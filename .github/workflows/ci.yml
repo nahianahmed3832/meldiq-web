@@ -1,0 +1,44 @@
+# Checks every push to main, every pull request and any manual run. It never deploys anything and has no secrets.
+# Integration and browser tests need the Orbit server (github.com/nahianahmed3832/griip-mesage, with first-frame WebSocket
+# authentication); they run locally (README.md › Checks) until that server change is on a branch CI can check out.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  web:
+    name: Typecheck, lint, unit tests, build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22.22.3 # the Orbit server's production version
+          cache: npm
+      - name: Install (exact versions from package-lock.json)
+        run: npm ci
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Lint
+        run: npm run lint
+      - name: Formatting
+        run: npm run format:check
+      # Cryptography against the shared griip-envelope-v1 and payload vectors, protocol rules, key storage, routing.
+      - name: Unit tests
+        run: npm test
+      - name: Build
+        run: npm run build

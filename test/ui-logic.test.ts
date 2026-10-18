@@ -1,0 +1,137 @@
+import { describe, expect, it } from "vitest";
+import type { Conversation } from "../src/api/schemas";
+import { parseRoute, routeHash } from "../src/app/router";
+import { initialState, type AppState, upsertLoaded, withMessages } from "../src/state/store";
+import { bytes, conversationTitle, dayLabel, relative, sameDay, shortWhen } from "../src/ui/format";
+import { channelGroups, inWorkspace, mentionConversations, mentionCount, orgUnread, people, unreadPeopleCount } from "../src/ui/selectors";
+import { textMessage } from "../src/sync/rules";
+
+const conv = (over: Partial<Conversation>): Conversation => ({
+  id: "c",
+  type: "CHANNEL",
+  orgId: "o1",
+  scope: "ORG",
+  scopeId: "o1",
+  scopeName: "Acme",
+  kind: "PUBLIC",
+  name: "general",
+  topic: null,
+  archived: false,
+  createdAt: 1,
+  updatedAt: 1,
+  memberCount: 3,
+  joined: true,
+  myRole: "MEMBER",
+  canPost: true,
+  canManage: false,
+  canMentionAll: false,
+  activeCall: null,
+  ...over,
+});
+
+const local = (id: string, unread = 0, mentions = 0, lastActivityAt = 0) => ({
+  id,
+  unread,
+  mentions,
+  lastMessageId: null,
+  lastPreview: null,
+  lastSenderName: null,
+  lastActivityAt,
+  readUpTo: 0,
+  draft: "",
+});
+
+describe("routes", () => {
+  it("round-trip every route, and fall back safely on anything else", () => {
+    for (const r of [
+      { section: "home" as const },
+      { section: "dms" as const, conversationId: "c_abc" },
+      { section: "activity" as const, conversationId: "c_abc", panel: "details" as const },
+      { section: "home" as const, conversationId: "c_abc", panel: "thread" as const, threadRoot: "m-1" },
+      { section: "settings" as const, settingsPage: "devices" as const },
+    ]) {
+      const parsed = parseRoute(routeHash(r));
+      expect(parsed.section).toBe(r.section);
+      if ("conversationId" in r) expect(parsed.conversationId).toBe(r.conversationId);
+      if ("panel" in r) expect(parsed.panel).toBe(r.panel);
+    }
+    expect(parseRoute("#/nowhere/c/<script>")).toMatchObject({ section: "home", conversationId: null });
+    expect(parseRoute("#/settings/nope").settingsPage).toBe("profile");
+    expect(parseRoute("").section).toBe("home");
+  });
+});
+
+describe("formatting", () => {
+  const now = new Date(2026, 9, 18, 15, 0).getTime();
+  it("days and times read naturally", () => {
+    expect(dayLabel(now, now)).toBe("Today");
+    expect(dayLabel(now - 86_400_000, now)).toBe("Yesterday");
+    expect(sameDay(now, now - 3600_000)).toBe(true);
+    expect(shortWhen(0)).toBe("");
+    expect(relative(now - 10_000, now)).toBe("just now");
+    expect(relative(now - 5 * 60_000, now)).toBe("5 min ago");
+    expect(bytes(512)).toBe("512 B");
+    expect(bytes(2048)).toBe("2.0 KB");
+    expect(bytes(5 * 1024 * 1024)).toBe("5.0 MB");
+  });
+
+  it("names conversations: channels by name, DMs by the other person", () => {
+    const dm = conv({
+      id: "d",
+      type: "DM",
+      orgId: null,
+      name: null,
+      members: [
+        { id: "me", username: "me", displayName: "Me", avatarColor: 0, statusText: null, photoRev: null, homeServer: null, role: null, orgRole: null, online: null },
+        { id: "u2", username: "sam", displayName: "Sam", avatarColor: 1, statusText: null, photoRev: null, homeServer: null, role: null, orgRole: null, online: true },
+      ],
+    });
+    expect(conversationTitle(dm, "me", {})).toBe("Sam");
+    expect(conversationTitle(dm, "me", { u2: { id: "u2", username: "sam", displayName: "Samuel", avatarColor: 1, statusText: null, online: true } })).toBe("Samuel");
+    expect(conversationTitle(conv({}), "me", {})).toBe("general");
+    expect(conversationTitle(conv({ type: "GROUP", name: null }), "me", {})).toBe("Group");
+  });
+});
+
+describe("sidebar selections", () => {
+  const state: AppState = {
+    ...initialState,
+    conversations: {
+      g: conv({ id: "g" }),
+      t: conv({ id: "t", scope: "TEAM", scopeId: "t1", scopeName: "Design team", name: "pixels" }),
+      x: conv({ id: "x", orgId: "o2", name: "other-org" }),
+      d: conv({ id: "d", type: "DM", orgId: null, name: null }),
+      p: conv({ id: "p", type: "GROUP", orgId: null, name: "Pals" }),
+    },
+    local: { g: local("g", 2, 0, 5), t: local("t", 0, 0, 3), x: local("x", 4, 1, 9), d: local("d", 1, 1, 7), p: local("p", 0, 0, 8) },
+  };
+
+  it("a workspace shows its own channels, grouped by scope, plus every DM and group", () => {
+    expect(channelGroups(state, "o1").map((g) => [g.title, g.channels.map((c) => c.id)])).toEqual([
+      ["Channels", ["g"]],
+      ["Design team", ["t"]],
+    ]);
+    expect(inWorkspace(state.conversations.d, "o1")).toBe(true);
+    expect(inWorkspace(state.conversations.x, "o1")).toBe(false);
+    expect(people(state).map((c) => c.id)).toEqual(["p", "d"]);
+  });
+
+  it("counts unread people, mentions and per-workspace unread channels", () => {
+    expect(unreadPeopleCount(state)).toBe(1);
+    expect(mentionCount(state)).toBe(2);
+    expect(mentionConversations(state, "o1").map((c) => c.id)).toEqual(["d"]);
+    expect(orgUnread(state, "o1")).toBe(1);
+    expect(orgUnread(state, "o2")).toBe(1);
+  });
+
+  it("loaded messages stay ordered by server time, and updates replace in place", () => {
+    const item = { id: 1, kind: "envelope" as const, conversationId: "g", messageId: "m-a", senderUserId: "u", senderDeviceId: "d", createdAt: 1, expiresAt: 2, payload: {} };
+    const a = textMessage({ type: "text", text: "a" }, item, false, 20, { ids: [], all: false });
+    const b = textMessage({ type: "text", text: "b" }, { ...item, messageId: "m-b" }, false, 10, { ids: [], all: false });
+    let s = withMessages(state, "g", [a, b], false);
+    expect(s.messages.g.items.map((m) => m.id)).toEqual(["m-b", "m-a"]);
+    s = upsertLoaded(s, { ...a, text: "a2" });
+    expect(s.messages.g.items.map((m) => m.text)).toEqual(["b", "a2"]);
+    expect(upsertLoaded(s, { ...a, conversationId: "not-loaded" })).toBe(s);
+  });
+});

@@ -1,0 +1,63 @@
+import type { Conversation } from "../api/schemas";
+import type { UserLite } from "../state/store";
+
+const time = new Intl.DateTimeFormat(undefined, { hour: "numeric", minute: "2-digit" });
+const weekday = new Intl.DateTimeFormat(undefined, { weekday: "long" });
+const date = new Intl.DateTimeFormat(undefined, { month: "short", day: "numeric" });
+const fullDate = new Intl.DateTimeFormat(undefined, { year: "numeric", month: "long", day: "numeric" });
+const full = new Intl.DateTimeFormat(undefined, { dateStyle: "full", timeStyle: "short" });
+
+export const clock = (t: number): string => time.format(t);
+export const fullTime = (t: number): string => full.format(t);
+
+function startOfDay(t: number): number {
+  const d = new Date(t);
+  d.setHours(0, 0, 0, 0);
+  return d.getTime();
+}
+
+/** "Today", "Yesterday", a weekday this week, or the date. */
+export function dayLabel(t: number, now = Date.now()): string {
+  const days = Math.round((startOfDay(now) - startOfDay(t)) / 86_400_000);
+  if (days === 0) return "Today";
+  if (days === 1) return "Yesterday";
+  if (days < 7 && days > 1) return weekday.format(t);
+  return new Date(t).getFullYear() === new Date(now).getFullYear() ? date.format(t) : fullDate.format(t);
+}
+
+export const sameDay = (a: number, b: number): boolean => startOfDay(a) === startOfDay(b);
+
+/** A list timestamp: the time today, the day this week, the date before. */
+export function shortWhen(t: number, now = Date.now()): string {
+  if (!t) return "";
+  const days = Math.round((startOfDay(now) - startOfDay(t)) / 86_400_000);
+  if (days === 0) return clock(t);
+  if (days < 7) return days === 1 ? "Yesterday" : weekday.format(t).slice(0, 3);
+  return date.format(t);
+}
+
+export function relative(t: number, now = Date.now()): string {
+  const s = Math.round((now - t) / 1000);
+  if (s < 45) return "just now";
+  if (s < 3600) return `${Math.round(s / 60)} min ago`;
+  if (s < 86_400) return `${Math.round(s / 3600)} h ago`;
+  return dayLabel(t, now);
+}
+
+export function bytes(n: number): string {
+  if (n < 1024) return `${n} B`;
+  if (n < 1024 * 1024) return `${(n / 1024).toFixed(n < 10 * 1024 ? 1 : 0)} KB`;
+  return `${(n / (1024 * 1024)).toFixed(1)} MB`;
+}
+
+/** The other person in a DM, from its member list. */
+export function dmPeer(c: Conversation, me: string): { id: string; displayName: string; username: string; avatarColor: number } | null {
+  return c.members?.find((m) => m.id !== me) ?? null;
+}
+
+export function conversationTitle(c: Conversation, me: string, users: Record<string, UserLite>): string {
+  if (c.type === "CHANNEL") return c.name ?? "channel";
+  if (c.type === "GROUP") return c.name ?? "Group";
+  const peer = dmPeer(c, me);
+  return (peer && (users[peer.id]?.displayName ?? peer.displayName)) || "Direct message";
+}

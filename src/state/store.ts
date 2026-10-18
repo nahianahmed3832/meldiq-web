@@ -1,0 +1,142 @@
+import type { Call, Conversation, Org, ServerInfo } from "../api/schemas";
+import type { ConversationLocal, PinnedIdentity, StoredMessage } from "../model/types";
+import type { ConnectionState } from "../realtime/socket";
+
+export type Phase =
+  /** Opening local data and signing in. */
+  | "loading"
+  /** This browser lacks what Orbit needs (WebCrypto Ed25519/X25519, IndexedDB, a secure context). */
+  | "unsupported"
+  /** Not linked to an account. */
+  | "signedOut"
+  | "ready"
+  /** The account removed this browser, or the server no longer knows it. */
+  | "revoked"
+  /** Orbit is open in another tab of this browser, which holds the connection. */
+  | "elsewhere";
+
+export interface Me {
+  userId: string;
+  deviceId: string;
+  username: string;
+  displayName: string;
+  identityKey: string;
+  avatarColor: number;
+  statusText: string | null;
+  /** This browser's device-key fingerprint, as the phone shows it. */
+  deviceFingerprint: string;
+  deviceName: string;
+}
+
+export interface UserLite {
+  id: string;
+  username: string;
+  displayName: string;
+  avatarColor: number;
+  statusText: string | null;
+  online: boolean | null;
+}
+
+export interface ConversationMessages {
+  items: StoredMessage[];
+  hasMore: boolean;
+}
+
+export interface HistoryState {
+  status: "idle" | "running" | "done" | "error" | "unsupported";
+  restored: number;
+  unreadable: number;
+  error: string | null;
+}
+
+export interface Notice {
+  id: number;
+  kind: "error" | "info";
+  text: string;
+}
+
+export interface AppState {
+  phase: Phase;
+  phaseReason: string | null;
+  me: Me | null;
+  server: ServerInfo | null;
+  connection: ConnectionState;
+  /** Conversations, workspaces and people have loaded at least once since start. */
+  synced: boolean;
+  orgs: Org[];
+  conversations: Record<string, Conversation>;
+  local: Record<string, ConversationLocal>;
+  messages: Record<string, ConversationMessages>;
+  users: Record<string, UserLite>;
+  /** conversation → user → expiry time */
+  typing: Record<string, Record<string, number>>;
+  /** Live calls by conversation (from the server's call events). */
+  calls: Record<string, Call>;
+  identityAlerts: PinnedIdentity[];
+  history: HistoryState;
+  notices: Notice[];
+}
+
+export const initialState: AppState = {
+  phase: "loading",
+  phaseReason: null,
+  me: null,
+  server: null,
+  connection: "offline",
+  synced: false,
+  orgs: [],
+  conversations: {},
+  local: {},
+  messages: {},
+  users: {},
+  typing: {},
+  calls: {},
+  identityAlerts: [],
+  history: { status: "idle", restored: 0, unreadable: 0, error: null },
+  notices: [],
+};
+
+type Listener = () => void;
+
+/** A single immutable state tree: every change makes a new object, so React can compare by reference. */
+export class Store {
+  private state: AppState;
+  private listeners = new Set<Listener>();
+
+  constructor(initial: AppState = initialState) {
+    this.state = initial;
+  }
+
+  get = (): AppState => this.state;
+
+  update(fn: (s: AppState) => AppState): void {
+    const next = fn(this.state);
+    if (next === this.state) return;
+    this.state = next;
+    for (const l of [...this.listeners]) l();
+  }
+
+  subscribe = (l: Listener): (() => void) => {
+    this.listeners.add(l);
+    return () => this.listeners.delete(l);
+  };
+}
+
+/** Returns [s] with one conversation's loaded messages replaced, kept in display order. */
+export function withMessages(s: AppState, conversationId: string, items: StoredMessage[], hasMore?: boolean): AppState {
+  const prev = s.messages[conversationId];
+  const sorted = [...items].sort(byDisplayOrder);
+  return { ...s, messages: { ...s.messages, [conversationId]: { items: sorted, hasMore: hasMore ?? prev?.hasMore ?? false } } };
+}
+
+/** Inserts or replaces one message in a loaded conversation (no-op when that conversation isn't loaded). */
+export function upsertLoaded(s: AppState, m: StoredMessage): AppState {
+  const prev = s.messages[m.conversationId];
+  if (!prev) return s;
+  const items = prev.items.some((x) => x.id === m.id) ? prev.items.map((x) => (x.id === m.id ? m : x)) : [...prev.items, m];
+  return withMessages(s, m.conversationId, items);
+}
+
+export function byDisplayOrder(a: StoredMessage, b: StoredMessage): number {
+  return a.sortTs - b.sortTs || (a.id < b.id ? -1 : a.id > b.id ? 1 : 0);
+}

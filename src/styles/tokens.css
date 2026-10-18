@@ -1,0 +1,166 @@
+/*
+ * Orbit design tokens for the web, from android ui/theme/OrbitPalettes.kt (UI-001):
+ * Ivory (light): warm ivory, dark type, charcoal actions, a terracotta → rose accent dark enough to read on ivory.
+ * Cocoa (dark): cocoa and charcoal surfaces, cream type, a soft peach → pink accent.
+ * The accent is used sparingly: selection, unread and mention counts, focus, the primary action.
+ */
+@font-face {
+  font-family: "Plus Jakarta Sans";
+  src: url("/fonts/PlusJakartaSans.ttf") format("truetype");
+  font-weight: 200 800;
+  font-display: swap;
+}
+
+:root {
+  color-scheme: light;
+  --font: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  --bg: #f7f2ed;
+  --surface: #fffdfb;
+  --surface-raised: #ffffff;
+  --surface-sunken: #efe8e2;
+  --surface-hover: #f3ece6;
+  --surface-selected: #ede3dc;
+  --border: #e6dcd5;
+  --border-strong: #d6c9c0;
+  --hairline: rgba(28, 23, 22, 0.08);
+  --text: #1c1716;
+  --text-2: #5f5450;
+  --text-3: #766963;
+  --outline: #8f817b;
+
+  --action: #221b1a;
+  --action-hover: #3a2f2c;
+  --on-action: #fff8f3;
+  --accent-start: #b4502f;
+  --accent-end: #a93a62;
+  --accent: #b0462f;
+  --accent-soft: #f8e6da;
+  --on-accent: #ffffff;
+  --accent-text: #9a3e2a;
+
+  --mention-bg: #fbeee6;
+  --mention-text: #8e3720;
+  --bubble-out: #efe3da;
+
+  --success: #276e45;
+  --success-soft: #e2f1e7;
+  --warning: #85590a;
+  --warning-soft: #f8ebd3;
+  --danger: #b3261e;
+  --danger-soft: #fae4e0;
+  --info: #2f6fb0;
+
+  /* The rail and the link screen's hero are cocoa in both themes: Orbit's deep frame around a light workspace. */
+  --rail: #1d1716;
+  --rail-hover: #2e2523;
+  --rail-text: #b8aaa5;
+  --rail-text-active: #fff8f3;
+
+  --shadow-sm: 0 1px 2px rgba(58, 42, 36, 0.06);
+  --shadow-md: 0 4px 16px rgba(58, 42, 36, 0.08), 0 1px 3px rgba(58, 42, 36, 0.06);
+  --shadow-lg: 0 16px 48px rgba(58, 42, 36, 0.16), 0 2px 8px rgba(58, 42, 36, 0.08);
+  --scrim: rgba(18, 13, 12, 0.42);
+  /* The glossy highlight on orbs and avatars (the Orbit mark's own top-left shine). */
+  --gloss: rgba(255, 255, 255, 0.9);
+  --focus: 0 0 0 2px var(--surface), 0 0 0 4px var(--accent);
+
+  --r-sm: 8px;
+  --r-md: 12px;
+  --r-lg: 16px;
+  --r-xl: 24px;
+  --r-pill: 999px;
+
+  --t-fast: 120ms;
+  --t-std: 200ms;
+  --ease: cubic-bezier(0.2, 0, 0, 1);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #171313;
+    --surface: #1e1918;
+    --surface-raised: #292120;
+    --surface-sunken: #141010;
+    --surface-hover: #2a2321;
+    --surface-selected: #3a302d;
+    --border: #3d3230;
+    --border-strong: #4d403d;
+    --hairline: rgba(255, 255, 255, 0.06);
+    --text: #fff8f3;
+    --text-2: #b8aaa5;
+    --text-3: #968883;
+    --outline: #7d6e69;
+    --action: #f6a585;
+    --action-hover: #f8b89f;
+    --on-action: #2a1914;
+    --accent-start: #f6a585;
+    --accent-end: #ee8aa6;
+    --accent: #f4a08f;
+    --accent-soft: #3a2a26;
+    --on-accent: #2a1914;
+    --accent-text: #f8b89f;
+    --mention-bg: #3a2a26;
+    --mention-text: #ffd3c0;
+    --bubble-out: #3a2c29;
+    --success: #7fd8a6;
+    --success-soft: #1b3327;
+    --warning: #f2c26b;
+    --warning-soft: #3a2f1a;
+    --danger: #ff8a80;
+    --danger-soft: #3d1f1d;
+    --info: #8fc8ff;
+    --rail: #0f0c0c;
+    --rail-hover: #241d1c;
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.35);
+    --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.55);
+    --scrim: rgba(0, 0, 0, 0.6);
+    --gloss: rgba(255, 255, 255, 0.1);
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #171313;
+  --surface: #1e1918;
+  --surface-raised: #292120;
+  --surface-sunken: #141010;
+  --surface-hover: #2a2321;
+  --surface-selected: #3a302d;
+  --border: #3d3230;
+  --border-strong: #4d403d;
+  --hairline: rgba(255, 255, 255, 0.06);
+  --text: #fff8f3;
+  --text-2: #b8aaa5;
+  --text-3: #968883;
+  --outline: #7d6e69;
+  --action: #f6a585;
+  --action-hover: #f8b89f;
+  --on-action: #2a1914;
+  --accent-start: #f6a585;
+  --accent-end: #ee8aa6;
+  --accent: #f4a08f;
+  --accent-soft: #3a2a26;
+  --on-accent: #2a1914;
+  --accent-text: #f8b89f;
+  --mention-bg: #3a2a26;
+  --mention-text: #ffd3c0;
+  --bubble-out: #3a2c29;
+  --success: #7fd8a6;
+  --success-soft: #1b3327;
+  --warning: #f2c26b;
+  --warning-soft: #3a2f1a;
+  --danger: #ff8a80;
+  --danger-soft: #3d1f1d;
+  --info: #8fc8ff;
+  --rail: #0f0c0c;
+  --rail-hover: #241d1c;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.35);
+  --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.55);
+  --scrim: rgba(0, 0, 0, 0.6);
+  --gloss: rgba(255, 255, 255, 0.1);
+}
