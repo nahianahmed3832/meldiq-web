@@ -16,8 +16,11 @@ test.beforeEach(async ({ context }) => {
 const PASSWORD = "a long enough password";
 
 async function signIn(page: Page, email: string): Promise<void> {
+  await expectSignedOut(page);
   await page.getByLabel("Email").fill(email);
   await page.getByLabel("Password", { exact: true }).fill(PASSWORD);
+  // The form reads what React holds: make sure the typing landed before sending.
+  await expect(page.getByLabel("Email")).toHaveValue(email);
   await page.getByRole("button", { name: "Sign in", exact: true }).click();
 }
 
@@ -37,7 +40,7 @@ test("sign up, set up encryption, come back after a reload, and add a second bro
   await expect(page.getByRole("heading", { name: "Set up end-to-end encryption" })).toBeVisible();
   await page.getByRole("button", { name: "Set up encryption" }).click();
   await expect(page.getByRole("heading", { name: "Save your recovery key" })).toBeVisible();
-  const recovery = ((await page.getByLabel("Recovery key").innerText()) ?? "").replace(/\s+/g, "-");
+  const recovery = ((await page.getByLabel("Recovery key", { exact: true }).innerText()) ?? "").replace(/\s+/g, "-");
   expect(recovery).toMatch(/^[A-Z2-9]{4}(-[A-Z2-9]{1,4})+$/);
   await expect(page.getByRole("button", { name: "Open Orbit" })).toBeDisabled();
   await page.getByLabel("I've stored my recovery key somewhere safe.").check();
@@ -62,7 +65,7 @@ test("sign up, set up encryption, come back after a reload, and add a second bro
   await signIn(second, email);
   await expect(second.getByRole("heading", { name: "Set up this browser" })).toBeVisible();
   await second.getByRole("tab", { name: "Use my recovery key" }).click();
-  await second.getByLabel("Recovery key").fill(recovery.toLowerCase());
+  await second.getByLabel("Recovery key", { exact: true }).fill(recovery.toLowerCase());
   await second.getByRole("button", { name: "Set up this browser" }).click();
   await expect(second.locator(".conn.online")).toBeVisible({ timeout: 15_000 });
   await bob.send(dm, { type: "text", text: "Both of your browsers get this" });

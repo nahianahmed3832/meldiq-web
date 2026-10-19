@@ -138,8 +138,10 @@ repository's `tools/griip-bot` (`npm ci` there, next to the server folder the te
 - **Not tested with the Android app on a physical phone** (§8). The native peer in the browser tests uses LiveKit's
   native frame cryptor with the Android key handling, which makes interop likely, not proven.
 - **Group calls** work like Android's (same server rules), but were tested here only one-to-one.
-- **No screen sharing, no device picker** (the browser's default microphone and camera), no picture-in-picture
-  window, no call history list (call entries appear in conversations). No ringing when no Orbit tab is open (no Web Push).
+- **Screen sharing and the device menu** (microphone, camera, speaker; added 2026-10-19) are tested only with
+  simulated media (`test/call-live.test.ts`), not in a real browser call. Screen sharing needs `getDisplayMedia`, so it
+  isn't offered in phones' browsers. No picture-in-picture window; call history shows as lines in conversations and
+  Activity › Missed calls, not as a separate list. No ringing when no Orbit tab is open (no Web Push).
 - **Keys aren't rotated** when people join or leave (T5.4, as on Android).
 - **Browser trust:** script injected into the page could read call keys from memory while a call runs (like message
   keys; `ORBIT_WEB_STATUS.md` › Security). The deployment's CSP is the defence.
@@ -173,20 +175,11 @@ on the same Wi-Fi, and an Orbit **debug or testing** build on the phone (those a
    npm run dev
    ```
 5. On the phone: **Settings › Server and about › Servers › Add a server**, `http://MAC_IP:8080`, **Check** (expect server
-   0.3.0 and calling available), **Add and switch**, and create an account there. Your production account stays as it is.
-6. Give the browser **its own account** (you can't call your own devices). The test tool makes one, "Alice", and acts
-   as Alice's phone to link the browser:
-   ```bash
-   npx tsx scripts/demo-phone.ts setup
-   ```
-   Open `http://localhost:5173` on the Mac; it shows a link code. Approve it as Alice:
-   ```bash
-   npx tsx scripts/demo-phone.ts approve CODE
-   ```
-   Then open a conversation between Alice and your phone's account:
-   ```bash
-   npx tsx scripts/demo-phone.ts dm alice YOUR_PHONE_USERNAME
-   ```
+   0.5.0 and calling available), **Add and switch**, and create an account there with an email address (the code comes
+   from `npx tsx scripts/demo-phone.ts mail`). Your production account stays as it is.
+6. Give the browser **its own account** (you can't call your own devices): open `http://localhost:5173` on the Mac,
+   **Create an account** with another email address, enter its code (same command), and **Set up encryption**. Then
+   open a conversation with your phone's account: **New message**, its exact `@username`.
 7. **Phone → browser, video.** On the phone, open the DM and start a video call. Check in the browser: the ring card
    appears and rings; the phone shows "Ringing…". Answer with video. Check on **both** sides: you see and hear each
    other; the badge reaches "End-to-end encrypted" (browser) and the phone's E2EE pill; tap/click both badges and
@@ -211,4 +204,5 @@ on the same Wi-Fi, and an Orbit **debug or testing** build on the phone (those a
     browser: the bot's moving test pattern and tone arrive, and the phone stops ringing.
 
 Record per step: pass or fail, what each badge said, whether the codes matched, and anything odd (echo, delay, video
-orientation). Browser calls are called supported only after steps 7–12 pass.
+orientation). Browser calls are called supported only after steps 7–12 pass. Also check, from the browser: **share your screen**
+during a video call (the phone shows it large) and **switch microphone or camera** from the call's device menu.

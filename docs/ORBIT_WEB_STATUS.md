@@ -1,225 +1,185 @@
-# Orbit Web: status report (2026-10-18)
+# Orbit Web: status report (2026-10-19)
 
-This repository is the web client. Its one server change lives in the Orbit repository (github.com/nahianahmed3832/griip-mesage),
-on branch `orbit-web` (based on `internal-beta` at 6f355a1); paths such as `server/…` and `android/…` below are in that repository.
-Design and audit:
-`ORBIT_WEB_ARCHITECTURE.md`. Deployment plan (not applied): `ORBIT_WEB_DEPLOYMENT.md`.
+This repository is the web client of Orbit. Its server changes are two patches in `server-patches/` for the Orbit
+repository (github.com/nahianahmed3832/griip-mesage, API 0.5.0); paths such as `server/…` and `android/…` below are in
+that repository. Design: `ORBIT_WEB_ARCHITECTURE.md`. Feature-by-feature inventory: `ORBIT_WEB_PARITY.md`. Calls:
+`ORBIT_WEB_CALLS.md`. Deployment (not applied): `ORBIT_WEB_DEPLOYMENT.md`. Hand-off notes: `ORBIT_WEB_HANDOFF.md`.
 
-**Bottom line.** Orbit Web is a working browser client of the existing Orbit server: a browser is linked as another
-device of an account by the phone, then sends and receives end-to-end encrypted messages, files, reactions, edits,
-deletions, pins and read receipts through the same server as the Android app, in real time, with reconnection and
-history restore. It has been verified against a real server with the reference protocol client (byte-compatible with
-the Android app) in Chromium, Firefox and WebKit. **It has not been tested with a physical phone yet** (§9), and
-**production can't serve it until the server change is deployed** (§3).
+Words used below: *written* (the code exists), *tested* (automated tests pass against a real Orbit server, with the
+server's reference protocol client, byte-compatible with the Android app, playing the other people), *verified in a
+browser* (Playwright in real Chromium, Firefox and WebKit, or checked by hand in the browser pane). Nothing has been
+verified with the Android app on a physical phone.
 
-**Calls (added 2026-10-18, `ORBIT_WEB_CALLS.md`).** Voice and video calls are implemented in the browser with the same
-server API and the same media encryption as the Android app, and pass their tests in Chromium, Firefox and WebKit with
-real encrypted media against LiveKit's native SDK. **They have not been run with the Android app on a physical phone,
-so browser calls are not supported yet**; the step-by-step phone test is `ORBIT_WEB_CALLS.md` › 8.
+**Bottom line.** Orbit Web is an authenticated, end-to-end encrypted browser client of the existing Orbit server: same
+accounts, workspaces, conversations and permissions as the Android app, no second backend or data store, realtime over
+the server's WebSocket. People sign in with their Orbit 2.0 email account, set the browser up as another device of the
+account (recovery key or approval from the phone), and then message, call, share files up to 1 GiB and run their
+workspace from the browser. It is **not deployed**, **not tested with a physical phone**, and **production can't serve
+it until the API is updated** (§3). Calls are built and tested in browsers but **not supported** until the phone test.
 
 ## 1. What was implemented
 
-| Area | What |
-|---|---|
-| Server (one change) | WebSocket authentication by first frame for clients that can't send headers: `server/src/ws.ts`, `WS_AUTH_TIMEOUT_MS` in `server/src/config.ts`, `server/test/ws_frame_auth.test.ts`, `docs/ABUSE_CONTROLS.md`. |
-| Cryptography (`src/crypto`) | griip-envelope-v1 seal/open, Ed25519, HPKE (X25519), attachment encryption (single and chunked), history keys and items, pairing (sealed identity seed), fingerprints and safety numbers. WebCrypto + `@hpke/core`; private keys non-extractable. |
-| Protocol and API (`src/protocol`, `src/api`) | zod validation of every server response, decrypted payload and history record; typed API client with re-authentication by signature. |
-| Sync (`src/sync`, `src/realtime`, `src/store`) | Linking, sign-in, realtime client (first-frame auth, ordered frames, backoff, heartbeat), receive pipeline, outbox, history restore, trust on first use, IndexedDB store, sign-out. |
-| Interface (`src/ui`) | Link screen; workspace rail and switcher; Home, DMs and Activity; sidebar with channel groups and DMs; conversation with history, paging, replies, threads, reactions, edits, deletions, pins, mentions, attachments (drag, paste, pick); details panel with members and safety numbers; search (⌘K); new message; channel browser; identity review; settings (profile, devices, notifications, appearance, security, about); status screens; responsive layout down to phone width. |
-| Calls (`src/call`, `src/ui/call`) | Ringing, answering, placing and joining calls; per-call media keys in memory only, from the call's creator only, with late-joiner requests; LiveKit (`livekit-client` 2.22.3, pinned) with frame encryption; a worker that verifies frames for the "End-to-end encrypted" badge and drops unencrypted ones; call stage, permission and device states, reconnecting, verification code. Details and evidence: `ORBIT_WEB_CALLS.md`. |
-| Tooling | `scripts/local-server.sh` (the Orbit server with local data; `--calls` for calling), `scripts/livekit-dev.sh` (a local LiveKit), `scripts/demo-phone.ts` (test participants for a local server), Playwright browser tests, `.github/workflows/ci.yml`. |
-
-## 2. Existing backend services reused (unchanged)
-
-Accounts and devices (`/v1/auth/challenge`, `login`, `add-device`, `/v1/pairing*`, `/v1/devices`), messages and queue
-(`/v1/messages`, `/v1/queue`, `/v1/queue/ack`, `/v1/ws`), conversations (`/v1/conversations*`, `/v1/conversations/:id/devices`,
-`/v1/users/devices`), workspaces (`/v1/orgs*`, `/v1/orgs/:id/channels`, `/v1/orgs/:id/activity`), people
-(`/v1/users/me`, `/v1/users/:id`, `/v1/users/search`), attachments (`POST/GET /v1/attachments`), encrypted history
-(`/v1/history/items`), calls (`POST /v1/calls`, `/join`, `/connected`, `/alerted`, `/decline`, `/end`, `/leave`,
-`GET /v1/calls/:id`, `GET /v1/calls/active`; `call` and `queue.drained` realtime events; the server's LiveKit), and
-`/v1/server-info`. Authorisation stays in `server/src/authz.ts`. Storage stays SQLite plus local disk or S3.
-
-## 3. Backend changes and migrations
-
-- **One change**: a socket without an `Authorization` header may authenticate with `{"t":"auth","token":…}` as its first
-  frame within `WS_AUTH_TIMEOUT_MS` (default 10 s); anything else closes it with 4401 before anything is sent. The token
-  never goes in a URL. Header authentication (the Android app) is unchanged; the session is still re-checked on every frame.
-- **Calls needed no server change**: the browser uses the call API and events as they are (`ORBIT_WEB_CALLS.md` › 1).
-- **No database migrations.** No new tables, stores, services or secrets. No second message store: plaintext exists only
-  on devices, as before.
-- **Not deployed.** Production (`msg.griipbuddy.cloud`) runs 0.2.0. Deploying is in `ORBIT_WEB_DEPLOYMENT.md`.
-
-## 4. What works end to end
-
-"Live" means a real Orbit server from this branch, with the reference client as the other side; "browser" means the
-real app in that engine (§6).
-
-| Feature | Status | Evidence |
+| Area | What | State |
 |---|---|---|
-| Link a browser from the phone (code + device-key fingerprint) | Works | `test/live.test.ts`; Playwright in Chromium, Firefox, WebKit, phone width; fingerprint on screen equals the phone's computation |
-| Sign in again after reload with the device key (token in memory only) | Works | Playwright reload step, all engines |
-| Receive in real time (decrypted, ordered by server time) | Works | live + browser tests |
-| Send; the other person and the account's own phone both receive it | Works | live + browser tests; "Delivered" receipt shown |
-| Phone's own messages appear in the browser as the account's | Works | live + browser tests |
-| Edits, deletions, reactions, pins (both directions; author-only rules) | Works | `live.test.ts`, `live-actions.test.ts` |
-| A control that arrives before its message | Works | `live.test.ts` |
-| Read receipts (DMs, groups ≤ 20); reading on the phone clears the browser's unread | Works | `live.test.ts` |
-| Mentions (resolved to member ids; @everyone needs the server's mark) | Works | `live-actions.test.ts`, `rules.test.ts` |
-| Replies and thread replies | Works | `live-actions.test.ts` |
-| Attachments both ways (encrypted, integrity-checked; up to 25 MB sent, 200 MB opened) | Works | `live.test.ts` |
-| Offline: queued sends go out on reconnect; backlog after reconnect in order, once each, with every frame duplicated on the wire | Works | `live.test.ts` |
-| Encrypted history restore on linking | Works with history written by the phone's algorithm | `live.test.ts` (items sealed by an independent implementation of `HistoryCrypto.kt`) |
-| Identity key change: sends paused, incoming held, released on acceptance | Works | `live.test.ts` |
-| Server-side authorisation (other conversations, files, forged signatures) | Enforced by the server | `live.test.ts` |
-| Removing the browser from the phone signs it out and erases its data | Works | live + browser tests |
-| Sign out (revoke, then erase) | Works | live + browser tests |
-| One tab per browser; "Use Orbit here" | Works | browser test |
-| Workspace switcher, channels, browse/join, activity feed, profile edit, devices list/removal | Works | `live-actions.test.ts`; manual in Chrome |
-| Typing and presence | Works | `live-actions.test.ts`; manual |
-| Voice and video calls, both directions, with E2EE media | **Works in browsers; not tested with a phone, so not supported yet** | `call-live.test.ts` (signalling and keys against the server with the reference client); `e2e/calls.spec.ts` in Chromium, Firefox, WebKit and at phone width (real LiveKit, media decrypted by LiveKit's native SDK, badge verified, wrong key shown as a problem) |
-| Call key only from the call's creator, kept out of storage, late-joiner requests, refusal without a key | Works | `call-live.test.ts` (IndexedDB checked for the key) |
-| Microphone and camera permission prompts and refusals, network drop and rejoin, busy, decline, ring recovery | Works | `call-live.test.ts`, `e2e/calls.spec.ts` |
+| Orbit 2.0 accounts (`src/auth`, `src/ui/auth`) | Sign in, sign up with an emailed code, forgotten password, moving a pre-2.0 account (username + recovery key, checked in the browser). Device setup: the first device makes the identity and shows the recovery key once; later browsers use the recovery key or the phone's approval. Session tokens sealed with a non-extractable AES key in IndexedDB, renewals serialised; an ended session asks for the password and keeps local data. Account settings: password, sessions. | tested, verified in a browser |
+| Workspaces (`src/ui/workspace`, `src/sync/workspaces.ts`) | Create (idempotent), join by code (preview first), settings and photo, leave, delete; people (roles, titles, removal, mirroring `server/src/roles.ts`); invitations; channels (create, access mode, archive, restore); branches and teams (create, archive, restore). New groups. | tested |
+| Personal arrangement (`src/sync/navPrefs.ts`) | Starred, custom sections, collapsed groups and notification levels, synced through `/v1/me/preferences`, merged across devices; local archive and mark read/unread. Activity: mentions, missed calls, thread replies, change log. | tested |
+| Messaging (`src/sync`, `src/ui/chat`) | Text, history and paging, replies and threads, edits, deletions, reactions, pins, mentions and @everyone, receipts, typing, presence; contact cards and locations; voice messages (record, preview, play); forwarding with re-encrypted files; call history lines; identity changes and safety numbers. | tested (recording itself: written only) |
+| Files (`src/crypto/fileStream.ts`, `src/sync/largeUpload.ts`) | Up to 1 GiB in the phone's chunked format, never held whole in memory: S3 multipart (16 MiB parts, each bound to size and SHA-256) or a streamed POST; streamed decryption; save straight to disk where the browser allows. | tested (S3: against a simulated store) |
+| Calls (`src/call`, `src/ui/call`) | Ringing, answering, placing, joining, per-call keys in memory from the creator only, LiveKit frame encryption with a per-track audit behind the "End-to-end encrypted" badge, reconnecting; screen sharing; microphone, camera and speaker choice. | tested; verified in browsers except screen sharing and device choice (simulated media only) |
+| Profile and privacy (`src/sync/profile.ts`, `src/ui/settings`) | Photo, names, username, bio, birthday, phone; who sees each field and who can find you; blocked people (list, unblock). | tested |
+| Runtime config and deployment (`src/app/config.ts`, `deploy/`) | `/config.json` (same-origin by default, or an https API origin); release build, install with atomic switch and nginx check, rollback, verify scripts; nginx site and security headers for web.griipbuddy.cloud. | written; config tested; nothing deployed |
+| Server (`server-patches/`) | 0001: WebSocket authentication by first frame (browsers can't send headers). 0002: `WEB_ORIGINS` (CORS allowlist without credentials, WebSocket origin control). | tested against the server's own suite |
 
-## 5. Automated tests run and results
+## 2. Backend reused (unchanged)
+
+Accounts (`/v2/auth/*`, `/v2/account*`, `/v2/workspaces`, `/v2/migration/legacy/*`), devices and pairing (`/v1/auth/challenge`,
+`/v1/pairing*`, `/v1/devices`), messages and queue (`/v1/messages`, `/v1/queue*`, `/v1/ws`), conversations
+(`/v1/conversations*` including groups, members and calls), workspaces (`/v1/orgs*`, `/v1/branches*`, `/v1/teams*`,
+`/v1/invites*`), preferences (`/v1/me/preferences/:workspaceId`), people and privacy (`/v1/users*`, `/v1/blocks`),
+attachments (`/v1/attachments*` including direct uploads), history (`/v1/history/items`), calls (`/v1/calls*`, the
+server's LiveKit) and `/v1/server-info`. Authorisation stays in `server/src/authz.ts` and `roles.ts`; the browser only
+hides what the server would refuse, and the tests make the refused calls directly.
+
+## 3. Backend changes, database and storage
+
+- **Two server patches, nothing else** (`server-patches/README.md`): 0001 is required (without it a browser receives
+  nothing live), 0002 is optional (off until `WEB_ORIGINS` is set). Both are backward compatible with the Android app.
+- **No migrations, collections, buckets or services added.** The browser never talks to a database. Plaintext exists
+  only on devices; the server stores ciphertext and the same metadata as for the phone.
+- **Production** (`msg.griipbuddy.cloud`) ran API 0.4.x. It needs API 0.5.0 with patch 0001, SES for account email, and
+  the DNS, TLS and S3 CORS steps in `ORBIT_WEB_DEPLOYMENT.md` §1. None of that was done.
+
+## 4. Realtime and synchronisation
+
+One authenticated WebSocket per browser (one tab holds it; others offer "Use Orbit here"): first-frame auth, ordered
+frame handling, acknowledgements only after a message is stored, backoff 1–30 s with jitter, 25 s pings, re-auth on
+4401 (refresh, or password when the session ended). Missed messages come back from the server's queue (7 days) in
+order, once each; history restore fills older ones. Server events refresh exactly what changed: `conv.updated`,
+`org.updated`/`org.deleted`, `prefs.updated` (the person's other devices), `devices.changed`, `call`, `presence`,
+`typing`. Workspace switching changes only what's shown; every request is authorised by the server.
+
+## 5. Tests run and results (2026-10-19)
+
+All against API 0.5.0 with both patches (`ORBIT_SERVER_DIR`, `ORBIT_WEB_HANDOFF.md`), Node 25.8, macOS.
 
 | Suite | Result |
 |---|---|
-| Server: `npm run typecheck`, `npm test` | clean; **275 passed, 9 skipped** (the real-S3 suite needs AWS credentials). Before the change: 268 passed. |
 | Web: `npm run typecheck`, `npm run lint`, `npm run format:check` | clean |
-| Web: `npm test` (unit + integration against an in-process server) | **141 passed** (89 before calls; Node 25.8). Coverage: 85% of lines, 80% of statements; `crypto` 99%, `protocol` 98%, `call` 89% of lines. The interface and the call code that needs a browser's WebRTC, workers and audio are covered by the browser tests. |
-| Web: `npm run build` | 157 KB JavaScript gzipped for the app (145 KB before calls); LiveKit (149 KB gzipped) and the encryption worker load only when a call starts. The development-only inspection hook is absent from the bundle. |
-| Browser: `npx playwright test` | **29 passed, 3 skipped** in Chromium 156 (full build, `channel: "chromium"`), Firefox 157.0, WebKit 27.2 and a Pixel 7-sized Chromium, with a local LiveKit 1.13.10. Skipped: a desktop-only test at phone width, and the network-drop call test in Firefox and WebKit (Playwright can't cut live connections there). The call tests also ran about 90 more times (`ORBIT_WEB_CALLS.md` › 6 › Stability: one unexplained Firefox failure, safe direction). Before calls: 11 passed, 1 skipped. |
+| Web: `npx vitest run` (unit + integration, 21 files) | **221 passed** on 5 of 6 runs; **one run had 1 failure** that wasn't captured and didn't recur in the next 5 runs (an intermittent; see §7) |
+| Web: `npm run build` | main bundle 147 KB gzipped; settings and workspace administration load on demand (8 KB each); LiveKit (150 KB) and its worker only when a call starts |
+| Browser: `npx playwright test` (Chromium, Firefox, WebKit, Pixel 7-sized Chromium; local LiveKit 1.13.10) | 40 tests (10 per project). **Two consecutive full runs after the last edit: 37 passed, 3 skipped, 0 failed each** (4.5 and 4.4 min). The skips are deliberate: the network-loss call test in Firefox and WebKit (their offline emulation doesn't cut live connections) and one desktop-only case at phone width. The first full run of this round, before the fixes, had 31 passed, 6 failed, 3 skipped: 5 failures in `accounts.spec.ts` (never run before; an ambiguous selector, and WebKit submitting before the typed email landed; both test-side, fixed) and 1 call flake in Chromium (§7) |
+| Server (scratch copy with both patches): `npx vitest run` | **409 passed, 10 skipped** (live-S3 suite without credentials, one MongoDB-only case). One earlier run had a timing failure in `account_store_races` (refresh race on MongoDB) that passes alone, with and without the patches |
 
-Shared test vectors: the browser reproduces `android/app/src/test/resources/griip-envelope-v1-vectors.json` (the
-same file the Android `EnvelopeInteropTest` and the server's `interop_vectors.test.ts` check) and re-encodes every payload
-in `griip-payload-v1-vectors.json` to the same JSON.
+Shared vectors: the browser reproduces the Android envelope and payload vectors, the Android recovery-key encoding
+(checked against an independent implementation) and the chunked file format (checked against the reference encryptor).
 
-Found and fixed by these tests: WebKit drops X25519 keys stored in IndexedDB (§7); the boot ran twice in React's
-development mode; sidebar rows lost their link role; a draft could reappear after sending; a read receipt the phone
-had already sent was repeated; sign-out could show "removed" instead of the link screen.
+Found and fixed in this round: the dev proxy didn't forward `/v2`; a page reload could see its own tab lock as another
+tab (start-up now retries briefly); call-log writes could race; browsers may not set `content-length` on S3 uploads.
 
-## 6. Browser and physical-device tests
+## 6. Browser and physical-device verification
 
-- **Real browsers**: Chromium, Firefox, WebKit (Playwright, above). Manually in the Claude browser pane (Chromium) at
-  1440×900, 800×600 and 375×812, light (Ivory) and dark (Cocoa): linking, messaging both ways, delivered and read
-  receipts, mentions, reactions, activity feed, details panel, phone layout. No horizontal scrolling at 375 px.
-- **Calls in real browsers**: Chromium, Firefox, WebKit and a phone-sized Chromium with fake microphones and cameras,
-  real end-to-end encrypted media through a local LiveKit, against LiveKit's native SDK as the other participant
-  (`ORBIT_WEB_CALLS.md` › 6). Screenshots checked at 1440×900 and phone width, light and dark: ringing card, call stage,
-  badge, verification code, minimised bar.
-- **Physical phone: not performed** (messages or calls). Nothing here proves interoperability with the Android app on a
-  real device yet; the reference client is byte-compatible with it (shared vectors), and the native LiveKit peer uses the
-  frame cryptor of the Android SDK's family with Android's key handling, which makes success likely but is not proof.
+- **Real browsers**: Chromium, Firefox, WebKit and phone width (§5). By hand in the browser pane: sign-up with an emailed
+  code, encryption setup and recovery key, reload into the stored session, creating a workspace, an invitation joined
+  by a test person, the member list, a channel, starring and the conversation menu, the production build served with a
+  `config.json`.
+- **Physical phone: not performed.** Messages, files, preferences and calls with the Android app on a real device are
+  unverified (§9). The reference client and LiveKit's native SDK make interoperability likely, not proven.
 
 ## 7. Known issues and security notes
 
 **Security**
-- **Safari / WebKit**: WebKit can't keep non-extractable X25519 keys in IndexedDB (verified: they read back as plain
-  objects). There the browser's encryption key is stored wrapped by a non-extractable AES key (`crypto/keyStorage.ts`):
-  protected at rest, but script running in the page could unwrap it. Chromium and Firefox keep it non-extractable.
-- **Messages at rest**: the browser keeps the messages it received or restored in IndexedDB, in the browser profile,
-  without the phone's SQLCipher layer. Signing out erases them. Shared computers should sign out (the settings say so).
-- **Injected script** in the page could use this browser's keys while it's open (not export them, except as above).
-  Defences: React text rendering only (no HTML from messages), http(s)-only links, inert-only inline media, and the CSP
-  in `ORBIT_WEB_DEPLOYMENT.md` (not deployed yet).
-- **Linking moves the identity seed** into the browser once, sealed to it; the browser uses it to derive history keys
-  and then drops it. A compromised page *during linking* could capture it.
-- **Inherited protocol limits** (`SECURITY.md` §4): no forward secrecy, trust on first use, server-asserted group
-  membership, cooperative deletion. Unchanged by Orbit Web.
-- **Call keys** live only in the page's memory while a call can use them (never IndexedDB, the outbox or logs). Script
-  injected into the page could read them during a call, as it could use the message keys. Every participant's media
-  is treated as encrypted whatever the media server says, and frames that would cross unencrypted are dropped.
-- **Not independently reviewed.** This report is the author's review, not an audit.
+- Script injected into the page could use this browser's keys and session while it's open. Defences: React text
+  rendering only, http(s)-only links, inert inline media, and the CSP in `deploy/nginx` (not deployed).
+- Session tokens and WebKit's X25519 key are stored wrapped by non-extractable AES keys: protected at rest, not from
+  script in the page. Chromium and Firefox keep the X25519 key itself non-extractable.
+- Messages the browser received are kept in IndexedDB without the phone's SQLCipher layer; signing out erases them.
+- The recovery key passes through the page when it's made or typed; it's dropped right after (never stored or sent).
+- Profile and workspace photos aren't end-to-end encrypted (as on the phone). Starred items and section names are
+  server-visible metadata (as on the phone).
+- Inherited protocol limits (`SECURITY.md` §4): no forward secrecy, trust on first use, server-asserted membership,
+  cooperative deletion. Not independently reviewed.
 
-**Functional limits**
-- Calls: **not supported until the physical-phone test passes** (`ORBIT_WEB_CALLS.md` › 8). Not in the browser: screen
-  sharing, choosing a microphone or camera, ringing with no Orbit tab open, group calls tested beyond one-to-one
-  (`ORBIT_WEB_CALLS.md` › 7). Production also needs the CSP and Permissions-Policy in `ORBIT_WEB_DEPLOYMENT.md`.
-- The browser reads the account's encrypted history but doesn't write it; the phone uploads everything the browser
-  sends or receives (it gets a copy of each). Messages exchanged while the phone is away longer than the 7-day relay
-  window reach history only from the browser's own storage.
-- Unread counts are per device (as on the phone). Reading syncs between devices only where read receipts exist: DMs and
-  groups of up to 20, not channels.
-- Not in the browser yet: creating groups and channels, workspace administration and invitations, muting and chat
-  archive, voice-message recording and inline playback, profile photos, call history, sending files over 25 MB.
-- Notifications work only while a tab is open (no Web Push: the server's push is UnifiedPush for Android).
-- Auth routes allow 30 requests a minute per address (existing server limit); many people linking browsers at once
-  behind one address could be slowed.
+**Functional limits and open issues**
+- Calls: not supported until the phone test (`ORBIT_WEB_CALLS.md` §8). Screen sharing and device choice tested only
+  with simulated media. Known intermittent: in one full run the Chromium video-call test's badge stayed "Verifying
+  encryption…" for 30 s; it then passed 5 of 5 times alone and in both later full runs. Cause not established; the
+  test now attaches the per-track evidence at the moment of failure (`call-tracks-at-failure.json`) so the next
+  occurrence can be diagnosed.
+- Not built: blocking someone from the browser (unblocking works), renaming channels and branches/teams, adding channel
+  members, departments, the synced workspace selection, phone-number lookup screen, animated emoji, several accounts in
+  one browser profile, text size, storage screen, languages other than English, Web Push (no notifications without an
+  open tab).
+- Blocked outside this repository: **connectors** (Google Drive, Microsoft Graph, calendar, GitHub, Jira, Notion) and
+  **custom roles**: being built by another session in the Orbit repository's uncommitted `orbit-integrations` worktree;
+  nothing to integrate until it's committed. Group mentions need a protocol change (`WORKSPACE_ADMINISTRATION.md` §8).
+- Large files: the S3 path is tested against a simulated store only; real S3 needs the bucket CORS rule.
+- Voice messages recorded in Chrome or Firefox are Opus (WebM/Ogg); whether the Android app plays them is unverified.
+- The intermittent unit/integration failure in §5 wasn't identified.
 
-## 8. How to run and deploy
-
-Development (from the repository root):
+## 8. How to run, test and deploy
 
 ```bash
 bash scripts/local-server.sh
 ```
 
 ```bash
-npm install && npm run dev
+npm ci && npm run dev
 ```
 
-Open `http://localhost:5173` (must be `localhost`: browsers enable WebCrypto only on HTTPS or localhost). Checks:
-`npm run typecheck`, `npm run lint`, `npm test`, `npm run test:integration`, `npx playwright test` (README.md). Production: `ORBIT_WEB_DEPLOYMENT.md`.
-
-With calls: start a local LiveKit first, then the server with `--calls` (`brew install livekit` once):
+Open http://localhost:5173 (WebCrypto needs HTTPS or localhost). Account emails go to the server's `data/mail`;
+`npx tsx scripts/demo-phone.ts mail` prints the codes. `ORBIT_SERVER_DIR` must point at a server with patch 0001.
 
 ```bash
-bash web/scripts/livekit-dev.sh
+npm run typecheck && npm run lint && npm run format:check && npx vitest run
 ```
 
 ```bash
-bash web/scripts/local-server.sh --calls
+npx playwright test
 ```
 
-The call browser tests also need `npm ci` in the Orbit repository's `tools/griip-bot` (LiveKit's native SDK plays the other side).
+Calls locally: `bash scripts/livekit-dev.sh`, then `bash scripts/local-server.sh --calls`. Production build and
+release: `bash deploy/scripts/build-release.sh`; install, verify and rollback: `ORBIT_WEB_DEPLOYMENT.md`.
 
-## 9. Phone test: when and how
+## 9. Physical-phone test: when and how
 
-For **calls**, follow `ORBIT_WEB_CALLS.md` › 8 (it starts LiveKit and the server with calling, and gives the browser its
-own account so it can call your phone). The steps below cover messaging.
+Ready now. Everything runs on the Mac against a local Orbit server; production isn't touched. You need the Mac and the
+phone on the same Wi-Fi, and an Orbit **debug or testing** build (0.2.2-beta or later) on the phone, which accepts
+`http://` servers. Run these from this repository, with `ORBIT_SERVER_DIR` set to a server folder that has patch 0001.
 
-**The browser side is ready for the physical-device test now.** It runs against an Orbit server started on the Mac, so
-production isn't touched; the phone joins that server as a second profile of the Orbit app. Run the commands below from
-this repository, with `ORBIT_SERVER_DIR` set to the `server/` folder of the Orbit repository's `orbit-web` branch (the
-one with first-frame WebSocket authentication).
-
-You need: the Mac and the phone on the same Wi-Fi; an Orbit **debug or testing** build on the phone (those allow
-`http://` servers; a release build accepts only HTTPS).
-
-1. On the Mac, start the server (keep it running):
+1. Start the server and the web app, each in its own terminal:
    ```bash
    bash scripts/local-server.sh
    ```
-   If macOS asks whether `node` may accept incoming connections, allow it.
-2. In a second terminal, start the web app:
    ```bash
    npm run dev
    ```
-3. Find the Mac's address on the Wi-Fi (it was `192.168.0.5` during development):
+2. Find the Mac's Wi-Fi address:
    ```bash
    ipconfig getifaddr en0
    ```
-4. On the phone, in Orbit: **Settings › Server and about › Servers › Add a server**, enter `http://<that address>:8080`,
-   tap **Check** (expect "server 0.3.0", open sign-up and an unencrypted-connection warning), then **Add and switch**.
-   Create an account there (no invitation needed on this server). Your production account stays as it is.
-5. On the Mac, open **http://localhost:5173**. It shows a link code and a device key.
-6. On the phone: **Settings › Devices › Approve new device**, type the code, tap **Look up**, check the device key matches
-   the browser's, tap **Approve**. The browser opens your account.
-7. Optional second person on the same server (prints usernames; `dm` opens a DM with your phone's username):
+3. On the phone: **Settings › Server and about › Servers › Add a server**, `http://<that address>:8080`, **Check**
+   (expect server 0.5.0), **Add and switch**. Create an account with an email address; get the code with:
+   ```bash
+   npx tsx scripts/demo-phone.ts mail
+   ```
+   Set up encryption on the phone and **write down the recovery key**.
+4. On the Mac, open http://localhost:5173 and **sign in with the same email and password**. Choose **Approve from my
+   phone**; on the phone, **Settings › Devices › Approve new device**, type the code, check the device key matches the
+   browser's, approve. (Or use **Use my recovery key**.)
+5. A second person on the same server, if wanted:
    ```bash
    npx tsx scripts/demo-phone.ts setup
    ```
    ```bash
    npx tsx scripts/demo-phone.ts dm bob YOUR_PHONE_USERNAME
    ```
-   ```bash
-   npx tsx scripts/demo-phone.ts say bob phone "Hello from Bob"
-   ```
 
-What we'll check together: a message typed on the phone appears in the browser without a reload and the reverse;
-reactions, edits and deletions both ways; a photo from the phone opens in the browser and a file from the browser opens
-on the phone; reading on the phone clears the browser's unread count; messages sent on the phone before linking appear
-after linking (history); turning the Mac's Wi-Fi off and on, then catching up; removing the browser in the phone's
-Settings › Devices signs it out.
+What we'll check together, recording pass or fail for each: messages both ways without a reload; replies, edits,
+reactions and deletions both ways; a photo from the phone opens in the browser and a file and a voice message from the
+browser open and play on the phone; a workspace created in the browser and joined from the phone with an invitation
+code (and the reverse); starring and muting on one device shows on the other; reading on the phone clears the browser's
+unread count; turning the Mac's Wi-Fi off and on, then catching up; removing the browser in the phone's Settings ›
+Devices signs it out. Calls: `ORBIT_WEB_CALLS.md` §8.
 
-Nothing in this report claims the physical-device test has passed. It will be recorded here after we run it.
+Nothing here claims the physical-device test has passed. It will be recorded here after we run it.
