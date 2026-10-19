@@ -1,0 +1,22 @@
+# A former address of Meldiq Web, sent permanently to the current one (rendered once per MELDIQ_REDIRECT_HOSTS entry by
+# deploy/scripts/install-release.sh). Keeps old links and bookmarks working; certbot's renewals still reach it on port 80.
+
+server {
+  listen 80;
+  listen [::]:80;
+  server_name ${OLD_HOST};
+  location /.well-known/acme-challenge/ { root /var/www/html; }
+  location / { return 301 https://${WEB_HOST}$request_uri; }
+}
+
+server {
+  listen 443 ssl http2;
+  listen [::]:443 ssl http2;
+  server_name ${OLD_HOST};
+  ssl_certificate /etc/letsencrypt/live/${OLD_HOST}/fullchain.pem;
+  ssl_certificate_key /etc/letsencrypt/live/${OLD_HOST}/privkey.pem;
+  ssl_protocols TLSv1.2 TLSv1.3;
+  server_tokens off;
+  add_header Strict-Transport-Security "max-age=31536000" always;
+  return 301 https://${WEB_HOST}$request_uri;
+}

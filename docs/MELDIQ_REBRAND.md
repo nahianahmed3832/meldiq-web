@@ -4,8 +4,9 @@ The web app (formerly Orbit Web) now presents itself as **Meldiq**. It keeps the
 same accounts and encryption, and works with the Android app (now `com.griipbuddy.meldiq`). This is a controlled
 rebrand, not a rebuild: no screen, flow or protocol was replaced.
 
-Nothing here touched production, DNS, Docker, MongoDB, AWS, OAuth registrations or the Android app. `web.meldiq.app` is
-**planned and not active**; nothing claims it works.
+The rebrand itself touched no production system. Afterwards, with the owner's go-ahead, the site went live on
+2026-10-19 at **https://web.meldiq.app** (DNS record, certificate, nginx site; §5), with `web.griipbuddy.cloud`
+redirecting there. Docker, MongoDB, the API, OAuth registrations and the Android app were not touched.
 
 ## 1. Audit summary (before the changes)
 
@@ -35,7 +36,7 @@ Nothing here touched production, DNS, Docker, MongoDB, AWS, OAuth registrations 
 | Metadata | `<title>Meldiq`, description, `application-name`, Apple title, Open Graph and Twitter card, favicon and touch icon, `manifest.webmanifest` (install name Meldiq, standalone, theme colours, icons) |
 | Package | `package.json` name `meldiq-web` and description (the GitHub repository URL is unchanged) |
 | Configuration | `MELDIQ_API_BASE_URL`, `MELDIQ_WS_URL`, `MELDIQ_WEB_BASE_URL`, `MELDIQ_ENVIRONMENT` write `/config.json` at install; `MELDIQ_API_UPSTREAM` and `MELDIQ_CONNECT_EXTRA` configure the web host's proxy and CSP (`.env.example`). Earlier names (`ORBIT_API_URL`, `WEB_HOST`, `API_UPSTREAM`, `CONNECT_EXTRA`) still work |
-| Deployment files | `deploy/nginx/meldiq-web*.conf.template`, `/opt/meldiq-web`, `meldiq-web.conf`, release tarball `meldiq-web-…` (never installed under the old names, so nothing live moves); `deploy/config/meldiq-planned.json` for the future domain |
+| Deployment files | `deploy/nginx/meldiq-web*.conf.template`, `/opt/meldiq-web`, `meldiq-web.conf`, release tarball `meldiq-web-…` (never installed under the old names, so nothing live moves); `deploy/config/meldiq-production.json` for the future domain |
 | Docs | `README.md`, `docs/ORBIT_WEB_DEPLOYMENT.md`, this file |
 | Tests | Expectations follow the new visible text; test device names say Meldiq Web |
 
@@ -68,9 +69,13 @@ names.
 | S3 CORS | Bucket rule (`ORBIT_WEB_DEPLOYMENT.md` §6) | Add `https://web.meldiq.app` as an allowed origin at cut-over |
 | Cookies | None (bearer tokens only) | Nothing to move |
 
-## 5. Domain plan: web.meldiq.app (not active)
+## 5. Domain: web.meldiq.app (live since 2026-10-19)
 
-Nothing below has been done. Each step needs the owner's approval.
+Done on 2026-10-19: steps 1–4 and 6 (the domain was already registered in Hostinger; `web` A record; Let's Encrypt
+certificate; release installed for `web.meldiq.app` with `MELDIQ_REDIRECT_HOSTS=web.griipbuddy.cloud`; `verify.sh`
+passed). The production API already had browser WebSocket sign-in, so it wasn't changed, and `WEB_ORIGINS` isn't needed
+for the same-origin setup. **Still open: the S3 CORS rule (step 5), without which browsers can't upload or open files,
+and the hand checks with a phone in step 6.** The original plan follows.
 
 1. **Buy and verify** `meldiq.app` in Hostinger. `.app` is HSTS-preloaded: it only works over HTTPS, which the site
    needs anyway.
@@ -105,5 +110,5 @@ sockets for that origin (verify step 6 catches it); `.app` without TLS doesn't l
 | Class | Items |
 |---|---|
 | Safe branding labels, changed | UI text, metadata, icons, manifest, package name, deploy file names (never installed), docs |
-| Runtime configuration prepared, not active | `MELDIQ_*` variables, `deploy/config/meldiq-planned.json`, `WEB_ORIGINS` value for the new domain, S3 CORS entry |
+| Runtime configuration prepared, not active | `MELDIQ_*` variables, `deploy/config/meldiq-production.json`, `WEB_ORIGINS` value for the new domain, S3 CORS entry |
 | Live identifiers needing their own migration | API host `msg.griipbuddy.cloud`, compose project `griip-internal-messaging`, its containers, volumes and network, MongoDB database names, the S3 bucket and IAM roles, SES identities and `MAIL_FROM`, LiveKit host `rtc.griipbuddy.cloud`, Android package id. None were touched; renaming any of them is a separate plan with downtime and rollback per resource |

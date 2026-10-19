@@ -1,7 +1,8 @@
 # Deploying Meldiq Web (formerly Orbit Web)
 
-> **Meldiq:** the app is now Meldiq Web. It deploys to `web.griipbuddy.cloud` today; `web.meldiq.app` is planned and
-> not active (`MELDIQ_REBRAND.md` › Domain plan). File and folder names below use `meldiq-web`; nothing was ever
+> **Live since 2026-10-19 at https://web.meldiq.app.** `web.griipbuddy.cloud` (live for an hour before that) now
+> redirects there permanently (`MELDIQ_REDIRECT_HOSTS`, §4). Examples below that name `web.griipbuddy.cloud` describe
+> the original setup; use `web.meldiq.app` (`MELDIQ_REBRAND.md` › Domain). File and folder names use `meldiq-web`; nothing was ever
 > installed under the old names.
 >
 > **Not applied.** Nothing here has been run against production, DNS or AWS. Every step below changes production
@@ -83,7 +84,14 @@ MELDIQ_WEB_BASE_URL=https://web.griipbuddy.cloud MELDIQ_ENVIRONMENT=production M
 ```
 
 `/config.json` is written from the `MELDIQ_*` values (`.env.example`); `CONFIG=config/<file>.json` copies a file
-instead. The earlier names `WEB_HOST`, `API_UPSTREAM` and `CONNECT_EXTRA` still work.
+instead. The earlier names `WEB_HOST`, `API_UPSTREAM` and `CONNECT_EXTRA` still work. `MELDIQ_REDIRECT_HOSTS="old.host …"`
+adds a permanent redirect from each former address to the current one (each needs its own certificate).
+
+The command that installed the current production release:
+
+```bash
+MELDIQ_WEB_BASE_URL=https://web.meldiq.app MELDIQ_ENVIRONMENT=production MELDIQ_API_UPSTREAM=127.0.0.1:18080 MELDIQ_REDIRECT_HOSTS=web.griipbuddy.cloud MELDIQ_CONNECT_EXTRA="https://rtc.griipbuddy.cloud wss://rtc.griipbuddy.cloud https://griipbuddy-orbit-media-sg.s3.ap-southeast-1.amazonaws.com" bash install-release.sh
+```
 
 `install-release.sh` copies the release to `/opt/meldiq-web/releases/<version>-<commit>`, writes its `config.json`,
 renders the nginx site and header snippet from the templates, switches `/opt/meldiq-web/current`, runs `nginx -t`

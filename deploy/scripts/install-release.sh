@@ -8,7 +8,8 @@
 #
 # /config.json is written from MELDIQ_API_BASE_URL (empty: same origin), MELDIQ_WS_URL, MELDIQ_WEB_BASE_URL and
 # MELDIQ_ENVIRONMENT, or copied from CONFIG=config/<file>.json. The earlier names WEB_HOST, API_UPSTREAM, CONNECT_EXTRA
-# still work.
+# still work. MELDIQ_REDIRECT_HOSTS (space-separated, e.g. "web.griipbuddy.cloud") are former addresses sent permanently
+# to the current one; each needs its own certificate.
 #
 # Steps: copy the files to /opt/meldiq-web/releases/<version>-<commit>, write its config.json, render the nginx site,
 # check nginx, switch /opt/meldiq-web/current to the new release, reload nginx. The previous release stays for rollback
@@ -21,6 +22,7 @@ WEB_HOST="${WEB_HOST%%/*}"
 API_UPSTREAM="${API_UPSTREAM#http://}"
 : "${CONNECT_EXTRA:=${MELDIQ_CONNECT_EXTRA:-}}"
 : "${CONFIG:=}"
+: "${MELDIQ_REDIRECT_HOSTS:=}"
 here="$(cd "$(dirname "$0")" && pwd)"
 base=/opt/meldiq-web
 release="$(tr '\n' '-' < "$here/RELEASE" | sed 's/-$//')"
@@ -28,7 +30,9 @@ target="$base/releases/$release"
 
 [ "$(id -u)" = 0 ] || { echo "Run as root." >&2; exit 1; }
 [ -f "$here/dist/index.html" ] || { echo "No dist/index.html next to this script: run it from an unpacked release." >&2; exit 1; }
-[ -f "/etc/letsencrypt/live/$WEB_HOST/fullchain.pem" ] || { echo "No TLS certificate for $WEB_HOST yet: certbot certonly --nginx -d $WEB_HOST" >&2; exit 1; }
+for h in "$WEB_HOST" $MELDIQ_REDIRECT_HOSTS; do
+  [ -f "/etc/letsencrypt/live/$h/fullchain.pem" ] || { echo "No TLS certificate for $h yet: certbot certonly --nginx -d $h" >&2; exit 1; }
+done
 # The browser's /config.json: public values only. Checked here as the app checks it (https, no paths).
 config_json() {
   python3 - "$@" <<'PY'
@@ -74,6 +78,9 @@ restore_nginx() {
 mkdir -p /etc/nginx/snippets
 envsubst "$vars" < "$here/nginx/meldiq-web-headers.conf.template" > "$snippet"
 envsubst "$vars" < "$here/nginx/meldiq-web.conf.template" > "$site"
+for h in $MELDIQ_REDIRECT_HOSTS; do
+  OLD_HOST="$h" envsubst '${OLD_HOST} ${WEB_HOST}' < "$here/nginx/meldiq-web-redirect.conf.template" >> "$site"
+done
 ln -sfn "$site" "$enabled"
 
 previous="$(readlink "$base/current" 2>/dev/null || true)"
