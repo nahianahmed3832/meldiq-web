@@ -68,17 +68,21 @@ limits see the real client address.
 `/etc/nginx/snippets/orbit-web-headers.conf`:
 
 ```nginx
-add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data:; media-src 'self' blob:; font-src 'self'; connect-src 'self' wss://orbit.griipbuddy.cloud https://YOUR-BUCKET.s3.YOUR-REGION.amazonaws.com; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'" always;
+add_header Content-Security-Policy "default-src 'self'; script-src 'self'; worker-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data:; media-src 'self' blob:; font-src 'self'; connect-src 'self' wss://orbit.griipbuddy.cloud wss://rtc.griipbuddy.cloud https://rtc.griipbuddy.cloud https://YOUR-BUCKET.s3.YOUR-REGION.amazonaws.com; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'" always;
 add_header X-Content-Type-Options nosniff always;
 add_header Referrer-Policy no-referrer always;
 add_header Cross-Origin-Opener-Policy same-origin always;
-add_header Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=()" always;
+add_header Permissions-Policy "camera=(self), microphone=(self), geolocation=(), payment=()" always;
 add_header Strict-Transport-Security "max-age=31536000" always;
 ```
 
 - `style-src 'unsafe-inline'` is needed for React `style` attributes; scripts stay `'self'` only (no inline scripts in
   the build).
 - The S3 entry in `connect-src` is only for S3 storage (presigned downloads); drop it for local storage.
+- Calls (`ORBIT_WEB_CALLS.md`): `rtc.griipbuddy.cloud` is the server's `LIVEKIT_PUBLIC_URL` (signalling over `wss`, and an
+  `https` check LiveKit makes when a connection fails); media itself goes to the LiveKit host's UDP 7882 / TCP 7881,
+  which CSP doesn't govern. `worker-src 'self'` lets the media-encryption worker (`/assets/e2eeWorker-*.js`) start.
+  `Permissions-Policy` allows the camera and microphone for this site only; the browser still asks the person.
 - The CSP is the main defence against injected script, which could use this browser's keys while the page is open.
 
 Then `nginx -t && systemctl reload nginx`.
@@ -101,6 +105,8 @@ Uploads from the browser go through the API (`POST /v1/attachments`), not to S3,
 3. Link from a phone signed in to `msg.griipbuddy.cloud` (Settings › Devices › Approve new device). The phone's
    account must be on the same server the web site proxies to.
 4. Send a message each way; remove the browser from the phone and check it signs out.
+5. Calls, only after the physical-phone test in `ORBIT_WEB_CALLS.md` › 8 has passed: call between the browser and a
+   phone on another account, both directions; the badge reaches "End-to-end encrypted" and the codes match.
 
 ## 6. Rolling back
 

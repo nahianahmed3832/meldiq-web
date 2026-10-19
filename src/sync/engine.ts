@@ -1,6 +1,15 @@
 import { z } from "zod";
 import { ApiClient, ApiError } from "../api/client";
+import type { AccountSessionGrant } from "../api/accountSchemas";
 import { type Call, type Conversation, type Member, type Org, type SessionGrant, zCall, zConversation, zMember, zOrg, zProfile, zServerInfo } from "../api/schemas";
+import { AccountApi } from "../auth/accountApi";
+import { type AccountSessionEnd, AccountSession } from "../auth/accountSession";
+import { TokenVault } from "../auth/tokenVault";
+import { CallManager } from "../call/manager";
+import { callSupport } from "../call/support";
+import type { MediaFactory } from "../call/types";
+import { canonical } from "../crypto/canonical";
+import { sign } from "../crypto/ed25519";
 import { fingerprint } from "../crypto/identity";
 import type { ConversationLocal, DeviceRecord, OutboxItem, PinnedIdentity, StoredMessage } from "../model/types";
 import { encodePayload, type Payload } from "../protocol/payload";
@@ -11,9 +20,9 @@ import type { EngineContext } from "./context";
 import { Directory } from "./directory";
 import { restoreHistory } from "./historySync";
 import { resolveMentions } from "./mentions";
-import { Outbox } from "./outbox";
+import { Outbox, sealAndPost } from "./outbox";
 import { Receiver } from "./receiver";
-import { applyPin, applyReaction, preview, sendsReadReceipts } from "./rules";
+import { applyPin, applyReaction, callEntry, preview, sendsReadReceipts } from "./rules";
 import { type RevokedReason, SessionManager } from "./session";
 
 export interface EngineOptions {
@@ -27,6 +36,15 @@ export interface EngineOptions {
   /** Per-browser preferences. */
   prefs?: () => { readReceipts: boolean; typing: boolean };
   onRevoked?: (reason: RevokedReason) => void;
+  /** Call media: LiveKit with frame encryption in the browser (call/livekitSession.ts); a fake in tests. */
+  media?: MediaFactory;
+  /** Whether this browser can encrypt call media (default: checked in the browser, false elsewhere). */
+  callSupported?: () => boolean;
+  ringtone?: { start(): void; stop(): void };
+  /** A system notification for a ringing call while the tab isn't looked at. */
+  ringAlert?: (title: string, video: boolean, conversationId: string) => void;
+  /** Call timing for tests. */
+  callTiming?: { keyWaitMs?: number; peerWindowMs?: number; rejoinWindowMs?: number };
 }
 
 const PAGE = 60;
@@ -45,7 +63,9 @@ export class Engine implements EngineContext {
   readonly state: Store;
   readonly api: ApiClient;
   readonly directory: Directory;
-  readonly session: SessionManager;
+  /** Orbit 2.0 account session (email and password), or the device-key session of a browser linked before 2.0. */
+  readonly session: AccountSession | SessionManager;
+  readonly calls: CallManager;
   private readonly realtime: RealtimeClient;
   private readonly receiver: Receiver;
   private readonly outbox: Outbox;
@@ -67,7 +87,9 @@ export class Engine implements EngineContext {
     state?: Store,
   ) {
     this.state = state ?? new Store(initialState);
-    this.session = new SessionManager(opts.base, device, (reason) => this.revoked(reason));
+    this.session = device.account
+      ? new AccountSession(opts.base, new TokenVault(store), (why) => this.accountSessionEnded(why))
+      : new SessionManager(opts.base, device, (reason) => this.revoked(reason));
     this.api = new ApiClient(opts.base, this.session);
     this.directory = new Directory(this.api, store, device, (pin) => this.identityChanged(pin));
     this.receiver = new Receiver(this);
@@ -75,6 +97,24 @@ export class Engine implements EngineContext {
       this,
       (id, ts) => this.markSent(id, ts),
       (id, status, reason) => this.markFailed(id, status, reason),
+    );
+    this.calls = new CallManager(
+      {
+        api: this.api,
+        state: this.state,
+        me: { userId: device.userId, deviceId: device.deviceId },
+        sendControlNow: (conversationId, payload) => this.sendControlNow(conversationId, payload),
+        describe: (conversationId) => this.describeConversation(conversationId),
+        displayName: (userId) => this.state.get().users[userId]?.displayName ?? null,
+        recordCall: (callId, conversationId, video) => this.recordOwnCall(callId, conversationId, video),
+        ringAlert: opts.ringAlert,
+      },
+      {
+        media: opts.media ?? unavailableMedia,
+        supported: opts.callSupported ?? (() => !!opts.media && callSupport().ok),
+        ringtone: opts.ringtone,
+        ...opts.callTiming,
+      },
     );
     this.realtime = new RealtimeClient({
       url: opts.wsUrl,
@@ -88,10 +128,13 @@ export class Engine implements EngineContext {
 
   // ───────────────────────── lifecycle ─────────────────────────
 
-  /** Starts with a session just granted by linking, or signs in with the device key. Works offline from local data. */
-  async start(grant?: SessionGrant): Promise<void> {
+  /**
+   * Starts with a session just granted (linking, signing in), or else signs in again by itself: the stored account session,
+   * or the device key. Works offline from local data.
+   */
+  async start(grant?: SessionGrant | AccountSessionGrant): Promise<void> {
     this.stopped = false;
-    if (grant) this.session.adopt(grant);
+    if (grant) await this.adopt(grant);
     const me = {
       userId: this.device.userId,
       deviceId: this.device.deviceId,
@@ -106,7 +149,8 @@ export class Engine implements EngineContext {
     await this.loadLocal();
     this.set((s) => ({ ...s, phase: "ready", me: { ...me, ...(s.me ?? {}) } }));
     if (!grant && !(await this.session.reauthenticate())) {
-      if (this.state.get().phase === "revoked") return;
+      const phase = this.state.get().phase;
+      if (phase === "revoked" || phase === "reauth") return;
     }
     this.realtime.start();
     void this.refreshAll();
@@ -116,6 +160,7 @@ export class Engine implements EngineContext {
 
   stop(): void {
     this.stopped = true;
+    this.calls.stop();
     this.realtime.stop();
     this.outbox.stop();
     for (const t of this.readTimers.values()) clearTimeout(t);
@@ -151,6 +196,48 @@ export class Engine implements EngineContext {
 
   setSigningOut(on: boolean): void {
     this.signingOut = on;
+  }
+
+  private async adopt(grant: SessionGrant | AccountSessionGrant): Promise<void> {
+    if ("accessToken" in grant) {
+      if (this.session instanceof AccountSession) await this.session.adopt(grant);
+    } else if (this.session instanceof SessionManager) this.session.adopt(grant);
+  }
+
+  /** The account session can't renew itself: stop syncing and ask for the password (local data stays). */
+  private accountSessionEnded(why: AccountSessionEnd): void {
+    if (this.signingOut) return;
+    if (why === "account_disabled") return this.revoked("account_disabled");
+    this.realtime.stop();
+    this.outbox.stop();
+    this.set((s) => ({ ...s, phase: "reauth", phaseReason: why }));
+  }
+
+  /**
+   * Signs in again after the account session ended: the password, plus proof that this browser still holds its device
+   * key, so the new session is bound to this device. A removed device is told so by the server, and then erased.
+   */
+  async signInAgain(password: string): Promise<void> {
+    const account = this.device.account;
+    if (!account || !(this.session instanceof AccountSession)) throw new Error("This browser isn't signed in with an Orbit account.");
+    const accounts = AccountApi.anonymous(this.opts.base);
+    const nonce = await accounts.challenge();
+    const signature = await sign(this.device.keys.signing.privateKey, canonical.authProof("login", nonce, this.device.keys.signingPublic));
+    try {
+      const grant = await accounts.login(account.email, password, this.device.deviceName, { deviceId: this.device.deviceId, nonce, signature });
+      await this.session.adopt(grant);
+    } catch (e) {
+      if (e instanceof ApiError && (e.code === "device_revoked" || e.code === "account_disabled")) {
+        this.revoked(e.code);
+        return;
+      }
+      throw e;
+    }
+    this.set((s) => ({ ...s, phase: "ready", phaseReason: null }));
+    this.stopped = false;
+    this.realtime.start();
+    void this.refreshAll();
+    this.outbox.kick();
   }
 
   private revoked(reason: RevokedReason): void {
@@ -300,8 +387,13 @@ export class Engine implements EngineContext {
           else calls[call.conversationId] = call;
           return { ...s, calls };
         });
+        if (typeof f.event === "string") void this.calls.onCallEvent(f.event, call, f as { from?: { displayName?: unknown }; reason?: unknown });
         return;
       }
+      case "queue.drained":
+        // The backlog, and with it any call key, has arrived: look for calls that rang while this browser was away.
+        void this.calls.recoverRinging();
+        return;
       default:
         return;
     }
@@ -639,6 +731,49 @@ export class Engine implements EngineContext {
     });
   }
 
+  /**
+   * Seals and posts a control message at once, without the outbox: it is never written to storage, so a call's media
+   * key stays in memory. One retry for a passing network or server problem; after that the call fails visibly.
+   */
+  async sendControlNow(conversationId: string, payload: Payload): Promise<void> {
+    const o = { messageId: crypto.randomUUID(), conversationId, cls: "control" as const, payloadJson: encodePayload(payload), sentAt: Date.now() };
+    try {
+      await sealAndPost(this, o);
+    } catch (e) {
+      if (!(e instanceof ApiError && e.isTransient)) throw e;
+      await new Promise((r) => setTimeout(r, 1_000));
+      await sealAndPost(this, o, true);
+    }
+  }
+
+  private async describeConversation(id: string): Promise<{ title: string; isGroup: boolean; colorIndex: number }> {
+    const c = await this.ensureConversation(id).catch(() => null);
+    if (!c) return { title: "Call", isGroup: false, colorIndex: 0 };
+    if (c.type !== "DM") return { title: c.type === "CHANNEL" ? `#${c.name ?? "channel"}` : (c.name ?? "Group"), isGroup: true, colorIndex: 0 };
+    const peer = c.members?.find((m) => m.id !== this.device.userId);
+    return { title: (peer && (this.state.get().users[peer.id]?.displayName ?? peer.displayName)) || "Call", isGroup: false, colorIndex: peer?.avatarColor ?? 0 };
+  }
+
+  /** The conversation entry for a call this browser started (others' entries come with their `call_invite`). */
+  private async recordOwnCall(callId: string, conversationId: string, video: boolean): Promise<void> {
+    const now = Date.now();
+    const item = {
+      id: 0,
+      kind: "envelope" as const,
+      conversationId,
+      messageId: `call-${callId}`,
+      senderUserId: this.device.userId,
+      senderDeviceId: this.device.deviceId,
+      createdAt: now,
+      expiresAt: now,
+      payload: { cls: "control" as const, serverTs: now },
+    };
+    const m = callEntry(item, true, callId, video, now);
+    if (!(await this.store.insertMessageIfAbsent(m))) return;
+    this.show(m);
+    await this.bump(m, { unread: false, mention: false });
+  }
+
   private async queue(o: OutboxItem): Promise<void> {
     await this.store.putOutbox(o);
     this.outbox.kick();
@@ -708,6 +843,11 @@ export class Engine implements EngineContext {
     return this.conversationsOf(this.state.get(), orgId);
   }
 }
+
+/** Without a media implementation (tests that don't need calls), calls can't start. */
+const unavailableMedia: MediaFactory = () => {
+  throw new Error("call media isn't available here");
+};
 
 function str(v: unknown): string | null {
   return typeof v === "string" && v.length > 0 && v.length <= 128 ? v : null;

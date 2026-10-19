@@ -100,4 +100,9 @@ export interface DeviceRecord {
   history: HistoryKeys | null;
   linkedAt: number;
   deviceName: string;
+  /**
+   * The Orbit 2.0 account this browser signed in to (email and password). Absent for a browser linked before Orbit 2.0,
+   * which signs in with its device key alone (v1, while the server still allows it).
+   */
+  account?: { id: string; email: string };
 }

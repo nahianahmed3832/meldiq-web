@@ -4,6 +4,7 @@ import { setPrefs, usePrefs } from "../../app/prefs";
 import { navigate, useRoute } from "../../app/router";
 import { ConversationView } from "../chat/ConversationView";
 import { SidePanel } from "../chat/SidePanel";
+import { CallLayer } from "../call/CallLayer";
 import { ChannelBrowser } from "../dialogs/ChannelBrowser";
 import { IdentityReview } from "../dialogs/IdentityReview";
 import { NewMessageDialog } from "../dialogs/NewMessageDialog";
@@ -114,6 +115,7 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
       </div>
       <TabBar section={section} hidden={!!route.conversationId && !settings} />
       <Notices />
+      <CallLayer />
       {dialog?.kind === "search" && <SearchDialog orgId={orgId} onClose={() => setDialog(null)} />}
       {dialog?.kind === "new" && <NewMessageDialog onClose={() => setDialog(null)} />}
       {dialog?.kind === "channels" && orgId && <ChannelBrowser orgId={orgId} onClose={() => setDialog(null)} />}

@@ -3,6 +3,7 @@ import { useCallback, useMemo, useState } from "react";
 import { shallowEqual, useEngine, useOrbit } from "../../app/orbit";
 import { navigate, type Route } from "../../app/router";
 import type { StoredMessage } from "../../model/types";
+import { CallFailure } from "../../call/rules";
 import { Avatar, colorIndexOf } from "../components/Avatar";
 import { conversationTitle, dmPeer, relative } from "../format";
 import type { ShellDialog } from "../shell/Shell";
@@ -21,6 +22,8 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
   }, shallowEqual);
   const loaded = useOrbit((s) => s.messages[id]);
   const call = useOrbit((s) => s.calls[id]);
+  const myCall = useOrbit((s) => (s.call.phase === "idle" || s.call.phase === "ended" ? null : s.call.conversationId));
+  const calling = useOrbit((s) => s.server?.calling === true);
   const history = useOrbit((s) => s.history.status);
   const memberIds = useMemo(() => new Set((c?.members ?? []).map((m) => m.id)), [c?.members]);
   const alerts = useOrbit(
@@ -70,6 +73,7 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
           </h1>
           <p className="ellipsis">{subtitle}</p>
         </div>
+        <CallButtons conversationId={id} canPost={c.canPost} archived={c.archived} serverCalling={calling} busy={myCall !== null} running={!!call} />
         {c.type !== "DM" && (
           <button
             className="btn btn-ghost btn-sm"
@@ -100,13 +104,17 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
               </button>
             </div>
           ))}
-          {call && (
+          {call && myCall !== id && (
             <div className="banner info call-banner">
               {call.video ? <Video size={16} /> : <Phone size={16} />}
               <span className="grow">
-                A {call.video ? "video" : "voice"} call is in progress{call.createdAt ? `, started ${relative(call.createdAt)}` : ""}. Join it from Orbit on your phone: calling in the browser isn't
-                available yet.
+                A {call.video ? "video" : "voice"} call is in progress{call.createdAt ? `, started ${relative(call.createdAt)}` : ""}.
               </span>
+              {calling && engine.calls.supported() && myCall === null && (
+                <button className="btn btn-secondary btn-sm" onClick={() => void engine.calls.join(id, call.id, call.video)}>
+                  Join
+                </button>
+              )}
             </div>
           )}
           {history === "running" && (
@@ -154,5 +162,44 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
       />
       {drop.over && <div className="drop-overlay">Drop files to send them, encrypted, to {title}</div>}
     </section>
+  );
+}
+
+interface CallButtonsProps {
+  conversationId: string;
+  canPost: boolean;
+  archived: boolean;
+  serverCalling: boolean;
+  /** This browser is already in a call. */
+  busy: boolean;
+  /** A call is running in this conversation (join it from the banner). */
+  running: boolean;
+}
+
+/** Voice and video call buttons; disabled with the reason when calling can't work here. */
+function CallButtons({ conversationId, canPost, archived, serverCalling, busy, running }: CallButtonsProps) {
+  const engine = useEngine();
+  const why = !serverCalling
+    ? "Calling isn't set up on this server"
+    : !engine.calls.supported()
+      ? CallFailure.UNSUPPORTED
+      : archived
+        ? "This channel is archived"
+        : !canPost
+          ? "You can't start calls here"
+          : busy
+            ? "You're already in a call"
+            : running
+              ? "A call is in progress: join it below"
+              : null;
+  return (
+    <span className="conv-call-actions">
+      <button className="icon-btn" onClick={() => void engine.calls.startCall(conversationId, false)} disabled={why !== null} aria-label="Start a voice call" title={why ?? "Voice call"}>
+        <Phone size={18} />
+      </button>
+      <button className="icon-btn" onClick={() => void engine.calls.startCall(conversationId, true)} disabled={why !== null} aria-label="Start a video call" title={why ?? "Video call"}>
+        <Video size={19} />
+      </button>
+    </span>
   );
 }

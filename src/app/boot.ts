@@ -1,3 +1,5 @@
+import { liveKitMedia } from "../call/media";
+import { Ringtone } from "../call/ringtone";
 import { LocalStore } from "../store/db";
 import { Engine } from "../sync/engine";
 import type { SessionGrant } from "../api/schemas";
@@ -46,11 +48,30 @@ function notify(title: string, body: string, conversationId: string): void {
   }
 }
 
+/** A ringing call while this tab isn't looked at: a system notification that brings the tab forward. */
+function ringAlert(title: string, video: boolean, conversationId: string): void {
+  const p = getPrefs();
+  if (!p.notifications || typeof Notification === "undefined" || Notification.permission !== "granted") return;
+  if (document.visibilityState === "visible" && document.hasFocus()) return;
+  try {
+    const n = new Notification(p.notificationText ? title : "Orbit", { body: video ? "Incoming video call" : "Incoming voice call", tag: `call-${conversationId}`, requireInteraction: true });
+    n.onclick = () => {
+      window.focus();
+      n.close();
+    };
+  } catch {
+    /* notifications unavailable in this context */
+  }
+}
+
 export function createEngine(device: DeviceRecord, store: LocalStore): Engine {
   const engine = new Engine(device, store, {
     base: "",
     wsUrl: wsUrl(),
     notify,
+    media: liveKitMedia,
+    ringtone: new Ringtone(),
+    ringAlert,
     prefs: () => {
       const p = getPrefs();
       return { readReceipts: p.readReceipts, typing: p.typing };

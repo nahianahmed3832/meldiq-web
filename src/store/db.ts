@@ -109,6 +109,10 @@ export class LocalStore {
     await this.db.put("kv", value, key);
   }
 
+  async deleteValue(key: string): Promise<void> {
+    await this.db.delete("kv", key);
+  }
+
   // ───── messages ─────
   async message(id: string): Promise<StoredMessage | null> {
     return (await this.db.get("messages", id)) ?? null;

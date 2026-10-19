@@ -1,4 +1,5 @@
 import type { Call, Conversation, Org, ServerInfo } from "../api/schemas";
+import { type CallUiState, idleCall } from "../call/types";
 import type { ConversationLocal, PinnedIdentity, StoredMessage } from "../model/types";
 import type { ConnectionState } from "../realtime/socket";
 
@@ -12,6 +13,8 @@ export type Phase =
   | "ready"
   /** The account removed this browser, or the server no longer knows it. */
   | "revoked"
+  /** The Orbit 2.0 account session ended (expired, signed out elsewhere, password changed): the password is needed again. Local data is kept. */
+  | "reauth"
   /** Orbit is open in another tab of this browser, which holds the connection. */
   | "elsewhere";
 
@@ -72,6 +75,8 @@ export interface AppState {
   typing: Record<string, Record<string, number>>;
   /** Live calls by conversation (from the server's call events). */
   calls: Record<string, Call>;
+  /** This browser's own call, if any (call/manager.ts). */
+  call: CallUiState;
   identityAlerts: PinnedIdentity[];
   history: HistoryState;
   notices: Notice[];
@@ -91,6 +96,7 @@ export const initialState: AppState = {
   users: {},
   typing: {},
   calls: {},
+  call: idleCall,
   identityAlerts: [],
   history: { status: "idle", restored: 0, unreadable: 0, error: null },
   notices: [],

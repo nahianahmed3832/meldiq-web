@@ -66,7 +66,7 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
       return (
         <span className="msg-call">
           {m.call?.video ? <Video size={16} /> : <Phone size={16} />}
-          {m.call?.video ? "Video call" : "Voice call"} · join calls from Orbit on your phone
+          {m.call?.video ? "Video call" : "Voice call"}
         </span>
       );
     if (m.kind === "undecryptable")

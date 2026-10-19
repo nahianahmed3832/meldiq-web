@@ -191,8 +191,25 @@ export const zCall = z.object({
     .nullish()
     .transform((v) => v ?? null),
   endReason: nullableString,
+  /** "DM", "GROUP" or "CHANNEL" (server 0.2.0 and later). */
+  conversationType: nullableString.optional(),
+  alertedAt: z.number().nullish().optional(),
+  /** Devices connected to the call's media right now. */
+  participants: z
+    .array(z.object({ userId: z.string(), deviceId: z.string() }))
+    .max(500)
+    .optional(),
 });
 export type Call = z.infer<typeof zCall>;
+
+/** What `POST /v1/calls` and `POST /v1/calls/:id/join` return: the call and a room-scoped media pass. */
+export const zCallGrant = z.object({
+  call: zCall,
+  media: z.object({ url: z.string().max(2048), token: z.string().max(8192), room: z.string().max(128) }),
+  joinedExisting: z.boolean().optional(),
+});
+export const zCallList = z.object({ calls: z.array(zCall).max(500) });
+export const zCallRes = z.object({ call: zCall });
 
 export const zServerInfo = z.object({
   version: z.string(),
@@ -202,6 +219,18 @@ export const zServerInfo = z.object({
   registration: z.string(),
   calling: z.boolean(),
   attachmentMaxBytes: z.number(),
+  /** Orbit 2.0: the largest file a person may send (bytes of the file itself). Older servers: attachmentMaxBytes. */
+  fileMaxBytes: z.number().optional(),
+  /** Orbit 2.0 accounts; absent on servers before them. */
+  accounts: z
+    .object({
+      registration: z.boolean(),
+      legacyLogin: z.boolean(),
+      legacyRegistration: z.boolean(),
+      legacyMigration: z.boolean(),
+      legacyMigrationRequired: z.boolean().default(false),
+    })
+    .optional(),
   features: z.array(z.string()).default([]),
 });
 export type ServerInfo = z.infer<typeof zServerInfo>;

@@ -14,7 +14,9 @@ export interface Phone {
   username: string;
   identity: { seed: Buffer };
   identityKeyB64: string;
-  received: { messageId: string; conversationId: string; senderUserId: string; senderDeviceId: string; payload: { type: string; text?: string } }[];
+  received: { messageId: string; conversationId: string; senderUserId: string; senderDeviceId: string; payload: { type: string; text?: string; callId?: string; e2eeKey?: string } }[];
+  /** Realtime frames as they arrived (calls: `{ t: "call", event, call }`). */
+  events: any[];
   req(method: string, path: string, body?: unknown): Promise<any>;
   send(conversationId: string, payload: unknown, cls?: "message" | "control", messageId?: string): Promise<{ serverTs: number }>;
   connect(): Promise<void>;

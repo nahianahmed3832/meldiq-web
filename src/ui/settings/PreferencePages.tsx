@@ -143,7 +143,11 @@ export function AboutPage() {
         <div className="setting">
           <div className="lines">
             <strong>Calls</strong>
-            <small>{server?.calling ? "Voice and video calls work in Orbit on your phone. Calling from the browser isn't available yet." : "This server has no calling configured."}</small>
+            <small>
+              {server?.calling
+                ? "Voice and video calls work in this browser and in Orbit on your phone. Call media is end-to-end encrypted with a new key for every call; the browser asks before it uses your microphone or camera."
+                : "This server has no calling configured."}
+            </small>
           </div>
         </div>
       </div>

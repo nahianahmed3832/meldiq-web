@@ -35,6 +35,8 @@ interface RequestOptions {
   raw?: Uint8Array;
   auth?: boolean;
   signal?: AbortSignal;
+  /** Lets the request finish while the page unloads (ending a call when the tab closes). */
+  keepalive?: boolean;
 }
 
 /**
@@ -83,7 +85,7 @@ export class ApiClient {
     }
     let res: Response;
     try {
-      res = await fetch(this.base + path, { method, headers, body, credentials: "omit", cache: "no-store", signal: opts.signal });
+      res = await fetch(this.base + path, { method, headers, body, credentials: "omit", cache: "no-store", signal: opts.signal, keepalive: opts.keepalive });
     } catch (e) {
       if (opts.signal?.aborted) throw e;
       throw new ApiError(0, "network", "Can't reach the server. Check your connection.");

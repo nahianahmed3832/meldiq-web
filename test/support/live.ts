@@ -5,8 +5,11 @@
  */
 import "fake-indexeddb/auto";
 import path from "node:path";
+import type { AccountSessionGrant } from "../../src/api/accountSchemas";
+import type { SessionGrant } from "../../src/api/schemas";
+import type { DeviceRecord } from "../../src/model/types";
 import { LocalStore } from "../../src/store/db";
-import { Engine } from "../../src/sync/engine";
+import { Engine, type EngineOptions } from "../../src/sync/engine";
 import { pollLink, startLink } from "../../src/sync/session";
 import { b64, nodeHistory, nodeSealSeed } from "./reference";
 import { serverDir } from "./serverDir";
@@ -46,10 +49,37 @@ export interface Server {
 
 const harnessPath = path.join(serverDir(), "test/support/harness.ts");
 const clientPath = path.join(serverDir(), "test/support/griipClient.ts");
+const accountsPath = path.join(serverDir(), "test/support/accounts.ts");
 
-export async function startServer(env: Record<string, string> = {}): Promise<Server> {
-  const mod = (await import(/* @vite-ignore */ harnessPath)) as { startServer(env: Record<string, string>): Promise<Server> };
-  return mod.startServer(env);
+/** Collects the server's account emails (server/test/support/accounts.ts MemoryMailer). */
+export interface Mailbox {
+  verifyCode(to: string): string;
+  resetCode(to: string): string;
+}
+
+/** An Orbit 2.0 account on the reference client (server/test/support/accounts.ts AccountClient): the phone of an email account. */
+export interface AccountPhone extends Phone {
+  email: string;
+  password: string;
+  accountId: string;
+  sessionId: string;
+  signIn(withDevice?: boolean): Promise<unknown>;
+}
+
+export async function startServer(env: Record<string, string> = {}, opts: { mailer?: Mailbox } = {}): Promise<Server> {
+  const mod = (await import(/* @vite-ignore */ harnessPath)) as { startServer(env: Record<string, string>, opts: { mailer?: Mailbox }): Promise<Server> };
+  return mod.startServer(env, opts);
+}
+
+export async function mailbox(): Promise<Mailbox> {
+  const mod = (await import(/* @vite-ignore */ accountsPath)) as { MemoryMailer: new () => Mailbox };
+  return new mod.MemoryMailer();
+}
+
+/** An email account with its encryption identity on the reference client, ready to message (AccountClient.ready). */
+export async function accountPhone(server: Server, mail: Mailbox, name: string): Promise<AccountPhone> {
+  const mod = (await import(/* @vite-ignore */ accountsPath)) as { AccountClient: { ready(base: string, mail: Mailbox, name: string): Promise<AccountPhone> } };
+  return mod.AccountClient.ready(server.baseUrl, mail, name);
 }
 
 export async function reference(): Promise<{ sign(pair: unknown, message: string): string; canonical: { deviceCert(a: string, b: string, c: string): string } }> {
@@ -105,21 +135,35 @@ export class TestNetwork {
 
 let dbCounter = 0;
 
+/** A fresh, empty IndexedDB store: one browser profile. */
+export async function freshStore(): Promise<LocalStore> {
+  return LocalStore.open(`orbit-web-test-${++dbCounter}-${Date.now()}`);
+}
+
+/** Starts a browser's engine the way App does once a device record exists, and waits for it to be online. */
+export async function startBrowser(server: Server, device: DeviceRecord, store: LocalStore, grant?: SessionGrant | AccountSessionGrant, extra: Partial<EngineOptions> = {}): Promise<LinkedBrowser> {
+  const net = new TestNetwork();
+  const engine = new Engine(device, store, { base: server.baseUrl, wsUrl: server.baseUrl.replace(/^http/, "ws") + "/v1/ws", createSocket: net.createSocket, ...extra });
+  await engine.start(grant);
+  await until(() => engine.state.get().connection === "online" && engine.state.get().synced);
+  return { engine, net };
+}
+
 export interface LinkedBrowser {
   engine: Engine;
   net: TestNetwork;
 }
 
 /** Links a new browser to [phone]'s account through the real pairing flow and starts its engine. */
-export async function linkBrowser(server: Server, phone: Phone, deviceName = "Orbit Web · Test"): Promise<LinkedBrowser> {
-  const store = await LocalStore.open(`orbit-web-test-${++dbCounter}-${Date.now()}`);
+export async function linkBrowser(server: Server, phone: Phone, deviceName = "Orbit Web · Test", extra: Partial<EngineOptions> = {}): Promise<LinkedBrowser> {
+  const store = await freshStore();
   const link = await startLink(server.baseUrl, deviceName);
   await approveLink(phone, link.code);
   const r = await pollLink(server.baseUrl, link);
   if (r.status !== "linked") throw new Error(`link not completed: ${r.status}`);
   await store.saveDevice(r.device);
   const net = new TestNetwork();
-  const engine = new Engine(r.device, store, { base: server.baseUrl, wsUrl: server.baseUrl.replace(/^http/, "ws") + "/v1/ws", createSocket: net.createSocket });
+  const engine = new Engine(r.device, store, { base: server.baseUrl, wsUrl: server.baseUrl.replace(/^http/, "ws") + "/v1/ws", createSocket: net.createSocket, ...extra });
   await engine.start(r.grant);
   await until(() => engine.state.get().connection === "online" && engine.state.get().synced);
   return { engine, net };

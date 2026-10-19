@@ -1,0 +1,190 @@
+import { AlertTriangle, Lock, Mic, MicOff, Minimize2, PhoneOff, ShieldAlert, ShieldQuestion, Video, VideoOff, Volume2, WifiOff } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { useEngine, useOrbit } from "../../app/orbit";
+import { CallFailure } from "../../call/rules";
+import type { CallParticipantView, CallUiState } from "../../call/types";
+import { Avatar } from "../components/Avatar";
+import { useFocusTrap } from "../components/Overlay";
+import { useNow } from "./useNow";
+import { callStatus, SECURITY_LABEL } from "./callText";
+
+/** The full call screen: who's in it, where it stands, what's proven about its encryption, and the controls. */
+export function CallStage() {
+  const engine = useEngine();
+  const call = useOrbit((s) => s.call);
+  const now = useNow(call.phase === "connected");
+  const [verifyOpen, setVerifyOpen] = useState(false);
+  const ended = call.phase === "ended";
+  const ref = useRef<HTMLElement>(null);
+  useFocusTrap(ref, true);
+
+  return (
+    <section ref={ref} className="call-stage" role="dialog" aria-modal="true" aria-label={`Call with ${call.title}`}>
+      <header className="call-head">
+        <button className="icon-btn" onClick={() => engine.calls.setMinimized(true)} aria-label="Minimise the call" disabled={ended}>
+          <Minimize2 size={18} />
+        </button>
+        <div className="grow">
+          <h2 className="ellipsis">{call.title}</h2>
+          <p className="status" role="status" aria-live="polite">
+            {callStatus(call, now)}
+          </p>
+        </div>
+        {call.verification && !ended && <SecurityBadge call={call} open={verifyOpen} onToggle={() => setVerifyOpen((o) => !o)} />}
+      </header>
+      <div className="call-notes">
+        {verifyOpen && call.verification && <Verification call={call} />}
+        <CallNotes call={call} />
+      </div>
+      <Tiles participants={call.participants} ended={ended} title={call.title} colorIndex={call.colorIndex} />
+      <Controls call={call} />
+    </section>
+  );
+}
+
+function SecurityBadge({ call, open, onToggle }: { call: CallUiState; open: boolean; onToggle: () => void }) {
+  const icon = call.security === "encrypted" ? <Lock size={14} /> : call.security === "problem" ? <ShieldAlert size={14} /> : <ShieldQuestion size={14} />;
+  return (
+    <button className={`e2ee-badge ${call.security}`} onClick={onToggle} aria-expanded={open} aria-label={`${SECURITY_LABEL[call.security]}. Show the call's verification code`}>
+      {icon}
+      {SECURITY_LABEL[call.security]}
+    </button>
+  );
+}
+
+/** The call's verification code (android CallVerification): the same on every device holding the same key. */
+function Verification({ call }: { call: CallUiState }) {
+  const code = call.verification!;
+  return (
+    <section className="call-verify" aria-label="Verification code">
+      <div className="code">
+        <span className="emoji" aria-label={`Emoji ${code.emoji.join(" ")}`}>
+          {code.emoji.join("")}
+        </span>
+        <span className="digits">{code.digits}</span>
+      </div>
+      <p>
+        Everyone in this call should see the same emoji and digits. They come from the call's encryption key, which the caller's device made and sent inside your end-to-end encrypted messages; the key
+        itself never leaves the devices. Matching codes show everyone's media uses that key; safety numbers show who the people are.
+      </p>
+      {call.security !== "encrypted" && (
+        <p>
+          {call.security === "problem"
+            ? "Media from someone in this call can't be decrypted with this key, or would arrive unencrypted. It isn't played."
+            : "Orbit shows “End-to-end encrypted” only after it has encrypted and decrypted media with this key in both directions."}
+        </p>
+      )}
+    </section>
+  );
+}
+
+function CallNotes({ call }: { call: CallUiState }) {
+  const engine = useEngine();
+  const notes = [];
+  if (call.peerReconnecting) notes.push({ key: "peer", icon: <WifiOff size={16} />, text: `${call.title}'s connection dropped. Waiting for them to reconnect…` });
+  for (const device of ["microphone", "camera"] as const) {
+    const issue = call.devices[device];
+    if (issue && call.phase !== "ended") notes.push({ key: device, icon: <AlertTriangle size={16} />, text: CallFailure.device(device, issue), retry: device });
+  }
+  if (call.path && call.path.startsWith("tcp")) notes.push({ key: "tcp", icon: <WifiOff size={16} />, text: "Connected over TCP: this network may block UDP, so the call can lag." });
+  return (
+    <>
+      {call.audioBlocked && call.phase !== "ended" && (
+        <div className="banner" role="alert">
+          <Volume2 size={16} />
+          <span className="grow">Your browser paused the call's sound.</span>
+          <button className="btn btn-secondary btn-sm" onClick={() => void engine.calls.startAudio()}>
+            Turn on sound
+          </button>
+        </div>
+      )}
+      {notes.map((n) => (
+        <div key={n.key} className={`banner${n.retry ? " danger" : ""}`} role={n.retry ? "alert" : "note"}>
+          {n.icon}
+          <span className="grow">{n.text}</span>
+          {n.retry && (
+            <button className="btn btn-secondary btn-sm" onClick={() => void (n.retry === "microphone" ? engine.calls.toggleMicrophone() : engine.calls.toggleCamera())}>
+              Try again
+            </button>
+          )}
+        </div>
+      ))}
+    </>
+  );
+}
+
+function Tiles({ participants, ended, title, colorIndex }: { participants: CallParticipantView[]; ended: boolean; title: string; colorIndex: number }) {
+  if (participants.length === 0)
+    return (
+      <div className="call-tiles">
+        <div className="call-tile">
+          <Avatar name={title} colorIndex={colorIndex} size={96} decorative />
+          {!ended && <span className="who">{title}</span>}
+        </div>
+      </div>
+    );
+  return (
+    <div className="call-tiles" aria-label="People in the call">
+      {participants.map((p) => (
+        <Tile key={p.identity} p={p} />
+      ))}
+    </div>
+  );
+}
+
+function Tile({ p }: { p: CallParticipantView }) {
+  const engine = useEngine();
+  const video = useRef<HTMLVideoElement>(null);
+  const epoch = useOrbit((s) => s.call.mediaEpoch);
+  const color = useOrbit((s) => s.users[p.userId]?.avatarColor ?? 0);
+  // Attached again whenever the camera turns on or the media connection is replaced (a rejoin).
+  useEffect(() => {
+    const el = video.current;
+    if (!p.cameraOn || !el) return;
+    return engine.calls.attachVideo(p.identity, el);
+  }, [engine, p.identity, p.cameraOn, epoch]);
+  const name = p.isLocal ? "You" : p.name;
+  const label = `${name}${p.micOn ? "" : ", muted"}${p.e2eeProblem ? ", encryption problem" : ""}${p.connectionWeak ? ", weak connection" : ""}`;
+  return (
+    <figure className={`call-tile${p.isLocal ? " local" : ""}${p.speaking ? " speaking" : ""}`} aria-label={label} style={{ margin: 0 }}>
+      {p.cameraOn ? <video ref={video} autoPlay playsInline muted aria-hidden="true" /> : <Avatar name={p.name} colorIndex={color} size={88} decorative />}
+      <figcaption className={`who${p.e2eeProblem ? " problem" : ""}`}>
+        {!p.micOn && <MicOff size={13} aria-hidden="true" />}
+        {p.e2eeProblem && <ShieldAlert size={13} aria-hidden="true" />}
+        {p.connectionWeak && <WifiOff size={13} aria-hidden="true" />}
+        <span className="ellipsis">{name}</span>
+      </figcaption>
+    </figure>
+  );
+}
+
+function Controls({ call }: { call: CallUiState }) {
+  const engine = useEngine();
+  const live = call.phase !== "ended";
+  const media = live && call.phase !== "incoming" && call.verification !== null;
+  return (
+    <div className="call-controls">
+      <button
+        className={`call-btn${call.devices.microphone ? " warn" : ""}`}
+        onClick={() => void engine.calls.toggleMicrophone()}
+        aria-pressed={call.micOn}
+        aria-label={call.micOn ? "Mute" : "Unmute"}
+        disabled={!media}
+      >
+        {call.micOn ? <Mic size={22} /> : <MicOff size={22} />}
+      </button>
+      <button
+        className={`call-btn${call.devices.camera ? " warn" : ""}`}
+        onClick={() => void engine.calls.toggleCamera()}
+        aria-pressed={call.cameraOn}
+        aria-label={call.cameraOn ? "Turn camera off" : "Turn camera on"}
+        disabled={!media}
+      >
+        {call.cameraOn ? <Video size={22} /> : <VideoOff size={22} />}
+      </button>
+      <button className="call-btn end" onClick={() => engine.calls.hangup()} aria-label="Hang up" disabled={!live}>
+        <PhoneOff size={22} />
+      </button>
+    </div>
+  );
+}

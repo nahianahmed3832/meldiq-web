@@ -5,7 +5,7 @@ import { createPortal } from "react-dom";
 const FOCUSABLE = 'button:not([disabled]), [href], input:not([disabled]), textarea:not([disabled]), select, [tabindex]:not([tabindex="-1"])';
 
 /** Keeps Tab inside [ref] and returns focus to where it was when the overlay closes. */
-function useFocusTrap(ref: RefObject<HTMLElement | null>, active: boolean): void {
+export function useFocusTrap(ref: RefObject<HTMLElement | null>, active: boolean): void {
   useEffect(() => {
     if (!active) return;
     const before = document.activeElement as HTMLElement | null;

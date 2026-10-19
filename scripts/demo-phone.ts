@@ -9,6 +9,7 @@
  *   npx tsx scripts/demo-phone.ts say bob general "hi"   someone posts to a conversation (by channel name, or "dm")
  *   npx tsx scripts/demo-phone.ts listen alice 30        print what alice's phone receives for 30 s
  *   npx tsx scripts/demo-phone.ts dm bob yourname        bob opens a DM with your real phone's account (saved as "phone")
+ *   npx tsx scripts/demo-phone.ts mail                   the newest email codes the local server "sent" (sign-up, reset)
  */
 import crypto from "node:crypto";
 import fs from "node:fs";
@@ -161,6 +162,24 @@ async function listen(who: string, seconds: number) {
   await c.disconnect();
 }
 
+/** Codes in the emails a local server wrote to data/mail (MAIL_TRANSPORT=file, scripts/local-server.sh), newest last. */
+function mail(count: number) {
+  const dir = process.env.MAIL_FILE_DIR ?? path.join(SERVER, "data/mail");
+  if (!fs.existsSync(dir)) throw new Error(`no emails yet in ${dir} (start the server with scripts/local-server.sh)`);
+  const files = fs
+    .readdirSync(dir)
+    .filter((f) => f.endsWith(".eml"))
+    .sort()
+    .slice(-count);
+  for (const f of files) {
+    const text = fs.readFileSync(path.join(dir, f), "utf8");
+    const to = text.match(/^To: (.+)$/m)?.[1] ?? "?";
+    const subject = text.match(/^Subject: (.+)$/m)?.[1] ?? "?";
+    const code = text.match(/\b(\d{6}|[A-Z2-9]{5}-[A-Z2-9]{5})\b/)?.[1] ?? "(no code)";
+    console.log(`${to}  ${subject}  ${code}`);
+  }
+}
+
 const [cmd, ...args] = process.argv.slice(2);
 const run =
   cmd === "setup"
@@ -173,7 +192,9 @@ const run =
           ? dm(args[0] ?? "bob", args[1] ?? "")
           : cmd === "listen"
             ? listen(args[0] ?? "alice", Number(args[1] ?? 30))
-            : Promise.reject(new Error("usage: setup | approve <code> | say <who> <where> <text> | dm <who> <username> | listen <who> <seconds>"));
+            : cmd === "mail"
+              ? Promise.resolve(mail(Number(args[0] ?? 5)))
+              : Promise.reject(new Error("usage: setup | approve <code> | say <who> <where> <text> | dm <who> <username> | listen <who> <seconds> | mail [count]"));
 run.catch((e: unknown) => {
   console.error(e instanceof Error ? e.message : e);
   process.exit(1);

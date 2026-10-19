@@ -13,6 +13,65 @@ const OFFLINE_RETRY_MS = 5_000;
 /** The server refuses a sentAt more than a day off; older queued messages are re-stamped (android: 20 h). */
 const RESTAMP_AFTER_MS = 20 * 3600_000;
 
+/** A recipient's identity key changed: nothing is sent to that conversation until the person reviews it. */
+export class IdentityChangedError extends Error {
+  constructor() {
+    super("A security key in this conversation changed");
+    this.name = "IdentityChangedError";
+  }
+}
+
+export interface Outgoing {
+  messageId: string;
+  conversationId: string;
+  cls: "message" | "control";
+  payloadJson: string;
+  sentAt: number;
+}
+
+/**
+ * Seals [o] to every current device of the conversation's members and posts it; returns the server's timestamp. Used by
+ * the outbox, and directly for what must never be written to storage (a call's media key). A changed device list is
+ * refreshed and tried once more; a changed identity key throws [IdentityChangedError].
+ */
+export async function sealAndPost(ctx: EngineContext, o: Outgoing, refresh = false): Promise<number> {
+  const { api, directory, device } = ctx;
+  for (const pass of [0, 1]) {
+    const r = await directory.recipients(o.conversationId, refresh || pass > 0);
+    if (r.changed.length) throw new IdentityChangedError();
+    const sealed = await sealEnvelope(
+      { messageId: o.messageId, conversationId: o.conversationId, senderUserId: device.userId, senderDeviceId: device.deviceId, sentAt: o.sentAt, cls: o.cls },
+      o.payloadJson,
+      r.devices,
+      device.keys.signing.privateKey,
+    );
+    const mentionAll = o.cls === "message" && parsePayload(o.payloadJson)?.mentionAll === true;
+    try {
+      const res = await api.json("POST", "/v1/messages", zSendRes, {
+        body: {
+          conversationId: o.conversationId,
+          messageId: o.messageId,
+          cls: o.cls,
+          sentAt: o.sentAt,
+          nonce: sealed.nonce,
+          ciphertext: sealed.ciphertext,
+          signature: sealed.signature,
+          recipients: sealed.recipients,
+          ...(mentionAll ? { mentionAll: true } : {}),
+        },
+      });
+      return res.serverTs;
+    } catch (e) {
+      if (e instanceof ApiError && e.status === 409 && e.code === "device_mismatch" && pass === 0) {
+        directory.invalidateConversation(o.conversationId); // someone's devices changed: refresh keys and try once more
+        continue;
+      }
+      throw e;
+    }
+  }
+  throw new ApiError(409, "device_mismatch", "The conversation's devices keep changing. Try again.");
+}
+
 /**
  * Sends what this browser queued, oldest first. A message is shown at once as "sending" and becomes authoritative only
  * when the server accepts it: then it takes the server's time. Message ids make retries idempotent on the server.
@@ -79,51 +138,24 @@ export class Outbox {
   }
 
   private async sendOne(o: OutboxItem): Promise<"done" | "offline"> {
-    const { api, store, directory, device } = this.ctx;
-    for (const pass of [0, 1]) {
-      try {
-        const r = await directory.recipients(o.conversationId, pass > 0 || o.attempts > 0);
-        if (r.changed.length) {
-          // Paused, not failed: resumes when the person accepts the new key.
-          await store.putOutbox({ ...o, held: true, lastError: "identity_changed" });
-          if (o.visible) await this.onFailed(o.messageId, "HELD", "Paused: a security key changed");
-          await this.ctx.refreshIdentityAlerts();
-          return "done";
-        }
-        const now = Date.now();
-        const sentAt = now - o.createdAt > RESTAMP_AFTER_MS ? now : o.createdAt;
-        const sealed = await sealEnvelope(
-          { messageId: o.messageId, conversationId: o.conversationId, senderUserId: device.userId, senderDeviceId: device.deviceId, sentAt, cls: o.cls },
-          o.payloadJson,
-          r.devices,
-          device.keys.signing.privateKey,
-        );
-        const mentionAll = o.cls === "message" && parsePayload(o.payloadJson)?.mentionAll === true;
-        const res = await api.json("POST", "/v1/messages", zSendRes, {
-          body: {
-            conversationId: o.conversationId,
-            messageId: o.messageId,
-            cls: o.cls,
-            sentAt,
-            nonce: sealed.nonce,
-            ciphertext: sealed.ciphertext,
-            signature: sealed.signature,
-            recipients: sealed.recipients,
-            ...(mentionAll ? { mentionAll: true } : {}),
-          },
-        });
-        await store.removeOutbox(o.messageId);
-        if (o.visible) await this.onSent(o.messageId, res.serverTs);
+    const { store } = this.ctx;
+    try {
+      const now = Date.now();
+      const sentAt = now - o.createdAt > RESTAMP_AFTER_MS ? now : o.createdAt;
+      const serverTs = await sealAndPost(this.ctx, { messageId: o.messageId, conversationId: o.conversationId, cls: o.cls, payloadJson: o.payloadJson, sentAt }, o.attempts > 0);
+      await store.removeOutbox(o.messageId);
+      if (o.visible) await this.onSent(o.messageId, serverTs);
+      return "done";
+    } catch (e) {
+      if (e instanceof IdentityChangedError) {
+        // Paused, not failed: resumes when the person accepts the new key.
+        await store.putOutbox({ ...o, held: true, lastError: "identity_changed" });
+        if (o.visible) await this.onFailed(o.messageId, "HELD", "Paused: a security key changed");
+        await this.ctx.refreshIdentityAlerts();
         return "done";
-      } catch (e) {
-        if (e instanceof ApiError && e.status === 409 && e.code === "device_mismatch" && pass === 0) {
-          directory.invalidateConversation(o.conversationId); // someone's devices changed: refresh keys and try once more
-          continue;
-        }
-        return this.failure(o, e);
       }
+      return this.failure(o, e);
     }
-    return "done";
   }
 
   private async failure(o: OutboxItem, e: unknown): Promise<"done" | "offline"> {

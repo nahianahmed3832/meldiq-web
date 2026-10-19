@@ -1,6 +1,5 @@
-import { z } from "zod";
 import { ApiError } from "../api/client";
-import { type Conversation, type QueueItem, zCall, zQueueItem } from "../api/schemas";
+import { type Call, type Conversation, type QueueItem, zCallRes, zQueueItem } from "../api/schemas";
 import { EnvelopeError, openEnvelope } from "../crypto/envelope";
 import type { StoredMessage } from "../model/types";
 import { parsePayload, type Payload } from "../protocol/payload";
@@ -8,7 +7,6 @@ import type { EngineContext } from "./context";
 import { applyDelete, applyDelivered, applyEdit, applyPin, applyReaction, applyRead, callEntry, receivedMentions, textMessage, undecryptable } from "./rules";
 
 const MAX_FAILURES = 3;
-const zCallRes = z.object({ call: zCall });
 
 /**
  * Turns delivery-queue items into this browser's state (android MessageRepository.handleItem / apply). An item is
@@ -142,8 +140,12 @@ export class Receiver {
       }
       case "call_invite":
         return this.callInvite(pl, item, mine, serverTs);
+      case "call_key_request":
+        // Only a call's creator answers, in the call's own conversation, while it's live (T5.3; call/manager.ts).
+        if (pl.callId) await this.ctx.calls.onKeyRequest(pl.callId, item.conversationId);
+        return;
       default:
-        return; // call_key_request (only a call's creator answers) and types from newer apps
+        return; // types from newer apps
     }
   }
 
@@ -191,21 +193,30 @@ export class Receiver {
     }
   }
 
-  /** A call entry, once the server confirms the sender started that call in this conversation (T5.2). */
+  /**
+   * A call's media key (kept in memory by the call manager, only from the call's creator: T5.2) and the call's entry in
+   * the conversation, once the server confirms the sender started that call in this conversation.
+   */
   private async callInvite(pl: Payload, item: QueueItem, mine: boolean, serverTs: number): Promise<void> {
-    if (!pl.callId || (await this.ctx.store.message(`call-${pl.callId}`))) return;
-    let call;
-    try {
-      call = (await this.ctx.api.json("GET", `/v1/calls/${encodeURIComponent(pl.callId)}`, zCallRes)).call;
-    } catch (e) {
-      if (e instanceof ApiError && e.status === 404) return;
-      throw e;
-    }
-    if (call.createdBy !== item.senderUserId || call.conversationId !== item.conversationId) return;
+    if (!pl.callId) return;
+    const call = await this.serverCall(pl.callId);
+    if (pl.e2eeKey) this.ctx.calls.onInvite(pl.callId, item.conversationId, item.senderUserId, pl.e2eeKey, call);
+    if (!call || call.createdBy !== item.senderUserId || call.conversationId !== item.conversationId) return;
+    if (await this.ctx.store.message(`call-${pl.callId}`)) return;
     const m = callEntry(item, mine, pl.callId, pl.video === true, serverTs);
     if (!(await this.ctx.store.insertMessageIfAbsent(m))) return;
     this.ctx.show(m);
     await this.ctx.bump(m, { unread: false, mention: false });
+  }
+
+  /** The server's record of a call; null when it doesn't exist for this account. */
+  private async serverCall(callId: string): Promise<Call | null> {
+    try {
+      return (await this.ctx.api.json("GET", `/v1/calls/${encodeURIComponent(callId)}`, zCallRes)).call;
+    } catch (e) {
+      if (e instanceof ApiError && e.status === 404) return null;
+      throw e;
+    }
   }
 
   private async receipt(item: QueueItem): Promise<void> {

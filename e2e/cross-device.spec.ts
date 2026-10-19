@@ -1,5 +1,6 @@
 import { expect, type Page, test } from "@playwright/test";
-import { approve, newPhone, type Phone, testAddress } from "./phone";
+import { link } from "./link";
+import { newPhone, testAddress } from "./phone";
 
 test.beforeEach(async ({ context }) => {
   await context.setExtraHTTPHeaders({ "x-orbit-test-ip": testAddress() });
@@ -16,18 +17,6 @@ test.afterEach(async ({ context }, info) => {
     await info.attach(`page-${i}.txt`, { body: `${p.url()}\n\n${text}`, contentType: "text/plain" });
   }
 });
-
-/** Links the page's browser to [phone]'s account through the real pairing flow; checks the fingerprint matches. */
-async function link(page: Page, phone: Phone): Promise<void> {
-  await page.goto("/");
-  await expect(page.getByRole("heading", { name: "Link this browser to your account" })).toBeVisible();
-  const code = page.locator(".code-box .code");
-  await expect(code).toHaveText(/^[A-Z0-9]{5} [A-Z0-9]{5}$/);
-  const shownFingerprint = await page.getByLabel("Device key").textContent();
-  const phoneFingerprint = await approve(phone, (await code.textContent())!);
-  expect(shownFingerprint).toBe(phoneFingerprint);
-  await expect(page.locator(".conn.online")).toBeVisible({ timeout: 15_000 });
-}
 
 const isPhoneWidth = (page: Page) => (page.viewportSize()?.width ?? 1440) < 640;
 

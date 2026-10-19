@@ -1,0 +1,274 @@
+From b089e18cb45ae10b3fd69dda3e136727a7cea6db Mon Sep 17 00:00:00 2001
+From: "MD.NAHIAN AHMED" <254077813+nahianahmed3832@users.noreply.github.com>
+Date: Mon, 19 Oct 2026 13:09:21 +0800
+Subject: [PATCH] feat(server): WebSocket authentication by first frame for
+ browsers
+
+A socket opened without an Authorization header (a browser, which can't set
+one) may authenticate with {"t":"auth","token"} as its first frame within
+WS_AUTH_TIMEOUT_MS (default 10 s, 100 ms to 60 s). Any other first frame, a
+wrong token or silence closes it with 4401 before anything is sent. Header
+authentication (the Android app) is unchanged, and the session is still
+checked on every frame. Rebased onto API 0.5.0's async frame pipeline.
+---
+ docs/ABUSE_CONTROLS.md            |   3 +
+ server/src/config.ts              |   3 +
+ server/src/ws.ts                  |  64 ++++++++++++-----
+ server/test/ws_frame_auth.test.ts | 110 ++++++++++++++++++++++++++++++
+ 4 files changed, 162 insertions(+), 18 deletions(-)
+ create mode 100644 server/test/ws_frame_auth.test.ts
+
+diff --git a/docs/ABUSE_CONTROLS.md b/docs/ABUSE_CONTROLS.md
+index 4eaec5c..10462c2 100644
+--- a/docs/ABUSE_CONTROLS.md
++++ b/docs/ABUSE_CONTROLS.md
+@@ -136,6 +136,9 @@ All of these are enforced by the server, whatever the app does:
+   most: pings, acknowledgements, typing.
+ - **`WS_MAX_SOCKETS_PER_DEVICE`** (4): a device opening more connections than this has its **oldest** one closed (code
+   4409). Reconnects always work. The app ignores the close of a connection it has already replaced.
++- **`WS_AUTH_TIMEOUT_MS`** (10000, 100–60000): a connection opened without an `Authorization` header (a browser, which
++  can't set one) must send `{"t":"auth","token":"…"}` as its first frame within this time. Another first frame, a wrong
++  token or silence closes it with code 4401 before anything is sent (Orbit Web).
+ 
+ ## Administrators: false positives
+ 
+diff --git a/server/src/config.ts b/server/src/config.ts
+index 3fe521f..2a75e69 100644
+--- a/server/src/config.ts
++++ b/server/src/config.ts
+@@ -187,6 +187,8 @@ export interface AbuseConfig {
+   wsFrameBurst: number;
+   /** Realtime connections per device; a newer one replaces the oldest. */
+   wsMaxSocketsPerDevice: number;
++  /** How long a socket opened without an Authorization header (a browser) has to send its {t:"auth"} frame. */
++  wsAuthTimeoutMs: number;
+ }
+ 
+ /** TRUST_PROXY: false | true | comma-separated proxy addresses, CIDRs or names (loopback, linklocal, uniquelocal). */
+@@ -217,6 +219,7 @@ function abuseConfig(int: (n: string, d: number) => number): AbuseConfig {
+     wsFramesPerSecond: Math.max(int("WS_FRAMES_PER_SECOND", 20), 1),
+     wsFrameBurst: Math.max(int("WS_FRAME_BURST", 100), 1),
+     wsMaxSocketsPerDevice: Math.max(int("WS_MAX_SOCKETS_PER_DEVICE", 4), 1),
++    wsAuthTimeoutMs: Math.min(Math.max(int("WS_AUTH_TIMEOUT_MS", 10_000), 100), 60_000),
+   };
+ }
+ 
+diff --git a/server/src/ws.ts b/server/src/ws.ts
+index 6d9ac8d..37e4310 100644
+--- a/server/src/ws.ts
++++ b/server/src/ws.ts
+@@ -7,9 +7,10 @@ import { now } from "./util.js";
+ 
+ /**
+  * Realtime gateway. Auth uses the same bearer session token as REST, sent in the
+- * Authorization header of the upgrade request (never in the URL, so it can't leak into logs).
++ * Authorization header of the upgrade request (never in the URL, so it can't leak into logs). Browsers, which can't set
++ * that header, send it as their first frame instead: {t:"auth", token}.
+  *
+- * Client → server: {t:"ack", ids}, {t:"typing", c, on}, {t:"ping"}
++ * Client → server: {t:"auth", token} (first frame, header-less sockets only), {t:"ack", ids}, {t:"typing", c, on}, {t:"ping"}
+  * Server → client: hello, queue, queue.drained, typing, presence, call, conv.updated,
+  *                  org.updated, devices.changed, pong
+  */
+@@ -38,13 +39,26 @@ export default async function wsRoutes(app: FastifyInstance, ctx: AppContext) {
+   };
+ 
+   app.get("/v1/ws", { websocket: true }, (socket, req) => {
+-    const token = req.headers.authorization?.startsWith("Bearer ") ? req.headers.authorization.slice(7) : undefined;
++    const header = req.headers.authorization?.startsWith("Bearer ") ? req.headers.authorization.slice(7) : undefined;
++    // Browsers can't set headers on a WebSocket: they send {t:"auth", token} as their first frame instead (never in the
++    // URL, so the token stays out of logs). Any other first frame, or none in time, closes the socket.
++    let awaitingAuthFrame = header === undefined;
++    const authTimer = awaitingAuthFrame ? setTimeout(() => socket.close(4401, "unauthorized"), ctx.config.abuse.wsAuthTimeoutMs) : undefined;
++    socket.once("close", () => clearTimeout(authTimer));
+     // Frames are handled one at a time, in order, each after the session is checked again (which may wait on the
+     // account store); frames arriving before authentication finishes wait for it.
+     let frames: Promise<void> = Promise.resolve();
+     let onFrame: ((raw: Buffer) => Promise<void>) | null = null;
+     const early: Buffer[] = [];
+     socket.on("message", (raw: Buffer) => {
++      if (awaitingAuthFrame) {
++        awaitingAuthFrame = false;
++        clearTimeout(authTimer);
++        const token = authFrameToken(raw);
++        if (token === undefined) socket.close(4401, "unauthorized");
++        else start(token);
++        return;
++      }
+       if (!onFrame) {
+         if (early.length < 32) early.push(raw);
+         return;
+@@ -55,21 +69,24 @@ export default async function wsRoutes(app: FastifyInstance, ctx: AppContext) {
+     socket.on("error", () => {
+       /* close handler cleans up */
+     });
+-    authenticateToken(ctx, token)
+-      .then((auth) => {
+-        if (!auth) {
+-          socket.close(4401, "unauthorized");
+-          return;
+-        }
+-        if (socket.readyState !== socket.OPEN) return;
+-        onFrame = open(socket, auth, token);
+-        const handle = onFrame;
+-        for (const raw of early.splice(0)) frames = frames.then(() => handle(raw)).catch((e) => ctx.log.warn({ err: e }, "websocket frame failed"));
+-      })
+-      .catch((e) => {
+-        ctx.log.error({ err: e }, "websocket authentication failed");
+-        socket.close(1011, "try again");
+-      });
++    const start = (token: string | undefined): void => {
++      authenticateToken(ctx, token)
++        .then((auth) => {
++          if (!auth) {
++            socket.close(4401, "unauthorized");
++            return;
++          }
++          if (socket.readyState !== socket.OPEN) return;
++          onFrame = open(socket, auth, token);
++          const handle = onFrame;
++          for (const raw of early.splice(0)) frames = frames.then(() => handle(raw)).catch((e) => ctx.log.warn({ err: e }, "websocket frame failed"));
++        })
++        .catch((e) => {
++          ctx.log.error({ err: e }, "websocket authentication failed");
++          socket.close(1011, "try again");
++        });
++    };
++    if (header !== undefined) start(header);
+   });
+ 
+   /** A connection authenticated as [auth]: registered with the hub, sent its backlog; returns its frame handler. */
+@@ -165,3 +182,14 @@ export default async function wsRoutes(app: FastifyInstance, ctx: AppContext) {
+     return onFrame;
+   };
+ }
++
++/** The token of a browser's first frame, {t:"auth", token}; undefined for anything else. */
++function authFrameToken(raw: Buffer): string | undefined {
++  if (raw.length > 1024) return undefined;
++  try {
++    const msg = JSON.parse(raw.toString("utf8")) as { t?: unknown; token?: unknown };
++    return msg?.t === "auth" && typeof msg.token === "string" ? msg.token : undefined;
++  } catch {
++    return undefined;
++  }
++}
+diff --git a/server/test/ws_frame_auth.test.ts b/server/test/ws_frame_auth.test.ts
+new file mode 100644
+index 0000000..9b9d032
+--- /dev/null
++++ b/server/test/ws_frame_auth.test.ts
+@@ -0,0 +1,110 @@
++/**
++ * Browsers can't set headers on a WebSocket, so a socket opened without an Authorization header may authenticate with
++ * its first frame, {t:"auth", token} (docs/ORBIT_WEB_ARCHITECTURE.md › G1). Header authentication is unchanged.
++ */
++import { afterAll, beforeAll, describe, expect, it } from "vitest";
++import WebSocket from "ws";
++import type { GriipClient } from "./support/griipClient.js";
++import { type Harness, startServer } from "./support/harness.js";
++
++let h: Harness;
++let alice: GriipClient, bob: GriipClient;
++let dm: string;
++
++beforeAll(async () => {
++  h = await startServer({ WS_AUTH_TIMEOUT_MS: "300" });
++  alice = await h.client("wsalice");
++  bob = await h.client("wsbob");
++  dm = (await alice.req("POST", "/v1/conversations/dm", { userId: bob.userId })).conversation.id;
++});
++afterAll(async () => h.close());
++
++interface Socket {
++  ws: WebSocket;
++  frames: any[];
++  closed: Promise<{ code: number; reason: string }>;
++  next: (pred: (f: any) => boolean, timeoutMs?: number) => Promise<any>;
++}
++
++/** A socket opened the way a browser opens one: no headers at all. */
++function browserSocket(): Promise<Socket> {
++  const ws = new WebSocket(h.baseUrl.replace(/^http/, "ws") + "/v1/ws");
++  const frames: any[] = [];
++  const closed = new Promise<{ code: number; reason: string }>((r) => ws.on("close", (code, reason) => r({ code, reason: reason.toString() })));
++  ws.on("message", (d) => frames.push(JSON.parse(d.toString())));
++  const next = async (pred: (f: any) => boolean, timeoutMs = 3000) => {
++    const deadline = Date.now() + timeoutMs;
++    for (;;) {
++      const f = frames.find(pred);
++      if (f) return f;
++      if (Date.now() > deadline) throw new Error("frame not received");
++      await new Promise((r) => setTimeout(r, 20));
++    }
++  };
++  return new Promise((resolve, reject) => {
++    ws.once("open", () => resolve({ ws, frames, closed, next }));
++    ws.once("error", reject);
++  });
++}
++
++describe("WebSocket authentication with the first frame (browsers)", () => {
++  it("a valid auth frame opens the session: hello, then queued envelopes, then acknowledgements work", async () => {
++    await alice.send(dm, { type: "text", text: "queued before the browser connects" });
++    const s = await browserSocket();
++    s.ws.send(JSON.stringify({ t: "auth", token: bob.token }));
++    const hello = await s.next((f) => f.t === "hello");
++    expect(hello).toMatchObject({ userId: bob.userId, deviceId: bob.deviceId });
++    const batch = await s.next((f) => f.t === "queue" && f.items.length > 0);
++    expect(batch.items[0]).toMatchObject({ kind: "envelope", conversationId: dm, senderUserId: alice.userId });
++    s.ws.send(JSON.stringify({ t: "ack", ids: batch.items.map((i: any) => i.id), backlog: true }));
++    await s.next((f) => f.t === "queue.drained");
++    // Acknowledged on the server: nothing is left in this device's queue.
++    expect((await bob.req("GET", "/v1/queue")).items).toHaveLength(0);
++    s.ws.close();
++  });
++
++  it("live envelopes reach an authenticated browser socket without a reconnect", async () => {
++    const s = await browserSocket();
++    s.ws.send(JSON.stringify({ t: "auth", token: bob.token }));
++    await s.next((f) => f.t === "queue.drained");
++    await alice.send(dm, { type: "text", text: "live" });
++    const live = await s.next((f) => f.t === "queue" && !f.backlog && f.items.length > 0);
++    expect(live.items[0].conversationId).toBe(dm);
++    s.ws.close();
++  });
++
++  it("a wrong token closes the socket with 4401 and never says hello", async () => {
++    const s = await browserSocket();
++    s.ws.send(JSON.stringify({ t: "auth", token: "x".repeat(43) }));
++    expect((await s.closed).code).toBe(4401);
++    expect(s.frames.some((f) => f.t === "hello")).toBe(false);
++  });
++
++  it("a first frame that isn't auth closes the socket with 4401", async () => {
++    const s = await browserSocket();
++    s.ws.send(JSON.stringify({ t: "ping" }));
++    expect((await s.closed).code).toBe(4401);
++    expect(s.frames).toHaveLength(0);
++  });
++
++  it("a socket that doesn't authenticate in time is closed with 4401", async () => {
++    const s = await browserSocket();
++    expect((await s.closed).code).toBe(4401);
++    expect(s.frames).toHaveLength(0);
++  });
++
++  it("a revoked device can't authenticate with its old token", async () => {
++    const carol = await h.client("wscarol");
++    const token = carol.token;
++    await carol.req("DELETE", `/v1/devices/${carol.deviceId}`);
++    const s = await browserSocket();
++    s.ws.send(JSON.stringify({ t: "auth", token }));
++    expect((await s.closed).code).toBe(4401);
++  });
++
++  it("header authentication (the Android app) still works unchanged", async () => {
++    await bob.connect();
++    expect(bob.events.some((e) => e.t === "hello" && e.deviceId === bob.deviceId)).toBe(true);
++    await bob.disconnect();
++  });
++});
+-- 
+2.54.0
+

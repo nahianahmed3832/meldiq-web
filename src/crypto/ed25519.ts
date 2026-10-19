@@ -17,6 +17,18 @@ export async function signingKeyFromSeed(seed: Uint8Array): Promise<CryptoKey> {
   return crypto.subtle.importKey("pkcs8", concat(PKCS8_PREFIX, seed), ED25519, false, ["sign"]);
 }
 
+/**
+ * The base64 public key of a 32-byte seed. The seed is imported once, extractable, only to read its JWK's public half;
+ * that key object is dropped right after.
+ */
+export async function publicKeyFromSeed(seed: Uint8Array): Promise<string> {
+  if (seed.length !== 32) throw new Error("Ed25519 seed must be 32 bytes");
+  const key = await crypto.subtle.importKey("pkcs8", concat(PKCS8_PREFIX, seed), ED25519, true, ["sign"]);
+  const jwk = await crypto.subtle.exportKey("jwk", key);
+  if (!jwk.x) throw new Error("the browser didn't return the public key");
+  return toB64(fromB64(jwk.x.replace(/-/g, "+").replace(/_/g, "/")));
+}
+
 export async function rawPublicKey(key: CryptoKey): Promise<Bytes> {
   return new Uint8Array(await crypto.subtle.exportKey("raw", key));
 }

@@ -1,4 +1,4 @@
-import { Check, Copy, KeyRound, Laptop, Lock, RefreshCw, ShieldCheck, Smartphone } from "lucide-react";
+import { ArrowLeft, Check, Copy, KeyRound, Laptop, Lock, RefreshCw, ShieldCheck, Smartphone } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ApiClient, ApiError } from "../api/client";
 import { type ServerInfo, type SessionGrant, zServerInfo } from "../api/schemas";
@@ -15,7 +15,7 @@ type Phase = { k: "starting" } | { k: "waiting"; link: PendingLink; deviceFp: st
  * Linking this browser to an Orbit account: the browser makes its own keys and a one-time code; the phone approves the code
  * in Settings › Devices and hands over the account identity, sealed to this browser. No password exists anywhere.
  */
-export function LinkScreen({ onLinked }: { onLinked: (device: DeviceRecord, grant: SessionGrant) => void }) {
+export function LinkScreen({ onLinked, onBack }: { onLinked: (device: DeviceRecord, grant: SessionGrant) => void; onBack?: () => void }) {
   const [phase, setPhase] = useState<Phase>({ k: "starting" });
   const [server, setServer] = useState<ServerInfo | null>(null);
   const [now, setNow] = useState(Date.now());
@@ -116,6 +116,11 @@ export function LinkScreen({ onLinked }: { onLinked: (device: DeviceRecord, gran
 
       <main className="link-main">
         <div className="link-card card">
+          {onBack && (
+            <button type="button" className="btn btn-ghost btn-sm auth-back" onClick={onBack}>
+              <ArrowLeft size={14} /> Sign in with email instead
+            </button>
+          )}
           <div>
             <h2>Link this browser to your account</h2>
             <p className="muted" style={{ margin: "6px 0 0" }}>

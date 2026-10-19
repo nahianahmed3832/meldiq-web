@@ -94,11 +94,14 @@ export type LinkPoll = { status: "pending" } | { status: "expired" } | { status:
 
 export class LinkError extends Error {}
 
+/** The phone's approval, opened and checked: the account's identity seed (the caller wipes it) and its public key. */
+export type LinkApproval = { status: "pending" } | { status: "expired" } | { status: "approved"; seed: Uint8Array; identityKey: string; username: string; certificate: string };
+
 /**
- * Checks the request once. When the phone has approved it: opens the identity seed, checks it belongs to the account and that
- * the certificate binds this browser's keys, registers this browser as a device, derives the history keys and drops the seed.
+ * Checks the request once. When the phone has approved it: opens the identity seed and checks it belongs to the identity
+ * key the phone named and that the certificate binds this browser's keys.
  */
-export async function pollLink(base: string, link: PendingLink): Promise<LinkPoll> {
+export async function pollLinkApproval(base: string, link: PendingLink): Promise<LinkApproval> {
   const api = new ApiClient(base);
   const r = await api.json("GET", `/v1/pairing/${encodeURIComponent(link.pairingId)}`, zPairingPoll, { auth: false });
   if (r.status !== "approved") return r;
@@ -109,6 +112,22 @@ export async function pollLink(base: string, link: PendingLink): Promise<LinkPol
     if (!(await seedMatchesPublicKey(seed, r.identityKey))) throw new LinkError("The account's identity didn't match. Linking was stopped.");
     const cert = canonical.deviceCert(r.identityKey, link.keys.signingPublic, link.keys.encryptionPublic);
     if (!(await verify(r.identityKey, cert, r.certificate))) throw new LinkError("The approval wasn't signed for this browser. Linking was stopped.");
+  } catch (e) {
+    seed.fill(0);
+    throw e;
+  }
+  return { status: "approved", seed, identityKey: r.identityKey, username: r.username, certificate: r.certificate };
+}
+
+/**
+ * Linking without an Orbit 2.0 account (v1): once the phone approved, registers this browser as a device of the phone's
+ * account, derives the history keys and drops the seed.
+ */
+export async function pollLink(base: string, link: PendingLink): Promise<LinkPoll> {
+  const r = await pollLinkApproval(base, link);
+  if (r.status !== "approved") return r;
+  const api = new ApiClient(base);
+  try {
     const nonce = await challenge(api);
     const grant = await api.json("POST", "/v1/auth/add-device", zSession, {
       auth: false,
@@ -119,7 +138,7 @@ export async function pollLink(base: string, link: PendingLink): Promise<LinkPol
         signature: await sign(link.keys.signing.privateKey, canonical.authProof("add-device", nonce, link.keys.signingPublic)),
       },
     });
-    const history = await deriveHistoryKeys(seed, grant.userId);
+    const history = await deriveHistoryKeys(r.seed, grant.userId);
     const device: DeviceRecord = {
       userId: grant.userId,
       deviceId: grant.deviceId,
@@ -132,7 +151,7 @@ export async function pollLink(base: string, link: PendingLink): Promise<LinkPol
     };
     return { status: "linked", device, grant };
   } finally {
-    seed.fill(0);
+    r.seed.fill(0);
   }
 }
 

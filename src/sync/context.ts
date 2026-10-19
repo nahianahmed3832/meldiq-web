@@ -1,5 +1,6 @@
 import type { ApiClient } from "../api/client";
 import type { Conversation } from "../api/schemas";
+import type { CallManager } from "../call/manager";
 import type { DeviceRecord, StoredMessage } from "../model/types";
 import type { Store } from "../state/store";
 import type { LocalStore } from "../store/db";
@@ -12,6 +13,8 @@ export interface EngineContext {
   readonly state: Store;
   readonly directory: Directory;
   readonly device: DeviceRecord;
+  /** Where call keys and key requests from received control messages go. */
+  readonly calls: Pick<CallManager, "onInvite" | "onKeyRequest">;
   /** The conversation on screen while this window has focus, if any. */
   viewing(): string | null;
   /** The server's view of a conversation, fetched if this browser doesn't know it yet. Null if it isn't visible to us. */

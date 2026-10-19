@@ -46,6 +46,21 @@ npx tsx scripts/demo-phone.ts setup
 npx tsx scripts/demo-phone.ts approve ABCDE12345
 ```
 
+## Calls
+
+Calls need a LiveKit media server. Locally (`brew install livekit` once), start it before the server, and the server
+with `--calls`:
+
+```bash
+bash scripts/livekit-dev.sh
+```
+
+```bash
+bash scripts/local-server.sh --calls
+```
+
+Design, tests and the phone test: `../docs/ORBIT_WEB_CALLS.md`.
+
 ## Checks
 
 ```bash
@@ -71,6 +86,10 @@ Browser tests: Chromium, Firefox, WebKit and a phone-sized Chromium, each run wi
 npx playwright install chromium firefox webkit && npx playwright test
 ```
 
+The call browser tests (`e2e/calls.spec.ts`) run when `livekit-server` is installed (`brew install livekit`) and the
+Orbit repository's `tools/griip-bot` (next to its `server/`) has its dependencies (`npm ci` there); otherwise they're
+skipped and say why. Playwright starts its own LiveKit.
+
 ## Layout
 
 | Path | What |
@@ -78,6 +97,7 @@ npx playwright install chromium firefox webkit && npx playwright test
 | `src/crypto` | griip-envelope-v1, HPKE, Ed25519, attachments, history keys, pairing, key storage (WebCrypto) |
 | `src/protocol`, `src/api` | validated payloads, history records and server responses; the API client |
 | `src/realtime`, `src/sync`, `src/store` | WebSocket, receive pipeline, outbox, history restore, directory and trust, IndexedDB |
+| `src/call` | calls: manager, keys, LiveKit session, encryption worker and frame audit, badge rules |
 | `src/state`, `src/app` | app state, React bindings, boot, routes, preferences |
 | `src/ui` | the interface |
 | `test`, `e2e` | Vitest and Playwright; `test/vectors` holds copies of the shared protocol vectors |

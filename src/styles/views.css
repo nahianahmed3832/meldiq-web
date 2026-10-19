@@ -134,7 +134,8 @@
   font-weight: 600;
   color: var(--text-2);
 }
-.segmented button[aria-pressed="true"] {
+.segmented button[aria-pressed="true"],
+.segmented button[aria-selected="true"] {
   background: var(--surface-raised);
   color: var(--text);
   box-shadow: var(--shadow-sm);
@@ -362,6 +363,75 @@
     opacity: 0;
     transform: translateY(6px);
   }
+}
+
+/* ───────────────────────── account forms (signed out) ───────────────────────── */
+.auth-form {
+  display: grid;
+  gap: 16px;
+}
+.auth-back {
+  justify-self: start;
+  margin: -8px 0 -4px -10px;
+}
+.auth-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px 16px;
+}
+.auth-alt {
+  display: grid;
+  gap: 10px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  font-size: 13px;
+}
+.auth-ways {
+  justify-self: start;
+  flex-wrap: wrap;
+}
+.auth-ways button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.text-link {
+  color: var(--link, var(--text));
+  font-weight: 600;
+  font-size: 13px;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.text-link:hover {
+  color: var(--text);
+}
+.code-input {
+  font-family: var(--mono);
+  font-size: 20px;
+  letter-spacing: 0.2em;
+}
+.textarea.mono {
+  font-size: 14px;
+  letter-spacing: 0.04em;
+  resize: vertical;
+}
+.recovery-key {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(64px, 1fr));
+  gap: 8px;
+  padding: 16px;
+  border-radius: var(--r-lg);
+  background: var(--surface-sunken);
+  border: 1px solid var(--border);
+  font-family: var(--mono);
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  user-select: all;
+}
+.recovery-key span {
+  text-align: center;
 }
 
 /* ───────────────────────── link (sign-in) screen ───────────────────────── */

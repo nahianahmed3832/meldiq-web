@@ -67,6 +67,6 @@ any client that speaks the protocol. No second database, message store or parall
 4. Interface: linking, shell, conversations, composer, attachments, settings, states. *(web)*
 5. Browser tests (Chromium, Firefox, WebKit, desktop and phone widths) against a local server. *(web)*
 6. Physical-device test with the Android app on a phone, on the developer's network (`ORBIT_WEB_STATUS.md` › Phone test).
-
-Calls in the browser (LiveKit JS with the same media E2EE) are a later stage: they need interop verified between a browser
-and a physical phone before they can be called supported.
+7. Calls in the browser (2026-10-18): LiveKit JS with the same media E2EE as the phone, no server change
+   (`ORBIT_WEB_CALLS.md`). Built and tested in browsers; they need interop verified between a browser and a physical
+   phone before they can be called supported.
