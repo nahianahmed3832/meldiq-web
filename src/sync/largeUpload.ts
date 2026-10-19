@@ -40,8 +40,13 @@ export type BodySender = (req: { method: string; url: string; headers: Record<st
 
 export class UploadCancelled extends Error {}
 
+/** Headers a page may not set; the browser sets them itself (content-length from the body, which is the signed size). */
+const FORBIDDEN = new Set(["content-length", "host", "connection"]);
+const settable = (headers: Record<string, string>) => Object.fromEntries(Object.entries(headers).filter(([k]) => !FORBIDDEN.has(k.toLowerCase())));
+
 /** XMLHttpRequest where it exists (fetch can't report upload progress), fetch elsewhere (tests). */
-export const sendBody: BodySender = (req, onSent, signal) => {
+export const sendBody: BodySender = (raw, onSent, signal) => {
+  const req = { ...raw, headers: settable(raw.headers) };
   if (typeof XMLHttpRequest === "undefined") {
     return fetch(req.url, { method: req.method, headers: req.headers, body: req.body, credentials: "omit", signal }).then(async (res) => {
       if (!res.ok) throw new ApiError(res.status, "upload_failed", `The upload was refused (${res.status}).`);

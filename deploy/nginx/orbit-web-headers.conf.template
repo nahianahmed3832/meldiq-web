@@ -1,0 +1,8 @@
+# Security headers for Orbit Web (docs/ORBIT_WEB_DEPLOYMENT.md › Headers). ${CONNECT_EXTRA}: LiveKit and the S3 bucket.
+add_header Content-Security-Policy "default-src 'self'; script-src 'self'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data:; media-src 'self' blob:; font-src 'self'; connect-src 'self' wss://${WEB_HOST} ${CONNECT_EXTRA}; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; upgrade-insecure-requests" always;
+add_header X-Content-Type-Options "nosniff" always;
+add_header Referrer-Policy "no-referrer" always;
+add_header Cross-Origin-Opener-Policy "same-origin" always;
+add_header Cross-Origin-Resource-Policy "same-origin" always;
+add_header Permissions-Policy "camera=(self), microphone=(self), display-capture=(self), geolocation=(self), payment=(), usb=()" always;
+add_header Strict-Transport-Security "max-age=31536000" always;

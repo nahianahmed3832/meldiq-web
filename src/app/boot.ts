@@ -1,3 +1,4 @@
+import { apiBase, wsUrl } from "./config";
 import { liveKitMedia } from "../call/media";
 import { Ringtone } from "../call/ringtone";
 import { LocalStore } from "../store/db";
@@ -25,10 +26,6 @@ export async function missingCapabilities(): Promise<string[]> {
     missing.push("X25519 key agreement in Web Crypto");
   }
   return missing;
-}
-
-export function wsUrl(): string {
-  return `${location.protocol === "https:" ? "wss:" : "ws:"}//${location.host}/v1/ws`;
 }
 
 /** System notifications for messages that arrive while this tab isn't looked at. */
@@ -66,7 +63,7 @@ function ringAlert(title: string, video: boolean, conversationId: string): void 
 
 export function createEngine(device: DeviceRecord, store: LocalStore): Engine {
   const engine = new Engine(device, store, {
-    base: "",
+    base: apiBase(),
     wsUrl: wsUrl(),
     notify,
     media: liveKitMedia,

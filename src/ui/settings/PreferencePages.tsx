@@ -1,3 +1,4 @@
+import { serverHost } from "../../app/config";
 import { useState } from "react";
 import { useOrbit } from "../../app/orbit";
 import { setPrefs, usePrefs } from "../../app/prefs";
@@ -104,7 +105,7 @@ export function AboutPage() {
           <div className="lines">
             <strong>Server</strong>
             <small>
-              {location.host}
+              {serverHost()}
               {server ? ` · ${server.instanceName ?? "Orbit"} ${server.version} · client API ${server.api}` : ""}
             </small>
           </div>

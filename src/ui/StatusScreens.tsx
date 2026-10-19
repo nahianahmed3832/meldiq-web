@@ -27,6 +27,22 @@ export function UnsupportedScreen({ missing }: { missing: string[] }) {
   );
 }
 
+/** The page's own configuration is broken (a deployment problem, not the person's). */
+export function ConfigError({ message }: { message: string }) {
+  return (
+    <main className="status-screen">
+      <div className="status-card card">
+        <span className="empty-orb">
+          <ShieldOff size={26} />
+        </span>
+        <h1>Orbit Web isn't set up correctly</h1>
+        <p>{message}</p>
+        <p className="faint">Nothing was sent anywhere. Tell whoever runs this Orbit server.</p>
+      </div>
+    </main>
+  );
+}
+
 export function ElsewhereScreen({ onUseHere }: { onUseHere: () => void }) {
   return (
     <main className="status-screen">

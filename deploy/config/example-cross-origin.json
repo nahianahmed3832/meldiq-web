@@ -1,0 +1,6 @@
+{
+  "apiBase": "https://msg.griipbuddy.cloud",
+  "wsUrl": "wss://msg.griipbuddy.cloud/v1/ws",
+  "publicUrl": "https://web.griipbuddy.cloud",
+  "environment": "production"
+}

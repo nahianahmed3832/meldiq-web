@@ -1,3 +1,4 @@
+import { apiBase, serverHost } from "../../app/config";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { AccountSessionGrant, AccountView, LegacyTicket } from "../../api/accountSchemas";
 import { ApiClient } from "../../api/client";
@@ -38,7 +39,7 @@ export function AuthScreen(props: {
   onReady: (device: DeviceRecord, grant: AccountSessionGrant) => void;
   onLinkWithPhone: () => void;
 }) {
-  const base = props.base ?? "";
+  const base = props.base ?? apiBase();
   const [step, setStep] = useState<Step>({ k: "signIn" });
   const [server, setServer] = useState<ServerInfo | null>(null);
   // A legacy account's identity seed, from its recovery key: sets up this browser right after the move, then is wiped.
@@ -190,7 +191,7 @@ export function AuthScreen(props: {
       {body}
       <div className="link-meta">
         <span>
-          Server: {location.host}
+          Server: {serverHost()}
           {server ? ` · ${server.instanceName ?? "Orbit"} ${server.version}` : ""}
         </span>
       </div>

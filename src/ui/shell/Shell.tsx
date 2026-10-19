@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { lazy, Suspense, useEffect, useMemo, useState } from "react";
 import { shallowEqual, useEngine, useOrbit } from "../../app/orbit";
 import { setPrefs, usePrefs } from "../../app/prefs";
 import { isFullPage, navigate, useRoute } from "../../app/router";
@@ -11,15 +11,16 @@ import { NewGroupDialog } from "../dialogs/NewGroupDialog";
 import { NewMessageDialog } from "../dialogs/NewMessageDialog";
 import { CreateWorkspaceDialog, JoinWorkspaceDialog } from "../dialogs/WorkspaceDialogs";
 import { SearchDialog } from "../dialogs/SearchDialog";
-import { SettingsView } from "../settings/SettingsView";
 import { ActivityView } from "../views/ActivityView";
 import { HomeView } from "../views/HomeView";
-import { WorkspaceView } from "../workspace/WorkspaceView";
 import { Notices } from "./Notices";
 import { Rail } from "./Rail";
 import { Sidebar } from "./Sidebar";
 import { TabBar } from "./TabBar";
 import { TopBar } from "./TopBar";
+
+const SettingsView = lazy(() => import("../settings/SettingsView").then((m) => ({ default: m.SettingsView })));
+const WorkspaceView = lazy(() => import("../workspace/WorkspaceView").then((m) => ({ default: m.WorkspaceView })));
 
 export type ShellDialog =
   { kind: "search" } | { kind: "new" } | { kind: "newGroup" } | { kind: "channels" } | { kind: "identity"; userId: string } | { kind: "createWorkspace" } | { kind: "joinWorkspace" } | null;
@@ -102,6 +103,8 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
   let main;
   if (section === "settings") main = <SettingsView page={route.settingsPage} onSignedOut={onSignedOut} />;
   else if (section === "workspace") main = <WorkspaceView orgId={orgId} page={route.workspacePage} onDialog={ctx.open} />;
+  // Settings and administration load on first use, keeping the first page load small.
+  if (settings) main = <Suspense fallback={<section className="main" aria-busy="true" />}>{main}</Suspense>;
   else if (route.conversationId && known) main = <ConversationView key={route.conversationId} id={route.conversationId} route={route} onDialog={ctx.open} />;
   else if (section === "activity") main = <ActivityView orgId={orgId} />;
   else main = <HomeView orgId={orgId} section={section} onDialog={ctx.open} />;

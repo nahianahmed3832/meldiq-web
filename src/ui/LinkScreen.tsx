@@ -1,3 +1,4 @@
+import { apiBase, serverHost } from "../app/config";
 import { ArrowLeft, Check, Copy, KeyRound, Laptop, Lock, RefreshCw, ShieldCheck, Smartphone } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ApiClient, ApiError } from "../api/client";
@@ -26,15 +27,15 @@ export function LinkScreen({ onLinked, onBack }: { onLinked: (device: DeviceReco
     const mine = ++gen.current;
     setPhase({ k: "starting" });
     try {
-      const info = await new ApiClient("").json("GET", "/v1/server-info", zServerInfo, { auth: false });
+      const info = await new ApiClient(apiBase()).json("GET", "/v1/server-info", zServerInfo, { auth: false });
       if (mine !== gen.current) return;
       setServer(info);
-      const link = await startLink("", browserDeviceName());
+      const link = await startLink(apiBase(), browserDeviceName());
       if (mine !== gen.current) return;
       setPhase({ k: "waiting", link, deviceFp: await fingerprint(link.keys.signingPublic) });
     } catch (e) {
       if (mine !== gen.current) return;
-      setPhase({ k: "error", message: e instanceof ApiError && e.isNetwork ? `Can't reach the Orbit server at ${location.host}.` : e instanceof ApiError ? e.message : "Couldn't start linking." });
+      setPhase({ k: "error", message: e instanceof ApiError && e.isNetwork ? `Can't reach the Orbit server at ${serverHost()}.` : e instanceof ApiError ? e.message : "Couldn't start linking." });
     }
   }, []);
 
@@ -58,7 +59,7 @@ export function LinkScreen({ onLinked, onBack }: { onLinked: (device: DeviceReco
     const tick = async () => {
       if (stopped || mine !== gen.current) return;
       try {
-        const r = await pollLink("", phase.link);
+        const r = await pollLink(apiBase(), phase.link);
         if (stopped || mine !== gen.current) return;
         if (r.status === "expired") return setPhase({ k: "expired" });
         if (r.status === "linked") {
@@ -209,7 +210,7 @@ export function LinkScreen({ onLinked, onBack }: { onLinked: (device: DeviceReco
               <Laptop size={14} /> {browserDeviceName()}
             </span>
             <span>
-              Server: {location.host}
+              Server: {serverHost()}
               {server ? ` · ${server.instanceName ?? "Orbit"} ${server.version}` : ""}
             </span>
           </div>

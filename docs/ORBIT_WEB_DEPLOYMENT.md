@@ -1,114 +1,181 @@
-# Deploying Orbit Web
+# Deploying Orbit Web to web.griipbuddy.cloud
 
-> **Not applied.** Nothing here has been run against production. Each step changes production infrastructure and
-> needs the owner's approval first. Status and test evidence: `ORBIT_WEB_STATUS.md`.
+> **Not applied.** Nothing here has been run against production, DNS or AWS. Every step below changes production
+> infrastructure and needs the owner's go-ahead. Status and evidence: `ORBIT_WEB_STATUS.md`.
 
-Orbit Web is static files (`dist/`, built from this repository) plus the existing API. The browser talks to the API **on its own origin**, so
-the API needs no CORS (`ORBIT_WEB_ARCHITECTURE.md` › G2): the web site's nginx serves the files and proxies `/v1` to
-the same API container the Android app uses. One backend, one database.
+Orbit Web is static files plus the existing Orbit API. The recommended setup serves the app at
+**https://web.griipbuddy.cloud** from the same VPS and nginx that already serve `msg.griipbuddy.cloud`, and proxies
+`/v1` and `/v2` from the web host to the same API container. The browser then talks to its own origin: no CORS, no
+cookies, one backend and one database for the phone and the browser. The domain is configuration (§3), not code.
 
-## 1. Prerequisites
-
-| # | What | Why |
-|---|---|---|
-| 1 | Deploy the server from this branch (0.3.0 + the WebSocket auth frame). | Production runs 0.2.0; browsers can't authenticate its WebSocket (G1). The change is backward compatible: the Android app keeps sending the `Authorization` header. Follow `DEPLOYMENT.md` (backup first: `scripts/backup.sh`). |
-| 2 | A host name with TLS for the web app, e.g. `orbit.griipbuddy.cloud`. | WebCrypto only works on HTTPS (or `localhost`). A separate site leaves `msg.griipbuddy.cloud` exactly as it is. |
-| 3 | With S3 storage only: a CORS rule on the attachments bucket (§4). | File downloads redirect to presigned S3 URLs; the browser follows them only if the bucket allows the web origin. |
-
-## 2. Build
-
-```bash
-npm ci && npm run build
+```
+browser ──https──▶ web.griipbuddy.cloud (nginx on the VPS)
+                    ├─ /            static app        /opt/orbit-web/current  (a release, §4)
+                    ├─ /config.json runtime config    written per server at install
+                    └─ /v1 /v2      proxy ──▶ 127.0.0.1:18080  (the API container the Android app uses)
+phone app ──https──▶ msg.griipbuddy.cloud (unchanged)
+calls ──wss──▶ rtc.griipbuddy.cloud (LiveKit, unchanged)        files ──https──▶ S3 (presigned, §6)
 ```
 
-Copy `dist/` to the server, e.g. `/opt/orbit-web/dist` (owned by root, read-only to nginx). The build contains no
-server addresses, keys or secrets: it always talks to the origin it's served from.
+## 1. What production needs first (owner's decisions)
 
-## 3. nginx site (new file, e.g. `/etc/nginx/sites-available/orbit-web.conf`)
+| # | Change | Why | Where |
+|---|---|---|---|
+| 1 | Deploy the API with `server-patches/0001` (first-frame WebSocket auth). | Browsers can't set an `Authorization` header on a WebSocket; without it the browser can't receive anything live. Backward compatible: the phone keeps sending the header. | Orbit repository, `docs/DEPLOYMENT.md` (back up first: `scripts/backup.sh`) |
+| 2 | API 0.5.0 or later (Orbit 2.0 accounts, workspace administration, preferences) in production. | Production ran 0.4.x; the web app signs in with email accounts (`/v2`). | Same |
+| 3 | Email for accounts (`MAIL_TRANSPORT=ses`, SES out of the sandbox). | Sign-up, verification and password reset send codes. Without it, existing verified accounts can still sign in. | `docs/ORBIT_SES_SETUP_2026-10-18.md` |
+| 4 | DNS: **A record `web` → 72.60.107.88** in the Hostinger zone for `griipbuddy.cloud`. | The new host name. | Hostinger DNS |
+| 5 | TLS: `certbot certonly --nginx -d web.griipbuddy.cloud` on the VPS. | WebCrypto only runs on HTTPS. Renewal is certbot's existing timer. | VPS |
+| 6 | 1 GB files: `FILE_MAX_BYTES` (default 1 GiB) and the quotas in `deploy/.env.example`; with S3, the bucket CORS rule (§6). | Production ran `ATTACHMENT_MAX_BYTES=25 MB`. Raising it is a cost decision (`ORBIT_2_ARCHITECTURE` §7). | API `.env` |
+| 7 | Optional: `WEB_ORIGINS=https://web.griipbuddy.cloud` (`server-patches/0002`). | Same-origin works without it. With it, the API also refuses browser WebSockets from any other site, and a cross-origin setup (§3) becomes possible. | API `.env` |
 
-```nginx
-server {
-  listen 443 ssl http2;
-  server_name orbit.griipbuddy.cloud;
-  # ssl_certificate / ssl_certificate_key: from certbot (certbot --nginx -d orbit.griipbuddy.cloud)
+## 2. Build a release (workstation)
 
-  root /opt/orbit-web/dist;
-  index index.html;
+```bash
+bash deploy/scripts/build-release.sh
+```
 
-  # The same API container the app uses (compose project griip-internal-messaging, API_HOST_PORT).
-  location /v1/ {
-    proxy_pass http://127.0.0.1:18080;
-    proxy_http_version 1.1;
-    proxy_set_header Upgrade $http_upgrade;          # /v1/ws
-    proxy_set_header Connection $connection_upgrade;
-    proxy_set_header Host $host;
-    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-    proxy_set_header X-Forwarded-Proto $scheme;
-    proxy_read_timeout 120s;                          # the app pings every 25 s
-    client_max_body_size 26m;                         # attachments (25 MiB + envelope)
-  }
+It refuses a dirty working tree, then runs `npm ci`, typecheck, lint, the unit tests and the production build, and
+writes `release/orbit-web-<version>-<commit>.tar.gz` with a `.sha256`. The tarball holds `dist/`, the nginx templates,
+the config files and the install, rollback and verify scripts. The build contains **no server address, key or secret**.
 
-  location /assets/ {
-    add_header Cache-Control "public, max-age=31536000, immutable";
-    include /etc/nginx/snippets/orbit-web-headers.conf;
-  }
+## 3. Configuration (per server, not per build)
 
-  location / {
-    try_files $uri /index.html;
-    add_header Cache-Control "no-cache";
-    include /etc/nginx/snippets/orbit-web-headers.conf;
-  }
+`/config.json` is read when the page loads (`src/app/config.ts`):
+
+| Field | Production value | Meaning |
+|---|---|---|
+| `apiBase` | `""` | Same origin (recommended). Or the API's https origin, e.g. `https://msg.griipbuddy.cloud`: then the API must list this site in `WEB_ORIGINS` (`server-patches/0002`), and CSP `connect-src` must include it. |
+| `wsUrl` | `null` | Derived: `wss://<page host>/v1/ws`, or from `apiBase`. |
+| `publicUrl` | `https://web.griipbuddy.cloud` | Shown in diagnostics. |
+| `environment` | `production` | `development`, `staging` or `production`. |
+
+`deploy/config/production.json` is the recommended file; `deploy/config/example-cross-origin.json` shows the
+cross-origin variant. **Moving to another domain**: a DNS record, a certificate, `WEB_HOST` at install (§4) and, if
+`WEB_ORIGINS` is set, its new value. No rebuild.
+
+A malformed `config.json` (e.g. an `http://` API) stops the app with "Orbit Web isn't set up correctly" rather than
+talking to the wrong server.
+
+## 4. Install on the VPS
+
+Copy the tarball to the VPS, check it, unpack, and install as root (it touches only `/opt/orbit-web`, its nginx site
+`orbit-web.conf` and the snippet `orbit-web-headers.conf`; never the API, its compose project or other sites):
+
+```bash
+scp release/orbit-web-*.tar.gz* root@72.60.107.88:/root/
+```
+
+```bash
+ssh root@72.60.107.88
+```
+
+```bash
+cd /root && shasum -a 256 -c orbit-web-*.tar.gz.sha256 && tar xzf orbit-web-*.tar.gz && cd orbit-web-*/
+```
+
+```bash
+WEB_HOST=web.griipbuddy.cloud API_UPSTREAM=127.0.0.1:18080 CONNECT_EXTRA="https://rtc.griipbuddy.cloud wss://rtc.griipbuddy.cloud https://BUCKET.s3.ap-southeast-1.amazonaws.com" CONFIG=config/production.json bash install-release.sh
+```
+
+`install-release.sh` copies the release to `/opt/orbit-web/releases/<version>-<commit>`, writes its `config.json`,
+renders the nginx site and header snippet from the templates, switches `/opt/orbit-web/current`, runs `nginx -t`
+(switching back if nginx refuses) and reloads nginx. The newest five releases are kept.
+
+nginx needs the usual upgrade map in `http {}` once (the script checks):
+`map $http_upgrade $connection_upgrade { default upgrade; '' close; }`.
+
+### What the nginx site does (`deploy/nginx/orbit-web.conf.template`)
+
+- HTTP → HTTPS; TLS 1.2/1.3 with the certbot certificate.
+- `/v1/ws`: upgraded, 120 s read timeout (the app pings every 25 s).
+- `/v1/`, `/v2/`: to the API; bodies up to 1100 MB stream **unbuffered** (`proxy_request_buffering off`), one-hour
+  timeouts for slow uploads. The API already trusts its local proxy (`TRUST_PROXY`), so per-address limits see the
+  real client.
+- `/config.json`: `no-store`. `/assets/`: content-hashed, cached a year. Everything else falls back to `index.html`.
+- Its own access and error logs (`/var/log/nginx/orbit-web.*.log`).
+
+### Headers (`deploy/nginx/orbit-web-headers.conf.template`)
+
+`Content-Security-Policy`: `default-src 'self'`; scripts only from the site (the build has no inline scripts);
+`worker-src 'self' blob:` (the call-encryption worker); `style-src 'self' 'unsafe-inline'` (React style attributes);
+`img-src`/`media-src` `blob:` (decrypted photos, voice and video); `connect-src 'self' wss://<host>` plus
+`CONNECT_EXTRA`: LiveKit signalling (`rtc.griipbuddy.cloud`, https and wss) and the S3 bucket (presigned uploads and
+downloads); `frame-ancestors 'none'`, `object-src 'none'`, `base-uri 'none'`, `form-action 'none'`.
+Also HSTS, `nosniff`, `Referrer-Policy: no-referrer`, COOP and CORP `same-origin`, and `Permissions-Policy` allowing
+camera, microphone, screen capture and location for this site only (the browser still asks the person).
+
+The CSP is the main defence against injected script, which could use this browser's keys while the page is open
+(`ORBIT_WEB_STATUS.md` › Security).
+
+## 5. Check
+
+```bash
+bash deploy/scripts/verify.sh https://web.griipbuddy.cloud
+```
+
+Read-only: DNS, certificate expiry, the app and its headers, `config.json` (and that it isn't cached), the API through
+the web origin (`/v1/server-info`, Orbit 2.0 accounts present), and the realtime upgrade (`101`). Then by hand:
+
+1. Open the site: the sign-in screen names the server and its version.
+2. Sign in with an existing account; set up the browser with the recovery key or by approving it on the phone.
+3. Send a message each way with the phone; edit, react, delete; a file both ways; star a channel on one device and see
+   it on the other.
+4. Calls only after the physical-phone test (`ORBIT_WEB_CALLS.md` §8) has passed.
+
+## 6. S3 (file storage)
+
+With S3 storage, files over the single-upload size go **from the browser straight to S3** (presigned PUTs, 16 MiB
+parts, each bound to its size and SHA-256), and downloads redirect to presigned GETs. The bucket needs a CORS rule for
+the web origin (add it to `deploy/aws/orbit-storage.yaml` as `CorsConfiguration`, or `aws s3api put-bucket-cors`):
+
+```json
+{
+  "CORSRules": [
+    {
+      "AllowedOrigins": ["https://web.griipbuddy.cloud"],
+      "AllowedMethods": ["GET", "PUT"],
+      "AllowedHeaders": ["range", "content-type", "x-amz-checksum-sha256", "x-amz-server-side-encryption", "x-amz-server-side-encryption-aws-kms-key-id"],
+      "MaxAgeSeconds": 3000
+    }
+  ]
 }
 ```
 
-`$connection_upgrade` needs the usual map in `http {}` (`map $http_upgrade $connection_upgrade { default upgrade; '' close; }`).
-The API already trusts its local proxy (`TRUST_PROXY=loopback,uniquelocal` in `deploy/compose.yaml`), so per-address
-limits see the real client address.
+These are the headers the server signs into its upload URLs (`server/src/storage/s3.ts`); the browser adds
+`content-length` itself from the body, which is the signed size. No `ExposeHeaders` is needed: the browser reads part
+ETags through the API (`GET /v1/attachments/uploads/:id/parts`).
+Without S3 (local disk), files stream through the API instead, and nothing here is needed.
 
-`/etc/nginx/snippets/orbit-web-headers.conf`:
+## 7. Roll back
 
-```nginx
-add_header Content-Security-Policy "default-src 'self'; script-src 'self'; worker-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data:; media-src 'self' blob:; font-src 'self'; connect-src 'self' wss://orbit.griipbuddy.cloud wss://rtc.griipbuddy.cloud https://rtc.griipbuddy.cloud https://YOUR-BUCKET.s3.YOUR-REGION.amazonaws.com; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'" always;
-add_header X-Content-Type-Options nosniff always;
-add_header Referrer-Policy no-referrer always;
-add_header Cross-Origin-Opener-Policy same-origin always;
-add_header Permissions-Policy "camera=(self), microphone=(self), geolocation=(), payment=()" always;
-add_header Strict-Transport-Security "max-age=31536000" always;
+The previous release (the API isn't touched):
+
+```bash
+bash /root/orbit-web-*/rollback.sh
 ```
 
-- `style-src 'unsafe-inline'` is needed for React `style` attributes; scripts stay `'self'` only (no inline scripts in
-  the build).
-- The S3 entry in `connect-src` is only for S3 storage (presigned downloads); drop it for local storage.
-- Calls (`ORBIT_WEB_CALLS.md`): `rtc.griipbuddy.cloud` is the server's `LIVEKIT_PUBLIC_URL` (signalling over `wss`, and an
-  `https` check LiveKit makes when a connection fails); media itself goes to the LiveKit host's UDP 7882 / TCP 7881,
-  which CSP doesn't govern. `worker-src 'self'` lets the media-encryption worker (`/assets/e2eeWorker-*.js`) start.
-  `Permissions-Policy` allows the camera and microphone for this site only; the browser still asks the person.
-- The CSP is the main defence against injected script, which could use this browser's keys while the page is open.
+Remove the site entirely:
 
-Then `nginx -t && systemctl reload nginx`.
-
-## 4. S3 bucket CORS (S3 storage only)
-
-Add to the attachments bucket (in `deploy/aws/orbit-storage.yaml` as `CorsConfiguration`, or with
-`aws s3api put-bucket-cors`):
-
-```json
-{ "CORSRules": [ { "AllowedOrigins": ["https://orbit.griipbuddy.cloud"], "AllowedMethods": ["GET"], "AllowedHeaders": ["range"], "MaxAgeSeconds": 3000 } ] }
+```bash
+rm /etc/nginx/sites-enabled/orbit-web.conf && nginx -t && systemctl reload nginx
 ```
 
-Uploads from the browser go through the API (`POST /v1/attachments`), not to S3, so no `PUT` rule is needed.
+The server patches can stay: 0001 only adds an authentication path for clients without the header; 0002 does nothing
+until `WEB_ORIGINS` is set.
 
-## 5. Check after deploying
+## 8. Environments
 
-1. `https://orbit.griipbuddy.cloud/v1/server-info` returns `version: 0.3.0` (or later).
-2. Open the site: the link screen shows a code and a device key (not "This browser can't run Orbit").
-3. Link from a phone signed in to `msg.griipbuddy.cloud` (Settings › Devices › Approve new device). The phone's
-   account must be on the same server the web site proxies to.
-4. Send a message each way; remove the browser from the phone and check it signs out.
-5. Calls, only after the physical-phone test in `ORBIT_WEB_CALLS.md` › 8 has passed: call between the browser and a
-   phone on another account, both directions; the badge reaches "End-to-end encrypted" and the codes match.
+| | Development | Staging (not created) | Production |
+|---|---|---|---|
+| App | `npm run dev` at http://localhost:5173 | a second site, e.g. `staging-web.griipbuddy.cloud`, same scripts | `web.griipbuddy.cloud` |
+| API | `bash scripts/local-server.sh` (local data, emails to files) | the staging compose project (`ORBIT_2_ARCHITECTURE` §9, needs the owner) | `msg.griipbuddy.cloud` container via the proxy |
+| config.json | none (same origin through Vite's proxy) | `environment: "staging"` | `deploy/config/production.json` |
+| Email | `MAIL_TRANSPORT=file` | SES sandbox | SES |
 
-## 6. Rolling back
+## 9. Logs, health and restarts
 
-Remove the site (`rm /etc/nginx/sites-enabled/orbit-web.conf && nginx -t && systemctl reload nginx`). The server
-change can stay: it only adds an authentication path for clients without the header.
+- The app is static: nginx serves it; there is no web process to restart. `systemctl reload nginx` after changes.
+- API health stays `scripts/verify.sh` in the Orbit repository; the web site's own check is §5.
+- Logs: `/var/log/nginx/orbit-web.access.log` and `.error.log` (no request bodies; tokens travel in headers nginx
+  doesn't log by default). The app sends no analytics or telemetry.

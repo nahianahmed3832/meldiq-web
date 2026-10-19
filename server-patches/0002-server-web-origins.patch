@@ -1,0 +1,197 @@
+From 965e053439345907711f6cb619937df4939d0bdd Mon Sep 17 00:00:00 2001
+From: "MD.NAHIAN AHMED" <254077813+nahianahmed3832@users.noreply.github.com>
+Date: Mon, 19 Oct 2026 14:16:11 +0800
+Subject: [PATCH] feat(server): WEB_ORIGINS for browser apps on another origin
+
+WEB_ORIGINS lists the browser apps (e.g. https://web.griipbuddy.cloud) that
+may call this API from another origin and open its WebSocket. Listed
+origins get CORS answers (no credentials: tokens are bearer tokens, never
+cookies) and preflights; others get no CORS headers, and their WebSockets
+are closed with 4403. Requests without an Origin (the phone apps) are never
+affected. Empty by default: the previous behaviour.
+---
+ server/src/app.ts               | 19 +++++++++
+ server/src/config.ts            | 26 ++++++++++++
+ server/src/ws.ts                |  6 +++
+ server/test/web_origins.test.ts | 71 +++++++++++++++++++++++++++++++++
+ 4 files changed, 122 insertions(+)
+ create mode 100644 server/test/web_origins.test.ts
+
+diff --git a/server/src/app.ts b/server/src/app.ts
+index 8d69fdf..0930727 100644
+--- a/server/src/app.ts
++++ b/server/src/app.ts
+@@ -118,6 +118,25 @@ export async function buildApp(
+   // LiveKit webhooks: keep the raw string, the signature covers the exact bytes.
+   app.addContentTypeParser("application/webhook+json", { parseAs: "string" }, (_req, body, done) => done(null, body));
+ 
++  // Cross-origin browser apps (WEB_ORIGINS): only the listed origins get CORS answers; everyone else gets none, so their
++  // pages can't read this API's responses. No cookies are used, so CORS here never carries ambient credentials.
++  if (config.webOrigins.length) {
++    const allowed = new Set(config.webOrigins);
++    app.addHook("onRequest", async (req, reply) => {
++      const origin = req.headers.origin;
++      if (!origin || !allowed.has(origin)) return;
++      reply.header("access-control-allow-origin", origin).header("vary", "Origin");
++      if (req.method === "OPTIONS") {
++        return reply
++          .header("access-control-allow-methods", "GET, POST, PUT, PATCH, DELETE")
++          .header("access-control-allow-headers", "authorization, content-type")
++          .header("access-control-max-age", "600")
++          .code(204)
++          .send();
++      }
++    });
++  }
++
+   await app.register(rateLimit, {
+     global: true,
+     max: config.rateLimitPerMinute,
+diff --git a/server/src/config.ts b/server/src/config.ts
+index 2a75e69..021e379 100644
+--- a/server/src/config.ts
++++ b/server/src/config.ts
+@@ -115,6 +115,12 @@ export interface Config {
+    * every entry, including ones a client sends itself, so per-address limits can be dodged (logged at start).
+    */
+   trustProxy: boolean | string[];
++  /**
++   * WEB_ORIGINS: the browser apps allowed to use this API from another origin (CORS) and to open its WebSocket, e.g.
++   * "https://web.griipbuddy.cloud". Empty (the default): no cross-origin access, and WebSocket origins aren't checked.
++   * Requests without an Origin (the phone apps) are never affected. Tokens are bearer tokens, never cookies.
++   */
++  webOrigins: string[];
+   /** Abuse controls (docs/ABUSE_CONTROLS.md). 0 turns a limit off. */
+   abuse: AbuseConfig;
+   /** Optional display name for this instance, shown on client setup screens (INSTANCE_NAME). */
+@@ -191,6 +197,25 @@ export interface AbuseConfig {
+   wsAuthTimeoutMs: number;
+ }
+ 
++/** WEB_ORIGINS: comma-separated origins (scheme, host and port only); https, or http for localhost in development. */
++export function webOrigins(raw: string | undefined): string[] {
++  const out: string[] = [];
++  for (const part of (raw ?? "").split(",").map((s) => s.trim()).filter(Boolean)) {
++    let u: URL;
++    try {
++      u = new URL(part);
++    } catch {
++      throw new Error(`WEB_ORIGINS: "${part}" isn't an origin like https://web.example.com`);
++    }
++    const local = u.hostname === "localhost" || u.hostname === "127.0.0.1";
++    if ((u.protocol !== "https:" && !(u.protocol === "http:" && local)) || u.pathname !== "/" || u.search || u.hash || u.username) {
++      throw new Error(`WEB_ORIGINS: "${part}" must be an https origin without a path`);
++    }
++    out.push(u.origin);
++  }
++  return [...new Set(out)];
++}
++
+ /** TRUST_PROXY: false | true | comma-separated proxy addresses, CIDRs or names (loopback, linklocal, uniquelocal). */
+ function trustProxy(v: string | undefined): Config["trustProxy"] {
+   const s = (v ?? "").trim();
+@@ -358,6 +383,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): Config {
+           }
+         : null,
+     trustProxy: trustProxy(env.TRUST_PROXY),
++    webOrigins: webOrigins(env.WEB_ORIGINS),
+     abuse: abuseConfig(int),
+     instanceName: (env.INSTANCE_NAME ?? "").trim().slice(0, 80) || null,
+     federation: federationConfig(env, dataDir, int),
+diff --git a/server/src/ws.ts b/server/src/ws.ts
+index 37e4310..56b3848 100644
+--- a/server/src/ws.ts
++++ b/server/src/ws.ts
+@@ -39,6 +39,12 @@ export default async function wsRoutes(app: FastifyInstance, ctx: AppContext) {
+   };
+ 
+   app.get("/v1/ws", { websocket: true }, (socket, req) => {
++    // A browser page from an origin not in WEB_ORIGINS can't use this socket (when the list is set). Apps send no Origin.
++    const origin = req.headers.origin;
++    if (origin && ctx.config.webOrigins.length && !ctx.config.webOrigins.includes(origin)) {
++      socket.close(4403, "origin not allowed");
++      return;
++    }
+     const header = req.headers.authorization?.startsWith("Bearer ") ? req.headers.authorization.slice(7) : undefined;
+     // Browsers can't set headers on a WebSocket: they send {t:"auth", token} as their first frame instead (never in the
+     // URL, so the token stays out of logs). Any other first frame, or none in time, closes the socket.
+diff --git a/server/test/web_origins.test.ts b/server/test/web_origins.test.ts
+new file mode 100644
+index 0000000..39315d6
+--- /dev/null
++++ b/server/test/web_origins.test.ts
+@@ -0,0 +1,71 @@
++/**
++ * WEB_ORIGINS (Orbit Web on another host): listed origins get CORS answers and may open the WebSocket; others get no
++ * CORS headers and a closed socket; apps without an Origin are unaffected. Empty list: the previous behaviour.
++ */
++import { afterAll, beforeAll, describe, expect, it } from "vitest";
++import WebSocket from "ws";
++import { webOrigins } from "../src/config.js";
++import type { GriipClient } from "./support/griipClient.js";
++import { type Harness, startServer } from "./support/harness.js";
++
++let h: Harness;
++let plain: Harness;
++let alice: GriipClient;
++const WEB = "https://web.example.test";
++
++beforeAll(async () => {
++  h = await startServer({ WEB_ORIGINS: `${WEB}, http://localhost:5173` });
++  plain = await startServer();
++  alice = await h.client("origins");
++});
++afterAll(async () => {
++  await h.close();
++  await plain.close();
++});
++
++function open(base: string, origin: string | undefined, token: string): Promise<{ code?: number; hello: boolean }> {
++  return new Promise((resolve) => {
++    const ws = new WebSocket(base.replace(/^http/, "ws") + "/v1/ws", origin ? { headers: { origin } } : {});
++    let hello = false;
++    ws.on("open", () => ws.send(JSON.stringify({ t: "auth", token })));
++    ws.on("message", (d) => {
++      if (JSON.parse(d.toString()).t === "hello") {
++        hello = true;
++        ws.close();
++      }
++    });
++    ws.on("close", (code) => resolve({ code, hello }));
++  });
++}
++
++describe("WEB_ORIGINS", () => {
++  it("answers a listed origin's preflight and requests with CORS headers, and nobody else's", async () => {
++    const pre = await fetch(`${h.baseUrl}/v1/users/me`, { method: "OPTIONS", headers: { origin: WEB, "access-control-request-method": "GET", "access-control-request-headers": "authorization" } });
++    expect(pre.status).toBe(204);
++    expect(pre.headers.get("access-control-allow-origin")).toBe(WEB);
++    expect(pre.headers.get("access-control-allow-headers")).toContain("authorization");
++    expect(pre.headers.get("access-control-allow-credentials")).toBeNull();
++    const ok = await fetch(`${h.baseUrl}/v1/users/me`, { headers: { origin: WEB, authorization: `Bearer ${alice.token}` } });
++    expect(ok.status).toBe(200);
++    expect(ok.headers.get("access-control-allow-origin")).toBe(WEB);
++    const other = await fetch(`${h.baseUrl}/v1/users/me`, { headers: { origin: "https://evil.example", authorization: `Bearer ${alice.token}` } });
++    expect(other.headers.get("access-control-allow-origin")).toBeNull();
++    // Without the setting there are no CORS answers at all.
++    const none = await fetch(`${plain.baseUrl}/v1/server-info`, { headers: { origin: WEB } });
++    expect(none.headers.get("access-control-allow-origin")).toBeNull();
++  });
++
++  it("lets listed origins and apps (no Origin) open the WebSocket, and closes others", async () => {
++    expect(await open(h.baseUrl, WEB, alice.token)).toMatchObject({ hello: true });
++    expect(await open(h.baseUrl, undefined, alice.token)).toMatchObject({ hello: true });
++    expect(await open(h.baseUrl, "https://evil.example", alice.token)).toMatchObject({ code: 4403, hello: false });
++  });
++
++  it("accepts only https origins without a path (http only for localhost)", () => {
++    expect(webOrigins("https://a.example, https://a.example/ ,http://localhost:5173")).toEqual(["https://a.example", "http://localhost:5173"]);
++    expect(webOrigins(undefined)).toEqual([]);
++    expect(() => webOrigins("http://a.example")).toThrow();
++    expect(() => webOrigins("https://a.example/app")).toThrow();
++    expect(() => webOrigins("*")).toThrow();
++  });
++});
+-- 
+2.54.0
+
