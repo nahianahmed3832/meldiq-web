@@ -1,4 +1,4 @@
-import type { CallParticipantView, DeviceIssues, MediaFactory, MediaGrant, MediaSession } from "./types";
+import type { CallParticipantView, DeviceIssues, DeviceKind, MediaDeviceChoice, MediaFactory, MediaGrant, MediaSession } from "./types";
 
 /**
  * The browser's call media, loaded on first use: LiveKit and its encryption worker stay out of the main bundle until
@@ -42,6 +42,22 @@ class DeferredSession implements MediaSession {
 
   attachVideo(identity: string, el: HTMLVideoElement): () => void {
     return this.ready?.attachVideo(identity, el) ?? (() => undefined);
+  }
+
+  async setScreenShare(on: boolean): Promise<void> {
+    return (await this.inner).setScreenShare(on);
+  }
+
+  attachScreen(identity: string, el: HTMLVideoElement): () => void {
+    return this.ready?.attachScreen(identity, el) ?? (() => undefined);
+  }
+
+  async listDevices(kind: DeviceKind): Promise<MediaDeviceChoice[]> {
+    return (await this.inner).listDevices(kind);
+  }
+
+  async useDevice(kind: DeviceKind, deviceId: string): Promise<void> {
+    return (await this.inner).useDevice(kind, deviceId);
   }
 
   async startAudio(): Promise<void> {

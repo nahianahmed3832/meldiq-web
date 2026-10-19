@@ -5,7 +5,8 @@ import { useEngine } from "../../app/orbit";
 import { usePrefs } from "../../app/prefs";
 import type { StoredMessage } from "../../model/types";
 import type { RichContent } from "../../model/types";
-import { MAX_FILES_PER_MESSAGE, MAX_UPLOAD_BYTES, sendFiles } from "../../sync/attachments";
+import { fileLimit, MAX_FILES_PER_MESSAGE, sendFiles } from "../../sync/attachments";
+import { UploadCancelled } from "../../sync/largeUpload";
 import { fallbackText } from "../../sync/rich";
 import { type Recording, voiceFileName, voiceMime } from "../../sync/voice";
 import { activeMentionQuery } from "../../sync/mentions";
@@ -41,6 +42,7 @@ export function Composer(props: ComposerProps) {
   const fileInput = useRef<HTMLInputElement>(null);
   const emoji = useMenu();
   const attach = useMenu();
+  const upload = useRef<AbortController | null>(null);
   const [voice, setVoice] = useState(false);
   const [rich, setRich] = useState<"contact" | "location" | null>(null);
   const canRecord = !props.threadRoot && voiceMime() !== null;
@@ -84,9 +86,10 @@ export function Composer(props: ComposerProps) {
 
   const addFiles = useCallback(
     (list: File[]) => {
-      const tooBig = list.find((f) => f.size > MAX_UPLOAD_BYTES - 16);
-      if (tooBig) engine.notice("error", `"${tooBig.name}" is larger than 25 MB. Send larger files from your phone.`);
-      setFiles((cur) => [...cur, ...list.filter((f) => f.size <= MAX_UPLOAD_BYTES - 16 && f.size > 0)].slice(0, MAX_FILES_PER_MESSAGE));
+      const limit = fileLimit(engine.state.get().server);
+      const tooBig = list.find((f) => f.size > limit);
+      if (tooBig) engine.notice("error", `"${tooBig.name}" is larger than this server accepts (${Math.floor(limit / (1024 * 1024))} MB per file).`);
+      setFiles((cur) => [...cur, ...list.filter((f) => f.size <= limit && f.size > 0)].slice(0, MAX_FILES_PER_MESSAGE));
     },
     [engine],
   );
@@ -133,10 +136,14 @@ export function Composer(props: ComposerProps) {
         await sendFiles(
           engine,
           c.id,
-          files.map((f) => ({ name: f.name, type: f.type, size: f.size, bytes: async () => new Uint8Array(await f.arrayBuffer()) })),
+          files.map((f) => ({ name: f.name, type: f.type, size: f.size, bytes: async () => new Uint8Array(await f.arrayBuffer()), source: f })),
           body,
           opts,
           (done, total) => setBusy(`Uploading ${done} of ${total}…`),
+          {
+            signal: (upload.current = new AbortController()).signal,
+            onProgress: (name, p) => setBusy(`${p.phase === "hashing" ? "Encrypting" : "Uploading"} ${name}… ${Math.floor((100 * p.done) / Math.max(1, p.total))}%`),
+          },
         );
       } else await engine.sendText(c.id, body, opts);
       setText("");
@@ -145,8 +152,9 @@ export function Composer(props: ComposerProps) {
       engine.setTyping(c.id, false);
       if (!props.threadRoot) void engine.saveDraft(c.id, "");
     } catch (e) {
-      engine.notice("error", e instanceof Error ? e.message : "Couldn't send.");
+      if (!(e instanceof UploadCancelled)) engine.notice("error", e instanceof Error ? e.message : "Couldn't send.");
     } finally {
+      upload.current = null;
       setBusy(null);
       input.current?.focus();
     }
@@ -320,6 +328,11 @@ export function Composer(props: ComposerProps) {
               <span className="hint" id={`composer-status-${c.id}`} aria-live="polite">
                 {busy ?? (prefs.enterToSend ? "Enter to send · Shift+Enter for a new line" : "Ctrl+Enter to send")}
               </span>
+              {busy && upload.current && (
+                <button className="btn btn-ghost btn-sm" onClick={() => upload.current?.abort()}>
+                  Cancel
+                </button>
+              )}
               {canRecord && !text.trim() && !files.length && !busy ? (
                 <button className="send-btn" onClick={() => setVoice(true)} aria-label="Record a voice message">
                   <Mic size={17} />

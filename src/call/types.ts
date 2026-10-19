@@ -26,6 +26,8 @@ export interface CallParticipantView {
   micOn: boolean;
   /** A camera track is published and on (its frames may not have arrived yet). */
   cameraOn: boolean;
+  /** Sharing their screen (for someone else: once its frames are proven to decrypt with the call key). */
+  screenOn: boolean;
   /** LiveKit rates this person's connection poor or lost. */
   connectionWeak: boolean;
   /** This person's media fails to encrypt or decrypt (shown on their tile, never hidden to make video show). */
@@ -43,6 +45,8 @@ export interface CallUiState {
   isGroup: boolean;
   micOn: boolean;
   cameraOn: boolean;
+  /** This browser is sharing its screen. */
+  screenSharing: boolean;
   participants: CallParticipantView[];
   /** When the other side joined (starts the timer). */
   connectedAt: number | null;
@@ -81,6 +85,7 @@ export const idleCall: CallUiState = {
   isGroup: false,
   micOn: true,
   cameraOn: false,
+  screenSharing: false,
   participants: [],
   connectedAt: null,
   security: "verifying",
@@ -111,10 +116,18 @@ export interface DeviceIssues {
   camera: DeviceIssue | null;
 }
 
-/** A microphone or camera couldn't be started; [issue] says why. */
+/** The devices a person can choose between during a call. */
+export type DeviceKind = "audioinput" | "videoinput" | "audiooutput";
+
+export interface MediaDeviceChoice {
+  deviceId: string;
+  label: string;
+}
+
+/** A microphone, camera or screen share couldn't be started; [issue] says why. */
 export class DeviceError extends Error {
   constructor(
-    readonly device: "microphone" | "camera",
+    readonly device: "microphone" | "camera" | "screen",
     readonly issue: DeviceIssue,
   ) {
     super(`${device} ${issue}`);
@@ -156,6 +169,14 @@ export interface MediaSession {
   remoteCount(): number;
   /** Shows [identity]'s camera in [el]; returns a function that stops. */
   attachVideo(identity: string, el: HTMLVideoElement): () => void;
+  /** Starts or stops sharing this browser's screen (the browser asks which screen or window). Rejects with [DeviceError]. */
+  setScreenShare(on: boolean): Promise<void>;
+  /** Shows [identity]'s shared screen in [el]; returns a function that stops. */
+  attachScreen(identity: string, el: HTMLVideoElement): () => void;
+  /** The microphones, cameras or speakers the browser offers (labels once permission was given). */
+  listDevices(kind: DeviceKind): Promise<MediaDeviceChoice[]>;
+  /** Switches the call to another microphone, camera or speaker. */
+  useDevice(kind: DeviceKind, deviceId: string): Promise<void>;
   /** Resumes sound after the browser blocked it (needs a click). */
   startAudio(): Promise<void>;
   disconnect(): Promise<void>;

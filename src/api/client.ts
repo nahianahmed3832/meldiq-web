@@ -65,6 +65,13 @@ export class ApiClient {
     await res.body?.cancel().catch(() => undefined);
   }
 
+  /** The answer's body as a stream (large downloads, decrypted as they arrive). The caller reads or cancels it. */
+  async stream(path: string, opts: RequestOptions = {}): Promise<ReadableStream<Uint8Array>> {
+    const res = await this.send("GET", path, opts);
+    if (!res.body) throw new ApiError(res.status, "decode", "The server's answer had no body");
+    return res.body;
+  }
+
   async bytes(path: string, opts: RequestOptions = {}): Promise<Uint8Array> {
     const res = await this.send("GET", path, opts);
     return new Uint8Array(await res.arrayBuffer());

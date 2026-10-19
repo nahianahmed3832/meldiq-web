@@ -5,7 +5,7 @@ import type { AppState, Store } from "../state/store";
 import { IdentityChangedError } from "../sync/outbox";
 import { CallKeyRing, judgeKey, type KeyVerdict, KeyRequestPacer, newCallKey, verificationCode } from "./callKeys";
 import { backoff, CallFailure, KEY_POLL_MS, KEY_WAIT_MS, PEER_WINDOW_MS, REJOIN_WINDOW_MS, retryable, shouldRing } from "./rules";
-import { type CallUiState, DeviceError, idleCall, type MediaEvents, type MediaFactory, type MediaGrant, type MediaSession } from "./types";
+import { type CallUiState, DeviceError, type DeviceKind, idleCall, type MediaDeviceChoice, type MediaEvents, type MediaFactory, type MediaGrant, type MediaSession } from "./types";
 
 /** What the call manager needs from the engine that owns it. */
 export interface CallHost {
@@ -454,6 +454,40 @@ export class CallManager {
     if (this.session === session) this.refresh();
   }
 
+  /** Shares this browser's screen, or stops (the browser's own "Stop sharing" also stops it; the state follows). */
+  async toggleScreenShare(): Promise<void> {
+    const session = this.session;
+    if (!session) return;
+    try {
+      await session.setScreenShare(!this.state.screenSharing);
+      this.patch({ error: null });
+    } catch (e) {
+      // Closing the browser's screen picker isn't a failure to show.
+      if (!(e instanceof DeviceError && e.issue === "denied")) this.patch({ error: "Your screen couldn't be shared." });
+    }
+    if (this.session === session) this.refresh();
+  }
+
+  attachScreen(identity: string, el: HTMLVideoElement): () => void {
+    return this.session?.attachScreen(identity, el) ?? (() => undefined);
+  }
+
+  async listDevices(kind: DeviceKind): Promise<MediaDeviceChoice[]> {
+    return (await this.session?.listDevices(kind)) ?? [];
+  }
+
+  /** Switches microphone, camera or speaker during the call. */
+  async useDevice(kind: DeviceKind, deviceId: string): Promise<void> {
+    const session = this.session;
+    if (!session) return;
+    try {
+      await session.useDevice(kind, deviceId);
+    } catch {
+      this.patch({ error: "That device couldn't be used. Choose another." });
+    }
+    if (this.session === session) this.refresh();
+  }
+
   async startAudio(): Promise<void> {
     await this.session?.startAudio().catch(() => undefined);
     this.patch({ audioBlocked: false });
@@ -572,7 +606,7 @@ export class CallManager {
     if (!session) return;
     const participants = session.participants();
     const local = participants.find((p) => p.isLocal);
-    this.patch({ participants, ...(local ? { micOn: local.micOn, cameraOn: local.cameraOn } : {}) });
+    this.patch({ participants, ...(local ? { micOn: local.micOn, cameraOn: local.cameraOn, screenSharing: local.screenOn } : {}) });
   }
 
   private markHandled(id: string | null): void {

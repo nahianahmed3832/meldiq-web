@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { useEngine } from "../../app/orbit";
 import type { AttachmentRef } from "../../protocol/payload";
-import { isInlineImage, openAttachment, safeMime } from "../../sync/attachments";
+import { isInlineImage, openAttachment, safeMime, saveAttachment } from "../../sync/attachments";
 import { clock, isVoice, shownDuration } from "../../sync/voice";
 import { bytes } from "../format";
 
@@ -183,17 +183,9 @@ function FileAttachment({ r, error: initialError }: { r: AttachmentRef; error?: 
     setBusy(true);
     setError(null);
     try {
-      const blob = await openAttachment(engine, r);
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = r.name;
-      a.rel = "noopener";
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      setTimeout(() => URL.revokeObjectURL(url), 30_000);
+      await saveAttachment(engine, r);
     } catch (e) {
+      if (e instanceof DOMException && e.name === "AbortError") return; // the save dialog was closed
       setError(e instanceof Error ? e.message : "Couldn't download this file.");
     } finally {
       setBusy(false);

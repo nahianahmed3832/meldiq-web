@@ -1,6 +1,9 @@
 import { z } from "zod";
 import { ApiError } from "../api/client";
 import { decryptFile, encryptFile } from "../crypto/attachment";
+import { EnvelopeError } from "../crypto/envelope";
+import { decryptStream } from "../crypto/fileStream";
+import { type UploadProgress, uploadLarge } from "./largeUpload";
 import type { AttachmentRef } from "../protocol/payload";
 import type { Engine } from "./engine";
 
@@ -10,11 +13,17 @@ import type { Engine } from "./engine";
  * server, then are checked (SHA-256) and decrypted here.
  */
 
-/** The single-message format every Orbit app opens: 25 MB, the server's default per-file limit. */
-export const MAX_UPLOAD_BYTES = 25 * 1024 * 1024;
-/** Larger (chunked) files are decrypted in memory here; past this size they're opened on the phone instead. */
-export const MAX_BROWSER_DOWNLOAD_BYTES = 200 * 1024 * 1024;
+/** Up to this size a file uses the single-message format every Orbit app opens; larger ones are encrypted in chunks. */
+export const SINGLE_FORMAT_BYTES = 25 * 1024 * 1024;
+/** Orbit 2.0's per-file limit (FILE_MAX_BYTES, 1 GiB); the server says its own in server-info (fileMaxBytes). */
+export const MAX_FILE_BYTES = 1024 * 1024 * 1024;
 export const MAX_FILES_PER_MESSAGE = 10;
+
+/** The largest file this server takes: fileMaxBytes (Orbit 2.0), else attachmentMaxBytes less the encryption tag. */
+export function fileLimit(server: { fileMaxBytes?: number; attachmentMaxBytes: number } | null): number {
+  if (!server) return SINGLE_FORMAT_BYTES;
+  return Math.min(MAX_FILE_BYTES, server.fileMaxBytes ?? server.attachmentMaxBytes - 16);
+}
 
 const zUploadRes = z.object({ id: z.string(), size: z.number(), expiresAt: z.number() });
 
@@ -27,17 +36,44 @@ export interface PickedFile {
   bytes(): Promise<Uint8Array>;
   /** A voice message: its length, sent with the reference (docs/VOICE_MESSAGES.md). */
   voiceDurationMs?: number;
+  /** The file itself, read in slices: required for files over the single-message size. */
+  source?: Blob;
 }
 
-export async function uploadFiles(engine: Engine, conversationId: string, files: PickedFile[], onProgress?: (done: number, total: number) => void): Promise<AttachmentRef[]> {
+const sizeText = (n: number): string => (n >= 1024 * 1024 * 1024 ? `${(n / (1024 * 1024 * 1024)).toFixed(n % (1024 * 1024 * 1024) ? 1 : 0)} GB` : `${Math.floor(n / (1024 * 1024))} MB`);
+
+export async function uploadFiles(
+  engine: Engine,
+  conversationId: string,
+  files: PickedFile[],
+  onProgress?: (done: number, total: number) => void,
+  large?: { onProgress?: (file: string, p: UploadProgress) => void; signal?: AbortSignal },
+): Promise<AttachmentRef[]> {
   if (files.length > MAX_FILES_PER_MESSAGE) throw new AttachmentError(`Send at most ${MAX_FILES_PER_MESSAGE} files in one message.`);
-  const limit = Math.min(MAX_UPLOAD_BYTES, engine.state.get().server?.attachmentMaxBytes ?? MAX_UPLOAD_BYTES);
-  const tooBig = files.find((f) => f.size > limit - 16);
-  if (tooBig) throw new AttachmentError(`"${tooBig.name}" is larger than ${Math.floor(limit / (1024 * 1024))} MB, the most this server accepts per file.`);
+  const limit = fileLimit(engine.state.get().server);
+  const tooBig = files.find((f) => f.size > limit);
+  if (tooBig) throw new AttachmentError(`"${tooBig.name}" is larger than ${sizeText(limit)}, the most this server accepts per file.`);
   const empty = files.find((f) => f.size === 0);
   if (empty) throw new AttachmentError(`"${empty.name}" is empty.`);
   const refs: AttachmentRef[] = [];
   for (const [i, f] of files.entries()) {
+    if (f.size > SINGLE_FORMAT_BYTES) {
+      if (!f.source) throw new AttachmentError(`"${f.name}" is too large to send this way.`);
+      refs.push(
+        await uploadLarge(
+          engine,
+          conversationId,
+          { name: f.name, type: f.type, size: f.size, slice: (a, b) => f.source!.slice(a, b) },
+          {
+            onProgress: (p) => large?.onProgress?.(f.name, p),
+            signal: large?.signal,
+            voiceDurationMs: f.voiceDurationMs,
+          },
+        ),
+      );
+      onProgress?.(i + 1, files.length);
+      continue;
+    }
     const enc = await encryptFile(await f.bytes());
     const res = await engine.api.json("POST", `/v1/attachments?conversationId=${encodeURIComponent(conversationId)}`, zUploadRes, { raw: enc.ciphertext });
     refs.push({
@@ -63,19 +99,30 @@ export async function sendFiles(
   caption: string,
   opts: { replyTo?: string; threadRoot?: string } = {},
   onProgress?: (done: number, total: number) => void,
+  large?: { onProgress?: (file: string, p: UploadProgress) => void; signal?: AbortSignal },
 ): Promise<string> {
-  const attachments = await uploadFiles(engine, conversationId, files, onProgress);
+  const attachments = await uploadFiles(engine, conversationId, files, onProgress, large);
   return engine.sendText(conversationId, caption, { ...opts, attachments });
 }
 
 const cache = new Map<string, Promise<Blob>>();
 
-/** Downloads, verifies and decrypts a file once per page load. Object URLs are made by the caller and revoked by it. */
+/** Files up to this size are kept decrypted for the page's life (instant reopening); larger ones are fetched each time. */
+const CACHE_LIMIT = 64 * 1024 * 1024;
+
+/** Downloads, verifies and decrypts a file (once per page load when small). Object URLs are made by the caller and revoked by it. */
 export function openAttachment(engine: Engine, ref: AttachmentRef): Promise<Blob> {
+  if (ref.chunk !== undefined) {
+    const parts: Blob[] = [];
+    const p = streamAttachment(engine, ref, (plain) => void parts.push(new Blob([new Uint8Array(plain)]))).then(() => new Blob(parts, { type: safeMime(ref.mime) }));
+    if (ref.size > CACHE_LIMIT) return p;
+    cache.set(ref.id, p);
+    p.catch(() => cache.delete(ref.id));
+    return p;
+  }
   let p = cache.get(ref.id);
   if (!p) {
     p = (async () => {
-      if (ref.size > MAX_BROWSER_DOWNLOAD_BYTES) throw new AttachmentError("This file is too large to open in the browser. Open it on your phone.");
       let ct: Uint8Array;
       try {
         ct = await engine.api.bytes(`/v1/attachments/${encodeURIComponent(ref.id)}`);
@@ -92,6 +139,70 @@ export function openAttachment(engine: Engine, ref: AttachmentRef): Promise<Blob
     cache.set(ref.id, p);
   }
   return p;
+}
+
+/**
+ * A chunked file, decrypted as it downloads and handed to [sink] chunk by chunk (decryptStream checks every chunk, the
+ * count and the whole hash; on failure the caller discards what it got).
+ */
+export async function streamAttachment(engine: Engine, ref: AttachmentRef, sink: (plain: Uint8Array) => Promise<void> | void, signal?: AbortSignal): Promise<void> {
+  let body: ReadableStream<Uint8Array>;
+  try {
+    body = await engine.api.stream(`/v1/attachments/${encodeURIComponent(ref.id)}`, { signal });
+  } catch (e) {
+    if (e instanceof ApiError && e.status === 404) throw new AttachmentError("This file has expired on the server (files are kept 7 days unless saved with history).");
+    throw e;
+  }
+  try {
+    await decryptStream(readAll(body), { key: ref.key, nonce: ref.nonce, sha256: ref.sha256, chunk: ref.chunk ?? 0, size: ref.size }, sink);
+  } catch (e) {
+    if (e instanceof EnvelopeError) throw new AttachmentError("This file didn't pass its integrity check and wasn't opened.");
+    throw e;
+  }
+}
+
+async function* readAll(body: ReadableStream<Uint8Array>): AsyncGenerator<Uint8Array> {
+  const reader = body.getReader();
+  try {
+    for (;;) {
+      const { done, value } = await reader.read();
+      if (done) return;
+      yield value;
+    }
+  } finally {
+    reader.releaseLock();
+  }
+}
+
+/**
+ * Saves a file to disk. Where the browser lets a page write a file it chose (Chromium's File System Access), a large
+ * file is decrypted straight into it, never whole in memory; a failed check deletes what was written. Elsewhere the
+ * decrypted file is handed to the browser's download.
+ */
+export async function saveAttachment(engine: Engine, ref: AttachmentRef): Promise<void> {
+  const picker = (window as unknown as { showSaveFilePicker?: (o: { suggestedName: string }) => Promise<FileSystemFileHandle> }).showSaveFilePicker;
+  if (ref.chunk !== undefined && ref.size > CACHE_LIMIT && picker) {
+    const handle = await picker({ suggestedName: ref.name });
+    const out = await handle.createWritable();
+    try {
+      await streamAttachment(engine, ref, (plain) => out.write(new Uint8Array(plain)));
+      await out.close();
+    } catch (e) {
+      await out.abort().catch(() => undefined);
+      throw e;
+    }
+    return;
+  }
+  const blob = await openAttachment(engine, ref);
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = ref.name;
+  a.rel = "noopener";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 30_000);
 }
 
 /** Only inert types are shown inline; anything else is a download, never rendered as a page (no HTML or SVG). */

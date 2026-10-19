@@ -1,10 +1,10 @@
-import { AlertTriangle, Lock, Mic, MicOff, Minimize2, PhoneOff, ShieldAlert, ShieldQuestion, Video, VideoOff, Volume2, WifiOff } from "lucide-react";
+import { AlertTriangle, Lock, Mic, MicOff, Minimize2, MonitorOff, MonitorUp, PhoneOff, Settings2, ShieldAlert, ShieldQuestion, Video, VideoOff, Volume2, WifiOff } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useEngine, useOrbit } from "../../app/orbit";
 import { CallFailure } from "../../call/rules";
-import type { CallParticipantView, CallUiState } from "../../call/types";
+import type { CallParticipantView, CallUiState, DeviceKind, MediaDeviceChoice } from "../../call/types";
 import { Avatar } from "../components/Avatar";
-import { useFocusTrap } from "../components/Overlay";
+import { Menu, useFocusTrap, useMenu } from "../components/Overlay";
 import { useNow } from "./useNow";
 import { callStatus, SECURITY_LABEL } from "./callText";
 
@@ -114,6 +114,20 @@ function CallNotes({ call }: { call: CallUiState }) {
 }
 
 function Tiles({ participants, ended, title, colorIndex }: { participants: CallParticipantView[]; ended: boolean; title: string; colorIndex: number }) {
+  // A shared screen takes the stage, everyone in a strip under it (android GROUP_CALL_TILES.md); your own share isn't
+  // shown back to you (it would show itself), only noted.
+  const sharer = participants.find((p) => p.screenOn && !p.isLocal);
+  if (sharer)
+    return (
+      <div className="call-screen-layout">
+        <ScreenView p={sharer} />
+        <div className="call-strip" aria-label="People in the call">
+          {participants.map((p) => (
+            <Tile key={p.identity} p={p} />
+          ))}
+        </div>
+      </div>
+    );
   if (participants.length === 0)
     return (
       <div className="call-tiles">
@@ -158,6 +172,28 @@ function Tile({ p }: { p: CallParticipantView }) {
   );
 }
 
+function ScreenView({ p }: { p: CallParticipantView }) {
+  const engine = useEngine();
+  const video = useRef<HTMLVideoElement>(null);
+  const epoch = useOrbit((s) => s.call.mediaEpoch);
+  useEffect(() => {
+    const el = video.current;
+    if (!el) return;
+    return engine.calls.attachScreen(p.identity, el);
+  }, [engine, p.identity, epoch]);
+  return (
+    <figure className="call-screen" aria-label={`${p.name}'s screen`} style={{ margin: 0 }}>
+      <video ref={video} autoPlay playsInline muted aria-hidden="true" />
+      <figcaption className="who">
+        <MonitorUp size={13} aria-hidden="true" /> {p.name} is sharing their screen
+      </figcaption>
+    </figure>
+  );
+}
+
+/** Screen sharing needs getDisplayMedia, which phones' browsers don't offer. */
+const canShareScreen = (): boolean => typeof navigator !== "undefined" && typeof navigator.mediaDevices?.getDisplayMedia === "function" && !/Android|iPhone|iPad/.test(navigator.userAgent);
+
 function Controls({ call }: { call: CallUiState }) {
   const engine = useEngine();
   const live = call.phase !== "ended";
@@ -182,9 +218,57 @@ function Controls({ call }: { call: CallUiState }) {
       >
         {call.cameraOn ? <Video size={22} /> : <VideoOff size={22} />}
       </button>
+      {canShareScreen() && (
+        <button
+          className={`call-btn${call.screenSharing ? " on" : ""}`}
+          onClick={() => void engine.calls.toggleScreenShare()}
+          aria-pressed={call.screenSharing}
+          aria-label={call.screenSharing ? "Stop sharing your screen" : "Share your screen"}
+          title={call.screenSharing ? "Stop sharing" : "Share your screen"}
+          disabled={!media}
+        >
+          {call.screenSharing ? <MonitorOff size={22} /> : <MonitorUp size={22} />}
+        </button>
+      )}
+      <DeviceMenu disabled={!media} />
       <button className="call-btn end" onClick={() => engine.calls.hangup()} aria-label="Hang up" disabled={!live}>
         <PhoneOff size={22} />
       </button>
     </div>
+  );
+}
+
+const KINDS: { kind: DeviceKind; heading: string }[] = [
+  { kind: "audioinput", heading: "Microphone" },
+  { kind: "videoinput", heading: "Camera" },
+  { kind: "audiooutput", heading: "Speaker" },
+];
+
+/** Microphone, camera and speaker choice during the call (speakers where the browser can switch them). */
+function DeviceMenu({ disabled }: { disabled: boolean }) {
+  const engine = useEngine();
+  const menu = useMenu();
+  const [lists, setLists] = useState<Record<DeviceKind, MediaDeviceChoice[]> | null>(null);
+  const open = async (el: HTMLElement) => {
+    const entries = await Promise.all(KINDS.map(async (k) => [k.kind, await engine.calls.listDevices(k.kind)] as const));
+    setLists(Object.fromEntries(entries) as Record<DeviceKind, MediaDeviceChoice[]>);
+    menu.open(el);
+  };
+  return (
+    <>
+      <button className="call-btn" onClick={(e) => void open(e.currentTarget)} aria-label="Choose microphone, camera or speaker" aria-haspopup="menu" disabled={disabled}>
+        <Settings2 size={22} />
+      </button>
+      {menu.anchor && lists && (
+        <Menu
+          anchor={menu.anchor}
+          label="Call devices"
+          onClose={menu.close}
+          entries={KINDS.flatMap((k) =>
+            lists[k.kind].length ? [{ heading: k.heading }, ...lists[k.kind].map((d) => ({ label: d.label, onSelect: () => void engine.calls.useDevice(k.kind, d.deviceId) }))] : [],
+          )}
+        />
+      )}
+    </>
   );
 }

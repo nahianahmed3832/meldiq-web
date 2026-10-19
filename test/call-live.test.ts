@@ -250,6 +250,27 @@ describe("calling from the browser", () => {
   });
 });
 
+describe("screen sharing and devices", () => {
+  it("shares the screen and stops; a closed screen picker isn't an error; devices can be switched", async () => {
+    rig.remoteOnConnect = 1;
+    await web.calls.startCall(dm, false);
+    const id = web.state.get().call.callId!;
+    await web.calls.toggleScreenShare();
+    expect(web.state.get().call.screenSharing).toBe(true);
+    expect(rig.last?.screen).toBe(true);
+    await web.calls.toggleScreenShare();
+    expect(web.state.get().call.screenSharing).toBe(false);
+    rig.screenRefused = true;
+    await web.calls.toggleScreenShare();
+    expect(web.state.get().call).toMatchObject({ screenSharing: false, error: null });
+    expect((await web.calls.listDevices("audioinput")).map((d) => d.deviceId)).toEqual(["audioinput-1", "audioinput-2"]);
+    await web.calls.useDevice("videoinput", "videoinput-2");
+    expect(rig.last?.device.videoinput).toBe("videoinput-2");
+    web.calls.hangup();
+    await callEvent(bob, id, "ended");
+  });
+});
+
 describe("keeping a call going", () => {
   it("rejoins the same call with the same key after this browser's media connection drops", async () => {
     const c = await bobCalls();

@@ -1,4 +1,14 @@
-import type { CallParticipantView, DeviceIssues, MediaEvents, MediaFactory, MediaGrant, MediaSession } from "../../src/call/types";
+import {
+  type CallParticipantView,
+  DeviceError,
+  type DeviceIssues,
+  type DeviceKind,
+  type MediaDeviceChoice,
+  type MediaEvents,
+  type MediaFactory,
+  type MediaGrant,
+  type MediaSession,
+} from "../../src/call/types";
 
 /**
  * A stand-in for the LiveKit media connection: records what the call manager asked for (above all, which key it
@@ -10,6 +20,8 @@ export class FakeMedia implements MediaSession {
   remote = 0;
   mic = false;
   camera = false;
+  screen = false;
+  device: Record<string, string> = {};
   prepared: boolean | null = null;
 
   constructor(
@@ -40,8 +52,19 @@ export class FakeMedia implements MediaSession {
   }
 
   participants(): CallParticipantView[] {
-    const me: CallParticipantView = { identity: "me", userId: "me", name: "You", isLocal: true, speaking: false, micOn: this.mic, cameraOn: this.camera, connectionWeak: false, e2eeProblem: false };
-    const others = Array.from({ length: this.remote }, (_, i) => ({ ...me, identity: `peer${i}`, userId: `peer${i}`, name: `Peer ${i}`, isLocal: false }));
+    const me: CallParticipantView = {
+      identity: "me",
+      userId: "me",
+      name: "You",
+      isLocal: true,
+      speaking: false,
+      micOn: this.mic,
+      cameraOn: this.camera,
+      screenOn: this.screen,
+      connectionWeak: false,
+      e2eeProblem: false,
+    };
+    const others = Array.from({ length: this.remote }, (_, i) => ({ ...me, identity: `peer${i}`, userId: `peer${i}`, name: `Peer ${i}`, isLocal: false, screenOn: false }));
     return [...others, me];
   }
 
@@ -51,6 +74,23 @@ export class FakeMedia implements MediaSession {
 
   attachVideo(): () => void {
     return () => undefined;
+  }
+
+  async setScreenShare(on: boolean): Promise<void> {
+    if (on && this.rig.screenRefused) throw new DeviceError("screen", "denied");
+    this.screen = on;
+  }
+
+  attachScreen(): () => void {
+    return () => undefined;
+  }
+
+  async listDevices(kind: DeviceKind): Promise<MediaDeviceChoice[]> {
+    return [1, 2].map((i) => ({ deviceId: `${kind}-${i}`, label: `${kind} ${i}` }));
+  }
+
+  async useDevice(kind: DeviceKind, deviceId: string): Promise<void> {
+    this.device[kind] = deviceId;
   }
 
   async startAudio(): Promise<void> {}
@@ -66,6 +106,7 @@ export class MediaRig {
   issues: DeviceIssues = { microphone: null, camera: null };
   remoteOnConnect = 1;
   failConnect: string | null = null;
+  screenRefused = false;
 
   readonly factory: MediaFactory = (events) => {
     const s = new FakeMedia(events, this);
@@ -81,5 +122,6 @@ export class MediaRig {
     this.issues = { microphone: null, camera: null };
     this.remoteOnConnect = 1;
     this.failConnect = null;
+    this.screenRefused = false;
   }
 }

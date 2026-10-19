@@ -17,7 +17,18 @@ import {
 import { isAuditMessage } from "./frameAudit";
 import { describePath, deviceIssueOf, MediaFlowMonitor } from "./rules";
 import { MediaSecurityTracker } from "./security";
-import { type CallParticipantView, DeviceError, type DeviceIssue, type DeviceIssues, type MediaEvents, type MediaGrant, type MediaSecurity, type MediaSession } from "./types";
+import {
+  type CallParticipantView,
+  DeviceError,
+  type DeviceIssue,
+  type DeviceIssues,
+  type DeviceKind,
+  type MediaDeviceChoice,
+  type MediaEvents,
+  type MediaGrant,
+  type MediaSecurity,
+  type MediaSession,
+} from "./types";
 
 // LiveKit's own logging stays at warnings: its signalling URL carries the call pass (android keeps SDK logging off).
 setLogLevel(LogLevel.warn);
@@ -117,12 +128,44 @@ export class LiveKitSession implements MediaSession {
     }
   }
 
+  async setScreenShare(on: boolean): Promise<void> {
+    try {
+      // Up to 1080p at 15 fps, as the phone shares (UI-003); no tab audio. Frame encryption covers it like any track.
+      await this.room?.localParticipant.setScreenShareEnabled(on, { audio: false, resolution: { width: 1920, height: 1080, frameRate: 15 }, contentHint: "detail" });
+    } catch (e) {
+      // Closing the browser's picker isn't an error worth showing.
+      if (e instanceof DOMException && e.name === "NotAllowedError" && on) throw new DeviceError("screen", "denied");
+      throw new DeviceError("screen", deviceIssueOf(e));
+    }
+  }
+
+  attachScreen(identity: string, el: HTMLVideoElement): () => void {
+    const room = this.room;
+    const p = room && (identity === room.localParticipant.identity ? room.localParticipant : room.getParticipantByIdentity(identity));
+    const track = p?.getTrackPublication(Track.Source.ScreenShare)?.track;
+    if (!track) return () => undefined;
+    track.attach(el);
+    return () => void track.detach(el);
+  }
+
+  async listDevices(kind: DeviceKind): Promise<MediaDeviceChoice[]> {
+    const all = await Room.getLocalDevices(kind, false).catch(() => [] as MediaDeviceInfo[]);
+    return all.map((d, i) => ({ deviceId: d.deviceId, label: d.label || `${kind === "audioinput" ? "Microphone" : kind === "videoinput" ? "Camera" : "Speaker"} ${i + 1}` }));
+  }
+
+  async useDevice(kind: DeviceKind, deviceId: string): Promise<void> {
+    if (!this.room) return;
+    const ok = await this.room.switchActiveDevice(kind, deviceId).catch(() => false);
+    if (ok === false) throw new DeviceError(kind === "videoinput" ? "camera" : "microphone", "failed");
+  }
+
   participants(): CallParticipantView[] {
     const room = this.room;
     if (!room) return [];
     const problems = this.tracker.problemIdentities();
     const view = (p: Participant, isLocal: boolean): CallParticipantView => {
       const cam = p.getTrackPublication(Track.Source.Camera);
+      const screen = p.getTrackPublication(Track.Source.ScreenShare);
       return {
         identity: p.identity,
         userId: userIdOf(p),
@@ -132,6 +175,7 @@ export class LiveKitSession implements MediaSession {
         micOn: p.isMicrophoneEnabled,
         // Someone else's video shows only once its frames are proven to decrypt with the call key (see pendingAudio).
         cameraOn: !!cam && !cam.isMuted && !!cam.track && (isLocal || this.tracker.proven(MediaSecurityTracker.key(p.identity, cam.track.mediaStreamID))),
+        screenOn: !!screen && !screen.isMuted && !!screen.track && (isLocal || this.tracker.proven(MediaSecurityTracker.key(p.identity, screen.track.mediaStreamID))),
         connectionWeak: p.connectionQuality === ConnectionQuality.Poor || p.connectionQuality === ConnectionQuality.Lost,
         e2eeProblem: problems.has(p.identity),
       };
