@@ -2,12 +2,13 @@ import { fileLimit, MAX_FILES_PER_MESSAGE } from "../../sync/attachments";
 import { serverHost } from "../../app/config";
 import { useState } from "react";
 import { useOrbit } from "../../app/orbit";
-import { type Palette, PALETTES, type Prefs, setPrefs, THEMES, usePrefs } from "../../app/prefs";
+import { type Palette, PALETTES, type Prefs, setPrefs, TEXT_SIZES, type TextSize, THEMES, usePrefs } from "../../app/prefs";
 import { bytes } from "../format";
 import { Toggle } from "../components/Toggle";
 
 const THEME_LABELS: Record<Prefs["theme"], string> = { system: "System", light: "Light", dark: "Dark" };
 const PALETTE_LABELS: Record<Palette, string> = { indigo: "Indigo", plum: "Plum", amber: "Amber" };
+const TEXT_SIZE_LABELS: Record<TextSize, string> = { small: "Small", default: "Default", large: "Large" };
 
 export function NotificationsPage() {
   const prefs = usePrefs();
@@ -102,6 +103,26 @@ export function AppearancePage() {
               </button>
             ))}
           </div>
+        </div>
+        <div className="setting">
+          <div className="lines">
+            <strong>Text size</strong>
+            <small>Messages and the message box. Everything else keeps its size.</small>
+          </div>
+          <div className="segmented" role="group" aria-label="Text size">
+            {TEXT_SIZES.map((t) => (
+              <button key={t} aria-pressed={prefs.textSize === t} onClick={() => setPrefs({ textSize: t })}>
+                {TEXT_SIZE_LABELS[t]}
+              </button>
+            ))}
+          </div>
+        </div>
+        <div className="setting">
+          <div className="lines">
+            <strong>Animated emoji</strong>
+            <small>Animated emoji play in conversations. Off: they're shown still (they're still sent animated).</small>
+          </div>
+          <Toggle label="Animated emoji" checked={prefs.animatedEmoji} onChange={(v) => setPrefs({ animatedEmoji: v })} />
         </div>
         <div className="setting">
           <div className="lines">

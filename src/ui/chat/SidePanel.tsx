@@ -1,5 +1,5 @@
-import { BellOff, Fingerprint, Hash, Lock, LogOut, MessageSquare, Pin, ShieldCheck, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { BellOff, Fingerprint, Hash, Images, Lock, LogOut, MessageSquare, Pin, ShieldCheck, X } from "lucide-react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import type { Member } from "../../api/schemas";
 import { useEngine, useOrbit } from "../../app/orbit";
 import { navigate, type Route } from "../../app/router";
@@ -12,6 +12,9 @@ import { levelOf, type NotifyLevel, workspaceOf } from "../../sync/navPrefs";
 import { preview } from "../../sync/rules";
 import { removeConversationMember } from "../../sync/workspaces";
 import { Composer } from "./Composer";
+import { AddMembersButton, BlockToggle, EditConversationButton } from "./ConversationManage";
+import { galleryOf } from "./gallery";
+import { MediaGalleryDialog } from "./MediaGalleryDialog";
 import { MessageList } from "./MessageList";
 
 export function SidePanel({ route }: { route: Route }) {
@@ -48,14 +51,24 @@ function DetailsPanel({ conversationId, onClose }: { conversationId: string; onC
   const [error, setError] = useState<string | null>(null);
   const [safety, setSafety] = useState<string | null>(null);
   const [verified, setVerified] = useState<boolean | null>(null);
+  const [galleryOpen, setGalleryOpen] = useState(false);
   const peer = c && me && c.type === "DM" ? dmPeer(c, me.userId) : null;
+  const memberCount = c?.memberCount;
 
-  useEffect(() => {
-    setMembers(null);
+  const loadMembers = useCallback(() => {
     conversationMembers(engine, conversationId)
       .then(setMembers)
       .catch((e: unknown) => setError(e instanceof Error ? e.message : "Couldn't load members"));
   }, [engine, conversationId]);
+
+  useEffect(() => {
+    setMembers(null);
+    loadMembers();
+    // memberCount: someone added or removed (here or on another device) reloads the list.
+  }, [loadMembers, memberCount]);
+
+  const gallery = useMemo(() => galleryOf(loaded ?? []), [loaded]);
+  const memberIds = useMemo(() => new Set((members ?? []).map((m) => m.id)), [members]);
 
   useEffect(() => {
     if (!peer || !me) return;
@@ -75,10 +88,7 @@ function DetailsPanel({ conversationId, onClose }: { conversationId: string; onC
   if (!c || !me) return null;
   const title = conversationTitle(c, me.userId, users);
   const pinned = (loaded ?? []).filter((m) => m.pinned && !m.deleted);
-  const files = (loaded ?? [])
-    .flatMap((m) => m.attachments.map((a) => ({ a, m })))
-    .slice(-8)
-    .reverse();
+  const senderName = (i: { outgoing: boolean; senderUserId: string }) => (i.outgoing ? "You" : (users[i.senderUserId]?.displayName ?? "Unknown"));
 
   return (
     <aside className="panel" aria-label="Details">
@@ -114,6 +124,11 @@ function DetailsPanel({ conversationId, onClose }: { conversationId: string; onC
               </dd>
             </div>
           </dl>
+          {c.type !== "DM" && c.canManage && (
+            <div>
+              <EditConversationButton c={c} />
+            </div>
+          )}
         </div>
 
         {peer && safety && (
@@ -160,12 +175,21 @@ function DetailsPanel({ conversationId, onClose }: { conversationId: string; onC
           </div>
         )}
 
+        {peer && (
+          <div className="panel-card">
+            <div>
+              <BlockToggle userId={peer.id} name={peer.displayName} />
+            </div>
+          </div>
+        )}
+
         {c.type !== "DM" && (
           <div style={{ display: "grid", gap: 4 }}>
             <div className="panel-section-title">
               <span>Members</span>
               <span>{c.memberCount}</span>
             </div>
+            <AddMembersButton c={c} memberIds={memberIds} onAdded={loadMembers} />
             {error && <div className="banner danger">{error}</div>}
             {!members && !error && <span className="skeleton" style={{ height: 120 }} />}
             {members?.map((m) => (
@@ -200,24 +224,18 @@ function DetailsPanel({ conversationId, onClose }: { conversationId: string; onC
           </div>
         )}
 
-        {files.length > 0 && (
-          <div style={{ display: "grid", gap: 6 }}>
-            <div className="panel-section-title">
-              <span>Recent files</span>
-            </div>
-            {files.map(({ a, m }) => (
-              <div key={a.id} className="person">
-                <span className="file-icon" style={{ width: 30, height: 30, borderRadius: 8, display: "grid", placeItems: "center", background: "var(--accent-soft)", color: "var(--accent-text)" }}>
-                  <MessageSquare size={14} />
-                </span>
-                <div className="lines grow">
-                  <span className="ellipsis">{a.name}</span>
-                  <small>{dayLabel(m.sortTs)}</small>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
+        <button className="panel-action-row" onClick={() => setGalleryOpen(true)}>
+          <span className="circle">
+            <Images size={16} />
+          </span>
+          <span className="lines grow">
+            <span>Media and files</span>
+            <small>
+              {gallery.media.length} photos and videos · {gallery.files.length} files
+            </small>
+          </span>
+        </button>
+        {galleryOpen && <MediaGalleryDialog gallery={gallery} nameOf={senderName} onClose={() => setGalleryOpen(false)} />}
 
         <ConversationSettings conversationId={conversationId} />
       </div>

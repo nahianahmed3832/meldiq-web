@@ -33,8 +33,14 @@ export const zTeam = z.object({
   canAccess: z.boolean(),
   canManage: z.boolean().default(false),
   memberCount: z.number(),
+  /** The department of its branch it's grouped under (no access of its own); null when ungrouped or cross-branch. */
+  departmentId: nullableString.default(null),
 });
 export type Team = z.infer<typeof zTeam>;
+
+/** A group of one branch's teams (docs/WORKSPACE_ADMINISTRATION.md D-15): it organises, it grants no access. */
+export const zDepartment = z.object({ id: z.string(), branchId: z.string(), name: z.string(), description: nullableString });
+export type Department = z.infer<typeof zDepartment>;
 
 export const zOrgPermissions = z.object({
   canManageOrg: z.boolean(),
@@ -51,6 +57,7 @@ export const zOrgAdminDetail = z.object({
   org: zOrg,
   branches: z.array(zBranch),
   teams: z.array(zTeam),
+  departments: z.array(zDepartment).default([]),
   stats: z.object({ members: z.number(), teams: z.number(), channels: z.number(), branches: z.number() }),
   permissions: zOrgPermissions,
 });

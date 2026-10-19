@@ -1,33 +1,60 @@
 import { Search, UsersRound } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { Member } from "../../api/schemas";
-import { useEngine } from "../../app/orbit";
+import { useEngine, useOrbit } from "../../app/orbit";
 import { navigate } from "../../app/router";
-import { searchPeople, startDirect } from "../../sync/account";
+import { resolveAddress, searchPeople, startDirect } from "../../sync/account";
+import { lookupKind, normalAddress } from "../../sync/lookup";
+import { findByPhone } from "../../sync/profile";
 import { Avatar } from "../components/Avatar";
 import { Dialog } from "../components/Overlay";
 
-/** Start a direct message: people who share a workspace with you, or anyone by exact @username (server search rules). */
+/**
+ * Start a direct message: people who share a workspace with you, anyone by exact @username (server search rules), by exact
+ * phone number (only people who allow it), or on another server by their full address (@name:domain, when this server
+ * federates).
+ */
 export function NewMessageDialog({ onClose, onNewGroup }: { onClose: () => void; onNewGroup?: () => void }) {
   const engine = useEngine();
   const [q, setQ] = useState("");
   const [people, setPeople] = useState<Member[]>([]);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const federates = useOrbit((s) => !!s.server?.federation);
+  const term = q.trim();
+  const kind = lookupKind(term);
 
   useEffect(() => {
-    const term = q.trim();
     if (!term) return setPeople([]);
+    let alive = true;
+    const find = async (): Promise<Member[]> => {
+      if (kind === "phone") {
+        // The server only looks up international numbers: say so rather than answer "no one found".
+        if (!term.startsWith("+")) throw new Error("Phone numbers start with + and the country code, for example +44 20 7946 0000.");
+        const p = await findByPhone(engine, term);
+        return p ? [p] : [];
+      }
+      if (kind === "address") return federates ? [await resolveAddress(engine, normalAddress(term))] : [];
+      return searchPeople(engine, term);
+    };
     const t = setTimeout(() => {
-      searchPeople(engine, term)
+      find()
         .then((r) => {
+          if (!alive) return;
           setPeople(r);
           setError(null);
         })
-        .catch((e: unknown) => setError(e instanceof Error ? e.message : "Search failed"));
+        .catch((e: unknown) => {
+          if (!alive) return;
+          setPeople([]);
+          setError(e instanceof Error ? e.message : "Search failed");
+        });
     }, 220);
-    return () => clearTimeout(t);
-  }, [q, engine]);
+    return () => {
+      alive = false;
+      clearTimeout(t);
+    };
+  }, [term, kind, federates, engine]);
 
   const open = async (id: string) => {
     setBusy(true);
@@ -51,7 +78,7 @@ export function NewMessageDialog({ onClose, onNewGroup }: { onClose: () => void;
             data-autofocus
             value={q}
             onChange={(e) => setQ(e.target.value)}
-            placeholder="Name or @username"
+            placeholder={federates ? "Name, @username, phone or @name:server" : "Name, @username or phone number"}
             aria-label="Find people"
             style={{ border: 0, outline: "none", background: "transparent", flex: 1, padding: "10px 0" }}
           />
@@ -67,9 +94,15 @@ export function NewMessageDialog({ onClose, onNewGroup }: { onClose: () => void;
               </span>
             </button>
           ))}
-          {q.trim() && people.length === 0 && !error && (
+          {term && people.length === 0 && !error && (
             <p className="faint" style={{ margin: "8px 4px" }}>
-              No one found. People appear here when you share a workspace, or by their exact @username.
+              {kind === "phone"
+                ? "No one found with that number. People only appear here by phone if they allow it (Settings › Privacy)."
+                : kind === "address"
+                  ? federates
+                    ? "No one found at that address."
+                    : "This Meldiq server doesn't connect to other servers, so addresses like @name:server can't be reached."
+                  : "No one found. People appear here when you share a workspace, or by their exact @username."}
             </p>
           )}
           {!q.trim() && (

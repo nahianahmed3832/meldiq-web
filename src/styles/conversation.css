@@ -144,7 +144,7 @@
 .msg-text {
   white-space: pre-wrap;
   overflow-wrap: anywhere;
-  font-size: 14.5px;
+  font-size: var(--msg-text-size);
   line-height: 1.5;
   color: var(--text);
 }
@@ -486,7 +486,7 @@
   padding: 12px 14px 4px;
   max-height: 220px;
   min-height: 44px;
-  font-size: 14.5px;
+  font-size: var(--msg-text-size);
   line-height: 1.5;
 }
 .composer-tools {
@@ -801,4 +801,181 @@
   color: var(--text-2);
   font-size: 12px;
   font-weight: 400;
+}
+
+/* ───────────────────────── media and files (details panel) ───────────────────────── */
+.panel-action-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--border);
+  background: var(--surface-raised);
+  text-align: left;
+  transition:
+    border-color var(--t-fast),
+    background var(--t-fast);
+}
+.panel-action-row:hover {
+  border-color: var(--border-strong);
+  background: var(--surface-hover);
+}
+.panel-action-row .circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--accent-soft);
+  color: var(--accent-text);
+  flex-shrink: 0;
+}
+.panel-action-row .lines {
+  display: grid;
+  min-width: 0;
+}
+.panel-action-row small {
+  color: var(--text-3);
+}
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 10px;
+}
+.gallery-cell {
+  margin: 0;
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+.gallery-cell .att-image,
+.gallery-cell .att-image img {
+  width: 100%;
+  max-width: none;
+  aspect-ratio: 1;
+  object-fit: cover;
+}
+.gallery-cell .att-file,
+.gallery-cell .att-video {
+  width: 100%;
+}
+.gallery-cell figcaption {
+  font-size: var(--fs-xs);
+  color: var(--text-3);
+}
+.gallery-files {
+  display: grid;
+  gap: 8px;
+}
+.gallery-file {
+  display: grid;
+  gap: 2px;
+}
+.gallery-file .att-file {
+  width: 100%;
+}
+
+.link-full {
+  display: block;
+  padding: 8px 10px;
+  border-radius: var(--r-sm);
+  background: var(--surface-sunken);
+  border: 1px solid var(--border);
+  font-family: var(--mono);
+  font-size: var(--fs-xs);
+  overflow-wrap: anywhere;
+}
+
+/* ───────────────────────── animated emoji (android AnimojiView: 1.4 s loop) ───────────────────────── */
+.animoji {
+  display: inline-grid;
+  place-items: center;
+  line-height: 1;
+}
+.animoji > span {
+  display: inline-block;
+  transform-origin: 50% 60%;
+}
+.animoji.motion-beat > span {
+  animation: animoji-beat 1.4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+.animoji.motion-bounce > span {
+  animation: animoji-bounce 1.4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+.animoji.motion-wave > span {
+  animation: animoji-wave 1.4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  transform-origin: 70% 85%;
+}
+.animoji.motion-wobble > span {
+  animation: animoji-wobble 1.4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+.animoji.motion-spin > span {
+  animation: animoji-spin 1.4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+@keyframes animoji-beat {
+  0%,
+  25%,
+  50%,
+  75%,
+  100% {
+    transform: scale(1);
+  }
+  12.5%,
+  62.5% {
+    transform: scale(1.12);
+  }
+}
+@keyframes animoji-bounce {
+  0%,
+  50%,
+  100% {
+    transform: scale(1);
+  }
+  25%,
+  75% {
+    transform: scale(1.08);
+  }
+}
+@keyframes animoji-wave {
+  0%,
+  50%,
+  100% {
+    transform: rotate(0);
+  }
+  12.5%,
+  62.5% {
+    transform: rotate(18deg);
+  }
+  37.5%,
+  87.5% {
+    transform: rotate(-18deg);
+  }
+}
+@keyframes animoji-wobble {
+  0%,
+  33.3%,
+  66.6%,
+  100% {
+    transform: rotate(0);
+  }
+  8.3%,
+  41.6%,
+  75% {
+    transform: rotate(8deg);
+  }
+  25%,
+  58.3%,
+  91.6% {
+    transform: rotate(-8deg);
+  }
+}
+@keyframes animoji-spin {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }

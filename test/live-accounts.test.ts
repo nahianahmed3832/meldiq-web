@@ -7,6 +7,8 @@ import { createIdentity, enrollWithSeed, SetupError } from "../src/auth/deviceSe
 import { verifyLegacyAccount } from "../src/auth/legacyMove";
 import { SetupCredentials } from "../src/auth/setupCredentials";
 import { TokenVault } from "../src/auth/tokenVault";
+import { accountSelection, rememberSelection } from "../src/sync/workspaceSelection";
+import { createWorkspace, requestId } from "../src/sync/workspaces";
 import { encodeRecoveryCode, decodeRecoveryCode } from "../src/crypto/recoveryCode";
 import type { DeviceRecord } from "../src/model/types";
 import type { LocalStore } from "../src/store/db";
@@ -144,6 +146,21 @@ describe("more browsers on the same account", () => {
     const again = await anon().login(address, PASSWORD, "Browser four");
     const { device } = await enrollWithSeed(new SetupCredentials(server.baseUrl, again).accounts, again.account, seed, "Browser four");
     expect(device.userId).toBe(first.engine.device.userId);
+  });
+
+  it("the selected workspace follows the account: saved from this browser, seen by its other devices", async () => {
+    const org = await createWorkspace(first.engine, "Grace & Co", null, requestId());
+    await first.engine.refreshAll();
+    await rememberSelection(first.engine, org.id);
+    expect(await accountSelection(first.engine)).toBe(org.id);
+    // Another device of the account (here a fresh sign-in) reads the same selection.
+    const phone = await anon().login(address, PASSWORD, "Phone");
+    const other = new AccountApi(new ApiClient(server.baseUrl, { token: () => phone.accessToken, reauthenticate: async () => false }));
+    expect((await other.workspaces()).selectedWorkspaceId).toBe(org.id);
+    // Choosing no organisation is the account's personal workspace; the browser shows none.
+    await rememberSelection(first.engine, null);
+    expect((await other.workspaces()).selectedWorkspaceId).toBe("personal");
+    expect(await accountSelection(first.engine)).toBeNull();
   });
 
   it("keeps working across access-token renewals: the stored session is refreshed, never replaced", async () => {

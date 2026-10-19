@@ -14,6 +14,7 @@ import { Avatar } from "../components/Avatar";
 import { Menu, useMenu } from "../components/Overlay";
 import { bytes } from "../format";
 import { EMOJI } from "./MessageItem";
+import { ANIMOJI } from "../../sync/animoji";
 import { ContactDialog, LocationDialog } from "./RichDialogs";
 import { VoiceBar } from "./VoiceBar";
 
@@ -390,6 +391,30 @@ export function Composer(props: ComposerProps) {
                 </div>
               ),
             },
+            ...(props.conversation.canPost
+              ? [
+                  { heading: "Send animated" },
+                  {
+                    custom: (
+                      <div className="emoji-grid">
+                        {ANIMOJI.map(([em]) => (
+                          <button
+                            key={em}
+                            role="menuitem"
+                            aria-label={`Send animated ${em}`}
+                            onClick={() => {
+                              emoji.close();
+                              void sendRich({ animoji: em });
+                            }}
+                          >
+                            {em}
+                          </button>
+                        ))}
+                      </div>
+                    ),
+                  },
+                ]
+              : []),
           ]}
         />
       )}

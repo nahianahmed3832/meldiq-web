@@ -246,6 +246,8 @@ export const zServerInfo = z.object({
     })
     .optional(),
   features: z.array(z.string()).default([]),
+  /** Federation with other servers (@name:domain addresses); null when this server doesn't federate. */
+  federation: z.object({ domain: z.string() }).nullable().optional(),
 });
 export type ServerInfo = z.infer<typeof zServerInfo>;
 

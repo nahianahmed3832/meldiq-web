@@ -8,7 +8,7 @@ import { useSyncExternalStore } from "react";
  *   #/workspace/<page>                            the current workspace's settings and administration
  */
 export type Section = "home" | "dms" | "activity" | "settings" | "workspace";
-export type SettingsPage = "profile" | "account" | "devices" | "notifications" | "appearance" | "security" | "about";
+export type SettingsPage = "profile" | "account" | "devices" | "notifications" | "appearance" | "storage" | "security" | "about";
 export type WorkspacePage = "overview" | "people" | "invitations" | "channels" | "structure";
 
 export interface Route {
@@ -24,7 +24,7 @@ export interface Route {
 export const isFullPage = (s: Section): boolean => s === "settings" || s === "workspace";
 
 const SECTIONS: Section[] = ["home", "dms", "activity", "settings", "workspace"];
-const PAGES: SettingsPage[] = ["profile", "account", "devices", "notifications", "appearance", "security", "about"];
+const PAGES: SettingsPage[] = ["profile", "account", "devices", "notifications", "appearance", "storage", "security", "about"];
 const WORKSPACE_PAGES: WorkspacePage[] = ["overview", "people", "invitations", "channels", "structure"];
 const ID = /^[A-Za-z0-9_-]{1,128}$/;
 

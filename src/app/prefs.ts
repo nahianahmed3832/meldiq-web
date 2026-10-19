@@ -8,10 +8,16 @@ export const THEMES = ["system", "light", "dark"] as const;
 /** The brand colour plates (src/styles/tokens.css › Palettes). */
 export const PALETTES = ["indigo", "plum", "amber"] as const;
 export type Palette = (typeof PALETTES)[number];
+/** Message text size (android Settings › Chats): conversation text only, the rest of the interface stays as it is. */
+export const TEXT_SIZES = ["small", "default", "large"] as const;
+export type TextSize = (typeof TEXT_SIZES)[number];
 
 export interface Prefs {
   theme: (typeof THEMES)[number];
   palette: Palette;
+  textSize: TextSize;
+  /** Animated emoji play (android Settings › Chats › Animated emoji); off: shown still. */
+  animatedEmoji: boolean;
   notifications: boolean;
   /** Show the sender and message text in system notifications (off: "New message"). */
   notificationText: boolean;
@@ -25,7 +31,19 @@ export interface Prefs {
 }
 
 const KEY = "orbit.prefs.v1";
-const defaults: Prefs = { theme: "system", palette: "indigo", notifications: false, notificationText: true, readReceipts: true, typing: true, enterToSend: true, orgId: null, collapsed: [] };
+const defaults: Prefs = {
+  theme: "system",
+  palette: "indigo",
+  textSize: "default",
+  animatedEmoji: true,
+  notifications: false,
+  notificationText: true,
+  readReceipts: true,
+  typing: true,
+  enterToSend: true,
+  orgId: null,
+  collapsed: [],
+};
 
 function load(): Prefs {
   try {
@@ -37,6 +55,8 @@ function load(): Prefs {
       ...stored,
       theme: THEMES.includes(stored.theme) ? stored.theme : defaults.theme,
       palette: PALETTES.includes(stored.palette) ? stored.palette : defaults.palette,
+      textSize: TEXT_SIZES.includes(stored.textSize) ? stored.textSize : defaults.textSize,
+      animatedEmoji: typeof stored.animatedEmoji === "boolean" ? stored.animatedEmoji : defaults.animatedEmoji,
     };
   } catch {
     return defaults;
@@ -72,8 +92,9 @@ export function usePrefs(): Prefs {
 }
 
 /** Light, dark or the system's, and the colour plate; the browser's own chrome takes the frame colour. */
-export function applyTheme({ theme, palette }: Pick<Prefs, "theme" | "palette">): void {
+export function applyTheme({ theme, palette, textSize }: Pick<Prefs, "theme" | "palette" | "textSize">): void {
   const root = document.documentElement;
+  root.setAttribute("data-text-size", textSize);
   if (theme === "system") root.removeAttribute("data-theme");
   else root.setAttribute("data-theme", theme);
   root.setAttribute("data-palette", palette);

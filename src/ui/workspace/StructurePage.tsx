@@ -1,4 +1,4 @@
-import { Archive, ArchiveRestore, Building2, Plus, UsersRound } from "lucide-react";
+import { Archive, ArchiveRestore, Building2, Plus, Settings2, UsersRound } from "lucide-react";
 import { type FormEvent, useState } from "react";
 import type { OrgAdminDetail } from "../../api/workspaceSchemas";
 import { useEngine } from "../../app/orbit";
@@ -6,6 +6,7 @@ import { archivedScopes, createBranch, createTeam, setBranchArchived, setTeamArc
 import { roleName } from "../../sync/workspaceRules";
 import { useAction, useLoad } from "./useLoad";
 import { Card, ErrorLine } from "./WorkspaceView";
+import { type ManagedScope, ScopeManageDialog } from "./ScopeManageDialog";
 
 /**
  * Branches and teams (docs/WORKSPACES.md, WORKSPACE_ADMINISTRATION.md §1): owners and admins create branches and
@@ -23,6 +24,7 @@ export function StructurePage({ detail, onChanged }: { detail: OrgAdminDetail; o
     onChanged();
   };
   const managedBranches = detail.branches.filter((b) => b.canManage);
+  const [managing, setManaging] = useState<ManagedScope | null>(null);
 
   return (
     <div className="ws-page">
@@ -41,6 +43,11 @@ export function StructurePage({ detail, onChanged }: { detail: OrgAdminDetail; o
                   {b.myRole ? ` · you're ${roleName(b.myRole).toLowerCase()}` : ""}
                 </small>
               </span>
+              {b.canManage && (
+                <button className="btn btn-ghost btn-sm" aria-label={`Manage ${b.name}`} onClick={() => setManaging({ kind: "branch", id: b.id, name: b.name, location: b.location })}>
+                  <Settings2 size={14} />
+                </button>
+              )}
               {isAdmin && (
                 <button className="btn btn-ghost btn-sm" disabled={act.busy} aria-label={`Archive ${b.name}`} onClick={() => void act.act(() => setBranchArchived(engine, b.id, true).then(changed))}>
                   <Archive size={14} />
@@ -62,6 +69,15 @@ export function StructurePage({ detail, onChanged }: { detail: OrgAdminDetail; o
                   {t.myRole ? ` · you're ${roleName(t.myRole).toLowerCase()}` : ""}
                 </small>
               </span>
+              {t.canManage && (
+                <button
+                  className="btn btn-ghost btn-sm"
+                  aria-label={`Manage ${t.name}`}
+                  onClick={() => setManaging({ kind: "team", id: t.id, name: t.name, branchId: t.branchId, departmentId: t.departmentId })}
+                >
+                  <Settings2 size={14} />
+                </button>
+              )}
               {(isAdmin || (t.branchId && detail.branches.find((b) => b.id === t.branchId)?.canManage)) && (
                 <button className="btn btn-ghost btn-sm" disabled={act.busy} aria-label={`Archive ${t.name}`} onClick={() => void act.act(() => setTeamArchived(engine, t.id, true).then(changed))}>
                   <Archive size={14} />
@@ -100,6 +116,15 @@ export function StructurePage({ detail, onChanged }: { detail: OrgAdminDetail; o
             ))}
           </ul>
         </Card>
+      )}
+      {managing && (
+        <ScopeManageDialog
+          orgId={detail.org.id}
+          scope={managing}
+          departments={detail.departments.filter((d) => d.branchId === (managing.kind === "branch" ? managing.id : managing.branchId))}
+          onChanged={changed}
+          onClose={() => setManaging(null)}
+        />
       )}
     </div>
   );

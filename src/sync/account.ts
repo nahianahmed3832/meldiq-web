@@ -15,6 +15,12 @@ export async function searchPeople(engine: Engine, q: string): Promise<Member[]>
 }
 
 /** Opens (or creates) the direct conversation with [userId] and returns its id. */
+/** Someone on another server by their exact address (@name:domain), found through federation (exact match only). */
+export async function resolveAddress(engine: Engine, address: string): Promise<Member> {
+  const r = await engine.api.json("GET", `/v1/federation/resolve?address=${encodeURIComponent(address.trim())}`, z.object({ user: zMember }));
+  return r.user;
+}
+
 export async function startDirect(engine: Engine, userId: string): Promise<string> {
   const { conversation } = await engine.api.json("POST", "/v1/conversations/dm", z.object({ conversation: zConversation }), { body: { userId } });
   await engine.ensureConversation(conversation.id);

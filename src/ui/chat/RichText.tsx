@@ -1,7 +1,8 @@
 import { Fragment, type ReactNode } from "react";
+import { SafeLink } from "./SafeLink";
 
 /**
- * Message text as plain React text (never HTML): links become anchors only for http(s) URLs, and @mentions are highlighted
+ * Message text as plain React text (never HTML): links become anchors only for http(s) URLs (misleading ones ask first), and @mentions are highlighted
  * only when they name someone the message actually mentions (ids resolved by the sender, android docs/MENTIONS.md).
  */
 const TOKEN = /(https?:\/\/[^\s<>"']+[^\s<>"'.,;:!?)\]])|((?<![\p{L}\p{N}_.@])@[A-Za-z0-9._]{1,24}(?::[A-Za-z0-9.-]{1,253})?)/gu;
@@ -14,9 +15,9 @@ export function RichText({ text, mentionNames, myUsername }: { text: string; men
     if (at > last) out.push(text.slice(last, at));
     if (m[1]) {
       out.push(
-        <a key={at} href={m[1]} target="_blank" rel="noopener noreferrer nofollow">
+        <SafeLink key={at} href={m[1]}>
           {m[1]}
-        </a>,
+        </SafeLink>,
       );
     } else {
       const name = m[2].slice(1).toLowerCase();

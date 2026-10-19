@@ -1,6 +1,6 @@
-import { lazy, Suspense, useEffect, useMemo, useState } from "react";
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { shallowEqual, useEngine, useOrbit } from "../../app/orbit";
-import { setPrefs, usePrefs } from "../../app/prefs";
+import { getPrefs, setPrefs, usePrefs } from "../../app/prefs";
 import { isFullPage, navigate, useRoute } from "../../app/router";
 import { ConversationView } from "../chat/ConversationView";
 import { SidePanel } from "../chat/SidePanel";
@@ -18,6 +18,7 @@ import { Rail } from "./Rail";
 import { Sidebar } from "./Sidebar";
 import { TabBar } from "./TabBar";
 import { TopBar } from "./TopBar";
+import { accountSelection, rememberSelection } from "../../sync/workspaceSelection";
 
 const SettingsView = lazy(() => import("../settings/SettingsView").then((m) => ({ default: m.SettingsView })));
 const WorkspaceView = lazy(() => import("../workspace/WorkspaceView").then((m) => ({ default: m.WorkspaceView })));
@@ -43,6 +44,30 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
   useEffect(() => {
     if (orgId !== prefs.orgId && synced) setPrefs({ orgId });
   }, [orgId, prefs.orgId, synced]);
+
+  // The account's selected workspace, shared with the phone (PUT /v2/account/preferences): adopted once when the app
+  // opens, then every switch made here is saved for the other devices. Best effort: if either call fails, this browser
+  // keeps its own choice and nothing else is affected.
+  const adopted = useRef(false);
+  const saved = useRef<string | null | undefined>(undefined);
+  useEffect(() => {
+    if (!synced || adopted.current) return;
+    adopted.current = true;
+    accountSelection(engine)
+      .then((id) => {
+        if (id && orgIds.includes(id) && id !== getPrefs().orgId) setPrefs({ orgId: id });
+      })
+      .catch(() => undefined);
+  }, [synced, engine, orgIds]);
+  useEffect(() => {
+    if (!synced || !adopted.current) return;
+    if (saved.current === undefined || saved.current === orgId) {
+      saved.current ??= orgId;
+      return;
+    }
+    saved.current = orgId;
+    rememberSelection(engine, orgId).catch(() => undefined);
+  }, [orgId, synced, engine]);
 
   // The conversation on screen (marks it read; new messages there don't count as unread while the window has focus).
   useEffect(() => {

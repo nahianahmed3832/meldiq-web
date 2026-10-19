@@ -26,6 +26,7 @@ import {
   workspaceChannels,
   workspaceDetail,
 } from "../src/sync/workspaces";
+import { createDepartment, deleteDepartment, renameDepartment, renameScope, scopeMembers, setScopeMember, setTeamDepartment } from "../src/sync/scopes";
 import { linkBrowser, type Phone, type Server, startServer, until } from "./support/live";
 
 /**
@@ -148,6 +149,47 @@ describe("workspaces from the browser", () => {
     expect((await archivedScopes(web, orgId)).teams.map((t) => t.id)).toContain(team.id);
     await setTeamArchived(web, team.id, false);
     expect((await workspaceDetail(web, orgId)).teams.map((t) => t.id)).toContain(team.id);
+  });
+
+  it("branches and teams: rename, add people, make someone manager or lead, remove them; members can't", async () => {
+    await createBranch(web, orgId, "Chattogram", null);
+    const branch = (await workspaceDetail(web, orgId)).branches.find((b) => b.name === "Chattogram")!;
+    await renameScope(web, "branch", branch.id, { name: "Chattogram Port", location: "Agrabad" });
+    expect((await workspaceDetail(web, orgId)).branches.find((b) => b.id === branch.id)).toMatchObject({ name: "Chattogram Port", location: "Agrabad" });
+
+    await setScopeMember(web, "branch", branch.id, bob.userId, "MEMBER");
+    expect((await scopeMembers(web, "branch", branch.id)).find((m) => m.id === bob.userId)?.role).toBe("MEMBER");
+    // Bob, a plain member, can't rename the branch or change who's in it.
+    expect((await fail(renameScope(bobWeb, "branch", branch.id, { name: "Bob's" }))).status).toBe(403);
+    expect((await fail(setScopeMember(bobWeb, "branch", branch.id, owner.userId, null))).status).toBe(403);
+    // Made manager, he can rename it.
+    await setScopeMember(web, "branch", branch.id, bob.userId, "MANAGER");
+    expect((await scopeMembers(web, "branch", branch.id)).find((m) => m.id === bob.userId)?.role).toBe("MANAGER");
+    await renameScope(bobWeb, "branch", branch.id, { name: "Chattogram", location: "Agrabad" });
+
+    await createTeam(web, orgId, "Ops", branch.id);
+    const team = (await workspaceDetail(web, orgId)).teams.find((t) => t.name === "Ops")!;
+    await renameScope(web, "team", team.id, { name: "Port operations" });
+    await setScopeMember(web, "team", team.id, bob.userId, "LEAD");
+    expect((await scopeMembers(web, "team", team.id)).find((m) => m.id === bob.userId)?.role).toBe("LEAD");
+    await setScopeMember(web, "team", team.id, bob.userId, null);
+    expect((await scopeMembers(web, "team", team.id)).map((m) => m.id)).not.toContain(bob.userId);
+    expect((await workspaceDetail(web, orgId)).teams.find((t) => t.id === team.id)?.name).toBe("Port operations");
+
+    // Departments group the branch's teams: add, rename, put a team in one, delete (the team stays, ungrouped).
+    await createDepartment(web, branch.id, "Logistics");
+    let dep = (await workspaceDetail(web, orgId)).departments.find((d) => d.name === "Logistics")!;
+    expect(dep.branchId).toBe(branch.id);
+    await renameDepartment(web, dep.id, "Logistics & shipping");
+    await setTeamDepartment(web, team.id, dep.id);
+    let d = await workspaceDetail(web, orgId);
+    dep = d.departments.find((x) => x.id === dep.id)!;
+    expect(dep.name).toBe("Logistics & shipping");
+    expect(d.teams.find((t) => t.id === team.id)?.departmentId).toBe(dep.id);
+    await deleteDepartment(web, dep.id);
+    d = await workspaceDetail(web, orgId);
+    expect(d.departments.map((x) => x.id)).not.toContain(dep.id);
+    expect(d.teams.find((t) => t.id === team.id)?.departmentId).toBeNull();
   });
 
   it("groups: the browser creates one, and the other member's browser gets it", async () => {

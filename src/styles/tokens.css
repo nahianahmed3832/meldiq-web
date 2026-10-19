@@ -64,9 +64,19 @@
   --sidebar-w: 280px;
   --frame-gap: 8px;
 
+  /* Message text (Appearance › Text size): conversation text only. */
+  --msg-text-size: 14.5px;
+
   --t-fast: 120ms;
   --t-std: 200ms;
   --ease: cubic-bezier(0.2, 0, 0, 1);
+}
+
+:root[data-text-size="small"] {
+  --msg-text-size: 13.5px;
+}
+:root[data-text-size="large"] {
+  --msg-text-size: 16.5px;
 }
 
 /* Static light values for browsers without light-dark() (they see the unsupported screen, readably). */

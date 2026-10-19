@@ -31,6 +31,8 @@ import { clock, fullTime } from "../format";
 import { isWebUrl } from "../../protocol/payload";
 import { Attachments } from "./Attachments";
 import { isEmojiOnly, RichText } from "./RichText";
+import { SafeLink } from "./SafeLink";
+import { AnimojiView } from "./AnimojiView";
 
 export const QUICK_EMOJI = ["👍", "❤️", "😂", "🎉", "🙏", "👀"];
 export const EMOJI = ["👍", "❤️", "😂", "🎉", "🙏", "👀", "🔥", "✅", "😮", "😢", "😍", "🤝", "💯", "👏", "🚀", "🙌", "😅", "🤔", "😎", "👌", "⭐", "💡", "☕", "🌟"];
@@ -100,7 +102,12 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
             <Forward size={12} aria-hidden="true" /> Forwarded
           </div>
         )}
-        {m.rich?.contact ? (
+        {m.rich?.animoji ? (
+          <div>
+            <AnimojiView emoji={m.rich.animoji} />
+            {mine && <Status m={m} onRetry={() => void engine.retry(m.id)} onReview={p.onReview} />}
+          </div>
+        ) : m.rich?.contact ? (
           <span className="msg-call">
             <UserRound size={16} /> {m.rich.contact.name}
             {m.rich.contact.phones.length ? ` · ${m.rich.contact.phones.join(", ")}` : ""}
@@ -129,14 +136,14 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
         )}
         <Attachments refs={m.attachments} />
         {m.rich?.link && isWebUrl(m.rich.link.url) && (
-          <a className="msg-quote link-preview" href={m.rich.link.url} target="_blank" rel="noopener noreferrer nofollow">
+          <SafeLink className="msg-quote link-preview" href={m.rich.link.url}>
             <strong>{m.rich.link.title ?? m.rich.link.siteName ?? m.rich.link.url}</strong>
             {m.rich.link.description && (
               <span className="ellipsis" style={{ display: "block" }}>
                 {m.rich.link.description}
               </span>
             )}
-          </a>
+          </SafeLink>
         )}
       </>
     );

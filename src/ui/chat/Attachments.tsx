@@ -94,7 +94,7 @@ function VoiceAttachment({ r }: { r: AttachmentRef }) {
 }
 
 /** Audio and video files: a card until opened, then the browser's player (decrypted in memory, never a page). */
-function MediaAttachment({ r }: { r: AttachmentRef }) {
+export function MediaAttachment({ r }: { r: AttachmentRef }) {
   const [open, setOpen] = useState(false);
   const { url, error, loading } = useBlobUrl(r, open);
   if (error) return <FileAttachment r={r} error={error} />;
@@ -138,7 +138,7 @@ function useBlobUrl(r: AttachmentRef, enabled: boolean): { url: string | null; e
   return state;
 }
 
-function ImageAttachment({ r }: { r: AttachmentRef }) {
+export function ImageAttachment({ r }: { r: AttachmentRef }) {
   const { url, error, loading } = useBlobUrl(r, true);
   const [open, setOpen] = useState(false);
   if (error) return <FileAttachment r={r} error={error} />;
@@ -175,7 +175,7 @@ function Lightbox({ url, name, onClose }: { url: string; name: string; onClose: 
   );
 }
 
-function FileAttachment({ r, error: initialError }: { r: AttachmentRef; error?: string }) {
+export function FileAttachment({ r, error: initialError }: { r: AttachmentRef; error?: string }) {
   const engine = useEngine();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(initialError ?? null);

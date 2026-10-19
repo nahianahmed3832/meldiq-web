@@ -1,5 +1,7 @@
 # Orbit Web: mobile-feature parity inventory
 
+> **Superseded on 2026-10-19 by `MELDIQ_WEB_FEATURE_PARITY.md`** (current statuses). The notes below still apply.
+
 Every feature of the Android app (Orbit 0.2.2-beta, `internal-beta` f92e59a, API 0.5.0), what the browser needs from the
 server for it, and where Orbit Web stands. Sources: the Android UI and data code, `server/src`, the server's tests and
 `docs/*.md` in the Orbit repository (github.com/nahianahmed3832/griip-mesage). Paths below are in that repository unless

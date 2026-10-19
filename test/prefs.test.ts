@@ -27,13 +27,13 @@ describe("preferences", () => {
   });
 
   it("keeps a stored theme and palette that are allowed", async () => {
-    const { getPrefs } = await loadWith({ theme: "dark", palette: "amber", enterToSend: false });
-    expect(getPrefs()).toMatchObject({ theme: "dark", palette: "amber", enterToSend: false });
+    const { getPrefs } = await loadWith({ theme: "dark", palette: "amber", textSize: "large", enterToSend: false });
+    expect(getPrefs()).toMatchObject({ theme: "dark", palette: "amber", textSize: "large", enterToSend: false });
   });
 
   it("falls back to the defaults for an unknown or tampered theme or palette", async () => {
-    const { getPrefs } = await loadWith({ theme: 'x" onload="', palette: "neon" });
-    expect(getPrefs()).toMatchObject({ theme: "system", palette: "indigo" });
+    const { getPrefs } = await loadWith({ theme: 'x" onload="', palette: "neon", textSize: "huge" });
+    expect(getPrefs()).toMatchObject({ theme: "system", palette: "indigo", textSize: "default" });
   });
 
   it("gives browsers that stored preferences before palettes existed the default palette", async () => {
