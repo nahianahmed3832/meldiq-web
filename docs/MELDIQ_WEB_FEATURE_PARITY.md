@@ -68,7 +68,7 @@ them.
 | Channels: create, access mode, archive, restore, browse, join, leave | `ChannelDetailsSections` | `/v1/orgs/:id/channels`, `PATCH /v1/conversations/:id` | Done | — | Scope managers change the mode | Done | live |
 | Channels and groups: rename, topic, add people | `ChannelDetailsSections`, `ManageSheets` | `PATCH /v1/conversations/:id`, `PUT …/members/:userId` | Partial | **New:** Details › Edit and Add people (only when `canManage`) | New members get messages from then on (E2EE) | Done | live (a non-admin is refused; the new member receives a message sent after) |
 | Workspace change log | `ActivityFeedScreen` | `GET /v1/orgs/:id/activity` | Done | — | — | Done | live |
-| Custom roles, permission catalogue | In progress elsewhere (not committed) | not committed | Blocked | — | — | Blocked: no committed server API | — |
+| Custom roles, permission catalogue | In progress in another session | **API 0.6.0** (`dac7bfc`, in production since 10:37 UTC) | Missing | Web screens not built yet | Server-side permission checks | Missing (server ready) | — |
 | User groups, group mentions | Not built in the product | — | — | — | Needs a protocol change | Not in the product | — |
 
 ## 3. Home, people and navigation
@@ -132,9 +132,9 @@ them.
 
 ## 8. Connectors and federation
 
-- **Connectors:** Google Drive, Microsoft Graph, calendar, GitHub, Jira and Notion are **Blocked**. No connector code is
-  committed in the server repository (`worktree-orbit-integrations` is still at `0cded9c`), so there's no API for the web
-  to call. Nothing is shown in the browser until the server advertises the feature.
+- **Connectors and saved items:** **Missing (server ready).** API 0.6.0 (`dac7bfc`, deployed by another session at 10:37
+  UTC) advertises `integrations`, `custom-roles` and `saved-items`. The web screens for them aren't built yet; they're
+  the next parity work.
 - **Federation:** DMs with people on other servers work like any other DM. Finding them by address is new and Built, but
   production has federation turned off.
 
@@ -146,6 +146,5 @@ them.
 | Languages other than English | Missing |
 | Sending link previews | Blocked: needs a server-side fetcher |
 | Background push | Blocked: needs Web Push (VAPID) on the server |
-| Custom roles | Blocked: the server code isn't committed |
-| Connectors | Blocked: the server code isn't committed |
+| Custom roles, connectors, saved items | Missing: the server is ready in API 0.6.0; the web screens are next |
 | Start fresh, wallpaper, camera and QR, encrypted backup, legacy username sign-up, server picker | Phone only by design |

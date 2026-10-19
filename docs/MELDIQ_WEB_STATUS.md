@@ -77,6 +77,27 @@ and workspace administration.
   `/v1/me/preferences`, which 0.4.2 didn't have.
 - `WEB_ORIGINS` is not set; the same-origin setup doesn't need it.
 
+### 2a. API 0.6.0 deployed by another session (10:33–10:37 UTC), **without the browser patches**
+
+Eight minutes after the 0.5.0 upgrade, API **0.6.0** was deployed:
+
+- **From:** another session's integrations branch, `worktree-orbit-integrations`, commit `dac7bfc`.
+- **What it adds:** custom roles, integrations, saved items, SMTP mail.
+- **Its rollback:** a backup `backups/pre-0.6.0-20261019T103347Z` and the image tag `0.5.0-rollback`.
+
+Its `server/` doesn't include `server-patches/0001` or `0002`. Checked at 10:58 UTC: a browser socket closes with 4401
+after about 1.7 s, without waiting for its auth frame. So in production, browsers can sign in and set up again, but they
+**can't go online** (no live messages) until patch 0001 is in the deployed server.
+
+The session "Orbit: custom roles, integrations marketplace, connectors" was asked to:
+
+1. Apply both patches to its branch.
+2. Commit them to the server repository.
+3. Include them in its next deploy.
+
+This session didn't touch the production API again, so as not to overwrite that deploy. **To check once it has
+landed:** a bare browser socket stays open about 10 s before closing with 4401.
+
 ## 3. Built this round
 
 Each item has the tests named in `MELDIQ_WEB_FEATURE_PARITY.md`.
@@ -122,8 +143,9 @@ Each item has the tests named in `MELDIQ_WEB_FEATURE_PARITY.md`.
 - **Physical-phone test:** no row is "device"-verified. Real Android ↔ web for messages, files and calls hasn't been
   done.
 - **Email texts:** the server still says "Orbit" in its emails (`server/src/accounts/mailer.ts`, a server change).
-- **Blocked:** connectors and custom roles (no committed server API), Web Push (needs VAPID on the server) and sending
-  link previews (needs a server-side fetcher).
+- **Server ready, no web screens yet:** custom roles, integrations (connectors) and saved items now exist in API 0.6.0
+  (`dac7bfc`, in production). The web screens for them are the next parity work.
+- **Blocked:** Web Push (needs VAPID on the server) and sending link previews (needs a server-side fetcher).
 - **Missing:** several accounts per browser, and languages other than English.
 
 **Known intermittent**
@@ -149,8 +171,9 @@ All against API 0.5.0 + patches, the build now in production.
 
 ## 6. Where to resume
 
-1. **S3 CORS:** after the rule is applied, send a file from the browser on production and open it on the phone.
-2. **Physical-phone test:** `ORBIT_WEB_STATUS.md` §9, now against production.
-3. **Call intermittent:** run `e2e/calls.spec.ts` on a cold LiveKit several times, and capture `call-tracks-at-failure.json`
+1. **Browser WebSocket patch on 0.6.0** (§2a): confirm it's in production, then check the web goes online.
+2. **S3 CORS:** after the rule is applied, send a file from the browser on production and open it on the phone.
+3. **Physical-phone test:** `ORBIT_WEB_STATUS.md` §9, now against production.
+4. **Call intermittent:** run `e2e/calls.spec.ts` on a cold LiveKit several times, and capture `call-tracks-at-failure.json`
    (it wasn't attached this time: check why the attach step didn't run).
-4. **Next parity items:** several accounts per browser; languages; Web Push once the server has VAPID.
+5. **Next parity items:** web screens for custom roles, integrations and saved items (API 0.6.0); several accounts per browser; languages; Web Push once the server has VAPID.
