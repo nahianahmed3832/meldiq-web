@@ -89,8 +89,9 @@ instead. The earlier names `WEB_HOST`, `API_UPSTREAM` and `CONNECT_EXTRA` still 
 renders the nginx site and header snippet from the templates, switches `/opt/meldiq-web/current`, runs `nginx -t`
 (switching back if nginx refuses) and reloads nginx. The newest five releases are kept.
 
-nginx needs the usual upgrade map in `http {}` once (the script checks):
-`map $http_upgrade $connection_upgrade { default upgrade; '' close; }`.
+The site brings its own WebSocket upgrade map (`$meldiq_web_connection_upgrade`), so nothing else in nginx is needed.
+If `nginx -t` refuses the new files, the script puts back the previous release and the previous nginx files (or removes
+the new site on a first install), so a refused install never blocks other sites' reloads.
 
 ### What the nginx site does (`deploy/nginx/meldiq-web.conf.template`)
 

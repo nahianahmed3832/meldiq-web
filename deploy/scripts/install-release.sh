@@ -58,18 +58,30 @@ find "$target" -type d -exec chmod 755 {} + && find "$target" -type f -exec chmo
 
 export WEB_HOST API_UPSTREAM CONNECT_EXTRA WEB_ROOT="$base/current"
 vars='${WEB_HOST} ${API_UPSTREAM} ${WEB_ROOT} ${CONNECT_EXTRA}'
+site=/etc/nginx/sites-available/meldiq-web.conf
+snippet=/etc/nginx/snippets/meldiq-web-headers.conf
+enabled=/etc/nginx/sites-enabled/meldiq-web.conf
+# The nginx files as they were, restored if nginx refuses the new ones (a broken site would block every later reload).
+backup="$(mktemp -d)"
+for f in "$site" "$snippet"; do [ -f "$f" ] && cp -p "$f" "$backup/"; done
+was_enabled=0; [ -e "$enabled" ] && was_enabled=1
+restore_nginx() {
+  for f in "$site" "$snippet"; do
+    if [ -f "$backup/$(basename "$f")" ]; then cp -p "$backup/$(basename "$f")" "$f"; else rm -f "$f"; fi
+  done
+  [ "$was_enabled" = 1 ] || rm -f "$enabled"
+}
 mkdir -p /etc/nginx/snippets
-envsubst "$vars" < "$here/nginx/meldiq-web-headers.conf.template" > /etc/nginx/snippets/meldiq-web-headers.conf
-envsubst "$vars" < "$here/nginx/meldiq-web.conf.template" > /etc/nginx/sites-available/meldiq-web.conf
-ln -sfn /etc/nginx/sites-available/meldiq-web.conf /etc/nginx/sites-enabled/meldiq-web.conf
-grep -q 'connection_upgrade' -r /etc/nginx/nginx.conf /etc/nginx/conf.d /etc/nginx/sites-enabled 2>/dev/null \
-  || { echo "nginx needs: map \$http_upgrade \$connection_upgrade { default upgrade; '' close; } in http {}" >&2; exit 1; }
+envsubst "$vars" < "$here/nginx/meldiq-web-headers.conf.template" > "$snippet"
+envsubst "$vars" < "$here/nginx/meldiq-web.conf.template" > "$site"
+ln -sfn "$site" "$enabled"
 
 previous="$(readlink "$base/current" 2>/dev/null || true)"
 ln -sfn "$target" "$base/current.new" && mv -Tf "$base/current.new" "$base/current"
 if ! nginx -t; then
   [ -n "$previous" ] && ln -sfn "$previous" "$base/current"
-  echo "nginx refused the configuration; the previous release is still current." >&2
+  restore_nginx
+  echo "nginx refused the configuration; the previous release and nginx files are back." >&2
   exit 1
 fi
 systemctl reload nginx
