@@ -65,11 +65,21 @@ Every item is backed by the real server (API 0.7.1). No mock APIs and no browser
 | When (UTC) | Change | By |
 |---|---|---|
 | 2026-10-20 | API **0.7.1** with the WebSocket first-frame patch | Another session |
-| 2026-10-20 | Web release with this round (§1) | This session; see §2a |
+| 2026-10-20 01:39 (UTC+8) | Web release **0.1.0-9e04997** (this round, §1) | This session; see §2a |
 
 ### 2a. Web deploy
 
-Filled in when the release is deployed (`deploy/install-release.sh`, then `verify.sh`).
+- **Release:** `release/meldiq-web-0.1.0-9e04997.tar.gz`, SHA-256 `ab0a3ded…50ef5`, checked on the VPS before unpacking.
+- **Install:** with the production command in `ORBIT_WEB_DEPLOYMENT.md` §4. `nginx -t` passed; only the web site and its
+  header snippet changed. The API and its compose project weren't touched.
+- **Rollback:** the previous release `0.1.0-3b3a580` is kept. Run `bash rollback.sh` on the VPS.
+- **Checks:**
+  - `verify.sh https://web.meldiq.app`: all ✓. That covers TLS, security headers, `config.json` not cached, the API
+    through this origin reporting 0.7.1, accounts, and realtime upgrade 101.
+  - The served bundle contains this round's screens.
+  - `web.griipbuddy.cloud` still answers 301.
+  - A bare browser socket stays open and closes with 4401 after 11.2 s, so first-frame sign-in works on 0.7.1.
+- **Not checked:** a signed-in session on production. It needs your account, and this session doesn't enter passwords.
 
 ## 3. Still open
 
@@ -117,8 +127,8 @@ server. Their behaviour is covered by `live-voice-rooms`, which drives the same 
 
 ## 5. Where to resume
 
-1. **Production check** after this deploy: sign in on web.meldiq.app and check that Later, the Roles, Apps and Usage
-   pages and voice rooms load against 0.7.1.
+1. **Signed-in check on production** (yours to do): sign in on web.meldiq.app and open Later, a voice room, and
+   Workspace › Roles, Apps and Usage.
 2. **S3 CORS:** after the rule is applied, send a file from the browser in production and open it on the phone.
 3. **Physical-phone test:** `ORBIT_WEB_STATUS.md` §9, extended with polls, a reminder made on each side, and a voice room
    with the phone and the browser in it.
