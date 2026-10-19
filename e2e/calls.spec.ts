@@ -49,6 +49,20 @@ async function setUp(page: Page): Promise<Pair> {
 const stage = (page: Page) => page.getByRole("dialog", { name: "Call with Bob Chen" });
 const badge = (s: Locator) => s.locator(".e2ee-badge");
 
+/**
+ * Waits for "End-to-end encrypted". If it doesn't come, the per-track evidence is attached right away, while the call is
+ * still up (after the test the call has usually ended and the evidence is gone).
+ */
+async function expectEncrypted(page: Page, s: Locator): Promise<void> {
+  try {
+    await expect(badge(s)).toHaveText("End-to-end encrypted", { timeout: 30_000 });
+  } catch (e) {
+    const tracks = await page.evaluate(() => (globalThis as { __orbitCallTracks?: () => unknown }).__orbitCallTracks?.()).catch(() => null);
+    await test.info().attach("call-tracks-at-failure.json", { body: JSON.stringify(tracks, null, 1), contentType: "application/json" });
+    throw e;
+  }
+}
+
 /** The remote person's video is playing: decoded frames with a size, and time moving. */
 async function remoteVideoPlays(page: Page): Promise<void> {
   const video = stage(page).locator("figure.call-tile:not(.local) video");
@@ -77,7 +91,7 @@ test("a video call from the phone app rings here and connects with media verifie
 
     const s = stage(page);
     await expect(s).toBeVisible();
-    await expect(badge(s)).toHaveText("End-to-end encrypted", { timeout: 30_000 });
+    await expectEncrypted(page, s);
     await expect(s.getByRole("status")).toHaveText(/^\d+:\d\d$/); // the call timer
     await remoteVideoPlays(page);
     await expect(page.locator("[data-orbit-call-audio] audio")).toHaveCount(1); // Bob's voice, once proven to decrypt
@@ -106,7 +120,7 @@ test("the browser calls the phone app; each side decrypts the other's audio", as
   await expect(s.getByRole("status")).toHaveText(/Calling…|Ringing…/, { timeout: 15_000 });
   const call = await answerCall(bob, false);
   try {
-    await expect(badge(s)).toHaveText("End-to-end encrypted", { timeout: 30_000 });
+    await expectEncrypted(page, s);
     await expect(s.getByRole("status")).toHaveText(/^\d+:\d\d$/);
     await heardBrowser(call.media);
     await s.getByRole("button", { name: "Mute" }).click();
@@ -167,7 +181,7 @@ test("a refused microphone is explained: no call goes out, and an answered call 
     const s = stage(page);
     await expect(s.getByRole("alert").filter({ hasText: "isn't allowed to use your microphone" })).toBeVisible({ timeout: 15_000 });
     await expect(s.getByRole("button", { name: "Try again" })).toBeVisible();
-    await expect(badge(s)).toHaveText("End-to-end encrypted", { timeout: 30_000 }); // all live media (Bob's) is verified
+    await expectEncrypted(page, s); // all live media (Bob's) is verified
   } finally {
     await call.media.leave();
     await context.close();
@@ -184,13 +198,13 @@ test("a call survives losing the network for a few seconds", async ({ page, cont
   try {
     await page.getByRole("button", { name: "Answer" }).click({ timeout: 15_000 });
     const s = stage(page);
-    await expect(badge(s)).toHaveText("End-to-end encrypted", { timeout: 30_000 });
+    await expectEncrypted(page, s);
     await context.setOffline(true);
     await expect(s.getByRole("status")).toHaveText(/Reconnecting/, { timeout: 30_000 });
     await page.waitForTimeout(3_000);
     await context.setOffline(false);
     await expect(s.getByRole("status")).toHaveText(/^\d+:\d\d$/, { timeout: 60_000 });
-    await expect(badge(s)).toHaveText("End-to-end encrypted", { timeout: 30_000 });
+    await expectEncrypted(page, s);
     const before = call.media.sustainedAudio();
     await expect.poll(() => call.media.sustainedAudio(), { timeout: 20_000 }).toBeGreaterThan(before);
   } finally {
