@@ -1,5 +1,5 @@
 import { expect, type Page, test } from "@playwright/test";
-import { link } from "./link";
+import { expectSignedOut, link } from "./link";
 import { newPhone, testAddress } from "./phone";
 
 test.beforeEach(async ({ context }) => {
@@ -58,7 +58,7 @@ test("a linked browser and the phone stay in sync through the server, and signin
   await page.goto("/#/settings/security");
   await page.getByRole("button", { name: "Sign out and erase this browser" }).click();
   await page.getByRole("dialog").getByRole("button", { name: "Sign out" }).click();
-  await expect(page.getByRole("heading", { name: "Link this browser to your account" })).toBeVisible();
+  await expectSignedOut(page);
   const devices = (await alice.req("GET", "/v1/devices")).devices as { name: string; revokedAt: number | null }[];
   expect(devices.filter((d) => d.name.startsWith("Orbit Web")).every((d) => d.revokedAt !== null)).toBe(true);
 
@@ -74,7 +74,7 @@ test("removing the browser from the phone signs it out and erases what it kept",
   await expect(page.getByRole("heading", { name: "Signed out" })).toBeVisible();
   await expect(page.getByText(/removed from your account/)).toBeVisible();
   await page.getByRole("button", { name: "Link this browser again" }).click();
-  await expect(page.getByRole("heading", { name: "Link this browser to your account" })).toBeVisible();
+  await expectSignedOut(page);
 });
 
 test("a second tab doesn't take the connection unless asked", async ({ page, context }) => {

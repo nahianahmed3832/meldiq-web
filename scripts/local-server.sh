@@ -26,7 +26,7 @@ cd "$dir"
 export PORT="${PORT:-8080}" HOST="${HOST:-0.0.0.0}" REGISTRATION_MODE="${REGISTRATION_MODE:-open}" LOG_LEVEL="${LOG_LEVEL:-info}"
 # Orbit 2.0 accounts: verification and reset emails are written to files instead of sent (development only);
 # `npx tsx scripts/demo-phone.ts mail` prints the newest codes.
-export APP_ENV="${APP_ENV:-development}" MAIL_TRANSPORT="${MAIL_TRANSPORT:-file}" MAIL_FILE_DIR="${MAIL_FILE_DIR:-$dir/data/mail}"
+export APP_ENV="${APP_ENV:-development}" MAIL_TRANSPORT="${MAIL_TRANSPORT:-file}" MAIL_FILE_DIR="${MAIL_FILE_DIR:-${DATA_DIR:-$dir/data}/mail}"
 if [ "${1:-}" = "--calls" ] || [ "${ORBIT_CALLS:-0}" = "1" ]; then
   export LIVEKIT_API_KEY="${LIVEKIT_API_KEY:-orbit-dev}"
   export LIVEKIT_API_SECRET="${LIVEKIT_API_SECRET:-orbit-dev-secret-for-local-testing-only-0001}"
