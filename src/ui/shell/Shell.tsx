@@ -1,24 +1,28 @@
 import { useEffect, useMemo, useState } from "react";
 import { shallowEqual, useEngine, useOrbit } from "../../app/orbit";
 import { setPrefs, usePrefs } from "../../app/prefs";
-import { navigate, useRoute } from "../../app/router";
+import { isFullPage, navigate, useRoute } from "../../app/router";
 import { ConversationView } from "../chat/ConversationView";
 import { SidePanel } from "../chat/SidePanel";
 import { CallLayer } from "../call/CallLayer";
 import { ChannelBrowser } from "../dialogs/ChannelBrowser";
 import { IdentityReview } from "../dialogs/IdentityReview";
+import { NewGroupDialog } from "../dialogs/NewGroupDialog";
 import { NewMessageDialog } from "../dialogs/NewMessageDialog";
+import { CreateWorkspaceDialog, JoinWorkspaceDialog } from "../dialogs/WorkspaceDialogs";
 import { SearchDialog } from "../dialogs/SearchDialog";
 import { SettingsView } from "../settings/SettingsView";
 import { ActivityView } from "../views/ActivityView";
 import { HomeView } from "../views/HomeView";
+import { WorkspaceView } from "../workspace/WorkspaceView";
 import { Notices } from "./Notices";
 import { Rail } from "./Rail";
 import { Sidebar } from "./Sidebar";
 import { TabBar } from "./TabBar";
 import { TopBar } from "./TopBar";
 
-export type ShellDialog = { kind: "search" } | { kind: "new" } | { kind: "channels" } | { kind: "identity"; userId: string } | null;
+export type ShellDialog =
+  { kind: "search" } | { kind: "new" } | { kind: "newGroup" } | { kind: "channels" } | { kind: "identity"; userId: string } | { kind: "createWorkspace" } | { kind: "joinWorkspace" } | null;
 
 /**
  * The signed-in frame: workspace rail, top bar, sidebar, the main column and an optional side panel; on phones a single
@@ -41,7 +45,7 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
 
   // The conversation on screen (marks it read; new messages there don't count as unread while the window has focus).
   useEffect(() => {
-    void engine.openConversation(route.section === "settings" ? null : route.conversationId);
+    void engine.openConversation(isFullPage(route.section) ? null : route.conversationId);
     setDrawer(false);
   }, [engine, route.conversationId, route.section]);
 
@@ -49,7 +53,7 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
   useEffect(() => {
     if (synced && route.conversationId && !known) {
       engine.notice("info", "That conversation isn't available to you.");
-      navigate({ section: route.section === "settings" ? "home" : route.section }, true);
+      navigate({ section: isFullPage(route.section) ? "home" : route.section }, true);
     }
   }, [synced, known, route.conversationId, route.section, engine]);
 
@@ -83,7 +87,7 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
         e.preventDefault();
         const i = route.conversationId ? order.indexOf(route.conversationId) : -1;
         const next = order[Math.max(0, Math.min(order.length - 1, i + (e.key === "ArrowDown" ? 1 : -1)))];
-        if (next) navigate({ section: route.section === "settings" ? "home" : route.section, conversationId: next });
+        if (next) navigate({ section: isFullPage(route.section) ? "home" : route.section, conversationId: next });
       } else if (e.key === "Escape" && drawer) setDrawer(false);
     };
     window.addEventListener("keydown", onKey);
@@ -91,12 +95,13 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
   }, [order, route, drawer]);
 
   const section = route.section;
-  const settings = section === "settings";
+  const settings = isFullPage(section);
   const phoneList = !route.conversationId && (section === "home" || section === "dms");
   const ctx = useMemo(() => ({ open: (d: ShellDialog) => setDialog(d) }), []);
 
   let main;
-  if (settings) main = <SettingsView page={route.settingsPage} onSignedOut={onSignedOut} />;
+  if (section === "settings") main = <SettingsView page={route.settingsPage} onSignedOut={onSignedOut} />;
+  else if (section === "workspace") main = <WorkspaceView orgId={orgId} page={route.workspacePage} onDialog={ctx.open} />;
   else if (route.conversationId && known) main = <ConversationView key={route.conversationId} id={route.conversationId} route={route} onDialog={ctx.open} />;
   else if (section === "activity") main = <ActivityView orgId={orgId} />;
   else main = <HomeView orgId={orgId} section={section} onDialog={ctx.open} />;
@@ -117,9 +122,12 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
       <Notices />
       <CallLayer />
       {dialog?.kind === "search" && <SearchDialog orgId={orgId} onClose={() => setDialog(null)} />}
-      {dialog?.kind === "new" && <NewMessageDialog onClose={() => setDialog(null)} />}
+      {dialog?.kind === "new" && <NewMessageDialog onClose={() => setDialog(null)} onNewGroup={() => setDialog({ kind: "newGroup" })} />}
       {dialog?.kind === "channels" && orgId && <ChannelBrowser orgId={orgId} onClose={() => setDialog(null)} />}
       {dialog?.kind === "identity" && <IdentityReview userId={dialog.userId} onClose={() => setDialog(null)} />}
+      {dialog?.kind === "newGroup" && <NewGroupDialog onClose={() => setDialog(null)} />}
+      {dialog?.kind === "createWorkspace" && <CreateWorkspaceDialog onClose={() => setDialog(null)} />}
+      {dialog?.kind === "joinWorkspace" && <JoinWorkspaceDialog onClose={() => setDialog(null)} />}
     </div>
   );
 }

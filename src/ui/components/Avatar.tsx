@@ -35,14 +35,16 @@ interface AvatarProps {
   square?: boolean;
   /** Hidden from assistive tech when the name is already next to it. */
   decorative?: boolean;
+  /** A photo (object URL) shown instead of the initials. */
+  photoUrl?: string | null;
 }
 
-export function Avatar({ name, colorIndex, size = 36, online, square, decorative }: AvatarProps) {
+export function Avatar({ name, colorIndex, size = 36, online, square, decorative, photoUrl }: AvatarProps) {
   const [a1, a2] = TONES[((colorIndex % TONES.length) + TONES.length) % TONES.length];
   const style = { width: size, height: size, fontSize: Math.round(size * 0.36), "--a1": a1, "--a2": a2 } as CSSProperties;
   return (
     <span className={`avatar${square ? " square" : ""}`} style={style} role={decorative ? undefined : "img"} aria-label={decorative ? undefined : name} aria-hidden={decorative || undefined}>
-      {initialsOf(name)}
+      {photoUrl ? <img src={photoUrl} alt="" className="avatar-photo" draggable={false} /> : initialsOf(name)}
       {online !== undefined && online !== null && <span className={`presence${online ? " on" : ""}`} aria-label={online ? "Online" : "Offline"} />}
     </span>
   );

@@ -1,3 +1,4 @@
+import { members } from "../format";
 import { Hash, Lock, Megaphone } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import type { Conversation } from "../../api/schemas";
@@ -41,7 +42,7 @@ export function ChannelBrowser({ orgId, onClose }: { orgId: string; onClose: () 
                   {c.name}
                   {c.archived ? " · archived" : ""}
                 </span>
-                <small className="ellipsis">{[c.topic, `${c.memberCount} members`, c.scopeName].filter(Boolean).join(" · ")}</small>
+                <small className="ellipsis">{[c.topic, members(c.memberCount), c.scopeName].filter(Boolean).join(" · ")}</small>
               </span>
               {c.joined ? (
                 <button

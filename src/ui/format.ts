@@ -44,6 +44,21 @@ export function relative(t: number, now = Date.now()): string {
   return dayLabel(t, now);
 }
 
+/** When something ends: "in 20 min", "in 5 h", "in 3 days", or the date. */
+export function untilWhen(t: number, now = Date.now()): string {
+  const s = (t - now) / 1000;
+  if (s <= 0) return "now";
+  if (s < 3600) return `in ${Math.ceil(s / 60)} min`;
+  if (s < 86_400) return `in ${Math.round(s / 3600)} h`;
+  const d = Math.round(s / 86_400);
+  return d < 14 ? `in ${d} ${d === 1 ? "day" : "days"}` : `on ${date.format(t)}`;
+}
+
+/** "1 member", "3 members". */
+export function members(n: number): string {
+  return `${n} ${n === 1 ? "member" : "members"}`;
+}
+
 export function bytes(n: number): string {
   if (n < 1024) return `${n} B`;
   if (n < 1024 * 1024) return `${(n / 1024).toFixed(n < 10 * 1024 ? 1 : 0)} KB`;

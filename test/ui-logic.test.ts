@@ -23,6 +23,7 @@ const conv = (over: Partial<Conversation>): Conversation => ({
   joined: true,
   myRole: "MEMBER",
   canPost: true,
+  canManageAccess: false,
   canManage: false,
   canMentionAll: false,
   activeCall: null,

@@ -1,13 +1,14 @@
-import { AtSign, Check, ChevronDown, Compass, Hash, Inbox, Lock, Megaphone, PenSquare, Plus, UsersRound } from "lucide-react";
+import { AtSign, Check, ChevronDown, Compass, Hash, Inbox, Lock, LogIn, Megaphone, PenSquare, Plus, Settings2, Ticket, UsersRound } from "lucide-react";
 import { memo } from "react";
 import type { Conversation } from "../../api/schemas";
 import { shallowEqual, useOrbit } from "../../app/orbit";
 import { setPrefs, usePrefs } from "../../app/prefs";
-import { type Section, useRoute } from "../../app/router";
+import { navigate, type Section, useRoute } from "../../app/router";
 import type { ConversationLocal } from "../../model/types";
 import { Avatar, colorIndexOf } from "../components/Avatar";
+import { OrgAvatar } from "../components/OrgAvatar";
 import { Menu, useMenu } from "../components/Overlay";
-import { conversationTitle, dmPeer, shortWhen } from "../format";
+import { conversationTitle, dmPeer, members, shortWhen } from "../format";
 import { channelGroups, mentionConversations, people } from "../selectors";
 import type { ShellDialog } from "./Shell";
 
@@ -37,12 +38,12 @@ export function Sidebar({ orgId, section, open, onDialog }: SidebarProps) {
           aria-expanded={!!switcher.anchor}
           aria-label={`Workspace: ${org?.name ?? "none"}. Switch workspace`}
         >
-          {org ? <Avatar name={org.name} colorIndex={colorIndexOf(org.id)} size={34} square decorative /> : <Avatar name="Orbit" colorIndex={7} size={34} square decorative />}
+          {org ? <OrgAvatar orgId={org.id} name={org.name} photoRev={org.photoRev} size={34} /> : <Avatar name="Orbit" colorIndex={7} size={34} square decorative />}
           <span className="grow">
             <strong className="ellipsis" style={{ display: "block" }}>
               {org?.name ?? "Orbit"}
             </strong>
-            <small>{org ? `${org.memberCount} members · ${roleLabel(org.myRole)}` : "No workspace yet"}</small>
+            <small>{org ? `${members(org.memberCount)} · ${roleLabel(org.myRole)}` : "No workspace yet"}</small>
           </span>
           <ChevronDown size={16} className="faint" />
         </button>
@@ -59,13 +60,22 @@ export function Sidebar({ orgId, section, open, onDialog }: SidebarProps) {
             { heading: "Your workspaces" },
             ...orgs.map((o) => ({
               label: o.name,
-              icon: <Avatar name={o.name} colorIndex={colorIndexOf(o.id)} size={22} square decorative />,
+              icon: <OrgAvatar orgId={o.id} name={o.name} photoRev={o.photoRev} size={22} />,
               checked: o.id === orgId,
               onSelect: () => setPrefs({ orgId: o.id }),
             })),
-            ...(orgs.length === 0 ? [{ custom: <div className="side-quiet">Join a workspace with an invitation on your phone.</div> }] : []),
+            ...(orgs.length === 0 ? [{ custom: <div className="side-quiet">You're not in a workspace yet.</div> }] : []),
             "separator" as const,
-            ...(org ? [{ label: "Browse channels", icon: <Compass size={16} />, onSelect: () => onDialog({ kind: "channels" }) }] : []),
+            ...(org
+              ? [
+                  { label: "Workspace settings", icon: <Settings2 size={16} />, onSelect: () => navigate({ section: "workspace", workspacePage: "overview" }) },
+                  { label: "Invite people", icon: <Ticket size={16} />, onSelect: () => navigate({ section: "workspace", workspacePage: "invitations" }) },
+                  { label: "Browse channels", icon: <Compass size={16} />, onSelect: () => onDialog({ kind: "channels" }) },
+                  "separator" as const,
+                ]
+              : []),
+            { label: "Create a workspace", icon: <Plus size={16} />, onSelect: () => onDialog({ kind: "createWorkspace" }) },
+            { label: "Join with a code", icon: <LogIn size={16} />, onSelect: () => onDialog({ kind: "joinWorkspace" }) },
           ]}
         />
       )}
@@ -99,6 +109,12 @@ export function Sidebar({ orgId, section, open, onDialog }: SidebarProps) {
                   <Plus size={16} />
                 </span>
                 <span className="grow">New message</span>
+              </button>
+              <button className="side-item" onClick={() => onDialog({ kind: "newGroup" })}>
+                <span className="glyph">
+                  <UsersRound size={16} />
+                </span>
+                <span className="grow">New group</span>
               </button>
             </Collapsible>
           </>
@@ -239,7 +255,7 @@ const ConversationRow = memo(function ConversationRow({ id, twoLine, hideRead }:
       : local?.lastPreview
         ? `${local.lastSenderName && c.type !== "DM" ? `${local.lastSenderName}: ` : local.lastSenderName === "You" ? "You: " : ""}${local.lastPreview}`
         : c.type === "GROUP"
-          ? `${c.memberCount} members`
+          ? members(c.memberCount)
           : "No messages yet";
     return (
       <a className={`side-item two-line${unread ? " unread" : ""}`} href={`#/${section}/c/${encodeURIComponent(id)}`} aria-current={current ? "page" : undefined} aria-label={label}>

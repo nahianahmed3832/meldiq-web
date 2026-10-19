@@ -5,7 +5,7 @@ import { navigate, type Route } from "../../app/router";
 import type { StoredMessage } from "../../model/types";
 import { CallFailure } from "../../call/rules";
 import { Avatar, colorIndexOf } from "../components/Avatar";
-import { conversationTitle, dmPeer, relative } from "../format";
+import { conversationTitle, dmPeer, members, relative } from "../format";
 import type { ShellDialog } from "../shell/Shell";
 import { Composer, useFileDrop } from "./Composer";
 import { ConversationStart, MessageList } from "./MessageList";
@@ -46,8 +46,8 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
     c.type === "DM"
       ? `@${peer?.username ?? ""}${peer?.online === true ? " · online" : ""}`
       : c.type === "GROUP"
-        ? `${c.memberCount} members`
-        : [c.topic, `${c.memberCount} members`, c.scope === "ORG" ? null : c.scopeName].filter(Boolean).join(" · ");
+        ? members(c.memberCount)
+        : [c.topic, members(c.memberCount), c.scope === "ORG" ? null : c.scopeName].filter(Boolean).join(" · ");
   const panelOpen = route.panel === "details";
 
   return (
@@ -78,7 +78,7 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
           <button
             className="btn btn-ghost btn-sm"
             onClick={() => navigate({ section: route.section, conversationId: id, panel: panelOpen ? null : "details" })}
-            aria-label={`${c.memberCount} members, show details`}
+            aria-label={`${members(c.memberCount)}, show details`}
           >
             <UsersRound size={16} /> {c.memberCount}
           </button>

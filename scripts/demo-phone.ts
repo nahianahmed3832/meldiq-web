@@ -10,6 +10,7 @@
  *   npx tsx scripts/demo-phone.ts listen alice 30        print what alice's phone receives for 30 s
  *   npx tsx scripts/demo-phone.ts dm bob yourname        bob opens a DM with your real phone's account (saved as "phone")
  *   npx tsx scripts/demo-phone.ts mail                   the newest email codes the local server "sent" (sign-up, reset)
+ *   npx tsx scripts/demo-phone.ts join bob ABCD-EFGH-JKLM  a test person joins a workspace with an invitation code
  */
 import crypto from "node:crypto";
 import fs from "node:fs";
@@ -123,7 +124,12 @@ async function approve(code: string) {
 async function say(who: string, where: string, text: string) {
   const state = load();
   const c = await person(state, who, who);
-  const id = state.conversations[where] ?? where;
+  // A saved name ("general", "dm", "phone"), else a channel or group of this person's by name, else an id.
+  let id = state.conversations[where];
+  if (!id) {
+    const mine = (await c.req("GET", "/v1/conversations")).conversations as { id: string; name: string | null }[];
+    id = mine.find((x) => (x.name ?? "").toLowerCase() === where.replace(/^#/, "").toLowerCase())?.id ?? where;
+  }
   // Like the phone's composer: @username tokens of known people become mention ids (docs/MENTIONS.md).
   const mentions = Object.values(state.people)
     .filter((p) => p.userId !== c.userId && new RegExp(`@${p.username}\\b`, "i").test(text))
@@ -143,6 +149,14 @@ async function dm(who: string, username: string) {
   state.conversations.phone = (await c.req("POST", "/v1/conversations/dm", { userId: target.id })).conversation.id;
   save(state);
   console.log(`${who} <-> @${target.username}: conversation saved as "phone"; send with: say ${who} phone "hello"`);
+}
+
+/** A test person joins a workspace with an invitation code (as the phone's Join workspace does). */
+async function join(who: string, code: string) {
+  const state = load();
+  const c = await person(state, who, who);
+  const r = await c.req("POST", "/v1/invites/accept", { code });
+  console.log(`${who} joined ${r.org.name} as ${r.org.myRole}`);
 }
 
 async function listen(who: string, seconds: number) {
@@ -194,7 +208,9 @@ const run =
             ? listen(args[0] ?? "alice", Number(args[1] ?? 30))
             : cmd === "mail"
               ? Promise.resolve(mail(Number(args[0] ?? 5)))
-              : Promise.reject(new Error("usage: setup | approve <code> | say <who> <where> <text> | dm <who> <username> | listen <who> <seconds> | mail [count]"));
+              : cmd === "join"
+                ? join(args[0] ?? "bob", args[1] ?? "")
+                : Promise.reject(new Error("usage: setup | approve <code> | say <who> <where> <text> | dm <who> <username> | listen <who> <seconds> | mail [count] | join <who> <code>"));
 run.catch((e: unknown) => {
   console.error(e instanceof Error ? e.message : e);
   process.exit(1);

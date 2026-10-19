@@ -7,7 +7,7 @@ import { navigate } from "../../app/router";
 import type { StoredMessage } from "../../model/types";
 import { searchPeople, startDirect } from "../../sync/account";
 import { Avatar, colorIndexOf } from "../components/Avatar";
-import { conversationTitle, shortWhen } from "../format";
+import { conversationTitle, members, shortWhen } from "../format";
 
 interface Result {
   key: string;
@@ -67,7 +67,7 @@ export function SearchDialog({ orgId: _orgId, onClose }: { orgId: string | null;
         key: `c:${c.id}`,
         group: "Conversations",
         title: c.type === "CHANNEL" ? `#${title}` : title,
-        sub: c.type === "CHANNEL" ? (c.scopeName ?? "Channel") : c.type === "GROUP" ? `Group · ${c.memberCount} members` : "Direct message",
+        sub: c.type === "CHANNEL" ? (c.scopeName ?? "Channel") : c.type === "GROUP" ? `Group · ${members(c.memberCount)}` : "Direct message",
         icon: c.type === "CHANNEL" ? <Hash size={18} /> : <Avatar name={title} colorIndex={colorIndexOf(c.id)} size={28} decorative />,
         go: () => navigate({ section: c.type === "CHANNEL" ? "home" : "dms", conversationId: c.id }),
       }));

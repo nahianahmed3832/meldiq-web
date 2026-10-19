@@ -5,9 +5,11 @@ import { useSyncExternalStore } from "react";
  *   #/home  #/dms  #/activity                     the three sections
  *   #/<section>/c/<id>[/details|/thread/<root>]   a conversation (and its side panel)
  *   #/settings/<page>
+ *   #/workspace/<page>                            the current workspace's settings and administration
  */
-export type Section = "home" | "dms" | "activity" | "settings";
-export type SettingsPage = "profile" | "devices" | "notifications" | "appearance" | "security" | "about";
+export type Section = "home" | "dms" | "activity" | "settings" | "workspace";
+export type SettingsPage = "profile" | "account" | "devices" | "notifications" | "appearance" | "security" | "about";
+export type WorkspacePage = "overview" | "people" | "invitations" | "channels" | "structure";
 
 export interface Route {
   section: Section;
@@ -15,17 +17,23 @@ export interface Route {
   panel: "details" | "thread" | null;
   threadRoot: string | null;
   settingsPage: SettingsPage;
+  workspacePage: WorkspacePage;
 }
 
-const SECTIONS: Section[] = ["home", "dms", "activity", "settings"];
-const PAGES: SettingsPage[] = ["profile", "devices", "notifications", "appearance", "security", "about"];
+/** Sections that take the whole page (no conversation list). */
+export const isFullPage = (s: Section): boolean => s === "settings" || s === "workspace";
+
+const SECTIONS: Section[] = ["home", "dms", "activity", "settings", "workspace"];
+const PAGES: SettingsPage[] = ["profile", "account", "devices", "notifications", "appearance", "security", "about"];
+const WORKSPACE_PAGES: WorkspacePage[] = ["overview", "people", "invitations", "channels", "structure"];
 const ID = /^[A-Za-z0-9_-]{1,128}$/;
 
 export function parseRoute(hash: string): Route {
   const parts = hash.replace(/^#\/?/, "").split("/").filter(Boolean).map(decodeURIComponent);
   const section = SECTIONS.includes(parts[0] as Section) ? (parts[0] as Section) : "home";
-  const route: Route = { section, conversationId: null, panel: null, threadRoot: null, settingsPage: "profile" };
+  const route: Route = { section, conversationId: null, panel: null, threadRoot: null, settingsPage: "profile", workspacePage: "overview" };
   if (section === "settings") return { ...route, settingsPage: PAGES.includes(parts[1] as SettingsPage) ? (parts[1] as SettingsPage) : "profile" };
+  if (section === "workspace") return { ...route, workspacePage: WORKSPACE_PAGES.includes(parts[1] as WorkspacePage) ? (parts[1] as WorkspacePage) : "overview" };
   if (parts[1] === "c" && parts[2] && ID.test(parts[2])) {
     route.conversationId = parts[2];
     if (parts[3] === "details") route.panel = "details";
@@ -39,6 +47,7 @@ export function parseRoute(hash: string): Route {
 
 export function routeHash(r: Partial<Route> & { section: Section }): string {
   if (r.section === "settings") return `#/settings/${r.settingsPage ?? "profile"}`;
+  if (r.section === "workspace") return `#/workspace/${r.workspacePage ?? "overview"}`;
   let h = `#/${r.section}`;
   if (r.conversationId) {
     h += `/c/${encodeURIComponent(r.conversationId)}`;

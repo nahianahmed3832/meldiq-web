@@ -52,6 +52,8 @@ export const zConversation = z.object({
   myRole: nullableString,
   canPost: z.boolean(),
   canManage: z.boolean(),
+  /** Whether this person may change the channel's access mode (its workspace, branch or team managers). */
+  canManageAccess: z.boolean().default(false),
   canMentionAll: z.boolean().default(false),
   activeCall: z
     .object({ id: z.string(), video: z.boolean(), state: z.string(), startedAt: z.number() })
@@ -68,6 +70,11 @@ export const zOrg = z.object({
   myRole: nullableString,
   memberCount: z.number().int(),
   createdAt: z.number(),
+  /** The workspace photo's revision (GET /v1/orgs/:id/photo), null without one. */
+  photoRev: z
+    .number()
+    .nullish()
+    .transform((v) => v ?? null),
 });
 export type Org = z.infer<typeof zOrg>;
 

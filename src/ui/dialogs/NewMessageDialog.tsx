@@ -1,4 +1,4 @@
-import { Search } from "lucide-react";
+import { Search, UsersRound } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { Member } from "../../api/schemas";
 import { useEngine } from "../../app/orbit";
@@ -8,7 +8,7 @@ import { Avatar } from "../components/Avatar";
 import { Dialog } from "../components/Overlay";
 
 /** Start a direct message: people who share a workspace with you, or anyone by exact @username (server search rules). */
-export function NewMessageDialog({ onClose }: { onClose: () => void }) {
+export function NewMessageDialog({ onClose, onNewGroup }: { onClose: () => void; onNewGroup?: () => void }) {
   const engine = useEngine();
   const [q, setQ] = useState("");
   const [people, setPeople] = useState<Member[]>([]);
@@ -73,9 +73,22 @@ export function NewMessageDialog({ onClose }: { onClose: () => void }) {
             </p>
           )}
           {!q.trim() && (
-            <p className="faint" style={{ margin: "8px 4px" }}>
-              Search for a colleague. New groups are created on the phone for now.
-            </p>
+            <>
+              <p className="faint" style={{ margin: "8px 4px" }}>
+                Search for a colleague, or start a group conversation.
+              </p>
+              {onNewGroup && (
+                <button className="list-row" onClick={onNewGroup}>
+                  <span className="empty-orb" style={{ width: 34, height: 34 }}>
+                    <UsersRound size={16} />
+                  </span>
+                  <span className="lines">
+                    <span>New group</span>
+                    <small>Up to 50 people on this server</small>
+                  </span>
+                </button>
+              )}
+            </>
           )}
         </div>
       </div>

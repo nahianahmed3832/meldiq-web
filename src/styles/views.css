@@ -573,3 +573,144 @@
   margin: 0;
   color: var(--text-2);
 }
+
+/* ───────────────────────── workspace settings and administration ───────────────────────── */
+.ws-page {
+  display: grid;
+  gap: 18px;
+}
+.ws-hero {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.ws-hero h1 {
+  margin: 0;
+  font-size: 24px;
+  letter-spacing: -0.02em;
+}
+.ws-hero p {
+  margin: 4px 0 0;
+}
+.ws-card {
+  padding: 20px;
+  display: grid;
+  gap: 14px;
+}
+.ws-card-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.ws-card-head h3 {
+  margin: 0;
+  font-size: 15.5px;
+}
+.ws-card-head p {
+  margin: 4px 0 0;
+  font-size: 13px;
+}
+.ws-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+}
+.ws-list > li.faint {
+  padding: 8px 2px;
+}
+.ws-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 10px 2px;
+  border-top: 1px solid var(--border);
+}
+.ws-row:first-child {
+  border-top: 0;
+}
+.ws-row .lines {
+  display: grid;
+  min-width: 0;
+}
+.ws-row .lines small {
+  color: var(--text-2);
+  font-size: 12.5px;
+}
+.ws-row-error {
+  flex-basis: 100%;
+  color: var(--danger);
+  font-size: 12.5px;
+}
+.role-badge,
+.status-badge {
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: var(--r-pill);
+  background: var(--surface-sunken);
+  color: var(--text-2);
+  white-space: nowrap;
+}
+.role-owner,
+.role-admin,
+.status-active {
+  background: var(--accent-soft);
+  color: var(--text);
+}
+.status-revoked,
+.status-expired {
+  color: var(--text-3);
+}
+.ws-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 12px;
+  align-items: end;
+}
+.ws-form .field > span {
+  font-weight: 600;
+  font-size: 13px;
+}
+.ws-wide {
+  grid-column: 1 / -1;
+}
+.ws-form-actions {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: flex-end;
+}
+.input-sm {
+  width: auto;
+  padding: 6px 10px;
+  font-size: 13px;
+}
+select.input {
+  appearance: auto;
+}
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: var(--r-pill);
+  background: var(--surface-sunken);
+  border: 1px solid var(--border);
+  font-size: 12.5px;
+  font-weight: 600;
+}
+.avatar-photo {
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  object-fit: cover;
+}
+.list-row[aria-pressed="true"] {
+  background: var(--surface-selected);
+}
