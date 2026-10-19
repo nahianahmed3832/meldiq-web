@@ -77,7 +77,19 @@ and workspace administration.
   `/v1/me/preferences`, which 0.4.2 didn't have.
 - `WEB_ORIGINS` is not set; the same-origin setup doesn't need it.
 
-### 2a. API 0.6.0 deployed by another session (10:33–10:37 UTC), **without the browser patches**
+### 2a. API 0.6.0 deployed by another session (10:33–10:37 UTC), **without the browser patches**. Resolved at 11:01 UTC
+
+> **Resolved.** The integrations session:
+>
+> - committed both patches to the server repository (`7dd93de` first-frame auth, `cb346e5` `WEB_ORIGINS`; `internal-beta`
+>   now at `3bd40e6`)
+> - ran the server suite: 538 passed, with SQLite and with MongoDB
+> - took a backup (`backups/pre-0.6.0-webpatch-20261019T110115Z`)
+> - rebuilt only the API (the unpatched image is kept as `0.6.0-nopatch`)
+>
+> Verified from this session at 11:04 UTC: a bare browser socket on `wss://web.meldiq.app/v1/ws` now waits 11.6 s before
+> closing with 4401, and `verify.sh` passes against 0.6.0. Later deploys from the repository keep the patches.
+
 
 Eight minutes after the 0.5.0 upgrade, API **0.6.0** was deployed:
 
@@ -171,7 +183,7 @@ All against API 0.5.0 + patches, the build now in production.
 
 ## 6. Where to resume
 
-1. **Browser WebSocket patch on 0.6.0** (§2a): confirm it's in production, then check the web goes online.
+1. **Browser WebSocket patch on 0.6.0** (§2a): done 11:01 UTC. Next, check a real sign-in on web.meldiq.app goes online.
 2. **S3 CORS:** after the rule is applied, send a file from the browser on production and open it on the phone.
 3. **Physical-phone test:** `ORBIT_WEB_STATUS.md` §9, now against production.
 4. **Call intermittent:** run `e2e/calls.spec.ts` on a cold LiveKit several times, and capture `call-tracks-at-failure.json`
