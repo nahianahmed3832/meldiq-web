@@ -8,8 +8,8 @@
   grid-template-rows: auto auto 1fr auto;
   gap: 12px;
   padding: 16px;
-  background: var(--rail);
-  color: var(--rail-text-active);
+  background: var(--call-bg);
+  color: var(--call-text);
 }
 .call-head {
   display: flex;
@@ -25,15 +25,15 @@
 .call-head .status {
   margin: 2px 0 0;
   font-size: 13px;
-  color: var(--rail-text);
+  color: var(--call-text-2);
   font-variant-numeric: tabular-nums;
 }
 .call-stage .icon-btn {
-  color: var(--rail-text);
+  color: var(--call-text-2);
 }
 .call-stage .icon-btn:hover:not(:disabled) {
-  background: var(--rail-hover);
-  color: var(--rail-text-active);
+  background: var(--call-control);
+  color: var(--call-text);
 }
 .e2ee-badge {
   display: inline-flex;
@@ -45,16 +45,16 @@
   font-size: 12.5px;
   font-weight: 600;
   white-space: nowrap;
-  background: var(--rail-hover);
-  color: var(--rail-text);
+  background: var(--call-control);
+  color: var(--call-text-2);
 }
 .e2ee-badge.encrypted {
-  background: #1f3a2a;
-  color: #b9e7c8;
+  background: var(--call-ok-soft);
+  color: var(--call-ok-text);
 }
 .e2ee-badge.problem {
-  background: #4a1f1c;
-  color: #ffc9c2;
+  background: var(--call-bad-soft);
+  color: var(--call-bad-text);
 }
 button.e2ee-badge:hover {
   filter: brightness(1.15);
@@ -64,12 +64,12 @@ button.e2ee-badge:hover {
   gap: 8px;
 }
 .call-notes .banner {
-  background: var(--rail-hover);
-  color: var(--rail-text-active);
+  background: var(--call-control);
+  color: var(--call-text);
 }
 .call-notes .banner.danger {
-  background: #4a1f1c;
-  color: #ffc9c2;
+  background: var(--call-bad-soft);
+  color: var(--call-bad-text);
 }
 .call-tiles {
   display: grid;
@@ -84,12 +84,12 @@ button.e2ee-badge:hover {
   display: grid;
   place-items: center;
   border-radius: var(--r-lg);
-  background: #2a2221;
+  background: var(--call-tile);
   overflow: hidden;
   min-height: 160px;
 }
 .call-tile.speaking {
-  box-shadow: inset 0 0 0 3px #e8a77f;
+  box-shadow: inset 0 0 0 3px var(--call-speaking);
 }
 .call-tile video {
   position: absolute;
@@ -97,7 +97,7 @@ button.e2ee-badge:hover {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  background: #000;
+  background: var(--media-bg);
 }
 .call-tile.local video {
   transform: scaleX(-1);
@@ -112,12 +112,12 @@ button.e2ee-badge:hover {
   max-width: calc(100% - 20px);
   padding: 4px 10px;
   border-radius: var(--r-pill);
-  background: rgba(0, 0, 0, 0.55);
+  background: var(--media-scrim);
   font-size: 12.5px;
   font-weight: 600;
 }
 .call-tile .who.problem {
-  background: rgba(120, 30, 25, 0.85);
+  background: var(--call-bad-strong);
 }
 .call-controls {
   display: flex;
@@ -132,39 +132,39 @@ button.e2ee-badge:hover {
   width: 54px;
   height: 54px;
   border-radius: 50%;
-  background: var(--rail-hover);
-  color: var(--rail-text-active);
+  background: var(--call-control);
+  color: var(--call-text);
   transition:
     background var(--t-fast) var(--ease),
     transform var(--t-fast) var(--ease);
 }
 .call-btn:hover:not(:disabled) {
-  background: #3e3330;
+  background: var(--call-control-hover);
 }
 .call-btn:active:not(:disabled) {
   transform: scale(0.96);
 }
 .call-btn[aria-pressed="false"] {
-  background: var(--rail-text-active);
-  color: var(--rail);
+  background: var(--call-text);
+  color: var(--call-bg);
 }
 .call-btn.warn {
-  box-shadow: inset 0 0 0 2px #e0a24f;
+  box-shadow: inset 0 0 0 2px var(--call-warn);
 }
-/* Fixed colours: the stage is dark in both themes, and white icons need a deep red and green behind them. */
+/* The stage is dark in both themes (tokens.css › call), so white icons sit on deep red and green. */
 .call-btn.end {
-  background: #b3261e;
-  color: #fff;
+  background: var(--call-end);
+  color: var(--on-media);
 }
 .call-btn.end:hover:not(:disabled) {
-  background: #c8352c;
+  background: var(--call-end-hover);
 }
 .call-btn.accept {
-  background: #276e45;
-  color: #fff;
+  background: var(--call-ok);
+  color: var(--on-media);
 }
 .call-btn.accept:hover:not(:disabled) {
-  background: #2f8253;
+  background: var(--call-ok-hover);
 }
 .call-btn:disabled {
   opacity: 0.45;
@@ -174,16 +174,16 @@ button.e2ee-badge:hover {
   gap: 8px;
   padding: 14px 16px;
   border-radius: var(--r-md);
-  background: var(--rail-hover);
+  background: var(--call-control);
   font-size: 13px;
-  color: var(--rail-text);
+  color: var(--call-text-2);
 }
 .call-verify .code {
   display: flex;
   align-items: baseline;
   gap: 16px;
   flex-wrap: wrap;
-  color: var(--rail-text-active);
+  color: var(--call-text);
 }
 .call-verify .emoji {
   font-size: 28px;
@@ -209,8 +209,8 @@ button.e2ee-badge:hover {
   gap: 14px;
   padding: 18px;
   border-radius: var(--r-xl);
-  background: var(--rail);
-  color: var(--rail-text-active);
+  background: var(--call-bg);
+  color: var(--call-text);
   box-shadow: var(--shadow-lg);
 }
 .call-incoming .who {
@@ -226,7 +226,7 @@ button.e2ee-badge:hover {
 .call-incoming p {
   margin: 2px 0 0;
   font-size: 13px;
-  color: var(--rail-text);
+  color: var(--call-text-2);
 }
 .call-incoming .actions {
   display: flex;
@@ -239,11 +239,11 @@ button.e2ee-badge:hover {
   gap: 6px;
   margin: 0;
   font-size: 12px;
-  color: var(--rail-text);
+  color: var(--call-text-2);
 }
 .call-incoming .note {
   font-size: 12.5px;
-  color: #ffc9c2;
+  color: var(--call-bad-text);
 }
 
 /* Minimised call: a bar over the bottom right of the workspace. */
@@ -258,8 +258,8 @@ button.e2ee-badge:hover {
   max-width: calc(100vw - 32px);
   padding: 8px 8px 8px 14px;
   border-radius: var(--r-pill);
-  background: var(--rail);
-  color: var(--rail-text-active);
+  background: var(--call-bg);
+  color: var(--call-text);
   box-shadow: var(--shadow-lg);
 }
 .call-mini .text {
@@ -269,7 +269,7 @@ button.e2ee-badge:hover {
   font-size: 13px;
 }
 .call-mini .text span {
-  color: var(--rail-text);
+  color: var(--call-text-2);
   font-size: 12px;
   font-variant-numeric: tabular-nums;
 }
@@ -324,7 +324,7 @@ button.e2ee-badge:hover {
   position: relative;
   min-height: 0;
   border-radius: 18px;
-  background: #000;
+  background: var(--media-bg);
   overflow: hidden;
   display: grid;
   place-items: center;
@@ -358,8 +358,8 @@ button.e2ee-badge:hover {
 .call-screen .who {
   padding: 4px 10px;
   border-radius: var(--r-pill);
-  background: rgba(0, 0, 0, 0.55);
-  color: #fff;
+  background: var(--media-scrim);
+  color: var(--on-media);
   font-size: 12.5px;
   font-weight: 600;
 }

@@ -130,6 +130,10 @@ export function Composer(props: ComposerProps) {
     if ((!body && !files.length) || busy) return;
     clearTimeout(draftTimer.current); // before anything async: a pending draft save must not bring the text back
     const opts = { replyTo: props.replyTo?.id, threadRoot: props.threadRoot };
+    // The box empties at once (the message shows as Sending), so whatever is typed while it encrypts and goes out
+    // starts the next message instead of joining this one or being wiped when this one finishes.
+    setText("");
+    if (!props.threadRoot) void engine.saveDraft(c.id, "");
     try {
       if (files.length) {
         setBusy(`Encrypting and uploading ${files.length === 1 ? "1 file" : `${files.length} files`}…`);
@@ -146,12 +150,12 @@ export function Composer(props: ComposerProps) {
           },
         );
       } else await engine.sendText(c.id, body, opts);
-      setText("");
       setFiles([]);
       props.onCancelReply();
       engine.setTyping(c.id, false);
-      if (!props.threadRoot) void engine.saveDraft(c.id, "");
     } catch (e) {
+      // Not sent: the text comes back unless something new has been typed meanwhile.
+      setText((now) => now || body);
       if (!(e instanceof UploadCancelled)) engine.notice("error", e instanceof Error ? e.message : "Couldn't send.");
     } finally {
       upload.current = null;

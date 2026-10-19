@@ -2,9 +2,12 @@ import { fileLimit, MAX_FILES_PER_MESSAGE } from "../../sync/attachments";
 import { serverHost } from "../../app/config";
 import { useState } from "react";
 import { useOrbit } from "../../app/orbit";
-import { setPrefs, usePrefs } from "../../app/prefs";
+import { type Palette, PALETTES, type Prefs, setPrefs, THEMES, usePrefs } from "../../app/prefs";
 import { bytes } from "../format";
 import { Toggle } from "../components/Toggle";
+
+const THEME_LABELS: Record<Prefs["theme"], string> = { system: "System", light: "Light", dark: "Dark" };
+const PALETTE_LABELS: Record<Palette, string> = { indigo: "Indigo", plum: "Plum", amber: "Amber" };
 
 export function NotificationsPage() {
   const prefs = usePrefs();
@@ -72,12 +75,30 @@ export function AppearancePage() {
         <div className="setting">
           <div className="lines">
             <strong>Theme</strong>
-            <small>Ivory for light, Cocoa for dark: the palettes of Meldiq on your phone.</small>
+            <small>Light, dark, or whatever this computer uses.</small>
           </div>
           <div className="segmented" role="group" aria-label="Theme">
-            {(["system", "light", "dark"] as const).map((t) => (
+            {THEMES.map((t) => (
               <button key={t} aria-pressed={prefs.theme === t} onClick={() => setPrefs({ theme: t })}>
-                {t === "system" ? "System" : t === "light" ? "Ivory" : "Cocoa"}
+                {THEME_LABELS[t]}
+              </button>
+            ))}
+          </div>
+        </div>
+        <div className="setting">
+          <div className="lines">
+            <strong>Colour</strong>
+            <small>The frame, sidebar and highlights. Messages stay on a calm, neutral background.</small>
+          </div>
+          <div className="palette-picker" role="radiogroup" aria-label="Colour">
+            {PALETTES.map((p) => (
+              <button key={p} role="radio" aria-checked={prefs.palette === p} className="palette-swatch" data-swatch={p} onClick={() => setPrefs({ palette: p })}>
+                <span className="swatch" aria-hidden="true">
+                  <i />
+                  <i />
+                  <i />
+                </span>
+                {PALETTE_LABELS[p]}
               </button>
             ))}
           </div>

@@ -96,8 +96,8 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
           </button>
         )}
         {m.forwarded && (
-          <div className="faint" style={{ fontSize: 12 }}>
-            Forwarded
+          <div className="msg-forwarded">
+            <Forward size={12} aria-hidden="true" /> Forwarded
           </div>
         )}
         {m.rich?.contact ? (
@@ -129,7 +129,7 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
         )}
         <Attachments refs={m.attachments} />
         {m.rich?.link && isWebUrl(m.rich.link.url) && (
-          <a className="msg-quote" href={m.rich.link.url} target="_blank" rel="noopener noreferrer nofollow" style={{ display: "block" }}>
+          <a className="msg-quote link-preview" href={m.rich.link.url} target="_blank" rel="noopener noreferrer nofollow">
             <strong>{m.rich.link.title ?? m.rich.link.siteName ?? m.rich.link.url}</strong>
             {m.rich.link.description && (
               <span className="ellipsis" style={{ display: "block" }}>
@@ -331,7 +331,7 @@ function Status({ m, onRetry, onReview }: { m: StoredMessage; onRetry: () => voi
       return (
         <span className="msg-meta failed">
           <CircleAlert size={13} /> {m.errorText ?? "Not sent"} ·{" "}
-          <button className="btn-ghost" style={{ color: "inherit", textDecoration: "underline" }} onClick={onRetry}>
+          <button className="msg-retry" onClick={onRetry}>
             Retry
           </button>
         </span>
@@ -340,7 +340,7 @@ function Status({ m, onRetry, onReview }: { m: StoredMessage; onRetry: () => voi
       return (
         <span className="msg-meta failed">
           <ShieldAlert size={13} /> Paused: a security key changed ·{" "}
-          <button className="btn-ghost" style={{ color: "inherit", textDecoration: "underline" }} onClick={onReview}>
+          <button className="msg-retry" onClick={onReview}>
             Review
           </button>
         </span>

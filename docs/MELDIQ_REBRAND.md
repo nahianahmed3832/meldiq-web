@@ -28,7 +28,7 @@ redirecting there. Docker, MongoDB, the API, OAuth registrations and the Android
 | Area | Change |
 |---|---|
 | Brand in one place | `src/app/brand.ts` (`Meldiq`, `Meldiq Web`, formerly Orbit) |
-| Logo | `src/ui/components/BrandMark.tsx` replaces `OrbitMark`; `public/meldiq.svg`; icons `meldiq-180/192/512.png`, maskable 512, share image `meldiq-og.png`, all rendered from the SVG by `scripts/render-brand-assets.ts`. **Provisional mark** in the app's existing tile and gradients: replace the path when the final logo exists, then run the script |
+| Logo | The official logo, `brand/meldiq-logo.webp`, is the only source. `scripts/render-brand-assets.ts` crops and scales it into the in-app mark (`BrandMark`), favicon, Apple and manifest icons and the share image. The provisional drawn mark and `public/meldiq.svg` are gone (`MELDIQ_DESIGN_SYSTEM.md`) |
 | Visible text | Every sign-in, sign-up, verification, reset and recovery screen; status screens (loading, unsupported, another tab, signed out, config error); rail, top bar, sidebar, settings (about, privacy, notifications, account, devices), call screen, identity review, errors and permission messages, system notifications ("Meldiq" when message text is hidden) |
 | Old accounts | Migration screens say "Used Orbit (now Meldiq) before email sign-in?" and "Move your Orbit account to Meldiq": people who knew the old name find the way |
 | New browser device names | "Meldiq Web · Chrome on macOS". Browsers set up before keep their stored "Orbit Web · …" name; Devices recognises both |

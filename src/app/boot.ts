@@ -14,6 +14,7 @@ export async function missingCapabilities(): Promise<string[]> {
   if (!window.crypto?.subtle) missing.push("the Web Crypto API");
   if (typeof indexedDB === "undefined") missing.push("IndexedDB storage");
   if (typeof WebSocket === "undefined") missing.push("WebSockets");
+  if (!CSS.supports("color", "light-dark(#000, #fff)")) missing.push("light and dark colours in CSS (light-dark())");
   if (missing.length) return missing;
   try {
     await crypto.subtle.generateKey({ name: "Ed25519" }, false, ["sign", "verify"]);

@@ -8,10 +8,10 @@ export function AuthFrame({ children }: { children: ReactNode }) {
     <div className="link-screen">
       <section className="link-hero" aria-label="About Meldiq Web">
         <div className="row" style={{ gap: 12 }}>
-          <BrandMark size={44} />
+          <BrandMark size={52} />
           <div>
             <strong style={{ fontSize: 17 }}>Meldiq</strong>
-            <div style={{ color: "#b8aaa5", fontSize: 12.5 }}>by GriipBuddy</div>
+            <div className="brand-byline">by GriipBuddy</div>
           </div>
         </div>
         <div>

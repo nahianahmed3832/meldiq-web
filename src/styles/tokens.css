@@ -1,8 +1,19 @@
 /*
- * Orbit design tokens for the web, from android ui/theme/OrbitPalettes.kt (UI-001):
- * Ivory (light): warm ivory, dark type, charcoal actions, a terracotta → rose accent dark enough to read on ivory.
- * Cocoa (dark): cocoa and charcoal surfaces, cream type, a soft peach → pink accent.
- * The accent is used sparingly: selection, unread and mention counts, focus, the primary action.
+ * Meldiq design tokens. Every colour in the interface comes from here.
+ *
+ * Structure:
+ *  1. Scale: type, radii, spacing, motion, elevation shape (palette-independent).
+ *  2. Neutrals: surfaces, text, borders and states, shared by every palette.
+ *  3. Palettes: the brand colour plates (indigo, the default from the logo's cyan → blue → violet ribbon; plum; amber).
+ *     A palette sets only brand hues: the frame (rail and top bar), the sidebar tint, the accent and its soft and text
+ *     forms, mentions, badges and the brand gradient. `data-palette` on <html> picks one (src/app/prefs.ts).
+ *
+ * Light and dark come from `color-scheme` (system, or `data-theme`), and every colour token is `light-dark(light, dark)`,
+ * so each palette is written once for both. Browsers without light-dark() get the static light values in the first block
+ * and are told on the unsupported screen (src/app/boot.ts).
+ *
+ * Hierarchy: the frame carries the brand colour; the sidebar is a soft tint of it; the conversation stays neutral. The
+ * accent is for selection, focus, primary actions, unread counts and mentions, never for whole panels.
  */
 @font-face {
   font-family: "Plus Jakarta Sans";
@@ -11,156 +22,278 @@
   font-display: swap;
 }
 
+/* ── 1. Scale ─────────────────────────────────────────────────────────────── */
 :root {
-  color-scheme: light;
   --font: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
 
-  --bg: #f7f2ed;
-  --surface: #fffdfb;
-  --surface-raised: #ffffff;
-  --surface-sunken: #efe8e2;
-  --surface-hover: #f3ece6;
-  --surface-selected: #ede3dc;
-  --border: #e6dcd5;
-  --border-strong: #d6c9c0;
-  --hairline: rgba(28, 23, 22, 0.08);
-  --text: #1c1716;
-  --text-2: #5f5450;
-  --text-3: #766963;
-  --outline: #8f817b;
+  /* Type: 12 / 13 / 14 (body) / 15 / 17 / 20 / 26 */
+  --fs-xs: 12px;
+  --fs-sm: 13px;
+  --fs-md: 14px;
+  --fs-lg: 15px;
+  --fs-xl: 17px;
+  --fs-2xl: 20px;
+  --fs-3xl: 26px;
 
-  --action: #221b1a;
-  --action-hover: #3a2f2c;
-  --on-action: #fff8f3;
-  --accent-start: #b4502f;
-  --accent-end: #a93a62;
-  --accent: #b0462f;
-  --accent-soft: #f8e6da;
-  --on-accent: #ffffff;
-  --accent-text: #9a3e2a;
-
-  --mention-bg: #fbeee6;
-  --mention-text: #8e3720;
-  --bubble-out: #efe3da;
-
-  --success: #276e45;
-  --success-soft: #e2f1e7;
-  --warning: #85590a;
-  --warning-soft: #f8ebd3;
-  --danger: #b3261e;
-  --danger-soft: #fae4e0;
-  --info: #2f6fb0;
-
-  /* The rail and the link screen's hero are cocoa in both themes: the app's deep frame around a light workspace. */
-  --rail: #1d1716;
-  --rail-hover: #2e2523;
-  --rail-text: #b8aaa5;
-  --rail-text-active: #fff8f3;
-
-  --shadow-sm: 0 1px 2px rgba(58, 42, 36, 0.06);
-  --shadow-md: 0 4px 16px rgba(58, 42, 36, 0.08), 0 1px 3px rgba(58, 42, 36, 0.06);
-  --shadow-lg: 0 16px 48px rgba(58, 42, 36, 0.16), 0 2px 8px rgba(58, 42, 36, 0.08);
-  --scrim: rgba(18, 13, 12, 0.42);
-  /* The glossy highlight on orbs and avatars (the brand mark's own top-left shine). */
-  --gloss: rgba(255, 255, 255, 0.9);
-  --focus: 0 0 0 2px var(--surface), 0 0 0 4px var(--accent);
-
+  /* Radii: controls 8, rows and inputs 10, cards 14, panels 18 */
+  --r-xs: 6px;
   --r-sm: 8px;
-  --r-md: 12px;
-  --r-lg: 16px;
-  --r-xl: 24px;
+  --r-md: 10px;
+  --r-lg: 14px;
+  --r-xl: 18px;
   --r-pill: 999px;
+
+  /* Spacing (4-point) */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-5: 20px;
+  --s-6: 24px;
+  --s-8: 32px;
+
+  /* Icons */
+  --icon-sm: 16px;
+  --icon-md: 18px;
+  --icon-lg: 20px;
+
+  /* Layout */
+  --rail-w: 68px;
+  --topbar-h: 52px;
+  --sidebar-w: 280px;
+  --frame-gap: 8px;
 
   --t-fast: 120ms;
   --t-std: 200ms;
   --ease: cubic-bezier(0.2, 0, 0, 1);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    color-scheme: dark;
-    --bg: #171313;
-    --surface: #1e1918;
-    --surface-raised: #292120;
-    --surface-sunken: #141010;
-    --surface-hover: #2a2321;
-    --surface-selected: #3a302d;
-    --border: #3d3230;
-    --border-strong: #4d403d;
-    --hairline: rgba(255, 255, 255, 0.06);
-    --text: #fff8f3;
-    --text-2: #b8aaa5;
-    --text-3: #968883;
-    --outline: #7d6e69;
-    --action: #f6a585;
-    --action-hover: #f8b89f;
-    --on-action: #2a1914;
-    --accent-start: #f6a585;
-    --accent-end: #ee8aa6;
-    --accent: #f4a08f;
-    --accent-soft: #3a2a26;
-    --on-accent: #2a1914;
-    --accent-text: #f8b89f;
-    --mention-bg: #3a2a26;
-    --mention-text: #ffd3c0;
-    --bubble-out: #3a2c29;
-    --success: #7fd8a6;
-    --success-soft: #1b3327;
-    --warning: #f2c26b;
-    --warning-soft: #3a2f1a;
-    --danger: #ff8a80;
-    --danger-soft: #3d1f1d;
-    --info: #8fc8ff;
-    --rail: #0f0c0c;
-    --rail-hover: #241d1c;
-    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
-    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.35);
-    --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.55);
-    --scrim: rgba(0, 0, 0, 0.6);
-    --gloss: rgba(255, 255, 255, 0.1);
-  }
+/* Static light values for browsers without light-dark() (they see the unsupported screen, readably). */
+:root {
+  --bg: #f5f5f9;
+  --surface: #ffffff;
+  --surface-raised: #ffffff;
+  --surface-sunken: #f0f0f5;
+  --surface-hover: #f2f2f7;
+  --surface-selected: #e9e9f1;
+  --border: #e3e3ec;
+  --border-strong: #cfd0dc;
+  --text: #16172b;
+  --text-2: #474960;
+  --text-3: #686a80;
+  --accent: #4f46e5;
+  --accent-text: #4338ca;
+  --accent-soft: #ecebfd;
+  --on-accent: #ffffff;
+  --action: #4f46e5;
+  --on-action: #ffffff;
+  --danger: #c0262d;
+  --rail: #241f63;
 }
 
-:root[data-theme="dark"] {
-  color-scheme: dark;
-  --bg: #171313;
-  --surface: #1e1918;
-  --surface-raised: #292120;
-  --surface-sunken: #141010;
-  --surface-hover: #2a2321;
-  --surface-selected: #3a302d;
-  --border: #3d3230;
-  --border-strong: #4d403d;
-  --hairline: rgba(255, 255, 255, 0.06);
-  --text: #fff8f3;
-  --text-2: #b8aaa5;
-  --text-3: #968883;
-  --outline: #7d6e69;
-  --action: #f6a585;
-  --action-hover: #f8b89f;
-  --on-action: #2a1914;
-  --accent-start: #f6a585;
-  --accent-end: #ee8aa6;
-  --accent: #f4a08f;
-  --accent-soft: #3a2a26;
-  --on-accent: #2a1914;
-  --accent-text: #f8b89f;
-  --mention-bg: #3a2a26;
-  --mention-text: #ffd3c0;
-  --bubble-out: #3a2c29;
-  --success: #7fd8a6;
-  --success-soft: #1b3327;
-  --warning: #f2c26b;
-  --warning-soft: #3a2f1a;
-  --danger: #ff8a80;
-  --danger-soft: #3d1f1d;
-  --info: #8fc8ff;
-  --rail: #0f0c0c;
-  --rail-hover: #241d1c;
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.35);
-  --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.55);
-  --scrim: rgba(0, 0, 0, 0.6);
-  --gloss: rgba(255, 255, 255, 0.1);
+@supports (color: light-dark(#000, #fff)) {
+  :root {
+    color-scheme: light dark;
+  }
+  :root[data-theme="light"] {
+    color-scheme: light;
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+  }
+
+  /* ── 2. Neutrals ────────────────────────────────────────────────────────── */
+  :root {
+    --bg: light-dark(#f5f5f9, #0e0f17);
+    --surface: light-dark(#ffffff, #14151f);
+    --surface-raised: light-dark(#ffffff, #1b1c28);
+    --surface-sunken: light-dark(#f1f1f6, #10111a);
+    --surface-hover: light-dark(#f3f3f8, #1d1e2b);
+    --surface-selected: light-dark(#ebebf3, #252637);
+    --border: light-dark(#e5e5ee, #262838);
+    --border-strong: light-dark(#d2d3df, #343649);
+    --hairline: light-dark(rgba(22, 23, 43, 0.07), rgba(255, 255, 255, 0.06));
+    --text: light-dark(#16172b, #f1f1f8);
+    --text-2: light-dark(#474960, #b5b6c9);
+    --text-3: light-dark(#686a80, #8b8da3);
+    --outline: light-dark(#8e90a6, #6e7088);
+
+    /* Primary actions take the accent; --action stays as the name the styles use. */
+    --action: var(--accent);
+    --action-hover: var(--accent-hover);
+    --on-action: var(--on-accent);
+    --link: var(--accent-text);
+
+    --success: light-dark(#1d7a4c, #5fd49a);
+    --success-soft: light-dark(#e3f4ea, #15301f);
+    --warning: light-dark(#8a5a00, #f3c461);
+    --warning-soft: light-dark(#fbf0d6, #352a12);
+    --danger: light-dark(#c0262d, #ff8a8a);
+    --danger-soft: light-dark(#fce6e6, #3a1a1d);
+    --on-danger: light-dark(#ffffff, #2b0d0f);
+    --info: light-dark(#2563c7, #8ab8ff);
+    --info-soft: light-dark(#e6effc, #182640);
+
+    /* Presence and connection */
+    --presence-on: light-dark(#1fa463, #4ad991);
+    --presence-off: light-dark(#a3a5b8, #5d5f75);
+
+    /* Overlays */
+    --scrim: light-dark(rgba(14, 15, 30, 0.42), rgba(0, 0, 0, 0.62));
+    --tooltip-bg: light-dark(#1b1c2e, #f1f1f8);
+    --tooltip-text: light-dark(#f6f6fb, #16172b);
+
+    --shadow-sm: 0 1px 2px light-dark(rgba(22, 23, 60, 0.06), rgba(0, 0, 0, 0.3));
+    --shadow-md: 0 4px 14px light-dark(rgba(22, 23, 60, 0.08), rgba(0, 0, 0, 0.35)), 0 1px 3px light-dark(rgba(22, 23, 60, 0.06), rgba(0, 0, 0, 0.25));
+    --shadow-lg: 0 18px 48px light-dark(rgba(22, 23, 60, 0.16), rgba(0, 0, 0, 0.55)), 0 2px 8px light-dark(rgba(22, 23, 60, 0.08), rgba(0, 0, 0, 0.3));
+    --gloss: light-dark(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.1));
+    --focus: 0 0 0 2px var(--surface), 0 0 0 4px var(--accent);
+    --focus-on-frame: 0 0 0 2px var(--rail), 0 0 0 4px var(--rail-text-active);
+
+    /* The call screen is always dark, whatever the theme, with a trace of the palette's frame. */
+    --call-bg: color-mix(in srgb, var(--rail-2) 38%, #05060c);
+    --call-text-2: #b6b8cc;
+    --call-bad-strong: rgba(150, 30, 36, 0.88);
+    --media-scrim: rgba(0, 0, 0, 0.55);
+    --call-tile: #1b1c2b;
+    --call-control: #2a2b3d;
+    --call-control-hover: #36384d;
+    --call-text: #f1f1f8;
+    --call-ok: #1f8a55;
+    --call-ok-hover: #24a063;
+    --call-ok-soft: #173a29;
+    --call-ok-text: #b4ecc9;
+    --call-end: #d23a3a;
+    --call-end-hover: #e04848;
+    --call-bad-soft: #4a1d22;
+    --call-bad-text: #ffc6c6;
+    --call-speaking: #7dd3fc;
+    --call-warn: #f3c461;
+    --media-bg: #000000;
+    --media-chrome: rgba(10, 10, 20, 0.88);
+    --media-control: rgba(255, 255, 255, 0.14);
+    --on-media: #ffffff;
+
+    /* The logo's own ground, for the sign-in hero and other brand moments. */
+    --brand-ground: #061130;
+    --brand-ground-2: #140f45;
+    --brand-on-ground: #f3f2ff;
+    --brand-on-ground-2: #b9bce6;
+    --brand-highlight: #7dd3fc;
+    --brand-glow-1: rgba(99, 102, 241, 0.42);
+    --brand-glow-2: rgba(34, 211, 238, 0.2);
+
+    /* Small fixed parts */
+    --panel-ring: light-dark(rgba(0, 0, 0, 0.04), rgba(255, 255, 255, 0.05));
+    --switch-thumb: #ffffff;
+    --on-avatar: #ffffff;
+    --avatar-gloss: rgba(255, 255, 255, 0.38);
+    --avatar-ring: rgba(0, 0, 0, 0.06);
+
+    /* Palette previews (Appearance › Colour): each plate's frame, sidebar and accent, whatever plate is active. */
+    --swatch-indigo-1: #231d62;
+    --swatch-indigo-2: #e2dffa;
+    --swatch-indigo-3: #4f46e5;
+    --swatch-plum-1: #4a1340;
+    --swatch-plum-2: #f4d8e7;
+    --swatch-plum-3: #b0236e;
+    --swatch-amber-1: #3d2610;
+    --swatch-amber-2: #f2e1c4;
+    --swatch-amber-3: #a85a06;
+    --brand-gradient: linear-gradient(120deg, #22d3ee 0%, #3b82f6 45%, #8b5cf6 80%, #c4b5fd 100%);
+  }
+
+  /* ── 3. Palettes ──────────────────────────────────────────────────────── */
+
+  /* Indigo (default): the logo's blue-violet. Frame deep indigo, sidebar lavender mist, accent indigo, badges cyan. */
+  :root,
+  :root[data-palette="indigo"] {
+    --rail: light-dark(#231d62, #100f2a);
+    --rail-2: light-dark(#1b1650, #0c0b20);
+    --rail-hover: light-dark(rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.07));
+    --rail-active: light-dark(rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.12));
+    --rail-text: light-dark(#c4c1f0, #a9a7d6);
+    --rail-text-active: #ffffff;
+    --rail-line: rgba(255, 255, 255, 0.12);
+    --rail-input: rgba(255, 255, 255, 0.1);
+    --rail-input-hover: rgba(255, 255, 255, 0.16);
+
+    --sidebar: light-dark(#f4f3fd, #15142a);
+    --sidebar-hover: light-dark(#eae8fb, #1f1e3a);
+    --sidebar-selected: light-dark(#e2dffa, #2a2852);
+    --sidebar-text: light-dark(#4a4a68, #b3b2d0);
+
+    --accent: light-dark(#4f46e5, #8f8bfa);
+    --accent-hover: light-dark(#4338ca, #a6a3fb);
+    --accent-soft: light-dark(#ecebfd, #25244a);
+    --accent-text: light-dark(#4338ca, #b4b1fd);
+    --on-accent: light-dark(#ffffff, #12112e);
+    --accent-2: light-dark(#0e7fa0, #4fd9f2);
+
+    --mention-bg: light-dark(#eceafd, #2a2858);
+    --mention-text: light-dark(#3a30c0, #cfccff);
+    --bubble-out: light-dark(#f0effd, #1f1e3d);
+    --badge: light-dark(#4f46e5, #8f8bfa);
+    --on-badge: light-dark(#ffffff, #12112e);
+    --rail-badge: #5ee0f5;
+    --on-rail-badge: #071a2e;
+    --accent-start: #22d3ee;
+    --accent-end: #8b5cf6;
+    --theme-color: #231d62;
+  }
+
+  /* Plum: magenta and plum. */
+  :root[data-palette="plum"] {
+    --rail: light-dark(#4a1340, #220a1e);
+    --rail-2: light-dark(#3a0f33, #1a0817);
+    --rail-text: light-dark(#ecc3dc, #d3a9c4);
+    --sidebar: light-dark(#fcf2f7, #1f1220);
+    --sidebar-hover: light-dark(#f8e5ef, #2c1a2c);
+    --sidebar-selected: light-dark(#f4d8e7, #3b2139);
+    --sidebar-text: light-dark(#5c4256, #d0b5c8);
+    --accent: light-dark(#b0236e, #f17cb8);
+    --accent-hover: light-dark(#931c5c, #f598c8);
+    --accent-soft: light-dark(#fbe6f0, #3a1c30);
+    --accent-text: light-dark(#9a1f61, #f8a7cf);
+    --on-accent: light-dark(#ffffff, #2a0b1d);
+    --accent-2: light-dark(#7c3aed, #c4a2ff);
+    --mention-bg: light-dark(#fbe4ef, #42203a);
+    --mention-text: light-dark(#8c1a57, #ffcfe4);
+    --bubble-out: light-dark(#fcedf4, #2f1a2b);
+    --badge: light-dark(#b0236e, #f17cb8);
+    --on-badge: light-dark(#ffffff, #2a0b1d);
+    --rail-badge: #ff9ccc;
+    --on-rail-badge: #3a0a24;
+    --accent-start: #f472b6;
+    --accent-end: #a21caf;
+    --theme-color: #4a1340;
+  }
+
+  /* Amber: gold and brown. */
+  :root[data-palette="amber"] {
+    --rail: light-dark(#3d2610, #1e1409);
+    --rail-2: light-dark(#301e0c, #170f07);
+    --rail-text: light-dark(#ecd2ab, #d2b893);
+    --sidebar: light-dark(#fcf6ec, #1d1710);
+    --sidebar-hover: light-dark(#f7ecda, #2a2117);
+    --sidebar-selected: light-dark(#f2e1c4, #3a2d1d);
+    --sidebar-text: light-dark(#5e4b33, #d2bfa4);
+    --accent: light-dark(#a85a06, #f2b046);
+    --accent-hover: light-dark(#8c4a04, #f6c26c);
+    --accent-soft: light-dark(#fcefd9, #3a2a14);
+    --accent-text: light-dark(#8f4c05, #f6c578);
+    --on-accent: light-dark(#ffffff, #2a1a04);
+    --accent-2: light-dark(#b45309, #fbbf24);
+    --mention-bg: light-dark(#fcecd2, #41301a);
+    --mention-text: light-dark(#7c4104, #ffe0ad);
+    --bubble-out: light-dark(#fdf3e3, #2c2214);
+    --badge: light-dark(#a85a06, #f2b046);
+    --on-badge: light-dark(#ffffff, #2a1a04);
+    --rail-badge: #fcc65a;
+    --on-rail-badge: #3a2404;
+    --accent-start: #fbbf24;
+    --accent-end: #b45309;
+    --theme-color: #3d2610;
+  }
 }

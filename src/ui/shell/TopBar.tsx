@@ -77,8 +77,8 @@ export function TopBar({ onMenu, onSearch }: { onMenu: () => void; onSearch: () 
               "separator",
               { heading: "Theme" },
               { label: "System", icon: <Monitor size={16} />, checked: prefs.theme === "system", onSelect: () => setPrefs({ theme: "system" }) },
-              { label: "Light (Ivory)", icon: <Sun size={16} />, checked: prefs.theme === "light", onSelect: () => setPrefs({ theme: "light" }) },
-              { label: "Dark (Cocoa)", icon: <Moon size={16} />, checked: prefs.theme === "dark", onSelect: () => setPrefs({ theme: "dark" }) },
+              { label: "Light", icon: <Sun size={16} />, checked: prefs.theme === "light", onSelect: () => setPrefs({ theme: "light" }) },
+              { label: "Dark", icon: <Moon size={16} />, checked: prefs.theme === "dark", onSelect: () => setPrefs({ theme: "dark" }) },
               "separator",
               { label: "Sign out of this browser…", icon: <LogOut size={16} />, danger: true, onSelect: () => navigate({ section: "settings", settingsPage: "security" }) },
             ]}

@@ -75,9 +75,22 @@
   .workspace {
     grid-template-rows: 52px minmax(0, 1fr);
   }
+  .body {
+    margin: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
   .topbar {
     padding: 0 8px 0 12px;
     gap: 6px;
+  }
+  .topbar::before {
+    content: "";
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+    border-radius: 7px;
+    background: url("/meldiq-mark-128.png") center / cover;
   }
   .searchbox span,
   .searchbox .kbd,
@@ -133,6 +146,9 @@
   }
   .composer-tools .hint {
     display: none;
+  }
+  .composer-tools > :last-child {
+    margin-left: auto;
   }
   .panel {
     width: 100%;

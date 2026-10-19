@@ -12,7 +12,7 @@ import { loadConfig } from "./app/config";
 import { App } from "./ui/App";
 import { ConfigError } from "./ui/StatusScreens";
 
-applyTheme(getPrefs().theme);
+applyTheme(getPrefs());
 
 const root = createRoot(document.getElementById("root")!);
 try {

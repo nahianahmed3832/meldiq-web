@@ -45,6 +45,13 @@ test("a linked browser and the phone stay in sync through the server, and signin
   await expect.poll(() => alice.received.some((m) => m.payload.text === "Reply typed in the browser ✓"), { timeout: 10_000 }).toBe(true);
   await expect(page.getByLabel("Delivered").first()).toBeVisible();
 
+  // Typing straight on after Enter starts a new message: neither joins the one still going out.
+  await composer.fill("First quick one");
+  await composer.press("Enter");
+  await composer.pressSequentially("Second quick one");
+  await composer.press("Enter");
+  await expect.poll(() => bob.received.filter((m) => /quick one/.test(m.payload.text ?? "")).map((m) => m.payload.text), { timeout: 10_000 }).toEqual(["First quick one", "Second quick one"]);
+
   // The account's phone writes: the browser shows it as the account's own message.
   await alice.send(dm, { type: "text", text: "Sent from my phone" });
   await expect(page.getByText("Sent from my phone")).toBeVisible();

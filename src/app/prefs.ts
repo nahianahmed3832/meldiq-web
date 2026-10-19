@@ -4,8 +4,14 @@ import { useSyncExternalStore } from "react";
  * Per-browser preferences. They hold no account data, so they live in localStorage, and every read and write tolerates
  * storage being unavailable (private windows, blocked site data): the defaults apply then.
  */
+export const THEMES = ["system", "light", "dark"] as const;
+/** The brand colour plates (src/styles/tokens.css › Palettes). */
+export const PALETTES = ["indigo", "plum", "amber"] as const;
+export type Palette = (typeof PALETTES)[number];
+
 export interface Prefs {
-  theme: "system" | "light" | "dark";
+  theme: (typeof THEMES)[number];
+  palette: Palette;
   notifications: boolean;
   /** Show the sender and message text in system notifications (off: "New message"). */
   notificationText: boolean;
@@ -19,12 +25,19 @@ export interface Prefs {
 }
 
 const KEY = "orbit.prefs.v1";
-const defaults: Prefs = { theme: "system", notifications: false, notificationText: true, readReceipts: true, typing: true, enterToSend: true, orgId: null, collapsed: [] };
+const defaults: Prefs = { theme: "system", palette: "indigo", notifications: false, notificationText: true, readReceipts: true, typing: true, enterToSend: true, orgId: null, collapsed: [] };
 
 function load(): Prefs {
   try {
     const raw = localStorage.getItem(KEY);
-    return raw ? { ...defaults, ...(JSON.parse(raw) as Partial<Prefs>) } : defaults;
+    if (!raw) return defaults;
+    const stored = { ...defaults, ...(JSON.parse(raw) as Partial<Prefs>) };
+    // Anything unknown (an older or tampered value) falls back to the default rather than reaching the page's attributes.
+    return {
+      ...stored,
+      theme: THEMES.includes(stored.theme) ? stored.theme : defaults.theme,
+      palette: PALETTES.includes(stored.palette) ? stored.palette : defaults.palette,
+    };
   } catch {
     return defaults;
   }
@@ -44,7 +57,7 @@ export function setPrefs(change: Partial<Prefs>): void {
   } catch {
     /* kept for this page only */
   }
-  applyTheme(current.theme);
+  applyTheme(current);
   for (const l of [...listeners]) l();
 }
 
@@ -58,10 +71,14 @@ export function usePrefs(): Prefs {
   );
 }
 
-export function applyTheme(theme: Prefs["theme"]): void {
+/** Light, dark or the system's, and the colour plate; the browser's own chrome takes the frame colour. */
+export function applyTheme({ theme, palette }: Pick<Prefs, "theme" | "palette">): void {
   const root = document.documentElement;
   if (theme === "system") root.removeAttribute("data-theme");
   else root.setAttribute("data-theme", theme);
+  root.setAttribute("data-palette", palette);
+  const frame = getComputedStyle(root).getPropertyValue("--theme-color").trim();
+  if (frame) document.querySelector('meta[name="theme-color"]')?.setAttribute("content", frame);
 }
 
 export function resetPrefs(): void {
@@ -71,6 +88,6 @@ export function resetPrefs(): void {
     /* nothing stored */
   }
   current = defaults;
-  applyTheme(current.theme);
+  applyTheme(current);
   for (const l of [...listeners]) l();
 }
