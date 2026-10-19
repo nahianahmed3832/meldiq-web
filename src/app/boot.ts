@@ -46,6 +46,23 @@ function notify(title: string, body: string, conversationId: string): void {
   }
 }
 
+/** A reminder that went off (Later): a system notification (when allowed) that opens Later or the saved message. */
+function notifyReminder(title: string, body: string, conversationId: string | null): void {
+  const p = getPrefs();
+  if (!p.notifications || typeof Notification === "undefined" || Notification.permission !== "granted") return;
+  try {
+    // Reminders are private by default: with message text hidden, the notification doesn't say what it's about.
+    const n = new Notification(p.notificationText ? title : "Meldiq reminder", { body: p.notificationText ? body : "You have a reminder", tag: `reminder:${title}` });
+    n.onclick = () => {
+      window.focus();
+      location.hash = conversationId ? `#/home/c/${encodeURIComponent(conversationId)}` : "#/later";
+      n.close();
+    };
+  } catch {
+    /* notifications unavailable in this context */
+  }
+}
+
 /** A ringing call while this tab isn't looked at: a system notification that brings the tab forward. */
 function ringAlert(title: string, video: boolean, conversationId: string): void {
   const p = getPrefs();
@@ -67,6 +84,7 @@ export function createEngine(device: DeviceRecord, store: LocalStore): Engine {
     base: apiBase(),
     wsUrl: wsUrl(),
     notify,
+    notifyReminder,
     media: liveKitMedia,
     ringtone: new Ringtone(),
     ringAlert,

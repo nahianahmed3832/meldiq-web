@@ -55,6 +55,16 @@ const accountsPath = path.join(serverDir(), "test/support/accounts.ts");
 export interface Mailbox {
   verifyCode(to: string): string;
   resetCode(to: string): string;
+  /** Every message sent (server 0.7+: subject and text), for codes the helpers above don't know. */
+  sent?: { to: string; subject: string; text: string }[];
+}
+
+/** The newest account-recovery code (6 digits) sent to [to] (server docs/ACCOUNT_RECOVERY.md). */
+export function recoveryEmailCode(mail: Mailbox, to: string): string {
+  const m = [...(mail.sent ?? [])].reverse().find((x) => x.to === to && /recover/i.test(`${x.subject} ${x.text}`));
+  const code = m?.text.match(/\b(\d{6})\b/)?.[1];
+  if (!code) throw new Error(`no recovery code sent to ${to}`);
+  return code;
 }
 
 /** An Orbit 2.0 account on the reference client (server/test/support/accounts.ts AccountClient): the phone of an email account. */

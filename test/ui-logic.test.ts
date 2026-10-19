@@ -27,6 +27,7 @@ const conv = (over: Partial<Conversation>): Conversation => ({
   canManage: false,
   canMentionAll: false,
   activeCall: null,
+  voice: false,
   ...over,
 });
 
@@ -135,5 +136,25 @@ describe("sidebar selections", () => {
     s = upsertLoaded(s, { ...a, text: "a2" });
     expect(s.messages.g.items.map((m) => m.text)).toEqual(["b", "a2"]);
     expect(upsertLoaded(s, { ...a, conversationId: "not-loaded" })).toBe(s);
+  });
+});
+
+describe("Get started (android StartRules)", () => {
+  it("shows until hidden or every required step is done; optional steps never keep it up", async () => {
+    const { startProgress, startVisible } = await import("../src/ui/views/startRules");
+    const steps = [
+      { key: "profile", label: "Add your name and photo", done: true },
+      { key: "workspace", label: "Create or join a workspace", done: false },
+      { key: "apps", label: "Connect the tools you use", done: false, optional: true },
+    ];
+    expect(startVisible(false, steps)).toBe(true);
+    expect(startVisible(true, steps)).toBe(false);
+    expect(
+      startVisible(
+        false,
+        steps.map((s) => (s.key === "workspace" ? { ...s, done: true } : s)),
+      ),
+    ).toBe(false);
+    expect(startProgress(steps)).toEqual({ done: 1, total: 3 });
   });
 });

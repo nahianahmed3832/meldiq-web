@@ -1,10 +1,10 @@
-import { AtSign, House, MessagesSquare } from "lucide-react";
+import { AtSign, Bookmark, House, MessagesSquare } from "lucide-react";
 import { shallowEqual, useOrbit } from "../../app/orbit";
 import { setPrefs } from "../../app/prefs";
 import { navigate, type Section } from "../../app/router";
 import { Avatar, colorIndexOf } from "../components/Avatar";
 import { BrandMark } from "../components/BrandMark";
-import { mentionCount, orgUnread, unreadPeopleCount } from "../selectors";
+import { laterDue, mentionCount, orgUnread, unreadPeopleCount } from "../selectors";
 
 /** Workspaces (the organisation switcher), then the three sections, as on the phone's tab bar. */
 export function Rail({ orgId, section }: { orgId: string | null; section: Section }) {
@@ -14,10 +14,12 @@ export function Rail({ orgId, section }: { orgId: string | null; section: Sectio
   );
   const dms = useOrbit(unreadPeopleCount);
   const mentions = useOrbit(mentionCount);
+  const later = useOrbit(laterDue);
   const nav = [
     { key: "home" as const, label: "Home", icon: <House />, count: 0 },
     { key: "dms" as const, label: "DMs", icon: <MessagesSquare />, count: dms },
     { key: "activity" as const, label: "Activity", icon: <AtSign />, count: mentions },
+    { key: "later" as const, label: "Later", icon: <Bookmark />, count: later },
   ];
   return (
     <nav className="rail" aria-label="Workspaces and sections">

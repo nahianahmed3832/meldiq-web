@@ -47,7 +47,8 @@ export class CallLog {
 
   async upsert(call: Call): Promise<void> {
     const { store, me } = this.host;
-    if (!this.host.knows(call.conversationId)) return;
+    // A voice room's comings and goings aren't calls in its history (docs/VOICE_ROOMS.md).
+    if (!this.host.knows(call.conversationId) || call.voiceRoom) return;
     const info = summarize(call, me.userId, this.host.declinedHere(call.id));
     const id = `call-${call.id}`;
     const existing = await store.message(id);

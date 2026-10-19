@@ -56,9 +56,18 @@ export const zConversation = z.object({
   canManageAccess: z.boolean().default(false),
   canMentionAll: z.boolean().default(false),
   activeCall: z
-    .object({ id: z.string(), video: z.boolean(), state: z.string(), startedAt: z.number() })
+    .object({
+      id: z.string(),
+      video: z.boolean(),
+      state: z.string(),
+      startedAt: z.number(),
+      /** Voice rooms: who is in the room's call now (at most 12, docs/VOICE_ROOMS.md). */
+      participantIds: z.array(z.string()).max(12).default([]),
+    })
     .nullish()
     .transform((v) => v ?? null),
+  /** A voice room (API 0.7+): a channel whose call anyone in it can drop into, without ringing. */
+  voice: z.boolean().default(false),
 });
 export type Conversation = z.infer<typeof zConversation>;
 
@@ -213,6 +222,10 @@ export const zCall = z.object({
     .array(z.object({ userId: z.string(), seconds: z.number() }))
     .max(500)
     .optional(),
+  /** A voice room's call: nobody rings, people raise hands, the room's managers moderate (API 0.7+). */
+  voiceRoom: z.boolean().default(false),
+  /** Voice rooms: who raised a hand, in order. */
+  hands: z.array(z.string()).max(500).default([]),
 });
 export type Call = z.infer<typeof zCall>;
 

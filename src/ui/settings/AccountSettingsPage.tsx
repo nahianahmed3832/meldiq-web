@@ -5,6 +5,7 @@ import { AccountApi } from "../../auth/accountApi";
 import { PASSWORD_MIN_LENGTH, passwordProblem } from "../../auth/rules";
 import { relative } from "../format";
 import { useAction, useLoad } from "../workspace/useLoad";
+import { RecoveryCodesCard } from "./RecoveryCodesCard";
 
 /**
  * The Orbit 2.0 account (docs/ORBIT_2_ARCHITECTURE §2): its email, the password, and where it's signed in. A browser
@@ -36,6 +37,7 @@ export function AccountSettingsPage() {
         <strong>{account.email}</strong>
       </div>
       <ChangePassword email={account.email} />
+      <RecoveryCodesCard />
       <Sessions accounts={new AccountApi(engine.api)} />
     </>
   );

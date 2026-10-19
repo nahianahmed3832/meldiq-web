@@ -6,6 +6,7 @@ import type { LocalStore } from "../store/db";
 import type { Member } from "../api/schemas";
 import { resolveMentions } from "./mentions";
 import { applyPin, applyReaction } from "./rules";
+import { applyClose, applyVote } from "./polls";
 
 /** What sending needs from the engine. */
 export interface ComposeHost {
@@ -58,6 +59,8 @@ export class Compose {
       location: opts.rich?.location,
       animoji: opts.rich?.animoji,
       link: opts.rich?.link,
+      poll: opts.rich?.poll,
+      sticker: opts.rich?.sticker,
       forwarded: opts.forwarded ? true : undefined,
     };
     const id = opts.presetId ?? crypto.randomUUID();
@@ -130,6 +133,27 @@ export class Compose {
     await this.host.store.putMessage(next);
     this.host.show(next);
     await this.enqueueControl(m.conversationId, { type: "reaction", target: m.id, emoji, add });
+  }
+
+  /** This person's vote on a poll (empty takes it back): shown at once, then sent as an encrypted "vote" control. */
+  async vote(m: StoredMessage, choices: string[]): Promise<void> {
+    if (!this.canPost(m.conversationId)) return;
+    const fresh = (await this.host.store.message(m.id)) ?? m;
+    if (!fresh.rich?.poll || fresh.rich.pollClosed) return;
+    const rich = applyVote(fresh.rich, this.host.device.userId, choices);
+    const next = { ...fresh, rich };
+    await this.host.store.putMessage(next);
+    this.host.show(next);
+    await this.enqueueControl(m.conversationId, { type: "vote", target: m.id, choices: rich.votes?.[this.host.device.userId] ?? [] });
+  }
+
+  /** Closes this person's own poll: no more votes from anyone. */
+  async closePoll(m: StoredMessage): Promise<void> {
+    if (!m.outgoing || !m.rich?.poll || !this.canPost(m.conversationId)) return;
+    const next = { ...m, rich: applyClose(m.rich, m.senderUserId, this.host.device.userId) };
+    await this.host.store.putMessage(next);
+    this.host.show(next);
+    await this.enqueueControl(m.conversationId, { type: "poll_close", target: m.id });
   }
 
   async edit(m: StoredMessage, text: string): Promise<void> {

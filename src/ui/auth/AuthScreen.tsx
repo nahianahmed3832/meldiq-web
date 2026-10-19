@@ -6,12 +6,14 @@ import { type ServerInfo, zServerInfo } from "../../api/schemas";
 import { AccountApi } from "../../auth/accountApi";
 import { enrollWithSeed } from "../../auth/deviceSetup";
 import { SetupCredentials, type SetupSessionEnd } from "../../auth/setupCredentials";
+import { RecoverCompleteForm, RecoverStartForm } from "./RecoverForms";
 import type { DeviceRecord } from "../../model/types";
 import { browserDeviceName } from "../../sync/session";
 import { AuthFrame, AuthHeading, FormError } from "./AuthFrame";
 import { ForgotPasswordForm, type FormContext, LegacyDetailsForm, LegacyVerifyForm, ResetPasswordForm, SignInForm, SignUpForm, VerifyEmailForm } from "./AccountForms";
 import { AddDeviceView, CreateIdentityView, RecoveryKeyReveal } from "./DeviceSetupViews";
 import { authErrorText } from "./useSubmit";
+import { IntroPages, introSeen } from "./IntroPages";
 
 type Step =
   | { k: "signIn"; notice?: string; email?: string }
@@ -19,6 +21,8 @@ type Step =
   | { k: "verify"; email: string; password: string }
   | { k: "forgot"; email: string }
   | { k: "reset"; email: string }
+  | { k: "recover"; email: string }
+  | { k: "recoverConfirm"; ticket: string; newEmail: string }
   | { k: "legacy" }
   | { k: "legacyDetails"; ticket: LegacyTicket }
   | { k: "create"; creds: SetupCredentials; account: AccountView }
@@ -48,6 +52,7 @@ export function AuthScreen(props: {
 }) {
   const base = props.base ?? apiBase();
   const [step, setStep] = useState<Step>({ k: "signIn" });
+  const [intro, setIntro] = useState(() => !introSeen());
   const [server, setServer] = useState<ServerInfo | null>(null);
   // A legacy account's identity seed, from its recovery key: sets up this browser right after the move, then is wiped.
   const [legacySeed, setLegacySeed] = useState<Uint8Array | null>(null);
@@ -119,6 +124,7 @@ export function AuthScreen(props: {
           onUnverified={(email, password) => setStep({ k: "verify", email, password })}
           onSignUp={() => setStep({ k: "signUp" })}
           onForgot={(email) => setStep({ k: "forgot", email })}
+          onRecover={server?.features.includes("recovery-codes") ? (email) => setStep({ k: "recover", email }) : undefined}
           onMove={() => setStep({ k: "legacy" })}
           onLinkWithPhone={props.onLinkWithPhone}
         />
@@ -129,6 +135,27 @@ export function AuthScreen(props: {
       break;
     case "verify":
       body = <VerifyEmailForm ctx={ctx} email={step.email} password={step.password} onVerified={(g) => void signedIn(g)} onBack={() => toSignIn(undefined, step.email)} />;
+      break;
+    case "recover":
+      body = (
+        <RecoverStartForm ctx={ctx} initialEmail={step.email} onStarted={(ticket, newEmail) => setStep({ k: "recoverConfirm", ticket, newEmail })} onBack={() => toSignIn(undefined, step.email)} />
+      );
+      break;
+    case "recoverConfirm":
+      body = (
+        <RecoverCompleteForm
+          ctx={ctx}
+          ticket={step.ticket}
+          newEmail={step.newEmail}
+          onDone={(email, left) =>
+            toSignIn(
+              `Your account now uses ${email}. Sign in with your new password, then set up this browser with your encryption recovery key or your phone. ${left === 1 ? "1 recovery code is" : `${left} recovery codes are`} left; make a new set in Settings › Account when you can.`,
+              email,
+            )
+          }
+          onBack={() => setStep({ k: "recover", email: "" })}
+        />
+      );
       break;
     case "forgot":
       body = <ForgotPasswordForm ctx={ctx} initialEmail={step.email} onSent={(email) => setStep({ k: "reset", email })} onBack={() => toSignIn(undefined, step.email)} />;
@@ -199,6 +226,7 @@ export function AuthScreen(props: {
 
   return (
     <AuthFrame>
+      {intro && <IntroPages onDone={() => setIntro(false)} />}
       {body}
       <div className="link-meta">
         <span>

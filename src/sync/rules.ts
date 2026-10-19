@@ -2,6 +2,8 @@ import { callLine } from "./callHistory";
 import type { ConversationType, QueueItem } from "../api/schemas";
 import type { RichContent, StoredMessage } from "../model/types";
 import { type AttachmentRef, MAX_RECEIVED_ATTACHMENTS, type Payload, safeFileName } from "../protocol/payload";
+import { cleanPoll } from "./polls";
+import { cleanSticker } from "./stickers";
 
 /**
  * What a received payload does to this device's copy of a conversation. Pure functions, so they're unit-tested on their own;
@@ -25,6 +27,10 @@ function richOf(p: Payload): RichContent | null {
   if (p.location) r.location = p.location;
   if (p.animoji) r.animoji = p.animoji;
   if (p.link) r.link = p.link;
+  const poll = cleanPoll(p.poll);
+  if (poll) r.poll = poll;
+  const sticker = cleanSticker(p.sticker);
+  if (sticker) r.sticker = sticker;
   return Object.keys(r).length ? r : null;
 }
 

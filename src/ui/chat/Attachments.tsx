@@ -1,4 +1,4 @@
-import { Download, FileText, Film, Mic, Pause, Play, TriangleAlert, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, Download, FileText, Film, Mic, Pause, Play, TriangleAlert, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { useEngine } from "../../app/orbit";
@@ -6,6 +6,7 @@ import type { AttachmentRef } from "../../protocol/payload";
 import { isInlineImage, openAttachment, safeMime, saveAttachment } from "../../sync/attachments";
 import { clock, isVoice, shownDuration } from "../../sync/voice";
 import { bytes } from "../format";
+import { albumOverflow, albumRows } from "./album";
 
 /**
  * Decrypts on demand. Images show inline; voice messages play in place (android VoiceViews); audio and video play inline
@@ -13,9 +14,14 @@ import { bytes } from "../format";
  */
 export function Attachments({ refs }: { refs: AttachmentRef[] }) {
   if (!refs.length) return null;
+  // Several photos sent together are an album (android AlbumGrid); everything else is listed under it.
+  const images = refs.filter((r) => !isVoice(r) && isInlineImage(r));
+  const album = images.length >= 2 ? images : [];
+  const rest = album.length ? refs.filter((r) => !album.includes(r)) : refs;
   return (
     <div className="attachments">
-      {refs.map((r) =>
+      {album.length > 0 && <AlbumGrid items={album} />}
+      {rest.map((r) =>
         isVoice(r) ? (
           <VoiceAttachment key={r.id} r={r} />
         ) : isInlineImage(r) ? (
@@ -153,26 +159,84 @@ export function ImageAttachment({ r }: { r: AttachmentRef }) {
   );
 }
 
-function Lightbox({ url, name, onClose }: { url: string; name: string; onClose: () => void }) {
+interface Steps {
+  position: string;
+  onPrev: (() => void) | null;
+  onNext: (() => void) | null;
+}
+
+function Lightbox({ url, name, onClose, steps }: { url: string | null; name: string; onClose: () => void; steps?: Steps }) {
   useEffect(() => {
-    const k = (e: KeyboardEvent) => e.key === "Escape" && onClose();
+    const k = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+      else if (e.key === "ArrowLeft") steps?.onPrev?.();
+      else if (e.key === "ArrowRight") steps?.onNext?.();
+    };
     document.addEventListener("keydown", k);
     return () => document.removeEventListener("keydown", k);
-  }, [onClose]);
+  }, [onClose, steps]);
   return createPortal(
     <div className="lightbox" role="dialog" aria-modal="true" aria-label={name} onClick={(e) => e.target === e.currentTarget && onClose()}>
       <div className="bar">
-        <a className="icon-btn" href={url} download={name} aria-label="Download">
-          <Download size={18} />
-        </a>
+        {steps && (
+          <>
+            <button className="icon-btn" onClick={() => steps.onPrev?.()} disabled={!steps.onPrev} aria-label="Previous photo">
+              <ChevronLeft size={18} />
+            </button>
+            <span className="lightbox-pos">{steps.position}</span>
+            <button className="icon-btn" onClick={() => steps.onNext?.()} disabled={!steps.onNext} aria-label="Next photo">
+              <ChevronRight size={18} />
+            </button>
+          </>
+        )}
+        {url && (
+          <a className="icon-btn" href={url} download={name} aria-label="Download">
+            <Download size={18} />
+          </a>
+        )}
         <button className="icon-btn" onClick={onClose} aria-label="Close" autoFocus>
           <X size={18} />
         </button>
       </div>
-      <img src={url} alt={name} />
+      {url ? <img src={url} alt={name} /> : <span className="spinner" aria-label={`Decrypting ${name}`} />}
     </div>,
     document.body,
   );
+}
+
+/** Several photos sent together: up to four tiles, the last saying how many more; each opens a viewer that steps through all. */
+function AlbumGrid({ items }: { items: AttachmentRef[] }) {
+  const [open, setOpen] = useState<number | null>(null);
+  const more = albumOverflow(items.length);
+  return (
+    <div className="album" role="group" aria-label={`${items.length} photos`}>
+      {albumRows(items.length).map((row, i) => (
+        <div key={i} className="album-row">
+          {row.map((at) => (
+            <AlbumTile key={items[at].id} r={items[at]} more={at === 3 ? more : 0} onOpen={() => setOpen(at)} />
+          ))}
+        </div>
+      ))}
+      {open !== null && <AlbumViewer items={items} at={open} onMove={setOpen} onClose={() => setOpen(null)} />}
+    </div>
+  );
+}
+
+function AlbumTile({ r, more, onOpen }: { r: AttachmentRef; more: number; onOpen: () => void }) {
+  const { url, error } = useBlobUrl(r, true);
+  return (
+    <button className="album-tile" onClick={onOpen} aria-label={more ? `Open photos, ${more} more` : `Open image ${r.name}`}>
+      {url ? <img src={url} alt="" loading="lazy" /> : error ? <TriangleAlert size={18} /> : <span className="skeleton" aria-hidden="true" />}
+      {more > 0 && <span className="album-more">+{more}</span>}
+    </button>
+  );
+}
+
+function AlbumViewer({ items, at, onMove, onClose }: { items: AttachmentRef[]; at: number; onMove: (i: number) => void; onClose: () => void }) {
+  const r = items[at];
+  const { url } = useBlobUrl(r, true);
+  const steps: Steps = { position: `${at + 1} of ${items.length}`, onPrev: at > 0 ? () => onMove(at - 1) : null, onNext: at < items.length - 1 ? () => onMove(at + 1) : null };
+  return <Lightbox url={url} name={r.name} onClose={onClose} steps={steps} />;
 }
 
 export function FileAttachment({ r, error: initialError }: { r: AttachmentRef; error?: string }) {

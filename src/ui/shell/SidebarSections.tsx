@@ -1,9 +1,9 @@
-import { Archive, AtSign, ChevronDown, Compass, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
+import { Archive, AtSign, Bookmark, ChevronDown, Compass, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
 import { type ReactNode, useState } from "react";
 import { shallowEqual, useEngine, useOrbit } from "../../app/orbit";
 import { setPrefs, usePrefs } from "../../app/prefs";
 import { Menu, useMenu } from "../components/Overlay";
-import { archivedPeople, channelGroups, homeLayout, type HomeSection, mentionConversations, people } from "../selectors";
+import { archivedPeople, channelGroups, homeLayout, type HomeSection, laterDue, mentionConversations, people } from "../selectors";
 import { ConversationRow, SectionNameDialog } from "./ConversationRow";
 
 /**
@@ -221,6 +221,24 @@ export function MentionsLink({ orgId, active }: { orgId: string | null; active: 
       </span>
       <span className="grow">Mentions</span>
       {n > 0 && <span className="count accent">{n}</span>}
+    </a>
+  );
+}
+
+/** Later: saved messages and reminders (android Home › Later); the count is what's due. */
+export function LaterLink({ active }: { active: boolean }) {
+  const due = useOrbit(laterDue);
+  return (
+    <a className="side-item" href="#/later" aria-current={active ? "page" : undefined}>
+      <span className="glyph">
+        <Bookmark size={16} />
+      </span>
+      <span className="grow">Later</span>
+      {due > 0 && (
+        <span className="count accent" aria-label={`${due} due`}>
+          {due}
+        </span>
+      )}
     </a>
   );
 }

@@ -1,4 +1,7 @@
 import {
+  AlarmClock,
+  Bookmark,
+  BookmarkX,
   Check,
   CheckCheck,
   CircleAlert,
@@ -21,7 +24,9 @@ import {
   Video,
 } from "lucide-react";
 import { memo, useState } from "react";
-import { useEngine } from "../../app/orbit";
+import { useEngine, useOrbit } from "../../app/orbit";
+import { PERSONAL } from "../../sync/navPrefs";
+import { RemindMeDialog } from "../later/RemindMeDialog";
 import type { StoredMessage } from "../../model/types";
 import { Avatar } from "../components/Avatar";
 import { callLine } from "../../sync/callHistory";
@@ -33,6 +38,11 @@ import { Attachments } from "./Attachments";
 import { isEmojiOnly, RichText } from "./RichText";
 import { SafeLink } from "./SafeLink";
 import { AnimojiView } from "./AnimojiView";
+import { PollView } from "./PollView";
+import { StickerView } from "./StickerView";
+import { MediaLinkCard } from "./MediaLinkCard";
+import { findMediaLink } from "../../sync/mediaLinks";
+import { usePrefs } from "../../app/prefs";
 
 export const QUICK_EMOJI = ["👍", "❤️", "😂", "🎉", "🙏", "👀"];
 export const EMOJI = ["👍", "❤️", "😂", "🎉", "🙏", "👀", "🔥", "✅", "😮", "😢", "😍", "🤝", "💯", "👏", "🚀", "🙌", "😅", "🤔", "😎", "👌", "⭐", "💡", "☕", "🌟"];
@@ -62,6 +72,11 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
   const [editing, setEditing] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [forwarding, setForwarding] = useState(false);
+  const [reminding, setReminding] = useState(false);
+  // Saved for later (android Home › Later): synced in the personal document when the server keeps saved items.
+  const savable = useOrbit((st) => st.server?.features.includes("saved-items") ?? false);
+  const { mediaCards } = usePrefs();
+  const saved = useOrbit((st) => st.nav[PERSONAL]?.saved?.find((x) => x.messageId === m.id));
   const more = useMenu();
   const picker = useMenu();
   const mine = m.outgoing;
@@ -89,6 +104,9 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
       );
     if (m.deleted) return <span className="msg-deleted">This message was deleted.</span>;
     if (editing) return <EditBox m={m} onDone={() => setEditing(false)} />;
+    // A poll, contact, location, sticker or animated emoji is the message itself: no card under it (android MessageBubble).
+    const structured = !!(m.rich?.poll || m.rich?.contact || m.rich?.location || m.rich?.sticker || m.rich?.animoji);
+    const mediaLink = mediaCards && !structured ? findMediaLink(m.text) : null;
     return (
       <>
         {p.replyTo && (
@@ -102,7 +120,17 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
             <Forward size={12} aria-hidden="true" /> Forwarded
           </div>
         )}
-        {m.rich?.animoji ? (
+        {m.rich?.poll ? (
+          <div>
+            <PollView m={m} myUserId={p.myUserId} canPost={p.canPost} />
+            {mine && <Status m={m} onRetry={() => void engine.retry(m.id)} onReview={p.onReview} />}
+          </div>
+        ) : m.rich?.sticker ? (
+          <div>
+            <StickerView sticker={m.rich.sticker} fallback={m.text} />
+            {mine && <Status m={m} onRetry={() => void engine.retry(m.id)} onReview={p.onReview} />}
+          </div>
+        ) : m.rich?.animoji ? (
           <div>
             <AnimojiView emoji={m.rich.animoji} />
             {mine && <Status m={m} onRetry={() => void engine.retry(m.id)} onReview={p.onReview} />}
@@ -135,15 +163,20 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
           )
         )}
         <Attachments refs={m.attachments} />
-        {m.rich?.link && isWebUrl(m.rich.link.url) && (
-          <SafeLink className="msg-quote link-preview" href={m.rich.link.url}>
-            <strong>{m.rich.link.title ?? m.rich.link.siteName ?? m.rich.link.url}</strong>
-            {m.rich.link.description && (
-              <span className="ellipsis" style={{ display: "block" }}>
-                {m.rich.link.description}
-              </span>
-            )}
-          </SafeLink>
+        {mediaLink ? (
+          <MediaLinkCard link={mediaLink} preview={m.rich?.link?.url === mediaLink.url ? m.rich.link : null} />
+        ) : (
+          m.rich?.link &&
+          isWebUrl(m.rich.link.url) && (
+            <SafeLink className="msg-quote link-preview" href={m.rich.link.url}>
+              <strong>{m.rich.link.title ?? m.rich.link.siteName ?? m.rich.link.url}</strong>
+              {m.rich.link.description && (
+                <span className="ellipsis" style={{ display: "block" }}>
+                  {m.rich.link.description}
+                </span>
+              )}
+            </SafeLink>
+          )
         )}
       </>
     );
@@ -268,6 +301,18 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
             ...(p.canPost
               ? [{ label: m.pinned ? "Unpin" : "Pin to conversation", icon: m.pinned ? <PinOff size={16} /> : <Pin size={16} />, onSelect: () => void engine.setPinned(m, !m.pinned) }]
               : []),
+            ...(live && savable
+              ? [
+                  saved
+                    ? { label: "Remove from Later", icon: <BookmarkX size={16} />, onSelect: () => void engine.later({ op: "unsave", messageId: m.id }) }
+                    : {
+                        label: "Save for later",
+                        icon: <Bookmark size={16} />,
+                        onSelect: () => void engine.later({ op: "save", conversationId: m.conversationId, messageId: m.id, savedAt: Date.now(), remindAt: null }),
+                      },
+                  { label: saved?.remindAt ? "Change reminder…" : "Remind me…", icon: <AlarmClock size={16} />, onSelect: () => setReminding(true) },
+                ]
+              : []),
             ...(live ? [{ label: "Forward…", icon: <Forward size={16} />, onSelect: () => setForwarding(true) }] : []),
             { label: "Copy text", icon: <Copy size={16} />, onSelect: () => void navigator.clipboard?.writeText(m.text) },
             ...(mine && p.canPost ? ["separator" as const, { label: "Delete for everyone", icon: <Trash2 size={16} />, danger: true, onSelect: () => setConfirmDelete(true) }] : []),
@@ -275,6 +320,18 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
         />
       )}
       {forwarding && <ForwardDialog message={m} onClose={() => setForwarding(false)} />}
+      {reminding && (
+        <RemindMeDialog
+          title="Remind me about this message"
+          current={saved?.remindAt ?? null}
+          onPick={(at) => {
+            setReminding(false);
+            void engine.later({ op: "save", conversationId: m.conversationId, messageId: m.id, savedAt: saved?.savedAt ?? Date.now(), remindAt: at });
+          }}
+          onClear={saved ? () => (setReminding(false), void engine.later({ op: "remind", messageId: m.id, remindAt: null })) : undefined}
+          onClose={() => setReminding(false)}
+        />
+      )}
       {confirmDelete && (
         <Dialog
           title="Delete this message for everyone?"

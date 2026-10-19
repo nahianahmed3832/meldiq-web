@@ -1,6 +1,7 @@
 import type { DeviceKeys } from "../crypto/identity";
 import type { HistoryKeys } from "../crypto/history";
-import type { AttachmentRef, ContactCard, LinkPreview, SharedLocation } from "../protocol/payload";
+import type { ReminderKey } from "../crypto/reminderKeys";
+import type { AttachmentRef, ContactCard, LinkPreview, Poll, SharedLocation, StickerRef } from "../protocol/payload";
 
 /** Delivery state of a message, as the phone shows it (android data/model/Models.kt `MessageStatus`). */
 export type MessageStatus = "SENDING" | "SENT" | "DELIVERED" | "READ" | "FAILED" | "RECEIVED" | "HELD";
@@ -10,6 +11,11 @@ export interface RichContent {
   location?: SharedLocation;
   animoji?: string;
   link?: LinkPreview;
+  poll?: Poll;
+  /** voter user id → their chosen option ids (polls; android RichContent.votes). */
+  votes?: Record<string, string[]>;
+  pollClosed?: boolean;
+  sticker?: StickerRef;
 }
 
 export interface CallEntry {
@@ -127,6 +133,11 @@ export interface DeviceRecord {
   identityKey: string;
   keys: DeviceKeys;
   history: HistoryKeys | null;
+  /**
+   * Seals reminders kept on the server (crypto/reminderKeys.ts). Derived when this browser was set up with the identity
+   * seed; absent on browsers set up before reminders (they unlock it once with the recovery key).
+   */
+  reminders?: ReminderKey | null;
   linkedAt: number;
   deviceName: string;
   /**

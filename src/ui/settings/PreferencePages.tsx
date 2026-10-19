@@ -5,6 +5,7 @@ import { useOrbit } from "../../app/orbit";
 import { type Palette, PALETTES, type Prefs, setPrefs, TEXT_SIZES, type TextSize, THEMES, usePrefs } from "../../app/prefs";
 import { bytes } from "../format";
 import { Toggle } from "../components/Toggle";
+import { IntroPages } from "../auth/IntroPages";
 
 const THEME_LABELS: Record<Prefs["theme"], string> = { system: "System", light: "Light", dark: "Dark" };
 const PALETTE_LABELS: Record<Palette, string> = { indigo: "Indigo", plum: "Plum", amber: "Amber" };
@@ -126,6 +127,13 @@ export function AppearancePage() {
         </div>
         <div className="setting">
           <div className="lines">
+            <strong>Music and video cards</strong>
+            <small>Show YouTube, Spotify and similar links as cards that open the provider's site. Nothing is fetched.</small>
+          </div>
+          <Toggle label="Music and video cards" checked={prefs.mediaCards} onChange={(v) => setPrefs({ mediaCards: v })} />
+        </div>
+        <div className="setting">
+          <div className="lines">
             <strong>Enter sends the message</strong>
             <small>Off: Enter adds a line and Ctrl+Enter (⌘+Enter) sends.</small>
           </div>
@@ -140,10 +148,21 @@ export function AboutPage() {
   const server = useOrbit((s) => s.server);
   const me = useOrbit((s) => s.me);
   const history = useOrbit((s) => s.history);
+  const [intro, setIntro] = useState(false);
   return (
     <>
       <h1>About</h1>
+      {intro && <IntroPages onDone={() => setIntro(false)} />}
       <div className="card">
+        <div className="setting">
+          <div className="lines">
+            <strong>Introduction</strong>
+            <small>The short tour of what Meldiq does, shown before you first signed in.</small>
+          </div>
+          <button className="btn btn-secondary btn-sm" onClick={() => setIntro(true)}>
+            Show
+          </button>
+        </div>
         <div className="setting">
           <div className="lines">
             <strong>Server</strong>

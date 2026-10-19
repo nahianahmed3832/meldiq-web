@@ -1,4 +1,4 @@
-import { AtSign, FileUp, Lock, MapPin, Mic, Paperclip, SendHorizontal, Smile, UserRound, X } from "lucide-react";
+import { AtSign, BarChart3, FileUp, Lock, MapPin, Mic, Paperclip, SendHorizontal, Smile, UserRound, X } from "lucide-react";
 import { type ClipboardEvent, type DragEvent, useCallback, useEffect, useRef, useState } from "react";
 import type { Conversation, Member } from "../../api/schemas";
 import { useEngine } from "../../app/orbit";
@@ -6,6 +6,7 @@ import { usePrefs } from "../../app/prefs";
 import type { StoredMessage } from "../../model/types";
 import type { RichContent } from "../../model/types";
 import { fileLimit, MAX_FILES_PER_MESSAGE, sendFiles } from "../../sync/attachments";
+import { type PhotoQuality, preparePhoto, QUALITY_LABEL, reencodable } from "../../sync/photoQuality";
 import { UploadCancelled } from "../../sync/largeUpload";
 import { fallbackText } from "../../sync/rich";
 import { type Recording, voiceFileName, voiceMime } from "../../sync/voice";
@@ -15,6 +16,9 @@ import { Menu, useMenu } from "../components/Overlay";
 import { bytes } from "../format";
 import { EMOJI } from "./MessageItem";
 import { ANIMOJI } from "../../sync/animoji";
+import { STICKER_PACKS } from "../../sync/stickers";
+import { PollDialog } from "./PollDialog";
+import { StickerArt } from "./StickerView";
 import { ContactDialog, LocationDialog } from "./RichDialogs";
 import { VoiceBar } from "./VoiceBar";
 
@@ -36,6 +40,8 @@ export function Composer(props: ComposerProps) {
   const prefs = usePrefs();
   const [text, setText] = useState("");
   const [files, setFiles] = useState<File[]>([]);
+  const [quality, setQuality] = useState<PhotoQuality>("standard");
+  const hasPhotos = files.some((f) => reencodable(f.type));
   const [busy, setBusy] = useState<string | null>(null);
   const [members, setMembers] = useState<Member[]>([]);
   const [suggest, setSuggest] = useState<{ start: number; items: Member[]; index: number } | null>(null);
@@ -45,7 +51,7 @@ export function Composer(props: ComposerProps) {
   const attach = useMenu();
   const upload = useRef<AbortController | null>(null);
   const [voice, setVoice] = useState(false);
-  const [rich, setRich] = useState<"contact" | "location" | null>(null);
+  const [rich, setRich] = useState<"contact" | "location" | "poll" | null>(null);
   const canRecord = !props.threadRoot && voiceMime() !== null;
   const draftTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
 
@@ -137,11 +143,14 @@ export function Composer(props: ComposerProps) {
     if (!props.threadRoot) void engine.saveDraft(c.id, "");
     try {
       if (files.length) {
-        setBusy(`Encrypting and uploading ${files.length === 1 ? "1 file" : `${files.length} files`}…`);
+        setBusy(hasPhotos && quality !== "original" ? "Preparing photos…" : `Encrypting and uploading ${files.length === 1 ? "1 file" : `${files.length} files`}…`);
+        // One at a time: decoding several large photos at once can run a phone's browser out of memory.
+        const prepared: File[] = [];
+        for (const f of files) prepared.push(await preparePhoto(f, quality));
         await sendFiles(
           engine,
           c.id,
-          files.map((f) => ({ name: f.name, type: f.type, size: f.size, bytes: async () => new Uint8Array(await f.arrayBuffer()), source: f })),
+          prepared.map((f) => ({ name: f.name, type: f.type, size: f.size, bytes: async () => new Uint8Array(await f.arrayBuffer()), source: f })),
           body,
           opts,
           (done, total) => setBusy(`Uploading ${done} of ${total}…`),
@@ -245,6 +254,23 @@ export function Composer(props: ComposerProps) {
                 </button>
               </span>
             ))}
+            {hasPhotos && (
+              <label className="file-quality">
+                <span>Photo quality</span>
+                <select className="input input-sm" value={quality} onChange={(e) => setQuality(e.target.value as PhotoQuality)} disabled={!!busy}>
+                  {(Object.keys(QUALITY_LABEL) as PhotoQuality[]).map((q) => (
+                    <option key={q} value={q}>
+                      {QUALITY_LABEL[q]}
+                    </option>
+                  ))}
+                </select>
+                <small className="faint">
+                  {quality === "original"
+                    ? "Sent as it is, with its details, including where it was taken if the photo records that."
+                    : "Resized and re-saved here, so details such as location aren't sent."}
+                </small>
+              </label>
+            )}
           </div>
         )}
         {voice ? (
@@ -358,6 +384,7 @@ export function Composer(props: ComposerProps) {
           onClose={attach.close}
           entries={[
             { label: `Files (up to ${MAX_FILES_PER_MESSAGE})`, icon: <FileUp size={16} />, onSelect: () => fileInput.current?.click() },
+            { label: "Poll…", icon: <BarChart3 size={16} />, onSelect: () => setRich("poll") },
             { label: "Contact card…", icon: <UserRound size={16} />, onSelect: () => setRich("contact") },
             { label: "Location…", icon: <MapPin size={16} />, onSelect: () => setRich("location") },
           ]}
@@ -365,6 +392,7 @@ export function Composer(props: ComposerProps) {
       )}
       {rich === "contact" && <ContactDialog onClose={() => setRich(null)} onSend={(contact) => void sendRich({ contact })} />}
       {rich === "location" && <LocationDialog onClose={() => setRich(null)} onSend={(location) => void sendRich({ location })} />}
+      {rich === "poll" && <PollDialog onClose={() => setRich(null)} onSend={(poll) => void sendRich({ poll })} />}
       {emoji.anchor && (
         <Menu
           anchor={emoji.anchor}
@@ -393,6 +421,29 @@ export function Composer(props: ComposerProps) {
             },
             ...(props.conversation.canPost
               ? [
+                  { heading: "Stickers" },
+                  {
+                    custom: (
+                      <div className="sticker-picker">
+                        {STICKER_PACKS.flatMap((pack) =>
+                          pack.stickers.map((s) => (
+                            <button
+                              key={`${pack.id}/${s.id}`}
+                              role="menuitem"
+                              aria-label={`Send sticker: ${s.caption}`}
+                              title={s.caption}
+                              onClick={() => {
+                                emoji.close();
+                                void sendRich({ sticker: { pack: pack.id, id: s.id } });
+                              }}
+                            >
+                              <StickerArt spec={s} size={60} still />
+                            </button>
+                          )),
+                        )}
+                      </div>
+                    ),
+                  },
                   { heading: "Send animated" },
                   {
                     custom: (

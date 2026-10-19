@@ -2,19 +2,19 @@ import { useSyncExternalStore } from "react";
 
 /**
  * Hash routes, so links survive reloads and Back works without a server route:
- *   #/home  #/dms  #/activity                     the three sections
- *   #/<section>/c/<id>[/details|/thread/<root>]   a conversation (and its side panel)
+ *   #/home  #/dms  #/activity  #/later            the sections (Later: saved messages and reminders)
+ *   #/<section>/c/<id>[/details|/search|/thread/<root>]   a conversation (and its side panel)
  *   #/settings/<page>
  *   #/workspace/<page>                            the current workspace's settings and administration
  */
-export type Section = "home" | "dms" | "activity" | "settings" | "workspace";
+export type Section = "home" | "dms" | "activity" | "later" | "settings" | "workspace";
 export type SettingsPage = "profile" | "account" | "devices" | "notifications" | "appearance" | "storage" | "security" | "about";
-export type WorkspacePage = "overview" | "people" | "invitations" | "channels" | "structure";
+export type WorkspacePage = "overview" | "people" | "invitations" | "channels" | "structure" | "roles" | "apps" | "audit" | "usage";
 
 export interface Route {
   section: Section;
   conversationId: string | null;
-  panel: "details" | "thread" | null;
+  panel: "details" | "thread" | "search" | null;
   threadRoot: string | null;
   settingsPage: SettingsPage;
   workspacePage: WorkspacePage;
@@ -23,9 +23,9 @@ export interface Route {
 /** Sections that take the whole page (no conversation list). */
 export const isFullPage = (s: Section): boolean => s === "settings" || s === "workspace";
 
-const SECTIONS: Section[] = ["home", "dms", "activity", "settings", "workspace"];
+const SECTIONS: Section[] = ["home", "dms", "activity", "later", "settings", "workspace"];
 const PAGES: SettingsPage[] = ["profile", "account", "devices", "notifications", "appearance", "storage", "security", "about"];
-const WORKSPACE_PAGES: WorkspacePage[] = ["overview", "people", "invitations", "channels", "structure"];
+const WORKSPACE_PAGES: WorkspacePage[] = ["overview", "people", "invitations", "channels", "structure", "roles", "apps", "audit", "usage"];
 const ID = /^[A-Za-z0-9_-]{1,128}$/;
 
 export function parseRoute(hash: string): Route {
@@ -37,6 +37,7 @@ export function parseRoute(hash: string): Route {
   if (parts[1] === "c" && parts[2] && ID.test(parts[2])) {
     route.conversationId = parts[2];
     if (parts[3] === "details") route.panel = "details";
+    if (parts[3] === "search") route.panel = "search";
     if (parts[3] === "thread" && parts[4] && ID.test(parts[4])) {
       route.panel = "thread";
       route.threadRoot = parts[4];
@@ -52,6 +53,7 @@ export function routeHash(r: Partial<Route> & { section: Section }): string {
   if (r.conversationId) {
     h += `/c/${encodeURIComponent(r.conversationId)}`;
     if (r.panel === "details") h += "/details";
+    if (r.panel === "search") h += "/search";
     if (r.panel === "thread" && r.threadRoot) h += `/thread/${encodeURIComponent(r.threadRoot)}`;
   }
   return h;

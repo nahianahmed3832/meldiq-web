@@ -7,7 +7,8 @@ import { OrgAvatar } from "../components/OrgAvatar";
 import { Menu, useMenu } from "../components/Overlay";
 import { members } from "../format";
 import type { ShellDialog } from "./Shell";
-import { ArchivedList, ChannelSections, Collapsible, MentionsLink, PeopleList, PersonalSections, SkeletonRows } from "./SidebarSections";
+import { ArchivedList, ChannelSections, Collapsible, LaterLink, MentionsLink, PeopleList, PersonalSections, SkeletonRows } from "./SidebarSections";
+import { VoiceRoomsSection } from "./VoiceRooms";
 
 interface SidebarProps {
   orgId: string | null;
@@ -88,6 +89,7 @@ export function Sidebar({ orgId, section, open, onDialog }: SidebarProps) {
             <span className="grow">{unreadOnly ? "Showing unreads only" : "Unreads"}</span>
           </button>
           <MentionsLink orgId={orgId} active={section === "activity"} />
+          <LaterLink active={section === "later"} />
         </div>
       )}
 
@@ -102,6 +104,7 @@ export function Sidebar({ orgId, section, open, onDialog }: SidebarProps) {
         ) : (
           <>
             <PersonalSections orgId={orgId} unreadOnly={unreadOnly} />
+            <VoiceRoomsSection orgId={orgId} />
             <ChannelSections orgId={orgId} unreadOnly={unreadOnly} onBrowse={org ? () => onDialog({ kind: "channels" }) : undefined} />
             <Collapsible id="people" title="Direct messages">
               <PeopleList unreadOnly={unreadOnly} orgId={orgId} excludePlaced />

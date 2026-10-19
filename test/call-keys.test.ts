@@ -33,6 +33,15 @@ describe("call keys", () => {
     expect(judgeKey({ ...call, state: "ENDED" }, "c1", "alice")).toBe("ended");
   });
 
+  it("in a voice room, someone connected to its call may pass the key on; outside voice rooms only the creator counts (android CallKeyVerifierTest)", () => {
+    const room = { conversationId: "c1", createdBy: "alice", state: "ACTIVE", voiceRoom: true, participants: [{ userId: "bob" }] };
+    expect(judgeKey(room, "c1", "alice")).toBeNull();
+    expect(judgeKey(room, "c1", "bob")).toBeNull();
+    expect(judgeKey(room, "c1", "mallory")).toBe("not_creator");
+    expect(judgeKey(room, "c2", "bob")).toBe("wrong_conversation");
+    expect(judgeKey({ ...room, voiceRoom: false }, "c1", "bob")).toBe("not_creator");
+  });
+
   it("keeps the first key for a call: a later invite can't swap it mid-call", () => {
     const ring = new CallKeyRing();
     const first = newCallKey();

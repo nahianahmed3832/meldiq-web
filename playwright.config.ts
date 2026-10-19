@@ -41,7 +41,12 @@ export default defineConfig({
   expect: { timeout: 10_000 },
   workers: 1,
   reporter: [["list"]],
-  use: { baseURL: `http://127.0.0.1:${WEB_PORT}`, trace: "retain-on-failure" },
+  use: {
+    baseURL: `http://127.0.0.1:${WEB_PORT}`,
+    trace: "retain-on-failure",
+    // The first-run introduction is shown once per browser; the tests start past it (it's checked by hand).
+    storageState: { cookies: [], origins: [{ origin: `http://127.0.0.1:${WEB_PORT}`, localStorage: [{ name: "meldiq.introSeen", value: "1" }] }] },
+  },
   projects: [
     { name: "chromium", use: { ...devices["Desktop Chrome"], viewport: { width: 1440, height: 900 }, ...chromiumMedia } },
     { name: "firefox", use: { ...devices["Desktop Firefox"], viewport: { width: 1440, height: 900 }, ...firefoxMedia } },

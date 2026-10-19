@@ -15,14 +15,30 @@ export type NotifyLevel = (typeof NOTIFY_LEVELS)[number];
 const SECTION_NAME_MAX = 60;
 const MAX_SECTIONS = 30;
 const MAX_STARRED = 200;
+const MAX_SAVED = 500;
 const ID_CHARS = "abcdefghijklmnopqrstuvwxyz0123456789";
 
 const zSection = z.object({ id: z.string(), name: z.string(), items: z.array(z.string()), collapsed: z.boolean().default(false) });
+/**
+ * A message saved for later (android Home › Later, server `saved-items`): ids and times only, in the personal document.
+ * The content stays end-to-end encrypted in the conversation.
+ */
+const zSavedItem = z.object({
+  conversationId: z.string(),
+  messageId: z.string(),
+  savedAt: z.number(),
+  remindAt: z.number().nullable().default(null),
+  done: z.boolean().default(false),
+});
+export type SavedItem = z.infer<typeof zSavedItem>;
 export const zNavPrefs = z.object({
   starred: z.array(z.string()).default([]),
   sections: z.array(zSection).default([]),
   collapsed: z.array(z.string()).default([]),
   notify: z.record(z.string(), z.enum(NOTIFY_LEVELS)).default({}),
+  // Optional on purpose: a document written without it keeps the server's list (servers before saved items, or a
+  // workspace document, never touch it).
+  saved: z.array(zSavedItem).optional(),
 });
 export type NavPrefs = z.infer<typeof zNavPrefs>;
 export type NavSection = NavPrefs["sections"][number];
@@ -40,7 +56,13 @@ export type NavOp =
   | { op: "renameSection"; id: string; name: string }
   | { op: "deleteSection"; id: string }
   | { op: "collapse"; key: string; collapsed: boolean }
-  | { op: "collapseSection"; id: string; collapsed: boolean };
+  | { op: "collapseSection"; id: string; collapsed: boolean }
+  // Saved for later (personal document only), as android NavPrefsRules: saving again moves it to the top and keeps its
+  // reminder unless a new one is given; done clears the reminder; a reminder reopens a done item.
+  | { op: "save"; conversationId: string; messageId: string; savedAt: number; remindAt: number | null }
+  | { op: "unsave"; messageId: string }
+  | { op: "savedDone"; messageId: string; done: boolean }
+  | { op: "remind"; messageId: string; remindAt: number | null };
 
 export type NavPlace = { k: "default" } | { k: "starred" } | { k: "section"; id: string };
 
@@ -123,6 +145,18 @@ export function applyOp(p: NavPrefs, o: NavOp): NavPrefs {
       return { ...p, collapsed: o.collapsed ? [...without(p.collapsed, o.key), o.key] : without(p.collapsed, o.key) };
     case "collapseSection":
       return { ...p, sections: p.sections.map((s) => (s.id === o.id ? { ...s, collapsed: o.collapsed } : s)) };
+    case "save": {
+      const current = p.saved ?? [];
+      const previous = current.find((x) => x.messageId === o.messageId);
+      const item: SavedItem = { conversationId: o.conversationId, messageId: o.messageId, savedAt: o.savedAt, remindAt: o.remindAt ?? previous?.remindAt ?? null, done: false };
+      return { ...p, saved: [item, ...current.filter((x) => x.messageId !== o.messageId)].slice(0, MAX_SAVED) };
+    }
+    case "unsave":
+      return { ...p, saved: (p.saved ?? []).filter((x) => x.messageId !== o.messageId) };
+    case "savedDone":
+      return { ...p, saved: (p.saved ?? []).map((x) => (x.messageId === o.messageId ? { ...x, done: o.done, remindAt: o.done ? null : x.remindAt } : x)) };
+    case "remind":
+      return { ...p, saved: (p.saved ?? []).map((x) => (x.messageId === o.messageId ? { ...x, remindAt: o.remindAt, done: false } : x)) };
   }
 }
 
@@ -253,4 +287,18 @@ export class NavSync {
       }
     }
   }
+}
+
+/** Saved messages still to deal with (newest first), then the finished ones (android NavPrefsRules.savedOpen/savedDone). */
+export function savedOpen(p: NavPrefs | undefined): SavedItem[] {
+  return (p?.saved ?? []).filter((x) => !x.done);
+}
+
+export function savedDone(p: NavPrefs | undefined): SavedItem[] {
+  return (p?.saved ?? []).filter((x) => x.done);
+}
+
+/** Saved messages whose reminder time has passed. */
+export function savedOverdue(p: NavPrefs | undefined, now: number): number {
+  return savedOpen(p).filter((x) => (x.remindAt ?? Number.MAX_SAFE_INTEGER) <= now).length;
 }

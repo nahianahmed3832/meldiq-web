@@ -50,6 +50,16 @@ export const zOrgPermissions = z.object({
   isOwner: z.boolean(),
   canLeave: z.boolean().default(true),
   canRestore: z.boolean().default(false),
+  // Custom roles, audit, usage and ownership (API 0.6+, docs/WORKSPACE_ROLES.md); false on older servers.
+  canViewRoles: z.boolean().default(false),
+  canManageRoles: z.boolean().default(false),
+  canAssignRoles: z.boolean().default(false),
+  canViewAudit: z.boolean().default(false),
+  canViewUsage: z.boolean().default(false),
+  canViewApps: z.boolean().default(false),
+  canManageApps: z.boolean().default(false),
+  canTransferOwnership: z.boolean().default(false),
+  effective: z.array(z.string()).default([]),
 });
 export type OrgPermissions = z.infer<typeof zOrgPermissions>;
 

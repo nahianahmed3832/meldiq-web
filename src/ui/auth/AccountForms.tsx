@@ -14,7 +14,7 @@ export interface FormContext {
   deviceName: string;
 }
 
-function Field({ id, label, hint, children }: { id: string; label: string; hint?: ReactNode; children: ReactNode }) {
+export function Field({ id, label, hint, children }: { id: string; label: string; hint?: ReactNode; children: ReactNode }) {
   return (
     <div className="field">
       <label htmlFor={id}>{label}</label>
@@ -24,7 +24,7 @@ function Field({ id, label, hint, children }: { id: string; label: string; hint?
   );
 }
 
-function Back({ onClick, label = "Back" }: { onClick: () => void; label?: string }) {
+export function Back({ onClick, label = "Back" }: { onClick: () => void; label?: string }) {
   return (
     <button type="button" className="btn btn-ghost btn-sm auth-back" onClick={onClick}>
       <ArrowLeft size={14} /> {label}
@@ -32,7 +32,7 @@ function Back({ onClick, label = "Back" }: { onClick: () => void; label?: string
   );
 }
 
-const submitHandler = (fn: () => void) => (e: FormEvent) => {
+export const submitHandler = (fn: () => void) => (e: FormEvent) => {
   e.preventDefault();
   fn();
 };
@@ -50,6 +50,8 @@ export function SignInForm(props: {
   onUnverified: (email: string, password: string) => void;
   onSignUp: () => void;
   onForgot: (email: string) => void;
+  /** Offered when the server has account recovery codes (feature `recovery-codes`). */
+  onRecover?: (email: string) => void;
   onMove: () => void;
   onLinkWithPhone: () => void;
 }) {
@@ -88,6 +90,11 @@ export function SignInForm(props: {
         <LinkButton onClick={() => props.onForgot(normalizeEmail(email))}>Forgot password?</LinkButton>
         {props.canSignUp && <LinkButton onClick={props.onSignUp}>Create an account</LinkButton>}
       </div>
+      {props.onRecover && (
+        <div className="auth-links">
+          <LinkButton onClick={() => props.onRecover?.(normalizeEmail(email))}>Lost access to your email?</LinkButton>
+        </div>
+      )}
       {(props.canMove || props.canLinkWithPhone) && (
         <div className="auth-alt">
           {props.canMove && (

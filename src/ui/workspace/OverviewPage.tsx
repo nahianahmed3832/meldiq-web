@@ -1,3 +1,4 @@
+import { TransferOwnership } from "./TransferOwnership";
 import { Camera, LogOut, Trash2 } from "lucide-react";
 import { type FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import type { OrgAdminDetail } from "../../api/workspaceSchemas";
@@ -26,6 +27,7 @@ export function OverviewPage({ detail, onChanged }: { detail: OrgAdminDetail; on
         </div>
       </header>
       {can.canManageOrg ? <Identity detail={detail} onChanged={onChanged} /> : <ReadOnlyAbout description={org.description} />}
+      <TransferOwnership detail={detail} onChanged={onChanged} />
       <Membership detail={detail} />
     </div>
   );

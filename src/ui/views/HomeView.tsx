@@ -8,6 +8,8 @@ import { Avatar, colorIndexOf } from "../components/Avatar";
 import { conversationTitle, dmPeer, shortWhen } from "../format";
 import { byActivity, inWorkspace, isPeople, mentionConversations } from "../selectors";
 import type { ShellDialog } from "../shell/Shell";
+import { StartChecklist } from "./StartChecklist";
+import { DraftsAndSent } from "./DraftsAndSent";
 
 function greeting(): string {
   const h = new Date().getHours();
@@ -73,6 +75,8 @@ export function HomeView({ orgId, section, onDialog }: { orgId: string | null; s
             )}
           </div>
 
+          {section === "home" && synced && <StartChecklist orgId={orgId} onDialog={onDialog} />}
+
           {history.status === "running" && (
             <div className="banner info" role="status">
               <RotateCw size={16} />
@@ -122,6 +126,8 @@ export function HomeView({ orgId, section, onDialog }: { orgId: string | null; s
               </button>
             )}
           </div>
+
+          {section === "home" && <DraftsAndSent orgId={orgId} />}
 
           <div className="card list-card">
             <h2>{section === "dms" ? "Recent direct messages" : "Recent conversations"}</h2>

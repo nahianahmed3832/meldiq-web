@@ -22,6 +22,8 @@ const call = (
     answeredAt: o.answered ?? null,
     endedAt: state === "ENDED" ? (o.ended === undefined ? 200_000 : o.ended) : null,
     endReason: state === "ENDED" ? (o.reason === undefined ? "hangup" : o.reason) : null,
+    voiceRoom: false,
+    hands: [],
     ...(o.attended ? { attended: o.attended } : {}),
   };
 };

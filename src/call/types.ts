@@ -72,6 +72,14 @@ export interface CallUiState {
   minimized: boolean;
   /** Counts media connections in this call: video elements attach again after a rejoin. */
   mediaEpoch: number;
+  /** A voice room's call (docs/VOICE_ROOMS.md): nobody rings, people raise hands, the room's managers moderate. */
+  voiceRoom: boolean;
+  /** Voice rooms: who raised a hand, in order (the server's list). */
+  hands: string[];
+  /** Voice rooms: this person manages the room, so may mute, lower hands and remove people. */
+  canModerate: boolean;
+  /** Something to tell the person during the call (a manager muted them, a request failed). */
+  notice: string | null;
 }
 
 export const idleCall: CallUiState = {
@@ -102,6 +110,10 @@ export const idleCall: CallUiState = {
   audioBlocked: false,
   minimized: false,
   mediaEpoch: 0,
+  voiceRoom: false,
+  hands: [],
+  canModerate: false,
+  notice: null,
 };
 
 /** What the server's call API hands a device that may join: a room-scoped LiveKit token. */

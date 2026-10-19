@@ -1,4 +1,4 @@
-import { AlertTriangle, Lock, Mic, MicOff, Minimize2, MonitorOff, MonitorUp, PhoneOff, Settings2, ShieldAlert, ShieldQuestion, Video, VideoOff, Volume2, WifiOff } from "lucide-react";
+import { AlertTriangle, Hand, Info, Lock, Mic, MicOff, Minimize2, MonitorOff, MonitorUp, PhoneOff, Settings2, ShieldAlert, ShieldQuestion, Video, VideoOff, Volume2, WifiOff, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useEngine, useOrbit } from "../../app/orbit";
 import { CallFailure } from "../../call/rules";
@@ -7,6 +7,7 @@ import { Avatar } from "../components/Avatar";
 import { Menu, useFocusTrap, useMenu } from "../components/Overlay";
 import { useNow } from "./useNow";
 import { callStatus, SECURITY_LABEL } from "./callText";
+import { HandButton, PeopleButton, RoomPeople, roomRows } from "./RoomControls";
 
 /** The full call screen: who's in it, where it stands, what's proven about its encryption, and the controls. */
 export function CallStage() {
@@ -14,6 +15,7 @@ export function CallStage() {
   const call = useOrbit((s) => s.call);
   const now = useNow(call.phase === "connected");
   const [verifyOpen, setVerifyOpen] = useState(false);
+  const [peopleOpen, setPeopleOpen] = useState(false);
   const ended = call.phase === "ended";
   const ref = useRef<HTMLElement>(null);
   useFocusTrap(ref, true);
@@ -34,10 +36,11 @@ export function CallStage() {
       </header>
       <div className="call-notes">
         {verifyOpen && call.verification && <Verification call={call} />}
+        {call.voiceRoom && peopleOpen && !ended && <RoomPeople call={call} />}
         <CallNotes call={call} />
       </div>
-      <Tiles participants={call.participants} ended={ended} title={call.title} colorIndex={call.colorIndex} />
-      <Controls call={call} />
+      <Tiles participants={call.participants} hands={call.hands} ended={ended} title={call.title} colorIndex={call.colorIndex} />
+      <Controls call={call} people={call.voiceRoom ? { open: peopleOpen, toggle: () => setPeopleOpen((o) => !o) } : null} />
     </section>
   );
 }
@@ -89,6 +92,15 @@ function CallNotes({ call }: { call: CallUiState }) {
   if (call.path && call.path.startsWith("tcp")) notes.push({ key: "tcp", icon: <WifiOff size={16} />, text: "Connected over TCP: this network may block UDP, so the call can lag." });
   return (
     <>
+      {call.notice && call.phase !== "ended" && (
+        <div className="banner info" role="status">
+          <Info size={16} />
+          <span className="grow">{call.notice}</span>
+          <button className="icon-btn" onClick={() => engine.calls.dismissNotice()} aria-label="Dismiss">
+            <X size={16} />
+          </button>
+        </div>
+      )}
       {call.audioBlocked && call.phase !== "ended" && (
         <div className="banner" role="alert">
           <Volume2 size={16} />
@@ -113,7 +125,7 @@ function CallNotes({ call }: { call: CallUiState }) {
   );
 }
 
-function Tiles({ participants, ended, title, colorIndex }: { participants: CallParticipantView[]; ended: boolean; title: string; colorIndex: number }) {
+function Tiles({ participants, hands, ended, title, colorIndex }: { participants: CallParticipantView[]; hands: string[]; ended: boolean; title: string; colorIndex: number }) {
   // A shared screen takes the stage, everyone in a strip under it (android GROUP_CALL_TILES.md); your own share isn't
   // shown back to you (it would show itself), only noted.
   const sharer = participants.find((p) => p.screenOn && !p.isLocal);
@@ -123,7 +135,7 @@ function Tiles({ participants, ended, title, colorIndex }: { participants: CallP
         <ScreenView p={sharer} />
         <div className="call-strip" aria-label="People in the call">
           {participants.map((p) => (
-            <Tile key={p.identity} p={p} />
+            <Tile key={p.identity} p={p} hand={hands.includes(p.userId)} />
           ))}
         </div>
       </div>
@@ -140,13 +152,13 @@ function Tiles({ participants, ended, title, colorIndex }: { participants: CallP
   return (
     <div className="call-tiles" aria-label="People in the call">
       {participants.map((p) => (
-        <Tile key={p.identity} p={p} />
+        <Tile key={p.identity} p={p} hand={hands.includes(p.userId)} />
       ))}
     </div>
   );
 }
 
-function Tile({ p }: { p: CallParticipantView }) {
+function Tile({ p, hand }: { p: CallParticipantView; hand: boolean }) {
   const engine = useEngine();
   const video = useRef<HTMLVideoElement>(null);
   const epoch = useOrbit((s) => s.call.mediaEpoch);
@@ -158,11 +170,12 @@ function Tile({ p }: { p: CallParticipantView }) {
     return engine.calls.attachVideo(p.identity, el);
   }, [engine, p.identity, p.cameraOn, epoch]);
   const name = p.isLocal ? "You" : p.name;
-  const label = `${name}${p.micOn ? "" : ", muted"}${p.e2eeProblem ? ", encryption problem" : ""}${p.connectionWeak ? ", weak connection" : ""}`;
+  const label = `${name}${hand ? ", hand raised" : ""}${p.micOn ? "" : ", muted"}${p.e2eeProblem ? ", encryption problem" : ""}${p.connectionWeak ? ", weak connection" : ""}`;
   return (
     <figure className={`call-tile${p.isLocal ? " local" : ""}${p.speaking ? " speaking" : ""}`} aria-label={label} style={{ margin: 0 }}>
       {p.cameraOn ? <video ref={video} autoPlay playsInline muted aria-hidden="true" /> : <Avatar name={p.name} colorIndex={color} size={88} decorative />}
       <figcaption className={`who${p.e2eeProblem ? " problem" : ""}`}>
+        {hand && <Hand size={13} aria-hidden="true" className="hand" />}
         {!p.micOn && <MicOff size={13} aria-hidden="true" />}
         {p.e2eeProblem && <ShieldAlert size={13} aria-hidden="true" />}
         {p.connectionWeak && <WifiOff size={13} aria-hidden="true" />}
@@ -194,7 +207,7 @@ function ScreenView({ p }: { p: CallParticipantView }) {
 /** Screen sharing needs getDisplayMedia, which phones' browsers don't offer. */
 const canShareScreen = (): boolean => typeof navigator !== "undefined" && typeof navigator.mediaDevices?.getDisplayMedia === "function" && !/Android|iPhone|iPad/.test(navigator.userAgent);
 
-function Controls({ call }: { call: CallUiState }) {
+function Controls({ call, people }: { call: CallUiState; people: { open: boolean; toggle: () => void } | null }) {
   const engine = useEngine();
   const live = call.phase !== "ended";
   const media = live && call.phase !== "incoming" && call.verification !== null;
@@ -230,6 +243,8 @@ function Controls({ call }: { call: CallUiState }) {
           {call.screenSharing ? <MonitorOff size={22} /> : <MonitorUp size={22} />}
         </button>
       )}
+      {call.voiceRoom && <HandButton call={call} />}
+      {people && <PeopleButton open={people.open} onToggle={people.toggle} count={roomRows(call).length} />}
       <DeviceMenu disabled={!media} />
       <button className="call-btn end" onClick={() => engine.calls.hangup()} aria-label="Hang up" disabled={!live}>
         <PhoneOff size={22} />

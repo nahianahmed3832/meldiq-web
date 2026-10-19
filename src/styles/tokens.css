@@ -201,6 +201,19 @@
     --avatar-gloss: rgba(255, 255, 255, 0.38);
     --avatar-ring: rgba(0, 0, 0, 0.06);
 
+    /* Sticker tones (docs/STICKERS.md; android Stickers.kt toneColor): deep enough for white captions at 4.5:1. */
+    --sticker-indigo: #4338ca;
+    --sticker-violet: #6d28d9;
+    --sticker-rose: #be123c;
+    --sticker-amber: #b45309;
+    --sticker-green: #047857;
+    --sticker-teal: #0f766e;
+    --sticker-sky: #0369a1;
+    --sticker-slate: #334155;
+    --on-sticker: #ffffff;
+    --sticker-shape-alpha: light-dark(0.16, 0.3);
+    --sticker-confetti: conic-gradient(from 0deg, #f59e0b 0 20%, #10b981 0 40%, #3b82f6 0 60%, #ec4899 0 80%, currentColor 0);
+
     /* Palette previews (Appearance › Colour): each plate's frame, sidebar and accent, whatever plate is active. */
     --swatch-indigo-1: #231d62;
     --swatch-indigo-2: #e2dffa;

@@ -1,4 +1,7 @@
-import { Archive, ArrowLeft, Hash, Info, Lock, Megaphone, Phone, ShieldAlert, UsersRound, Video } from "lucide-react";
+import { AppUpdatesBar } from "./AppUpdatesBar";
+import { VoiceRoomBanner } from "./VoiceRoomBanner";
+import { SecurityPadlock } from "./SecuritySheet";
+import { Archive, ArrowLeft, Hash, Headphones, Info, Lock, Megaphone, Phone, Search, ShieldAlert, UsersRound, Video } from "lucide-react";
 import { useCallback, useMemo, useState } from "react";
 import { shallowEqual, useEngine, useOrbit } from "../../app/orbit";
 import { navigate, type Route } from "../../app/router";
@@ -41,7 +44,7 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
   }, [engine, onDialog]);
 
   if (!c || !me) return null;
-  const glyph = c.type === "CHANNEL" ? c.kind === "PRIVATE" ? <Lock size={18} /> : c.kind === "ANNOUNCEMENT" ? <Megaphone size={18} /> : <Hash size={19} /> : null;
+  const glyph = c.type !== "CHANNEL" ? null : c.voice ? <Headphones size={18} /> : c.kind === "PRIVATE" ? <Lock size={18} /> : c.kind === "ANNOUNCEMENT" ? <Megaphone size={18} /> : <Hash size={19} />;
   const subtitle =
     c.type === "DM"
       ? `@${peer?.username ?? ""}${peer?.online === true ? " · online" : ""}`
@@ -73,7 +76,7 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
           </h1>
           <p className="ellipsis">{subtitle}</p>
         </div>
-        <CallButtons conversationId={id} canPost={c.canPost} archived={c.archived} serverCalling={calling} busy={myCall !== null} running={!!call} />
+        {!c.voice && <CallButtons conversationId={id} canPost={c.canPost} archived={c.archived} serverCalling={calling} busy={myCall !== null} running={!!call} />}
         {c.type !== "DM" && (
           <button
             className="btn btn-ghost btn-sm"
@@ -85,6 +88,16 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
         )}
         <button
           className="icon-btn"
+          aria-pressed={route.panel === "search"}
+          onClick={() => navigate({ section: route.section, conversationId: id, panel: route.panel === "search" ? null : "search" })}
+          aria-label={route.panel === "search" ? "Close search" : "Search in this conversation"}
+          title="Search in this conversation"
+        >
+          <Search size={18} />
+        </button>
+        <SecurityPadlock conversationId={id} />
+        <button
+          className="icon-btn"
           aria-pressed={panelOpen}
           onClick={() => navigate({ section: route.section, conversationId: id, panel: panelOpen ? null : "details" })}
           aria-label={panelOpen ? "Hide details" : "Show details"}
@@ -93,7 +106,8 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
         </button>
       </header>
 
-      {(alerts.length > 0 || call || c.archived || history === "running") && (
+      {c.type === "CHANNEL" && <AppUpdatesBar conversationId={id} />}
+      {(alerts.length > 0 || call || c.voice || c.archived || history === "running") && (
         <div className="conv-banners">
           {alerts.map((a) => (
             <div key={a.userId} className="banner warn" role="alert">
@@ -104,7 +118,8 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
               </button>
             </div>
           ))}
-          {call && myCall !== id && (
+          {c.voice && myCall !== id && <VoiceRoomBanner conversationId={id} canJoin={calling && engine.calls.supported() && myCall === null && !c.archived} />}
+          {call && !c.voice && myCall !== id && (
             <div className="banner info call-banner">
               {call.video ? <Video size={16} /> : <Phone size={16} />}
               <span className="grow">

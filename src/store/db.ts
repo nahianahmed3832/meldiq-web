@@ -175,13 +175,27 @@ export class LocalStore {
     return all.filter((m) => m.outgoing && (m.serverTs ?? m.sortTs) <= upTo && m.status !== "READ");
   }
 
-  async searchMessages(query: string, limit = 50): Promise<StoredMessage[]> {
+  /** Message text on this browser containing [query]; in one conversation when [conversationId] is given. */
+  async searchMessages(query: string, limit = 50, conversationId?: string): Promise<StoredMessage[]> {
     const q = query.toLowerCase();
+    const out: StoredMessage[] = [];
+    const store = this.db.transaction("messages").store;
+    let cursor = conversationId ? await store.index("byConversation").openCursor(IDBKeyRange.bound([conversationId, -Infinity], [conversationId, Infinity])) : await store.openCursor();
+    while (cursor) {
+      const m = cursor.value;
+      if (!m.deleted && m.kind === "text" && m.text.toLowerCase().includes(q)) out.push(m);
+      cursor = await cursor.continue();
+    }
+    return out.sort((a, b) => b.sortTs - a.sortTs).slice(0, limit);
+  }
+
+  /** Your latest sent messages across conversations, thread replies aside (android Home › Drafts & sent). */
+  async recentSent(limit: number): Promise<StoredMessage[]> {
     const out: StoredMessage[] = [];
     let cursor = await this.db.transaction("messages").store.openCursor();
     while (cursor) {
       const m = cursor.value;
-      if (!m.deleted && m.kind === "text" && m.text.toLowerCase().includes(q)) out.push(m);
+      if (m.outgoing && !m.deleted && m.kind === "text" && !m.threadRootId && m.text) out.push(m);
       cursor = await cursor.continue();
     }
     return out.sort((a, b) => b.sortTs - a.sortTs).slice(0, limit);

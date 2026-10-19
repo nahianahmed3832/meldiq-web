@@ -1,4 +1,4 @@
-import { Building2, Hash, Laptop, LayoutGrid, Ticket, UsersRound } from "lucide-react";
+import { Blocks, Building2, Gauge, Hash, Laptop, LayoutGrid, ScrollText, ShieldCheck, Ticket, UsersRound } from "lucide-react";
 import type { ReactNode } from "react";
 import { useEngine, useOrbit } from "../../app/orbit";
 import { navigate, type WorkspacePage } from "../../app/router";
@@ -10,13 +10,23 @@ import { OverviewPage } from "./OverviewPage";
 import { PeoplePage } from "./PeoplePage";
 import { StructurePage } from "./StructurePage";
 import { useLoad } from "./useLoad";
+import { RolesPage } from "./RolesPage";
+import { AuditPage } from "./AuditPage";
+import { AppsPage } from "./AppsPage";
+import { UsagePage } from "./UsagePage";
+import type { OrgPermissions } from "../../api/workspaceSchemas";
 
-const PAGES: { key: WorkspacePage; label: string; icon: ReactNode }[] = [
+/** Pages, with the permission flag that shows them (the server decides; older servers don't send the newer flags). */
+const PAGES: { key: WorkspacePage; label: string; icon: ReactNode; shown?: (p: OrgPermissions) => boolean }[] = [
   { key: "overview", label: "Overview", icon: <LayoutGrid size={17} /> },
   { key: "people", label: "People", icon: <UsersRound size={17} /> },
   { key: "invitations", label: "Invitations", icon: <Ticket size={17} /> },
   { key: "channels", label: "Channels", icon: <Hash size={17} /> },
   { key: "structure", label: "Branches & teams", icon: <Building2 size={17} /> },
+  { key: "roles", label: "Roles", icon: <ShieldCheck size={17} />, shown: (p) => p.canViewRoles },
+  { key: "apps", label: "Apps", icon: <Blocks size={17} />, shown: (p) => p.canViewApps },
+  { key: "audit", label: "Audit log", icon: <ScrollText size={17} />, shown: (p) => p.canViewAudit },
+  { key: "usage", label: "Usage", icon: <Gauge size={17} />, shown: (p) => p.canViewUsage },
 ];
 
 /**
@@ -57,7 +67,7 @@ export function WorkspaceView({ orgId, page, onDialog }: { orgId: string | null;
       <div className="settings">
         <nav className="settings-nav" aria-label="Workspace pages">
           <h2 className="ellipsis">{org.name}</h2>
-          {PAGES.map((p) => (
+          {PAGES.filter((p) => !p.shown || (d && p.shown(d.permissions))).map((p) => (
             <button key={p.key} className="side-item" aria-current={page === p.key ? "page" : undefined} onClick={() => navigate({ section: "workspace", workspacePage: p.key })}>
               <span className="glyph">{p.icon}</span>
               <span className="grow">{p.label}</span>
@@ -89,6 +99,14 @@ export function WorkspaceView({ orgId, page, onDialog }: { orgId: string | null;
               <InvitationsPage detail={d} />
             ) : page === "channels" ? (
               <ChannelsPage detail={d} />
+            ) : page === "roles" ? (
+              <RolesPage detail={d} />
+            ) : page === "apps" ? (
+              <AppsPage detail={d} />
+            ) : page === "audit" ? (
+              <AuditPage detail={d} />
+            ) : page === "usage" ? (
+              <UsagePage detail={d} />
             ) : (
               <StructurePage detail={d} onChanged={detail.reload} />
             )}

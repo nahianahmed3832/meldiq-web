@@ -5,7 +5,7 @@ import { type Call, type Conversation, type Member, type Org, type SessionGrant,
 import { signInWithDevice } from "../auth/accountApi";
 import { type AccountSessionEnd, AccountSession } from "../auth/accountSession";
 import { TokenVault } from "../auth/tokenVault";
-import { CallManager } from "../call/manager";
+import { CallManager, type CallTarget } from "../call/manager";
 import { callSupport } from "../call/support";
 import type { MediaFactory } from "../call/types";
 import { fingerprint } from "../crypto/identity";
@@ -19,6 +19,11 @@ import { Directory } from "./directory";
 import { restoreHistory } from "./historySync";
 import { Outbox, sealAndPost } from "./outbox";
 import { levelOf, type NavOp, NavSync, PERSONAL, shouldNotify, workspaceOf } from "./navPrefs";
+import { firstShowing, ReminderSync } from "./reminders";
+import { callFrame, orgDeletedFrame, presenceFrame, typingFrame } from "./frameReducers";
+import type { Reminder } from "./reminderRules";
+import { deriveReminderKey } from "../crypto/reminderKeys";
+import { publicKeyFromSeed } from "../crypto/ed25519";
 import { Receiver } from "./receiver";
 import { CallLog } from "./callLog";
 import { Compose } from "./compose";
@@ -35,6 +40,8 @@ export interface EngineOptions {
   createSocket?: (url: string) => WebSocket;
   /** Shows a system notification for a message that arrived off screen. */
   notify?: (title: string, body: string, conversationId: string) => void;
+  /** Shows a system notification for a reminder that went off (server reminders, Later). */
+  notifyReminder?: (title: string, body: string, conversationId: string | null) => void;
   /** Per-browser preferences. */
   prefs?: () => { readReceipts: boolean; typing: boolean };
   onRevoked?: (reason: RevokedReason) => void;
@@ -58,6 +65,10 @@ const CACHE_KEY = "cache.meta";
 /**
  * One linked browser's connection to its account: realtime delivery, the outbox, history restore and the state the
  * interface draws. The server stays the source of truth for everything except message content, which only devices can read.
+ *
+ * Size (about 870 lines, over the usual 800): this is the composition root that wires every sync piece to one state
+ * tree. The pieces themselves live beside it (compose, locals, callLog, navPrefs, reminders, frameReducers, receiver,
+ * outbox); what remains here is the wiring plus the few operations that need several of them at once.
  */
 export class Engine implements EngineContext {
   readonly state: Store;
@@ -68,6 +79,8 @@ export class Engine implements EngineContext {
   readonly calls: CallManager;
   /** Starred, sections, collapsed groups and notification levels, synced across the person's devices. */
   readonly nav: NavSync;
+  /** Server reminders (Later › Reminders), sealed with this browser's reminder key. */
+  readonly reminders: ReminderSync;
   /** Call history lines and the recent-call log. */
   readonly callLog: CallLog;
   private readonly compose: Compose;
@@ -85,12 +98,20 @@ export class Engine implements EngineContext {
   private members = new Map<string, Member[]>();
   private lastTypingAt = 0;
 
+  /** This browser's device record; only its account address can change (after an account recovery, signInAgain). */
+  private record: DeviceRecord;
+
+  get device(): DeviceRecord {
+    return this.record;
+  }
+
   constructor(
-    readonly device: DeviceRecord,
+    device: DeviceRecord,
     readonly store: LocalStore,
     private readonly opts: EngineOptions,
     state?: Store,
   ) {
+    this.record = device;
     this.state = state ?? new Store(initialState);
     this.session = device.account
       ? new AccountSession(opts.base, new TokenVault(store), (why) => this.accountSessionEnded(why))
@@ -151,7 +172,18 @@ export class Engine implements EngineContext {
       put: (path, body) => this.api.json("PUT", path, z.unknown(), { body }),
       load: (key) => store.getValue(key),
       save: (key, value) => store.setValue(key, value),
-      publish: (nav) => this.set((s) => ({ ...s, nav })),
+      publish: (nav) => {
+        this.set((s) => ({ ...s, nav }));
+        // Saved messages with a time get a server reminder, so they go off even with no tab open (android syncLater).
+        void this.reminders?.syncLater(nav[PERSONAL]?.saved ?? []);
+      },
+    });
+    this.reminders = new ReminderSync({
+      api: this.api,
+      key: () => this.record.reminders ?? null,
+      available: () => this.state.get().server?.features.includes("reminders") ?? false,
+      publish: (reminders) => this.set((s) => ({ ...s, reminders })),
+      show: (r) => this.showReminder(r),
     });
     this.realtime = new RealtimeClient({
       url: opts.wsUrl,
@@ -224,6 +256,31 @@ export class Engine implements EngineContext {
     return this.nav.change(workspaceOf(this.state.get().conversations[conversationId]?.orgId ?? null), op);
   }
 
+  /** Saved for later (android Home › Later): kept in the personal document, so every device of the person shows it. */
+  later(op: Extract<NavOp, { op: "save" | "unsave" | "savedDone" | "remind" }>): Promise<void> {
+    return this.nav.change(PERSONAL, op);
+  }
+
+  /** A reminder that went off: shown once per occurrence on this browser (the phone shows its own). */
+  private async showReminder(r: Reminder): Promise<boolean> {
+    if (!(await firstShowing(this.store, r))) return false;
+    const title = r.content?.title ?? "Reminder";
+    this.notice("info", `Reminder: ${title}`);
+    this.opts.notifyReminder?.(title, r.content?.note ?? (r.content?.source === "later" ? "A message you saved for later" : "Meldiq reminder"), r.content?.ref?.conversationId ?? null);
+    return true;
+  }
+
+  /**
+   * Browsers set up before reminders existed have no reminder key: the recovery key (the identity seed) gives it, once.
+   * The seed must be this account's; it isn't kept.
+   */
+  async unlockReminders(seed: Uint8Array): Promise<void> {
+    if ((await publicKeyFromSeed(seed)) !== this.record.identityKey) throw new Error("That recovery key belongs to a different Meldiq account.");
+    this.record = { ...this.record, reminders: await deriveReminderKey(seed, this.record.userId) };
+    await this.store.saveDevice(this.record);
+    await this.reminders.refresh();
+  }
+
   notice(kind: "error" | "info", text: string): void {
     const id = Date.now() + Math.random();
     this.set((s) => ({ ...s, notices: [...s.notices.slice(-3), { id, kind, text }] }));
@@ -259,13 +316,20 @@ export class Engine implements EngineContext {
    * Signs in again after the account session ended: the password, plus proof that this browser still holds its device
    * key, so the new session is bound to this device. A removed device is told so by the server, and then erased.
    */
-  async signInAgain(password: string): Promise<void> {
+  async signInAgain(password: string, email?: string): Promise<void> {
     if (!(this.session instanceof AccountSession)) throw new Error("This browser isn't signed in with a Meldiq account.");
+    const account = this.record.account;
     try {
-      await this.session.adopt(await signInWithDevice(this.opts.base, this.device, password));
+      await this.session.adopt(await signInWithDevice(this.opts.base, this.record, password, email));
     } catch (e) {
       if (e instanceof ApiError && (e.code === "device_revoked" || e.code === "account_disabled")) return this.revoked(e.code);
       throw e;
+    }
+    // The account moved to a new address (account recovery, or a change on another device): the device proof above showed
+    // it's still this browser's account, so the address it signs in with from now on is the new one.
+    if (account && email && email !== account.email) {
+      this.record = { ...this.record, account: { ...account, email } };
+      await this.store.saveDevice(this.record);
     }
     this.set((s) => ({ ...s, phase: "ready", phaseReason: null }));
     this.stopped = false;
@@ -323,6 +387,8 @@ export class Engine implements EngineContext {
               createdAt: c.activeCall.startedAt,
               endedAt: null,
               endReason: null,
+              voiceRoom: c.voice,
+              hands: [],
             };
         return {
           ...s,
@@ -338,6 +404,7 @@ export class Engine implements EngineContext {
       const st = this.state.get();
       await this.store.setValue(CACHE_KEY, { orgs: st.orgs, conversations: Object.values(st.conversations), users: Object.values(st.users) });
       void this.nav.refresh([PERSONAL, ...orgs.orgs.map((o) => o.id)]);
+      void this.reminders.refresh();
     } catch (e) {
       if (!(e instanceof ApiError && e.isNetwork)) this.notice("error", e instanceof ApiError ? e.message : "Couldn't load your conversations.");
     }
@@ -378,18 +445,13 @@ export class Engine implements EngineContext {
         const c = str(f.c);
         const u = str(f.u);
         if (!c || !u || u === this.device.userId) return;
-        this.set((s) => {
-          const cur = { ...(s.typing[c] ?? {}) };
-          if (f.on === true) cur[u] = Date.now() + 6000;
-          else delete cur[u];
-          return { ...s, typing: { ...s.typing, [c]: cur } };
-        });
+        this.set((s) => typingFrame(s, c, u, f.on === true));
         return;
       }
       case "presence": {
         const id = str(f.userId);
         if (!id) return;
-        this.set((s) => (s.users[id] ? { ...s, users: { ...s.users, [id]: { ...s.users[id], online: f.online === true } } } : s));
+        this.set((s) => presenceFrame(s, id, f.online === true));
         return;
       }
       case "conv.updated": {
@@ -403,6 +465,15 @@ export class Engine implements EngineContext {
       case "org.updated":
         await this.refreshAll();
         return;
+      case "integration.event": {
+        const id = str(f.conversationId);
+        if (id) this.set((s) => ({ ...s, appEventsRev: { ...s.appEventsRev, [id]: (s.appEventsRev[id] ?? 0) + 1 } }));
+        return;
+      }
+      case "reminders.changed":
+      case "reminder.due":
+        await this.reminders.refresh();
+        return;
       case "prefs.updated": {
         const ws = str(f.workspaceId);
         if (ws) await this.nav.refresh([ws]);
@@ -411,7 +482,7 @@ export class Engine implements EngineContext {
       case "org.deleted": {
         const id = str(f.orgId);
         if (!id) return;
-        this.set((s) => ({ ...s, orgs: s.orgs.filter((o) => o.id !== id), conversations: Object.fromEntries(Object.entries(s.conversations).filter(([, c]) => c.orgId !== id)) }));
+        this.set((s) => orgDeletedFrame(s, id));
         return;
       }
       case "devices.changed": {
@@ -423,13 +494,8 @@ export class Engine implements EngineContext {
         const parsed = zCall.safeParse(f.call);
         if (!parsed.success) return;
         const call = parsed.data;
-        this.set((s) => {
-          const calls = { ...s.calls };
-          if (call.state === "ENDED") delete calls[call.conversationId];
-          else calls[call.conversationId] = call;
-          return { ...s, calls };
-        });
-        if (typeof f.event === "string") void this.calls.onCallEvent(f.event, call, f as { from?: { displayName?: unknown }; reason?: unknown });
+        this.set((s) => callFrame(s, call));
+        if (typeof f.event === "string") void this.calls.onCallEvent(f.event, call, f as { from?: { displayName?: unknown }; reason?: unknown; action?: unknown });
         void this.callLog.upsert(call);
         return;
       }
@@ -695,6 +761,14 @@ export class Engine implements EngineContext {
     return this.compose.deleteForEveryone(m);
   }
 
+  vote(m: StoredMessage, choices: string[]): Promise<void> {
+    return this.compose.vote(m, choices);
+  }
+
+  closePoll(m: StoredMessage): Promise<void> {
+    return this.compose.closePoll(m);
+  }
+
   setPinned(m: StoredMessage, pinned: boolean): Promise<void> {
     return this.compose.setPinned(m, pinned);
   }
@@ -726,12 +800,14 @@ export class Engine implements EngineContext {
     }
   }
 
-  private async describeConversation(id: string): Promise<{ title: string; isGroup: boolean; colorIndex: number }> {
+  private async describeConversation(id: string): Promise<CallTarget> {
     const c = await this.ensureConversation(id).catch(() => null);
-    if (!c) return { title: "Call", isGroup: false, colorIndex: 0 };
-    if (c.type !== "DM") return { title: c.type === "CHANNEL" ? `#${c.name ?? "channel"}` : (c.name ?? "Group"), isGroup: true, colorIndex: 0 };
+    if (!c) return { title: "Call", isGroup: false, colorIndex: 0, voiceRoom: false, canModerate: false };
+    if (c.type !== "DM")
+      return { title: c.type === "CHANNEL" ? `#${c.name ?? "channel"}` : (c.name ?? "Group"), isGroup: true, colorIndex: 0, voiceRoom: c.voice, canModerate: c.voice && c.canManage };
     const peer = c.members?.find((m) => m.id !== this.device.userId);
-    return { title: (peer && (this.state.get().users[peer.id]?.displayName ?? peer.displayName)) || "Call", isGroup: false, colorIndex: peer?.avatarColor ?? 0 };
+    const title = (peer && (this.state.get().users[peer.id]?.displayName ?? peer.displayName)) || "Call";
+    return { title, isGroup: false, colorIndex: peer?.avatarColor ?? 0, voiceRoom: false, canModerate: false };
   }
 
   private async queue(o: OutboxItem): Promise<void> {
@@ -760,8 +836,12 @@ export class Engine implements EngineContext {
   }
 
   /** Text search over the messages this browser holds (the server can't search encrypted content). */
-  searchMessages(query: string): Promise<StoredMessage[]> {
-    return this.store.searchMessages(query);
+  recentSent(limit: number): Promise<StoredMessage[]> {
+    return this.store.recentSent(limit);
+  }
+
+  searchMessages(query: string, conversationId?: string): Promise<StoredMessage[]> {
+    return this.store.searchMessages(query, conversationId ? 100 : 50, conversationId);
   }
 
   /** Up to [limit] newest messages of a conversation, for threads, pins and files. */

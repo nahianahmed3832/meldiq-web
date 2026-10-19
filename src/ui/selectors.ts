@@ -1,6 +1,6 @@
 import type { Conversation } from "../api/schemas";
 import type { AppState } from "../state/store";
-import { levelOf, type NavPrefs, PERSONAL, placed, workspaceOf } from "../sync/navPrefs";
+import { levelOf, type NavPrefs, PERSONAL, placed, savedOverdue, workspaceOf } from "../sync/navPrefs";
 
 /**
  * What the sidebar and the three sections list, from the server's conversations and this browser's unread counts
@@ -130,4 +130,28 @@ export function mentionCount(s: AppState): number {
 /** Channels with unread messages in a workspace (the rail's badge). */
 export function orgUnread(s: AppState, orgId: string): number {
   return Object.values(s.conversations).filter((c) => c.type === "CHANNEL" && c.orgId === orgId && unreadOf(s, c.id) > 0 && !isMuted(s, c)).length;
+}
+
+/** Saved messages whose reminder time has passed, plus server reminders that went off and weren't dealt with. */
+export function laterDue(s: AppState): number {
+  return savedOverdue(s.nav[PERSONAL], Date.now()) + s.reminders.items.filter((r) => r.state === "fired").length;
+}
+
+/**
+ * Who is in a voice room now (user ids): the live call's connected devices once its events arrive, else the server's
+ * list on the conversation; empty when the room has no call (android VoiceRooms.roomPeople).
+ */
+export function roomPeople(s: AppState, conversationId: string): string[] {
+  const call = s.calls[conversationId];
+  if (!call) return [];
+  if (call.participants) return [...new Set(call.participants.map((p) => p.userId))];
+  return s.conversations[conversationId]?.activeCall?.participantIds ?? [];
+}
+
+/** The workspace's voice rooms this person is in, alphabetical (android WorkspaceHomeScreen voiceRooms). */
+export function voiceRooms(s: AppState, orgId: string | null): Conversation[] {
+  if (!orgId) return [];
+  return Object.values(s.conversations)
+    .filter((c) => c.voice && c.orgId === orgId && c.joined && !c.archived)
+    .sort((a, b) => (a.name ?? "").localeCompare(b.name ?? ""));
 }

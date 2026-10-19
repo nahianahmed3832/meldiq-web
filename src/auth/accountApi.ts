@@ -34,6 +34,11 @@ export interface NewDevice {
 }
 
 const zChallenge = z.object({ nonce: z.string() });
+const zRecoverStarted = z.object({ ticket: z.string(), email: z.string(), expiresAt: z.number() });
+const zRecovered = z.object({ email: z.string(), remainingCodes: z.number() });
+const zRecoveryStatus = z.object({ remaining: z.number(), total: z.number(), createdAt: z.number().nullable() });
+const zRecoveryCodes = z.object({ codes: z.array(z.string()), createdAt: z.number() });
+export type RecoveryStatus = z.infer<typeof zRecoveryStatus>;
 
 /**
  * The Orbit 2.0 account routes (docs/ORBIT_2_ARCHITECTURE §6). Calls before sign-in go without a token; the rest use the
@@ -78,6 +83,19 @@ export class AccountApi {
     return this.api.json("POST", "/v2/auth/password/reset", zOk, { auth: false, body: { email, code, newPassword } });
   }
 
+  /**
+   * Account recovery after losing the email address (server docs/ACCOUNT_RECOVERY.md): one recovery code, used up here,
+   * and the new address, which gets a 6-digit code. Restores account access only, never encryption keys.
+   */
+  recoverStart(email: string, code: string, newEmail: string) {
+    return this.api.json("POST", "/v2/auth/recover/start", zRecoverStarted, { auth: false, body: { email, code, newEmail } });
+  }
+
+  /** The emailed code and a new password: the account moves to the new address and every session signs out. */
+  recoverComplete(ticket: string, code: string, newPassword: string) {
+    return this.api.json("POST", "/v2/auth/recover/complete", zRecovered, { auth: false, body: { ticket, code, newPassword } });
+  }
+
   legacyVerify(username: string, nonce: string, signature: string) {
     return this.api.json("POST", "/v2/migration/legacy/verify", zLegacyTicket, { auth: false, body: { username, nonce, signature } });
   }
@@ -102,6 +120,20 @@ export class AccountApi {
 
   changePassword(currentPassword: string, newPassword: string): Promise<unknown> {
     return this.api.json("POST", "/v2/account/password", zOk, { body: { currentPassword, newPassword } });
+  }
+
+  /** How many of the account's recovery codes are left (never the codes). */
+  recoveryCodesStatus() {
+    return this.api.json("GET", "/v2/account/recovery-codes", zRecoveryStatus);
+  }
+
+  /** A new set of ten codes, shown once; replaces the old set. Needs the password again. */
+  makeRecoveryCodes(password: string) {
+    return this.api.json("POST", "/v2/account/recovery-codes", zRecoveryCodes, { body: { password } });
+  }
+
+  revokeRecoveryCodes(password: string): Promise<unknown> {
+    return this.api.json("POST", "/v2/account/recovery-codes/revoke", zOk, { body: { password } });
   }
 
   sessions() {
@@ -131,10 +163,10 @@ export class AccountApi {
  * (a fresh challenge signed with it), so the new session is bound to this device. A removed device is refused
  * (device_revoked).
  */
-export async function signInWithDevice(base: string, device: DeviceRecord, password: string): Promise<AccountSessionGrant> {
+export async function signInWithDevice(base: string, device: DeviceRecord, password: string, email?: string): Promise<AccountSessionGrant> {
   if (!device.account) throw new Error("This browser isn't signed in with a Meldiq account.");
   const accounts = AccountApi.anonymous(base);
   const nonce = await accounts.challenge();
   const signature = await sign(device.keys.signing.privateKey, canonical.authProof("login", nonce, device.keys.signingPublic));
-  return accounts.login(device.account.email, password, device.deviceName, { deviceId: device.deviceId, nonce, signature });
+  return accounts.login(email ?? device.account.email, password, device.deviceName, { deviceId: device.deviceId, nonce, signature });
 }

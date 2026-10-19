@@ -1,191 +1,138 @@
-# Meldiq Web status (2026-10-19)
+# Meldiq Web status (2026-10-20)
 
-This document covers the current round and where to pick up again. The feature-by-feature inventory is
-`MELDIQ_WEB_FEATURE_PARITY.md`. Earlier rounds are in `ORBIT_WEB_STATUS.md`, whose evidence still stands.
+This document covers the current round and where to pick up again. The feature-by-feature inventory, with an ID, the
+Android source, backend, tests and verification level for every row, is `MELDIQ_WEB_FEATURE_PARITY.md`. Earlier rounds
+are summarised in §6 and detailed in `ORBIT_WEB_STATUS.md`.
 
-Live: **https://web.meldiq.app**. `web.griipbuddy.cloud` redirects there. The API is **0.5.0 + browser patches** at
-`msg.griipbuddy.cloud` (the same container serves both).
+Live: **https://web.meldiq.app** (`web.griipbuddy.cloud` redirects there). The API at `msg.griipbuddy.cloud` is **0.7.1**,
+deployed by another session, with the browser WebSocket patch.
 
-## 1. The sign-in / recovery-key failure: root cause and fix
+## 1. Built this round
 
-**Symptom (production, 09:00–09:03 UTC).** Signing in worked (`POST /v2/auth/login` 200). Setting the browser up then
-failed every time, whether with the recovery key or with the phone's approval:
+Every item is backed by the real server (API 0.7.1). No mock APIs and no browser-only stand-ins for server features.
 
-- `POST /v2/account/devices` returned **401**.
-- `POST /v2/auth/refresh` returned **401**.
+**Accounts**
+- **Account recovery with recovery codes** (lost email): start with the current email, a code and a new email, then
+  confirm with the emailed 6-digit code and a new password. The screen says plainly that this restores the account,
+  not the encryption keys.
+- **Recovery codes in Settings › Account:** see how many are left, make a new set (shown once, copy or download), revoke.
+  All behind the password.
+- **Signing in again after the email changed** on another device.
+- **First-run introduction**, shown once per browser and again from Settings › About.
 
-**Evidence.** The web host's access log and the API's request log, paths and status codes only (no bodies, tokens or
-codes). In the 80 seconds between the sign-in and the first failure, the **phone** made these calls:
+**Later**
+- **Saved items**, synced through the personal preferences document like the phone's.
+- **Reminders:** create, edit, snooze, complete, dismiss, repeat. They go off once in the browser.
+  - Contents are sealed with the account's reminder key, so the server can't read them; the phone can.
+  - A saved message with a time gets the same server reminder the phone would make.
+  - Browsers set up before reminders existed unlock them with the recovery key.
 
-1. Listed the account's sessions (`GET /v2/account/sessions`).
-2. Deleted three of them (`DELETE /v2/account/sessions/…`, 09:01:13–09:01:17).
+**Messages**
+- **Polls:** create, vote, change your vote, close (creator only).
+- **Stickers:** the shared catalogue.
+- **Music and video cards** for YouTube, YouTube Music, Spotify, SoundCloud and Vimeo links, with an on/off setting.
+  Nothing is fetched.
+- **Conversation security sheet** behind a padlock in the header.
+- **Search in a conversation.**
+- **Album grid**, with a viewer that steps through the photos.
+- **Photo quality** (Standard, HD, Original). Standard and HD re-encode the photo, so location data isn't sent.
 
-A browser that is still being set up appears in that list, because its session has no device yet.
+**Home**
+- **Drafts & sent.**
+- **Get started** checklist.
 
-**What the failures mean on the server.** Nothing else could explain them:
+**Workspaces**
+- **Custom roles:** catalogue, templates, editor and assignments.
+- **Audit log, ownership transfer, usage and limits.**
+- **Apps:** directory, install, request, turn off, uninstall.
+- **Incoming webhooks and workflows.**
+- **Live app updates** in channels.
 
-- The session was revoked, so the access token was refused.
-- The refresh token was refused for the same reason. It wasn't expiry: the access token lasts 15 minutes, and the
-  refresh token was only 80 seconds old.
+**Calls**
+- **Voice rooms:** create one, see who's in it from Home, and join without ringing anyone.
+- **Raise hand**, and the room managers' **mute, lower hand and remove**.
+- **The room's key** can be passed on by anyone connected, under the phone's rule.
 
-**Root cause (web).** `SetupCredentials` didn't recognise a refused refresh as the end of the session. Every later
-attempt (09:02:57, 09:03:26) reused the dead tokens and failed the same way, with no way forward short of reloading the
-page.
+**Fixed on the way**
+- **App updates in a channel never loaded.** The server's event ids are strings and the web expected numbers.
+  `live-roles-apps` caught it.
+- **Search snippets** now keep the match in view next to long links.
+- **The type check:** `npx tsc --noEmit -p .` checks nothing in this repository, because the root config only has
+  references. The real check is `npx tsc -b` (what `npm run build` runs). It was used for this round and is clean.
 
-**Ruled out.** Your recovery key was never sent and was not at fault:
+## 2. Production
 
-- The code isn't sent anywhere. Only a signature made with it is.
-- The certificate and proof formats match the server byte for byte (`griip-device-cert-v1`, `griip-auth-v1`).
-- Both setup paths work on production's exact server code with test accounts.
-
-**Fix** (`src/auth/setupCredentials.ts`, `src/ui/auth/AuthScreen.tsx`, commit `fdf4f11`, deployed 10:31 UTC):
-
-- A 401 on refresh ends the setup session. Nothing more is sent with it.
-- The screen returns to sign-in with the email kept and an explanation.
-- Nothing about keys, certificates or the server's checks changed, and no safeguard was relaxed.
-
-**Regression tests** (both fail on the previous code):
-
-- `test/live-accounts.test.ts`, "a setup session removed on another device…", against the real server.
-- `e2e/accounts.spec.ts`, which removes the browser's setup session through the session list mid-setup, then expects the
-  explanation and a successful set-up after signing in again.
-
-**Second blocker found on the way (backend).** Production ran **API 0.4.2**, the code before 0.5.0 (`fdb62a1~1`; its
-source is identical). 0.4.2 authenticates WebSockets only by the `Authorization` header, which browsers can't send. A
-browser socket was accepted and then closed with 4401, so the web app could never be "online". My earlier go-live check
-mistook that for first-frame sign-in. 0.4.2 also lacked the routes the web uses for synced navigation, workspace photos
-and workspace administration.
-
-## 2. Production changes made today (with your approval)
-
-| When (UTC) | Change | Rollback |
+| When (UTC) | Change | By |
 |---|---|---|
-| 10:23 | Backup `backups/pre-0.5.0-20261019T102306Z` with the deployment's `backup.sh`: integrity ok, schema 14, 31 users, 71 MB | — |
-| 10:24 | `server/` replaced with **0.5.0 + `server-patches/0001` + `0002`** (`internal-beta` f92e59a + patches, identical to the server every web test runs against). The old source is kept as `server.pre-0.5.0` and `compose.yaml.pre-0.5.0`; the image is tagged `griip-internal-messaging-api:0.5.0`, and 0.4.2 is kept | Put `image: …:0.4.2` back in `compose.yaml` and run `docker compose -p griip-internal-messaging -f compose.yaml up -d --no-deps api`; restore the backup if needed |
-| 10:25 | Only the `api` container recreated (`up -d --no-deps api`); healthy in seconds. LiveKit and ntfy untouched. Migration `015_workspace_prefs.sql` is additive (`orgs.photo_rev` column, `nav_preferences` table) | Additive: 0.4.2 ignores both |
-| 10:31 | Web release `0.1.0-fdf4f11` (the sign-in fix) | `rollback.sh` on the VPS |
-| next | Web release with this round's features (§3) | `rollback.sh` |
+| 2026-10-20 | API **0.7.1** with the WebSocket first-frame patch | Another session |
+| 2026-10-20 | Web release with this round (§1) | This session; see §2a |
 
-**Verified after the upgrade:**
+### 2a. Web deploy
 
-- **Versions:** `server-info` reports 0.5.0, with `workspace-admin`, `nav-preferences` and `org-photos`.
-- **Data:** intact (31 users, 39 devices, 6 workspaces, 17 conversations).
-- **Browser WebSocket sign-in:** an unauthenticated socket now waits about 10 s for its auth frame before closing with
-  4401. That is the first-frame sign-in at work.
-- **Web host:** `verify.sh https://web.meldiq.app` passes, including realtime 101.
-- **Phones:** reconnected and working (logins, messages 200, sockets 101, no 5xx). The newer app now uses
-  `/v1/me/preferences`, which 0.4.2 didn't have.
-- `WEB_ORIGINS` is not set; the same-origin setup doesn't need it.
+Filled in when the release is deployed (`deploy/install-release.sh`, then `verify.sh`).
 
-### 2a. API 0.6.0 deployed by another session (10:33–10:37 UTC), **without the browser patches**. Resolved at 11:01 UTC
-
-> **Resolved.** The integrations session:
->
-> - committed both patches to the server repository (`7dd93de` first-frame auth, `cb346e5` `WEB_ORIGINS`; `internal-beta`
->   now at `3bd40e6`)
-> - ran the server suite: 538 passed, with SQLite and with MongoDB
-> - took a backup (`backups/pre-0.6.0-webpatch-20261019T110115Z`)
-> - rebuilt only the API (the unpatched image is kept as `0.6.0-nopatch`)
->
-> Verified from this session at 11:04 UTC: a bare browser socket on `wss://web.meldiq.app/v1/ws` now waits 11.6 s before
-> closing with 4401, and `verify.sh` passes against 0.6.0. Later deploys from the repository keep the patches.
-
-
-Eight minutes after the 0.5.0 upgrade, API **0.6.0** was deployed:
-
-- **From:** another session's integrations branch, `worktree-orbit-integrations`, commit `dac7bfc`.
-- **What it adds:** custom roles, integrations, saved items, SMTP mail.
-- **Its rollback:** a backup `backups/pre-0.6.0-20261019T103347Z` and the image tag `0.5.0-rollback`.
-
-Its `server/` doesn't include `server-patches/0001` or `0002`. Checked at 10:58 UTC: a browser socket closes with 4401
-after about 1.7 s, without waiting for its auth frame. So in production, browsers can sign in and set up again, but they
-**can't go online** (no live messages) until patch 0001 is in the deployed server.
-
-The session "Orbit: custom roles, integrations marketplace, connectors" was asked to:
-
-1. Apply both patches to its branch.
-2. Commit them to the server repository.
-3. Include them in its next deploy.
-
-This session didn't touch the production API again, so as not to overwrite that deploy. **To check once it has
-landed:** a bare browser socket stays open about 10 s before closing with 4401.
-
-## 3. Built this round
-
-Each item has the tests named in `MELDIQ_WEB_FEATURE_PARITY.md`.
-
-**Conversations**
-- **Edit a channel or group:** rename it, set a channel's topic, and add people from Details. Offered only when the
-  server says you manage it.
-- **Block or unblock** someone from a direct message's details.
-- **Media and files:** a photos-and-videos grid and a file list, decrypted on demand, with SVG and other active types
-  offered as downloads only.
-
-**People and workspaces**
-- **New message** finds people by exact international phone number (only if they allow it) and by `@name:server` (when
-  the server federates).
-- **Synced workspace selection:** the browser adopts the account's selection when it opens and saves every switch, as
-  the phone does.
-- **Branches and teams:** rename them; add members and managers or leads; departments (add, rename, delete, group a
-  team).
-
-**Links and emoji**
-- **Link warnings:** the phone's `LinkRules.warning`, same checks and wording. A warned link asks before opening.
-- **Animated emoji:** the phone's 20 emoji and 5 motions. They show and send, with an on/off switch in Appearance, and
-  respect the system's reduced-motion setting.
-
-**Settings**
-- **Appearance:** message text size (Small, Default, Large).
-- **Storage:** what this browser keeps, and asking the browser to keep it permanently (this device's keys live there).
-
-**Fix**
-- The composer empties at once on send. Before, text typed while a message was going out joined it, or was wiped after
-  an upload.
-
-## 4. Still open
+## 3. Still open
 
 **Needs a decision or an action outside this repository**
-- **S3 CORS rule:** browsers can't upload or download files until it exists. It needs an AWS login (none on this Mac):
+- **S3 CORS rule:** browsers can't upload or download files through S3 until it exists. It needs an AWS login:
 
   ```bash
   aws s3api put-bucket-cors --bucket griipbuddy-orbit-media-sg --region ap-southeast-1 --cors-configuration '{"CORSRules":[{"AllowedOrigins":["https://web.meldiq.app"],"AllowedMethods":["GET","PUT"],"AllowedHeaders":["range","content-type","x-amz-checksum-sha256","x-amz-server-side-encryption","x-amz-server-side-encryption-aws-kms-key-id"],"MaxAgeSeconds":3000}]}'
   ```
 
-  First check that `get-bucket-cors` returns `NoSuchCORSConfiguration`; `put-bucket-cors` replaces the whole rule.
-- **Physical-phone test:** no row is "device"-verified. Real Android ↔ web for messages, files and calls hasn't been
-  done.
-- **Email texts:** the server still says "Orbit" in its emails (`server/src/accounts/mailer.ts`, a server change).
-- **Server ready, no web screens yet:** custom roles, integrations (connectors) and saved items now exist in API 0.6.0
-  (`dac7bfc`, in production). The web screens for them are the next parity work.
-- **Blocked:** Web Push (needs VAPID on the server) and sending link previews (needs a server-side fetcher).
-- **Missing:** several accounts per browser, and languages other than English.
+  First check that `get-bucket-cors` returns `NoSuchCORSConfiguration`, because `put-bucket-cors` replaces the whole
+  rule.
+- **Physical-phone test:** no row is device-verified. Real Android ↔ web for messages, polls, reminders, voice rooms,
+  files and calls hasn't been done; the reference client proves the protocol only.
+- **Connecting your account to an app from the web:** the server returns OAuth only to `meldiq://integrations`
+  (`INTEGRATIONS_APP_RETURN_URL`). The web needs a per-client return, such as `https://web.meldiq.app/#/workspace/apps`.
+  This is a server change and needs approval.
+- **Blocked on the server:** Web Push (VAPID), so there are no notifications without an open tab. Sending link previews
+  (needs a server-side fetcher).
+- **Not built:** translation (on the phone it's on-device ML), languages other than English, several accounts per
+  browser profile.
 
 **Known intermittent**
-- The Chromium "video call from the phone app" browser test sometimes stays at "Verifying encryption…".
-  - Today it failed in two runs (both times as the first call test after LiveKit started) and passed in the third, also
-    as the first, so "first call" isn't the cause on its own.
-  - It passes when repeated, and the other call tests pass in the same runs.
-  - No call code changed in this round. Cause not established.
+- The Chromium "video call from the phone app" browser test.
+  - It sometimes stays at "Verifying encryption…" when it's the first call after LiveKit starts.
+  - Today it failed once in the full run and passed when the call suite was run again (5/5).
+  - No call path it uses changed this round. Voice rooms add code only for voice-room calls.
 
-## 5. Tests run (2026-10-19)
+## 4. Tests run (2026-10-20)
 
-All against API 0.5.0 + patches, the build now in production.
+All against the server code of API 0.7.1 (`srv071`, the production build), started in-process or as a local server.
 
 | Suite | Result |
 |---|---|
-| Server suite (`server/`, `npx vitest run`) + typecheck | 409 passed, 10 skipped, 0 failed; typecheck clean |
-| Web typecheck, lint, format | clean |
-| Web unit + integration (`npx vitest run`, 26 files) | **243 passed** |
-| Browser, without the call suite (`npx playwright test`, 4 projects) | **19 passed** (accounts, cross-device, including the two new regression scenarios), 0 failed. The call suite was skipped in that run because the release folder has no native test peer |
-| Browser, call suite (`e2e/calls.spec.ts`, server folder with the native peer) | Run 1: 17 passed, 2 skipped (deliberate), 1 failed (the known intermittent above). Run 2, straight after: **18 passed, 2 skipped, 0 failed** |
-| Production | `verify.sh` all ✓; server-info 0.5.0; WebSocket first-frame sign-in; phone traffic healthy |
-| By hand (local) | Edit channel and topic, Details panel, Storage, Appearance, animated emoji sent and played |
+| Typecheck (`npx tsc -b`), lint, format | clean |
+| Unit (`npm test`, 24 files) | **201 passed** |
+| Unit + live (`npx vitest run`, 36 files) | **295 passed**, 0 failed |
+| New live suites | `live-roles-apps` (6), `live-voice-rooms` (5), `live-later` (5), `live-rich` (5), `live-accounts` recovery codes (2) |
+| Browser (`npx playwright test`, 4 projects, with LiveKit) | 36 passed, 3 skipped (deliberate), 1 failed (the known intermittent). Call suite run again: **5 passed** |
+| Production build | passes; no secrets in the bundle (scanned for LiveKit, integration, AWS and key material) |
+| By hand (Chromium, local 0.7.1 server) | Intro, Get started, Spotify card, security sheet, search with highlight and jump, voice room created and listed with its banner, usage page, two photos re-encoded and sent as an album with the viewer |
 
-## 6. Where to resume
+**Not checked by hand:** the Raise hand button and the People panel on the call screen. The local server had no media
+server. Their behaviour is covered by `live-voice-rooms`, which drives the same call manager.
 
-1. **Browser WebSocket patch on 0.6.0** (§2a): done 11:01 UTC. Next, check a real sign-in on web.meldiq.app goes online.
-2. **S3 CORS:** after the rule is applied, send a file from the browser on production and open it on the phone.
-3. **Physical-phone test:** `ORBIT_WEB_STATUS.md` §9, now against production.
-4. **Call intermittent:** run `e2e/calls.spec.ts` on a cold LiveKit several times, and capture `call-tracks-at-failure.json`
-   (it wasn't attached this time: check why the attach step didn't run).
-5. **Next parity items:** web screens for custom roles, integrations and saved items (API 0.6.0); several accounts per browser; languages; Web Push once the server has VAPID.
+## 5. Where to resume
+
+1. **Production check** after this deploy: sign in on web.meldiq.app and check that Later, the Roles, Apps and Usage
+   pages and voice rooms load against 0.7.1.
+2. **S3 CORS:** after the rule is applied, send a file from the browser in production and open it on the phone.
+3. **Physical-phone test:** `ORBIT_WEB_STATUS.md` §9, extended with polls, a reminder made on each side, and a voice room
+   with the phone and the browser in it.
+4. **OAuth return for the web** (server change, needs approval), then connecting accounts and sharing from apps.
+5. **Call intermittent:** run `e2e/calls.spec.ts` on a cold LiveKit several times and read `call-tracks-at-failure.json`.
+
+## 6. Earlier round (2026-10-19), in short
+
+- **Sign-in / recovery-key failure:** root cause and fix in `fdf4f11`.
+  - The phone ended the browser's setup session from its session list, and setup kept reusing the dead tokens.
+  - A 401 on refresh now ends setup and returns to sign-in, with an explanation.
+  - Regression tests: `live-accounts` and `e2e/accounts`.
+- **API upgrades:**
+  - 0.4.2 → 0.5.0 with the browser patches, with your approval. A backup was taken first.
+  - Then 0.6.0 and 0.7.1 were deployed by other sessions. The patches are now in the server repository.
+- **Parity round `3b3a580`:** conversation management, people lookup, structure admin, link warnings, animated emoji,
+  media gallery, storage.

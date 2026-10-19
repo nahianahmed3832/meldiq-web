@@ -34,6 +34,15 @@ const zLink = z.object({
   siteName: opt(z.string().max(200)),
 });
 
+/** A poll (docs/RICH_MESSAGES.md › Polls): bounded here, cleaned by sync/polls.ts like android PollRules.clean. */
+const zPoll = z.object({
+  question: z.string().max(1000),
+  options: z.array(z.object({ id: z.string().max(32), text: z.string().max(500) })).max(20),
+  multi: z.boolean().default(false),
+});
+/** A sticker reference into the shared catalogue (docs/STICKERS.md); the text carries the readable fallback. */
+const zSticker = z.object({ pack: z.string().max(64), id: z.string().max(64) });
+
 export const zPayload = z.object({
   type: z.string().max(40),
   text: opt(z.string().max(100_000)),
@@ -55,15 +64,21 @@ export const zPayload = z.object({
   animoji: opt(z.string().max(64)),
   forwarded: opt(z.boolean()),
   link: opt(zLink),
+  poll: opt(zPoll),
+  sticker: opt(zSticker),
+  /** A "vote" control: the chosen option ids of the poll in [target] (empty takes the vote back). */
+  choices: opt(z.array(z.string().max(32)).max(20)),
 });
 export type Payload = z.infer<typeof zPayload>;
+export type Poll = z.infer<typeof zPoll>;
+export type StickerRef = z.infer<typeof zSticker>;
 
 export type ContactCard = z.infer<typeof zContact>;
 export type SharedLocation = z.infer<typeof zLocation>;
 export type LinkPreview = z.infer<typeof zLink>;
 
 /** Payload types this client acts on; anything else (a newer app's) is acknowledged and ignored. */
-export const KNOWN_TYPES = ["text", "edit", "delete", "reaction", "pin", "read", "call_invite", "call_key_request"] as const;
+export const KNOWN_TYPES = ["text", "edit", "delete", "reaction", "pin", "vote", "poll_close", "read", "call_invite", "call_key_request"] as const;
 
 /** Parses decrypted JSON. Returns null for something that isn't a payload at all. */
 export function parsePayload(json: string): Payload | null {

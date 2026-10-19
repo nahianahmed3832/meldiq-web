@@ -5,8 +5,8 @@ import { fromB64, randomBytes, toB64, utf8 } from "../crypto/bytes";
  * CallKeyRequests, CallVerification).
  *
  * The caller makes a random 256-bit key per call and sends it inside a griip-envelope-v1 `call_invite`. A key is
- * accepted only from the call's creator, in the call's own conversation (T5.2), and the first accepted key for a call
- * wins. Keys live in this object only: never in IndexedDB, localStorage, URLs or logs, and they're gone when the tab
+ * accepted only from the call's creator (in a voice room, also from someone connected to it), in the call's own
+ * conversation (T5.2), and the first accepted key for a call wins. Keys live in this object only: never in IndexedDB, localStorage, URLs or logs, and they're gone when the tab
  * closes or the call ends.
  */
 
@@ -17,7 +17,7 @@ const MAX_CALLS = 64;
 export interface CallKey {
   callId: string;
   conversationId: string;
-  /** Who sent it: always the call's creator. */
+  /** Who sent it: the call's creator, or in a voice room someone connected to its call. */
   fromUserId: string;
   key: string;
 }
@@ -27,6 +27,9 @@ export interface CallRecord {
   conversationId: string;
   createdBy: string;
   state: string;
+  voiceRoom?: boolean;
+  /** Devices connected to the call's media right now. */
+  participants?: { userId: string }[];
 }
 
 export type KeyVerdict = "accepted" | "duplicate" | "unknown_call" | "wrong_conversation" | "not_creator" | "ended" | "malformed";
@@ -44,11 +47,20 @@ export function isWellFormedKey(key: string): boolean {
   }
 }
 
-/** T5.2: who may set a call's key. [call] is the server's record, null when the call doesn't exist for this account. */
+/** Someone the server lists as connected to a voice room's call (a room outlives whoever opened it). */
+export function inRoomCall(call: CallRecord, userId: string): boolean {
+  return call.voiceRoom === true && (call.participants ?? []).some((p) => p.userId === userId);
+}
+
+/**
+ * T5.2: who may set a call's key (android CallKeyVerifier). [call] is the server's record, null when the call doesn't
+ * exist for this account. The call's creator, in its own conversation; in a voice room also anyone connected to it, who
+ * holds the room's key already (docs/VOICE_ROOMS.md › Encryption).
+ */
 export function judgeKey(call: CallRecord | null, conversationId: string, senderUserId: string): Exclude<KeyVerdict, "accepted" | "duplicate" | "malformed"> | null {
   if (!call) return "unknown_call";
   if (call.conversationId !== conversationId) return "wrong_conversation";
-  if (call.createdBy !== senderUserId) return "not_creator";
+  if (call.createdBy !== senderUserId && !inRoomCall(call, senderUserId)) return "not_creator";
   if (call.state === "ENDED") return "ended";
   return null;
 }

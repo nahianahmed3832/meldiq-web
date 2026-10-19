@@ -22,5 +22,7 @@ export async function forwardMessage(engine: Engine, m: StoredMessage, toConvers
     }),
   );
   const attachments = files.length ? await uploadFiles(engine, toConversationId, files) : undefined;
-  return engine.sendText(toConversationId, m.text, { attachments, rich: m.rich, forwarded: true });
+  // A forwarded poll starts fresh: its votes and closing belong to the conversation it came from.
+  const rich = m.rich?.poll ? { ...m.rich, votes: undefined, pollClosed: undefined } : m.rich;
+  return engine.sendText(toConversationId, m.text, { attachments, rich, forwarded: true });
 }

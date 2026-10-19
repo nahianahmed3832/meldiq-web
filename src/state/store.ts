@@ -1,3 +1,4 @@
+import { NO_REMINDERS, type RemindersState } from "../sync/reminders";
 import type { Call, Conversation, Org, ServerInfo } from "../api/schemas";
 import { type CallUiState, idleCall } from "../call/types";
 import type { CallLogItem, ConversationLocal, PinnedIdentity, StoredMessage } from "../model/types";
@@ -89,6 +90,10 @@ export interface AppState {
   threadRev: number;
   /** Recent calls on this browser, newest first (Activity › Missed calls). */
   callLog: CallLogItem[];
+  /** Reminders kept by the server (Later › Reminders). */
+  reminders: RemindersState;
+  /** Bumped per channel when an app posts an update there (server `integration.event`): its App updates bar reloads. */
+  appEventsRev: Record<string, number>;
 }
 
 export const initialState: AppState = {
@@ -110,6 +115,8 @@ export const initialState: AppState = {
   nav: {},
   threadRev: 0,
   callLog: [],
+  reminders: NO_REMINDERS,
+  appEventsRev: {},
   history: { status: "idle", restored: 0, unreadable: 0, error: null },
   notices: [],
 };

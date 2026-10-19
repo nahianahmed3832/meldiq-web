@@ -12,6 +12,7 @@ import { NewMessageDialog } from "../dialogs/NewMessageDialog";
 import { CreateWorkspaceDialog, JoinWorkspaceDialog } from "../dialogs/WorkspaceDialogs";
 import { SearchDialog } from "../dialogs/SearchDialog";
 import { ActivityView } from "../views/ActivityView";
+import { LaterView } from "../later/LaterView";
 import { HomeView } from "../views/HomeView";
 import { Notices } from "./Notices";
 import { Rail } from "./Rail";
@@ -132,6 +133,7 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
   if (settings) main = <Suspense fallback={<section className="main" aria-busy="true" />}>{main}</Suspense>;
   else if (route.conversationId && known) main = <ConversationView key={route.conversationId} id={route.conversationId} route={route} onDialog={ctx.open} />;
   else if (section === "activity") main = <ActivityView orgId={orgId} />;
+  else if (section === "later") main = <LaterView />;
   else main = <HomeView orgId={orgId} section={section} onDialog={ctx.open} />;
 
   return (

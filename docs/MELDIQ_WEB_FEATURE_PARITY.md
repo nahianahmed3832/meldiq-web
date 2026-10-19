@@ -1,150 +1,194 @@
 # Meldiq Web ↔ Android feature parity
 
-Updated 2026-10-19. It supersedes `ORBIT_WEB_PARITY.md`, whose detailed notes still apply where this file doesn't repeat
-them.
+Updated 2026-10-20. It replaces the 2026-10-19 version of this file; `ORBIT_WEB_PARITY.md` still holds older detail.
 
 ## Sources
 
-- **Android app:** `internal-beta` at `f92e59a` (app commit `0cded9c`, versionName 0.2.1-beta) in the server repository
-  (github.com/nahianahmed3832/griip-mesage). Its screens, data and repository code were read.
-- **Server:** API 0.5.0 plus `server-patches/0001` and `0002`. This is the exact build running in production since
-  2026-10-19 10:25 UTC; the server's own suite gave 409 passed and 10 skipped.
-- **Unchanged since the last audit:** neither the Android app nor the server gained features since `ORBIT_WEB_PARITY.md`
-  was written. The newer `0cded9c` changed the app only (workspace settings, personal sections, thread replies), and the
-  web already had all three.
+- **Android app:** `internal-beta` at `35aa4b5` in the server repository (github.com/nahianahmed3832/griip-mesage). Every
+  screen under `android/app/src/main/java/com/meldiq/android/ui` and the rules and repositories behind them were read
+  (read-only `git show`; the shared checkout wasn't touched).
+- **Server:** API **0.7.1**, the build in production since 2026-10-20 (deployed by another session, with the WebSocket
+  first-frame patch). The live tests below run against that server's own code, started in-process.
+- The server's `docs/FEATURE_INVENTORY.md` is a 2026-10-16 audit and predates most of these screens, so this inventory
+  was built from the app itself.
 
-## Status
+## How to read the tables
+
+**Android** says what the phone has: **Implemented**, **Partial** (the phone's own limit is named), or **Planned** (shown
+as "coming soon", nothing built).
+
+**Web** says what the browser has:
 
 | Status | Meaning |
 |---|---|
-| **Done** | Built, and tested against a real server |
-| **Built** | Implemented, with the limits of its testing stated |
+| **Done** | Built, and tested against the real server |
+| **Built** | Implemented; the limits of its testing are stated |
 | **Partial** | The named part is missing |
-| **Missing** | Not in the browser |
-| **Blocked** | Needs something outside this repository, which is named |
-| **Phone only** | Deliberately not offered in a browser, with the reason |
+| **Unsupported on web** | Deliberately not offered in a browser, with the reason |
+| **Backend blocked** | Needs a server change, which is named |
+| **Missing** | Not built |
 
-## Verification levels
+**Verified** is the strongest evidence for the row:
 
 | Level | Meaning |
 |---|---|
-| **live** | Vitest against the real server, with the server's reference client playing the phone, byte-compatible with Android |
+| **live** | Vitest against the real server, with the server's reference client playing the phone (byte-compatible with Android) |
 | **browser** | Playwright in Chromium, Firefox, WebKit and phone-width Chromium |
-| **unit** | Unit test |
+| **unit** | Unit test, often the phone's own cases |
 | **by hand** | Looked at in the running app |
-| **device** | Against the real Android app. **No row has this level yet**; the physical-phone test is still pending |
+| **device** | Against the real Android app on a phone. **No row has this level**: the physical-phone test is still pending |
 
-"New" marks what this round added or fixed.
+Two browser tabs or the reference client are not proof of interoperability with a physical phone; they prove the
+protocol, which the phone shares.
 
-## 1. Accounts, devices and sessions
+"**New**" marks what the 2026-10-20 round added.
 
-| Feature | Android | Backend | Web before | Web now / missing | Dependencies, security | Status | Verified |
+## ACC · Accounts, devices and sessions
+
+| ID | Feature | Android | Backend | Web | Gaps, security | Tests | Verified |
 |---|---|---|---|---|---|---|---|
-| Sign up, verify email, sign in, refresh | `StartScreens`, `AccountRepository` | `/v2/auth/*` | Done | — | scrypt, hashed codes, rotating refresh tokens | Done | live, browser |
-| Set up this browser with the recovery key | `DeviceSetupScreens`, `RecoveryCode` | `POST /v2/account/devices` | Done | **New:** a setup session ended elsewhere (e.g. removed in the phone's session list) now returns to sign-in with an explanation; before, every attempt failed with 401 (`MELDIQ_WEB_STATUS.md` §1) | Key typed locally, never sent; another account's key refused before sending | Done | live, browser (regression tests fail on the old code) |
-| Set up by approving on the phone | `ProfileScreens` › Approve new device | `/v1/pairing*`, then `/v2/account/devices` | Done | Same fix as above | Seed sealed with HPKE to this browser | Done | live |
-| Returning browser: sign in again with device proof | `AccountRepository` | `/v2/auth/login` + `device` | Done | — | Proof signed by the device key | Done | live |
-| Forgot / reset password | `StartScreens` | `/v2/auth/password/*` | Built | — | Reset revokes all sessions | Built | browser (request step) |
-| Change password, rename account | `AccountSettings` | `/v2/account/password`, `PATCH /v2/account` | Built | — | Other sessions revoked | Built | by hand |
-| Sessions list, end a session | `AccountSettings` | `/v2/account/sessions` | Done | — | — | Done | live |
-| Move a pre-2.0 account | `LegacyMoveScreens` | `/v2/migration/legacy/*` | Done | — | Identity-key signature, single-use ticket | Done | live |
-| Devices list, remove a device; a removed browser signs out | `ProfileScreens` | `/v1/devices`, `devices.changed` | Done | — | — | Done | live, browser |
-| Start fresh (new identity) | `DeviceSetupScreens` | `/v2/account/identity/reset` | Phone only | — | Destroys history on every device | Phone only | — |
-| Several accounts in one browser | Settings › Accounts | — | Missing | Missing | Separate key stores per account | Missing (use another browser profile) | — |
-| Legacy username sign-up, server picker | `SignUpScreen`, `ServersScreen` | `/v1/auth/register` | Phone only | — | Being retired; the web uses its deployment's server | Phone only | — |
+| ACC-01 | Sign up, verify email, sign in, refresh | Implemented · `StartScreens`, `AccountRepository` | `/v2/auth/*` | Done | scrypt, hashed codes, rotating refresh tokens | `live-accounts`, `e2e/accounts` | live, browser |
+| ACC-02 | Set up this browser with the recovery key | Implemented · `DeviceSetupScreens` | `POST /v2/account/devices` | Done | Key checked locally, never sent; a setup ended elsewhere returns to sign-in | `live-accounts`, `e2e/accounts` | live, browser |
+| ACC-03 | Set up by approving on the phone | Implemented · `ProfileScreens` › Approve | `/v1/pairing*` | Done | Seed sealed with HPKE to this browser | `live` | live |
+| ACC-04 | Returning browser signs in with device proof | Implemented · `AccountRepository` | `/v2/auth/login` + `device` | Done | — | `live-accounts` | live |
+| ACC-05 | Forgot / reset password | Implemented · `StartScreens` | `/v2/auth/password/*` | Built | Reset revokes all sessions | `e2e/accounts` (request step) | browser |
+| ACC-06 | **New:** Account recovery with a recovery code (lost email) | Implemented · `AccountRecoveryScreens` | `/v2/auth/recover/start`, `/complete` (`recovery-codes`) | Done | Restores account access only, never the encryption keys (the page says so). Wrong or used codes refused; rate limits are the server's | `live-accounts` › recovery codes (synthetic codes) | live |
+| ACC-07 | **New:** Recovery codes: count, make a new set, revoke | Implemented · `RecoveryCodesSettings` | `/v2/account/recovery-codes` | Done | Behind the password; codes shown once (copy, download), never logged | `live-accounts` | live |
+| ACC-08 | **New:** Sign in again after the account's email changed | Implemented | `/v2/auth/login` | Done | The new email is saved to this browser's record | `live-accounts` | live |
+| ACC-09 | Change password, rename account | Implemented · `AccountSettings` | `/v2/account/*` | Built | Other sessions revoked | — | by hand |
+| ACC-10 | Sessions list, end a session | Implemented · `AccountSettings` | `/v2/account/sessions` | Done | — | `live-accounts` | live |
+| ACC-11 | Move a pre-2.0 account | Implemented · `LegacyMoveScreens` | `/v2/migration/legacy/*` | Done | Identity-key signature, single-use ticket | `live-accounts` | live |
+| ACC-12 | Devices, remove a device; a removed browser signs out | Implemented · `ProfileScreens` | `/v1/devices`, `devices.changed` | Done | — | `live`, `e2e/cross-device` | live, browser |
+| ACC-13 | Start fresh (new identity) | Implemented · `DeviceSetupScreens` | `/v2/account/identity/reset` | Unsupported on web | Destroys history on every device; kept to the phone | — | — |
+| ACC-14 | Several accounts or servers in one app | Implemented · `ServersScreen` | — | Unsupported on web | One account per browser profile: keys live in that profile's storage. Use another profile | — | — |
+| ACC-15 | Legacy username sign-up | Implemented · `SignUpScreen` | `/v1/auth/register` | Unsupported on web | Being retired | — | — |
+| ACC-16 | **New:** First-run introduction, replayable from About | Implemented · `IntroScreen` | — | Built | Shown once per browser (local convenience); nothing asks for permissions | — | by hand (Chromium: five pages, Coming soon, Get started) |
 
-## 2. Workspaces and administration
+## WS · Workspaces and administration
 
-| Feature | Android | Backend | Web before | Web now / missing | Dependencies, security | Status | Verified |
+| ID | Feature | Android | Backend | Web | Gaps, security | Tests | Verified |
 |---|---|---|---|---|---|---|---|
-| Switch workspace; selection follows the account | `WorkspaceSwitcher` | `GET /v2/workspaces`, `PUT /v2/account/preferences` | Partial | **New:** adopted when the app opens, saved on every switch (account browsers) | Switching grants nothing | Done | live |
-| Create, join (code), leave, delete a workspace | `NewActions`, `JoinWorkspace`, `WorkspaceSettings` | `/v1/orgs*`, `/v1/invites/*` | Done | QR scanning: phone only (codes can be typed) | Owner-only delete after typing the name | Done | live |
-| Workspace name, description, photo | `WorkspaceSettings` | `PATCH /v1/orgs/:id`, `/photo` | Done | — | Owners and admins | Done | live |
-| Members, roles, titles, removal | `RoleViews`, `ManageSheets` | `/v1/orgs/:id/members*` | Done | — | Offered actions mirror `roles.ts` | Done | live |
-| Invitations | `ManageSheets` | `/v1/orgs/:id/invites` | Done | — | — | Done | live |
-| Branches and teams: create, archive, restore | `ScopeAdminViews` | `/v1/orgs/:id/branches`, `/teams` | Done | — | — | Done | live |
-| Branches and teams: rename, members, managers and leads | `ScopeAdminViews` | `PATCH /v1/branches/:id`, `/v1/teams/:id`, `…/members/:userId` | Missing | **New:** Workspace › Branches & teams › Manage | `canManageBranch`, `canManageTeam`; refusals shown | Done | live (a non-manager is refused with 403) |
-| Departments: add, rename, delete, put a team in one | `ScopeAdminViews` | `/v1/branches/:id/departments`, `/v1/departments/:id`, `PATCH /v1/teams/:id` | Missing | **New:** in the branch's and team's Manage dialog | Branch managers; grants no access | Done | live |
-| Channels: create, access mode, archive, restore, browse, join, leave | `ChannelDetailsSections` | `/v1/orgs/:id/channels`, `PATCH /v1/conversations/:id` | Done | — | Scope managers change the mode | Done | live |
-| Channels and groups: rename, topic, add people | `ChannelDetailsSections`, `ManageSheets` | `PATCH /v1/conversations/:id`, `PUT …/members/:userId` | Partial | **New:** Details › Edit and Add people (only when `canManage`) | New members get messages from then on (E2EE) | Done | live (a non-admin is refused; the new member receives a message sent after) |
-| Workspace change log | `ActivityFeedScreen` | `GET /v1/orgs/:id/activity` | Done | — | — | Done | live |
-| Custom roles, permission catalogue | In progress in another session | **API 0.6.0** (`dac7bfc`, in production since 10:37 UTC) | Missing | Web screens not built yet | Server-side permission checks | Missing (server ready) | — |
-| User groups, group mentions | Not built in the product | — | — | — | Needs a protocol change | Not in the product | — |
+| WS-01 | Switch workspace; selection follows the account | Implemented · `WorkspaceSwitcher` | `/v2/workspaces`, `/v2/account/preferences` | Done | — | `live-nav` | live |
+| WS-02 | Create, join with a code, leave, delete | Implemented · `NewActions`, `JoinWorkspace` | `/v1/orgs*`, `/v1/invites/*` | Done | QR scanning is phone-only (codes can be typed) | `live-workspace` | live |
+| WS-03 | Name, description, photo | Implemented · `WorkspaceSettings` | `PATCH /v1/orgs/:id`, `/photo` | Done | — | `live-workspace` | live |
+| WS-04 | Members, base roles, titles, removal | Implemented · `RoleViews` | `/v1/orgs/:id/members*` | Done | Every refusal comes from the server | `live-workspace` | live |
+| WS-05 | Invitations | Implemented · `ManageSheets` | `/v1/orgs/:id/invites` | Done | — | `live-workspace` | live |
+| WS-06 | Branches, teams, departments | Implemented · `ScopeAdminViews` | `/v1/branches`, `/v1/teams`, `/v1/departments` | Done | — | `live-workspace` | live |
+| WS-07 | Channels: create, access, archive, browse, join, leave, rename, add people | Implemented · `ChannelDetailsSections` | `/v1/orgs/:id/channels`, `PATCH /v1/conversations/:id` | Done | — | `live-workspace`, `live-manage` | live |
+| WS-08 | **New:** Custom roles: catalogue, templates, create, edit on revision, archive, delete, assign | Implemented · `RolesScreen`, `RoleEditorSheet` | `/v1/orgs/:id/roles`, `/v1/roles/:id*` (`custom-roles`) | Done | Anti-escalation is the server's: the editor offers only what you hold; a stale revision is refused (409 `stale`); members get 403 | `live-roles-apps` | live |
+| WS-09 | **New:** Audit log, filtered, paged | Implemented · `AuditScreen` | `/v1/orgs/:id/audit` | Done | `audit.view` only; never message content | `live-roles-apps` | live |
+| WS-10 | **New:** Transfer ownership | Implemented · `TransferOwnershipSheet` | `/v1/orgs/:id/ownership` | Done | Exact workspace name; the previous owner becomes an admin | `live-roles-apps` | live |
+| WS-11 | **New:** Usage and limits | Implemented · `UsageScreen` | `/v1/orgs/:id/usage`, `/plan` | Done | `workspace.usage.view`; no plan exists, so none is offered | `live-roles-apps` | live, by hand |
+| WS-12 | Workspace change log (Activity) | Implemented · `ActivityFeedScreen` | `/v1/orgs/:id/activity` | Done | — | `live` | live |
 
-## 3. Home, people and navigation
+## HOME · Home, people and navigation
 
-| Feature | Android | Backend | Web before | Web now / missing | Status | Verified |
-|---|---|---|---|---|---|---|
-| Home, DMs, Activity; unread and mention counts; drafts | `WorkspaceHomeScreen` | read receipts | Done | — | Done | live, browser |
-| Starred, sections, collapsed, notification levels (synced) | `NavPreferences` | `/v1/me/preferences/:workspaceId`, `prefs.updated` | Done | — | Done | live |
-| Archive and mark read/unread (this device) | `ChatActionsSheet` | — | Done | — | Done | live |
-| Find people by name or @username | `ContactsScreen` | `/v1/users/search` | Done | — | Done | live |
-| Find someone by phone number | `ContactsScreen` | `/v1/users/by-phone` (their privacy setting) | Partial (no screen) | **New:** New message accepts `+country number`; a local number gets a hint | Done | live (not found until they allow it), unit |
-| Find someone on another server (`@name:server`) | `FEDERATION_PROTOCOL.md` | `/v1/federation/resolve` | Missing | **New:** New message accepts `@name:server` when the server federates | Built (**production doesn't federate**: `federation: null`) | unit |
-| Search conversations, people, messages (local, E2EE) | `SearchScreen` | `/v1/users/search` | Done | — | Done | live, by hand |
-| Activity: mentions, missed calls, thread replies, change log | `ActivityFeedScreen` | `/v1/orgs/:id/activity` | Done | — | Done | live |
+| ID | Feature | Android | Backend | Web | Gaps, security | Tests | Verified |
+|---|---|---|---|---|---|---|---|
+| HOME-01 | Home, DMs, Activity; unread and mention counts | Implemented · `WorkspaceHomeScreen` | — | Done | — | `live`, `e2e` | live, browser |
+| HOME-02 | Starred, custom sections, collapsed, notification levels (synced) | Implemented · `HomeCustomSections` | `/v1/me/preferences/:id` | Done | — | `live-nav` | live |
+| HOME-03 | Archive, mark read/unread (this device) | Implemented · `ChatActionsSheet` | — | Done | — | `live-nav` | live |
+| HOME-04 | **New:** Drafts & sent | Implemented · Home › Drafts & sent | — | Done | This browser's drafts and sent messages only | `live-rich` | live |
+| HOME-05 | **New:** Get started checklist | Implemented · `HomeStart` | — | Built | Checked off from real state; hidden per browser | `ui-logic` (the phone's rules) | unit, by hand |
+| HOME-06 | Find people: name, @username, phone number, `@name:server` | Implemented · `ContactsScreen` | `/v1/users/*`, `/v1/federation/resolve` | Done (federation Built) | Production has federation off | `lookup`, `live` | live, unit |
+| HOME-07 | Search: conversations, people, messages | Implemented · `SearchScreen` | `/v1/users/search` | Done | Message text is searched locally (E2EE) | `live`, by hand | live |
+| HOME-08 | **New:** Search in one conversation | Implemented · `ConversationViewModel` search | — | Done | Local only; a result loads older pages to show it in place | `live-rich` | live, by hand (match highlighted, jump focuses the message) |
+| HOME-09 | Activity: mentions, missed calls, thread replies, change log | Implemented · `ActivityFeedScreen` | — | Done | — | `live`, `threads` | live |
 
-## 4. Messaging
+## MSG · Messaging
 
-| Feature | Android | Protocol | Web before | Web now / missing | Status | Verified |
-|---|---|---|---|---|---|---|
-| Send, receive, history, paging; replies, threads; edit, delete; reactions; pins; mentions, `@everyone` | `ConversationScreen`, `MessageBubble` | envelopes, controls | Done | **New:** the composer empties at once, so typing straight on starts a new message (before, it joined the one still sending) | Done | live, browser |
-| Read and delivered receipts, typing, presence | `ConversationViewModel` | `receipt`, `typing`, `presence` | Done | — | Done | live |
-| Link warnings (look-alike, hidden destination, IP, http, long chains) | `LinkRules.warning`, `LinkOpener` | — | Missing | **New:** the same checks and words; a warned link asks first | Done | unit (the phone's cases) |
-| Sending link previews | `LinkPreview` | payload `link` | Missing | Previews received from the phone show | Blocked: browsers can't fetch other sites' pages; would need a server-side fetcher | — |
-| Contact cards, locations | `RichViews` | payload `contact`, `location` | Done | — | Done | live |
-| Animated emoji: show, send, on/off | `RichViews` Animoji, Settings › Chats | payload `animoji` | Missing (shown as text) | **New:** same 20 emoji and motions; Appearance › Animated emoji; respects reduced motion | Done | live (both ways), by hand |
-| Forwarding (files re-encrypted) | message menu | `forwarded` | Done | — | Done | live |
-| Voice messages | `VoiceViews` | attachment `voice` | Done | — | Done (recording by hand only) | live (wire format) |
-| Identity change hold and review; safety numbers | `ConversationInfoScreen` | key-change events | Done | — | Done | live |
-| Block someone | `PrivacyScreen` › Blocked | `/v1/blocks` | Partial (unblock only) | **New:** Details of a DM › Block / Unblock | Done | live (blocked messages don't arrive; others do) |
-| Conversation details: about, members, pins, notifications, leave | `ConversationInfoScreen` | | Done | Rename, topic and add people above | Done | live |
-| Message text size | Settings › Chats | — | Missing | **New:** Appearance › Text size (messages and the message box) | Done | unit, by hand |
-| Chat wallpaper | Settings › Chats | — | Phone only | — | Phone only (the web keeps the calm design-system surface) | — |
+| ID | Feature | Android | Protocol | Web | Gaps, security | Tests | Verified |
+|---|---|---|---|---|---|---|---|
+| MSG-01 | Send, receive, history, replies, threads, edit, delete, reactions, pins, mentions | Implemented · `ConversationScreen` | envelopes, controls | Done | — | `live`, `live-actions`, `e2e` | live, browser |
+| MSG-02 | Receipts, typing, presence | Implemented | `receipt`, `typing`, `presence` | Done | — | `live` | live |
+| MSG-03 | **New:** Polls: create, vote, change vote, close (creator only), results | Implemented · `Polls` | payload `poll`; controls `vote`, `poll_close` | Done | Limits as `PollRules`; a non-creator's close and votes on a closed poll are ignored; forwarded polls drop votes | `polls-stickers`, `live-rich` | live (both ways) |
+| MSG-04 | **New:** Stickers: picker, send, receive | Implemented · `Stickers` | payload `sticker` | Done | The shared catalogue file, unchanged; a malformed reference falls back to text | `polls-stickers`, `live-rich` | live (both ways) |
+| MSG-05 | Animated emoji | Implemented · `RichViews` | payload `animoji` | Done | Respects reduced motion | `live-extras` | live |
+| MSG-06 | Link warnings | Implemented · `LinkRules`, `LinkOpener` | — | Done | — | `link-rules` | unit |
+| MSG-07 | **New:** Music and video cards (YouTube, Spotify, SoundCloud, Vimeo) with an on/off setting | Implemented · `MediaCards`, `MediaLinks` | — | Done | Recognised from the address only; nothing fetched, no embedded player | `media-links` (the phone's rules) | unit, by hand |
+| MSG-08 | Sending link previews | Implemented · `LinkPreview` | payload `link` | Backend blocked | Received previews show. Making one needs a server-side fetcher (a browser can't read other sites) | — | — |
+| MSG-09 | Contact cards, locations | Implemented · `RichViews` | `contact`, `location` | Done | — | `live` | live |
+| MSG-10 | Forwarding | Implemented | `forwarded` | Done | Files re-encrypted | `live` | live |
+| MSG-11 | Voice messages | Implemented · `VoiceViews` | attachment `voice` | Done | Recording checked by hand | `live` | live |
+| MSG-12 | Identity change hold, review, safety numbers | Implemented | — | Done | — | `live` | live |
+| MSG-13 | **New:** Conversation security sheet (padlock) | Implemented · `ConversationSecuritySheet` | — | Done | Only facts that apply; the browser always encrypts call media | `conversation-security` (the phone's rules) | unit, by hand |
+| MSG-14 | Block / unblock | Implemented · `PrivacyScreen` | `/v1/blocks` | Done | — | `live-manage` | live |
+| MSG-15 | Message text size | Implemented | — | Done | — | unit | unit, by hand |
+| MSG-16 | Chat wallpaper | Implemented | — | Unsupported on web | The web keeps the design-system surface | — | — |
+| MSG-17 | Translation of messages | Partial · `MessageBubble` translation | on-device | Missing | On the phone it's on-device ML; a browser would need a model or a service that sees plaintext | — | — |
+| MSG-18 | Swipe to reply | Implemented · `SwipeToReply` | — | Unsupported on web | Reply is in the message menu | — | — |
 
-## 5. Files and media
+## LATER · Saved items and reminders
 
-| Feature | Android | Backend | Web before | Web now / missing | Status | Verified |
-|---|---|---|---|---|---|---|
-| Encrypted files, images, video; chunked 1 GB; direct S3 parts | `AttachPanel`, `AttachmentRepository` | `/v1/attachments*`, `/uploads*` | Done / Built | — | Done, but **production needs the S3 CORS rule** for browsers (`MELDIQ_WEB_STATUS.md` §4) | live (30 MB through the API; S3 parts against a simulated store) |
-| Media and files of a conversation | `MediaGallery` | — | Partial (8 recent files) | **New:** Details › Media and files: photos and videos grid, files list, decrypted on demand | Done | unit, by hand |
-| Storage | `StorageScreen` | — | Missing | **New:** Settings › Storage: what this browser keeps, and asking it to keep the data (the device keys live there) | Done | by hand |
-| Camera capture, QR scanning | camera, `InviteScanner` | — | Phone only | — | Phone only | — |
+| ID | Feature | Android | Backend | Web | Gaps, security | Tests | Verified |
+|---|---|---|---|---|---|---|---|
+| LATER-01 | **New:** Save for later, mark done, remove; synced | Implemented · `LaterScreen` | personal preferences document (`saved-items`) | Done | The list is only changed on purpose; other preference writes keep it | `live-later` | live (both ways) |
+| LATER-02 | **New:** Reminders: create, edit, snooze, complete, dismiss, repeat | Implemented · `RemindersScreen`, `ReminderEditor` | `/v1/reminders*` (`reminders`) | Done | Sealed with the account's reminder key (AES-256-GCM, HKDF of the identity seed): the server can't read them; the phone can | `live-later`, `reminder-rules` (node-crypto interop) | live |
+| LATER-03 | **New:** A saved message with a time gets the phone's server reminder | Implemented · `syncLater` | `/v1/reminders` | Done | Same id derivation as the phone | `live-later` | live |
+| LATER-04 | **New:** Reminders go off in the browser, once | Implemented | `reminder.due` | Done | System notification only with the tab open (no Web Push) | `live-later` | live |
+| LATER-05 | **New:** Browsers set up before reminders: unlock with the recovery key | — (phones derive at setup) | — | Done | A wrong account's key is refused | `live-later` | live |
 
-## 6. Calls
+## FILE · Files and media
 
-| Feature | Android | Backend | Web | Status | Verified |
-|---|---|---|---|---|---|
-| 1:1 voice and video, ring, answer, decline, busy, hang up; media E2EE and verification code | `CallManager`, `CallOverlay` | `/v1/calls*`, LiveKit | Built | Built | browser (LiveKit's native SDK as the far side; media decrypted both ways). **Not device-verified** |
-| Group calls, screen sharing, device choice, minimised call | `CallTiles`, `CallControls` | LiveKit | Built | Built | browser, with simulated media |
-| Call history, missed calls | `CallsScreen` | `/v1/conversations/:id/calls` | Done | Done | live |
+| ID | Feature | Android | Backend | Web | Gaps, security | Tests | Verified |
+|---|---|---|---|---|---|---|---|
+| FILE-01 | Encrypted files, images, video; up to 10 per message; chunked up to 1 GB | Implemented · `AttachPanel`, `BatchComposer` | `/v1/attachments*`, `/uploads*` | Done | **Production needs the S3 CORS rule** for direct browser parts | `live-large`, `large-files` | live |
+| FILE-02 | **New:** Album grid for several photos, viewer steps through them | Implemented · `AlbumGrid` | — | Done | — | `media-links` › albums (the phone's layout) | unit, by hand (two photos, viewer steps 1 of 2 → 2 of 2) |
+| FILE-03 | **New:** Photo quality Standard / HD / Original | Implemented · `BatchComposer` | — | Built | Standard and HD re-encode upright, so metadata (location) isn't sent; GIFs never re-encoded; Original says it keeps details. Video compression: phone only | `photo-quality` | unit, by hand (Chromium: 3000×2000 → 1600×1067 and 2400×3200 → 1200×1600, sent as .jpg) |
+| FILE-04 | Media and files of a conversation | Implemented · `MediaGallery` | — | Done | — | `gallery` | unit, by hand |
+| FILE-05 | Storage | Implemented · `StorageScreen` | — | Done | — | — | by hand |
+| FILE-06 | Camera capture, QR scanning, share from other apps | Implemented | — | Unsupported on web | Files can be picked, pasted or dropped | — | — |
 
-## 7. Profile, privacy, notifications, settings
+## CALL · Calls and voice rooms
 
-| Feature | Android | Backend | Web | Status | Verified |
-|---|---|---|---|---|---|
-| Profile fields, photo, privacy (who sees and finds you) | `EditProfileScreen`, `PrivacyScreen` | `/v1/users/me*` | Done | Done | live |
-| Notifications while a tab is open; synced levels | settings | — | Done | Done | by hand |
-| Background notifications (no tab open) | UnifiedPush | `/v1/devices/current/push` | Missing | Blocked: needs Web Push (VAPID) on the server | — |
-| Appearance: theme, colour plate, text size, animated emoji | Settings | — | Done | Done | unit, by hand |
-| Languages (Simplified Chinese, Bengali) | `AppLanguage` | — | Missing | Missing: English only | — |
-| Encrypted backup and restore | `BACKUP.md` | — | Phone only | Phone only (the browser restores server history) | — |
+| ID | Feature | Android | Backend | Web | Gaps, security | Tests | Verified |
+|---|---|---|---|---|---|---|---|
+| CALL-01 | 1:1 and group calls, ring, answer, decline, busy; E2EE media and verification code | Implemented · `CallManager`, `CallOverlay` | `/v1/calls*`, LiveKit | Built | No unencrypted fallback | `call-live`, `call-keys`, `e2e/calls` | live, browser (LiveKit native SDK as far side). **Not device-verified** |
+| CALL-02 | Screen sharing, device choice, minimised call | Implemented | LiveKit | Built | — | `e2e/calls` | browser |
+| CALL-03 | Call history, missed calls | Implemented · `CallsScreen` | `/v1/conversations/:id/calls` | Done | — | `live`, `messaging-extras` | live |
+| CALL-04 | **New:** Voice rooms: create, Home › Voice rooms with who's in each, banner, Join; nobody rings | Implemented · `VoiceRooms` | `voice` channels, `/v1/calls` (`voice-rooms`) | Done | Not an announcement channel; no call entries in the room's history | `live-voice-rooms` | live, by hand (create, Voice rooms list, banner; Join needs a media server, so not clicked by hand) |
+| CALL-05 | **New:** Raise hand, queue in order | Implemented · `CallOverlay` | `/v1/calls/:id/hand` | Done | — | `live-voice-rooms` | live |
+| CALL-06 | **New:** Moderation: mute microphone, lower hand, remove (room managers) | Implemented · `PeoplePanel` | `/v1/calls/:id/moderate` | Done | Server checks `canManageConversation`; only the person can unmute | `live-voice-rooms` (stand-in media server) | live |
+| CALL-07 | **New:** A room's key passed on by anyone connected | Implemented · `CallKeyVerifier` | — | Done | Accepted only from the creator or someone the server lists as connected, in the room's conversation; first key wins | `call-keys`, `live-voice-rooms` | live, unit |
 
-## 8. Connectors and federation
+## APP · Apps and integrations
 
-- **Connectors and saved items:** **Missing (server ready).** API 0.6.0 (`dac7bfc`, deployed by another session at 10:37
-  UTC) advertises `integrations`, `custom-roles` and `saved-items`. The web screens for them aren't built yet; they're
-  the next parity work.
-- **Federation:** DMs with people on other servers work like any other DM. Finding them by address is new and Built, but
-  production has federation turned off.
+| ID | Feature | Android | Backend | Web | Gaps, security | Tests | Verified |
+|---|---|---|---|---|---|---|---|
+| APP-01 | **New:** App directory, states, install, request, decline, turn off/on, uninstall | Implemented · `AppsScreen`, `AppDetailScreen` | `/v1/orgs/:id/integrations*` (`integrations`) | Done | Credentials never reach the browser | `live-roles-apps` | live |
+| APP-02 | **New:** Incoming webhooks: create (secret once), rotate, delete | Implemented · `HooksCard` | `/v1/orgs/:id/integration-hooks*` | Done | Secret shown once; a rotated secret stops the old one | `live-roles-apps` | live |
+| APP-03 | **New:** Workflows list | Implemented · `WorkflowsPanel` | `/integrations/workflows` | Built | — | — | by hand |
+| APP-04 | **New:** App updates in a channel, live | Implemented · `AppUpdates` | `/v1/conversations/:id/integration-events`, `integration.event` | Done | Server-visible, labelled so (not E2EE). Fixed: event ids are strings | `live-roles-apps` | live |
+| APP-05 | Connect your own account to an app (OAuth) | Implemented · `AppDetailScreen` | `INTEGRATIONS_APP_RETURN_URL` | Backend blocked | The server returns to `meldiq://integrations` only; a browser needs a per-client return such as `https://web.meldiq.app/#/…` | — | — |
+| APP-06 | Share an item from a connected app | Implemented · `ShareFromApp` | provider search | Backend blocked | Needs APP-05 | — | — |
 
-## Not in the browser, and why
+## SET · Profile, privacy, notifications, settings
 
-| Feature | Reason |
-|---|---|
-| Several accounts in one browser profile | Missing |
-| Languages other than English | Missing |
-| Sending link previews | Blocked: needs a server-side fetcher |
-| Background push | Blocked: needs Web Push (VAPID) on the server |
-| Custom roles, connectors, saved items | Missing: the server is ready in API 0.6.0; the web screens are next |
-| Start fresh, wallpaper, camera and QR, encrypted backup, legacy username sign-up, server picker | Phone only by design |
+| ID | Feature | Android | Backend | Web | Gaps, security | Tests | Verified |
+|---|---|---|---|---|---|---|---|
+| SET-01 | Profile, photo, privacy (who sees and finds you) | Implemented · `EditProfileScreen`, `PrivacyScreen` | `/v1/users/me*` | Done | — | `live` | live |
+| SET-02 | Notifications with a tab open; synced levels | Implemented | — | Done | — | by hand | by hand |
+| SET-03 | Background notifications (no tab open) | Implemented · UnifiedPush / FCM | `/v1/devices/current/push` | Backend blocked | Needs Web Push (VAPID) on the server | — | — |
+| SET-04 | Appearance: theme, colours, text size, animated emoji, music and video cards | Implemented | — | Done | — | unit | unit, by hand |
+| SET-05 | Languages (Simplified Chinese, Bengali) | Implemented · `AppLanguage` | — | Missing | English only | — | — |
+| SET-06 | Encrypted backup and restore | Implemented | — | Unsupported on web | The browser restores the server's encrypted history | — | — |
+| SET-07 | Notification health checks (battery, OEM) | Implemented · `NotificationHealthViews` | — | Unsupported on web | Android-specific | — | — |
+
+## PLAN · Planned on Android, not built anywhere
+
+| ID | Feature | Android | Web |
+|---|---|---|---|
+| PLAN-01 | People and HR: directory, attendance, shifts, leave | Planned ("coming soon" in the intro) | Not built; nothing to match |
+| PLAN-02 | Voice rooms: stage roles, recording, guest invite links | Not built (docs/VOICE_ROOMS.md) | Not built |
+| PLAN-03 | Call key rotation when people join or leave | Not built (D-06) | Not built |
+
+## Blocked or deliberately absent, in one place
+
+| What | Why | What would unblock it |
+|---|---|---|
+| Connecting your account to an app, sharing from it | Server returns OAuth only to `meldiq://` | A per-client return URL on the server (needs approval) |
+| Background push | No Web Push on the server | VAPID keys and a Web Push sender |
+| Sending link previews | Browsers can't fetch other sites | A server-side preview fetcher |
+| Translation | On-device ML on the phone | A browser model, or a service that would see plaintext (a product decision) |
+| Languages other than English | Not built | Translating the web strings |
+| Start fresh, several accounts, wallpaper, camera and QR, share sheet, encrypted backup, swipe, battery checks | Phone only by design | — |

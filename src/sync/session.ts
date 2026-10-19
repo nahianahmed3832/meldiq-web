@@ -3,6 +3,7 @@ import { type SessionGrant, zPairingPoll, zPairingStart, zSession } from "../api
 import { canonical } from "../crypto/canonical";
 import { seedMatchesPublicKey, sign, verify } from "../crypto/ed25519";
 import { deriveHistoryKeys } from "../crypto/history";
+import { deriveReminderKey } from "../crypto/reminderKeys";
 import { type DeviceKeys, generateDeviceKeys, generateTransferKeys, openSealedSeed, type TransferKeys } from "../crypto/identity";
 import type { DeviceRecord } from "../model/types";
 import { z } from "zod";
@@ -139,6 +140,7 @@ export async function pollLink(base: string, link: PendingLink): Promise<LinkPol
       },
     });
     const history = await deriveHistoryKeys(r.seed, grant.userId);
+    const reminders = await deriveReminderKey(r.seed, grant.userId);
     const device: DeviceRecord = {
       userId: grant.userId,
       deviceId: grant.deviceId,
@@ -146,6 +148,7 @@ export async function pollLink(base: string, link: PendingLink): Promise<LinkPol
       identityKey: r.identityKey,
       keys: link.keys,
       history,
+      reminders,
       linkedAt: Date.now(),
       deviceName: link.deviceName,
     };

@@ -363,3 +363,47 @@ button.e2ee-badge:hover {
   font-size: 12.5px;
   font-weight: 600;
 }
+
+/* Voice rooms: raised hands and the People list (docs/VOICE_ROOMS.md). */
+.call-tile .who .hand,
+.room-people .hand {
+  color: var(--warning);
+}
+.room-people {
+  display: grid;
+  gap: 6px;
+  padding: 12px 14px;
+  border-radius: var(--r-md);
+  background: var(--call-control);
+  font-size: 13px;
+  color: var(--call-text-2);
+  max-height: 40vh;
+  overflow: auto;
+}
+.room-people h3 {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 650;
+  color: var(--call-text);
+}
+.room-people .hands {
+  color: var(--warning);
+  font-weight: 500;
+}
+.room-people ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 2px;
+}
+.room-people li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 32px;
+  color: var(--call-text);
+}
+.room-people .icon-btn {
+  color: var(--call-text-2);
+}

@@ -16,10 +16,12 @@ import { AddMembersButton, BlockToggle, EditConversationButton } from "./Convers
 import { galleryOf } from "./gallery";
 import { MediaGalleryDialog } from "./MediaGalleryDialog";
 import { MessageList } from "./MessageList";
+import { SearchPanel } from "./SearchPanel";
 
 export function SidePanel({ route }: { route: Route }) {
   const close = () => navigate({ section: route.section, conversationId: route.conversationId });
   if (!route.conversationId) return null;
+  if (route.panel === "search") return <SearchPanel conversationId={route.conversationId} onClose={close} />;
   return route.panel === "thread" && route.threadRoot ? (
     <ThreadPanel conversationId={route.conversationId} root={route.threadRoot} onClose={close} />
   ) : (

@@ -5,6 +5,7 @@ import type { StoredMessage } from "../model/types";
 import { parsePayload, type Payload } from "../protocol/payload";
 import type { EngineContext } from "./context";
 import { applyDelete, applyDelivered, applyEdit, applyPin, applyReaction, applyRead, callEntry, receivedMentions, textMessage, undecryptable } from "./rules";
+import { applyClose, applyVote } from "./polls";
 
 const MAX_FAILURES = 3;
 
@@ -128,6 +129,12 @@ export class Receiver {
         return this.change(pl, item, serverTs, (t) => applyReaction(t, item.senderUserId, pl.emoji!, pl.add !== false));
       case "pin":
         return this.change(pl, item, serverTs, (t) => applyPin(t, pl.pinned === true));
+      case "vote":
+        // A poll vote (docs/RICH_MESSAGES.md › Polls): replaces the voter's earlier one; only real options count.
+        return this.change(pl, item, serverTs, (t) => (t.rich?.poll && !t.deleted ? { ...t, rich: applyVote(t.rich, item.senderUserId, pl.choices ?? []) } : null));
+      case "poll_close":
+        // Only from the poll's own sender.
+        return this.change(pl, item, serverTs, (t) => (t.rich?.poll && t.senderUserId === item.senderUserId ? { ...t, rich: applyClose(t.rich, t.senderUserId, item.senderUserId) } : null));
       case "read": {
         if (pl.upTo === undefined) return;
         if (mine) return this.ctx.readElsewhere(item.conversationId, pl.upTo);
@@ -194,14 +201,15 @@ export class Receiver {
   }
 
   /**
-   * A call's media key (kept in memory by the call manager, only from the call's creator: T5.2) and the call's entry in
-   * the conversation, once the server confirms the sender started that call in this conversation.
+   * A call's media key (kept in memory by the call manager, only from the call's creator or, in a voice room, someone
+   * connected to it: T5.2) and the call's entry in the conversation, once the server confirms the sender started that
+   * call in this conversation (none for voice rooms).
    */
   private async callInvite(pl: Payload, item: QueueItem, mine: boolean, serverTs: number): Promise<void> {
     if (!pl.callId) return;
     const call = await this.serverCall(pl.callId);
     if (pl.e2eeKey) this.ctx.calls.onInvite(pl.callId, item.conversationId, item.senderUserId, pl.e2eeKey, call);
-    if (!call || call.createdBy !== item.senderUserId || call.conversationId !== item.conversationId) return;
+    if (!call || call.voiceRoom || call.createdBy !== item.senderUserId || call.conversationId !== item.conversationId) return;
     if (await this.ctx.store.message(`call-${pl.callId}`)) return;
     const m = callEntry(item, mine, pl.callId, pl.video === true, serverTs);
     if (!(await this.ctx.store.insertMessageIfAbsent(m))) return;

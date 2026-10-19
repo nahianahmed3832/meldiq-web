@@ -5,6 +5,7 @@ import type { StoredMessage } from "../../model/types";
 import { Avatar } from "../components/Avatar";
 import { dayLabel, sameDay } from "../format";
 import { MessageItem } from "./MessageItem";
+import { JUMP_EVENT } from "./SearchPanel";
 
 const GROUP_MS = 5 * 60_000;
 const NEAR_BOTTOM = 120;
@@ -104,6 +105,12 @@ export function MessageList(props: MessageListProps) {
     setHighlight(id);
     setTimeout(() => setHighlight(null), 1700);
   }, []);
+  // A search result chosen in the side panel (after it loaded the message): shown once the list has rendered it.
+  useEffect(() => {
+    const onJump = (e: Event) => requestAnimationFrame(() => jump((e as CustomEvent<string>).detail));
+    window.addEventListener(JUMP_EVENT, onJump);
+    return () => window.removeEventListener(JUMP_EVENT, onJump);
+  }, [jump]);
 
   if (!me) return null;
   const nameOf = (id: string) => (id === me.userId ? me.displayName : (users[id]?.displayName ?? "Unknown"));

@@ -2,7 +2,7 @@ import { Archive, ArchiveRestore, Hash, Lock, Megaphone, Plus } from "lucide-rea
 import { type FormEvent, useState } from "react";
 import type { Conversation } from "../../api/schemas";
 import type { OrgAdminDetail } from "../../api/workspaceSchemas";
-import { useEngine } from "../../app/orbit";
+import { useEngine, useOrbit } from "../../app/orbit";
 import { navigate } from "../../app/router";
 import { type ChannelKind, type ChannelScope, createChannel, updateConversation, workspaceChannels } from "../../sync/workspaces";
 import { useAction, useLoad } from "./useLoad";
@@ -128,16 +128,20 @@ function NewChannel({ detail, onCreated }: { detail: OrgAdminDetail; onCreated: 
   const [topic, setTopic] = useState("");
   const [scope, setScope] = useState(scopes[0]?.value ?? "ORG:");
   const [kind, setKind] = useState<ChannelKind>("PUBLIC");
+  const [voice, setVoice] = useState(false);
+  const voiceOffered = useOrbit((s) => s.server?.features.includes("voice-rooms") ?? false);
   const act = useAction();
+  const kinds = (Object.keys(KIND_TEXT) as ChannelKind[]).filter((k) => !(voice && k === "ANNOUNCEMENT"));
 
   const submit = (e: FormEvent) => {
     e.preventDefault();
     if (!name.trim()) return;
     const [s, id] = scope.split(":");
     void act.act(async () => {
-      const ch = await createChannel(engine, detail.org.id, { name, topic: topic || null, scope: s as ChannelScope, scopeId: id || null, kind });
+      const ch = await createChannel(engine, detail.org.id, { name, topic: topic || null, scope: s as ChannelScope, scopeId: id || null, kind, voice });
       setName("");
       setTopic("");
+      setVoice(false);
       onCreated();
       navigate({ section: "home", conversationId: ch.id });
     });
@@ -163,13 +167,26 @@ function NewChannel({ detail, onCreated }: { detail: OrgAdminDetail; onCreated: 
         <label className="field">
           <span>Access</span>
           <select className="input" value={kind} onChange={(e) => setKind(e.target.value as ChannelKind)}>
-            {(Object.keys(KIND_TEXT) as ChannelKind[]).map((k) => (
+            {kinds.map((k) => (
               <option key={k} value={k}>
                 {KIND_TEXT[k].label}
               </option>
             ))}
           </select>
         </label>
+        {voiceOffered && (
+          <label className="row ws-wide" style={{ gap: 10, fontSize: 13 }}>
+            <input
+              type="checkbox"
+              checked={voice}
+              onChange={(e) => {
+                setVoice(e.target.checked);
+                if (e.target.checked && kind === "ANNOUNCEMENT") setKind("PUBLIC");
+              }}
+            />
+            <span>Voice room: people drop into its call from Home, without anyone being rung</span>
+          </label>
+        )}
         <label className="field ws-wide">
           <span>Topic (optional)</span>
           <input className="input" value={topic} maxLength={250} onChange={(e) => setTopic(e.target.value)} />
@@ -179,7 +196,7 @@ function NewChannel({ detail, onCreated }: { detail: OrgAdminDetail; onCreated: 
         </p>
         <div className="ws-form-actions">
           <button className="btn btn-primary btn-sm" disabled={!name.trim() || act.busy || scopes.length === 0}>
-            <Plus size={14} /> {act.busy ? "Creating…" : "Create channel"}
+            <Plus size={14} /> {act.busy ? "Creating…" : voice ? "Create voice room" : "Create channel"}
           </button>
         </div>
       </form>

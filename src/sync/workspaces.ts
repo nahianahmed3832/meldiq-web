@@ -151,9 +151,14 @@ export async function setTeamArchived(engine: Engine, teamId: string, archived: 
 export type ChannelKind = "PUBLIC" | "PRIVATE" | "ANNOUNCEMENT";
 export type ChannelScope = "ORG" | "BRANCH" | "TEAM";
 
-export async function createChannel(engine: Engine, orgId: string, c: { name: string; topic: string | null; scope: ChannelScope; scopeId: string | null; kind: ChannelKind }): Promise<Conversation> {
+/** [voice]: a voice room (API 0.7+, docs/VOICE_ROOMS.md), public or private; the server refuses an announcement one. */
+export async function createChannel(
+  engine: Engine,
+  orgId: string,
+  c: { name: string; topic: string | null; scope: ChannelScope; scopeId: string | null; kind: ChannelKind; voice?: boolean },
+): Promise<Conversation> {
   const { channel } = await engine.api.json("POST", `/v1/orgs/${enc(orgId)}/channels`, zChannelOut, {
-    body: { name: c.name.trim(), topic: c.topic?.trim() || null, scope: c.scope, scopeId: c.scopeId, kind: c.kind },
+    body: { name: c.name.trim(), topic: c.topic?.trim() || null, scope: c.scope, scopeId: c.scopeId, kind: c.kind, ...(c.voice ? { voice: true } : {}) },
   });
   await engine.refreshAll();
   return channel;

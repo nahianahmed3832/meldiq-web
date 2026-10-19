@@ -18,6 +18,8 @@ export interface Prefs {
   textSize: TextSize;
   /** Animated emoji play (android Settings › Chats › Animated emoji); off: shown still. */
   animatedEmoji: boolean;
+  /** Music and video links show as cards that open the provider (android Settings › Chats); nothing is fetched. */
+  mediaCards: boolean;
   notifications: boolean;
   /** Show the sender and message text in system notifications (off: "New message"). */
   notificationText: boolean;
@@ -28,6 +30,8 @@ export interface Prefs {
   orgId: string | null;
   /** Collapsed sidebar sections. */
   collapsed: string[];
+  /** Home's Get started card was hidden in this browser. */
+  startHidden: boolean;
 }
 
 const KEY = "orbit.prefs.v1";
@@ -36,6 +40,7 @@ const defaults: Prefs = {
   palette: "indigo",
   textSize: "default",
   animatedEmoji: true,
+  mediaCards: true,
   notifications: false,
   notificationText: true,
   readReceipts: true,
@@ -43,6 +48,7 @@ const defaults: Prefs = {
   enterToSend: true,
   orgId: null,
   collapsed: [],
+  startHidden: false,
 };
 
 function load(): Prefs {
@@ -57,6 +63,7 @@ function load(): Prefs {
       palette: PALETTES.includes(stored.palette) ? stored.palette : defaults.palette,
       textSize: TEXT_SIZES.includes(stored.textSize) ? stored.textSize : defaults.textSize,
       animatedEmoji: typeof stored.animatedEmoji === "boolean" ? stored.animatedEmoji : defaults.animatedEmoji,
+      mediaCards: typeof stored.mediaCards === "boolean" ? stored.mediaCards : defaults.mediaCards,
     };
   } catch {
     return defaults;

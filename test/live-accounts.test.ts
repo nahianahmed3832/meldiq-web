@@ -14,7 +14,7 @@ import type { DeviceRecord } from "../src/model/types";
 import type { LocalStore } from "../src/store/db";
 import { pollLinkApproval, startLink } from "../src/sync/session";
 import { tokensOf } from "../src/auth/accountSession";
-import { type AccountPhone, accountPhone, approveLink, freshStore, type Mailbox, mailbox, type Phone, type Server, startBrowser, startServer, until } from "./support/live";
+import { type AccountPhone, accountPhone, approveLink, freshStore, type Mailbox, mailbox, type Phone, recoveryEmailCode, type Server, startBrowser, startServer, until } from "./support/live";
 
 /**
  * Orbit 2.0 accounts in the browser (docs/ORBIT_2_ARCHITECTURE §2–§5) against the real server: sign-up with an emailed
@@ -249,5 +249,73 @@ describe("moving an account from before Orbit 2.0", () => {
     const again = await verifyLegacyAccount(anon(), legacy.username, recovery).catch((e) => e);
     expect(again).toBeInstanceOf(ApiError);
     expect((again as ApiError).code).toBe("already_migrated");
+  });
+});
+
+describe("account recovery codes (lost access to the email address)", () => {
+  const NEW_PASSWORD = "another long enough password";
+  const authed = (grant: AccountSessionGrant) => new AccountApi(new ApiClient(server.baseUrl, { token: () => grant.accessToken, reauthenticate: async () => false }));
+
+  it("recovers the account to a new address with one code; the set-up browser keeps its keys and signs in with the new address", async () => {
+    const s = await signUp("rosa");
+    const made = await createIdentity(new SetupCredentials(server.baseUrl, s.grant).accounts, s.grant.account, "Browser R");
+    const browser = await keepAndStart(made.device, s.grant);
+    try {
+      // Codes: counts only are readable; making them needs the password; ten, shown once.
+      const api = authed(s.grant);
+      expect(await api.recoveryCodesStatus()).toMatchObject({ remaining: 0, total: 0 });
+      await expect(api.makeRecoveryCodes("not my password!")).rejects.toMatchObject({ status: 401 });
+      const { codes } = await api.makeRecoveryCodes(PASSWORD);
+      expect(codes).toHaveLength(10);
+      expect(codes[0]).toMatch(/^[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/);
+      expect(await api.recoveryCodesStatus()).toMatchObject({ remaining: 10, total: 10 });
+
+      // Wrong code, unknown address: the same answer.
+      const newAddress = email("rosa.new");
+      await expect(anon().recoverStart(s.address, "AAAA-AAAA-AAAA", newAddress)).rejects.toMatchObject({ code: "invalid_recovery" });
+      await expect(anon().recoverStart(email("nobody"), codes[0], newAddress)).rejects.toMatchObject({ code: "invalid_recovery" });
+
+      // Typed in lower case without dashes: still the code. It's used up by this step.
+      const started = await anon().recoverStart(s.address, codes[0].replace(/-/g, "").toLowerCase(), newAddress);
+      expect(started.email).toBe(newAddress);
+      await expect(anon().recoverStart(s.address, codes[0], email("rosa.other"))).rejects.toMatchObject({ code: "invalid_recovery" });
+
+      await expect(anon().recoverComplete(started.ticket, "000000", NEW_PASSWORD)).rejects.toMatchObject({ code: "invalid_code" });
+      const done = await anon().recoverComplete(started.ticket, recoveryEmailCode(mail, newAddress), NEW_PASSWORD);
+      expect(done).toEqual({ email: newAddress, remainingCodes: 9 });
+
+      // Every session of the account was signed out; the old address and password no longer sign in.
+      await expect(anon().refresh(s.grant.refreshToken)).rejects.toMatchObject({ status: 401 });
+      await expect(anon().login(s.address, PASSWORD, "web")).rejects.toMatchObject({ status: 401 });
+
+      // The set-up browser: its stored address is the old one, so it signs in again with the new one (and its device key).
+      const engine = browser.engine;
+      await engine.api.call("GET", "/v1/users/me").catch(() => undefined);
+      await until(() => engine.state.get().phase === "reauth", 8000, "password prompt");
+      await expect(engine.signInAgain(NEW_PASSWORD)).rejects.toMatchObject({ status: 401 });
+      await engine.signInAgain(NEW_PASSWORD, newAddress);
+      expect(engine.state.get().phase).toBe("ready");
+      expect(engine.device.account?.email).toBe(newAddress);
+      expect((await engine.store.device())?.account?.email).toBe(newAddress);
+      // Account recovery didn't touch the encryption identity: same user, same device, messages still decrypt.
+      expect(engine.device.deviceId).toBe(made.device.deviceId);
+      const carol = await server.client("carol2", "Carol");
+      await carol.connect();
+      const dm = (await carol.req("POST", "/v1/conversations/dm", { userId: engine.device.userId })).conversation.id;
+      await carol.send(dm, { type: "text", text: "after recovery" });
+      await until(async () => (await engine.conversationMessages(dm)).some((m) => m.text === "after recovery"), 8000, "message after recovery");
+    } finally {
+      browser.engine.stop();
+    }
+  });
+
+  it("revoking needs the password and leaves no usable codes", async () => {
+    const s = await signUp("sam");
+    const api = authed(s.grant);
+    const { codes } = await api.makeRecoveryCodes(PASSWORD);
+    await expect(api.revokeRecoveryCodes("not my password!")).rejects.toMatchObject({ status: 401 });
+    await api.revokeRecoveryCodes(PASSWORD);
+    expect((await api.recoveryCodesStatus()).remaining).toBe(0);
+    await expect(anon().recoverStart(s.address, codes[1], email("sam.new"))).rejects.toMatchObject({ code: "invalid_recovery" });
   });
 });

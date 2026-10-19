@@ -979,3 +979,546 @@
     transform: rotate(360deg);
   }
 }
+
+/* ───────────────────────── polls (docs/RICH_MESSAGES.md › Polls) ───────────────────────── */
+.poll {
+  display: grid;
+  gap: 8px;
+  max-width: 420px;
+  margin-top: 4px;
+  padding: 12px;
+  border-radius: var(--r-lg);
+  border: 1px solid var(--border);
+  background: var(--surface-raised);
+}
+.poll-head {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  color: var(--text);
+}
+.poll-head svg {
+  color: var(--accent-text);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.poll-options {
+  display: grid;
+  gap: 6px;
+}
+.poll-option {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  text-align: left;
+  font-size: var(--fs-sm);
+}
+.poll-option:hover:not(:disabled) {
+  border-color: var(--accent);
+}
+.poll-option[aria-checked="true"] {
+  border-color: var(--accent);
+  color: var(--accent-text);
+  font-weight: 650;
+}
+.poll-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: var(--accent-soft);
+  transition: width var(--t-std) var(--ease);
+}
+.poll-option > :not(.poll-fill) {
+  position: relative;
+}
+.poll-mark {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid var(--outline);
+  flex-shrink: 0;
+}
+.poll-mark.multi {
+  border-radius: 4px;
+}
+.poll-option[aria-checked="true"] .poll-mark {
+  border-color: var(--accent);
+  background: var(--accent);
+  box-shadow: inset 0 0 0 2px var(--surface-raised);
+}
+.poll-count {
+  font-variant-numeric: tabular-nums;
+  color: var(--text-2);
+}
+.poll-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  color: var(--text-3);
+  font-size: var(--fs-xs);
+}
+
+/* ───────────────────────── stickers (docs/STICKERS.md; android Stickers.kt) ───────────────────────── */
+.sticker {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  align-content: center;
+  gap: 0.03em;
+  cursor: default;
+}
+.sticker.motion-stamp,
+.sticker[class*="motion-"] {
+  cursor: pointer;
+}
+.tone-indigo {
+  --tone: var(--sticker-indigo);
+}
+.tone-violet {
+  --tone: var(--sticker-violet);
+}
+.tone-rose {
+  --tone: var(--sticker-rose);
+}
+.tone-amber {
+  --tone: var(--sticker-amber);
+}
+.tone-green {
+  --tone: var(--sticker-green);
+}
+.tone-teal {
+  --tone: var(--sticker-teal);
+}
+.tone-sky {
+  --tone: var(--sticker-sky);
+}
+.tone-slate {
+  --tone: var(--sticker-slate);
+}
+.sticker-shape {
+  position: absolute;
+  width: 72%;
+  height: 72%;
+  top: 8%;
+  border-radius: 50%;
+  background: var(--tone);
+  opacity: var(--sticker-shape-alpha);
+}
+.sticker-emoji {
+  position: relative;
+  font-size: 0.42em;
+  line-height: 1.1;
+  display: inline-block;
+}
+.sticker-caption {
+  position: relative;
+  max-width: 92%;
+  padding: 0.02em 0.08em;
+  border-radius: var(--r-pill);
+  background: var(--tone);
+  color: var(--on-sticker);
+  font-size: 0.1em;
+  font-weight: 800;
+  line-height: 1.3;
+  text-align: center;
+  transform: rotate(-3deg);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.sticker.compact .sticker-caption {
+  font-size: 0.085em;
+}
+.sticker-confetti,
+.sticker-burst {
+  position: absolute;
+  width: 80%;
+  height: 80%;
+  top: 4%;
+  border-radius: 50%;
+  pointer-events: none;
+}
+.sticker-confetti {
+  color: var(--tone);
+  background: var(--sticker-confetti);
+  -webkit-mask: radial-gradient(circle, transparent 52%, #000 53%, #000 58%, transparent 59%);
+  mask: radial-gradient(circle, transparent 52%, #000 53%, #000 58%, transparent 59%);
+  animation: sticker-spread 1.2s linear 2 forwards;
+}
+.sticker-burst {
+  background: repeating-conic-gradient(var(--tone) 0 6deg, transparent 6deg 45deg);
+  -webkit-mask: radial-gradient(circle, transparent 60%, #000 61%, #000 72%, transparent 73%);
+  mask: radial-gradient(circle, transparent 60%, #000 61%, #000 72%, transparent 73%);
+  animation: sticker-spread 1.2s linear 2 forwards;
+}
+@keyframes sticker-spread {
+  from {
+    transform: scale(0.7);
+    opacity: 1;
+  }
+  to {
+    transform: scale(1.35);
+    opacity: 0;
+  }
+}
+/* The emoji's motion: one 1.2 s cycle, played twice (spin, stamp and pop once); always ends at rest. */
+.motion-stamp .sticker-emoji {
+  animation: st-stamp 1.2s linear 1;
+}
+.motion-rise .sticker-emoji {
+  animation: st-rise 1.2s linear 2;
+}
+.motion-bounce .sticker-emoji {
+  animation: st-bounce 1.2s linear 2;
+}
+.motion-pulse .sticker-emoji {
+  animation: st-pulse 1.2s linear 2;
+}
+.motion-wiggle .sticker-emoji {
+  animation: st-wiggle 1.2s linear 2;
+}
+.motion-pop .sticker-emoji {
+  animation: st-pop 1.2s linear 1;
+}
+.motion-float .sticker-emoji {
+  animation: st-float 1.2s linear 2;
+}
+.motion-sway .sticker-emoji {
+  animation: st-sway 1.2s linear 2;
+  transform-origin: 50% 100%;
+}
+.motion-shake .sticker-emoji {
+  animation: st-shake 1.2s linear 2;
+}
+.motion-spin .sticker-emoji {
+  animation: st-spin 1.2s linear 1;
+}
+.motion-confetti .sticker-emoji,
+.motion-burst .sticker-emoji {
+  animation: st-swell 1.2s linear 2;
+}
+@keyframes st-stamp {
+  0% {
+    transform: scale(1.6) rotate(-8deg);
+  }
+  30% {
+    transform: scale(1) rotate(-3deg);
+  }
+  65% {
+    transform: scale(1.04) rotate(-1.5deg);
+  }
+  100% {
+    transform: none;
+  }
+}
+@keyframes st-rise {
+  50% {
+    transform: translateY(-14px) scale(1.06);
+  }
+}
+@keyframes st-bounce {
+  25%,
+  75% {
+    transform: translateY(-10px);
+  }
+  50% {
+    transform: none;
+  }
+}
+@keyframes st-pulse {
+  25%,
+  75% {
+    transform: scale(1.12);
+  }
+  50% {
+    transform: none;
+  }
+}
+@keyframes st-wiggle {
+  12.5% {
+    transform: rotate(10deg);
+  }
+  37.5% {
+    transform: rotate(-8deg);
+  }
+  62.5% {
+    transform: rotate(7deg);
+  }
+  87.5% {
+    transform: rotate(-5deg);
+  }
+}
+@keyframes st-pop {
+  0% {
+    transform: scale(0.6);
+  }
+  25% {
+    transform: scale(1.15);
+  }
+  100% {
+    transform: none;
+  }
+}
+@keyframes st-float {
+  25% {
+    transform: translateY(-6px) rotate(3deg);
+  }
+  75% {
+    transform: translateY(6px) rotate(-3deg);
+  }
+}
+@keyframes st-sway {
+  25% {
+    transform: rotate(9deg);
+  }
+  75% {
+    transform: rotate(-9deg);
+  }
+}
+@keyframes st-shake {
+  6%,
+  31%,
+  56% {
+    transform: translateX(6px);
+  }
+  19%,
+  44%,
+  69% {
+    transform: translateX(-5px);
+  }
+  85% {
+    transform: translateX(2px);
+  }
+}
+@keyframes st-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes st-swell {
+  50% {
+    transform: scale(1.1);
+  }
+}
+.sticker-picker {
+  display: grid;
+  grid-template-columns: repeat(4, 64px);
+  gap: 4px;
+}
+.sticker-picker button {
+  border-radius: var(--r-md);
+  display: grid;
+  place-items: center;
+}
+.sticker-picker button:hover {
+  background: var(--surface-hover);
+}
+
+/* Music and video links as cards (android MediaCards): the provider's colour behind a white glyph, nothing fetched. */
+.media-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 6px;
+  padding: 10px;
+  min-width: 240px;
+  max-width: 340px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  text-decoration: none;
+}
+.media-card:hover {
+  border-color: var(--border-strong, var(--border));
+  background: var(--surface-raised);
+}
+.media-card-art {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border-radius: var(--r-sm);
+  color: #fff;
+}
+/* Deep shades of each provider's colour: white on each meets 4.5:1. */
+.media-youtube,
+.media-youtube-music {
+  background: #c4120f;
+}
+.media-spotify {
+  background: #117a3e;
+}
+.media-soundcloud {
+  background: #b34700;
+}
+.media-vimeo {
+  background: #0a6e9c;
+}
+.media-card-text {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+  flex: 1;
+}
+.media-card-text small {
+  font-size: 12px;
+  color: var(--text-3);
+}
+.media-card-text small:first-child {
+  font-weight: 650;
+}
+.media-card-text strong {
+  font-size: 14px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+.media-card-open {
+  flex: none;
+  color: var(--text-3);
+}
+
+/* The conversation's security panel (android ConversationSecuritySheet). */
+.icon-btn.warn {
+  color: var(--warning);
+}
+.security-points {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 14px;
+}
+.security-points li {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+.security-points .lines {
+  display: grid;
+  gap: 2px;
+}
+.security-points small {
+  color: var(--text-3);
+  font-size: 13px;
+}
+.security-icon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--r-sm);
+  background: var(--surface-sunken);
+  color: var(--text-3);
+}
+.security-icon.ok {
+  color: var(--success);
+}
+.security-icon.warn {
+  color: var(--warning);
+}
+
+/* Albums (android AlbumGrid): up to four tiles, the last one counting the rest. */
+.album {
+  display: grid;
+  gap: 3px;
+  width: min(360px, 100%);
+  border-radius: var(--r-md);
+  overflow: hidden;
+}
+.album-row {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: 3px;
+}
+.album-tile {
+  position: relative;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  padding: 0;
+  overflow: hidden;
+  background: var(--surface-sunken);
+  color: var(--text-3);
+}
+/* The wide first photo of a three-photo album. */
+.album-row:has(> :only-child) .album-tile {
+  aspect-ratio: 2 / 1;
+}
+.album-tile img,
+.album-tile .skeleton {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.album-more {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgb(0 0 0 / 0.5);
+  color: #fff;
+  font-size: 22px;
+  font-weight: 700;
+}
+.lightbox-pos {
+  color: #fff;
+  font-size: 13px;
+  min-width: 56px;
+  text-align: center;
+}
+
+/* Photo quality in the composer's file preview (android BatchComposer). */
+.file-quality {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+  flex-basis: 100%;
+  font-size: 12.5px;
+}
+.file-quality small {
+  flex-basis: 100%;
+}
+
+/* Search in this conversation (side panel). */
+.search-results {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 2px;
+}
+.search-results .lines {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+  text-align: left;
+}
+.search-results small {
+  color: var(--text-3);
+  font-size: 12px;
+}
+.clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+}
+.search-results mark {
+  background: var(--warning-soft);
+  color: inherit;
+  border-radius: 3px;
+  padding: 0 1px;
+}

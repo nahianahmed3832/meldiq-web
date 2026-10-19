@@ -1,5 +1,7 @@
 import type { ContactCard, SharedLocation } from "../protocol/payload";
 import type { RichContent } from "../model/types";
+import { pollFallback } from "./polls";
+import { findSticker, stickerFallback } from "./stickers";
 
 /**
  * Contact cards and locations sent from the browser (docs/RICH_MESSAGES.md; android RichRules). They travel inside the
@@ -36,6 +38,11 @@ export function osmLink(l: SharedLocation): string {
 export function fallbackText(r: RichContent): string {
   if (r.contact) return `👤 ${[r.contact.name, ...r.contact.phones, ...r.contact.emails].join("\n")}`;
   if (r.location) return `📍 ${r.location.label ? `${r.location.label}\n` : ""}${osmLink(r.location)}`;
+  if (r.poll) return pollFallback(r.poll);
+  if (r.sticker) {
+    const spec = findSticker(r.sticker);
+    return spec ? stickerFallback(spec) : "Sticker";
+  }
   return r.animoji ?? "";
 }
 

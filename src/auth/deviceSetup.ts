@@ -3,6 +3,7 @@ import { randomBytes } from "../crypto/bytes";
 import { canonical } from "../crypto/canonical";
 import { publicKeyFromSeed, sign, signingKeyFromSeed } from "../crypto/ed25519";
 import { deriveHistoryKeys } from "../crypto/history";
+import { deriveReminderKey } from "../crypto/reminderKeys";
 import { type DeviceKeys, generateDeviceKeys } from "../crypto/identity";
 import { encodeRecoveryCode } from "../crypto/recoveryCode";
 import type { DeviceRecord } from "../model/types";
@@ -35,6 +36,7 @@ async function enroll(accounts: AccountApi, account: AccountView, seed: Uint8Arr
       identityKey,
       keys,
       history: await deriveHistoryKeys(seed, r.userId),
+      reminders: await deriveReminderKey(seed, r.userId),
       linkedAt: Date.now(),
       deviceName,
       account: { id: account.id, email: account.email },

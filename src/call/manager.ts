@@ -3,7 +3,7 @@ import { type Call, zCallGrant, zCallList, zCallRes } from "../api/schemas";
 import type { Payload } from "../protocol/payload";
 import type { AppState, Store } from "../state/store";
 import { IdentityChangedError } from "../sync/outbox";
-import { CallKeyRing, judgeKey, type KeyVerdict, KeyRequestPacer, newCallKey, verificationCode } from "./callKeys";
+import { CallKeyRing, inRoomCall, judgeKey, type KeyVerdict, KeyRequestPacer, newCallKey, verificationCode } from "./callKeys";
 import { backoff, CallFailure, KEY_POLL_MS, KEY_WAIT_MS, PEER_WINDOW_MS, REJOIN_WINDOW_MS, retryable, shouldRing } from "./rules";
 import { type CallUiState, DeviceError, type DeviceKind, idleCall, type MediaDeviceChoice, type MediaEvents, type MediaFactory, type MediaGrant, type MediaSession } from "./types";
 
@@ -14,14 +14,25 @@ export interface CallHost {
   readonly me: { userId: string; deviceId: string };
   /** Seals and posts a control message at once, never writing it to storage (call keys stay in memory). */
   sendControlNow(conversationId: string, payload: Payload): Promise<void>;
-  /** Title, kind and colour of a conversation for the call screen. */
-  describe(conversationId: string): Promise<{ title: string; isGroup: boolean; colorIndex: number }>;
+  /** Title, kind and colour of a conversation for the call screen; whether it's a voice room this person manages. */
+  describe(conversationId: string): Promise<CallTarget>;
   displayName(userId: string): string | null;
   /** The call's entry in its conversation, for a call this browser started (others' arrive as messages). */
   recordCall(callId: string, conversationId: string, video: boolean): Promise<void>;
   /** A system notification for a ringing call while the tab isn't looked at. */
   ringAlert?(title: string, video: boolean, conversationId: string): void;
 }
+
+export interface CallTarget {
+  title: string;
+  isGroup: boolean;
+  colorIndex: number;
+  voiceRoom: boolean;
+  canModerate: boolean;
+}
+
+/** What a voice room's manager can do to someone in its call (server POST /v1/calls/:id/moderate). */
+export type ModerationAction = "mute" | "lower_hand" | "remove";
 
 export interface CallOptions {
   media: MediaFactory;
@@ -85,7 +96,8 @@ export class CallManager {
   async startCall(conversationId: string, video: boolean): Promise<void> {
     if (!this.isFree()) return;
     const about = await this.host.describe(conversationId);
-    const gen = this.begin({ ...idleCall, phase: "outgoing", conversationId, video, cameraOn: video, ...about });
+    // Nobody is rung in a voice room: joining it just connects (android CallManager).
+    const gen = this.begin({ ...idleCall, phase: about.voiceRoom ? "connecting" : "outgoing", conversationId, video, cameraOn: video, ...about });
     this.created = true;
     try {
       if (!this.opts.supported()) throw new CallError(CallFailure.UNSUPPORTED);
@@ -163,7 +175,8 @@ export class CallManager {
     const key = newCallKey();
     this.keys.accept({ callId, conversationId, fromUserId: this.host.me.userId, key });
     await this.host.sendControlNow(conversationId, { type: "call_invite", callId, video, e2eeKey: key });
-    void this.host.recordCall(callId, conversationId, video).catch(() => undefined);
+    // A voice room's comings and goings aren't calls in its conversation (docs/VOICE_ROOMS.md).
+    if (!this.state.voiceRoom) void this.host.recordCall(callId, conversationId, video).catch(() => undefined);
     return key;
   }
 
@@ -333,10 +346,14 @@ export class CallManager {
 
   // ───────────────────────── server events and keys ─────────────────────────
 
-  /** A realtime `call` frame (server ws.ts): ring, started, updated, alerted, declined, dismissed, ended. */
-  async onCallEvent(event: string, call: Call, extra: { from?: { displayName?: unknown }; reason?: unknown }): Promise<void> {
+  /** A realtime `call` frame (server ws.ts): ring, started, updated, alerted, declined, dismissed, ended, moderated. */
+  async onCallEvent(event: string, call: Call, extra: { from?: { displayName?: unknown }; reason?: unknown; action?: unknown }): Promise<void> {
     const current = call.id === this.state.callId;
+    if (current && call.voiceRoom && event !== "ended") this.patch({ voiceRoom: true, hands: call.hands });
     switch (event) {
+      case "moderated":
+        if (current) await this.onModerated(extra.action);
+        return;
       case "ring":
         return this.onRing(call, typeof extra.from?.displayName === "string" ? extra.from.displayName : null);
       case "ended":
@@ -414,13 +431,19 @@ export class CallManager {
     return refused ?? this.keys.accept({ callId, conversationId, fromUserId: senderUserId, key });
   }
 
-  /** A late joiner asks for a call's key: only this account, as the call's creator, answers, while the call is live. */
+  /**
+   * A late joiner asks for a call's key: this account answers as the call's creator, or in a voice room while connected
+   * to its call (a room outlives whoever opened it; android MessageRepository call_key_request), while the call is live.
+   */
   async onKeyRequest(callId: string, conversationId: string): Promise<void> {
+    const me = this.host.me.userId;
     const k = this.keys.get(callId);
-    if (!k || k.fromUserId !== this.host.me.userId || k.conversationId !== conversationId || !this.pacer.shouldAnswer(callId)) return;
+    const inThisRoom = this.state.callId === callId && this.state.voiceRoom;
+    if (!k || (k.fromUserId !== me && !inThisRoom) || k.conversationId !== conversationId || !this.pacer.shouldAnswer(callId)) return;
     try {
       const { call } = await this.host.api.json("GET", `/v1/calls/${encodeURIComponent(callId)}`, zCallRes);
-      if (call.state === "ENDED" || call.createdBy !== this.host.me.userId) return;
+      const mayAnswer = (k.fromUserId === me && call.createdBy === me) || inRoomCall(call, me);
+      if (call.state === "ENDED" || !mayAnswer) return;
       await this.host.sendControlNow(conversationId, { type: "call_invite", callId, video: call.video, e2eeKey: k.key });
     } catch {
       /* the joiner asks again */
@@ -497,6 +520,47 @@ export class CallManager {
     this.patch({ minimized });
   }
 
+  dismissNotice(): void {
+    this.patch({ notice: null });
+  }
+
+  // ───────────────────────── voice rooms ─────────────────────────
+
+  /** Raises or lowers this person's hand; everyone in the room sees the queue. */
+  async raiseHand(raised: boolean): Promise<void> {
+    const id = this.state.callId;
+    if (!id || !this.state.voiceRoom) return;
+    try {
+      const { call } = await this.host.api.json("POST", `/v1/calls/${encodeURIComponent(id)}/hand`, zCallRes, { body: { raised } });
+      if (call.id === this.state.callId) this.patch({ hands: call.hands, notice: null });
+    } catch (e) {
+      this.patch({ notice: e instanceof ApiError ? e.message : "Your hand couldn't be changed. Try again." });
+    }
+  }
+
+  /** The room's managers: mute someone's microphone (only they can turn it on again), lower their hand, or remove them. */
+  async moderate(userId: string, action: ModerationAction): Promise<void> {
+    const id = this.state.callId;
+    if (!id || !this.state.voiceRoom || !this.state.canModerate) return;
+    try {
+      const { call } = await this.host.api.json("POST", `/v1/calls/${encodeURIComponent(id)}/moderate`, zCallRes, { body: { userId, action } });
+      if (call.id === this.state.callId) this.patch({ hands: call.hands, notice: null });
+    } catch (e) {
+      this.patch({ notice: e instanceof ApiError ? e.message : "That didn't work. Try again." });
+    }
+  }
+
+  /** A manager acted on this person: a muted microphone shows off here too; removal arrives as the call's end. */
+  private async onModerated(action: unknown): Promise<void> {
+    if (action === "mute") {
+      await this.session?.setMicrophone(false).catch(() => undefined);
+      this.refresh();
+      this.patch({ notice: "A room manager muted your microphone. You can turn it on again." });
+    } else if (action === "lower_hand") {
+      this.patch({ notice: "A room manager lowered your hand." });
+    }
+  }
+
   attachVideo(identity: string, el: HTMLVideoElement): () => void {
     return this.session?.attachVideo(identity, el) ?? (() => undefined);
   }
@@ -552,8 +616,9 @@ export class CallManager {
     this.scheduleReset(next, ERROR_SHOWN_MS);
   }
 
+  /** A voice room's call is left, never ended for everyone: it closes by itself when the last person leaves. */
   private othersInCall(s: CallUiState): boolean {
-    return s.isGroup && s.participants.some((p) => !p.isLocal);
+    return s.voiceRoom || (s.isGroup && s.participants.some((p) => !p.isLocal));
   }
 
   /** 1:1 calls end for both; in a group call with others still in it, this browser only leaves. */
