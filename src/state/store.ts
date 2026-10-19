@@ -2,6 +2,7 @@ import type { Call, Conversation, Org, ServerInfo } from "../api/schemas";
 import { type CallUiState, idleCall } from "../call/types";
 import type { ConversationLocal, PinnedIdentity, StoredMessage } from "../model/types";
 import type { ConnectionState } from "../realtime/socket";
+import type { NavPrefs } from "../sync/navPrefs";
 
 export type Phase =
   /** Opening local data and signing in. */
@@ -38,6 +39,8 @@ export interface UserLite {
   avatarColor: number;
   statusText: string | null;
   online: boolean | null;
+  /** Profile photo revision (GET /v1/users/:id/photo), where their privacy setting lets this account see it. */
+  photoRev?: number | null;
 }
 
 export interface ConversationMessages {
@@ -80,6 +83,10 @@ export interface AppState {
   identityAlerts: PinnedIdentity[];
   history: HistoryState;
   notices: Notice[];
+  /** Personal navigation preferences by workspace ("personal" or an organisation id), with unsent changes applied. */
+  nav: Record<string, NavPrefs>;
+  /** Bumped when a thread reply arrives or a thread is seen: Activity › Thread replies reloads. */
+  threadRev: number;
 }
 
 export const initialState: AppState = {
@@ -98,6 +105,8 @@ export const initialState: AppState = {
   calls: {},
   call: idleCall,
   identityAlerts: [],
+  nav: {},
+  threadRev: 0,
   history: { status: "idle", restored: 0, unreadable: 0, error: null },
   notices: [],
 };

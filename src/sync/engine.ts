@@ -21,7 +21,9 @@ import { Directory } from "./directory";
 import { restoreHistory } from "./historySync";
 import { resolveMentions } from "./mentions";
 import { Outbox, sealAndPost } from "./outbox";
+import { levelOf, type NavOp, NavSync, PERSONAL, workspaceOf } from "./navPrefs";
 import { Receiver } from "./receiver";
+import { type ThreadActivity, threadActivity } from "./threads";
 import { applyPin, applyReaction, callEntry, preview, sendsReadReceipts } from "./rules";
 import { type RevokedReason, SessionManager } from "./session";
 
@@ -52,6 +54,7 @@ const zConversations = z.object({ conversations: z.array(zConversation) });
 const zOrgs = z.object({ orgs: z.array(zOrg) });
 const zMembers = z.object({ members: z.array(zMember) });
 const CACHE_KEY = "cache.meta";
+const THREAD_SEEN_KEY = "threads.seen";
 
 const emptyLocal = (id: string): ConversationLocal => ({ id, unread: 0, mentions: 0, lastMessageId: null, lastPreview: null, lastSenderName: null, lastActivityAt: 0, readUpTo: 0, draft: "" });
 
@@ -66,6 +69,8 @@ export class Engine implements EngineContext {
   /** Orbit 2.0 account session (email and password), or the device-key session of a browser linked before 2.0. */
   readonly session: AccountSession | SessionManager;
   readonly calls: CallManager;
+  /** Starred, sections, collapsed groups and notification levels, synced across the person's devices. */
+  readonly nav: NavSync;
   private readonly realtime: RealtimeClient;
   private readonly receiver: Receiver;
   private readonly outbox: Outbox;
@@ -116,6 +121,13 @@ export class Engine implements EngineContext {
         ...opts.callTiming,
       },
     );
+    this.nav = new NavSync({
+      get: (path) => this.api.json("GET", path, z.unknown()),
+      put: (path, body) => this.api.json("PUT", path, z.unknown(), { body }),
+      load: (key) => store.getValue(key),
+      save: (key, value) => store.setValue(key, value),
+      publish: (nav) => this.set((s) => ({ ...s, nav })),
+    });
     this.realtime = new RealtimeClient({
       url: opts.wsUrl,
       token: () => this.session.token(),
@@ -180,6 +192,11 @@ export class Engine implements EngineContext {
 
   private set(fn: (s: AppState) => AppState): void {
     this.state.update(fn);
+  }
+
+  /** Arranges a conversation on Home (starred, a section, its notification level) in its workspace's synced document. */
+  arrange(conversationId: string, op: NavOp): Promise<void> {
+    return this.nav.change(workspaceOf(this.state.get().conversations[conversationId]?.orgId ?? null), op);
   }
 
   notice(kind: "error" | "info", text: string): void {
@@ -274,7 +291,7 @@ export class Engine implements EngineContext {
       this.set((s) => {
         const users = { ...s.users };
         for (const c of convs.conversations) for (const m of c.members ?? []) users[m.id] = toUser(m, users[m.id]);
-        users[u.id] = { id: u.id, username: u.username, displayName: u.displayName, avatarColor: u.avatarColor, statusText: u.statusText, online: true };
+        users[u.id] = { id: u.id, username: u.username, displayName: u.displayName, avatarColor: u.avatarColor, statusText: u.statusText, online: true, photoRev: u.photoRev };
         const calls: Record<string, Call> = {};
         for (const c of convs.conversations)
           if (c.activeCall)
@@ -301,6 +318,7 @@ export class Engine implements EngineContext {
       });
       const st = this.state.get();
       await this.store.setValue(CACHE_KEY, { orgs: st.orgs, conversations: Object.values(st.conversations), users: Object.values(st.users) });
+      void this.nav.refresh([PERSONAL, ...orgs.orgs.map((o) => o.id)]);
     } catch (e) {
       if (!(e instanceof ApiError && e.isNetwork)) this.notice("error", e instanceof ApiError ? e.message : "Couldn't load your conversations.");
     }
@@ -366,6 +384,11 @@ export class Engine implements EngineContext {
       case "org.updated":
         await this.refreshAll();
         return;
+      case "prefs.updated": {
+        const ws = str(f.workspaceId);
+        if (ws) await this.nav.refresh([ws]);
+        return;
+      }
       case "org.deleted": {
         const id = str(f.orgId);
         if (!id) return;
@@ -449,7 +472,7 @@ export class Engine implements EngineContext {
         .then(({ user: u }) =>
           this.set((s) => ({
             ...s,
-            users: { ...s.users, [u.id]: { id: u.id, username: u.username, displayName: u.displayName, avatarColor: u.avatarColor, statusText: u.statusText, online: u.online } },
+            users: { ...s.users, [u.id]: { id: u.id, username: u.username, displayName: u.displayName, avatarColor: u.avatarColor, statusText: u.statusText, online: u.online, photoRev: u.photoRev } },
           })),
         )
         .catch(() => undefined)
@@ -460,7 +483,29 @@ export class Engine implements EngineContext {
   }
 
   show(m: StoredMessage): void {
-    this.set((s) => upsertLoaded(s, m));
+    this.set((s) => {
+      const next = upsertLoaded(s, m);
+      return m.threadRootId ? { ...next, threadRev: next.threadRev + 1 } : next;
+    });
+  }
+
+  /** Threads this account takes part in, with replies not yet seen here (Activity › Thread replies). */
+  async threadActivity(): Promise<ThreadActivity[]> {
+    const replies = await this.store.threadReplies();
+    const rootIds = [...new Set(replies.map((m) => m.threadRootId).filter((id): id is string => !!id))];
+    const roots = new Map(await Promise.all(rootIds.map(async (id) => [id, await this.store.message(id)] as const)));
+    const seen = (await this.store.getValue<Record<string, number>>(THREAD_SEEN_KEY)) ?? {};
+    return threadActivity(replies, roots, seen);
+  }
+
+  /** The thread was opened here: its replies so far are seen. */
+  async markThreadSeen(rootId: string): Promise<void> {
+    const seen = (await this.store.getValue<Record<string, number>>(THREAD_SEEN_KEY)) ?? {};
+    const newest = (await this.store.threadReplies()).filter((m) => m.threadRootId === rootId).reduce((t, m) => Math.max(t, m.sortTs), 0);
+    // Server times only (the replies' own), so a fast clock here can't mark later replies as seen.
+    if (newest === 0 || (seen[rootId] ?? 0) >= newest) return;
+    await this.store.setValue(THREAD_SEEN_KEY, { ...seen, [rootId]: newest });
+    this.set((s) => ({ ...s, threadRev: s.threadRev + 1 }));
   }
 
   private async local(id: string): Promise<ConversationLocal> {
@@ -504,9 +549,18 @@ export class Engine implements EngineContext {
     );
   }
 
-  notifyIncoming(m: StoredMessage, conversation: Conversation | null, mentioned: boolean): void {
+  /**
+   * A system notification for a message that arrived off screen, unless the person's synced notification level for the
+   * conversation says otherwise (docs/MENTIONS.md, NOTIFICATIONS.md): "mentions" lets mentions and @everyone through,
+   * "none" (muted) only a mention of them by name.
+   */
+  notifyIncoming(m: StoredMessage, conversation: Conversation | null, mention: "me" | "all" | null): void {
     if (!this.opts.notify) return;
     const st = this.state.get();
+    const level = levelOf(st.nav[workspaceOf(conversation?.orgId ?? null)], m.conversationId);
+    if (level === "none" && mention !== "me") return;
+    if (level === "mentions" && mention === null) return;
+    const mentioned = mention !== null;
     const sender = st.users[m.senderUserId]?.displayName ?? "Someone";
     const title = conversation?.type === "CHANNEL" ? `#${conversation.name ?? "channel"}` : conversation?.type === "GROUP" ? (conversation.name ?? sender) : sender;
     this.opts.notify(mentioned ? `${title} · mentioned you` : title, conversation?.type === "DM" ? preview(m) : `${sender}: ${preview(m)}`, m.conversationId);
@@ -580,6 +634,18 @@ export class Engine implements EngineContext {
     this.lastReadSent.set(id, upTo);
     await this.saveLocal({ ...(await this.local(id)), readUpTo: upTo });
     await this.enqueueControl(id, { type: "read", upTo });
+  }
+
+  /** Marks a conversation read or unread on this browser only: no read receipt is sent either way (as on the phone). */
+  async setUnreadLocally(id: string, unread: boolean): Promise<void> {
+    const l = await this.local(id);
+    await this.saveLocal(unread ? { ...l, unread: Math.max(1, l.unread) } : { ...l, unread: 0, mentions: 0 });
+  }
+
+  /** Archives a conversation on this browser, or brings it back (local, reversible; nothing is sent). */
+  async setArchivedLocally(id: string, archived: boolean): Promise<void> {
+    const l = await this.local(id);
+    await this.saveLocal({ ...l, archivedAt: archived ? Date.now() : null });
   }
 
   // ───────────────────────── sending ─────────────────────────
@@ -854,5 +920,5 @@ function str(v: unknown): string | null {
 }
 
 function toUser(m: Member, prev?: UserLite): UserLite {
-  return { id: m.id, username: m.username, displayName: m.displayName, avatarColor: m.avatarColor, statusText: m.statusText, online: m.online ?? prev?.online ?? null };
+  return { id: m.id, username: m.username, displayName: m.displayName, avatarColor: m.avatarColor, statusText: m.statusText, online: m.online ?? prev?.online ?? null, photoRev: m.photoRev ?? null };
 }

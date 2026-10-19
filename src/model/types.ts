@@ -64,6 +64,11 @@ export interface ConversationLocal {
   /** Newest server time this device has read up to. */
   readUpTo: number;
   draft: string;
+  /**
+   * Archived on this browser (android CHAT_LIST_ACTIONS.md): out of the lists and badges, still a member, still notified
+   * unless muted. Local only, like the phone's. Absent on records from before.
+   */
+  archivedAt?: number | null;
 }
 
 export interface OutboxItem {

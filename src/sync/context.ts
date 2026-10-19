@@ -28,7 +28,8 @@ export interface EngineContext {
   /** This account read [conversationId] up to [upTo] on another device. */
   readElsewhere(conversationId: string, upTo: number): Promise<void>;
   markReadSoon(conversationId: string): void;
-  notifyIncoming(m: StoredMessage, conversation: Conversation | null, mentioned: boolean): void;
+  /** [mention]: "me" when the message mentions this account by name, "all" for a server-attested @everyone. */
+  notifyIncoming(m: StoredMessage, conversation: Conversation | null, mention: "me" | "all" | null): void;
   refreshIdentityAlerts(): Promise<void>;
   kickOutbox(): void;
 }

@@ -353,3 +353,61 @@
   font-size: 11px;
   font-weight: 500;
 }
+
+/* A sidebar row with its … menu button, shown on hover or keyboard focus (always on touch screens). */
+.side-row {
+  position: relative;
+}
+.side-row > .side-item {
+  padding-right: 34px;
+}
+.row-more {
+  position: absolute;
+  top: 50%;
+  right: 6px;
+  transform: translateY(-50%);
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: var(--r-sm);
+  color: var(--text-2);
+  opacity: 0;
+  transition: opacity var(--t-fast);
+}
+.side-row:hover .row-more,
+.side-row:focus-within .row-more,
+.side-section-row:hover .row-more,
+.side-section-row:focus-within .row-more,
+.row-more[aria-expanded="true"] {
+  opacity: 1;
+}
+.row-more:hover {
+  background: var(--surface-hover);
+  color: var(--text);
+}
+@media (hover: none) {
+  .row-more {
+    opacity: 1;
+  }
+}
+.side-row:hover > .side-item .count,
+.side-row:focus-within > .side-item .count {
+  visibility: hidden;
+}
+.side-section-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.side-section-row .side-section-head {
+  flex: 1;
+}
+.side-section-row .row-more {
+  position: static;
+  transform: none;
+  margin-right: 4px;
+}
+.side-item.muted {
+  color: var(--text-3);
+}

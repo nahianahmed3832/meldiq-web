@@ -106,8 +106,24 @@ export function holdDeviceLock(steal: boolean, onLost: () => void): Promise<bool
   return request(steal, onLost);
 }
 
+/** A page being reloaded can still hold the lock for a moment: ask again a few times before deciding it's another tab. */
+const LOCK_ATTEMPTS = 6;
+const LOCK_RETRY_MS = 250;
+
 function request(steal: boolean, onLost: () => void): Promise<boolean> {
-  held = new Promise((resolve) => {
+  held = (async () => {
+    for (let attempt = 0; attempt < LOCK_ATTEMPTS; attempt++) {
+      if (await tryLock(steal, onLost)) return true;
+      if (steal) return false;
+      await new Promise((r) => setTimeout(r, LOCK_RETRY_MS));
+    }
+    return false;
+  })();
+  return held;
+}
+
+function tryLock(steal: boolean, onLost: () => void): Promise<boolean> {
+  return new Promise((resolve) => {
     navigator.locks
       .request(LOCK, steal ? { steal: true } : { ifAvailable: true }, (lock) => {
         if (!lock) {
@@ -122,5 +138,4 @@ function request(steal: boolean, onLost: () => void): Promise<boolean> {
         onLost();
       });
   });
-  return held;
 }

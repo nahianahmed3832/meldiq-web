@@ -29,7 +29,7 @@ interface HeldItem {
 
 interface OrbitDB extends DBSchema {
   kv: { key: string; value: unknown };
-  messages: { key: string; value: StoredMessage; indexes: { byConversation: [string, number] } };
+  messages: { key: string; value: StoredMessage; indexes: { byConversation: [string, number]; byThread: string } };
   conversations: { key: string; value: ConversationLocal };
   outbox: { key: string; value: OutboxItem };
   pins: { key: string; value: PinnedIdentity };
@@ -40,7 +40,8 @@ interface OrbitDB extends DBSchema {
 export type { HeldItem, PendingControl };
 
 export const DB_NAME = "orbit-web";
-const VERSION = 1;
+/** 2: messages indexed by thread root (Activity › Thread replies). */
+const VERSION = 2;
 
 /** The repository the sync engine reads and writes; one implementation over IndexedDB. */
 export class LocalStore {
@@ -56,14 +57,18 @@ export class LocalStore {
       blocking() {
         db.close();
       },
-      upgrade(d) {
-        d.createObjectStore("kv");
-        d.createObjectStore("messages", { keyPath: "id" }).createIndex("byConversation", ["conversationId", "sortTs"]);
-        d.createObjectStore("conversations", { keyPath: "id" });
-        d.createObjectStore("outbox", { keyPath: "messageId" });
-        d.createObjectStore("pins", { keyPath: "userId" });
-        d.createObjectStore("held", { keyPath: "queueId" }).createIndex("bySender", "senderUserId");
-        d.createObjectStore("pendingControls", { keyPath: "id" }).createIndex("byTarget", ["conversationId", "target"]);
+      upgrade(d, oldVersion, _newVersion, tx) {
+        if (oldVersion < 1) {
+          d.createObjectStore("kv");
+          d.createObjectStore("messages", { keyPath: "id" }).createIndex("byConversation", ["conversationId", "sortTs"]);
+          d.createObjectStore("conversations", { keyPath: "id" });
+          d.createObjectStore("outbox", { keyPath: "messageId" });
+          d.createObjectStore("pins", { keyPath: "userId" });
+          d.createObjectStore("held", { keyPath: "queueId" }).createIndex("bySender", "senderUserId");
+          d.createObjectStore("pendingControls", { keyPath: "id" }).createIndex("byTarget", ["conversationId", "target"]);
+        }
+        // Only replies have a thread root (null isn't a key), so this index holds thread replies alone.
+        if (oldVersion < 2) tx.objectStore("messages").createIndex("byThread", "threadRootId");
       },
     });
     return new LocalStore(db, name);
@@ -149,6 +154,11 @@ export class LocalStore {
   }
 
   /** Newest messages first, for previews: the first one [accept] takes. */
+  /** Every thread reply this browser has, oldest first within each thread. */
+  async threadReplies(): Promise<StoredMessage[]> {
+    return (await this.db.getAllFromIndex("messages", "byThread")).sort((a, b) => a.sortTs - b.sortTs);
+  }
+
   async newestMessage(conversationId: string, accept: (m: StoredMessage) => boolean): Promise<StoredMessage | null> {
     const range = IDBKeyRange.bound([conversationId, -Infinity], [conversationId, Infinity]);
     let cursor = await this.db.transaction("messages").store.index("byConversation").openCursor(range, "prev");

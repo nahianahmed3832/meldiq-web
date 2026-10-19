@@ -116,7 +116,7 @@ export class Receiver {
         const mentioned = !mine && (mentions.ids.includes(device.userId) || mentions.all);
         await this.ctx.bump(m, { unread: !mine && !viewing, mention: mentioned && !viewing });
         if (viewing && !mine) this.ctx.markReadSoon(item.conversationId);
-        if (!mine && !viewing) this.ctx.notifyIncoming(m, conv, mentioned);
+        if (!mine && !viewing) this.ctx.notifyIncoming(m, conv, mentions.ids.includes(device.userId) ? "me" : mentions.all ? "all" : null);
         return;
       }
       case "edit":

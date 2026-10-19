@@ -1,4 +1,4 @@
-import { BellOff, Fingerprint, Hash, Lock, MessageSquare, Pin, ShieldCheck, X } from "lucide-react";
+import { BellOff, Fingerprint, Hash, Lock, LogOut, MessageSquare, Pin, ShieldCheck, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { Member } from "../../api/schemas";
 import { useEngine, useOrbit } from "../../app/orbit";
@@ -8,7 +8,9 @@ import type { StoredMessage } from "../../model/types";
 import { conversationMembers, startDirect, userProfile } from "../../sync/account";
 import { Avatar } from "../components/Avatar";
 import { conversationTitle, dmPeer, dayLabel } from "../format";
+import { levelOf, type NotifyLevel, workspaceOf } from "../../sync/navPrefs";
 import { preview } from "../../sync/rules";
+import { removeConversationMember } from "../../sync/workspaces";
 import { Composer } from "./Composer";
 import { MessageList } from "./MessageList";
 
@@ -217,20 +219,93 @@ function DetailsPanel({ conversationId, onClose }: { conversationId: string; onC
           </div>
         )}
 
-        <p className="faint" style={{ fontSize: 12, margin: 0, display: "flex", gap: 6 }}>
-          <BellOff size={14} /> Muting and other chat preferences are set on your phone.
-        </p>
+        <ConversationSettings conversationId={conversationId} />
       </div>
     </aside>
   );
 }
 
+const LEVELS: { level: NotifyLevel; label: string }[] = [
+  { level: "all", label: "All new messages" },
+  { level: "mentions", label: "Mentions only" },
+  { level: "none", label: "Off" },
+];
+
+/** Notifications (synced to every device of the person) and leaving the group or channel. */
+function ConversationSettings({ conversationId }: { conversationId: string }) {
+  const engine = useEngine();
+  const c = useOrbit((s) => s.conversations[conversationId]);
+  const level = useOrbit((s) => levelOf(s.nav[workspaceOf(c?.orgId ?? null)], conversationId));
+  const [confirm, setConfirm] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  if (!c) return null;
+  const leavable = c.type === "GROUP" || (c.type === "CHANNEL" && !(c.kind === "ANNOUNCEMENT" && !c.canManage));
+  const leave = async () => {
+    try {
+      await removeConversationMember(engine, conversationId, engine.device.userId);
+      await engine.refreshAll();
+      navigate({ section: c.type === "CHANNEL" ? "home" : "dms" });
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Couldn't leave.");
+    }
+  };
+  return (
+    <div className="panel-card" style={{ display: "grid", gap: 10 }}>
+      <label className="field">
+        <span className="panel-section-title">
+          <span className="row" style={{ gap: 6 }}>
+            <BellOff size={14} /> Notifications
+          </span>
+        </span>
+        <select className="input input-sm" value={level} onChange={(e) => void engine.arrange(conversationId, { op: "notify", conversationId, level: e.target.value as NotifyLevel })}>
+          {LEVELS.map((l) => (
+            <option key={l.level} value={l.level}>
+              {l.label}
+            </option>
+          ))}
+        </select>
+        <span className="hint">Applies on all your devices. A mention of you still notifies when they're off.</span>
+      </label>
+      {leavable && (
+        <>
+          {error && (
+            <div className="banner danger" role="alert">
+              {error}
+            </div>
+          )}
+          {confirm ? (
+            <div className="row" style={{ gap: 8 }}>
+              <span className="grow">Leave {c.type === "GROUP" ? "this group" : "this channel"}?</span>
+              <button className="btn btn-secondary btn-sm" onClick={() => setConfirm(false)}>
+                Cancel
+              </button>
+              <button className="btn btn-danger btn-sm" onClick={() => void leave()}>
+                Leave
+              </button>
+            </div>
+          ) : (
+            <button className="btn btn-danger-quiet btn-sm" style={{ justifySelf: "start" }} onClick={() => setConfirm(true)}>
+              <LogOut size={14} /> Leave {c.type === "GROUP" ? "group" : "channel"}
+            </button>
+          )}
+        </>
+      )}
+    </div>
+  );
+}
+
 function ThreadPanel({ conversationId, root, onClose }: { conversationId: string; root: string; onClose: () => void }) {
+  const engine = useEngine();
   const c = useOrbit((s) => s.conversations[conversationId]);
   const items = useOrbit((s) => s.messages[conversationId]?.items);
   const me = useOrbit((s) => s.me);
   const users = useOrbit((s) => s.users);
   const rootMsg: StoredMessage | undefined = items?.find((m) => m.id === root);
+  const replies = (items ?? []).filter((m) => m.threadRootId === root).length;
+  // Looking at the thread sees its replies (Activity › Thread replies), including ones that arrive while it's open.
+  useEffect(() => {
+    void engine.markThreadSeen(root);
+  }, [engine, root, replies]);
   if (!c || !me) return null;
   const title = conversationTitle(c, me.userId, users);
   return (

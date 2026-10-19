@@ -1,5 +1,6 @@
 import type { Conversation } from "../api/schemas";
 import type { AppState } from "../state/store";
+import { levelOf, type NavPrefs, PERSONAL, placed, workspaceOf } from "../sync/navPrefs";
 
 /**
  * What the sidebar and the three sections list, from the server's conversations and this browser's unread counts
@@ -46,17 +47,73 @@ export function channelGroups(s: AppState, orgId: string | null): ChannelGroup[]
     .sort((a, b) => (SCOPE_ORDER[a.scope ?? "ORG"] ?? 3) - (SCOPE_ORDER[b.scope ?? "ORG"] ?? 3) || a.title.localeCompare(b.title));
 }
 
+/** Archived on this browser (out of the lists and badges; android ChatListRules.isArchived). */
+export const isArchived = (s: AppState, id: string): boolean => !!s.local[id]?.archivedAt;
+
+/** Muted with the synced notification level "none": its unread count shows quietly and stays out of the badges. */
+export function isMuted(s: AppState, c: Conversation): boolean {
+  return levelOf(s.nav[workspaceOf(c.orgId)], c.id) === "none";
+}
+
+/** Direct messages and groups, newest first, without the ones archived here. */
 export function people(s: AppState): Conversation[] {
-  return Object.values(s.conversations).filter(isPeople).sort(byActivity(s));
+  return Object.values(s.conversations)
+    .filter((c) => isPeople(c) && !isArchived(s, c.id))
+    .sort(byActivity(s));
+}
+
+export function archivedPeople(s: AppState): Conversation[] {
+  return Object.values(s.conversations)
+    .filter((c) => isPeople(c) && isArchived(s, c.id))
+    .sort(byActivity(s));
 }
 
 export function unreadOf(s: AppState, id: string): number {
   return s.local[id]?.unread ?? 0;
 }
 
-/** Unread direct messages and groups. */
+/** Unread direct messages and groups (archived and muted ones aside). */
 export function unreadPeopleCount(s: AppState): number {
-  return Object.values(s.conversations).filter((c) => isPeople(c) && unreadOf(s, c.id) > 0).length;
+  return Object.values(s.conversations).filter((c) => isPeople(c) && unreadOf(s, c.id) > 0 && !isArchived(s, c.id) && !isMuted(s, c)).length;
+}
+
+export interface HomeSection {
+  /** "personal" or the organisation id whose document holds it. */
+  workspaceId: string;
+  id: string;
+  name: string;
+  collapsed: boolean;
+  ids: string[];
+}
+
+export interface HomeLayout {
+  starred: string[];
+  sections: HomeSection[];
+  /** Conversations shown in Starred or a section, left out of their default groups. */
+  placed: Set<string>;
+}
+
+/**
+ * Home's personal arrangement for a workspace (docs/WORKSPACE_ADMINISTRATION.md §5): Starred and the custom sections
+ * from the workspace's document (its channels) and the personal one (direct messages and groups), in the person's order;
+ * only conversations this account has and that belong in this workspace's view.
+ */
+export function homeLayout(s: AppState, orgId: string | null): HomeLayout {
+  const docs: [string, NavPrefs | undefined][] = [...(orgId ? ([[orgId, s.nav[orgId]]] as [string, NavPrefs | undefined][]) : []), [PERSONAL, s.nav[PERSONAL]]];
+  const shown = (id: string) => {
+    const c = s.conversations[id];
+    return !!c && inWorkspace(c, orgId) && !isArchived(s, id);
+  };
+  const starred: string[] = [];
+  const sections: HomeSection[] = [];
+  const all = new Set<string>();
+  for (const [ws, p] of docs) {
+    if (!p) continue;
+    starred.push(...p.starred.filter(shown));
+    for (const sec of p.sections) sections.push({ workspaceId: ws, id: sec.id, name: sec.name, collapsed: sec.collapsed, ids: sec.items.filter(shown) });
+    for (const id of placed(p)) all.add(id);
+  }
+  return { starred, sections, placed: all };
 }
 
 /** Conversations in this workspace's view with unread @mentions of me. */
@@ -72,5 +129,5 @@ export function mentionCount(s: AppState): number {
 
 /** Channels with unread messages in a workspace (the rail's badge). */
 export function orgUnread(s: AppState, orgId: string): number {
-  return Object.values(s.conversations).filter((c) => c.type === "CHANNEL" && c.orgId === orgId && unreadOf(s, c.id) > 0).length;
+  return Object.values(s.conversations).filter((c) => c.type === "CHANNEL" && c.orgId === orgId && unreadOf(s, c.id) > 0 && !isMuted(s, c)).length;
 }
