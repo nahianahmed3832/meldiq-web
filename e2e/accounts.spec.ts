@@ -15,6 +15,21 @@ test.beforeEach(async ({ context }) => {
 
 const PASSWORD = "a long enough password";
 
+/** What the phone's Settings › Sessions does: another sign-in lists the account's sessions and removes the newest one without a device (a browser still being set up). */
+async function removeSetupSessionElsewhere(email: string): Promise<void> {
+  const api = process.env.ORBIT_E2E_API!;
+  const headers = { "content-type": "application/json", "x-orbit-test-ip": testAddress() };
+  const login = await fetch(`${api}/v2/auth/login`, { method: "POST", headers, body: JSON.stringify({ email, password: PASSWORD, deviceName: "Phone" }) });
+  const { accessToken } = (await login.json()) as { accessToken: string };
+  // No content-type on the body-less requests: the server refuses an empty JSON body.
+  const auth = { "x-orbit-test-ip": headers["x-orbit-test-ip"], authorization: `Bearer ${accessToken}` };
+  const list = (await (await fetch(`${api}/v2/account/sessions`, { headers: auth })).json()) as { sessions: { id: string; deviceId: string | null; current: boolean; createdAt: number }[] };
+  const target = list.sessions.filter((s) => !s.current && s.deviceId === null).sort((a, b) => b.createdAt - a.createdAt)[0];
+  expect(target, "the browser's setup session is listed").toBeTruthy();
+  const r = await fetch(`${api}/v2/account/sessions/${encodeURIComponent(target!.id)}`, { method: "DELETE", headers: auth });
+  expect(r.ok).toBe(true);
+}
+
 async function signIn(page: Page, email: string): Promise<void> {
   await expectSignedOut(page);
   await page.getByLabel("Email").fill(email);
@@ -62,6 +77,19 @@ test("sign up, set up encryption, come back after a reload, and add a second bro
   const other = await browser.newContext({ extraHTTPHeaders: { "x-orbit-test-ip": testAddress() } });
   const second = await other.newPage();
   await second.goto("/");
+  await signIn(second, email);
+  await expect(second.getByRole("heading", { name: "Set up this browser" })).toBeVisible();
+
+  // The setup session is removed on another device before it finishes (production, 2026-10-19): the recovery key can't
+  // be used with it, so the screen goes back to sign-in with the email kept and says why, instead of failing every try.
+  await removeSetupSessionElsewhere(email);
+  await second.getByRole("tab", { name: "Use my recovery key" }).click();
+  await second.getByLabel("Recovery key", { exact: true }).fill(recovery);
+  await second.getByRole("button", { name: "Set up this browser" }).click();
+  await expect(second.getByText(/This sign-in was ended before the browser was set up/)).toBeVisible();
+  await expect(second.getByLabel("Email")).toHaveValue(email);
+
+  // Signing in again sets it up with the same recovery key.
   await signIn(second, email);
   await expect(second.getByRole("heading", { name: "Set up this browser" })).toBeVisible();
   await second.getByRole("tab", { name: "Use my recovery key" }).click();

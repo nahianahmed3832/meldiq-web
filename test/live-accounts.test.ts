@@ -120,6 +120,32 @@ describe("more browsers on the same account", () => {
     expect(await decodeRecoveryCode((await encodeRecoveryCode(other)).slice(0, -3))).toBeNull();
   });
 
+  it("a setup session removed on another device ends setup with one clear outcome, and signing in again finishes it", async () => {
+    // Production, 2026-10-19: the browser signed in, then the session was removed in the phone's session list before
+    // setup finished; every recovery-key or approval attempt after that reused the dead session and failed with 401.
+    const grant = await anon().login(address, PASSWORD, "Browser four");
+    const ends: string[] = [];
+    const creds = new SetupCredentials(server.baseUrl, grant, (why) => ends.push(why));
+    const phone = await anon().login(address, PASSWORD, "Phone");
+    await new AccountApi(new ApiClient(server.baseUrl, { token: () => phone.accessToken, reauthenticate: async () => false })).endSession(grant.session.id);
+
+    const seed = (await decodeRecoveryCode(recovery))!;
+    await expect(enrollWithSeed(creds.accounts, grant.account, seed, "Browser four")).rejects.toMatchObject({ status: 401 });
+    expect(ends).toEqual(["session_ended"]);
+    expect(creds.endedBecause).toBe("session_ended");
+    // Nothing more is tried with the dead session: a second attempt is refused here without another refresh.
+    await expect(enrollWithSeed(creds.accounts, grant.account, seed, "Browser four")).rejects.toMatchObject({ status: 401 });
+    expect(ends).toEqual(["session_ended"]);
+    // No device was added for it.
+    const devices = (await first.engine.api.json("GET", "/v1/devices", z.object({ devices: z.array(z.object({ name: z.string() })) }))).devices;
+    expect(devices.map((d) => d.name)).not.toContain("Browser four");
+
+    // Signing in again (what the screen asks for) sets the browser up with the same recovery key.
+    const again = await anon().login(address, PASSWORD, "Browser four");
+    const { device } = await enrollWithSeed(new SetupCredentials(server.baseUrl, again).accounts, again.account, seed, "Browser four");
+    expect(device.userId).toBe(first.engine.device.userId);
+  });
+
   it("keeps working across access-token renewals: the stored session is refreshed, never replaced", async () => {
     const before = (await new TokenVault(first.engine.store).load())!;
     // The access token runs out (15 minutes in production): expire it on the server.

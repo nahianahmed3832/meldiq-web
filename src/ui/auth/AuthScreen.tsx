@@ -5,7 +5,7 @@ import { ApiClient } from "../../api/client";
 import { type ServerInfo, zServerInfo } from "../../api/schemas";
 import { AccountApi } from "../../auth/accountApi";
 import { enrollWithSeed } from "../../auth/deviceSetup";
-import { SetupCredentials } from "../../auth/setupCredentials";
+import { SetupCredentials, type SetupSessionEnd } from "../../auth/setupCredentials";
 import type { DeviceRecord } from "../../model/types";
 import { browserDeviceName } from "../../sync/session";
 import { AuthFrame, AuthHeading, FormError } from "./AuthFrame";
@@ -32,6 +32,13 @@ type Step =
  * [onReady] gets the new device and its account session. [onLinkWithPhone] opens the older phone-only linking, offered
  * while the server still accepts device-key sign-in.
  */
+/** What the sign-in screen says when the session setting this browser up was ended before it finished. */
+const SETUP_ENDED: Record<SetupSessionEnd, string> = {
+  session_ended:
+    "This sign-in was ended before the browser was set up: it was signed out from another device (for example removed from the session list on your phone), or it expired. Sign in again to continue.",
+  account_disabled: "This account is disabled.",
+};
+
 export function AuthScreen(props: {
   base?: string;
   /** Keeps the new device and its session, before the recovery key is shown (so a reload then doesn't lose the device). */
@@ -70,7 +77,11 @@ export function AuthScreen(props: {
   /** Signed in: set up encryption on this browser, or (after a move) do it at once with the recovery key typed earlier. */
   const signedIn = useCallback(
     async (grant: AccountSessionGrant) => {
-      const creds = new SetupCredentials(base, grant);
+      // Ended from elsewhere before setup finished (e.g. removed in the phone's session list): sign in again, email kept.
+      const creds = new SetupCredentials(base, grant, (why) => {
+        forgetSeed();
+        setStep({ k: "signIn", notice: SETUP_ENDED[why], email: grant.account.email });
+      });
       const account = grant.account;
       if (!account.identity) return setStep({ k: "create", creds, account });
       if (!legacySeed) return setStep({ k: "addDevice", creds, account });
