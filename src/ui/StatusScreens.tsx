@@ -1,12 +1,12 @@
 import { AppWindow, MonitorX, ShieldOff } from "lucide-react";
-import { OrbitMark } from "./components/OrbitMark";
+import { BrandMark } from "./components/BrandMark";
 
 export function LoadingScreen() {
   return (
     <main className="status-screen" aria-busy="true">
       <div className="status-card">
-        <OrbitMark size={56} />
-        <p className="muted">Opening Orbit…</p>
+        <BrandMark size={56} />
+        <p className="muted">Opening Meldiq…</p>
       </div>
     </main>
   );
@@ -19,8 +19,8 @@ export function UnsupportedScreen({ missing }: { missing: string[] }) {
         <span className="empty-orb">
           <MonitorX size={26} />
         </span>
-        <h1>This browser can't run Orbit</h1>
-        <p>Orbit keeps your keys in the browser and encrypts every message on this computer. It needs {missing.join(", ")}.</p>
+        <h1>This browser can't run Meldiq</h1>
+        <p>Meldiq keeps your keys in the browser and encrypts every message on this computer. It needs {missing.join(", ")}.</p>
         <p className="faint">Use a current version of Chrome, Edge, Firefox or Safari, over HTTPS.</p>
       </div>
     </main>
@@ -35,9 +35,9 @@ export function ConfigError({ message }: { message: string }) {
         <span className="empty-orb">
           <ShieldOff size={26} />
         </span>
-        <h1>Orbit Web isn't set up correctly</h1>
+        <h1>Meldiq Web isn't set up correctly</h1>
         <p>{message}</p>
-        <p className="faint">Nothing was sent anywhere. Tell whoever runs this Orbit server.</p>
+        <p className="faint">Nothing was sent anywhere. Tell whoever runs this Meldiq server.</p>
       </div>
     </main>
   );
@@ -50,10 +50,10 @@ export function ElsewhereScreen({ onUseHere }: { onUseHere: () => void }) {
         <span className="empty-orb">
           <AppWindow size={26} />
         </span>
-        <h1>Orbit is open in another tab</h1>
-        <p>This browser is one Orbit device, and one tab at a time keeps it connected.</p>
+        <h1>Meldiq is open in another tab</h1>
+        <p>This browser is one Meldiq device, and one tab at a time keeps it connected.</p>
         <button className="btn btn-primary btn-lg" onClick={onUseHere}>
-          Use Orbit here
+          Use Meldiq here
         </button>
       </div>
     </main>
@@ -73,7 +73,7 @@ export function RevokedScreen({ reason, message, onLinkAgain }: { reason: string
         <span className="empty-orb">
           <ShieldOff size={26} />
         </span>
-        <h1>{message ? "Orbit couldn't start" : "Signed out"}</h1>
+        <h1>{message ? "Meldiq couldn't start" : "Signed out"}</h1>
         <p>{message ?? (reason && REASONS[reason]) ?? "This browser is no longer linked to your account."}</p>
         <button className="btn btn-primary btn-lg" onClick={onLinkAgain}>
           {message ? "Try again" : "Link this browser again"}

@@ -37,7 +37,7 @@ async function signUp(name: string): Promise<{ address: string; grant: AccountSe
   const address = email(name);
   await anon().register(name, address, PASSWORD);
   await anon().verifyEmail(address, mail.verifyCode(address), PASSWORD);
-  return { address, grant: await anon().login(address, PASSWORD, "Orbit Web · Test") };
+  return { address, grant: await anon().login(address, PASSWORD, "Meldiq Web · Test") };
 }
 
 /** What App does when setup finishes: keep the device and its session, then start syncing. */
@@ -56,10 +56,10 @@ describe("signing up in the browser", () => {
     await expect(anon().verifyEmail(address, "000000", PASSWORD)).rejects.toMatchObject({ code: "invalid_code" });
     await anon().verifyEmail(address, mail.verifyCode(address), PASSWORD);
 
-    const grant = await anon().login(address, PASSWORD, "Orbit Web · Test");
+    const grant = await anon().login(address, PASSWORD, "Meldiq Web · Test");
     expect(grant.account.identity).toBeNull();
     const creds = new SetupCredentials(server.baseUrl, grant);
-    const { device, recoveryCode } = await createIdentity(creds.accounts, grant.account, "Orbit Web · Test");
+    const { device, recoveryCode } = await createIdentity(creds.accounts, grant.account, "Meldiq Web · Test");
     expect(device.account).toEqual({ id: grant.account.id, email: address });
     expect(recoveryCode).toMatch(/^[A-Z2-9]{4}(-[A-Z2-9]{1,4})+$/);
     // The recovery key is the identity: it derives the public key the server now holds.
@@ -156,14 +156,14 @@ describe("approving a browser from the phone (Orbit 2.0)", () => {
   });
 
   it("the phone's approval sets up the browser on the same account; another account's approval is refused", async () => {
-    const grant = await anon().login(phone.email, phone.password, "Orbit Web · Approved");
-    const link = await startLink(server.baseUrl, "Orbit Web · Approved");
+    const grant = await anon().login(phone.email, phone.password, "Meldiq Web · Approved");
+    const link = await startLink(server.baseUrl, "Meldiq Web · Approved");
     await approveLink(phone as Phone, link.code);
     const approval = await until(async () => {
       const r = await pollLinkApproval(server.baseUrl, link);
       return r.status === "approved" ? r : null;
     });
-    const { device } = await enrollWithSeed(new SetupCredentials(server.baseUrl, grant).accounts, grant.account, approval.seed, "Orbit Web · Approved", link.keys);
+    const { device } = await enrollWithSeed(new SetupCredentials(server.baseUrl, grant).accounts, grant.account, approval.seed, "Meldiq Web · Approved", link.keys);
     approval.seed.fill(0);
     expect(device.userId).toBe(phone.userId);
     const { engine } = await keepAndStart(device, grant);
@@ -176,14 +176,14 @@ describe("approving a browser from the phone (Orbit 2.0)", () => {
 
     // An approval from a different account's phone can't set up this account's browser.
     const stranger = await accountPhone(server, mail, "stranger");
-    const link2 = await startLink(server.baseUrl, "Orbit Web · Wrong");
+    const link2 = await startLink(server.baseUrl, "Meldiq Web · Wrong");
     await approveLink(stranger as Phone, link2.code);
     const wrong = await until(async () => {
       const r = await pollLinkApproval(server.baseUrl, link2);
       return r.status === "approved" ? r : null;
     });
-    const grant2 = await anon().login(phone.email, phone.password, "Orbit Web · Wrong");
-    await expect(enrollWithSeed(new SetupCredentials(server.baseUrl, grant2).accounts, grant2.account, wrong.seed, "Orbit Web · Wrong", link2.keys)).rejects.toBeInstanceOf(SetupError);
+    const grant2 = await anon().login(phone.email, phone.password, "Meldiq Web · Wrong");
+    await expect(enrollWithSeed(new SetupCredentials(server.baseUrl, grant2).accounts, grant2.account, wrong.seed, "Meldiq Web · Wrong", link2.keys)).rejects.toBeInstanceOf(SetupError);
   });
 });
 
@@ -197,9 +197,9 @@ describe("moving an account from before Orbit 2.0", () => {
     const address = email("oldtimer");
     await anon().legacyComplete(ticket.ticket, "Old Timer", address, PASSWORD);
     await anon().verifyEmail(address, mail.verifyCode(address), PASSWORD);
-    const grant = await anon().login(address, PASSWORD, "Orbit Web · Moved");
+    const grant = await anon().login(address, PASSWORD, "Meldiq Web · Moved");
     expect(grant.account.identity?.userId).toBe(legacy.userId);
-    const { device } = await enrollWithSeed(new SetupCredentials(server.baseUrl, grant).accounts, grant.account, seed, "Orbit Web · Moved");
+    const { device } = await enrollWithSeed(new SetupCredentials(server.baseUrl, grant).accounts, grant.account, seed, "Meldiq Web · Moved");
     seed.fill(0);
     expect(device.userId).toBe(legacy.userId);
     // A second move of the same account is refused.

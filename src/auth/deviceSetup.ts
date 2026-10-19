@@ -64,6 +64,6 @@ export async function createIdentity(accounts: AccountApi, account: AccountView,
 export async function enrollWithSeed(accounts: AccountApi, account: AccountView, seed: Uint8Array, deviceName: string, keys?: DeviceKeys): Promise<Enrolled> {
   const identityKey = account.identity?.identityKey;
   if (!identityKey) throw new SetupError("This account has no encryption keys yet.");
-  if ((await publicKeyFromSeed(seed)) !== identityKey) throw new SetupError("That recovery key belongs to a different Orbit account.");
+  if ((await publicKeyFromSeed(seed)) !== identityKey) throw new SetupError("That recovery key belongs to a different Meldiq account.");
   return enroll(accounts, account, seed, identityKey, keys ?? (await generateDeviceKeys()), deviceName, "add-device");
 }

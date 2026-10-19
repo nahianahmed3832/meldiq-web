@@ -1,16 +1,16 @@
 import { KeyRound, Lock, ShieldCheck } from "lucide-react";
 import type { ReactNode } from "react";
-import { OrbitMark } from "../components/OrbitMark";
+import { BrandMark } from "../components/BrandMark";
 
 /** The signed-out layout: Orbit's story on the left, the current step on the right (stacked on phones). */
 export function AuthFrame({ children }: { children: ReactNode }) {
   return (
     <div className="link-screen">
-      <section className="link-hero" aria-label="About Orbit Web">
+      <section className="link-hero" aria-label="About Meldiq Web">
         <div className="row" style={{ gap: 12 }}>
-          <OrbitMark size={44} />
+          <BrandMark size={44} />
           <div>
-            <strong style={{ fontSize: 17 }}>Orbit</strong>
+            <strong style={{ fontSize: 17 }}>Meldiq</strong>
             <div style={{ color: "#b8aaa5", fontSize: 12.5 }}>by GriipBuddy</div>
           </div>
         </div>
@@ -18,7 +18,7 @@ export function AuthFrame({ children }: { children: ReactNode }) {
           <h1>
             Your team, <em>on every screen.</em>
           </h1>
-          <p>Orbit Web is another device of your Orbit account. Messages stay end-to-end encrypted, and your phone and this computer stay in sync through your Orbit server.</p>
+          <p>Meldiq Web is another device of your Meldiq account. Messages stay end-to-end encrypted, and your phone and this computer stay in sync through your Meldiq server.</p>
         </div>
         <div className="hero-points">
           <div>

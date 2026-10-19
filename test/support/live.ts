@@ -155,7 +155,7 @@ export interface LinkedBrowser {
 }
 
 /** Links a new browser to [phone]'s account through the real pairing flow and starts its engine. */
-export async function linkBrowser(server: Server, phone: Phone, deviceName = "Orbit Web · Test", extra: Partial<EngineOptions> = {}): Promise<LinkedBrowser> {
+export async function linkBrowser(server: Server, phone: Phone, deviceName = "Meldiq Web · Test", extra: Partial<EngineOptions> = {}): Promise<LinkedBrowser> {
   const store = await freshStore();
   const link = await startLink(server.baseUrl, deviceName);
   await approveLink(phone, link.code);

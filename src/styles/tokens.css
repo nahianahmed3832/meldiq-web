@@ -52,7 +52,7 @@
   --danger-soft: #fae4e0;
   --info: #2f6fb0;
 
-  /* The rail and the link screen's hero are cocoa in both themes: Orbit's deep frame around a light workspace. */
+  /* The rail and the link screen's hero are cocoa in both themes: the app's deep frame around a light workspace. */
   --rail: #1d1716;
   --rail-hover: #2e2523;
   --rail-text: #b8aaa5;
@@ -62,7 +62,7 @@
   --shadow-md: 0 4px 16px rgba(58, 42, 36, 0.08), 0 1px 3px rgba(58, 42, 36, 0.06);
   --shadow-lg: 0 16px 48px rgba(58, 42, 36, 0.16), 0 2px 8px rgba(58, 42, 36, 0.08);
   --scrim: rgba(18, 13, 12, 0.42);
-  /* The glossy highlight on orbs and avatars (the Orbit mark's own top-left shine). */
+  /* The glossy highlight on orbs and avatars (the brand mark's own top-left shine). */
   --gloss: rgba(255, 255, 255, 0.9);
   --focus: 0 0 0 2px var(--surface), 0 0 0 4px var(--accent);
 

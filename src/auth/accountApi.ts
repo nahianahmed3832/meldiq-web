@@ -132,7 +132,7 @@ export class AccountApi {
  * (device_revoked).
  */
 export async function signInWithDevice(base: string, device: DeviceRecord, password: string): Promise<AccountSessionGrant> {
-  if (!device.account) throw new Error("This browser isn't signed in with an Orbit account.");
+  if (!device.account) throw new Error("This browser isn't signed in with a Meldiq account.");
   const accounts = AccountApi.anonymous(base);
   const nonce = await accounts.challenge();
   const signature = await sign(device.keys.signing.privateKey, canonical.authProof("login", nonce, device.keys.signingPublic));

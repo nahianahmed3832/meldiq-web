@@ -74,6 +74,7 @@ describe("formatting", () => {
     expect(bytes(512)).toBe("512 B");
     expect(bytes(2048)).toBe("2.0 KB");
     expect(bytes(5 * 1024 * 1024)).toBe("5.0 MB");
+    expect(bytes(1024 ** 3)).toBe("1.0 GB");
   });
 
   it("names conversations: channels by name, DMs by the other person", () => {

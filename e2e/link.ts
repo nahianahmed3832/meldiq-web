@@ -3,7 +3,7 @@ import { approve, type Phone } from "./phone";
 
 /** The signed-out screen: Orbit 2.0 sign-in (email and password). */
 export async function expectSignedOut(page: Page): Promise<void> {
-  await expect(page.getByRole("heading", { name: "Sign in to Orbit" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Sign in to Meldiq" })).toBeVisible();
 }
 
 /**

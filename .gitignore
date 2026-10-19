@@ -8,3 +8,4 @@ test-results/
 .env
 .env.*
 release/
+!.env.example

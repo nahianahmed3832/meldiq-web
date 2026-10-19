@@ -60,7 +60,7 @@ test("a linked browser and the phone stay in sync through the server, and signin
   await page.getByRole("dialog").getByRole("button", { name: "Sign out" }).click();
   await expectSignedOut(page);
   const devices = (await alice.req("GET", "/v1/devices")).devices as { name: string; revokedAt: number | null }[];
-  expect(devices.filter((d) => d.name.startsWith("Orbit Web")).every((d) => d.revokedAt !== null)).toBe(true);
+  expect(devices.filter((d) => /^(Meldiq|Orbit) Web/.test(d.name)).every((d) => d.revokedAt !== null)).toBe(true);
 
   await alice.disconnect();
   await bob.disconnect();
@@ -69,7 +69,7 @@ test("a linked browser and the phone stay in sync through the server, and signin
 test("removing the browser from the phone signs it out and erases what it kept", async ({ page }) => {
   const alice = await newPhone("alice", "Alice Rahman");
   await link(page, alice);
-  const web = ((await alice.req("GET", "/v1/devices")).devices as { id: string; name: string }[]).find((d) => d.name.startsWith("Orbit Web"))!;
+  const web = ((await alice.req("GET", "/v1/devices")).devices as { id: string; name: string }[]).find((d) => /^(Meldiq|Orbit) Web/.test(d.name))!;
   await alice.req("DELETE", `/v1/devices/${web.id}`);
   await expect(page.getByRole("heading", { name: "Signed out" })).toBeVisible();
   await expect(page.getByText(/removed from your account/)).toBeVisible();
@@ -83,8 +83,8 @@ test("a second tab doesn't take the connection unless asked", async ({ page, con
   await link(page, alice);
   const second = await context.newPage();
   await second.goto("/");
-  await expect(second.getByRole("heading", { name: "Orbit is open in another tab" })).toBeVisible();
-  await second.getByRole("button", { name: "Use Orbit here" }).click();
+  await expect(second.getByRole("heading", { name: "Meldiq is open in another tab" })).toBeVisible();
+  await second.getByRole("button", { name: "Use Meldiq here" }).click();
   await expect(
     second.locator(".conn.online"),
     await second
@@ -96,5 +96,5 @@ test("a second tab doesn't take the connection unless asked", async ({ page, con
     .catch(async (e: Error) => {
       throw new Error(`${e.message}\nSecond tab shows: ${(await second.locator("body").innerText()).slice(0, 400)}`);
     });
-  await expect(page.getByRole("heading", { name: "Orbit is open in another tab" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Meldiq is open in another tab" })).toBeVisible();
 });

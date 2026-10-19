@@ -3,7 +3,7 @@ import { shallowEqual, useOrbit } from "../../app/orbit";
 import { setPrefs } from "../../app/prefs";
 import { navigate, type Section } from "../../app/router";
 import { Avatar, colorIndexOf } from "../components/Avatar";
-import { OrbitMark } from "../components/OrbitMark";
+import { BrandMark } from "../components/BrandMark";
 import { mentionCount, orgUnread, unreadPeopleCount } from "../selectors";
 
 /** Workspaces (the organisation switcher), then the three sections, as on the phone's tab bar. */
@@ -21,8 +21,8 @@ export function Rail({ orgId, section }: { orgId: string | null; section: Sectio
   ];
   return (
     <nav className="rail" aria-label="Workspaces and sections">
-      <a className="rail-logo" href="#/home" aria-label="Orbit home">
-        <OrbitMark size={40} />
+      <a className="rail-logo" href="#/home" aria-label="Meldiq home">
+        <BrandMark size={40} />
       </a>
       {orgs.length > 0 && (
         <div role="group" aria-label="Workspaces" style={{ display: "grid", gap: 10, justifyItems: "center", marginTop: 4 }}>

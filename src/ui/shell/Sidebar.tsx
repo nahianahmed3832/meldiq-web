@@ -35,10 +35,10 @@ export function Sidebar({ orgId, section, open, onDialog }: SidebarProps) {
           aria-expanded={!!switcher.anchor}
           aria-label={`Workspace: ${org?.name ?? "none"}. Switch workspace`}
         >
-          {org ? <OrgAvatar orgId={org.id} name={org.name} photoRev={org.photoRev} size={34} /> : <Avatar name="Orbit" colorIndex={7} size={34} square decorative />}
+          {org ? <OrgAvatar orgId={org.id} name={org.name} photoRev={org.photoRev} size={34} /> : <Avatar name="Meldiq" colorIndex={7} size={34} square decorative />}
           <span className="grow">
             <strong className="ellipsis" style={{ display: "block" }}>
-              {org?.name ?? "Orbit"}
+              {org?.name ?? "Meldiq"}
             </strong>
             <small>{org ? `${members(org.memberCount)} · ${roleLabel(org.myRole)}` : "No workspace yet"}</small>
           </span>

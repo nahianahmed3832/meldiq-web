@@ -46,7 +46,7 @@ beforeAll(async () => {
   await alice.connect();
   await bob.connect();
   await carol.connect();
-  const linked = await linkBrowser(server, alice, "Orbit Web · Calls", {
+  const linked = await linkBrowser(server, alice, "Meldiq Web · Calls", {
     media: rig.factory,
     callSupported: () => true,
     callTiming: { keyWaitMs: 2_500, peerWindowMs: 400, rejoinWindowMs: 20_000 },
@@ -339,7 +339,7 @@ describe("stopping", () => {
 
 describe("a browser that can't encrypt call media", () => {
   it("shows the ring with an explanation, doesn't claim to be ringing, and can't answer", async () => {
-    const other = await linkBrowser(server, alice, "Orbit Web · Old", { media: rig.factory, callSupported: () => false });
+    const other = await linkBrowser(server, alice, "Meldiq Web · Old", { media: rig.factory, callSupported: () => false });
     try {
       const c = await bobCalls();
       await until(() => other.engine.state.get().call.phase === "incoming", 8000, "ring");

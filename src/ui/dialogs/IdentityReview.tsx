@@ -50,7 +50,7 @@ export function IdentityReview({ userId, onClose }: { userId: string; onClose: (
       <div className="dialog-body">
         <div className="banner warn">
           <ShieldAlert size={16} />
-          <span className="grow">Messages to and from {name} are paused. This happens when someone reinstalls Orbit without their recovery key, and it's also what an attacker would cause.</span>
+          <span className="grow">Messages to and from {name} are paused. This happens when someone reinstalls Meldiq without their recovery key, and it's also what an attacker would cause.</span>
         </div>
         <p style={{ margin: 0 }}>Ask {name} to open your conversation on their phone and compare this safety number with theirs, in person or on a call you trust:</p>
         <span className="fingerprint" style={{ whiteSpace: "pre-line", fontSize: 16 }}>

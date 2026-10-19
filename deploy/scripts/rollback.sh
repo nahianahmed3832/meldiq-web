@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# Switches Orbit Web back to the release before the current one, ON THE WEB SERVER (as root). The API is untouched.
+# Switches Meldiq Web back to the release before the current one, ON THE WEB SERVER (as root). The API is untouched.
 #   bash rollback.sh            → the previous release
-#   bash rollback.sh <release>  → a named one from /opt/orbit-web/releases
+#   bash rollback.sh <release>  → a named one from /opt/meldiq-web/releases
 set -euo pipefail
-base=/opt/orbit-web
+base=/opt/meldiq-web
 current="$(readlink "$base/current")"
 if [ -n "${1:-}" ]; then
   target="$base/releases/$1"

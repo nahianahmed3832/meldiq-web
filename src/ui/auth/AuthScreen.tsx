@@ -99,7 +99,7 @@ export function AuthScreen(props: {
       body = (
         <SignInForm
           ctx={ctx}
-          notice={step.notice ?? (server && !accounts ? "This Orbit server is older than email accounts. Link this browser with your phone instead." : null)}
+          notice={step.notice ?? (server && !accounts ? "This Meldiq server is older than email accounts. Link this browser with your phone instead." : null)}
           initialEmail={step.email}
           canSignUp={accounts?.registration ?? false}
           canMove={(accounts?.legacyMigration ?? false) && (accounts?.registration ?? false)}
@@ -192,7 +192,7 @@ export function AuthScreen(props: {
       <div className="link-meta">
         <span>
           Server: {serverHost()}
-          {server ? ` · ${server.instanceName ?? "Orbit"} ${server.version}` : ""}
+          {server ? ` · ${server.instanceName ?? "Meldiq"} ${server.version}` : ""}
         </span>
       </div>
     </AuthFrame>

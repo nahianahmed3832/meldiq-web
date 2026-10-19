@@ -71,7 +71,7 @@ function Verification({ call }: { call: CallUiState }) {
         <p>
           {call.security === "problem"
             ? "Media from someone in this call can't be decrypted with this key, or would arrive unencrypted. It isn't played."
-            : "Orbit shows “End-to-end encrypted” only after it has encrypted and decrypted media with this key in both directions."}
+            : "Meldiq shows “End-to-end encrypted” only after it has encrypted and decrypted media with this key in both directions."}
         </p>
       )}
     </section>

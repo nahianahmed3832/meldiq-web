@@ -24,5 +24,5 @@ try {
   );
 } catch (e) {
   // A deployment mistake (an unreadable config.json): say so rather than talking to the wrong server.
-  root.render(<ConfigError message={e instanceof Error ? e.message : "Orbit Web isn't configured correctly."} />);
+  root.render(<ConfigError message={e instanceof Error ? e.message : "Meldiq Web isn't configured correctly."} />);
 }

@@ -20,7 +20,7 @@ export function AccountSettingsPage() {
         <div className="card" style={{ padding: 20, display: "grid", gap: 10 }}>
           <p style={{ margin: 0 }}>This browser was linked to your account with your phone, before email sign-in existed. It has no email or password here.</p>
           <p className="muted" style={{ margin: 0 }}>
-            On your phone, move your account to email sign-in (Orbit asks when you update). Then sign out here and sign in with your email to manage your account from this browser.
+            On your phone, move your account to email sign-in (Meldiq asks when you update). Then sign out here and sign in with your email to manage your account from this browser.
           </p>
         </div>
       </>

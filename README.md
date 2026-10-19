@@ -1,8 +1,14 @@
-# Orbit Web
+# Meldiq Web
 
-The browser client of [Orbit](https://github.com/nahianahmed3832/griip-mesage): another device of your Orbit account,
-on the same server as the Android app. Your phone links the browser; messages are encrypted and decrypted in the browser
-and the server only relays ciphertext. One backend, one source of truth.
+The browser client of **Meldiq** (formerly Orbit; the server and Android code live in
+[the Orbit repository](https://github.com/nahianahmed3832/griip-mesage)): another device of your Meldiq account, on the
+same server as the Android app. You sign in with your email and password and set the browser up with your recovery key
+or your phone's approval; messages are encrypted and decrypted in the browser and the server only relays ciphertext.
+One backend, one source of truth.
+
+- The rebrand from Orbit to Meldiq, what changed and what keeps the old name on purpose, and the plan for
+  `web.meldiq.app`: [`docs/MELDIQ_REBRAND.md`](docs/MELDIQ_REBRAND.md)
+- Configuration: [`.env.example`](.env.example) and `/config.json` (`src/app/config.ts`)
 
 - Design and audit: [`docs/ORBIT_WEB_ARCHITECTURE.md`](docs/ORBIT_WEB_ARCHITECTURE.md)
 - What works, test evidence, known issues, the phone test: [`docs/ORBIT_WEB_STATUS.md`](docs/ORBIT_WEB_STATUS.md)

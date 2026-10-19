@@ -8,9 +8,9 @@ import { LinkError } from "../../sync/session";
 export function authErrorText(e: unknown): string {
   if (e instanceof SetupError || e instanceof LinkError) return e.message;
   if (e instanceof ApiError) {
-    if (e.isNetwork) return "Can't reach the Orbit server. Check your connection and try again.";
+    if (e.isNetwork) return "Can't reach the Meldiq server. Check your connection and try again.";
     if (e.status === 429) return `Too many attempts. Try again in ${waitText(e.retryAfterMs)}.`;
-    if (e.status === 404 && e.code === "http") return "This Orbit server doesn't have email accounts yet. It needs an update.";
+    if (e.status === 404 && e.code === "http") return "This Meldiq server doesn't have email accounts yet. It needs an update.";
     return e.message;
   }
   return "Something went wrong. Try again.";

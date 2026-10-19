@@ -6,7 +6,7 @@ import { type ServerInfo, type SessionGrant, zServerInfo } from "../api/schemas"
 import { fingerprint } from "../crypto/identity";
 import type { DeviceRecord } from "../model/types";
 import { browserDeviceName, LinkError, type PendingLink, pollLink, startLink } from "../sync/session";
-import { OrbitMark } from "./components/OrbitMark";
+import { BrandMark } from "./components/BrandMark";
 
 const POLL_MS = 2000;
 
@@ -35,7 +35,7 @@ export function LinkScreen({ onLinked, onBack }: { onLinked: (device: DeviceReco
       setPhase({ k: "waiting", link, deviceFp: await fingerprint(link.keys.signingPublic) });
     } catch (e) {
       if (mine !== gen.current) return;
-      setPhase({ k: "error", message: e instanceof ApiError && e.isNetwork ? `Can't reach the Orbit server at ${serverHost()}.` : e instanceof ApiError ? e.message : "Couldn't start linking." });
+      setPhase({ k: "error", message: e instanceof ApiError && e.isNetwork ? `Can't reach the Meldiq server at ${serverHost()}.` : e instanceof ApiError ? e.message : "Couldn't start linking." });
     }
   }, []);
 
@@ -85,11 +85,11 @@ export function LinkScreen({ onLinked, onBack }: { onLinked: (device: DeviceReco
 
   return (
     <div className="link-screen">
-      <section className="link-hero" aria-label="About Orbit Web">
+      <section className="link-hero" aria-label="About Meldiq Web">
         <div className="row" style={{ gap: 12 }}>
-          <OrbitMark size={44} />
+          <BrandMark size={44} />
           <div>
-            <strong style={{ fontSize: 17 }}>Orbit</strong>
+            <strong style={{ fontSize: 17 }}>Meldiq</strong>
             <div style={{ color: "#b8aaa5", fontSize: 12.5 }}>by GriipBuddy</div>
           </div>
         </div>
@@ -97,7 +97,7 @@ export function LinkScreen({ onLinked, onBack }: { onLinked: (device: DeviceReco
           <h1>
             Your team, <em>on every screen.</em>
           </h1>
-          <p>Orbit Web is another device of your Orbit account. Messages stay end-to-end encrypted, and your phone and this computer stay in sync through your Orbit server.</p>
+          <p>Meldiq Web is another device of your Meldiq account. Messages stay end-to-end encrypted, and your phone and this computer stay in sync through your Meldiq server.</p>
         </div>
         <div className="hero-points">
           <div>
@@ -125,7 +125,7 @@ export function LinkScreen({ onLinked, onBack }: { onLinked: (device: DeviceReco
           <div>
             <h2>Link this browser to your account</h2>
             <p className="muted" style={{ margin: "6px 0 0" }}>
-              You need Orbit on your phone, signed in to this server.
+              You need Meldiq on your phone, signed in to this server.
             </p>
           </div>
 
@@ -141,7 +141,7 @@ export function LinkScreen({ onLinked, onBack }: { onLinked: (device: DeviceReco
           <ol className="steps">
             <li>
               <div>
-                <strong>On your phone, open Orbit</strong>
+                <strong>On your phone, open Meldiq</strong>
                 <div className="muted">
                   Go to <b>Settings › Devices</b> and tap <b>Approve new device</b>.
                 </div>
@@ -211,7 +211,7 @@ export function LinkScreen({ onLinked, onBack }: { onLinked: (device: DeviceReco
             </span>
             <span>
               Server: {serverHost()}
-              {server ? ` · ${server.instanceName ?? "Orbit"} ${server.version}` : ""}
+              {server ? ` · ${server.instanceName ?? "Meldiq"} ${server.version}` : ""}
             </span>
           </div>
         </div>

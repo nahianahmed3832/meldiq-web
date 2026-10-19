@@ -158,7 +158,7 @@ export const CallFailure = {
     const what = device === "microphone" ? "microphone" : "camera";
     switch (issue) {
       case "denied":
-        return `Orbit isn't allowed to use your ${what}. Allow it in your browser's site settings (the icon next to the address), then try again.`;
+        return `Meldiq isn't allowed to use your ${what}. Allow it in your browser's site settings (the icon next to the address), then try again.`;
       case "missing":
         return `No ${what} was found. Connect one, then try again.`;
       case "busy":

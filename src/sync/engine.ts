@@ -260,7 +260,7 @@ export class Engine implements EngineContext {
    * key, so the new session is bound to this device. A removed device is told so by the server, and then erased.
    */
   async signInAgain(password: string): Promise<void> {
-    if (!(this.session instanceof AccountSession)) throw new Error("This browser isn't signed in with an Orbit account.");
+    if (!(this.session instanceof AccountSession)) throw new Error("This browser isn't signed in with a Meldiq account.");
     try {
       await this.session.adopt(await signInWithDevice(this.opts.base, this.device, password));
     } catch (e) {

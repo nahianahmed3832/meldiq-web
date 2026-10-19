@@ -1,8 +1,8 @@
 {
-  "name": "orbit-web",
+  "name": "meldiq-web",
   "version": "0.1.0",
   "private": true,
-  "description": "Orbit Web: the browser client of Orbit, a device of the same account on the same server",
+  "description": "Meldiq Web (formerly Orbit Web): the browser client of Meldiq, a device of the same account on the same server",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/nahianahmed3832/orbit-web.git"

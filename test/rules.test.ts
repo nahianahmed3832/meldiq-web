@@ -182,7 +182,7 @@ describe("history records (the phone's Room rows)", () => {
 
 describe("device name", () => {
   it("names the browser and system for the device list", () => {
-    expect(browserDeviceName("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0 Safari/537.36")).toBe("Orbit Web · Chrome on macOS");
-    expect(browserDeviceName("Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:140.0) Gecko/20100101 Firefox/140.0")).toBe("Orbit Web · Firefox on Windows");
+    expect(browserDeviceName("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0 Safari/537.36")).toBe("Meldiq Web · Chrome on macOS");
+    expect(browserDeviceName("Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:140.0) Gecko/20100101 Firefox/140.0")).toBe("Meldiq Web · Firefox on Windows");
   });
 });

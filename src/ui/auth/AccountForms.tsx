@@ -72,7 +72,7 @@ export function SignInForm(props: {
 
   return (
     <form className="auth-form" onSubmit={submitHandler(submit)} noValidate>
-      <AuthHeading title="Sign in to Orbit" sub="Use the email and password of your Orbit account." />
+      <AuthHeading title="Sign in to Meldiq" sub="Use the email and password of your Meldiq account." />
       <FormNotice text={props.notice ?? null} />
       <FormError text={error} />
       <Field id="si-email" label="Email">
@@ -92,7 +92,7 @@ export function SignInForm(props: {
         <div className="auth-alt">
           {props.canMove && (
             <div>
-              <strong>Used Orbit before email sign-in?</strong>
+              <strong>Used Orbit (now Meldiq) before email sign-in?</strong>
               <span className="muted"> Move your account with your username and recovery key. </span>
               <LinkButton onClick={props.onMove}>Move my account</LinkButton>
             </div>
@@ -130,7 +130,7 @@ export function SignUpForm(props: { ctx: FormContext; inviteRequired: boolean; o
   return (
     <form className="auth-form" onSubmit={submitHandler(submit)} noValidate>
       <Back onClick={props.onBack} label="Sign in instead" />
-      <AuthHeading title="Create your Orbit account" sub="We'll email you a code to confirm the address." />
+      <AuthHeading title="Create your Meldiq account" sub="We'll email you a code to confirm the address." />
       <FormError text={error} />
       <Field id="su-name" label="Your name" hint="Shown to the people you talk to.">
         <input id="su-name" className="input" autoComplete="name" value={name} maxLength={80} onChange={(e) => setName(e.target.value)} autoFocus />
@@ -238,7 +238,7 @@ export function ResetPasswordForm(props: { ctx: FormContext; email: string; onDo
     <form className="auth-form" onSubmit={submitHandler(submit)} noValidate>
       <Back onClick={props.onBack} />
       <AuthHeading title="Choose a new password" />
-      <FormNotice text={`If ${props.email} has an Orbit account, we sent it a reset code. It's valid for 15 minutes.`} />
+      <FormNotice text={`If ${props.email} has a Meldiq account, we sent it a reset code. It's valid for 15 minutes.`} />
       <FormError text={error} />
       <Field id="rp-code" label="Reset code">
         <input id="rp-code" className="input code-input" autoComplete="one-time-code" value={code} maxLength={32} onChange={(e) => setCode(e.target.value)} autoFocus />
@@ -260,7 +260,7 @@ export function LegacyVerifyForm(props: { ctx: FormContext; onVerified: (ticket:
   const [recovery, setRecovery] = useState("");
   const { busy, error, setError, run } = useSubmit();
   const submit = () => {
-    if (!username.trim()) return setError("Enter your Orbit username.");
+    if (!username.trim()) return setError("Enter your Meldiq username.");
     if (!recovery.trim()) return setError("Enter your recovery key.");
     void run(async () => {
       const { ticket, seed } = await verifyLegacyAccount(props.ctx.accounts, username, recovery);
@@ -270,7 +270,7 @@ export function LegacyVerifyForm(props: { ctx: FormContext; onVerified: (ticket:
   return (
     <form className="auth-form" onSubmit={submitHandler(submit)} noValidate>
       <Back onClick={props.onBack} />
-      <AuthHeading title="Move your Orbit account" sub="Your conversations, workspaces and contacts stay as they are. Your recovery key is checked here in the browser and never sent." />
+      <AuthHeading title="Move your Orbit account to Meldiq" sub="Your conversations, workspaces and contacts stay as they are. Your recovery key is checked here in the browser and never sent." />
       <FormError text={error} />
       <Field id="lg-username" label="Username">
         <input id="lg-username" className="input" autoComplete="username" value={username} onChange={(e) => setUsername(e.target.value)} autoFocus />

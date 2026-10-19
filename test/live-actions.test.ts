@@ -186,8 +186,8 @@ describe("account and workspace", () => {
   });
 
   it("profile changes go to the server and come back to the browser", async () => {
-    await updateProfile(web, { displayName: "Alice R.", statusText: "Shipping Orbit Web" });
-    expect(web.state.get().me).toMatchObject({ displayName: "Alice R.", statusText: "Shipping Orbit Web" });
+    await updateProfile(web, { displayName: "Alice R.", statusText: "Shipping Meldiq Web" });
+    expect(web.state.get().me).toMatchObject({ displayName: "Alice R.", statusText: "Shipping Meldiq Web" });
   });
 
   it("lists the account's devices and can remove another device of the account", async () => {

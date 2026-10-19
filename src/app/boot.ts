@@ -34,7 +34,7 @@ function notify(title: string, body: string, conversationId: string): void {
   if (!p.notifications || typeof Notification === "undefined" || Notification.permission !== "granted") return;
   if (document.visibilityState === "visible" && document.hasFocus()) return;
   try {
-    const n = new Notification(p.notificationText ? title : "Orbit", { body: p.notificationText ? body : "New message", tag: conversationId, silent: false });
+    const n = new Notification(p.notificationText ? title : "Meldiq", { body: p.notificationText ? body : "New message", tag: conversationId, silent: false });
     n.onclick = () => {
       window.focus();
       location.hash = `#/home/c/${encodeURIComponent(conversationId)}`;
@@ -51,7 +51,7 @@ function ringAlert(title: string, video: boolean, conversationId: string): void 
   if (!p.notifications || typeof Notification === "undefined" || Notification.permission !== "granted") return;
   if (document.visibilityState === "visible" && document.hasFocus()) return;
   try {
-    const n = new Notification(p.notificationText ? title : "Orbit", { body: video ? "Incoming video call" : "Incoming voice call", tag: `call-${conversationId}`, requireInteraction: true });
+    const n = new Notification(p.notificationText ? title : "Meldiq", { body: video ? "Incoming video call" : "Incoming voice call", tag: `call-${conversationId}`, requireInteraction: true });
     n.onclick = () => {
       window.focus();
       n.close();

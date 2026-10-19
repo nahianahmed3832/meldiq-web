@@ -39,9 +39,9 @@ test("sign up, set up encryption, come back after a reload, and add a second bro
   await expect(page.getByRole("heading", { name: "Save your recovery key" })).toBeVisible();
   const recovery = ((await page.getByLabel("Recovery key").innerText()) ?? "").replace(/\s+/g, "-");
   expect(recovery).toMatch(/^[A-Z2-9]{4}(-[A-Z2-9]{1,4})+$/);
-  await expect(page.getByRole("button", { name: "Open Orbit" })).toBeDisabled();
+  await expect(page.getByRole("button", { name: "Open Meldiq" })).toBeDisabled();
   await page.getByLabel("I've stored my recovery key somewhere safe.").check();
-  await page.getByRole("button", { name: "Open Orbit" }).click();
+  await page.getByRole("button", { name: "Open Meldiq" }).click();
   await expect(page.locator(".conn.online")).toBeVisible({ timeout: 15_000 });
 
   // The session survives a reload (stored sealed); no password asked.
@@ -52,7 +52,7 @@ test("sign up, set up encryption, come back after a reload, and add a second bro
   const me = await page.evaluate(() => (window as unknown as { __orbit: { device: { userId: string } } }).__orbit.device.userId);
   const bob = await newPhone("bob", "Bob Chen");
   const dm = (await bob.req("POST", "/v1/conversations/dm", { userId: me })).conversation.id as string;
-  await bob.send(dm, { type: "text", text: "Welcome to Orbit, Nadia" });
+  await bob.send(dm, { type: "text", text: "Welcome to Meldiq, Nadia" });
   await expect(page.getByRole("link", { name: /Bob Chen/ })).toBeVisible();
 
   // A second browser: sign in, set it up with the recovery key, and it reads the same conversation.

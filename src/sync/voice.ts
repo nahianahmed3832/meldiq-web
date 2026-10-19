@@ -73,7 +73,7 @@ export class VoiceRecorder {
       const name = e instanceof DOMException ? e.name : "";
       throw new RecordingError(
         name === "NotAllowedError"
-          ? "Orbit isn't allowed to use your microphone. Allow it in your browser's site settings and try again."
+          ? "Meldiq isn't allowed to use your microphone. Allow it in your browser's site settings and try again."
           : name === "NotFoundError"
             ? "No microphone was found."
             : "The microphone couldn't be started. It may be in use by another app.",

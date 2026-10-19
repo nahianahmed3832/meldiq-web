@@ -1,0 +1,17 @@
+{
+  "name": "Meldiq",
+  "short_name": "Meldiq",
+  "description": "End-to-end encrypted team messaging.",
+  "id": "/",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#171313",
+  "theme_color": "#1d1716",
+  "icons": [
+    { "src": "/meldiq.svg", "sizes": "any", "type": "image/svg+xml" },
+    { "src": "/meldiq-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/meldiq-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/meldiq-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

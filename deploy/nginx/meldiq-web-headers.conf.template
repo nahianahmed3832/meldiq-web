@@ -1,4 +1,4 @@
-# Security headers for Orbit Web (docs/ORBIT_WEB_DEPLOYMENT.md › Headers). ${CONNECT_EXTRA}: LiveKit and the S3 bucket.
+# Security headers for Meldiq Web (docs/ORBIT_WEB_DEPLOYMENT.md › Headers). ${CONNECT_EXTRA}: LiveKit and the S3 bucket.
 add_header Content-Security-Policy "default-src 'self'; script-src 'self'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data:; media-src 'self' blob:; font-src 'self'; connect-src 'self' wss://${WEB_HOST} ${CONNECT_EXTRA}; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; upgrade-insecure-requests" always;
 add_header X-Content-Type-Options "nosniff" always;
 add_header Referrer-Policy "no-referrer" always;

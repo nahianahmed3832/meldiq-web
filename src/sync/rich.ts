@@ -54,7 +54,7 @@ export function currentPosition(timeoutMs = 15_000): Promise<SharedLocation> {
         reject(
           new Error(
             e.code === e.PERMISSION_DENIED
-              ? "Orbit isn't allowed to use your location. Allow it in your browser's site settings and try again."
+              ? "Meldiq isn't allowed to use your location. Allow it in your browser's site settings and try again."
               : e.code === e.TIMEOUT
                 ? "Your location took too long to find. Try again."
                 : "Your location couldn't be found.",

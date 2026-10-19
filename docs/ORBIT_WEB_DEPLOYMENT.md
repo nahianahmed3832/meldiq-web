@@ -1,16 +1,20 @@
-# Deploying Orbit Web to web.griipbuddy.cloud
+# Deploying Meldiq Web (formerly Orbit Web)
 
+> **Meldiq:** the app is now Meldiq Web. It deploys to `web.griipbuddy.cloud` today; `web.meldiq.app` is planned and
+> not active (`MELDIQ_REBRAND.md` › Domain plan). File and folder names below use `meldiq-web`; nothing was ever
+> installed under the old names.
+>
 > **Not applied.** Nothing here has been run against production, DNS or AWS. Every step below changes production
 > infrastructure and needs the owner's go-ahead. Status and evidence: `ORBIT_WEB_STATUS.md`.
 
-Orbit Web is static files plus the existing Orbit API. The recommended setup serves the app at
+Meldiq Web is static files plus the existing Orbit API. The recommended setup serves the app at
 **https://web.griipbuddy.cloud** from the same VPS and nginx that already serve `msg.griipbuddy.cloud`, and proxies
 `/v1` and `/v2` from the web host to the same API container. The browser then talks to its own origin: no CORS, no
 cookies, one backend and one database for the phone and the browser. The domain is configuration (§3), not code.
 
 ```
 browser ──https──▶ web.griipbuddy.cloud (nginx on the VPS)
-                    ├─ /            static app        /opt/orbit-web/current  (a release, §4)
+                    ├─ /            static app        /opt/meldiq-web/current  (a release, §4)
                     ├─ /config.json runtime config    written per server at install
                     └─ /v1 /v2      proxy ──▶ 127.0.0.1:18080  (the API container the Android app uses)
 phone app ──https──▶ msg.griipbuddy.cloud (unchanged)
@@ -36,7 +40,7 @@ bash deploy/scripts/build-release.sh
 ```
 
 It refuses a dirty working tree, then runs `npm ci`, typecheck, lint, the unit tests and the production build, and
-writes `release/orbit-web-<version>-<commit>.tar.gz` with a `.sha256`. The tarball holds `dist/`, the nginx templates,
+writes `release/meldiq-web-<version>-<commit>.tar.gz` with a `.sha256`. The tarball holds `dist/`, the nginx templates,
 the config files and the install, rollback and verify scripts. The build contains **no server address, key or secret**.
 
 ## 3. Configuration (per server, not per build)
@@ -54,16 +58,16 @@ the config files and the install, rollback and verify scripts. The build contain
 cross-origin variant. **Moving to another domain**: a DNS record, a certificate, `WEB_HOST` at install (§4) and, if
 `WEB_ORIGINS` is set, its new value. No rebuild.
 
-A malformed `config.json` (e.g. an `http://` API) stops the app with "Orbit Web isn't set up correctly" rather than
+A malformed `config.json` (e.g. an `http://` API) stops the app with "Meldiq Web isn't set up correctly" rather than
 talking to the wrong server.
 
 ## 4. Install on the VPS
 
-Copy the tarball to the VPS, check it, unpack, and install as root (it touches only `/opt/orbit-web`, its nginx site
-`orbit-web.conf` and the snippet `orbit-web-headers.conf`; never the API, its compose project or other sites):
+Copy the tarball to the VPS, check it, unpack, and install as root (it touches only `/opt/meldiq-web`, its nginx site
+`meldiq-web.conf` and the snippet `meldiq-web-headers.conf`; never the API, its compose project or other sites):
 
 ```bash
-scp release/orbit-web-*.tar.gz* root@72.60.107.88:/root/
+scp release/meldiq-web-*.tar.gz* root@72.60.107.88:/root/
 ```
 
 ```bash
@@ -71,21 +75,24 @@ ssh root@72.60.107.88
 ```
 
 ```bash
-cd /root && shasum -a 256 -c orbit-web-*.tar.gz.sha256 && tar xzf orbit-web-*.tar.gz && cd orbit-web-*/
+cd /root && shasum -a 256 -c meldiq-web-*.tar.gz.sha256 && tar xzf meldiq-web-*.tar.gz && cd meldiq-web-*/
 ```
 
 ```bash
-WEB_HOST=web.griipbuddy.cloud API_UPSTREAM=127.0.0.1:18080 CONNECT_EXTRA="https://rtc.griipbuddy.cloud wss://rtc.griipbuddy.cloud https://BUCKET.s3.ap-southeast-1.amazonaws.com" CONFIG=config/production.json bash install-release.sh
+MELDIQ_WEB_BASE_URL=https://web.griipbuddy.cloud MELDIQ_ENVIRONMENT=production MELDIQ_API_UPSTREAM=127.0.0.1:18080 MELDIQ_CONNECT_EXTRA="https://rtc.griipbuddy.cloud wss://rtc.griipbuddy.cloud https://BUCKET.s3.ap-southeast-1.amazonaws.com" bash install-release.sh
 ```
 
-`install-release.sh` copies the release to `/opt/orbit-web/releases/<version>-<commit>`, writes its `config.json`,
-renders the nginx site and header snippet from the templates, switches `/opt/orbit-web/current`, runs `nginx -t`
+`/config.json` is written from the `MELDIQ_*` values (`.env.example`); `CONFIG=config/<file>.json` copies a file
+instead. The earlier names `WEB_HOST`, `API_UPSTREAM` and `CONNECT_EXTRA` still work.
+
+`install-release.sh` copies the release to `/opt/meldiq-web/releases/<version>-<commit>`, writes its `config.json`,
+renders the nginx site and header snippet from the templates, switches `/opt/meldiq-web/current`, runs `nginx -t`
 (switching back if nginx refuses) and reloads nginx. The newest five releases are kept.
 
 nginx needs the usual upgrade map in `http {}` once (the script checks):
 `map $http_upgrade $connection_upgrade { default upgrade; '' close; }`.
 
-### What the nginx site does (`deploy/nginx/orbit-web.conf.template`)
+### What the nginx site does (`deploy/nginx/meldiq-web.conf.template`)
 
 - HTTP → HTTPS; TLS 1.2/1.3 with the certbot certificate.
 - `/v1/ws`: upgraded, 120 s read timeout (the app pings every 25 s).
@@ -93,9 +100,9 @@ nginx needs the usual upgrade map in `http {}` once (the script checks):
   timeouts for slow uploads. The API already trusts its local proxy (`TRUST_PROXY`), so per-address limits see the
   real client.
 - `/config.json`: `no-store`. `/assets/`: content-hashed, cached a year. Everything else falls back to `index.html`.
-- Its own access and error logs (`/var/log/nginx/orbit-web.*.log`).
+- Its own access and error logs (`/var/log/nginx/meldiq-web.*.log`).
 
-### Headers (`deploy/nginx/orbit-web-headers.conf.template`)
+### Headers (`deploy/nginx/meldiq-web-headers.conf.template`)
 
 `Content-Security-Policy`: `default-src 'self'`; scripts only from the site (the build has no inline scripts);
 `worker-src 'self' blob:` (the call-encryption worker); `style-src 'self' 'unsafe-inline'` (React style attributes);
@@ -152,13 +159,13 @@ Without S3 (local disk), files stream through the API instead, and nothing here 
 The previous release (the API isn't touched):
 
 ```bash
-bash /root/orbit-web-*/rollback.sh
+bash /root/meldiq-web-*/rollback.sh
 ```
 
 Remove the site entirely:
 
 ```bash
-rm /etc/nginx/sites-enabled/orbit-web.conf && nginx -t && systemctl reload nginx
+rm /etc/nginx/sites-enabled/meldiq-web.conf && nginx -t && systemctl reload nginx
 ```
 
 The server patches can stay: 0001 only adds an authentication path for clients without the header; 0002 does nothing
@@ -177,5 +184,5 @@ until `WEB_ORIGINS` is set.
 
 - The app is static: nginx serves it; there is no web process to restart. `systemctl reload nginx` after changes.
 - API health stays `scripts/verify.sh` in the Orbit repository; the web site's own check is §5.
-- Logs: `/var/log/nginx/orbit-web.access.log` and `.error.log` (no request bodies; tokens travel in headers nginx
+- Logs: `/var/log/nginx/meldiq-web.access.log` and `.error.log` (no request bodies; tokens travel in headers nginx
   doesn't log by default). The app sends no analytics or telemetry.

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# Builds a release of Orbit Web: the static app plus its install scripts, as one tarball with a SHA-256 file.
+# Builds a release of Meldiq Web: the static app plus its install scripts, as one tarball with a SHA-256 file.
 # Run from the repository root. Nothing is uploaded or installed.
-#   bash deploy/scripts/build-release.sh            → release/orbit-web-<version>-<commit>.tar.gz
+#   bash deploy/scripts/build-release.sh            → release/meldiq-web-<version>-<commit>.tar.gz
 set -euo pipefail
 cd "$(dirname "$0")/../.."
 if [ -n "$(git status --porcelain)" ]; then
@@ -10,7 +10,7 @@ if [ -n "$(git status --porcelain)" ]; then
 fi
 version="$(node -p "require('./package.json').version")"
 commit="$(git rev-parse --short HEAD)"
-name="orbit-web-${version}-${commit}"
+name="meldiq-web-${version}-${commit}"
 npm ci --no-audit --no-fund
 npm run typecheck
 npm run lint

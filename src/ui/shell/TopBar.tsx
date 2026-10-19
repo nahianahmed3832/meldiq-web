@@ -24,7 +24,7 @@ export function TopBar({ onMenu, onSearch }: { onMenu: () => void; onSearch: () 
           <MenuIcon size={19} />
         </button>
       </div>
-      <button className="searchbox" onClick={onSearch} aria-label="Search Orbit" aria-keyshortcuts={mac ? "Meta+K" : "Control+K"}>
+      <button className="searchbox" onClick={onSearch} aria-label="Search Meldiq" aria-keyshortcuts={mac ? "Meta+K" : "Control+K"}>
         <Search size={16} />
         <span>Search conversations, people and messages</span>
         <kbd className="kbd">{mac ? "⌘K" : "Ctrl K"}</kbd>
@@ -33,7 +33,7 @@ export function TopBar({ onMenu, onSearch }: { onMenu: () => void; onSearch: () 
         <button
           className={`conn ${connection}`}
           onClick={() => connection !== "online" && engine.reconnect()}
-          title={connection === "online" ? "Connected to your Orbit server" : "Not connected. Click to reconnect now; messages you send wait and go out when the connection is back."}
+          title={connection === "online" ? "Connected to your Meldiq server" : "Not connected. Click to reconnect now; messages you send wait and go out when the connection is back."}
           aria-live="polite"
         >
           <i aria-hidden="true" />

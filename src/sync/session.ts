@@ -159,5 +159,5 @@ export async function pollLink(base: string, link: PendingLink): Promise<LinkPol
 export function browserDeviceName(ua: string = typeof navigator === "undefined" ? "" : navigator.userAgent): string {
   const browser = /Edg\//.test(ua) ? "Edge" : /Firefox\//.test(ua) ? "Firefox" : /Chrome\//.test(ua) ? "Chrome" : /Safari\//.test(ua) ? "Safari" : "Browser";
   const os = /Mac OS X|Macintosh/.test(ua) ? "macOS" : /Windows/.test(ua) ? "Windows" : /Android/.test(ua) ? "Android" : /iPhone|iPad/.test(ua) ? "iOS" : /Linux/.test(ua) ? "Linux" : "the web";
-  return `Orbit Web · ${browser} on ${os}`;
+  return `Meldiq Web · ${browser} on ${os}`;
 }

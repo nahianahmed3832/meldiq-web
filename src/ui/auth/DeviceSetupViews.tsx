@@ -61,11 +61,11 @@ export function RecoveryKeyReveal({ code, onDone }: { code: string; onDone: () =
     return () => window.removeEventListener("beforeunload", warn);
   }, [saved]);
   const download = () => {
-    const blob = new Blob([`Orbit recovery key\n\n${code}\n\nKeep this somewhere safe. Anyone with it can read your messages.\n`], { type: "text/plain" });
+    const blob = new Blob([`Meldiq recovery key\n\n${code}\n\nKeep this somewhere safe. Anyone with it can read your messages.\n`], { type: "text/plain" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = "orbit-recovery-key.txt";
+    a.download = "meldiq-recovery-key.txt";
     a.click();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   };
@@ -103,7 +103,7 @@ export function RecoveryKeyReveal({ code, onDone }: { code: string; onDone: () =
         <label htmlFor="rk-saved">I've stored my recovery key somewhere safe.</label>
       </div>
       <button className="btn btn-primary btn-lg" disabled={!saved} onClick={onDone}>
-        Open Orbit
+        Open Meldiq
       </button>
     </div>
   );
@@ -233,7 +233,7 @@ function ApproveFromDevice(props: { creds: SetupCredentials; account: AccountVie
     <ol className="steps">
       <li>
         <div>
-          <strong>On your phone, open Orbit</strong>
+          <strong>On your phone, open Meldiq</strong>
           <div className="muted">
             Go to <b>Settings › Devices</b> and tap <b>Approve new device</b>.
           </div>

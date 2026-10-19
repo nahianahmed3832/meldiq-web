@@ -54,7 +54,7 @@ export function App() {
       setBoot({ s: "ready", engine, reauth: false });
       await engine.start();
     } catch (e) {
-      setBoot({ s: "error", message: e instanceof Error ? e.message : "Orbit couldn't start." });
+      setBoot({ s: "error", message: e instanceof Error ? e.message : "Meldiq couldn't start." });
     }
   }, []);
 

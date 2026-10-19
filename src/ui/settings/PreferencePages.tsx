@@ -1,3 +1,4 @@
+import { fileLimit, MAX_FILES_PER_MESSAGE } from "../../sync/attachments";
 import { serverHost } from "../../app/config";
 import { useState } from "react";
 import { useOrbit } from "../../app/orbit";
@@ -28,7 +29,7 @@ export function NotificationsPage() {
                 ? "This browser doesn't support notifications."
                 : permission === "denied"
                   ? "Blocked in your browser's site settings. Allow notifications for this site there, then turn this on."
-                  : "A notification when a message arrives while you're looking elsewhere. Only while Orbit is open in a tab."}
+                  : "A notification when a message arrives while you're looking elsewhere. Only while Meldiq is open in a tab."}
             </small>
           </div>
           <Toggle label="Desktop notifications" checked={prefs.notifications && permission === "granted"} onChange={(v) => void enable(v)} />
@@ -71,7 +72,7 @@ export function AppearancePage() {
         <div className="setting">
           <div className="lines">
             <strong>Theme</strong>
-            <small>Ivory for light, Cocoa for dark: the palettes of Orbit on your phone.</small>
+            <small>Ivory for light, Cocoa for dark: the palettes of Meldiq on your phone.</small>
           </div>
           <div className="segmented" role="group" aria-label="Theme">
             {(["system", "light", "dark"] as const).map((t) => (
@@ -106,7 +107,7 @@ export function AboutPage() {
             <strong>Server</strong>
             <small>
               {serverHost()}
-              {server ? ` · ${server.instanceName ?? "Orbit"} ${server.version} · client API ${server.api}` : ""}
+              {server ? ` · ${server.instanceName ?? "Meldiq"} ${server.version} · client API ${server.api}` : ""}
             </small>
           </div>
         </div>
@@ -136,8 +137,7 @@ export function AboutPage() {
           <div className="lines">
             <strong>Files</strong>
             <small>
-              Up to {bytes(Math.min(server?.attachmentMaxBytes ?? 25 * 1024 * 1024, 25 * 1024 * 1024))} per file from the browser, 10 files per message. Files are kept 7 days on the server unless
-              saved with history.
+              Up to {bytes(fileLimit(server))} per file, {MAX_FILES_PER_MESSAGE} files per message. Files are kept 7 days on the server unless saved with history.
             </small>
           </div>
         </div>
@@ -146,14 +146,14 @@ export function AboutPage() {
             <strong>Calls</strong>
             <small>
               {server?.calling
-                ? "Voice and video calls work in this browser and in Orbit on your phone. Call media is end-to-end encrypted with a new key for every call; the browser asks before it uses your microphone or camera."
+                ? "Voice and video calls work in this browser and in Meldiq on your phone. Call media is end-to-end encrypted with a new key for every call; the browser asks before it uses your microphone or camera."
                 : "This server has no calling configured."}
             </small>
           </div>
         </div>
       </div>
       <p className="faint" style={{ fontSize: 12.5 }}>
-        Orbit Web 0.1.0 · Plus Jakarta Sans is used under the SIL Open Font License (<a href="/fonts/OFL.txt">license</a>).
+        Meldiq Web 0.1.0 · Plus Jakarta Sans is used under the SIL Open Font License (<a href="/fonts/OFL.txt">license</a>).
       </p>
     </>
   );

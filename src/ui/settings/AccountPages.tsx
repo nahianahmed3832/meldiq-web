@@ -37,7 +37,7 @@ export function DevicesPage() {
         {active.map((d) => (
           <div key={d.id} className="setting">
             <span className="empty-orb" style={{ width: 40, height: 40 }}>
-              {/Orbit Web/.test(d.name) ? <Laptop size={18} /> : <Smartphone size={18} />}
+              {/^(Meldiq|Orbit) Web/.test(d.name) ? <Laptop size={18} /> : <Smartphone size={18} />}
             </span>
             <div className="lines">
               <strong className="ellipsis">{d.name}</strong>
@@ -153,7 +153,7 @@ export function SecurityPage({ onSignedOut }: { onSignedOut: () => void }) {
           </li>
           <li>
             {engine.device.account
-              ? "Your account session is kept encrypted under a key this page can use but not read; if it ends, Orbit asks for your password again. Your password itself is never stored."
+              ? "Your account session is kept encrypted under a key this page can use but not read; if it ends, Meldiq asks for your password again. Your password itself is never stored."
               : "The session token is held in memory only; each visit signs in again with the device key."}
           </li>
         </ul>
@@ -187,7 +187,7 @@ export function SecurityPage({ onSignedOut }: { onSignedOut: () => void }) {
           }
         >
           <div className="dialog-body">
-            <p style={{ margin: 0 }}>To use Orbit here again you'll link this browser from your phone.</p>
+            <p style={{ margin: 0 }}>To use Meldiq here again you'll link this browser from your phone.</p>
           </div>
         </Dialog>
       )}

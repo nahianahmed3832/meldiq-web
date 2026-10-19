@@ -2,11 +2,12 @@ import react from "@vitejs/plugin-react";
 import { defineConfig } from "vitest/config";
 
 /**
- * The web app talks to the Orbit server on its own origin (docs/ORBIT_WEB_ARCHITECTURE.md › G2): in development Vite
- * proxies /v1 (REST and the /v1/ws WebSocket) and /v2 (Orbit 2.0 accounts) to ORBIT_API_URL; in production nginx does
+ * The web app talks to the Meldiq (formerly Orbit) API on its own origin (docs/ORBIT_WEB_ARCHITECTURE.md › G2): in development Vite
+ * proxies /v1 (REST and the /v1/ws WebSocket) and /v2 (email accounts) to MELDIQ_API_UPSTREAM; in production nginx does
  * the same.
  */
-const api = process.env.ORBIT_API_URL ?? "http://127.0.0.1:8080";
+// Where the dev server proxies the API: MELDIQ_API_UPSTREAM, or ORBIT_API_URL (the earlier name, still read).
+const api = process.env.MELDIQ_API_UPSTREAM ?? process.env.ORBIT_API_URL ?? "http://127.0.0.1:8080";
 // Browser tests only (ORBIT_E2E_FORWARD=1): each test's browser presents its own client address, so the server's
 // per-address sign-in limits apply per test rather than to the whole run (playwright.config.ts).
 const e2eForward = process.env.ORBIT_E2E_FORWARD === "1";
