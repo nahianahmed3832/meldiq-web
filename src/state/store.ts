@@ -1,6 +1,6 @@
 import type { Call, Conversation, Org, ServerInfo } from "../api/schemas";
 import { type CallUiState, idleCall } from "../call/types";
-import type { ConversationLocal, PinnedIdentity, StoredMessage } from "../model/types";
+import type { CallLogItem, ConversationLocal, PinnedIdentity, StoredMessage } from "../model/types";
 import type { ConnectionState } from "../realtime/socket";
 import type { NavPrefs } from "../sync/navPrefs";
 
@@ -87,6 +87,8 @@ export interface AppState {
   nav: Record<string, NavPrefs>;
   /** Bumped when a thread reply arrives or a thread is seen: Activity › Thread replies reloads. */
   threadRev: number;
+  /** Recent calls on this browser, newest first (Activity › Missed calls). */
+  callLog: CallLogItem[];
 }
 
 export const initialState: AppState = {
@@ -107,6 +109,7 @@ export const initialState: AppState = {
   identityAlerts: [],
   nav: {},
   threadRev: 0,
+  callLog: [],
   history: { status: "idle", restored: 0, unreadable: 0, error: null },
   notices: [],
 };

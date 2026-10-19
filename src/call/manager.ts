@@ -54,6 +54,8 @@ export class CallManager {
   private readonly pacer: KeyRequestPacer;
   /** Calls this browser already rang, answered, declined or ended: ring recovery never re-rings them. */
   private readonly handled = new Set<string>();
+  /** Calls declined here (the server tells only the caller about a group-call decline; the history line needs it). */
+  private readonly declined = new Set<string>();
   private session: MediaSession | null = null;
   /** Bumped when an attempt starts or ends: work for an older attempt stops at its next check. */
   private gen = 0;
@@ -121,11 +123,16 @@ export class CallManager {
     await this.answer({ ...idleCall, phase: "connecting", callId, conversationId, video, cameraOn: video, ...about }, callId, video);
   }
 
+  declinedHere(callId: string): boolean {
+    return this.declined.has(callId);
+  }
+
   decline(): void {
     const s = this.state;
     if (s.phase !== "incoming" || !s.callId) return;
     const id = s.callId;
     this.markHandled(id);
+    this.declined.add(id);
     void this.host.api.call("POST", `/v1/calls/${encodeURIComponent(id)}/decline`, { body: { reason: "declined" } }).catch(() => undefined);
     this.teardown();
     this.gen++;

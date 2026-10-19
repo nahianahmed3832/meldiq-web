@@ -1,15 +1,118 @@
-import { Download, FileText, Mic, TriangleAlert, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { Download, FileText, Film, Mic, Pause, Play, TriangleAlert, X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { useEngine } from "../../app/orbit";
 import type { AttachmentRef } from "../../protocol/payload";
-import { isInlineImage, openAttachment } from "../../sync/attachments";
+import { isInlineImage, openAttachment, safeMime } from "../../sync/attachments";
+import { clock, isVoice, shownDuration } from "../../sync/voice";
 import { bytes } from "../format";
 
-/** Decrypts on demand; images show inline, everything else is a file card that downloads the decrypted file. */
+/**
+ * Decrypts on demand. Images show inline; voice messages play in place (android VoiceViews); audio and video play inline
+ * once opened (a click, so nothing large downloads unasked); anything else is a file card that downloads.
+ */
 export function Attachments({ refs }: { refs: AttachmentRef[] }) {
   if (!refs.length) return null;
-  return <div className="attachments">{refs.map((r) => (isInlineImage(r) ? <ImageAttachment key={r.id} r={r} /> : <FileAttachment key={r.id} r={r} />))}</div>;
+  return (
+    <div className="attachments">
+      {refs.map((r) =>
+        isVoice(r) ? (
+          <VoiceAttachment key={r.id} r={r} />
+        ) : isInlineImage(r) ? (
+          <ImageAttachment key={r.id} r={r} />
+        ) : isPlayable(r) ? (
+          <MediaAttachment key={r.id} r={r} />
+        ) : (
+          <FileAttachment key={r.id} r={r} />
+        ),
+      )}
+    </div>
+  );
+}
+
+const isPlayable = (r: AttachmentRef): boolean => /^(audio|video)\//.test(safeMime(r.mime));
+
+/** A voice message: play/pause, a seek bar and its length; the first play downloads and decrypts it. */
+function VoiceAttachment({ r }: { r: AttachmentRef }) {
+  const [wanted, setWanted] = useState(false);
+  const { url, error, loading } = useBlobUrl(r, wanted);
+  const audio = useRef<HTMLAudioElement | null>(null);
+  const [playing, setPlaying] = useState(false);
+  const [pos, setPos] = useState(0);
+  const total = shownDuration(r.durationMs);
+  useEffect(() => {
+    if (url && wanted) void audio.current?.play().catch(() => setPlaying(false));
+  }, [url, wanted]);
+  if (error) return <FileAttachment r={r} error={error} />;
+  const seconds = Math.round(total / 1000);
+  return (
+    <div className="voice-msg" role="group" aria-label={`Voice message, ${seconds} seconds`}>
+      <button
+        className="voice-play"
+        aria-label={playing ? "Pause voice message" : `Play voice message, ${seconds} seconds`}
+        onClick={() => {
+          if (!url) return setWanted(true);
+          if (playing) audio.current?.pause();
+          else void audio.current?.play();
+        }}
+        disabled={loading && wanted}
+      >
+        {loading && wanted ? <span className="spinner" aria-hidden="true" /> : playing ? <Pause size={16} /> : <Play size={16} />}
+      </button>
+      <input
+        type="range"
+        className="voice-seek"
+        min={0}
+        max={Math.max(1, total)}
+        value={pos}
+        aria-label="Position"
+        aria-valuetext={`${Math.round(pos / 1000)} seconds of ${seconds} seconds`}
+        disabled={!url}
+        onChange={(e) => {
+          const v = Number(e.target.value);
+          setPos(v);
+          if (audio.current) audio.current.currentTime = v / 1000;
+        }}
+      />
+      <span className="voice-len">{playing || pos > 0 ? `${clock(pos)} / ${clock(total)}` : clock(total)}</span>
+      {url && (
+        <audio
+          ref={audio}
+          src={url}
+          preload="auto"
+          onPlay={() => setPlaying(true)}
+          onPause={() => setPlaying(false)}
+          onEnded={() => {
+            setPlaying(false);
+            setPos(0);
+          }}
+          onTimeUpdate={(e) => setPos(Math.round(e.currentTarget.currentTime * 1000))}
+        />
+      )}
+    </div>
+  );
+}
+
+/** Audio and video files: a card until opened, then the browser's player (decrypted in memory, never a page). */
+function MediaAttachment({ r }: { r: AttachmentRef }) {
+  const [open, setOpen] = useState(false);
+  const { url, error, loading } = useBlobUrl(r, open);
+  if (error) return <FileAttachment r={r} error={error} />;
+  const video = safeMime(r.mime).startsWith("video/");
+  if (!open || loading || !url) {
+    return (
+      <button className="att-file" onClick={() => setOpen(true)} aria-label={`Play ${r.name}, ${bytes(r.size)}`} disabled={open}>
+        <span className="file-icon">{video ? <Film size={18} /> : <Play size={18} />}</span>
+        <span className="grow" style={{ minWidth: 0 }}>
+          <span className="ellipsis" style={{ display: "block", fontWeight: 600 }}>
+            {r.name}
+          </span>
+          <small>{open ? "Decrypting…" : `${bytes(r.size)} · end-to-end encrypted · play here`}</small>
+        </span>
+      </button>
+    );
+  }
+  return video ? <video className="att-video" src={url} controls autoPlay playsInline aria-label={r.name} /> : <audio className="att-audio" src={url} controls autoPlay aria-label={r.name} />;
 }
 
 function useBlobUrl(r: AttachmentRef, enabled: boolean): { url: string | null; error: string | null; loading: boolean } {

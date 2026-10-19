@@ -25,6 +25,8 @@ export interface PickedFile {
   type: string;
   size: number;
   bytes(): Promise<Uint8Array>;
+  /** A voice message: its length, sent with the reference (docs/VOICE_MESSAGES.md). */
+  voiceDurationMs?: number;
 }
 
 export async function uploadFiles(engine: Engine, conversationId: string, files: PickedFile[], onProgress?: (done: number, total: number) => void): Promise<AttachmentRef[]> {
@@ -38,7 +40,16 @@ export async function uploadFiles(engine: Engine, conversationId: string, files:
   for (const [i, f] of files.entries()) {
     const enc = await encryptFile(await f.bytes());
     const res = await engine.api.json("POST", `/v1/attachments?conversationId=${encodeURIComponent(conversationId)}`, zUploadRes, { raw: enc.ciphertext });
-    refs.push({ id: res.id, name: f.name.slice(0, 200) || "file", mime: f.type || "application/octet-stream", size: f.size, key: enc.key, nonce: enc.nonce, sha256: enc.sha256 });
+    refs.push({
+      id: res.id,
+      name: f.name.slice(0, 200) || "file",
+      mime: f.type || "application/octet-stream",
+      size: f.size,
+      key: enc.key,
+      nonce: enc.nonce,
+      sha256: enc.sha256,
+      ...(f.voiceDurationMs !== undefined ? { voice: true, durationMs: Math.round(f.voiceDurationMs) } : {}),
+    });
     onProgress?.(i + 1, files.length);
   }
   return refs;

@@ -54,6 +54,16 @@ export function levelOf(p: NavPrefs | undefined, conversationId: string): Notify
   return p?.notify[conversationId] ?? "all";
 }
 
+/**
+ * Whether a message notifies at a conversation's level (docs/MENTIONS.md): "mentions" lets mentions and @everyone
+ * through, "none" (muted) only a mention of the person by name.
+ */
+export function shouldNotify(level: NotifyLevel, mention: "me" | "all" | null): boolean {
+  if (level === "none") return mention === "me";
+  if (level === "mentions") return mention !== null;
+  return true;
+}
+
 /** Conversations in Starred or a custom section, so they aren't listed again in their default group. */
 export function placed(p: NavPrefs): Set<string> {
   return new Set([...p.starred, ...p.sections.flatMap((s) => s.items)]);

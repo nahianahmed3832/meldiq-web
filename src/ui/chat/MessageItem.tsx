@@ -1,15 +1,17 @@
 import {
-  CircleAlert,
-  Clock,
   Check,
   CheckCheck,
+  CircleAlert,
+  Clock,
   Copy,
+  Forward,
   MapPin,
   MessageSquareReply,
   MessagesSquare,
   MoreHorizontal,
   Pencil,
   Phone,
+  PhoneMissed,
   Pin,
   PinOff,
   ShieldAlert,
@@ -22,6 +24,8 @@ import { memo, useState } from "react";
 import { useEngine } from "../../app/orbit";
 import type { StoredMessage } from "../../model/types";
 import { Avatar } from "../components/Avatar";
+import { callLine } from "../../sync/callHistory";
+import { ForwardDialog } from "../dialogs/ForwardDialog";
 import { Dialog, Menu, useMenu } from "../components/Overlay";
 import { clock, fullTime } from "../format";
 import { isWebUrl } from "../../protocol/payload";
@@ -55,6 +59,7 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
   const { m } = p;
   const [editing, setEditing] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [forwarding, setForwarding] = useState(false);
   const more = useMenu();
   const picker = useMenu();
   const mine = m.outgoing;
@@ -62,13 +67,18 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
   const live = m.kind === "text" && !m.deleted;
 
   const body = () => {
-    if (m.kind === "call")
+    if (m.kind === "call") {
+      const line = callLine(m.call?.info, m.call?.video ?? false, mine, p.senderName);
       return (
-        <span className="msg-call">
-          {m.call?.video ? <Video size={16} /> : <Phone size={16} />}
-          {m.call?.video ? "Video call" : "Voice call"}
+        <span className={`msg-call${line.missed ? " missed" : ""}`}>
+          {m.call?.video ? <Video size={16} /> : line.missed ? <PhoneMissed size={16} /> : <Phone size={16} />}
+          <span>
+            {line.title}
+            {line.detail && <small className="msg-call-detail">{line.detail}</small>}
+          </span>
         </span>
       );
+    }
     if (m.kind === "undecryptable")
       return (
         <span className="msg-undecryptable" title={m.errorText ?? undefined}>
@@ -251,11 +261,13 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
             ...(p.canPost
               ? [{ label: m.pinned ? "Unpin" : "Pin to conversation", icon: m.pinned ? <PinOff size={16} /> : <Pin size={16} />, onSelect: () => void engine.setPinned(m, !m.pinned) }]
               : []),
+            ...(live ? [{ label: "Forward…", icon: <Forward size={16} />, onSelect: () => setForwarding(true) }] : []),
             { label: "Copy text", icon: <Copy size={16} />, onSelect: () => void navigator.clipboard?.writeText(m.text) },
             ...(mine && p.canPost ? ["separator" as const, { label: "Delete for everyone", icon: <Trash2 size={16} />, danger: true, onSelect: () => setConfirmDelete(true) }] : []),
           ]}
         />
       )}
+      {forwarding && <ForwardDialog message={m} onClose={() => setForwarding(false)} />}
       {confirmDelete && (
         <Dialog
           title="Delete this message for everyone?"

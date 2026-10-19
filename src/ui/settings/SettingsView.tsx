@@ -1,10 +1,13 @@
-import { Bell, Info, Laptop, Palette, Shield, Smartphone, UserRound } from "lucide-react";
+import { Bell, Info, KeyRound, Laptop, Palette, Shield, Smartphone, UserRound } from "lucide-react";
 import { navigate, type SettingsPage } from "../../app/router";
 import { AboutPage, AppearancePage, NotificationsPage } from "./PreferencePages";
-import { DevicesPage, ProfilePage, SecurityPage } from "./AccountPages";
+import { AccountSettingsPage } from "./AccountSettingsPage";
+import { DevicesPage, SecurityPage } from "./AccountPages";
+import { ProfilePage } from "./ProfilePage";
 
 const PAGES: { key: SettingsPage; label: string; icon: React.ReactNode }[] = [
   { key: "profile", label: "Profile", icon: <UserRound size={17} /> },
+  { key: "account", label: "Account", icon: <KeyRound size={17} /> },
   { key: "devices", label: "Devices", icon: <Smartphone size={17} /> },
   { key: "notifications", label: "Notifications", icon: <Bell size={17} /> },
   { key: "appearance", label: "Appearance", icon: <Palette size={17} /> },
@@ -34,6 +37,7 @@ export function SettingsView({ page, onSignedOut }: { page: SettingsPage; onSign
         <div className="settings-page scroll">
           <div className="inner">
             {page === "profile" && <ProfilePage />}
+            {page === "account" && <AccountSettingsPage />}
             {page === "devices" && <DevicesPage />}
             {page === "notifications" && <NotificationsPage />}
             {page === "appearance" && <AppearancePage />}

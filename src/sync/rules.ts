@@ -1,3 +1,4 @@
+import { callLine } from "./callHistory";
 import type { ConversationType, QueueItem } from "../api/schemas";
 import type { RichContent, StoredMessage } from "../model/types";
 import { type AttachmentRef, MAX_RECEIVED_ATTACHMENTS, type Payload, safeFileName } from "../protocol/payload";
@@ -125,9 +126,9 @@ type FileKind = "photo" | "video" | "file";
 const kindOf = (mime: string): FileKind => (mime.toLowerCase().startsWith("image/") ? "photo" : mime.toLowerCase().startsWith("video/") ? "video" : "file");
 
 /** The sidebar line for a message (android MessageRepository.preview and AttachmentPolicy.preview). */
-export function preview(m: Pick<StoredMessage, "deleted" | "kind" | "text" | "attachments" | "rich" | "call">): string {
+export function preview(m: Pick<StoredMessage, "deleted" | "kind" | "text" | "attachments" | "rich" | "call" | "outgoing">): string {
   if (m.deleted) return "Message deleted";
-  if (m.kind === "call") return m.call?.video ? "📹 Video call" : "📞 Voice call";
+  if (m.kind === "call") return `📞 ${m.call?.info ? callLine(m.call.info, m.call.video, m.outgoing, null).title : m.call?.video ? "Video call" : "Voice call"}`;
   if (m.kind === "undecryptable") return "Couldn't be decrypted";
   if (m.rich?.contact) return `👤 ${m.rich.contact.name}`;
   if (m.rich?.location) return `📍 ${m.rich.location.label ?? "Location"}`;

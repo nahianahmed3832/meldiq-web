@@ -1,4 +1,5 @@
 import type { StoredMessage } from "../model/types";
+import type { LocalStore } from "../store/db";
 
 /** A thread the person takes part in, for Activity › Thread replies (android ThreadActivityRules). */
 export interface ThreadActivity {
@@ -44,4 +45,25 @@ export function threadActivity(replies: readonly StoredMessage[], roots: Readonl
     });
   }
   return out.sort((a, b) => Number(b.unseen > 0) - Number(a.unseen > 0) || b.lastReplyAt - a.lastReplyAt).slice(0, THREADS_SHOWN);
+}
+
+const THREAD_SEEN_KEY = "threads.seen";
+
+/** Threads this account takes part in, with replies not yet seen here (Activity › Thread replies). */
+export async function loadThreadActivity(store: LocalStore): Promise<ThreadActivity[]> {
+  const replies = await store.threadReplies();
+  const rootIds = [...new Set(replies.map((m) => m.threadRootId).filter((id): id is string => !!id))];
+  const roots = new Map(await Promise.all(rootIds.map(async (id) => [id, await store.message(id)] as const)));
+  const seen = (await store.getValue<Record<string, number>>(THREAD_SEEN_KEY)) ?? {};
+  return threadActivity(replies, roots, seen);
+}
+
+/** The thread was opened here: its replies so far are seen. True when that changed anything. */
+export async function markThreadSeen(store: LocalStore, rootId: string): Promise<boolean> {
+  const seen = (await store.getValue<Record<string, number>>(THREAD_SEEN_KEY)) ?? {};
+  const newest = (await store.threadReplies()).filter((m) => m.threadRootId === rootId).reduce((t, m) => Math.max(t, m.sortTs), 0);
+  // Server times only (the replies' own), so a fast clock here can't mark later replies as seen.
+  if (newest === 0 || (seen[rootId] ?? 0) >= newest) return false;
+  await store.setValue(THREAD_SEEN_KEY, { ...seen, [rootId]: newest });
+  return true;
 }

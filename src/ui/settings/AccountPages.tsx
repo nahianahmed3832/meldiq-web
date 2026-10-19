@@ -3,75 +3,10 @@ import { useCallback, useEffect, useState } from "react";
 import type { Device } from "../../api/schemas";
 import { useEngine, useOrbit } from "../../app/orbit";
 import { fingerprint } from "../../crypto/identity";
-import { listDevices, revokeDevice, signOut, SignOutUnconfirmed, updateProfile } from "../../sync/account";
-import { Avatar } from "../components/Avatar";
+import { listDevices, revokeDevice, signOut, SignOutUnconfirmed } from "../../sync/account";
+import { BlockedPeople, PrivacySettings } from "./PrivacyPage";
 import { Dialog } from "../components/Overlay";
 import { relative } from "../format";
-
-export function ProfilePage() {
-  const engine = useEngine();
-  const me = useOrbit((s) => s.me);
-  const [name, setName] = useState(me?.displayName ?? "");
-  const [status, setStatus] = useState(me?.statusText ?? "");
-  const [saving, setSaving] = useState(false);
-  const [saved, setSaved] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  useEffect(() => {
-    setName(me?.displayName ?? "");
-    setStatus(me?.statusText ?? "");
-  }, [me?.displayName, me?.statusText]);
-  if (!me) return null;
-  const dirty = name.trim() !== me.displayName || (status.trim() || null) !== (me.statusText ?? null);
-  return (
-    <>
-      <h1>Profile</h1>
-      <div className="card" style={{ padding: 20, display: "grid", gap: 16 }}>
-        <div className="row" style={{ gap: 14 }}>
-          <Avatar name={name || me.displayName} colorIndex={me.avatarColor} size={56} decorative />
-          <div>
-            <div style={{ fontWeight: 700, fontSize: 16 }}>{name || me.displayName}</div>
-            <div className="faint">@{me.username}</div>
-          </div>
-        </div>
-        <form
-          style={{ display: "grid", gap: 14 }}
-          onSubmit={(e) => {
-            e.preventDefault();
-            if (!name.trim()) return setError("Your name can't be empty.");
-            setSaving(true);
-            setError(null);
-            updateProfile(engine, { displayName: name.trim(), statusText: status.trim() || null })
-              .then(() => {
-                setSaved(true);
-                setTimeout(() => setSaved(false), 2000);
-              })
-              .catch((err: unknown) => setError(err instanceof Error ? err.message : "Couldn't save"))
-              .finally(() => setSaving(false));
-          }}
-        >
-          <div className="field">
-            <label htmlFor="pf-name">Display name</label>
-            <input id="pf-name" className="input" value={name} maxLength={80} onChange={(e) => setName(e.target.value)} />
-          </div>
-          <div className="field">
-            <label htmlFor="pf-status">Status</label>
-            <input id="pf-status" className="input" value={status} maxLength={140} placeholder="What are you up to?" onChange={(e) => setStatus(e.target.value)} />
-            <span className="hint">Who sees your status follows your privacy settings on your phone.</span>
-          </div>
-          {error && <div className="banner danger">{error}</div>}
-          <div className="row">
-            <span className="faint grow" style={{ fontSize: 12.5 }}>
-              Your username, photo and privacy choices are changed on your phone.
-            </span>
-            <button className="btn btn-primary" disabled={!dirty || saving}>
-              {saved ? "Saved" : saving ? "Saving…" : "Save changes"}
-            </button>
-          </div>
-        </form>
-      </div>
-    </>
-  );
-}
 
 export function DevicesPage() {
   const engine = useEngine();
@@ -93,7 +28,7 @@ export function DevicesPage() {
       <div>
         <h1>Devices</h1>
         <p className="muted" style={{ margin: "6px 0 0" }}>
-          Every device of your account gets its own keys and its own copy of each message. Link another browser from its link screen and approve it on your phone.
+          Every device of your account gets its own keys and its own copy of each message. To add a browser, sign in there and set it up with your recovery key or by approving it on your phone.
         </p>
       </div>
       {error && <div className="banner danger">{error}</div>}
@@ -204,17 +139,23 @@ export function SecurityPage({ onSignedOut }: { onSignedOut: () => void }) {
           </div>
         </div>
       </div>
+      <PrivacySettings />
+      <BlockedPeople />
       <div className="card" style={{ padding: "16px 18px", display: "grid", gap: 10 }}>
         <strong>How this browser protects your messages</strong>
         <ul className="muted" style={{ margin: 0, paddingLeft: 18, display: "grid", gap: 6, fontSize: 13.5 }}>
           <li>Messages and files are encrypted and decrypted here, with keys this page can use but can't read or export.</li>
           <li>The server relays ciphertext. It sees who talks to whom and when, not what is said.</li>
-          <li>Your recovery key never comes to the browser. This browser can't approve other devices.</li>
+          <li>This browser doesn't keep your recovery key: it's shown once when it's made, or typed in to set the browser up, and dropped right after. This browser can't approve other devices.</li>
           <li>
             Messages this browser received are kept in its storage on this computer so they're there next time. That storage isn't as strongly protected as your phone's encrypted database: sign out on
             shared computers.
           </li>
-          <li>The session token is held in memory only; each visit signs in again with the device key.</li>
+          <li>
+            {engine.device.account
+              ? "Your account session is kept encrypted under a key this page can use but not read; if it ends, Orbit asks for your password again. Your password itself is never stored."
+              : "The session token is held in memory only; each visit signs in again with the device key."}
+          </li>
         </ul>
       </div>
       <div className="card" style={{ padding: "16px 18px", display: "grid", gap: 12, borderColor: "var(--danger-soft)" }}>

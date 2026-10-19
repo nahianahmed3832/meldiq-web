@@ -1,4 +1,4 @@
-import { AtSign, Building2, Hash, LogIn, LogOut, MailPlus, MessagesSquare, Phone, UsersRound } from "lucide-react";
+import { AtSign, Building2, Hash, LogIn, LogOut, MailPlus, MessagesSquare, Phone, PhoneMissed, UsersRound } from "lucide-react";
 import { useEffect, useState } from "react";
 import { ApiError } from "../../api/client";
 import type { Activity } from "../../api/schemas";
@@ -82,6 +82,7 @@ export function ActivityView({ orgId }: { orgId: string | null }) {
               ))
             )}
           </div>
+          <MissedCalls />
           <ThreadReplies />
           {orgId && (
             <div className="card list-card">
@@ -108,6 +109,45 @@ export function ActivityView({ orgId }: { orgId: string | null }) {
         </div>
       </div>
     </section>
+  );
+}
+
+/** The week's missed calls (android WorkspaceHomeRules.MISSED_CALLS_ACTIVITY_WINDOW_MS), newest first. */
+const MISSED_WINDOW_MS = 7 * 86_400_000;
+
+function MissedCalls() {
+  const missed = useOrbit(
+    (s) =>
+      s.callLog
+        .filter((c) => c.outcome === "missed" && Date.now() - c.at < MISSED_WINDOW_MS && s.conversations[c.conversationId])
+        .slice(0, 20)
+        .map((c) => ({ ...c, title: s.me ? conversationTitle(s.conversations[c.conversationId], s.me.userId, s.users) : "", by: s.users[c.startedBy]?.displayName ?? "Someone" })),
+    (a, b) => JSON.stringify(a) === JSON.stringify(b),
+  );
+  if (missed.length === 0) return null;
+  return (
+    <div className="card list-card">
+      <h2>Missed calls</h2>
+      {missed.map((c) => (
+        <button key={c.callId} className="list-row" onClick={() => navigate({ section: "activity", conversationId: c.conversationId })}>
+          <span className="empty-orb" style={{ width: 36, height: 36, color: "var(--danger)" }}>
+            <PhoneMissed size={16} />
+          </span>
+          <span className="lines">
+            <span className="ellipsis" style={{ fontWeight: 700 }}>
+              {c.group ? c.title : c.by}
+            </span>
+            <small className="ellipsis">
+              Missed {c.group ? "group " : ""}
+              {c.video ? "video" : "voice"} call{c.group ? ` · started by ${c.by}` : ""}
+            </small>
+          </span>
+          <span className="faint" style={{ fontSize: 12 }}>
+            {relative(c.at)}
+          </span>
+        </button>
+      ))}
+    </div>
   );
 }
 

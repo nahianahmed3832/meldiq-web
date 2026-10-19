@@ -1,15 +1,20 @@
-import { AtSign, Lock, Paperclip, SendHorizontal, Smile, X } from "lucide-react";
+import { AtSign, FileUp, Lock, MapPin, Mic, Paperclip, SendHorizontal, Smile, UserRound, X } from "lucide-react";
 import { type ClipboardEvent, type DragEvent, useCallback, useEffect, useRef, useState } from "react";
 import type { Conversation, Member } from "../../api/schemas";
 import { useEngine } from "../../app/orbit";
 import { usePrefs } from "../../app/prefs";
 import type { StoredMessage } from "../../model/types";
+import type { RichContent } from "../../model/types";
 import { MAX_FILES_PER_MESSAGE, MAX_UPLOAD_BYTES, sendFiles } from "../../sync/attachments";
+import { fallbackText } from "../../sync/rich";
+import { type Recording, voiceFileName, voiceMime } from "../../sync/voice";
 import { activeMentionQuery } from "../../sync/mentions";
 import { Avatar } from "../components/Avatar";
 import { Menu, useMenu } from "../components/Overlay";
 import { bytes } from "../format";
 import { EMOJI } from "./MessageItem";
+import { ContactDialog, LocationDialog } from "./RichDialogs";
+import { VoiceBar } from "./VoiceBar";
 
 interface ComposerProps {
   conversation: Conversation;
@@ -35,6 +40,10 @@ export function Composer(props: ComposerProps) {
   const input = useRef<HTMLTextAreaElement>(null);
   const fileInput = useRef<HTMLInputElement>(null);
   const emoji = useMenu();
+  const attach = useMenu();
+  const [voice, setVoice] = useState(false);
+  const [rich, setRich] = useState<"contact" | "location" | null>(null);
+  const canRecord = !props.threadRoot && voiceMime() !== null;
   const draftTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   // Draft: restored when the conversation opens, saved as you type (main composer only).
@@ -143,6 +152,35 @@ export function Composer(props: ComposerProps) {
     }
   };
 
+  /** A voice message (android VoiceViews): an encrypted audio attachment marked voice, with its length. */
+  const sendVoice = async (rec: Recording) => {
+    const opts = { replyTo: props.replyTo?.id, threadRoot: props.threadRoot };
+    try {
+      await sendFiles(
+        engine,
+        c.id,
+        [{ name: voiceFileName(rec.mime), type: rec.mime, size: rec.blob.size, bytes: async () => new Uint8Array(await rec.blob.arrayBuffer()), voiceDurationMs: rec.durationMs }],
+        "",
+        opts,
+      );
+      props.onCancelReply();
+      setVoice(false);
+    } catch (e) {
+      engine.notice("error", e instanceof Error ? e.message : "Couldn't send the voice message.");
+    }
+  };
+
+  /** A contact card or location: inside the encrypted message, with a readable text for apps that don't show it. */
+  const sendRich = async (content: RichContent) => {
+    setRich(null);
+    try {
+      await engine.sendText(c.id, fallbackText(content), { rich: content, replyTo: props.replyTo?.id, threadRoot: props.threadRoot });
+      props.onCancelReply();
+    } catch (e) {
+      engine.notice("error", e instanceof Error ? e.message : "Couldn't send.");
+    }
+  };
+
   if (!c.canPost) {
     return (
       <div className="composer-wrap">
@@ -196,93 +234,119 @@ export function Composer(props: ComposerProps) {
             ))}
           </div>
         )}
-        <label className="sr-only" htmlFor={`composer-${c.id}-${props.threadRoot ?? "main"}`}>
-          {props.threadRoot ? "Reply in thread" : `Message ${props.title}`}
-        </label>
-        <textarea
-          id={`composer-${c.id}-${props.threadRoot ?? "main"}`}
-          ref={input}
-          rows={1}
-          value={text}
-          placeholder={props.threadRoot ? "Reply in thread…" : `Message ${c.type === "CHANNEL" ? "#" : ""}${props.title}`}
-          onChange={(e) => onChange(e.target.value)}
-          onBlur={() => engine.setTyping(c.id, false)}
-          onPaste={(e: ClipboardEvent<HTMLTextAreaElement>) => {
-            const pasted = Array.from(e.clipboardData.files);
-            if (pasted.length) {
-              e.preventDefault();
-              addFiles(pasted);
-            }
-          }}
-          onKeyDown={(e) => {
-            if (suggest) {
-              if (e.key === "ArrowDown" || e.key === "ArrowUp") {
-                e.preventDefault();
-                const d = e.key === "ArrowDown" ? 1 : -1;
-                setSuggest({ ...suggest, index: (suggest.index + d + suggest.items.length) % suggest.items.length });
-                return;
-              }
-              if (e.key === "Enter" || e.key === "Tab") {
-                e.preventDefault();
-                pick(suggest.items[suggest.index]);
-                return;
-              }
-              if (e.key === "Escape") {
-                setSuggest(null);
-                return;
-              }
-            }
-            if (e.key === "Escape" && props.replyTo) props.onCancelReply();
-            if (e.key === "Enter" && !e.shiftKey && !e.nativeEvent.isComposing && (prefs.enterToSend || e.metaKey || e.ctrlKey)) {
-              e.preventDefault();
-              void send();
-            }
-          }}
-          aria-describedby={busy ? `composer-status-${c.id}` : undefined}
-          disabled={!!busy}
-        />
-        <div className="composer-tools">
-          <button className="icon-btn" onClick={() => fileInput.current?.click()} aria-label="Attach files" title={`Attach files (up to ${MAX_FILES_PER_MESSAGE}, 25 MB each)`} disabled={!!busy}>
-            <Paperclip size={18} />
-          </button>
-          <input
-            ref={fileInput}
-            type="file"
-            multiple
-            hidden
-            onChange={(e) => {
-              addFiles(Array.from(e.target.files ?? []));
-              e.target.value = "";
-            }}
-          />
-          <button className="icon-btn" onClick={(e) => emoji.open(e.currentTarget)} aria-label="Insert emoji" aria-haspopup="menu">
-            <Smile size={18} />
-          </button>
-          {c.type !== "DM" && (
-            <button
-              className="icon-btn"
-              aria-label="Mention someone"
-              onClick={() => {
-                const next = `${text}${text && !text.endsWith(" ") ? " " : ""}@`;
-                setText(next);
-                requestAnimationFrame(() => {
-                  input.current?.focus();
-                  input.current?.setSelectionRange(next.length, next.length);
-                  onChange(next);
-                });
+        {voice ? (
+          <VoiceBar onSend={sendVoice} onClose={() => setVoice(false)} />
+        ) : (
+          <>
+            <label className="sr-only" htmlFor={`composer-${c.id}-${props.threadRoot ?? "main"}`}>
+              {props.threadRoot ? "Reply in thread" : `Message ${props.title}`}
+            </label>
+            <textarea
+              id={`composer-${c.id}-${props.threadRoot ?? "main"}`}
+              ref={input}
+              rows={1}
+              value={text}
+              placeholder={props.threadRoot ? "Reply in thread…" : `Message ${c.type === "CHANNEL" ? "#" : ""}${props.title}`}
+              onChange={(e) => onChange(e.target.value)}
+              onBlur={() => engine.setTyping(c.id, false)}
+              onPaste={(e: ClipboardEvent<HTMLTextAreaElement>) => {
+                const pasted = Array.from(e.clipboardData.files);
+                if (pasted.length) {
+                  e.preventDefault();
+                  addFiles(pasted);
+                }
               }}
-            >
-              <AtSign size={18} />
-            </button>
-          )}
-          <span className="hint" id={`composer-status-${c.id}`} aria-live="polite">
-            {busy ?? (prefs.enterToSend ? "Enter to send · Shift+Enter for a new line" : "Ctrl+Enter to send")}
-          </span>
-          <button className="send-btn" onClick={() => void send()} disabled={(!text.trim() && !files.length) || !!busy} aria-label="Send">
-            <SendHorizontal size={17} />
-          </button>
-        </div>
+              onKeyDown={(e) => {
+                if (suggest) {
+                  if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+                    e.preventDefault();
+                    const d = e.key === "ArrowDown" ? 1 : -1;
+                    setSuggest({ ...suggest, index: (suggest.index + d + suggest.items.length) % suggest.items.length });
+                    return;
+                  }
+                  if (e.key === "Enter" || e.key === "Tab") {
+                    e.preventDefault();
+                    pick(suggest.items[suggest.index]);
+                    return;
+                  }
+                  if (e.key === "Escape") {
+                    setSuggest(null);
+                    return;
+                  }
+                }
+                if (e.key === "Escape" && props.replyTo) props.onCancelReply();
+                if (e.key === "Enter" && !e.shiftKey && !e.nativeEvent.isComposing && (prefs.enterToSend || e.metaKey || e.ctrlKey)) {
+                  e.preventDefault();
+                  void send();
+                }
+              }}
+              aria-describedby={busy ? `composer-status-${c.id}` : undefined}
+              disabled={!!busy}
+            />
+            <div className="composer-tools">
+              <button className="icon-btn" onClick={(e) => attach.open(e.currentTarget)} aria-label="Attach" aria-haspopup="menu" title="Attach files, a contact or your location" disabled={!!busy}>
+                <Paperclip size={18} />
+              </button>
+              <input
+                ref={fileInput}
+                type="file"
+                multiple
+                hidden
+                onChange={(e) => {
+                  addFiles(Array.from(e.target.files ?? []));
+                  e.target.value = "";
+                }}
+              />
+              <button className="icon-btn" onClick={(e) => emoji.open(e.currentTarget)} aria-label="Insert emoji" aria-haspopup="menu">
+                <Smile size={18} />
+              </button>
+              {c.type !== "DM" && (
+                <button
+                  className="icon-btn"
+                  aria-label="Mention someone"
+                  onClick={() => {
+                    const next = `${text}${text && !text.endsWith(" ") ? " " : ""}@`;
+                    setText(next);
+                    requestAnimationFrame(() => {
+                      input.current?.focus();
+                      input.current?.setSelectionRange(next.length, next.length);
+                      onChange(next);
+                    });
+                  }}
+                >
+                  <AtSign size={18} />
+                </button>
+              )}
+              <span className="hint" id={`composer-status-${c.id}`} aria-live="polite">
+                {busy ?? (prefs.enterToSend ? "Enter to send · Shift+Enter for a new line" : "Ctrl+Enter to send")}
+              </span>
+              {canRecord && !text.trim() && !files.length && !busy ? (
+                <button className="send-btn" onClick={() => setVoice(true)} aria-label="Record a voice message">
+                  <Mic size={17} />
+                </button>
+              ) : (
+                <button className="send-btn" onClick={() => void send()} disabled={(!text.trim() && !files.length) || !!busy} aria-label="Send">
+                  <SendHorizontal size={17} />
+                </button>
+              )}
+            </div>
+          </>
+        )}
       </div>
+      {attach.anchor && (
+        <Menu
+          anchor={attach.anchor}
+          label="Attach"
+          onClose={attach.close}
+          entries={[
+            { label: `Files (up to ${MAX_FILES_PER_MESSAGE})`, icon: <FileUp size={16} />, onSelect: () => fileInput.current?.click() },
+            { label: "Contact card…", icon: <UserRound size={16} />, onSelect: () => setRich("contact") },
+            { label: "Location…", icon: <MapPin size={16} />, onSelect: () => setRich("location") },
+          ]}
+        />
+      )}
+      {rich === "contact" && <ContactDialog onClose={() => setRich(null)} onSend={(contact) => void sendRich({ contact })} />}
+      {rich === "location" && <LocationDialog onClose={() => setRich(null)} onSend={(location) => void sendRich({ location })} />}
       {emoji.anchor && (
         <Menu
           anchor={emoji.anchor}

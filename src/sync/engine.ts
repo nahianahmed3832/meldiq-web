@@ -2,16 +2,14 @@ import { z } from "zod";
 import { ApiClient, ApiError } from "../api/client";
 import type { AccountSessionGrant } from "../api/accountSchemas";
 import { type Call, type Conversation, type Member, type Org, type SessionGrant, zCall, zConversation, zMember, zOrg, zProfile, zServerInfo } from "../api/schemas";
-import { AccountApi } from "../auth/accountApi";
+import { signInWithDevice } from "../auth/accountApi";
 import { type AccountSessionEnd, AccountSession } from "../auth/accountSession";
 import { TokenVault } from "../auth/tokenVault";
 import { CallManager } from "../call/manager";
 import { callSupport } from "../call/support";
 import type { MediaFactory } from "../call/types";
-import { canonical } from "../crypto/canonical";
-import { sign } from "../crypto/ed25519";
 import { fingerprint } from "../crypto/identity";
-import type { ConversationLocal, DeviceRecord, OutboxItem, PinnedIdentity, StoredMessage } from "../model/types";
+import type { ConversationLocal, DeviceRecord, OutboxItem, PinnedIdentity, RichContent, StoredMessage } from "../model/types";
 import { encodePayload, type Payload } from "../protocol/payload";
 import { type Frame, RealtimeClient } from "../realtime/socket";
 import { type AppState, initialState, Store, type UserLite, upsertLoaded, withMessages } from "../state/store";
@@ -19,12 +17,14 @@ import type { LocalStore } from "../store/db";
 import type { EngineContext } from "./context";
 import { Directory } from "./directory";
 import { restoreHistory } from "./historySync";
-import { resolveMentions } from "./mentions";
 import { Outbox, sealAndPost } from "./outbox";
-import { levelOf, type NavOp, NavSync, PERSONAL, workspaceOf } from "./navPrefs";
+import { levelOf, type NavOp, NavSync, PERSONAL, shouldNotify, workspaceOf } from "./navPrefs";
 import { Receiver } from "./receiver";
-import { type ThreadActivity, threadActivity } from "./threads";
-import { applyPin, applyReaction, callEntry, preview, sendsReadReceipts } from "./rules";
+import { CallLog } from "./callLog";
+import { Compose } from "./compose";
+import { ConversationLocals } from "./locals";
+import { loadThreadActivity, markThreadSeen, type ThreadActivity } from "./threads";
+import { preview, sendsReadReceipts } from "./rules";
 import { type RevokedReason, SessionManager } from "./session";
 
 export interface EngineOptions {
@@ -54,9 +54,6 @@ const zConversations = z.object({ conversations: z.array(zConversation) });
 const zOrgs = z.object({ orgs: z.array(zOrg) });
 const zMembers = z.object({ members: z.array(zMember) });
 const CACHE_KEY = "cache.meta";
-const THREAD_SEEN_KEY = "threads.seen";
-
-const emptyLocal = (id: string): ConversationLocal => ({ id, unread: 0, mentions: 0, lastMessageId: null, lastPreview: null, lastSenderName: null, lastActivityAt: 0, readUpTo: 0, draft: "" });
 
 /**
  * One linked browser's connection to its account: realtime delivery, the outbox, history restore and the state the
@@ -71,6 +68,10 @@ export class Engine implements EngineContext {
   readonly calls: CallManager;
   /** Starred, sections, collapsed groups and notification levels, synced across the person's devices. */
   readonly nav: NavSync;
+  /** Call history lines and the recent-call log. */
+  readonly callLog: CallLog;
+  private readonly compose: Compose;
+  private readonly locals: ConversationLocals;
   private readonly realtime: RealtimeClient;
   private readonly receiver: Receiver;
   private readonly outbox: Outbox;
@@ -83,7 +84,6 @@ export class Engine implements EngineContext {
   private userFetches = new Map<string, Promise<void>>();
   private members = new Map<string, Member[]>();
   private lastTypingAt = 0;
-  private draftWrites = new Map<string, Promise<void>>();
 
   constructor(
     readonly device: DeviceRecord,
@@ -111,7 +111,7 @@ export class Engine implements EngineContext {
         sendControlNow: (conversationId, payload) => this.sendControlNow(conversationId, payload),
         describe: (conversationId) => this.describeConversation(conversationId),
         displayName: (userId) => this.state.get().users[userId]?.displayName ?? null,
-        recordCall: (callId, conversationId, video) => this.recordOwnCall(callId, conversationId, video),
+        recordCall: (callId, conversationId, video) => this.callLog.recordOwn(callId, conversationId, video),
         ringAlert: opts.ringAlert,
       },
       {
@@ -121,6 +121,31 @@ export class Engine implements EngineContext {
         ...opts.callTiming,
       },
     );
+    this.locals = new ConversationLocals(store, {
+      senderName: (userId) => this.state.get().users[userId]?.displayName ?? null,
+      publish: (l) => this.set((s) => ({ ...s, local: { ...s.local, [l.id]: l } })),
+    });
+    this.compose = new Compose({
+      store,
+      device,
+      state: () => this.state.get(),
+      membersOf: (id) => this.membersOf(id),
+      show: (m) => this.show(m),
+      bump: (m, counts) => this.bump(m, counts),
+      refreshPreview: (id) => this.refreshPreview(id),
+      queue: (o) => this.queue(o),
+    });
+    this.callLog = new CallLog({
+      api: this.api,
+      store,
+      me: { userId: device.userId, deviceId: device.deviceId },
+      knows: (id) => !!this.state.get().conversations[id],
+      declinedHere: (id) => this.calls.declinedHere(id),
+      show: (m) => this.show(m),
+      bump: (m) => this.bump(m, { unread: false, mention: false }),
+      refreshPreview: (id) => this.refreshPreview(id),
+      publish: (callLog) => this.set((s) => ({ ...s, callLog })),
+    });
     this.nav = new NavSync({
       get: (path) => this.api.json("GET", path, z.unknown()),
       put: (path, body) => this.api.json("PUT", path, z.unknown(), { body }),
@@ -235,19 +260,11 @@ export class Engine implements EngineContext {
    * key, so the new session is bound to this device. A removed device is told so by the server, and then erased.
    */
   async signInAgain(password: string): Promise<void> {
-    const account = this.device.account;
-    if (!account || !(this.session instanceof AccountSession)) throw new Error("This browser isn't signed in with an Orbit account.");
-    const accounts = AccountApi.anonymous(this.opts.base);
-    const nonce = await accounts.challenge();
-    const signature = await sign(this.device.keys.signing.privateKey, canonical.authProof("login", nonce, this.device.keys.signingPublic));
+    if (!(this.session instanceof AccountSession)) throw new Error("This browser isn't signed in with an Orbit account.");
     try {
-      const grant = await accounts.login(account.email, password, this.device.deviceName, { deviceId: this.device.deviceId, nonce, signature });
-      await this.session.adopt(grant);
+      await this.session.adopt(await signInWithDevice(this.opts.base, this.device, password));
     } catch (e) {
-      if (e instanceof ApiError && (e.code === "device_revoked" || e.code === "account_disabled")) {
-        this.revoked(e.code);
-        return;
-      }
+      if (e instanceof ApiError && (e.code === "device_revoked" || e.code === "account_disabled")) return this.revoked(e.code);
       throw e;
     }
     this.set((s) => ({ ...s, phase: "ready", phaseReason: null }));
@@ -268,8 +285,10 @@ export class Engine implements EngineContext {
     const locals = await this.store.conversations();
     const cache = await this.store.getValue<{ orgs: Org[]; conversations: Conversation[]; users: UserLite[] }>(CACHE_KEY);
     const pins = await this.store.changedPins();
+    const callLog = await this.callLog.load();
     this.set((s) => ({
       ...s,
+      callLog,
       local: Object.fromEntries(locals.map((l) => [l.id, l])),
       orgs: cache?.orgs ?? s.orgs,
       conversations: cache ? Object.fromEntries(cache.conversations.map((c) => [c.id, c])) : s.conversations,
@@ -411,6 +430,7 @@ export class Engine implements EngineContext {
           return { ...s, calls };
         });
         if (typeof f.event === "string") void this.calls.onCallEvent(f.event, call, f as { from?: { displayName?: unknown }; reason?: unknown });
+        void this.callLog.upsert(call);
         return;
       }
       case "queue.drained":
@@ -490,55 +510,48 @@ export class Engine implements EngineContext {
   }
 
   /** Threads this account takes part in, with replies not yet seen here (Activity › Thread replies). */
-  async threadActivity(): Promise<ThreadActivity[]> {
-    const replies = await this.store.threadReplies();
-    const rootIds = [...new Set(replies.map((m) => m.threadRootId).filter((id): id is string => !!id))];
-    const roots = new Map(await Promise.all(rootIds.map(async (id) => [id, await this.store.message(id)] as const)));
-    const seen = (await this.store.getValue<Record<string, number>>(THREAD_SEEN_KEY)) ?? {};
-    return threadActivity(replies, roots, seen);
+  threadActivity(): Promise<ThreadActivity[]> {
+    return loadThreadActivity(this.store);
   }
 
   /** The thread was opened here: its replies so far are seen. */
   async markThreadSeen(rootId: string): Promise<void> {
-    const seen = (await this.store.getValue<Record<string, number>>(THREAD_SEEN_KEY)) ?? {};
-    const newest = (await this.store.threadReplies()).filter((m) => m.threadRootId === rootId).reduce((t, m) => Math.max(t, m.sortTs), 0);
-    // Server times only (the replies' own), so a fast clock here can't mark later replies as seen.
-    if (newest === 0 || (seen[rootId] ?? 0) >= newest) return;
-    await this.store.setValue(THREAD_SEEN_KEY, { ...seen, [rootId]: newest });
-    this.set((s) => ({ ...s, threadRev: s.threadRev + 1 }));
+    if (await markThreadSeen(this.store, rootId)) this.set((s) => ({ ...s, threadRev: s.threadRev + 1 }));
   }
 
-  private async local(id: string): Promise<ConversationLocal> {
-    return (await this.store.conversation(id)) ?? emptyLocal(id);
+  private local(id: string): Promise<ConversationLocal> {
+    return this.locals.get(id);
   }
 
-  private async saveLocal(l: ConversationLocal): Promise<void> {
-    await this.store.putConversation(l);
-    this.set((s) => ({ ...s, local: { ...s.local, [l.id]: l } }));
+  private saveLocal(l: ConversationLocal): Promise<void> {
+    return this.locals.save(l);
   }
 
-  async bump(m: StoredMessage, counts: { unread: boolean; mention: boolean }): Promise<void> {
-    const l = await this.local(m.conversationId);
-    const isLatest = m.threadRootId === null && m.sortTs >= l.lastActivityAt;
-    const sender = m.outgoing ? "You" : (this.state.get().users[m.senderUserId]?.displayName ?? null);
-    await this.saveLocal({
-      ...l,
-      ...(isLatest ? { lastMessageId: m.id, lastPreview: preview(m), lastSenderName: sender, lastActivityAt: m.sortTs } : {}),
-      unread: l.unread + (counts.unread ? 1 : 0),
-      mentions: l.mentions + (counts.mention ? 1 : 0),
-    });
+  bump(m: StoredMessage, counts: { unread: boolean; mention: boolean }): Promise<void> {
+    return this.locals.bump(m, counts);
   }
 
-  async refreshPreview(conversationId: string): Promise<void> {
-    const l = await this.local(conversationId);
-    const last = await this.store.newestMessage(conversationId, (m) => m.threadRootId === null);
-    const sender = last ? (last.outgoing ? "You" : (this.state.get().users[last.senderUserId]?.displayName ?? null)) : null;
-    await this.saveLocal({ ...l, lastMessageId: last?.id ?? null, lastPreview: last ? preview(last) : null, lastSenderName: sender, lastActivityAt: Math.max(l.lastActivityAt, last?.sortTs ?? 0) });
+  refreshPreview(conversationId: string): Promise<void> {
+    return this.locals.refreshPreview(conversationId);
   }
 
-  async readElsewhere(conversationId: string, upTo: number): Promise<void> {
-    const l = await this.local(conversationId);
-    await this.saveLocal({ ...l, unread: 0, mentions: 0, readUpTo: Math.max(l.readUpTo, upTo) });
+  readElsewhere(conversationId: string, upTo: number): Promise<void> {
+    return this.locals.readElsewhere(conversationId, upTo);
+  }
+
+  /** Marks a conversation read or unread on this browser only: no read receipt is sent either way (as on the phone). */
+  setUnreadLocally(id: string, unread: boolean): Promise<void> {
+    return this.locals.setUnread(id, unread);
+  }
+
+  /** Archives a conversation on this browser, or brings it back (local, reversible; nothing is sent). */
+  setArchivedLocally(id: string, archived: boolean): Promise<void> {
+    return this.locals.setArchived(id, archived);
+  }
+
+  /** A conversation's unsent text, kept with this browser's other local data (never in localStorage). */
+  saveDraft(conversationId: string, text: string): Promise<void> {
+    return this.locals.saveDraft(conversationId, text);
   }
 
   markReadSoon(conversationId: string): void {
@@ -557,9 +570,7 @@ export class Engine implements EngineContext {
   notifyIncoming(m: StoredMessage, conversation: Conversation | null, mention: "me" | "all" | null): void {
     if (!this.opts.notify) return;
     const st = this.state.get();
-    const level = levelOf(st.nav[workspaceOf(conversation?.orgId ?? null)], m.conversationId);
-    if (level === "none" && mention !== "me") return;
-    if (level === "mentions" && mention === null) return;
+    if (!shouldNotify(levelOf(st.nav[workspaceOf(conversation?.orgId ?? null)], m.conversationId), mention)) return;
     const mentioned = mention !== null;
     const sender = st.users[m.senderUserId]?.displayName ?? "Someone";
     const title = conversation?.type === "CHANNEL" ? `#${conversation.name ?? "channel"}` : conversation?.type === "GROUP" ? (conversation.name ?? sender) : sender;
@@ -606,6 +617,12 @@ export class Engine implements EngineContext {
     const items = await this.store.latestMessages(id, PAGE);
     this.set((s) => withMessages(s, id, items, items.length === PAGE));
     await this.markRead(id);
+    void this.syncCalls(id);
+  }
+
+  /** The conversation's calls from the server's record (catches up calls that ended while this browser was away). */
+  syncCalls(conversationId: string): Promise<void> {
+    return this.callLog.sync(conversationId);
   }
 
   setFocused(focused: boolean): void {
@@ -637,22 +654,7 @@ export class Engine implements EngineContext {
   }
 
   /** Marks a conversation read or unread on this browser only: no read receipt is sent either way (as on the phone). */
-  async setUnreadLocally(id: string, unread: boolean): Promise<void> {
-    const l = await this.local(id);
-    await this.saveLocal(unread ? { ...l, unread: Math.max(1, l.unread) } : { ...l, unread: 0, mentions: 0 });
-  }
-
-  /** Archives a conversation on this browser, or brings it back (local, reversible; nothing is sent). */
-  async setArchivedLocally(id: string, archived: boolean): Promise<void> {
-    const l = await this.local(id);
-    await this.saveLocal({ ...l, archivedAt: archived ? Date.now() : null });
-  }
-
   // ───────────────────────── sending ─────────────────────────
-
-  private canPost(conversationId: string): boolean {
-    return this.state.get().conversations[conversationId]?.canPost === true;
-  }
 
   async membersOf(conversationId: string): Promise<Member[]> {
     const cached = this.members.get(conversationId);
@@ -665,113 +667,36 @@ export class Engine implements EngineContext {
   }
 
   /** Shows the message at once ("sending") and queues it; the outbox makes it authoritative. Returns its id. */
-  async sendText(conversationId: string, text: string, opts: { replyTo?: string; threadRoot?: string; attachments?: Payload["attachments"]; presetId?: string } = {}): Promise<string> {
-    const conv = this.state.get().conversations[conversationId];
-    if (!conv?.canPost) throw new ApiError(403, "forbidden", conv?.archived ? "This channel is archived" : "You can't post in this conversation");
-    const body = text.trim();
-    const mentions = conv.type === "DM" ? { ids: [], all: false } : resolveMentions(body, await this.membersOf(conversationId).catch(() => []), conv.canMentionAll, this.device.userId);
-    const payload: Payload = {
-      type: "text",
-      text: body,
-      replyTo: opts.replyTo,
-      threadRoot: opts.threadRoot,
-      mentions: mentions.ids.length ? mentions.ids : undefined,
-      mentionAll: mentions.all ? true : undefined,
-      attachments: opts.attachments?.length ? opts.attachments : undefined,
-    };
-    const id = opts.presetId ?? crypto.randomUUID();
-    const now = Date.now();
-    const existing = await this.store.message(id);
-    const m: StoredMessage = {
-      id,
-      conversationId,
-      senderUserId: this.device.userId,
-      senderDeviceId: this.device.deviceId,
-      outgoing: true,
-      kind: "text",
-      text: body,
-      replyToId: opts.replyTo ?? null,
-      threadRootId: opts.threadRoot ?? null,
-      mentions: mentions.ids,
-      mentionAll: mentions.all,
-      attachments: opts.attachments ?? [],
-      sentAt: existing?.sentAt ?? now,
-      serverTs: null,
-      sortTs: existing?.sortTs ?? now,
-      status: "SENDING",
-      errorText: null,
-      editedAt: null,
-      deleted: false,
-      pinned: false,
-      reactions: {},
-      readBy: [],
-      deliveredTo: [],
-      call: null,
-      rich: null,
-      forwarded: false,
-    };
-    await this.store.putMessage(m);
-    await this.queue({
-      messageId: id,
-      conversationId,
-      cls: "message",
-      payloadJson: encodePayload(payload),
-      createdAt: now,
-      attempts: 0,
-      nextAttemptAt: 0,
-      lastError: null,
-      visible: true,
-      held: false,
-    });
-    this.show(m);
-    await this.bump(m, { unread: false, mention: false });
-    return id;
+  /**
+   * Sends a message (sync/compose.ts). [rich]: a contact card, location or animated emoji, with its readable form in
+   * [text]. [forwarded]: marked "Forwarded"; mentions aren't carried over.
+   */
+  sendText(
+    conversationId: string,
+    text: string,
+    opts: { replyTo?: string; threadRoot?: string; attachments?: Payload["attachments"]; presetId?: string; rich?: RichContent | null; forwarded?: boolean } = {},
+  ): Promise<string> {
+    return this.compose.sendText(conversationId, text, opts);
   }
 
-  async retry(messageId: string): Promise<void> {
-    const m = await this.store.message(messageId);
-    if (!m || m.status !== "FAILED") return;
-    await this.sendText(m.conversationId, m.text, { replyTo: m.replyToId ?? undefined, threadRoot: m.threadRootId ?? undefined, attachments: m.attachments, presetId: m.id });
+  retry(messageId: string): Promise<void> {
+    return this.compose.retry(messageId);
   }
 
-  async react(m: StoredMessage, emoji: string): Promise<void> {
-    if (!this.canPost(m.conversationId)) return;
-    const fresh = (await this.store.message(m.id)) ?? m;
-    const add = !(fresh.reactions[emoji] ?? []).includes(this.device.userId);
-    const next = applyReaction(fresh, this.device.userId, emoji, add);
-    await this.store.putMessage(next);
-    this.show(next);
-    await this.enqueueControl(m.conversationId, { type: "reaction", target: m.id, emoji, add });
+  react(m: StoredMessage, emoji: string): Promise<void> {
+    return this.compose.react(m, emoji);
   }
 
-  async edit(m: StoredMessage, text: string): Promise<void> {
-    if (!m.outgoing || m.deleted || !this.canPost(m.conversationId)) return;
-    const body = text.trim();
-    if (!body) return;
-    const conv = this.state.get().conversations[m.conversationId];
-    const ids = conv && conv.type !== "DM" ? resolveMentions(body, await this.membersOf(m.conversationId).catch(() => []), false, this.device.userId).ids : [];
-    const next = { ...m, text: body, editedAt: Date.now(), mentions: ids };
-    await this.store.putMessage(next);
-    this.show(next);
-    await this.refreshPreview(m.conversationId);
-    await this.enqueueControl(m.conversationId, { type: "edit", target: m.id, text: body, mentions: ids });
+  edit(m: StoredMessage, text: string): Promise<void> {
+    return this.compose.edit(m, text);
   }
 
-  async deleteForEveryone(m: StoredMessage): Promise<void> {
-    if (!m.outgoing || !this.canPost(m.conversationId)) return;
-    const next = { ...m, deleted: true, text: "", attachments: [], rich: null };
-    await this.store.putMessage(next);
-    this.show(next);
-    await this.refreshPreview(m.conversationId);
-    await this.enqueueControl(m.conversationId, { type: "delete", target: m.id });
+  deleteForEveryone(m: StoredMessage): Promise<void> {
+    return this.compose.deleteForEveryone(m);
   }
 
-  async setPinned(m: StoredMessage, pinned: boolean): Promise<void> {
-    if (!this.canPost(m.conversationId)) return;
-    const next = applyPin(m, pinned);
-    await this.store.putMessage(next);
-    this.show(next);
-    await this.enqueueControl(m.conversationId, { type: "pin", target: m.id, pinned });
+  setPinned(m: StoredMessage, pinned: boolean): Promise<void> {
+    return this.compose.setPinned(m, pinned);
   }
 
   setTyping(conversationId: string, on: boolean): void {
@@ -782,19 +707,8 @@ export class Engine implements EngineContext {
     this.realtime.send({ t: "typing", c: conversationId, on });
   }
 
-  private async enqueueControl(conversationId: string, payload: Payload): Promise<void> {
-    await this.queue({
-      messageId: crypto.randomUUID(),
-      conversationId,
-      cls: "control",
-      payloadJson: encodePayload(payload),
-      createdAt: Date.now(),
-      attempts: 0,
-      nextAttemptAt: 0,
-      lastError: null,
-      visible: false,
-      held: false,
-    });
+  private enqueueControl(conversationId: string, payload: Payload): Promise<void> {
+    return this.compose.enqueueControl(conversationId, payload);
   }
 
   /**
@@ -818,26 +732,6 @@ export class Engine implements EngineContext {
     if (c.type !== "DM") return { title: c.type === "CHANNEL" ? `#${c.name ?? "channel"}` : (c.name ?? "Group"), isGroup: true, colorIndex: 0 };
     const peer = c.members?.find((m) => m.id !== this.device.userId);
     return { title: (peer && (this.state.get().users[peer.id]?.displayName ?? peer.displayName)) || "Call", isGroup: false, colorIndex: peer?.avatarColor ?? 0 };
-  }
-
-  /** The conversation entry for a call this browser started (others' entries come with their `call_invite`). */
-  private async recordOwnCall(callId: string, conversationId: string, video: boolean): Promise<void> {
-    const now = Date.now();
-    const item = {
-      id: 0,
-      kind: "envelope" as const,
-      conversationId,
-      messageId: `call-${callId}`,
-      senderUserId: this.device.userId,
-      senderDeviceId: this.device.deviceId,
-      createdAt: now,
-      expiresAt: now,
-      payload: { cls: "control" as const, serverTs: now },
-    };
-    const m = callEntry(item, true, callId, video, now);
-    if (!(await this.store.insertMessageIfAbsent(m))) return;
-    this.show(m);
-    await this.bump(m, { unread: false, mention: false });
   }
 
   private async queue(o: OutboxItem): Promise<void> {
@@ -865,21 +759,6 @@ export class Engine implements EngineContext {
     this.outbox.kick();
   }
 
-  /** A conversation's unsent text, kept with this browser's other local data (never in localStorage). */
-  saveDraft(conversationId: string, text: string): Promise<void> {
-    // Writes for one conversation run in order, so the last call wins (a late keystroke save can't undo "sent").
-    const previous = this.draftWrites.get(conversationId) ?? Promise.resolve();
-    const next = previous.then(async () => {
-      const l = await this.local(conversationId);
-      if (l.draft !== text) await this.saveLocal({ ...l, draft: text });
-    });
-    this.draftWrites.set(
-      conversationId,
-      next.catch(() => undefined),
-    );
-    return next;
-  }
-
   /** Text search over the messages this browser holds (the server can't search encrypted content). */
   searchMessages(query: string): Promise<StoredMessage[]> {
     return this.store.searchMessages(query);
@@ -898,15 +777,6 @@ export class Engine implements EngineContext {
   async markVerified(userId: string, verified: boolean): Promise<void> {
     const pin = await this.store.pin(userId);
     if (pin) await this.store.putPin({ ...pin, verified });
-  }
-
-  private conversationsOf(s: AppState, orgId: string | null): Conversation[] {
-    return Object.values(s.conversations).filter((c) => (orgId === null ? true : c.orgId === orgId));
-  }
-
-  /** For tests and the activity view: every conversation visible in a workspace. */
-  conversationList(orgId: string | null = null): Conversation[] {
-    return this.conversationsOf(this.state.get(), orgId);
   }
 }
 

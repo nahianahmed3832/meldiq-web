@@ -1,4 +1,7 @@
 import { ApiClient } from "../api/client";
+import { canonical } from "../crypto/canonical";
+import { sign } from "../crypto/ed25519";
+import type { DeviceRecord } from "../model/types";
 import {
   type AccountSessionGrant,
   zAccepted,
@@ -121,4 +124,17 @@ export class AccountApi {
   enroll(body: { identityKey?: string; username?: string; device: NewDevice; nonce: string; signature: string }) {
     return this.api.json("POST", "/v2/account/devices", zEnrollResult, { body });
   }
+}
+
+/**
+ * Signs in again after the account session ended: the password, plus proof that this browser still holds its device key
+ * (a fresh challenge signed with it), so the new session is bound to this device. A removed device is refused
+ * (device_revoked).
+ */
+export async function signInWithDevice(base: string, device: DeviceRecord, password: string): Promise<AccountSessionGrant> {
+  if (!device.account) throw new Error("This browser isn't signed in with an Orbit account.");
+  const accounts = AccountApi.anonymous(base);
+  const nonce = await accounts.challenge();
+  const signature = await sign(device.keys.signing.privateKey, canonical.authProof("login", nonce, device.keys.signingPublic));
+  return accounts.login(device.account.email, password, device.deviceName, { deviceId: device.deviceId, nonce, signature });
 }

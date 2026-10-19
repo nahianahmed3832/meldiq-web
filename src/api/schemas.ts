@@ -206,6 +206,13 @@ export const zCall = z.object({
     .array(z.object({ userId: z.string(), deviceId: z.string() }))
     .max(500)
     .optional(),
+  /** When two different people were connected (null: never answered). */
+  answeredAt: z.number().nullish().optional(),
+  /** Ended calls: who connected and for how long (servers from 2026-10-17; older ones leave it out). */
+  attended: z
+    .array(z.object({ userId: z.string(), seconds: z.number() }))
+    .max(500)
+    .optional(),
 });
 export type Call = z.infer<typeof zCall>;
 

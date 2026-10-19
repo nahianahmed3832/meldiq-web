@@ -15,6 +15,30 @@ export interface RichContent {
 export interface CallEntry {
   callId: string;
   video: boolean;
+  /** What happened, from the server's record of the call (sync/callHistory.ts); absent until known. */
+  info?: CallInfo;
+}
+
+/** One recent call, for Activity › Missed calls. */
+export interface CallLogItem {
+  callId: string;
+  conversationId: string;
+  video: boolean;
+  at: number;
+  outcome: CallOutcome;
+  startedBy: string;
+  group: boolean;
+}
+
+export type CallOutcome = "completed" | "missed" | "declined" | "busy" | "no_answer" | "cancelled" | "failed" | "ongoing" | "ended";
+
+export interface CallInfo {
+  outcome: CallOutcome;
+  startedBy: string;
+  group: boolean;
+  durationSec?: number;
+  /** Group calls: how many people connected. */
+  joined?: number;
 }
 
 /**
