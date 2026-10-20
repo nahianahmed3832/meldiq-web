@@ -155,10 +155,14 @@ Every item is backed by the real server (API 0.7.1). No mock APIs and no browser
 ## 3. Still open
 
 **Needs a decision or an action outside this repository**
-- **S3 CORS rule:** browsers can't upload or download files through S3 until it exists. It needs an AWS login:
+- **S3 CORS rule (recommended, no longer blocking):** the bucket still has no CORS rule ("CORS is not enabled for this
+  bucket", checked 2026-10-20), which broke every file in the browser ("Can't reach the server"). Since `0.2.4-beta`
+  the web works without it: downloads go through the web server's `/media/attachments/` and uploads through the API
+  when S3 refuses the browser (`ORBIT_WEB_DEPLOYMENT.md` §6). Adding the rule moves that traffic back to S3 directly.
+  It needs an AWS login, and the earlier version of the rule lacked `if-none-match`:
 
   ```bash
-  aws s3api put-bucket-cors --bucket griipbuddy-orbit-media-sg --region ap-southeast-1 --cors-configuration '{"CORSRules":[{"AllowedOrigins":["https://web.meldiq.app"],"AllowedMethods":["GET","PUT"],"AllowedHeaders":["range","content-type","x-amz-checksum-sha256","x-amz-server-side-encryption","x-amz-server-side-encryption-aws-kms-key-id"],"MaxAgeSeconds":3000}]}'
+  aws s3api put-bucket-cors --bucket griipbuddy-orbit-media-sg --region ap-southeast-1 --cors-configuration '{"CORSRules":[{"AllowedOrigins":["https://web.meldiq.app"],"AllowedMethods":["GET","PUT"],"AllowedHeaders":["range","content-type","if-none-match","x-amz-checksum-sha256","x-amz-server-side-encryption","x-amz-server-side-encryption-aws-kms-key-id"],"MaxAgeSeconds":3000}]}'
   ```
 
   First check that `get-bucket-cors` returns `NoSuchCORSConfiguration`, because `put-bucket-cors` replaces the whole

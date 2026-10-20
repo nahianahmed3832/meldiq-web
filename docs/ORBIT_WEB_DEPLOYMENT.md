@@ -108,6 +108,11 @@ the new site on a first install), so a refused install never blocks other sites'
 - `/v1/`, `/v2/`: to the API; bodies up to 1100 MB stream **unbuffered** (`proxy_request_buffering off`), one-hour
   timeouts for slow uploads. The API already trusts its local proxy (`TRUST_PROXY`), so per-address limits see the
   real client.
+- `/media/attachments/<id>` (`deploy/nginx/meldiq-web-media.conf.template`, rendered to
+  `/etc/nginx/snippets/meldiq-web-media.conf`): for a bucket without a CORS rule (§6). It asks the API with the person's
+  token; when the API answers with a link to the bucket, nginx follows it itself, only to `MELDIQ_MEDIA_ORIGIN` (default:
+  the `amazonaws.com` entry of `MELDIQ_CONNECT_EXTRA`) and without the token or cookies, keeping `Range`. Any other
+  host gets 502; the API's own errors pass through; GET only.
 - `/config.json`: `no-store`. `/assets/`: content-hashed, cached a year. Everything else falls back to `index.html`.
 - Its own access and error logs (`/var/log/nginx/meldiq-web.*.log`).
 
@@ -142,23 +147,32 @@ the web origin (`/v1/server-info`, Orbit 2.0 accounts present), and the realtime
 ## 6. S3 (file storage)
 
 With S3 storage, files over the single-upload size go **from the browser straight to S3** (presigned PUTs, 16 MiB
-parts, each bound to its size and SHA-256), and downloads redirect to presigned GETs. The bucket needs a CORS rule for
-the web origin (add it to `deploy/aws/orbit-storage.yaml` as `CorsConfiguration`, or `aws s3api put-bucket-cors`):
+parts, each bound to its size and SHA-256), and downloads redirect to presigned GETs. For that, the bucket needs a CORS
+rule for the web origin (add it to `deploy/aws/orbit-storage.yaml` as `CorsConfiguration`, or `aws s3api
+put-bucket-cors`).
+
+**Without the rule the web still works** (since 2026-10-20): a refused download is fetched again through the web
+server's `/media/attachments/` (§4), and a refused upload is removed and sent through the API instead. Each tab
+remembers it and goes that way at once for later files. Phones are unaffected (CORS is a browser rule). The rule is
+still worth adding: it keeps browsers' file traffic off the web server.
+
+The rule (the production bucket had none on 2026-10-20: S3 answered "CORS is not enabled for this bucket"):
 
 ```json
 {
   "CORSRules": [
     {
-      "AllowedOrigins": ["https://web.griipbuddy.cloud"],
+      "AllowedOrigins": ["https://web.meldiq.app"],
       "AllowedMethods": ["GET", "PUT"],
-      "AllowedHeaders": ["range", "content-type", "x-amz-checksum-sha256", "x-amz-server-side-encryption", "x-amz-server-side-encryption-aws-kms-key-id"],
+      "AllowedHeaders": ["range", "content-type", "if-none-match", "x-amz-checksum-sha256", "x-amz-server-side-encryption", "x-amz-server-side-encryption-aws-kms-key-id"],
       "MaxAgeSeconds": 3000
     }
   ]
 }
 ```
 
-These are the headers the server signs into its upload URLs (`server/src/storage/s3.ts`); the browser adds
+These are the headers the server signs into its upload URLs (`server/src/storage/s3.ts`; `if-none-match` was missing
+from this list before 2026-10-20, which would have kept single uploads refused); the browser adds
 `content-length` itself from the body, which is the signed size. No `ExposeHeaders` is needed: the browser reads part
 ETags through the API (`GET /v1/attachments/uploads/:id/parts`).
 Without S3 (local disk), files stream through the API instead, and nothing here is needed.
