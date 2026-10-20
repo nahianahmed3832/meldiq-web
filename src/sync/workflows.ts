@@ -23,6 +23,9 @@ export type WfCondition = z.infer<typeof zCondition>;
 const zAction = z.object({ type: z.string(), channelId: z.string().optional(), channelIds: z.array(z.string()).optional(), subject: z.string().optional(), text: z.string().optional() });
 export type WfAction = z.infer<typeof zAction>;
 
+/** A workflow as sent to the server, also what an AI draft comes back as (docs/AI.md). */
+export const zWfInput = z.object({ name: z.string(), trigger: zTrigger, conditions: z.array(zCondition).default([]), actions: z.array(zAction), enabled: z.boolean().default(false) });
+
 export interface WfInput {
   name: string;
   trigger: WfTrigger;

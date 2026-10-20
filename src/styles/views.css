@@ -1316,3 +1316,24 @@ select.input {
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 8px 12px;
 }
+
+/* AI dialogs (round 7 C8): the draft being sent, and the answer, marked as written by AI. */
+.ai-quote {
+  margin: 0;
+  padding: 8px 10px;
+  border-left: 3px solid var(--border);
+  color: var(--text-2);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  max-height: 8lh;
+  overflow: auto;
+}
+.ai-answer {
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--surface-sunken);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  max-height: 50vh;
+  overflow: auto;
+}

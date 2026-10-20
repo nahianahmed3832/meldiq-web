@@ -1,4 +1,4 @@
-import { History, Pencil, Plus, Trash2, TriangleAlert, X } from "lucide-react";
+import { History, Pencil, Plus, Sparkles, Trash2, TriangleAlert, X } from "lucide-react";
 import { useState } from "react";
 import type { OrgAdminDetail } from "../../api/workspaceSchemas";
 import { useEngine } from "../../app/orbit";
@@ -23,6 +23,7 @@ import { Dialog } from "../components/Overlay";
 import { fullTime, relative } from "../format";
 import { useAction, useLoad } from "./useLoad";
 import { WorkflowEditor } from "./WorkflowEditor";
+import { AiWorkflowDraftDialog, useAiStatus } from "../ai/AiDialogs";
 import { Card, ErrorLine } from "./WorkspaceView";
 
 const STATE: Record<string, string> = { done: "Done", failed: "Failed", queued: "Queued", running: "Running", skipped: "Skipped", cancelled: "Cancelled", partial: "Partly done" };
@@ -39,6 +40,8 @@ export function WorkflowsPage({ detail }: { detail: OrgAdminDetail }) {
   const catalog = useLoad(() => workflowCatalog(engine, orgId), [engine, orgId]);
   const channels = useLoad(() => workspaceChannels(engine, orgId, false), [engine, orgId]);
   const [editing, setEditing] = useState<{ start: WfInput; existing: Workflow | null } | null>(null);
+  const [drafting, setDrafting] = useState(false);
+  const ai = useAiStatus(orgId);
   const [picking, setPicking] = useState<WfTemplate | null>(null);
   const [runsOf, setRunsOf] = useState<Workflow | null>(null);
   const act = useAction();
@@ -56,9 +59,16 @@ export function WorkflowsPage({ detail }: { detail: OrgAdminDetail }) {
         title="Workflows"
         sub="When something happens in this workspace, do something: post an update, add a member to channels, or email the admins. They run on the server with their owner's rights."
         actions={
-          <button className="btn btn-primary btn-sm" disabled={!catalog.data} onClick={() => setEditing({ start: blankWorkflow(), existing: null })}>
-            <Plus size={14} /> New workflow
-          </button>
+          <>
+            {ai?.available && (
+              <button className="btn btn-secondary btn-sm" disabled={!catalog.data} onClick={() => setDrafting(true)}>
+                <Sparkles size={14} /> Draft with AI
+              </button>
+            )}
+            <button className="btn btn-primary btn-sm" disabled={!catalog.data} onClick={() => setEditing({ start: blankWorkflow(), existing: null })}>
+              <Plus size={14} /> New workflow
+            </button>
+          </>
         }
       >
         <ErrorLine text={list.error ?? act.error} />
@@ -136,6 +146,16 @@ export function WorkflowsPage({ detail }: { detail: OrgAdminDetail }) {
             </ul>
           </div>
         </Dialog>
+      )}
+      {drafting && (
+        <AiWorkflowDraftDialog
+          orgId={orgId}
+          onClose={() => setDrafting(false)}
+          onOpen={(draft) => {
+            setDrafting(false);
+            setEditing({ start: draft, existing: null });
+          }}
+        />
       )}
       {editing && catalog.data && (
         <WorkflowEditor

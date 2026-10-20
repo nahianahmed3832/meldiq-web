@@ -1,4 +1,4 @@
-import { Archive, ArchiveRestore, ArrowLeft, Download, History, MessageSquare, Pencil, Share2, Trash2 } from "lucide-react";
+import { Archive, ArchiveRestore, ArrowLeft, Download, History, MessageSquare, Pencil, Share2, Sparkles, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { ApiError } from "../../../api/client";
 import { useEngine } from "../../../app/orbit";
@@ -26,6 +26,7 @@ import { ErrorLine } from "../WorkspaceView";
 import { NotE2ee } from "./DocumentsPage";
 import { MarkdownView } from "./MarkdownView";
 import { SharingDialog, VersionsDialog } from "./DocumentDialogs";
+import { AiDocSummaryDialog, useAiStatus } from "../../ai/AiDialogs";
 
 /**
  * One document (android round 7 C4 DocumentScreen): read in the Markdown subset, edit on its revision (someone else's
@@ -37,7 +38,8 @@ export function DocumentScreen({ docId, orgId }: { docId: string; orgId: string 
   const loaded = useLoad(() => getDocument(engine, docId), [engine, docId, tick]);
   const [editing, setEditing] = useState<{ title: string; content: string } | null>(null);
   const [panel, setPanel] = useState<"comments" | null>(null);
-  const [dialog, setDialog] = useState<"versions" | "sharing" | null>(null);
+  const [dialog, setDialog] = useState<"versions" | "sharing" | "summary" | null>(null);
+  const ai = useAiStatus(orgId);
   const [stale, setStale] = useState(false);
   const act = useAction();
   const d = loaded.data;
@@ -104,6 +106,11 @@ export function DocumentScreen({ docId, orgId }: { docId: string; orgId: string 
             <Share2 size={14} /> Share
           </button>
         )}
+        {ai?.available && !editing && (
+          <button className="btn btn-ghost btn-sm" onClick={() => setDialog("summary")}>
+            <Sparkles size={14} /> Summarise
+          </button>
+        )}
         <button className="btn btn-ghost btn-sm" onClick={exportIt} title="Download as Markdown">
           <Download size={14} /> Export
         </button>
@@ -166,6 +173,7 @@ export function DocumentScreen({ docId, orgId }: { docId: string; orgId: string 
       </div>
 
       {dialog === "versions" && <VersionsDialog doc={d} canRestore={canEdit} onRestored={reload} onClose={() => setDialog(null)} />}
+      {dialog === "summary" && <AiDocSummaryDialog orgId={orgId} documentId={d.id} title={d.title} onClose={() => setDialog(null)} />}
       {dialog === "sharing" && <SharingDialog doc={d} orgId={orgId} onSaved={reload} onClose={() => setDialog(null)} />}
     </div>
   );

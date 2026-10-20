@@ -1,4 +1,4 @@
-import { AtSign, BarChart3, FileUp, Lock, MapPin, Mic, Paperclip, SendHorizontal, Smile, UserRound, X } from "lucide-react";
+import { AtSign, BarChart3, FileUp, Lock, MapPin, Mic, Paperclip, ScrollText, SendHorizontal, Smile, Sparkles, UserRound, X } from "lucide-react";
 import { type ClipboardEvent, type DragEvent, useCallback, useEffect, useRef, useState } from "react";
 import type { Conversation, Member } from "../../api/schemas";
 import { useEngine } from "../../app/orbit";
@@ -22,6 +22,8 @@ import { StickerArt } from "./StickerView";
 import { LocationDialog } from "./RichDialogs";
 import { ProfileShareDialog } from "./ProfileCards";
 import { VoiceBar } from "./VoiceBar";
+import { AiCatchUpDialog, AiWriteDialog, useAiStatus } from "../ai/AiDialogs";
+import { catchUpMessages } from "../../sync/ai";
 
 interface ComposerProps {
   conversation: Conversation;
@@ -53,6 +55,9 @@ export function Composer(props: ComposerProps) {
   const upload = useRef<AbortController | null>(null);
   const [voice, setVoice] = useState(false);
   const [rich, setRich] = useState<"contact" | "location" | "poll" | null>(null);
+  const [aiDialog, setAiDialog] = useState<"write" | "catch-up" | null>(null);
+  // Workspace AI (android round 7 C8): offered only when the server says it can be used here; nothing is sent unasked.
+  const ai = useAiStatus(c.orgId ?? null);
   const canRecord = !props.threadRoot && voiceMime() !== null;
   const draftTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
 
@@ -388,11 +393,37 @@ export function Composer(props: ComposerProps) {
             { label: "Poll…", icon: <BarChart3 size={16} />, onSelect: () => setRich("poll") },
             { label: "Share a profile…", icon: <UserRound size={16} />, onSelect: () => setRich("contact") },
             { label: "Location…", icon: <MapPin size={16} />, onSelect: () => setRich("location") },
+            ...(ai?.available && c.orgId
+              ? [
+                  { label: "Writing help (AI)…", icon: <Sparkles size={16} />, onSelect: () => setAiDialog("write") },
+                  ...(c.type === "CHANNEL" && !props.threadRoot ? [{ label: "Catch up (AI)…", icon: <ScrollText size={16} />, onSelect: () => setAiDialog("catch-up") }] : []),
+                ]
+              : []),
           ]}
         />
       )}
       {rich === "contact" && <ProfileShareDialog onClose={() => setRich(null)} onSend={(contact) => void sendRich({ contact })} />}
       {rich === "location" && <LocationDialog onClose={() => setRich(null)} onSend={(location) => void sendRich({ location })} />}
+      {aiDialog === "write" && c.orgId && (
+        <AiWriteDialog
+          orgId={c.orgId}
+          draft={text}
+          onClose={() => setAiDialog(null)}
+          onUse={(t) => {
+            setAiDialog(null);
+            onChange(t);
+            input.current?.focus();
+          }}
+        />
+      )}
+      {aiDialog === "catch-up" && c.orgId && (
+        <AiCatchUpDialog
+          orgId={c.orgId}
+          channelId={c.id}
+          messages={catchUpMessages(engine.state.get().messages[c.id]?.items ?? [], (id) => engine.state.get().users[id]?.displayName ?? "?")}
+          onClose={() => setAiDialog(null)}
+        />
+      )}
       {rich === "poll" && <PollDialog onClose={() => setRich(null)} onSend={(poll) => void sendRich({ poll })} />}
       {emoji.anchor && (
         <Menu
