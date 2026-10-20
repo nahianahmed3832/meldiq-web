@@ -34,7 +34,8 @@ redirecting there. Docker, MongoDB, the API, OAuth registrations and the Android
 | New browser device names | "Meldiq Web · Chrome on macOS". Browsers set up before keep their stored "Orbit Web · …" name; Devices recognises both |
 | Downloaded recovery key | `meldiq-recovery-key.txt`, titled "Meldiq recovery key" |
 | Metadata | `<title>Meldiq`, description, `application-name`, Apple title, Open Graph and Twitter card, favicon and touch icon, `manifest.webmanifest` (install name Meldiq, standalone, theme colours, icons) |
-| Package | `package.json` name `meldiq-web` and description (the GitHub repository URL is unchanged) |
+| Package | `package.json` name `meldiq-web` and description |
+| GitHub repository | Renamed `orbit-web` → **`meldiq-web`** on 2026-10-20 (github.com/nahianahmed3832/meldiq-web), described as Meldiq's web application, homepage web.meldiq.app. GitHub redirects the old address, including `git` remotes; update local clones with `git remote set-url origin git@github.com:nahianahmed3832/meldiq-web.git` |
 | Configuration | `MELDIQ_API_BASE_URL`, `MELDIQ_WS_URL`, `MELDIQ_WEB_BASE_URL`, `MELDIQ_ENVIRONMENT` write `/config.json` at install; `MELDIQ_API_UPSTREAM` and `MELDIQ_CONNECT_EXTRA` configure the web host's proxy and CSP (`.env.example`). Earlier names (`ORBIT_API_URL`, `WEB_HOST`, `API_UPSTREAM`, `CONNECT_EXTRA`) still work |
 | Deployment files | `deploy/nginx/meldiq-web*.conf.template`, `/opt/meldiq-web`, `meldiq-web.conf`, release tarball `meldiq-web-…` (never installed under the old names, so nothing live moves); `deploy/config/meldiq-production.json` for the future domain |
 | Docs | `README.md`, `docs/ORBIT_WEB_DEPLOYMENT.md`, this file |
@@ -53,7 +54,6 @@ names.
 | Worker name `orbit-call-e2ee`, message type `orbit.frameAudit`, probe `orbit-web-seed-check` | `src/call/`, `src/crypto/ed25519.ts` | Internal plumbing, never shown; renaming gains nothing and risks the call encryption wrapper |
 | `useOrbit`, `src/app/orbit.tsx`, `OrbitDB` type | code identifiers | Internal names in ~60 files; churn without user benefit (a later code-only rename is safe) |
 | "Orbit 2.0" (account system version), "Orbit repository", `docs/ORBIT_*.md` file names, `ORBIT_SERVER_DIR`, `ORBIT_E2E_*` | docs, tests, tooling | They name the server repository and its documents, which still carry those names; the test variables are used by CI and other sessions |
-| `https://github.com/nahianahmed3832/orbit-web` | `package.json` | The real repository; renaming it is a GitHub decision |
 | Server name in server-info (`instanceName`) | API environment | The web app shows the server's `INSTANCE_NAME` if set, else "Meldiq" (§4) |
 
 ## 4. Pending outside this repository (needs the owner)

@@ -5,11 +5,11 @@ f92e59a (API 0.5.0). They live here because they can only be merged into the Orb
 go-ahead. Apply from the Orbit repository's root, in order:
 
 ```bash
-git am /path/to/orbit-web/server-patches/0001-server-websocket-first-frame-auth.patch
+git am /path/to/meldiq-web/server-patches/0001-server-websocket-first-frame-auth.patch
 ```
 
 ```bash
-git am /path/to/orbit-web/server-patches/0002-server-web-origins.patch
+git am /path/to/meldiq-web/server-patches/0002-server-web-origins.patch
 ```
 
 | Patch | What | Needed? | Tests |

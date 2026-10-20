@@ -6,6 +6,9 @@ same server as the Android app. You sign in with your email and password and set
 or your phone's approval; messages are encrypted and decrypted in the browser and the server only relays ciphertext.
 One backend, one source of truth.
 
+This repository is **github.com/nahianahmed3832/meldiq-web** (named `orbit-web` until 2026-10-20; the old address
+redirects). The app is live at **https://web.meldiq.app**.
+
 - The rebrand from Orbit to Meldiq, what changed and what keeps the old name on purpose, and the plan for
   `web.meldiq.app`: [`docs/MELDIQ_REBRAND.md`](docs/MELDIQ_REBRAND.md)
 - Configuration: [`.env.example`](.env.example) and `/config.json` (`src/app/config.ts`)

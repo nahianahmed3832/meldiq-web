@@ -5,8 +5,9 @@
   "description": "Meldiq Web (formerly Orbit Web): the browser client of Meldiq, a device of the same account on the same server",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nahianahmed3832/orbit-web.git"
+    "url": "git+https://github.com/nahianahmed3832/meldiq-web.git"
   },
+  "homepage": "https://web.meldiq.app",
   "type": "module",
   "engines": {
     "node": ">=22"
