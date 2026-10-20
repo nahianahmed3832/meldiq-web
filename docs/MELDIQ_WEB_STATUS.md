@@ -163,8 +163,8 @@ Every item is backed by the real server (API 0.7.1). No mock APIs and no browser
   nginx 1.24 itself, by a temporary instance on the VPS (9 cases, removed afterwards).
 - **Checks:** `verify.sh` all ✓; `/media/attachments/<id>` reaches the API (401 without a token, POST refused); the VPS
   reaches the bucket over TLS; served bundle is this release's; socket closes with 4401 after 11.0 s.
-- **Not checked:** opening a real file signed in on production (needs your account). Reload web.meldiq.app and open
-  the photo.
+- **Confirmed by the owner (2026-10-20):** after a reload, the photo from the phone that showed "Can't reach the
+  server" opens in the browser on production.
 - **Rollback:** `0.2.4-beta-ba154b1` is kept (`bash rollback.sh`); the snippet stays harmless without the app's use.
 
 ## 3. Still open
