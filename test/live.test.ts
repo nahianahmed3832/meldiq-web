@@ -87,7 +87,9 @@ describe("messaging across devices through the one server", () => {
     await bob.send(dm, { type: "text", text: "hi Alice, from Bob ✓" }, "message", id);
     await until(() => textOf(web, id), 5000, "bob's message");
     expect(await messageIn(web, id)).toMatchObject({ outgoing: false, senderUserId: bob.userId, status: "RECEIVED" });
-    expect(web.state.get().local[dm]?.unread).toBeGreaterThanOrEqual(1);
+    // The message is stored first and counted right after (receiver.ts), so wait for the count, not just the message.
+    await until(() => (web.state.get().local[dm]?.unread ?? 0) >= 1, 5000, "the unread count");
+    expect(web.state.get().local[dm]?.unread).toBe(1);
   });
 
   it("a message sent in the browser reaches the other person and the account's own phone", async () => {

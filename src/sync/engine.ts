@@ -611,10 +611,6 @@ export class Engine implements EngineContext {
     return this.locals.get(id);
   }
 
-  private saveLocal(l: ConversationLocal): Promise<void> {
-    return this.locals.save(l);
-  }
-
   bump(m: StoredMessage, counts: { unread: boolean; mention: boolean }): Promise<void> {
     return this.locals.bump(m, counts);
   }
@@ -729,8 +725,11 @@ export class Engine implements EngineContext {
 
   /** Clears unread on this device and, where the phone would, tells the others with an encrypted read receipt. */
   async markRead(id: string): Promise<void> {
-    const l = await this.local(id);
-    if (l.unread || l.mentions) await this.saveLocal({ ...l, unread: 0, mentions: 0 });
+    let l = await this.local(id);
+    await this.locals.update(id, (cur) => {
+      l = cur;
+      return cur.unread || cur.mentions ? { ...cur, unread: 0, mentions: 0 } : null;
+    });
     const conv = this.state.get().conversations[id];
     if (!conv || !sendsReadReceipts(conv.type, conv.memberCount, conv.canPost) || this.opts.prefs?.().readReceipts === false) return;
     const latest = await this.store.newestMessage(id, (m) => !m.outgoing && m.kind === "text");
@@ -739,7 +738,7 @@ export class Engine implements EngineContext {
     // Already said by this browser, or by another device of the account (its receipt reached us as readElsewhere).
     if (Math.max(this.lastReadSent.get(id) ?? 0, l.readUpTo) >= upTo) return;
     this.lastReadSent.set(id, upTo);
-    await this.saveLocal({ ...(await this.local(id)), readUpTo: upTo });
+    await this.locals.update(id, (cur) => ({ ...cur, readUpTo: Math.max(cur.readUpTo, upTo) }));
     await this.enqueueControl(id, { type: "read", upTo });
   }
 
