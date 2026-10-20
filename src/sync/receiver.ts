@@ -68,7 +68,7 @@ export class Receiver {
     const placeholder = existing?.kind === "undecryptable" && existing.senderUserId === item.senderUserId;
     if (existing && cls === "message" && !placeholder) return; // a duplicate delivery
 
-    const sender = await directory.senderKey(item.senderUserId, item.senderDeviceId);
+    const sender = await directory.senderKey(item.senderUserId, item.senderDeviceId, p.serverTs ?? item.createdAt);
     if (sender.kind === "changed") {
       await store.hold(item);
       await this.ctx.refreshIdentityAlerts();

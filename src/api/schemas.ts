@@ -156,7 +156,15 @@ export const zDevice = z.object({
 export type Device = z.infer<typeof zDevice>;
 
 export const zDeviceKeys = z.object({ id: z.string(), signingKey: z.string(), encryptionKey: z.string(), certificate: z.string() });
-export const zUserKeys = z.object({ userId: z.string(), identityKey: z.string(), devices: z.array(zDeviceKeys) });
+/** A device removed from its account: never encrypted to; envelopes the server accepted up to `revokedAt` verify (T1.5). */
+export const zRevokedDeviceKeys = zDeviceKeys.extend({ revokedAt: z.number() });
+export const zUserKeys = z.object({
+  userId: z.string(),
+  identityKey: z.string(),
+  devices: z.array(zDeviceKeys),
+  /** Servers with the T1.5 fix list devices revoked within the queue lifetime; older ones omit it. */
+  revokedDevices: z.array(zRevokedDeviceKeys).default([]),
+});
 export type UserKeys = z.infer<typeof zUserKeys>;
 
 export const zSession = z.object({ userId: z.string(), deviceId: z.string(), sessionToken: z.string(), expiresAt: z.number() });

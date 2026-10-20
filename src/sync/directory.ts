@@ -64,20 +64,26 @@ export class Directory {
         changed.push(u.userId);
         continue;
       }
-      for (const d of await this.certified(u, key)) if (d.id !== this.me.deviceId) devices.push({ deviceId: d.id, encryptionKey: d.encryptionKey });
+      for (const d of await this.certified(u.devices, key)) if (d.id !== this.me.deviceId) devices.push({ deviceId: d.id, encryptionKey: d.encryptionKey });
     }
     return { devices, changed };
   }
 
-  /** The signing key to verify a sender device with, after the same checks. */
-  async senderKey(userId: string, deviceId: string): Promise<SenderKey> {
+  /**
+   * The signing key to verify the device that signed an envelope the server accepted at [serverTs], after the same
+   * checks: an active device, or one revoked no earlier than [serverTs] (T1.5, as on the phone). The server accepts
+   * nothing from a device once it's revoked, so a later envelope is unknown. Revoked devices are never encrypted to.
+   */
+  async senderKey(userId: string, deviceId: string, serverTs: number): Promise<SenderKey> {
     for (const refetch of [false, true]) {
       const u = await this.userKeys(userId, refetch);
       if (!u) return { kind: "unknown" };
       const key = await this.trustedKey(u);
       if (key === null) return { kind: "changed" };
-      const d = (await this.certified(u, key)).find((x) => x.id === deviceId);
+      const d = (await this.certified(u.devices, key)).find((x) => x.id === deviceId);
       if (d) return { kind: "trusted", signingKey: d.signingKey };
+      const revoked = (await this.certified(u.revokedDevices, key)).find((x) => x.id === deviceId && serverTs <= x.revokedAt);
+      if (revoked) return { kind: "trusted", signingKey: revoked.signingKey };
     }
     return { kind: "unknown" };
   }
@@ -118,9 +124,9 @@ export class Directory {
     return null;
   }
 
-  private async certified(u: UserKeys, identityKey: string): Promise<UserKeys["devices"]> {
-    const out: UserKeys["devices"] = [];
-    for (const d of u.devices) {
+  private async certified<D extends UserKeys["devices"][number]>(devices: readonly D[], identityKey: string): Promise<D[]> {
+    const out: D[] = [];
+    for (const d of devices) {
       const cacheKey = `${identityKey}|${d.signingKey}|${d.encryptionKey}|${d.certificate}`;
       if (this.verified.has(cacheKey) || (await verify(identityKey, canonical.deviceCert(identityKey, d.signingKey, d.encryptionKey), d.certificate))) {
         this.verified.add(cacheKey);
