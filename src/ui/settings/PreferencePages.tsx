@@ -201,6 +201,9 @@ export function AboutPage() {
     <>
       <h1>About</h1>
       {intro && <IntroPages onDone={() => setIntro(false)} />}
+      <p className="faint" style={{ margin: "0 0 12px" }}>
+        Meldiq Web by GriipBuddy · version {__APP_VERSION__}
+      </p>
       <div className="card">
         <div className="setting">
           <div className="lines">

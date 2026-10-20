@@ -1,5 +1,9 @@
 import react from "@vitejs/plugin-react";
+import { readFileSync } from "node:fs";
 import { defineConfig } from "vitest/config";
+
+/** The web app's version, kept equal to the Android release it matches (package.json), shown in Settings › About. */
+const appVersion = (JSON.parse(readFileSync(new URL("./package.json", import.meta.url), "utf8")) as { version: string }).version;
 
 /**
  * The web app talks to the Meldiq (formerly Orbit) API on its own origin (docs/ORBIT_WEB_ARCHITECTURE.md › G2): in development Vite
@@ -27,6 +31,7 @@ const proxy = {
 
 export default defineConfig({
   plugins: [react()],
+  define: { __APP_VERSION__: JSON.stringify(appVersion) },
   server: { host: "127.0.0.1", port: 5173, strictPort: true, proxy },
   preview: { host: "127.0.0.1", port: 4173, strictPort: true, proxy },
   build: { target: "es2022", sourcemap: true },
