@@ -2,7 +2,7 @@ import { TransferOwnership } from "./TransferOwnership";
 import { Camera, LogOut, Trash2 } from "lucide-react";
 import { type FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import type { OrgAdminDetail } from "../../api/workspaceSchemas";
-import { useEngine } from "../../app/orbit";
+import { useEngine, useOrbit } from "../../app/orbit";
 import { setPrefs } from "../../app/prefs";
 import { navigate } from "../../app/router";
 import { deleteWorkspace, leaveWorkspace, removeWorkspacePhoto, requestId, setWorkspacePhoto, updateWorkspace } from "../../sync/workspaces";
@@ -12,9 +12,11 @@ import { Dialog } from "../components/Overlay";
 import { squareJpeg } from "./photo";
 import { useAction } from "./useLoad";
 import { Card, ErrorLine } from "./WorkspaceView";
+import { GuestPolicyCard, TemplatesCard } from "./WorkspaceSetupCards";
 
 export function OverviewPage({ detail, onChanged }: { detail: OrgAdminDetail; onChanged: () => void }) {
   const { org, permissions: can, stats } = detail;
+  const features = useOrbit((s) => s.server?.features ?? []);
   return (
     <div className="ws-page">
       <header className="ws-hero">
@@ -27,6 +29,8 @@ export function OverviewPage({ detail, onChanged }: { detail: OrgAdminDetail; on
         </div>
       </header>
       {can.canManageOrg ? <Identity detail={detail} onChanged={onChanged} /> : <ReadOnlyAbout description={org.description} />}
+      {can.canManageOrg && features.includes("workspace-templates") && <TemplatesCard detail={detail} onChanged={onChanged} />}
+      {can.canManageOrg && features.includes("guest-expiry") && <GuestPolicyCard detail={detail} onChanged={onChanged} />}
       <TransferOwnership detail={detail} onChanged={onChanged} />
       <Membership detail={detail} />
     </div>

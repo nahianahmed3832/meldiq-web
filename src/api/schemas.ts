@@ -84,6 +84,12 @@ export const zOrg = z.object({
     .number()
     .nullish()
     .transform((v) => v ?? null),
+  /** Round 7 guest policy (docs/WORKSPACE_C5.md); older servers allow guests without a limit. */
+  guestsAllowed: z.boolean().default(true),
+  guestMaxDays: z
+    .number()
+    .nullish()
+    .transform((v) => v ?? null),
 });
 export type Org = z.infer<typeof zOrg>;
 

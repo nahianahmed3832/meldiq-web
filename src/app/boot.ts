@@ -63,6 +63,22 @@ function notifyReminder(title: string, body: string, conversationId: string | nu
   }
 }
 
+/** A scheduled meeting starting in ten minutes (round 7): opens its voice room. */
+function notifyMeeting(title: string, body: string, roomId: string | null): void {
+  const p = getPrefs();
+  if (!p.notifications || typeof Notification === "undefined" || Notification.permission !== "granted") return;
+  try {
+    const n = new Notification(p.notificationText ? title : "Meldiq meeting", { body: p.notificationText ? body : "A meeting starts soon", tag: `meeting:${title}`, silent: !p.messageSound });
+    n.onclick = () => {
+      window.focus();
+      if (roomId) location.hash = `#/home/c/${encodeURIComponent(roomId)}`;
+      n.close();
+    };
+  } catch {
+    /* notifications unavailable in this context */
+  }
+}
+
 /** A ringing call while this tab isn't looked at: a system notification that brings the tab forward. */
 function ringAlert(title: string, video: boolean, conversationId: string): void {
   const p = getPrefs();
@@ -85,6 +101,7 @@ export function createEngine(device: DeviceRecord, store: LocalStore): Engine {
     wsUrl: wsUrl(),
     notify,
     notifyReminder,
+    notifyMeeting,
     media: liveKitMedia,
     ringtone: new Ringtone(() => getPrefs().callRingtone),
     ringAlert,

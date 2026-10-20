@@ -1,7 +1,7 @@
 import { Check, Copy, Ticket } from "lucide-react";
 import { type FormEvent, useState } from "react";
 import type { Invite, NewInvite, OrgAdminDetail, OrgRole } from "../../api/workspaceSchemas";
-import { useEngine } from "../../app/orbit";
+import { useEngine, useOrbit } from "../../app/orbit";
 import { createInvitation, invitations, revokeInvitation } from "../../sync/workspaces";
 import { invitableRoles, roleName } from "../../sync/workspaceRules";
 import { shortWhen, untilWhen } from "../format";
@@ -93,6 +93,10 @@ function NewInvitation({ detail, onCreated }: { detail: OrgAdminDetail; onCreate
   const [scope, setScope] = useState(scopes[0]?.value ?? "");
   const [uses, setUses] = useState(1);
   const [hours, setHours] = useState(72);
+  const [guestDays, setGuestDays] = useState("");
+  const guestExpiry = useOrbit((st) => st.server?.features.includes("guest-expiry") ?? false);
+  const org = useOrbit((st) => st.orgs.find((o) => o.id === detail.org.id) ?? null);
+  const guestsOff = guestExpiry && org?.guestsAllowed === false;
   const [made, setMade] = useState<NewInvite | null>(null);
   const [copied, setCopied] = useState(false);
   const act = useAction();
@@ -106,6 +110,7 @@ function NewInvitation({ detail, onCreated }: { detail: OrgAdminDetail; onCreate
         teamId: scope.startsWith("t:") ? scope.slice(2) : null,
         maxUses: uses,
         expiresInHours: hours,
+        ...(role === "GUEST" && guestExpiry && Number(guestDays) > 0 ? { guestDays: Number(guestDays) } : {}),
       });
       setMade(r);
       onCreated();
@@ -139,6 +144,25 @@ function NewInvitation({ detail, onCreated }: { detail: OrgAdminDetail; onCreate
           <span>Uses</span>
           <input className="input" type="number" min={1} max={500} value={uses} onChange={(e) => setUses(Math.max(1, Math.min(500, Number(e.target.value) || 1)))} />
         </label>
+        {role === "GUEST" && guestExpiry && (
+          <label className="field">
+            <span>Guest for (days)</span>
+            <input
+              className="input"
+              type="number"
+              min={1}
+              max={org?.guestMaxDays ?? 365}
+              value={guestDays}
+              onChange={(e) => setGuestDays(e.target.value)}
+              placeholder={org?.guestMaxDays ? `at most ${org.guestMaxDays}` : "no end date"}
+            />
+          </label>
+        )}
+        {role === "GUEST" && guestsOff && (
+          <p className="warn-text ws-wide" style={{ margin: 0, fontSize: 13 }}>
+            Guests are turned off for this workspace, so the server will refuse a guest invitation.
+          </p>
+        )}
         <label className="field">
           <span>Expires after</span>
           <select className="input" value={hours} onChange={(e) => setHours(Number(e.target.value))}>

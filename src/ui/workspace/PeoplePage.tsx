@@ -1,8 +1,9 @@
 import { MoreHorizontal, Search } from "lucide-react";
 import { useState } from "react";
 import type { DirectoryMember, OrgAdminDetail, OrgRole } from "../../api/workspaceSchemas";
-import { useEngine } from "../../app/orbit";
+import { useEngine, useOrbit } from "../../app/orbit";
 import { changeMember, directory, removeMember } from "../../sync/workspaces";
+import { setGuestExpiry } from "../../sync/workspaceC5";
 import { assignableRoles, removalAllowed, roleName, titleChangeAllowed } from "../../sync/workspaceRules";
 import { UserAvatar } from "../components/OrgAvatar";
 import { Dialog, Menu, type MenuEntry, useMenu } from "../components/Overlay";
@@ -61,13 +62,17 @@ function MemberRow({ member: m, orgId, myRole, myId, owners, onChanged }: { memb
   const engine = useEngine();
   const menu = useMenu();
   const act = useAction();
-  const [editing, setEditing] = useState<"title" | "remove" | null>(null);
+  const [editing, setEditing] = useState<"title" | "remove" | "expiry" | null>(null);
+  const guestExpiry = useOrbit((st) => st.server?.features.includes("guest-expiry") ?? false);
   const self = m.id === myId;
   const role = (m.orgRole ?? "MEMBER") as OrgRole;
   const roles = assignableRoles(myRole, role, self, owners);
   const canTitle = titleChangeAllowed(myRole, role, self);
   const canRemove = !self && removalAllowed(myRole, role, owners);
+  // A guest's end date (round 7): set by people who can change member access, i.e. who may change this guest's role.
+  const canExpire = role === "GUEST" && roles.length > 0 && guestExpiry;
   const entries: MenuEntry[] = [
+    ...(canExpire ? [{ label: m.expiresAt ? "Change end date…" : "Set an end date…", onSelect: () => setEditing("expiry") }] : []),
     ...(roles.length ? [{ heading: "Role" } as const] : []),
     ...roles.map((r) => ({
       label: `Make ${roleName(r).toLowerCase()}`,
@@ -87,6 +92,7 @@ function MemberRow({ member: m, orgId, myRole, myId, owners, onChanged }: { memb
         <small className="ellipsis">
           @{m.username}
           {m.title ? ` · ${m.title}` : ""}
+          {role === "GUEST" && m.expiresAt ? ` · guest until ${new Date(m.expiresAt).toLocaleDateString()}` : ""}
         </small>
       </span>
       <span className={`role-badge role-${role.toLowerCase()}`}>{roleName(role)}</span>
@@ -104,6 +110,7 @@ function MemberRow({ member: m, orgId, myRole, myId, owners, onChanged }: { memb
         </div>
       )}
       {editing === "title" && <TitleDialog member={m} orgId={orgId} onClose={() => setEditing(null)} onSaved={onChanged} />}
+      {editing === "expiry" && <ExpiryDialog member={m} orgId={orgId} onClose={() => setEditing(null)} onSaved={onChanged} />}
       {editing === "remove" && (
         <Dialog title={`Remove ${m.displayName}?`} onClose={() => setEditing(null)}>
           <div className="dialog-body">
@@ -162,6 +169,43 @@ function TitleDialog({ member, orgId, onClose, onSaved }: { member: DirectoryMem
           </button>
         </div>
       </form>
+    </Dialog>
+  );
+}
+
+/** A guest's end date (round 7, docs/WORKSPACE_C5.md › Guests): the server keeps it within the workspace's maximum. */
+function ExpiryDialog({ member, orgId, onClose, onSaved }: { member: DirectoryMember; orgId: string; onClose: () => void; onSaved: () => void }) {
+  const engine = useEngine();
+  const act = useAction();
+  const [date, setDate] = useState(member.expiresAt ? new Date(member.expiresAt).toISOString().slice(0, 10) : "");
+  const save = (expiresAt: number | null) =>
+    void act.act(async () => {
+      await setGuestExpiry(engine, orgId, member.id, expiresAt);
+      onSaved();
+      onClose();
+    });
+  return (
+    <Dialog title={`${member.displayName}'s end date`} onClose={onClose}>
+      <div className="dialog-body">
+        <p className="faint" style={{ margin: 0 }}>
+          On this day they leave the workspace, exactly as if removed: channels, teams, groups and meeting invitations.
+        </p>
+        <label className="field">
+          <span>Last day</span>
+          <input className="input" type="date" value={date} onChange={(e) => setDate(e.target.value)} />
+        </label>
+        <ErrorLine text={act.error} />
+        <div className="row" style={{ justifyContent: "flex-end", gap: 8 }}>
+          {member.expiresAt && (
+            <button className="btn btn-secondary" disabled={act.busy} onClick={() => save(null)}>
+              No end date
+            </button>
+          )}
+          <button className="btn btn-primary" disabled={act.busy || !date} onClick={() => save(new Date(`${date}T23:59:59`).getTime())}>
+            Save
+          </button>
+        </div>
+      </div>
     </Dialog>
   );
 }

@@ -1,10 +1,11 @@
-import { Ban, Pencil, UserPlus } from "lucide-react";
+import { Ban, Pencil, UserPlus, Users } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { Conversation, Member } from "../../api/schemas";
-import { useEngine } from "../../app/orbit";
+import { useEngine, useOrbit } from "../../app/orbit";
 import { searchPeople } from "../../sync/account";
 import { block, blockedIds, unblock } from "../../sync/profile";
 import { addConversationMember, directory, updateConversation } from "../../sync/workspaces";
+import { addGroupToChannel, type Group, listGroups } from "../../sync/workspaceC5";
 import { Avatar } from "../components/Avatar";
 import { Dialog } from "../components/Overlay";
 
@@ -207,11 +208,81 @@ function AddMembersDialog({ c, memberIds, onAdded, onClose }: { c: Conversation;
             ))}
           </div>
         )}
+        {c.type === "CHANNEL" && c.orgId && <AddGroupSection c={c} orgId={c.orgId} onAdded={onAdded} />}
         <p className="faint" style={{ margin: 0, fontSize: 12 }}>
           New members see messages sent from now on. Earlier messages were encrypted for the people here at the time.
         </p>
       </div>
     </Dialog>
+  );
+}
+
+/**
+ * Adding a workspace group's current members to a channel (android round 7 C5 "Add a group"): each person is checked
+ * like adding them one by one, so anyone outside the channel's branch or team is skipped; later group changes don't
+ * follow. Shown when the server offers groups.
+ */
+function AddGroupSection({ c, orgId, onAdded }: { c: Conversation; orgId: string; onAdded: () => void }) {
+  const engine = useEngine();
+  const offered = useOrbit((s) => s.server?.features.includes("groups") ?? false);
+  const [groups, setGroups] = useState<Group[] | null>(null);
+  const [done, setDone] = useState<Record<string, string>>({});
+  const [busy, setBusy] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!offered) return;
+    let alive = true;
+    listGroups(engine, orgId).then(
+      (g) => alive && setGroups(g),
+      (e: unknown) => alive && setError(messageOf(e, "Couldn't load the workspace's groups.")),
+    );
+    return () => {
+      alive = false;
+    };
+  }, [engine, orgId, offered]);
+
+  if (!offered || (groups && groups.length === 0)) return null;
+  const add = async (g: Group) => {
+    setBusy(g.id);
+    setError(null);
+    try {
+      const r = await addGroupToChannel(engine, c.id, g.id);
+      setDone((d) => ({ ...d, [g.id]: r.skipped ? `${r.added} added, ${r.skipped} can't join` : `${r.added} added` }));
+      if (r.added) onAdded();
+    } catch (e) {
+      setError(messageOf(e, `Couldn't add @${g.handle}.`));
+    } finally {
+      setBusy(null);
+    }
+  };
+  return (
+    <div style={{ display: "grid", gap: 2 }} aria-label="Add a group">
+      <strong style={{ fontSize: 13 }}>Or add a group</strong>
+      {error && (
+        <div className="banner danger" role="alert">
+          {error}
+        </div>
+      )}
+      {(groups ?? []).map((g) => (
+        <div key={g.id} className="person">
+          <Users size={18} className="faint" />
+          <div className="lines grow">
+            <span className="ellipsis">{g.name}</span>
+            <small className="ellipsis">
+              @{g.handle} · {g.members.length === 1 ? "1 member" : `${g.members.length} members`}
+            </small>
+          </div>
+          {done[g.id] ? (
+            <span className="tag ok">{done[g.id]}</span>
+          ) : (
+            <button className="btn btn-secondary btn-sm" disabled={busy !== null} onClick={() => void add(g)}>
+              {busy === g.id ? "Adding…" : "Add group"}
+            </button>
+          )}
+        </div>
+      ))}
+    </div>
   );
 }
 

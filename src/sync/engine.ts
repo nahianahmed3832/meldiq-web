@@ -21,6 +21,7 @@ import { Outbox, sealAndPost } from "./outbox";
 import { levelOf, type NavOp, NavSync, PERSONAL, shouldNotify, workspaceOf } from "./navPrefs";
 import { firstShowing, ReminderSync } from "./reminders";
 import { callFrame, orgDeletedFrame, presenceFrame, typingFrame } from "./frameReducers";
+import { meetingSoon } from "./workspaceC5";
 import type { Reminder } from "./reminderRules";
 import { deriveReminderKey } from "../crypto/reminderKeys";
 import { publicKeyFromSeed } from "../crypto/ed25519";
@@ -42,6 +43,8 @@ export interface EngineOptions {
   notify?: (title: string, body: string, conversationId: string) => void;
   /** Shows a system notification for a reminder that went off (server reminders, Later). */
   notifyReminder?: (title: string, body: string, conversationId: string | null) => void;
+  /** A scheduled meeting starts in ten minutes (round 7): [roomId] is the voice room it happens in. */
+  notifyMeeting?: (title: string, body: string, roomId: string | null) => void;
   /** Per-browser preferences. */
   prefs?: () => { readReceipts: boolean; typing: boolean; groupNotifications?: boolean };
   onRevoked?: (reason: RevokedReason) => void;
@@ -470,6 +473,11 @@ export class Engine implements EngineContext {
         if (id) this.set((s) => ({ ...s, appEventsRev: { ...s.appEventsRev, [id]: (s.appEventsRev[id] ?? 0) + 1 } }));
         return;
       }
+      case "meeting.updated":
+      case "meeting.soon":
+        this.set((s) => ({ ...s, meetingsRev: s.meetingsRev + 1 }));
+        if (f.t === "meeting.soon" && typeof f.meetingId === "string") void meetingSoon(this, f.meetingId, this.opts.notifyMeeting);
+        return;
       case "reminders.changed":
       case "reminder.due":
         await this.reminders.refresh();

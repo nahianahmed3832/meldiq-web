@@ -94,6 +94,8 @@ export interface AppState {
   reminders: RemindersState;
   /** Bumped per channel when an app posts an update there (server `integration.event`): its App updates bar reloads. */
   appEventsRev: Record<string, number>;
+  /** Bumped on each meeting.updated / meeting.soon frame (round 7 meetings): open lists reload. */
+  meetingsRev: number;
 }
 
 export const initialState: AppState = {
@@ -117,6 +119,7 @@ export const initialState: AppState = {
   callLog: [],
   reminders: NO_REMINDERS,
   appEventsRev: {},
+  meetingsRev: 0,
   history: { status: "idle", restored: 0, unreadable: 0, error: null },
   notices: [],
 };

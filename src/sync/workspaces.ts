@@ -116,6 +116,8 @@ export interface InviteRequest {
   teamId?: string | null;
   maxUses: number;
   expiresInHours: number;
+  /** Guest invitations: how many days the membership lasts from joining (round 7; within the workspace's maximum). */
+  guestDays?: number | null;
 }
 
 export async function createInvitation(engine: Engine, orgId: string, r: InviteRequest): Promise<NewInvite> {

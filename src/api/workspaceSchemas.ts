@@ -80,6 +80,11 @@ export type OrgAdminDetail = z.infer<typeof zOrgAdminDetail>;
 
 export const zDirectoryMember = zMember.extend({
   title: nullableString,
+  /** A guest's end date (round 7); null for members and guests without one. */
+  expiresAt: z
+    .number()
+    .nullish()
+    .transform((v) => v ?? null),
   branches: z.array(z.object({ id: z.string(), role: nullableString })).default([]),
   teams: z.array(z.object({ id: z.string(), role: nullableString })).default([]),
 });
