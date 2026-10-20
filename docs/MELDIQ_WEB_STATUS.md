@@ -112,6 +112,7 @@ Every item is backed by the real server (API 0.7.1). No mock APIs and no browser
 | 2026-10-20 | API **0.7.1** with the WebSocket first-frame patch | Another session |
 | 2026-10-20 01:39 (UTC+8) | Web release **0.1.0-9e04997** (this round, §1) | This session; see §2a |
 | 2026-10-20 10:46 (UTC+8) | Web release **0.1.0-1286588**: both Android sync passes (§0) and the scroll fix | This session; see §2b |
+| 2026-10-20 12:36 (UTC+8) | Web release **0.2.4-beta-ba154b1**: round 8 Unified Inbox and the 0.2.4-beta version (§0, pass 3) | This session; see §2c |
 
 ### 2a. Web deploy
 
@@ -140,6 +141,16 @@ Every item is backed by the real server (API 0.7.1). No mock APIs and no browser
 - **Round 7 screens are hidden in production:** its API offers none of `search`, `workflows`, `documents`,
   `workspace-templates`, `groups`, `guest-expiry`, `meetings`, `developer-api`, `ai` (checked on `/v1/server-info`).
 - **Not checked:** a signed-in session on production (needs your account).
+
+### 2c. Web deploy of 0.2.4-beta-ba154b1
+
+- **Release:** `release/meldiq-web-0.2.4-beta-ba154b1.tar.gz` (commit `ba154b1`, pushed to `origin/main` of
+  github.com/nahianahmed3832/meldiq-web), checksum checked on the VPS. Its build ran typecheck, lint, 243 unit tests and
+  the production build; the unpacked release (43 files) was scanned for key material, Meta tokens included: clean.
+- **Rollback:** `0.1.0-1286588` is kept. Run `bash rollback.sh` on the VPS.
+- **Checks:** `verify.sh` all ✓; the served bundle is this release's; `web.griipbuddy.cloud` answers 301; a bare socket
+  closes with 4401 after 11.2 s.
+- **Hidden in production:** the API (0.7.1) offers none of the round 7/8 features, `unified-inbox` included.
 
 ## 3. Still open
 
