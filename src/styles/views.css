@@ -1088,3 +1088,26 @@ select.input {
     flex-wrap: wrap;
   }
 }
+
+/* Settings › Service health (platform admins). */
+.health-summary {
+  display: grid;
+  gap: 8px;
+  padding: 14px 16px;
+}
+.health-warnings {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--warning);
+  font-weight: 600;
+}
+.health-title {
+  font-size: 15px;
+  margin: 14px 0 6px;
+}
+.health-card {
+  padding: 12px 16px;
+}
+.ok-text {
+  color: var(--success);
+}

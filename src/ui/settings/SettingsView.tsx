@@ -1,4 +1,8 @@
-import { Bell, HardDrive, Info, KeyRound, Laptop, Palette, Shield, Smartphone, UserRound } from "lucide-react";
+import { Activity, Bell, HardDrive, Info, KeyRound, Laptop, Palette, Shield, Smartphone, UserRound } from "lucide-react";
+import { useEngine } from "../../app/orbit";
+import { isPlatformAdmin } from "../../sync/ops";
+import { useLoad } from "../workspace/useLoad";
+import { ServiceHealthPage } from "./ServiceHealthPage";
 import { navigate, type SettingsPage } from "../../app/router";
 import { AboutPage, AppearancePage, NotificationsPage } from "./PreferencePages";
 import { AccountSettingsPage } from "./AccountSettingsPage";
@@ -18,12 +22,16 @@ const PAGES: { key: SettingsPage; label: string; icon: React.ReactNode }[] = [
 ];
 
 export function SettingsView({ page, onSignedOut }: { page: SettingsPage; onSignedOut: () => void }) {
+  const engine = useEngine();
+  // Service health is for platform administrators only (android round 7 C1); the server checks it again.
+  const admin = useLoad(() => isPlatformAdmin(engine).catch(() => false), [engine]).data === true;
+  const pages = admin ? [...PAGES, { key: "health" as const, label: "Service health", icon: <Activity size={17} /> }] : PAGES;
   return (
     <section className="main" aria-label="Settings" style={{ display: "flex", flexDirection: "column" }}>
       <div className="settings">
         <nav className="settings-nav" aria-label="Settings pages">
           <h2>Settings</h2>
-          {PAGES.map((p) => (
+          {pages.map((p) => (
             <button key={p.key} className="side-item" aria-current={page === p.key ? "page" : undefined} onClick={() => navigate({ section: "settings", settingsPage: p.key })}>
               <span className="glyph">{p.icon}</span>
               <span className="grow">{p.label}</span>
@@ -46,6 +54,7 @@ export function SettingsView({ page, onSignedOut }: { page: SettingsPage; onSign
             {page === "storage" && <StoragePage />}
             {page === "security" && <SecurityPage onSignedOut={onSignedOut} />}
             {page === "about" && <AboutPage />}
+            {page === "health" && <ServiceHealthPage />}
           </div>
         </div>
       </div>
