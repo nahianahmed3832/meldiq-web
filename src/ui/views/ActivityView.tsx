@@ -92,7 +92,7 @@ export function ActivityView({ orgId }: { orgId: string | null }) {
               )}
             </div>
           )}
-          {activityShows(filter, "calls") && <MissedCalls />}
+          {activityShows(filter, "calls") && <MissedCalls showEmpty={filter === "calls"} />}
           {activityShows(filter, "threads") && <ThreadReplies />}
           {filter === "all" && orgId && (
             <div className="card list-card">
@@ -125,7 +125,7 @@ export function ActivityView({ orgId }: { orgId: string | null }) {
 /** The week's missed calls (android WorkspaceHomeRules.MISSED_CALLS_ACTIVITY_WINDOW_MS), newest first. */
 const MISSED_WINDOW_MS = 7 * 86_400_000;
 
-function MissedCalls() {
+function MissedCalls({ showEmpty = false }: { showEmpty?: boolean }) {
   const missed = useOrbit(
     (s) =>
       s.callLog
@@ -134,7 +134,18 @@ function MissedCalls() {
         .map((c) => ({ ...c, title: s.me ? conversationTitle(s.conversations[c.conversationId], s.me.userId, s.users) : "", by: s.users[c.startedBy]?.displayName ?? "Someone" })),
     (a, b) => JSON.stringify(a) === JSON.stringify(b),
   );
-  if (missed.length === 0) return null;
+  if (missed.length === 0) {
+    // Under the Calls chip (round 3) an empty list says so instead of leaving the page blank.
+    if (!showEmpty) return null;
+    return (
+      <div className="card list-card">
+        <h2>Missed calls</h2>
+        <div className="side-quiet" style={{ padding: 14 }}>
+          No missed calls in the last week.
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="card list-card">
       <h2>Missed calls</h2>
