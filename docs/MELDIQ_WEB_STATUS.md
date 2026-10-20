@@ -101,6 +101,7 @@ Every item is backed by the real server (API 0.7.1). No mock APIs and no browser
 |---|---|---|
 | 2026-10-20 | API **0.7.1** with the WebSocket first-frame patch | Another session |
 | 2026-10-20 01:39 (UTC+8) | Web release **0.1.0-9e04997** (this round, §1) | This session; see §2a |
+| 2026-10-20 10:46 (UTC+8) | Web release **0.1.0-1286588**: both Android sync passes (§0) and the scroll fix | This session; see §2b |
 
 ### 2a. Web deploy
 
@@ -115,6 +116,20 @@ Every item is backed by the real server (API 0.7.1). No mock APIs and no browser
   - `web.griipbuddy.cloud` still answers 301.
   - A bare browser socket stays open and closes with 4401 after 11.2 s, so first-frame sign-in works on 0.7.1.
 - **Not checked:** a signed-in session on production. It needs your account, and this session doesn't enter passwords.
+
+### 2b. Web deploy of 0.1.0-1286588
+
+- **Release:** `release/meldiq-web-0.1.0-1286588.tar.gz` (commit `1286588`, pushed to `origin/main`), SHA-256
+  `012d1665…`, checked on the VPS before unpacking. Its build ran typecheck, lint, 237 unit tests and the production
+  build; the unpacked release (43 files) was scanned for key material: clean.
+- **Install:** the production command in `ORBIT_WEB_DEPLOYMENT.md` §4; `nginx -t` passed. The API wasn't touched.
+- **Rollback:** `0.1.0-9e04997` is kept. Run `bash rollback.sh` on the VPS.
+- **Checks:** `verify.sh https://web.meldiq.app` all ✓ (TLS, headers, `config.json`, API 0.7.1 through this origin,
+  accounts, realtime 101); the served `index` bundle is this release's; `web.griipbuddy.cloud` answers 301; a bare
+  socket closes with 4401 after 11.2 s.
+- **Round 7 screens are hidden in production:** its API offers none of `search`, `workflows`, `documents`,
+  `workspace-templates`, `groups`, `guest-expiry`, `meetings`, `developer-api`, `ai` (checked on `/v1/server-info`).
+- **Not checked:** a signed-in session on production (needs your account).
 
 ## 3. Still open
 
@@ -145,7 +160,19 @@ Every item is backed by the real server (API 0.7.1). No mock APIs and no browser
 
 ## 4. Tests run (2026-10-20)
 
-All against the server code of API 0.7.1 (`srv071`, the production build), started in-process or as a local server.
+**Round 7 C1–C8 pass (latest):**
+
+| Suite | Result |
+|---|---|
+| Typecheck (`npx tsc -b`), lint, format | clean |
+| Unit + live, round 7 server copy | 55 files, **355 passed**, 0 failed |
+| Unit + live, API 0.7.1 code | 55 files, **338 passed, 17 skipped** (round 7 suites skip themselves), 0 failed |
+| New suites | `live-r7-ops`, `universal-search`, `live-r7-search`, `workflow-rules`, `live-r7-workflows`, `document-rules`, `live-r7-documents`, `meeting-rules`, `live-r7-c5`, `live-r7-developer`, `live-r7-usage`, `ai-rules`, `live-r7-ai` (stand-in AI provider inside the test server) |
+| Browser (`npx playwright test`, 4 projects, LiveKit, API 0.7.1 code) | **37 passed, 3 skipped** (deliberate), 0 failed |
+| Release build and secret scan | passes; clean |
+| By hand (Chromium, local round 7 server) | all round 7 pages listed; template applied; meeting scheduled with an invitee; AI page without a provider; measured usage; API key made (token once, not stored). Found and fixed: long pages didn't scroll in wide windows |
+
+**Earlier in the day**, all against the server code of API 0.7.1 (`srv071`, the production build), started in-process or as a local server.
 
 | Suite | Result |
 |---|---|
@@ -162,6 +189,8 @@ server. Their behaviour is covered by `live-voice-rooms`, which drives the same 
 
 ## 5. Where to resume
 
+0. **Round 7 server:** C1–C8 appear in production once the round 7 API is deployed (your approval). Then open each by
+   hand there; see `MELDIQ_ANDROID_WEB_SYNC_REPORT.md` §6.
 1. **Signed-in check on production** (yours to do): sign in on web.meldiq.app and open Later, a voice room, and
    Workspace › Roles, Apps and Usage.
 2. **S3 CORS:** after the rule is applied, send a file from the browser in production and open it on the phone.
