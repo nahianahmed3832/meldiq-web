@@ -101,11 +101,11 @@
   --text: #16172b;
   --text-2: #474960;
   --text-3: #686a80;
-  --accent: #4f46e5;
-  --accent-text: #4338ca;
+  --accent: #4b4fc9;
+  --accent-text: #353aa6;
   --accent-soft: #ecebfd;
   --on-accent: #ffffff;
-  --action: #4f46e5;
+  --action: #4b4fc9;
   --on-action: #ffffff;
   --danger: #c0262d;
   --rail: #241f63;
@@ -226,7 +226,7 @@
     /* Palette previews (Appearance › Colour): each plate's frame, sidebar and accent, whatever plate is active. */
     --swatch-indigo-1: #231d62;
     --swatch-indigo-2: #e2dffa;
-    --swatch-indigo-3: #4f46e5;
+    --swatch-indigo-3: #4b4fc9;
     --swatch-plum-1: #4a1340;
     --swatch-plum-2: #f4d8e7;
     --swatch-plum-3: #b0236e;
@@ -238,7 +238,11 @@
 
   /* ── 3. Palettes ──────────────────────────────────────────────────────── */
 
-  /* Indigo (default): the logo's blue-violet. Frame deep indigo, sidebar lavender mist, accent indigo, badges cyan. */
+  /*
+   * Indigo (default): the logo's blue-violet. Frame deep indigo, sidebar lavender mist, accent indigo, badges cyan.
+   * The accent is Meldiq's one brand indigo, #4b4fc9 (dark mode #8b93ff), the same as Android's Graphite palette and the
+   * account emails (meldiq docs/product/MELDIQ_2_DECISIONS.md §3).
+   */
   :root,
   :root[data-palette="indigo"] {
     --rail: light-dark(#231d62, #100f2a);
@@ -256,17 +260,17 @@
     --sidebar-selected: light-dark(#e2dffa, #2a2852);
     --sidebar-text: light-dark(#4a4a68, #b3b2d0);
 
-    --accent: light-dark(#4f46e5, #8f8bfa);
-    --accent-hover: light-dark(#4338ca, #a6a3fb);
+    --accent: light-dark(#4b4fc9, #8b93ff);
+    --accent-hover: light-dark(#353aa6, #a5adff);
     --accent-soft: light-dark(#ecebfd, #25244a);
-    --accent-text: light-dark(#4338ca, #b4b1fd);
+    --accent-text: light-dark(#353aa6, #b8beff);
     --on-accent: light-dark(#ffffff, #12112e);
     --accent-2: light-dark(#0e7fa0, #4fd9f2);
 
     --mention-bg: light-dark(#eceafd, #2a2858);
     --mention-text: light-dark(#3a30c0, #cfccff);
     --bubble-out: light-dark(#f0effd, #1f1e3d);
-    --badge: light-dark(#4f46e5, #8f8bfa);
+    --badge: light-dark(#4b4fc9, #8b93ff);
     --on-badge: light-dark(#ffffff, #12112e);
     --rail-badge: #5ee0f5;
     --on-rail-badge: #071a2e;

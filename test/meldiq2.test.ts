@@ -73,6 +73,42 @@ describe("signals", () => {
   });
 });
 
+describe("signals when the network or server fails", () => {
+  it("never throw into the caller and keep the events for the next try", async () => {
+    let fail = true;
+    const sent: AnalyticsEvent[][] = [];
+    const s = new Signals({
+      features: () => ["experiments", "analytics-events"],
+      getExperiments: async () => ({ mode: "on", analytics: true, assignments: [] }),
+      send: async (events) => {
+        if (fail) throw new Error("offline");
+        sent.push(events);
+      },
+      schedule: () => undefined,
+    });
+    await s.refresh();
+    s.track("message.sent", { surface: "channel" });
+    await expect(s.flush()).resolves.toBeUndefined();
+    fail = false;
+    await s.flush();
+    expect(sent.flat().map((x) => x.name)).toEqual(["message.sent"]);
+  });
+
+  it("keep the established experience when the experiments request fails", async () => {
+    const s = new Signals({
+      features: () => ["experiments", "analytics-events"],
+      getExperiments: async () => {
+        throw new Error("500");
+      },
+      send: async () => undefined,
+      schedule: () => undefined,
+    });
+    await expect(s.refresh()).resolves.toBeUndefined();
+    expect(s.variant("home-layout", "sections")).toBe("sections");
+    expect(s.enabled).toBe(false);
+  });
+});
+
 describe("closed analytics values", () => {
   it("bucket result counts and map search kinds to the catalogue's scopes", () => {
     expect([0, 1, 2, 5, 40].map(resultBucket)).toEqual(["0", "1", "2-5", "2-5", "6+"]);

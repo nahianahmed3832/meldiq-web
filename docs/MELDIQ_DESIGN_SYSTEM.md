@@ -10,11 +10,11 @@ shared with the phone (`src/ui/components/Avatar.tsx`).
   only logo file. Don't redraw it.
 - **Derivatives:** `scripts/render-brand-assets.ts` crops and scales it. Nothing is drawn by hand. The crops are:
 
-  | Crop | What it is | Files |
-  |---|---|---|
-  | Tight | The mark framed with 14% padding | `public/meldiq-mark-128/256.png` (in the app), `favicon-32.png`, `meldiq-180.png` (Apple), `meldiq-192/512.png` (manifest) |
-  | Full | The whole logo, with the mark inside the maskable safe zone | `meldiq-maskable-512.png` |
-  | Share image | The logo on its own ground colour, with the name | `meldiq-og.png` (1200×630) |
+  | Crop        | What it is                                                  | Files                                                                                                                      |
+  | ----------- | ----------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+  | Tight       | The mark framed with 14% padding                            | `public/meldiq-mark-128/256.png` (in the app), `favicon-32.png`, `meldiq-180.png` (Apple), `meldiq-192/512.png` (manifest) |
+  | Full        | The whole logo, with the mark inside the maskable safe zone | `meldiq-maskable-512.png`                                                                                                  |
+  | Share image | The logo on its own ground colour, with the name            | `meldiq-og.png` (1200×630)                                                                                                 |
 
 - **In the app:** `BrandMark` (`src/ui/components/BrandMark.tsx`) shows the tight crop with rounded corners. It's used
   in the rail, sign-in, linking and status screens, and the phone top bar.
@@ -38,17 +38,17 @@ Theme and Colour). Stored values are checked against the allowed lists before us
 
 ### Plates
 
-| Plate | Frame | Sidebar | Accent | Badges on the frame |
-|---|---|---|---|---|
-| **Indigo** (default, from the logo) | deep indigo `#231d62` | lavender mist `#f4f3fd` | indigo `#4f46e5` | logo cyan `#5ee0f5` |
-| Plum | plum `#4a1340` | blush `#fcf2f7` | magenta-plum `#b0236e` | pink `#ff9ccc` |
-| Amber | brown `#3d2610` | cream `#fcf6ec` | amber `#a85a06` | gold `#fcc65a` |
+| Plate                               | Frame                 | Sidebar                 | Accent                                                                                                                | Badges on the frame |
+| ----------------------------------- | --------------------- | ----------------------- | --------------------------------------------------------------------------------------------------------------------- | ------------------- |
+| **Indigo** (default, from the logo) | deep indigo `#231d62` | lavender mist `#f4f3fd` | indigo `#4b4fc9` (dark `#8b93ff`), Meldiq's one brand indigo, the same as Android and the account emails (2026-10-21) | logo cyan `#5ee0f5` |
+| Plum                                | plum `#4a1340`        | blush `#fcf2f7`         | magenta-plum `#b0236e`                                                                                                | pink `#ff9ccc`      |
+| Amber                               | brown `#3d2610`       | cream `#fcf6ec`         | amber `#a85a06`                                                                                                       | gold `#fcc65a`      |
 
 The dark-mode values are in the token file. Contrast was computed for every text-on-colour pair below, and all meet
 WCAG AA (4.5:1):
 
-- **Accent text on white:** 6.6–7.9.
-- **White on the accent (buttons):** 5.1–6.3.
+- **Accent text on white:** 6.6–9.1.
+- **White on the accent (buttons):** 5.1–6.4.
 - **Dark-mode accent text:** 9.2–11.4.
 - **Selected sidebar text on its tint:** 5.1–6.1.
 - **Rail text on the frame:** 8.6–9.7.
@@ -70,16 +70,16 @@ WCAG AA (4.5:1):
 
 ## Scale
 
-| | Tokens |
-|---|---|
-| Type | `--fs-xs` 12 · `sm` 13 · `md` 14 (body) · `lg` 15 · `xl` 17 · `2xl` 20 · `3xl` 26; Plus Jakarta Sans |
-| Radii | `--r-xs` 6 · `sm` 8 (controls) · `md` 10 (rows, inputs, buttons) · `lg` 14 (cards, composer, panel) · `xl` 18 (dialogs) · `pill` |
-| Spacing | `--s-1` 4 · `s-2` 8 · `s-3` 12 · `s-4` 16 · `s-5` 20 · `s-6` 24 · `s-8` 32 |
-| Icons | `--icon-sm` 16 · `md` 18 · `lg` 20 |
-| Layout | `--rail-w` 68 · `--topbar-h` 52 · `--sidebar-w` 280 · `--frame-gap` 8 |
-| Elevation | `--shadow-sm` (controls) · `md` (floating toolbars, the panel) · `lg` (menus, dialogs, toasts) |
-| Focus | `--focus` (a 2px ring in the accent, offset from the surface) and `--focus-on-frame` on the rail and top bar |
-| Motion | `--t-fast` 120ms · `--t-std` 200ms · `--ease`. Everything respects `prefers-reduced-motion` |
+|           | Tokens                                                                                                                           |
+| --------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| Type      | `--fs-xs` 12 · `sm` 13 · `md` 14 (body) · `lg` 15 · `xl` 17 · `2xl` 20 · `3xl` 26; Plus Jakarta Sans                             |
+| Radii     | `--r-xs` 6 · `sm` 8 (controls) · `md` 10 (rows, inputs, buttons) · `lg` 14 (cards, composer, panel) · `xl` 18 (dialogs) · `pill` |
+| Spacing   | `--s-1` 4 · `s-2` 8 · `s-3` 12 · `s-4` 16 · `s-5` 20 · `s-6` 24 · `s-8` 32                                                       |
+| Icons     | `--icon-sm` 16 · `md` 18 · `lg` 20                                                                                               |
+| Layout    | `--rail-w` 68 · `--topbar-h` 52 · `--sidebar-w` 280 · `--frame-gap` 8                                                            |
+| Elevation | `--shadow-sm` (controls) · `md` (floating toolbars, the panel) · `lg` (menus, dialogs, toasts)                                   |
+| Focus     | `--focus` (a 2px ring in the accent, offset from the surface) and `--focus-on-frame` on the rail and top bar                     |
+| Motion    | `--t-fast` 120ms · `--t-std` 200ms · `--ease`. Everything respects `prefers-reduced-motion`                                      |
 
 ## Messaging
 
