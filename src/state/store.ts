@@ -96,6 +96,8 @@ export interface AppState {
   appEventsRev: Record<string, number>;
   /** Bumped on each meeting.updated / meeting.soon frame (round 7 meetings): open lists reload. */
   meetingsRev: number;
+  /** Bumped on each inbox.* frame (round 8 Unified Inbox; ids only): open inbox screens reload. */
+  inboxRev: number;
 }
 
 export const initialState: AppState = {
@@ -120,6 +122,7 @@ export const initialState: AppState = {
   reminders: NO_REMINDERS,
   appEventsRev: {},
   meetingsRev: 0,
+  inboxRev: 0,
   history: { status: "idle", restored: 0, unreadable: 0, error: null },
   notices: [],
 };

@@ -76,8 +76,11 @@ export interface AccountPhone extends Phone {
   signIn(withDevice?: boolean): Promise<unknown>;
 }
 
-export async function startServer(env: Record<string, string> = {}, opts: { mailer?: Mailbox } = {}): Promise<Server> {
-  const mod = (await import(/* @vite-ignore */ harnessPath)) as { startServer(env: Record<string, string>, opts: { mailer?: Mailbox }): Promise<Server> };
+/** [integrationsFetch]: the server's outbound HTTP to providers (Meta, …), replaced by a fake in tests, as the server's own tests do. */
+type ServerOpts = { mailer?: Mailbox; integrationsFetch?: (url: string, init?: RequestInit) => Promise<Response> };
+
+export async function startServer(env: Record<string, string> = {}, opts: ServerOpts = {}): Promise<Server> {
+  const mod = (await import(/* @vite-ignore */ harnessPath)) as { startServer(env: Record<string, string>, opts: ServerOpts): Promise<Server> };
   return mod.startServer(env, opts);
 }
 

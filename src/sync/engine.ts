@@ -22,6 +22,7 @@ import { levelOf, type NavOp, NavSync, PERSONAL, shouldNotify, workspaceOf } fro
 import { firstShowing, ReminderSync } from "./reminders";
 import { callFrame, orgDeletedFrame, presenceFrame, typingFrame } from "./frameReducers";
 import { meetingSoon } from "./workspaceC5";
+import { NOTICE_TEXT } from "./inbox";
 import type { Reminder } from "./reminderRules";
 import { deriveReminderKey } from "../crypto/reminderKeys";
 import { publicKeyFromSeed } from "../crypto/ed25519";
@@ -45,6 +46,8 @@ export interface EngineOptions {
   notifyReminder?: (title: string, body: string, conversationId: string | null) => void;
   /** A scheduled meeting starts in ten minutes (round 7): [roomId] is the voice room it happens in. */
   notifyMeeting?: (title: string, body: string, roomId: string | null) => void;
+  /** A customer inbox event that needs someone (round 8): escalated, overdue, undelivered reply, broken account. */
+  notifyInbox?: (text: string, conversationId: string | null) => void;
   /** Per-browser preferences. */
   prefs?: () => { readReceipts: boolean; typing: boolean; groupNotifications?: boolean };
   onRevoked?: (reason: RevokedReason) => void;
@@ -478,6 +481,17 @@ export class Engine implements EngineContext {
         this.set((s) => ({ ...s, meetingsRev: s.meetingsRev + 1 }));
         if (f.t === "meeting.soon" && typeof f.meetingId === "string") void meetingSoon(this, f.meetingId, this.opts.notifyMeeting);
         return;
+      case "inbox.updated":
+      case "inbox.escalated":
+      case "inbox.overdue":
+      case "inbox.delivery_failed":
+      case "inbox.account_failed": {
+        // Ids only: the frame never carries a customer's name or text (docs/UNIFIED_INBOX.md).
+        this.set((s) => ({ ...s, inboxRev: s.inboxRev + 1 }));
+        const notice = NOTICE_TEXT[f.t];
+        if (notice) this.opts.notifyInbox?.(notice, str(f.conversationId) ?? null);
+        return;
+      }
       case "reminders.changed":
       case "reminder.due":
         await this.reminders.refresh();

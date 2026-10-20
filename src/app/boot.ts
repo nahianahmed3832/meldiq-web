@@ -79,6 +79,22 @@ function notifyMeeting(title: string, body: string, roomId: string | null): void
   }
 }
 
+/** A customer inbox notice (round 8): never the customer's name or text, which the event doesn't carry. */
+function notifyInbox(text: string, conversationId: string | null): void {
+  const p = getPrefs();
+  if (!p.notifications || typeof Notification === "undefined" || Notification.permission !== "granted") return;
+  try {
+    const n = new Notification("Customer inbox", { body: text, tag: `inbox:${text}:${conversationId ?? ""}`, silent: !p.messageSound });
+    n.onclick = () => {
+      window.focus();
+      location.hash = conversationId ? `#/workspace/inbox/${encodeURIComponent(conversationId)}` : "#/workspace/inbox";
+      n.close();
+    };
+  } catch {
+    /* notifications unavailable in this context */
+  }
+}
+
 /** A ringing call while this tab isn't looked at: a system notification that brings the tab forward. */
 function ringAlert(title: string, video: boolean, conversationId: string): void {
   const p = getPrefs();
@@ -102,6 +118,7 @@ export function createEngine(device: DeviceRecord, store: LocalStore): Engine {
     notify,
     notifyReminder,
     notifyMeeting,
+    notifyInbox,
     media: liveKitMedia,
     ringtone: new Ringtone(() => getPrefs().callRingtone),
     ringAlert,

@@ -1337,3 +1337,106 @@ select.input {
   max-height: 50vh;
   overflow: auto;
 }
+
+/* Customer inbox (round 8): customer conversations aren't end-to-end encrypted, and the screens say so. */
+.ib-note {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  font-size: 12.5px;
+}
+.ib-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.ib-search .input {
+  flex: 1;
+}
+.ib-empty {
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  padding: 24px 0;
+  text-align: center;
+}
+.ib-row {
+  align-items: flex-start;
+}
+.ib-row .ib-read {
+  font-weight: 600;
+}
+.ib-row-meta {
+  display: grid;
+  justify-items: end;
+  gap: 4px;
+  flex: none;
+}
+.ib-badge {
+  flex: none;
+  padding: 2px 8px;
+  border-radius: var(--r-pill);
+  font-size: 11.5px;
+  font-weight: 650;
+  background: var(--surface-sunken);
+  border: 1px solid var(--border);
+}
+.ib-whatsapp {
+  color: #15803d;
+}
+.ib-instagram {
+  color: #c2410c;
+}
+.ib-messenger {
+  color: var(--accent-text);
+}
+.ib-thread {
+  display: grid;
+  gap: 8px;
+  max-height: min(60vh, 640px);
+  overflow: auto;
+  align-content: start;
+}
+.ib-msg {
+  display: grid;
+  gap: 2px;
+  max-width: min(78%, 560px);
+  padding: 8px 12px;
+  border-radius: 14px;
+  background: var(--surface-sunken);
+}
+.ib-msg p {
+  margin: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.ib-msg.out {
+  justify-self: end;
+  background: var(--accent-soft);
+}
+.ib-msg.note {
+  justify-self: center;
+  background: color-mix(in srgb, #f59e0b 14%, transparent);
+}
+.ib-label {
+  font-weight: 650;
+}
+.ai-text {
+  color: #7c3aed;
+}
+.ib-composer {
+  display: grid;
+  gap: 6px;
+}
+.ib-compose-row {
+  gap: 8px;
+  align-items: flex-end;
+}
+.ib-conversation .doc-toolbar .lines {
+  display: grid;
+  min-width: 0;
+}
+.ib-conversation .doc-toolbar .lines small {
+  font-size: 12.5px;
+}

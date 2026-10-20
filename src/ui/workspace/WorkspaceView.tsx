@@ -1,4 +1,4 @@
-import { Blocks, Building2, CalendarDays, Code2, Sparkles, FileText, Gauge, Hash, Workflow, Laptop, LayoutGrid, ScrollText, ShieldCheck, Ticket, Users, UsersRound } from "lucide-react";
+import { Blocks, Building2, CalendarDays, Code2, Inbox, Sparkles, FileText, Gauge, Hash, Workflow, Laptop, LayoutGrid, ScrollText, ShieldCheck, Ticket, Users, UsersRound } from "lucide-react";
 import type { ReactNode } from "react";
 import { useEngine, useOrbit } from "../../app/orbit";
 import { navigate, type WorkspacePage } from "../../app/router";
@@ -17,6 +17,7 @@ import { UsagePage } from "./UsagePage";
 import { WorkflowsPage } from "./WorkflowsPage";
 import { DocumentsPage } from "./documents/DocumentsPage";
 import { AiPage } from "./AiPage";
+import { InboxPage } from "./inbox/InboxPage";
 import { DeveloperPage } from "./DeveloperPage";
 import { GroupsPage } from "./GroupsPage";
 import { MeetingsPage } from "./MeetingsPage";
@@ -32,6 +33,7 @@ const PAGES: { key: WorkspacePage; label: string; icon: ReactNode; shown?: (p: O
   { key: "roles", label: "Roles", icon: <ShieldCheck size={17} />, shown: (p) => p.canViewRoles },
   { key: "apps", label: "Apps", icon: <Blocks size={17} />, shown: (p) => p.canViewApps },
   { key: "audit", label: "Audit log", icon: <ScrollText size={17} />, shown: (p) => p.canViewAudit },
+  { key: "inbox", label: "Customer inbox", icon: <Inbox size={17} />, feature: "unified-inbox", shown: (p) => p.effective.includes("inbox.view") },
   { key: "groups", label: "Groups", icon: <Users size={17} />, feature: "groups", shown: (_p, d) => d.org.myRole !== "GUEST" },
   { key: "meetings", label: "Meetings", icon: <CalendarDays size={17} />, feature: "meetings" },
   { key: "documents", label: "Documents", icon: <FileText size={17} />, feature: "documents" },
@@ -122,6 +124,8 @@ export function WorkspaceView({ orgId, page, itemId, onDialog }: { orgId: string
               <UsagePage detail={d} />
             ) : page === "workflows" ? (
               <WorkflowsPage detail={d} />
+            ) : page === "inbox" ? (
+              <InboxPage detail={d} itemId={itemId} />
             ) : page === "ai" ? (
               <AiPage detail={d} />
             ) : page === "developer" ? (
