@@ -1,4 +1,4 @@
-import { ArrowDown, Hash, Lock, Megaphone } from "lucide-react";
+import { ArrowDown, Hash, Lock, Megaphone, Pencil, UserPlus } from "lucide-react";
 import { Fragment, type ReactNode, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { useOrbit } from "../../app/orbit";
 import type { StoredMessage } from "../../model/types";
@@ -205,7 +205,22 @@ export function MessageList(props: MessageListProps) {
 }
 
 /** "This is the beginning of …": shown above the oldest message once there's nothing earlier. */
-export function ConversationStart({ type, kind, title, topic, color }: { type: string; kind: string | null; title: string; topic: string | null; color: number }) {
+export function ConversationStart({
+  type,
+  kind,
+  title,
+  topic,
+  color,
+  onManage,
+}: {
+  type: string;
+  kind: string | null;
+  title: string;
+  topic: string | null;
+  color: number;
+  /** Round 3 (the reference's "Add description" / "Add people"): opens the channel's details, for its managers. */
+  onManage?: () => void;
+}) {
   return (
     <div className="conv-start">
       {type === "CHANNEL" ? (
@@ -226,6 +241,16 @@ export function ConversationStart({ type, kind, title, topic, color }: { type: s
       <p className="faint" style={{ fontSize: 12.5 }}>
         Earlier messages appear here if one of your devices kept them in your encrypted history.
       </p>
+      {onManage && (
+        <div className="row" style={{ gap: 8, justifyContent: "center" }}>
+          <button className="btn btn-secondary btn-sm" onClick={onManage}>
+            <Pencil size={14} /> Add description
+          </button>
+          <button className="btn btn-secondary btn-sm" onClick={onManage}>
+            <UserPlus size={14} /> Add people
+          </button>
+        </div>
+      )}
     </div>
   );
 }

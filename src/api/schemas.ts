@@ -16,6 +16,12 @@ export const zMember = z.object({
   displayName: z.string(),
   avatarColor: z.number().int().default(0),
   statusText: nullableString,
+  /** Round 3 (servers with status-expiry): the status emoji; and whether they paused notifications, when their last-seen setting lets you see it. */
+  statusEmoji: nullableString,
+  notificationsPaused: z
+    .boolean()
+    .nullish()
+    .transform((v) => v ?? null),
   photoRev: z
     .number()
     .nullish()
@@ -122,6 +128,16 @@ export const zProfile = z.object({
   displayName: z.string(),
   avatarColor: z.number().int().default(0),
   statusText: nullableString,
+  /** Round 3: the status emoji and when it ends; your own profile also says until when notifications are paused. */
+  statusEmoji: nullableString,
+  statusExpiresAt: z
+    .number()
+    .nullish()
+    .transform((v) => v ?? null),
+  notificationsPausedUntil: z
+    .number()
+    .nullish()
+    .transform((v) => v ?? null),
   firstName: nullableString,
   lastName: nullableString,
   photoRev: z

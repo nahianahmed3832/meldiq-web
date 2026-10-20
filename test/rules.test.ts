@@ -118,8 +118,34 @@ describe("applying received payloads (same outcome as the phone)", () => {
 
 describe("mentions", () => {
   const members: Member[] = [
-    { id: "u-sam", username: "sam", displayName: "Sam", avatarColor: 0, statusText: null, photoRev: null, homeServer: null, role: null, orgRole: null, online: null },
-    { id: "u-me", username: "me", displayName: "Me", avatarColor: 0, statusText: null, photoRev: null, homeServer: null, role: null, orgRole: null, online: null },
+    {
+      id: "u-sam",
+      username: "sam",
+      displayName: "Sam",
+      avatarColor: 0,
+      statusText: null,
+      statusEmoji: null,
+      notificationsPaused: null,
+      photoRev: null,
+      homeServer: null,
+      role: null,
+      orgRole: null,
+      online: null,
+    },
+    {
+      id: "u-me",
+      username: "me",
+      displayName: "Me",
+      avatarColor: 0,
+      statusText: null,
+      statusEmoji: null,
+      notificationsPaused: null,
+      photoRev: null,
+      homeServer: null,
+      role: null,
+      orgRole: null,
+      online: null,
+    },
   ];
 
   it("resolve only against the conversation's members, never myself", () => {

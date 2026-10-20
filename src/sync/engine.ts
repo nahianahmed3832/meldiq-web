@@ -3,6 +3,7 @@ import { ApiClient, ApiError } from "../api/client";
 import type { AccountSessionGrant } from "../api/accountSchemas";
 import { type Call, type Conversation, type Member, type Org, type SessionGrant, zCall, zConversation, zMember, zOrg, zProfile, zServerInfo } from "../api/schemas";
 import { Signals, zExperiments } from "./signals";
+import { paused } from "./status";
 import { signInWithDevice } from "../auth/accountApi";
 import { type AccountSessionEnd, AccountSession } from "../auth/accountSession";
 import { TokenVault } from "../auth/tokenVault";
@@ -419,7 +420,16 @@ export class Engine implements EngineContext {
           ...s,
           server,
           synced: true,
-          me: s.me && { ...s.me, username: u.username, displayName: u.displayName, avatarColor: u.avatarColor, statusText: u.statusText },
+          me: s.me && {
+            ...s.me,
+            username: u.username,
+            displayName: u.displayName,
+            avatarColor: u.avatarColor,
+            statusText: u.statusText,
+            statusEmoji: u.statusEmoji,
+            statusExpiresAt: u.statusExpiresAt,
+            notificationsPausedUntil: u.notificationsPausedUntil,
+          },
           orgs: orgs.orgs,
           conversations: Object.fromEntries(convs.conversations.map((c) => [c.id, c])),
           users,
@@ -673,6 +683,8 @@ export class Engine implements EngineContext {
   notifyIncoming(m: StoredMessage, conversation: Conversation | null, mention: "me" | "all" | null): void {
     if (!this.opts.notify) return;
     const st = this.state.get();
+    // Paused from the profile menu (round 3): the message arrives and counts as unread, without a notification.
+    if (paused(st.me?.notificationsPausedUntil ?? null, Date.now())) return;
     if (!shouldNotify(levelOf(st.nav[workspaceOf(conversation?.orgId ?? null)], m.conversationId), mention)) return;
     const mentioned = mention !== null;
     // Group notifications off (android Settings › Notifications): groups and channels stay quiet; mentions still notify.
@@ -929,5 +941,15 @@ function str(v: unknown): string | null {
 }
 
 function toUser(m: Member, prev?: UserLite): UserLite {
-  return { id: m.id, username: m.username, displayName: m.displayName, avatarColor: m.avatarColor, statusText: m.statusText, online: m.online ?? prev?.online ?? null, photoRev: m.photoRev ?? null };
+  return {
+    id: m.id,
+    username: m.username,
+    displayName: m.displayName,
+    avatarColor: m.avatarColor,
+    statusText: m.statusText,
+    statusEmoji: m.statusEmoji,
+    notificationsPaused: m.notificationsPaused,
+    online: m.online ?? prev?.online ?? null,
+    photoRev: m.photoRev ?? null,
+  };
 }

@@ -1,5 +1,6 @@
-import { Check, ChevronDown, Compass, Inbox, LogIn, PenSquare, Plus, Settings2, Ticket, UsersRound } from "lucide-react";
-import { useOrbit } from "../../app/orbit";
+import { Check, CheckCheck, ChevronDown, Compass, Inbox, LogIn, PenSquare, Plus, Settings2, Ticket, UsersRound } from "lucide-react";
+import { shallowEqual, useEngine, useOrbit } from "../../app/orbit";
+import { markAllReadTargets } from "../selectors";
 import { setPrefs, usePrefs } from "../../app/prefs";
 import { navigate, type Section } from "../../app/router";
 import { Avatar } from "../components/Avatar";
@@ -22,6 +23,8 @@ export function Sidebar({ orgId, section, open, onDialog }: SidebarProps) {
   const orgs = useOrbit((s) => s.orgs);
   const synced = useOrbit((s) => s.synced);
   const empty = useOrbit((s) => Object.keys(s.conversations).length === 0);
+  const engine = useEngine();
+  const readTargets = useOrbit((s) => markAllReadTargets(s, orgId), shallowEqual);
   const switcher = useMenu();
   const prefs = usePrefs();
   const unreadOnly = prefs.collapsed.includes("::unread-only");
@@ -69,6 +72,8 @@ export function Sidebar({ orgId, section, open, onDialog }: SidebarProps) {
                   { label: "Workspace settings", icon: <Settings2 size={16} />, onSelect: () => navigate({ section: "workspace", workspacePage: "overview" }) },
                   { label: "Invite people", icon: <Ticket size={16} />, onSelect: () => navigate({ section: "workspace", workspacePage: "invitations" }) },
                   { label: "Browse channels", icon: <Compass size={16} />, onSelect: () => onDialog({ kind: "channels" }) },
+                  // Round 3 (the reference's server menu "Mark As Read"): this workspace's unread channels.
+                  ...(readTargets.length > 0 ? [{ label: "Mark all as read", icon: <CheckCheck size={16} />, onSelect: () => void Promise.all(readTargets.map((cid) => engine.markRead(cid))) }] : []),
                   "separator" as const,
                 ]
               : []),

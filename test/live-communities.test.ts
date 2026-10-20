@@ -8,7 +8,11 @@ import { TokenVault } from "../src/auth/tokenVault";
 import type { DeviceRecord } from "../src/model/types";
 import { appDirectory } from "../src/sync/apps";
 import { createWorkspace, requestId, setWorkspaceKind } from "../src/sync/workspaces";
+import { setNotificationsPaused, setStatus } from "../src/sync/status";
+import { z } from "zod";
 import { freshStore, type Mailbox, mailbox, type Server, startBrowser, startServer, until } from "./support/live";
+
+const until_ = (f: () => unknown) => until(f, 6000, "condition");
 
 /** Meldiq 2.0 against the real server (test accounts only): communities, the curated directory, signals off by default. */
 let server: Server;
@@ -64,6 +68,33 @@ describe("communities and the curated directory in the browser", () => {
       await engine.signals.refresh();
       expect(engine.signals.enabled).toBe(false);
       expect(engine.signals.variant("home-layout", "sections")).toBe("sections");
+    } finally {
+      b.engine.stop();
+    }
+  });
+
+  it("keeps a status with its end time and a notification pause, and counts who is online in a channel", async () => {
+    const b = await browserAccount("webstatus");
+    try {
+      const engine = b.engine;
+      expect(engine.state.get().server?.features).toEqual(expect.arrayContaining(["status-expiry", "notifications-pause", "conversation-presence"]));
+      const until = Date.now() + 3_600_000;
+      await setStatus(engine, "In a meeting", "📅", until);
+      expect(engine.state.get().me).toMatchObject({ statusText: "In a meeting", statusEmoji: "📅", statusExpiresAt: until });
+      const pause = Date.now() + 2 * 3_600_000;
+      await setNotificationsPaused(engine, pause);
+      expect(engine.state.get().me?.notificationsPausedUntil).toBe(pause);
+      await setNotificationsPaused(engine, null);
+      expect(engine.state.get().me?.notificationsPausedUntil).toBeNull();
+      await setStatus(engine, null, null, null);
+      expect(engine.state.get().me?.statusText).toBeNull();
+
+      const org = await createWorkspace(engine, "Presence Makers", null, requestId(), "community");
+      await until_(() => Object.values(engine.state.get().conversations).find((c) => c.orgId === org.id && c.name === "general"));
+      const general = Object.values(engine.state.get().conversations).find((c) => c.orgId === org.id && c.name === "general")!;
+      const presence = await engine.api.json("GET", `/v1/conversations/${general.id}/presence`, z.object({ online: z.number(), members: z.number() }));
+      expect(presence.members).toBe(1);
+      expect(presence.online).toBe(1); // this browser is connected and counts itself
     } finally {
       b.engine.stop();
     }

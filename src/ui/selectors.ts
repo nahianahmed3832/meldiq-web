@@ -130,6 +130,24 @@ export function mentionCount(s: AppState): number {
 }
 
 /** Channels with unread messages in a workspace (the rail's badge). */
+/**
+ * What "Mark all as read" clears (round 3; android WorkspaceHomeRules.markAllReadTargets): this workspace's channels
+ * you're in with anything unread. DMs and groups keep their state.
+ */
+export function markAllReadTargets(s: AppState, orgId: string | null): string[] {
+  if (!orgId) return [];
+  return Object.values(s.conversations)
+    .filter((c) => c.type === "CHANNEL" && c.orgId === orgId && c.joined !== false && (unreadOf(s, c.id) > 0 || (s.local[c.id]?.mentions ?? 0) > 0))
+    .map((c) => c.id);
+}
+
+export type ActivityFilter = "all" | "mentions" | "threads" | "calls";
+
+/** Which Activity sections a filter chip shows (round 3, the reference's Activity chips). */
+export function activityShows(filter: ActivityFilter, section: Exclude<ActivityFilter, "all">): boolean {
+  return filter === "all" || filter === section;
+}
+
 export function orgUnread(s: AppState, orgId: string): number {
   return Object.values(s.conversations).filter((c) => c.type === "CHANNEL" && c.orgId === orgId && unreadOf(s, c.id) > 0 && !isMuted(s, c)).length;
 }

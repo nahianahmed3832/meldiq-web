@@ -28,6 +28,10 @@ export interface Me {
   identityKey: string;
   avatarColor: number;
   statusText: string | null;
+  /** Round 3: your status emoji and its end time, and until when notifications are paused (from the server). */
+  statusEmoji?: string | null;
+  statusExpiresAt?: number | null;
+  notificationsPausedUntil?: number | null;
   /** This browser's device-key fingerprint, as the phone shows it. */
   deviceFingerprint: string;
   deviceName: string;
@@ -39,6 +43,9 @@ export interface UserLite {
   displayName: string;
   avatarColor: number;
   statusText: string | null;
+  /** Round 3: their status emoji, and whether they paused notifications (null: unknown or not visible to you). */
+  statusEmoji?: string | null;
+  notificationsPaused?: boolean | null;
   online: boolean | null;
   /** Profile photo revision (GET /v1/users/:id/photo), where their privacy setting lets this account see it. */
   photoRev?: number | null;

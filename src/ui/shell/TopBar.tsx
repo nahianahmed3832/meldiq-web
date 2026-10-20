@@ -1,10 +1,13 @@
-import { Bell, LogOut, Menu as MenuIcon, Monitor, Moon, Search, Settings, Smartphone, Sun, UserRound } from "lucide-react";
+import { Bell, BellOff, LogOut, Menu as MenuIcon, Monitor, Moon, Search, Settings, Smartphone, Smile, Sun, UserRound } from "lucide-react";
+import { useState } from "react";
 import { useEngine, useOrbit } from "../../app/orbit";
 import { setPrefs, usePrefs } from "../../app/prefs";
 import { navigate } from "../../app/router";
 import { Avatar } from "../components/Avatar";
 import { Menu, useMenu } from "../components/Overlay";
 import { mentionCount } from "../selectors";
+import { paused, statusLine } from "../../sync/status";
+import { PauseDialog, StatusDialog } from "../dialogs/StatusDialogs";
 
 const CONN_LABEL = { online: "Online", connecting: "Connecting…", reconnecting: "Reconnecting…", offline: "Offline" } as const;
 
@@ -16,6 +19,12 @@ export function TopBar({ onMenu, onSearch }: { onMenu: () => void; onSearch: () 
   const prefs = usePrefs();
   const profile = useMenu();
   const mac = typeof navigator !== "undefined" && /Mac|iPhone|iPad/.test(navigator.platform);
+  // Round 3 (the reference's profile popover): status and pausing notifications, on servers that keep them.
+  const statusOffered = useOrbit((s) => s.server?.features.includes("status-expiry") ?? false);
+  const [dialog, setDialog] = useState<"status" | "pause" | null>(null);
+  const now = Date.now();
+  const myStatus = statusLine(me, now);
+  const pausedUntil = paused(me?.notificationsPausedUntil, now) ? (me?.notificationsPausedUntil ?? null) : null;
 
   return (
     <header className="topbar">
@@ -65,12 +74,23 @@ export function TopBar({ onMenu, onSearch }: { onMenu: () => void; onSearch: () 
                         {me.displayName}
                       </div>
                       <div className="faint ellipsis">@{me.username}</div>
-                      {me.statusText && <div className="muted ellipsis">{me.statusText}</div>}
+                      {(statusOffered ? myStatus : me.statusText) && <div className="muted ellipsis">{statusOffered ? myStatus : me.statusText}</div>}
                     </div>
                   </div>
                 ),
               },
               "separator",
+              ...(statusOffered
+                ? [
+                    { label: myStatus ? "Change status…" : "Set a status…", icon: <Smile size={16} />, onSelect: () => setDialog("status") },
+                    {
+                      label: pausedUntil ? `Notifications paused until ${new Date(pausedUntil).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}…` : "Pause notifications…",
+                      icon: <BellOff size={16} />,
+                      onSelect: () => setDialog("pause"),
+                    },
+                    "separator" as const,
+                  ]
+                : []),
               { label: "Profile", icon: <UserRound size={16} />, onSelect: () => navigate({ section: "settings", settingsPage: "profile" }) },
               { label: "Devices", icon: <Smartphone size={16} />, onSelect: () => navigate({ section: "settings", settingsPage: "devices" }) },
               { label: "Settings", icon: <Settings size={16} />, onSelect: () => navigate({ section: "settings", settingsPage: "notifications" }) },
@@ -85,6 +105,8 @@ export function TopBar({ onMenu, onSearch }: { onMenu: () => void; onSearch: () 
           />
         )}
       </div>
+      {dialog === "status" && <StatusDialog onClose={() => setDialog(null)} />}
+      {dialog === "pause" && <PauseDialog onClose={() => setDialog(null)} />}
     </header>
   );
 }

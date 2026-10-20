@@ -2,7 +2,7 @@ import { AppUpdatesBar } from "./AppUpdatesBar";
 import { VoiceRoomBanner } from "./VoiceRoomBanner";
 import { SecurityPadlock } from "./SecuritySheet";
 import { PinnedButton } from "./PinnedPanel";
-import { Archive, ArrowLeft, Hash, Headphones, Info, Lock, Megaphone, Phone, Search, ShieldAlert, UsersRound, Video } from "lucide-react";
+import { Archive, ArrowLeft, BellOff, Hash, Headphones, Info, Lock, Megaphone, Phone, Search, ShieldAlert, UsersRound, Video } from "lucide-react";
 import { useCallback, useMemo, useState } from "react";
 import { shallowEqual, useEngine, useOrbit } from "../../app/orbit";
 import { navigate, type Route } from "../../app/router";
@@ -13,6 +13,7 @@ import { conversationTitle, dmPeer, members, relative } from "../format";
 import type { ShellDialog } from "../shell/Shell";
 import { Composer, useFileDrop } from "./Composer";
 import { ConversationStart, MessageList } from "./MessageList";
+import { useOnlineCount } from "./useOnlineCount";
 
 export function ConversationView({ id, route, onDialog }: { id: string; route: Route; onDialog: (d: ShellDialog) => void }) {
   const engine = useEngine();
@@ -22,8 +23,21 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
   const peer = useOrbit((s) => {
     if (!c || c.type !== "DM" || !s.me) return null;
     const p = dmPeer(c, s.me.userId);
-    return p ? { id: p.id, username: p.username, color: p.avatarColor, online: s.users[p.id]?.online ?? null } : null;
+    const u = p ? s.users[p.id] : undefined;
+    return p
+      ? {
+          id: p.id,
+          username: p.username,
+          name: u?.displayName ?? p.displayName,
+          color: p.avatarColor,
+          online: u?.online ?? null,
+          // Round 3: their status, and whether they paused notifications (when their last-seen setting lets you know).
+          status: [u?.statusEmoji, u?.statusText].filter((x) => !!x).join(" ") || null,
+          paused: u?.notificationsPaused === true,
+        }
+      : null;
   }, shallowEqual);
+  const online = useOnlineCount(id, c?.type === "CHANNEL");
   const loaded = useOrbit((s) => s.messages[id]);
   const call = useOrbit((s) => s.calls[id]);
   const myCall = useOrbit((s) => (s.call.phase === "idle" || s.call.phase === "ended" ? null : s.call.conversationId));
@@ -48,10 +62,10 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
   const glyph = c.type !== "CHANNEL" ? null : c.voice ? <Headphones size={18} /> : c.kind === "PRIVATE" ? <Lock size={18} /> : c.kind === "ANNOUNCEMENT" ? <Megaphone size={18} /> : <Hash size={19} />;
   const subtitle =
     c.type === "DM"
-      ? `@${peer?.username ?? ""}${peer?.online === true ? " · online" : ""}`
+      ? [`@${peer?.username ?? ""}`, peer?.online === true ? "online" : null, peer?.status].filter(Boolean).join(" · ")
       : c.type === "GROUP"
         ? members(c.memberCount)
-        : [c.topic, members(c.memberCount), c.scope === "ORG" ? null : c.scopeName].filter(Boolean).join(" · ");
+        : [c.topic, members(c.memberCount), online ? `${online} online` : null, c.scope === "ORG" ? null : c.scopeName].filter(Boolean).join(" · ");
   const panelOpen = route.panel === "details";
 
   return (
@@ -110,8 +124,14 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
       </header>
 
       {c.type === "CHANNEL" && <AppUpdatesBar conversationId={id} />}
-      {(alerts.length > 0 || call || c.voice || c.archived || history === "running") && (
+      {(alerts.length > 0 || call || c.voice || c.archived || history === "running" || peer?.paused) && (
         <div className="conv-banners">
+          {peer?.paused && (
+            <div className="banner" role="status">
+              <BellOff size={16} aria-hidden />
+              <span className="grow">{peer.name} has paused notifications</span>
+            </div>
+          )}
           {alerts.map((a) => (
             <div key={a.userId} className="banner warn" role="alert">
               <ShieldAlert size={16} />
@@ -153,7 +173,16 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
           onReply={setReplyTo}
           onThread={onThread}
           onReview={onReview}
-          start={<ConversationStart type={c.type} kind={c.kind} title={title} topic={c.topic} color={peer?.color ?? colorIndexOf(c.id)} />}
+          start={
+            <ConversationStart
+              type={c.type}
+              kind={c.kind}
+              title={title}
+              topic={c.topic}
+              color={peer?.color ?? colorIndexOf(c.id)}
+              onManage={c.type === "CHANNEL" && c.canManage ? () => navigate({ section: route.section, conversationId: id, panel: "details" }) : undefined}
+            />
+          }
         />
       ) : (
         <div className="messages" aria-busy="true" style={{ padding: 18, display: "grid", gap: 18, alignContent: "end" }}>

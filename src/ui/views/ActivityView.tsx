@@ -8,7 +8,7 @@ import { orgActivity } from "../../sync/account";
 import type { ThreadActivity } from "../../sync/threads";
 import { Avatar, colorIndexOf } from "../components/Avatar";
 import { conversationTitle, relative } from "../format";
-import { mentionConversations } from "../selectors";
+import { type ActivityFilter, activityShows, mentionConversations } from "../selectors";
 
 /**
  * What needs you (android ActivityFeedScreen): unread @mentions in every workspace (opening the chat clears them), then the
@@ -29,6 +29,7 @@ export function ActivityView({ orgId }: { orgId: string | null }) {
       })),
     (a, b) => a.length === b.length && a.every((x, i) => shallowEqual(x, b[i])),
   );
+  const [filter, setFilter] = useState<ActivityFilter>("all");
   const [log, setLog] = useState<Activity[] | null>(null);
   const [logError, setLogError] = useState<string | null>(null);
 
@@ -49,42 +50,51 @@ export function ActivityView({ orgId }: { orgId: string | null }) {
             <h1>Activity</h1>
             <p className="view-sub">Mentions of you, and what changed in {org?.name ?? "your workspace"}.</p>
           </div>
-          <div className="card list-card">
-            <h2>Unread mentions</h2>
-            {mentions.length === 0 ? (
-              <div className="empty" style={{ padding: 28 }}>
-                <span className="empty-orb">
-                  <AtSign size={24} />
-                </span>
-                <p>Nobody has mentioned you since you last read. You're all caught up.</p>
-              </div>
-            ) : (
-              mentions.map((m) => (
-                <button key={m.id} className="list-row" onClick={() => navigate({ section: "activity", conversationId: m.id })}>
-                  {m.type === "CHANNEL" ? (
-                    <span className="empty-orb" style={{ width: 36, height: 36 }}>
-                      <Hash size={16} />
-                    </span>
-                  ) : (
-                    <Avatar name={m.title} colorIndex={colorIndexOf(m.id)} size={36} decorative />
-                  )}
-                  <span className="lines">
-                    <span className="ellipsis" style={{ fontWeight: 700 }}>
-                      {m.type === "CHANNEL" ? `#${m.title}` : m.title}
-                    </span>
-                    <small className="ellipsis">{m.preview}</small>
-                  </span>
-                  <span className="faint" style={{ fontSize: 12 }}>
-                    {relative(m.at)}
-                  </span>
-                  <span className="count accent">@{m.count}</span>
-                </button>
-              ))
-            )}
+          <div className="search-filters" role="tablist" aria-label="Show">
+            {(["all", "mentions", "threads", "calls"] as const).map((f) => (
+              <button key={f} role="tab" aria-selected={filter === f} className="chip" onClick={() => setFilter(f)}>
+                {{ all: "All", mentions: "Mentions", threads: "Threads", calls: "Calls" }[f]}
+              </button>
+            ))}
           </div>
-          <MissedCalls />
-          <ThreadReplies />
-          {orgId && (
+          {activityShows(filter, "mentions") && (
+            <div className="card list-card">
+              <h2>Unread mentions</h2>
+              {mentions.length === 0 ? (
+                <div className="empty" style={{ padding: 28 }}>
+                  <span className="empty-orb">
+                    <AtSign size={24} />
+                  </span>
+                  <p>Nobody has mentioned you since you last read. You're all caught up.</p>
+                </div>
+              ) : (
+                mentions.map((m) => (
+                  <button key={m.id} className="list-row" onClick={() => navigate({ section: "activity", conversationId: m.id })}>
+                    {m.type === "CHANNEL" ? (
+                      <span className="empty-orb" style={{ width: 36, height: 36 }}>
+                        <Hash size={16} />
+                      </span>
+                    ) : (
+                      <Avatar name={m.title} colorIndex={colorIndexOf(m.id)} size={36} decorative />
+                    )}
+                    <span className="lines">
+                      <span className="ellipsis" style={{ fontWeight: 700 }}>
+                        {m.type === "CHANNEL" ? `#${m.title}` : m.title}
+                      </span>
+                      <small className="ellipsis">{m.preview}</small>
+                    </span>
+                    <span className="faint" style={{ fontSize: 12 }}>
+                      {relative(m.at)}
+                    </span>
+                    <span className="count accent">@{m.count}</span>
+                  </button>
+                ))
+              )}
+            </div>
+          )}
+          {activityShows(filter, "calls") && <MissedCalls />}
+          {activityShows(filter, "threads") && <ThreadReplies />}
+          {filter === "all" && orgId && (
             <div className="card list-card">
               <h2>Workspace activity</h2>
               {logError ? (
