@@ -1,8 +1,9 @@
-import { Activity, Bell, HardDrive, Info, KeyRound, Laptop, Palette, Shield, Smartphone, UserRound } from "lucide-react";
+import { Activity, BarChart3, Bell, HardDrive, Info, KeyRound, Laptop, Palette, Shield, Smartphone, UserRound } from "lucide-react";
 import { useEngine } from "../../app/orbit";
 import { isPlatformAdmin } from "../../sync/ops";
 import { useLoad } from "../workspace/useLoad";
 import { ServiceHealthPage } from "./ServiceHealthPage";
+import { AdminUsagePage } from "./AdminUsagePage";
 import { navigate, type SettingsPage } from "../../app/router";
 import { AboutPage, AppearancePage, NotificationsPage } from "./PreferencePages";
 import { AccountSettingsPage } from "./AccountSettingsPage";
@@ -23,9 +24,11 @@ const PAGES: { key: SettingsPage; label: string; icon: React.ReactNode }[] = [
 
 export function SettingsView({ page, onSignedOut }: { page: SettingsPage; onSignedOut: () => void }) {
   const engine = useEngine();
-  // Service health is for platform administrators only (android round 7 C1); the server checks it again.
+  // Service health and workspace usage are for platform administrators only (android round 7 C1, C7); the server checks again.
   const admin = useLoad(() => isPlatformAdmin(engine).catch(() => false), [engine]).data === true;
-  const pages = admin ? [...PAGES, { key: "health" as const, label: "Service health", icon: <Activity size={17} /> }] : PAGES;
+  const pages = admin
+    ? [...PAGES, { key: "health" as const, label: "Service health", icon: <Activity size={17} /> }, { key: "usage" as const, label: "Workspace usage", icon: <BarChart3 size={17} /> }]
+    : PAGES;
   return (
     <section className="main" aria-label="Settings" style={{ display: "flex", flexDirection: "column" }}>
       <div className="settings">
@@ -55,6 +58,7 @@ export function SettingsView({ page, onSignedOut }: { page: SettingsPage; onSign
             {page === "security" && <SecurityPage onSignedOut={onSignedOut} />}
             {page === "about" && <AboutPage />}
             {page === "health" && <ServiceHealthPage />}
+            {page === "usage" && <AdminUsagePage />}
           </div>
         </div>
       </div>

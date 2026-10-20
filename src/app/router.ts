@@ -8,7 +8,7 @@ import { useSyncExternalStore } from "react";
  *   #/workspace/<page>                            the current workspace's settings and administration
  */
 export type Section = "home" | "dms" | "activity" | "later" | "settings" | "workspace";
-export type SettingsPage = "profile" | "account" | "devices" | "notifications" | "appearance" | "storage" | "security" | "about" | "health";
+export type SettingsPage = "profile" | "account" | "devices" | "notifications" | "appearance" | "storage" | "security" | "about" | "health" | "usage";
 export type WorkspacePage = "overview" | "people" | "invitations" | "channels" | "structure" | "roles" | "apps" | "audit" | "usage" | "documents" | "workflows" | "groups" | "meetings" | "developer";
 
 export interface Route {
@@ -26,7 +26,7 @@ export interface Route {
 export const isFullPage = (s: Section): boolean => s === "settings" || s === "workspace";
 
 const SECTIONS: Section[] = ["home", "dms", "activity", "later", "settings", "workspace"];
-const PAGES: SettingsPage[] = ["profile", "account", "devices", "notifications", "appearance", "storage", "security", "about", "health"];
+const PAGES: SettingsPage[] = ["profile", "account", "devices", "notifications", "appearance", "storage", "security", "about", "health", "usage"];
 const WORKSPACE_PAGES: WorkspacePage[] = ["overview", "people", "invitations", "channels", "structure", "roles", "apps", "audit", "usage", "documents", "workflows", "groups", "meetings", "developer"];
 const ID = /^[A-Za-z0-9_-]{1,128}$/;
 

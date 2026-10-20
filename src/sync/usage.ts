@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { ApiError } from "../api/client";
 import type { Engine } from "./engine";
 
 /**
@@ -14,12 +15,19 @@ const zUsage = z.object({
   invitations: z.object({ active: n }),
   roles: z.object({ custom: n }),
   apps: z.object({ installed: n, connectedAccounts: n.default(0), notifications: n.default(0), webhooks: n.default(0) }).passthrough(),
+  /** Round 7 (docs/USAGE_AND_PLANS.md): what the server measured per UTC day; counts and sizes only. */
+  metered: z
+    .object({
+      days: n,
+      metrics: z.array(z.object({ metric: z.string(), label: z.string(), kind: z.string(), total: z.number(), daily: z.array(z.object({ day: z.string(), value: z.number() })).default([]) })),
+    })
+    .optional(),
 });
 export type WorkspaceUsage = z.infer<typeof zUsage>;
 
 const zPlan = z.object({
   plan: z.unknown().nullable(),
-  capabilities: z.array(z.object({ key: z.string(), label: z.string(), limit: z.number().nullable(), used: z.number(), available: z.boolean() })).default([]),
+  capabilities: z.array(z.object({ key: z.string(), label: z.string(), limit: z.number().nullable(), used: z.number(), available: z.boolean(), source: z.string().default("server") })).default([]),
 });
 export type WorkspacePlan = z.infer<typeof zPlan>;
 
@@ -31,4 +39,54 @@ export async function workspaceUsage(engine: Engine, orgId: string): Promise<Wor
 
 export async function workspacePlan(engine: Engine, orgId: string): Promise<WorkspacePlan> {
   return engine.api.json("GET", `/v1/orgs/${enc(orgId)}/plan`, zPlan);
+}
+
+/** The limits a platform admin may set per workspace, as the server names them (it refuses unknown ones). */
+export const LIMIT_LABEL: Record<string, string> = {
+  members: "Members (including guests)",
+  "storage.bytes": "Stored file bytes",
+  workflows: "Workflows",
+  documents: "Documents",
+  groups: "User groups",
+  api_keys: "Active API keys",
+  "webhooks.outgoing": "Outgoing webhooks",
+  "integrations.installed": "Installed apps",
+  "integrations.webhooks": "Incoming webhooks",
+  "integrations.notifications": "App notifications in channels",
+  "roles.custom": "Custom roles",
+  "ai.requests_monthly": "AI requests this month",
+};
+
+/** Sizes are bytes; everything else is a count. */
+export const isBytes = (key: string): boolean => key.endsWith("bytes");
+
+// ───────────── Platform administrators (round 7 C7; the server checks every call) ─────────────
+
+const zAdminUsage = z.object({
+  days: n,
+  workspaces: z.array(
+    z.object({
+      id: z.string(),
+      name: z.string(),
+      createdAt: z.number(),
+      usage: z.record(z.string(), z.number()),
+      limits: z.array(z.object({ key: z.string(), limit: z.number() })),
+    }),
+  ),
+});
+export type AdminUsage = z.infer<typeof zAdminUsage>;
+
+/** Every workspace with its measured totals over [days] and its own limits: counts only, no content or names of members. */
+export async function adminUsage(engine: Engine, days: number): Promise<AdminUsage> {
+  try {
+    return await engine.api.json("GET", `/v1/admin/usage?days=${days}`, zAdminUsage);
+  } catch (e) {
+    // Servers before round 7 measure no usage (and advertise no feature for it).
+    if (e instanceof ApiError && e.status === 404) throw new ApiError(404, "not_supported", "This server doesn't measure workspace usage yet: it needs a Meldiq API with usage metering.");
+    throw e;
+  }
+}
+/** A workspace's own limits (platform admins only; audited). null clears one, so the server-wide limit applies again. */
+export async function setWorkspaceLimits(engine: Engine, orgId: string, limits: Record<string, number | null>): Promise<{ key: string; limit: number }[]> {
+  return (await engine.api.json("PUT", `/v1/admin/orgs/${enc(orgId)}/limits`, z.object({ limits: z.array(z.object({ key: z.string(), limit: z.number() })) }), { body: { limits } })).limits;
 }

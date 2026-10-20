@@ -918,6 +918,13 @@ select.input {
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 8px;
 }
+.usage-spark {
+  flex: none;
+}
+.usage-spark rect {
+  fill: var(--accent);
+  opacity: 0.7;
+}
 .usage-stat {
   display: grid;
   gap: 2px;
@@ -1301,4 +1308,11 @@ select.input {
 .doc-comment-form {
   display: grid;
   gap: 6px;
+}
+
+/* Settings › Workspace usage: a workspace's own limits (platform admins). */
+.limits-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 8px 12px;
 }
