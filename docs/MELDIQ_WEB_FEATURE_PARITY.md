@@ -209,6 +209,18 @@ when the server advertises its feature and the person holds the permission, so *
 | R7-11 | Workspace usage and own limits for platform admins (S-27) | Not on the phone (web extra) | `/v1/admin/usage`, `/v1/admin/orgs/:id/limits` | Done | Platform admins only; audited by the server | `live-r7-usage` | live |
 | R7-12 | AI: switch and provider, writing help, catch-up, document summary, ask documents, workflow drafts (S-28) | Implemented · `AiScreen`, `AiSheets`, `AiRules` | `/v1/orgs/:id/ai…` (`ai`) | Built | Off until the server has a provider and an admin turns it on; consent on every request; catch-up sends only what this browser decrypted. Tested with a stand-in provider inside the test server; no real provider has been called | `ai-rules`, `live-r7-ai` | live (stand-in provider) |
 
+## R8 · Round 8: Unified Inbox (uncommitted Android, undeployed server)
+
+| ID | Feature | Android | Backend | Web | Gaps, security | Tests | Verified |
+|---|---|---|---|---|---|---|---|
+| R8-01 | Customer inbox: views, platform filter, search, live refresh (S-30) | Implemented · `InboxScreen` | `/v1/orgs/:id/inbox/conversations`, frames `inbox.*` | Done | `inbox.view`; customer messages aren't end-to-end encrypted, and the screens say so | `live-r8-inbox` | live, by hand |
+| R8-02 | Conversation: reply within the window, WhatsApp templates, notes, delivery states, attachments (S-30) | Implemented · `InboxConversationScreen`, `InboxRules` | `/v1/inbox/conversations/:id…` | Done | Notes never reach customers or AI; a customer's file is downloaded, never opened in the page | `inbox-rules`, `live-r8-inbox` | live, by hand |
+| R8-03 | Take, assign, queue, priority, tags, resolve, hand over from AI, erase a customer's data (S-30) | Implemented | `PATCH /v1/inbox/conversations/:id` on its revision, `/claim`, `/handoff`, `DELETE` | Done | A stale change is refused; erasing is for `inbox.manage` and audited | `live-r8-inbox` | live, by hand (priority) |
+| R8-04 | AI drafts and summaries in a conversation (S-30) | Implemented | `/ai/draft`, `/ai/summary` | Built | Shown only when workspace AI is available and the inbox's AI mode isn't off; consent per request | — (no provider configured; the server's own tests cover it) | — |
+| R8-05 | Inbox setup: platforms and what's missing, connect with a Meta token, health, queues, AI and automation, response target, retention, 30-day report (S-30) | Implemented · `InboxSetupScreen` | `/v1/orgs/:id/inbox/{providers,accounts,queues,settings,report}` | Done | `inbox.manage`; the token is typed into a masked field, checked by the server with Meta, stored sealed, never shown again | `live-r8-inbox` | live, by hand (connected a test Page through the dialog) |
+| R8-06 | Inbox notices: escalated, overdue, undelivered, account needs attention (S-30) | Implemented · `InboxNotifier` | frames with ids only | Done | No customer name or text in a notice | — | — |
+| R8-07 | App version shown in About, equal to the Android release (S-31) | Implemented | — | Done | 0.2.4-beta | — | by hand |
+
 ## PLAN · Planned on Android, not built anywhere
 
 | ID | Feature | Android | Web |

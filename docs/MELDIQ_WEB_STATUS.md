@@ -30,6 +30,16 @@ The web was matched to the **latest Android code** in two passes. Item by item: 
   deploy; needs your approval).
 - Fix found by hand (`606c625`): long workspace and settings pages couldn't scroll in windows wider than 640 px.
 
+**Pass 3 (version 0.2.4-beta), round 8 and the app version:**
+- The Unified Inbox for customer conversations from Messenger, Instagram and WhatsApp business accounts: Workspace ›
+  Customer inbox (`inbox.view`) and Inbox setup (`inbox.manage`), matching the phone's three screens and notices. It
+  appears only where the server offers `unified-inbox`; production doesn't yet.
+- The web's version is now **0.2.4-beta**, the Android release these features ship in, shown in Settings › About.
+- Checked against the newest round 7/8 server code: the whole suite passes there too.
+- By hand against a local copy of that server with a fake Meta inside it: a test Page connected through the web's own
+  dialog, a synthetic customer's message arriving live, a reply, an internal note and a priority change. No real Meta
+  account exists or was used.
+
 **Tests (pass 2):**
 - Unit and live against the round 7 server copy: 55 files, **355 passed**. Against the 0.7.1 code: **338 passed, 17
   skipped** (the round 7 suites skip themselves).
@@ -160,7 +170,18 @@ Every item is backed by the real server (API 0.7.1). No mock APIs and no browser
 
 ## 4. Tests run (2026-10-20)
 
-**Round 7 C1–C8 pass (latest):**
+**Pass 3 (round 8 inbox, version 0.2.4-beta; latest):**
+
+| Suite | Result |
+|---|---|
+| Typecheck, lint, format | clean |
+| Unit + live, newest round 7/8 server copy | 57 files, **364 passed**, 0 failed |
+| Unit + live, API 0.7.1 code | 57 files, **344 passed, 20 skipped** (round 7/8 suites skip themselves), 0 failed |
+| New suites | `inbox-rules` (the phone's `InboxRulesTest` cases), `live-r8-inbox` (fake Meta inside the test server) |
+| Browser (`npx playwright test`, 4 projects, LiveKit, API 0.7.1 code) | 36 passed, 3 skipped (deliberate), 1 failed: the known Chromium "video call from the phone app" intermittent. Call suite run again: **18 passed, 2 skipped, 0 failed** |
+| By hand (Chromium, local round 7/8 server with a fake Meta) | Inbox setup lists platforms (TikTok awaiting access); a test Page connected through the dialog (token masked); a synthetic customer's message arrived live; reply sent, note added, priority set. Fixed: the header's name and details ran together; a paragraph nested in a paragraph |
+
+**Round 7 C1–C8 pass:**
 
 | Suite | Result |
 |---|---|
