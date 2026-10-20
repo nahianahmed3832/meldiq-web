@@ -4,6 +4,8 @@
 .app {
   display: grid;
   grid-template-columns: var(--rail-w) minmax(0, 1fr);
+  /* One row as tall as the window: without it the row grows to a long page's height and its scroll area never scrolls. */
+  grid-template-rows: minmax(0, 1fr);
   height: 100dvh;
   overflow: hidden;
   background: linear-gradient(180deg, var(--rail) 0%, var(--rail-2) 100%);
