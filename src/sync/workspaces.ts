@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { type Conversation, type Org, zConversation } from "../api/schemas";
+import { type Conversation, type Org, type OrgKind, zConversation } from "../api/schemas";
 import {
   type Archived,
   type DirectoryMember,
@@ -33,8 +33,18 @@ export function requestId(): string {
   return crypto.randomUUID();
 }
 
-export async function createWorkspace(engine: Engine, name: string, description: string | null, reqId: string): Promise<Org> {
-  const { org } = await engine.api.json("POST", "/v1/orgs", zOrgOut, { body: { name: name.trim(), description: description?.trim() || null, requestId: reqId } });
+/** [kind] "community" only where the server has communities (an older one would quietly make a team). */
+export async function createWorkspace(engine: Engine, name: string, description: string | null, reqId: string, kind: OrgKind = "team"): Promise<Org> {
+  const body = { name: name.trim(), description: description?.trim() || null, requestId: reqId, ...(kind === "community" ? { kind } : {}) };
+  const { org } = await engine.api.json("POST", "/v1/orgs", zOrgOut, { body });
+  engine.signals.track(kind === "community" ? "community.created" : "workspace.created");
+  await engine.refreshAll();
+  return org;
+}
+
+/** Team or community (owners only; the server checks). Only what the apps show first changes. */
+export async function setWorkspaceKind(engine: Engine, orgId: string, kind: OrgKind): Promise<Org> {
+  const { org } = await engine.api.json("PATCH", `/v1/orgs/${enc(orgId)}`, zOrgOut, { body: { kind } });
   await engine.refreshAll();
   return org;
 }

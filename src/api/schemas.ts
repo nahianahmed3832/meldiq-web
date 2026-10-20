@@ -90,8 +90,11 @@ export const zOrg = z.object({
     .number()
     .nullish()
     .transform((v) => v ?? null),
+  /** Meldiq 2.0 (docs/product/MELDIQ_2_DECISIONS.md): a team or a community; older servers send nothing (a team). */
+  kind: z.enum(["team", "community"]).catch("team").default("team"),
 });
 export type Org = z.infer<typeof zOrg>;
+export type OrgKind = Org["kind"];
 
 export const zOrgDetail = z.object({
   org: zOrg,

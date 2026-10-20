@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { zConversation, zMember } from "../api/schemas";
 import type { Engine } from "./engine";
+import { resultBucket } from "./signals";
 
 /**
  * Universal search (server docs/SEARCH.md, android round 7 slice C2 SearchRules): people, channels, workspaces, groups
@@ -75,5 +76,20 @@ export async function serverSearch(engine: Engine, q: string, opts: { types: str
   const p = new URLSearchParams({ q, types: opts.types, limit: String(opts.limit) });
   if (opts.cursor) p.set("cursor", opts.cursor);
   if (opts.orgId) p.set("orgId", opts.orgId);
-  return (await engine.api.json("GET", `/v1/search?${p}`, zResults)).results;
+  const results = (await engine.api.json("GET", `/v1/search?${p}`, zResults)).results;
+  // Counted only (docs/product/EXPERIMENTS.md): the scope and a bucket of how many came back, never the words.
+  if (!opts.cursor) {
+    const found = Object.values(results).reduce((n, section) => n + ((section as { items?: unknown[] } | null | undefined)?.items?.length ?? 0), 0);
+    engine.signals.track("search.performed", { scope: analyticsScope(opts.types), results: resultBucket(found) });
+  }
+  return results;
+}
+
+/** The analytics scope for a server search (the catalogue's closed list). Several kinds at once is "all". */
+export function analyticsScope(types: string): "all" | "people" | "channels" | "files" {
+  if (types.includes(",")) return "all";
+  if (types === "people") return "people";
+  if (types === "channels") return "channels";
+  if (types === "documents") return "files";
+  return "all";
 }

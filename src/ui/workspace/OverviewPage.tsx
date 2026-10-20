@@ -5,7 +5,8 @@ import type { OrgAdminDetail } from "../../api/workspaceSchemas";
 import { useEngine, useOrbit } from "../../app/orbit";
 import { setPrefs } from "../../app/prefs";
 import { navigate } from "../../app/router";
-import { deleteWorkspace, leaveWorkspace, removeWorkspacePhoto, requestId, setWorkspacePhoto, updateWorkspace } from "../../sync/workspaces";
+import { deleteWorkspace, leaveWorkspace, removeWorkspacePhoto, requestId, setWorkspaceKind, setWorkspacePhoto, updateWorkspace } from "../../sync/workspaces";
+import type { OrgKind } from "../../api/schemas";
 import { roleName } from "../../sync/workspaceRules";
 import { OrgAvatar } from "../components/OrgAvatar";
 import { Dialog } from "../components/Overlay";
@@ -24,16 +25,46 @@ export function OverviewPage({ detail, onChanged }: { detail: OrgAdminDetail; on
         <div className="grow">
           <h1>{org.name}</h1>
           <p className="muted">
-            {roleName(org.myRole)} · {stats.members} {stats.members === 1 ? "member" : "members"} · {stats.channels} channels · {stats.branches} branches · {stats.teams} teams
+            {org.kind === "community"
+              ? `Community · ${roleName(org.myRole)} · ${stats.members} ${stats.members === 1 ? "member" : "members"} · ${stats.channels} channels`
+              : `${roleName(org.myRole)} · ${stats.members} ${stats.members === 1 ? "member" : "members"} · ${stats.channels} channels · ${stats.branches} branches · ${stats.teams} teams`}
           </p>
         </div>
       </header>
       {can.canManageOrg ? <Identity detail={detail} onChanged={onChanged} /> : <ReadOnlyAbout description={org.description} />}
       {can.canManageOrg && features.includes("workspace-templates") && <TemplatesCard detail={detail} onChanged={onChanged} />}
       {can.canManageOrg && features.includes("guest-expiry") && <GuestPolicyCard detail={detail} onChanged={onChanged} />}
+      {features.includes("communities") && <KindCard detail={detail} onChanged={onChanged} />}
       <TransferOwnership detail={detail} onChanged={onChanged} />
       <Membership detail={detail} />
     </div>
+  );
+}
+
+/** Team or community (Meldiq 2.0). Owners switch it; only what the apps show first changes, never members or data. */
+function KindCard({ detail, onChanged }: { detail: OrgAdminDetail; onChanged: () => void }) {
+  const engine = useEngine();
+  const { org } = detail;
+  const owner = org.myRole === "OWNER";
+  const save = useAction();
+  const choose = (kind: OrgKind) => {
+    if (!owner || kind === org.kind) return;
+    void save.act(() => setWorkspaceKind(engine, org.id, kind).then(onChanged));
+  };
+  return (
+    <Card title="Kind of workspace" sub={owner ? "Changes what Meldiq shows first. Nothing is added or removed." : "Only owners can change this."}>
+      <ErrorLine text={save.error} />
+      <div className="kind-choice" role="radiogroup" aria-label="Kind of workspace">
+        {(["team", "community"] as const).map((k) => (
+          <button key={k} type="button" role="radio" aria-checked={org.kind === k} className="kind-option" disabled={!owner || save.busy} onClick={() => choose(k)}>
+            <span>
+              <strong>{k === "team" ? "Team" : "Community"}</strong>
+              <small>{k === "team" ? "Colleagues working together: branches, teams and admin tools" : "People with a shared interest: channels, voice rooms and open invitations"}</small>
+            </span>
+          </button>
+        ))}
+      </div>
+    </Card>
   );
 }
 

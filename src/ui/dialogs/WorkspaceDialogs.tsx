@@ -1,8 +1,9 @@
-import { Building2, Ticket } from "lucide-react";
+import { Building2, Ticket, Users } from "lucide-react";
 import { type FormEvent, useMemo, useState } from "react";
 import { ApiError } from "../../api/client";
 import type { InvitePreview } from "../../api/workspaceSchemas";
-import { useEngine } from "../../app/orbit";
+import { useEngine, useOrbit } from "../../app/orbit";
+import type { OrgKind } from "../../api/schemas";
 import { setPrefs } from "../../app/prefs";
 import { navigate } from "../../app/router";
 import { acceptInvite, createWorkspace, previewInvite, requestId } from "../../sync/workspaces";
@@ -16,6 +17,10 @@ const errorText = (e: unknown, fallback: string) => (e instanceof ApiError ? e.m
 export function CreateWorkspaceDialog({ onClose }: { onClose: () => void }) {
   const engine = useEngine();
   const reqId = useMemo(requestId, []);
+  // Meldiq 2.0: a team or a community, offered only where the server has communities.
+  const communities = useOrbit((s) => s.server?.features.includes("communities") ?? false);
+  const [kind, setKind] = useState<OrgKind>("team");
+  const community = communities && kind === "community";
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [busy, setBusy] = useState(false);
@@ -23,26 +28,46 @@ export function CreateWorkspaceDialog({ onClose }: { onClose: () => void }) {
 
   const submit = async (e: FormEvent) => {
     e.preventDefault();
-    if (!name.trim()) return setError("Give the workspace a name.");
+    if (!name.trim()) return setError(community ? "Give the community a name." : "Give the workspace a name.");
     setBusy(true);
     setError(null);
     try {
-      const org = await createWorkspace(engine, name, description || null, reqId);
+      const org = await createWorkspace(engine, name, description || null, reqId, community ? "community" : "team");
       setPrefs({ orgId: org.id });
       onClose();
       navigate({ section: "workspace", workspacePage: "invitations" });
     } catch (err) {
-      setError(errorText(err, "Couldn't create the workspace."));
+      setError(errorText(err, community ? "Couldn't create the community." : "Couldn't create the workspace."));
     } finally {
       setBusy(false);
     }
   };
 
   return (
-    <Dialog title="Create a workspace" onClose={onClose}>
+    <Dialog title={community ? "Start a community" : "Create a workspace"} onClose={onClose}>
       <form className="dialog-body" onSubmit={(e) => void submit(e)} noValidate>
+        {communities && (
+          <div className="kind-choice" role="radiogroup" aria-label="What is it for?">
+            <button type="button" role="radio" aria-checked={!community} className="kind-option" onClick={() => setKind("team")}>
+              <Building2 size={18} aria-hidden />
+              <span>
+                <strong>Team</strong>
+                <small>Colleagues working together: branches, teams and admin tools</small>
+              </span>
+            </button>
+            <button type="button" role="radio" aria-checked={community} className="kind-option" onClick={() => setKind("community")}>
+              <Users size={18} aria-hidden />
+              <span>
+                <strong>Community</strong>
+                <small>People with a shared interest: channels, voice rooms and open invitations</small>
+              </span>
+            </button>
+          </div>
+        )}
         <p className="muted" style={{ margin: 0 }}>
-          A workspace holds your organisation's channels, branches and teams. You'll be its owner and can invite people next.
+          {community
+            ? "It starts with #welcome, #announcements, #general, #introductions and a lounge to talk in. You'll run it and can invite people next."
+            : "A workspace holds your organisation's channels, branches and teams. You'll be its owner and can invite people next."}
         </p>
         {error && (
           <div className="banner danger" role="alert">
@@ -51,7 +76,7 @@ export function CreateWorkspaceDialog({ onClose }: { onClose: () => void }) {
         )}
         <div className="field">
           <label htmlFor="cw-name">Name</label>
-          <input id="cw-name" className="input" data-autofocus value={name} maxLength={80} onChange={(e) => setName(e.target.value)} placeholder="Acme Inc." />
+          <input id="cw-name" className="input" data-autofocus value={name} maxLength={80} onChange={(e) => setName(e.target.value)} placeholder={community ? "Dhaka Makers" : "Acme Inc."} />
         </div>
         <div className="field">
           <label htmlFor="cw-desc">Description (optional)</label>
@@ -62,7 +87,7 @@ export function CreateWorkspaceDialog({ onClose }: { onClose: () => void }) {
             Cancel
           </button>
           <button className="btn btn-primary" disabled={busy}>
-            <Building2 size={16} /> {busy ? "Creating…" : "Create workspace"}
+            {community ? <Users size={16} /> : <Building2 size={16} />} {busy ? "Creating…" : community ? "Create community" : "Create workspace"}
           </button>
         </div>
       </form>

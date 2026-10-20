@@ -3,6 +3,7 @@ import { type FormEvent, useState } from "react";
 import type { OrgAdminDetail } from "../../api/workspaceSchemas";
 import { useEngine } from "../../app/orbit";
 import {
+  directoryGroups,
   type App,
   appDirectory,
   createWebhook,
@@ -50,9 +51,37 @@ export function AppsPage({ detail }: { detail: OrgAdminDetail }) {
     return out;
   };
 
-  const apps = dir.data?.apps ?? [];
-  const usable = apps.filter((a) => a.state !== "coming_soon");
-  const soon = apps.filter((a) => a.state === "coming_soon");
+  const { recommended, more } = directoryGroups(dir.data?.apps ?? []);
+  const row = (a: App) => {
+    const connectable = a.actions.includes("connect") || a.actions.includes("reconnect");
+    return (
+      <li key={a.id} className="ws-row" style={{ alignItems: "flex-start" }}>
+        <span className="lines grow">
+          <span>
+            {a.name}{" "}
+            <span className={`tag${a.state === "connected" || a.state === "installed" ? " ok" : a.state === "error" || a.state === "blocked" ? " danger" : ""}`}>
+              {STATE_LABEL[a.state] ?? a.state}
+            </span>
+          </span>
+          <small>{a.summary ?? a.publisher ?? ""}</small>
+          {a.state === "needs_configuration" && <small>The server doesn't have this app's sign-in set up yet (an administrator of the Meldiq server registers it with the provider).</small>}
+          {connectable && <small>Connect your own account from the Meldiq phone app for now: signing in from the browser is coming in a server update.</small>}
+        </span>
+        <span className="row" style={{ gap: 4, flexWrap: "wrap", justifyContent: "flex-end" }}>
+          {actionsFor(a).map((x) => (
+            <button
+              key={x.key}
+              className={`btn btn-sm ${x.danger ? "btn-danger-quiet" : x.key === "install" || x.key === "approve" ? "btn-primary" : "btn-secondary"}`}
+              disabled={act.busy}
+              onClick={() => run(x.fn)}
+            >
+              {x.label}
+            </button>
+          ))}
+        </span>
+      </li>
+    );
+  };
   return (
     <div className="ws-page">
       <ErrorLine text={act.error ?? dir.error} />
@@ -60,43 +89,25 @@ export function AppsPage({ detail }: { detail: OrgAdminDetail }) {
         {!dir.data ? (
           <span className="skeleton" style={{ height: 120 }} />
         ) : (
-          <ul className="ws-list" aria-label="Apps">
-            {usable.map((a) => {
-              const connectable = a.actions.includes("connect") || a.actions.includes("reconnect");
-              return (
-                <li key={a.id} className="ws-row" style={{ alignItems: "flex-start" }}>
-                  <span className="lines grow">
-                    <span>
-                      {a.name}{" "}
-                      <span className={`tag${a.state === "connected" || a.state === "installed" ? " ok" : a.state === "error" || a.state === "blocked" ? " danger" : ""}`}>
-                        {STATE_LABEL[a.state] ?? a.state}
-                      </span>
-                    </span>
-                    <small>{a.summary ?? a.publisher ?? ""}</small>
-                    {a.state === "needs_configuration" && <small>The server doesn't have this app's sign-in set up yet (an administrator of the Meldiq server registers it with the provider).</small>}
-                    {connectable && <small>Connect your own account from the Meldiq phone app for now: signing in from the browser is coming in a server update.</small>}
-                  </span>
-                  <span className="row" style={{ gap: 4, flexWrap: "wrap", justifyContent: "flex-end" }}>
-                    {actionsFor(a).map((x) => (
-                      <button
-                        key={x.key}
-                        className={`btn btn-sm ${x.danger ? "btn-danger-quiet" : x.key === "install" || x.key === "approve" ? "btn-primary" : "btn-secondary"}`}
-                        disabled={act.busy}
-                        onClick={() => run(x.fn)}
-                      >
-                        {x.label}
-                      </button>
-                    ))}
-                  </span>
-                </li>
-              );
-            })}
-          </ul>
-        )}
-        {soon.length > 0 && (
-          <p className="faint" style={{ margin: 0, fontSize: 12.5 }}>
-            Coming soon: {soon.map((a) => a.name).join(", ")}. Many can post into a channel today through an incoming webhook.
-          </p>
+          <>
+            {recommended.length > 0 && (
+              <section aria-labelledby="apps-recommended">
+                <h3 id="apps-recommended" className="ws-subhead">
+                  Recommended
+                </h3>
+                <ul className="ws-list">{recommended.map(row)}</ul>
+              </section>
+            )}
+            {more.length > 0 && (
+              <section aria-labelledby="apps-more">
+                <h3 id="apps-more" className="ws-subhead">
+                  More apps
+                </h3>
+                <ul className="ws-list">{more.map(row)}</ul>
+              </section>
+            )}
+            {recommended.length === 0 && more.length === 0 && <p className="muted">No apps are available on this server yet.</p>}
+          </>
         )}
       </Card>
       <Webhooks orgId={orgId} />

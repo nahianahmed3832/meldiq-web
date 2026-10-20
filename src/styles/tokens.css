@@ -67,9 +67,18 @@
   /* Message text (Appearance › Text size): conversation text only. */
   --msg-text-size: 14.5px;
 
+  /*
+   * Motion (Meldiq 2.0, shared with Android's Motion tokens in meaning, not code): instant 90ms for what leaves first,
+   * fast for hover and selection, std for panels and dialogs, page for whole views. Arrivals decelerate (--ease-enter),
+   * departures accelerate (--ease-exit). prefers-reduced-motion turns all of it off (base.css).
+   */
+  --t-instant: 90ms;
   --t-fast: 120ms;
   --t-std: 200ms;
+  --t-page: 260ms;
   --ease: cubic-bezier(0.2, 0, 0, 1);
+  --ease-enter: cubic-bezier(0.05, 0.7, 0.1, 1);
+  --ease-exit: cubic-bezier(0.3, 0, 0.8, 0.15);
 }
 
 :root[data-text-size="small"] {

@@ -2,6 +2,7 @@ import { z } from "zod";
 import { ApiClient, ApiError } from "../api/client";
 import type { AccountSessionGrant } from "../api/accountSchemas";
 import { type Call, type Conversation, type Member, type Org, type SessionGrant, zCall, zConversation, zMember, zOrg, zProfile, zServerInfo } from "../api/schemas";
+import { Signals, zExperiments } from "./signals";
 import { signInWithDevice } from "../auth/accountApi";
 import { type AccountSessionEnd, AccountSession } from "../auth/accountSession";
 import { TokenVault } from "../auth/tokenVault";
@@ -87,6 +88,8 @@ export class Engine implements EngineContext {
   readonly nav: NavSync;
   /** Server reminders (Later › Reminders), sealed with this browser's reminder key. */
   readonly reminders: ReminderSync;
+  /** Experiments and content-free analytics counts, silent unless the server turns them on (src/sync/signals.ts). */
+  readonly signals: Signals;
   /** Call history lines and the recent-call log. */
   readonly callLog: CallLog;
   private readonly compose: Compose;
@@ -191,6 +194,13 @@ export class Engine implements EngineContext {
       publish: (reminders) => this.set((s) => ({ ...s, reminders })),
       show: (r) => this.showReminder(r),
     });
+    this.signals = new Signals({
+      features: () => this.state.get().server?.features ?? [],
+      getExperiments: () => this.api.json("GET", "/v1/experiments", zExperiments),
+      send: async (events) => {
+        await this.api.json("POST", "/v1/analytics/events", z.unknown(), { body: { platform: "web", events } });
+      },
+    });
     this.realtime = new RealtimeClient({
       url: opts.wsUrl,
       token: () => this.session.token(),
@@ -228,13 +238,22 @@ export class Engine implements EngineContext {
       if (phase === "revoked" || phase === "reauth") return;
     }
     this.realtime.start();
-    void this.refreshAll();
+    void this.refreshAll().then(async () => {
+      await this.signals.refresh();
+      this.signals.track("app.opened");
+    });
+    if (typeof document !== "undefined") document.addEventListener("visibilitychange", this.flushSignalsWhenHidden);
     this.outbox.kick();
     void this.runHistory();
   }
 
+  private readonly flushSignalsWhenHidden = () => {
+    if (document.visibilityState === "hidden") void this.signals.flush();
+  };
+
   stop(): void {
     this.stopped = true;
+    if (typeof document !== "undefined") document.removeEventListener("visibilitychange", this.flushSignalsWhenHidden);
     this.calls.stop();
     this.realtime.stop();
     this.outbox.stop();
@@ -765,7 +784,12 @@ export class Engine implements EngineContext {
     text: string,
     opts: { replyTo?: string; threadRoot?: string; attachments?: Payload["attachments"]; presetId?: string; rich?: RichContent | null; forwarded?: boolean } = {},
   ): Promise<string> {
-    return this.compose.sendText(conversationId, text, opts);
+    const sent = this.compose.sendText(conversationId, text, opts);
+    void sent.then(
+      () => this.signals.track("message.sent", { surface: opts.threadRoot ? "thread" : "channel" }),
+      () => undefined,
+    );
+    return sent;
   }
 
   retry(messageId: string): Promise<void> {

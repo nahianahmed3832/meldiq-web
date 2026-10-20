@@ -1440,3 +1440,59 @@ select.input {
 .ib-conversation .doc-toolbar .lines small {
   font-size: 12.5px;
 }
+
+/* Team or community (Meldiq 2.0): two radio cards in the create dialog. */
+.kind-choice {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--s-2);
+}
+.kind-option {
+  display: flex;
+  gap: var(--s-2);
+  align-items: flex-start;
+  text-align: start;
+  padding: var(--s-3);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+  transition:
+    border-color var(--t-fast) var(--ease),
+    background var(--t-fast) var(--ease);
+}
+.kind-option:hover {
+  background: var(--surface-hover);
+}
+.kind-option[aria-checked="true"] {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+.kind-option:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.kind-option span {
+  display: grid;
+  gap: 2px;
+}
+.kind-option small {
+  color: var(--text-2);
+  font-size: var(--fs-xs);
+}
+@media (max-width: 520px) {
+  .kind-choice {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* App directory groups (Meldiq 2.0): Recommended, then More apps. */
+.ws-subhead {
+  margin: var(--s-3) 0 var(--s-1);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}

@@ -1,0 +1,71 @@
+import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import type { AccountSessionGrant } from "../src/api/accountSchemas";
+import { AccountApi } from "../src/auth/accountApi";
+import { tokensOf } from "../src/auth/accountSession";
+import { createIdentity } from "../src/auth/deviceSetup";
+import { SetupCredentials } from "../src/auth/setupCredentials";
+import { TokenVault } from "../src/auth/tokenVault";
+import type { DeviceRecord } from "../src/model/types";
+import { appDirectory } from "../src/sync/apps";
+import { createWorkspace, requestId, setWorkspaceKind } from "../src/sync/workspaces";
+import { freshStore, type Mailbox, mailbox, type Server, startBrowser, startServer, until } from "./support/live";
+
+/** Meldiq 2.0 against the real server (test accounts only): communities, the curated directory, signals off by default. */
+let server: Server;
+let mail: Mailbox;
+const PASSWORD = "a long enough password";
+let counter = 0;
+const email = (n: string) => `${n}.${Date.now().toString(36)}${++counter}@example.test`;
+
+beforeAll(async () => {
+  mail = await mailbox();
+  server = await startServer({}, { mailer: mail });
+});
+afterAll(async () => server?.close());
+
+const anon = () => AccountApi.anonymous(server.baseUrl);
+
+async function browserAccount(name: string) {
+  const address = email(name);
+  await anon().register(name, address, PASSWORD);
+  await anon().verifyEmail(address, mail.verifyCode(address), PASSWORD);
+  const grant: AccountSessionGrant = await anon().login(address, PASSWORD, "Meldiq Web · Test");
+  const creds = new SetupCredentials(server.baseUrl, grant);
+  const { device } = await createIdentity(creds.accounts, grant.account, "Meldiq Web · Test");
+  const store = await freshStore();
+  await store.saveDevice(device as DeviceRecord);
+  await new TokenVault(store).save(tokensOf(creds.grant));
+  const browser = await startBrowser(server, device as DeviceRecord, store, creds.grant);
+  await until(() => browser.engine.state.get().server, 6000, "server info");
+  return browser;
+}
+
+describe("communities and the curated directory in the browser", () => {
+  it("creates a community with its welcome channels, switches it to a team, and lists only connectable apps", async () => {
+    const b = await browserAccount("webcommunity");
+    try {
+      const engine = b.engine;
+      expect(engine.state.get().server?.features).toEqual(expect.arrayContaining(["communities", "experiments", "analytics-events"]));
+      const org = await createWorkspace(engine, "Web Makers", null, requestId(), "community");
+      expect(org.kind).toBe("community");
+      await until(() => engine.state.get().orgs.find((o) => o.id === org.id)?.kind === "community", 6000, "community in the list");
+      await until(
+        () => ["welcome", "announcements", "general", "introductions", "lounge"].every((n) => Object.values(engine.state.get().conversations).some((c) => c.orgId === org.id && c.name === n)),
+        6000,
+        "community channels",
+      );
+      expect((await setWorkspaceKind(engine, org.id, "team")).kind).toBe("team");
+
+      const dir = await appDirectory(engine, org.id);
+      expect(dir.apps.some((a) => a.state === "coming_soon")).toBe(false);
+      expect(dir.apps.find((a) => a.id === "github")?.tier).toBe("essential");
+
+      // Off by default: nobody is in an experiment and nothing is collected.
+      await engine.signals.refresh();
+      expect(engine.signals.enabled).toBe(false);
+      expect(engine.signals.variant("home-layout", "sections")).toBe("sections");
+    } finally {
+      b.engine.stop();
+    }
+  });
+});

@@ -22,6 +22,8 @@ const zApp = z.object({
   category: z.string().nullable().optional(),
   summary: z.string().nullable().optional(),
   featured: z.boolean().optional(),
+  /** Meldiq 2.0 curation: essential, optional or planned; absent on older servers (then [featured] decides). */
+  tier: z.string().nullable().optional(),
   availability: z.string().nullable().optional(),
   state: z.string(),
   actions: z.array(z.string()).default([]),
@@ -30,6 +32,17 @@ const zApp = z.object({
   myAccount: z.object({ status: z.string().optional(), displayName: z.string().nullable().optional(), login: z.string().nullable().optional() }).passthrough().nullable().optional(),
 });
 export type App = z.infer<typeof zApp>;
+
+/**
+ * The directory's two groups (Meldiq 2.0): the apps most teams need, then the rest. Planned apps never appear (the
+ * server leaves them out; an older server's are dropped here too). Without tiers, featured apps lead.
+ */
+export function directoryGroups(apps: readonly App[]): { recommended: App[]; more: App[] } {
+  const usable = apps.filter((a) => a.state !== "coming_soon" && a.availability !== "coming_soon");
+  const tiered = usable.some((a) => !!a.tier);
+  const isRecommended = (a: App) => (tiered ? a.tier === "essential" : !!a.featured);
+  return { recommended: usable.filter(isRecommended), more: usable.filter((a) => !isRecommended(a)) };
+}
 const zDirectory = z.object({
   apps: z.array(zApp),
   permissions: z.object({
