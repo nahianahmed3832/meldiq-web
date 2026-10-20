@@ -7,6 +7,7 @@ import { PASSWORD_MIN_LENGTH, passwordProblem } from "../../auth/rules";
 import { deleteAccount } from "../../sync/account";
 import { relative } from "../format";
 import { useAction, useLoad } from "../workspace/useLoad";
+import { KeyBackupCard } from "./KeyBackupCard";
 import { RecoveryCodesCard } from "./RecoveryCodesCard";
 
 /**
@@ -39,6 +40,7 @@ export function AccountSettingsPage({ onSignedOut }: { onSignedOut: () => void }
         <strong>{account.email}</strong>
       </div>
       <ChangePassword email={account.email} />
+      <KeyBackupCard />
       <RecoveryCodesCard />
       <Sessions accounts={new AccountApi(engine.api)} />
       <DeleteAccount email={account.email} onDeleted={onSignedOut} />
@@ -140,7 +142,8 @@ function ChangePassword({ email }: { email: string }) {
         <KeyRound size={16} style={{ verticalAlign: "-3px" }} /> Password
       </h3>
       <p className="muted" style={{ margin: 0, fontSize: 13 }}>
-        Changing it signs out every other session of your account. This browser stays signed in.
+        Changing it signs out every other session of your account. This browser stays signed in. This browser doesn't keep your account's keys, so your key backup turns off until your phone signs in
+        with the new password, which backs the keys up again.
       </p>
       <form onSubmit={submit} className="ws-form" noValidate>
         <input type="email" autoComplete="username" value={email} readOnly hidden />

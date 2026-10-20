@@ -27,7 +27,7 @@ export function AuthFrame({ children }: { children: ReactNode }) {
           </div>
           <div>
             <KeyRound size={18} />
-            <span>Your password signs you in. Your encryption keys never leave your devices.</span>
+            <span>Your password signs you in. Your encryption keys leave your devices only locked with your password.</span>
           </div>
           <div>
             <ShieldCheck size={18} />

@@ -1,6 +1,7 @@
 import { ApiClient } from "../api/client";
 import { canonical } from "../crypto/canonical";
 import { sign } from "../crypto/ed25519";
+import type { KeyBackup } from "../crypto/keyBackup";
 import type { DeviceRecord } from "../model/types";
 import {
   type AccountSessionGrant,
@@ -38,6 +39,9 @@ const zRecoverStarted = z.object({ ticket: z.string(), email: z.string(), expire
 const zRecovered = z.object({ email: z.string(), remainingCodes: z.number() });
 const zRecoveryStatus = z.object({ remaining: z.number(), total: z.number(), createdAt: z.number().nullable() });
 const zRecoveryCodes = z.object({ codes: z.array(z.string()), createdAt: z.number() });
+const zKeyBackupStatus = z.object({ exists: z.boolean(), updatedAt: z.number().nullable() });
+const zKeyBackup = z.object({ version: z.number(), iterations: z.number(), salt: z.string(), nonce: z.string(), ciphertext: z.string(), identityKey: z.string() });
+const zKeyUnlockStarted = z.object({ email: z.string(), expiresAt: z.number() });
 export type RecoveryStatus = z.infer<typeof zRecoveryStatus>;
 
 /**
@@ -142,6 +146,30 @@ export class AccountApi {
 
   revokeRecoveryCodes(password: string): Promise<unknown> {
     return this.api.json("POST", "/v2/account/recovery-codes/revoke", zOk, { body: { password } });
+  }
+
+  /** Whether the account has a key backup for its current password and keys (server docs/KEY_BACKUP.md). */
+  keyBackupStatus() {
+    return this.api.json("GET", "/v2/account/key-backup", zKeyBackupStatus);
+  }
+
+  /** Saves the keys sealed under [password] (a device of the account only; the server checks the password). */
+  saveKeyBackup(password: string, backup: KeyBackup) {
+    return this.api.json("PUT", "/v2/account/key-backup", z.object({ updatedAt: z.number() }), { body: { password, backup } });
+  }
+
+  removeKeyBackup(): Promise<unknown> {
+    return this.api.json("DELETE", "/v2/account/key-backup", zOk);
+  }
+
+  /** Emails a code for unlocking the backup in this session; says where it went (masked). */
+  startKeyUnlock() {
+    return this.api.json("POST", "/v2/account/key-backup/unlock/start", zKeyUnlockStarted, { body: {} });
+  }
+
+  /** The emailed code gets the sealed keys back (single use). */
+  keyUnlock(code: string): Promise<KeyBackup> {
+    return this.api.json("POST", "/v2/account/key-backup/unlock", zKeyBackup, { body: { code } });
   }
 
   sessions() {

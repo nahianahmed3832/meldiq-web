@@ -25,8 +25,8 @@ type Step =
   | { k: "recoverConfirm"; ticket: string; newEmail: string }
   | { k: "legacy" }
   | { k: "legacyDetails"; ticket: LegacyTicket }
-  | { k: "create"; creds: SetupCredentials; account: AccountView }
-  | { k: "addDevice"; creds: SetupCredentials; account: AccountView }
+  | { k: "create"; creds: SetupCredentials; account: AccountView; password?: string }
+  | { k: "addDevice"; creds: SetupCredentials; account: AccountView; password?: string }
   | { k: "enrolling" }
   | { k: "recoveryKey"; device: DeviceRecord; grant: AccountSessionGrant; code: string }
   | { k: "failed"; message: string };
@@ -79,20 +79,23 @@ export function AuthScreen(props: {
     });
   }, []);
 
-  /** Signed in: set up encryption on this browser, or (after a move) do it at once with the recovery key typed earlier. */
+  /**
+   * Signed in: set up encryption on this browser, or (after a move) do it at once with the recovery key typed earlier.
+   * [password] stays in memory for the key backup (unlocking it, or making it once this browser has the keys).
+   */
   const signedIn = useCallback(
-    async (grant: AccountSessionGrant) => {
+    async (grant: AccountSessionGrant, password?: string) => {
       // Ended from elsewhere before setup finished (e.g. removed in the phone's session list): sign in again, email kept.
       const creds = new SetupCredentials(base, grant, (why) => {
         forgetSeed();
         setStep({ k: "signIn", notice: SETUP_ENDED[why], email: grant.account.email });
       });
       const account = grant.account;
-      if (!account.identity) return setStep({ k: "create", creds, account });
-      if (!legacySeed) return setStep({ k: "addDevice", creds, account });
+      if (!account.identity) return setStep({ k: "create", creds, account, password });
+      if (!legacySeed) return setStep({ k: "addDevice", creds, account, password });
       setStep({ k: "enrolling" });
       try {
-        const { device } = await enrollWithSeed(creds.accounts, account, legacySeed, ctx.deviceName);
+        const { device } = await enrollWithSeed(creds.accounts, account, legacySeed, ctx.deviceName, undefined, password);
         props.onReady(device, creds.grant);
       } catch (e) {
         setStep({ k: "failed", message: authErrorText(e) });
@@ -120,7 +123,7 @@ export function AuthScreen(props: {
           canSignUp={accounts?.registration ?? false}
           canMove={(accounts?.legacyMigration ?? false) && (accounts?.registration ?? false)}
           canLinkWithPhone={!accounts || accounts.legacyLogin}
-          onSignedIn={(g) => void signedIn(g)}
+          onSignedIn={(g, password) => void signedIn(g, password)}
           onUnverified={(email, password) => setStep({ k: "verify", email, password })}
           onSignUp={() => setStep({ k: "signUp" })}
           onForgot={(email) => setStep({ k: "forgot", email })}
@@ -134,7 +137,7 @@ export function AuthScreen(props: {
       body = <SignUpForm ctx={ctx} inviteRequired={server?.registration === "invite"} onSent={(email, password) => setStep({ k: "verify", email, password })} onBack={() => toSignIn()} />;
       break;
     case "verify":
-      body = <VerifyEmailForm ctx={ctx} email={step.email} password={step.password} onVerified={(g) => void signedIn(g)} onBack={() => toSignIn(undefined, step.email)} />;
+      body = <VerifyEmailForm ctx={ctx} email={step.email} password={step.password} onVerified={(g) => void signedIn(g, step.password)} onBack={() => toSignIn(undefined, step.email)} />;
       break;
     case "recover":
       body = (
@@ -191,6 +194,7 @@ export function AuthScreen(props: {
           creds={step.creds}
           account={step.account}
           deviceName={ctx.deviceName}
+          password={step.password}
           onCreated={(device, code) => {
             const grant = step.creds.grant;
             void props
@@ -203,7 +207,16 @@ export function AuthScreen(props: {
       );
       break;
     case "addDevice":
-      body = <AddDeviceView creds={step.creds} account={step.account} deviceName={ctx.deviceName} onEnrolled={(device) => props.onReady(device, step.creds.grant)} onSignOut={() => toSignIn()} />;
+      body = (
+        <AddDeviceView
+          creds={step.creds}
+          account={step.account}
+          deviceName={ctx.deviceName}
+          password={step.password}
+          onEnrolled={(device) => props.onReady(device, step.creds.grant)}
+          onSignOut={() => toSignIn()}
+        />
+      );
       break;
     case "enrolling":
       body = <AuthHeading title="Setting up this browser…" sub="Certifying this browser's keys with your account's identity." />;
