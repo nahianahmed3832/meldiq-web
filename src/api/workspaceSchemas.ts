@@ -58,6 +58,11 @@ export const zOrgPermissions = z.object({
   canViewUsage: z.boolean().default(false),
   canViewApps: z.boolean().default(false),
   canManageApps: z.boolean().default(false),
+  // Round 7 (API with workflows, groups, developer access, policies); false on older servers.
+  canManageWorkflows: z.boolean().default(false),
+  canManageGroups: z.boolean().default(false),
+  canManageDevelopers: z.boolean().default(false),
+  canManagePolicies: z.boolean().default(false),
   canTransferOwnership: z.boolean().default(false),
   effective: z.array(z.string()).default([]),
 });

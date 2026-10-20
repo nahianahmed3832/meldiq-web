@@ -1138,3 +1138,47 @@ select.input {
   margin: 8px 14px 0;
   font-size: 12px;
 }
+
+/* Workflows (android round 7 C3). */
+.wf-editor section {
+  display: grid;
+  gap: 8px;
+}
+.wf-editor h3 {
+  margin: 0;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-3);
+}
+.wf-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.wf-row .input {
+  flex: 1 1 140px;
+  width: auto;
+}
+.wf-action {
+  display: grid;
+  gap: 6px;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+}
+.wf-channels {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.wf-problems {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--warning);
+  font-size: 13px;
+}
+.warn-text {
+  color: var(--warning);
+}

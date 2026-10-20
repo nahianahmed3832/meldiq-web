@@ -9,7 +9,7 @@ import { useSyncExternalStore } from "react";
  */
 export type Section = "home" | "dms" | "activity" | "later" | "settings" | "workspace";
 export type SettingsPage = "profile" | "account" | "devices" | "notifications" | "appearance" | "storage" | "security" | "about" | "health";
-export type WorkspacePage = "overview" | "people" | "invitations" | "channels" | "structure" | "roles" | "apps" | "audit" | "usage" | "documents";
+export type WorkspacePage = "overview" | "people" | "invitations" | "channels" | "structure" | "roles" | "apps" | "audit" | "usage" | "documents" | "workflows";
 
 export interface Route {
   section: Section;
@@ -27,7 +27,7 @@ export const isFullPage = (s: Section): boolean => s === "settings" || s === "wo
 
 const SECTIONS: Section[] = ["home", "dms", "activity", "later", "settings", "workspace"];
 const PAGES: SettingsPage[] = ["profile", "account", "devices", "notifications", "appearance", "storage", "security", "about", "health"];
-const WORKSPACE_PAGES: WorkspacePage[] = ["overview", "people", "invitations", "channels", "structure", "roles", "apps", "audit", "usage", "documents"];
+const WORKSPACE_PAGES: WorkspacePage[] = ["overview", "people", "invitations", "channels", "structure", "roles", "apps", "audit", "usage", "documents", "workflows"];
 const ID = /^[A-Za-z0-9_-]{1,128}$/;
 
 export function parseRoute(hash: string): Route {

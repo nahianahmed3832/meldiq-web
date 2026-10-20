@@ -1,4 +1,4 @@
-import { Blocks, Building2, Gauge, Hash, Laptop, LayoutGrid, ScrollText, ShieldCheck, Ticket, UsersRound } from "lucide-react";
+import { Blocks, Building2, Gauge, Hash, Workflow, Laptop, LayoutGrid, ScrollText, ShieldCheck, Ticket, UsersRound } from "lucide-react";
 import type { ReactNode } from "react";
 import { useEngine, useOrbit } from "../../app/orbit";
 import { navigate, type WorkspacePage } from "../../app/router";
@@ -14,6 +14,7 @@ import { RolesPage } from "./RolesPage";
 import { AuditPage } from "./AuditPage";
 import { AppsPage } from "./AppsPage";
 import { UsagePage } from "./UsagePage";
+import { WorkflowsPage } from "./WorkflowsPage";
 import type { OrgPermissions } from "../../api/workspaceSchemas";
 
 /** Pages, with the permission flag that shows them (the server decides; older servers don't send the newer flags). */
@@ -26,6 +27,7 @@ const PAGES: { key: WorkspacePage; label: string; icon: ReactNode; shown?: (p: O
   { key: "roles", label: "Roles", icon: <ShieldCheck size={17} />, shown: (p) => p.canViewRoles },
   { key: "apps", label: "Apps", icon: <Blocks size={17} />, shown: (p) => p.canViewApps },
   { key: "audit", label: "Audit log", icon: <ScrollText size={17} />, shown: (p) => p.canViewAudit },
+  { key: "workflows", label: "Workflows", icon: <Workflow size={17} />, shown: (p) => p.canManageWorkflows },
   { key: "usage", label: "Usage", icon: <Gauge size={17} />, shown: (p) => p.canViewUsage },
 ];
 
@@ -107,6 +109,8 @@ export function WorkspaceView({ orgId, page, onDialog }: { orgId: string | null;
               <AuditPage detail={d} />
             ) : page === "usage" ? (
               <UsagePage detail={d} />
+            ) : page === "workflows" ? (
+              <WorkflowsPage detail={d} />
             ) : (
               <StructurePage detail={d} onChanged={detail.reload} />
             )}
