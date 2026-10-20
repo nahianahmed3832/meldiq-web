@@ -1182,3 +1182,123 @@ select.input {
 .warn-text {
   color: var(--warning);
 }
+
+/* Documents (android round 7 C4). */
+.doc-plain {
+  color: var(--warning);
+  background: var(--warning-soft);
+  gap: 4px;
+}
+.doc-toolbar {
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.doc-layout {
+  display: grid;
+  gap: 14px;
+}
+.doc-layout.with-panel {
+  grid-template-columns: minmax(0, 1fr) 300px;
+}
+@media (max-width: 900px) {
+  .doc-layout.with-panel {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+.doc-card {
+  padding: 22px 26px;
+  min-width: 0;
+}
+.doc-title {
+  margin: 0 0 4px;
+  font-size: 24px;
+}
+.doc-meta {
+  margin: 0 0 16px;
+  font-size: 13px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+.doc-body {
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+.doc-body h2,
+.doc-body h3,
+.doc-body h4 {
+  margin: 14px 0 6px;
+}
+.doc-body p {
+  margin: 2px 0;
+}
+.doc-body blockquote {
+  margin: 6px 0;
+  padding-left: 12px;
+  border-left: 3px solid var(--border-strong);
+  color: var(--text-2);
+}
+.doc-body code {
+  font-family: var(--mono);
+  font-size: 0.92em;
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: var(--surface-sunken);
+}
+.doc-bullet {
+  display: flex;
+  gap: 8px;
+}
+.doc-gap {
+  height: 10px;
+}
+.doc-editor {
+  display: grid;
+  gap: 10px;
+}
+.doc-title-input {
+  font-size: 20px;
+  font-weight: 700;
+}
+.doc-editor textarea {
+  min-height: 360px;
+  resize: vertical;
+  line-height: 1.5;
+}
+.doc-comments {
+  display: grid;
+  gap: 10px;
+  align-content: start;
+  padding: 14px;
+}
+.doc-comment-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+.doc-comment-list li {
+  display: grid;
+  gap: 2px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+.doc-comment-list li.resolved {
+  opacity: 0.6;
+}
+.doc-comment-list blockquote {
+  margin: 0;
+  padding-left: 8px;
+  border-left: 2px solid var(--accent);
+  color: var(--text-3);
+  font-size: 12.5px;
+}
+.doc-comment-list p {
+  margin: 0;
+}
+.doc-comment-form {
+  display: grid;
+  gap: 6px;
+}

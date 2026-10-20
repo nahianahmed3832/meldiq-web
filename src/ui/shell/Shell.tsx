@@ -128,7 +128,7 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
 
   let main;
   if (section === "settings") main = <SettingsView page={route.settingsPage} onSignedOut={onSignedOut} />;
-  else if (section === "workspace") main = <WorkspaceView orgId={orgId} page={route.workspacePage} onDialog={ctx.open} />;
+  else if (section === "workspace") main = <WorkspaceView orgId={orgId} page={route.workspacePage} itemId={route.itemId} onDialog={ctx.open} />;
   // Settings and administration load on first use, keeping the first page load small.
   if (settings) main = <Suspense fallback={<section className="main" aria-busy="true" />}>{main}</Suspense>;
   else if (route.conversationId && known) main = <ConversationView key={route.conversationId} id={route.conversationId} route={route} onDialog={ctx.open} />;

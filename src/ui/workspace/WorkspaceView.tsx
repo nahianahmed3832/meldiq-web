@@ -1,4 +1,4 @@
-import { Blocks, Building2, Gauge, Hash, Workflow, Laptop, LayoutGrid, ScrollText, ShieldCheck, Ticket, UsersRound } from "lucide-react";
+import { Blocks, Building2, FileText, Gauge, Hash, Workflow, Laptop, LayoutGrid, ScrollText, ShieldCheck, Ticket, UsersRound } from "lucide-react";
 import type { ReactNode } from "react";
 import { useEngine, useOrbit } from "../../app/orbit";
 import { navigate, type WorkspacePage } from "../../app/router";
@@ -15,10 +15,11 @@ import { AuditPage } from "./AuditPage";
 import { AppsPage } from "./AppsPage";
 import { UsagePage } from "./UsagePage";
 import { WorkflowsPage } from "./WorkflowsPage";
+import { DocumentsPage } from "./documents/DocumentsPage";
 import type { OrgPermissions } from "../../api/workspaceSchemas";
 
 /** Pages, with the permission flag that shows them (the server decides; older servers don't send the newer flags). */
-const PAGES: { key: WorkspacePage; label: string; icon: ReactNode; shown?: (p: OrgPermissions) => boolean }[] = [
+const PAGES: { key: WorkspacePage; label: string; icon: ReactNode; shown?: (p: OrgPermissions) => boolean; feature?: string }[] = [
   { key: "overview", label: "Overview", icon: <LayoutGrid size={17} /> },
   { key: "people", label: "People", icon: <UsersRound size={17} /> },
   { key: "invitations", label: "Invitations", icon: <Ticket size={17} /> },
@@ -27,6 +28,7 @@ const PAGES: { key: WorkspacePage; label: string; icon: ReactNode; shown?: (p: O
   { key: "roles", label: "Roles", icon: <ShieldCheck size={17} />, shown: (p) => p.canViewRoles },
   { key: "apps", label: "Apps", icon: <Blocks size={17} />, shown: (p) => p.canViewApps },
   { key: "audit", label: "Audit log", icon: <ScrollText size={17} />, shown: (p) => p.canViewAudit },
+  { key: "documents", label: "Documents", icon: <FileText size={17} />, feature: "documents" },
   { key: "workflows", label: "Workflows", icon: <Workflow size={17} />, shown: (p) => p.canManageWorkflows },
   { key: "usage", label: "Usage", icon: <Gauge size={17} />, shown: (p) => p.canViewUsage },
 ];
@@ -35,8 +37,9 @@ const PAGES: { key: WorkspacePage; label: string; icon: ReactNode; shown?: (p: O
  * The current workspace's settings and administration (docs/WORKSPACE_ADMINISTRATION.md). What each page offers follows
  * the permissions the server sends; the server decides every change.
  */
-export function WorkspaceView({ orgId, page, onDialog }: { orgId: string | null; page: WorkspacePage; onDialog: (d: ShellDialog) => void }) {
+export function WorkspaceView({ orgId, page, itemId, onDialog }: { orgId: string | null; page: WorkspacePage; itemId: string | null; onDialog: (d: ShellDialog) => void }) {
   const engine = useEngine();
+  const features = useOrbit((s) => s.server?.features ?? []);
   // Any change to the workspace (here, on another device, by an admin) refreshes the org list; that reloads the detail.
   const org = useOrbit((s) => s.orgs.find((o) => o.id === orgId) ?? null);
   const detail = useLoad(() => (orgId ? workspaceDetail(engine, orgId) : Promise.resolve(null)), [engine, orgId, org]);
@@ -69,7 +72,7 @@ export function WorkspaceView({ orgId, page, onDialog }: { orgId: string | null;
       <div className="settings">
         <nav className="settings-nav" aria-label="Workspace pages">
           <h2 className="ellipsis">{org.name}</h2>
-          {PAGES.filter((p) => !p.shown || (d && p.shown(d.permissions))).map((p) => (
+          {PAGES.filter((p) => (!p.shown || (d && p.shown(d.permissions))) && (!p.feature || features.includes(p.feature))).map((p) => (
             <button key={p.key} className="side-item" aria-current={page === p.key ? "page" : undefined} onClick={() => navigate({ section: "workspace", workspacePage: p.key })}>
               <span className="glyph">{p.icon}</span>
               <span className="grow">{p.label}</span>
@@ -111,6 +114,8 @@ export function WorkspaceView({ orgId, page, onDialog }: { orgId: string | null;
               <UsagePage detail={d} />
             ) : page === "workflows" ? (
               <WorkflowsPage detail={d} />
+            ) : page === "documents" ? (
+              <DocumentsPage detail={d} docId={itemId} />
             ) : (
               <StructurePage detail={d} onChanged={detail.reload} />
             )}
