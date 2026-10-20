@@ -1,4 +1,5 @@
 import { useSyncExternalStore } from "react";
+import { TRANSLATE_TARGETS, type TranslateTarget } from "../sync/translate";
 
 /**
  * Per-browser preferences. They hold no account data, so they live in localStorage, and every read and write tolerates
@@ -12,15 +13,30 @@ export type Palette = (typeof PALETTES)[number];
 export const TEXT_SIZES = ["small", "default", "large"] as const;
 export type TextSize = (typeof TEXT_SIZES)[number];
 
+/** How conversations are drawn (android MessageLayout): a left-aligned stream with names (default), or bubbles. */
+export const MESSAGE_LAYOUTS = ["stream", "bubbles"] as const;
+export type MessageLayout = (typeof MESSAGE_LAYOUTS)[number];
+
 export interface Prefs {
   theme: (typeof THEMES)[number];
   palette: Palette;
   textSize: TextSize;
+  messageLayout: MessageLayout;
   /** Animated emoji play (android Settings › Chats › Animated emoji); off: shown still. */
   animatedEmoji: boolean;
   /** Music and video links show as cards that open the provider (android Settings › Chats); nothing is fetched. */
   mediaCards: boolean;
+  /** Every link shows where it goes before opening (android Links › Ask every time); off: only misleading ones. */
+  askBeforeLinks: boolean;
+  /** Received photos load by themselves (android Download photos automatically); off: a click loads each one. */
+  autoLoadPhotos: boolean;
   notifications: boolean;
+  /** Groups and channels notify too (off: only direct messages and mentions of you; android Group notifications). */
+  groupNotifications: boolean;
+  /** Notifications make the system's sound (off: silent). */
+  messageSound: boolean;
+  /** Incoming calls ring in this tab (off: the call card and notification only). */
+  callRingtone: boolean;
   /** Show the sender and message text in system notifications (off: "New message"). */
   notificationText: boolean;
   readReceipts: boolean;
@@ -32,6 +48,10 @@ export interface Prefs {
   collapsed: string[];
   /** Home's Get started card was hidden in this browser. */
   startHidden: boolean;
+  /** The person agreed to on-device translation (the browser may download a language model). */
+  translateConsent: boolean;
+  /** The language messages are translated into. */
+  translateTarget: TranslateTarget;
 }
 
 const KEY = "orbit.prefs.v1";
@@ -39,9 +59,15 @@ const defaults: Prefs = {
   theme: "system",
   palette: "indigo",
   textSize: "default",
+  messageLayout: "stream",
   animatedEmoji: true,
   mediaCards: true,
+  askBeforeLinks: false,
+  autoLoadPhotos: true,
   notifications: false,
+  groupNotifications: true,
+  messageSound: true,
+  callRingtone: true,
   notificationText: true,
   readReceipts: true,
   typing: true,
@@ -49,6 +75,8 @@ const defaults: Prefs = {
   orgId: null,
   collapsed: [],
   startHidden: false,
+  translateConsent: false,
+  translateTarget: "en",
 };
 
 function load(): Prefs {
@@ -62,8 +90,10 @@ function load(): Prefs {
       theme: THEMES.includes(stored.theme) ? stored.theme : defaults.theme,
       palette: PALETTES.includes(stored.palette) ? stored.palette : defaults.palette,
       textSize: TEXT_SIZES.includes(stored.textSize) ? stored.textSize : defaults.textSize,
+      messageLayout: MESSAGE_LAYOUTS.includes(stored.messageLayout) ? stored.messageLayout : defaults.messageLayout,
       animatedEmoji: typeof stored.animatedEmoji === "boolean" ? stored.animatedEmoji : defaults.animatedEmoji,
       mediaCards: typeof stored.mediaCards === "boolean" ? stored.mediaCards : defaults.mediaCards,
+      translateTarget: TRANSLATE_TARGETS.some((t) => t.code === stored.translateTarget) ? stored.translateTarget : defaults.translateTarget,
     };
   } catch {
     return defaults;
@@ -99,9 +129,10 @@ export function usePrefs(): Prefs {
 }
 
 /** Light, dark or the system's, and the colour plate; the browser's own chrome takes the frame colour. */
-export function applyTheme({ theme, palette, textSize }: Pick<Prefs, "theme" | "palette" | "textSize">): void {
+export function applyTheme({ theme, palette, textSize, messageLayout }: Pick<Prefs, "theme" | "palette" | "textSize" | "messageLayout">): void {
   const root = document.documentElement;
   root.setAttribute("data-text-size", textSize);
+  root.setAttribute("data-message-layout", messageLayout);
   if (theme === "system") root.removeAttribute("data-theme");
   else root.setAttribute("data-theme", theme);
   root.setAttribute("data-palette", palette);

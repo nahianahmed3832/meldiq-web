@@ -2,28 +2,12 @@ import { Search, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useEngine, useOrbit } from "../../app/orbit";
 import type { StoredMessage } from "../../model/types";
-import type { Engine } from "../../sync/engine";
 import { shortWhen } from "../format";
+import { jumpTo } from "./jump";
 
-/** How many older pages a result may load to be shown in place. */
-const MAX_PAGES = 30;
 const MIN_QUERY = 2;
 /** Characters of text shown before a match. */
 const CONTEXT = 32;
-
-/** Asks the open message list to scroll to and highlight [messageId] (MessageList listens). */
-export const JUMP_EVENT = "meldiq:jump-to-message";
-
-/** Loads older pages until [messageId] is among the shown messages; false if it isn't in this browser's history. */
-async function reveal(engine: Engine, conversationId: string, messageId: string): Promise<boolean> {
-  for (let i = 0; i <= MAX_PAGES; i++) {
-    const loaded = engine.state.get().messages[conversationId];
-    if (loaded?.items.some((m) => m.id === messageId)) return true;
-    if (loaded && !loaded.hasMore) return false;
-    await engine.loadOlder(conversationId);
-  }
-  return false;
-}
 
 /**
  * Search in this conversation (android ConversationViewModel search): message text on this browser, newest first. The
@@ -56,8 +40,7 @@ export function SearchPanel({ conversationId, onClose }: { conversationId: strin
 
   const open = async (m: StoredMessage) => {
     setMissing(null);
-    if (await reveal(engine, conversationId, m.id)) window.dispatchEvent(new CustomEvent(JUMP_EVENT, { detail: m.id }));
-    else setMissing("That message isn't loaded in this conversation any more.");
+    if (!(await jumpTo(engine, conversationId, m.id))) setMissing("That message isn't loaded in this conversation any more.");
   };
 
   return (

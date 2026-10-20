@@ -1,4 +1,4 @@
-import { BellOff, Fingerprint, Hash, Images, Lock, LogOut, MessageSquare, Pin, ShieldCheck, X } from "lucide-react";
+import { BellOff, Fingerprint, Hash, Images, Lock, LogOut, MessageSquare, ShieldCheck, X } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { Member } from "../../api/schemas";
 import { useEngine, useOrbit } from "../../app/orbit";
@@ -9,7 +9,6 @@ import { conversationMembers, startDirect, userProfile } from "../../sync/accoun
 import { Avatar } from "../components/Avatar";
 import { conversationTitle, dmPeer, dayLabel } from "../format";
 import { levelOf, type NotifyLevel, workspaceOf } from "../../sync/navPrefs";
-import { preview } from "../../sync/rules";
 import { removeConversationMember } from "../../sync/workspaces";
 import { Composer } from "./Composer";
 import { AddMembersButton, BlockToggle, EditConversationButton } from "./ConversationManage";
@@ -17,11 +16,13 @@ import { galleryOf } from "./gallery";
 import { MediaGalleryDialog } from "./MediaGalleryDialog";
 import { MessageList } from "./MessageList";
 import { SearchPanel } from "./SearchPanel";
+import { PinnedPanel } from "./PinnedPanel";
 
 export function SidePanel({ route }: { route: Route }) {
   const close = () => navigate({ section: route.section, conversationId: route.conversationId });
   if (!route.conversationId) return null;
   if (route.panel === "search") return <SearchPanel conversationId={route.conversationId} onClose={close} />;
+  if (route.panel === "pinned") return <PinnedPanel conversationId={route.conversationId} onClose={close} />;
   return route.panel === "thread" && route.threadRoot ? (
     <ThreadPanel conversationId={route.conversationId} root={route.threadRoot} onClose={close} />
   ) : (
@@ -89,7 +90,6 @@ function DetailsPanel({ conversationId, onClose }: { conversationId: string; onC
 
   if (!c || !me) return null;
   const title = conversationTitle(c, me.userId, users);
-  const pinned = (loaded ?? []).filter((m) => m.pinned && !m.deleted);
   const senderName = (i: { outgoing: boolean; senderUserId: string }) => (i.outgoing ? "You" : (users[i.senderUserId]?.displayName ?? "Unknown"));
 
   return (
@@ -157,23 +157,6 @@ function DetailsPanel({ conversationId, onClose }: { conversationId: string; onC
                 {verified ? "Clear verified" : "Mark as verified"}
               </button>
             </div>
-          </div>
-        )}
-
-        {pinned.length > 0 && (
-          <div style={{ display: "grid", gap: 6 }}>
-            <div className="panel-section-title">
-              <span className="row" style={{ gap: 6 }}>
-                <Pin size={13} /> Pinned
-              </span>
-              <span>{pinned.length}</span>
-            </div>
-            {pinned.map((m) => (
-              <button key={m.id} className="msg-quote" style={{ maxWidth: "none" }} onClick={() => document.getElementById(`msg-${m.id}`)?.scrollIntoView({ block: "center", behavior: "smooth" })}>
-                <strong>{m.outgoing ? "You" : (users[m.senderUserId]?.displayName ?? "Unknown")}</strong>
-                <span className="ellipsis">{preview(m)}</span>
-              </button>
-            ))}
           </div>
         )}
 

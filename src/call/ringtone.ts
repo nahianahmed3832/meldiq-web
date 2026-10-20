@@ -16,8 +16,11 @@ export class Ringtone {
   private ctx: AudioContext | null = null;
   private timer: ReturnType<typeof setInterval> | undefined;
 
+  /** [enabled]: the person's Call ringtone setting (android Settings › Notifications); off, calls only show. */
+  constructor(private readonly enabled: () => boolean = () => true) {}
+
   start(): void {
-    if (this.ctx || typeof AudioContext === "undefined") return;
+    if (this.ctx || typeof AudioContext === "undefined" || !this.enabled()) return;
     try {
       this.ctx = new AudioContext();
       void this.ctx.resume().catch(() => undefined);

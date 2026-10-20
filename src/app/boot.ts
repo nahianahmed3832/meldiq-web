@@ -35,7 +35,7 @@ function notify(title: string, body: string, conversationId: string): void {
   if (!p.notifications || typeof Notification === "undefined" || Notification.permission !== "granted") return;
   if (document.visibilityState === "visible" && document.hasFocus()) return;
   try {
-    const n = new Notification(p.notificationText ? title : "Meldiq", { body: p.notificationText ? body : "New message", tag: conversationId, silent: false });
+    const n = new Notification(p.notificationText ? title : "Meldiq", { body: p.notificationText ? body : "New message", tag: conversationId, silent: !p.messageSound });
     n.onclick = () => {
       window.focus();
       location.hash = `#/home/c/${encodeURIComponent(conversationId)}`;
@@ -86,11 +86,11 @@ export function createEngine(device: DeviceRecord, store: LocalStore): Engine {
     notify,
     notifyReminder,
     media: liveKitMedia,
-    ringtone: new Ringtone(),
+    ringtone: new Ringtone(() => getPrefs().callRingtone),
     ringAlert,
     prefs: () => {
       const p = getPrefs();
-      return { readReceipts: p.readReceipts, typing: p.typing };
+      return { readReceipts: p.readReceipts, typing: p.typing, groupNotifications: p.groupNotifications };
     },
   });
   // Development builds only (removed from production bundles): lets the browser tests and a developer inspect state.

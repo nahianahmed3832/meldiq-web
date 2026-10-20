@@ -7,6 +7,43 @@ are summarised in §6 and detailed in `ORBIT_WEB_STATUS.md`.
 Live: **https://web.meldiq.app** (`web.griipbuddy.cloud` redirects there). The API at `msg.griipbuddy.cloud` is **0.7.1**,
 deployed by another session, with the browser WebSocket patch.
 
+## 0. Android sync pass (2026-10-20, later): not deployed
+
+This pass matched the web to the **latest Android code**.
+
+- **Reference:** `internal-beta` `35aa4b5` (0.2.3-beta), plus round 7.
+- **Round 7** is uncommitted work in the `orbit-integrations` worktree, aimed at 0.2.4-beta.
+- **Report:** item by item in `MELDIQ_ANDROID_WEB_SYNC_REPORT.md` (S-01 … S-20).
+
+**Built:**
+- Profile cards in place of contact cards with phone numbers.
+- No call buttons in text channels.
+- Public channels that reach every member: fixes members never seeing org-wide public channels, on today's production
+  server.
+- Faster call setup, and mirroring only your own front camera.
+- Pin button and pinned list.
+- Bulk save to a folder.
+- Message info.
+- On-device translation, where the browser has it.
+- Invitation QR codes and pasted invite links.
+- Notification and chat options: group notifications, sound, ringtone, photo auto-load, ask before links.
+- Bubbles layout.
+- Your network address.
+
+**Tests:**
+- Unit and live: 42 files, **320 passed**.
+- Browser: the known call intermittent once; the call suite then passed twice, 18/18.
+- Build and secret scan: clean.
+
+**Not done:** deployed, pushed and phone-tested. Committed locally only, waiting for your go-ahead to push and deploy.
+
+**Resume here:** `MELDIQ_ANDROID_WEB_SYNC_REPORT.md` §6. In short:
+1. Phone test with the round 7 APK.
+2. Chrome translation with a real model.
+3. Re-check against round 7 once it's committed.
+4. OAuth feature flag.
+5. Languages.
+
 ## 1. Built this round
 
 Every item is backed by the real server (API 0.7.1). No mock APIs and no browser-only stand-ins for server features.

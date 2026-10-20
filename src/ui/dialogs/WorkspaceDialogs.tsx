@@ -8,6 +8,7 @@ import { navigate } from "../../app/router";
 import { acceptInvite, createWorkspace, previewInvite, requestId } from "../../sync/workspaces";
 import { cleanInviteCode, roleName } from "../../sync/workspaceRules";
 import { Dialog } from "../components/Overlay";
+import { checkInvite, extractInvite } from "../../sync/inviteCodes";
 
 const errorText = (e: unknown, fallback: string) => (e instanceof ApiError ? e.message : fallback);
 
@@ -79,8 +80,11 @@ export function JoinWorkspaceDialog({ onClose }: { onClose: () => void }) {
 
   const check = async (e: FormEvent) => {
     e.preventDefault();
-    const c = cleanInviteCode(code);
-    if (c.replace(/-/g, "").length < 8) return setError("Enter the invitation code you were given.");
+    // A pasted invite link or invite message works as well as the code itself (android InviteCodes).
+    const typed = checkInvite(code);
+    const c = extractInvite(code) ?? (typed.kind === "ok" ? typed.code : null);
+    if (!c) return setError(typed.kind === "invalid" ? typed.reason : "Enter the invitation code you were given.");
+    setCode(c);
     setBusy(true);
     setError(null);
     try {
@@ -96,7 +100,7 @@ export function JoinWorkspaceDialog({ onClose }: { onClose: () => void }) {
     setBusy(true);
     setError(null);
     try {
-      const org = await acceptInvite(engine, cleanInviteCode(code));
+      const org = await acceptInvite(engine, extractInvite(code) ?? cleanInviteCode(code));
       setPrefs({ orgId: org.id });
       onClose();
       navigate({ section: "home" });
@@ -120,7 +124,7 @@ export function JoinWorkspaceDialog({ onClose }: { onClose: () => void }) {
             <div className="field">
               <label htmlFor="jw-code">Invitation code</label>
               <input id="jw-code" className="input mono" data-autofocus value={code} onChange={(e) => setCode(e.target.value)} placeholder="ABCD-EFGH-JKLM" autoComplete="off" spellCheck={false} />
-              <span className="hint">Ask a workspace owner or admin for one. Codes from a QR invitation work too.</span>
+              <span className="hint">Ask a workspace owner or admin for one. You can paste the whole invite message or link.</span>
             </div>
             <div className="row" style={{ justifyContent: "flex-end", gap: 8 }}>
               <button type="button" className="btn btn-secondary" onClick={onClose}>

@@ -154,3 +154,19 @@ describe("usage and limits", () => {
     expect(plan.capabilities.some((c) => c.key === "roles.custom")).toBe(true);
   });
 });
+
+describe("channel access (android round 7, bug 6)", () => {
+  it("a public channel from the browser reaches every member at once, and people who join later", async () => {
+    const ch = await createChannel(web, orgId, { name: "everyone-sees-this", topic: null, scope: "ORG", scopeId: null, kind: "PUBLIC" });
+    // Bob was already a member: the channel shows up in his browser without him joining it.
+    await until(() => bobWeb.state.get().conversations[ch.id]?.joined === true, 8000, "Bob auto-joined");
+    // Someone who joins the workspace afterwards gets it too.
+    const cleo = await server.client("cleo", "Cleo");
+    await cleo.req("POST", "/v1/invites/accept", { code: (await createInvitation(web, orgId, { role: "MEMBER", maxUses: 1, expiresInHours: 1 })).code });
+    const list = (await cleo.req("GET", "/v1/conversations")).conversations as { id: string }[];
+    expect(list.some((c) => c.id === ch.id)).toBe(true);
+    // A private channel stays invite-only.
+    const priv = await createChannel(web, orgId, { name: "leads-only", topic: null, scope: "ORG", scopeId: null, kind: "PRIVATE" });
+    expect(((await cleo.req("GET", "/v1/conversations")).conversations as { id: string }[]).some((c) => c.id === priv.id)).toBe(false);
+  });
+});

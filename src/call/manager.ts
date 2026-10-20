@@ -112,7 +112,7 @@ export class CallManager {
       this.markHandled(res.call.id);
       this.created = !res.joinedExisting;
       this.patch({ callId: res.call.id, alerted: res.call.alertedAt != null, isGroup: about.isGroup || (res.call.conversationType ?? "DM") !== "DM" });
-      const key = res.joinedExisting ? await this.waitForKey(gen, res.call.id) : await this.distributeKey(res.call.id, conversationId, video);
+      const key = res.joinedExisting ? await this.waitForKey(gen, res.call.id) : this.distributeKey(gen, res.call.id, conversationId, video);
       await this.connect(gen, session, res.call.id, res.media, key);
     } catch (e) {
       this.failed(gen, e);
@@ -161,20 +161,27 @@ export class CallManager {
     try {
       const session = this.newSession(gen);
       await this.prepare(gen, session, withVideo, false);
-      const res = await this.host.api.json("POST", `/v1/calls/${encodeURIComponent(callId)}/join`, zCallGrant);
+      // Asking to join and waiting for the key (usually here already) run side by side (android round 7, bug 7).
+      const [res, key] = await Promise.all([this.host.api.json("POST", `/v1/calls/${encodeURIComponent(callId)}/join`, zCallGrant), this.waitForKey(gen, callId)]);
       this.check(gen);
-      const key = await this.waitForKey(gen, callId);
       await this.connect(gen, session, callId, res.media, key);
     } catch (e) {
       this.failed(gen, e);
     }
   }
 
-  /** A new call's key: kept here, and sent to every device in the conversation inside an encrypted control message. */
-  private async distributeKey(callId: string, conversationId: string, video: boolean): Promise<string> {
+  /**
+   * A new call's key: kept here, and sent to every device in the conversation inside an encrypted control message. The
+   * message goes out while this browser connects to the media room (android round 7, bug 7): this browser already has
+   * the key, only the people called need it, and they wait for it. If it can't be sent, the call ends with the reason.
+   */
+  private distributeKey(gen: number, callId: string, conversationId: string, video: boolean): string {
     const key = newCallKey();
     this.keys.accept({ callId, conversationId, fromUserId: this.host.me.userId, key });
-    await this.host.sendControlNow(conversationId, { type: "call_invite", callId, video, e2eeKey: key });
+    this.host.sendControlNow(conversationId, { type: "call_invite", callId, video, e2eeKey: key }).catch((e: unknown) => {
+      if (gen !== this.gen || this.state.callId !== callId) return;
+      this.failed(gen, e instanceof IdentityChangedError ? e : new CallError(CallFailure.KEY_NOT_SENT));
+    });
     // A voice room's comings and goings aren't calls in its conversation (docs/VOICE_ROOMS.md).
     if (!this.state.voiceRoom) void this.host.recordCall(callId, conversationId, video).catch(() => undefined);
     return key;

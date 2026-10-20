@@ -285,3 +285,13 @@ describe("call status lines", () => {
     expect(duration(-5)).toBe("0:00");
   });
 });
+
+describe("preview mirroring (android round 7 CallMediaPolicy.mirrorPreview)", () => {
+  it("mirrors only your own front camera", async () => {
+    const { mirrorPreview } = await import("../src/call/rules");
+    expect(mirrorPreview(true, "user")).toBe(true);
+    expect(mirrorPreview(true, undefined)).toBe(true); // laptop webcams don't say, and face you
+    expect(mirrorPreview(true, "environment")).toBe(false); // a phone's back camera
+    expect(mirrorPreview(false, "user")).toBe(false); // other people are never mirrored
+  });
+});

@@ -1,7 +1,8 @@
-import { Camera } from "lucide-react";
+import { AtSign, Camera, Check, Copy } from "lucide-react";
 import { type FormEvent, useEffect, useRef, useState } from "react";
 import { useEngine, useOrbit } from "../../app/orbit";
 import { AccountApi } from "../../auth/accountApi";
+import { networkAddress } from "../../sync/account";
 import { birthdayProblem, myProfile, phoneProblem, removeMyPhoto, setMyPhoto, updateMyProfile } from "../../sync/profile";
 import { UserAvatar } from "../components/OrgAvatar";
 import { squareJpeg } from "../workspace/photo";
@@ -17,6 +18,7 @@ export function ProfilePage() {
   const photoRev = useOrbit((s) => (s.me ? (s.users[s.me.userId]?.photoRev ?? null) : null));
   const [version, setVersion] = useState(0);
   const profile = useLoad(() => myProfile(engine), [engine, version]);
+  const address = useLoad(() => networkAddress(engine), [engine]);
   const [form, setForm] = useState({ displayName: "", firstName: "", lastName: "", username: "", statusText: "", birthday: "", phone: "" });
   const [saved, setSaved] = useState(false);
   const save = useAction();
@@ -73,6 +75,7 @@ export function ProfilePage() {
   return (
     <>
       <h1>Profile</h1>
+      {address.data && <NetworkAddress address={address.data} />}
       <div className="card" style={{ padding: 20, display: "grid", gap: 18 }}>
         <div className="row" style={{ gap: 16, flexWrap: "wrap" }}>
           <UserAvatar userId={me.userId} name={form.displayName || me.displayName} colorIndex={me.avatarColor} photoRev={photoRev} size={64} decorative />
@@ -141,5 +144,23 @@ export function ProfilePage() {
         </form>
       </div>
     </>
+  );
+}
+
+/** Your address on the Meldiq network (android Settings): people on other servers message you with it. */
+function NetworkAddress({ address }: { address: string }) {
+  const [copied, setCopied] = useState(false);
+  return (
+    <div className="card setting">
+      <div className="lines">
+        <strong className="row" style={{ gap: 6 }}>
+          <AtSign size={15} /> {address}
+        </strong>
+        <small>Your address on the Meldiq network. Share it so people on other servers can message you.</small>
+      </div>
+      <button className="btn btn-secondary btn-sm" onClick={() => void navigator.clipboard?.writeText(address).then(() => setCopied(true))}>
+        {copied ? <Check size={14} /> : <Copy size={14} />} {copied ? "Copied" : "Copy"}
+      </button>
+    </div>
   );
 }

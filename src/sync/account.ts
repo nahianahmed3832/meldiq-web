@@ -48,6 +48,12 @@ export async function conversationMembers(engine: Engine, conversationId: string
   return (await engine.api.json("GET", `/v1/conversations/${encodeURIComponent(conversationId)}/members`, z.object({ members: z.array(zMember) }))).members;
 }
 
+/** Your address on the Meldiq network (`@name:server`), when this server federates; null when it doesn't. */
+export async function networkAddress(engine: Engine): Promise<string | null> {
+  if (!engine.state.get().server?.federation) return null;
+  return (await engine.api.json("GET", "/v1/federation/info", z.object({ address: z.string().max(300) }))).address;
+}
+
 export async function userProfile(engine: Engine, userId: string) {
   return (await engine.api.json("GET", `/v1/users/${encodeURIComponent(userId)}`, z.object({ user: zProfile }))).user;
 }

@@ -1,6 +1,6 @@
 # Meldiq Web ↔ Android feature parity
 
-Updated 2026-10-20. It replaces the 2026-10-19 version of this file; `ORBIT_WEB_PARITY.md` still holds older detail.
+Updated 2026-10-20 (second pass: Android round 7 and the remaining `35aa4b5` gaps; see `MELDIQ_ANDROID_WEB_SYNC_REPORT.md` for the S-numbers). It replaces the 2026-10-19 version of this file; `ORBIT_WEB_PARITY.md` still holds older detail.
 
 ## Sources
 
@@ -80,6 +80,8 @@ protocol, which the phone shares.
 | WS-10 | **New:** Transfer ownership | Implemented · `TransferOwnershipSheet` | `/v1/orgs/:id/ownership` | Done | Exact workspace name; the previous owner becomes an admin | `live-roles-apps` | live |
 | WS-11 | **New:** Usage and limits | Implemented · `UsageScreen` | `/v1/orgs/:id/usage`, `/plan` | Done | `workspace.usage.view`; no plan exists, so none is offered | `live-roles-apps` | live, by hand |
 | WS-12 | Workspace change log (Activity) | Implemented · `ActivityFeedScreen` | `/v1/orgs/:id/activity` | Done | — | `live` | live |
+| WS-13 | Invitation QR code; invite links and shared messages accepted when joining | Implemented · `OrgScreens.qrBitmap`, `InviteCodes` | — | Done (sync S-11) | QR in the phone's link format; look-alike characters refused | `invite-codes` | unit, by hand (QR decoded) |
+| WS-14 | Public channels reach every member; an unjoined channel joins on a click (round 7 bug 6) | Implemented · `WorkspaceScreen`; server default | `autoJoin` | Done (sync S-03) | Existing opt-in channels need the server's repair command | `live-roles-apps` | live |
 
 ## HOME · Home, people and navigation
 
@@ -107,7 +109,7 @@ protocol, which the phone shares.
 | MSG-06 | Link warnings | Implemented · `LinkRules`, `LinkOpener` | — | Done | — | `link-rules` | unit |
 | MSG-07 | **New:** Music and video cards (YouTube, Spotify, SoundCloud, Vimeo) with an on/off setting | Implemented · `MediaCards`, `MediaLinks` | — | Done | Recognised from the address only; nothing fetched, no embedded player | `media-links` (the phone's rules) | unit, by hand |
 | MSG-08 | Sending link previews | Implemented · `LinkPreview` | payload `link` | Backend blocked | Received previews show. Making one needs a server-side fetcher (a browser can't read other sites) | — | — |
-| MSG-09 | Contact cards, locations | Implemented · `RichViews` | `contact`, `location` | Done | — | `live` | live |
+| MSG-09 | Contact cards as Meldiq **profile cards** (round 7: name, user id, username, never numbers); locations | Implemented · `ProfileCards`, `RichRules` | `contact`, `location` | Done (sync S-01) | Old cards with numbers still show; a profile card's numbers are dropped | `profile-cards`, `live-rich`, `live` | live, by hand |
 | MSG-10 | Forwarding | Implemented | `forwarded` | Done | Files re-encrypted | `live` | live |
 | MSG-11 | Voice messages | Implemented · `VoiceViews` | attachment `voice` | Done | Recording checked by hand | `live` | live |
 | MSG-12 | Identity change hold, review, safety numbers | Implemented | — | Done | — | `live` | live |
@@ -115,8 +117,12 @@ protocol, which the phone shares.
 | MSG-14 | Block / unblock | Implemented · `PrivacyScreen` | `/v1/blocks` | Done | — | `live-manage` | live |
 | MSG-15 | Message text size | Implemented | — | Done | — | unit | unit, by hand |
 | MSG-16 | Chat wallpaper | Implemented | — | Unsupported on web | The web keeps the design-system surface | — | — |
-| MSG-17 | Translation of messages | Partial · `MessageBubble` translation | on-device | Missing | On the phone it's on-device ML; a browser would need a model or a service that sees plaintext | — | — |
+| MSG-17 | Translation of received messages on the device | Implemented · `MessageTranslator` (ML Kit) | on-device | Built (sync S-10) | Only where the browser has an on-device translator (Chromium's built-in); otherwise not offered. No real translation seen yet: the test browser couldn't load a model | `translate` | unit |
 | MSG-18 | Swipe to reply | Implemented · `SwipeToReply` | — | Unsupported on web | Reply is in the message menu | — | — |
+| MSG-19 | Message info (status, sent, relay, delivered to, read by, encryption) | Implemented · `ConversationScreen` | receipts | Done (sync S-09) | — | `live` (receipts) | by hand |
+| MSG-20 | Pin button in the header, pinned list with jump and unpin (round 7) | Implemented · `PinnedMessages` | pin controls | Done (sync S-06) | Ordered by message time | `live-rich` | live, by hand |
+| MSG-21 | Message layout: stream or bubbles | Implemented · `MessageLayout` | — | Done (sync S-14) | — | — | by hand |
+| MSG-22 | Composer buttons step aside while typing (round 7) | Implemented · `ComposerAux` | — | Unsupported on web (sync S-08) | Desktop has room; not adopted | — | — |
 
 ## LATER · Saved items and reminders
 
@@ -138,6 +144,8 @@ protocol, which the phone shares.
 | FILE-04 | Media and files of a conversation | Implemented · `MediaGallery` | — | Done | — | `gallery` | unit, by hand |
 | FILE-05 | Storage | Implemented · `StorageScreen` | — | Done | — | — | by hand |
 | FILE-06 | Camera capture, QR scanning, share from other apps | Implemented | — | Unsupported on web | Files can be picked, pasted or dropped | — | — |
+| FILE-07 | Bulk save: select files, save them to a folder (round 7) | Implemented · `BulkSave`, `BulkSaver` | per-file download | Done (sync S-07) | Folder picker in Chromium; downloads elsewhere; existing files never overwritten | `bulk-save`, `live-rich` | live, by hand (selection) |
+| FILE-08 | Download photos automatically (on/off) | Implemented · `AutoDownload` | — | Done (sync S-13) | No "Wi-Fi only": desktop browsers don't say | — | by hand |
 
 ## CALL · Calls and voice rooms
 
@@ -150,6 +158,9 @@ protocol, which the phone shares.
 | CALL-05 | **New:** Raise hand, queue in order | Implemented · `CallOverlay` | `/v1/calls/:id/hand` | Done | — | `live-voice-rooms` | live |
 | CALL-06 | **New:** Moderation: mute microphone, lower hand, remove (room managers) | Implemented · `PeoplePanel` | `/v1/calls/:id/moderate` | Done | Server checks `canManageConversation`; only the person can unmute | `live-voice-rooms` (stand-in media server) | live |
 | CALL-07 | **New:** A room's key passed on by anyone connected | Implemented · `CallKeyVerifier` | — | Done | Accepted only from the creator or someone the server lists as connected, in the room's conversation; first key wins | `call-keys`, `live-voice-rooms` | live, unit |
+| CALL-08 | Faster call setup: key sent alongside connecting, join and key wait in parallel (round 7 bug 7) | Implemented · `CallManager` | — | Done (sync S-04) | Not timed | `call-setup`, `call-live` | live, unit |
+| CALL-09 | Mirror only your own front camera (round 7 bug 3) | Implemented · `CallMediaPolicy` | — | Built (sync S-05) | Back camera not tried on a phone browser | `call-rules` | unit |
+| CALL-10 | No call buttons in text channels (round 7) | Implemented · `ConversationScreen` | 409 `text_channel_no_calls` (undeployed) | Done (sync S-02) | — | e2e calls | browser, by hand |
 
 ## APP · Apps and integrations
 
@@ -173,6 +184,9 @@ protocol, which the phone shares.
 | SET-05 | Languages (Simplified Chinese, Bengali) | Implemented · `AppLanguage` | — | Missing | English only | — | — |
 | SET-06 | Encrypted backup and restore | Implemented | — | Unsupported on web | The browser restores the server's encrypted history | — | — |
 | SET-07 | Notification health checks (battery, OEM) | Implemented · `NotificationHealthViews` | — | Unsupported on web | Android-specific | — | — |
+| SET-08 | Notifications: group notifications, message sound, call ringtone | Implemented · `SettingsStore` | — | Done (sync S-12) | Sound is the system notification's | `live-rich` | live, by hand |
+| SET-09 | Links: ask every time | Implemented · `LinkOpening.ASK` | — | Done (sync S-13) | Opening "in the app" doesn't apply in a browser | — | by hand |
+| SET-10 | Your Meldiq network address, to copy | Implemented · `SettingsScreens` | `/v1/federation/info` | Done (sync S-15) | Production doesn't federate | `live-federation` | live |
 
 ## PLAN · Planned on Android, not built anywhere
 
@@ -189,6 +203,6 @@ protocol, which the phone shares.
 | Connecting your account to an app, sharing from it | Server returns OAuth only to `meldiq://` | A per-client return URL on the server (needs approval) |
 | Background push | No Web Push on the server | VAPID keys and a Web Push sender |
 | Sending link previews | Browsers can't fetch other sites | A server-side preview fetcher |
-| Translation | On-device ML on the phone | A browser model, or a service that would see plaintext (a product decision) |
+| Translation outside Chromium | The phone translates on the device; only Chromium has a built-in on-device translator | Other browsers shipping one; a translation service would see plaintext (a product decision) |
 | Languages other than English | Not built | Translating the web strings |
 | Start fresh, several accounts, wallpaper, camera and QR, share sheet, encrypted backup, swipe, battery checks | Phone only by design | — |

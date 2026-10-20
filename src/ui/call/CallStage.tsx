@@ -173,7 +173,11 @@ function Tile({ p, hand }: { p: CallParticipantView; hand: boolean }) {
   const label = `${name}${hand ? ", hand raised" : ""}${p.micOn ? "" : ", muted"}${p.e2eeProblem ? ", encryption problem" : ""}${p.connectionWeak ? ", weak connection" : ""}`;
   return (
     <figure className={`call-tile${p.isLocal ? " local" : ""}${p.speaking ? " speaking" : ""}`} aria-label={label} style={{ margin: 0 }}>
-      {p.cameraOn ? <video ref={video} autoPlay playsInline muted aria-hidden="true" /> : <Avatar name={p.name} colorIndex={color} size={88} decorative />}
+      {p.cameraOn ? (
+        <video ref={video} className={p.mirrored ? "mirrored" : undefined} autoPlay playsInline muted aria-hidden="true" />
+      ) : (
+        <Avatar name={p.name} colorIndex={color} size={88} decorative />
+      )}
       <figcaption className={`who${p.e2eeProblem ? " problem" : ""}`}>
         {hand && <Hand size={13} aria-hidden="true" className="hand" />}
         {!p.micOn && <MicOff size={13} aria-hidden="true" />}

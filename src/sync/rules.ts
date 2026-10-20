@@ -4,6 +4,7 @@ import type { RichContent, StoredMessage } from "../model/types";
 import { type AttachmentRef, MAX_RECEIVED_ATTACHMENTS, type Payload, safeFileName } from "../protocol/payload";
 import { cleanPoll } from "./polls";
 import { cleanSticker } from "./stickers";
+import { cleanContact } from "./rich";
 
 /**
  * What a received payload does to this device's copy of a conversation. Pure functions, so they're unit-tested on their own;
@@ -23,7 +24,8 @@ export function receivedMentions(p: Payload, attested: boolean, type: Conversati
 
 function richOf(p: Payload): RichContent | null {
   const r: RichContent = {};
-  if (p.contact) r.contact = p.contact;
+  const contact = p.contact ? cleanContact(p.contact) : null;
+  if (contact) r.contact = contact;
   if (p.location) r.location = p.location;
   if (p.animoji) r.animoji = p.animoji;
   if (p.link) r.link = p.link;

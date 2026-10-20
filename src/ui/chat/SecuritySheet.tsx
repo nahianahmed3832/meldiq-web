@@ -126,17 +126,19 @@ function SecuritySheet({ conversationId, onClose }: { conversationId: string; on
         ) : undefined
       }
     >
-      <ul className="security-points">
-        {securityPoints(data.facts).map((p) => (
-          <li key={p}>
-            <span className={`security-icon ${TEXT[p].tone}`}>{TEXT[p].icon}</span>
-            <span className="lines">
-              <strong>{TEXT[p].title}</strong>
-              <small>{TEXT[p].body(who)}</small>
-            </span>
-          </li>
-        ))}
-      </ul>
+      <div className="dialog-body">
+        <ul className="security-points">
+          {securityPoints(data.facts).map((p) => (
+            <li key={p}>
+              <span className={`security-icon ${TEXT[p].tone}`}>{TEXT[p].icon}</span>
+              <span className="lines">
+                <strong>{TEXT[p].title}</strong>
+                <small>{TEXT[p].body(who)}</small>
+              </span>
+            </li>
+          ))}
+        </ul>
+      </div>
     </Dialog>
   );
 }

@@ -63,8 +63,9 @@ export class FakeMedia implements MediaSession {
       screenOn: this.screen,
       connectionWeak: false,
       e2eeProblem: false,
+      mirrored: true,
     };
-    const others = Array.from({ length: this.remote }, (_, i) => ({ ...me, identity: `peer${i}`, userId: `peer${i}`, name: `Peer ${i}`, isLocal: false, screenOn: false }));
+    const others = Array.from({ length: this.remote }, (_, i) => ({ ...me, identity: `peer${i}`, userId: `peer${i}`, name: `Peer ${i}`, isLocal: false, screenOn: false, mirrored: false }));
     return [...others, me];
   }
 

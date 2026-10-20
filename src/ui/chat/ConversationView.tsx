@@ -1,6 +1,7 @@
 import { AppUpdatesBar } from "./AppUpdatesBar";
 import { VoiceRoomBanner } from "./VoiceRoomBanner";
 import { SecurityPadlock } from "./SecuritySheet";
+import { PinnedButton } from "./PinnedPanel";
 import { Archive, ArrowLeft, Hash, Headphones, Info, Lock, Megaphone, Phone, Search, ShieldAlert, UsersRound, Video } from "lucide-react";
 import { useCallback, useMemo, useState } from "react";
 import { shallowEqual, useEngine, useOrbit } from "../../app/orbit";
@@ -76,7 +77,8 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
           </h1>
           <p className="ellipsis">{subtitle}</p>
         </div>
-        {!c.voice && <CallButtons conversationId={id} canPost={c.canPost} archived={c.archived} serverCalling={calling} busy={myCall !== null} running={!!call} />}
+        {/* Calls in a workspace happen in its voice rooms; a text channel has none to start (android round 7). */}
+        {c.type !== "CHANNEL" && <CallButtons conversationId={id} canPost={c.canPost} archived={c.archived} serverCalling={calling} busy={myCall !== null} running={!!call} />}
         {c.type !== "DM" && (
           <button
             className="btn btn-ghost btn-sm"
@@ -95,6 +97,7 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
         >
           <Search size={18} />
         </button>
+        <PinnedButton conversationId={id} />
         <SecurityPadlock conversationId={id} />
         <button
           className="icon-btn"

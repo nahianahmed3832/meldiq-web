@@ -5,7 +5,7 @@ import type { StoredMessage } from "../../model/types";
 import { Avatar } from "../components/Avatar";
 import { dayLabel, sameDay } from "../format";
 import { MessageItem } from "./MessageItem";
-import { JUMP_EVENT } from "./SearchPanel";
+import { JUMP_EVENT } from "./jump";
 
 const GROUP_MS = 5 * 60_000;
 const NEAR_BOTTOM = 120;

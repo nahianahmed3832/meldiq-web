@@ -14,12 +14,37 @@ const MAX_LABEL = 120;
 
 const coord = (v: number): string => v.toFixed(6);
 
-/** A contact as the phone cleans it: trimmed, bounded, de-duplicated, at least a name. Null when nothing usable. */
+const USER_ID = /^[A-Za-z0-9_-]{1,64}$/;
+/** Local usernames, or federated ones with their server (name@server.example), as android RichRules.USERNAME. */
+const USERNAME = /^[A-Za-z0-9_.-]{1,64}(@[A-Za-z0-9.-]{1,190})?$/;
+
+/**
+ * A contact as the phone cleans it (android RichRules.clean): trimmed, bounded, de-duplicated, at least a name. A
+ * profile card (with a valid user id) is only a profile: whatever numbers or addresses a sender put in are dropped.
+ * Null when nothing usable.
+ */
 export function cleanContact(c: ContactCard): ContactCard | null {
   const name = c.name.trim().slice(0, MAX_NAME);
   if (!name) return null;
+  const userId = c.userId?.trim();
+  if (userId && USER_ID.test(userId)) {
+    const username = c.username?.trim();
+    return { name, phones: [], emails: [], userId, ...(username && USERNAME.test(username) ? { username } : {}) };
+  }
   const list = (l: string[]) => [...new Set(l.map((x) => x.trim().slice(0, MAX_FIELD)).filter(Boolean))].slice(0, MAX_FIELDS);
   return { name, phones: list(c.phones), emails: list(c.emails) };
+}
+
+/** The Meldiq profile card for a person (android RichRules.profileCard): name, user id and username only. */
+export function profileCard(userId: string, displayName: string, username: string | null): ContactCard | null {
+  return cleanContact({ name: displayName.trim() || (username ?? ""), phones: [], emails: [], userId, ...(username ? { username } : {}) });
+}
+
+/** A card as it goes on the wire: a profile card without the empty legacy lists, as the phone sends it. */
+export function contactWire(c: ContactCard): ContactCard {
+  if (!c.userId) return c;
+  const { phones: _p, emails: _e, ...profile } = c;
+  return profile as ContactCard;
 }
 
 export function cleanLocation(l: SharedLocation): SharedLocation | null {
@@ -36,6 +61,7 @@ export function osmLink(l: SharedLocation): string {
 
 /** The text older apps and notifications show (android RichRules.fallbackText). */
 export function fallbackText(r: RichContent): string {
+  if (r.contact?.userId) return `👤 ${r.contact.name}${r.contact.username ? ` (@${r.contact.username})` : ""}`;
   if (r.contact) return `👤 ${[r.contact.name, ...r.contact.phones, ...r.contact.emails].join("\n")}`;
   if (r.location) return `📍 ${r.location.label ? `${r.location.label}\n` : ""}${osmLink(r.location)}`;
   if (r.poll) return pollFallback(r.poll);

@@ -4,6 +4,7 @@ import { dayLabel } from "../format";
 import { FileAttachment, ImageAttachment, MediaAttachment } from "./Attachments";
 import type { Gallery, GalleryItem } from "./gallery";
 import { isInlineImage } from "../../sync/attachments";
+import { BulkSaveBar, itemKey, useBulkSave } from "./BulkSaveBar";
 
 /** Photos are decrypted as they're shown: a page at a time keeps a long history from downloading everything at once. */
 const PAGE = 24;
@@ -18,9 +19,27 @@ export function MediaGalleryDialog({ gallery, nameOf, onClose }: { gallery: Gall
   const [tab, setTab] = useState<Tab>(gallery.media.length || !gallery.files.length ? "media" : "files");
   const [shown, setShown] = useState(PAGE);
   const items = tab === "media" ? gallery.media : gallery.files;
+  const bulk = useBulkSave();
+  const all = [...gallery.media, ...gallery.files];
+  /** In selection mode a file is ticked instead of opened (android round 7 bulk select). */
+  const pick = (i: GalleryItem) =>
+    bulk.selecting && (
+      <label className="bulk-pick">
+        <input type="checkbox" checked={bulk.selected.has(itemKey(i))} onChange={() => bulk.toggle(itemKey(i))} aria-label={`Select ${i.ref.name}`} />
+      </label>
+    );
   return (
     <Dialog title="Media and files" onClose={onClose} wide>
       <div className="dialog-body">
+        {bulk.selecting ? (
+          <BulkSaveBar all={all} bulk={bulk} />
+        ) : (
+          all.length > 1 && (
+            <button className="btn btn-secondary btn-sm" style={{ justifySelf: "start" }} onClick={bulk.start}>
+              Select files to save
+            </button>
+          )
+        )}
         <div className="segmented" role="tablist" aria-label="Show">
           {(["media", "files"] as const).map((t) => (
             <button
@@ -43,7 +62,12 @@ export function MediaGalleryDialog({ gallery, nameOf, onClose }: { gallery: Gall
         ) : tab === "media" ? (
           <div className="gallery-grid" role="tabpanel" aria-label="Photos and videos">
             {items.slice(0, shown).map((i) => (
-              <figure key={i.ref.id} className="gallery-cell">
+              <figure
+                key={i.ref.id}
+                className={`gallery-cell${bulk.selecting ? " selecting" : ""}${bulk.selected.has(itemKey(i)) ? " picked" : ""}`}
+                onClick={bulk.selecting ? (e) => e.target === e.currentTarget.querySelector(".bulk-pick input") || bulk.toggle(itemKey(i)) : undefined}
+              >
+                {pick(i)}
                 {isInlineImage(i.ref) ? <ImageAttachment r={i.ref} /> : <MediaAttachment r={i.ref} />}
                 <figcaption className="ellipsis">
                   {nameOf(i)} · {dayLabel(i.at)}
@@ -54,7 +78,12 @@ export function MediaGalleryDialog({ gallery, nameOf, onClose }: { gallery: Gall
         ) : (
           <div className="gallery-files" role="tabpanel" aria-label="Files">
             {items.slice(0, shown).map((i) => (
-              <div key={i.ref.id} className="gallery-file">
+              <div
+                key={i.ref.id}
+                className={`gallery-file${bulk.selecting ? " selecting" : ""}${bulk.selected.has(itemKey(i)) ? " picked" : ""}`}
+                onClick={bulk.selecting ? (e) => e.target === e.currentTarget.querySelector(".bulk-pick input") || bulk.toggle(itemKey(i)) : undefined}
+              >
+                {pick(i)}
                 <FileAttachment r={i.ref} />
                 <small className="faint">
                   {nameOf(i)} · {dayLabel(i.at)}

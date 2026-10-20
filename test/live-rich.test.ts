@@ -2,6 +2,10 @@ import nodeCrypto from "node:crypto";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import type { Engine } from "../src/sync/engine";
 import { voters } from "../src/sync/polls";
+import { fallbackText, profileCard } from "../src/sync/rich";
+import { sendFiles } from "../src/sync/attachments";
+import { planSave, saveSummary } from "../src/sync/bulkSave";
+import { runBulkSave } from "../src/sync/bulkSaver";
 import { linkBrowser, type Phone, type Server, startServer, until } from "./support/live";
 
 /**
@@ -130,5 +134,108 @@ describe("search in a conversation", () => {
     expect(sent[0]?.id).toBe(id);
     expect(sent.every((m) => m.outgoing)).toBe(true);
     expect(sent.map((m) => m.sortTs)).toEqual([...sent.map((m) => m.sortTs)].sort((a, b) => b - a));
+  });
+});
+
+describe("profile cards (android round 7)", () => {
+  it("a profile card from the browser carries no numbers; one from the phone is kept as a profile, numbers dropped", async () => {
+    const card = profileCard(bo.userId, "Bo", bo.username)!;
+    const id = await web.sendText(group, fallbackText({ contact: card }), { rich: { contact: card } });
+    const got = await until(() => bo.received.find((m) => m.messageId === id), 8000, "card on the phone");
+    expect(got.payload.contact).toEqual({ name: "Bo", userId: bo.userId, username: bo.username });
+
+    const fromPhone = nodeCrypto.randomUUID();
+    await bo.send(group, { type: "text", text: "👤 Ann", contact: { name: "Ann", phones: ["+8801712000000"], userId: ann.userId, username: ann.username } }, "message", fromPhone);
+    const shown = await until(async () => (await message(fromPhone))?.rich?.contact, 8000, "card in the browser");
+    expect(shown).toEqual({ name: "Ann", phones: [], emails: [], userId: ann.userId, username: ann.username });
+  });
+});
+
+describe("pinned messages (android round 7)", () => {
+  it("the pinned list follows pins from the phone, newest first, and an unpin from the browser reaches the phone", async () => {
+    const older = nodeCrypto.randomUUID();
+    const newer = nodeCrypto.randomUUID();
+    await bo.send(group, { type: "text", text: "agenda for Monday" }, "message", older);
+    await bo.send(group, { type: "text", text: "the new office address" }, "message", newer);
+    await until(async () => !!(await message(newer)), 8000, "messages in the browser");
+    await bo.send(group, { type: "pin", target: older, pinned: true }, "control");
+    await bo.send(group, { type: "pin", target: newer, pinned: true }, "control");
+    await until(async () => (await web.pinnedMessages(group)).length === 2, 8000, "two pins in the browser");
+    expect((await web.pinnedMessages(group)).map((m) => m.id)).toEqual([newer, older]);
+
+    await web.setPinned((await message(older))!, false);
+    await until(() => bo.received.some((m) => m.payload.type === "pin" && m.payload.target === older && m.payload.pinned === false), 8000, "unpin on the phone");
+    expect((await web.pinnedMessages(group)).map((m) => m.id)).toEqual([newer]);
+  });
+});
+
+describe("bulk save (android round 7)", () => {
+  it("saves several files decrypted into a folder, never overwriting what's there, and reports a file it can't get", async () => {
+    const a = new TextEncoder().encode("first report");
+    const b = new TextEncoder().encode("second report");
+    const file = (name: string, data: Uint8Array) => ({ name, type: "text/plain", size: data.byteLength, bytes: async () => data });
+    const id = await sendFiles(web, group, [file("report.txt", a), file("report.txt", b)], "two reports");
+    const m = (await message(id))!;
+    const plan = planSave([...m.attachments.map((ref) => ({ messageId: id, ref })), { messageId: id, ref: { ...m.attachments[0], id: "att_doesnotexist000000", name: "gone.txt" } }]);
+    if (plan.kind !== "ready") throw new Error(plan.kind);
+    expect(plan.items.map((i) => i.fileName)).toEqual(["report.txt", "report (1).txt", "gone.txt"]);
+
+    // A folder that already holds a "report.txt" of the person's own.
+    const folder = new Map<string, Uint8Array>([["report.txt", new TextEncoder().encode("mine, keep it")]]);
+    const dir = {
+      async getFileHandle(name: string, o?: { create?: boolean }) {
+        if (!folder.has(name) && !o?.create) throw new DOMException("not found", "NotFoundError");
+        return {
+          async createWritable() {
+            const parts: Uint8Array[] = [];
+            return {
+              async write(d: Blob | Uint8Array) {
+                parts.push(d instanceof Uint8Array ? d : new Uint8Array(await d.arrayBuffer()));
+              },
+              async close() {
+                folder.set(name, new Uint8Array(Buffer.concat(parts)));
+              },
+              async abort() {},
+            };
+          },
+        };
+      },
+    };
+    const status: Record<string, string> = {};
+    await runBulkSave(
+      web,
+      plan.items,
+      dir,
+      (key, s) => void (status[key] = s),
+      () => false,
+    );
+    const text = (n: string) => new TextDecoder().decode(folder.get(n));
+    expect(text("report.txt")).toBe("mine, keep it");
+    expect([text("report (1).txt"), text("report (1) (1).txt")].sort()).toEqual(["first report", "second report"].sort());
+    expect(saveSummary(status as Record<string, "saved" | "failed">)).toMatchObject({ saved: 2, failed: 1, finished: true, retryable: 1 });
+  });
+});
+
+describe("group notifications off (android Settings › Notifications)", () => {
+  it("groups and channels stay quiet; a mention of you and direct messages still notify", async () => {
+    const notified: string[] = [];
+    const quiet = (
+      await linkBrowser(server, ann, "Meldiq Web · Quiet", {
+        notify: (_t: string, body: string) => void notified.push(body),
+        prefs: () => ({ readReceipts: true, typing: true, groupNotifications: false }),
+      })
+    ).engine;
+    try {
+      const dm = (await bo.req("POST", "/v1/conversations/dm", { userId: ann.userId })).conversation.id as string;
+      await until(() => !!quiet.state.get().conversations[dm], 8000, "the DM in the quiet browser");
+      await bo.send(group, { type: "text", text: "lunch is here" }, "message");
+      await bo.send(group, { type: "text", text: "@ann your order", mentions: [ann.userId] }, "message");
+      await bo.send(dm, { type: "text", text: "a direct one" }, "message");
+      await until(() => notified.some((b) => b.includes("a direct one")), 8000, "the DM notified");
+      expect(notified.some((b) => b.includes("your order"))).toBe(true);
+      expect(notified.some((b) => b.includes("lunch is here"))).toBe(false);
+    } finally {
+      quiet.stop();
+    }
   });
 });

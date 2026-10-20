@@ -151,14 +151,27 @@ export async function setTeamArchived(engine: Engine, teamId: string, archived: 
 export type ChannelKind = "PUBLIC" | "PRIVATE" | "ANNOUNCEMENT";
 export type ChannelScope = "ORG" | "BRANCH" | "TEAM";
 
-/** [voice]: a voice room (API 0.7+, docs/VOICE_ROOMS.md), public or private; the server refuses an announcement one. */
+/**
+ * [voice]: a voice room (API 0.7+, docs/VOICE_ROOMS.md), public or private; the server refuses an announcement one.
+ * A public channel is joined by everyone it's for, now and later (android round 7, MELDIQ_CALL_BUGS bug 6): servers up
+ * to 0.7.1 stored workspace-wide public channels as opt-in unless `autoJoin` was sent, so members never saw them.
+ * Private channels stay invite-only; announcement channels are always joined.
+ */
 export async function createChannel(
   engine: Engine,
   orgId: string,
   c: { name: string; topic: string | null; scope: ChannelScope; scopeId: string | null; kind: ChannelKind; voice?: boolean },
 ): Promise<Conversation> {
   const { channel } = await engine.api.json("POST", `/v1/orgs/${enc(orgId)}/channels`, zChannelOut, {
-    body: { name: c.name.trim(), topic: c.topic?.trim() || null, scope: c.scope, scopeId: c.scopeId, kind: c.kind, ...(c.voice ? { voice: true } : {}) },
+    body: {
+      name: c.name.trim(),
+      topic: c.topic?.trim() || null,
+      scope: c.scope,
+      scopeId: c.scopeId,
+      kind: c.kind,
+      ...(c.kind === "PUBLIC" ? { autoJoin: true } : {}),
+      ...(c.voice ? { voice: true } : {}),
+    },
   });
   await engine.refreshAll();
   return channel;

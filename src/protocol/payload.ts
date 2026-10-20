@@ -23,7 +23,17 @@ export const zAttachmentRef = z.object({
 });
 export type AttachmentRef = z.infer<typeof zAttachmentRef>;
 
-const zContact = z.object({ name: z.string().max(200), phones: z.array(z.string().max(64)).max(20).default([]), emails: z.array(z.string().max(200)).max(20).default([]) });
+/**
+ * A shared contact. Since Android round 7 a card is a Meldiq profile (name, user id, username) and never carries numbers;
+ * phones and emails remain so cards from older apps still show.
+ */
+const zContact = z.object({
+  name: z.string().max(200),
+  phones: z.array(z.string().max(64)).max(20).default([]),
+  emails: z.array(z.string().max(200)).max(20).default([]),
+  userId: opt(z.string().max(64)),
+  username: opt(z.string().max(260)),
+});
 const zLocation = z.object({ lat: z.number().min(-90).max(90), lon: z.number().min(-180).max(180), accuracyM: opt(z.number()), label: opt(z.string().max(200)) });
 /** Only web links: a link preview comes from another person's device, so nothing like javascript: may become a link. */
 export const isWebUrl = (u: string): boolean => /^https?:\/\/[^\s]+$/i.test(u);

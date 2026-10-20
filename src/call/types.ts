@@ -32,6 +32,8 @@ export interface CallParticipantView {
   connectionWeak: boolean;
   /** This person's media fails to encrypt or decrypt (shown on their tile, never hidden to make video show). */
   e2eeProblem: boolean;
+  /** Draw the camera mirrored: only your own front-facing camera (rules.mirrorPreview). */
+  mirrored: boolean;
 }
 
 export interface CallUiState {

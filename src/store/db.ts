@@ -189,6 +189,13 @@ export class LocalStore {
     return out.sort((a, b) => b.sortTs - a.sortTs).slice(0, limit);
   }
 
+  /** A conversation's pinned messages kept on this browser, newest first (android round 7 pinned sheet). */
+  async pinnedMessages(conversationId: string): Promise<StoredMessage[]> {
+    const range = IDBKeyRange.bound([conversationId, -Infinity], [conversationId, Infinity]);
+    const all = await this.db.getAllFromIndex("messages", "byConversation", range);
+    return all.filter((m) => m.pinned && !m.deleted).sort((a, b) => b.sortTs - a.sortTs);
+  }
+
   /** Your latest sent messages across conversations, thread replies aside (android Home › Drafts & sent). */
   async recentSent(limit: number): Promise<StoredMessage[]> {
     const out: StoredMessage[] = [];

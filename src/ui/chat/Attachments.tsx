@@ -1,7 +1,8 @@
-import { ChevronLeft, ChevronRight, Download, FileText, Film, Mic, Pause, Play, TriangleAlert, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, Download, FileText, Film, Image as ImageIcon, Mic, Pause, Play, TriangleAlert, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { useEngine } from "../../app/orbit";
+import { usePrefs } from "../../app/prefs";
 import type { AttachmentRef } from "../../protocol/payload";
 import { isInlineImage, openAttachment, safeMime, saveAttachment } from "../../sync/attachments";
 import { clock, isVoice, shownDuration } from "../../sync/voice";
@@ -145,9 +146,26 @@ function useBlobUrl(r: AttachmentRef, enabled: boolean): { url: string | null; e
 }
 
 export function ImageAttachment({ r }: { r: AttachmentRef }) {
-  const { url, error, loading } = useBlobUrl(r, true);
+  // Download photos automatically off (android Settings › Chats): each photo waits for a click.
+  const { autoLoadPhotos } = usePrefs();
+  const [asked, setAsked] = useState(false);
+  const { url, error, loading } = useBlobUrl(r, autoLoadPhotos || asked);
   const [open, setOpen] = useState(false);
   if (error) return <FileAttachment r={r} error={error} />;
+  if (!autoLoadPhotos && !asked)
+    return (
+      <button className="att-file" onClick={() => setAsked(true)} aria-label={`Load photo ${r.name}, ${bytes(r.size)}`}>
+        <span className="file-icon">
+          <ImageIcon size={18} />
+        </span>
+        <span className="grow" style={{ minWidth: 0 }}>
+          <span className="ellipsis" style={{ display: "block", fontWeight: 600 }}>
+            Photo
+          </span>
+          <small>{bytes(r.size)} · end-to-end encrypted · click to load</small>
+        </span>
+      </button>
+    );
   if (loading || !url) return <div className="att-image att-pending skeleton" aria-label={`Loading ${r.name}`} />;
   return (
     <>
@@ -223,10 +241,19 @@ function AlbumGrid({ items }: { items: AttachmentRef[] }) {
 }
 
 function AlbumTile({ r, more, onOpen }: { r: AttachmentRef; more: number; onOpen: () => void }) {
-  const { url, error } = useBlobUrl(r, true);
+  const { autoLoadPhotos } = usePrefs();
+  const { url, error } = useBlobUrl(r, autoLoadPhotos);
   return (
     <button className="album-tile" onClick={onOpen} aria-label={more ? `Open photos, ${more} more` : `Open image ${r.name}`}>
-      {url ? <img src={url} alt="" loading="lazy" /> : error ? <TriangleAlert size={18} /> : <span className="skeleton" aria-hidden="true" />}
+      {url ? (
+        <img src={url} alt="" loading="lazy" />
+      ) : error ? (
+        <TriangleAlert size={18} />
+      ) : autoLoadPhotos ? (
+        <span className="skeleton" aria-hidden="true" />
+      ) : (
+        <ImageIcon size={20} aria-hidden="true" />
+      )}
       {more > 0 && <span className="album-more">+{more}</span>}
     </button>
   );

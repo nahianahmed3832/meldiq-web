@@ -8,6 +8,8 @@ import {
   Clock,
   Copy,
   Forward,
+  Info,
+  Languages,
   MapPin,
   MessageSquareReply,
   MessagesSquare,
@@ -41,6 +43,10 @@ import { AnimojiView } from "./AnimojiView";
 import { PollView } from "./PollView";
 import { StickerView } from "./StickerView";
 import { MediaLinkCard } from "./MediaLinkCard";
+import { ProfileCardView } from "./ProfileCards";
+import { MessageInfoDialog } from "./MessageInfo";
+import { TranslateDialog, TranslationView } from "./Translate";
+import { translationSupported } from "../../sync/translate";
 import { findMediaLink } from "../../sync/mediaLinks";
 import { usePrefs } from "../../app/prefs";
 
@@ -72,6 +78,9 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
   const [editing, setEditing] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [forwarding, setForwarding] = useState(false);
+  const [info, setInfo] = useState(false);
+  const [translating, setTranslating] = useState(false);
+  const [translation, setTranslation] = useState<string | null>(null);
   const [reminding, setReminding] = useState(false);
   // Saved for later (android Home › Later): synced in the personal document when the server keeps saved items.
   const savable = useOrbit((st) => st.server?.features.includes("saved-items") ?? false);
@@ -135,6 +144,11 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
             <AnimojiView emoji={m.rich.animoji} />
             {mine && <Status m={m} onRetry={() => void engine.retry(m.id)} onReview={p.onReview} />}
           </div>
+        ) : m.rich?.contact?.userId ? (
+          <div>
+            <ProfileCardView card={m.rich.contact} />
+            {mine && <Status m={m} onRetry={() => void engine.retry(m.id)} onReview={p.onReview} />}
+          </div>
         ) : m.rich?.contact ? (
           <span className="msg-call">
             <UserRound size={16} /> {m.rich.contact.name}
@@ -153,6 +167,7 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
           <div className={`msg-text${isEmojiOnly(m.text) ? " big-emoji" : ""}`}>
             <RichText text={m.text} mentionNames={p.mentionNames} myUsername={p.myUsername} />
             {m.editedAt && <span className="msg-meta">(edited)</span>}
+            {translation && <TranslationView text={translation} onHide={() => setTranslation(null)} />}
             {mine && <Status m={m} onRetry={() => void engine.retry(m.id)} onReview={p.onReview} />}
           </div>
         ) : (
@@ -185,7 +200,7 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
   const reactions = Object.entries(m.reactions);
   return (
     <div
-      className={`msg${p.first ? " first" : ""}${mentioned ? " mentioned" : ""}${p.highlighted ? " highlight" : ""}${more.anchor || picker.anchor ? " menu-open" : ""}`}
+      className={`msg${mine ? " mine" : ""}${p.first ? " first" : ""}${mentioned ? " mentioned" : ""}${p.highlighted ? " highlight" : ""}${more.anchor || picker.anchor ? " menu-open" : ""}`}
       id={`msg-${m.id}`}
       role="article"
       aria-label={`${p.senderName}, ${fullTime(m.sortTs)}`}
@@ -194,7 +209,7 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
       <div className="msg-gutter">
         {p.first ? <Avatar name={p.senderName} colorIndex={p.senderColor} size={38} decorative /> : <time dateTime={new Date(m.sortTs).toISOString()}>{clock(m.sortTs)}</time>}
       </div>
-      <div style={{ minWidth: 0 }}>
+      <div className="msg-main">
         {p.first && (
           <div className="msg-head">
             <strong className="ellipsis">{p.senderName}</strong>
@@ -314,12 +329,25 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
                 ]
               : []),
             ...(live ? [{ label: "Forward…", icon: <Forward size={16} />, onSelect: () => setForwarding(true) }] : []),
-            { label: "Copy text", icon: <Copy size={16} />, onSelect: () => void navigator.clipboard?.writeText(m.text) },
+            ...(m.text ? [{ label: "Copy text", icon: <Copy size={16} />, onSelect: () => void navigator.clipboard?.writeText(m.text) }] : []),
+            ...(!mine && m.text && translationSupported() ? [{ label: "Translate…", icon: <Languages size={16} />, onSelect: () => setTranslating(true) }] : []),
+            ...(mine ? [{ label: "Message info", icon: <Info size={16} />, onSelect: () => setInfo(true) }] : []),
             ...(mine && p.canPost ? ["separator" as const, { label: "Delete for everyone", icon: <Trash2 size={16} />, danger: true, onSelect: () => setConfirmDelete(true) }] : []),
           ]}
         />
       )}
       {forwarding && <ForwardDialog message={m} onClose={() => setForwarding(false)} />}
+      {info && <MessageInfoDialog m={m} onClose={() => setInfo(false)} />}
+      {translating && (
+        <TranslateDialog
+          text={m.text}
+          onClose={() => setTranslating(false)}
+          onDone={(t) => {
+            setTranslating(false);
+            setTranslation(t);
+          }}
+        />
+      )}
       {reminding && (
         <RemindMeDialog
           title="Remind me about this message"

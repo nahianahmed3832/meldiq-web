@@ -2,7 +2,7 @@ import { fileLimit, MAX_FILES_PER_MESSAGE } from "../../sync/attachments";
 import { serverHost } from "../../app/config";
 import { useState } from "react";
 import { useOrbit } from "../../app/orbit";
-import { type Palette, PALETTES, type Prefs, setPrefs, TEXT_SIZES, type TextSize, THEMES, usePrefs } from "../../app/prefs";
+import { MESSAGE_LAYOUTS, type Palette, PALETTES, type Prefs, setPrefs, TEXT_SIZES, type TextSize, THEMES, usePrefs } from "../../app/prefs";
 import { bytes } from "../format";
 import { Toggle } from "../components/Toggle";
 import { IntroPages } from "../auth/IntroPages";
@@ -45,6 +45,27 @@ export function NotificationsPage() {
             <small>Off: notifications only say "New message".</small>
           </div>
           <Toggle label="Show message text in notifications" checked={prefs.notificationText} onChange={(v) => setPrefs({ notificationText: v })} />
+        </div>
+        <div className="setting">
+          <div className="lines">
+            <strong>Group notifications</strong>
+            <small>Off: groups and channels stay quiet; mentions of you still notify.</small>
+          </div>
+          <Toggle label="Group notifications" checked={prefs.groupNotifications} onChange={(v) => setPrefs({ groupNotifications: v })} />
+        </div>
+        <div className="setting">
+          <div className="lines">
+            <strong>Message sound</strong>
+            <small>Notifications play your system's notification sound. Off: they arrive silently.</small>
+          </div>
+          <Toggle label="Message sound" checked={prefs.messageSound} onChange={(v) => setPrefs({ messageSound: v })} />
+        </div>
+        <div className="setting">
+          <div className="lines">
+            <strong>Incoming call ringtone</strong>
+            <small>Meldiq's own ringtone while a call rings in this tab. Off: the call card and notification only.</small>
+          </div>
+          <Toggle label="Incoming call ringtone" checked={prefs.callRingtone} onChange={(v) => setPrefs({ callRingtone: v })} />
         </div>
       </div>
       <h1 style={{ fontSize: 17, marginTop: 8 }}>Conversations</h1>
@@ -120,10 +141,37 @@ export function AppearancePage() {
         </div>
         <div className="setting">
           <div className="lines">
+            <strong>Message layout</strong>
+            <small>A stream with names, or bubbles with your messages on the right.</small>
+          </div>
+          <div className="segmented" role="group" aria-label="Message layout">
+            {MESSAGE_LAYOUTS.map((l) => (
+              <button key={l} aria-pressed={prefs.messageLayout === l} onClick={() => setPrefs({ messageLayout: l })}>
+                {l === "stream" ? "Stream" : "Bubbles"}
+              </button>
+            ))}
+          </div>
+        </div>
+        <div className="setting">
+          <div className="lines">
             <strong>Animated emoji</strong>
             <small>Animated emoji play in conversations. Off: they're shown still (they're still sent animated).</small>
           </div>
           <Toggle label="Animated emoji" checked={prefs.animatedEmoji} onChange={(v) => setPrefs({ animatedEmoji: v })} />
+        </div>
+        <div className="setting">
+          <div className="lines">
+            <strong>Download photos automatically</strong>
+            <small>Received photos are decrypted and shown as they arrive. Off: each waits for a click. Videos and files always wait.</small>
+          </div>
+          <Toggle label="Download photos automatically" checked={prefs.autoLoadPhotos} onChange={(v) => setPrefs({ autoLoadPhotos: v })} />
+        </div>
+        <div className="setting">
+          <div className="lines">
+            <strong>Ask before opening links</strong>
+            <small>Every link shows where it goes before it opens. Off: only links that look misleading ask.</small>
+          </div>
+          <Toggle label="Ask before opening links" checked={prefs.askBeforeLinks} onChange={(v) => setPrefs({ askBeforeLinks: v })} />
         </div>
         <div className="setting">
           <div className="lines">

@@ -1,13 +1,16 @@
 import { Copy, ExternalLink, TriangleAlert } from "lucide-react";
 import { type ReactNode, useState } from "react";
+import { getPrefs } from "../../app/prefs";
 import { linkWarning, readableDomain } from "../../sync/linkRules";
 import { Dialog } from "../components/Overlay";
 
 /**
  * A web link from a message (android LinkOpener): opens in a new tab, never with this page as its opener or referrer.
- * A link that looks misleading (android LinkRules.warning) asks first, showing where it really goes.
+ * A link that looks misleading (android LinkRules.warning) asks first, showing where it really goes; with Links › Ask
+ * every time (android LinkOpening.ASK) every link does.
  */
 export function SafeLink({ href, className, children }: { href: string; className?: string; children: ReactNode }) {
+  /** null: not asking; "": asking because of the setting; otherwise the warning. */
   const [asking, setAsking] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const close = () => {
@@ -23,14 +26,14 @@ export function SafeLink({ href, className, children }: { href: string; classNam
         rel="noopener noreferrer nofollow"
         onClick={(e) => {
           const warning = linkWarning(href);
-          if (!warning) return;
+          if (!warning && !getPrefs().askBeforeLinks) return;
           e.preventDefault();
-          setAsking(warning);
+          setAsking(warning ?? "");
         }}
       >
         {children}
       </a>
-      {asking && (
+      {asking !== null && (
         <Dialog
           title={readableDomain(href) ?? "Open link"}
           onClose={close}
@@ -51,17 +54,23 @@ export function SafeLink({ href, className, children }: { href: string; classNam
                   close();
                 }}
               >
-                <ExternalLink size={15} /> Open anyway
+                <ExternalLink size={15} /> {asking ? "Open anyway" : "Open"}
               </button>
             </>
           }
         >
           <div className="dialog-body">
             <code className="link-full">{href}</code>
-            <div className="banner warn" role="alert">
-              <TriangleAlert size={16} />
-              <span className="grow">{asking}</span>
-            </div>
+            {asking ? (
+              <div className="banner warn" role="alert">
+                <TriangleAlert size={16} />
+                <span className="grow">{asking}</span>
+              </div>
+            ) : (
+              <p className="faint" style={{ margin: 0 }}>
+                This is where the link goes. It opens in a new tab.
+              </p>
+            )}
           </div>
         </Dialog>
       )}

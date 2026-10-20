@@ -99,7 +99,8 @@ button.e2ee-badge:hover {
   object-fit: cover;
   background: var(--media-bg);
 }
-.call-tile.local video {
+/* Your own front camera only, like a mirror (rules.mirrorPreview); a back camera is drawn as it is. */
+.call-tile video.mirrored {
   transform: scaleX(-1);
 }
 .call-tile .who {

@@ -7,6 +7,8 @@ import { invitableRoles, roleName } from "../../sync/workspaceRules";
 import { shortWhen, untilWhen } from "../format";
 import { useAction, useLoad } from "./useLoad";
 import { Card, ErrorLine } from "./WorkspaceView";
+import { QrCode } from "../components/QrCode";
+import { inviteLink } from "../../sync/inviteCodes";
 
 const EXPIRY: { hours: number; label: string }[] = [
   { hours: 24, label: "1 day" },
@@ -156,12 +158,13 @@ function NewInvitation({ detail, onCreated }: { detail: OrgAdminDetail; onCreate
       <ErrorLine text={act.error} />
       {made && (
         <div className="code-box" role="status">
+          <QrCode text={inviteLink(made.code)} size={132} label={`QR code for invitation ${made.code}`} />
           <span className="grow">
             <span className="code" style={{ fontSize: 22 }}>
               {made.code}
             </span>
             <small className="faint" style={{ display: "block" }}>
-              {roleName(made.role)} · {made.maxUses} {made.maxUses === 1 ? "use" : "uses"} · expires {untilWhen(made.expiresAt)}. Shown once.
+              {roleName(made.role)} · {made.maxUses} {made.maxUses === 1 ? "use" : "uses"} · expires {untilWhen(made.expiresAt)}. Shown once. Scan the code with Meldiq on a phone, or share the code.
             </small>
           </span>
           <button

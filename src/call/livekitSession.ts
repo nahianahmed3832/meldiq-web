@@ -15,7 +15,7 @@ import {
   VideoPresets,
 } from "livekit-client";
 import { isAuditMessage } from "./frameAudit";
-import { describePath, deviceIssueOf, MediaFlowMonitor } from "./rules";
+import { describePath, deviceIssueOf, MediaFlowMonitor, mirrorPreview } from "./rules";
 import { MediaSecurityTracker } from "./security";
 import {
   type CallParticipantView,
@@ -178,6 +178,7 @@ export class LiveKitSession implements MediaSession {
         screenOn: !!screen && !screen.isMuted && !!screen.track && (isLocal || this.tracker.proven(MediaSecurityTracker.key(p.identity, screen.track.mediaStreamID))),
         connectionWeak: p.connectionQuality === ConnectionQuality.Poor || p.connectionQuality === ConnectionQuality.Lost,
         e2eeProblem: problems.has(p.identity),
+        mirrored: mirrorPreview(isLocal, isLocal ? cam?.track?.mediaStreamTrack.getSettings().facingMode : undefined),
       };
     };
     // Others in the order they arrived, then you (android CallTiles.order).

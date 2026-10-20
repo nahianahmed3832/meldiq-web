@@ -43,7 +43,7 @@ export interface EngineOptions {
   /** Shows a system notification for a reminder that went off (server reminders, Later). */
   notifyReminder?: (title: string, body: string, conversationId: string | null) => void;
   /** Per-browser preferences. */
-  prefs?: () => { readReceipts: boolean; typing: boolean };
+  prefs?: () => { readReceipts: boolean; typing: boolean; groupNotifications?: boolean };
   onRevoked?: (reason: RevokedReason) => void;
   /** Call media: LiveKit with frame encryption in the browser (call/livekitSession.ts); a fake in tests. */
   media?: MediaFactory;
@@ -638,6 +638,8 @@ export class Engine implements EngineContext {
     const st = this.state.get();
     if (!shouldNotify(levelOf(st.nav[workspaceOf(conversation?.orgId ?? null)], m.conversationId), mention)) return;
     const mentioned = mention !== null;
+    // Group notifications off (android Settings › Notifications): groups and channels stay quiet; mentions still notify.
+    if (conversation?.type !== "DM" && !mentioned && this.opts.prefs?.().groupNotifications === false) return;
     const sender = st.users[m.senderUserId]?.displayName ?? "Someone";
     const title = conversation?.type === "CHANNEL" ? `#${conversation.name ?? "channel"}` : conversation?.type === "GROUP" ? (conversation.name ?? sender) : sender;
     this.opts.notify(mentioned ? `${title} · mentioned you` : title, conversation?.type === "DM" ? preview(m) : `${sender}: ${preview(m)}`, m.conversationId);
@@ -836,6 +838,10 @@ export class Engine implements EngineContext {
   }
 
   /** Text search over the messages this browser holds (the server can't search encrypted content). */
+  pinnedMessages(conversationId: string): Promise<StoredMessage[]> {
+    return this.store.pinnedMessages(conversationId);
+  }
+
   recentSent(limit: number): Promise<StoredMessage[]> {
     return this.store.recentSent(limit);
   }

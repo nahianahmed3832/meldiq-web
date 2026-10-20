@@ -4,6 +4,7 @@ import type { Conversation } from "../../api/schemas";
 import type { OrgAdminDetail } from "../../api/workspaceSchemas";
 import { useEngine, useOrbit } from "../../app/orbit";
 import { navigate } from "../../app/router";
+import { joinChannel } from "../../sync/account";
 import { type ChannelKind, type ChannelScope, createChannel, updateConversation, workspaceChannels } from "../../sync/workspaces";
 import { useAction, useLoad } from "./useLoad";
 import { Card, ErrorLine } from "./WorkspaceView";
@@ -67,6 +68,21 @@ function ChannelRow({ c, onChanged }: { c: Conversation; onChanged: () => void }
           <a className="ellipsis" href={`#/home/c/${encodeURIComponent(c.id)}`} onClick={() => navigate({ section: "home", conversationId: c.id })}>
             {c.name}
           </a>
+        ) : !c.archived ? (
+          // A channel you haven't joined joins on a click of its name too, then opens (android round 7).
+          <button
+            className="link-btn ellipsis"
+            disabled={act.busy}
+            onClick={() =>
+              void act.act(async () => {
+                await joinChannel(engine, c.id);
+                navigate({ section: "home", conversationId: c.id });
+              })
+            }
+            title="Join and open"
+          >
+            {c.name}
+          </button>
         ) : (
           <span className="ellipsis">{c.name}</span>
         )}

@@ -1046,3 +1046,45 @@ select.input {
   gap: 10px;
   width: min(520px, 100%);
 }
+
+/* A text-like button (a channel name that joins and opens). */
+.link-btn {
+  padding: 0;
+  text-align: left;
+  color: var(--accent-text);
+  font: inherit;
+}
+.link-btn:hover:not(:disabled) {
+  text-decoration: underline;
+}
+
+/* Label and value pairs (Message info). */
+.info-list {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+}
+.info-list div {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 12px;
+}
+.info-list dt {
+  color: var(--text-3);
+  font-size: 13px;
+}
+.info-list dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+/* An invitation's QR code (android invite screen): white quiet zone, readable in either theme. */
+.qr-code {
+  flex: none;
+  border-radius: var(--r-sm);
+}
+@media (max-width: 520px) {
+  .code-box:has(.qr-code) {
+    flex-wrap: wrap;
+  }
+}

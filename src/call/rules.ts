@@ -14,7 +14,8 @@ export const PEER_WINDOW_MS = 30_000;
 export const REJOIN_WINDOW_MS = 45_000;
 /** How long to wait for a call's key before refusing to join (android CallManager.waitForKey: 40 × 250 ms). */
 export const KEY_WAIT_MS = 10_000;
-export const KEY_POLL_MS = 250;
+/** How often a joiner looks for the call's key (android round 7: every 50 ms, was 250). */
+export const KEY_POLL_MS = 50;
 
 export interface RingCandidate {
   id: string;
@@ -132,6 +133,7 @@ export function describePath(stats: Iterable<Stat>): string | null {
 /** User-facing messages, one per failure class (android CallFailure). */
 export const CallFailure = {
   NO_KEY: "Couldn't get this call's encryption key, so the call wasn't joined. Ask the caller to try again.",
+  KEY_NOT_SENT: "Couldn't send the call's encryption key, so the other person can't join. Try calling again.",
   UNSUPPORTED: "This browser can't encrypt call media end to end. Use a current Chrome, Edge, Firefox or Safari, or answer on your phone.",
   KEY_CHANGED: "Someone's security key in this conversation changed. Review it before calling.",
 
@@ -188,4 +190,13 @@ export function deviceIssueOf(e: unknown): DeviceIssue {
     default:
       return "failed";
   }
+}
+
+/**
+ * Whether a camera picture is drawn mirrored (android round 7 CallMediaPolicy.mirrorPreview): only your own front-facing
+ * camera, like a mirror. A back camera (`environment`) is drawn as it is, or it moves the wrong way when the phone turns;
+ * laptop webcams don't say which way they face, and face you. Mirroring is local drawing only: others never see it.
+ */
+export function mirrorPreview(isLocal: boolean, facingMode: string | undefined): boolean {
+  return isLocal && facingMode !== "environment";
 }

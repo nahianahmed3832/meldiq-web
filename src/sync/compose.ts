@@ -7,6 +7,7 @@ import type { Member } from "../api/schemas";
 import { resolveMentions } from "./mentions";
 import { applyPin, applyReaction } from "./rules";
 import { applyClose, applyVote } from "./polls";
+import { contactWire } from "./rich";
 
 /** What sending needs from the engine. */
 export interface ComposeHost {
@@ -55,7 +56,7 @@ export class Compose {
       mentions: mentions.ids.length ? mentions.ids : undefined,
       mentionAll: mentions.all ? true : undefined,
       attachments: opts.attachments?.length ? opts.attachments : undefined,
-      contact: opts.rich?.contact,
+      contact: opts.rich?.contact ? contactWire(opts.rich.contact) : undefined,
       location: opts.rich?.location,
       animoji: opts.rich?.animoji,
       link: opts.rich?.link,

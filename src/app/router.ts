@@ -3,7 +3,7 @@ import { useSyncExternalStore } from "react";
 /**
  * Hash routes, so links survive reloads and Back works without a server route:
  *   #/home  #/dms  #/activity  #/later            the sections (Later: saved messages and reminders)
- *   #/<section>/c/<id>[/details|/search|/thread/<root>]   a conversation (and its side panel)
+ *   #/<section>/c/<id>[/details|/search|/pinned|/thread/<root>]   a conversation (and its side panel)
  *   #/settings/<page>
  *   #/workspace/<page>                            the current workspace's settings and administration
  */
@@ -14,7 +14,7 @@ export type WorkspacePage = "overview" | "people" | "invitations" | "channels" |
 export interface Route {
   section: Section;
   conversationId: string | null;
-  panel: "details" | "thread" | "search" | null;
+  panel: "details" | "thread" | "search" | "pinned" | null;
   threadRoot: string | null;
   settingsPage: SettingsPage;
   workspacePage: WorkspacePage;
@@ -38,6 +38,7 @@ export function parseRoute(hash: string): Route {
     route.conversationId = parts[2];
     if (parts[3] === "details") route.panel = "details";
     if (parts[3] === "search") route.panel = "search";
+    if (parts[3] === "pinned") route.panel = "pinned";
     if (parts[3] === "thread" && parts[4] && ID.test(parts[4])) {
       route.panel = "thread";
       route.threadRoot = parts[4];
@@ -54,6 +55,7 @@ export function routeHash(r: Partial<Route> & { section: Section }): string {
     h += `/c/${encodeURIComponent(r.conversationId)}`;
     if (r.panel === "details") h += "/details";
     if (r.panel === "search") h += "/search";
+    if (r.panel === "pinned") h += "/pinned";
     if (r.panel === "thread" && r.threadRoot) h += `/thread/${encodeURIComponent(r.threadRoot)}`;
   }
   return h;

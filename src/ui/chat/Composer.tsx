@@ -19,7 +19,8 @@ import { ANIMOJI } from "../../sync/animoji";
 import { STICKER_PACKS } from "../../sync/stickers";
 import { PollDialog } from "./PollDialog";
 import { StickerArt } from "./StickerView";
-import { ContactDialog, LocationDialog } from "./RichDialogs";
+import { LocationDialog } from "./RichDialogs";
+import { ProfileShareDialog } from "./ProfileCards";
 import { VoiceBar } from "./VoiceBar";
 
 interface ComposerProps {
@@ -385,12 +386,12 @@ export function Composer(props: ComposerProps) {
           entries={[
             { label: `Files (up to ${MAX_FILES_PER_MESSAGE})`, icon: <FileUp size={16} />, onSelect: () => fileInput.current?.click() },
             { label: "Poll…", icon: <BarChart3 size={16} />, onSelect: () => setRich("poll") },
-            { label: "Contact card…", icon: <UserRound size={16} />, onSelect: () => setRich("contact") },
+            { label: "Share a profile…", icon: <UserRound size={16} />, onSelect: () => setRich("contact") },
             { label: "Location…", icon: <MapPin size={16} />, onSelect: () => setRich("location") },
           ]}
         />
       )}
-      {rich === "contact" && <ContactDialog onClose={() => setRich(null)} onSend={(contact) => void sendRich({ contact })} />}
+      {rich === "contact" && <ProfileShareDialog onClose={() => setRich(null)} onSend={(contact) => void sendRich({ contact })} />}
       {rich === "location" && <LocationDialog onClose={() => setRich(null)} onSend={(location) => void sendRich({ location })} />}
       {rich === "poll" && <PollDialog onClose={() => setRich(null)} onSend={(poll) => void sendRich({ poll })} />}
       {emoji.anchor && (
