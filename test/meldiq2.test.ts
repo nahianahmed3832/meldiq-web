@@ -110,3 +110,14 @@ describe("workspace kind", () => {
     expect(zOrg.parse({ ...base, kind: "something-new" }).kind).toBe("team");
   });
 });
+
+describe("workspace pages for a community", () => {
+  it("leave out organisation structure and the customer inbox, unless that page is open", async () => {
+    const { pageShownForKind } = await import("../src/sync/workspaceRules");
+    expect(pageShownForKind("structure", "team")).toBe(true);
+    expect(pageShownForKind("structure", "community")).toBe(false);
+    expect(pageShownForKind("inbox", "community")).toBe(false);
+    expect(pageShownForKind("inbox", "community", "inbox")).toBe(true);
+    expect(pageShownForKind("channels", "community")).toBe(true);
+  });
+});

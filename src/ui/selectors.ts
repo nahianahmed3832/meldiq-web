@@ -36,6 +36,8 @@ export function channelGroups(s: AppState, orgId: string | null): ChannelGroup[]
   const groups = new Map<string, ChannelGroup>();
   for (const c of Object.values(s.conversations)) {
     if (c.type !== "CHANNEL" || c.orgId !== orgId || !orgId) continue;
+    // Voice rooms have their own section (with who is in them), so they aren't listed a second time here.
+    if (c.voice) continue;
     const key = `${c.scope ?? "ORG"}:${c.scopeId ?? c.orgId}`;
     const title = c.scope === "ORG" || !c.scope ? "Channels" : (c.scopeName ?? (c.scope === "TEAM" ? "Team" : "Branch"));
     const g = groups.get(key) ?? { key, title, scope: c.scope, channels: [] };

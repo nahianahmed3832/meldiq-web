@@ -57,3 +57,14 @@ export function roleName(role: string | null | undefined): string {
 export function cleanInviteCode(code: string): string {
   return code.trim().toUpperCase().replace(/\s+/g, "");
 }
+
+/**
+ * Meldiq 2.0: workspace pages a community doesn't show up front (organisation structure and the customer inbox are
+ * for companies). Hiding is only presentation: the pages, their data and their links keep working, and an owner who
+ * switches the workspace to a team sees them again.
+ */
+export const TEAM_ONLY_PAGES: readonly string[] = ["structure", "inbox"];
+
+export function pageShownForKind(page: string, kind: "team" | "community", current: string | null = null): boolean {
+  return kind === "team" || !TEAM_ONLY_PAGES.includes(page) || page === current;
+}

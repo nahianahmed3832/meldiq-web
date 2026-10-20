@@ -109,6 +109,11 @@ describe("sidebar selections", () => {
     local: { g: local("g", 2, 0, 5), t: local("t", 0, 0, 3), x: local("x", 4, 1, 9), d: local("d", 1, 1, 7), p: local("p", 0, 0, 8) },
   };
 
+  it("lists a voice room once, in its own section, not again among the channels", () => {
+    const withRoom: AppState = { ...state, conversations: { ...state.conversations, v: conv({ id: "v", name: "lounge", voice: true }) } };
+    expect(channelGroups(withRoom, "o1").flatMap((g) => g.channels.map((c) => c.id))).toEqual(["g", "t"]);
+  });
+
   it("a workspace shows its own channels, grouped by scope, plus every DM and group", () => {
     expect(channelGroups(state, "o1").map((g) => [g.title, g.channels.map((c) => c.id)])).toEqual([
       ["Channels", ["g"]],

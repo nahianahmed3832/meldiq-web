@@ -22,25 +22,33 @@ import { DeveloperPage } from "./DeveloperPage";
 import { GroupsPage } from "./GroupsPage";
 import { MeetingsPage } from "./MeetingsPage";
 import type { OrgAdminDetail, OrgPermissions } from "../../api/workspaceSchemas";
+import { pageShownForKind } from "../../sync/workspaceRules";
 
 /** Pages, with the permission flag that shows them (the server decides; older servers don't send the newer flags). */
-const PAGES: { key: WorkspacePage; label: string; icon: ReactNode; shown?: (p: OrgPermissions, d: OrgAdminDetail) => boolean; feature?: string }[] = [
-  { key: "overview", label: "Overview", icon: <LayoutGrid size={17} /> },
-  { key: "people", label: "People", icon: <UsersRound size={17} /> },
-  { key: "invitations", label: "Invitations", icon: <Ticket size={17} /> },
-  { key: "channels", label: "Channels", icon: <Hash size={17} /> },
-  { key: "structure", label: "Branches & teams", icon: <Building2 size={17} /> },
-  { key: "roles", label: "Roles", icon: <ShieldCheck size={17} />, shown: (p) => p.canViewRoles },
-  { key: "apps", label: "Apps", icon: <Blocks size={17} />, shown: (p) => p.canViewApps },
-  { key: "audit", label: "Audit log", icon: <ScrollText size={17} />, shown: (p) => p.canViewAudit },
-  { key: "inbox", label: "Customer inbox", icon: <Inbox size={17} />, feature: "unified-inbox", shown: (p) => p.effective.includes("inbox.view") },
-  { key: "groups", label: "Groups", icon: <Users size={17} />, feature: "groups", shown: (_p, d) => d.org.myRole !== "GUEST" },
-  { key: "meetings", label: "Meetings", icon: <CalendarDays size={17} />, feature: "meetings" },
-  { key: "documents", label: "Documents", icon: <FileText size={17} />, feature: "documents" },
-  { key: "workflows", label: "Workflows", icon: <Workflow size={17} />, shown: (p) => p.canManageWorkflows },
-  { key: "ai", label: "AI", icon: <Sparkles size={17} />, feature: "ai" },
-  { key: "developer", label: "API keys & webhooks", icon: <Code2 size={17} />, feature: "developer-api", shown: (p) => p.canManageDevelopers },
-  { key: "usage", label: "Usage", icon: <Gauge size={17} />, shown: (p) => p.canViewUsage },
+/** Meldiq 2.0: the pages in three groups (people and channels; tools; administration) instead of one long list. */
+type PageGroup = "workspace" | "tools" | "admin";
+const GROUPS: { key: PageGroup; label: string }[] = [
+  { key: "workspace", label: "Workspace" },
+  { key: "tools", label: "Tools" },
+  { key: "admin", label: "Administration" },
+];
+const PAGES: { key: WorkspacePage; label: string; icon: ReactNode; group: PageGroup; shown?: (p: OrgPermissions, d: OrgAdminDetail) => boolean; feature?: string }[] = [
+  { key: "overview", label: "Overview", icon: <LayoutGrid size={17} />, group: "workspace" },
+  { key: "people", label: "People", icon: <UsersRound size={17} />, group: "workspace" },
+  { key: "invitations", label: "Invitations", icon: <Ticket size={17} />, group: "workspace" },
+  { key: "channels", label: "Channels", icon: <Hash size={17} />, group: "workspace" },
+  { key: "groups", label: "Groups", icon: <Users size={17} />, group: "workspace", feature: "groups", shown: (_p, d) => d.org.myRole !== "GUEST" },
+  { key: "structure", label: "Branches & teams", icon: <Building2 size={17} />, group: "workspace" },
+  { key: "documents", label: "Documents", icon: <FileText size={17} />, group: "tools", feature: "documents" },
+  { key: "meetings", label: "Meetings", icon: <CalendarDays size={17} />, group: "tools", feature: "meetings" },
+  { key: "apps", label: "Apps", icon: <Blocks size={17} />, group: "tools", shown: (p) => p.canViewApps },
+  { key: "workflows", label: "Workflows", icon: <Workflow size={17} />, group: "tools", shown: (p) => p.canManageWorkflows },
+  { key: "ai", label: "AI", icon: <Sparkles size={17} />, group: "tools", feature: "ai" },
+  { key: "inbox", label: "Customer inbox", icon: <Inbox size={17} />, group: "tools", feature: "unified-inbox", shown: (p) => p.effective.includes("inbox.view") },
+  { key: "roles", label: "Roles", icon: <ShieldCheck size={17} />, group: "admin", shown: (p) => p.canViewRoles },
+  { key: "audit", label: "Audit log", icon: <ScrollText size={17} />, group: "admin", shown: (p) => p.canViewAudit },
+  { key: "developer", label: "API keys & webhooks", icon: <Code2 size={17} />, group: "admin", feature: "developer-api", shown: (p) => p.canManageDevelopers },
+  { key: "usage", label: "Usage", icon: <Gauge size={17} />, group: "admin", shown: (p) => p.canViewUsage },
 ];
 
 /**
@@ -62,7 +70,7 @@ export function WorkspaceView({ orgId, page, itemId, onDialog }: { orgId: string
             <Building2 size={26} />
           </span>
           <h2>No workspace yet</h2>
-          <p className="muted">Create one for your organisation, or join one with an invitation code.</p>
+          <p className="muted">Create one for your organisation, start a community, or join one with an invitation code.</p>
           <div className="row" style={{ gap: 8, justifyContent: "center" }}>
             <button className="btn btn-primary" onClick={() => onDialog({ kind: "createWorkspace" })}>
               Create a workspace
@@ -82,12 +90,25 @@ export function WorkspaceView({ orgId, page, itemId, onDialog }: { orgId: string
       <div className="settings">
         <nav className="settings-nav" aria-label="Workspace pages">
           <h2 className="ellipsis">{org.name}</h2>
-          {PAGES.filter((p) => (!p.shown || (d && p.shown(d.permissions, d))) && (!p.feature || features.includes(p.feature))).map((p) => (
-            <button key={p.key} className="side-item" aria-current={page === p.key ? "page" : undefined} onClick={() => navigate({ section: "workspace", workspacePage: p.key })}>
-              <span className="glyph">{p.icon}</span>
-              <span className="grow">{p.label}</span>
-            </button>
-          ))}
+          {GROUPS.map((g) => {
+            const pages = PAGES.filter(
+              (p) => p.group === g.key && (!p.shown || (d && p.shown(d.permissions, d))) && (!p.feature || features.includes(p.feature)) && pageShownForKind(p.key, org.kind, page),
+            );
+            if (pages.length === 0) return null;
+            return (
+              <div key={g.key} role="group" aria-labelledby={`ws-group-${g.key}`} className="settings-nav-group">
+                <h3 id={`ws-group-${g.key}`} className="ws-subhead">
+                  {g.label}
+                </h3>
+                {pages.map((p) => (
+                  <button key={p.key} className="side-item" aria-current={page === p.key ? "page" : undefined} onClick={() => navigate({ section: "workspace", workspacePage: p.key })}>
+                    <span className="glyph">{p.icon}</span>
+                    <span className="grow">{p.label}</span>
+                  </button>
+                ))}
+              </div>
+            );
+          })}
           <button className="side-item" onClick={() => navigate({ section: "home" })} style={{ marginTop: 8 }}>
             <span className="glyph">
               <Laptop size={17} />

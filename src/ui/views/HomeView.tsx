@@ -61,7 +61,7 @@ export function HomeView({ orgId, section, onDialog }: { orgId: string | null; s
               {greeting()}, {me.displayName.split(" ")[0]} 👋
             </h1>
             <p className="view-sub">
-              {org ? `Here's what's happening in ${org.name}.` : "Your direct messages and groups are here. Create a workspace for your organisation, or join one with an invitation code."}
+              {org ? `Here's what's happening in ${org.name}.` : "Your direct messages and groups are here. Create a workspace for your team, start a community, or join one with an invitation code."}
             </p>
             {!org && section === "home" && (
               <div className="row" style={{ gap: 8, marginTop: 12, flexWrap: "wrap" }}>
