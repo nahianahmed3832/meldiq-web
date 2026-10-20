@@ -151,14 +151,14 @@ protocol, which the phone shares.
 
 | ID | Feature | Android | Backend | Web | Gaps, security | Tests | Verified |
 |---|---|---|---|---|---|---|---|
-| CALL-01 | 1:1 and group calls, ring, answer, decline, busy; E2EE media and verification code | Implemented · `CallManager`, `CallOverlay` | `/v1/calls*`, LiveKit | Built | No unencrypted fallback | `call-live`, `call-keys`, `e2e/calls` | live, browser (LiveKit native SDK as far side). **Not device-verified** |
+| CALL-01 | 1:1 and group calls, ring, answer, decline, busy; E2EE media and verification code | Implemented · `CallManager`, `CallOverlay` | `/v1/calls*`, LiveKit | Built | No unencrypted fallback | `live-calls`, `call-keys`, `e2e/calls` | live, browser (LiveKit native SDK as far side). **Not device-verified** |
 | CALL-02 | Screen sharing, device choice, minimised call | Implemented | LiveKit | Built | — | `e2e/calls` | browser |
 | CALL-03 | Call history, missed calls | Implemented · `CallsScreen` | `/v1/conversations/:id/calls` | Done | — | `live`, `messaging-extras` | live |
 | CALL-04 | **New:** Voice rooms: create, Home › Voice rooms with who's in each, banner, Join; nobody rings | Implemented · `VoiceRooms` | `voice` channels, `/v1/calls` (`voice-rooms`) | Done | Not an announcement channel; no call entries in the room's history | `live-voice-rooms` | live, by hand (create, Voice rooms list, banner; Join needs a media server, so not clicked by hand) |
 | CALL-05 | **New:** Raise hand, queue in order | Implemented · `CallOverlay` | `/v1/calls/:id/hand` | Done | — | `live-voice-rooms` | live |
 | CALL-06 | **New:** Moderation: mute microphone, lower hand, remove (room managers) | Implemented · `PeoplePanel` | `/v1/calls/:id/moderate` | Done | Server checks `canManageConversation`; only the person can unmute | `live-voice-rooms` (stand-in media server) | live |
 | CALL-07 | **New:** A room's key passed on by anyone connected | Implemented · `CallKeyVerifier` | — | Done | Accepted only from the creator or someone the server lists as connected, in the room's conversation; first key wins | `call-keys`, `live-voice-rooms` | live, unit |
-| CALL-08 | Faster call setup: key sent alongside connecting, join and key wait in parallel (round 7 bug 7) | Implemented · `CallManager` | — | Done (sync S-04) | Not timed | `call-setup`, `call-live` | live, unit |
+| CALL-08 | Faster call setup: key sent alongside connecting, join and key wait in parallel (round 7 bug 7) | Implemented · `CallManager` | — | Done (sync S-04) | Not timed | `call-setup`, `live-calls` | live, unit |
 | CALL-09 | Mirror only your own front camera (round 7 bug 3) | Implemented · `CallMediaPolicy` | — | Built (sync S-05) | Back camera not tried on a phone browser | `call-rules` | unit |
 | CALL-10 | No call buttons in text channels (round 7) | Implemented · `ConversationScreen` | 409 `text_channel_no_calls` (undeployed) | Done (sync S-02) | — | e2e calls | browser, by hand |
 

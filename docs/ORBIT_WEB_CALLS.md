@@ -39,7 +39,7 @@ No gap was found that needed the backend, so there is **no server change, migrat
   conversation, the account's own phone included.
 - **Never stored.** The `call_invite` is sealed and posted directly (`Engine.sendControlNow`), not through the outbox,
   because the outbox lives in IndexedDB. Received keys live in `CallKeyRing` in memory. A test reads every IndexedDB
-  store after a call and checks the key isn't there (`test/call-live.test.ts`). A tab reload forgets keys; a call
+  store after a call and checks the key isn't there (`test/live-calls.test.ts`). A tab reload forgets keys; a call
   joined after a reload gets its key again with `call_key_request`.
 - **Accepting a key (T5.2):** only from the call's creator, in the call's own conversation, for a call that hasn't
   ended, checked against `GET /v1/calls/:id`; the envelope signature already proved the sender. The first accepted key
@@ -114,7 +114,7 @@ if an upgrade changes it.
 |---|---|
 | `test/call-keys.test.ts` (11) | Key format and refusal of malformed keys; creator-only acceptance (T5.2); first key wins; bounded ring; request and answer pacing (T5.3); verification code equal to an independent HKDF implementation and to RFC 5869 test case 1; frame-audit verdicts (decrypted, encrypted, unchanged, empty, server-injected, unseen frames) |
 | `test/call-rules.test.ts` (22) | D-17 badge: the cases of android `MediaSecurityTrackerTest` plus wrong key, slow start, unencrypted frame, LiveKit error, injected frames; ring recovery; retryable reasons and backoff; media flow; network path without addresses; failure messages; device-error classes; the call screen's status lines |
-| `test/call-live.test.ts` (19) | Against an in-process server with reference clients (byte-compatible with Android) and a recording fake for media: ringing and `alerted`, joining with the caller's key, `ACTIVE` state, hang-up; refusing to join without a key (and asking for it); getting it by `call_key_request`; T5.2 in a group; decline; listen-only with refused devices; ringing stops when the account's phone answers; ring recovery after reconnecting; placing a call (key format, the account's phone gets it too, call entry, **key absent from IndexedDB**); answering key requests only as the creator; hanging up while the call is being created leaves nothing ringing; no call without a microphone; busy; rejoin with the same key; removal ends the call; 1:1 peer drop and return; stopping from a state listener can't loop; a browser that can't encrypt |
+| `test/live-calls.test.ts` (19) | Against an in-process server with reference clients (byte-compatible with Android) and a recording fake for media: ringing and `alerted`, joining with the caller's key, `ACTIVE` state, hang-up; refusing to join without a key (and asking for it); getting it by `call_key_request`; T5.2 in a group; decline; listen-only with refused devices; ringing stops when the account's phone answers; ring recovery after reconnecting; placing a call (key format, the account's phone gets it too, call entry, **key absent from IndexedDB**); answering key requests only as the creator; hanging up while the call is being created leaves nothing ringing; no call without a microphone; busy; rejoin with the same key; removal ends the call; 1:1 peer drop and return; stopping from a state listener can't loop; a browser that can't encrypt |
 | `e2e/calls.spec.ts` (5 × 4 projects) | Real browsers, real LiveKit, real E2EE against LiveKit's **native** SDK (libwebrtc's frame cryptor, the Android SDK's implementation family): an incoming video call verified encrypted both ways (remote video playing, the native side hearing the browser), verification code; an outgoing voice call, mute, hang-up from the other side; a wrong-key peer shown as "Encryption problem", nothing rendered, the native side hearing nothing; a refused microphone (no call placed; an answered call listen-only); a network drop and recovery (Chromium, and Chromium at phone width) |
 
 Results on 2026-10-18 (Node 25.8, Playwright 1.64.1, LiveKit 1.13.10): unit and integration 141 passed; browser tests
@@ -139,7 +139,7 @@ repository's `tools/griip-bot` (`npm ci` there, next to the server folder the te
   native frame cryptor with the Android key handling, which makes interop likely, not proven.
 - **Group calls** work like Android's (same server rules), but were tested here only one-to-one.
 - **Screen sharing and the device menu** (microphone, camera, speaker; added 2026-10-19) are tested only with
-  simulated media (`test/call-live.test.ts`), not in a real browser call. Screen sharing needs `getDisplayMedia`, so it
+  simulated media (`test/live-calls.test.ts`), not in a real browser call. Screen sharing needs `getDisplayMedia`, so it
   isn't offered in phones' browsers. No picture-in-picture window; call history shows as lines in conversations and
   Activity › Missed calls, not as a separate list. No ringing when no Orbit tab is open (no Web Push).
 - **Keys aren't rotated** when people join or leave (T5.4, as on Android).
