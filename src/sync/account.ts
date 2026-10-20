@@ -1,6 +1,8 @@
 import { z } from "zod";
 import { ApiError } from "../api/client";
 import { type Activity, type Conversation, type Device, type Member, type OrgDetail, zActivity, zConversation, zDevice, zMember, zOrgDetail, zProfile } from "../api/schemas";
+import { AccountApi } from "../auth/accountApi";
+import { normalizeEmail } from "../auth/rules";
 import { LocalStore } from "../store/db";
 import type { Engine } from "./engine";
 
@@ -88,6 +90,18 @@ export async function signOut(engine: Engine, force = false): Promise<void> {
       throw new SignOutUnconfirmed(e instanceof ApiError ? e.message : "Couldn't reach the server");
     }
   }
+  engine.stop();
+  engine.session.forget();
+  await LocalStore.erase(engine.store);
+}
+
+/**
+ * Deletes the account on the server (server docs/ACCOUNT_DELETION.md), then this browser's copy of it: keys, messages
+ * and files. The server has already ended every session and removed every device, so there is nothing to sign out.
+ */
+export async function deleteAccount(engine: Engine, password: string, typedEmail: string): Promise<void> {
+  await new AccountApi(engine.api).deleteAccount(password, normalizeEmail(typedEmail));
+  engine.setSigningOut(true);
   engine.stop();
   engine.session.forget();
   await LocalStore.erase(engine.store);

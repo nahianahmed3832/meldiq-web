@@ -63,6 +63,7 @@ protocol, which the phone shares.
 | ACC-14 | Several accounts or servers in one app | Implemented · `ServersScreen` | — | Unsupported on web | One account per browser profile: keys live in that profile's storage. Use another profile | — | — |
 | ACC-15 | Legacy username sign-up | Implemented · `SignUpScreen` | `/v1/auth/register` | Unsupported on web | Being retired | — | — |
 | ACC-16 | **New:** First-run introduction, replayable from About | Implemented · `IntroScreen` | — | Built | Shown once per browser (local convenience); nothing asks for permissions | — | by hand (Chromium: five pages, Coming soon, Get started) |
+| ACC-17 | **New (remediation round 1):** Delete your account (email typed, password); this browser erases its copy | Implemented · `DeleteAccount` (Settings › Security) | `DELETE /v2/account` (`account-delete`) | Built | Refused while the only owner of a workspace (409, nothing changes); offered only when the server advertises it | `delete-account-rules`, `live-account-delete` | live. **Not device-verified; server change not deployed** |
 
 ## WS · Workspaces and administration
 
@@ -113,6 +114,7 @@ protocol, which the phone shares.
 | MSG-10 | Forwarding | Implemented | `forwarded` | Done | Files re-encrypted | `live` | live |
 | MSG-11 | Voice messages | Implemented · `VoiceViews` | attachment `voice` | Done | Recording checked by hand | `live` | live |
 | MSG-12 | Identity change hold, review, safety numbers | Implemented | — | Done | — | `live` | live |
+| MSG-23 | **New (remediation round 1):** Messages from a device revoked after sending stay readable (T1.5) | Implemented · `KeyDirectory.senderKey` | `revokedDevices` in the key directory | Built | Accepted only up to the device's `revokedAt`, and only if certified by the pinned identity; never encrypted to | `revoked-sender` (unit) | unit. **Server change not deployed** |
 | MSG-13 | **New:** Conversation security sheet (padlock) | Implemented · `ConversationSecuritySheet` | — | Done | Only facts that apply; the browser always encrypts call media | `conversation-security` (the phone's rules) | unit, by hand |
 | MSG-14 | Block / unblock | Implemented · `PrivacyScreen` | `/v1/blocks` | Done | — | `live-manage` | live |
 | MSG-15 | Message text size | Implemented | — | Done | — | unit | unit, by hand |

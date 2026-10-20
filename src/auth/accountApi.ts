@@ -122,6 +122,14 @@ export class AccountApi {
     return this.api.json("POST", "/v2/account/password", zOk, { body: { currentPassword, newPassword } });
   }
 
+  /**
+   * Deletes the account for good (server docs/ACCOUNT_DELETION.md): the password again and the account's email typed by
+   * the person. Refused with 409 owns_workspaces while they're a workspace's only owner; nothing changes then.
+   */
+  deleteAccount(password: string, confirmEmail: string) {
+    return this.api.json("DELETE", "/v2/account", z.object({ deleted: z.literal(true), deletedAt: z.number() }), { body: { password, confirmEmail } });
+  }
+
   /** How many of the account's recovery codes are left (never the codes). */
   recoveryCodesStatus() {
     return this.api.json("GET", "/v2/account/recovery-codes", zRecoveryStatus);

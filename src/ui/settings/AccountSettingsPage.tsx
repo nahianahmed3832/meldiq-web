@@ -1,8 +1,10 @@
-import { KeyRound, Laptop, LogOut } from "lucide-react";
+import { KeyRound, Laptop, LogOut, Trash2 } from "lucide-react";
 import { type FormEvent, useState } from "react";
 import { useEngine } from "../../app/orbit";
 import { AccountApi } from "../../auth/accountApi";
+import { canDeleteAccount, type DeletionProblem, deletionProblem, deletionProblemText } from "../../auth/deleteAccount";
 import { PASSWORD_MIN_LENGTH, passwordProblem } from "../../auth/rules";
+import { deleteAccount } from "../../sync/account";
 import { relative } from "../format";
 import { useAction, useLoad } from "../workspace/useLoad";
 import { RecoveryCodesCard } from "./RecoveryCodesCard";
@@ -11,7 +13,7 @@ import { RecoveryCodesCard } from "./RecoveryCodesCard";
  * The Orbit 2.0 account (docs/ORBIT_2_ARCHITECTURE §2): its email, the password, and where it's signed in. A browser
  * linked before 2.0 has no account here and is told how to get one.
  */
-export function AccountSettingsPage() {
+export function AccountSettingsPage({ onSignedOut }: { onSignedOut: () => void }) {
   const engine = useEngine();
   const account = engine.device.account;
   if (!account) {
@@ -39,7 +41,79 @@ export function AccountSettingsPage() {
       <ChangePassword email={account.email} />
       <RecoveryCodesCard />
       <Sessions accounts={new AccountApi(engine.api)} />
+      <DeleteAccount email={account.email} onDeleted={onSignedOut} />
     </>
+  );
+}
+
+/** Deleting the account for good (server docs/ACCOUNT_DELETION.md); this browser erases its copy once the server confirms. */
+function DeleteAccount({ email, onDeleted }: { email: string; onDeleted: () => void }) {
+  const engine = useEngine();
+  const available = engine.state.get().server?.features.includes("account-delete") ?? false;
+  const [open, setOpen] = useState(false);
+  const [typed, setTyped] = useState("");
+  const [password, setPassword] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [problem, setProblem] = useState<DeletionProblem | null>(null);
+  const submit = (e: FormEvent) => {
+    e.preventDefault();
+    if (!canDeleteAccount(typed, email, password) || busy) return;
+    setBusy(true);
+    setProblem(null);
+    deleteAccount(engine, password, typed).then(onDeleted, (err: unknown) => {
+      setBusy(false);
+      setProblem(deletionProblem(err));
+    });
+  };
+  return (
+    <div className="card" style={{ padding: 20, display: "grid", gap: 12 }}>
+      <h3 style={{ margin: 0 }}>
+        <Trash2 size={16} style={{ verticalAlign: "-3px" }} /> Delete account
+      </h3>
+      <p className="muted" style={{ margin: 0, fontSize: 13 }}>
+        Deletes the Meldiq account {email} for good. You leave every workspace, group and channel, every device is signed out and your profile is erased. It can't be undone.
+      </p>
+      <p className="faint" style={{ margin: 0, fontSize: 12.5 }}>
+        People you messaged keep the conversation, shown as "Deleted account". Messages already delivered stay on their devices. Once the server confirms, this browser erases its copy too.
+      </p>
+      {!available && (
+        <div className="banner" role="status">
+          This server can't delete accounts yet.
+        </div>
+      )}
+      {available && !open && (
+        <div>
+          <button className="btn btn-danger-quiet btn-sm" onClick={() => setOpen(true)}>
+            Delete my account…
+          </button>
+        </div>
+      )}
+      {available && open && (
+        <form onSubmit={submit} className="ws-form" noValidate>
+          <label className="field">
+            <span>Type your email to confirm</span>
+            <input className="input" type="email" autoComplete="off" placeholder={email} value={typed} onChange={(e) => setTyped(e.target.value)} disabled={busy} />
+          </label>
+          <label className="field">
+            <span>Current password</span>
+            <input className="input" type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} disabled={busy} />
+          </label>
+          {problem && (
+            <div className="banner danger ws-wide" role="alert">
+              {deletionProblemText(problem)}
+            </div>
+          )}
+          <div className="ws-form-actions">
+            <button type="button" className="btn btn-ghost btn-sm" disabled={busy} onClick={() => setOpen(false)}>
+              Keep my account
+            </button>
+            <button className="btn btn-danger btn-sm" disabled={busy || !canDeleteAccount(typed, email, password)}>
+              {busy ? "Deleting…" : "Delete my account"}
+            </button>
+          </div>
+        </form>
+      )}
+    </div>
   );
 }
 

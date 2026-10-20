@@ -50,7 +50,7 @@ export function SettingsView({ page, onSignedOut }: { page: SettingsPage; onSign
         <div className="settings-page scroll">
           <div className="inner">
             {page === "profile" && <ProfilePage />}
-            {page === "account" && <AccountSettingsPage />}
+            {page === "account" && <AccountSettingsPage onSignedOut={onSignedOut} />}
             {page === "devices" && <DevicesPage />}
             {page === "notifications" && <NotificationsPage />}
             {page === "appearance" && <AppearancePage />}
