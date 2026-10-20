@@ -1,4 +1,4 @@
-import { Blocks, Building2, CalendarDays, FileText, Gauge, Hash, Workflow, Laptop, LayoutGrid, ScrollText, ShieldCheck, Ticket, Users, UsersRound } from "lucide-react";
+import { Blocks, Building2, CalendarDays, Code2, FileText, Gauge, Hash, Workflow, Laptop, LayoutGrid, ScrollText, ShieldCheck, Ticket, Users, UsersRound } from "lucide-react";
 import type { ReactNode } from "react";
 import { useEngine, useOrbit } from "../../app/orbit";
 import { navigate, type WorkspacePage } from "../../app/router";
@@ -16,6 +16,7 @@ import { AppsPage } from "./AppsPage";
 import { UsagePage } from "./UsagePage";
 import { WorkflowsPage } from "./WorkflowsPage";
 import { DocumentsPage } from "./documents/DocumentsPage";
+import { DeveloperPage } from "./DeveloperPage";
 import { GroupsPage } from "./GroupsPage";
 import { MeetingsPage } from "./MeetingsPage";
 import type { OrgAdminDetail, OrgPermissions } from "../../api/workspaceSchemas";
@@ -34,6 +35,7 @@ const PAGES: { key: WorkspacePage; label: string; icon: ReactNode; shown?: (p: O
   { key: "meetings", label: "Meetings", icon: <CalendarDays size={17} />, feature: "meetings" },
   { key: "documents", label: "Documents", icon: <FileText size={17} />, feature: "documents" },
   { key: "workflows", label: "Workflows", icon: <Workflow size={17} />, shown: (p) => p.canManageWorkflows },
+  { key: "developer", label: "API keys & webhooks", icon: <Code2 size={17} />, feature: "developer-api", shown: (p) => p.canManageDevelopers },
   { key: "usage", label: "Usage", icon: <Gauge size={17} />, shown: (p) => p.canViewUsage },
 ];
 
@@ -118,6 +120,8 @@ export function WorkspaceView({ orgId, page, itemId, onDialog }: { orgId: string
               <UsagePage detail={d} />
             ) : page === "workflows" ? (
               <WorkflowsPage detail={d} />
+            ) : page === "developer" ? (
+              <DeveloperPage detail={d} />
             ) : page === "groups" ? (
               <GroupsPage detail={d} />
             ) : page === "meetings" ? (
