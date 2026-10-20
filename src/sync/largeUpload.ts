@@ -48,11 +48,18 @@ const settable = (headers: Record<string, string>) => Object.fromEntries(Object.
 export const sendBody: BodySender = (raw, onSent, signal) => {
   const req = { ...raw, headers: settable(raw.headers) };
   if (typeof XMLHttpRequest === "undefined") {
-    return fetch(req.url, { method: req.method, headers: req.headers, body: req.body, credentials: "omit", signal }).then(async (res) => {
-      if (!res.ok) throw new ApiError(res.status, "upload_failed", `The upload was refused (${res.status}).`);
-      onSent(req.body.size);
-      return res.text();
-    });
+    return fetch(req.url, { method: req.method, headers: req.headers, body: req.body, credentials: "omit", signal }).then(
+      async (res) => {
+        if (!res.ok) throw new ApiError(res.status, "upload_failed", `The upload was refused (${res.status}).`);
+        onSent(req.body.size);
+        return res.text();
+      },
+      (e: unknown) => {
+        // As XMLHttpRequest reports it: a refused or failed request, unless it was cancelled.
+        if (signal?.aborted) throw e;
+        throw new ApiError(0, "network", "The upload was interrupted. Check your connection and try again.");
+      },
+    );
   }
   return new Promise((resolve, reject) => {
     const x = new XMLHttpRequest();
@@ -103,6 +110,17 @@ export async function uploadLarge(
   }
 }
 
+/**
+ * Set once a direct upload to S3 was refused in this tab and the file then went through the API: a bucket without a
+ * CORS rule for this site refuses browsers as if they were offline. Later files go through the API at once.
+ */
+let directBlocked = false;
+
+/** For tests: forget that this tab switched to uploading through the API. */
+export function resetUploadRoute(): void {
+  directBlocked = false;
+}
+
 async function upload(
   engine: Engine,
   conversationId: string,
@@ -114,15 +132,15 @@ async function upload(
   opts: { onProgress?: (p: UploadProgress) => void; signal?: AbortSignal },
 ): Promise<string> {
   const report = (done: number) => opts.onProgress?.({ phase: "uploading", done, total });
+  // The ciphertext as one streamed body to the API (same origin, so no CORS), which stores it itself.
+  const viaApi = async () => (await sendViaApi(engine, conversationId, await cipherBlob(file, k), send, report, opts.signal)).id;
+  if (directBlocked) return viaApi();
   let start: z.infer<typeof zStart>;
   try {
     start = await engine.api.json("POST", "/v1/attachments/uploads", zStart, { body: { conversationId, size: total, sha256: hash } });
   } catch (e) {
     if (!(e instanceof ApiError && e.code === "direct_upload_unavailable")) throw e;
-    // This server receives files itself: the ciphertext as one streamed body.
-    const body = await cipherBlob(file, k);
-    const res = await sendViaApi(engine, conversationId, body, send, report, opts.signal);
-    return res.id;
+    return viaApi();
   }
   const enc = encodeURIComponent(start.uploadId);
   try {
@@ -151,7 +169,13 @@ async function upload(
   } catch (e) {
     // Whatever reached the store is removed (the server also expires abandoned uploads).
     await engine.api.call("DELETE", `/v1/attachments/uploads/${enc}`).catch(() => undefined);
-    throw e;
+    if (!(e instanceof ApiError && e.code === "network") || opts.signal?.aborted) throw e;
+    // Refused like an offline request: most likely a bucket without a CORS rule for this site. Try the API instead;
+    // if this tab is really offline, that fails too and says so.
+    report(0);
+    const id = await viaApi();
+    directBlocked = true;
+    return id;
   }
 }
 

@@ -9,7 +9,8 @@
 # /config.json is written from MELDIQ_API_BASE_URL (empty: same origin), MELDIQ_WS_URL, MELDIQ_WEB_BASE_URL and
 # MELDIQ_ENVIRONMENT, or copied from CONFIG=config/<file>.json. The earlier names WEB_HOST, API_UPSTREAM, CONNECT_EXTRA
 # still work. MELDIQ_REDIRECT_HOSTS (space-separated, e.g. "web.griipbuddy.cloud") are former addresses sent permanently
-# to the current one; each needs its own certificate.
+# to the current one; each needs its own certificate. MELDIQ_MEDIA_ORIGIN is the S3 bucket's https origin that
+# /media/attachments/ may follow (default: the amazonaws.com entry of MELDIQ_CONNECT_EXTRA; none: that path refuses).
 #
 # Steps: copy the files to /opt/meldiq-web/releases/<version>-<commit>, write its config.json, render the nginx site,
 # check nginx, switch /opt/meldiq-web/current to the new release, reload nginx. The previous release stays for rollback
@@ -21,6 +22,21 @@ WEB_HOST="${WEB_HOST%%/*}"
 : "${API_UPSTREAM:=${MELDIQ_API_UPSTREAM:-127.0.0.1:18080}}"
 API_UPSTREAM="${API_UPSTREAM#http://}"
 : "${CONNECT_EXTRA:=${MELDIQ_CONNECT_EXTRA:-}}"
+: "${MEDIA_ORIGIN:=${MELDIQ_MEDIA_ORIGIN:-}}"
+if [ -z "$MEDIA_ORIGIN" ]; then
+  for o in $CONNECT_EXTRA; do case "$o" in https://*.amazonaws.com) MEDIA_ORIGIN="$o"; break ;; esac; done
+fi
+if [ -n "$MEDIA_ORIGIN" ]; then
+  [[ "$MEDIA_ORIGIN" =~ ^https://[a-z0-9.-]+$ ]] || { echo "MELDIQ_MEDIA_ORIGIN must be an https origin without a path" >&2; exit 1; }
+  MEDIA_ORIGIN_RE="$(printf '%s' "$MEDIA_ORIGIN" | sed 's/[.]/\\./g')"
+else
+  MEDIA_ORIGIN="(none)"
+  MEDIA_ORIGIN_RE="https://media-origin-not-configured\\.invalid"
+fi
+# nginx needs a resolver to follow a link to the bucket: the host's own (systemd-resolved's stub on Ubuntu).
+RESOLVER="$(awk '/^nameserver/ { print $2; exit }' /etc/resolv.conf 2>/dev/null || true)"
+[ -n "$RESOLVER" ] || RESOLVER=127.0.0.53
+case "$RESOLVER" in *:*) RESOLVER="[$RESOLVER]" ;; esac
 : "${CONFIG:=}"
 : "${MELDIQ_REDIRECT_HOSTS:=}"
 here="$(cd "$(dirname "$0")" && pwd)"
@@ -60,23 +76,25 @@ fi
 chown -R root:root "$target"
 find "$target" -type d -exec chmod 755 {} + && find "$target" -type f -exec chmod 644 {} +
 
-export WEB_HOST API_UPSTREAM CONNECT_EXTRA WEB_ROOT="$base/current"
-vars='${WEB_HOST} ${API_UPSTREAM} ${WEB_ROOT} ${CONNECT_EXTRA}'
+export WEB_HOST API_UPSTREAM CONNECT_EXTRA MEDIA_ORIGIN MEDIA_ORIGIN_RE RESOLVER WEB_ROOT="$base/current"
+vars='${WEB_HOST} ${API_UPSTREAM} ${WEB_ROOT} ${CONNECT_EXTRA} ${MEDIA_ORIGIN} ${MEDIA_ORIGIN_RE} ${RESOLVER}'
 site=/etc/nginx/sites-available/meldiq-web.conf
 snippet=/etc/nginx/snippets/meldiq-web-headers.conf
+media=/etc/nginx/snippets/meldiq-web-media.conf
 enabled=/etc/nginx/sites-enabled/meldiq-web.conf
 # The nginx files as they were, restored if nginx refuses the new ones (a broken site would block every later reload).
 backup="$(mktemp -d)"
-for f in "$site" "$snippet"; do [ -f "$f" ] && cp -p "$f" "$backup/"; done
+for f in "$site" "$snippet" "$media"; do [ -f "$f" ] && cp -p "$f" "$backup/"; done
 was_enabled=0; [ -e "$enabled" ] && was_enabled=1
 restore_nginx() {
-  for f in "$site" "$snippet"; do
+  for f in "$site" "$snippet" "$media"; do
     if [ -f "$backup/$(basename "$f")" ]; then cp -p "$backup/$(basename "$f")" "$f"; else rm -f "$f"; fi
   done
   [ "$was_enabled" = 1 ] || rm -f "$enabled"
 }
 mkdir -p /etc/nginx/snippets
 envsubst "$vars" < "$here/nginx/meldiq-web-headers.conf.template" > "$snippet"
+envsubst "$vars" < "$here/nginx/meldiq-web-media.conf.template" > "$media"
 envsubst "$vars" < "$here/nginx/meldiq-web.conf.template" > "$site"
 for h in $MELDIQ_REDIRECT_HOSTS; do
   OLD_HOST="$h" envsubst '${OLD_HOST} ${WEB_HOST}' < "$here/nginx/meldiq-web-redirect.conf.template" >> "$site"

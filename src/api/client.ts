@@ -72,6 +72,11 @@ export class ApiClient {
     return res.body;
   }
 
+  /** The answer itself, for callers that need its headers or body as they choose (a failed status still throws). */
+  async response(path: string, opts: RequestOptions = {}): Promise<Response> {
+    return this.send("GET", path, opts);
+  }
+
   async bytes(path: string, opts: RequestOptions = {}): Promise<Uint8Array> {
     const res = await this.send("GET", path, opts);
     return new Uint8Array(await res.arrayBuffer());

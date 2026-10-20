@@ -125,7 +125,7 @@ export function openAttachment(engine: Engine, ref: AttachmentRef): Promise<Blob
     p = (async () => {
       let ct: Uint8Array;
       try {
-        ct = await engine.api.bytes(`/v1/attachments/${encodeURIComponent(ref.id)}`);
+        ct = new Uint8Array(await (await attachmentResponse(engine, ref.id)).arrayBuffer());
       } catch (e) {
         if (e instanceof ApiError && e.status === 404) throw new AttachmentError("This file has expired on the server (files are kept 7 days unless saved with history).");
         throw e;
@@ -142,13 +142,58 @@ export function openAttachment(engine: Engine, ref: AttachmentRef): Promise<Blob
 }
 
 /**
+ * Servers that keep files in S3 answer a download with a short-lived S3 link. A browser follows it only if the bucket
+ * allows this site (a CORS rule); without one the request fails as if offline. The file is then fetched through this
+ * site's own web server, which follows the link itself (deploy/nginx, /media/attachments/), and later files in this tab
+ * go that way at once. The phone apps aren't affected: CORS is a browser rule.
+ */
+let throughWebServer = false;
+
+export async function attachmentResponse(engine: Engine, id: string, signal?: AbortSignal): Promise<Response> {
+  const direct = `/v1/attachments/${encodeURIComponent(id)}`;
+  if (throughWebServer) return (await viaWebServer(engine, id, signal)) ?? engine.api.response(direct, { signal });
+  try {
+    return await engine.api.response(direct, { signal });
+  } catch (e) {
+    if (!(e instanceof ApiError && e.code === "network") || signal?.aborted) throw e;
+    let res: Response | null;
+    try {
+      res = await viaWebServer(engine, id, signal);
+    } catch (again) {
+      // The server's own answer (expired, not a member) is the one to show; still unreachable: the first error.
+      throw again instanceof ApiError && again.code !== "network" ? again : e;
+    }
+    if (!res) throw e;
+    throughWebServer = true;
+    return res;
+  }
+}
+
+/** Null where this site has no such route: a development server or an older install answers with the app's page. */
+async function viaWebServer(engine: Engine, id: string, signal?: AbortSignal): Promise<Response | null> {
+  const res = await engine.api.response(`/media/attachments/${encodeURIComponent(id)}`, { signal });
+  if ((res.headers.get("content-type") ?? "").includes("text/html")) {
+    await res.body?.cancel().catch(() => undefined);
+    return null;
+  }
+  return res;
+}
+
+/** For tests: forget that this tab switched to the web server. */
+export function resetAttachmentRoute(): void {
+  throughWebServer = false;
+}
+
+/**
  * A chunked file, decrypted as it downloads and handed to [sink] chunk by chunk (decryptStream checks every chunk, the
  * count and the whole hash; on failure the caller discards what it got).
  */
 export async function streamAttachment(engine: Engine, ref: AttachmentRef, sink: (plain: Uint8Array) => Promise<void> | void, signal?: AbortSignal): Promise<void> {
   let body: ReadableStream<Uint8Array>;
   try {
-    body = await engine.api.stream(`/v1/attachments/${encodeURIComponent(ref.id)}`, { signal });
+    const res = await attachmentResponse(engine, ref.id, signal);
+    if (!res.body) throw new ApiError(res.status, "decode", "The server's answer had no body");
+    body = res.body;
   } catch (e) {
     if (e instanceof ApiError && e.status === 404) throw new AttachmentError("This file has expired on the server (files are kept 7 days unless saved with history).");
     throw e;

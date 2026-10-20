@@ -62,6 +62,9 @@ server {
     proxy_send_timeout 3600s;
   }
 
+  # Files kept in S3, fetched for browsers the bucket doesn't allow yet (snippets/meldiq-web-media.conf).
+  include /etc/nginx/snippets/meldiq-web-media.conf;
+
   # Runtime configuration: never cached, so a domain or API change applies at the next page load.
   location = /config.json {
     add_header Cache-Control "no-store" always;

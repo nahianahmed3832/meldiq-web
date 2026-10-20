@@ -1,0 +1,37 @@
+# Files kept in S3 (included in the Meldiq Web server block). The API answers a download with a short-lived link to the
+# bucket, which a browser may follow only if the bucket allows this site (a CORS rule). When it doesn't, the app asks
+# here instead: nginx asks the API (membership is checked there, with the person's token) and follows the link itself,
+# only to ${MEDIA_ORIGIN} and never with the person's token. Phones follow the link directly.
+location ~ "^/media/attachments/([A-Za-z0-9_-]{1,64})$" {
+  limit_except GET { deny all; }
+  proxy_pass http://${API_UPSTREAM}/v1/attachments/$1;
+  proxy_http_version 1.1;
+  proxy_set_header Connection "";
+  proxy_set_header Host $host;
+  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+  proxy_set_header X-Forwarded-Proto $scheme;
+  proxy_buffering off;
+  proxy_read_timeout 3600s;
+  proxy_intercept_errors on;
+  error_page 301 302 303 307 = @meldiq_media;
+}
+
+location @meldiq_media {
+  set $meldiq_media_url $upstream_http_location;
+  if ($meldiq_media_url !~ "^${MEDIA_ORIGIN_RE}/") {
+    return 502;
+  }
+  resolver ${RESOLVER} valid=60s ipv6=off;
+  resolver_timeout 5s;
+  proxy_pass $meldiq_media_url;
+  proxy_http_version 1.1;
+  proxy_set_header Connection "";
+  proxy_set_header Authorization "";
+  proxy_set_header Cookie "";
+  proxy_ssl_server_name on;
+  proxy_ssl_verify on;
+  proxy_ssl_verify_depth 4;
+  proxy_ssl_trusted_certificate /etc/ssl/certs/ca-certificates.crt;
+  proxy_buffering off;
+  proxy_read_timeout 3600s;
+}
