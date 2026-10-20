@@ -1,6 +1,6 @@
 # Meldiq Web ↔ Android feature parity
 
-Updated 2026-10-20 (second pass: Android round 7 and the remaining `35aa4b5` gaps; see `MELDIQ_ANDROID_WEB_SYNC_REPORT.md` for the S-numbers). It replaces the 2026-10-19 version of this file; `ORBIT_WEB_PARITY.md` still holds older detail.
+Updated 2026-10-20 (second pass: Android round 7 and the remaining `35aa4b5` gaps; third pass: round 7 slices C1–C8, section R7; see `MELDIQ_ANDROID_WEB_SYNC_REPORT.md` for the S-numbers). It replaces the 2026-10-19 version of this file; `ORBIT_WEB_PARITY.md` still holds older detail.
 
 ## Sources
 
@@ -187,6 +187,27 @@ protocol, which the phone shares.
 | SET-08 | Notifications: group notifications, message sound, call ringtone | Implemented · `SettingsStore` | — | Done (sync S-12) | Sound is the system notification's | `live-rich` | live, by hand |
 | SET-09 | Links: ask every time | Implemented · `LinkOpening.ASK` | — | Done (sync S-13) | Opening "in the app" doesn't apply in a browser | — | by hand |
 | SET-10 | Your Meldiq network address, to copy | Implemented · `SettingsScreens` | `/v1/federation/info` | Done (sync S-15) | Production doesn't federate | `live-federation` | live |
+
+## R7 · Round 7 slices C1–C8 (uncommitted Android, undeployed server)
+
+The phone's round 7 C1–C8 live in the `orbit-integrations` worktree and need its server, which isn't deployed. The web
+is built and tested against a copy of that server (`live-r7-*` tests skip themselves on 0.7.1) and shows each screen only
+when the server advertises its feature and the person holds the permission, so **production shows none of them yet**.
+
+| ID | Feature | Android | Backend | Web | Gaps, security | Tests | Verified |
+|---|---|---|---|---|---|---|---|
+| R7-01 | Service health for platform admins (S-21) | Implemented · `ServiceHealthScreen` | `/v1/platform/me`, `/v1/admin/health` | Done | Platform admins only; "not measured" shown as such | `live-r7-ops` | live |
+| R7-02 | Universal search: filters, server sections, paging, recent searches (S-22) | Implemented · `SearchScreen` | `GET /v1/search` (`search`) | Done | Messages are searched on this browser only (encrypted); recent searches kept on this browser | `universal-search`, `live-r7-search` | live |
+| R7-03 | Workflows: templates, editor, test, on/off, runs, cancel (S-23) | Implemented · `WorkflowsScreen`, `WorkflowRules` | `/v1/orgs/:id/workflows…` (`workflows`) | Done | `workflows.manage`; run with the owner's rights | `workflow-rules`, `live-r7-workflows` | live |
+| R7-04 | Documents: edit on revision, comments, versions, sharing, archive, export (S-24) | Implemented · `DocumentsScreen`, `DocRules` | `/v1/orgs/:id/documents…` (`documents`) | Done | Server-readable, and labelled so; restricted documents 404 for others | `document-rules`, `live-r7-documents` | live |
+| R7-05 | Workspace templates and guest policy (S-25) | Implemented · `WorkspaceC5Screens` | `/v1/workspace-templates`, `/apply-template`, `/guest-policy` | Done | Adds only what's missing; `workspace.edit` | `live-r7-c5` | live, by hand |
+| R7-06 | User groups; Add a group to a channel (S-25) | Implemented | `/v1/orgs/:id/groups`, `/v1/conversations/:id/add-group` (`groups`) | Done | A group grants nothing; each member checked like a single add; guests can't see groups | `live-r7-c5` | live |
+| R7-07 | Guest end dates on People and invitations (S-25) | Implemented | `/members/:id/expiry`, invite `guestDays` (`guest-expiry`) | Done | Capped by the policy's maximum | `live-r7-c5` | live |
+| R7-08 | Meetings in voice rooms: invite people and groups, answer, edit on revision, cancel, .ics, live updates, starting-soon notice (S-25) | Implemented · `MeetingRules` | `/v1/orgs/:id/meetings`, `/v1/meetings/:id…`; frames `meeting.updated`, `meeting.soon` (`meetings`) | Done | Invitees must be able to open the room; titles are server-readable | `meeting-rules`, `live-r7-c5` | live, by hand |
+| R7-09 | API keys and outgoing webhooks (S-26) | Implemented · `DeveloperScreen` | `/v1/orgs/:id/api-keys`, `/webhooks…` (`developer-api`) | Done | `developers.manage`; token and signing secret shown once, never stored | `live-r7-developer` | live, by hand |
+| R7-10 | Measured usage (30 days) and where limits come from (S-27) | Implemented · `AdminScreens` (Usage) | `/v1/orgs/:id/usage` `metered`, `/plan` | Done | Counts and sizes only | `live-r7-usage` | live, by hand |
+| R7-11 | Workspace usage and own limits for platform admins (S-27) | Not on the phone (web extra) | `/v1/admin/usage`, `/v1/admin/orgs/:id/limits` | Done | Platform admins only; audited by the server | `live-r7-usage` | live |
+| R7-12 | AI: switch and provider, writing help, catch-up, document summary, ask documents, workflow drafts (S-28) | Implemented · `AiScreen`, `AiSheets`, `AiRules` | `/v1/orgs/:id/ai…` (`ai`) | Built | Off until the server has a provider and an admin turns it on; consent on every request; catch-up sends only what this browser decrypted. Tested with a stand-in provider inside the test server; no real provider has been called | `ai-rules`, `live-r7-ai` | live (stand-in provider) |
 
 ## PLAN · Planned on Android, not built anywhere
 

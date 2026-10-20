@@ -9,7 +9,7 @@ Started 2026-10-20. This report tracks the web against the **latest Android code
 |---|---|---|---|
 | `internal-beta` (the designated development and release branch; `origin/HEAD`) | `35aa4b5`, versionCode 10, **0.2.3-beta** | The last committed and released app | **Baseline.** The full inventory was taken against it and is unchanged: no commit has landed since |
 | Main checkout `/Volumes/code_files/griip_message` | `35aa4b5` + uncommitted `build.gradle.kts` | Owner's bump to versionCode 11, **0.2.4-beta**; no code change | The next release's number |
-| Worktree `.claude/worktrees/orbit-integrations` (branch `worktree-orbit-integrations`) | `35aa4b5` + **uncommitted round 7** (edited 2026-10-20 00:41–00:56 UTC+8; its session is still running) | Round 7 slice A ("built, not yet phone-tested") and the call/channel bug fixes (`docs/MELDIQ_ROUND7_PLAN_2026-10-19.md`, `docs/MELDIQ_CALL_BUGS_2026-10-20.md`) | **Latest Android behaviour.** Matched here wherever it works against the deployed server; anything that needs its undeployed server changes is listed as a backend blocker |
+| Worktree `.claude/worktrees/orbit-integrations` (branch `worktree-orbit-integrations`) | `35aa4b5` + **uncommitted round 7** (its session is still running) | Round 7 slice A, the call/channel bug fixes (`docs/MELDIQ_ROUND7_PLAN_2026-10-19.md`, `docs/MELDIQ_CALL_BUGS_2026-10-20.md`), and slices **C1–C8** (service health, universal search, workflows, documents, templates/groups/guests/meetings, developer API, usage and limits, AI) | **Latest Android behaviour.** Matched here wherever it works against the deployed server. C1–C8 need its undeployed server: the web is built and tested against a copy of that server and hides each screen until the server offers it |
 | Old worktrees (`orbit-round-2/3/4`, `lucid-sanderson`, `sleepy-leavitt`) | 2026-10-17/18, package `com.griipbuddy.orbit` | Pre-rebrand experiments, never merged (e.g. self-service account deletion) | **Not used**: not on the designated branch |
 
 The other session's files were only read (`git show`, `git diff`, `cat`). Nothing in the shared checkout or the
@@ -22,6 +22,10 @@ changes are deployed:
 - Public channels auto-join by default.
 - Channel repair CLI.
 - Voice-room events in the activity feed.
+
+Round 7 C1–C8 add server features (`search`, `workflows`, `documents`, `workspace-templates`, `groups`,
+`guest-expiry`, `meetings`, `developer-api`, `ai`), usage metering and platform-admin health; none are deployed. The web
+reads `/v1/server-info` features and permission flags, so production (0.7.1) shows none of these screens.
 
 Branch `oauth-web-return` (`54b9eff`) holds the web OAuth return; it isn't deployed either.
 
@@ -64,9 +68,19 @@ phone), browser (Playwright), by hand, device. **No item is device-verified.**
 | S-18 | 35aa4b5 | Sending link previews | `LinkPreview` | needs a fetcher | Received previews show | **Backend blocker** (browsers can't fetch other sites) | — | — | — | Blocked |
 | S-19 | 35aa4b5 | Languages (Simplified Chinese, Bengali) | `AppLanguage.kt`, `android/i18n` | none | English only | **Missing in Web** | Not this round: every interface string would first need to move into a catalogue | — | — | Deferred |
 | S-20 | round 7 plan | Video rooms, conferences, presence states, friends, workforce, stories, live location (slices B–F) | plan only | not built | — | **Android incomplete** (planned, not built) | Nothing to match | — | — | — |
+| S-21 | round 7 C1 | Service health for platform admins: checks, load, queues, jobs, providers, slow routes | `ServiceHealthScreen.kt` | `GET /v1/platform/me`, `/v1/admin/health` (round 7 server) | — | **Missing in Web** | Settings › Service health, shown to platform admins only; "not measured" instead of invented numbers; an older server gets a plain message | Server checks platform admin on every call | `live-r7-ops` | Implemented, automated (round 7 server copy) |
+| S-22 | round 7 C2 | Universal search: filters, server sections (people, channels, workspaces, groups, documents), paging, recent searches | `SearchScreen.kt` | `GET /v1/search` (`search`) | Local search only | **Missing in Web** | Search dialog rebuilt: filters, local and server sections, Show more with a cursor, recent searches (this browser only), joining a channel from a result, opening documents. Falls back to the old local search on older servers | Server returns only what the person may see; messages stay local (encrypted) | `universal-search`, `live-r7-search` | Implemented, automated |
+| S-23 | round 7 C3 | Workflows: templates, editor, test run, on/off, run history, cancel | `WorkflowsScreen.kt`, `WorkflowEditor.kt`, `WorkflowRules.kt` | `/v1/orgs/:id/workflows…` (`workflows`) | — | **Missing in Web** | Workspace › Workflows for `workflows.manage`; the phone's rules ported (fields, actions, problems, summaries) | Runs on the server with the owner's rights; owner losing the right is shown | `workflow-rules`, `live-r7-workflows` | Implemented, automated |
+| S-24 | round 7 C4 | Documents: Markdown subset, edit on revision, comments, versions, sharing, archive, export | `DocumentsScreen.kt`, `DocSheets.kt`, `DocRules.kt` | `/v1/orgs/:id/documents…` (`documents`) | — | **Missing in Web** | Workspace › Documents; a stale save is refused, never overwritten; marked "not end-to-end encrypted" | Restricted documents are invisible to others (404) | `document-rules`, `live-r7-documents` | Implemented, automated |
+| S-25 | round 7 C5 | Workspace templates, user groups, guest end dates and policy, scheduled meetings | `WorkspaceC5Screens.kt`, `MeetingRules.kt` | `/v1/workspace-templates`, groups, guest-policy, expiry, meetings (`workspace-templates`, `groups`, `guest-expiry`, `meetings`) | — | **Missing in Web** | Templates and guest policy on Overview; Groups page and Add a group in a channel's add-people dialog; guest end dates on People and invitations; Meetings page (voice room, people and groups, answers, edit on revision, cancel, .ics), live `meeting.updated` reloads and a `meeting.soon` notification | Groups grant nothing; each member is checked like a single add | `meeting-rules`, `live-r7-c5` | Implemented, automated, runtime-tested (template applied, meeting scheduled with an invitee, by hand) |
+| S-26 | round 7 C6 | API keys and outgoing webhooks | `DeveloperScreen.kt` | `/v1/orgs/:id/api-keys`, `/webhooks…` (`developer-api`) | — | **Missing in Web** | Workspace › API keys & webhooks for `developers.manage`: scopes, expiry, rotate, revoke; webhooks with public-https check, events, test ping, on/off, new signing secret, deliveries | Token and signing secret shown once in a dialog, never stored or logged (checked by hand: not in browser storage) | `live-r7-developer` (key works only on `/ext`, only its scopes; idempotent update; rotate/revoke stop it; address rules) | Implemented, automated, runtime-tested |
+| S-27 | round 7 C7 | Measured usage and plan limits | `AdminScreens.kt` (Usage) | `/v1/orgs/:id/usage` `metered`, `/plan`, `/v1/admin/usage`, `/v1/admin/orgs/:id/limits` | Counts and limits without sources | **Out of sync** | Usage shows 30 measured days with a daily strip and each limit's source. Web extra: Settings › Workspace usage for platform admins (totals over 7/30/90 days, a workspace's own limits) | Platform admins only; counts only | `live-r7-usage` | Implemented, automated, runtime-tested (Usage page) |
+| S-28 | round 7 C8 | AI: workspace switch and provider, writing help, channel catch-up, document summary, ask documents, workflow drafts | `AiScreen.kt`, `AiSheets.kt`, `AiRules.kt` | `/v1/orgs/:id/ai…` (`ai`), off until a provider is configured and an admin turns it on | — | **Missing in Web** | Workspace › AI; Writing help and Catch up in the composer's attach menu; Summarise on documents; Draft with AI in Workflows. Each dialog names the provider and what goes; nothing is sent before "Send to …" | Catch-up sends only messages this browser decrypted (150 / 30,000 characters, the phone's rule); the server keeps no text | `ai-rules`, `live-r7-ai` (a stand-in provider inside the test server, as the server's own tests use; **no real provider was called**) | Implemented, automated. No AI provider is configured anywhere |
+| S-29 | web | Long workspace and settings pages couldn't scroll in windows wider than 640 px | — | none | The app grid's row grew to the page's height, so its scroll area never scrolled | **Web bug** (found by hand this pass; not caused by this round: the layout rule predates it) | `.app` gets one window-high row, as phone widths already had | — | Checked by hand (Usage page scrolls); Playwright | Fixed |
 
 "Automated" means the named tests were run and passed. "Runtime-tested" means checked by hand in Chromium against a
-local 0.7.1 server. **No item is cross-device verified on a physical phone.**
+local server (0.7.1 for S-01–S-15; a copy of the round 7 server for S-21–S-29). **No item is cross-device verified on a
+physical phone.** S-21–S-28 are hidden in production until the round 7 server is deployed.
 
 Everything else in `MELDIQ_WEB_FEATURE_PARITY.md` (accounts, recovery codes, Later, polls, stickers, roles, apps,
 voice rooms, …) was checked again against `35aa4b5` and the round 7 diff. It is **Already matched**: round 7 doesn't
@@ -120,10 +134,13 @@ touch it.
    - a public channel made on the web appearing on the phone.
 2. **Translation in a desktop Chrome** where the built-in model downloads: translate a message into each of the three
    languages.
-3. **When round 7 is committed:** compare its final diff with this report and redo anything that changed.
+3. **Round 7 server (C1–C8) deployed** (your approval): the web's C1–C8 screens appear on their own. Then check each
+   by hand on production: search, a workflow from a template, a document, a meeting, a group, an API key, Usage.
+   Webhooks need `INTEGRATIONS_TOKEN_KEY` on the server; AI stays off until you choose a provider, key and budget.
+4. **When round 7 is committed:** compare its final diff with this report and redo anything that changed.
    - Its server change (`text_channel_no_calls`, auto-join default, `channel-access-repair`) needs your approval to
      deploy.
    - The repair needs a dry run reviewed first.
-4. **OAuth for the web** (`oauth-web-return`): add a feature flag the web can detect, then build Connect, Send to app
+5. **OAuth for the web** (`oauth-web-return`): add a feature flag the web can detect, then build Connect, Send to app
    and Share from app.
-5. **Languages:** move the web's interface strings into a catalogue, then reuse `android/i18n` for Chinese and Bengali.
+6. **Languages:** move the web's interface strings into a catalogue, then reuse `android/i18n` for Chinese and Bengali.

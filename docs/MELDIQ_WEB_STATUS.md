@@ -7,42 +7,40 @@ are summarised in §6 and detailed in `ORBIT_WEB_STATUS.md`.
 Live: **https://web.meldiq.app** (`web.griipbuddy.cloud` redirects there). The API at `msg.griipbuddy.cloud` is **0.7.1**,
 deployed by another session, with the browser WebSocket patch.
 
-## 0. Android sync pass (2026-10-20, later): not deployed
+## 0. Android sync passes (2026-10-20, later)
 
-This pass matched the web to the **latest Android code**.
+The web was matched to the **latest Android code** in two passes. Item by item: `MELDIQ_ANDROID_WEB_SYNC_REPORT.md`
+(S-01 … S-29); inventory: `MELDIQ_WEB_FEATURE_PARITY.md` (section R7 for round 7 C1–C8).
 
-- **Reference:** `internal-beta` `35aa4b5` (0.2.3-beta), plus round 7.
-- **Round 7** is uncommitted work in the `orbit-integrations` worktree, aimed at 0.2.4-beta.
-- **Report:** item by item in `MELDIQ_ANDROID_WEB_SYNC_REPORT.md` (S-01 … S-20).
+- **Reference:** `internal-beta` `35aa4b5` (0.2.3-beta), plus round 7: uncommitted work in the `orbit-integrations`
+  worktree (slice A, the call/channel fixes, and slices C1–C8), aimed at 0.2.4-beta.
 
-**Built:**
+**Pass 1 (commit `a70afad`), live in production:**
 - Profile cards in place of contact cards with phone numbers.
-- No call buttons in text channels.
-- Public channels that reach every member: fixes members never seeing org-wide public channels, on today's production
-  server.
-- Faster call setup, and mirroring only your own front camera.
-- Pin button and pinned list.
-- Bulk save to a folder.
-- Message info.
-- On-device translation, where the browser has it.
-- Invitation QR codes and pasted invite links.
-- Notification and chat options: group notifications, sound, ringtone, photo auto-load, ask before links.
-- Bubbles layout.
-- Your network address.
+- No call buttons in text channels; public channels that reach every member; faster call setup; mirroring only your own
+  front camera.
+- Pin button and pinned list; bulk save to a folder; message info; on-device translation where the browser has it.
+- Invitation QR codes and pasted invite links; notification and chat options; bubbles layout; your network address.
 
-**Tests:**
-- Unit and live: 42 files, **320 passed**.
-- Browser: the known call intermittent once; the call suite then passed twice, 18/18.
-- Build and secret scan: clean.
+**Pass 2 (commits `8509ac0` … `ce8dc3e`), round 7 C1–C8, built in Android's order:**
+- C1 service health (platform admins), C2 universal search, C3 workflows, C4 documents, C5 templates, groups, guest
+  end dates and meetings, C6 API keys and webhooks, C7 measured usage and limits, C8 AI with consent on every request.
+- Each screen appears only when the server advertises its feature and the person has the permission. **Production's
+  API (0.7.1) offers none of them, so they are deployed but hidden** until the round 7 server is deployed (not ours to
+  deploy; needs your approval).
+- Fix found by hand (`606c625`): long workspace and settings pages couldn't scroll in windows wider than 640 px.
 
-**Not done:** deployed, pushed and phone-tested. Committed locally only, waiting for your go-ahead to push and deploy.
+**Tests (pass 2):**
+- Unit and live against the round 7 server copy: 55 files, **355 passed**. Against the 0.7.1 code: **338 passed, 17
+  skipped** (the round 7 suites skip themselves).
+- AI was tested with a stand-in provider inside the test server, as the server's own tests do. No real AI provider was
+  called, and none is configured anywhere.
+- By hand (Chromium, local round 7 server): template applied, meeting scheduled with an invitee, AI page without a
+  provider, measured usage, an API key made (token shown once, not in browser storage).
 
-**Resume here:** `MELDIQ_ANDROID_WEB_SYNC_REPORT.md` §6. In short:
-1. Phone test with the round 7 APK.
-2. Chrome translation with a real model.
-3. Re-check against round 7 once it's committed.
-4. OAuth feature flag.
-5. Languages.
+**Not done:** phone-tested. Round 7 needs its server deployed before anyone sees C1–C8.
+
+**Resume here:** `MELDIQ_ANDROID_WEB_SYNC_REPORT.md` §6.
 
 ## 1. Built this round
 
