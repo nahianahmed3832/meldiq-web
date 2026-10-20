@@ -189,6 +189,32 @@ export class LocalStore {
     return out.sort((a, b) => b.sortTs - a.sortTs).slice(0, limit);
   }
 
+  /** Files in this browser's history whose name contains [query], newest first (android round 7 search › Files). */
+  async searchFiles(query: string, limit: number): Promise<{ message: StoredMessage; ref: StoredMessage["attachments"][number] }[]> {
+    const q = query.toLowerCase();
+    const out: { message: StoredMessage; ref: StoredMessage["attachments"][number] }[] = [];
+    let cursor = await this.db.transaction("messages").store.openCursor();
+    while (cursor) {
+      const m = cursor.value;
+      if (!m.deleted) for (const ref of m.attachments) if (!ref.voice && ref.name.toLowerCase().includes(q)) out.push({ message: m, ref });
+      cursor = await cursor.continue();
+    }
+    return out.sort((a, b) => b.message.sortTs - a.message.sortTs).slice(0, limit);
+  }
+
+  /** Pinned messages in any conversation whose text contains [query], newest first (search › Pinned). */
+  async searchPinned(query: string, limit: number): Promise<StoredMessage[]> {
+    const q = query.toLowerCase();
+    const out: StoredMessage[] = [];
+    let cursor = await this.db.transaction("messages").store.openCursor();
+    while (cursor) {
+      const m = cursor.value;
+      if (m.pinned && !m.deleted && m.text.toLowerCase().includes(q)) out.push(m);
+      cursor = await cursor.continue();
+    }
+    return out.sort((a, b) => b.sortTs - a.sortTs).slice(0, limit);
+  }
+
   /** A conversation's pinned messages kept on this browser, newest first (android round 7 pinned sheet). */
   async pinnedMessages(conversationId: string): Promise<StoredMessage[]> {
     const range = IDBKeyRange.bound([conversationId, -Infinity], [conversationId, Infinity]);

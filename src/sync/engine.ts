@@ -838,6 +838,14 @@ export class Engine implements EngineContext {
   }
 
   /** Text search over the messages this browser holds (the server can't search encrypted content). */
+  searchFiles(query: string, limit = 50): ReturnType<LocalStore["searchFiles"]> {
+    return this.store.searchFiles(query, limit);
+  }
+
+  searchPinned(query: string, limit = 50): Promise<StoredMessage[]> {
+    return this.store.searchPinned(query, limit);
+  }
+
   pinnedMessages(conversationId: string): Promise<StoredMessage[]> {
     return this.store.pinnedMessages(conversationId);
   }
