@@ -382,6 +382,79 @@
 .emoji-grid button:hover {
   background: var(--surface-hover);
 }
+/* The full picker (src/ui/chat/EmojiPicker.tsx): search, skin tone, category tabs, sections. */
+.emoji-picker {
+  display: grid;
+  gap: 8px;
+  width: min(330px, calc(100vw - 32px));
+  padding: 4px;
+}
+.emoji-picker-top {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.emoji-picker-top .input {
+  flex: 1;
+  min-width: 0;
+}
+.emoji-cell {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--r-sm);
+  font-size: 20px;
+}
+.emoji-cell:hover,
+.emoji-cell[aria-checked="true"],
+.emoji-cell[aria-expanded="true"] {
+  background: var(--surface-hover);
+}
+.emoji-tones {
+  display: flex;
+  justify-content: space-between;
+}
+.emoji-tabs {
+  display: flex;
+  justify-content: space-between;
+}
+.emoji-tabs button {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--r-pill);
+  color: var(--text-secondary, var(--text));
+}
+.emoji-tabs button[aria-selected="true"] {
+  background: var(--accent-soft);
+  color: var(--accent-text);
+}
+.emoji-tabs button:disabled {
+  opacity: 0.35;
+}
+.emoji-scroll {
+  position: relative;
+  height: 300px;
+  overflow-y: auto;
+}
+.emoji-heading {
+  margin: 8px 2px 4px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary, var(--text));
+}
+.emoji-picker .emoji-grid {
+  grid-template-columns: repeat(auto-fill, 36px);
+  justify-content: space-between;
+}
+.emoji-picker .emoji-grid button {
+  width: 36px;
+  height: 36px;
+  font-size: 22px;
+}
+.emoji-note {
+  margin: 12px 4px;
+}
 .notices {
   position: fixed;
   left: 88px;

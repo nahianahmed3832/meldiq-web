@@ -14,7 +14,7 @@ import { activeMentionQuery } from "../../sync/mentions";
 import { Avatar } from "../components/Avatar";
 import { Menu, useMenu } from "../components/Overlay";
 import { bytes } from "../format";
-import { EMOJI } from "./MessageItem";
+import { EmojiPicker } from "./EmojiPicker";
 import { ANIMOJI } from "../../sync/animoji";
 import { STICKER_PACKS } from "../../sync/stickers";
 import { PollDialog } from "./PollDialog";
@@ -433,22 +433,13 @@ export function Composer(props: ComposerProps) {
           entries={[
             {
               custom: (
-                <div className="emoji-grid">
-                  {EMOJI.map((em) => (
-                    <button
-                      key={em}
-                      role="menuitem"
-                      aria-label={em}
-                      onClick={() => {
-                        emoji.close();
-                        onChange(text + em);
-                        input.current?.focus();
-                      }}
-                    >
-                      {em}
-                    </button>
-                  ))}
-                </div>
+                <EmojiPicker
+                  onPick={(em) => {
+                    emoji.close();
+                    onChange(text + em);
+                    input.current?.focus();
+                  }}
+                />
               ),
             },
             ...(props.conversation.canPost

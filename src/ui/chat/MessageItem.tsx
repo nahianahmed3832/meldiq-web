@@ -49,9 +49,9 @@ import { TranslateDialog, TranslationView } from "./Translate";
 import { translationSupported } from "../../sync/translate";
 import { findMediaLink } from "../../sync/mediaLinks";
 import { usePrefs } from "../../app/prefs";
+import { EmojiPicker } from "./EmojiPicker";
 
 export const QUICK_EMOJI = ["👍", "❤️", "😂", "🎉", "🙏", "👀"];
-export const EMOJI = ["👍", "❤️", "😂", "🎉", "🙏", "👀", "🔥", "✅", "😮", "😢", "😍", "🤝", "💯", "👏", "🚀", "🙌", "😅", "🤔", "😎", "👌", "⭐", "💡", "☕", "🌟"];
 
 export interface MessageItemProps {
   m: StoredMessage;
@@ -285,21 +285,12 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
           entries={[
             {
               custom: (
-                <div className="emoji-grid" role="group" aria-label="Choose a reaction">
-                  {EMOJI.map((e) => (
-                    <button
-                      key={e}
-                      role="menuitem"
-                      onClick={() => {
-                        picker.close();
-                        void engine.react(m, e);
-                      }}
-                      aria-label={e}
-                    >
-                      {e}
-                    </button>
-                  ))}
-                </div>
+                <EmojiPicker
+                  onPick={(e) => {
+                    picker.close();
+                    void engine.react(m, e);
+                  }}
+                />
               ),
             },
           ]}

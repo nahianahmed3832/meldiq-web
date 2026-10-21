@@ -6,6 +6,7 @@ import { parsePayload, type Payload } from "../protocol/payload";
 import type { EngineContext } from "./context";
 import { applyDelete, applyDelivered, applyEdit, applyPin, applyReaction, applyRead, callEntry, receivedMentions, textMessage, undecryptable } from "./rules";
 import { applyClose, applyVote } from "./polls";
+import { isReaction } from "../emoji/rules";
 
 const MAX_FAILURES = 3;
 
@@ -125,7 +126,8 @@ export class Receiver {
       case "delete":
         return this.change(pl, item, serverTs, (t) => applyDelete(t, item.senderUserId));
       case "reaction":
-        if (!pl.emoji) return;
+        // One emoji, not text: anything else from a modified client is dropped (meldiq docs/EMOJI.md).
+        if (!isReaction(pl.emoji)) return;
         return this.change(pl, item, serverTs, (t) => applyReaction(t, item.senderUserId, pl.emoji!, pl.add !== false));
       case "pin":
         return this.change(pl, item, serverTs, (t) => applyPin(t, pl.pinned === true));
