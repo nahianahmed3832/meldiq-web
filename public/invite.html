@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#231d62" />
+    <meta name="referrer" content="no-referrer" />
+    <meta name="robots" content="noindex" />
+    <title>Meldiq invitation</title>
+    <link rel="icon" href="/favicon-32.png" />
+    <style>
+      :root { --bg: #f6f5fb; --card: #ffffff; --text: #1b1838; --muted: #5d5a78; --accent: #4b3fd1; --accent-text: #ffffff; --line: #e4e2f0; --warn: #8a5a00; }
+      @media (prefers-color-scheme: dark) { :root { --bg: #121024; --card: #1d1a36; --text: #f2f1fa; --muted: #b3b0cc; --accent: #8f86ff; --accent-text: #120f2a; --line: #2e2a4f; --warn: #f0c060; } }
+      * { box-sizing: border-box; }
+      body { margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 24px 16px; background: var(--bg); color: var(--text); font: 16px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
+      main { width: 100%; max-width: 420px; background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 28px 24px; text-align: center; }
+      img { width: 56px; height: 56px; border-radius: 14px; }
+      h1 { font-size: 1.4rem; margin: 14px 0 4px; overflow-wrap: anywhere; }
+      p { margin: 6px 0; color: var(--muted); overflow-wrap: anywhere; }
+      .code { font: 600 1.1rem ui-monospace, Menlo, monospace; letter-spacing: 0.06em; color: var(--text); margin: 16px 0 4px; }
+      .actions { display: grid; gap: 10px; margin-top: 20px; }
+      a.button, button { display: block; width: 100%; padding: 13px 16px; border-radius: 999px; border: 1px solid var(--line); background: transparent; color: var(--text); font: inherit; font-weight: 600; text-decoration: none; cursor: pointer; }
+      a.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-text); }
+      .warn { color: var(--warn); }
+      [hidden] { display: none !important; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <img src="/meldiq-mark-128.png" alt="" />
+      <p id="lead">You've been invited to a community on Meldiq</p>
+      <h1 id="name">Loading…</h1>
+      <p id="about" hidden></p>
+      <p id="members" hidden></p>
+      <p id="problem" class="warn" hidden></p>
+      <div id="join" hidden>
+        <div class="code" id="code"></div>
+        <div class="actions">
+          <a class="button primary" id="open-app" href="#">Open in the Meldiq app</a>
+          <button type="button" id="copy">Copy the code</button>
+          <a class="button" href="/">Use Meldiq Web</a>
+        </div>
+        <p style="margin-top: 14px; font-size: 0.9rem">In Meldiq Web, choose Join with a code and paste it.</p>
+      </div>
+    </main>
+    <script src="/invite.js"></script>
+  </body>
+</html>

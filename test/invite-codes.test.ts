@@ -7,7 +7,9 @@ describe("invite codes", () => {
     expect(inviteFromScan("griip://invite/ABCD-EFGH-JK23")).toBe("ABCD-EFGH-JK23");
     expect(inviteFromScan("GRIIP://INVITE/abcdefghjk23")).toBe("ABCD-EFGH-JK23");
     expect(inviteFromScan("  abcd-efgh-jk23\n")).toBe("ABCD-EFGH-JK23");
-    expect(inviteLink("ABCD-EFGH-JK23")).toBe("meldiq://invite/ABCD-EFGH-JK23");
+    expect(inviteLink("ABCD-EFGH-JK23")).toBe("https://meldiq.app/invite/ABCD-EFGH-JK23");
+    expect(inviteFromScan("https://www.meldiq.app/invite/abcdefghjk23")).toBe("ABCD-EFGH-JK23");
+    expect(inviteFromScan("meldiq://invite/ABCD-EFGH-JK23")).toBe("ABCD-EFGH-JK23");
     expect(inviteFromScan(inviteLink("ABCD-EFGH-JK23"))).toBe("ABCD-EFGH-JK23");
     expect(inviteFromScan("MELDIQ://INVITE/abcdefghjk23")).toBe("ABCD-EFGH-JK23");
     expect(inviteFromScan("orbit://invite/ABCD-EFGH-JK23")).toBeNull();

@@ -1,0 +1,57 @@
+// The meldiq.app/invite/CODE page (batch B4b): shows which community the invitation is for, using the public preview
+// (name, description and size only; never channels or members), and hands the code to the app or Meldiq Web.
+// Plain script, no build step: the page must load before the web app and under its Content-Security-Policy.
+(function () {
+  "use strict";
+  var CODE = /^[A-Za-z0-9]{4}(-?[A-Za-z0-9]{4}){2,4}$/;
+  var PROBLEMS = {
+    invite_not_found: "This invitation link isn't valid. Ask for a new one.",
+    invite_expired: "This invitation has expired. Ask for a new one.",
+    invite_revoked: "This invitation was turned off. Ask for a new one.",
+    invite_used_up: "This invitation has been used up. Ask for a new one.",
+  };
+
+  function el(id) { return document.getElementById(id); }
+  function show(id, text) { var e = el(id); if (text !== undefined) e.textContent = text; e.hidden = false; }
+
+  function codeFromPath(path) {
+    var raw = decodeURIComponent(path.replace(/^\/invite\/?/, "").split("/")[0] || "");
+    if (!CODE.test(raw)) return null;
+    var plain = raw.toUpperCase().replace(/[^A-Z0-9]/g, "");
+    return plain.match(/.{1,4}/g).join("-");
+  }
+
+  function problem(text) {
+    el("name").textContent = "Invitation";
+    show("problem", text);
+  }
+
+  var code = codeFromPath(window.location.pathname);
+  if (!code) { problem(PROBLEMS.invite_not_found); return; }
+
+  el("code").textContent = code;
+  // On Android this opens the app when it's installed; App Links usually open it before this page loads at all.
+  el("open-app").href = "meldiq://invite/" + encodeURIComponent(code);
+  el("copy").addEventListener("click", function () {
+    var done = function () { el("copy").textContent = "Copied"; };
+    if (navigator.clipboard) navigator.clipboard.writeText(code).then(done, function () {});
+  });
+
+  fetch("/v1/invites/" + encodeURIComponent(code) + "/public", { credentials: "omit" })
+    .then(function (r) { return r.json().then(function (body) { return { ok: r.ok, body: body }; }); })
+    .then(function (res) {
+      if (!res.ok) {
+        var c = res.body && res.body.error && res.body.error.code;
+        problem(PROBLEMS[c] || "This invitation can't be opened right now. Try again later.");
+        return;
+      }
+      var community = res.body.community || {};
+      el("name").textContent = community.name || "A Meldiq community";
+      document.title = (community.name || "Meldiq") + " · Meldiq invitation";
+      if (community.description) show("about", community.description);
+      if (typeof community.memberCount === "number") show("members", community.memberCount === 1 ? "1 member" : community.memberCount + " members");
+      if (res.body.invitesPaused) show("problem", "This community has paused new members for now. Try again later.");
+      show("join");
+    })
+    .catch(function () { problem("This invitation can't be opened right now. Check your connection and try again."); });
+})();

@@ -1,17 +1,18 @@
 /**
- * Invitation codes (android InviteCodes): the link the invite screen draws as a QR code (`meldiq://invite/CODE`, or
- * `griip://invite/CODE` from before Meldiq), the shared invite text that contains it, or a bare code. Anything else, web
- * links included, is refused, so pasted text can never make the app open a URL.
+ * Invitation codes (android InviteCodes): the link the invite screen draws as a QR code (`https://meldiq.app/invite/CODE`
+ * since batch B4b; `meldiq://invite/CODE`, or `griip://invite/CODE` from before Meldiq), the shared invite text that
+ * contains it, or a bare code. Anything else, other web links included, is refused, so pasted text can never make the
+ * app open a URL.
  */
-const LINK = /(?:meldiq|griip):\/\/invite\/([A-Za-z0-9-]{1,40})/i;
+const LINK = /(?:(?:meldiq|griip):\/\/invite\/|https:\/\/(?:www\.)?meldiq\.app\/invite\/)([A-Za-z0-9-]{1,40})/i;
 const BARE = /^[A-Za-z0-9]{4}(-?[A-Za-z0-9]{4}){2,4}$/;
 /** A code inside longer text, e.g. the shared invite message; never part of a web address. */
 const EMBEDDED = /(?<![A-Za-z0-9/.])[A-Za-z0-9]{4}-[A-Za-z0-9]{4}-[A-Za-z0-9]{4}(?:-[A-Za-z0-9]{4}){0,2}(?![A-Za-z0-9/-])/g;
 /** The characters the server draws codes from (server CODE_ALPHABET): no I, L, O, 0 or 1, which look alike. */
 export const INVITE_ALPHABET = "ABCDEFGHJKMNPQRSTUVWXYZ23456789";
 
-/** The link the invite screen draws and shares. */
-export const inviteLink = (code: string): string => `meldiq://invite/${code}`;
+/** The link the invite screen draws and shares: a web link (batch B4b) that opens the phone app when it's installed. */
+export const inviteLink = (code: string): string => `https://meldiq.app/invite/${code}`;
 
 const group = (code: string): string => code.match(/.{1,4}/g)!.join("-");
 
