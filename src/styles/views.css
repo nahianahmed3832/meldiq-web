@@ -479,6 +479,48 @@
   align-items: center;
   gap: 6px;
 }
+/* Ways back in, shown only after "Having trouble signing in?" / "Can't access your email?". */
+.auth-choices {
+  display: grid;
+  gap: 10px;
+}
+.auth-choice {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  min-height: 64px;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--surface-raised);
+  color: var(--text);
+  text-align: left;
+}
+.auth-choice:hover {
+  background: var(--surface-hover);
+  border-color: var(--border-strong);
+}
+.auth-choice-icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--r-sm);
+  background: var(--accent-soft);
+  color: var(--accent-text);
+}
+.auth-choice-text {
+  display: grid;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+  font-size: 13px;
+}
+.auth-choice-text strong {
+  font-size: 14px;
+}
 .text-link {
   color: var(--link, var(--text));
   font-weight: 600;

@@ -83,6 +83,7 @@ test("sign up, set up encryption, come back after a reload, and add a second bro
   // The setup session is removed on another device before it finishes (production, 2026-10-19): the recovery key can't
   // be used with it, so the screen goes back to sign-in with the email kept and says why, instead of failing every try.
   await removeSetupSessionElsewhere(email);
+  await openOtherWays(second);
   await second.getByRole("tab", { name: "Use my recovery key" }).click();
   await second.getByLabel("Recovery key", { exact: true }).fill(recovery);
   await second.getByRole("button", { name: "Set up this browser" }).click();
@@ -92,6 +93,7 @@ test("sign up, set up encryption, come back after a reload, and add a second bro
   // Signing in again sets it up with the same recovery key.
   await signIn(second, email);
   await expect(second.getByRole("heading", { name: "Set up this browser" })).toBeVisible();
+  await openOtherWays(second);
   await second.getByRole("tab", { name: "Use my recovery key" }).click();
   await second.getByLabel("Recovery key", { exact: true }).fill(recovery.toLowerCase());
   await second.getByRole("button", { name: "Set up this browser" }).click();
@@ -109,9 +111,17 @@ test("a wrong password and a forgotten password", async ({ page }) => {
   await page.goto("/");
   await signIn(page, email);
   await expect(page.getByRole("alert")).toContainText("don't match an account");
-  await page.getByRole("button", { name: "Forgot password?" }).click();
+  await page.getByRole("button", { name: "Having trouble signing in?" }).click();
+  await page.getByRole("button", { name: /I forgot my password/ }).click();
   await expect(page.getByRole("heading", { name: "Reset your password" })).toBeVisible();
   await page.getByRole("button", { name: "Send code" }).click();
   // The same answer whether or not the address has an account.
   await expect(page.getByRole("heading", { name: "Choose a new password" })).toBeVisible();
 });
+
+/** "Set up this browser" offers the emailed code first when the keys are backed up; the other ways sit behind a link. */
+async function openOtherWays(page: Page): Promise<void> {
+  const help = page.getByRole("button", { name: "Can't access your email?" });
+  await expect(help.or(page.getByRole("tab", { name: "Use my recovery key" }))).toBeVisible();
+  if (await help.isVisible()) await help.click();
+}

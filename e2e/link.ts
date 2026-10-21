@@ -13,7 +13,8 @@ export async function expectSignedOut(page: Page): Promise<void> {
 export async function link(page: Page, phone: Phone): Promise<void> {
   await page.goto("/");
   await expectSignedOut(page);
-  await page.getByRole("button", { name: "Link with your phone instead" }).click();
+  await page.getByRole("button", { name: "Having trouble signing in?" }).click();
+  await page.getByRole("button", { name: /Link with your phone instead/ }).click();
   await expect(page.getByRole("heading", { name: "Link this browser to your account" })).toBeVisible();
   const code = page.locator(".code-box .code");
   await expect(code).toHaveText(/^[A-Z0-9]{5} [A-Z0-9]{5}$/);

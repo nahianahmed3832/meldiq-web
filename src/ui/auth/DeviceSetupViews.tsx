@@ -113,7 +113,8 @@ export function RecoveryKeyReveal({ code, onDone }: { code: string; onDone: () =
 
 // ───────────────────────── later devices ─────────────────────────
 
-type Way = "email" | "phone" | "recovery";
+/** The ways besides the emailed code. */
+type OtherWay = "phone" | "recovery";
 
 interface AddDeviceProps {
   creds: SetupCredentials;
@@ -125,50 +126,82 @@ interface AddDeviceProps {
 }
 
 /**
- * Adds this browser to an account that already has keys. With a key backup for the current password, an emailed code
- * comes first (server docs/KEY_BACKUP.md); another device or the recovery key are for when the email can't work.
+ * Adds this browser to an account that already has keys. With a key backup for the current password, the emailed code
+ * is the one way shown (server docs/KEY_BACKUP.md); approving from the phone and the recovery key open only from
+ * "Can't access your email?". Without a backup they are the only ways, so they're shown at once (meldiq
+ * docs/product/MELDIQ_AUTH_FLOW_AUDIT.md).
  */
 export function AddDeviceView(props: AddDeviceProps & { onSignOut: () => void }) {
-  const [backup, setBackup] = useState<boolean | null>(null);
-  const [way, setWay] = useState<Way>("phone");
+  // The key backup check: which attempt it answers, and whether a backup exists (null: the server couldn't say).
+  const [status, setStatus] = useState<{ attempt: number; exists: boolean | null } | null>(null);
+  const [attempt, setAttempt] = useState(0);
+  const [way, setWay] = useState<OtherWay>("phone");
+  const [others, setOthers] = useState(false);
   const { creds } = props;
   useEffect(() => {
     let live = true;
     creds.accounts
       .keyBackupStatus()
-      .then((s) => {
-        if (!live) return;
-        setBackup(s.exists);
-        if (s.exists) setWay("email");
-      })
+      .then((s) => live && setStatus({ attempt, exists: s.exists }))
       // The server couldn't say: offer the other ways without claiming there's no backup.
-      .catch(() => undefined);
+      .catch(() => live && setStatus({ attempt, exists: null }));
     return () => {
       live = false;
     };
-  }, [creds]);
+  }, [creds, attempt]);
+  const checking = status?.attempt !== attempt;
+  const backup = checking ? null : status.exists;
+  const emailWay = backup === true && !others;
   return (
     <div className="auth-form">
       <AuthHeading title="Set up this browser" sub={`Signed in as ${props.account.email}. To read your messages here, this browser needs your account's keys.`} />
-      <div className="segmented auth-ways" role="tablist" aria-label="How to set up this browser">
-        {backup && (
-          <button role="tab" aria-selected={way === "email"} onClick={() => setWay("email")}>
-            <MailCheck size={14} /> Code by email
-          </button>
-        )}
-        <button role="tab" aria-selected={way === "phone"} onClick={() => setWay("phone")}>
-          <Smartphone size={14} /> Approve from my phone
-        </button>
-        <button role="tab" aria-selected={way === "recovery"} onClick={() => setWay("recovery")}>
-          <KeyRound size={14} /> Use my recovery key
-        </button>
-      </div>
-      {backup === false && (
-        <p className="hint" style={{ margin: 0 }}>
-          There's no key backup for your current password (for example after a password reset), so use your phone or your recovery key.
+      {checking ? (
+        <p className="muted" role="status" style={{ margin: 0 }}>
+          Checking for a backup of your keys…
         </p>
+      ) : emailWay ? (
+        <>
+          <EmailUnlock {...props} />
+          <div className="auth-links">
+            <LinkButton onClick={() => setOthers(true)}>Can't access your email?</LinkButton>
+          </div>
+        </>
+      ) : (
+        <>
+          {backup === true && (
+            <p className="muted" style={{ margin: 0 }}>
+              Other ways to unlock: if the email code can't reach you, use one of these.
+            </p>
+          )}
+          {backup === false && (
+            <p className="hint" style={{ margin: 0 }}>
+              There's no key backup for your current password (for example after a password reset), so use your phone or your recovery key.
+            </p>
+          )}
+          {backup === null && (
+            <div className="banner warn" role="alert">
+              <span className="grow">Couldn't check whether your keys are backed up. Try again, or use another way below.</span>
+              <button type="button" className="btn btn-secondary btn-sm" onClick={() => setAttempt((n) => n + 1)}>
+                <RefreshCw size={14} /> Try again
+              </button>
+            </div>
+          )}
+          <div className="segmented auth-ways" role="tablist" aria-label="How to set up this browser">
+            <button role="tab" aria-selected={way === "phone"} onClick={() => setWay("phone")}>
+              <Smartphone size={14} /> Approve from my phone
+            </button>
+            <button role="tab" aria-selected={way === "recovery"} onClick={() => setWay("recovery")}>
+              <KeyRound size={14} /> Use my recovery key
+            </button>
+          </div>
+          {way === "phone" ? <ApproveFromDevice {...props} /> : <RecoveryKeyEntry {...props} />}
+          {backup === true && (
+            <div className="auth-links">
+              <LinkButton onClick={() => setOthers(false)}>Back to the email code</LinkButton>
+            </div>
+          )}
+        </>
       )}
-      {way === "email" ? <EmailUnlock {...props} /> : way === "phone" ? <ApproveFromDevice {...props} /> : <RecoveryKeyEntry {...props} />}
       <div className="auth-links">
         <LinkButton onClick={props.onSignOut}>Use a different account</LinkButton>
       </div>

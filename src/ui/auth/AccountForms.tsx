@@ -1,4 +1,4 @@
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ArrowLeftRight, ChevronRight, LockKeyhole, MailX, Smartphone } from "lucide-react";
 import { type FormEvent, type ReactNode, useState } from "react";
 import type { AccountSessionGrant, LegacyTicket } from "../../api/accountSchemas";
 import { ApiError } from "../../api/client";
@@ -57,6 +57,7 @@ export function SignInForm(props: {
 }) {
   const [email, setEmail] = useState(props.initialEmail ?? "");
   const [password, setPassword] = useState("");
+  const [help, setHelp] = useState(false);
   const { busy, error, setError, run } = useSubmit();
 
   const submit = () => {
@@ -71,6 +72,18 @@ export function SignInForm(props: {
       }
     });
   };
+
+  if (help) {
+    return (
+      <SignInHelp
+        onForgot={() => props.onForgot(normalizeEmail(email))}
+        onRecover={props.onRecover && (() => props.onRecover?.(normalizeEmail(email)))}
+        onMove={props.canMove ? props.onMove : undefined}
+        onLinkWithPhone={props.canLinkWithPhone ? props.onLinkWithPhone : undefined}
+        onBack={() => setHelp(false)}
+      />
+    );
+  }
 
   return (
     <form className="auth-form" onSubmit={submitHandler(submit)} noValidate>
@@ -87,32 +100,56 @@ export function SignInForm(props: {
         {busy ? "Signing in…" : "Sign in"}
       </button>
       <div className="auth-links">
-        <LinkButton onClick={() => props.onForgot(normalizeEmail(email))}>Forgot password?</LinkButton>
+        <LinkButton onClick={() => setHelp(true)}>Having trouble signing in?</LinkButton>
         {props.canSignUp && <LinkButton onClick={props.onSignUp}>Create an account</LinkButton>}
       </div>
-      {props.onRecover && (
-        <div className="auth-links">
-          <LinkButton onClick={() => props.onRecover?.(normalizeEmail(email))}>Lost access to your email?</LinkButton>
-        </div>
-      )}
-      {(props.canMove || props.canLinkWithPhone) && (
-        <div className="auth-alt">
-          {props.canMove && (
-            <div>
-              <strong>Used Orbit (now Meldiq) before email sign-in?</strong>
-              <span className="muted"> Move your account with your username and recovery key. </span>
-              <LinkButton onClick={props.onMove}>Move my account</LinkButton>
-            </div>
-          )}
-          {props.canLinkWithPhone && (
-            <div>
-              <span className="muted">Haven't moved yet and have your phone? </span>
-              <LinkButton onClick={props.onLinkWithPhone}>Link with your phone instead</LinkButton>
-            </div>
-          )}
-        </div>
-      )}
     </form>
+  );
+}
+
+/**
+ * The ways back in, shown only after "Having trouble signing in?" (Meldiq Android does the same; meldiq
+ * docs/product/MELDIQ_AUTH_FLOW_AUDIT.md). A way is offered only when this server and this browser allow it.
+ */
+function SignInHelp(props: { onForgot: () => void; onRecover?: () => void; onMove?: () => void; onLinkWithPhone?: () => void; onBack: () => void }) {
+  return (
+    <div className="auth-form">
+      <AuthHeading title="Having trouble signing in?" sub="Choose what happened. What you typed stays here if you come back." />
+      <div className="auth-choices">
+        <ChoiceButton icon={<LockKeyhole size={18} />} title="I forgot my password" sub="We'll email you a code to set a new one." onClick={props.onForgot} />
+        {props.onRecover && (
+          <ChoiceButton icon={<MailX size={18} />} title="I can't get into my email" sub="Use one of your saved recovery codes to move the account to a new address." onClick={props.onRecover} />
+        )}
+        {props.onMove && (
+          <ChoiceButton icon={<ArrowLeftRight size={18} />} title="Move an existing account" sub="Used Orbit before email sign-in? Use your username and recovery key once." onClick={props.onMove} />
+        )}
+        {props.onLinkWithPhone && (
+          <ChoiceButton
+            icon={<Smartphone size={18} />}
+            title="Link with your phone instead"
+            sub="Haven't moved your account yet? Approve this browser from your phone."
+            onClick={props.onLinkWithPhone}
+          />
+        )}
+      </div>
+      <Back onClick={props.onBack} label="Back to sign in" />
+    </div>
+  );
+}
+
+/** One way to choose, as a large button: icon, title and a line about it. */
+export function ChoiceButton({ icon, title, sub, onClick }: { icon: ReactNode; title: string; sub: string; onClick: () => void }) {
+  return (
+    <button type="button" className="auth-choice" onClick={onClick}>
+      <span className="auth-choice-icon" aria-hidden="true">
+        {icon}
+      </span>
+      <span className="auth-choice-text">
+        <strong>{title}</strong>
+        <span className="muted">{sub}</span>
+      </span>
+      <ChevronRight size={16} aria-hidden="true" />
+    </button>
   );
 }
 
