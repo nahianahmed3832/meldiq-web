@@ -133,7 +133,7 @@ export class Receiver {
         return this.change(pl, item, serverTs, (t) => applyPin(t, pl.pinned === true));
       case "vote":
         // A poll vote (docs/RICH_MESSAGES.md › Polls): replaces the voter's earlier one; only real options count.
-        return this.change(pl, item, serverTs, (t) => (t.rich?.poll && !t.deleted ? { ...t, rich: applyVote(t.rich, item.senderUserId, pl.choices ?? []) } : null));
+        return this.change(pl, item, serverTs, (t) => (t.rich?.poll && !t.deleted ? { ...t, rich: applyVote(t.rich, item.senderUserId, pl.choices ?? [], serverTs) } : null));
       case "poll_close":
         // Only from the poll's own sender.
         return this.change(pl, item, serverTs, (t) => (t.rich?.poll && t.senderUserId === item.senderUserId ? { ...t, rich: applyClose(t.rich, t.senderUserId, item.senderUserId) } : null));

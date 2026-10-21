@@ -21,10 +21,23 @@ export function cleanPoll(p: Poll | null | undefined): Poll | null {
   const seen = new Set<string>();
   const options = p.options
     .filter((o) => OPTION_ID.test(o.id) && !seen.has(o.id) && (seen.add(o.id), true))
-    .map((o) => ({ id: o.id, text: squash(o.text).slice(0, MAX_OPTION) }))
+    .map((o) => ({ id: o.id, text: squash(o.text).slice(0, MAX_OPTION), ...(cleanEmoji(o.emoji) ? { emoji: cleanEmoji(o.emoji)! } : {}) }))
     .filter((o) => o.text)
     .slice(0, MAX_OPTIONS);
-  return options.length < MIN_OPTIONS ? null : { question, options, multi: p.multi === true };
+  if (options.length < MIN_OPTIONS) return null;
+  const endsAt = typeof p.endsAt === "number" && p.endsAt > 0 ? p.endsAt : undefined;
+  return { question, options, multi: p.multi === true, ...(endsAt ? { endsAt } : {}) };
+}
+
+/** An answer's emoji (Android batch B8): no letters or digits, at most 16 characters; undefined otherwise. */
+export function cleanEmoji(e: string | null | undefined): string | undefined {
+  const t = e?.trim();
+  return t && t.length <= 16 && !/[\p{L}\p{N}]/u.test(t) ? t : undefined;
+}
+
+/** Closed by its creator, or past its end time. */
+export function pollClosed(rich: RichContent, now: number): boolean {
+  return rich.pollClosed === true || (rich.poll?.endsAt != null && now >= rich.poll.endsAt);
 }
 
 /** A poll from the composer's fields: blank options dropped, ids "o1", "o2", … in order; null when it isn't valid. */
@@ -40,9 +53,11 @@ export function composePoll(question: string, options: readonly string[], multi:
 }
 
 /** [voter]'s vote: their earlier choices replaced (unknown options dropped, one unless several are allowed; empty takes it back). */
-export function applyVote(rich: RichContent, voter: string, choices: readonly string[]): RichContent {
+export function applyVote(rich: RichContent, voter: string, choices: readonly string[], at?: number): RichContent {
   const poll = rich.poll;
   if (!poll || rich.pollClosed) return rich;
+  // Votes the server accepted after the poll ended don't count (every device uses the server's time).
+  if (poll.endsAt != null && at != null && at > poll.endsAt) return rich;
   const valid = new Set(poll.options.map((o) => o.id));
   const unique = [...new Set(choices.filter((c) => valid.has(c)))];
   const picked = poll.multi ? unique : unique.slice(0, 1);
@@ -58,7 +73,7 @@ export function applyClose(rich: RichContent, pollSender: string, closer: string
 }
 
 /** Votes per option (every option listed, zero included), in the poll's order. */
-export function tally(rich: RichContent): { id: string; text: string; votes: number }[] {
+export function tally(rich: RichContent): { id: string; text: string; emoji?: string; votes: number }[] {
   const counts = new Map<string, number>();
   for (const choice of Object.values(rich.votes ?? {}).flat()) counts.set(choice, (counts.get(choice) ?? 0) + 1);
   return (rich.poll?.options ?? []).map((o) => ({ ...o, votes: counts.get(o.id) ?? 0 }));
@@ -71,5 +86,5 @@ export function voters(rich: RichContent): number {
 
 /** The text older apps and notifications show. */
 export function pollFallback(p: Poll): string {
-  return `📊 ${p.question}\n${p.options.map((o, i) => `${i + 1}. ${o.text}`).join("\n")}`;
+  return `📊 ${p.question}\n${p.options.map((o, i) => `${i + 1}. ${o.emoji ? `${o.emoji} ` : ""}${o.text}`).join("\n")}`;
 }

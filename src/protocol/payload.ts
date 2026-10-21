@@ -47,8 +47,10 @@ const zLink = z.object({
 /** A poll (docs/RICH_MESSAGES.md › Polls): bounded here, cleaned by sync/polls.ts like android PollRules.clean. */
 const zPoll = z.object({
   question: z.string().max(1000),
-  options: z.array(z.object({ id: z.string().max(32), text: z.string().max(500) })).max(20),
+  options: z.array(z.object({ id: z.string().max(32), text: z.string().max(500), emoji: opt(z.string().max(32)) })).max(20),
   multi: z.boolean().default(false),
+  /** Android batch B8: when voting ends (epoch ms); absent: open until its creator closes it. */
+  endsAt: opt(z.number().int()),
 });
 /** A sticker reference into the shared catalogue (docs/STICKERS.md); the text carries the readable fallback. */
 const zSticker = z.object({ pack: z.string().max(64), id: z.string().max(64) });

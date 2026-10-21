@@ -1,7 +1,7 @@
 import { BarChart3, Lock } from "lucide-react";
 import { useEngine } from "../../app/orbit";
 import type { StoredMessage } from "../../model/types";
-import { tally, voters } from "../../sync/polls";
+import { pollClosed, tally, voters } from "../../sync/polls";
 
 /**
  * A poll in a message (android RichViews poll card): each option with its count and share, this person's choice marked,
@@ -16,7 +16,7 @@ export function PollView({ m, myUserId, canPost }: { m: StoredMessage; myUserId:
   const counts = tally(rich);
   const total = voters(rich);
   const mine = new Set(rich.votes?.[myUserId] ?? []);
-  const closed = rich.pollClosed === true;
+  const closed = pollClosed(rich, Date.now());
   const choose = (id: string) => {
     if (closed || !canPost) return;
     const next = poll.multi ? (mine.has(id) ? [...mine].filter((x) => x !== id) : [...mine, id]) : mine.has(id) ? [] : [id];
@@ -43,7 +43,10 @@ export function PollView({ m, myUserId, canPost }: { m: StoredMessage; myUserId:
             >
               <span className="poll-fill" style={{ width: `${share}%` }} aria-hidden="true" />
               <span className={`poll-mark${poll.multi ? " multi" : ""}`} aria-hidden="true" />
-              <span className="grow ellipsis">{o.text}</span>
+              <span className="grow ellipsis">
+                {o.emoji ? `${o.emoji} ` : ""}
+                {o.text}
+              </span>
               <span className="poll-count">{o.votes}</span>
             </button>
           );
