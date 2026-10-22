@@ -1,4 +1,5 @@
 import { ApiError } from "../api/client";
+import { countsEveryone } from "./navPrefs";
 import { type Call, type Conversation, type QueueItem, zCallRes, zQueueItem } from "../api/schemas";
 import { EnvelopeError, openEnvelope } from "../crypto/envelope";
 import type { StoredMessage } from "../model/types";
@@ -115,10 +116,12 @@ export class Receiver {
         this.ctx.show(m);
         await this.replayPending(item.conversationId, item.messageId);
         const viewing = this.ctx.viewing() === item.conversationId;
-        const mentioned = !mine && (mentions.ids.includes(device.userId) || mentions.all);
+        // Batch B2: a community whose settings ignore @everyone treats it as an ordinary message (no mention, no badge).
+        const all = mentions.all && (!conv?.orgId || countsEveryone(this.ctx.state.get().nav[conv.orgId]));
+        const mentioned = !mine && (mentions.ids.includes(device.userId) || all);
         await this.ctx.bump(m, { unread: !mine && !viewing, mention: mentioned && !viewing });
         if (viewing && !mine) this.ctx.markReadSoon(item.conversationId);
-        if (!mine && !viewing) this.ctx.notifyIncoming(m, conv, mentions.ids.includes(device.userId) ? "me" : mentions.all ? "all" : null);
+        if (!mine && !viewing) this.ctx.notifyIncoming(m, conv, mentions.ids.includes(device.userId) ? "me" : all ? "all" : null);
         return;
       }
       case "edit":

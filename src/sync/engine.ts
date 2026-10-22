@@ -3,6 +3,7 @@ import { ApiClient, ApiError } from "../api/client";
 import type { AccountSessionGrant } from "../api/accountSchemas";
 import { type Call, type Conversation, type Member, type Org, type SessionGrant, zCall, zConversation, zMember, zOrg, zProfile, zServerInfo } from "../api/schemas";
 import { Signals, zExperiments } from "./signals";
+import { CommunitySync } from "./community";
 import { paused } from "./status";
 import { signInWithDevice } from "../auth/accountApi";
 import { type AccountSessionEnd, AccountSession } from "../auth/accountSession";
@@ -93,6 +94,8 @@ export class Engine implements EngineContext {
   readonly signals: Signals;
   /** Call history lines and the recent-call log. */
   readonly callLog: CallLog;
+  /** Opened communities' categories and channel lists (src/sync/community.ts). */
+  readonly community: CommunitySync;
   private readonly compose: Compose;
   private readonly locals: ConversationLocals;
   private readonly realtime: RealtimeClient;
@@ -194,6 +197,18 @@ export class Engine implements EngineContext {
       available: () => this.state.get().server?.features.includes("reminders") ?? false,
       publish: (reminders) => this.set((s) => ({ ...s, reminders })),
       show: (r) => this.showReminder(r),
+    });
+    this.community = new CommunitySync({
+      json: (method, path, schema, init) => this.api.json(method, path, schema, init),
+      features: () => this.state.get().server?.features ?? [],
+      loaded: (orgId) => !!this.state.get().communities[orgId],
+      publish: (orgId, data) =>
+        this.set((s) => {
+          const communities = { ...s.communities };
+          if (data) communities[orgId] = data;
+          else delete communities[orgId];
+          return { ...s, communities };
+        }),
     });
     this.signals = new Signals({
       features: () => this.state.get().server?.features ?? [],
@@ -499,6 +514,14 @@ export class Engine implements EngineContext {
       }
       case "org.updated":
         await this.refreshAll();
+        this.community.refreshLoaded(this.state.get().orgs.map((o) => o.id));
+        return;
+      case "org.applications":
+      case "org.application":
+      case "org.reports":
+        // Ids only: open moderation pages reload (and an approved application brings the community into the list).
+        this.set((s) => ({ ...s, moderationRev: s.moderationRev + 1 }));
+        if (f.t === "org.application") void this.refreshAll();
         return;
       case "integration.event": {
         const id = str(f.conversationId);
@@ -534,6 +557,7 @@ export class Engine implements EngineContext {
         const id = str(f.orgId);
         if (!id) return;
         this.set((s) => orgDeletedFrame(s, id));
+        this.community.forget(id);
         return;
       }
       case "devices.changed": {
@@ -685,7 +709,7 @@ export class Engine implements EngineContext {
     const st = this.state.get();
     // Paused from the profile menu (round 3): the message arrives and counts as unread, without a notification.
     if (paused(st.me?.notificationsPausedUntil ?? null, Date.now())) return;
-    if (!shouldNotify(levelOf(st.nav[workspaceOf(conversation?.orgId ?? null)], m.conversationId), mention)) return;
+    if (!shouldNotify(levelOf(st.nav[workspaceOf(conversation?.orgId ?? null)], m.conversationId, conversation?.categoryId ?? null), mention)) return;
     const mentioned = mention !== null;
     // Group notifications off (android Settings › Notifications): groups and channels stay quiet; mentions still notify.
     if (conversation?.type !== "DM" && !mentioned && this.opts.prefs?.().groupNotifications === false) return;

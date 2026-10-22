@@ -238,7 +238,7 @@ const LEVELS: { level: NotifyLevel; label: string }[] = [
 function ConversationSettings({ conversationId }: { conversationId: string }) {
   const engine = useEngine();
   const c = useOrbit((s) => s.conversations[conversationId]);
-  const level = useOrbit((s) => levelOf(s.nav[workspaceOf(c?.orgId ?? null)], conversationId));
+  const level = useOrbit((s) => levelOf(s.nav[workspaceOf(c?.orgId ?? null)], conversationId, c?.categoryId ?? null));
   const [confirm, setConfirm] = useState(false);
   const [error, setError] = useState<string | null>(null);
   if (!c) return null;

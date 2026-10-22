@@ -28,6 +28,17 @@ const conv = (over: Partial<Conversation>): Conversation => ({
   canMentionAll: false,
   activeCall: null,
   voice: false,
+  categoryId: null,
+  categoryName: null,
+  position: 0,
+  format: "text",
+  forumTags: [],
+  guidelines: null,
+  photoRev: null,
+  timedOutUntil: null,
+  slowmodeSec: 0,
+  slowmodeExempt: false,
+  nextPostAt: null,
   ...over,
 });
 

@@ -10,11 +10,16 @@ import type { Engine } from "./engine";
 const n = z.number().int().nonnegative();
 const zUsage = z.object({
   members: z.object({ total: n, owners: n, admins: n, members: n, guests: n }),
-  structure: z.object({ branches: n, departments: n, teams: n, channels: n, archivedChannels: n }),
+  /** Branches, departments and teams are zero on community servers (they became roles and categories); categories since then. */
+  structure: z.object({ branches: n.default(0), departments: n.default(0), teams: n.default(0), categories: n.optional(), channels: n, archivedChannels: n }),
   files: z.object({ count: n, bytes: n }),
   invitations: z.object({ active: n }),
   roles: z.object({ custom: n }),
-  apps: z.object({ installed: n, connectedAccounts: n.default(0), notifications: n.default(0), webhooks: n.default(0) }).passthrough(),
+  /** Apps were removed with the community rebuild (API 0.12): community servers leave this out. */
+  apps: z
+    .object({ installed: n, connectedAccounts: n.default(0), notifications: n.default(0), webhooks: n.default(0) })
+    .passthrough()
+    .optional(),
   /** Round 7 (docs/USAGE_AND_PLANS.md): what the server measured per UTC day; counts and sizes only. */
   metered: z
     .object({

@@ -74,6 +74,41 @@ export const zConversation = z.object({
     .transform((v) => v ?? null),
   /** A voice room (API 0.7+): a channel whose call anyone in it can drop into, without ringing. */
   voice: z.boolean().default(false),
+  // ── Communities (API 0.12+, docs/COMMUNITY_REBUILD_2026-10-21.md); older servers leave these out. ──
+  /** The channel's category (null: none) and its place in it. */
+  categoryId: nullableString,
+  categoryName: nullableString,
+  position: z.number().int().default(0),
+  /** "text", or "forum": posts with a title, each with its replies in a thread. */
+  format: z.enum(["text", "forum"]).catch("text").default("text"),
+  forumTags: z
+    .array(z.object({ id: z.string(), name: z.string() }))
+    .max(50)
+    .default([]),
+  /** Batch B8: a forum's post guidelines. */
+  guidelines: nullableString,
+  /** Batch B6b: a group's photo revision (GET /v1/conversations/:id/photo). */
+  photoRev: z
+    .number()
+    .nullish()
+    .transform((v) => v ?? null),
+  /** Whether this person may share files here (a channel can take it away); older servers: whenever they may post. */
+  canAttach: z.boolean().optional(),
+  /** While this person is timed out in the community: when it ends. */
+  timedOutUntil: z
+    .number()
+    .nullish()
+    .transform((v) => v ?? null),
+  /** Batch B3: slowmode seconds, whether it applies to this person, and when they may post next (null: now). */
+  slowmodeSec: z.number().int().default(0),
+  slowmodeExempt: z.boolean().default(false),
+  nextPostAt: z
+    .number()
+    .nullish()
+    .transform((v) => v ?? null),
+  /** Voice channels: whether this person may join the call, and speak in it (listen-only otherwise). */
+  canConnect: z.boolean().optional(),
+  canSpeak: z.boolean().optional(),
 });
 export type Conversation = z.infer<typeof zConversation>;
 
@@ -98,6 +133,44 @@ export const zOrg = z.object({
     .transform((v) => v ?? null),
   /** Meldiq 2.0 (docs/product/MELDIQ_2_DECISIONS.md): a team or a community; older servers send nothing (a team). */
   kind: z.enum(["team", "community"]).catch("team").default("team"),
+  // ── Communities (API 0.12+); older servers leave these out. ──
+  /** Listed in Discover, and whether anyone may join from there or only with an invitation. */
+  visibility: z.enum(["private", "public"]).catch("private").default("private"),
+  joinPolicy: z.enum(["invite", "open"]).catch("invite").default("invite"),
+  rules: nullableString,
+  /** Batch B4 Security actions: until when joining, and new DMs between members, are paused (null: not paused). */
+  invitesPausedUntil: z
+    .number()
+    .nullish()
+    .transform((v) => v ?? null),
+  dmsPausedUntil: z
+    .number()
+    .nullish()
+    .transform((v) => v ?? null),
+  /** Batch B4b: the join questions (null: applications off), activity alerts on or off, and a recent alert (moderators). */
+  joinQuestions: z
+    .array(z.string())
+    .max(10)
+    .nullish()
+    .transform((v) => v ?? null),
+  activityAlerts: z.boolean().default(true),
+  activityAlert: z
+    .object({ count: z.number().int(), at: z.number() })
+    .passthrough()
+    .nullish()
+    .transform((v) => v ?? null),
+  /** Batch B8b: the community guide (members only) and whether onboarding questions are on. */
+  guide: z
+    .object({
+      welcome: nullableString,
+      tasks: z.array(z.object({ id: z.string().optional(), title: z.string(), channelId: nullableString })).default([]),
+      resources: z.array(z.object({ id: z.string().optional(), title: z.string(), channelId: nullableString, description: nullableString.optional() })).default([]),
+    })
+    .passthrough()
+    .nullish()
+    .catch(null)
+    .transform((v) => v ?? null),
+  onboarding: z.boolean().default(false),
 });
 export type Org = z.infer<typeof zOrg>;
 export type OrgKind = Org["kind"];

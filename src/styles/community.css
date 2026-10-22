@@ -1,0 +1,130 @@
+/* ───────────────────────── communities (docs/COMMUNITY_REBUILD_2026-10-21.md) ─────────────────────────
+ * The channel panel: categories, channels you haven't joined (dimmed until opened), who is in a voice channel, and the
+ * dialogs for channels, categories and permissions. */
+.side-channels {
+  display: grid;
+  gap: 1px;
+}
+.side-item.channel-item.unjoined {
+  color: var(--text-3);
+}
+.side-item.channel-item.unjoined .glyph {
+  opacity: 0.7;
+}
+.side-item.channel-item .glyph.live {
+  color: var(--success);
+}
+.side-item.channel-item[aria-busy="true"] {
+  opacity: 0.6;
+}
+.side-section-row .row-more + .row-more {
+  margin-left: -2px;
+}
+.voice-channel-people {
+  display: grid;
+  gap: 2px;
+  padding: 0 8px 4px 40px;
+}
+.voice-person {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  color: var(--text-2);
+  min-width: 0;
+}
+.side-browse {
+  margin-top: 10px;
+  color: var(--text-3);
+  font-size: 13px;
+}
+
+.field .label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-2);
+}
+.icon-btn-xs {
+  width: 18px;
+  height: 18px;
+  border-radius: var(--r-xs);
+  display: inline-grid;
+  place-items: center;
+  color: var(--text-3);
+}
+.icon-btn-xs:hover {
+  color: var(--text);
+  background: var(--surface-hover);
+}
+.template-choice {
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+}
+
+/* Permissions: who on the left, each capability's deny / inherit / allow on the right. */
+.perm-grid {
+  display: grid;
+  grid-template-columns: 200px minmax(0, 1fr);
+  gap: var(--s-3);
+  min-height: 260px;
+}
+.perm-subjects {
+  display: grid;
+  align-content: start;
+  gap: 1px;
+  border-right: 1px solid var(--border);
+  padding-right: var(--s-2);
+  max-height: 420px;
+  overflow-y: auto;
+}
+.perm-subjects .side-item[aria-selected="true"] {
+  background: var(--sidebar-selected);
+  color: var(--accent-text);
+  font-weight: 650;
+}
+.perm-subjects .dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+.perm-caps {
+  display: grid;
+  align-content: start;
+  gap: var(--s-2);
+}
+.perm-row {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border);
+}
+.perm-row .lines {
+  display: grid;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+.perm-row .lines small {
+  color: var(--text-2);
+  font-size: 12.5px;
+}
+.perm-tri button {
+  padding: 0 10px;
+}
+.perm-tri button.perm-deny[aria-pressed="true"] {
+  color: var(--danger);
+}
+.perm-tri button.perm-allow[aria-pressed="true"] {
+  color: var(--success);
+}
+@media (max-width: 640px) {
+  .perm-grid {
+    grid-template-columns: 1fr;
+  }
+  .perm-subjects {
+    border-right: 0;
+    border-bottom: 1px solid var(--border);
+    max-height: 160px;
+  }
+}

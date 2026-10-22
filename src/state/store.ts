@@ -4,6 +4,7 @@ import { type CallUiState, idleCall } from "../call/types";
 import type { CallLogItem, ConversationLocal, PinnedIdentity, StoredMessage } from "../model/types";
 import type { ConnectionState } from "../realtime/socket";
 import type { NavPrefs } from "../sync/navPrefs";
+import type { CommunityData } from "../sync/community";
 
 export type Phase =
   /** Opening local data and signing in. */
@@ -105,6 +106,10 @@ export interface AppState {
   meetingsRev: number;
   /** Bumped on each inbox.* frame (round 8 Unified Inbox; ids only): open inbox screens reload. */
   inboxRev: number;
+  /** Communities opened in this session: their categories and every channel the person may see (joined or not). */
+  communities: Record<string, CommunityData>;
+  /** Bumped when join applications or reports change (server `org.applications`, `org.application`, `org.reports`). */
+  moderationRev: number;
 }
 
 export const initialState: AppState = {
@@ -130,6 +135,8 @@ export const initialState: AppState = {
   appEventsRev: {},
   meetingsRev: 0,
   inboxRev: 0,
+  communities: {},
+  moderationRev: 0,
   history: { status: "idle", restored: 0, unreadable: 0, error: null },
   notices: [],
 };

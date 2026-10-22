@@ -84,7 +84,8 @@ describe("voice rooms", () => {
   it("is created as a voice room and listed under Home › Voice rooms", async () => {
     expect(oliviaWeb.state.get().server?.features).toContain("voice-rooms");
     const orgId = oliviaWeb.state.get().conversations[room]!.orgId;
-    expect(voiceRooms(maxWeb.state.get(), orgId).map((c) => c.id)).toEqual([room]);
+    // Community servers also start every community with a voice channel of their own.
+    expect(voiceRooms(maxWeb.state.get(), orgId).map((c) => c.id)).toContain(room);
     // Not an announcement channel.
     const e = await createChannel(oliviaWeb, orgId!, { name: "news", topic: null, scope: "ORG", scopeId: null, kind: "ANNOUNCEMENT", voice: true }).catch((x: unknown) => x);
     expect(e).toBeInstanceOf(ApiError);

@@ -6,6 +6,7 @@ import type { Engine } from "../src/sync/engine";
 import { assignRole, auditLog, createRole, deleteRole, roleMembers, rolesOverview, transferOwnership, unassignRole, updateRole } from "../src/sync/roles";
 import { workspacePlan, workspaceUsage } from "../src/sync/usage";
 import { acceptInvite, changeMember, createChannel, createInvitation, createWorkspace, requestId, workspaceDetail } from "../src/sync/workspaces";
+import { serverFeatures } from "./support/features";
 import { linkBrowser, type Phone, type Server, startServer, until } from "./support/live";
 
 /**
@@ -107,7 +108,9 @@ describe("ownership", () => {
 });
 
 describe("apps and incoming webhooks", () => {
-  it("installs incoming webhooks, posts into a channel with the secret, and the browser hears of it at once", async () => {
+  it("installs incoming webhooks, posts into a channel with the secret, and the browser hears of it at once", async (t) => {
+    // Apps and webhooks were retired with the community rebuild (API 0.12): servers since then don't offer them.
+    if (!(await serverFeatures(server)).includes("integrations")) return t.skip();
     const dir = await appDirectory(web, orgId);
     expect(dir.permissions.canInstall).toBe(true);
     expect(dir.apps.some((a) => a.id === "incoming-webhooks")).toBe(true);
@@ -145,7 +148,12 @@ describe("usage and limits", () => {
     const u = await workspaceUsage(web, orgId);
     expect(u.members).toMatchObject({ total: 2, owners: 1, members: 1 });
     expect(u.structure.channels).toBeGreaterThanOrEqual(1);
-    expect(u.apps.installed).toBe(1);
+    if ((await serverFeatures(server)).includes("integrations")) expect(u.apps?.installed).toBe(1);
+    else {
+      // Community servers: no apps any more, and categories counted instead of branches and teams.
+      expect(u.apps).toBeUndefined();
+      expect(u.structure.categories).toBeGreaterThanOrEqual(0);
+    }
     expect((await workspaceDetail(web, orgId)).permissions.canViewUsage).toBe(true);
     expect((await workspaceDetail(bobWeb, orgId)).permissions.canViewUsage).toBe(false);
     expect((await fail(workspaceUsage(bobWeb, orgId))).status).toBe(403);

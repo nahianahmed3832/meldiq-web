@@ -10,6 +10,9 @@ import { members } from "../format";
 import type { ShellDialog } from "./Shell";
 import { ArchivedList, ChannelSections, Collapsible, LaterLink, MentionsLink, PeopleList, PersonalSections, SkeletonRows } from "./SidebarSections";
 import { VoiceRoomsSection } from "./VoiceRooms";
+import { CommunityHeader, hideMutedKey } from "../community/CommunityHeader";
+import { CommunityPanel } from "../community/CommunityPanel";
+import { useCommunityDetail } from "../community/useCommunityPermissions";
 
 interface SidebarProps {
   orgId: string | null;
@@ -28,31 +31,39 @@ export function Sidebar({ orgId, section, open, onDialog }: SidebarProps) {
   const switcher = useMenu();
   const prefs = usePrefs();
   const unreadOnly = prefs.collapsed.includes("::unread-only");
+  // Community servers (API 0.12+): categories, a channel panel and the community menu (android CommunityHomeScreen).
+  const communities = useOrbit((s) => s.server?.features.includes("community-channels") ?? false);
+  const { perms } = useCommunityDetail(communities ? orgId : null);
+  const hideMuted = !!orgId && prefs.collapsed.includes(hideMutedKey(orgId));
 
   return (
     <aside className={`sidebar${open ? " open" : ""}`} aria-label="Conversations">
       <div className="side-head">
-        <button
-          className="org-switch"
-          onClick={(e) => switcher.open(e.currentTarget)}
-          aria-haspopup="menu"
-          aria-expanded={!!switcher.anchor}
-          aria-label={`Workspace: ${org?.name ?? "none"}. Switch workspace`}
-        >
-          {org ? <OrgAvatar orgId={org.id} name={org.name} photoRev={org.photoRev} size={34} /> : <Avatar name="Meldiq" colorIndex={7} size={34} square decorative />}
-          <span className="grow">
-            <strong className="ellipsis" style={{ display: "block" }}>
-              {org?.name ?? "Meldiq"}
-            </strong>
-            <small>{org ? `${members(org.memberCount)} · ${roleLabel(org.myRole)}` : "No workspace yet"}</small>
-          </span>
-          <ChevronDown size={16} className="faint" />
-        </button>
+        {communities ? (
+          <CommunityHeader orgId={orgId} perms={perms} onDialog={onDialog} />
+        ) : (
+          <button
+            className="org-switch"
+            onClick={(e) => switcher.open(e.currentTarget)}
+            aria-haspopup="menu"
+            aria-expanded={!!switcher.anchor}
+            aria-label={`Workspace: ${org?.name ?? "none"}. Switch workspace`}
+          >
+            {org ? <OrgAvatar orgId={org.id} name={org.name} photoRev={org.photoRev} size={34} /> : <Avatar name="Meldiq" colorIndex={7} size={34} square decorative />}
+            <span className="grow">
+              <strong className="ellipsis" style={{ display: "block" }}>
+                {org?.name ?? "Meldiq"}
+              </strong>
+              <small>{org ? `${members(org.memberCount)} · ${roleLabel(org.myRole)}` : "No workspace yet"}</small>
+            </span>
+            <ChevronDown size={16} className="faint" />
+          </button>
+        )}
         <button className="icon-btn" onClick={() => onDialog({ kind: "new" })} aria-label="New message" title="New message">
           <PenSquare size={18} />
         </button>
       </div>
-      {switcher.anchor && (
+      {!communities && switcher.anchor && (
         <Menu
           anchor={switcher.anchor}
           label="Workspaces"
@@ -109,8 +120,14 @@ export function Sidebar({ orgId, section, open, onDialog }: SidebarProps) {
         ) : (
           <>
             <PersonalSections orgId={orgId} unreadOnly={unreadOnly} />
-            <VoiceRoomsSection orgId={orgId} />
-            <ChannelSections orgId={orgId} unreadOnly={unreadOnly} onBrowse={org ? () => onDialog({ kind: "channels" }) : undefined} />
+            {communities && orgId ? (
+              <CommunityPanel orgId={orgId} unreadOnly={unreadOnly} hideMuted={hideMuted} perms={perms} />
+            ) : (
+              <>
+                <VoiceRoomsSection orgId={orgId} />
+                <ChannelSections orgId={orgId} unreadOnly={unreadOnly} onBrowse={org ? () => onDialog({ kind: "channels" }) : undefined} />
+              </>
+            )}
             <Collapsible id="people" title="Direct messages">
               <PeopleList unreadOnly={unreadOnly} orgId={orgId} excludePlaced />
               <button className="side-item" onClick={() => onDialog({ kind: "new" })}>

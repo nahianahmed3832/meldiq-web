@@ -152,7 +152,7 @@ function RowMenu({ id, title, inPlace, unread, anchor, onClose }: { id: string; 
   const [naming, setNaming] = useState(false);
   if (!c) return null;
   const place = prefs ? placeOf(prefs, id) : { k: "default" as const };
-  const level = levelOf(prefs, id);
+  const level = levelOf(prefs, id, c.categoryId);
   const sections = prefs?.sections ?? [];
   const arrange = (op: Parameters<typeof engine.arrange>[1]) => void engine.arrange(id, op);
   const entries: MenuEntry[] = [

@@ -54,7 +54,7 @@ export const isArchived = (s: AppState, id: string): boolean => !!s.local[id]?.a
 
 /** Muted with the synced notification level "none": its unread count shows quietly and stays out of the badges. */
 export function isMuted(s: AppState, c: Conversation): boolean {
-  return levelOf(s.nav[workspaceOf(c.orgId)], c.id) === "none";
+  return levelOf(s.nav[workspaceOf(c.orgId)], c.id, c.categoryId) === "none";
 }
 
 /** Direct messages and groups, newest first, without the ones archived here. */

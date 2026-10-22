@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { zCategory } from "./communitySchemas";
 import { zConversation, zMember, zOrg } from "./schemas";
 
 /** Workspace administration answers (server/src/routes/orgs.ts, docs/WORKSPACE_ADMINISTRATION.md). */
@@ -64,6 +65,9 @@ export const zOrgPermissions = z.object({
   canManageDevelopers: z.boolean().default(false),
   canManagePolicies: z.boolean().default(false),
   canTransferOwnership: z.boolean().default(false),
+  // Communities (API 0.12+): arranging channels and categories, and bans.
+  canManageChannels: z.boolean().default(false),
+  canBan: z.boolean().default(false),
   effective: z.array(z.string()).default([]),
 });
 export type OrgPermissions = z.infer<typeof zOrgPermissions>;
@@ -73,8 +77,12 @@ export const zOrgAdminDetail = z.object({
   branches: z.array(zBranch),
   teams: z.array(zTeam),
   departments: z.array(zDepartment).default([]),
-  stats: z.object({ members: z.number(), teams: z.number(), channels: z.number(), branches: z.number() }),
+  /** Communities (API 0.12+): the categories this person sees, in order. */
+  categories: z.array(zCategory).default([]),
+  stats: z.object({ members: z.number(), teams: z.number(), channels: z.number(), branches: z.number(), categories: z.number().default(0) }),
   permissions: zOrgPermissions,
+  /** The custom roles this person holds here (name and colour). */
+  myRoles: z.array(z.object({ id: z.string(), name: z.string(), color: nullableString })).default([]),
 });
 export type OrgAdminDetail = z.infer<typeof zOrgAdminDetail>;
 

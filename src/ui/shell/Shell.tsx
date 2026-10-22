@@ -11,6 +11,8 @@ import { NewGroupDialog } from "../dialogs/NewGroupDialog";
 import { NewMessageDialog } from "../dialogs/NewMessageDialog";
 import { CreateWorkspaceDialog, JoinWorkspaceDialog } from "../dialogs/WorkspaceDialogs";
 import { SearchDialog } from "../dialogs/SearchDialog";
+import { CreateCommunityDialog } from "../community/CreateCommunityDialog";
+import { DiscoverDialog } from "../community/DiscoverDialog";
 import { ActivityView } from "../views/ActivityView";
 import { LaterView } from "../later/LaterView";
 import { HomeView } from "../views/HomeView";
@@ -25,7 +27,15 @@ const SettingsView = lazy(() => import("../settings/SettingsView").then((m) => (
 const WorkspaceView = lazy(() => import("../workspace/WorkspaceView").then((m) => ({ default: m.WorkspaceView })));
 
 export type ShellDialog =
-  { kind: "search" } | { kind: "new" } | { kind: "newGroup" } | { kind: "channels" } | { kind: "identity"; userId: string } | { kind: "createWorkspace" } | { kind: "joinWorkspace" } | null;
+  | { kind: "search" }
+  | { kind: "new" }
+  | { kind: "newGroup" }
+  | { kind: "channels" }
+  | { kind: "identity"; userId: string }
+  | { kind: "createWorkspace" }
+  | { kind: "joinWorkspace" }
+  | { kind: "discover" }
+  | null;
 
 /**
  * The signed-in frame: workspace rail, top bar, sidebar, the main column and an optional side panel; on phones a single
@@ -36,6 +46,7 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
   const route = useRoute();
   const prefs = usePrefs();
   const orgIds = useOrbit((s) => s.orgs.map((o) => o.id), shallowEqual);
+  const communities = useOrbit((s) => s.server?.features.includes("community-channels") ?? false);
   const known = useOrbit((s) => (route.conversationId ? !!s.conversations[route.conversationId] : true));
   const synced = useOrbit((s) => s.synced);
   const [drawer, setDrawer] = useState(false);
@@ -156,7 +167,8 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
       {dialog?.kind === "channels" && orgId && <ChannelBrowser orgId={orgId} onClose={() => setDialog(null)} />}
       {dialog?.kind === "identity" && <IdentityReview userId={dialog.userId} onClose={() => setDialog(null)} />}
       {dialog?.kind === "newGroup" && <NewGroupDialog onClose={() => setDialog(null)} />}
-      {dialog?.kind === "createWorkspace" && <CreateWorkspaceDialog onClose={() => setDialog(null)} />}
+      {dialog?.kind === "createWorkspace" && (communities ? <CreateCommunityDialog onClose={() => setDialog(null)} /> : <CreateWorkspaceDialog onClose={() => setDialog(null)} />)}
+      {dialog?.kind === "discover" && <DiscoverDialog onClose={() => setDialog(null)} />}
       {dialog?.kind === "joinWorkspace" && <JoinWorkspaceDialog onClose={() => setDialog(null)} />}
     </div>
   );
