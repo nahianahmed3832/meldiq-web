@@ -200,7 +200,9 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
 
       {/* A voice channel is for talking: no messages (meldiq batch B14; the server refuses them too). */}
       {c.voice ? (
-        <p className="muted" style={{ padding: "12px 16px", margin: 0 }}>Voice channels are for talking only. Join the room to talk.</p>
+        <p className="muted" style={{ padding: "12px 16px", margin: 0 }}>
+          Voice channels are for talking only. Join the room to talk.
+        </p>
       ) : (
         <Composer
           conversation={c}
