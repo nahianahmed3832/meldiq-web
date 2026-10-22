@@ -6,7 +6,7 @@ status is **`docs/product/MELDIQ_WEB_PARITY_MATRIX.md`**.
 
 ## Where things are
 
-- **Branch:** `claude/meldiq-web-android-parity-a6333c` in the meldiq-web worktree
+- **Branch:** `meldiq-web-android-parity` in the meldiq-web worktree
   `orbit_web/.claude/worktrees/meldiq-web-android-parity-a6333c`. Not pushed, no PR, not deployed.
 - **Commits, in order:**
 
@@ -21,8 +21,8 @@ status is **`docs/product/MELDIQ_WEB_PARITY_MATRIX.md`**.
 | `1b0aaa9` | B14 | Minimal DM/group header, one-row composer, tabbed details, New group with… |
 | `80768e6` | B16 | Motion with the shared tokens, off under reduced motion |
 | `726841a` | — | Community wording, Android's current intro pages |
-| `67de053` | — | Merge of `main` (voice channels have no message box, `df66b32`/`e9f8d2b`) |
-| `c141464` | B14 | Voice channel room page; details header, round actions and Android's tab order |
+| `ffbbc55` | — | Merge of `main` (voice channels have no message box, `df66b32`/`e9f8d2b`) |
+| `5bcfe41` | B14 | Voice channel room page; details header, round actions and Android's tab order |
 
 ## How it was checked (2026-10-22)
 

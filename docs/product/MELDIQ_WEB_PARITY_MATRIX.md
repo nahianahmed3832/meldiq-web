@@ -7,8 +7,8 @@ Updated 2026-10-22. One row per behaviour. **The web is not at full parity:** ro
 
 - **Android specification:** `meldiq_android/docs/product/MELDIQ_SESSION_HANDOFF.md` (2026-10-21/22, batches B1–B14)
   and the Android source it names. Read only; that checkout was not edited.
-- **Web:** branch `claude/meldiq-web-android-parity-a6333c` of meldiq-web, commits `3fc900e` … `726841a`, merged with
-  `main` (`67de053`, adds `df66b32`/`e9f8d2b`). Poll end times and answer emoji (`dbf67ce`) were already in `main`.
+- **Web:** branch `meldiq-web-android-parity` of meldiq-web, commits `3fc900e` … `726841a`, merged with
+  `main` (`ffbbc55`, adds `df66b32`/`e9f8d2b`). Poll end times and answer emoji (`dbf67ce`) were already in `main`.
 - **Server used for tests:** a copy of the server repository's current code (API **0.24.0**), started in-process by the
   live tests and as a local server on port 8188 for browser checks. Production runs **0.25.0** (adds the B14 voice
   channel refusal, which the web already respects). No production server, database or deployment was touched.
