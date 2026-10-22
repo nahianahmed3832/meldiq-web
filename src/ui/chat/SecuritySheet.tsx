@@ -102,7 +102,7 @@ const TEXT: Record<SecurityPoint, { icon: ReactNode; tone: "ok" | "warn" | "plai
 };
 
 /** What protects this conversation, and what doesn't (android ConversationSecuritySheet). */
-function SecuritySheet({ conversationId, onClose }: { conversationId: string; onClose: () => void }) {
+export function SecuritySheet({ conversationId, onClose }: { conversationId: string; onClose: () => void }) {
   const route = useRoute();
   const data = useFacts(conversationId);
   if (!data) return null;

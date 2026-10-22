@@ -1,4 +1,6 @@
 import { callLine } from "./callHistory";
+import { cleanTags, cleanTitle } from "./forumRules";
+import { cleanRef, cleanRefs } from "./expressions";
 import type { ConversationType, QueueItem } from "../api/schemas";
 import type { RichContent, StoredMessage } from "../model/types";
 import { type AttachmentRef, MAX_RECEIVED_ATTACHMENTS, type Payload, safeFileName } from "../protocol/payload";
@@ -33,6 +35,14 @@ function richOf(p: Payload): RichContent | null {
   if (poll) r.poll = poll;
   const sticker = cleanSticker(p.sticker);
   if (sticker) r.sticker = sticker;
+  const title = cleanTitle(p.title);
+  if (title) r.title = title;
+  const tags = cleanTags(p.tags);
+  if (tags.length) r.tags = tags;
+  const emoji = cleanRefs(p.customEmoji, p.text ?? "");
+  if (emoji.length) r.customEmoji = emoji;
+  const customSticker = cleanRef(p.customSticker);
+  if (customSticker) r.customSticker = customSticker;
   return Object.keys(r).length ? r : null;
 }
 

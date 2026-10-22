@@ -27,6 +27,7 @@ import {
   workspaceDetail,
 } from "../src/sync/workspaces";
 import { createDepartment, deleteDepartment, renameDepartment, renameScope, scopeMembers, setScopeMember, setTeamDepartment } from "../src/sync/scopes";
+import { serverFeatures } from "./support/features";
 import { linkBrowser, type Phone, type Server, startServer, until } from "./support/live";
 
 /**
@@ -138,7 +139,9 @@ describe("workspaces from the browser", () => {
     expect(bobWeb.state.get().conversations[news.id]?.canPost).toBe(false);
   });
 
-  it("branches and teams: create, archive and restore", async () => {
+  it("branches and teams: create, archive and restore", async (t) => {
+    // Branches and teams became roles and categories in the community rebuild (API 0.12).
+    if ((await serverFeatures(server)).includes("community-channels")) return t.skip();
     await createBranch(web, orgId, "Dhaka", "Gulshan");
     const d = await workspaceDetail(web, orgId);
     const branch = d.branches.find((b) => b.name === "Dhaka")!;
@@ -151,7 +154,8 @@ describe("workspaces from the browser", () => {
     expect((await workspaceDetail(web, orgId)).teams.map((t) => t.id)).toContain(team.id);
   });
 
-  it("branches and teams: rename, add people, make someone manager or lead, remove them; members can't", async () => {
+  it("branches and teams: rename, add people, make someone manager or lead, remove them; members can't", async (t) => {
+    if ((await serverFeatures(server)).includes("community-channels")) return t.skip();
     await createBranch(web, orgId, "Chattogram", null);
     const branch = (await workspaceDetail(web, orgId)).branches.find((b) => b.name === "Chattogram")!;
     await renameScope(web, "branch", branch.id, { name: "Chattogram Port", location: "Agrabad" });

@@ -1,9 +1,9 @@
-import { Archive, AtSign, Bookmark, ChevronDown, Compass, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
+import { Archive, AtSign, Bookmark, ChevronDown, Compass, Contact, MailQuestion, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
 import { type ReactNode, useState } from "react";
 import { shallowEqual, useEngine, useOrbit } from "../../app/orbit";
 import { setPrefs, usePrefs } from "../../app/prefs";
 import { Menu, useMenu } from "../components/Overlay";
-import { archivedPeople, channelGroups, homeLayout, type HomeSection, laterDue, mentionConversations, people } from "../selectors";
+import { archivedPeople, channelGroups, homeLayout, type HomeSection, laterDue, mentionConversations, messageRequests, people } from "../selectors";
 import { ConversationRow, SectionNameDialog } from "./ConversationRow";
 
 /**
@@ -253,5 +253,33 @@ export function SkeletonRows() {
         </div>
       ))}
     </div>
+  );
+}
+
+/**
+ * Batch B6: "Message requests · N waiting" (when there are any) and Connections, at the top of the direct messages
+ * (android ChatsScreen). Requests make no sound and count in no badge.
+ */
+export function PeopleExtras({ onRequests, onConnections }: { onRequests: () => void; onConnections?: () => void }) {
+  const waiting = useOrbit((s) => messageRequests(s).length);
+  return (
+    <>
+      {waiting > 0 && (
+        <button className="side-item" onClick={onRequests}>
+          <span className="glyph">
+            <MailQuestion size={16} />
+          </span>
+          <span className="grow">Message requests · {waiting} waiting</span>
+        </button>
+      )}
+      {onConnections && (
+        <button className="side-item" onClick={onConnections}>
+          <span className="glyph">
+            <Contact size={16} />
+          </span>
+          <span className="grow">Connections</span>
+        </button>
+      )}
+    </>
   );
 }

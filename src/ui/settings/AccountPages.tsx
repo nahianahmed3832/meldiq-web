@@ -4,7 +4,7 @@ import type { Device } from "../../api/schemas";
 import { useEngine, useOrbit } from "../../app/orbit";
 import { fingerprint } from "../../crypto/identity";
 import { listDevices, revokeDevice, signOut, SignOutUnconfirmed } from "../../sync/account";
-import { BlockedPeople, PrivacySettings } from "./PrivacyPage";
+import { BlockedPeople, MessagingSettings, PrivacySettings } from "./PrivacyPage";
 import { Dialog } from "../components/Overlay";
 import { relative } from "../format";
 
@@ -139,6 +139,7 @@ export function SecurityPage({ onSignedOut }: { onSignedOut: () => void }) {
           </div>
         </div>
       </div>
+      <MessagingSettings />
       <PrivacySettings />
       <BlockedPeople />
       <div className="card" style={{ padding: "16px 18px", display: "grid", gap: 10 }}>

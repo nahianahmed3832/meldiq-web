@@ -128,6 +128,8 @@ export interface InviteRequest {
   expiresInHours: number;
   /** Guest invitations: how many days the membership lasts from joining (round 7; within the workspace's maximum). */
   guestDays?: number | null;
+  /** Communities: one of its custom roles the invitation also gives (the inviter must be able to assign it). */
+  roleId?: string | null;
 }
 
 export async function createInvitation(engine: Engine, orgId: string, r: InviteRequest): Promise<NewInvite> {

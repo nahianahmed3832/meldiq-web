@@ -107,7 +107,8 @@
   .conn {
     padding: 0 9px;
   }
-  .topbar-right .hide-sm {
+  .topbar-right .hide-sm,
+  .composer-row .hide-sm {
     display: none;
   }
   .sidebar {

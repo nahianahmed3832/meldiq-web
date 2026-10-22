@@ -1,4 +1,4 @@
-import { Bell, Headphones, MessagesSquare, ShieldCheck, Users } from "lucide-react";
+import { Bell, Compass, Headphones, MessagesSquare, ShieldCheck } from "lucide-react";
 import { type ReactNode, useState } from "react";
 import { createPortal } from "react-dom";
 import { BrandMark } from "../components/BrandMark";
@@ -11,18 +11,17 @@ interface Page {
   soon?: boolean;
 }
 
-/** The phone's introduction pages (android IntroScreen), in the browser's words. */
+/** The phone's introduction pages (android IntroScreen), in the browser's words. Communities replaced the connector and HR pages on Android (2026-10-21). */
 const PAGES: Page[] = [
   {
     icon: <MessagesSquare size={52} />,
-    title: "Work together in one place",
+    title: "Talk in one place",
     body: "Channels, groups and direct messages with threads, polls and files. Everything is end-to-end encrypted on your devices.",
   },
   { icon: <Bell size={52} />, title: "Never lose track", body: "Save messages for later and set reminders. They reach every device you're signed in on, even after a restart." },
-  { icon: <Headphones size={52} />, title: "Talk it through", body: "Voice and video calls with screen sharing, and voice rooms your team can drop into any time." },
-  // Meldiq B15: the same pages as the Android app since the community rebuild (no integrations or HR pages).
+  { icon: <Headphones size={52} />, title: "Talk it through", body: "Voice and video calls with screen sharing, and voice channels anyone can drop into any time." },
   {
-    icon: <Users size={52} />,
+    icon: <Compass size={52} />,
     title: "Find your communities",
     body: "Join public communities or start your own, with channels in categories, forums for organised topics and announcements.",
   },

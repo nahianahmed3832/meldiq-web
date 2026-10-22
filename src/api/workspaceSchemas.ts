@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { zCategory } from "./communitySchemas";
 import { zConversation, zMember, zOrg } from "./schemas";
 
 /** Workspace administration answers (server/src/routes/orgs.ts, docs/WORKSPACE_ADMINISTRATION.md). */
@@ -64,6 +65,9 @@ export const zOrgPermissions = z.object({
   canManageDevelopers: z.boolean().default(false),
   canManagePolicies: z.boolean().default(false),
   canTransferOwnership: z.boolean().default(false),
+  // Communities (API 0.12+): arranging channels and categories, and bans.
+  canManageChannels: z.boolean().default(false),
+  canBan: z.boolean().default(false),
   effective: z.array(z.string()).default([]),
 });
 export type OrgPermissions = z.infer<typeof zOrgPermissions>;
@@ -73,8 +77,12 @@ export const zOrgAdminDetail = z.object({
   branches: z.array(zBranch),
   teams: z.array(zTeam),
   departments: z.array(zDepartment).default([]),
-  stats: z.object({ members: z.number(), teams: z.number(), channels: z.number(), branches: z.number() }),
+  /** Communities (API 0.12+): the categories this person sees, in order. */
+  categories: z.array(zCategory).default([]),
+  stats: z.object({ members: z.number(), teams: z.number(), channels: z.number(), branches: z.number(), categories: z.number().default(0) }),
   permissions: zOrgPermissions,
+  /** The custom roles this person holds here (name and colour). */
+  myRoles: z.array(z.object({ id: z.string(), name: z.string(), color: nullableString })).default([]),
 });
 export type OrgAdminDetail = z.infer<typeof zOrgAdminDetail>;
 
@@ -87,6 +95,13 @@ export const zDirectoryMember = zMember.extend({
     .transform((v) => v ?? null),
   branches: z.array(z.object({ id: z.string(), role: nullableString })).default([]),
   teams: z.array(z.object({ id: z.string(), role: nullableString })).default([]),
+  /** A timeout still running (MOD-06), null without one. */
+  timeoutUntil: z
+    .number()
+    .nullish()
+    .transform((v) => v ?? null),
+  /** Batch B12: the custom roles they hold; [hoist] roles head their own group in the member list, in role order. */
+  customRoles: z.array(z.object({ id: z.string(), name: z.string(), color: nullableString, hoist: z.boolean().default(false), position: z.number().default(0) })).default([]),
 });
 export type DirectoryMember = z.infer<typeof zDirectoryMember>;
 

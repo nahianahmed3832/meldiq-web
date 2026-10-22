@@ -1,5 +1,5 @@
 import { CheckCircle2, Circle, X } from "lucide-react";
-import { useOrbit } from "../../app/orbit";
+import { useCommunityServer, useOrbit } from "../../app/orbit";
 import { setPrefs, usePrefs } from "../../app/prefs";
 import { navigate } from "../../app/router";
 import type { ShellDialog } from "../shell/Shell";
@@ -9,11 +9,12 @@ const notificationsAllowed = (): boolean => typeof Notification !== "undefined" 
 
 /**
  * Get started (android HomeStart): the first things a new person does in Meldiq, each one a click away, checked off from
- * real state (a photo, a workspace, a teammate, notifications). Nothing is forced; the card can be hidden and goes away
+ * real state (a photo, a workspace or community, someone invited, notifications). Nothing is forced; the card can be hidden and goes away
  * by itself once the required steps are done.
  */
 export function StartChecklist({ orgId, onDialog }: { orgId: string | null; onDialog: (d: ShellDialog) => void }) {
   const prefs = usePrefs();
+  const community = useCommunityServer();
   const facts = useOrbit(
     (s) => ({
       photo: !!(s.me && s.users[s.me.userId]?.photoRev),
@@ -24,10 +25,10 @@ export function StartChecklist({ orgId, onDialog }: { orgId: string | null; onDi
   );
   const steps: (StartStep & { go: () => void })[] = [
     { key: "profile", label: "Add your name and photo", done: facts.photo, go: () => navigate({ section: "settings", settingsPage: "profile" }) },
-    { key: "workspace", label: "Create or join a workspace", done: facts.workspaces > 0, go: () => onDialog({ kind: "joinWorkspace" }) },
+    { key: "workspace", label: community ? "Start or join a community" : "Create or join a workspace", done: facts.workspaces > 0, go: () => onDialog({ kind: "joinWorkspace" }) },
     {
       key: "invite",
-      label: "Invite your teammates",
+      label: community ? "Invite your friends" : "Invite your teammates",
       done: facts.members > 1,
       go: () => (orgId ? navigate({ section: "workspace", workspacePage: "invitations" }) : onDialog({ kind: "createWorkspace" })),
     },

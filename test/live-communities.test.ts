@@ -58,11 +58,13 @@ describe("communities and the curated directory in the browser", () => {
         6000,
         "community channels",
       );
-      expect((await setWorkspaceKind(engine, org.id, "team")).kind).toBe("team");
-
-      const dir = await appDirectory(engine, org.id);
-      expect(dir.apps.some((a) => a.state === "coming_soon")).toBe(false);
-      expect(dir.apps.find((a) => a.id === "github")?.tier).toBe("essential");
+      // Before the community rebuild (API 0.12) a workspace could be a team, with an app directory.
+      if (engine.state.get().server?.features.includes("integrations")) {
+        expect((await setWorkspaceKind(engine, org.id, "team")).kind).toBe("team");
+        const dir = await appDirectory(engine, org.id);
+        expect(dir.apps.some((a) => a.state === "coming_soon")).toBe(false);
+        expect(dir.apps.find((a) => a.id === "github")?.tier).toBe("essential");
+      }
 
       // Off by default: nobody is in an experiment and nothing is collected.
       await engine.signals.refresh();

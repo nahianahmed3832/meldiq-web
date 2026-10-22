@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { StoredMessage } from "../src/model/types";
 import type { AttachmentRef } from "../src/protocol/payload";
-import { galleryOf } from "../src/ui/chat/gallery";
+import { filterFiles, galleryOf, linksOf } from "../src/ui/chat/gallery";
 
 const ref = (id: string, mime: string, extra: Partial<AttachmentRef> = {}): AttachmentRef => ({ id, name: `${id}.bin`, mime, size: 10, key: "k", nonce: "n", sha256: "s", ...extra });
 
@@ -65,5 +65,27 @@ describe("conversation gallery", () => {
     const g = galleryOf([message("m1", 1, [ref("s", "image/svg+xml")])]);
     expect(g.media).toEqual([]);
     expect(g.files.map((i) => i.ref.id)).toEqual(["s"]);
+  });
+});
+
+describe("conversation links and file search (batch B14 details tabs)", () => {
+  it("lists every web link in the text, newest first, once each, without trailing punctuation", () => {
+    const links = linksOf([
+      message("m1", 1, [], { text: "see https://a.example/x, and http://b.example/y." }),
+      message("m2", 2, [], { text: "again https://a.example/x" }),
+      message("m3", 3, [], { text: "gone https://c.example", deleted: true }),
+      message("m4", 4, [], { text: "no links here" }),
+    ]);
+    expect(links.map((l) => [l.url, l.messageId])).toEqual([
+      ["https://a.example/x", "m2"],
+      ["http://b.example/y", "m1"],
+    ]);
+    expect(links[0]).toMatchObject({ domain: "a.example", at: 2 });
+  });
+
+  it("finds files by name, ignoring case; an empty search keeps them all", () => {
+    const g = galleryOf([message("m1", 1, [ref("Report", "application/pdf"), ref("notes", "text/plain")])]);
+    expect(filterFiles(g.files, "  report ").map((i) => i.ref.id)).toEqual(["Report"]);
+    expect(filterFiles(g.files, "")).toHaveLength(2);
   });
 });

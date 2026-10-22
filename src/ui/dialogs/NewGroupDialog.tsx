@@ -12,13 +12,13 @@ import { Dialog } from "../components/Overlay";
 /** Groups hold up to 50 people on this server (server/src/routes/conversations.ts MAX_GROUP); people on other servers can't be added. */
 const MAX_OTHERS = 49;
 
-/** A new group conversation: a name and the people in it (android NewActions › New group). */
-export function NewGroupDialog({ onClose }: { onClose: () => void }) {
+/** A new group conversation: a name and the people in it (android NewActions › New group); [initial] starts picked (B14 "New group with…"). */
+export function NewGroupDialog({ onClose, initial = [] }: { onClose: () => void; initial?: Member[] }) {
   const engine = useEngine();
   const [name, setName] = useState("");
   const [q, setQ] = useState("");
   const [found, setFound] = useState<Member[]>([]);
-  const [picked, setPicked] = useState<Member[]>([]);
+  const [picked, setPicked] = useState<Member[]>(initial);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 

@@ -7,7 +7,7 @@ import { shortWhen } from "../format";
 import { jumpTo } from "./jump";
 
 /** This conversation's pinned messages on this browser, kept current as pins arrive (they're encrypted control messages). */
-function usePinned(conversationId: string): StoredMessage[] {
+export function usePinned(conversationId: string): StoredMessage[] {
   const engine = useEngine();
   const loaded = useOrbit((s) => s.messages[conversationId]);
   const [pinned, setPinned] = useState<StoredMessage[]>([]);

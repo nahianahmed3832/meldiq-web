@@ -96,9 +96,11 @@ export function CreateWorkspaceDialog({ onClose }: { onClose: () => void }) {
 }
 
 /** Joins a workspace with an invitation code: shows what it is first (preview), then accepts. */
-export function JoinWorkspaceDialog({ onClose }: { onClose: () => void }) {
+export function JoinWorkspaceDialog({ onClose, initialCode }: { onClose: () => void; initialCode?: string }) {
   const engine = useEngine();
-  const [code, setCode] = useState("");
+  const [code, setCode] = useState(initialCode ?? "");
+  const community = useOrbit((s) => s.server?.features.includes("community-channels") ?? false);
+  const noun = community ? "community" : "workspace";
   const [preview, setPreview] = useState<InvitePreview | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -130,14 +132,14 @@ export function JoinWorkspaceDialog({ onClose }: { onClose: () => void }) {
       onClose();
       navigate({ section: "home" });
     } catch (err) {
-      setError(errorText(err, "Couldn't join the workspace."));
+      setError(errorText(err, `Couldn't join the ${noun}.`));
     } finally {
       setBusy(false);
     }
   };
 
   return (
-    <Dialog title="Join a workspace" onClose={onClose}>
+    <Dialog title={`Join a ${noun}`} onClose={onClose}>
       <div className="dialog-body">
         {error && (
           <div className="banner danger" role="alert">
@@ -149,7 +151,7 @@ export function JoinWorkspaceDialog({ onClose }: { onClose: () => void }) {
             <div className="field">
               <label htmlFor="jw-code">Invitation code</label>
               <input id="jw-code" className="input mono" data-autofocus value={code} onChange={(e) => setCode(e.target.value)} placeholder="ABCD-EFGH-JKLM" autoComplete="off" spellCheck={false} />
-              <span className="hint">Ask a workspace owner or admin for one. You can paste the whole invite message or link.</span>
+              <span className="hint">Ask a member for one. You can paste the whole invite message or link.</span>
             </div>
             <div className="row" style={{ justifyContent: "flex-end", gap: 8 }}>
               <button type="button" className="btn btn-secondary" onClick={onClose}>
@@ -171,13 +173,13 @@ export function JoinWorkspaceDialog({ onClose }: { onClose: () => void }) {
                 {preview.team ? `, team ${preview.team.name}` : ""}.
               </span>
             </div>
-            {preview.alreadyMember && <div className="banner info">You're already a member of this workspace.</div>}
+            {preview.alreadyMember && <div className="banner info">You're already a member of this {noun}.</div>}
             <div className="row" style={{ justifyContent: "flex-end", gap: 8 }}>
               <button type="button" className="btn btn-secondary" onClick={() => setPreview(null)}>
                 Back
               </button>
               <button className="btn btn-primary" disabled={busy} onClick={() => void join()}>
-                {busy ? "Joining…" : preview.alreadyMember ? "Open workspace" : "Join workspace"}
+                {busy ? "Joining…" : preview.alreadyMember ? `Open ${noun}` : `Join ${noun}`}
               </button>
             </div>
           </div>

@@ -2,7 +2,7 @@ import { TransferOwnership } from "./TransferOwnership";
 import { Camera, LogOut, Trash2 } from "lucide-react";
 import { type FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import type { OrgAdminDetail } from "../../api/workspaceSchemas";
-import { useEngine, useOrbit } from "../../app/orbit";
+import { useCommunityServer, useEngine, useOrbit } from "../../app/orbit";
 import { setPrefs } from "../../app/prefs";
 import { navigate } from "../../app/router";
 import { deleteWorkspace, leaveWorkspace, removeWorkspacePhoto, requestId, setWorkspaceKind, setWorkspacePhoto, updateWorkspace } from "../../sync/workspaces";
@@ -14,6 +14,7 @@ import { squareJpeg } from "./photo";
 import { useAction } from "./useLoad";
 import { Card, ErrorLine } from "./WorkspaceView";
 import { GuestPolicyCard, TemplatesCard } from "./WorkspaceSetupCards";
+import { AccessCard, JoinQuestionsCard } from "./ModerationPages";
 
 export function OverviewPage({ detail, onChanged }: { detail: OrgAdminDetail; onChanged: () => void }) {
   const { org, permissions: can, stats } = detail;
@@ -32,9 +33,12 @@ export function OverviewPage({ detail, onChanged }: { detail: OrgAdminDetail; on
         </div>
       </header>
       {can.canManageOrg ? <Identity detail={detail} onChanged={onChanged} /> : <ReadOnlyAbout description={org.description} />}
+      {features.includes("community-channels") && <AccessCard detail={detail} />}
+      {features.includes("community-channels") && can.canManageOrg && features.includes("join-applications") && <JoinQuestionsCard detail={detail} />}
       {can.canManageOrg && features.includes("workspace-templates") && <TemplatesCard detail={detail} onChanged={onChanged} />}
       {can.canManageOrg && features.includes("guest-expiry") && <GuestPolicyCard detail={detail} onChanged={onChanged} />}
-      {features.includes("communities") && <KindCard detail={detail} onChanged={onChanged} />}
+      {/* Every workspace is a community since API 0.12: the team/community switch is only for older servers. */}
+      {features.includes("communities") && !features.includes("community-channels") && <KindCard detail={detail} onChanged={onChanged} />}
       <TransferOwnership detail={detail} onChanged={onChanged} />
       <Membership detail={detail} />
     </div>
@@ -79,6 +83,7 @@ function ReadOnlyAbout({ description }: { description: string | null }) {
 function Identity({ detail, onChanged }: { detail: OrgAdminDetail; onChanged: () => void }) {
   const engine = useEngine();
   const { org } = detail;
+  const community = useCommunityServer();
   const [name, setName] = useState(org.name);
   const [description, setDescription] = useState(org.description ?? "");
   const save = useAction();
@@ -105,7 +110,7 @@ function Identity({ detail, onChanged }: { detail: OrgAdminDetail; onChanged: ()
   };
 
   return (
-    <Card title="Workspace details" sub="Members see the name, description and photo. They aren't end-to-end encrypted.">
+    <Card title={community ? "Community details" : "Workspace details"} sub="Members see the name, description and photo. They aren't end-to-end encrypted.">
       <div className="row" style={{ gap: 16, alignItems: "center", flexWrap: "wrap" }}>
         <OrgAvatar orgId={org.id} name={org.name} photoRev={org.photoRev} size={56} />
         <input ref={file} type="file" accept="image/*" hidden onChange={(e) => pick(e.target.files?.[0])} />

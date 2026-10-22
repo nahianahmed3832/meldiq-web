@@ -1,4 +1,7 @@
-import { AtSign, BarChart3, FileUp, Lock, MapPin, Mic, Paperclip, ScrollText, SendHorizontal, Smile, Sparkles, UserRound, X } from "lucide-react";
+import { AtSign, BarChart3, FileUp, Lock, MapPin, Mic, Paperclip, Plus, ScrollText, SendHorizontal, Smile, Sparkles, UserRound, X } from "lucide-react";
+import { useExpressions } from "../community/CustomEmoji";
+import { forSending, refOf } from "../../sync/expressions";
+import type { CustomEmojiRef } from "../../protocol/payload";
 import { type ClipboardEvent, type DragEvent, useCallback, useEffect, useRef, useState } from "react";
 import type { Conversation, Member } from "../../api/schemas";
 import { useEngine } from "../../app/orbit";
@@ -24,6 +27,9 @@ import { ProfileShareDialog } from "./ProfileCards";
 import { VoiceBar } from "./VoiceBar";
 import { AiCatchUpDialog, AiWriteDialog, useAiStatus } from "../ai/AiDialogs";
 import { catchUpMessages } from "../../sync/ai";
+import { slowmodeLabel, waitText } from "../../sync/communityRules";
+import { untilWhen } from "../format";
+import { useNow } from "../call/useNow";
 
 interface ComposerProps {
   conversation: Conversation;
@@ -60,6 +66,14 @@ export function Composer(props: ComposerProps) {
   const ai = useAiStatus(c.orgId ?? null);
   const canRecord = !props.threadRoot && voiceMime() !== null;
   const draftTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
+  // Batch B9: a community's own emoji and stickers in its channels; the ones picked for this message by name.
+  const communityEmoji = useExpressions(c.type === "CHANNEL" ? c.orgId : null);
+  const picked = useRef(new Map<string, CustomEmojiRef>());
+  // Batch B3 slowmode: when this person may post next (the server's answer, or one interval after their last message).
+  const slowed = c.type === "CHANNEL" && c.slowmodeSec > 0 && !c.slowmodeExempt;
+  const [lastSent, setLastSent] = useState(0);
+  const nextAt = slowed ? Math.max(c.nextPostAt ?? 0, lastSent + c.slowmodeSec * 1000) : 0;
+  const now = useNow(slowed && nextAt > Date.now());
 
   // Draft: restored when the conversation opens, saved as you type (main composer only).
   useEffect(() => {
@@ -165,7 +179,12 @@ export function Composer(props: ComposerProps) {
             onProgress: (name, p) => setBusy(`${p.phase === "hashing" ? "Encrypting" : "Uploading"} ${name}… ${Math.floor((100 * p.done) / Math.max(1, p.total))}%`),
           },
         );
-      } else await engine.sendText(c.id, body, opts);
+      } else {
+        // Batch B9: the community emoji the text still names go with it (id, community and image hash).
+        const customEmoji = forSending(body, picked.current.values());
+        await engine.sendText(c.id, body, customEmoji.length ? { ...opts, rich: { customEmoji } } : opts);
+      }
+      if (slowed && !props.threadRoot) setLastSent(Date.now());
       setFiles([]);
       props.onCancelReply();
       engine.setTyping(c.id, false);
@@ -216,9 +235,11 @@ export function Composer(props: ComposerProps) {
           <Lock size={16} />
           {c.archived
             ? "This channel is archived. You can read it, but nobody can post."
-            : c.kind === "ANNOUNCEMENT"
-              ? "Only the people who manage this announcement channel can post here."
-              : "You can't post in this conversation."}
+            : c.timedOutUntil && c.timedOutUntil > Date.now()
+              ? `You're timed out in this community until ${untilWhen(c.timedOutUntil)}. You can read, but not post.`
+              : c.kind === "ANNOUNCEMENT"
+                ? "Only the people who manage this announcement channel can post here."
+                : "You can't post in this conversation."}
         </div>
       </div>
     );
@@ -235,6 +256,11 @@ export function Composer(props: ComposerProps) {
               <span className="faint">@{m.username}</span>
             </button>
           ))}
+        </div>
+      )}
+      {slowed && (
+        <div className="composer-slowmode" role="status" aria-live="polite">
+          {nextAt > now ? `Slowmode · you can send again in ${waitText(nextAt, now)}. Messages you send now go out then.` : `Slowmode is on: one message every ${slowmodeLabel(c.slowmodeSec)}.`}
         </div>
       )}
       <div className="composer">
@@ -286,51 +312,17 @@ export function Composer(props: ComposerProps) {
             <label className="sr-only" htmlFor={`composer-${c.id}-${props.threadRoot ?? "main"}`}>
               {props.threadRoot ? "Reply in thread" : `Message ${props.title}`}
             </label>
-            <textarea
-              id={`composer-${c.id}-${props.threadRoot ?? "main"}`}
-              ref={input}
-              rows={1}
-              value={text}
-              placeholder={props.threadRoot ? "Reply in thread…" : `Message ${c.type === "CHANNEL" ? "#" : ""}${props.title}`}
-              onChange={(e) => onChange(e.target.value)}
-              onBlur={() => engine.setTyping(c.id, false)}
-              onPaste={(e: ClipboardEvent<HTMLTextAreaElement>) => {
-                const pasted = Array.from(e.clipboardData.files);
-                if (pasted.length) {
-                  e.preventDefault();
-                  addFiles(pasted);
-                }
-              }}
-              onKeyDown={(e) => {
-                if (suggest) {
-                  if (e.key === "ArrowDown" || e.key === "ArrowUp") {
-                    e.preventDefault();
-                    const d = e.key === "ArrowDown" ? 1 : -1;
-                    setSuggest({ ...suggest, index: (suggest.index + d + suggest.items.length) % suggest.items.length });
-                    return;
-                  }
-                  if (e.key === "Enter" || e.key === "Tab") {
-                    e.preventDefault();
-                    pick(suggest.items[suggest.index]);
-                    return;
-                  }
-                  if (e.key === "Escape") {
-                    setSuggest(null);
-                    return;
-                  }
-                }
-                if (e.key === "Escape" && props.replyTo) props.onCancelReply();
-                if (e.key === "Enter" && !e.shiftKey && !e.nativeEvent.isComposing && (prefs.enterToSend || e.metaKey || e.ctrlKey)) {
-                  e.preventDefault();
-                  void send();
-                }
-              }}
-              aria-describedby={busy ? `composer-status-${c.id}` : undefined}
-              disabled={!!busy}
-            />
-            <div className="composer-tools">
-              <button className="icon-btn" onClick={(e) => attach.open(e.currentTarget)} aria-label="Attach" aria-haspopup="menu" title="Attach files, a contact or your location" disabled={!!busy}>
-                <Paperclip size={18} />
+            {/* B14 (android one-row composer): actions, the text, emoji, and the microphone that becomes Send. */}
+            <div className="composer-row">
+              <button
+                className="icon-btn composer-plus"
+                onClick={(e) => attach.open(e.currentTarget)}
+                aria-label="Add files, a poll and more"
+                aria-haspopup="menu"
+                title="Add files, a poll and more"
+                disabled={!!busy}
+              >
+                <Plus size={19} />
               </button>
               <input
                 ref={fileInput}
@@ -342,12 +334,54 @@ export function Composer(props: ComposerProps) {
                   e.target.value = "";
                 }}
               />
+              <textarea
+                id={`composer-${c.id}-${props.threadRoot ?? "main"}`}
+                ref={input}
+                rows={1}
+                value={text}
+                placeholder={props.threadRoot ? "Reply in thread…" : `Message ${c.type === "CHANNEL" ? "#" : ""}${props.title}`}
+                onChange={(e) => onChange(e.target.value)}
+                onBlur={() => engine.setTyping(c.id, false)}
+                onPaste={(e: ClipboardEvent<HTMLTextAreaElement>) => {
+                  const pasted = Array.from(e.clipboardData.files);
+                  if (pasted.length) {
+                    e.preventDefault();
+                    addFiles(pasted);
+                  }
+                }}
+                onKeyDown={(e) => {
+                  if (suggest) {
+                    if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+                      e.preventDefault();
+                      const d = e.key === "ArrowDown" ? 1 : -1;
+                      setSuggest({ ...suggest, index: (suggest.index + d + suggest.items.length) % suggest.items.length });
+                      return;
+                    }
+                    if (e.key === "Enter" || e.key === "Tab") {
+                      e.preventDefault();
+                      pick(suggest.items[suggest.index]);
+                      return;
+                    }
+                    if (e.key === "Escape") {
+                      setSuggest(null);
+                      return;
+                    }
+                  }
+                  if (e.key === "Escape" && props.replyTo) props.onCancelReply();
+                  if (e.key === "Enter" && !e.shiftKey && !e.nativeEvent.isComposing && (prefs.enterToSend || e.metaKey || e.ctrlKey)) {
+                    e.preventDefault();
+                    void send();
+                  }
+                }}
+                aria-describedby={busy ? `composer-status-${c.id}` : undefined}
+                disabled={!!busy}
+              />
               <button className="icon-btn" onClick={(e) => emoji.open(e.currentTarget)} aria-label="Insert emoji" aria-haspopup="menu">
                 <Smile size={18} />
               </button>
               {c.type !== "DM" && (
                 <button
-                  className="icon-btn"
+                  className="icon-btn hide-sm"
                   aria-label="Mention someone"
                   onClick={() => {
                     const next = `${text}${text && !text.endsWith(" ") ? " " : ""}@`;
@@ -362,24 +396,33 @@ export function Composer(props: ComposerProps) {
                   <AtSign size={18} />
                 </button>
               )}
-              <span className="hint" id={`composer-status-${c.id}`} aria-live="polite">
-                {busy ?? (prefs.enterToSend ? "Enter to send · Shift+Enter for a new line" : "Ctrl+Enter to send")}
-              </span>
-              {busy && upload.current && (
-                <button className="btn btn-ghost btn-sm" onClick={() => upload.current?.abort()}>
-                  Cancel
-                </button>
-              )}
               {canRecord && !text.trim() && !files.length && !busy ? (
-                <button className="send-btn" onClick={() => setVoice(true)} aria-label="Record a voice message">
+                <button key="mic" className="send-btn" onClick={() => setVoice(true)} aria-label="Record a voice message">
                   <Mic size={17} />
                 </button>
               ) : (
-                <button className="send-btn" onClick={() => void send()} disabled={(!text.trim() && !files.length) || !!busy} aria-label="Send">
+                <button
+                  key="send"
+                  className="send-btn"
+                  onClick={() => void send()}
+                  disabled={(!text.trim() && !files.length) || !!busy}
+                  aria-label="Send"
+                  title={prefs.enterToSend ? "Send (Enter) · Shift+Enter for a new line" : "Send (Ctrl+Enter)"}
+                >
                   <SendHorizontal size={17} />
                 </button>
               )}
             </div>
+            {busy && (
+              <div className="composer-status" id={`composer-status-${c.id}`} aria-live="polite">
+                <span className="grow">{busy}</span>
+                {upload.current && (
+                  <button className="btn btn-ghost btn-sm" onClick={() => upload.current?.abort()}>
+                    Cancel
+                  </button>
+                )}
+              </div>
+            )}
           </>
         )}
       </div>
@@ -434,6 +477,29 @@ export function Composer(props: ComposerProps) {
             {
               custom: (
                 <EmojiPicker
+                  community={
+                    communityEmoji
+                      ? {
+                          list: communityEmoji,
+                          onEmoji: (e) => {
+                            emoji.close();
+                            picked.current.set(e.name, refOf(e));
+                            onChange(`${text}${text && !text.endsWith(" ") ? " " : ""}:${e.name}: `);
+                            input.current?.focus();
+                          },
+                          onSticker: (e) => {
+                            emoji.close();
+                            void engine
+                              .sendText(c.id, `:${e.name}:`, { rich: { customSticker: refOf(e) }, replyTo: props.replyTo?.id, threadRoot: props.threadRoot })
+                              .then(() => {
+                                props.onCancelReply();
+                                if (slowed && !props.threadRoot) setLastSent(Date.now());
+                              })
+                              .catch((err: unknown) => engine.notice("error", err instanceof Error ? err.message : "Couldn't send the sticker."));
+                          },
+                        }
+                      : undefined
+                  }
                   onPick={(em) => {
                     emoji.close();
                     onChange(text + em);

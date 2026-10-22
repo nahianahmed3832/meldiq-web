@@ -6,7 +6,13 @@ export async function serverFeatures(server: Server): Promise<string[]> {
   return info.features ?? [];
 }
 
-/** Makes [userId] a platform administrator on an in-process test server (as the server's own tests do). */
+type AdminConfig = { platformAdmins?: Set<string>; integrations?: { platformAdmins: Set<string> } };
+
+/**
+ * Makes [userId] a platform administrator on an in-process test server (as the server's own tests do). The list moved
+ * from the integrations settings to the top of the config when integrations were retired (API 0.12).
+ */
 export function makePlatformAdmin(server: Server, userId: string): void {
-  (server.ctx as unknown as { config: { integrations: { platformAdmins: Set<string> } } }).config.integrations.platformAdmins.add(userId);
+  const config = (server.ctx as unknown as { config: AdminConfig }).config;
+  (config.platformAdmins ?? config.integrations?.platformAdmins)?.add(userId);
 }

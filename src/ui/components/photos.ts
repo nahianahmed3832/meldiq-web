@@ -26,13 +26,13 @@ function load(engine: Engine, path: string, key: string): Promise<string | null>
 }
 
 /** The photo of a user or workspace at revision [rev], or null (none, not allowed, or still loading). */
-export function usePhoto(kind: "user" | "org", id: string, rev: number | null | undefined): string | null {
+export function usePhoto(kind: "user" | "org" | "group", id: string, rev: number | null | undefined): string | null {
   const engine = useEngine();
   const [url, setUrl] = useState<string | null>(null);
   useEffect(() => {
     if (!rev) return setUrl(null);
     let live = true;
-    const path = kind === "user" ? `/v1/users/${encodeURIComponent(id)}/photo` : `/v1/orgs/${encodeURIComponent(id)}/photo`;
+    const path = kind === "user" ? `/v1/users/${encodeURIComponent(id)}/photo` : kind === "group" ? `/v1/conversations/${encodeURIComponent(id)}/photo` : `/v1/orgs/${encodeURIComponent(id)}/photo`;
     void load(engine, path, `${kind}:${id}:${rev}`).then((u) => live && setUrl(u));
     return () => {
       live = false;

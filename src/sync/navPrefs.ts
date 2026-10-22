@@ -39,6 +39,16 @@ export const zNavPrefs = z.object({
   // Optional on purpose: a document written without it keeps the server's list (servers before saved items, or a
   // workspace document, never touch it).
   saved: z.array(zSavedItem).optional(),
+  /** Batch B2, community documents: the level its channels follow unless they have their own, and Ignore @everyone. */
+  community: z.object({ level: z.enum(NOTIFY_LEVELS).default("all"), suppressEveryone: z.boolean().default(false) }).optional(),
+  /** Batch B2, personal document: the person's communities in rail order. */
+  railOrder: z.array(z.string()).optional(),
+  /** Batch B3: mutes that end by themselves (conversation id → epoch ms). */
+  mutedUntil: z.record(z.string(), z.number()).optional(),
+  /** Batch B3, community documents: a category's own level, which its channels follow unless they have one. */
+  categoryNotify: z.record(z.string(), z.enum(NOTIFY_LEVELS)).optional(),
+  /** Batch B3, community documents: channels hidden from the channel list (they stay joined). */
+  hidden: z.array(z.string()).optional(),
 });
 export type NavPrefs = z.infer<typeof zNavPrefs>;
 export type NavSection = NavPrefs["sections"][number];
@@ -51,7 +61,6 @@ export const EMPTY_PREFS: NavPrefs = { starred: [], sections: [], collapsed: [],
 export type NavOp =
   | { op: "place"; conversationId: string; sectionId: string | null; starred: boolean }
   | { op: "move"; conversationId: string; delta: number }
-  | { op: "notify"; conversationId: string; level: NotifyLevel }
   | { op: "addSection"; id: string; name: string }
   | { op: "renameSection"; id: string; name: string }
   | { op: "deleteSection"; id: string }
@@ -62,7 +71,15 @@ export type NavOp =
   | { op: "save"; conversationId: string; messageId: string; savedAt: number; remindAt: number | null }
   | { op: "unsave"; messageId: string }
   | { op: "savedDone"; messageId: string; done: boolean }
-  | { op: "remind"; messageId: string; remindAt: number | null };
+  | { op: "remind"; messageId: string; remindAt: number | null }
+  // Batch B2 and B3, as android NavPrefsRules: [categoryId] lets "all" stay stored while that category is quieter.
+  | { op: "notify"; conversationId: string; level: NotifyLevel; categoryId?: string | null }
+  | { op: "community"; level?: NotifyLevel; suppressEveryone?: boolean }
+  | { op: "notifyReset"; conversationId: string }
+  | { op: "railOrder"; orgIds: string[] }
+  | { op: "muteUntil"; conversationId: string; until: number | null }
+  | { op: "categoryNotify"; categoryId: string; level: NotifyLevel | null }
+  | { op: "hide"; conversationId: string; hidden: boolean };
 
 export type NavPlace = { k: "default" } | { k: "starred" } | { k: "section"; id: string };
 
@@ -72,9 +89,45 @@ export function placeOf(p: NavPrefs, conversationId: string): NavPlace {
   return s ? { k: "section", id: s.id } : { k: "default" };
 }
 
-export function levelOf(p: NavPrefs | undefined, conversationId: string): NotifyLevel {
-  return p?.notify[conversationId] ?? "all";
+/**
+ * The level that applies to a conversation now (android NavPrefsRules.level): "none" during a timed mute; else its own
+ * level; else its category's ([categoryId]); else its community's; else "all".
+ */
+export function levelOf(p: NavPrefs | undefined, conversationId: string, categoryId: string | null = null, now: number = Date.now()): NotifyLevel {
+  if (mutedUntil(p, conversationId, now) !== null) return "none";
+  return p?.notify[conversationId] ?? parentLevel(p, categoryId);
 }
+
+/** What a channel follows when it has no level of its own: its category's level, else the community's. */
+export function parentLevel(p: NavPrefs | undefined, categoryId: string | null): NotifyLevel {
+  return (categoryId ? p?.categoryNotify?.[categoryId] : undefined) ?? communityLevel(p);
+}
+
+export const communityLevel = (p: NavPrefs | undefined): NotifyLevel => p?.community?.level ?? "all";
+
+/** Whether @everyone counts as a mention in this community (Ignore @everyone off). */
+export const countsEveryone = (p: NavPrefs | undefined): boolean => p?.community?.suppressEveryone !== true;
+
+/** When a timed mute of [conversationId] ends, if one is running at [now]. */
+export function mutedUntil(p: NavPrefs | undefined, conversationId: string, now: number = Date.now()): number | null {
+  const t = p?.mutedUntil?.[conversationId];
+  return t !== undefined && t > now ? t : null;
+}
+
+/**
+ * The details page's Mute button (batch B14, android DetailsActionsRow): mute what notifies; unmute ends a timed mute and
+ * goes back to what the conversation inherits, or turns it on when that is off too.
+ */
+export function muteToggle(p: NavPrefs | undefined, conversationId: string, categoryId: string | null, now: number = Date.now()): NavOp[] {
+  if (levelOf(p, conversationId, categoryId, now) !== "none") return [{ op: "notify", conversationId, level: "none" }];
+  const ops: NavOp[] = [];
+  if (mutedUntil(p, conversationId, now) !== null) ops.push({ op: "muteUntil", conversationId, until: null });
+  if (parentLevel(p, categoryId) === "none") ops.push({ op: "notify", conversationId, level: "all" });
+  else if (p?.notify[conversationId] !== undefined) ops.push({ op: "notifyReset", conversationId });
+  return ops;
+}
+
+export const isHidden = (p: NavPrefs | undefined, conversationId: string): boolean => !!p?.hidden?.includes(conversationId);
 
 /**
  * Whether a message notifies at a conversation's level (docs/MENTIONS.md): "mentions" lets mentions and @everyone
@@ -89,6 +142,12 @@ export function shouldNotify(level: NotifyLevel, mention: "me" | "all" | null): 
 /** Conversations in Starred or a custom section, so they aren't listed again in their default group. */
 export function placed(p: NavPrefs): Set<string> {
   return new Set([...p.starred, ...p.sections.flatMap((s) => s.items)]);
+}
+
+function omit<V>(m: Record<string, V>, key: string): Record<string, V> {
+  const next = { ...m };
+  delete next[key];
+  return next;
 }
 
 function without<T>(list: readonly T[], x: T): T[] {
@@ -124,11 +183,29 @@ export function applyOp(p: NavPrefs, o: NavOp): NavPrefs {
     case "move":
       return { ...p, starred: shifted(p.starred, o.conversationId, o.delta), sections: p.sections.map((s) => ({ ...s, items: shifted(s.items, o.conversationId, o.delta) })) };
     case "notify": {
+      // "All" is only stored while the category or community is quieter; choosing a level also ends a timed mute.
       const notify = { ...p.notify };
-      if (o.level === "all") delete notify[o.conversationId];
+      if (o.level === "all" && parentLevel(p, o.categoryId ?? null) === "all") delete notify[o.conversationId];
       else notify[o.conversationId] = o.level;
-      return { ...p, notify };
+      return { ...p, notify, ...(p.mutedUntil ? { mutedUntil: omit(p.mutedUntil, o.conversationId) } : {}) };
     }
+    case "notifyReset":
+      return { ...p, notify: omit(p.notify, o.conversationId) };
+    case "community": {
+      const current = p.community ?? { level: "all" as NotifyLevel, suppressEveryone: false };
+      const next = { level: o.level ?? current.level, suppressEveryone: o.suppressEveryone ?? current.suppressEveryone };
+      // Back to "all": an "all" override says nothing any more, unless category levels make it mean something.
+      const dropAll = next.level === "all" && !Object.keys(p.categoryNotify ?? {}).length;
+      return { ...p, community: next, notify: dropAll ? Object.fromEntries(Object.entries(p.notify).filter(([, l]) => l !== "all")) : p.notify };
+    }
+    case "railOrder":
+      return { ...p, railOrder: [...new Set(o.orgIds)] };
+    case "muteUntil":
+      return { ...p, mutedUntil: o.until === null ? omit(p.mutedUntil ?? {}, o.conversationId) : { ...(p.mutedUntil ?? {}), [o.conversationId]: o.until } };
+    case "categoryNotify":
+      return { ...p, categoryNotify: o.level === null ? omit(p.categoryNotify ?? {}, o.categoryId) : { ...(p.categoryNotify ?? {}), [o.categoryId]: o.level } };
+    case "hide":
+      return { ...p, hidden: o.hidden ? [...without(p.hidden ?? [], o.conversationId), o.conversationId] : without(p.hidden ?? [], o.conversationId) };
     case "addSection": {
       const name = o.name.trim().slice(0, SECTION_NAME_MAX);
       if (!name || p.sections.length >= MAX_SECTIONS || p.sections.some((s) => s.id === o.id)) return p;

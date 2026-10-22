@@ -1,17 +1,17 @@
 import type { OrgAdminDetail } from "../../api/workspaceSchemas";
-import { useEngine, useOrbit } from "../../app/orbit";
+import { useEngine } from "../../app/orbit";
 import { isBytes, workspacePlan, workspaceUsage, type WorkspaceUsage } from "../../sync/usage";
 import { bytes } from "../format";
 import { useLoad } from "./useLoad";
 import { Card, ErrorLine } from "./WorkspaceView";
 
-/** Workspace › Usage (android UsageScreen): people, structure, files, apps and any server-wide limits, counted by the server. */
+/** Community › Usage (android UsageScreen): people, channels, files and any server-wide limits, counted by the server. */
 export function UsagePage({ detail }: { detail: OrgAdminDetail }) {
   const engine = useEngine();
   const orgId = detail.org.id;
-  const hasApps = useOrbit((s) => s.server?.features.includes("integrations") ?? false);
   const usage = useLoad(() => workspaceUsage(engine, orgId), [engine, orgId]);
-  const plan = useLoad(() => (hasApps ? workspacePlan(engine, orgId) : Promise.resolve(null)), [engine, orgId, hasApps]);
+  // Every member may see the plan and its limits; a server without plans answers 404, which just leaves the card out.
+  const plan = useLoad(() => workspacePlan(engine, orgId).catch(() => null), [engine, orgId]);
   const u = usage.data;
   const limited = plan.data?.capabilities.filter((c) => c.limit !== null) ?? [];
   return (
@@ -24,23 +24,34 @@ export function UsagePage({ detail }: { detail: OrgAdminDetail }) {
           <Card title="People" sub={`${count(u.members.owners, "owner")} and ${count(u.members.admins, "admin")} · ${count(u.members.members, "member")} and ${count(u.members.guests, "guest")}`}>
             <p className="usage-figure">{u.members.total}</p>
           </Card>
-          <Card title="Structure" sub={`Archived channels: ${u.structure.archivedChannels} · Departments: ${u.structure.departments}`}>
-            <div className="usage-stats">
-              <Stat label="Branches" value={u.structure.branches} />
-              <Stat label="Teams" value={u.structure.teams} />
-              <Stat label="Channels" value={u.structure.channels} />
-            </div>
-          </Card>
+          {u.structure.categories !== undefined ? (
+            <Card title="Channels" sub={`Archived channels: ${u.structure.archivedChannels}`}>
+              <div className="usage-stats">
+                <Stat label="Channels" value={u.structure.channels} />
+                <Stat label="Categories" value={u.structure.categories} />
+              </div>
+            </Card>
+          ) : (
+            <Card title="Structure" sub={`Archived channels: ${u.structure.archivedChannels} · Departments: ${u.structure.departments}`}>
+              <div className="usage-stats">
+                <Stat label="Branches" value={u.structure.branches} />
+                <Stat label="Teams" value={u.structure.teams} />
+                <Stat label="Channels" value={u.structure.channels} />
+              </div>
+            </Card>
+          )}
           <Card title="Files" sub="Encrypted files the server still holds for this workspace's channels. It never sees what's in them.">
             <p className="usage-figure">
               {bytes(u.files.bytes)} <small>· {count(u.files.count, "file")}</small>
             </p>
           </Card>
-          <Card title="Apps, roles and invitations">
+          <Card title={u.apps ? "Apps, roles and invitations" : "Roles and invitations"}>
+            {u.apps && (
+              <p className="faint" style={{ margin: "0 0 4px" }}>
+                {count(u.apps.installed, "app")} installed · {count(u.apps.connectedAccounts, "connected account")} · {count(u.apps.notifications, "app notification")}
+              </p>
+            )}
             <p className="faint" style={{ margin: 0 }}>
-              {count(u.apps.installed, "app")} installed · {count(u.apps.connectedAccounts, "connected account")} · {count(u.apps.notifications, "app notification")}
-            </p>
-            <p className="faint" style={{ margin: "4px 0 0" }}>
               Custom roles: {u.roles.custom} · Active invitations: {u.invitations.active}
             </p>
           </Card>

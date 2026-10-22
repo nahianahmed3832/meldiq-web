@@ -3,6 +3,8 @@ import { type ReactNode, useState } from "react";
 import { getPrefs } from "../../app/prefs";
 import { linkWarning, readableDomain } from "../../sync/linkRules";
 import { Dialog } from "../components/Overlay";
+import { useEngine } from "../../app/orbit";
+import { openInApp } from "./inAppLinks";
 
 /**
  * A web link from a message (android LinkOpener): opens in a new tab, never with this page as its opener or referrer.
@@ -13,6 +15,7 @@ export function SafeLink({ href, className, children }: { href: string; classNam
   /** null: not asking; "": asking because of the setting; otherwise the warning. */
   const [asking, setAsking] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+  const engine = useEngine();
   const close = () => {
     setAsking(null);
     setCopied(false);
@@ -25,6 +28,7 @@ export function SafeLink({ href, className, children }: { href: string; classNam
         target="_blank"
         rel="noopener noreferrer nofollow"
         onClick={(e) => {
+          if (openInApp(engine, href)) return e.preventDefault();
           const warning = linkWarning(href);
           if (!warning && !getPrefs().askBeforeLinks) return;
           e.preventDefault();

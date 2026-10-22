@@ -1,4 +1,5 @@
 import { ApiError } from "../api/client";
+import { countsEveryone } from "./navPrefs";
 import { type Call, type Conversation, type QueueItem, zCallRes, zQueueItem } from "../api/schemas";
 import { EnvelopeError, openEnvelope } from "../crypto/envelope";
 import type { StoredMessage } from "../model/types";
@@ -6,7 +7,7 @@ import { parsePayload, type Payload } from "../protocol/payload";
 import type { EngineContext } from "./context";
 import { applyDelete, applyDelivered, applyEdit, applyPin, applyReaction, applyRead, callEntry, receivedMentions, textMessage, undecryptable } from "./rules";
 import { applyClose, applyVote } from "./polls";
-import { isReaction } from "../emoji/rules";
+import { reactionAllowed } from "./expressions";
 
 const MAX_FAILURES = 3;
 
@@ -115,10 +116,12 @@ export class Receiver {
         this.ctx.show(m);
         await this.replayPending(item.conversationId, item.messageId);
         const viewing = this.ctx.viewing() === item.conversationId;
-        const mentioned = !mine && (mentions.ids.includes(device.userId) || mentions.all);
+        // Batch B2: a community whose settings ignore @everyone treats it as an ordinary message (no mention, no badge).
+        const all = mentions.all && (!conv?.orgId || countsEveryone(this.ctx.state.get().nav[conv.orgId]));
+        const mentioned = !mine && (mentions.ids.includes(device.userId) || all);
         await this.ctx.bump(m, { unread: !mine && !viewing, mention: mentioned && !viewing });
         if (viewing && !mine) this.ctx.markReadSoon(item.conversationId);
-        if (!mine && !viewing) this.ctx.notifyIncoming(m, conv, mentions.ids.includes(device.userId) ? "me" : mentions.all ? "all" : null);
+        if (!mine && !viewing) this.ctx.notifyIncoming(m, conv, mentions.ids.includes(device.userId) ? "me" : all ? "all" : null);
         return;
       }
       case "edit":
@@ -126,8 +129,9 @@ export class Receiver {
       case "delete":
         return this.change(pl, item, serverTs, (t) => applyDelete(t, item.senderUserId));
       case "reaction":
-        // One emoji, not text: anything else from a modified client is dropped (meldiq docs/EMOJI.md).
-        if (!isReaction(pl.emoji)) return;
+        // One emoji, not text: anything else from a modified client is dropped (meldiq docs/EMOJI.md). In a community's
+        // channels a community emoji's :name: is a reaction too (batch B12).
+        if (!reactionAllowed(pl.emoji, conv?.type === "CHANNEL" && !!conv.orgId)) return;
         return this.change(pl, item, serverTs, (t) => applyReaction(t, item.senderUserId, pl.emoji!, pl.add !== false));
       case "pin":
         return this.change(pl, item, serverTs, (t) => applyPin(t, pl.pinned === true));

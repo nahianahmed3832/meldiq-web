@@ -54,6 +54,11 @@ const zPoll = z.object({
 });
 /** A sticker reference into the shared catalogue (docs/STICKERS.md); the text carries the readable fallback. */
 const zSticker = z.object({ pack: z.string().max(64), id: z.string().max(64) });
+/**
+ * Batch B9: a community's emoji or sticker as a message names it (android CustomEmojiRef): which one ([id] in community
+ * [orgId]), its name, and the image's SHA-256, so the image is shown only if the downloaded one is the one meant.
+ */
+const zCustomEmoji = z.object({ id: z.string().max(64), orgId: z.string().max(64), name: z.string().max(64), sha256: z.string().max(128), animated: z.boolean().default(false) });
 
 export const zPayload = z.object({
   type: z.string().max(40),
@@ -80,7 +85,15 @@ export const zPayload = z.object({
   sticker: opt(zSticker),
   /** A "vote" control: the chosen option ids of the poll in [target] (empty takes the vote back). */
   choices: opt(z.array(z.string().max(32)).max(20)),
+  /** A forum post's title (communities); [text] then starts with the title and a blank line. Omitted elsewhere. */
+  title: opt(z.string().max(1000)),
+  /** A forum post's tag ids, from the forum's tag list. */
+  tags: opt(z.array(z.string().max(64)).max(50)),
+  /** Batch B9: community emoji used in [text] as `:name:`, and a community sticker (text: its `:name:`). */
+  customEmoji: opt(z.array(zCustomEmoji).max(50)),
+  customSticker: opt(zCustomEmoji),
 });
+export type CustomEmojiRef = z.infer<typeof zCustomEmoji>;
 export type Payload = z.infer<typeof zPayload>;
 export type Poll = z.infer<typeof zPoll>;
 export type StickerRef = z.infer<typeof zSticker>;
