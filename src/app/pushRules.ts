@@ -48,3 +48,12 @@ export interface SavedRegistration {
 export function needsRegistration(saved: SavedRegistration | null, deviceId: string, token: string, now: number): boolean {
   return !saved || saved.deviceId !== deviceId || saved.token !== token || now - saved.at > REGISTER_AGAIN_MS;
 }
+
+/**
+ * iPhone and iPad: web push exists only for a site added to the Home Screen and opened from there (iOS 16.4+). In Safari
+ * itself there's no Push API at all, so Settings says how to get it instead of "not supported".
+ */
+export function iosNeedsHomeScreen(ua: string, standalone: boolean, maxTouchPoints: number): boolean {
+  const ios = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && maxTouchPoints > 1);
+  return ios && !standalone;
+}

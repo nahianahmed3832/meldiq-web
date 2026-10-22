@@ -10,6 +10,8 @@
   position: fixed;
   inset: var(--app-top, 0px) 0 auto 0;
   height: var(--app-height, 100dvh);
+  /* Opened from the Home Screen (standalone), the page runs under the status bar and, in landscape, the notch. */
+  padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) 0 env(safe-area-inset-left, 0px);
   overflow: hidden;
   background: linear-gradient(180deg, var(--rail) 0%, var(--rail-2) 100%);
 }

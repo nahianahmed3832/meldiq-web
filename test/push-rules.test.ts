@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { needsRegistration, pushState, type PushStateInput, REGISTER_AGAIN_MS } from "../src/app/pushRules";
+import { iosNeedsHomeScreen, needsRegistration, pushState, type PushStateInput, REGISTER_AGAIN_MS } from "../src/app/pushRules";
 
 const base: PushStateInput = { supported: true, secure: true, serverOffers: true, configured: true, permission: "granted", enabled: true, registered: true, busy: false, error: null };
 
@@ -41,5 +41,16 @@ describe("Desktop notifications before the person chose (the 'allowed but nothin
     expect(notificationChoice({ notifications: false }, false)).toEqual({ notifyChoice: "unset", notifications: false });
     expect(notificationChoice({ notifications: true }, false)).toEqual({ notifyChoice: "on", notifications: true });
     expect(notificationChoice({ notifications: true, notifyChoice: "off" }, true)).toEqual({ notifyChoice: "off", notifications: false });
+  });
+});
+
+describe("iPhone and iPad: push only from the Home Screen", () => {
+  const iphone = "Mozilla/5.0 (iPhone; CPU iPhone OS 16_7 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1";
+  const ipad = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Safari/605.1.15";
+  it("asks for the Home Screen in Safari on an iPhone or iPad, not once opened from there, and never on a Mac", () => {
+    expect(iosNeedsHomeScreen(iphone, false, 5)).toBe(true);
+    expect(iosNeedsHomeScreen(iphone, true, 5)).toBe(false);
+    expect(iosNeedsHomeScreen(ipad, false, 5)).toBe(true);
+    expect(iosNeedsHomeScreen(ipad, false, 0)).toBe(false);
   });
 });

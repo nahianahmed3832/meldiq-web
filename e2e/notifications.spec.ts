@@ -64,13 +64,14 @@ test("with Meldiq closed, a wake-up shows who wrote, without the text, and opens
   const all = await shown(viewer);
   expect(JSON.stringify(all)).not.toContain("are you there");
   // A click (the service worker tells the open page where to go): the conversation opens, once the app is running.
-  await expect.poll(() => viewer.evaluate(() => (window as unknown as { __orbit?: { state: { get(): { synced: boolean } } } }).__orbit?.state.get().synced ?? false), { timeout: 15_000 }).toBe(true);
+  await expect(viewer.locator(".conn.online")).toBeVisible({ timeout: 15_000 });
   await viewer.waitForTimeout(500);
   await viewer.evaluate((hash) => navigator.serviceWorker.dispatchEvent(new MessageEvent("message", { data: { type: "meldiq-open", hash } })), `#/dms/c/${dm}`);
   await expect(viewer).toHaveURL(new RegExp(`#/dms/c/${dm}$`));
 });
 
 test("a muted conversation's messages wake nothing; with Meldiq open, the page shows them itself", async ({ page, context }) => {
+  test.skip(process.env.ORBIT_E2E_BUILD === "1", "mutes through the development build's engine hook");
   const { bob, dm } = await setUp(page);
   await page.evaluate(async (id) => {
     const engine = (window as unknown as { __orbit: { arrange(id: string, op: unknown): Promise<void> } }).__orbit;

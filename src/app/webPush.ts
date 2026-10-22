@@ -185,10 +185,15 @@ export function refreshPush(engine: Engine): void {
   void registerPush(engine).catch(() => undefined);
 }
 
-/** Signing out: this browser stops receiving (the server already removed the token with the device). */
+/**
+ * Signing out: this browser stops receiving (the server already removed the token with the device). Call it after the
+ * local data is erased: in WebKit, asking the service worker for its push subscription while IndexedDB is being deleted
+ * stalls the deletion (found by e2e/cross-device.spec.ts). Only a browser that registered has anything to drop.
+ */
 export function forgetPush(): void {
+  const registered = saved() !== null;
   save(null);
-  if (typeof navigator === "undefined" || !("serviceWorker" in navigator)) return;
+  if (!registered || typeof navigator === "undefined" || !("serviceWorker" in navigator)) return;
   void navigator.serviceWorker
     .getRegistration()
     .then((r) => r?.pushManager?.getSubscription())

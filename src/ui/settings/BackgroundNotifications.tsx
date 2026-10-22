@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useEngine, useOrbit } from "../../app/orbit";
 import { usePrefs } from "../../app/prefs";
-import { type PushState, pushState } from "../../app/pushRules";
+import { iosNeedsHomeScreen, type PushState, pushState } from "../../app/pushRules";
 import { pushAvailable, pushRegistered, pushSupported, PushError, registerPush, systemNotify, unregisterPush } from "../../app/webPush";
 import { config } from "../../app/config";
 
@@ -50,12 +50,17 @@ export function BackgroundNotifications({ permission }: { permission: Notificati
       .catch((e: unknown) => setError(e instanceof PushError ? e.message : "Couldn't reach the server. Try again."))
       .finally(() => setBusy(false));
   };
+  const homeScreen = state === "unsupported" && iosNeedsHomeScreen(navigator.userAgent, matchMedia("(display-mode: standalone)").matches, navigator.maxTouchPoints);
   const canRegister = pushAvailable(engine) && (state === "needs-registration" || state === "failed" || state === "on");
   return (
     <div className="setting" style={{ alignItems: "flex-start" }}>
       <div className="lines">
         <strong>When Meldiq is closed</strong>
-        <small role="status">{TEXT[state]}</small>
+        <small role="status">
+          {homeScreen
+            ? "On iPhone and iPad (iOS 16.4 or later): add Meldiq to your Home Screen (Share › Add to Home Screen), open it from there, then turn this on. In Safari itself, notifications come while Meldiq is open."
+            : TEXT[state]}
+        </small>
         {error && (
           <small className="danger-text" role="alert">
             {error}
