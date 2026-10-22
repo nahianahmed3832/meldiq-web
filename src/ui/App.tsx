@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { createEngine, holdDeviceLock, missingCapabilities } from "../app/boot";
+import { createEngine, holdDeviceLock, missingCapabilities, startNotifications } from "../app/boot";
+import { hideSplash } from "../app/splash";
 import { EngineProvider } from "../app/orbit";
 import { resetPrefs } from "../app/prefs";
 import type { AccountSessionGrant } from "../api/accountSchemas";
@@ -34,6 +35,10 @@ type Boot =
  */
 export function App() {
   const [boot, setBoot] = useState<Boot>({ s: "loading" });
+  // The launch screen goes as soon as there's something to show: sign-in, the app, or what went wrong.
+  useEffect(() => {
+    if (boot.s !== "loading") hideSplash();
+  }, [boot.s]);
 
   const begin = useCallback(async (steal = false) => {
     setBoot({ s: "loading" });
@@ -53,6 +58,7 @@ export function App() {
       engineRef = engine;
       setBoot({ s: "ready", engine, reauth: false });
       await engine.start();
+      startNotifications(engine);
     } catch (e) {
       setBoot({ s: "error", message: e instanceof Error ? e.message : "Meldiq couldn't start." });
     }
@@ -88,6 +94,7 @@ export function App() {
     const engine = createEngine(device, store);
     setBoot({ s: "ready", engine, reauth: false });
     await engine.start(grant);
+    startNotifications(engine);
   }, []);
 
   const saveAccountDevice = useCallback(async (store: LocalStore, device: DeviceRecord, grant: AccountSessionGrant) => {

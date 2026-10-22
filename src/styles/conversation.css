@@ -325,10 +325,38 @@
   box-shadow: var(--shadow-md);
   z-index: 2;
 }
-.msg:hover .msg-actions,
-.msg:focus-within .msg-actions,
-.msg.menu-open .msg-actions {
+/*
+ * Where there's a real pointer the toolbar shows on hover, and on keyboard focus anywhere. Not on touch screens (2026-10-22):
+ * there a :hover that reveals something makes iOS Safari swallow the tap (a tap on a reaction showed the toolbar instead of
+ * toggling it); a long press opens the message's menu instead (longPress.ts).
+ */
+@media (hover: hover) {
+  .msg:hover .msg-actions,
+  .msg.menu-open .msg-actions {
+    display: flex;
+  }
+}
+.msg:has(:focus-visible) .msg-actions {
   display: flex;
+}
+@media (hover: none) and (pointer: coarse) {
+  /* A long press is the message's menu, not a text selection or the system's callout ("Copy text" is in the menu). */
+  .msg {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+}
+.menu-quick {
+  display: flex;
+  justify-content: space-between;
+  gap: 2px;
+  padding: 4px 4px 2px;
+}
+.menu-quick .icon-btn {
+  width: 38px;
+  height: 38px;
+  font-size: 20px;
 }
 .msg-actions .icon-btn {
   width: 30px;
@@ -1987,4 +2015,35 @@
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--text-2);
+}
+
+/* Batch B14b: a channel's header is "# name ›" and who's online; its details have the channel's icon and topic. */
+.conv-title-chevron {
+  flex-shrink: 0;
+  color: var(--text-3);
+}
+.online-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin-right: 5px;
+  border-radius: 50%;
+  background: var(--presence-on);
+  vertical-align: 1px;
+}
+.details-channel-icon {
+  display: grid;
+  place-items: center;
+  width: 72px;
+  height: 72px;
+  border-radius: 22px;
+  background: var(--surface-sunken);
+  color: var(--text-2);
+}
+.details-topic {
+  margin: 0;
+  text-align: center;
+  color: var(--text-2);
+  font-size: 13px;
+  overflow-wrap: anywhere;
 }

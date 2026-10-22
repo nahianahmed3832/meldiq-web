@@ -6,9 +6,7 @@ import { presenceWords } from "../../sync/social";
 import { GroupAvatar } from "../components/OrgAvatar";
 import { RequestBar, RequestSentBanner } from "../people/RequestBar";
 import { VoiceRoomView } from "./VoiceRoomView";
-import { SecurityPadlock } from "./SecuritySheet";
-import { PinnedButton } from "./PinnedPanel";
-import { Archive, ArrowLeft, BellOff, Info, MessagesSquare, Phone, Search, ShieldAlert, UsersRound, Video } from "lucide-react";
+import { Archive, ArrowLeft, BellOff, ChevronRight, Phone, Search, ShieldAlert, Video } from "lucide-react";
 import { useCallback, useMemo, useState } from "react";
 import { shallowEqual, useEngine, useOrbit } from "../../app/orbit";
 import { navigate, type Route } from "../../app/router";
@@ -73,8 +71,7 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
       ? [`@${peer?.username ?? ""}`, peer?.pronouns, presenceWords(peer?.presence, peer?.online)?.toLowerCase(), peer?.status].filter(Boolean).join(" · ")
       : c.type === "GROUP"
         ? members(c.memberCount)
-        : // Who's online here, or the member count (as on Android, batch B14b), after the topic on a wide screen.
-          [c.topic, online ? `${online} online` : members(c.memberCount)].filter(Boolean).join(" · ");
+        : null; // a channel's line is built in the header below (who's online, with its dot)
   const panelOpen = route.panel === "details";
 
   return (
@@ -95,36 +92,48 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
                 <h1>
                   {glyph}
                   <span className="ellipsis">{title}</span>
+                  {c.type === "CHANNEL" && <ChevronRight size={16} className="conv-title-chevron" aria-hidden />}
                   {c.archived && (
                     <span className="tag">
                       <Archive size={11} /> Archived
                     </span>
                   )}
                 </h1>
-                <p className="ellipsis">{subtitle}</p>
+                <p className="ellipsis">
+                  {c.type === "CHANNEL" ? (
+                    <>
+                      {/* As on Android (B14b): who's online, with a green dot, or the member count; the topic too where there's room. */}
+                      {c.topic && <span className="hide-sm">{c.topic} · </span>}
+                      {online ? (
+                        <>
+                          <span className="online-dot" aria-hidden />
+                          {online} online
+                        </>
+                      ) : (
+                        members(c.memberCount)
+                      )}
+                    </>
+                  ) : (
+                    subtitle
+                  )}
+                </p>
               </div>
             </>
           );
-          // B14: in a DM or group the name opens the details (members, media, pins, links, files).
-          return c.type === "CHANNEL" ? (
-            titleBlock
-          ) : (
-            <button className="conv-title-btn" onClick={() => navigate({ section: route.section, conversationId: id, panel: panelOpen ? null : "details" })} aria-label={`${title}: details`}>
+          // B14 and B14b: the name opens the details (members, media, pins, threads, links, files), as on Android.
+          return (
+            <button
+              className="conv-title-btn"
+              onClick={() => navigate({ section: route.section, conversationId: id, panel: panelOpen ? null : "details" })}
+              aria-label={`${c.type === "CHANNEL" ? `#${title}` : title}: details`}
+              aria-expanded={panelOpen}
+            >
               {titleBlock}
             </button>
           );
         })()}
         {/* Calls in a workspace happen in its voice rooms; a text channel has none to start (android round 7). */}
         {c.type !== "CHANNEL" && !c.request && <CallButtons conversationId={id} canPost={c.canPost} archived={c.archived} serverCalling={calling} busy={myCall !== null} running={!!call} />}
-        {c.type === "CHANNEL" && (
-          <button
-            className="btn btn-ghost btn-sm"
-            onClick={() => navigate({ section: route.section, conversationId: id, panel: panelOpen ? null : "details" })}
-            aria-label={`${members(c.memberCount)}, show details`}
-          >
-            <UsersRound size={16} /> {c.memberCount}
-          </button>
-        )}
         {!c.voice && (
           <button
             className="icon-btn"
@@ -136,34 +145,8 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
             <Search size={18} />
           </button>
         )}
-        {c.type === "CHANNEL" && !c.voice && c.format !== "forum" && (
-          <button
-            className="icon-btn"
-            aria-pressed={route.panel === "threads"}
-            onClick={() => navigate({ section: route.section, conversationId: id, panel: route.panel === "threads" ? null : "threads" })}
-            aria-label="Threads"
-            title="Threads"
-          >
-            <MessagesSquare size={18} />
-          </button>
-        )}
-        {c.type === "CHANNEL" ? (
-          <>
-            {/* A voice channel has no messages to search or pin (batch B14). */}
-            {!c.voice && <PinnedButton conversationId={id} />}
-            <SecurityPadlock conversationId={id} />
-            <button
-              className="icon-btn"
-              aria-pressed={panelOpen}
-              onClick={() => navigate({ section: route.section, conversationId: id, panel: panelOpen ? null : "details" })}
-              aria-label={panelOpen ? "Hide details" : "Show details"}
-            >
-              <Info size={19} />
-            </button>
-          </>
-        ) : (
-          <ConversationMenu conversationId={id} route={route} />
-        )}
+        {/* B14b: a channel's header is its name and search; pins, threads and security are in its details. */}
+        {c.type !== "CHANNEL" && <ConversationMenu conversationId={id} route={route} />}
       </header>
 
       {c.type === "CHANNEL" && <AppUpdatesBar conversationId={id} />}

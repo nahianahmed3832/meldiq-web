@@ -330,10 +330,26 @@ button.e2ee-badge:hover {
   display: grid;
   place-items: center;
 }
+/*
+ * The whole shared frame, at its own proportions: the video fills the panel and is letterboxed inside it. (Sized as a
+ * grid child, its height used to come from its width instead, and the panel cut a tall share off: 2026-10-22.)
+ */
 .call-screen video {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: contain;
+}
+.call-screen-full {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: var(--media-scrim);
+  color: var(--on-media);
+}
+.call-screen:fullscreen {
+  border-radius: 0;
 }
 .call-screen .who {
   position: absolute;
@@ -350,8 +366,40 @@ button.e2ee-badge:hover {
   padding-bottom: 4px;
 }
 .call-strip .call-tile {
-  flex: 0 0 160px;
-  height: 110px;
+  flex: 0 0 132px;
+  height: 96px;
+  min-height: 0;
+  align-content: start;
+  padding-top: 12px;
+}
+/* A portrait share on a wide window: the people in a column beside it, so the screen keeps the full height. */
+.call-screen-layout.side {
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-rows: minmax(0, 1fr);
+}
+.call-screen-layout.side .call-strip {
+  flex-direction: column;
+  overflow: hidden auto;
+  padding: 0 0 0 2px;
+}
+.call-screen-layout.side .call-strip .call-tile {
+  flex: 0 0 96px;
+  width: 132px;
+}
+@media (max-width: 640px) {
+  .call-screen-layout,
+  .call-screen-layout.side {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr) auto;
+    padding: 0;
+  }
+  .call-screen-layout.side .call-strip {
+    flex-direction: row;
+    overflow: auto hidden;
+  }
+  .call-screen-layout.side .call-strip .call-tile {
+    flex: 0 0 132px;
+  }
 }
 .call-btn.on {
   background: var(--accent-soft);

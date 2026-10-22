@@ -1,7 +1,6 @@
-import { Pin, PinOff, X } from "lucide-react";
+import { PinOff, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useEngine, useOrbit } from "../../app/orbit";
-import { navigate, useRoute } from "../../app/router";
 import type { StoredMessage } from "../../model/types";
 import { shortWhen } from "../format";
 import { jumpTo } from "./jump";
@@ -22,25 +21,6 @@ export function usePinned(conversationId: string): StoredMessage[] {
     };
   }, [engine, conversationId, loaded]);
   return pinned;
-}
-
-/** The pin button in the conversation header (android round 7 PinnedButton), with how many are pinned. */
-export function PinnedButton({ conversationId }: { conversationId: string }) {
-  const route = useRoute();
-  const count = usePinned(conversationId).length;
-  const open = route.panel === "pinned";
-  return (
-    <button
-      className="icon-btn pin-btn"
-      aria-pressed={open}
-      onClick={() => navigate({ section: route.section, conversationId, panel: open ? null : "pinned" })}
-      aria-label={count ? `Pinned messages (${count})` : "Pinned messages"}
-      title="Pinned messages"
-    >
-      <Pin size={17} />
-      {count > 0 && <span className="pin-count">{count}</span>}
-    </button>
-  );
 }
 
 /**

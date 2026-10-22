@@ -6,6 +6,7 @@ import { MESSAGE_LAYOUTS, type Palette, PALETTES, type Prefs, setPrefs, TEXT_SIZ
 import { bytes } from "../format";
 import { Toggle } from "../components/Toggle";
 import { IntroPages } from "../auth/IntroPages";
+import { BackgroundNotifications } from "./BackgroundNotifications";
 
 const THEME_LABELS: Record<Prefs["theme"], string> = { system: "System", light: "Light", dark: "Dark" };
 const PALETTE_LABELS: Record<Palette, string> = { indigo: "Indigo", plum: "Plum", amber: "Amber" };
@@ -16,11 +17,12 @@ export function NotificationsPage() {
   const supported = typeof Notification !== "undefined";
   const [permission, setPermission] = useState<NotificationPermission | "unsupported">(supported ? Notification.permission : "unsupported");
   const enable = async (on: boolean) => {
-    if (!on) return setPrefs({ notifications: false });
+    if (!on) return setPrefs({ notifications: false, notifyChoice: "off" });
     if (!supported) return;
+    // Asked only here, on the person's own click, never at sign-in.
     const p = Notification.permission === "default" ? await Notification.requestPermission() : Notification.permission;
     setPermission(p);
-    setPrefs({ notifications: p === "granted" });
+    setPrefs({ notifications: p === "granted", notifyChoice: p === "granted" ? "on" : "unset" });
   };
   return (
     <>
@@ -34,11 +36,12 @@ export function NotificationsPage() {
                 ? "This browser doesn't support notifications."
                 : permission === "denied"
                   ? "Blocked in your browser's site settings. Allow notifications for this site there, then turn this on."
-                  : "A notification when a message arrives while you're looking elsewhere. Only while Meldiq is open in a tab."}
+                  : "A notification when a message or call arrives while you're looking elsewhere."}
             </small>
           </div>
           <Toggle label="Desktop notifications" checked={prefs.notifications && permission === "granted"} onChange={(v) => void enable(v)} />
         </div>
+        <BackgroundNotifications permission={permission} />
         <div className="setting">
           <div className="lines">
             <strong>Show message text</strong>

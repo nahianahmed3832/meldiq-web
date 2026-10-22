@@ -37,11 +37,26 @@ const zWs = z
     }
   }, "wsUrl must be a wss:// URL");
 
+/**
+ * Firebase Cloud Messaging for background notifications (the same Firebase project as the Android app): the project's
+ * public web-app settings and its Web Push key (VAPID public key), from Firebase console › Project settings. None of
+ * these is a secret. Without them the web shows notifications only while a Meldiq tab is open.
+ */
+const zFirebase = z.object({
+  apiKey: z.string().min(10).max(100),
+  projectId: z.string().regex(/^[a-z][a-z0-9-]{4,61}[a-z0-9]$/),
+  messagingSenderId: z.string().regex(/^\d{3,20}$/),
+  appId: z.string().regex(/^\d+:\d+:web:[0-9a-f]+$/, "firebase.appId must be a web app's id (1:…:web:…)"),
+  vapidKey: z.string().regex(/^[A-Za-z0-9_-]{80,100}$/, "firebase.vapidKey must be the Web Push key pair's public key"),
+});
+export type FirebaseWebConfig = z.infer<typeof zFirebase>;
+
 const zConfig = z.object({
   apiBase: zOrigin.default("").transform((v) => v.replace(/\/$/, "")),
   wsUrl: zWs.nullable().default(null),
   publicUrl: z.string().max(200).nullable().default(null),
   environment: z.enum(["development", "staging", "production"]).default("production"),
+  firebase: zFirebase.nullable().default(null),
 });
 export type RuntimeConfig = z.infer<typeof zConfig>;
 

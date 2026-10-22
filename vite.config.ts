@@ -1,6 +1,8 @@
 import react from "@vitejs/plugin-react";
 import { readFileSync } from "node:fs";
+import postcss from "postcss";
 import { defineConfig } from "vitest/config";
+import { lightDarkFallback } from "./build/lightDarkFallback";
 
 /** The web app's version, kept equal to the Android release it matches (package.json), shown in Settings › About. */
 const appVersion = (JSON.parse(readFileSync(new URL("./package.json", import.meta.url), "utf8")) as { version: string }).version;
@@ -32,12 +34,17 @@ const proxy = {
 export default defineConfig({
   plugins: [react()],
   define: { __APP_VERSION__: JSON.stringify(appVersion) },
-  server: { host: "127.0.0.1", port: 5173, strictPort: true, proxy },
+  // Colours for browsers without light-dark() (Safari before 17.5, every iPhone 8): build/lightDarkFallback.ts.
+  css: { postcss: { plugins: [lightDarkFallback(postcss)] } },
+  // The service worker's source lives under /src/sw/ in development: this lets it control the whole app ("/").
+  server: { host: "127.0.0.1", port: 5173, strictPort: true, proxy, headers: { "Service-Worker-Allowed": "/" } },
   preview: { host: "127.0.0.1", port: 4173, strictPort: true, proxy },
-  build: { target: "es2022", sourcemap: true },
+  // Oldest supported: Safari/iOS 16.4 (an iPhone 8 runs up to iOS 16.7), docs/MELDIQ_WEB_BROWSERS.md.
+  build: { target: ["es2022", "safari16.4"], sourcemap: true },
   test: {
     environment: "node",
     include: ["test/**/*.test.ts"],
+    setupFiles: ["test/support/legacyCurvesSetup.ts"],
     testTimeout: 30_000,
     hookTimeout: 30_000,
     coverage: {

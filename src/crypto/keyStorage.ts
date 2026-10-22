@@ -9,6 +9,9 @@ import { type Bytes, copy, randomBytes } from "./bytes";
  * with a non-extractable AES-256-GCM key that WebKit does store correctly, and only the wrapped bytes are kept; the
  * session uses a non-extractable copy. This protects the key at rest, but script running in the page could unwrap it,
  * which the non-extractable path prevents (docs/ORBIT_WEB_STATUS.md › Known limitations).
+ *
+ * Browsers without native Ed25519/X25519 (Safari before 17, legacyCurves.ts) keep both private keys this way: the signing
+ * key too ([ed25519KeysPersist] is false there).
  */
 
 export interface SealedPrivateKey {
@@ -35,19 +38,49 @@ export function x25519KeysPersist(): Promise<boolean> {
   return persists;
 }
 
-/** A new X25519 pair for the session, plus its sealed form for storage. The session's private key is non-extractable. */
-export async function generateSealedX25519(): Promise<{ pair: CryptoKeyPair; sealed: SealedPrivateKey }> {
-  const extractable = (await crypto.subtle.generateKey({ name: "X25519" }, true, ["deriveBits"])) as CryptoKeyPair;
+let signingPersists: Promise<boolean> | null = null;
+
+/** Whether this browser keeps Ed25519 CryptoKeys intact through structured cloning (false with the fallback curves). */
+export function ed25519KeysPersist(): Promise<boolean> {
+  signingPersists ??= (async () => {
+    try {
+      const k = await crypto.subtle.generateKey({ name: "Ed25519" }, false, ["sign", "verify"]);
+      const clone = structuredClone((k as CryptoKeyPair).privateKey);
+      return clone instanceof CryptoKey && clone.algorithm.name === "Ed25519";
+    } catch {
+      return false;
+    }
+  })();
+  return signingPersists;
+}
+
+type Curve = "X25519" | "Ed25519";
+const PRIVATE_USAGES: Record<Curve, KeyUsage[]> = { X25519: ["deriveBits"], Ed25519: ["sign"] };
+const PAIR_USAGES: Record<Curve, KeyUsage[]> = { X25519: ["deriveBits"], Ed25519: ["sign", "verify"] };
+
+/** A new pair for the session, plus its sealed form for storage. The session's private key is non-extractable. */
+async function generateSealed(curve: Curve): Promise<{ pair: CryptoKeyPair; sealed: SealedPrivateKey }> {
+  const extractable = (await crypto.subtle.generateKey({ name: curve }, true, PAIR_USAGES[curve])) as CryptoKeyPair;
   const wrappingKey = await crypto.subtle.generateKey({ name: "AES-GCM", length: 256 }, false, ["wrapKey", "unwrapKey"]);
   const iv = randomBytes(12);
   const wrapped = new Uint8Array(await crypto.subtle.wrapKey("pkcs8", extractable.privateKey, wrappingKey, { name: "AES-GCM", iv }));
   const sealed = { wrappingKey, iv, wrapped };
-  return { pair: { publicKey: extractable.publicKey, privateKey: await unsealX25519(sealed) }, sealed };
+  return { pair: { publicKey: extractable.publicKey, privateKey: await unseal(curve, sealed) }, sealed };
 }
 
+function unseal(curve: Curve, s: SealedPrivateKey): Promise<CryptoKey> {
+  return crypto.subtle.unwrapKey("pkcs8", copy(s.wrapped), s.wrappingKey, { name: "AES-GCM", iv: copy(s.iv) }, { name: curve }, false, PRIVATE_USAGES[curve]);
+}
+
+export const generateSealedX25519 = () => generateSealed("X25519");
+export const generateSealedEd25519 = () => generateSealed("Ed25519");
+
 /** The stored private key as a non-extractable CryptoKey. */
-export async function unsealX25519(s: SealedPrivateKey): Promise<CryptoKey> {
-  return crypto.subtle.unwrapKey("pkcs8", copy(s.wrapped), s.wrappingKey, { name: "AES-GCM", iv: copy(s.iv) }, { name: "X25519" }, false, ["deriveBits"]);
+export const unsealX25519 = (s: SealedPrivateKey): Promise<CryptoKey> => unseal("X25519", s);
+export const unsealEd25519 = (s: SealedPrivateKey): Promise<CryptoKey> => unseal("Ed25519", s);
+
+export async function importEd25519Public(raw: Uint8Array): Promise<CryptoKey> {
+  return crypto.subtle.importKey("raw", copy(raw), { name: "Ed25519" }, true, ["verify"]);
 }
 
 export async function importX25519Public(raw: Uint8Array): Promise<CryptoKey> {

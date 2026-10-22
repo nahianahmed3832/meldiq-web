@@ -31,6 +31,11 @@ export interface Prefs {
   /** Received photos load by themselves (android Download photos automatically); off: a click loads each one. */
   autoLoadPhotos: boolean;
   notifications: boolean;
+  /**
+   * Whether the person chose Desktop notifications themselves. Until they do, notifications follow the browser's
+   * permission for this site (granted in its site settings counts), instead of staying off although it was allowed.
+   */
+  notifyChoice: "unset" | "on" | "off";
   /** Groups and channels notify too (off: only direct messages and mentions of you; android Group notifications). */
   groupNotifications: boolean;
   /** Notifications make the system's sound (off: silent). */
@@ -70,6 +75,7 @@ const defaults: Prefs = {
   askBeforeLinks: false,
   autoLoadPhotos: true,
   notifications: false,
+  notifyChoice: "unset",
   groupNotifications: true,
   messageSound: true,
   callRingtone: true,
@@ -90,7 +96,7 @@ const defaults: Prefs = {
 function load(): Prefs {
   try {
     const raw = localStorage.getItem(KEY);
-    if (!raw) return defaults;
+    if (!raw) return { ...defaults, ...notificationChoice(defaults) };
     const stored = { ...defaults, ...(JSON.parse(raw) as Partial<Prefs>) };
     // Anything unknown (an older or tampered value) falls back to the default rather than reaching the page's attributes.
     return {
@@ -105,10 +111,22 @@ function load(): Prefs {
       noiseReduction: typeof stored.noiseReduction === "boolean" ? stored.noiseReduction : defaults.noiseReduction,
       shareMode: stored.shareMode === "motion" ? "motion" : "text",
       shareAudio: typeof stored.shareAudio === "boolean" ? stored.shareAudio : defaults.shareAudio,
+      ...notificationChoice(stored),
     };
   } catch {
     return defaults;
   }
+}
+
+const permitted = (): boolean => typeof Notification !== "undefined" && Notification.permission === "granted";
+
+/**
+ * Desktop notifications as chosen: on or off when the person chose; otherwise on if this site may notify. (Stored copies
+ * from before the choice existed say `notifications: false` by default, which said nothing about a choice.)
+ */
+export function notificationChoice(stored: Pick<Prefs, "notifications"> & Partial<Pick<Prefs, "notifyChoice">>, granted: boolean = permitted()): Pick<Prefs, "notifications" | "notifyChoice"> {
+  const choice = stored.notifyChoice === "on" || stored.notifyChoice === "off" ? stored.notifyChoice : stored.notifications ? "on" : "unset";
+  return { notifyChoice: choice, notifications: choice === "on" || (choice === "unset" && granted) };
 }
 
 let current: Prefs = load();
@@ -127,6 +145,12 @@ export function setPrefs(change: Partial<Prefs>): void {
   }
   applyTheme(current);
   for (const l of [...listeners]) l();
+}
+
+/** Called after every change (the service worker's copy of the notification choices). Returns the unsubscribe. */
+export function subscribePrefs(l: () => void): () => void {
+  listeners.add(l);
+  return () => listeners.delete(l);
 }
 
 export function usePrefs(): Prefs {

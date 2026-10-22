@@ -419,3 +419,32 @@ a.icon-btn {
 .avatar .presence.on {
   background: var(--presence-on);
 }
+
+/*
+ * Touch screens (2026-10-22, "the page zooms"): iOS Safari zooms the whole page into any field whose text is smaller
+ * than 16px when it's focused, so fields are 16px there. Taps on controls don't wait for, or trigger, double-tap zoom.
+ * Pinch zoom stays as it is everywhere.
+ */
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+@media (pointer: coarse) {
+  input:not([type="checkbox"], [type="radio"], [type="range"], [type="color"], [type="file"]),
+  textarea,
+  select {
+    font-size: max(16px, 1em) !important;
+  }
+}
+button,
+a,
+label,
+summary,
+select,
+[role="button"],
+[role="tab"],
+[role="menuitem"],
+[role="option"],
+.list-row {
+  touch-action: manipulation;
+}

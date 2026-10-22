@@ -1,7 +1,7 @@
 import { type DBSchema, type IDBPDatabase, openDB } from "idb";
 import type { QueueItem } from "../api/schemas";
 import { fromB64 } from "../crypto/bytes";
-import { importX25519Public, unsealX25519 } from "../crypto/keyStorage";
+import { importEd25519Public, importX25519Public, unsealEd25519, unsealX25519 } from "../crypto/keyStorage";
 import type { ConversationLocal, DeviceRecord, OutboxItem, PinnedIdentity, StoredMessage } from "../model/types";
 
 /**
@@ -93,16 +93,19 @@ export class LocalStore {
   async device(): Promise<DeviceRecord | null> {
     const d = (await this.db.get("kv", "device")) as DeviceRecord | undefined;
     if (!d) return null;
-    const sealed = d.keys.sealedEncryption;
-    if (!sealed) return d;
-    // Stored sealed (WebKit): rebuild the session's non-extractable encryption key pair.
-    const encryption = { privateKey: await unsealX25519(sealed), publicKey: await importX25519Public(fromB64(d.keys.encryptionPublic)) };
-    return { ...d, keys: { ...d.keys, encryption } };
+    const { sealedEncryption, sealedSigning } = d.keys;
+    // Stored sealed (WebKit's X25519; both keys where the browser lacks native Ed25519/X25519): rebuild the session's
+    // non-extractable key pairs.
+    const encryption = sealedEncryption ? { privateKey: await unsealX25519(sealedEncryption), publicKey: await importX25519Public(fromB64(d.keys.encryptionPublic)) } : d.keys.encryption;
+    const signing = sealedSigning ? { privateKey: await unsealEd25519(sealedSigning), publicKey: await importEd25519Public(fromB64(d.keys.signingPublic)) } : d.keys.signing;
+    return sealedEncryption || sealedSigning ? { ...d, keys: { ...d.keys, encryption, signing } } : d;
   }
 
   async saveDevice(d: DeviceRecord): Promise<void> {
     // A sealed encryption key is stored only in its sealed form: the browser couldn't read the CryptoKey back.
-    const stored = d.keys.sealedEncryption ? { ...d, keys: { ...d.keys, encryption: null } } : d;
+    // So is a sealed signing key.
+    const keys = { ...d.keys, ...(d.keys.sealedEncryption ? { encryption: null } : {}), ...(d.keys.sealedSigning ? { signing: null } : {}) };
+    const stored = d.keys.sealedEncryption || d.keys.sealedSigning ? { ...d, keys } : d;
     await this.db.put("kv", stored, "device");
   }
 

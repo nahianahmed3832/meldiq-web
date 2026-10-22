@@ -9,7 +9,8 @@ status is **`docs/product/MELDIQ_WEB_PARITY_MATRIX.md`**.
 - **Branch:** `meldiq-web-android-parity` on GitHub (pushed 2026-10-22 under the owner's name), pull request
   https://github.com/nahianahmed3832/meldiq-web/pull/1 into `main` (not merged: pushing `main` directly was refused by the
   session's permission check, so it waits for review). Local worktree: `orbit_web/.claude/worktrees/meldiq-web-android-parity-a6333c`.
-- **Production:** release **0.5.0-beta-4f4c289** live at https://web.meldiq.app since 2026-10-22 03:49 UTC (details below).
+- **Production:** release **0.5.0-beta-ea703df** live at https://web.meldiq.app since 2026-10-22 05:10 UTC (screen-share and
+  notification fixes, below); before it 0.5.0-beta-4f4c289 from 03:49 UTC.
 - **Commits, in order:**
 
 | Commit | Batches | What |
@@ -78,6 +79,85 @@ status is **`docs/product/MELDIQ_WEB_PARITY_MATRIX.md`**.
   **Not checked in production:** anything after signing in (no account was used), calls, phones.
 - Roll back: `bash /root/meldiq-web-0.5.0-beta-4f4c289/rollback.sh` on the VPS (previous: `0.2.4-beta-e9f8d2b`).
 - After PR #1 is merged, `main` matches production; until then a deploy built from `main` would roll these changes back.
+
+## Urgent fixes after release (2026-10-22, later; not deployed)
+
+**Screen sharing (reported with a laptop photo: a portrait phone screen cropped to a strip).**
+- Reproduced first with a new e2e test, `e2e/screen-share.spec.ts`. The native peer shares a frame with coloured edges;
+  at 1280×620 a 1920×1080 share was drawn 684 px tall in a 241 px panel.
+- Cause: the video's `height: 100%` didn't resolve inside the panel's auto-sized grid track. Its height came from its
+  width, and `overflow: hidden` cut it off, so `object-fit: contain` never applied.
+- Fix (`e35c55f`): the video fills the panel absolutely, letterboxed. A portrait share puts the people column beside
+  it; tiles are compact; there's a full-screen button.
+- The test passes for portrait and landscape at four window sizes, and checks that stopping the share restores the
+  layout.
+
+**Notifications.** See `MELDIQ_WEB_PUSH.md`.
+- Foreground fixes: notifications now follow the site's permission until the person chooses, a second message alerts
+  again, and clicks work after the tab is gone.
+- Background notifications through the Android app's Firebase project and the server's existing content-free wake-up:
+  no server change. The service worker signs in as this browser, reads (never acknowledges) the queue, and applies the
+  app's rules.
+- **Needs the owner's Firebase web app and Web Push key** (§3 there) and a deploy before it works in production.
+- Real Firebase delivery hasn't been tested. The service worker was tested with wake-ups delivered through Chromium's
+  DevTools protocol (`e2e/notifications.spec.ts`, 3 tests).
+
+**Checks:**
+- `vitest`: 86 files, 505 passed, 21 skipped, 0 failed (server 0.25.0).
+- Chromium e2e: 17 of 18 passed in the full run. The failure was the known intermittent video call test, which then
+  passed 2 of 2 on its own.
+
+### Release 0.5.0-beta-ea703df (2026-10-22 05:10 UTC, at the owner's request)
+
+- Built from `ea703df` (PR #2's head, not yet merged), with typecheck, lint, 347 unit tests and the build. Installed with the
+  same command as 4f4c289, **without** `MELDIQ_FIREBASE_CONFIG`: background notifications show "not set up for this site"
+  until the owner's Firebase web app and Web Push key exist (`MELDIQ_WEB_PUSH.md` §3); notifications with a tab open and
+  the screen-share fix are live.
+- Checked:
+  - `verify.sh` passed every check.
+  - `/sw.js` is served as `application/javascript`, `no-cache`, byte-identical to the build, and the page serves the new
+    bundle.
+  - The production service worker installs and activates under the live CSP (registered by hand in a test browser,
+    then removed). The sign-in page loads without console errors.
+  - `web.griipbuddy.cloud` still 301s.
+- Not checked in production: anything after signing in, calls, phones.
+- Roll back: `bash /root/meldiq-web-0.5.0-beta-ea703df/rollback.sh` (to 0.5.0-beta-4f4c289).
+- Until PR #2 is merged, a deploy built from `main` would roll these fixes back.
+
+## iPhone 8, phones and launch screen (2026-10-22, evening; not deployed)
+
+The owner's "complete master engineering prompt". Details in `MELDIQ_WEB_BROWSERS.md` (cause, policy, device checklist)
+and `MELDIQ_WEB_LAUNCH.md`. Mapped to existing batches (no B17): compatibility and phones under B13b (web parity),
+reactions and touch under B12/B14, the channel screen under B14b, the launch screen under B16.
+
+- **Cause of the iPhone 8 failure**, from MDN compatibility data and the code:
+  - WebCrypto Ed25519/X25519 need iOS 17 and `light-dark()` needs iOS 17.5; an iPhone 8 stops at 16.7.
+  - Meldiq's start-up check refused the browser before sign-in.
+  - Fixed with fallback curves (`@noble/curves` 1.9.7, sealed keys at rest), a generated colour fallback and a Safari
+    16.4 build target.
+  - Oldest supported: **Safari/iOS 16.4**.
+- **Phones:**
+  - 16px fields on touch screens (iOS focus zoom), no double-tap zoom, pinch zoom kept.
+  - The frame follows the visual viewport (iOS keyboard) and the safe areas.
+  - A tap toggles a reaction (the hover toolbar swallowed iOS taps); a long press opens quick reactions.
+- **B14b on the web:** `# name ›` header and the channel details tabs, as Android. `main`'s b07fe99 is merged
+  (`e918872`), so community channels have no Leave; the server refuses it in API 0.26.0.
+- **Launch screen:** the owner's 45 MB HEVC animation shipped as 60 KB H.264 over an 11 KB still; gone as soon as the
+  app shows anything.
+- **Bug found by the new production-build e2e:** sign-out could hang in WebKit; fixed.
+- **Commits:** `7752bbe`, `ba26c81`, `b3463bf`, `f980216`, `c2ee581` (plus docs), on `meldiq-web-android-parity` with
+  PR #2's commits.
+- **Checks:**
+  - `vitest`: 89 files, 521 passed, 0 failed; with the fallback forced (`ORBIT_LEGACY_CURVES=1`), 512 passed, 0 failed.
+  - Full e2e in Chromium, WebKit and at phone width: 62 passed, 8 skipped, 2 failed. One was the known intermittent
+    video call (it passed 2 of 2 alone); the other was the emoji test hovering at phone width, now updated for the long
+    press and passing in all three.
+  - The new and core specs on the production build: all passed.
+- **Not done:**
+  - any physical device (the checklist is in `MELDIQ_WEB_BROWSERS.md` §5);
+  - Safari 16 itself;
+  - drag to reorder;
+  - timeline media sizing (DM-06).
 
 ## Open items
 

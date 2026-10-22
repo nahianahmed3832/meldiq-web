@@ -257,3 +257,9 @@ export function micLevel(samples: ArrayLike<number>): number {
   for (let i = 0; i < samples.length; i++) sum += samples[i] * samples[i];
   return Math.min(1, Math.max(0, Math.sqrt(Math.sqrt(sum / samples.length))));
 }
+
+/** A received screen share's shape, from its frame size: a phone held upright is portrait. Null before the first frame. */
+export function frameShape(width: number, height: number): "portrait" | "landscape" | null {
+  if (!width || !height) return null;
+  return height > width ? "portrait" : "landscape";
+}

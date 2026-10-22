@@ -37,7 +37,8 @@ import type { StoredMessage } from "../../model/types";
 import { Avatar } from "../components/Avatar";
 import { callLine } from "../../sync/callHistory";
 import { ForwardDialog } from "../dialogs/ForwardDialog";
-import { Dialog, Menu, useMenu } from "../components/Overlay";
+import { Dialog, Menu, type MenuEntry, useMenu } from "../components/Overlay";
+import { useLongPress } from "./longPress";
 import { clock, fullTime } from "../format";
 import { isWebUrl } from "../../protocol/payload";
 import { Attachments } from "./Attachments";
@@ -106,6 +107,8 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
   const saved = useOrbit((st) => st.nav[PERSONAL]?.saved?.find((x) => x.messageId === m.id));
   const more = useMenu();
   const picker = useMenu();
+  // Touch screens have no hover toolbar: a long press opens the menu with quick reactions, reply and the rest.
+  const [pressed, setPressed] = useState(false);
   const mine = m.outgoing;
   const mentioned = !mine && (m.mentions.includes(p.myUserId) || m.mentionAll);
   const live = m.kind === "text" && !m.deleted;
@@ -221,8 +224,54 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
   };
 
   const reactions = Object.entries(m.reactions);
+  const press = useLongPress(
+    (el) => {
+      setPressed(true);
+      more.open(el);
+    },
+    !editing && m.kind !== "call",
+  );
+  const quickRow: MenuEntry[] =
+    pressed && live && p.canPost
+      ? [
+          {
+            custom: (
+              <div className="menu-quick" role="group" aria-label="Quick reactions">
+                {QUICK_EMOJI.map((e) => (
+                  <button
+                    key={e}
+                    className="icon-btn quick-emoji"
+                    aria-label={`React ${e}`}
+                    onClick={() => {
+                      more.close();
+                      void engine.react(m, e);
+                    }}
+                  >
+                    {e}
+                  </button>
+                ))}
+                <button
+                  className="icon-btn"
+                  aria-label="Add reaction"
+                  onClick={() => {
+                    const anchor = more.anchor;
+                    more.close();
+                    if (anchor) picker.open(anchor);
+                  }}
+                >
+                  <SmilePlus size={18} />
+                </button>
+              </div>
+            ),
+          },
+          { label: "Reply", icon: <MessageSquareReply size={16} />, onSelect: () => p.onReply(m) },
+          ...(p.onThread && !m.threadRootId ? [{ label: "Reply in thread", icon: <MessagesSquare size={16} />, onSelect: () => p.onThread?.(m) }] : []),
+          "separator",
+        ]
+      : [];
   return (
     <div
+      {...press}
       className={`msg${mine ? " mine" : ""}${p.first ? " first" : ""}${mentioned ? " mentioned" : ""}${p.highlighted ? " highlight" : ""}${more.anchor || picker.anchor ? " menu-open" : ""}`}
       id={`msg-${m.id}`}
       role="article"
@@ -333,8 +382,12 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
           anchor={more.anchor}
           align="end"
           label="Message"
-          onClose={more.close}
+          onClose={() => {
+            more.close();
+            setPressed(false);
+          }}
           entries={[
+            ...quickRow,
             ...(mine && p.canPost ? [{ label: "Edit", icon: <Pencil size={16} />, onSelect: () => setEditing(true) }] : []),
             ...(p.canPost
               ? [{ label: m.pinned ? "Unpin" : "Pin to conversation", icon: m.pinned ? <PinOff size={16} /> : <Pin size={16} />, onSelect: () => void engine.setPinned(m, !m.pinned) }]

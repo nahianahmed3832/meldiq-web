@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { ApiClient } from "../src/api/client";
 import { CallManager, type CallHost, type CallTarget } from "../src/call/manager";
-import { audioProcessing, deafenChange, micLevel, SHARE_MODES, shareModeOf } from "../src/call/rules";
+import { audioProcessing, deafenChange, frameShape, micLevel, SHARE_MODES, shareModeOf } from "../src/call/rules";
 import { Store } from "../src/state/store";
 import { MediaRig } from "./support/fakeMedia";
 
@@ -89,5 +89,14 @@ describe("call controls", () => {
     expect(host.state.get().call).toMatchObject({ shareMode: null, shareAudio: false });
     rig.last?.events.shareEnded?.("Bo");
     expect(host.state.get().call.notice).toBe("Bo stopped sharing their screen");
+  });
+});
+
+describe("a shared screen's shape (screen-share crop fix, 2026-10-22)", () => {
+  it("is portrait when taller than wide, landscape otherwise, unknown before the first frame", () => {
+    expect(frameShape(540, 1170)).toBe("portrait");
+    expect(frameShape(1920, 1080)).toBe("landscape");
+    expect(frameShape(1000, 1000)).toBe("landscape");
+    expect(frameShape(0, 0)).toBeNull();
   });
 });

@@ -1,6 +1,6 @@
 # Meldiq Web parity matrix (Android batches B1–B16)
 
-Updated 2026-10-22. One row per behaviour. **The web is not at full parity:** rows marked *not started*, *specified*,
+Updated 2026-10-22 (and later the same day: iPhone 8 / Safari 16.4+, phones, launch screen, B14b). One row per behaviour. **The web is not at full parity:** rows marked *not started*, *specified*,
 *implementing* or *blocked*, and every row's "Known limitations" column, name what is missing or unverified.
 
 ## Sources and how this was checked
@@ -46,12 +46,16 @@ Columns: **ID** · **Android** · **Web** · **UI changes** · **Backend changes
 |---|---|---|---|---|---|---|---|---|---|
 | AUTH-01 Recovery choices only behind help links (B1) | Approved (phone-tested by owner) | Sign in shows only email and password; "Having trouble signing in?" and "Can't access your email?" lead to the choices | None this round (already matched) | None | Key backup unlock by emailed code; recovery codes | Existing auth tests; seen by hand 2026-10-22 (sign-in, unlock by code) | Stacks on phone width | tested | Not tried against production this round |
 | AUTH-02 Intro pages | Communities and roles pages replaced connectors and HR (2026-10-21) | Same five pages and copy | `IntroPages.tsx`; tagline "Your people, on every screen" | None | None (per-browser "seen" flag) | Seen by hand | Full-screen | tested | — |
+| AUTH-03 iPhone 8 / Safari 16.4+ (2026-10-22) | — | Fixed: the app refused iOS 16 (no WebCrypto Ed25519/X25519 before iOS 17, no light-dark() before 17.5). Fallback curves (@noble/curves), sealed signing key, generated colour fallback, Safari 16.4 build target | `legacyCurves.ts`, `keyStorage.ts`, `build/lightDarkFallback.ts`, `vite.config.ts` | None | Same algorithms and bytes; on old browsers private keys live in page memory, sealed at rest (`MELDIQ_WEB_BROWSERS.md` §1) | `legacy-curves`, `light-dark-fallback`, `keystorage`; whole suite with `ORBIT_LEGACY_CURVES=1`; e2e `legacy-safari.spec.ts` (Chromium and WebKit with native curves removed), production build too | — | tested | **Not on a real iPhone 8 or Safari 16** (Playwright WebKit is current): device checklist in `MELDIQ_WEB_BROWSERS.md` §5 |
+| AUTH-04 Launch screen (Discord-like) | Built (Android splash) | The brand animation, 60 KB H.264 from the owner's 45 MB HEVC, over an 11 KB still shown at first paint; reduced motion and Data Saver: still only; gone as soon as the app shows anything | `index.html`, `splash.ts`, `public/launch/` | None | — | e2e `launch.spec.ts` (Chromium, WebKit, phone width; dev and production builds) | Centred, `min(62vmin, 320px)` | tested | Not seen on a physical phone |
 
 ### B. Navigation and shell
 
 | ID | Android | Web | UI changes | Backend changes | Data and permissions | Tests | Responsive | Status | Known limitations |
 |---|---|---|---|---|---|---|---|---|---|
 | NAV-01 Community rail order (B2) | Approved | Drag order synced to every device | Sidebar rail | None (nav preferences) | `/v1/me/preferences/:id` `railOrder` | `live-nav`, `community-rules` | Rail at all widths | tested | — |
+| NAV-07 Notifications while a tab is open | Built | Fixed: Desktop notifications follow the site's permission until chosen; a second message alerts again (renotify); clicks work after the tab is gone | `prefs.ts`, `boot.ts`, `webPush.ts` | None | Local choices | `push-rules.test.ts` | — | tested | — |
+| NAV-08 Phones: zoom, keyboard, safe areas | — | Fixed: fields 16px on touch screens (iOS focus zoom), no double-tap zoom on controls, pinch zoom kept; the frame follows the visual viewport (iOS keyboard) and the safe areas (Home Screen) | `base.css`, `viewport.ts`, `layout.css`, `index.html` | None | — | e2e `viewports.spec.ts` at 320–1440 px (no sideways scroll, composer on screen) | All required sizes | implemented | The iOS keyboard and Home Screen layout need the device checklist; emulation can't open an iOS keyboard |
 | NAV-02 Community notification level and Ignore @everyone (B2) | Approved | Community menu › Notifications | `NotifyDialogs` | None | NavPrefs `community {level, suppressEveryone}`; receiver drops @everyone when set | `community-rules`, `live-nav` | Dialog | tested | — |
 | NAV-03 Timed mutes, category levels, hidden channels (B3) | Approved | Channel and category menus; level resolution timed mute → own → category → community | `CommunityPanel`, `NotifyDialogs` | None | NavPrefs `mutedUntil`, `categoryNotify`, `hidden` | `community-rules`, `live-nav` | Menus | tested | — |
 | NAV-04 Unreads view (B5) | Built, not phone-tested | Activity › Unreads grouped by community | `Activity` | None | Local unread state | unit (`unreadGroups`) | List | tested | — |
@@ -71,6 +75,7 @@ Columns: **ID** · **Android** · **Web** · **UI changes** · **Backend changes
 | COM-07 Guide and onboarding questions (B8b) | Built | Guide card on Home, onboarding banner and dialog, settings pages | `GuideOnboarding`, `GuidePages` | **Gap:** onboarding changes aren't broadcast (no `org.updated`) | Answers may grant roles (server) | `guide-rules`, `live-forum-guide` | Cards | tested | Other members see onboarding edits only after a refresh (server) |
 | COM-08 Community emoji and stickers (B9) | Built | Upload, rename, remove; picker section; stickers; images shown only if the SHA-256 matches | `ExpressionsPage`, `EmojiPicker`, `CustomEmoji` | None | Managers only (403 for members); `customEmoji`/`customSticker` refs inside E2EE payload | `expression-rules`, `live-expressions` | Grid | tested | — |
 | COM-09 Community emoji reactions (B12) | Built | `:name:` reactions in community channels only | `ReactionEmoji` | None | Receiver rejects `:name:` outside communities | `live-expressions` | — | tested | — |
+| COM-11 Reactions by touch | Built | A tap toggles a reaction; a long press opens the message menu with quick reactions and Add reaction; a scroll never does; hover-only toolbar where there's hover | `longPress.ts`, `MessageItem.tsx`, `conversation.css` | None | — | `long-press.test.ts`; e2e `touch.spec.ts` (phone width) | Phones | tested | Touch emulated in Chromium, not iOS Safari; message text isn't selectable by long press on touch screens ("Copy text" is in the menu) |
 | COM-10 Role hoist and member groups (B12) | Built | Hoisted roles group the member list | `RoleEditor`, `PeoplePage` | None | `role-hoist` | unit (`memberGroups`) | List | tested | — |
 
 ### D. Categories and channels
@@ -85,6 +90,7 @@ Columns: **ID** · **Android** · **Web** · **UI changes** · **Backend changes
 | CH-06 Threads list and message links (B5) | Built | Threads panel; copy message link; links open in the app | `ThreadsPanel`, `messageLinks`, `inAppLinks` | None | — | `message-links`, unit | Panel | tested | — |
 | CH-07 Voice channels have no messages (B14) | Built (API 0.25.0 refuses them) | Note in place of the composer | `ConversationView` (`df66b32`, merged) | Production 0.25.0 refuses | — | by hand 2026-10-22 | — | tested | — |
 | CH-08 Voice channel as a room page (B14) | Built: tiles, Join voice, Invite people, notices | Room page in place of the message list: who's in it (one tile full width, more two by two), Join voice or Open the call, Invite people, listen-only and no-permission notes, why Join is off; no search, pins or message box | `VoiceRoomView`, `voiceRoomRules` (replaces `VoiceRoomBanner`) | None | `voice.connect`, `voice.speak`; the server refuses messages (0.25.0) | `voice-room.test.ts`; e2e `voice-room.spec.ts` (Chromium and phone width: a native peer in the room, join, key exchange, Open the call) | Tiles two across at every width | tested | Tiles weren't looked at by hand with people in them (the local hand-check server has no calling); Invite people opens the community's invitations page, which needs the invite permission |
+| CH-09 Channel header and details (B14b) | Built (B14b) | `# name ›`, online with a dot or member count, search only; details: search, mute, settings, icon, name, kind, topic, tabs Members · Media · Pins · Threads · Links · Files (no Threads for forums, members only for voice), Manage channel access, Encryption and security; settings behind the gear; no Leave | `ConversationView.tsx`, `ChannelDetails.tsx`, `detailsRules.ts`, `ThreadsPanel.tsx` | Leaving a community channel refused (API 0.26.0, `leave_community`) | Manage channel access for channel managers (server checks) | `details-rules.test.ts`; e2e `viewports.spec.ts` (channel and its details at every size) | Phones: details full width | tested | Drag to reorder isn't built on the web (mouse or touch): channels, categories and the rail are ordered through Move up, Move down and Move to in their menus |
 
 ### E. Friends and people
 
@@ -126,10 +132,11 @@ Covered by COM-08 and COM-09; the full Unicode picker (search, categories, recen
 | CALL-01 Deafen (B10) | Built | Deafen pill; mic restored only if it was on; kept after reconnect | `CallStage`, `manager` | None | — | `call-controls`; e2e deafen (Chromium) passed | Pill row wraps | tested | Firefox and Safari not tried |
 | CALL-02 Noise reduction (B10) | Built | Settings › Calls, from the next call | `CallsPage`, prefs | None | Per browser | `call-controls` | Page | tested | Quality depends on the browser's own processing |
 | CALL-03 Pre-call check (B10) | Built | Level meter and camera preview; nothing sent | `CallsPage` (`PreCallCheck`) | None | Devices released on stop | `call-controls` (`micLevel`); page seen by hand | Page | implemented | The check itself wasn't run by hand (it asks for camera and microphone) |
-| CALL-04 Camera switch front/back (B10) | Built | Not built | — | — | — | — | — | not started | Browsers list devices rather than front/back; a device picker would be the web form |
+| CALL-04 Camera switch front/back (B10) | Built | The call's device menu (the settings button in a call) lists microphones, cameras and speakers and switches to the one chosen | `CallStage.tsx` (device menu), `livekitSession.ts` (`switchActiveDevice`) | None | — | none of its own | Menu | implemented | Correction (2026-10-22): this already existed; earlier rows said "not built". On phones the camera names are the browser's ("Front camera"/"Back camera" on most); not tried by hand |
 | CALL-05 Reconnect (B10) | Built | Existing reconnect | — | None | — | e2e "survives losing the network" passed | — | tested | — |
 | CALL-06 Screen share modes and sound (B11) | Built | Text and apps / Motion and video; tab or system sound where offered; stop from the browser bar ends cleanly | `ShareDialog`, `livekitSession` | None | — | `call-controls` | Dialog | tested | Shared sound only where the browser offers it (Chromium); not checked by hand on a real screen share |
 | CALL-07 Listen-only voice channels | Built | No microphone opened without `voice.speak`; no join without `voice.connect` | `manager`, `engine` | None | Server permissions | unit; e2e listen-only path | — | tested | — |
+| CALL-09 A shared screen shows whole (reported 2026-10-22) | — | Fix: the video is letterboxed inside its panel; a portrait share puts the people beside it; full-screen button | `CallStage.tsx`, `call.css` | None | — | e2e `screen-share.spec.ts`: 540×1170 and 1920×1080 shares at 1280×620, 1440×900, 820×560, 390×780, all edges inside, unstretched; stop sharing restores the layout (reproduced the crop first) | Side column on wide windows, strip under it on phones | tested | Not checked with a real phone sharing to a real browser |
 | CALL-08 Calls from the phone app | Built | Existing | — | None | E2EE media | e2e "video call from the phone app" | — | tested | Known intermittent: can stick at "Verifying encryption…" (passed this run) |
 
 ### J. Platform, admin and AI readiness
@@ -138,13 +145,17 @@ Covered by COM-08 and COM-09; the full Unicode picker (search, categories, recen
 |---|---|---|---|---|---|---|---|---|---|
 | ADM-01 Super-admin controls hidden from community admins | Built | Service health and platform pages only for platform admins | — | None | Server checks platform admin | Existing tests (`makePlatformAdmin`) | — | tested | — |
 | AI-01 No E2EE content to AI without consent | Consent per request (round 7 C8) | Same consent design, unchanged | — | None | Nothing sent without consent | Existing tests | — | tested | No new AI feature this round |
-| PLAT-01 Web Push | Phone notifications | Notifications only while a tab is open | — | Needs a Web Push service | — | — | — | blocked | Server and service work |
+| PLAT-01 Background notifications (Web Push through Firebase) | FCM wake-ups (phone-tested 2026-10-20) | Service worker shows what's waiting when Meldiq is closed (no text); this browser's FCM token registered for its device; page notifications through the worker; Settings states | `src/sw/*`, `webPush.ts`, `BackgroundNotifications.tsx` | None (existing `PUT /v1/devices/current/fcm`) | Same content-free `{"w":"1"}`; the worker signs in as this browser and reads, never acknowledges | `wake-rules`, `push-rules`, `config` tests; e2e `notifications.spec.ts` (Chromium; wake-up delivered through DevTools) | — | blocked | Needs the owner's Firebase web app and Web Push key (`MELDIQ_WEB_PUSH.md` §3) and a deploy; real Firebase delivery not tested; Brave needs Google push messaging allowed |
 | PLAT-02 Dates and interface in your language (B12) | Built (dates) | English only | — | — | — | — | — | not started | — |
 
 ## Open items, in order
 
 1. DM-06 timeline media sizing and quiet call notes (the last B14 item on the web).
-2. CALL-04 camera choice in a call; run the pre-call check by hand.
-3. Server: broadcast onboarding changes; files domain on MongoDB; Web Push.
-4. Owner checks: a phone with this web build, Safari and Firefox, a 1 GiB upload on a real network, production after an
+2. Drag to reorder channels, categories and the rail (mouse and long-press-and-drag), keeping personal and shared
+   ordering apart; the server already checks who may change shared order.
+3. The device checklist on a real iPhone 8, a newer iPhone and an Android phone (`MELDIQ_WEB_BROWSERS.md` §5).
+4. Run the pre-call check and the in-call device menu by hand (CALL-03, CALL-04).
+5. Owner: Firebase web app and Web Push key for background notifications (`MELDIQ_WEB_PUSH.md` §3), then a deploy.
+6. Server: broadcast onboarding changes; files domain on MongoDB.
+7. Owner checks: a phone with this web build, Safari and Firefox, a 1 GiB upload on a real network, production after an
    approved deployment.

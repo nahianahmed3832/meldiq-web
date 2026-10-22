@@ -1,12 +1,13 @@
 import { type Bytes, fromB64, sha256, toB64, utf8 } from "./bytes";
 import { generateSigningKeys, rawPublicKey } from "./ed25519";
 import { generateEncryptionKeys, open, rawX25519Public } from "./hpke";
-import { generateSealedX25519, type SealedPrivateKey, x25519KeysPersist } from "./keyStorage";
+import { ed25519KeysPersist, generateSealedEd25519, generateSealedX25519, type SealedPrivateKey, x25519KeysPersist } from "./keyStorage";
 
 /**
  * This browser's own device keys: non-extractable WebCrypto key pairs, kept in IndexedDB (structured clone). Where the
  * browser can't keep X25519 keys that way (WebKit), [sealedEncryption] holds the stored form of the encryption key and
- * [encryption] is rebuilt from it on load (crypto/keyStorage.ts).
+ * [encryption] is rebuilt from it on load (crypto/keyStorage.ts). Browsers without native Ed25519 (legacyCurves.ts) keep
+ * the signing key the same way, in [sealedSigning].
  */
 export interface DeviceKeys {
   signing: CryptoKeyPair;
@@ -16,11 +17,13 @@ export interface DeviceKeys {
   /** X25519 public key, base64. */
   encryptionPublic: string;
   sealedEncryption?: SealedPrivateKey;
+  sealedSigning?: SealedPrivateKey;
 }
 
 /** [sealEncryptionKey]: force the sealed form (tests); by default it's used only where the browser needs it. */
-export async function generateDeviceKeys(opts: { sealEncryptionKey?: boolean } = {}): Promise<DeviceKeys> {
-  const signing = await generateSigningKeys();
+export async function generateDeviceKeys(opts: { sealEncryptionKey?: boolean; sealSigningKey?: boolean } = {}): Promise<DeviceKeys> {
+  const sealSigning = opts.sealSigningKey ?? !(await ed25519KeysPersist());
+  const { pair: signing, sealed: sealedSigning } = sealSigning ? await generateSealedEd25519() : { pair: await generateSigningKeys(), sealed: undefined };
   const sealed = opts.sealEncryptionKey ?? !(await x25519KeysPersist());
   const { pair: encryption, sealed: sealedEncryption } = sealed ? await generateSealedX25519() : { pair: await generateEncryptionKeys(), sealed: undefined };
   return {
@@ -29,6 +32,7 @@ export async function generateDeviceKeys(opts: { sealEncryptionKey?: boolean } =
     signingPublic: toB64(await rawPublicKey(signing.publicKey)),
     encryptionPublic: toB64(await rawX25519Public(encryption.publicKey)),
     ...(sealedEncryption ? { sealedEncryption } : {}),
+    ...(sealedSigning ? { sealedSigning } : {}),
   };
 }
 

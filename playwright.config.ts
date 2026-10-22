@@ -96,10 +96,12 @@ export default defineConfig({
         ]
       : []),
     {
-      command: `npx vite --port ${WEB_PORT} --strictPort`,
+      // ORBIT_E2E_BUILD=1: the production bundle (what users get: minified, the built /sw.js, the Safari 16.4 target),
+      // served by `vite preview` with the same proxy; otherwise the development server.
+      command: process.env.ORBIT_E2E_BUILD === "1" ? `npm run -s build && npx vite preview --port ${WEB_PORT} --strictPort` : `npx vite --port ${WEB_PORT} --strictPort`,
       url: `http://127.0.0.1:${WEB_PORT}`,
       reuseExistingServer: false,
-      timeout: 60_000,
+      timeout: process.env.ORBIT_E2E_BUILD === "1" ? 240_000 : 60_000,
       env: { ORBIT_API_URL: `http://127.0.0.1:${API_PORT}`, ORBIT_E2E_FORWARD: "1" },
     },
   ],

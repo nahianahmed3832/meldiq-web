@@ -1,4 +1,4 @@
-import { Bell, BellOff, Fingerprint, Hash, Images, Lock, MessageSquare, Search, Shield, ShieldCheck, User, UserPlus, UsersRound } from "lucide-react";
+import { Bell, BellOff, Fingerprint, Hash, Lock, MessageSquare, Search, Shield, ShieldCheck, User, UserPlus, UsersRound } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { Conversation, Member } from "../../api/schemas";
 import { useEngine, useOrbit } from "../../app/orbit";
@@ -18,13 +18,13 @@ import { ConversationSettings } from "./ConversationSettings";
 import { type DetailsAction, DetailsActions, DetailsHero, DetailsTabBar, FilesTab, LinksTab, MediaTab, PinsTab } from "./DetailsTabs";
 import { type DetailsTab, detailsTabs } from "./detailsRules";
 import { galleryOf, linksOf } from "./gallery";
-import { MediaGalleryDialog } from "./MediaGalleryDialog";
 import { PanelHead } from "./PanelHead";
 import { usePinned } from "./PinnedPanel";
 import { SecuritySheet } from "./SecuritySheet";
+import { ChannelDetails } from "./ChannelDetails";
 
 /** A conversation's members, loaded again when someone joins or leaves (here or on another device). */
-function useMembers(conversationId: string, memberCount: number | undefined) {
+export function useMembers(conversationId: string, memberCount: number | undefined) {
   const engine = useEngine();
   const [members, setMembers] = useState<Member[] | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -44,14 +44,14 @@ function useMembers(conversationId: string, memberCount: number | undefined) {
 }
 
 /** Photos, videos, files and links in the messages this browser has loaded. */
-function useShared(conversationId: string) {
+export function useShared(conversationId: string) {
   const loaded = useOrbit((s) => s.messages[conversationId]?.items);
   const gallery = useMemo(() => galleryOf(loaded ?? []), [loaded]);
   const links = useMemo(() => linksOf(loaded ?? []), [loaded]);
   return { gallery, links };
 }
 
-function useSenderName() {
+export function useSenderName() {
   const users = useOrbit((s) => s.users);
   return (i: { outgoing: boolean; senderUserId: string }) => (i.outgoing ? "You" : (users[i.senderUserId]?.displayName ?? "Unknown"));
 }
@@ -60,38 +60,9 @@ export function DetailsPanel({ conversationId, onClose }: { conversationId: stri
   const c = useOrbit((s) => s.conversations[conversationId]);
   const me = useOrbit((s) => s.me);
   if (!c || !me) return null;
-  // Batch B14: a direct message or group has a details page of its own; a channel keeps its single page.
+  // Batches B14 and B14b: a direct message or group, and a channel, each have a details page like Android's.
   // Keyed by conversation: another conversation's details start on their own first tab, with nothing carried over.
   return c.type === "CHANNEL" ? <ChannelDetails key={c.id} c={c} onClose={onClose} /> : <ChatDetails key={c.id} c={c} me={me.userId} onClose={onClose} />;
-}
-
-function ChannelDetails({ c, onClose }: { c: Conversation; onClose: () => void }) {
-  const { members, error, reload } = useMembers(c.id, c.memberCount);
-  const { gallery } = useShared(c.id);
-  const nameOf = useSenderName();
-  const [galleryOpen, setGalleryOpen] = useState(false);
-  return (
-    <aside className="panel" aria-label="Details">
-      <PanelHead title="Details" sub={`#${c.name ?? "channel"}`} onClose={onClose} />
-      <div className="panel-body scroll">
-        <AboutCards c={c} />
-        <MembersList c={c} members={members} error={error} onAdded={reload} showAdd />
-        <button className="panel-action-row" onClick={() => setGalleryOpen(true)}>
-          <span className="circle">
-            <Images size={16} />
-          </span>
-          <span className="lines grow">
-            <span>Media and files</span>
-            <small>
-              {gallery.media.length} photos and videos · {gallery.files.length} files
-            </small>
-          </span>
-        </button>
-        {galleryOpen && <MediaGalleryDialog gallery={gallery} nameOf={nameOf} onClose={() => setGalleryOpen(false)} />}
-        <ConversationSettings conversationId={c.id} />
-      </div>
-    </aside>
-  );
 }
 
 /**
@@ -175,7 +146,7 @@ function ChatDetails({ c, me, onClose }: { c: Conversation; me: string; onClose:
 }
 
 /** The conversation's facts, and in a DM the safety number and blocking; a group's photo. */
-function AboutCards({ c }: { c: Conversation }) {
+export function AboutCards({ c }: { c: Conversation }) {
   const engine = useEngine();
   const me = useOrbit((s) => s.me);
   const peer = me && c.type === "DM" ? dmPeer(c, me.userId) : null;
@@ -280,7 +251,7 @@ interface MembersListProps {
   showAdd: boolean;
 }
 
-function MembersList({ c, members, error, onAdded, showAdd }: MembersListProps) {
+export function MembersList({ c, members, error, onAdded, showAdd }: MembersListProps) {
   const engine = useEngine();
   const me = useOrbit((s) => s.me?.userId);
   const memberIds = useMemo(() => new Set((members ?? []).map((m) => m.id)), [members]);

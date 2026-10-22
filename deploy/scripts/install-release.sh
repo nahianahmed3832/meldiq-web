@@ -11,6 +11,10 @@
 # still work. MELDIQ_REDIRECT_HOSTS (space-separated, e.g. "web.griipbuddy.cloud") are former addresses sent permanently
 # to the current one; each needs its own certificate. MELDIQ_MEDIA_ORIGIN is the S3 bucket's https origin that
 # /media/attachments/ may follow (default: the amazonaws.com entry of MELDIQ_CONNECT_EXTRA; none: that path refuses).
+# MELDIQ_FIREBASE_CONFIG is a JSON file with the Firebase web app's public settings and Web Push key (background
+# notifications, docs/MELDIQ_WEB_PUSH.md): {"apiKey","projectId","messagingSenderId","appId","vapidKey"}. With it,
+# config.json carries them and the page may reach Firebase's registration hosts; without it, background notifications
+# stay off (notifications still show while a tab is open).
 #
 # Steps: copy the files to /opt/meldiq-web/releases/<version>-<commit>, write its config.json, render the nginx site,
 # check nginx, switch /opt/meldiq-web/current to the new release, reload nginx. The previous release stays for rollback
@@ -60,9 +64,22 @@ env = os.environ.get("MELDIQ_ENVIRONMENT", "production").strip()
 if api and not re.fullmatch(r"https://[a-z0-9.-]+(:\d+)?", api): sys.exit("MELDIQ_API_BASE_URL must be empty or an https origin without a path")
 if ws and not ws.startswith("wss://"): sys.exit("MELDIQ_WS_URL must be a wss:// URL")
 if env not in ("development", "staging", "production"): sys.exit("MELDIQ_ENVIRONMENT must be development, staging or production")
-print(json.dumps({"apiBase": api, "wsUrl": ws, "publicUrl": web, "environment": env}, indent=2))
+out = {"apiBase": api, "wsUrl": ws, "publicUrl": web, "environment": env}
+fb_file = os.environ.get("MELDIQ_FIREBASE_CONFIG", "").strip()
+if fb_file:
+  fb = json.load(open(fb_file))
+  want = {"apiKey": r"[A-Za-z0-9_-]{10,100}", "projectId": r"[a-z][a-z0-9-]{4,61}[a-z0-9]", "messagingSenderId": r"\d{3,20}", "appId": r"\d+:\d+:web:[0-9a-f]+", "vapidKey": r"[A-Za-z0-9_-]{80,100}"}
+  for k, pattern in want.items():
+    if not isinstance(fb.get(k), str) or not re.fullmatch(pattern, fb[k]): sys.exit(f"MELDIQ_FIREBASE_CONFIG: {k} is missing or malformed")
+  out["firebase"] = {k: fb[k] for k in want}
+print(json.dumps(out, indent=2))
 PY
 }
+# Background notifications: the page registers its token with Firebase (Installations and FCM registrations).
+if [ -n "${MELDIQ_FIREBASE_CONFIG:-}" ]; then
+  [ -f "$MELDIQ_FIREBASE_CONFIG" ] || { echo "MELDIQ_FIREBASE_CONFIG: no such file" >&2; exit 1; }
+  CONNECT_EXTRA="$CONNECT_EXTRA https://firebaseinstallations.googleapis.com https://fcmregistrations.googleapis.com"
+fi
 
 mkdir -p "$base/releases"
 rm -rf "$target"
