@@ -3,6 +3,7 @@ import { expect, test } from "@playwright/test";
 import { expectSignedOut } from "./link";
 import { emailedCode } from "./mail";
 import { newPhone, testAddress } from "./phone";
+import { hold } from "./touchInput";
 
 /**
  * The full emoji picker (meldiq docs/EMOJI.md) in a real browser: search, skin tone, category tabs, typing an emoji
@@ -12,7 +13,7 @@ test.beforeEach(async ({ context }) => {
   await context.setExtraHTTPHeaders({ "x-orbit-test-ip": testAddress() });
 });
 
-test("search, skin tone and categories, into the composer and as a reaction", async ({ page }) => {
+test("search, skin tone and categories, into the composer and as a reaction", async ({ page, hasTouch }) => {
   const email = `e2e.${crypto.randomBytes(4).toString("hex")}@example.test`;
   await page.goto("/");
   await expectSignedOut(page);
@@ -47,8 +48,15 @@ test("search, skin tone and categories, into the composer and as a reaction", as
   await expect(page.getByRole("textbox", { name: /Message/ })).toHaveValue(/👍🏽/);
 
   // A reaction from the picker: the Flags tab jumps to its section; recent emoji come first next time.
-  await page.getByText("Pick an emoji").hover();
-  await page.getByRole("button", { name: "Add reaction" }).click();
+  // With a mouse: the message's toolbar on hover. On a touch screen: a long press opens its menu (longPress.ts).
+  const message = page.getByRole("article").filter({ hasText: "Pick an emoji" });
+  if (hasTouch) {
+    await hold(page, message, 650);
+    await page.getByRole("menu", { name: "Message" }).getByRole("button", { name: "Add reaction" }).click();
+  } else {
+    await message.hover();
+    await page.getByRole("button", { name: "Add reaction" }).click();
+  }
   await expect(page.getByRole("heading", { name: "Recently used" })).toBeVisible();
   await page.getByRole("tab", { name: "Flags" }).click();
   await expect(page.getByRole("tab", { name: "Flags" })).toHaveAttribute("aria-selected", "true");

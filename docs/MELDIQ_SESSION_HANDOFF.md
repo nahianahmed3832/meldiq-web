@@ -124,6 +124,41 @@ status is **`docs/product/MELDIQ_WEB_PARITY_MATRIX.md`**.
 - Roll back: `bash /root/meldiq-web-0.5.0-beta-ea703df/rollback.sh` (to 0.5.0-beta-4f4c289).
 - Until PR #2 is merged, a deploy built from `main` would roll these fixes back.
 
+## iPhone 8, phones and launch screen (2026-10-22, evening; not deployed)
+
+The owner's "complete master engineering prompt". Details in `MELDIQ_WEB_BROWSERS.md` (cause, policy, device checklist)
+and `MELDIQ_WEB_LAUNCH.md`. Mapped to existing batches (no B17): compatibility and phones under B13b (web parity),
+reactions and touch under B12/B14, the channel screen under B14b, the launch screen under B16.
+
+- **Cause of the iPhone 8 failure**, from MDN compatibility data and the code:
+  - WebCrypto Ed25519/X25519 need iOS 17 and `light-dark()` needs iOS 17.5; an iPhone 8 stops at 16.7.
+  - Meldiq's start-up check refused the browser before sign-in.
+  - Fixed with fallback curves (`@noble/curves` 1.9.7, sealed keys at rest), a generated colour fallback and a Safari
+    16.4 build target.
+  - Oldest supported: **Safari/iOS 16.4**.
+- **Phones:**
+  - 16px fields on touch screens (iOS focus zoom), no double-tap zoom, pinch zoom kept.
+  - The frame follows the visual viewport (iOS keyboard) and the safe areas.
+  - A tap toggles a reaction (the hover toolbar swallowed iOS taps); a long press opens quick reactions.
+- **B14b on the web:** `# name ›` header and the channel details tabs, as Android. `main`'s b07fe99 is merged
+  (`e918872`), so community channels have no Leave; the server refuses it in API 0.26.0.
+- **Launch screen:** the owner's 45 MB HEVC animation shipped as 60 KB H.264 over an 11 KB still; gone as soon as the
+  app shows anything.
+- **Bug found by the new production-build e2e:** sign-out could hang in WebKit; fixed.
+- **Commits:** `7752bbe`, `ba26c81`, `b3463bf`, `f980216`, `c2ee581` (plus docs), on `meldiq-web-android-parity` with
+  PR #2's commits.
+- **Checks:**
+  - `vitest`: 89 files, 521 passed, 0 failed; with the fallback forced (`ORBIT_LEGACY_CURVES=1`), 512 passed, 0 failed.
+  - Full e2e in Chromium, WebKit and at phone width: 62 passed, 8 skipped, 2 failed. One was the known intermittent
+    video call (it passed 2 of 2 alone); the other was the emoji test hovering at phone width, now updated for the long
+    press and passing in all three.
+  - The new and core specs on the production build: all passed.
+- **Not done:**
+  - any physical device (the checklist is in `MELDIQ_WEB_BROWSERS.md` §5);
+  - Safari 16 itself;
+  - drag to reorder;
+  - timeline media sizing (DM-06).
+
 ## Open items
 
 Listed in the matrix's last section. In short: timeline media sizing,

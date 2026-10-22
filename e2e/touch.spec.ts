@@ -1,6 +1,7 @@
-import { expect, type Locator, type Page, test } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 import { link } from "./link";
 import { newPhone, testAddress } from "./phone";
+import { hold } from "./touchInput";
 
 /**
  * Touch interactions on a phone-sized screen (2026-10-22): a tap on a reaction toggles it; a long press on a message opens
@@ -12,18 +13,6 @@ test.skip(({ hasTouch }) => !hasTouch, "touch screens only (the phone-width proj
 test.beforeEach(async ({ context }) => {
   await context.setExtraHTTPHeaders({ "x-orbit-test-ip": testAddress() });
 });
-
-/** A finger held on [target] for [ms], optionally sliding [dy] pixels (a scroll). */
-async function hold(page: Page, target: Locator, ms: number, dy = 0): Promise<void> {
-  const box = (await target.boundingBox())!;
-  const x = box.x + Math.min(40, box.width / 2);
-  const y = box.y + box.height / 2;
-  const ev = { pointerType: "touch", isPrimary: true, pointerId: 7, bubbles: true };
-  await target.dispatchEvent("pointerdown", { ...ev, clientX: x, clientY: y });
-  if (dy) await target.dispatchEvent("pointermove", { ...ev, clientX: x, clientY: y + dy });
-  await page.waitForTimeout(ms);
-  await target.dispatchEvent("pointerup", { ...ev, clientX: x, clientY: y + dy });
-}
 
 test("a tap toggles a reaction, a long press opens quick reactions, and scrolling opens nothing", async ({ page }) => {
   const alice = await newPhone("alice", "Alice Rahman");
