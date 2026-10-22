@@ -54,6 +54,14 @@ function loadRecent(): string[] {
     return [];
   }
 }
+/** Signing out forgets them: what someone searched for isn't left for the next person on this browser. */
+export function forgetRecentSearches(): void {
+  try {
+    localStorage.removeItem(RECENT_KEY);
+  } catch {
+    /* nothing stored */
+  }
+}
 function saveRecent(list: string[]): void {
   try {
     localStorage.setItem(RECENT_KEY, JSON.stringify(list));

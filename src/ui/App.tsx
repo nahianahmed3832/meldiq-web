@@ -3,6 +3,7 @@ import { createEngine, holdDeviceLock, missingCapabilities, startNotifications }
 import { hideSplash } from "../application/splash";
 import { EngineProvider } from "../application/orbit";
 import { resetPrefs } from "../application/prefs";
+import { forgetRecentSearches } from "./dialogs/SearchDialog";
 import type { AccountSessionGrant } from "../api/accountSchemas";
 import type { SessionGrant } from "../api/schemas";
 import { tokensOf } from "../auth/accountSession";
@@ -104,6 +105,7 @@ export function App() {
 
   const signedOut = useCallback(async () => {
     resetPrefs();
+    forgetRecentSearches();
     setBoot({ s: "signedOut", store: await LocalStore.open() });
   }, []);
 
