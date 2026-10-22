@@ -160,6 +160,7 @@ export function MessageList(props: MessageListProps) {
                 first={first}
                 senderName={m.outgoing ? me.displayName : nameOf(m.senderUserId)}
                 senderColor={m.outgoing ? me.avatarColor : (users[m.senderUserId]?.avatarColor ?? 0)}
+                senderPhotoRev={users[m.outgoing ? me.userId : m.senderUserId]?.photoRev}
                 myUserId={me.userId}
                 myUsername={me.username}
                 mentionNames={mentionNames}
@@ -211,6 +212,7 @@ export function ConversationStart({
   title,
   topic,
   color,
+  avatar,
   onManage,
 }: {
   type: string;
@@ -218,6 +220,8 @@ export function ConversationStart({
   title: string;
   topic: string | null;
   color: number;
+  /** The DM peer's or the group's own avatar (with its photo); initials otherwise. */
+  avatar?: ReactNode;
   /** Round 3 (the reference's "Add description" / "Add people"): opens the channel's details, for its managers. */
   onManage?: () => void;
 }) {
@@ -228,7 +232,7 @@ export function ConversationStart({
           {kind === "PRIVATE" ? <Lock size={22} /> : kind === "ANNOUNCEMENT" ? <Megaphone size={22} /> : <Hash size={24} />}
         </span>
       ) : (
-        <Avatar name={title} colorIndex={color} size={52} decorative />
+        (avatar ?? <Avatar name={title} colorIndex={color} size={52} decorative />)
       )}
       <h2>{type === "CHANNEL" ? `Welcome to #${title}` : title}</h2>
       <p>

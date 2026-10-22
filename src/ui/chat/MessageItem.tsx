@@ -34,7 +34,7 @@ import { useEngine, useOrbit } from "../../application/orbit";
 import { PERSONAL } from "../../sync/navPrefs";
 import { RemindMeDialog } from "../later/RemindMeDialog";
 import type { StoredMessage } from "../../model/types";
-import { Avatar } from "../components/Avatar";
+import { UserAvatar } from "../components/OrgAvatar";
 import { callLine } from "../../sync/callHistory";
 import { ForwardDialog } from "../dialogs/ForwardDialog";
 import { Dialog, Menu, type MenuEntry, useMenu } from "../components/Overlay";
@@ -66,6 +66,8 @@ export interface MessageItemProps {
   first: boolean;
   senderName: string;
   senderColor: number;
+  /** The sender's profile photo revision, where their privacy setting lets this account see it. */
+  senderPhotoRev?: number | null;
   myUserId: string;
   myUsername: string;
   /** Usernames of the people this message mentions (for highlighting). */
@@ -281,7 +283,7 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
       <div className="msg-gutter">
         {p.first ? (
           <button className="msg-avatar-btn" onClick={() => openProfile(m.senderUserId, p.senderName)} aria-label={`${p.senderName}'s profile`} tabIndex={-1}>
-            <Avatar name={p.senderName} colorIndex={p.senderColor} size={38} decorative />
+            <UserAvatar userId={m.senderUserId} name={p.senderName} colorIndex={p.senderColor} photoRev={p.senderPhotoRev} size={38} decorative />
           </button>
         ) : (
           <time dateTime={new Date(m.sortTs).toISOString()}>{clock(m.sortTs)}</time>

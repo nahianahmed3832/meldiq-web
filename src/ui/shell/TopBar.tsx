@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useEngine, useOrbit } from "../../application/orbit";
 import { setPrefs, usePrefs } from "../../application/prefs";
 import { navigate } from "../../application/router";
-import { Avatar } from "../components/Avatar";
+import { UserAvatar } from "../components/OrgAvatar";
 import { Menu, useMenu } from "../components/Overlay";
 import { mentionCount } from "../selectors";
 import { paused, statusLine } from "../../sync/status";
@@ -15,6 +15,7 @@ const CONN_LABEL = { online: "Online", connecting: "Connecting…", reconnecting
 export function TopBar({ onMenu, onSearch }: { onMenu: () => void; onSearch: () => void }) {
   const engine = useEngine();
   const me = useOrbit((s) => s.me);
+  const myPhoto = useOrbit((s) => (s.me ? s.users[s.me.userId]?.photoRev : null));
   const connection = useOrbit((s) => s.connection);
   const mentions = useOrbit(mentionCount);
   const prefs = usePrefs();
@@ -58,7 +59,7 @@ export function TopBar({ onMenu, onSearch }: { onMenu: () => void; onSearch: () 
           <Settings size={19} />
         </button>
         <button className="me-btn" onClick={(e) => profile.open(e.currentTarget)} aria-label="Your profile and settings" aria-haspopup="menu" aria-expanded={!!profile.anchor}>
-          <Avatar name={me?.displayName ?? "Me"} colorIndex={me?.avatarColor ?? 0} size={32} online={connection === "online"} decorative />
+          <UserAvatar userId={me?.userId ?? ""} name={me?.displayName ?? "Me"} colorIndex={me?.avatarColor ?? 0} photoRev={myPhoto} size={32} online={connection === "online"} decorative />
         </button>
         {profile.anchor && me && (
           <Menu
@@ -70,7 +71,7 @@ export function TopBar({ onMenu, onSearch }: { onMenu: () => void; onSearch: () 
               {
                 custom: (
                   <div className="row" style={{ padding: "8px 10px 10px", gap: 12 }}>
-                    <Avatar name={me.displayName} colorIndex={me.avatarColor} size={40} decorative />
+                    <UserAvatar userId={me.userId} name={me.displayName} colorIndex={me.avatarColor} photoRev={myPhoto} size={40} decorative />
                     <div className="grow">
                       <div className="ellipsis" style={{ fontWeight: 700 }}>
                         {me.displayName}

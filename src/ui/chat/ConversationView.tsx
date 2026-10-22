@@ -3,7 +3,7 @@ import { UNKNOWN } from "../../api/enums";
 import { ChannelGlyph } from "../community/ChannelDialogs";
 import { ForumView } from "./ForumView";
 import { presenceWords } from "../../sync/social";
-import { GroupAvatar } from "../components/OrgAvatar";
+import { GroupAvatar, UserAvatar } from "../components/OrgAvatar";
 import { RequestBar, RequestSentBanner } from "../people/RequestBar";
 import { VoiceRoomView } from "./VoiceRoomView";
 import { Archive, ArrowLeft, BellOff, ChevronRight, Phone, Search, ShieldAlert, Video } from "lucide-react";
@@ -12,7 +12,7 @@ import { shallowEqual, useEngine, useOrbit } from "../../application/orbit";
 import { navigate, type Route } from "../../application/router";
 import type { StoredMessage } from "../../model/types";
 import { CallFailure } from "../../call/rules";
-import { Avatar, colorIndexOf } from "../components/Avatar";
+import { colorIndexOf } from "../components/Avatar";
 import { conversationTitle, dmPeer, members, relative } from "../format";
 import type { ShellDialog } from "../shell/Shell";
 import { Composer, useFileDrop } from "./Composer";
@@ -34,6 +34,7 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
           username: p.username,
           name: u?.displayName ?? p.displayName,
           color: p.avatarColor,
+          photoRev: u?.photoRev ?? null,
           online: u?.online ?? null,
           presence: u?.presence ?? null,
           pronouns: u?.pronouns ?? null,
@@ -84,7 +85,7 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
           const titleBlock = (
             <>
               {c.type === "DM" ? (
-                <Avatar name={title} colorIndex={peer?.color ?? 0} size={34} online={peer?.online} presence={peer?.presence} decorative />
+                <UserAvatar userId={peer?.id ?? ""} name={title} colorIndex={peer?.color ?? 0} photoRev={peer?.photoRev} size={34} online={peer?.online} presence={peer?.presence} decorative />
               ) : c.type === "GROUP" ? (
                 <GroupAvatar conversationId={c.id} name={title} photoRev={c.photoRev} size={34} />
               ) : null}
@@ -209,6 +210,13 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
               title={title}
               topic={c.topic}
               color={peer?.color ?? colorIndexOf(c.id)}
+              avatar={
+                c.type === "DM" && peer ? (
+                  <UserAvatar userId={peer.id} name={title} colorIndex={peer.color} photoRev={peer.photoRev} size={52} decorative />
+                ) : c.type === "GROUP" ? (
+                  <GroupAvatar conversationId={c.id} name={title} photoRev={c.photoRev} size={52} />
+                ) : undefined
+              }
               onManage={c.type === "CHANNEL" && c.canManage ? () => navigate({ section: route.section, conversationId: id, panel: "details" }) : undefined}
             />
           }

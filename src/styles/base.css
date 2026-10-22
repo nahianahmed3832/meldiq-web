@@ -97,6 +97,14 @@ a.icon-btn {
   flex: 1;
   min-width: 0;
 }
+/* Text columns (`.lines`, grid where a screen makes it one): a column that may shrink, so a long name or preview ends
+   in an ellipsis inside its row instead of widening the row past its box (reported in the conversation list). */
+.lines {
+  grid-template-columns: minmax(0, 1fr);
+}
+.lines > * {
+  min-width: 0;
+}
 
 /* ───────────────────────── buttons, inputs ───────────────────────── */
 .btn {

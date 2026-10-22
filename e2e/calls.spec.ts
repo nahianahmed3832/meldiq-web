@@ -134,6 +134,63 @@ test("the browser calls the phone app; each side decrypts the other's audio", as
   }
 });
 
+/** Whether two boxes overlap. */
+const overlaps = (a: { x: number; y: number; width: number; height: number }, b: { x: number; y: number; width: number; height: number }) =>
+  a.x < b.x + b.width && b.x < a.x + a.width && a.y < b.y + b.height && b.y < a.y + a.height;
+
+test("a minimised call stays clear of the message box, can be dragged and moved with the keys, and messages still send", async ({ page }) => {
+  const { bob, dm } = await setUp(page);
+  await page.getByRole("link", { name: /Bob Chen/ }).click();
+  await page.getByRole("button", { name: "Start a voice call" }).click();
+  const call = await answerCall(bob, false);
+  try {
+    await expect(stage(page).getByRole("status")).toHaveText(/^\d+:\d\d$/, { timeout: 30_000 });
+    await stage(page).getByRole("button", { name: "Minimise the call" }).click();
+    const mini = page.getByRole("region", { name: "Call with Bob Chen" });
+    await expect(mini).toBeVisible();
+
+    // Reported: it sat on the Send button, so nothing could be sent during a call.
+    const box = page.getByLabel("Message Bob Chen");
+    await box.fill("Can you hear me?");
+    const send = page.getByRole("button", { name: "Send" });
+    expect(overlaps((await mini.boundingBox())!, (await send.boundingBox())!)).toBe(false);
+    expect(overlaps((await mini.boundingBox())!, (await box.boundingBox())!)).toBe(false);
+    await send.click();
+    await waitUntil(() => bob.received.find((m) => m.conversationId === dm && m.payload.text === "Can you hear me?"), 15_000, "the message during the call");
+
+    // Dragged by its grip: it follows the pointer and stays on screen.
+    const grip = mini.getByRole("button", { name: /Move the call window/ });
+    const view = page.viewportSize()!;
+    const dragTo = async (x: number, y: number) => {
+      const g = (await grip.boundingBox())!;
+      await page.mouse.move(g.x + g.width / 2, g.y + g.height / 2);
+      await page.mouse.down();
+      await page.mouse.move(x, y, { steps: 8 });
+      await page.mouse.up();
+    };
+    const target = { x: Math.round(view.width / 2), y: Math.round(view.height / 2) };
+    await dragTo(target.x, target.y);
+    const g = (await grip.boundingBox())!;
+    expect(Math.abs(g.x + g.width / 2 - target.x)).toBeLessThanOrEqual(2);
+    expect(Math.abs(g.y + g.height / 2 - target.y)).toBeLessThanOrEqual(2);
+    await dragTo(-500, -500); // past the corner: kept on screen
+    const corner = (await mini.boundingBox())!;
+    expect([Math.round(corner.x), Math.round(corner.y)]).toEqual([8, 8]);
+
+    // From the keyboard: the grip moves it with the arrow keys; the place is kept across a reload of the page.
+    await grip.focus();
+    await page.keyboard.press("ArrowRight");
+    await page.keyboard.press("ArrowDown");
+    expect([Math.round((await mini.boundingBox())!.x), Math.round((await mini.boundingBox())!.y)]).toEqual([24, 24]);
+    expect(await page.evaluate(() => localStorage.getItem("meldiq.miniCall.position"))).toBe(JSON.stringify({ x: 24, y: 24 }));
+
+    await mini.getByRole("button", { name: "Hang up" }).click();
+    await expect(mini).toBeHidden({ timeout: 10_000 });
+  } finally {
+    await call.media.leave();
+  }
+});
+
 test("media under the wrong key is reported as a problem and never shown as encrypted", async ({ page }) => {
   const { bob, dm } = await setUp(page);
   const call = await placeCall(bob, dm, true, { mediaKey: Buffer.alloc(32, 7).toString("base64") });
