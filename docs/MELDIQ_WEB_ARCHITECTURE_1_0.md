@@ -2,7 +2,8 @@
 
 The web part of the approved Architecture 1.0 plan (meldiq_android `docs/architecture/ARCHITECTURE_1_0_PLAN.md` §7.1,
 ADR 0008): canonical contracts, retired integrations removed, and the move to Next.js. Branch `nextjs-migration`
-(from `contract-fixtures`, from `main` = production 0.5.0-beta-b327e82). **Nothing here is deployed or pushed.**
+(from `contract-fixtures`, from `main` = production 0.5.0-beta-b327e82), PR #4. **In production since 2026-10-23 as
+0.5.0-beta-ff0dd9c** (§6).
 
 ## 1. Baseline (before any change: `contract-fixtures` 96ab083 = production + the contract test)
 
@@ -68,9 +69,7 @@ process, the nginx security headers.
 Compared with the Vite baseline: the three baseline failures are gone (the Firefox legacy test was fixed; the video
 call and deafen tests passed this time) and no test regressed.
 
-**Deployment readiness:** ready for the owner's review, not deployed. Before installing: check the live release,
-build from the reviewed commit with `deploy/scripts/build-release.sh`, install, run `verify.sh`, open the site on a
-phone. Rollback: `rollback.sh` (returns to the last Vite release; see `docs/MELDIQ_WEB_NEXTJS.md` §5).
+**Deployment readiness:** deployed on the owner's go-ahead (§6).
 
 **Unresolved / not checked here:**
 - Physical phones and Safari 16 itself (Playwright's WebKit is current); the device checklist is in
@@ -79,3 +78,22 @@ phone. Rollback: `rollback.sh` (returns to the last Vite release; see `docs/MELD
   (the compiled worker chunk is used). Harmless, but extra.
 - The version is still 0.5.0-beta: a bump is the owner's call.
 - The accounts and emoji browser specs can't run on a production build (they need the development hook).
+
+## 6. Production (2026-10-23, on the owner's go-ahead)
+
+- **Checked first:** the live web was 0.5.0-beta-b327e82 (nothing newer from another session); the live API had moved
+  to **0.27.0** (meldiq_android 7a17d3a). So the branch was tested again against a 0.27.0 server copy: unit + live
+  546 passed, 0 failed; browser tests on the production build with the production CSP 72 passed, 16 skipped, 8
+  failed (only the accounts and emoji specs that need the development hook, as before). CI on PR #4 passed.
+- **Release:** `meldiq-web-0.5.0-beta-ff0dd9c.tar.gz` (4.7 MB, SHA-256 `771c530af888…`), built with
+  `build-release.sh` from the branch tip ff0dd9c (typecheck, lint, unit tests and build inside), checked on the VPS
+  before unpacking; installed with the production command (no Firebase config, as before); `nginx -t` passed.
+- **verify.sh:** all checks passed, including the new ones: `/dms` is served by the app, no inline script.
+  `/_next/static/` is cached a year, `/sw.js` not cached.
+- **Live check** (Chromium, Firefox, WebKit, signed out): `/`, a deep path and an old hash link
+  (`/#/settings/devices` → `/settings/devices`) all show sign-in, no console error and no CSP violation; the launch
+  screen fades out.
+- **Not merged:** PR #4 wasn't merged when this was deployed (the merge needs the owner), so `main` is behind
+  production until it is. Deploying from `main` before then would roll this release back.
+- **Rollback:** `bash /root/meldiq-web-0.5.0-beta-ff0dd9c/rollback.sh` on the VPS returns to 0.5.0-beta-b327e82.
+- **Not checked:** signed-in flows on the live site and physical phones.
