@@ -7,6 +7,8 @@ import {
   CircleAlert,
   Clock,
   Copy,
+  Flag,
+  Link2,
   Forward,
   Info,
   Languages,
@@ -50,6 +52,8 @@ import { translationSupported } from "../../sync/translate";
 import { findMediaLink } from "../../sync/mediaLinks";
 import { usePrefs } from "../../app/prefs";
 import { EmojiPicker } from "./EmojiPicker";
+import { ReportDialog } from "./ReportDialog";
+import { canLink, messageLink } from "../../sync/messageLinks";
 
 export const QUICK_EMOJI = ["👍", "❤️", "😂", "🎉", "🙏", "👀"];
 
@@ -82,6 +86,10 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
   const [translating, setTranslating] = useState(false);
   const [translation, setTranslation] = useState<string | null>(null);
   const [reminding, setReminding] = useState(false);
+  const [reporting, setReporting] = useState(false);
+  const reportable = useOrbit((st) => st.server?.features.includes("reports") ?? false);
+  const conv = useOrbit((st) => st.conversations[m.conversationId]);
+  const orgName = useOrbit((st) => (conv?.orgId ? (st.orgs.find((o) => o.id === conv.orgId)?.name ?? null) : null));
   // Saved for later (android Home › Later): synced in the personal document when the server keeps saved items.
   const savable = useOrbit((st) => st.server?.features.includes("saved-items") ?? false);
   const { mediaCards } = usePrefs();
@@ -322,12 +330,26 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
             ...(live ? [{ label: "Forward…", icon: <Forward size={16} />, onSelect: () => setForwarding(true) }] : []),
             ...(m.text ? [{ label: "Copy text", icon: <Copy size={16} />, onSelect: () => void navigator.clipboard?.writeText(m.text) }] : []),
             ...(!mine && m.text && translationSupported() ? [{ label: "Translate…", icon: <Languages size={16} />, onSelect: () => setTranslating(true) }] : []),
+            ...(live && canLink(m.deleted, m.status)
+              ? [
+                  {
+                    label: "Copy message link",
+                    icon: <Link2 size={16} />,
+                    onSelect: () => {
+                      void navigator.clipboard?.writeText(messageLink(m.conversationId, m.id)).catch(() => undefined);
+                      engine.notice("info", "Message link copied. It opens only for people in this conversation.");
+                    },
+                  },
+                ]
+              : []),
             ...(mine ? [{ label: "Message info", icon: <Info size={16} />, onSelect: () => setInfo(true) }] : []),
+            ...(!mine && live && reportable && conv ? ["separator" as const, { label: "Report…", icon: <Flag size={16} />, danger: true, onSelect: () => setReporting(true) }] : []),
             ...(mine && p.canPost ? ["separator" as const, { label: "Delete for everyone", icon: <Trash2 size={16} />, danger: true, onSelect: () => setConfirmDelete(true) }] : []),
           ]}
         />
       )}
       {forwarding && <ForwardDialog message={m} onClose={() => setForwarding(false)} />}
+      {reporting && conv && <ReportDialog target={{ kind: "message", message: m, conversationId: m.conversationId, conversationType: conv.type, orgName }} onClose={() => setReporting(false)} />}
       {info && <MessageInfoDialog m={m} onClose={() => setInfo(false)} />}
       {translating && (
         <TranslateDialog

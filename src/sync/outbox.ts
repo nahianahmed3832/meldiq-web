@@ -165,6 +165,12 @@ export class Outbox {
       await store.putOutbox({ ...o, nextAttemptAt: Date.now() + OFFLINE_RETRY_MS, lastError: e.message });
       return "offline";
     }
+    // Batch B3 slowmode: the server says when this person may post next. The message waits until then, as on the phone,
+    // without using up its attempts (a slowmode can be hours long).
+    if (e instanceof ApiError && e.code === "slowmode") {
+      await store.putOutbox({ ...o, nextAttemptAt: slowmodeRetryAt(e, Date.now()), lastError: e.message });
+      return "done";
+    }
     if (e instanceof ApiError && e.isTransient && o.attempts + 1 < BACKOFF_MS.length) {
       const wait = Math.max(BACKOFF_MS[o.attempts] ?? BACKOFF_MS[BACKOFF_MS.length - 1], e.retryAfterMs ?? 0);
       await store.putOutbox({ ...o, attempts: o.attempts + 1, nextAttemptAt: Date.now() + wait, lastError: e.message });
@@ -174,4 +180,11 @@ export class Outbox {
     if (o.visible) await this.onFailed(o.messageId, "FAILED", e instanceof ApiError ? e.message : "Couldn't encrypt this message");
     return "done";
   }
+}
+
+/** When a message refused by slowmode may go out: the server's nextPostAt, else its retryAfter, plus a small margin. */
+export function slowmodeRetryAt(e: ApiError, now: number): number {
+  const d = (e.details ?? {}) as { nextPostAt?: unknown; retryAfter?: unknown };
+  const at = typeof d.nextPostAt === "number" ? d.nextPostAt : now + (typeof d.retryAfter === "number" ? d.retryAfter * 1000 : (e.retryAfterMs ?? 5_000));
+  return Math.max(now + 250, at + 250);
 }

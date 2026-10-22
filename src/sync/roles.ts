@@ -41,6 +41,7 @@ export const zRole = z.object({
   archived: z.boolean().default(false),
   canEdit: z.boolean().default(false),
   canAssign: z.boolean().default(false),
+  hoist: z.boolean().default(false),
 });
 export type Role = z.infer<typeof zRole>;
 
@@ -70,6 +71,8 @@ export interface RoleFields {
   color?: string | null;
   permissions?: string[];
   denies?: string[];
+  /** Batch B12: the role's people are listed under its own heading in the member list (servers with `role-hoist`). */
+  hoist?: boolean;
 }
 
 export async function createRole(engine: Engine, orgId: string, fields: RoleFields & { template?: string }): Promise<Role> {
@@ -111,10 +114,12 @@ const zAudit = z.object({
 });
 export type AuditPage = z.infer<typeof zAudit>;
 
-export async function auditLog(engine: Engine, orgId: string, before?: number | null, action?: string): Promise<AuditPage> {
+/** [actorId] (batch B4): only changes made by that person. */
+export async function auditLog(engine: Engine, orgId: string, before?: number | null, action?: string, actorId?: string): Promise<AuditPage> {
   const q = new URLSearchParams({ limit: "50" });
   if (before) q.set("before", String(before));
   if (action) q.set("action", action);
+  if (actorId) q.set("actorId", actorId);
   return engine.api.json("GET", `/v1/orgs/${enc(orgId)}/audit?${q}`, zAudit);
 }
 

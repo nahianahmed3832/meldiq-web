@@ -24,6 +24,9 @@ import { ProfileShareDialog } from "./ProfileCards";
 import { VoiceBar } from "./VoiceBar";
 import { AiCatchUpDialog, AiWriteDialog, useAiStatus } from "../ai/AiDialogs";
 import { catchUpMessages } from "../../sync/ai";
+import { slowmodeLabel, waitText } from "../../sync/communityRules";
+import { untilWhen } from "../format";
+import { useNow } from "../call/useNow";
 
 interface ComposerProps {
   conversation: Conversation;
@@ -60,6 +63,11 @@ export function Composer(props: ComposerProps) {
   const ai = useAiStatus(c.orgId ?? null);
   const canRecord = !props.threadRoot && voiceMime() !== null;
   const draftTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
+  // Batch B3 slowmode: when this person may post next (the server's answer, or one interval after their last message).
+  const slowed = c.type === "CHANNEL" && c.slowmodeSec > 0 && !c.slowmodeExempt;
+  const [lastSent, setLastSent] = useState(0);
+  const nextAt = slowed ? Math.max(c.nextPostAt ?? 0, lastSent + c.slowmodeSec * 1000) : 0;
+  const now = useNow(slowed && nextAt > Date.now());
 
   // Draft: restored when the conversation opens, saved as you type (main composer only).
   useEffect(() => {
@@ -166,6 +174,7 @@ export function Composer(props: ComposerProps) {
           },
         );
       } else await engine.sendText(c.id, body, opts);
+      if (slowed && !props.threadRoot) setLastSent(Date.now());
       setFiles([]);
       props.onCancelReply();
       engine.setTyping(c.id, false);
@@ -216,9 +225,11 @@ export function Composer(props: ComposerProps) {
           <Lock size={16} />
           {c.archived
             ? "This channel is archived. You can read it, but nobody can post."
-            : c.kind === "ANNOUNCEMENT"
-              ? "Only the people who manage this announcement channel can post here."
-              : "You can't post in this conversation."}
+            : c.timedOutUntil && c.timedOutUntil > Date.now()
+              ? `You're timed out in this community until ${untilWhen(c.timedOutUntil)}. You can read, but not post.`
+              : c.kind === "ANNOUNCEMENT"
+                ? "Only the people who manage this announcement channel can post here."
+                : "You can't post in this conversation."}
         </div>
       </div>
     );
@@ -235,6 +246,11 @@ export function Composer(props: ComposerProps) {
               <span className="faint">@{m.username}</span>
             </button>
           ))}
+        </div>
+      )}
+      {slowed && (
+        <div className="composer-slowmode" role="status" aria-live="polite">
+          {nextAt > now ? `Slowmode · you can send again in ${waitText(nextAt, now)}. Messages you send now go out then.` : `Slowmode is on: one message every ${slowmodeLabel(c.slowmodeSec)}.`}
         </div>
       )}
       <div className="composer">

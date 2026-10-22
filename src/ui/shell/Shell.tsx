@@ -13,6 +13,7 @@ import { CreateWorkspaceDialog, JoinWorkspaceDialog } from "../dialogs/Workspace
 import { SearchDialog } from "../dialogs/SearchDialog";
 import { CreateCommunityDialog } from "../community/CreateCommunityDialog";
 import { DiscoverDialog } from "../community/DiscoverDialog";
+import { JOIN_INVITE_EVENT } from "../chat/inAppLinks";
 import { ActivityView } from "../views/ActivityView";
 import { LaterView } from "../later/LaterView";
 import { HomeView } from "../views/HomeView";
@@ -33,7 +34,7 @@ export type ShellDialog =
   | { kind: "channels" }
   | { kind: "identity"; userId: string }
   | { kind: "createWorkspace" }
-  | { kind: "joinWorkspace" }
+  | { kind: "joinWorkspace"; code?: string }
   | { kind: "discover" }
   | null;
 
@@ -94,6 +95,13 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
       navigate({ section: isFullPage(route.section) ? "home" : route.section }, true);
     }
   }, [synced, known, route.conversationId, route.section, engine]);
+
+  // An invite link clicked inside a chat opens Join with its code (batch B4b).
+  useEffect(() => {
+    const onInvite = (e: Event) => setDialog({ kind: "joinWorkspace", code: String((e as CustomEvent).detail ?? "") });
+    window.addEventListener(JOIN_INVITE_EVENT, onInvite);
+    return () => window.removeEventListener(JOIN_INVITE_EVENT, onInvite);
+  }, []);
 
   useEffect(() => {
     const focus = () => engine.setFocused(document.visibilityState === "visible" && document.hasFocus());
@@ -169,7 +177,7 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
       {dialog?.kind === "newGroup" && <NewGroupDialog onClose={() => setDialog(null)} />}
       {dialog?.kind === "createWorkspace" && (communities ? <CreateCommunityDialog onClose={() => setDialog(null)} /> : <CreateWorkspaceDialog onClose={() => setDialog(null)} />)}
       {dialog?.kind === "discover" && <DiscoverDialog onClose={() => setDialog(null)} />}
-      {dialog?.kind === "joinWorkspace" && <JoinWorkspaceDialog onClose={() => setDialog(null)} />}
+      {dialog?.kind === "joinWorkspace" && <JoinWorkspaceDialog initialCode={dialog.code} onClose={() => setDialog(null)} />}
     </div>
   );
 }

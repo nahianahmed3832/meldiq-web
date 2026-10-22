@@ -68,3 +68,21 @@ export const TEAM_ONLY_PAGES: readonly string[] = ["structure", "inbox"];
 export function pageShownForKind(page: string, kind: "team" | "community", current: string | null = null): boolean {
   return kind === "team" || !TEAM_ONLY_PAGES.includes(page) || page === current;
 }
+
+/**
+ * The member list in groups (batch B12, android MemberGroups): each role shown separately heads its own group, in role
+ * order, and a person appears once, under their highest such role; everyone else comes last under Members (null).
+ */
+export function memberGroups<T extends { customRoles: { id: string; name: string; hoist: boolean; position: number; color: string | null }[] }>(
+  members: readonly T[],
+): { role: { id: string; name: string; color: string | null } | null; members: T[] }[] {
+  const top = (m: T) => m.customRoles.filter((r) => r.hoist).sort((a, b) => a.position - b.position)[0] ?? null;
+  const roles = new Map<string, { id: string; name: string; color: string | null; position: number }>();
+  for (const m of members) {
+    const r = top(m);
+    if (r && !roles.has(r.id)) roles.set(r.id, r);
+  }
+  const groups = [...roles.values()].sort((a, b) => a.position - b.position).map((r) => ({ role: { id: r.id, name: r.name, color: r.color }, members: members.filter((m) => top(m)?.id === r.id) }));
+  const rest = members.filter((m) => top(m) === null);
+  return rest.length ? [...groups, { role: null, members: rest }] : groups;
+}

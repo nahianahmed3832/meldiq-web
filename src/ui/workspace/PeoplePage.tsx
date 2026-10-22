@@ -4,7 +4,11 @@ import type { DirectoryMember, OrgAdminDetail, OrgRole } from "../../api/workspa
 import { useEngine, useOrbit } from "../../app/orbit";
 import { changeMember, directory, removeMember } from "../../sync/workspaces";
 import { setGuestExpiry } from "../../sync/workspaceC5";
-import { assignableRoles, removalAllowed, roleName, titleChangeAllowed } from "../../sync/workspaceRules";
+import { assignableRoles, memberGroups, removalAllowed, roleName, titleChangeAllowed } from "../../sync/workspaceRules";
+import { ban, setTimeout_ } from "../../sync/community";
+import { running, TIMEOUT_CHOICES } from "../../sync/reports";
+import { ReportDialog } from "../chat/ReportDialog";
+import { untilWhen } from "../format";
 import { UserAvatar } from "../components/OrgAvatar";
 import { Dialog, Menu, type MenuEntry, useMenu } from "../components/Overlay";
 import { useAction, useLoad } from "./useLoad";
@@ -47,23 +51,36 @@ export function PeoplePage({ detail }: { detail: OrgAdminDetail }) {
           />
         </form>
         <ErrorLine text={people.error} />
-        <ul className="ws-list" aria-label="Members" aria-busy={people.loading}>
-          {(people.data ?? []).map((m) => (
-            <MemberRow key={m.id} member={m} orgId={orgId} myRole={myRole} myId={engine.device.userId} owners={owners} onChanged={() => setVersion((v) => v + 1)} />
-          ))}
-          {people.data?.length === 0 && <li className="faint">No one matches.</li>}
-        </ul>
+        {memberGroups(people.data ?? []).map((g) => (
+          <section key={g.role?.id ?? "members"} aria-label={g.role?.name ?? "Members"}>
+            {(people.data ?? []).some((m) => m.customRoles.some((r) => r.hoist)) && (
+              <h3 className="ws-subhead" style={g.role?.color ? { color: g.role.color } : undefined}>
+                {g.role?.name ?? "Members"} — {g.members.length}
+              </h3>
+            )}
+            <ul className="ws-list" aria-label={g.role?.name ?? "Members"} aria-busy={people.loading}>
+              {g.members.map((m) => (
+                <MemberRow key={m.id} member={m} detail={detail} myRole={myRole} myId={engine.device.userId} owners={owners} onChanged={() => setVersion((v) => v + 1)} />
+              ))}
+            </ul>
+          </section>
+        ))}
+        {people.data?.length === 0 && <p className="faint">No one matches.</p>}
       </Card>
     </div>
   );
 }
 
-function MemberRow({ member: m, orgId, myRole, myId, owners, onChanged }: { member: DirectoryMember; orgId: string; myRole: OrgRole; myId: string; owners: number; onChanged: () => void }) {
+function MemberRow(props: { member: DirectoryMember; detail: OrgAdminDetail; myRole: OrgRole; myId: string; owners: number; onChanged: () => void }) {
+  const { member: m, detail, myRole, myId, owners, onChanged } = props;
+  const orgId = detail.org.id;
   const engine = useEngine();
   const menu = useMenu();
   const act = useAction();
-  const [editing, setEditing] = useState<"title" | "remove" | "expiry" | null>(null);
+  const [editing, setEditing] = useState<"title" | "remove" | "expiry" | "timeout" | "ban" | "report" | null>(null);
   const guestExpiry = useOrbit((st) => st.server?.features.includes("guest-expiry") ?? false);
+  const features = useOrbit((st) => st.server?.features ?? []);
+  const p = detail.permissions;
   const self = m.id === myId;
   const role = (m.orgRole ?? "MEMBER") as OrgRole;
   const roles = assignableRoles(myRole, role, self, owners);
@@ -71,6 +88,12 @@ function MemberRow({ member: m, orgId, myRole, myId, owners, onChanged }: { memb
   const canRemove = !self && removalAllowed(myRole, role, owners);
   // A guest's end date (round 7): set by people who can change member access, i.e. who may change this guest's role.
   const canExpire = role === "GUEST" && roles.length > 0 && guestExpiry;
+  // Timeouts and bans (MOD-05, MOD-06), mirroring the server's rule only to decide what to offer: never owners, admins
+  // only by the owner. The server checks again.
+  const lower = !self && role !== "OWNER" && (role !== "ADMIN" || myRole === "OWNER");
+  const canTimeout = lower && (p.isOwner || p.effective.includes("members.timeout"));
+  const canBan = lower && p.canBan && features.includes("community-moderation");
+  const timedOut = running(m.timeoutUntil);
   const entries: MenuEntry[] = [
     ...(canExpire ? [{ label: m.expiresAt ? "Change end date…" : "Set an end date…", onSelect: () => setEditing("expiry") }] : []),
     ...(roles.length ? [{ heading: "Role" } as const] : []),
@@ -79,7 +102,19 @@ function MemberRow({ member: m, orgId, myRole, myId, owners, onChanged }: { memb
       onSelect: () => void act.act(() => changeMember(engine, orgId, m.id, { role: r }).then(onChanged)),
     })),
     ...(canTitle ? [{ label: "Edit title…", onSelect: () => setEditing("title") }] : []),
-    ...(canRemove ? ["separator" as const, { label: "Remove from workspace…", danger: true, onSelect: () => setEditing("remove") }] : []),
+    ...(canTimeout
+      ? [
+          "separator" as const,
+          timedOut
+            ? { label: "End timeout", onSelect: () => void act.act(() => setTimeout_(engine, orgId, m.id, null, null).then(onChanged)) }
+            : { label: "Time out…", onSelect: () => setEditing("timeout") },
+        ]
+      : []),
+    ...(canRemove
+      ? ["separator" as const, { label: features.includes("community-channels") ? "Remove from community…" : "Remove from workspace…", danger: true, onSelect: () => setEditing("remove") }]
+      : []),
+    ...(canBan ? [{ label: "Ban…", danger: true, onSelect: () => setEditing("ban") }] : []),
+    ...(!self && features.includes("reports") ? [{ label: "Report…", onSelect: () => setEditing("report") }] : []),
   ];
   return (
     <li className="ws-row">
@@ -95,6 +130,11 @@ function MemberRow({ member: m, orgId, myRole, myId, owners, onChanged }: { memb
           {role === "GUEST" && m.expiresAt ? ` · guest until ${new Date(m.expiresAt).toLocaleDateString()}` : ""}
         </small>
       </span>
+      {timedOut && (
+        <span className="tag warn" title={`Until ${untilWhen(m.timeoutUntil!)}`}>
+          Timed out
+        </span>
+      )}
       <span className={`role-badge role-${role.toLowerCase()}`}>{roleName(role)}</span>
       {entries.length > 0 ? (
         <button className="icon-btn" aria-label={`Manage ${m.displayName}`} aria-haspopup="menu" onClick={(e) => menu.open(e.currentTarget)} disabled={act.busy}>
@@ -111,6 +151,11 @@ function MemberRow({ member: m, orgId, myRole, myId, owners, onChanged }: { memb
       )}
       {editing === "title" && <TitleDialog member={m} orgId={orgId} onClose={() => setEditing(null)} onSaved={onChanged} />}
       {editing === "expiry" && <ExpiryDialog member={m} orgId={orgId} onClose={() => setEditing(null)} onSaved={onChanged} />}
+      {editing === "timeout" && <TimeoutDialog member={m} orgId={orgId} onClose={() => setEditing(null)} onSaved={onChanged} />}
+      {editing === "ban" && <BanDialog member={m} orgId={orgId} onClose={() => setEditing(null)} onSaved={onChanged} />}
+      {editing === "report" && (
+        <ReportDialog target={{ kind: "person", userId: m.id, name: m.displayName, communities: [{ id: orgId, name: detail.org.name }], orgId }} onClose={() => setEditing(null)} />
+      )}
       {editing === "remove" && (
         <Dialog title={`Remove ${m.displayName}?`} onClose={() => setEditing(null)}>
           <div className="dialog-body">
@@ -203,6 +248,85 @@ function ExpiryDialog({ member, orgId, onClose, onSaved }: { member: DirectoryMe
           )}
           <button className="btn btn-primary" disabled={act.busy || !date} onClick={() => save(new Date(`${date}T23:59:59`).getTime())}>
             Save
+          </button>
+        </div>
+      </div>
+    </Dialog>
+  );
+}
+
+/** Time out (MOD-06, android TimeoutSheet): 60 seconds to a week; they can read but not post, share files or talk. */
+function TimeoutDialog({ member, orgId, onClose, onSaved }: { member: DirectoryMember; orgId: string; onClose: () => void; onSaved: () => void }) {
+  const engine = useEngine();
+  const act = useAction();
+  const [reason, setReason] = useState("");
+  return (
+    <Dialog title={`Time out ${member.displayName}`} onClose={onClose}>
+      <div className="dialog-body">
+        <p className="muted" style={{ margin: 0 }}>
+          They can read but not post, share files or talk in voice channels, anywhere in the community, and they're taken out of its calls.
+        </p>
+        <input
+          className="input"
+          aria-label="Reason (optional, in the audit log)"
+          placeholder="Reason (optional, in the audit log)"
+          maxLength={300}
+          value={reason}
+          onChange={(e) => setReason(e.target.value)}
+        />
+        <ErrorLine text={act.error} />
+        <div style={{ display: "grid", gap: 2 }}>
+          {TIMEOUT_CHOICES.map((c) => (
+            <button
+              key={c.ms}
+              className="list-row"
+              disabled={act.busy}
+              onClick={() =>
+                void act.act(async () => {
+                  await setTimeout_(engine, orgId, member.id, Date.now() + c.ms, reason || null);
+                  onSaved();
+                  onClose();
+                })
+              }
+            >
+              <span className="lines">
+                <span>{c.label}</span>
+              </span>
+            </button>
+          ))}
+        </div>
+      </div>
+    </Dialog>
+  );
+}
+
+/** Ban (MOD-05): removes them now and keeps them out (invitations and open joining) until the ban is lifted. */
+function BanDialog({ member, orgId, onClose, onSaved }: { member: DirectoryMember; orgId: string; onClose: () => void; onSaved: () => void }) {
+  const engine = useEngine();
+  const act = useAction();
+  const [reason, setReason] = useState("");
+  return (
+    <Dialog title={`Ban ${member.displayName}?`} onClose={onClose}>
+      <div className="dialog-body">
+        <p style={{ margin: 0 }}>They're removed from the community and can't come back until you lift the ban (Community settings › Bans).</p>
+        <input className="input" aria-label="Reason (optional)" placeholder="Reason (optional)" maxLength={300} value={reason} onChange={(e) => setReason(e.target.value)} />
+        <ErrorLine text={act.error} />
+        <div className="row" style={{ justifyContent: "flex-end", gap: 8 }}>
+          <button className="btn btn-secondary" onClick={onClose}>
+            Cancel
+          </button>
+          <button
+            className="btn btn-danger"
+            disabled={act.busy}
+            onClick={() =>
+              void act.act(async () => {
+                await ban(engine, orgId, member.id, reason || null);
+                onSaved();
+                onClose();
+              })
+            }
+          >
+            Ban
           </button>
         </div>
       </div>

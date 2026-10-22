@@ -1,4 +1,28 @@
-import { Blocks, Building2, CalendarDays, Code2, Inbox, Sparkles, FileText, Gauge, Hash, Workflow, Laptop, LayoutGrid, ScrollText, ShieldCheck, Ticket, Users, UsersRound } from "lucide-react";
+import {
+  Ban,
+  Blocks,
+  Building2,
+  CalendarDays,
+  Code2,
+  Flag,
+  Inbox,
+  Sparkles,
+  FileText,
+  Gauge,
+  Hash,
+  Workflow,
+  Laptop,
+  LayoutGrid,
+  ScrollText,
+  Shield,
+  ShieldCheck,
+  Ticket,
+  UserCheck,
+  Users,
+  UsersRound,
+} from "lucide-react";
+import { ApplicationsPage, BansPage, SecurityPage } from "./ModerationPages";
+import { ReportsPage } from "./ReportsPage";
 import type { ReactNode } from "react";
 import { useEngine, useOrbit } from "../../app/orbit";
 import { navigate, type WorkspacePage } from "../../app/router";
@@ -31,6 +55,34 @@ const GROUPS: { key: PageGroup; label: string }[] = [
   { key: "workspace", label: "Workspace" },
   { key: "tools", label: "Tools" },
   { key: "admin", label: "Administration" },
+];
+
+/**
+ * Community servers (API 0.12+): Community settings in Android's groups (android CommunitySettingsScreen): Community,
+ * People, Channels, Moderation, More. Each page shows only for people allowed to use it, on servers that have it.
+ */
+type CommunityGroup = "community" | "people" | "channels" | "moderation" | "more";
+const COMMUNITY_GROUPS: { key: CommunityGroup; label: string }[] = [
+  { key: "community", label: "Community" },
+  { key: "people", label: "People" },
+  { key: "channels", label: "Channels" },
+  { key: "moderation", label: "Moderation" },
+  { key: "more", label: "More" },
+];
+const can = (p: OrgPermissions, perm: string) => p.isOwner || p.effective.includes(perm);
+const COMMUNITY_PAGES: { key: WorkspacePage; label: string; icon: ReactNode; group: CommunityGroup; shown?: (p: OrgPermissions) => boolean; feature?: string }[] = [
+  { key: "overview", label: "Overview", icon: <LayoutGrid size={17} />, group: "community" },
+  { key: "people", label: "Members", icon: <UsersRound size={17} />, group: "people", shown: (p) => p.canViewDirectory },
+  { key: "roles", label: "Roles", icon: <ShieldCheck size={17} />, group: "people", shown: (p) => p.canViewRoles },
+  { key: "invitations", label: "Invitations", icon: <Ticket size={17} />, group: "people", shown: (p) => p.canInvite },
+  { key: "channels", label: "Channels & categories", icon: <Hash size={17} />, group: "channels" },
+  { key: "applications", label: "Applications", icon: <UserCheck size={17} />, group: "moderation", feature: "join-applications", shown: (p) => can(p, "members.approve") },
+  { key: "reports", label: "Reports", icon: <Flag size={17} />, group: "moderation", feature: "reports", shown: (p) => can(p, "reports.view") },
+  { key: "security", label: "Security actions", icon: <Shield size={17} />, group: "moderation", feature: "security-actions", shown: (p) => p.canManageOrg || p.canBan },
+  { key: "bans", label: "Bans", icon: <Ban size={17} />, group: "moderation", feature: "community-moderation", shown: (p) => p.canBan },
+  { key: "audit", label: "Audit log", icon: <ScrollText size={17} />, group: "moderation", shown: (p) => p.canViewAudit },
+  { key: "meetings", label: "Events", icon: <CalendarDays size={17} />, group: "more", feature: "meetings" },
+  { key: "usage", label: "Usage", icon: <Gauge size={17} />, group: "more", shown: (p) => p.canViewUsage },
 ];
 const PAGES: { key: WorkspacePage; label: string; icon: ReactNode; group: PageGroup; shown?: (p: OrgPermissions, d: OrgAdminDetail) => boolean; feature?: string }[] = [
   { key: "overview", label: "Overview", icon: <LayoutGrid size={17} />, group: "workspace" },
@@ -85,30 +137,50 @@ export function WorkspaceView({ orgId, page, itemId, onDialog }: { orgId: string
   }
 
   const d = detail.data;
+  const community = features.includes("community-channels");
   return (
     <section className="main" aria-label={`${org.name} settings`} style={{ display: "flex", flexDirection: "column" }}>
       <div className="settings">
-        <nav className="settings-nav" aria-label="Workspace pages">
+        <nav className="settings-nav" aria-label={community ? "Community settings" : "Workspace pages"}>
           <h2 className="ellipsis">{org.name}</h2>
-          {GROUPS.map((g) => {
-            const pages = PAGES.filter(
-              (p) => p.group === g.key && (!p.shown || (d && p.shown(d.permissions, d))) && (!p.feature || features.includes(p.feature)) && pageShownForKind(p.key, org.kind, page),
-            );
-            if (pages.length === 0) return null;
-            return (
-              <div key={g.key} role="group" aria-labelledby={`ws-group-${g.key}`} className="settings-nav-group">
-                <h3 id={`ws-group-${g.key}`} className="ws-subhead">
-                  {g.label}
-                </h3>
-                {pages.map((p) => (
-                  <button key={p.key} className="side-item" aria-current={page === p.key ? "page" : undefined} onClick={() => navigate({ section: "workspace", workspacePage: p.key })}>
-                    <span className="glyph">{p.icon}</span>
-                    <span className="grow">{p.label}</span>
-                  </button>
-                ))}
-              </div>
-            );
-          })}
+          {community &&
+            COMMUNITY_GROUPS.map((g) => {
+              const pages = COMMUNITY_PAGES.filter((p) => p.group === g.key && (!p.shown || (d && p.shown(d.permissions))) && (!p.feature || features.includes(p.feature)));
+              if (pages.length === 0) return null;
+              return (
+                <div key={g.key} role="group" aria-labelledby={`ws-group-${g.key}`} className="settings-nav-group">
+                  <h3 id={`ws-group-${g.key}`} className="ws-subhead">
+                    {g.label}
+                  </h3>
+                  {pages.map((p) => (
+                    <button key={p.key} className="side-item" aria-current={page === p.key ? "page" : undefined} onClick={() => navigate({ section: "workspace", workspacePage: p.key })}>
+                      <span className="glyph">{p.icon}</span>
+                      <span className="grow">{p.label}</span>
+                    </button>
+                  ))}
+                </div>
+              );
+            })}
+          {!community &&
+            GROUPS.map((g) => {
+              const pages = PAGES.filter(
+                (p) => p.group === g.key && (!p.shown || (d && p.shown(d.permissions, d))) && (!p.feature || features.includes(p.feature)) && pageShownForKind(p.key, org.kind, page),
+              );
+              if (pages.length === 0) return null;
+              return (
+                <div key={g.key} role="group" aria-labelledby={`ws-group-${g.key}`} className="settings-nav-group">
+                  <h3 id={`ws-group-${g.key}`} className="ws-subhead">
+                    {g.label}
+                  </h3>
+                  {pages.map((p) => (
+                    <button key={p.key} className="side-item" aria-current={page === p.key ? "page" : undefined} onClick={() => navigate({ section: "workspace", workspacePage: p.key })}>
+                      <span className="glyph">{p.icon}</span>
+                      <span className="grow">{p.label}</span>
+                    </button>
+                  ))}
+                </div>
+              );
+            })}
           <button className="side-item" onClick={() => navigate({ section: "home" })} style={{ marginTop: 8 }}>
             <span className="glyph">
               <Laptop size={17} />
@@ -155,6 +227,14 @@ export function WorkspaceView({ orgId, page, itemId, onDialog }: { orgId: string
               <GroupsPage detail={d} />
             ) : page === "meetings" ? (
               <MeetingsPage detail={d} />
+            ) : page === "applications" ? (
+              <ApplicationsPage detail={d} />
+            ) : page === "reports" ? (
+              <ReportsPage detail={d} />
+            ) : page === "security" ? (
+              <SecurityPage detail={d} />
+            ) : page === "bans" ? (
+              <BansPage detail={d} />
             ) : page === "documents" ? (
               <DocumentsPage detail={d} docId={itemId} />
             ) : (

@@ -10,7 +10,30 @@ import { useSyncExternalStore } from "react";
 export type Section = "home" | "dms" | "activity" | "later" | "settings" | "workspace";
 export type SettingsPage = "profile" | "account" | "devices" | "notifications" | "appearance" | "storage" | "security" | "about" | "health" | "usage";
 export type WorkspacePage =
-  "overview" | "people" | "invitations" | "channels" | "structure" | "roles" | "apps" | "audit" | "usage" | "documents" | "workflows" | "groups" | "meetings" | "developer" | "ai" | "inbox";
+  | "overview"
+  | "people"
+  | "invitations"
+  | "channels"
+  | "structure"
+  | "roles"
+  | "apps"
+  | "audit"
+  | "usage"
+  | "documents"
+  | "workflows"
+  | "groups"
+  | "meetings"
+  | "developer"
+  | "ai"
+  | "inbox"
+  // Communities (batches B4–B9).
+  | "applications"
+  | "reports"
+  | "security"
+  | "bans"
+  | "guide"
+  | "onboarding"
+  | "expressions";
 
 export interface Route {
   section: Section;
@@ -45,6 +68,13 @@ const WORKSPACE_PAGES: WorkspacePage[] = [
   "developer",
   "ai",
   "inbox",
+  "applications",
+  "reports",
+  "security",
+  "bans",
+  "guide",
+  "onboarding",
+  "expressions",
 ];
 const ID = /^[A-Za-z0-9_-]{1,128}$/;
 

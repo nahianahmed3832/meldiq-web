@@ -128,3 +128,47 @@
     max-height: 160px;
   }
 }
+
+/* Slowmode (batch B3): a quiet line above the composer, with the countdown while you wait. */
+.composer-slowmode {
+  margin: 0 4px 6px;
+  font-size: 12.5px;
+  color: var(--text-3);
+}
+.report-message {
+  margin: 0;
+  padding: 8px 10px;
+  border-left: 3px solid var(--danger);
+  background: var(--surface-sunken);
+  border-radius: var(--r-sm);
+  white-space: pre-wrap;
+}
+.report-context p {
+  margin: 0 0 2px;
+  font-size: 13px;
+}
+.answers {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+}
+.answers dt {
+  font-weight: 600;
+  font-size: 13px;
+}
+.answers dd {
+  margin: 2px 0 0;
+  white-space: pre-wrap;
+}
+button.chip {
+  cursor: pointer;
+  color: var(--text-2);
+}
+button.chip:hover {
+  color: var(--text);
+}
+button.chip[aria-pressed="true"] {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--accent-text);
+}

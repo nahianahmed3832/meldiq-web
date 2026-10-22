@@ -95,6 +95,13 @@ export const zDirectoryMember = zMember.extend({
     .transform((v) => v ?? null),
   branches: z.array(z.object({ id: z.string(), role: nullableString })).default([]),
   teams: z.array(z.object({ id: z.string(), role: nullableString })).default([]),
+  /** A timeout still running (MOD-06), null without one. */
+  timeoutUntil: z
+    .number()
+    .nullish()
+    .transform((v) => v ?? null),
+  /** Batch B12: the custom roles they hold; [hoist] roles head their own group in the member list, in role order. */
+  customRoles: z.array(z.object({ id: z.string(), name: z.string(), color: nullableString, hoist: z.boolean().default(false), position: z.number().default(0) })).default([]),
 });
 export type DirectoryMember = z.infer<typeof zDirectoryMember>;
 
