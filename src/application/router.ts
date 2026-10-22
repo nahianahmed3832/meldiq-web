@@ -164,10 +164,12 @@ export function startRouting(): () => void {
   document.addEventListener("click", onClick);
   window.addEventListener("hashchange", legacy);
   Router.events.on("routeChangeComplete", afterNext);
+  Router.events.on("hashChangeComplete", afterNext); // what it reports when only the "#…" part differs
   return () => {
     document.removeEventListener("click", onClick);
     window.removeEventListener("hashchange", legacy);
     Router.events.off("routeChangeComplete", afterNext);
+    Router.events.off("hashChangeComplete", afterNext);
   };
 }
 
