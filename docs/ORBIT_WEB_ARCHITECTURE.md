@@ -27,7 +27,7 @@ client needs that the backend lacked, and how the web client is built. Status of
 | # | Gap | Resolution |
 |---|---|---|
 | G1 | The WebSocket reads the session token from the `Authorization` header of the upgrade request. Browsers can't set headers on a WebSocket. | **Server extension (backward compatible):** a socket without the header may authenticate with its first frame, `{"t":"auth","token":"…"}`, within 10 s. The token never goes in a URL. Android is unchanged. |
-| G2 | The API sends no CORS headers. | **No server change.** The web app is served from the same origin as the API: the Vite dev server proxies `/v1` in development; in production nginx serves this repository's `dist/` build and proxies `/v1` (`ORBIT_WEB_DEPLOYMENT.md`). |
+| G2 | The API sends no CORS headers. | **No server change.** The web app is served from the same origin as the API: the development server (`next dev`, earlier Vite) proxies `/v1` in development; in production nginx serves this repository's `dist/` build and proxies `/v1` (`ORBIT_WEB_DEPLOYMENT.md`). |
 | G3 | With S3 storage, attachment downloads redirect to a presigned S3 URL. A browser follows it only if the bucket allows the web origin (CORS). | Deployment setting on the bucket, documented; not applied (production change needs approval). Local-disk storage needs nothing. |
 | G4 | Production runs 0.2.0 without G1. | Deploying is a production change: not done without approval. Development and the phone test use a server started from this branch on the developer's Mac. |
 

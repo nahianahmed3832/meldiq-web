@@ -42,13 +42,14 @@ A server with local data in its `data/` folder, open sign-up and no calling:
 bash scripts/local-server.sh
 ```
 
-The web app on `http://localhost:5173`, proxying `/v1` to `ORBIT_API_URL` (default `http://127.0.0.1:8080`):
+The web app (Next.js, `docs/MELDIQ_WEB_NEXTJS.md`) on `http://127.0.0.1:5173`, proxying `/v1` and `/v2` to `ORBIT_API_URL`
+(default `http://127.0.0.1:8080`):
 
 ```bash
 npm install && npm run dev
 ```
 
-Use `localhost`, not a LAN address: browsers allow WebCrypto only on HTTPS or localhost. Link the browser from a phone
+Use `127.0.0.1`, not a LAN address: browsers allow WebCrypto only on HTTPS or this machine. Link the browser from a phone
 signed in to the same server (Settings › Devices › Approve new device), or with the test tool for a local server:
 
 ```bash
@@ -113,7 +114,8 @@ skipped and say why. Playwright starts its own LiveKit.
 | `src/protocol`, `src/api` | validated payloads, history records and server responses; the API client |
 | `src/realtime`, `src/sync`, `src/store` | WebSocket, receive pipeline, outbox, history restore, directory and trust, IndexedDB |
 | `src/call` | calls: manager, keys, LiveKit session, encryption worker and frame audit, badge rules |
-| `src/state`, `src/app` | app state, React bindings, boot, routes, preferences |
+| `src/pages`, `src/client` | the Next.js page shell and the app's start in the browser |
+| `src/state`, `src/application` | app state, React bindings, boot, routes, preferences |
 | `src/ui` | the interface |
 | `test`, `e2e` | Vitest and Playwright; `test/vectors` and `test/contract-fixtures` hold copies of the shared protocol vectors and the server's contract fixtures |
-| `scripts` | `local-server.sh` (start the Orbit server for development), `demo-phone.ts` (test participants on a local server), `sync-contract-fixtures.ts` (copy the server's contract fixtures) |
+| `scripts` | `local-server.sh` (start the Orbit server for development), `demo-phone.ts` (test participants on a local server), `sync-contract-fixtures.ts` (copy the server's contract fixtures), `web-server.ts` (a build or `next dev` behind production's headers and `/v1` proxy), `finish-export.mjs` (the build's last step) |
