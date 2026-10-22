@@ -5,7 +5,7 @@ import { ForumView } from "./ForumView";
 import { presenceWords } from "../../sync/social";
 import { GroupAvatar } from "../components/OrgAvatar";
 import { RequestBar, RequestSentBanner } from "../people/RequestBar";
-import { VoiceRoomBanner } from "./VoiceRoomBanner";
+import { VoiceRoomView } from "./VoiceRoomView";
 import { SecurityPadlock } from "./SecuritySheet";
 import { PinnedButton } from "./PinnedPanel";
 import { Archive, ArrowLeft, BellOff, Info, MessagesSquare, Phone, Search, ShieldAlert, UsersRound, Video } from "lucide-react";
@@ -124,15 +124,17 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
             <UsersRound size={16} /> {c.memberCount}
           </button>
         )}
-        <button
-          className="icon-btn"
-          aria-pressed={route.panel === "search"}
-          onClick={() => navigate({ section: route.section, conversationId: id, panel: route.panel === "search" ? null : "search" })}
-          aria-label={route.panel === "search" ? "Close search" : "Search in this conversation"}
-          title="Search in this conversation"
-        >
-          <Search size={18} />
-        </button>
+        {!c.voice && (
+          <button
+            className="icon-btn"
+            aria-pressed={route.panel === "search"}
+            onClick={() => navigate({ section: route.section, conversationId: id, panel: route.panel === "search" ? null : "search" })}
+            aria-label={route.panel === "search" ? "Close search" : "Search in this conversation"}
+            title="Search in this conversation"
+          >
+            <Search size={18} />
+          </button>
+        )}
         {c.type === "CHANNEL" && !c.voice && c.format !== "forum" && (
           <button
             className="icon-btn"
@@ -146,7 +148,8 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
         )}
         {c.type === "CHANNEL" ? (
           <>
-            <PinnedButton conversationId={id} />
+            {/* A voice channel has no messages to search or pin (batch B14). */}
+            {!c.voice && <PinnedButton conversationId={id} />}
             <SecurityPadlock conversationId={id} />
             <button
               className="icon-btn"
@@ -163,7 +166,7 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
       </header>
 
       {c.type === "CHANNEL" && <AppUpdatesBar conversationId={id} />}
-      {(alerts.length > 0 || call || c.voice || c.archived || history === "running" || peer?.paused || (c.request && !c.request.incoming)) && (
+      {(alerts.length > 0 || (call && !c.voice) || c.archived || history === "running" || peer?.paused || (c.request && !c.request.incoming)) && (
         <div className="conv-banners">
           {c.request && !c.request.incoming && <RequestSentBanner conversation={c} />}
           {peer?.paused && (
@@ -181,7 +184,6 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
               </button>
             </div>
           ))}
-          {c.voice && myCall !== id && <VoiceRoomBanner conversationId={id} canJoin={calling && engine.calls.supported() && myCall === null && !c.archived && c.canConnect !== false} />}
           {call && !c.voice && myCall !== id && (
             <div className="banner info call-banner">
               {call.video ? <Video size={16} /> : <Phone size={16} />}
@@ -203,7 +205,9 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
         </div>
       )}
 
-      {c.type === "CHANNEL" && c.format === "forum" ? (
+      {c.voice ? (
+        <VoiceRoomView c={c} />
+      ) : c.type === "CHANNEL" && c.format === "forum" ? (
         <ForumView c={c} section={route.section} />
       ) : loaded ? (
         <MessageList
@@ -240,12 +244,8 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
         </div>
       )}
 
-      {/* A voice channel is for talking: no messages (meldiq batch B14; the server refuses them too). */}
-      {c.type === "CHANNEL" && c.format === "forum" ? null : c.voice ? (
-        <p className="muted" style={{ padding: "12px 16px", margin: 0 }}>
-          Voice channels are for talking only. Join the room to talk.
-        </p>
-      ) : c.request?.incoming ? (
+      {/* A voice channel is for talking: no messages (batch B14; the server refuses them too). Its room page has Join. */}
+      {(c.type === "CHANNEL" && c.format === "forum") || c.voice ? null : c.request?.incoming ? (
         <RequestBar conversation={c} name={title} />
       ) : (
         <Composer

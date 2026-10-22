@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { ApiError } from "../src/api/client";
-import { applyOp, EMPTY_PREFS, levelOf, type NavPrefs, NavSync, type NavSyncHost, newSectionId, placed, placeOf, replay } from "../src/sync/navPrefs";
+import { applyOp, EMPTY_PREFS, levelOf, muteToggle, type NavPrefs, NavSync, type NavSyncHost, newSectionId, placed, placeOf, replay } from "../src/sync/navPrefs";
 
 const base: NavPrefs = { starred: ["a", "b"], sections: [{ id: "s_1", name: "Projects", items: ["c"], collapsed: false }], collapsed: [], notify: {} };
 
@@ -159,5 +159,29 @@ describe("syncing preferences (android NavPreferences)", () => {
       { op: "move", conversationId: "c2", delta: -1 },
     ]);
     expect(p.sections[0].items).toEqual(["c2", "c1"]);
+  });
+});
+
+describe("the details Mute button (batch B14, android DetailsActionsRow)", () => {
+  const now = 1_000;
+  const mutedAfter = (p: NavPrefs) => levelOf(replay(p, muteToggle(p, "a", null, now)), "a", null, now) === "none";
+
+  it("mutes a conversation that notifies", () => {
+    expect(muteToggle(EMPTY_PREFS, "a", null, now)).toEqual([{ op: "notify", conversationId: "a", level: "none" }]);
+    expect(mutedAfter(EMPTY_PREFS)).toBe(true);
+  });
+
+  it("unmutes back to what it inherits", () => {
+    const p = applyOp(EMPTY_PREFS, { op: "notify", conversationId: "a", level: "none" });
+    expect(muteToggle(p, "a", null, now)).toEqual([{ op: "notifyReset", conversationId: "a" }]);
+    expect(mutedAfter(p)).toBe(false);
+  });
+
+  it("ends a timed mute, and turns messages on when the community or category is off", () => {
+    const timed = applyOp(EMPTY_PREFS, { op: "muteUntil", conversationId: "a", until: now + 60_000 });
+    expect(mutedAfter(timed)).toBe(false);
+    const quietCommunity = applyOp(EMPTY_PREFS, { op: "community", level: "none" });
+    expect(muteToggle(quietCommunity, "a", null, now)).toEqual([{ op: "notify", conversationId: "a", level: "all" }]);
+    expect(mutedAfter(quietCommunity)).toBe(false);
   });
 });

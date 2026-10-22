@@ -1,33 +1,31 @@
 import { ExternalLink, MessageSquareText, Search } from "lucide-react";
-import { useState } from "react";
+import { type ReactNode, useState } from "react";
 import { useEngine, useOrbit } from "../../app/orbit";
 import { isInlineImage } from "../../sync/attachments";
 import { dayLabel, shortWhen } from "../format";
 import { FileAttachment, ImageAttachment, MediaAttachment } from "./Attachments";
+import type { DetailsTab } from "./detailsRules";
 import { filterFiles, type Gallery, type GalleryItem, type LinkItem } from "./gallery";
 import { jumpTo } from "./jump";
 import { usePinned } from "./PinnedPanel";
 import { SafeLink } from "./SafeLink";
 
-/** The details page of a direct message or group (batch B14, android ConversationDetails): its tabs. */
-export type DetailsTab = "about" | "members" | "media" | "pins" | "links" | "files";
-
-const TAB_LABEL: Record<DetailsTab, string> = { about: "About", members: "Members", media: "Media", pins: "Pins", links: "Links", files: "Files" };
-export const DETAILS_TABS = Object.keys(TAB_LABEL) as DetailsTab[];
+const TAB_LABEL: Record<DetailsTab, string> = { members: "Members", media: "Media", pins: "Pins", links: "Links", files: "Files" };
 
 /** Photos are decrypted as they're shown: a page at a time keeps a long history from downloading everything at once. */
 const PAGE = 18;
 
 interface TabBarProps {
+  tabs: DetailsTab[];
   tab: DetailsTab;
   onTab: (t: DetailsTab) => void;
   counts: Partial<Record<DetailsTab, number>>;
 }
 
-export function DetailsTabBar({ tab, onTab, counts }: TabBarProps) {
+export function DetailsTabBar({ tabs, tab, onTab, counts }: TabBarProps) {
   return (
     <div className="details-tabs" role="tablist" aria-label="Details">
-      {DETAILS_TABS.map((t) => (
+      {tabs.map((t) => (
         <button key={t} role="tab" aria-selected={tab === t} onClick={() => onTab(t)}>
           {TAB_LABEL[t]}
           {counts[t] ? <span className="details-tab-count">{counts[t]}</span> : null}
@@ -59,17 +57,28 @@ const Missing = () => (
   </p>
 );
 
-export function MediaTab({ gallery, nameOf }: { gallery: Gallery; nameOf: (i: GalleryItem) => string }) {
+interface ItemsTabProps {
+  conversationId: string;
+  gallery: Gallery;
+  nameOf: (i: GalleryItem) => string;
+}
+
+export function MediaTab({ conversationId, gallery, nameOf }: ItemsTabProps) {
   const [shown, setShown] = useState(PAGE);
+  const [missing, setMissing] = useState(false);
   if (gallery.media.length === 0) return <Empty text="No photos or videos in this conversation on this browser yet." />;
   return (
     <>
+      {missing && <Missing />}
       <div className="gallery-grid details-grid" role="tabpanel" aria-label="Photos and videos">
         {gallery.media.slice(0, shown).map((i) => (
           <figure key={i.ref.id} className="gallery-cell">
             {isInlineImage(i.ref) ? <ImageAttachment r={i.ref} /> : <MediaAttachment r={i.ref} />}
-            <figcaption className="ellipsis">
-              {nameOf(i)} · {dayLabel(i.at)}
+            <figcaption className="details-caption">
+              <span className="ellipsis">
+                {nameOf(i)} · {dayLabel(i.at)}
+              </span>
+              <ShowInChat conversationId={conversationId} messageId={i.messageId} onMissing={() => setMissing(true)} />
             </figcaption>
           </figure>
         ))}
@@ -83,8 +92,9 @@ export function MediaTab({ gallery, nameOf }: { gallery: Gallery; nameOf: (i: Ga
   );
 }
 
-export function FilesTab({ gallery, nameOf }: { gallery: Gallery; nameOf: (i: GalleryItem) => string }) {
+export function FilesTab({ conversationId, gallery, nameOf }: ItemsTabProps) {
   const [q, setQ] = useState("");
+  const [missing, setMissing] = useState(false);
   if (gallery.files.length === 0) return <Empty text="No files in this conversation on this browser yet." />;
   const items = filterFiles(gallery.files, q);
   return (
@@ -93,6 +103,7 @@ export function FilesTab({ gallery, nameOf }: { gallery: Gallery; nameOf: (i: Ga
         <Search size={15} aria-hidden />
         <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search files" aria-label="Search files" />
       </label>
+      {missing && <Missing />}
       {items.length === 0 ? (
         <Empty text="No files match." />
       ) : (
@@ -100,9 +111,12 @@ export function FilesTab({ gallery, nameOf }: { gallery: Gallery; nameOf: (i: Ga
           {items.map((i) => (
             <div key={i.ref.id} className="gallery-file">
               <FileAttachment r={i.ref} />
-              <small className="faint">
-                {nameOf(i)} · {dayLabel(i.at)}
-              </small>
+              <span className="details-caption">
+                <small className="faint ellipsis">
+                  {nameOf(i)} · {dayLabel(i.at)}
+                </small>
+                <ShowInChat conversationId={conversationId} messageId={i.messageId} onMissing={() => setMissing(true)} />
+              </span>
             </div>
           ))}
         </div>
@@ -159,5 +173,41 @@ export function LinksTab({ conversationId, links, nameOf }: { conversationId: st
         </li>
       ))}
     </ul>
+  );
+}
+
+/** The top of the page: the photo, the name, then @username or the member count, and presence (android DetailsHeader). */
+export function DetailsHero({ avatar, title, sub, presence }: { avatar: ReactNode; title: string; sub: string | null; presence: string | null }) {
+  return (
+    <div className="details-hero">
+      {avatar}
+      <h3>{title}</h3>
+      {sub && <small className="faint">{sub}</small>}
+      {presence && <small className="details-presence">{presence}</small>}
+    </div>
+  );
+}
+
+export interface DetailsAction {
+  key: string;
+  label: string;
+  icon: ReactNode;
+  onClick: () => void;
+  active?: boolean;
+}
+
+/** Round actions with their labels under them: Search · Mute · Profile or Add · Security (android DetailsActionsRow). */
+export function DetailsActions({ actions }: { actions: DetailsAction[] }) {
+  return (
+    <div className="details-actions" role="group" aria-label="Actions">
+      {actions.map((a) => (
+        <button key={a.key} className={`details-action${a.active ? " active" : ""}`} onClick={a.onClick} aria-pressed={a.active}>
+          <span className="details-action-circle" aria-hidden>
+            {a.icon}
+          </span>
+          <span className="ellipsis">{a.label}</span>
+        </button>
+      ))}
+    </div>
   );
 }

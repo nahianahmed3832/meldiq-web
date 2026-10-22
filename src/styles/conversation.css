@@ -1770,7 +1770,7 @@
 .details-tabs {
   display: flex;
   gap: 2px;
-  padding: 0 10px 8px;
+  padding: 0 0 8px;
   overflow-x: auto;
   scrollbar-width: none;
   border-bottom: 1px solid var(--hairline);
@@ -1825,4 +1825,166 @@
 }
 .details-link .lines {
   min-width: 0;
+}
+
+/* Batch B14: a voice channel's room page (android VoiceChannelScreen). */
+.voice-room-page {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px clamp(16px, 4vw, 32px);
+}
+.voice-room-empty {
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  margin: auto 0;
+  padding: 32px 0;
+  text-align: center;
+}
+.voice-room-empty h2 {
+  margin: 10px 0 0;
+  font-size: 18px;
+}
+.voice-room-empty p {
+  margin: 0;
+  max-width: 360px;
+}
+.voice-room-orb {
+  display: grid;
+  place-items: center;
+  width: 96px;
+  height: 96px;
+  border-radius: var(--r-xl);
+  background: var(--surface-sunken);
+  color: var(--text-2);
+}
+.voice-room-label {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-2);
+}
+.voice-room-tiles {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+.voice-room-tiles.single {
+  grid-template-columns: minmax(0, 1fr);
+}
+.voice-room-tile {
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: 8px;
+  min-width: 0;
+  aspect-ratio: 16 / 10;
+  padding: 10px;
+  border-radius: var(--r-lg);
+  background: var(--surface-sunken);
+  animation: rise var(--t-fast) var(--ease-enter);
+}
+.voice-room-tile span {
+  max-width: 100%;
+}
+.voice-room-foot {
+  margin-top: auto;
+  display: grid;
+  gap: 10px;
+  max-width: 560px;
+  width: 100%;
+  align-self: center;
+}
+.voice-room-join {
+  height: 46px;
+  width: 100%;
+  justify-content: center;
+}
+.details-hero {
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+  padding: 4px 0;
+  text-align: center;
+}
+.details-hero h3 {
+  margin: 8px 0 0;
+  font-size: 18px;
+  overflow-wrap: anywhere;
+}
+.details-presence {
+  color: var(--accent-text);
+  font-weight: 600;
+}
+.details-actions {
+  display: flex;
+  justify-content: space-evenly;
+  gap: 4px;
+}
+.details-action {
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  min-width: 0;
+  width: 64px;
+  padding: 4px 0;
+  border-radius: var(--r-sm);
+  font-size: 12px;
+  color: var(--text-2);
+}
+.details-action-circle {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--surface-sunken);
+  color: var(--text);
+  transition: background var(--t-fast) var(--ease);
+}
+.details-action:hover .details-action-circle {
+  background: var(--surface-selected);
+}
+.details-action.active .details-action-circle {
+  background: var(--accent-soft);
+  color: var(--accent-text);
+}
+.details-action span:last-child {
+  max-width: 100%;
+}
+.details-tab-body {
+  display: grid;
+  gap: 8px;
+}
+.details-caption {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  font-size: var(--fs-xs);
+  color: var(--text-3);
+}
+.details-caption .ellipsis {
+  flex: 1;
+  min-width: 0;
+}
+.details-caption .icon-btn {
+  width: 26px;
+  height: 26px;
+}
+.details-settings-head {
+  margin: 8px 0 0;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-2);
 }

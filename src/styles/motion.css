@@ -20,7 +20,7 @@
   animation: panel-in var(--t-std) var(--ease-enter);
 }
 [role="tabpanel"],
-.details-tabs + .panel-body {
+.details-tab-body {
   animation: fade var(--t-fast) var(--ease);
 }
 .side-section-row:has(> .side-section-head[aria-expanded="true"]) ~ .side-channels > * {

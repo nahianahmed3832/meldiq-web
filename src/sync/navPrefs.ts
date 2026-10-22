@@ -114,6 +114,19 @@ export function mutedUntil(p: NavPrefs | undefined, conversationId: string, now:
   return t !== undefined && t > now ? t : null;
 }
 
+/**
+ * The details page's Mute button (batch B14, android DetailsActionsRow): mute what notifies; unmute ends a timed mute and
+ * goes back to what the conversation inherits, or turns it on when that is off too.
+ */
+export function muteToggle(p: NavPrefs | undefined, conversationId: string, categoryId: string | null, now: number = Date.now()): NavOp[] {
+  if (levelOf(p, conversationId, categoryId, now) !== "none") return [{ op: "notify", conversationId, level: "none" }];
+  const ops: NavOp[] = [];
+  if (mutedUntil(p, conversationId, now) !== null) ops.push({ op: "muteUntil", conversationId, until: null });
+  if (parentLevel(p, categoryId) === "none") ops.push({ op: "notify", conversationId, level: "all" });
+  else if (p?.notify[conversationId] !== undefined) ops.push({ op: "notifyReset", conversationId });
+  return ops;
+}
+
 export const isHidden = (p: NavPrefs | undefined, conversationId: string): boolean => !!p?.hidden?.includes(conversationId);
 
 /**
