@@ -22,6 +22,7 @@ status is **`docs/product/MELDIQ_WEB_PARITY_MATRIX.md`**.
 | `80768e6` | B16 | Motion with the shared tokens, off under reduced motion |
 | `726841a` | — | Community wording, Android's current intro pages |
 | `67de053` | — | Merge of `main` (voice channels have no message box, `df66b32`/`e9f8d2b`) |
+| `c141464` | B14 | Voice channel room page; details header, round actions and Android's tab order |
 
 ## How it was checked (2026-10-22)
 
@@ -44,9 +45,22 @@ status is **`docs/product/MELDIQ_WEB_PARITY_MATRIX.md`**.
 - A second person: `cd srv/tools/griip-bot && GRIIP_SERVER=http://127.0.0.1:8188 GRIIP_BOT_ID=local-peer-identity.json
   npm run bot -- chat <username> 600`. **Always set `GRIIP_SERVER`:** the bot defaults to production.
 
+## B14 completion (same day, later)
+
+- A voice channel opens as its room (`VoiceRoomView`): who's in it, Join voice or Open the call, Invite people, the
+  listen-only and no-permission notes, and why Join is off. No search, pins or message box. `VoiceRoomBanner` is gone.
+- DM and group details follow Android's `DmDetails`: photo and name, round actions Search · Mute/Unmute · Profile (DM)
+  or Add (group managers) · Security, New group (DM), tabs (a group opens on Members, a DM on Media), settings below.
+  Media, Files, Pins and Links open the message in the chat. The panel moved to `ConversationDetails.tsx`.
+- Checked: `voice-room.test.ts`, `details-rules.test.ts`, `muteToggle` in `nav-prefs.test.ts`; e2e `voice-room.spec.ts`
+  passed in Chromium and at phone width; by hand at 400 px: Mute and Unmute, Profile, Security, Add, and a group made
+  with New group. Afterwards: full suite **84 files, 491 passed, 21 skipped, 0 failed**; `calls.spec.ts` and
+  `voice-room.spec.ts` in Chromium **7 of 7 passed**.
+- Still not on the web from B14: timeline media sizing and quiet call notes (DM-06).
+
 ## Open items
 
-Listed in the matrix's last section. In short: the B14 voice room page and round actions, timeline media sizing,
+Listed in the matrix's last section. In short: timeline media sizing,
 camera choice in a call, and three server items (onboarding broadcast, files domain on MongoDB, Web Push), plus the owner's
 device and production checks.
 

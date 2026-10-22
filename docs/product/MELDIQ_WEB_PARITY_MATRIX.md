@@ -82,7 +82,7 @@ Columns: **ID** · **Android** · **Web** · **UI changes** · **Backend changes
 | CH-05 Forums: guidelines, tags any/all, top reaction, follow (B8) | Built | Forum view, New post, Follow in the thread | `ForumView`, `SidePanel` | None | Title/tags inside E2EE payload | `forum-rules`, `live-forum-guide`; by hand | Cards | tested | Post list is built from this browser's newest 2,000 messages |
 | CH-06 Threads list and message links (B5) | Built | Threads panel; copy message link; links open in the app | `ThreadsPanel`, `messageLinks`, `inAppLinks` | None | — | `message-links`, unit | Panel | tested | — |
 | CH-07 Voice channels have no messages (B14) | Built (API 0.25.0 refuses them) | Note in place of the composer | `ConversationView` (`df66b32`, merged) | Production 0.25.0 refuses | — | by hand 2026-10-22 | — | tested | — |
-| CH-08 Voice channel as a room page (B14) | Built: tiles, Join voice, Invite people, notices | Voice room banner with Join; listen-only and no-permission handled | `VoiceRoomBanner`, `CallStage` | None | `voice.connect`, `voice.speak` | unit (`listenOnly`), e2e (listen-only) | — | implementing | No tile view of who's in the room before joining, and no Invite people button on the room |
+| CH-08 Voice channel as a room page (B14) | Built: tiles, Join voice, Invite people, notices | Room page in place of the message list: who's in it (one tile full width, more two by two), Join voice or Open the call, Invite people, listen-only and no-permission notes, why Join is off; no search, pins or message box | `VoiceRoomView`, `voiceRoomRules` (replaces `VoiceRoomBanner`) | None | `voice.connect`, `voice.speak`; the server refuses messages (0.25.0) | `voice-room.test.ts`; e2e `voice-room.spec.ts` (Chromium and phone width: a native peer in the room, join, key exchange, Open the call) | Tiles two across at every width | tested | Tiles weren't looked at by hand with people in them (the local hand-check server has no calling); Invite people opens the community's invitations page, which needs the invite permission |
 
 ### E. Friends and people
 
@@ -99,9 +99,9 @@ Columns: **ID** · **Android** · **Web** · **UI changes** · **Backend changes
 |---|---|---|---|---|---|---|---|---|---|
 | DM-01 Minimal header (B14) | Built | Avatar and name (open details), voice, video, search, one overflow (pins, security, details); channels unchanged | `ConversationView`, `ConversationMenu` | None | — | by hand at 1024 px and 375 px | Back arrow on phone | tested | — |
 | DM-02 One-row composer (B14) | Built | + (attach menu), field, emoji, @ (wide screens), mic → Send | `Composer` | None | — | by hand; existing composer tests | @ hidden on phone | tested | Emoji sits beside the field, not inside it |
-| DM-03 Details tabs with counts (B14) | Built: Members (groups) · Media · Pins · Links · Files | About · Members · Media · Pins · Links · Files | `SidePanel`, `DetailsTabs` | None | Read from this browser's loaded messages | `gallery.test.ts` (links, file search); by hand: About, Members, Links at 1024 px and 375 px | Tabs scroll sideways on phone; no page scroll | tested | Media, Files and Pins checked only empty; Media and Files don't jump to the message (Links and Pins do); counts cover the loaded page of messages; DMs also show a Members tab |
-| DM-04 Details round actions Search · Mute · Profile/Add · Security (B14) | Built | Same functions in other places: search in the header, notifications in About, security in the overflow and About | — | None | — | — | — | implementing | The row of round actions isn't built |
-| DM-05 New group with this person (B14) | Built | Members tab › New group with <name>, person pre-added | `NewGroupDialog initial` | None | — | by hand (row shown; group not created) | Dialog | implemented | Creating the group from this row not done by hand |
+| DM-03 Details tabs with counts (B14) | Built: Members (groups) · Media · Pins · Links · Files | Same tabs: a group opens on Members, a DM on Media (no Members tab); settings below the tabs | `ConversationDetails`, `DetailsTabs`, `detailsRules` | None | Read from this browser's loaded messages | `gallery.test.ts`, `details-rules.test.ts`; by hand at 400 px: DM and group, Links | Tabs scroll sideways on phone; no page scroll | tested | Media, Files and Pins checked only empty; counts cover the loaded page of messages |
+| DM-04 Details round actions Search · Mute · Profile/Add · Security (B14) | Built | Header (photo, name, @username or member count, presence) and round actions: Search, Mute/Unmute, Profile (DM) or Add (group managers), Security; Media, Files, Pins and Links open the message in the chat | `DetailsActions`, `DetailsHero`; `muteToggle` | None | Mute is the synced notification level (ends a timed mute; turns on when the community or category is off) | `nav-prefs.test.ts` (`muteToggle`); by hand: Mute and Unmute, Profile, Security, Add | Four or five across, fits 400 px | tested | — |
+| DM-05 New group with this person (B14) | Built | Under the actions in a DM: New group, person pre-added | `NewGroupDialog initial` | None | — | by hand: a group created from it with the person in it | Dialog | tested | — |
 | DM-06 Timeline media sizing and quiet call notes (B14) | Built | Not changed | — | — | — | — | — | not started | — |
 | DM-07 Poll end times and answer emoji (B8) | Built | Same rules (`dbf67ce`, another session) | Polls | None | Inside E2EE payload | Poll tests in the suite | — | tested | — |
 | DM-08 Long reply quotes on a phone | — | Fix: quote shortens instead of widening the message | `conversation.css` | None | — | by hand at 375 px | — | tested | — |
@@ -141,9 +141,8 @@ Covered by COM-08 and COM-09; the full Unicode picker (search, categories, recen
 
 ## Open items, in order
 
-1. CH-08 room page (tiles, Invite people) and DM-04 round actions, to finish B14 on the web.
-2. DM-06 timeline media sizing and quiet call notes.
-3. CALL-04 camera choice in a call; run the pre-call check by hand.
-4. Server: broadcast onboarding changes; files domain on MongoDB; Web Push.
-5. Owner checks: a phone with this web build, Safari and Firefox, a 1 GiB upload on a real network, production after an
+1. DM-06 timeline media sizing and quiet call notes (the last B14 item on the web).
+2. CALL-04 camera choice in a call; run the pre-call check by hand.
+3. Server: broadcast onboarding changes; files domain on MongoDB; Web Push.
+4. Owner checks: a phone with this web build, Safari and Firefox, a 1 GiB upload on a real network, production after an
    approved deployment.
