@@ -240,7 +240,12 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
         </div>
       )}
 
-      {c.type === "CHANNEL" && c.format === "forum" ? null : c.request?.incoming ? (
+      {/* A voice channel is for talking: no messages (meldiq batch B14; the server refuses them too). */}
+      {c.type === "CHANNEL" && c.format === "forum" ? null : c.voice ? (
+        <p className="muted" style={{ padding: "12px 16px", margin: 0 }}>
+          Voice channels are for talking only. Join the room to talk.
+        </p>
+      ) : c.request?.incoming ? (
         <RequestBar conversation={c} name={title} />
       ) : (
         <Composer
