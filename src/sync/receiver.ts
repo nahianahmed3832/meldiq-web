@@ -1,11 +1,11 @@
 import { ApiError } from "../api/client";
 import { countsEveryone } from "./navPrefs";
-import { type Call, type Conversation, type QueueItem, zCallRes, zQueueItem } from "../api/schemas";
+import { type Call, type Conversation, type QueueItem, zCallRes, zQueueItem, zQueueItemIdentity } from "../api/schemas";
 import { EnvelopeError, openEnvelope } from "../crypto/envelope";
 import type { StoredMessage } from "../model/types";
 import { parsePayload, type Payload } from "../protocol/payload";
 import type { EngineContext } from "./context";
-import { applyDelete, applyDelivered, applyEdit, applyPin, applyReaction, applyRead, callEntry, receivedMentions, textMessage, undecryptable } from "./rules";
+import { applyDelete, applyDelivered, applyEdit, applyPin, applyReaction, applyRead, callEntry, receivedMentions, textMessage, undecryptable, unsupported } from "./rules";
 import { applyClose, applyVote } from "./polls";
 import { reactionAllowed } from "./expressions";
 
@@ -26,8 +26,16 @@ export class Receiver {
     for (const r of raw) {
       const parsed = zQueueItem.safeParse(r);
       if (!parsed.success) {
+        // A newer item kind or payload: a placeholder in its conversation, acknowledged once it's stored. Only an item
+        // that names no message (or a receipt, which isn't one) is acknowledged without a trace: it would only come back.
         const id = (r as { id?: unknown } | null)?.id;
-        if (typeof id === "number" && Number.isInteger(id)) acks.push(id); // malformed: would only come back again
+        if (typeof id !== "number" || !Number.isInteger(id)) continue;
+        try {
+          await this.recordUnreadable(r);
+          acks.push(id);
+        } catch {
+          /* the store is unavailable: delivered again later */
+        }
         continue;
       }
       const item = parsed.data;
@@ -99,7 +107,7 @@ export class Receiver {
       throw e;
     }
     const payload = parsePayload(json);
-    if (!payload) return;
+    if (!payload) return this.recordUnsupported(item, "unreadable payload");
     const conversation = await this.ctx.ensureConversation(item.conversationId);
     await this.apply(payload, item, conversation, item.senderUserId === device.userId, p.serverTs ?? item.createdAt, placeholder);
   }
@@ -158,7 +166,9 @@ export class Receiver {
         if (pl.callId) await this.ctx.calls.onKeyRequest(pl.callId, item.conversationId);
         return;
       default:
-        return; // types from newer apps
+        // Types from newer apps: a message gets a placeholder; a control (cls "control") is ignored.
+        if ((item.payload.cls ?? "message") === "message") return this.recordUnsupported(item, `payload type ${pl.type.slice(0, 40)}`);
+        return;
     }
   }
 
@@ -240,6 +250,24 @@ export class Receiver {
     const next = applyDelivered(m, item.senderUserId);
     await this.ctx.store.putMessage(next);
     this.ctx.show(next);
+  }
+
+  /** A queue item that doesn't parse: a placeholder when it names a message (receipts and controls aren't messages). */
+  private async recordUnreadable(raw: unknown): Promise<void> {
+    const who = zQueueItemIdentity.safeParse(raw);
+    if (!who.success || who.data.kind === "receipt") return;
+    const cls = (raw as { payload?: { cls?: unknown } }).payload?.cls;
+    if (cls === "control") return;
+    await this.recordUnsupported({ ...who.data, kind: "envelope", payload: {} }, `queue item kind ${who.data.kind.slice(0, 40)}`);
+  }
+
+  private async recordUnsupported(item: QueueItem, reason: string): Promise<void> {
+    if ((item.payload.cls ?? "message") !== "message") return;
+    const m = unsupported(item, reason);
+    if (await this.ctx.store.insertMessageIfAbsent(m)) {
+      this.ctx.show(m);
+      await this.ctx.bump(m, { unread: this.ctx.viewing() !== item.conversationId, mention: false });
+    }
   }
 
   private async recordUndecryptable(item: QueueItem, reason: string): Promise<void> {

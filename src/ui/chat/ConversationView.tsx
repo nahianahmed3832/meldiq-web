@@ -1,4 +1,5 @@
 import { ConversationMenu } from "./ConversationMenu";
+import { UNKNOWN } from "../../api/enums";
 import { ChannelGlyph } from "../community/ChannelDialogs";
 import { ForumView } from "./ForumView";
 import { presenceWords } from "../../sync/social";
@@ -227,7 +228,11 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
       )}
 
       {/* A voice channel is for talking: no messages (batch B14; the server refuses them too). Its room page has Join. */}
-      {(c.type === "CHANNEL" && c.format === "forum") || c.voice ? null : c.request?.incoming ? (
+      {(c.type === "CHANNEL" && c.format === "forum") || c.voice ? null : c.format === UNKNOWN ? (
+        <div className="banner info" role="status" style={{ margin: 12 }}>
+          This channel is of a kind this version of Meldiq Web can't post in yet. Its messages are shown above.
+        </div>
+      ) : c.request?.incoming ? (
         <RequestBar conversation={c} name={title} />
       ) : (
         <Composer

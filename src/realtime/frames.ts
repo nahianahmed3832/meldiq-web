@@ -1,5 +1,47 @@
 import { type Call, zCall } from "../api/schemas";
-import type { Frame } from "../realtime/socket";
+
+/**
+ * The realtime protocol on /v1/ws (server docs/api/realtime.schema.json), in one place: frames are read from the
+ * socket's text (readFrame), the ones the engine acts on are checked and typed (parseFrame), and what this browser
+ * sends is typed to the schema's ClientEvent (ClientFrame, writeFrame). Unknown frame names and extra fields are
+ * ignored, as the contract asks.
+ */
+
+/** Any frame as it arrives: a JSON object with a string `t`. */
+export interface Frame {
+  t: string;
+  [key: string]: unknown;
+}
+
+/** What this browser sends (ClientEvent): sign-in first, then pings, acknowledgements and typing. */
+export type ClientFrame = { t: "auth"; token: string } | { t: "ping" } | { t: "ack"; ids: number[]; backlog?: boolean } | { t: "typing"; c: string; on: boolean };
+
+const MAX_FRAME_CHARS = 4 * 1024 * 1024;
+
+/** A frame from the socket's text, or null for anything that isn't one (too large, not JSON, no `t`). */
+export function readFrame(data: unknown): Frame | null {
+  if (typeof data !== "string" || data.length > MAX_FRAME_CHARS) return null;
+  try {
+    const f = JSON.parse(data) as unknown;
+    return f && typeof f === "object" && !Array.isArray(f) && typeof (f as Frame).t === "string" ? (f as Frame) : null;
+  } catch {
+    return null;
+  }
+}
+
+/** The text of a frame this browser sends: only the fields the schema allows. */
+export function writeFrame(f: ClientFrame): string {
+  switch (f.t) {
+    case "auth":
+      return JSON.stringify({ t: f.t, token: f.token });
+    case "ping":
+      return JSON.stringify({ t: f.t });
+    case "ack":
+      return JSON.stringify(f.backlog === undefined ? { t: f.t, ids: f.ids } : { t: f.t, ids: f.ids, backlog: f.backlog });
+    case "typing":
+      return JSON.stringify({ t: f.t, c: f.c, on: f.on });
+  }
+}
 
 /** A server frame the engine acts on, with the fields it needs checked (docs/api/realtime.schema.json on the server). */
 export type ServerFrame =

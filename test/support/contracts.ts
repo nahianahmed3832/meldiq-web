@@ -75,10 +75,12 @@ function readTree(dir: string, base = dir): Map<string, string> {
   return out;
 }
 
-/** What test/contract-fixtures should hold for this server checkout: the fixtures as they are, and routes.json. */
+/** What test/contract-fixtures should hold: the fixtures as they are, routes.json, and the frames clients may send. */
 export function expectedCopy(repo: string): Map<string, string> {
   const files = readTree(path.join(repo, "shared/contracts/fixtures"));
   files.set("routes.json", `${JSON.stringify(routeTable(repo), null, 2)}\n`);
+  const realtime = JSON.parse(fs.readFileSync(path.join(repo, "docs/api/realtime.schema.json"), "utf8")) as { $defs: { ClientEvent: unknown } };
+  files.set("realtime-client.schema.json", `${JSON.stringify(realtime.$defs.ClientEvent, null, 2)}\n`);
   return files;
 }
 

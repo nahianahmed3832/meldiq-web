@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { openEnum } from "../api/enums";
 import type { Engine } from "./engine";
 
 /**
@@ -40,10 +41,8 @@ const zMeeting = z.object({
   canEdit: z.boolean(),
   rev: z.number(),
   /** Batch B8b: how it repeats (null: once). */
-  repeat: z
-    .enum(["weekly", "biweekly", "monthly", "yearly"])
+  repeat: openEnum(["weekly", "biweekly", "monthly", "yearly"])
     .nullish()
-    .catch(null)
     .transform((v) => v ?? null),
 });
 export type Meeting = z.infer<typeof zMeeting>;

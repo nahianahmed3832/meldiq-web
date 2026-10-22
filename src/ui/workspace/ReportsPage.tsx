@@ -74,7 +74,7 @@ export function ReportsPage({ detail }: { detail: OrgAdminDetail }) {
             )}
             {r.status !== "open" && (
               <p className="faint" style={{ margin: 0 }}>
-                {r.status === "actioned" ? "Handled" : "Dismissed"} by {r.handledBy?.displayName ?? "a moderator"}
+                {r.status === "actioned" ? "Handled" : r.status === "dismissed" ? "Dismissed" : "Changed in a newer version of Meldiq"} by {r.handledBy?.displayName ?? "a moderator"}
                 {r.handledNote ? ` · ${r.handledNote}` : ""}
               </p>
             )}

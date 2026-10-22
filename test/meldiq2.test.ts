@@ -118,10 +118,24 @@ describe("closed analytics values", () => {
 });
 
 describe("workspace kind", () => {
-  it("is a team unless the server says community", () => {
+  it("is a team when the server says nothing, and unknown (not a team) when it says something newer", () => {
     const base = { id: "o1", name: "Acme", slug: "acme", description: null, myRole: "OWNER", memberCount: 1, createdAt: 1 };
     expect(zOrg.parse(base).kind).toBe("team");
     expect(zOrg.parse({ ...base, kind: "community" }).kind).toBe("community");
-    expect(zOrg.parse({ ...base, kind: "something-new" }).kind).toBe("team");
+    expect(zOrg.parse({ ...base, kind: "something-new" }).kind).toBe("unknown");
+  });
+});
+
+describe("enums the server may extend", () => {
+  it("keep a value this version doesn't know as unknown instead of a real one", async () => {
+    const { zOverwrite, zApplicationStatus } = await import("../src/api/communitySchemas");
+    const { zConversation } = await import("../src/api/schemas");
+    const { readCopy } = await import("./support/contracts");
+    expect(zApplicationStatus.parse("waitlisted")).toBe("unknown");
+    expect(zApplicationStatus.parse("approved")).toBe("approved");
+    expect(zOverwrite.parse({ subject: "g_1", kind: "group", label: "Group", color: null, allow: [], deny: [] }).kind).toBe("unknown");
+    const [real] = readCopy<{ conversations: Record<string, unknown>[] }>("http/GET_v1_conversations.json").conversations;
+    expect(zConversation.parse({ ...real, format: "canvas" }).format).toBe("unknown");
+    expect(zConversation.parse(real).format).toBe("text");
   });
 });

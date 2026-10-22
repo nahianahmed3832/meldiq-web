@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { openEnum } from "../api/enums";
 import { type Conversation, zConversation, zMember } from "../api/schemas";
 import { createInvitation } from "./workspaces";
 import type { Engine } from "./engine";
@@ -61,7 +62,7 @@ export type RequestPolicy = (typeof REQUEST_POLICIES)[number];
 export const DM_POLICY_LABEL: Record<DmPolicy, string> = { everyone: "Everyone", communities: "People in your communities", connections: "Only your connections" };
 export const REQUEST_POLICY_LABEL: Record<RequestPolicy, string> = { everyone: "Everyone", communities: "People in your communities", nobody: "Nobody" };
 
-const zMessaging = z.object({ dmPolicy: z.enum(DM_POLICIES).catch("everyone"), requestPolicy: z.enum(REQUEST_POLICIES).catch("everyone") });
+const zMessaging = z.object({ dmPolicy: openEnum(DM_POLICIES), requestPolicy: openEnum(REQUEST_POLICIES) });
 export type MessagingSettings = z.infer<typeof zMessaging>;
 
 export function messagingSettings(engine: Engine): Promise<MessagingSettings> {

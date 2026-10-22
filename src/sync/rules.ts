@@ -131,6 +131,13 @@ export function callEntry(item: QueueItem, mine: boolean, callId: string, video:
   };
 }
 
+/** Shown for a message this version can't read (a newer item kind or payload): kept, never silently dropped. */
+export const UNSUPPORTED_TEXT = "This message was sent from a newer version of Meldiq and can't be shown here.";
+
+export function unsupported(item: QueueItem, reason: string): StoredMessage {
+  return { ...undecryptable(item, reason), text: UNSUPPORTED_TEXT };
+}
+
 export function undecryptable(item: QueueItem, reason: string): StoredMessage {
   return {
     ...textMessage({ type: "text" }, item, false, item.createdAt, { ids: [], all: false }),

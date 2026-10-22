@@ -263,7 +263,13 @@ export function ApplicationsPage({ detail }: { detail: OrgAdminDetail }) {
           ) : (
             <p className="faint" style={{ margin: 0 }}>
               {a.status === "approved" ? <Check size={13} /> : null}{" "}
-              {a.status === "approved" ? `Let in by ${a.handledByName ?? "a moderator"}` : a.status === "denied" ? `Declined by ${a.handledByName ?? "a moderator"}` : "Withdrawn"}
+              {a.status === "approved"
+                ? `Let in by ${a.handledByName ?? "a moderator"}`
+                : a.status === "denied"
+                  ? `Declined by ${a.handledByName ?? "a moderator"}`
+                  : a.status === "withdrawn"
+                    ? "Withdrawn"
+                    : "Status set in a newer version of Meldiq"}
               {a.note ? ` · ${a.note}` : ""}
             </p>
           )}

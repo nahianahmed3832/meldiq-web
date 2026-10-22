@@ -34,7 +34,7 @@ export interface Me {
   statusExpiresAt?: number | null;
   notificationsPausedUntil?: number | null;
   /** Batch B6b: your presence choice and until when; B12: your pronouns. */
-  presenceMode?: "auto" | "idle" | "dnd" | "invisible" | null;
+  presenceMode?: "auto" | "idle" | "dnd" | "invisible" | "unknown" | null;
   presenceUntil?: number | null;
   pronouns?: string | null;
   /** This browser's device-key fingerprint, as the phone shows it. */
