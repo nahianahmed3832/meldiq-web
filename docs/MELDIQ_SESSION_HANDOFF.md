@@ -9,7 +9,8 @@ status is **`docs/product/MELDIQ_WEB_PARITY_MATRIX.md`**.
 - **Branch:** `meldiq-web-android-parity` on GitHub (pushed 2026-10-22 under the owner's name), pull request
   https://github.com/nahianahmed3832/meldiq-web/pull/1 into `main` (not merged: pushing `main` directly was refused by the
   session's permission check, so it waits for review). Local worktree: `orbit_web/.claude/worktrees/meldiq-web-android-parity-a6333c`.
-- **Production:** release **0.5.0-beta-4f4c289** live at https://web.meldiq.app since 2026-10-22 03:49 UTC (details below).
+- **Production:** release **0.5.0-beta-ea703df** live at https://web.meldiq.app since 2026-10-22 05:10 UTC (screen-share and
+  notification fixes, below); before it 0.5.0-beta-4f4c289 from 03:49 UTC.
 - **Commits, in order:**
 
 | Commit | Batches | What |
@@ -105,6 +106,23 @@ status is **`docs/product/MELDIQ_WEB_PARITY_MATRIX.md`**.
 - `vitest`: 86 files, 505 passed, 21 skipped, 0 failed (server 0.25.0).
 - Chromium e2e: 17 of 18 passed in the full run. The failure was the known intermittent video call test, which then
   passed 2 of 2 on its own.
+
+### Release 0.5.0-beta-ea703df (2026-10-22 05:10 UTC, at the owner's request)
+
+- Built from `ea703df` (PR #2's head, not yet merged), with typecheck, lint, 347 unit tests and the build. Installed with the
+  same command as 4f4c289, **without** `MELDIQ_FIREBASE_CONFIG`: background notifications show "not set up for this site"
+  until the owner's Firebase web app and Web Push key exist (`MELDIQ_WEB_PUSH.md` §3); notifications with a tab open and
+  the screen-share fix are live.
+- Checked:
+  - `verify.sh` passed every check.
+  - `/sw.js` is served as `application/javascript`, `no-cache`, byte-identical to the build, and the page serves the new
+    bundle.
+  - The production service worker installs and activates under the live CSP (registered by hand in a test browser,
+    then removed). The sign-in page loads without console errors.
+  - `web.griipbuddy.cloud` still 301s.
+- Not checked in production: anything after signing in, calls, phones.
+- Roll back: `bash /root/meldiq-web-0.5.0-beta-ea703df/rollback.sh` (to 0.5.0-beta-4f4c289).
+- Until PR #2 is merged, a deploy built from `main` would roll these fixes back.
 
 ## Open items
 
