@@ -6,7 +6,8 @@ Branch `meldiq-web-android-parity` brings Android's batches B1–B16 to the web:
 settings, moderation, connections and message requests, forums and the guide, community emoji, call controls (B10,
 B11), the minimal DM screen (B14) and motion (B16). Behaviour-by-behaviour status, with what's missing and what wasn't
 verified: **`product/MELDIQ_WEB_PARITY_MATRIX.md`**. Commits and how it was checked: `MELDIQ_SESSION_HANDOFF.md`.
-**The web is not at full parity**: the matrix lists the gaps. Nothing from this round is in production.
+**The web is not at full parity**: the matrix lists the gaps. Live in production since 2026-10-22 03:49 UTC as release
+**0.5.0-beta-4f4c289** after an audit (`MELDIQ_WEB_AUDIT_2026-10-22.md`); pull request #1 brings it to `main`.
 
 The sections below are from 2026-10-20.
 

@@ -11,12 +11,14 @@ Updated 2026-10-22. One row per behaviour. **The web is not at full parity:** ro
   `main` (`ffbbc55`, adds `df66b32`/`e9f8d2b`). Poll end times and answer emoji (`dbf67ce`) were already in `main`.
 - **Server used for tests:** a copy of the server repository's current code (API **0.24.0**), started in-process by the
   live tests and as a local server on port 8188 for browser checks. Production runs **0.25.0** (adds the B14 voice
-  channel refusal, which the web already respects). No production server, database or deployment was touched.
+  channel refusal, which the web already respects). Tests didn't touch production. After the audit the web was deployed as 0.5.0-beta-4f4c289 (the API wasn't changed);
+  in production only the public checks and the sign-in page were looked at.
 - **Automated:** `vitest` full suite after the merge (unit tests port Android's rule tests; `live-*` tests run the web
   engine against the real server code, with the reference client playing the phone). Playwright call e2e (Chromium,
   local LiveKit, the native `griip-bot` peer): **6 of 6 passed** on 2026-10-22.
 - **By hand:** the in-app browser against the local server, at desktop width and at 375 px (phone emulation).
-- **Not done anywhere in this round:** a physical phone, a real Android device talking to this web build, production,
+- **Not done anywhere in this round:** a physical phone, a real Android device talking to this web build, anything after
+  signing in on production,
   Safari and Firefox by hand, and a 1 GiB upload over a real network.
 
 ### Status words

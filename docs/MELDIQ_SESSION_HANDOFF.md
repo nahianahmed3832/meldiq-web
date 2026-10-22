@@ -6,8 +6,10 @@ status is **`docs/product/MELDIQ_WEB_PARITY_MATRIX.md`**.
 
 ## Where things are
 
-- **Branch:** `meldiq-web-android-parity` in the meldiq-web worktree
-  `orbit_web/.claude/worktrees/meldiq-web-android-parity-a6333c`. Not pushed, no PR, not deployed.
+- **Branch:** `meldiq-web-android-parity` on GitHub (pushed 2026-10-22 under the owner's name), pull request
+  https://github.com/nahianahmed3832/meldiq-web/pull/1 into `main` (not merged: pushing `main` directly was refused by the
+  session's permission check, so it waits for review). Local worktree: `orbit_web/.claude/worktrees/meldiq-web-android-parity-a6333c`.
+- **Production:** release **0.5.0-beta-4f4c289** live at https://web.meldiq.app since 2026-10-22 03:49 UTC (details below).
 - **Commits, in order:**
 
 | Commit | Batches | What |
@@ -57,6 +59,25 @@ status is **`docs/product/MELDIQ_WEB_PARITY_MATRIX.md`**.
   with New group. Afterwards: full suite **84 files, 491 passed, 21 skipped, 0 failed**; `calls.spec.ts` and
   `voice-room.spec.ts` in Chromium **7 of 7 passed**.
 - Still not on the web from B14: timeline media sizing and quiet call notes (DM-06).
+
+## Release 0.5.0-beta-4f4c289 (2026-10-22, at the owner's request, after the audit)
+
+- Audit first: `MELDIQ_WEB_AUDIT_2026-10-22.md` (10 findings, none critical, high or security; all fixed in `828e063`).
+- Tested against production's server version (0.25.0, Android commit `22d5303`, exported read-only): `vitest` 84 files,
+  492 passed, 21 skipped, 0 failed; `calls.spec.ts` + `voice-room.spec.ts` in Chromium 7 of 7 passed.
+- `main` had moved (`1988d91`, another session's B15 intro and checklist change); merged in `4f4c289` (the intro keeps
+  Android's newer voice-channel line; the checklist drops the apps step everywhere, as B15 does).
+- Built with `deploy/scripts/build-release.sh` (typecheck, lint, 334 unit tests, build), uploaded, `sha256sum -c` on the
+  VPS, installed with the same settings as the previous release:
+  `MELDIQ_WEB_BASE_URL=https://web.meldiq.app MELDIQ_ENVIRONMENT=production MELDIQ_API_UPSTREAM=127.0.0.1:18080
+  MELDIQ_REDIRECT_HOSTS=web.griipbuddy.cloud MELDIQ_CONNECT_EXTRA="https://rtc.meldiq.app wss://rtc.meldiq.app
+  https://rtc.griipbuddy.cloud wss://rtc.griipbuddy.cloud https://griipbuddy-orbit-media-sg.s3.ap-southeast-1.amazonaws.com"`.
+  The API wasn't touched.
+- Checked: `verify.sh https://web.meldiq.app` all passed (DNS, TLS, headers, config, API 0.25.0 through the site, realtime
+  101); the site serves the new bundle; `web.griipbuddy.cloud` still 301s; the sign-in page loads without console errors.
+  **Not checked in production:** anything after signing in (no account was used), calls, phones.
+- Roll back: `bash /root/meldiq-web-0.5.0-beta-4f4c289/rollback.sh` on the VPS (previous: `0.2.4-beta-e9f8d2b`).
+- After PR #1 is merged, `main` matches production; until then a deploy built from `main` would roll these changes back.
 
 ## Open items
 
