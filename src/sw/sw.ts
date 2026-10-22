@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { ApiClient } from "../api/client";
 import { zConversation, zProfile, zQueueItem } from "../api/schemas";
+import { installLegacyCurves } from "../crypto/legacyCurves";
 import { LocalStore } from "../store/db";
 import { type NavPrefs, PERSONAL, workspaceOf, zNavDoc } from "../sync/navPrefs";
 import { SessionManager } from "../sync/session";
@@ -72,6 +73,7 @@ const zConversations = z.object({ conversations: z.array(zConversation) });
 
 /** What's waiting for this browser, as notifications (nothing is acknowledged: the app still fetches it all). */
 async function lookUp(): Promise<WakeNotice[]> {
+  await installLegacyCurves().catch(() => []); // signing in below needs Ed25519 (Safari before 17: the fallback)
   const store = await LocalStore.open();
   let device;
   try {

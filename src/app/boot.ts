@@ -8,14 +8,17 @@ import type { DeviceRecord } from "../model/types";
 import { getPrefs } from "./prefs";
 import { refreshPush, startServiceWorker, systemNotify } from "./webPush";
 
-/** What this browser needs: a secure context, WebCrypto with Ed25519 and X25519, IndexedDB and WebSockets. */
+/**
+ * What this browser needs: a secure context, WebCrypto with Ed25519 and X25519 (natively, or the fallback that main.tsx
+ * installs for Safari before 17), IndexedDB and WebSockets. Colours no longer need light-dark(): older browsers get the
+ * same palettes through a generated fallback (vite.config.ts, docs/MELDIQ_WEB_BROWSERS.md).
+ */
 export async function missingCapabilities(): Promise<string[]> {
   const missing: string[] = [];
   if (!window.isSecureContext) missing.push("a secure connection (HTTPS)");
   if (!window.crypto?.subtle) missing.push("the Web Crypto API");
   if (typeof indexedDB === "undefined") missing.push("IndexedDB storage");
   if (typeof WebSocket === "undefined") missing.push("WebSockets");
-  if (!CSS.supports("color", "light-dark(#000, #fff)")) missing.push("light and dark colours in CSS (light-dark())");
   if (missing.length) return missing;
   try {
     await crypto.subtle.generateKey({ name: "Ed25519" }, false, ["sign", "verify"]);

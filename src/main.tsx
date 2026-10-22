@@ -11,6 +11,7 @@ import "./styles/community.css";
 import "./styles/motion.css";
 import "./styles/responsive.css"; // last: its media queries override the rest
 import { loadConfig } from "./app/config";
+import { installLegacyCurves } from "./crypto/legacyCurves";
 import { App } from "./ui/App";
 import { ConfigError } from "./ui/StatusScreens";
 
@@ -18,6 +19,8 @@ applyTheme(getPrefs());
 
 const root = createRoot(document.getElementById("root")!);
 try {
+  // Safari before 17 (every iPhone 8) has no Ed25519/X25519 in WebCrypto: the fallback fills in before anything signs.
+  await installLegacyCurves().catch(() => []);
   await loadConfig();
   root.render(
     <StrictMode>
