@@ -12,12 +12,14 @@ import "./styles/motion.css";
 import "./styles/responsive.css"; // last: its media queries override the rest
 import { loadConfig } from "./app/config";
 import { followVisualViewport } from "./app/viewport";
+import { hideSplash, startSplash } from "./app/splash";
 import { installLegacyCurves } from "./crypto/legacyCurves";
 import { App } from "./ui/App";
 import { ConfigError } from "./ui/StatusScreens";
 
 applyTheme(getPrefs());
 followVisualViewport();
+startSplash();
 
 const root = createRoot(document.getElementById("root")!);
 try {
@@ -32,4 +34,5 @@ try {
 } catch (e) {
   // A deployment mistake (an unreadable config.json): say so rather than talking to the wrong server.
   root.render(<ConfigError message={e instanceof Error ? e.message : "Meldiq Web isn't configured correctly."} />);
+  hideSplash();
 }

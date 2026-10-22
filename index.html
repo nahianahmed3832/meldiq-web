@@ -22,9 +22,46 @@
     <link rel="apple-touch-icon" href="/meldiq-180.png" />
     <link rel="manifest" href="/manifest.webmanifest" />
     <title>Meldiq</title>
+    <!--
+      The launch screen (docs/MELDIQ_WEB_LAUNCH.md): the logo at once (an 11 KB still), its 5-second animation (60 KB H.264,
+      from meldiq_animation.mp4) only where motion is welcome, gone as soon as the app has started (src/app/splash.ts).
+    -->
+    <style>
+      #splash {
+        position: fixed;
+        inset: 0;
+        z-index: 1000;
+        display: grid;
+        place-items: center;
+        background: #0a132d;
+        transition: opacity 220ms ease;
+      }
+      #splash.done {
+        opacity: 0;
+        pointer-events: none;
+      }
+      #splash > * {
+        grid-area: 1 / 1;
+        width: min(62vmin, 320px);
+        height: auto;
+        aspect-ratio: 1;
+        object-fit: contain;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        #splash {
+          transition: none;
+        }
+      }
+    </style>
   </head>
   <body>
     <noscript>Meldiq needs JavaScript: it encrypts and decrypts your messages in this browser.</noscript>
+    <div id="splash" aria-hidden="true">
+      <img src="/launch/meldiq-launch.jpg" alt="" width="480" height="480" decoding="async" />
+      <video muted autoplay playsinline preload="auto" poster="/launch/meldiq-launch.jpg" disablepictureinpicture disableremoteplayback>
+        <source src="/launch/meldiq-launch.mp4" type="video/mp4" media="(prefers-reduced-motion: no-preference)" />
+      </video>
+    </div>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
