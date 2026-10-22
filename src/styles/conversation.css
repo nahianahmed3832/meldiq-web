@@ -2016,3 +2016,34 @@
   text-transform: uppercase;
   color: var(--text-2);
 }
+
+/* Batch B14b: a channel's header is "# name ›" and who's online; its details have the channel's icon and topic. */
+.conv-title-chevron {
+  flex-shrink: 0;
+  color: var(--text-3);
+}
+.online-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin-right: 5px;
+  border-radius: 50%;
+  background: var(--presence-on);
+  vertical-align: 1px;
+}
+.details-channel-icon {
+  display: grid;
+  place-items: center;
+  width: 72px;
+  height: 72px;
+  border-radius: 22px;
+  background: var(--surface-sunken);
+  color: var(--text-2);
+}
+.details-topic {
+  margin: 0;
+  text-align: center;
+  color: var(--text-2);
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}

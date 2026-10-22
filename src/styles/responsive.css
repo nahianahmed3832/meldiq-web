@@ -108,7 +108,8 @@
     padding: 0 9px;
   }
   .topbar-right .hide-sm,
-  .composer-row .hide-sm {
+  .composer-row .hide-sm,
+  .conv-title .hide-sm {
     display: none;
   }
   .sidebar {

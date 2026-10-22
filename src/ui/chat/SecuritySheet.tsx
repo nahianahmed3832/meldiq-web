@@ -1,6 +1,6 @@
-import { Blocks, Info, Lock, MessageSquare, Paperclip, Phone, Server, ShieldAlert, ShieldCheck, ShieldQuestion } from "lucide-react";
+import { Blocks, Info, MessageSquare, Paperclip, Phone, Server, ShieldAlert, ShieldCheck, ShieldQuestion } from "lucide-react";
 import { type ReactNode, useEffect, useState } from "react";
-import { shallowEqual, useEngine, useOrbit } from "../../app/orbit";
+import { useEngine, useOrbit } from "../../app/orbit";
 import { navigate, useRoute } from "../../app/router";
 import { isRemoteUsername, type SecurityFacts, type SecurityPoint, securityPoints } from "../../sync/conversationSecurity";
 import { Dialog } from "../components/Overlay";
@@ -39,23 +39,6 @@ function useFacts(conversationId: string): { facts: SecurityFacts; peer: { id: s
   }, [engine, peerId]);
   if (!base) return null;
   return { facts: { type: base.type, peerVerified: base.type === "DM" ? peerVerified === true : null, changedMembers: base.changedMembers, otherServers: base.otherServers }, peer: base.peer };
-}
-
-/** The padlock in the conversation header (android SecurityPadlock): quiet, in the warning colour when a key changed. */
-export function SecurityPadlock({ conversationId }: { conversationId: string }) {
-  const [open, setOpen] = useState(false);
-  const attention = useOrbit((s) => {
-    const ids = new Set((s.conversations[conversationId]?.members ?? []).map((m) => m.id));
-    return s.identityAlerts.some((a) => ids.has(a.userId));
-  }, shallowEqual);
-  return (
-    <>
-      <button className={`icon-btn${attention ? " warn" : ""}`} onClick={() => setOpen(true)} aria-label={attention ? "Security details: a security key changed" : "Security details"} title="Security">
-        {attention ? <ShieldAlert size={18} /> : <Lock size={17} />}
-      </button>
-      {open && <SecuritySheet conversationId={conversationId} onClose={() => setOpen(false)} />}
-    </>
-  );
 }
 
 const TEXT: Record<SecurityPoint, { icon: ReactNode; tone: "ok" | "warn" | "plain"; title: string; body: (who: string) => string }> = {

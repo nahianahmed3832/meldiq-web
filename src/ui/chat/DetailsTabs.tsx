@@ -9,8 +9,9 @@ import { filterFiles, type Gallery, type GalleryItem, type LinkItem } from "./ga
 import { jumpTo } from "./jump";
 import { usePinned } from "./PinnedPanel";
 import { SafeLink } from "./SafeLink";
+import { MediaGalleryDialog } from "./MediaGalleryDialog";
 
-const TAB_LABEL: Record<DetailsTab, string> = { members: "Members", media: "Media", pins: "Pins", links: "Links", files: "Files" };
+const TAB_LABEL: Record<DetailsTab, string> = { members: "Members", media: "Media", pins: "Pins", threads: "Threads", links: "Links", files: "Files" };
 
 /** Photos are decrypted as they're shown: a page at a time keeps a long history from downloading everything at once. */
 const PAGE = 18;
@@ -63,6 +64,20 @@ interface ItemsTabProps {
   nameOf: (i: GalleryItem) => string;
 }
 
+/** "Save several…": the gallery with bulk save to a folder (android round 7), for more than one item. */
+function SaveSeveral({ gallery, nameOf }: { gallery: Gallery; nameOf: (i: GalleryItem) => string }) {
+  const [open, setOpen] = useState(false);
+  if (gallery.media.length + gallery.files.length < 2) return null;
+  return (
+    <>
+      <button className="btn btn-ghost btn-sm" style={{ justifySelf: "start" }} onClick={() => setOpen(true)}>
+        Save several…
+      </button>
+      {open && <MediaGalleryDialog gallery={gallery} nameOf={nameOf} onClose={() => setOpen(false)} />}
+    </>
+  );
+}
+
 export function MediaTab({ conversationId, gallery, nameOf }: ItemsTabProps) {
   const [shown, setShown] = useState(PAGE);
   const [missing, setMissing] = useState(false);
@@ -88,6 +103,7 @@ export function MediaTab({ conversationId, gallery, nameOf }: ItemsTabProps) {
           Show more ({gallery.media.length - shown})
         </button>
       )}
+      <SaveSeveral gallery={gallery} nameOf={nameOf} />
     </>
   );
 }
@@ -121,6 +137,7 @@ export function FilesTab({ conversationId, gallery, nameOf }: ItemsTabProps) {
           ))}
         </div>
       )}
+      <SaveSeveral gallery={gallery} nameOf={nameOf} />
     </div>
   );
 }
