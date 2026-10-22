@@ -1,6 +1,6 @@
 import { AtSign, House, MessagesSquare, Settings } from "lucide-react";
-import { useOrbit } from "../../app/orbit";
-import { navigate, type Section } from "../../app/router";
+import { useOrbit } from "../../application/orbit";
+import { navigate, type Section } from "../../application/router";
 import { mentionCount, unreadPeopleCount } from "../selectors";
 
 /** Phones: the bottom tab bar (hidden inside a conversation, like the phone app). */

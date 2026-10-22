@@ -1,4 +1,4 @@
-import { apiBase, serverHost } from "../../app/config";
+import { apiBase, serverHost } from "../../application/config";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { AccountSessionGrant, AccountView, LegacyTicket } from "../../api/accountSchemas";
 import { ApiClient } from "../../api/client";

@@ -1,8 +1,8 @@
 import { AtSign, Compass, Hash, Inbox, MessagesSquare, PenSquare, RotateCw, ShieldCheck, UsersRound } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { OrgDetail } from "../../api/schemas";
-import { shallowEqual, useEngine, useOrbit } from "../../app/orbit";
-import { navigate, type Section } from "../../app/router";
+import { shallowEqual, useEngine, useOrbit } from "../../application/orbit";
+import { navigate, type Section } from "../../application/router";
 import { orgDetail } from "../../sync/account";
 import { Avatar, colorIndexOf } from "../components/Avatar";
 import { conversationTitle, dmPeer, shortWhen } from "../format";

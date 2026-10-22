@@ -1,8 +1,8 @@
 import { MessageSquare, PenSquare, Search, ScrollText } from "lucide-react";
 import { type FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import type { Conversation } from "../../api/schemas";
-import { useEngine, useOrbit } from "../../app/orbit";
-import { navigate, type Section } from "../../app/router";
+import { useEngine, useOrbit } from "../../application/orbit";
+import { navigate, type Section } from "../../application/router";
 import type { StoredMessage } from "../../model/types";
 import { cleanTitle, filterPosts, guidelinesPreview, MAX_TAGS_PER_POST, MAX_TITLE, postBody, posts, type PostSort, postText, titleOf, topReaction } from "../../sync/forumRules";
 import { Avatar } from "../components/Avatar";

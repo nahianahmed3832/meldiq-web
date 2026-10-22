@@ -2,9 +2,9 @@ import { Building2, Hash, MessageSquareText, Paperclip, Pin, Search, UsersRound,
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import type { Conversation, Member } from "../../api/schemas";
-import { useEngine, useOrbit } from "../../app/orbit";
-import { setPrefs } from "../../app/prefs";
-import { navigate } from "../../app/router";
+import { useEngine, useOrbit } from "../../application/orbit";
+import { setPrefs } from "../../application/prefs";
+import { navigate } from "../../application/router";
 import type { StoredMessage } from "../../model/types";
 import type { AttachmentRef } from "../../protocol/payload";
 import { joinChannel, searchPeople, startDirect } from "../../sync/account";

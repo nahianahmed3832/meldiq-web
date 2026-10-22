@@ -3,8 +3,8 @@ import { UNKNOWN } from "../../api/enums";
 import { EVENT_REPEATS, type EventRepeatChoice, repeatLabel } from "../../sync/workspaceC5";
 import { useState } from "react";
 import type { OrgAdminDetail } from "../../api/workspaceSchemas";
-import { shallowEqual, useCommunityServer, useEngine, useOrbit } from "../../app/orbit";
-import { navigate } from "../../app/router";
+import { shallowEqual, useCommunityServer, useEngine, useOrbit } from "../../application/orbit";
+import { navigate } from "../../application/router";
 import {
   cancelMeeting,
   createMeeting,

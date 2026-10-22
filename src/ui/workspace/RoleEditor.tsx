@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { Toggle } from "../components/Toggle";
-import { useEngine, useOrbit } from "../../app/orbit";
+import { useEngine, useOrbit } from "../../application/orbit";
 import { createRole, grantable, type PermissionDef, type Role, type RolesOverview, updateRole } from "../../sync/roles";
 import { Dialog } from "../components/Overlay";
 import { ErrorLine } from "./WorkspaceView";

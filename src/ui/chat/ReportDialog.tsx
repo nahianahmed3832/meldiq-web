@@ -1,7 +1,7 @@
 import { Flag, ShieldBan } from "lucide-react";
 import { useState } from "react";
 import { ApiError } from "../../api/client";
-import { useEngine, useOrbit } from "../../app/orbit";
+import { useEngine, useOrbit } from "../../application/orbit";
 import type { StoredMessage } from "../../model/types";
 import { goesToCommunity, REASON_LABEL, REPORT_CONTEXT, REPORT_NOTE_MAX, REPORT_REASONS, type ReportReason, reportContent, sendReport } from "../../sync/reports";
 import { Dialog } from "../components/Overlay";

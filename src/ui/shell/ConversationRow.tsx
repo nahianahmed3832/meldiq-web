@@ -21,8 +21,8 @@ import {
   UsersRound,
 } from "lucide-react";
 import { memo, type MouseEvent, useState } from "react";
-import { useEngine, useOrbit } from "../../app/orbit";
-import { navigate, useRoute } from "../../app/router";
+import { useEngine, useOrbit } from "../../application/orbit";
+import { navigate, useRoute } from "../../application/router";
 import type { ConversationLocal } from "../../model/types";
 import { levelOf, newSectionId, type NotifyLevel, placeOf, workspaceOf } from "../../sync/navPrefs";
 import { GroupAvatar, UserAvatar } from "../components/OrgAvatar";

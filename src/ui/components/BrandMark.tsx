@@ -1,4 +1,4 @@
-import { BRAND } from "../../app/brand";
+import { BRAND } from "../../application/brand";
 
 /**
  * The Meldiq logo, from the one authoritative source (brand/meldiq-logo.webp, cropped and scaled by

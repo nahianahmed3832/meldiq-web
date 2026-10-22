@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { Conversation } from "../src/api/schemas";
-import { parseRoute, routeHash } from "../src/app/router";
+import { parseRoute, routeHash } from "../src/application/router";
 import { initialState, type AppState, upsertLoaded, withMessages } from "../src/state/store";
 import { bytes, conversationTitle, dayLabel, relative, sameDay, shortWhen } from "../src/ui/format";
 import { channelGroups, inWorkspace, mentionConversations, mentionCount, orgUnread, people, unreadPeopleCount } from "../src/ui/selectors";

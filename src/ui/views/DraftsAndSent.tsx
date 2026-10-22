@@ -1,7 +1,7 @@
 import { PenLine, Send } from "lucide-react";
 import { useEffect, useState } from "react";
-import { shallowEqual, useEngine, useOrbit } from "../../app/orbit";
-import { navigate } from "../../app/router";
+import { shallowEqual, useEngine, useOrbit } from "../../application/orbit";
+import { navigate } from "../../application/router";
 import type { StoredMessage } from "../../model/types";
 import { conversationTitle, shortWhen } from "../format";
 import { inWorkspace } from "../selectors";

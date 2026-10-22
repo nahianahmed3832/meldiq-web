@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { OrgAdminDetail } from "../../api/workspaceSchemas";
-import { useEngine } from "../../app/orbit";
+import { useEngine } from "../../application/orbit";
 import { setGuestPolicy } from "../../sync/workspaceC5";
 import { useAction } from "./useLoad";
 import { Card, ErrorLine } from "./WorkspaceView";

@@ -11,7 +11,7 @@ redirects). The app is live at **https://web.meldiq.app**.
 
 - The rebrand from Orbit to Meldiq, what changed and what keeps the old name on purpose, and the plan for
   `web.meldiq.app`: [`docs/MELDIQ_REBRAND.md`](docs/MELDIQ_REBRAND.md)
-- Configuration: [`.env.example`](.env.example) and `/config.json` (`src/app/config.ts`)
+- Configuration: [`.env.example`](.env.example) and `/config.json` (`src/application/config.ts`)
 - Where things stand and what's next: [`docs/MELDIQ_WEB_STATUS.md`](docs/MELDIQ_WEB_STATUS.md); the Android parity
   inventory: [`docs/MELDIQ_WEB_FEATURE_PARITY.md`](docs/MELDIQ_WEB_FEATURE_PARITY.md)
 - Design system: the logo and its icons, colour tokens and the Indigo, Plum and Amber plates, scale, messaging:

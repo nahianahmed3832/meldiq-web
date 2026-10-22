@@ -1,4 +1,4 @@
-/** What the service worker and the page tell each other (src/sw/sw.ts, src/app/webPush.ts). */
+/** What the service worker and the page tell each other (src/sw/sw.ts, src/application/webPush.ts). */
 export const SW_WAKE = "meldiq-wake";
 export const SW_OPEN = "meldiq-open";
 

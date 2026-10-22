@@ -46,7 +46,7 @@ the config files and the install, rollback and verify scripts. The build contain
 
 ## 3. Configuration (per server, not per build)
 
-`/config.json` is read when the page loads (`src/app/config.ts`):
+`/config.json` is read when the page loads (`src/application/config.ts`):
 
 | Field | Production value | Meaning |
 |---|---|---|

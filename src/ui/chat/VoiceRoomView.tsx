@@ -1,8 +1,8 @@
 import { ChevronRight, Headphones, UserPlus } from "lucide-react";
 import type { Conversation } from "../../api/schemas";
-import { shallowEqual, useEngine, useOrbit } from "../../app/orbit";
-import { setPrefs } from "../../app/prefs";
-import { navigate } from "../../app/router";
+import { shallowEqual, useEngine, useOrbit } from "../../application/orbit";
+import { setPrefs } from "../../application/prefs";
+import { navigate } from "../../application/router";
 import { UserAvatar } from "../components/OrgAvatar";
 import { CallFailure } from "../../call/rules";
 import { roomPeople } from "../selectors";

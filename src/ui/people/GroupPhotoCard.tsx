@@ -2,7 +2,7 @@ import { Camera } from "lucide-react";
 import { useRef, useState } from "react";
 import { ApiError } from "../../api/client";
 import type { Conversation } from "../../api/schemas";
-import { useEngine, useOrbit } from "../../app/orbit";
+import { useEngine, useOrbit } from "../../application/orbit";
 import { removeGroupPhoto, setGroupPhoto } from "../../sync/social";
 import { GroupAvatar } from "../components/OrgAvatar";
 import { squareJpeg } from "../workspace/photo";

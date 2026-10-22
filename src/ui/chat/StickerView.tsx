@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { usePrefs } from "../../app/prefs";
+import { usePrefs } from "../../application/prefs";
 import type { StickerRef } from "../../protocol/payload";
 import { findSticker, type StickerSpec } from "../../sync/stickers";
 

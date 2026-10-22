@@ -1,5 +1,5 @@
 import type { OrgAdminDetail } from "../../api/workspaceSchemas";
-import { useEngine } from "../../app/orbit";
+import { useEngine } from "../../application/orbit";
 import { isBytes, workspacePlan, workspaceUsage, type WorkspaceUsage } from "../../sync/usage";
 import { bytes } from "../format";
 import { useLoad } from "./useLoad";

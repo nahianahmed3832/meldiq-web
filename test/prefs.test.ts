@@ -13,7 +13,7 @@ function storage(initial: Record<string, string>) {
 async function loadWith(stored: unknown) {
   vi.resetModules();
   vi.stubGlobal("localStorage", storage(stored === undefined ? {} : { "orbit.prefs.v1": JSON.stringify(stored) }));
-  return import("../src/app/prefs");
+  return import("../src/application/prefs");
 }
 
 afterEach(() => {

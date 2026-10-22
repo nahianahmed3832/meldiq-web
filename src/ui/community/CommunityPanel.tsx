@@ -2,8 +2,8 @@ import { BellOff, ChevronDown, Eye, MoreHorizontal, Plus } from "lucide-react";
 import { memo, type MouseEvent, useEffect, useMemo, useState } from "react";
 import type { Category } from "../../api/communitySchemas";
 import type { Conversation } from "../../api/schemas";
-import { shallowEqual, useEngine, useOrbit } from "../../app/orbit";
-import { navigate, useRoute } from "../../app/router";
+import { shallowEqual, useEngine, useOrbit } from "../../application/orbit";
+import { navigate, useRoute } from "../../application/router";
 import { joinCommunityChannel, saveLayout, updateChannel } from "../../sync/community";
 import {
   allMuted,

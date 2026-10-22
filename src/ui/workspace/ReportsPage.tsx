@@ -1,7 +1,7 @@
 import { Flag, Paperclip } from "lucide-react";
 import { useState } from "react";
 import type { OrgAdminDetail } from "../../api/workspaceSchemas";
-import { useEngine, useOrbit } from "../../app/orbit";
+import { useEngine, useOrbit } from "../../application/orbit";
 import { communityReports, REASON_LABEL, type ReportReason, setReportStatus } from "../../sync/reports";
 import { bytes, shortWhen } from "../format";
 import { useAction, useLoad } from "./useLoad";

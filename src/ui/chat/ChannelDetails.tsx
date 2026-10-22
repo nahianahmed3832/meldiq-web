@@ -1,8 +1,8 @@
 import { ArrowLeft, Bell, BellOff, ChevronRight, KeyRound, Search, Settings, ShieldCheck } from "lucide-react";
 import { useState } from "react";
 import type { Conversation } from "../../api/schemas";
-import { useEngine, useOrbit } from "../../app/orbit";
-import { navigate, useRoute } from "../../app/router";
+import { useEngine, useOrbit } from "../../application/orbit";
+import { navigate, useRoute } from "../../application/router";
 import { levelOf, muteToggle, workspaceOf } from "../../sync/navPrefs";
 import { ChannelGlyph } from "../community/ChannelDialogs";
 import { PermissionsDialog } from "../community/PermissionsDialog";

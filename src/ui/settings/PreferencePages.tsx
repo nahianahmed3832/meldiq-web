@@ -1,8 +1,8 @@
 import { fileLimit, MAX_FILES_PER_MESSAGE } from "../../sync/attachments";
-import { serverHost } from "../../app/config";
+import { serverHost } from "../../application/config";
 import { useState } from "react";
-import { useOrbit } from "../../app/orbit";
-import { MESSAGE_LAYOUTS, type Palette, PALETTES, type Prefs, setPrefs, TEXT_SIZES, type TextSize, THEMES, usePrefs } from "../../app/prefs";
+import { useOrbit } from "../../application/orbit";
+import { MESSAGE_LAYOUTS, type Palette, PALETTES, type Prefs, setPrefs, TEXT_SIZES, type TextSize, THEMES, usePrefs } from "../../application/prefs";
 import { bytes } from "../format";
 import { Toggle } from "../components/Toggle";
 import { IntroPages } from "../auth/IntroPages";

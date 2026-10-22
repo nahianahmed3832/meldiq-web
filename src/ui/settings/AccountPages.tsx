@@ -1,7 +1,7 @@
 import { KeyRound, Laptop, LogOut, Smartphone, Trash2 } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import type { Device } from "../../api/schemas";
-import { useEngine, useOrbit } from "../../app/orbit";
+import { useEngine, useOrbit } from "../../application/orbit";
 import { fingerprint } from "../../crypto/identity";
 import { listDevices, revokeDevice, signOut, SignOutUnconfirmed } from "../../sync/account";
 import { BlockedPeople, MessagingSettings, PrivacySettings } from "./PrivacyPage";

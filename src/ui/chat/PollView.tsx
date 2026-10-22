@@ -1,5 +1,5 @@
 import { BarChart3, Lock } from "lucide-react";
-import { useEngine } from "../../app/orbit";
+import { useEngine } from "../../application/orbit";
 import type { StoredMessage } from "../../model/types";
 import { pollClosed, tally, voters } from "../../sync/polls";
 

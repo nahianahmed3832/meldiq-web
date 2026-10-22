@@ -1,7 +1,7 @@
 import { Ban, Pencil, UserPlus } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { Conversation, Member } from "../../api/schemas";
-import { useEngine } from "../../app/orbit";
+import { useEngine } from "../../application/orbit";
 import { searchPeople } from "../../sync/account";
 import { block, blockedIds, unblock } from "../../sync/profile";
 import { addConversationMember, directory, updateConversation } from "../../sync/workspaces";

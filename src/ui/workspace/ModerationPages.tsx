@@ -1,7 +1,7 @@
 import { Ban, Check, Minus, Plus, Shield, UserCheck, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { OrgAdminDetail } from "../../api/workspaceSchemas";
-import { useEngine, useOrbit } from "../../app/orbit";
+import { useEngine, useOrbit } from "../../application/orbit";
 import { answerApplication, applications, bans, setJoinQuestions, setSecurity, unban, updateCommunityAccess } from "../../sync/community";
 import { PAUSE_CHOICES, running } from "../../sync/reports";
 import { Toggle } from "../components/Toggle";

@@ -2,8 +2,8 @@ import { Archive, ArchiveRestore, Hash, Lock, Megaphone, Plus } from "lucide-rea
 import { type FormEvent, useState } from "react";
 import type { Conversation } from "../../api/schemas";
 import type { OrgAdminDetail } from "../../api/workspaceSchemas";
-import { useEngine, useOrbit } from "../../app/orbit";
-import { navigate } from "../../app/router";
+import { useEngine, useOrbit } from "../../application/orbit";
+import { navigate } from "../../application/router";
 import { joinChannel } from "../../sync/account";
 import { type ChannelKind, type ChannelScope, createChannel, updateConversation, workspaceChannels } from "../../sync/workspaces";
 import { useAction, useLoad } from "./useLoad";

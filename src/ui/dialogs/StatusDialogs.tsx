@@ -2,7 +2,7 @@ import { BellOff, Clock } from "lucide-react";
 import { type FormEvent, useState } from "react";
 import { ApiError } from "../../api/client";
 import { currentPresence, PRESENCE_DURATIONS, PRESENCE_LABEL, PRESENCE_MODES, type PresenceMode, setPresence } from "../../sync/social";
-import { useEngine, useOrbit } from "../../app/orbit";
+import { useEngine, useOrbit } from "../../application/orbit";
 import {
   CLEAR_AFTER_LABEL,
   type ClearAfter,

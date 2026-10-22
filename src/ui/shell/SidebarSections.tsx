@@ -1,7 +1,7 @@
 import { Archive, AtSign, Bookmark, ChevronDown, Compass, Contact, MailQuestion, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
 import { type ReactNode, useState } from "react";
-import { shallowEqual, useEngine, useOrbit } from "../../app/orbit";
-import { setPrefs, usePrefs } from "../../app/prefs";
+import { shallowEqual, useEngine, useOrbit } from "../../application/orbit";
+import { setPrefs, usePrefs } from "../../application/prefs";
 import { Menu, useMenu } from "../components/Overlay";
 import { archivedPeople, channelGroups, homeLayout, type HomeSection, laterDue, mentionConversations, messageRequests, people } from "../selectors";
 import { ConversationRow, SectionNameDialog } from "./ConversationRow";

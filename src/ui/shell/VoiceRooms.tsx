@@ -1,6 +1,6 @@
 import { Headphones } from "lucide-react";
-import { shallowEqual, useEngine, useOrbit } from "../../app/orbit";
-import { navigate } from "../../app/router";
+import { shallowEqual, useEngine, useOrbit } from "../../application/orbit";
+import { navigate } from "../../application/router";
 import { UserAvatar } from "../components/OrgAvatar";
 import { roomPeople, voiceRooms } from "../selectors";
 import { Collapsible } from "./SidebarSections";

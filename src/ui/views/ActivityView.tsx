@@ -2,8 +2,8 @@ import { AtSign, Building2, Hash, LogIn, LogOut, MailPlus, MessagesSquare, Phone
 import { useEffect, useState } from "react";
 import { ApiError } from "../../api/client";
 import type { Activity } from "../../api/schemas";
-import { shallowEqual, useEngine, useOrbit } from "../../app/orbit";
-import { navigate } from "../../app/router";
+import { shallowEqual, useEngine, useOrbit } from "../../application/orbit";
+import { navigate } from "../../application/router";
 import { orgActivity } from "../../sync/account";
 import type { ThreadActivity } from "../../sync/threads";
 import { Avatar, colorIndexOf } from "../components/Avatar";

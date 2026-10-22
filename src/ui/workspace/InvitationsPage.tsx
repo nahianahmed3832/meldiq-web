@@ -1,7 +1,7 @@
 import { Check, Copy, Ticket } from "lucide-react";
 import { type FormEvent, useState } from "react";
 import type { Invite, NewInvite, OrgAdminDetail, OrgRole } from "../../api/workspaceSchemas";
-import { useEngine, useOrbit } from "../../app/orbit";
+import { useEngine, useOrbit } from "../../application/orbit";
 import { createInvitation, invitations, revokeInvitation } from "../../sync/workspaces";
 import { invitableRoles, roleName } from "../../sync/workspaceRules";
 import { shortWhen, untilWhen } from "../format";

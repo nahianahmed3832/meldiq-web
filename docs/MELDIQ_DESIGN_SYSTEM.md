@@ -33,7 +33,7 @@ shared with the phone (`src/ui/components/Avatar.tsx`).
 3. **Modes:** each colour is written as `light-dark(light, dark)`. `color-scheme` decides which one applies: the
    system's setting, or `data-theme="light|dark"`. A palette is written once for both modes.
 
-`data-palette` and `data-theme` on `<html>` come from the per-browser preferences (`src/app/prefs.ts`, Appearance ›
+`data-palette` and `data-theme` on `<html>` come from the per-browser preferences (`src/application/prefs.ts`, Appearance ›
 Theme and Colour). Stored values are checked against the allowed lists before use.
 
 ### Plates
@@ -99,4 +99,4 @@ WCAG AA (4.5:1):
 
 `light-dark()` needs Chrome 123, Firefox 120 or Safari 17.5. The app already requires Ed25519 and X25519 in Web Crypto
 (Chrome 137+, Firefox 130+, Safari 17+). Safari 17.0–17.4 lacks `light-dark()`, so the capability check
-(`src/app/boot.ts`) now lists it, and those browsers get the unsupported screen in readable static colours.
+(`src/application/boot.ts`) now lists it, and those browsers get the unsupported screen in readable static colours.

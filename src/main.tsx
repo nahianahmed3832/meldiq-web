@@ -1,6 +1,6 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { applyTheme, getPrefs } from "./app/prefs";
+import { applyTheme, getPrefs } from "./application/prefs";
 import "./styles/tokens.css";
 import "./styles/base.css";
 import "./styles/layout.css";
@@ -10,9 +10,9 @@ import "./styles/call.css";
 import "./styles/community.css";
 import "./styles/motion.css";
 import "./styles/responsive.css"; // last: its media queries override the rest
-import { loadConfig } from "./app/config";
-import { followVisualViewport } from "./app/viewport";
-import { hideSplash, startSplash } from "./app/splash";
+import { loadConfig } from "./application/config";
+import { followVisualViewport } from "./application/viewport";
+import { hideSplash, startSplash } from "./application/splash";
 import { installLegacyCurves } from "./crypto/legacyCurves";
 import { App } from "./ui/App";
 import { ConfigError } from "./ui/StatusScreens";

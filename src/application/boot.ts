@@ -37,7 +37,7 @@ const allowed = (): boolean => getPrefs().notifications && typeof Notification !
 const lookedAt = (): boolean => document.visibilityState === "visible" && document.hasFocus();
 const room = (id: string | null): string | null => (id ? `#/home/c/${encodeURIComponent(id)}` : null);
 
-/** System notifications for messages that arrive while this tab isn't looked at (src/app/webPush.ts shows them). */
+/** System notifications for messages that arrive while this tab isn't looked at (src/application/webPush.ts shows them). */
 function notify(title: string, body: string, conversationId: string): void {
   if (!allowed() || lookedAt()) return;
   const p = getPrefs();

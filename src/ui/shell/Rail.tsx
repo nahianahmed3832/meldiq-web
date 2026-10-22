@@ -1,7 +1,7 @@
 import { AtSign, Bookmark, House, MessagesSquare } from "lucide-react";
-import { shallowEqual, useOrbit } from "../../app/orbit";
-import { setPrefs } from "../../app/prefs";
-import { navigate, type Section } from "../../app/router";
+import { shallowEqual, useOrbit } from "../../application/orbit";
+import { setPrefs } from "../../application/prefs";
+import { navigate, type Section } from "../../application/router";
 import { Avatar, colorIndexOf } from "../components/Avatar";
 import { BrandMark } from "../components/BrandMark";
 import { laterDue, mentionCount, orgUnread, unreadPeopleCount } from "../selectors";

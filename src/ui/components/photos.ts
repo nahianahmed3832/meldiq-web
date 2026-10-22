@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useEngine } from "../../app/orbit";
+import { useEngine } from "../../application/orbit";
 import type { Engine } from "../../sync/engine";
 
 /**
