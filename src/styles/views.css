@@ -190,32 +190,41 @@
 .palette-swatch .swatch i {
   flex: 1;
 }
-.palette-swatch[data-swatch="indigo"] .swatch i:nth-child(1) {
-  background: var(--swatch-indigo-1);
+.palette-swatch[data-swatch="graphite"] .swatch i:nth-child(1) {
+  background: var(--swatch-graphite-1);
 }
-.palette-swatch[data-swatch="indigo"] .swatch i:nth-child(2) {
-  background: var(--swatch-indigo-2);
+.palette-swatch[data-swatch="graphite"] .swatch i:nth-child(2) {
+  background: var(--swatch-graphite-2);
 }
-.palette-swatch[data-swatch="indigo"] .swatch i:nth-child(3) {
-  background: var(--swatch-indigo-3);
+.palette-swatch[data-swatch="graphite"] .swatch i:nth-child(3) {
+  background: var(--swatch-graphite-3);
 }
-.palette-swatch[data-swatch="plum"] .swatch i:nth-child(1) {
-  background: var(--swatch-plum-1);
+.palette-swatch[data-swatch="aurora"] .swatch i:nth-child(1) {
+  background: var(--swatch-aurora-1);
 }
-.palette-swatch[data-swatch="plum"] .swatch i:nth-child(2) {
-  background: var(--swatch-plum-2);
+.palette-swatch[data-swatch="aurora"] .swatch i:nth-child(2) {
+  background: var(--swatch-aurora-2);
 }
-.palette-swatch[data-swatch="plum"] .swatch i:nth-child(3) {
-  background: var(--swatch-plum-3);
+.palette-swatch[data-swatch="aurora"] .swatch i:nth-child(3) {
+  background: var(--swatch-aurora-3);
 }
-.palette-swatch[data-swatch="amber"] .swatch i:nth-child(1) {
-  background: var(--swatch-amber-1);
+.palette-swatch[data-swatch="sunset"] .swatch i:nth-child(1) {
+  background: var(--swatch-sunset-1);
 }
-.palette-swatch[data-swatch="amber"] .swatch i:nth-child(2) {
-  background: var(--swatch-amber-2);
+.palette-swatch[data-swatch="sunset"] .swatch i:nth-child(2) {
+  background: var(--swatch-sunset-2);
 }
-.palette-swatch[data-swatch="amber"] .swatch i:nth-child(3) {
-  background: var(--swatch-amber-3);
+.palette-swatch[data-swatch="sunset"] .swatch i:nth-child(3) {
+  background: var(--swatch-sunset-3);
+}
+.palette-swatch[data-swatch="meadow"] .swatch i:nth-child(1) {
+  background: var(--swatch-meadow-1);
+}
+.palette-swatch[data-swatch="meadow"] .swatch i:nth-child(2) {
+  background: var(--swatch-meadow-2);
+}
+.palette-swatch[data-swatch="meadow"] .swatch i:nth-child(3) {
+  background: var(--swatch-meadow-3);
 }
 .fingerprint {
   font-family: var(--mono);

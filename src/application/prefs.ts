@@ -6,8 +6,8 @@ import { TRANSLATE_TARGETS, type TranslateTarget } from "../sync/translate";
  * storage being unavailable (private windows, blocked site data): the defaults apply then.
  */
 export const THEMES = ["system", "light", "dark"] as const;
-/** The brand colour plates (src/styles/tokens.css › Palettes). */
-export const PALETTES = ["indigo", "plum", "amber"] as const;
+/** Android's colour presets (src/styles/tokens.css › Palettes; android MeldiqPalettes), Graphite first and default. */
+export const PALETTES = ["graphite", "aurora", "sunset", "meadow"] as const;
 export type Palette = (typeof PALETTES)[number];
 /** Message text size (android Settings › Chats): conversation text only, the rest of the interface stays as it is. */
 export const TEXT_SIZES = ["small", "default", "large"] as const;
@@ -17,7 +17,15 @@ export type TextSize = (typeof TEXT_SIZES)[number];
 export const MESSAGE_LAYOUTS = ["stream", "bubbles"] as const;
 export type MessageLayout = (typeof MESSAGE_LAYOUTS)[number];
 
+/**
+ * Version of the default look, as Android's MeldiqPalettes.DESIGN_VERSION: a browser that stored preferences before it
+ * moves once to Graphite, and from following the system to dark (a light or dark choice is kept).
+ */
+export const DESIGN_VERSION = 2;
+
 export interface Prefs {
+  /** Since design version 2: which default look these preferences were made with. */
+  designVersion: number;
   theme: (typeof THEMES)[number];
   palette: Palette;
   textSize: TextSize;
@@ -66,8 +74,10 @@ export interface Prefs {
 
 const KEY = "orbit.prefs.v1";
 const defaults: Prefs = {
-  theme: "system",
-  palette: "indigo",
+  designVersion: DESIGN_VERSION,
+  // Dark is the default look, as on Android (SettingsStore.DEFAULT_THEME).
+  theme: "dark",
+  palette: "graphite",
   textSize: "default",
   messageLayout: "stream",
   animatedEmoji: true,
@@ -97,7 +107,7 @@ function load(): Prefs {
   try {
     const raw = localStorage.getItem(KEY);
     if (!raw) return { ...defaults, ...notificationChoice(defaults) };
-    const stored = { ...defaults, ...(JSON.parse(raw) as Partial<Prefs>) };
+    const stored = migrated({ ...defaults, designVersion: 0, ...(JSON.parse(raw) as Partial<Prefs>) });
     // Anything unknown (an older or tampered value) falls back to the default rather than reaching the page's attributes.
     return {
       ...stored,
@@ -116,6 +126,12 @@ function load(): Prefs {
   } catch {
     return defaults;
   }
+}
+
+/** The one-time move to Android's look (android SettingsStore.migratedDesign): Graphite, and dark instead of system. */
+function migrated(p: Prefs): Prefs {
+  if (p.designVersion >= DESIGN_VERSION) return p;
+  return { ...p, designVersion: DESIGN_VERSION, theme: p.theme === "light" || p.theme === "dark" ? p.theme : "dark", palette: defaults.palette };
 }
 
 const permitted = (): boolean => typeof Notification !== "undefined" && Notification.permission === "granted";
@@ -163,7 +179,7 @@ export function usePrefs(): Prefs {
   );
 }
 
-/** Light, dark or the system's, and the colour plate; the browser's own chrome takes the frame colour. */
+/** Light, dark or the system's, and the colour preset; the browser's own chrome takes the frame colour of the mode shown. */
 export function applyTheme({ theme, palette, textSize, messageLayout }: Pick<Prefs, "theme" | "palette" | "textSize" | "messageLayout">): void {
   const root = document.documentElement;
   root.setAttribute("data-text-size", textSize);
@@ -171,7 +187,10 @@ export function applyTheme({ theme, palette, textSize, messageLayout }: Pick<Pre
   if (theme === "system") root.removeAttribute("data-theme");
   else root.setAttribute("data-theme", theme);
   root.setAttribute("data-palette", palette);
-  const frame = getComputedStyle(root).getPropertyValue("--theme-color").trim();
+  const dark = theme === "dark" || (theme === "system" && typeof matchMedia === "function" && matchMedia("(prefers-color-scheme: dark)").matches);
+  const frame = getComputedStyle(root)
+    .getPropertyValue(dark ? "--theme-color-dark" : "--theme-color-light")
+    .trim();
   if (frame) document.querySelector('meta[name="theme-color"]')?.setAttribute("content", frame);
 }
 
