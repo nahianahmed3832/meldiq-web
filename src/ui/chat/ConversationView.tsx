@@ -1,8 +1,14 @@
 import { AppUpdatesBar } from "./AppUpdatesBar";
-import { VoiceRoomBanner } from "./VoiceRoomBanner";
+import { ConversationMenu } from "./ConversationMenu";
+import { ChannelGlyph } from "../community/ChannelDialogs";
+import { ForumView } from "./ForumView";
+import { presenceWords } from "../../sync/social";
+import { GroupAvatar } from "../components/OrgAvatar";
+import { RequestBar, RequestSentBanner } from "../people/RequestBar";
+import { VoiceRoomView } from "./VoiceRoomView";
 import { SecurityPadlock } from "./SecuritySheet";
 import { PinnedButton } from "./PinnedPanel";
-import { Archive, ArrowLeft, BellOff, Hash, Headphones, Info, Lock, Megaphone, Phone, Search, ShieldAlert, UsersRound, Video } from "lucide-react";
+import { Archive, ArrowLeft, BellOff, Info, MessagesSquare, Phone, Search, ShieldAlert, UsersRound, Video } from "lucide-react";
 import { useCallback, useMemo, useState } from "react";
 import { shallowEqual, useEngine, useOrbit } from "../../app/orbit";
 import { navigate, type Route } from "../../app/router";
@@ -31,6 +37,8 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
           name: u?.displayName ?? p.displayName,
           color: p.avatarColor,
           online: u?.online ?? null,
+          presence: u?.presence ?? null,
+          pronouns: u?.pronouns ?? null,
           // Round 3: their status, and whether they paused notifications (when their last-seen setting lets you know).
           status: [u?.statusEmoji, u?.statusText].filter((x) => !!x).join(" ") || null,
           paused: u?.notificationsPaused === true,
@@ -59,13 +67,13 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
   }, [engine, onDialog]);
 
   if (!c || !me) return null;
-  const glyph = c.type !== "CHANNEL" ? null : c.voice ? <Headphones size={18} /> : c.kind === "PRIVATE" ? <Lock size={18} /> : c.kind === "ANNOUNCEMENT" ? <Megaphone size={18} /> : <Hash size={19} />;
+  const glyph = c.type !== "CHANNEL" ? null : <ChannelGlyph kind={c.kind} voice={c.voice} format={c.format} size={18} />;
   const subtitle =
     c.type === "DM"
-      ? [`@${peer?.username ?? ""}`, peer?.online === true ? "online" : null, peer?.status].filter(Boolean).join(" · ")
+      ? [`@${peer?.username ?? ""}`, peer?.pronouns, presenceWords(peer?.presence, peer?.online)?.toLowerCase(), peer?.status].filter(Boolean).join(" · ")
       : c.type === "GROUP"
         ? members(c.memberCount)
-        : [c.topic, members(c.memberCount), online ? `${online} online` : null, c.scope === "ORG" ? null : c.scopeName].filter(Boolean).join(" · ");
+        : [c.topic, members(c.memberCount), online ? `${online} online` : null, c.categoryName ?? (c.scope === "ORG" ? null : c.scopeName)].filter(Boolean).join(" · ");
   const panelOpen = route.panel === "details";
 
   return (
@@ -74,26 +82,40 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
         <button className="icon-btn back" onClick={() => navigate({ section: route.section })} aria-label="Back to conversations">
           <ArrowLeft size={19} />
         </button>
-        {c.type === "DM" ? (
-          <Avatar name={title} colorIndex={peer?.color ?? 0} size={34} online={peer?.online} decorative />
-        ) : c.type === "GROUP" ? (
-          <Avatar name={title} colorIndex={colorIndexOf(c.id)} size={34} decorative />
-        ) : null}
-        <div className="conv-title">
-          <h1>
-            {glyph}
-            <span className="ellipsis">{title}</span>
-            {c.archived && (
-              <span className="tag">
-                <Archive size={11} /> Archived
-              </span>
-            )}
-          </h1>
-          <p className="ellipsis">{subtitle}</p>
-        </div>
+        {(() => {
+          const titleBlock = (
+            <>
+              {c.type === "DM" ? (
+                <Avatar name={title} colorIndex={peer?.color ?? 0} size={34} online={peer?.online} presence={peer?.presence} decorative />
+              ) : c.type === "GROUP" ? (
+                <GroupAvatar conversationId={c.id} name={title} photoRev={c.photoRev} size={34} />
+              ) : null}
+              <div className="conv-title">
+                <h1>
+                  {glyph}
+                  <span className="ellipsis">{title}</span>
+                  {c.archived && (
+                    <span className="tag">
+                      <Archive size={11} /> Archived
+                    </span>
+                  )}
+                </h1>
+                <p className="ellipsis">{subtitle}</p>
+              </div>
+            </>
+          );
+          // B14: in a DM or group the name opens the details (members, media, pins, links, files).
+          return c.type === "CHANNEL" ? (
+            titleBlock
+          ) : (
+            <button className="conv-title-btn" onClick={() => navigate({ section: route.section, conversationId: id, panel: panelOpen ? null : "details" })} aria-label={`${title}: details`}>
+              {titleBlock}
+            </button>
+          );
+        })()}
         {/* Calls in a workspace happen in its voice rooms; a text channel has none to start (android round 7). */}
-        {c.type !== "CHANNEL" && <CallButtons conversationId={id} canPost={c.canPost} archived={c.archived} serverCalling={calling} busy={myCall !== null} running={!!call} />}
-        {c.type !== "DM" && (
+        {c.type !== "CHANNEL" && !c.request && <CallButtons conversationId={id} canPost={c.canPost} archived={c.archived} serverCalling={calling} busy={myCall !== null} running={!!call} />}
+        {c.type === "CHANNEL" && (
           <button
             className="btn btn-ghost btn-sm"
             onClick={() => navigate({ section: route.section, conversationId: id, panel: panelOpen ? null : "details" })}
@@ -102,30 +124,51 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
             <UsersRound size={16} /> {c.memberCount}
           </button>
         )}
-        <button
-          className="icon-btn"
-          aria-pressed={route.panel === "search"}
-          onClick={() => navigate({ section: route.section, conversationId: id, panel: route.panel === "search" ? null : "search" })}
-          aria-label={route.panel === "search" ? "Close search" : "Search in this conversation"}
-          title="Search in this conversation"
-        >
-          <Search size={18} />
-        </button>
-        <PinnedButton conversationId={id} />
-        <SecurityPadlock conversationId={id} />
-        <button
-          className="icon-btn"
-          aria-pressed={panelOpen}
-          onClick={() => navigate({ section: route.section, conversationId: id, panel: panelOpen ? null : "details" })}
-          aria-label={panelOpen ? "Hide details" : "Show details"}
-        >
-          <Info size={19} />
-        </button>
+        {!c.voice && (
+          <button
+            className="icon-btn"
+            aria-pressed={route.panel === "search"}
+            onClick={() => navigate({ section: route.section, conversationId: id, panel: route.panel === "search" ? null : "search" })}
+            aria-label={route.panel === "search" ? "Close search" : "Search in this conversation"}
+            title="Search in this conversation"
+          >
+            <Search size={18} />
+          </button>
+        )}
+        {c.type === "CHANNEL" && !c.voice && c.format !== "forum" && (
+          <button
+            className="icon-btn"
+            aria-pressed={route.panel === "threads"}
+            onClick={() => navigate({ section: route.section, conversationId: id, panel: route.panel === "threads" ? null : "threads" })}
+            aria-label="Threads"
+            title="Threads"
+          >
+            <MessagesSquare size={18} />
+          </button>
+        )}
+        {c.type === "CHANNEL" ? (
+          <>
+            {/* A voice channel has no messages to search or pin (batch B14). */}
+            {!c.voice && <PinnedButton conversationId={id} />}
+            <SecurityPadlock conversationId={id} />
+            <button
+              className="icon-btn"
+              aria-pressed={panelOpen}
+              onClick={() => navigate({ section: route.section, conversationId: id, panel: panelOpen ? null : "details" })}
+              aria-label={panelOpen ? "Hide details" : "Show details"}
+            >
+              <Info size={19} />
+            </button>
+          </>
+        ) : (
+          <ConversationMenu conversationId={id} route={route} />
+        )}
       </header>
 
       {c.type === "CHANNEL" && <AppUpdatesBar conversationId={id} />}
-      {(alerts.length > 0 || call || c.voice || c.archived || history === "running" || peer?.paused) && (
+      {(alerts.length > 0 || (call && !c.voice) || c.archived || history === "running" || peer?.paused || (c.request && !c.request.incoming)) && (
         <div className="conv-banners">
+          {c.request && !c.request.incoming && <RequestSentBanner conversation={c} />}
           {peer?.paused && (
             <div className="banner" role="status">
               <BellOff size={16} aria-hidden />
@@ -141,7 +184,6 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
               </button>
             </div>
           ))}
-          {c.voice && myCall !== id && <VoiceRoomBanner conversationId={id} canJoin={calling && engine.calls.supported() && myCall === null && !c.archived} />}
           {call && !c.voice && myCall !== id && (
             <div className="banner info call-banner">
               {call.video ? <Video size={16} /> : <Phone size={16} />}
@@ -163,7 +205,11 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
         </div>
       )}
 
-      {loaded ? (
+      {c.voice ? (
+        <VoiceRoomView c={c} />
+      ) : c.type === "CHANNEL" && c.format === "forum" ? (
+        <ForumView c={c} section={route.section} />
+      ) : loaded ? (
         <MessageList
           conversationId={id}
           items={loaded.items}
@@ -198,11 +244,9 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
         </div>
       )}
 
-      {/* A voice channel is for talking: no messages (meldiq batch B14; the server refuses them too). */}
-      {c.voice ? (
-        <p className="muted" style={{ padding: "12px 16px", margin: 0 }}>
-          Voice channels are for talking only. Join the room to talk.
-        </p>
+      {/* A voice channel is for talking: no messages (batch B14; the server refuses them too). Its room page has Join. */}
+      {(c.type === "CHANNEL" && c.format === "forum") || c.voice ? null : c.request?.incoming ? (
+        <RequestBar conversation={c} name={title} />
       ) : (
         <Composer
           conversation={c}

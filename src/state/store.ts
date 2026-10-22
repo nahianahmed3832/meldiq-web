@@ -4,6 +4,7 @@ import { type CallUiState, idleCall } from "../call/types";
 import type { CallLogItem, ConversationLocal, PinnedIdentity, StoredMessage } from "../model/types";
 import type { ConnectionState } from "../realtime/socket";
 import type { NavPrefs } from "../sync/navPrefs";
+import type { CommunityData } from "../sync/community";
 
 export type Phase =
   /** Opening local data and signing in. */
@@ -32,6 +33,10 @@ export interface Me {
   statusEmoji?: string | null;
   statusExpiresAt?: number | null;
   notificationsPausedUntil?: number | null;
+  /** Batch B6b: your presence choice and until when; B12: your pronouns. */
+  presenceMode?: "auto" | "idle" | "dnd" | "invisible" | null;
+  presenceUntil?: number | null;
+  pronouns?: string | null;
   /** This browser's device-key fingerprint, as the phone shows it. */
   deviceFingerprint: string;
   deviceName: string;
@@ -47,6 +52,9 @@ export interface UserLite {
   statusEmoji?: string | null;
   notificationsPaused?: boolean | null;
   online: boolean | null;
+  /** Batch B6b: online, idle, do not disturb or offline (null: unknown or not visible to you); B12 pronouns. */
+  presence?: "online" | "idle" | "dnd" | "offline" | null;
+  pronouns?: string | null;
   /** Profile photo revision (GET /v1/users/:id/photo), where their privacy setting lets this account see it. */
   photoRev?: number | null;
 }
@@ -105,6 +113,12 @@ export interface AppState {
   meetingsRev: number;
   /** Bumped on each inbox.* frame (round 8 Unified Inbox; ids only): open inbox screens reload. */
   inboxRev: number;
+  /** Communities opened in this session: their categories and every channel the person may see (joined or not). */
+  communities: Record<string, CommunityData>;
+  /** Bumped when join applications or reports change (server `org.applications`, `org.application`, `org.reports`). */
+  moderationRev: number;
+  /** Bumped on `connections.updated` (batch B6): the connections list and profile buttons reload. */
+  connectionsRev: number;
 }
 
 export const initialState: AppState = {
@@ -130,6 +144,9 @@ export const initialState: AppState = {
   appEventsRev: {},
   meetingsRev: 0,
   inboxRev: 0,
+  communities: {},
+  moderationRev: 0,
+  connectionsRev: 0,
   history: { status: "idle", restored: 0, unreadable: 0, error: null },
   notices: [],
 };

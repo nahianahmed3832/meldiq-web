@@ -1,4 +1,5 @@
-import { Activity, BarChart3, Bell, HardDrive, Info, KeyRound, Laptop, Palette, Shield, Smartphone, UserRound } from "lucide-react";
+import { Activity, BarChart3, Bell, HardDrive, Info, KeyRound, Laptop, Palette, PhoneCall, Shield, Smartphone, UserRound } from "lucide-react";
+import { CallsPage } from "./CallsPage";
 import { useEngine } from "../../app/orbit";
 import { isPlatformAdmin } from "../../sync/ops";
 import { useLoad } from "../workspace/useLoad";
@@ -16,6 +17,7 @@ const PAGES: { key: SettingsPage; label: string; icon: React.ReactNode }[] = [
   { key: "account", label: "Account", icon: <KeyRound size={17} /> },
   { key: "devices", label: "Devices", icon: <Smartphone size={17} /> },
   { key: "notifications", label: "Notifications", icon: <Bell size={17} /> },
+  { key: "calls", label: "Calls", icon: <PhoneCall size={17} /> },
   { key: "appearance", label: "Appearance", icon: <Palette size={17} /> },
   { key: "storage", label: "Storage", icon: <HardDrive size={17} /> },
   { key: "security", label: "Privacy & security", icon: <Shield size={17} /> },
@@ -53,6 +55,7 @@ export function SettingsView({ page, onSignedOut }: { page: SettingsPage; onSign
             {page === "account" && <AccountSettingsPage onSignedOut={onSignedOut} />}
             {page === "devices" && <DevicesPage />}
             {page === "notifications" && <NotificationsPage />}
+            {page === "calls" && <CallsPage />}
             {page === "appearance" && <AppearancePage />}
             {page === "storage" && <StoragePage />}
             {page === "security" && <SecurityPage onSignedOut={onSignedOut} />}

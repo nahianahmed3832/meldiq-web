@@ -95,8 +95,47 @@ const zMeeting = z.object({
   cancelled: z.boolean(),
   canEdit: z.boolean(),
   rev: z.number(),
+  /** Batch B8b: how it repeats (null: once). */
+  repeat: z
+    .enum(["weekly", "biweekly", "monthly", "yearly"])
+    .nullish()
+    .catch(null)
+    .transform((v) => v ?? null),
 });
 export type Meeting = z.infer<typeof zMeeting>;
+export const EVENT_REPEATS = ["none", "weekly", "biweekly", "monthly", "yearly"] as const;
+export type EventRepeatChoice = (typeof EVENT_REPEATS)[number];
+
+/** The start's weekday name and which one of the month it is (1–5), in [zone] (android EventRepeatRules.weekdayAndNth). */
+export function weekdayAndNth(startMs: number, zone: string): { weekday: string; nth: number } | null {
+  try {
+    const parts = new Intl.DateTimeFormat("en-US", { timeZone: zone, weekday: "long", day: "numeric" }).formatToParts(new Date(startMs));
+    const weekday = parts.find((p) => p.type === "weekday")?.value;
+    const day = Number(parts.find((p) => p.type === "day")?.value);
+    return weekday && day ? { weekday, nth: Math.floor((day - 1) / 7) + 1 } : null;
+  } catch {
+    return null;
+  }
+}
+
+const NTH = ["first", "second", "third", "fourth"];
+
+/** What a repeat choice says for an event starting at [startMs] (android b8b_* strings): "Weekly on Thursday"… */
+export function repeatLabel(choice: EventRepeatChoice, startMs: number, zone: string): string {
+  const w = weekdayAndNth(startMs, zone);
+  switch (choice) {
+    case "none":
+      return "Does not repeat";
+    case "weekly":
+      return w ? `Weekly on ${w.weekday}` : "Weekly";
+    case "biweekly":
+      return w ? `Every other ${w.weekday}` : "Every other week";
+    case "monthly":
+      return w ? `Monthly on the ${w.nth >= 5 ? "last" : NTH[w.nth - 1]} ${w.weekday}` : "Monthly";
+    case "yearly":
+      return "Every year";
+  }
+}
 export interface MeetingInput {
   roomId: string;
   title: string;
@@ -106,6 +145,8 @@ export interface MeetingInput {
   timeZone: string;
   participantIds: string[];
   groupIds: string[];
+  /** Batch B8b (servers with `event-repeat`): null repeats nothing. */
+  repeat?: Exclude<EventRepeatChoice, "none"> | null;
 }
 
 export async function listMeetings(engine: Engine, orgId: string): Promise<Meeting[]> {

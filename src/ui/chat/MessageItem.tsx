@@ -7,6 +7,8 @@ import {
   CircleAlert,
   Clock,
   Copy,
+  Flag,
+  Link2,
   Forward,
   Info,
   Languages,
@@ -26,6 +28,8 @@ import {
   Video,
 } from "lucide-react";
 import { memo, useState } from "react";
+import { CustomEmojiImage, ReactionEmoji, useExpressions } from "../community/CustomEmoji";
+import { reactionName } from "../../sync/expressions";
 import { useEngine, useOrbit } from "../../app/orbit";
 import { PERSONAL } from "../../sync/navPrefs";
 import { RemindMeDialog } from "../later/RemindMeDialog";
@@ -50,6 +54,9 @@ import { translationSupported } from "../../sync/translate";
 import { findMediaLink } from "../../sync/mediaLinks";
 import { usePrefs } from "../../app/prefs";
 import { EmojiPicker } from "./EmojiPicker";
+import { ReportDialog } from "./ReportDialog";
+import { openProfile } from "../people/ProfileDialog";
+import { canLink, messageLink } from "../../sync/messageLinks";
 
 export const QUICK_EMOJI = ["👍", "❤️", "😂", "🎉", "🙏", "👀"];
 
@@ -82,6 +89,17 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
   const [translating, setTranslating] = useState(false);
   const [translation, setTranslation] = useState<string | null>(null);
   const [reminding, setReminding] = useState(false);
+  const [reporting, setReporting] = useState(false);
+  const reportable = useOrbit((st) => st.server?.features.includes("reports") ?? false);
+  const inCommunity = useOrbit((st) => {
+    const c = st.conversations[m.conversationId];
+    return c?.type === "CHANNEL" && c.orgId ? c.orgId : null;
+  });
+  // Batch B12: community emoji reactions are drawn from the community's current emoji (only loaded where used).
+  const hasCustomReaction = Object.keys(m.reactions).some((e) => reactionName(e) !== null);
+  const communityEmoji = useExpressions(hasCustomReaction || inCommunity ? inCommunity : null);
+  const conv = useOrbit((st) => st.conversations[m.conversationId]);
+  const orgName = useOrbit((st) => (conv?.orgId ? (st.orgs.find((o) => o.id === conv.orgId)?.name ?? null) : null));
   // Saved for later (android Home › Later): synced in the personal document when the server keeps saved items.
   const savable = useOrbit((st) => st.server?.features.includes("saved-items") ?? false);
   const { mediaCards } = usePrefs();
@@ -114,7 +132,7 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
     if (m.deleted) return <span className="msg-deleted">This message was deleted.</span>;
     if (editing) return <EditBox m={m} onDone={() => setEditing(false)} />;
     // A poll, contact, location, sticker or animated emoji is the message itself: no card under it (android MessageBubble).
-    const structured = !!(m.rich?.poll || m.rich?.contact || m.rich?.location || m.rich?.sticker || m.rich?.animoji);
+    const structured = !!(m.rich?.poll || m.rich?.contact || m.rich?.location || m.rich?.sticker || m.rich?.animoji || m.rich?.customSticker);
     const mediaLink = mediaCards && !structured ? findMediaLink(m.text) : null;
     return (
       <>
@@ -137,6 +155,11 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
         ) : m.rich?.sticker ? (
           <div>
             <StickerView sticker={m.rich.sticker} fallback={m.text} />
+            {mine && <Status m={m} onRetry={() => void engine.retry(m.id)} onReview={p.onReview} />}
+          </div>
+        ) : m.rich?.customSticker ? (
+          <div>
+            <CustomEmojiImage id={m.rich.customSticker.id} name={m.rich.customSticker.name} sha256={m.rich.customSticker.sha256} sticker />
             {mine && <Status m={m} onRetry={() => void engine.retry(m.id)} onReview={p.onReview} />}
           </div>
         ) : m.rich?.animoji ? (
@@ -165,7 +188,7 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
           </a>
         ) : m.text ? (
           <div className={`msg-text${isEmojiOnly(m.text) ? " big-emoji" : ""}`}>
-            <RichText text={m.text} mentionNames={p.mentionNames} myUsername={p.myUsername} />
+            <RichText text={m.text} mentionNames={p.mentionNames} myUsername={p.myUsername} customEmoji={m.rich?.customEmoji} />
             {m.editedAt && <span className="msg-meta">(edited)</span>}
             {translation && <TranslationView text={translation} onHide={() => setTranslation(null)} />}
             {mine && <Status m={m} onRetry={() => void engine.retry(m.id)} onReview={p.onReview} />}
@@ -207,12 +230,20 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
       tabIndex={-1}
     >
       <div className="msg-gutter">
-        {p.first ? <Avatar name={p.senderName} colorIndex={p.senderColor} size={38} decorative /> : <time dateTime={new Date(m.sortTs).toISOString()}>{clock(m.sortTs)}</time>}
+        {p.first ? (
+          <button className="msg-avatar-btn" onClick={() => openProfile(m.senderUserId, p.senderName)} aria-label={`${p.senderName}'s profile`} tabIndex={-1}>
+            <Avatar name={p.senderName} colorIndex={p.senderColor} size={38} decorative />
+          </button>
+        ) : (
+          <time dateTime={new Date(m.sortTs).toISOString()}>{clock(m.sortTs)}</time>
+        )}
       </div>
       <div className="msg-main">
         {p.first && (
           <div className="msg-head">
-            <strong className="ellipsis">{p.senderName}</strong>
+            <button className="msg-name ellipsis" onClick={() => openProfile(m.senderUserId, p.senderName)}>
+              {p.senderName}
+            </button>
             <time dateTime={new Date(m.sortTs).toISOString()} title={fullTime(m.sortTs)}>
               {clock(m.sortTs)}
             </time>
@@ -235,7 +266,7 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
                 onClick={() => void engine.react(m, emoji)}
                 aria-label={`${emoji} ${users.length}, ${users.includes(p.myUserId) ? "remove your reaction" : "react"}`}
               >
-                <span>{emoji}</span>
+                <span>{reactionName(emoji) ? <ReactionEmoji name={reactionName(emoji)!} list={communityEmoji} /> : emoji}</span>
                 {users.length}
               </button>
             ))}
@@ -286,6 +317,7 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
             {
               custom: (
                 <EmojiPicker
+                  community={communityEmoji ? { list: communityEmoji, reactions: true } : undefined}
                   onPick={(e) => {
                     picker.close();
                     void engine.react(m, e);
@@ -322,12 +354,26 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
             ...(live ? [{ label: "Forward…", icon: <Forward size={16} />, onSelect: () => setForwarding(true) }] : []),
             ...(m.text ? [{ label: "Copy text", icon: <Copy size={16} />, onSelect: () => void navigator.clipboard?.writeText(m.text) }] : []),
             ...(!mine && m.text && translationSupported() ? [{ label: "Translate…", icon: <Languages size={16} />, onSelect: () => setTranslating(true) }] : []),
+            ...(live && canLink(m.deleted, m.status)
+              ? [
+                  {
+                    label: "Copy message link",
+                    icon: <Link2 size={16} />,
+                    onSelect: () => {
+                      void navigator.clipboard?.writeText(messageLink(m.conversationId, m.id)).catch(() => undefined);
+                      engine.notice("info", "Message link copied. It opens only for people in this conversation.");
+                    },
+                  },
+                ]
+              : []),
             ...(mine ? [{ label: "Message info", icon: <Info size={16} />, onSelect: () => setInfo(true) }] : []),
+            ...(!mine && live && reportable && conv ? ["separator" as const, { label: "Report…", icon: <Flag size={16} />, danger: true, onSelect: () => setReporting(true) }] : []),
             ...(mine && p.canPost ? ["separator" as const, { label: "Delete for everyone", icon: <Trash2 size={16} />, danger: true, onSelect: () => setConfirmDelete(true) }] : []),
           ]}
         />
       )}
       {forwarding && <ForwardDialog message={m} onClose={() => setForwarding(false)} />}
+      {reporting && conv && <ReportDialog target={{ kind: "message", message: m, conversationId: m.conversationId, conversationType: conv.type, orgName }} onClose={() => setReporting(false)} />}
       {info && <MessageInfoDialog m={m} onClose={() => setInfo(false)} />}
       {translating && (
         <TranslateDialog

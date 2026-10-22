@@ -131,6 +131,8 @@ describe("mentions", () => {
       role: null,
       orgRole: null,
       online: null,
+      presence: null,
+      pronouns: null,
     },
     {
       id: "u-me",
@@ -145,6 +147,8 @@ describe("mentions", () => {
       role: null,
       orgRole: null,
       online: null,
+      presence: null,
+      pronouns: null,
     },
   ];
 

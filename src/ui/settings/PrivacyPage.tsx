@@ -1,6 +1,7 @@
 import { ShieldBan } from "lucide-react";
 import { useState } from "react";
-import { useEngine } from "../../app/orbit";
+import { useEngine, useOrbit } from "../../app/orbit";
+import { DM_POLICIES, DM_POLICY_LABEL, type DmPolicy, messagingSettings, REQUEST_POLICIES, REQUEST_POLICY_LABEL, type RequestPolicy, setMessagingSettings } from "../../sync/social";
 import { type Audience, AUDIENCES, blockedIds, myProfile, type Privacy, type PrivacyField, setPrivacy, unblock } from "../../sync/profile";
 import { userProfile } from "../../sync/account";
 import { useAction, useLoad } from "../workspace/useLoad";
@@ -102,6 +103,68 @@ export function BlockedPeople() {
         ))}
         {list.data?.length === 0 && <li className="faint">Nobody.</li>}
       </ul>
+    </div>
+  );
+}
+
+/**
+ * Who can message you (batch B6, android MessagingPrivacy): directly, or as a message request you answer first. Blocked
+ * and unknown people get the same answer, so a setting never reveals a block.
+ */
+export function MessagingSettings() {
+  const engine = useEngine();
+  const offered = useOrbit((s) => s.server?.features.includes("message-requests") ?? false);
+  const loaded = useLoad(() => (offered ? messagingSettings(engine) : Promise.resolve(null)), [engine, offered]);
+  const [local, setLocal] = useState<Awaited<ReturnType<typeof messagingSettings>> | null>(null);
+  const act = useAction();
+  const s = local ?? loaded.data;
+  if (!offered) return null;
+  return (
+    <div className="card" style={{ padding: 20, display: "grid", gap: 12 }}>
+      <h3 style={{ margin: 0 }}>Messages</h3>
+      {(loaded.error || act.error) && (
+        <div className="banner danger" role="alert">
+          {loaded.error ?? act.error}
+        </div>
+      )}
+      <div className="ws-row">
+        <span className="lines grow">
+          <span>Who can message you directly</span>
+          <small>Others can send you a message request, which arrives without a notification.</small>
+        </span>
+        <select
+          className="input input-sm"
+          aria-label="Who can message you directly"
+          disabled={!s || act.busy}
+          value={s?.dmPolicy ?? "everyone"}
+          onChange={(e) => void act.act(async () => setLocal(await setMessagingSettings(engine, { dmPolicy: e.target.value as DmPolicy })))}
+        >
+          {DM_POLICIES.map((p) => (
+            <option key={p} value={p}>
+              {DM_POLICY_LABEL[p]}
+            </option>
+          ))}
+        </select>
+      </div>
+      <div className="ws-row">
+        <span className="lines grow">
+          <span>Who can send you requests</span>
+          <small>Message requests and connection requests. Anyone else is told you only accept messages from people you're connected with.</small>
+        </span>
+        <select
+          className="input input-sm"
+          aria-label="Who can send you requests"
+          disabled={!s || act.busy}
+          value={s?.requestPolicy ?? "everyone"}
+          onChange={(e) => void act.act(async () => setLocal(await setMessagingSettings(engine, { requestPolicy: e.target.value as RequestPolicy })))}
+        >
+          {REQUEST_POLICIES.map((p) => (
+            <option key={p} value={p}>
+              {REQUEST_POLICY_LABEL[p]}
+            </option>
+          ))}
+        </select>
+      </div>
     </div>
   );
 }

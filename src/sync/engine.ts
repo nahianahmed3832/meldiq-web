@@ -3,6 +3,7 @@ import { ApiClient, ApiError } from "../api/client";
 import type { AccountSessionGrant } from "../api/accountSchemas";
 import { type Call, type Conversation, type Member, type Org, type SessionGrant, zCall, zConversation, zMember, zOrg, zProfile, zServerInfo } from "../api/schemas";
 import { Signals, zExperiments } from "./signals";
+import { CommunitySync } from "./community";
 import { paused } from "./status";
 import { signInWithDevice } from "../auth/accountApi";
 import { type AccountSessionEnd, AccountSession } from "../auth/accountSession";
@@ -32,7 +33,7 @@ import { Receiver } from "./receiver";
 import { CallLog } from "./callLog";
 import { Compose } from "./compose";
 import { ConversationLocals } from "./locals";
-import { loadThreadActivity, markThreadSeen, type ThreadActivity } from "./threads";
+import { followedThreads, loadThreadActivity, markThreadSeen, setFollowed, type ThreadActivity } from "./threads";
 import { preview, sendsReadReceipts } from "./rules";
 import { type RevokedReason, SessionManager } from "./session";
 
@@ -62,6 +63,8 @@ export interface EngineOptions {
   ringAlert?: (title: string, video: boolean, conversationId: string) => void;
   /** Call timing for tests. */
   callTiming?: { keyWaitMs?: number; peerWindowMs?: number; rejoinWindowMs?: number };
+  /** Settings › Calls (batches B10, B11): noise reduction, and how this browser shares its screen. */
+  callPrefs?: () => { noiseReduction: boolean; shareMode: "text" | "motion"; shareAudio: boolean };
 }
 
 const PAGE = 60;
@@ -93,6 +96,8 @@ export class Engine implements EngineContext {
   readonly signals: Signals;
   /** Call history lines and the recent-call log. */
   readonly callLog: CallLog;
+  /** Opened communities' categories and channel lists (src/sync/community.ts). */
+  readonly community: CommunitySync;
   private readonly compose: Compose;
   private readonly locals: ConversationLocals;
   private readonly realtime: RealtimeClient;
@@ -149,6 +154,7 @@ export class Engine implements EngineContext {
         media: opts.media ?? unavailableMedia,
         supported: opts.callSupported ?? (() => !!opts.media && callSupport().ok),
         ringtone: opts.ringtone,
+        callPrefs: opts.callPrefs,
         ...opts.callTiming,
       },
     );
@@ -194,6 +200,18 @@ export class Engine implements EngineContext {
       available: () => this.state.get().server?.features.includes("reminders") ?? false,
       publish: (reminders) => this.set((s) => ({ ...s, reminders })),
       show: (r) => this.showReminder(r),
+    });
+    this.community = new CommunitySync({
+      json: (method, path, schema, init) => this.api.json(method, path, schema, init),
+      features: () => this.state.get().server?.features ?? [],
+      loaded: (orgId) => !!this.state.get().communities[orgId],
+      publish: (orgId, data) =>
+        this.set((s) => {
+          const communities = { ...s.communities };
+          if (data) communities[orgId] = data;
+          else delete communities[orgId];
+          return { ...s, communities };
+        }),
     });
     this.signals = new Signals({
       features: () => this.state.get().server?.features ?? [],
@@ -400,7 +418,7 @@ export class Engine implements EngineContext {
       this.set((s) => {
         const users = { ...s.users };
         for (const c of convs.conversations) for (const m of c.members ?? []) users[m.id] = toUser(m, users[m.id]);
-        users[u.id] = { id: u.id, username: u.username, displayName: u.displayName, avatarColor: u.avatarColor, statusText: u.statusText, online: true, photoRev: u.photoRev };
+        users[u.id] = { id: u.id, username: u.username, displayName: u.displayName, avatarColor: u.avatarColor, statusText: u.statusText, online: true, photoRev: u.photoRev, pronouns: u.pronouns };
         const calls: Record<string, Call> = {};
         for (const c of convs.conversations)
           if (c.activeCall)
@@ -429,6 +447,9 @@ export class Engine implements EngineContext {
             statusEmoji: u.statusEmoji,
             statusExpiresAt: u.statusExpiresAt,
             notificationsPausedUntil: u.notificationsPausedUntil,
+            presenceMode: u.presenceMode,
+            presenceUntil: u.presenceUntil,
+            pronouns: u.pronouns,
           },
           orgs: orgs.orgs,
           conversations: Object.fromEntries(convs.conversations.map((c) => [c.id, c])),
@@ -486,9 +507,12 @@ export class Engine implements EngineContext {
       case "presence": {
         const id = str(f.userId);
         if (!id) return;
-        this.set((s) => presenceFrame(s, id, f.online === true));
+        this.set((s) => presenceFrame(s, id, f.online === true, typeof f.presence === "string" ? f.presence : null));
         return;
       }
+      case "connections.updated":
+        this.set((s) => ({ ...s, connectionsRev: s.connectionsRev + 1 }));
+        return;
       case "conv.updated": {
         const id = str(f.conversationId);
         if (!id) return;
@@ -499,6 +523,14 @@ export class Engine implements EngineContext {
       }
       case "org.updated":
         await this.refreshAll();
+        this.community.refreshLoaded(this.state.get().orgs.map((o) => o.id));
+        return;
+      case "org.applications":
+      case "org.application":
+      case "org.reports":
+        // Ids only: open moderation pages reload (and an approved application brings the community into the list).
+        this.set((s) => ({ ...s, moderationRev: s.moderationRev + 1 }));
+        if (f.t === "org.application") void this.refreshAll();
         return;
       case "integration.event": {
         const id = str(f.conversationId);
@@ -534,6 +566,7 @@ export class Engine implements EngineContext {
         const id = str(f.orgId);
         if (!id) return;
         this.set((s) => orgDeletedFrame(s, id));
+        this.community.forget(id);
         return;
       }
       case "devices.changed": {
@@ -609,7 +642,20 @@ export class Engine implements EngineContext {
         .then(({ user: u }) =>
           this.set((s) => ({
             ...s,
-            users: { ...s.users, [u.id]: { id: u.id, username: u.username, displayName: u.displayName, avatarColor: u.avatarColor, statusText: u.statusText, online: u.online, photoRev: u.photoRev } },
+            users: {
+              ...s.users,
+              [u.id]: {
+                id: u.id,
+                username: u.username,
+                displayName: u.displayName,
+                avatarColor: u.avatarColor,
+                statusText: u.statusText,
+                online: u.online,
+                photoRev: u.photoRev,
+                presence: u.presence,
+                pronouns: u.pronouns,
+              },
+            },
           })),
         )
         .catch(() => undefined)
@@ -629,6 +675,16 @@ export class Engine implements EngineContext {
   /** Threads this account takes part in, with replies not yet seen here (Activity › Thread replies). */
   threadActivity(): Promise<ThreadActivity[]> {
     return loadThreadActivity(this.store);
+  }
+
+  /** Follows a thread or forum post (batch B8): its replies come into Activity › Threads. Kept on this browser. */
+  async setFollowed(rootId: string, on: boolean): Promise<void> {
+    await setFollowed(this.store, rootId, on);
+    this.set((s) => ({ ...s, threadRev: s.threadRev + 1 }));
+  }
+
+  isFollowed(rootId: string): Promise<boolean> {
+    return followedThreads(this.store).then((s) => s.has(rootId));
   }
 
   /** The thread was opened here: its replies so far are seen. */
@@ -682,10 +738,12 @@ export class Engine implements EngineContext {
    */
   notifyIncoming(m: StoredMessage, conversation: Conversation | null, mention: "me" | "all" | null): void {
     if (!this.opts.notify) return;
+    // Batch B6: a message request arrives without a notification (it waits under DMs › Message requests).
+    if (conversation?.request?.incoming) return;
     const st = this.state.get();
     // Paused from the profile menu (round 3): the message arrives and counts as unread, without a notification.
     if (paused(st.me?.notificationsPausedUntil ?? null, Date.now())) return;
-    if (!shouldNotify(levelOf(st.nav[workspaceOf(conversation?.orgId ?? null)], m.conversationId), mention)) return;
+    if (!shouldNotify(levelOf(st.nav[workspaceOf(conversation?.orgId ?? null)], m.conversationId, conversation?.categoryId ?? null), mention)) return;
     const mentioned = mention !== null;
     // Group notifications off (android Settings › Notifications): groups and channels stay quiet; mentions still notify.
     if (conversation?.type !== "DM" && !mentioned && this.opts.prefs?.().groupNotifications === false) return;
@@ -863,7 +921,15 @@ export class Engine implements EngineContext {
     const c = await this.ensureConversation(id).catch(() => null);
     if (!c) return { title: "Call", isGroup: false, colorIndex: 0, voiceRoom: false, canModerate: false };
     if (c.type !== "DM")
-      return { title: c.type === "CHANNEL" ? `#${c.name ?? "channel"}` : (c.name ?? "Group"), isGroup: true, colorIndex: 0, voiceRoom: c.voice, canModerate: c.voice && c.canManage };
+      return {
+        title: c.type === "CHANNEL" ? `#${c.name ?? "channel"}` : (c.name ?? "Group"),
+        isGroup: true,
+        colorIndex: 0,
+        voiceRoom: c.voice,
+        canModerate: c.voice && c.canManage,
+        // Voice permissions (voice.speak): a channel you may only listen in opens no microphone.
+        listenOnly: c.voice && c.canSpeak === false,
+      };
     const peer = c.members?.find((m) => m.id !== this.device.userId);
     const title = (peer && (this.state.get().users[peer.id]?.displayName ?? peer.displayName)) || "Call";
     return { title, isGroup: false, colorIndex: peer?.avatarColor ?? 0, voiceRoom: false, canModerate: false };
@@ -951,5 +1017,7 @@ function toUser(m: Member, prev?: UserLite): UserLite {
     notificationsPaused: m.notificationsPaused,
     online: m.online ?? prev?.online ?? null,
     photoRev: m.photoRev ?? null,
+    presence: m.presence ?? prev?.presence ?? null,
+    pronouns: m.pronouns ?? prev?.pronouns ?? null,
   };
 }

@@ -11,6 +11,13 @@ import { NewGroupDialog } from "../dialogs/NewGroupDialog";
 import { NewMessageDialog } from "../dialogs/NewMessageDialog";
 import { CreateWorkspaceDialog, JoinWorkspaceDialog } from "../dialogs/WorkspaceDialogs";
 import { SearchDialog } from "../dialogs/SearchDialog";
+import { CreateCommunityDialog } from "../community/CreateCommunityDialog";
+import { DiscoverDialog } from "../community/DiscoverDialog";
+import { JOIN_INVITE_EVENT } from "../chat/inAppLinks";
+import { noteGuideVisit } from "../../sync/guide";
+import { GUIDE_EVENT } from "../community/GuideOnboarding";
+import { OPEN_PROFILE_EVENT, ProfileDialog } from "../people/ProfileDialog";
+import { ConnectionsDialog, MessageRequestsDialog } from "../people/ConnectionsDialog";
 import { ActivityView } from "../views/ActivityView";
 import { LaterView } from "../later/LaterView";
 import { HomeView } from "../views/HomeView";
@@ -25,7 +32,17 @@ const SettingsView = lazy(() => import("../settings/SettingsView").then((m) => (
 const WorkspaceView = lazy(() => import("../workspace/WorkspaceView").then((m) => ({ default: m.WorkspaceView })));
 
 export type ShellDialog =
-  { kind: "search" } | { kind: "new" } | { kind: "newGroup" } | { kind: "channels" } | { kind: "identity"; userId: string } | { kind: "createWorkspace" } | { kind: "joinWorkspace" } | null;
+  | { kind: "search" }
+  | { kind: "new" }
+  | { kind: "newGroup" }
+  | { kind: "channels" }
+  | { kind: "identity"; userId: string }
+  | { kind: "createWorkspace" }
+  | { kind: "joinWorkspace"; code?: string }
+  | { kind: "discover" }
+  | { kind: "connections" }
+  | { kind: "requests" }
+  | null;
 
 /**
  * The signed-in frame: workspace rail, top bar, sidebar, the main column and an optional side panel; on phones a single
@@ -36,6 +53,7 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
   const route = useRoute();
   const prefs = usePrefs();
   const orgIds = useOrbit((s) => s.orgs.map((o) => o.id), shallowEqual);
+  const communities = useOrbit((s) => s.server?.features.includes("community-channels") ?? false);
   const known = useOrbit((s) => (route.conversationId ? !!s.conversations[route.conversationId] : true));
   const synced = useOrbit((s) => s.synced);
   const [drawer, setDrawer] = useState(false);
@@ -74,6 +92,10 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
   useEffect(() => {
     void engine.openConversation(isFullPage(route.section) ? null : route.conversationId);
     setDrawer(false);
+    // Batch B8b: opening a channel ticks the community guide's tasks that point to it (kept on this browser).
+    const c = route.conversationId ? engine.state.get().conversations[route.conversationId] : null;
+    const guide = c?.orgId ? (engine.state.get().orgs.find((o) => o.id === c.orgId)?.guide ?? null) : null;
+    if (c?.orgId && guide) void noteGuideVisit(engine.store, c.orgId, guide, c.id).then((changed) => changed && window.dispatchEvent(new Event(GUIDE_EVENT)));
   }, [engine, route.conversationId, route.section]);
 
   // A conversation this account can no longer see (removed, or another workspace's link) closes.
@@ -83,6 +105,24 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
       navigate({ section: isFullPage(route.section) ? "home" : route.section }, true);
     }
   }, [synced, known, route.conversationId, route.section, engine]);
+
+  // Someone's profile, opened from a name or a member list anywhere.
+  const [profile, setProfile] = useState<{ userId: string; name: string } | null>(null);
+  useEffect(() => {
+    const onOpen = (e: Event) => {
+      const d = (e as CustomEvent<{ userId: string; name?: string }>).detail;
+      if (d?.userId) setProfile({ userId: d.userId, name: d.name ?? "Profile" });
+    };
+    window.addEventListener(OPEN_PROFILE_EVENT, onOpen);
+    return () => window.removeEventListener(OPEN_PROFILE_EVENT, onOpen);
+  }, []);
+
+  // An invite link clicked inside a chat opens Join with its code (batch B4b).
+  useEffect(() => {
+    const onInvite = (e: Event) => setDialog({ kind: "joinWorkspace", code: String((e as CustomEvent).detail ?? "") });
+    window.addEventListener(JOIN_INVITE_EVENT, onInvite);
+    return () => window.removeEventListener(JOIN_INVITE_EVENT, onInvite);
+  }, []);
 
   useEffect(() => {
     const focus = () => engine.setFocused(document.visibilityState === "visible" && document.hasFocus());
@@ -156,8 +196,12 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
       {dialog?.kind === "channels" && orgId && <ChannelBrowser orgId={orgId} onClose={() => setDialog(null)} />}
       {dialog?.kind === "identity" && <IdentityReview userId={dialog.userId} onClose={() => setDialog(null)} />}
       {dialog?.kind === "newGroup" && <NewGroupDialog onClose={() => setDialog(null)} />}
-      {dialog?.kind === "createWorkspace" && <CreateWorkspaceDialog onClose={() => setDialog(null)} />}
-      {dialog?.kind === "joinWorkspace" && <JoinWorkspaceDialog onClose={() => setDialog(null)} />}
+      {dialog?.kind === "createWorkspace" && (communities ? <CreateCommunityDialog onClose={() => setDialog(null)} /> : <CreateWorkspaceDialog onClose={() => setDialog(null)} />)}
+      {dialog?.kind === "discover" && <DiscoverDialog onClose={() => setDialog(null)} />}
+      {dialog?.kind === "connections" && <ConnectionsDialog onClose={() => setDialog(null)} />}
+      {dialog?.kind === "requests" && <MessageRequestsDialog onClose={() => setDialog(null)} />}
+      {profile && <ProfileDialog key={profile.userId} userId={profile.userId} fallbackName={profile.name} onClose={() => setProfile(null)} />}
+      {dialog?.kind === "joinWorkspace" && <JoinWorkspaceDialog initialCode={dialog.code} onClose={() => setDialog(null)} />}
     </div>
   );
 }

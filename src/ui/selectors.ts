@@ -54,19 +54,27 @@ export const isArchived = (s: AppState, id: string): boolean => !!s.local[id]?.a
 
 /** Muted with the synced notification level "none": its unread count shows quietly and stays out of the badges. */
 export function isMuted(s: AppState, c: Conversation): boolean {
-  return levelOf(s.nav[workspaceOf(c.orgId)], c.id) === "none";
+  return levelOf(s.nav[workspaceOf(c.orgId)], c.id, c.categoryId) === "none";
 }
 
-/** Direct messages and groups, newest first, without the ones archived here. */
+/** Batch B6: a message request waiting for you, listed apart (DMs › Message requests) with no badge. */
+export const isRequest = (c: Conversation): boolean => c.request?.incoming === true;
+
+/** Message requests waiting for this person, newest first. */
+export function messageRequests(s: AppState): Conversation[] {
+  return Object.values(s.conversations).filter(isRequest).sort(byActivity(s));
+}
+
+/** Direct messages and groups, newest first, without the ones archived here or requests waiting for you. */
 export function people(s: AppState): Conversation[] {
   return Object.values(s.conversations)
-    .filter((c) => isPeople(c) && !isArchived(s, c.id))
+    .filter((c) => isPeople(c) && !isArchived(s, c.id) && !isRequest(c))
     .sort(byActivity(s));
 }
 
 export function archivedPeople(s: AppState): Conversation[] {
   return Object.values(s.conversations)
-    .filter((c) => isPeople(c) && isArchived(s, c.id))
+    .filter((c) => isPeople(c) && isArchived(s, c.id) && !isRequest(c))
     .sort(byActivity(s));
 }
 
@@ -76,7 +84,7 @@ export function unreadOf(s: AppState, id: string): number {
 
 /** Unread direct messages and groups (archived and muted ones aside). */
 export function unreadPeopleCount(s: AppState): number {
-  return Object.values(s.conversations).filter((c) => isPeople(c) && unreadOf(s, c.id) > 0 && !isArchived(s, c.id) && !isMuted(s, c)).length;
+  return Object.values(s.conversations).filter((c) => isPeople(c) && unreadOf(s, c.id) > 0 && !isArchived(s, c.id) && !isMuted(s, c) && !isRequest(c)).length;
 }
 
 export interface HomeSection {
@@ -141,11 +149,35 @@ export function markAllReadTargets(s: AppState, orgId: string | null): string[] 
     .map((c) => c.id);
 }
 
-export type ActivityFilter = "all" | "mentions" | "threads" | "calls";
+export type ActivityFilter = "all" | "mentions" | "unreads" | "threads" | "calls";
 
-/** Which Activity sections a filter chip shows (round 3, the reference's Activity chips). */
+/** Which Activity sections a filter chip shows (round 3, the reference's Activity chips); All doesn't repeat Unreads (B5). */
 export function activityShows(filter: ActivityFilter, section: Exclude<ActivityFilter, "all">): boolean {
-  return filter === "all" || filter === section;
+  return filter === section || (filter === "all" && section !== "unreads");
+}
+
+export interface UnreadGroup {
+  /** null: direct messages and groups. */
+  orgId: string | null;
+  title: string;
+  ids: string[];
+}
+
+/**
+ * Activity › Unreads (batch B5, android ActivityRules.unreads): conversations with unread messages, newest first, without
+ * muted, archived, hidden ones or message requests; direct messages and groups first, then each community by its name.
+ */
+export function unreadGroups(s: AppState): UnreadGroup[] {
+  const unread = Object.values(s.conversations)
+    .filter((c) => unreadOf(s, c.id) > 0 && !isMuted(s, c) && !isArchived(s, c.id) && !isRequest(c) && !(c.orgId && s.nav[c.orgId]?.hidden?.includes(c.id)))
+    .sort(byActivity(s));
+  const direct = unread.filter((c) => c.type !== "CHANNEL");
+  const byOrg = new Map<string, string[]>();
+  for (const c of unread) if (c.type === "CHANNEL" && c.orgId) byOrg.set(c.orgId, [...(byOrg.get(c.orgId) ?? []), c.id]);
+  return [
+    ...(direct.length ? [{ orgId: null, title: "Direct messages and groups", ids: direct.map((c) => c.id) }] : []),
+    ...[...byOrg].map(([orgId, ids]) => ({ orgId, title: s.orgs.find((o) => o.id === orgId)?.name ?? "Community", ids })),
+  ];
 }
 
 export function orgUnread(s: AppState, orgId: string): number {

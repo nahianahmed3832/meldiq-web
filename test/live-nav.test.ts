@@ -74,8 +74,8 @@ describe("arranging Home on one browser shows on the other", () => {
     await bob.send(dm, { type: "text", text: "quiet please" });
     await until(async () => (await one.conversationMessages(dm)).some((m) => m.text === "quiet please"), 6000, "message arrives");
     expect(notified).toEqual([]);
-    // Muted conversations stay out of the DMs badge, though their unread count is kept.
-    expect(one.state.get().local[dm]?.unread).toBeGreaterThan(0);
+    // Muted conversations stay out of the DMs badge, though their unread count is kept (counted just after it's stored).
+    await until(() => (one.state.get().local[dm]?.unread ?? 0) > 0, 6000, "unread counted");
     expect(unreadPeopleCount(one.state.get())).toBe(0);
     await one.arrange(dm, { op: "notify", conversationId: dm, level: "all" });
     await bob.send(dm, { type: "text", text: "now you hear me" });

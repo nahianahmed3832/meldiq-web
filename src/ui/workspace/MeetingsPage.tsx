@@ -1,7 +1,8 @@
 import { CalendarPlus, Headphones, Pencil, Plus, X } from "lucide-react";
+import { EVENT_REPEATS, type EventRepeatChoice, repeatLabel } from "../../sync/workspaceC5";
 import { useState } from "react";
 import type { OrgAdminDetail } from "../../api/workspaceSchemas";
-import { shallowEqual, useEngine, useOrbit } from "../../app/orbit";
+import { shallowEqual, useCommunityServer, useEngine, useOrbit } from "../../app/orbit";
 import { navigate } from "../../app/router";
 import {
   cancelMeeting,
@@ -38,6 +39,7 @@ export function MeetingsPage({ detail }: { detail: OrgAdminDetail }) {
   const engine = useEngine();
   const orgId = detail.org.id;
   const rev = useOrbit((s) => s.meetingsRev);
+  const community = useCommunityServer();
   const [tick, setTick] = useState(0);
   const meetings = useLoad(() => listMeetings(engine, orgId), [engine, orgId, tick, rev]);
   const [editing, setEditing] = useState<Meeting | "new" | null>(null);
@@ -57,8 +59,8 @@ export function MeetingsPage({ detail }: { detail: OrgAdminDetail }) {
   return (
     <div className="ws-page">
       <Card
-        title="Meetings"
-        sub="Meetings happen in the workspace's voice rooms: joining one joins its room. Titles and times are readable by the server, like a channel's name."
+        title={community ? "Events" : "Meetings"}
+        sub={`${community ? "Events happen in the community's" : "Meetings happen in the workspace's"} voice rooms: joining one joins its room. Titles and times are readable by the server, like a channel's name.`}
         actions={
           !guest && (
             <button className="btn btn-primary btn-sm" onClick={() => setEditing("new")}>
@@ -68,14 +70,15 @@ export function MeetingsPage({ detail }: { detail: OrgAdminDetail }) {
         }
       >
         <ErrorLine text={meetings.error ?? act.error} />
-        {meetings.data && upcoming.length === 0 && <p className="faint">No meetings in the next 30 days.</p>}
+        {meetings.data && upcoming.length === 0 && <p className="faint">No {community ? "events" : "meetings"} in the next 30 days.</p>}
         <ul className="ws-list">
           {upcoming.map((m) => (
             <li key={m.id} className="ws-row" style={{ alignItems: "flex-start" }}>
               <span className="lines grow">
                 <strong>{m.title}</strong>
                 <small>
-                  {whenText(m.startsAt, m.endsAt, zone())} · {m.room?.name ? `#${m.room.name}` : "room gone"} · organized by {m.organizer.name ?? "someone"}
+                  {whenText(m.startsAt, m.endsAt, zone())}
+                  {m.repeat ? ` · ${repeatLabel(m.repeat, m.startsAt, m.timeZone)}` : ""} · {m.room?.name ? `#${m.room.name}` : "room gone"} · organized by {m.organizer.name ?? "someone"}
                 </small>
                 {m.description && <small className="faint">{m.description}</small>}
                 <small className="faint">
@@ -132,6 +135,7 @@ export function MeetingsPage({ detail }: { detail: OrgAdminDetail }) {
 function MeetingDialog({ orgId, meeting, onClose, onSaved }: { orgId: string; meeting: Meeting | null; onClose: () => void; onSaved: () => void }) {
   const engine = useEngine();
   const rooms = useOrbit((s) => voiceRooms(s, orgId), shallowEqual);
+  const community = useCommunityServer();
   const tz = meeting?.timeZone ?? zone();
   const [d0, t0, dur0] = meeting ? meetingFields(meeting.startsAt, meeting.endsAt, tz) : [...nextSlot(Date.now(), tz), 30];
   const [title, setTitle] = useState(meeting?.title ?? "");
@@ -140,6 +144,8 @@ function MeetingDialog({ orgId, meeting, onClose, onSaved }: { orgId: string; me
   const [date, setDate] = useState(d0);
   const [time, setTime] = useState(t0);
   const [minutes, setMinutes] = useState<number>(dur0);
+  const repeats = useOrbit((s) => s.server?.features.includes("event-repeat") ?? false);
+  const [repeat, setRepeat] = useState<EventRepeatChoice>(meeting?.repeat ?? "none");
   const [people, setPeople] = useState<{ id: string; name: string }[]>(meeting?.participants.map((p) => ({ id: p.id, name: p.name ?? "someone" })) ?? []);
   const [groupIds, setGroupIds] = useState<string[]>([]);
   const [q, setQ] = useState("");
@@ -159,13 +165,14 @@ function MeetingDialog({ orgId, meeting, onClose, onSaved }: { orgId: string; me
         timeZone: tz,
         participantIds: people.map((p) => p.id),
         groupIds,
+        ...(repeats ? { repeat: repeat === "none" ? null : repeat } : {}),
       };
       await (meeting ? updateMeeting(engine, meeting.id, meeting.rev, input) : createMeeting(engine, orgId, input));
       onSaved();
     });
   return (
     <Dialog
-      title={meeting ? "Edit meeting" : "Schedule a meeting"}
+      title={community ? (meeting ? "Edit event" : "Schedule an event") : meeting ? "Edit meeting" : "Schedule a meeting"}
       onClose={onClose}
       footer={
         <button className="btn btn-primary" disabled={problems.length > 0 || act.busy} onClick={save}>
@@ -201,6 +208,18 @@ function MeetingDialog({ orgId, meeting, onClose, onSaved }: { orgId: string; me
           </select>
         </div>
         <small className="faint">Times are in {tz}.</small>
+        {repeats && (
+          <label className="field">
+            <span>Repeats</span>
+            <select className="input" value={repeat} onChange={(e) => setRepeat(e.target.value as EventRepeatChoice)}>
+              {EVENT_REPEATS.map((r) => (
+                <option key={r} value={r}>
+                  {repeatLabel(r, startMs(date, time, tz) ?? Date.now(), tz)}
+                </option>
+              ))}
+            </select>
+          </label>
+        )}
         <label className="field">
           <span>Notes (optional)</span>
           <textarea className="input" rows={2} maxLength={2000} value={description} onChange={(e) => setDescription(e.target.value)} />

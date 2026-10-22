@@ -9,13 +9,18 @@ import { useAction, useLoad } from "./useLoad";
 import { Card, ErrorLine } from "./WorkspaceView";
 import { QrCode } from "../components/QrCode";
 import { inviteLink } from "../../sync/inviteCodes";
+import { rolesOverview } from "../../sync/roles";
 
+/** Batch B4 (android InviteChoices): 1 hour to 30 days, and 1 to 500 uses. */
 const EXPIRY: { hours: number; label: string }[] = [
+  { hours: 1, label: "1 hour" },
   { hours: 24, label: "1 day" },
   { hours: 72, label: "3 days" },
   { hours: 24 * 7, label: "7 days" },
   { hours: 24 * 30, label: "30 days" },
 ];
+
+const USES = [1, 10, 50, 100, 500];
 
 const STATUS: Record<Invite["status"], string> = { active: "Active", revoked: "Revoked", expired: "Expired", used_up: "Used up" };
 
@@ -83,9 +88,14 @@ function NewInvitation({ detail, onCreated }: { detail: OrgAdminDetail; onCreate
   const myRole = (detail.org.myRole ?? "MEMBER") as OrgRole;
   const isAdmin = detail.permissions.canManageOrg;
   const roles = isAdmin ? invitableRoles(myRole) : (["MEMBER", "GUEST"] as OrgRole[]);
-  // Admins may invite into the whole workspace; managers only into what they manage.
+  // Community servers (API 0.12+) have no branches or teams: an invitation admits to the whole community, optionally
+  // with one of its roles. Older servers: admins invite into the whole workspace, managers into what they manage.
+  const community = useOrbit((st) => st.server?.features.includes("community-channels") ?? false);
+  const customRoles = useLoad(() => (community && detail.permissions.canAssignRoles ? rolesOverview(engine, detail.org.id) : Promise.resolve(null)), [engine, detail.org.id, community]);
+  const grantable = (customRoles.data?.roles ?? []).filter((r) => !r.archived && r.canAssign);
+  const [roleId, setRoleId] = useState("");
   const scopes = [
-    ...(isAdmin ? [{ value: "", label: "The whole workspace" }] : []),
+    ...(isAdmin || community ? [{ value: "", label: community ? "The whole community" : "The whole workspace" }] : []),
     ...detail.branches.filter((b) => isAdmin || b.canManage).map((b) => ({ value: `b:${b.id}`, label: `Branch: ${b.name}` })),
     ...detail.teams.filter((t) => isAdmin || t.canManage).map((t) => ({ value: `t:${t.id}`, label: `Team: ${t.name}` })),
   ];
@@ -110,6 +120,7 @@ function NewInvitation({ detail, onCreated }: { detail: OrgAdminDetail; onCreate
         teamId: scope.startsWith("t:") ? scope.slice(2) : null,
         maxUses: uses,
         expiresInHours: hours,
+        ...(community && roleId && role !== "GUEST" ? { roleId } : {}),
         ...(role === "GUEST" && guestExpiry && Number(guestDays) > 0 ? { guestDays: Number(guestDays) } : {}),
       });
       setMade(r);
@@ -130,19 +141,40 @@ function NewInvitation({ detail, onCreated }: { detail: OrgAdminDetail; onCreate
             ))}
           </select>
         </label>
+        {!community && (
+          <label className="field">
+            <span>Into</span>
+            <select className="input" value={scope} onChange={(e) => setScope(e.target.value)}>
+              {scopes.map((s) => (
+                <option key={s.value} value={s.value}>
+                  {s.label}
+                </option>
+              ))}
+            </select>
+          </label>
+        )}
+        {community && grantable.length > 0 && role !== "GUEST" && (
+          <label className="field">
+            <span>Also give the role</span>
+            <select className="input" value={roleId} onChange={(e) => setRoleId(e.target.value)}>
+              <option value="">No extra role</option>
+              {grantable.map((r) => (
+                <option key={r.id} value={r.id}>
+                  {r.name}
+                </option>
+              ))}
+            </select>
+          </label>
+        )}
         <label className="field">
-          <span>Into</span>
-          <select className="input" value={scope} onChange={(e) => setScope(e.target.value)}>
-            {scopes.map((s) => (
-              <option key={s.value} value={s.value}>
-                {s.label}
+          <span>Uses</span>
+          <select className="input" value={uses} onChange={(e) => setUses(Number(e.target.value))}>
+            {USES.map((n) => (
+              <option key={n} value={n}>
+                {n === 1 ? "1 use" : `${n} uses`}
               </option>
             ))}
           </select>
-        </label>
-        <label className="field">
-          <span>Uses</span>
-          <input className="input" type="number" min={1} max={500} value={uses} onChange={(e) => setUses(Math.max(1, Math.min(500, Number(e.target.value) || 1)))} />
         </label>
         {role === "GUEST" && guestExpiry && (
           <label className="field">

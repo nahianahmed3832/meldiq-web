@@ -8,6 +8,8 @@ import {
   type MediaFactory,
   type MediaGrant,
   type MediaSession,
+  type PrepareOptions,
+  type ShareOptions,
 } from "../../src/call/types";
 
 /**
@@ -23,16 +25,20 @@ export class FakeMedia implements MediaSession {
   screen = false;
   device: Record<string, string> = {};
   prepared: boolean | null = null;
+  prepareOptions: PrepareOptions | null = null;
+  shareOptions: ShareOptions | null = null;
+  deafened = false;
 
   constructor(
     readonly events: MediaEvents,
     private readonly rig: MediaRig,
   ) {}
 
-  async prepare(video: boolean): Promise<DeviceIssues> {
+  async prepare(video: boolean, opts: PrepareOptions = {}): Promise<DeviceIssues> {
     this.prepared = video;
+    this.prepareOptions = opts;
     const issues = this.rig.issues;
-    this.mic = !issues.microphone;
+    this.mic = !issues.microphone && opts.microphone !== false;
     this.camera = video && !issues.camera;
     return issues;
   }
@@ -77,9 +83,14 @@ export class FakeMedia implements MediaSession {
     return () => undefined;
   }
 
-  async setScreenShare(on: boolean): Promise<void> {
+  async setScreenShare(on: boolean, opts?: ShareOptions): Promise<void> {
     if (on && this.rig.screenRefused) throw new DeviceError("screen", "denied");
     this.screen = on;
+    this.shareOptions = opts ?? null;
+  }
+
+  setDeafened(on: boolean): void {
+    this.deafened = on;
   }
 
   attachScreen(): () => void {

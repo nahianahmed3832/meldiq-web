@@ -1,7 +1,7 @@
 import type { DeviceKeys } from "../crypto/identity";
 import type { HistoryKeys } from "../crypto/history";
 import type { ReminderKey } from "../crypto/reminderKeys";
-import type { AttachmentRef, ContactCard, LinkPreview, Poll, SharedLocation, StickerRef } from "../protocol/payload";
+import type { AttachmentRef, ContactCard, CustomEmojiRef, LinkPreview, Poll, SharedLocation, StickerRef } from "../protocol/payload";
 
 /** Delivery state of a message, as the phone shows it (android data/model/Models.kt `MessageStatus`). */
 export type MessageStatus = "SENDING" | "SENT" | "DELIVERED" | "READ" | "FAILED" | "RECEIVED" | "HELD";
@@ -16,6 +16,13 @@ export interface RichContent {
   votes?: Record<string, string[]>;
   pollClosed?: boolean;
   sticker?: StickerRef;
+  /** A forum post's title; its text still starts with it (sync/forumRules.ts body() strips it for display). */
+  title?: string;
+  /** A forum post's tag ids (the forum's tags name them). */
+  tags?: string[];
+  /** Batch B9: community emoji shown inside the text, and a community sticker. */
+  customEmoji?: CustomEmojiRef[];
+  customSticker?: CustomEmojiRef;
 }
 
 export interface CallEntry {

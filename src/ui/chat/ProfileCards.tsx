@@ -1,10 +1,8 @@
-import { CircleUserRound, MessageSquare, Search } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
-import { ApiError } from "../../api/client";
-import { useEngine, useOrbit } from "../../app/orbit";
-import { navigate } from "../../app/router";
+import { CircleUserRound, Search } from "lucide-react";
+import { openProfile } from "../people/ProfileDialog";
+import { useMemo, useState } from "react";
+import { useOrbit } from "../../app/orbit";
 import type { ContactCard } from "../../protocol/payload";
-import { startDirect, userProfile } from "../../sync/account";
 import { profileCard } from "../../sync/rich";
 import { UserAvatar } from "../components/OrgAvatar";
 import { Dialog } from "../components/Overlay";
@@ -70,7 +68,6 @@ export function ProfileShareDialog({ onSend, onClose }: { onSend: (c: ContactCar
 
 /** A received or sent profile card (android ProfileCardView): name, @username and View profile. No phone number, ever. */
 export function ProfileCardView({ card }: { card: ContactCard }) {
-  const [open, setOpen] = useState(false);
   if (!card.userId) return null;
   return (
     <div className="profile-card">
@@ -80,69 +77,9 @@ export function ProfileCardView({ card }: { card: ContactCard }) {
         {card.username && <small>@{card.username}</small>}
         <small className="faint">Meldiq profile</small>
       </span>
-      <button className="btn btn-secondary btn-sm" onClick={() => setOpen(true)}>
+      <button className="btn btn-secondary btn-sm" onClick={() => openProfile(card.userId!, card.name)}>
         View profile
       </button>
-      {open && <ProfileDialog userId={card.userId} fallbackName={card.name} onClose={() => setOpen(false)} />}
     </div>
-  );
-}
-
-type Profile = Awaited<ReturnType<typeof userProfile>>;
-
-/** Someone's profile as the server lets this account see it (its privacy rules apply), with Message. */
-function ProfileDialog({ userId, fallbackName, onClose }: { userId: string; fallbackName: string; onClose: () => void }) {
-  const engine = useEngine();
-  const me = useOrbit((s) => s.me?.userId);
-  const [profile, setProfile] = useState<Profile | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  useEffect(() => {
-    let alive = true;
-    userProfile(engine, userId)
-      .then((p) => alive && setProfile(p))
-      .catch(
-        (e: unknown) =>
-          alive && setError(e instanceof ApiError && (e.status === 404 || e.status === 403) ? "This profile isn't available to you." : e instanceof Error ? e.message : "Couldn't load this profile."),
-      );
-    return () => {
-      alive = false;
-    };
-  }, [engine, userId]);
-  const message = () =>
-    void startDirect(engine, userId)
-      .then((id) => {
-        onClose();
-        navigate({ section: "dms", conversationId: id });
-      })
-      .catch((e: unknown) => setError(e instanceof Error ? e.message : "Couldn't open the conversation."));
-  return (
-    <Dialog
-      title={profile?.displayName ?? fallbackName}
-      onClose={onClose}
-      footer={
-        profile && userId !== me ? (
-          <button className="btn btn-primary" onClick={message}>
-            <MessageSquare size={16} /> Message
-          </button>
-        ) : undefined
-      }
-    >
-      <div className="dialog-body profile-dialog">
-        {error ? (
-          <p className="faint">{error}</p>
-        ) : !profile ? (
-          <div className="skeleton" style={{ height: 64 }} aria-busy="true" />
-        ) : (
-          <div className="row" style={{ gap: 14 }}>
-            <UserAvatar userId={profile.id} name={profile.displayName} colorIndex={profile.avatarColor} photoRev={profile.photoRev} size={56} decorative />
-            <span className="lines">
-              <strong>{profile.displayName}</strong>
-              <small>@{profile.username}</small>
-              {profile.statusText && <small className="faint">{profile.statusText}</small>}
-            </span>
-          </div>
-        )}
-      </div>
-    </Dialog>
   );
 }

@@ -118,7 +118,7 @@ export function AddMembersButton({ c, memberIds, onAdded }: { c: Conversation; m
   );
 }
 
-function AddMembersDialog({ c, memberIds, onAdded, onClose }: { c: Conversation; memberIds: ReadonlySet<string>; onAdded: () => void; onClose: () => void }) {
+export function AddMembersDialog({ c, memberIds, onAdded, onClose }: { c: Conversation; memberIds: ReadonlySet<string>; onAdded: () => void; onClose: () => void }) {
   const engine = useEngine();
   const [q, setQ] = useState("");
   const [results, setResults] = useState<Member[] | null>(null);

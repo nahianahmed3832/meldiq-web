@@ -10,6 +10,7 @@ import { byActivity, inWorkspace, isPeople, mentionConversations } from "../sele
 import type { ShellDialog } from "../shell/Shell";
 import { StartChecklist } from "./StartChecklist";
 import { DraftsAndSent } from "./DraftsAndSent";
+import { GuideCard, OnboardingBanner } from "../community/GuideOnboarding";
 
 function greeting(): string {
   const h = new Date().getHours();
@@ -22,6 +23,7 @@ export function HomeView({ orgId, section, onDialog }: { orgId: string | null; s
   const me = useOrbit((s) => s.me);
   const org = useOrbit((s) => s.orgs.find((o) => o.id === orgId) ?? null);
   const synced = useOrbit((s) => s.synced);
+  const communities = useOrbit((s) => s.server?.features.includes("community-channels") ?? false);
   const history = useOrbit((s) => s.history);
   const unread = useOrbit(
     (s) =>
@@ -61,13 +63,22 @@ export function HomeView({ orgId, section, onDialog }: { orgId: string | null; s
               {greeting()}, {me.displayName.split(" ")[0]} 👋
             </h1>
             <p className="view-sub">
-              {org ? `Here's what's happening in ${org.name}.` : "Your direct messages and groups are here. Create a workspace for your team, start a community, or join one with an invitation code."}
+              {org
+                ? `Here's what's happening in ${org.name}.`
+                : communities
+                  ? "Your direct messages and groups are here. Start a community, find one in Discover, or join one with an invitation code."
+                  : "Your direct messages and groups are here. Create a workspace for your team, start a community, or join one with an invitation code."}
             </p>
             {!org && section === "home" && (
               <div className="row" style={{ gap: 8, marginTop: 12, flexWrap: "wrap" }}>
                 <button className="btn btn-primary btn-sm" onClick={() => onDialog({ kind: "createWorkspace" })}>
-                  Create a workspace
+                  {communities ? "Start a community" : "Create a workspace"}
                 </button>
+                {communities && (
+                  <button className="btn btn-secondary btn-sm" onClick={() => onDialog({ kind: "discover" })}>
+                    Discover communities
+                  </button>
+                )}
                 <button className="btn btn-secondary btn-sm" onClick={() => onDialog({ kind: "joinWorkspace" })}>
                   Join with a code
                 </button>
@@ -75,6 +86,8 @@ export function HomeView({ orgId, section, onDialog }: { orgId: string | null; s
             )}
           </div>
 
+          {section === "home" && orgId && communities && <OnboardingBanner orgId={orgId} />}
+          {section === "home" && orgId && communities && <GuideCard orgId={orgId} />}
           {section === "home" && synced && <StartChecklist orgId={orgId} onDialog={onDialog} />}
 
           {history.status === "running" && (
@@ -143,7 +156,7 @@ export function HomeView({ orgId, section, onDialog }: { orgId: string | null; s
                   <MessagesSquare size={24} />
                 </span>
                 <h2>No conversations yet</h2>
-                <p>Start a direct message, or join a channel in your workspace.</p>
+                <p>Start a direct message, or join a channel in your {communities ? "community" : "workspace"}.</p>
                 <div className="row">
                   <button className="btn btn-primary" onClick={() => onDialog({ kind: "new" })}>
                     <PenSquare size={16} /> New message

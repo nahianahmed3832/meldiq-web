@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
-import { useEngine } from "../../app/orbit";
+import { Toggle } from "../components/Toggle";
+import { useEngine, useOrbit } from "../../app/orbit";
 import { createRole, grantable, type PermissionDef, type Role, type RolesOverview, updateRole } from "../../sync/roles";
 import { Dialog } from "../components/Overlay";
 import { ErrorLine } from "./WorkspaceView";
@@ -44,6 +45,8 @@ export function RoleEditor({
   const [color, setColor] = useState(start?.color ?? COLORS[0]);
   const [grants, setGrants] = useState<Set<string>>(new Set(start?.permissions ?? []));
   const [denies, setDenies] = useState<Set<string>>(new Set(start?.denies ?? []));
+  const hoistable = useOrbit((s) => s.server?.features.includes("role-hoist") ?? false);
+  const [hoist, setHoist] = useState(role?.hoist ?? false);
   const act = useAction();
   const byCategory = useMemo(() => {
     const m = new Map<string, PermissionDef[]>();
@@ -60,7 +63,7 @@ export function RoleEditor({
   };
   const save = () =>
     void act.act(async () => {
-      const fields = { name: name.trim(), description: description.trim() || null, color, permissions: [...grants], denies: [...denies] };
+      const fields = { name: name.trim(), description: description.trim() || null, color, permissions: [...grants], denies: [...denies], ...(hoistable ? { hoist } : {}) };
       if (role) await updateRole(engine, role, fields);
       else await createRole(engine, orgId, { ...fields, ...(template ? { template } : {}) });
       onSaved();
@@ -102,6 +105,15 @@ export function RoleEditor({
             </div>
           </div>
         </div>
+        {hoistable && (
+          <div className="setting">
+            <span className="lines">
+              <strong>Show members separately</strong>
+              <small>People with this role are listed under its name in the member list, in role order.</small>
+            </span>
+            <Toggle checked={hoist} onChange={setHoist} label="Show members separately" />
+          </div>
+        )}
         <label className="field">
           <span>Description</span>
           <input

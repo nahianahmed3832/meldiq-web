@@ -37,15 +37,23 @@ interface AvatarProps {
   decorative?: boolean;
   /** A photo (object URL) shown instead of the initials. */
   photoUrl?: string | null;
+  /** Batch B6b: idle (amber) or do not disturb (red) instead of the plain online dot. */
+  presence?: "online" | "idle" | "dnd" | "offline" | null;
 }
 
-export function Avatar({ name, colorIndex, size = 36, online, square, decorative, photoUrl }: AvatarProps) {
+const PRESENCE_TEXT = { online: "Online", idle: "Idle", dnd: "Do not disturb", offline: "Offline" } as const;
+
+export function Avatar({ name, colorIndex, size = 36, online, square, decorative, photoUrl, presence }: AvatarProps) {
   const [a1, a2] = TONES[((colorIndex % TONES.length) + TONES.length) % TONES.length];
   const style = { width: size, height: size, fontSize: Math.round(size * 0.36), "--a1": a1, "--a2": a2 } as CSSProperties;
   return (
     <span className={`avatar${square ? " square" : ""}`} style={style} role={decorative ? undefined : "img"} aria-label={decorative ? undefined : name} aria-hidden={decorative || undefined}>
       {photoUrl ? <img src={photoUrl} alt="" className="avatar-photo" draggable={false} /> : initialsOf(name)}
-      {online !== undefined && online !== null && <span className={`presence${online ? " on" : ""}`} aria-label={online ? "Online" : "Offline"} />}
+      {presence && online ? (
+        <span className={`presence on${presence === "idle" ? " idle" : presence === "dnd" ? " dnd" : ""}`} aria-label={PRESENCE_TEXT[presence]} />
+      ) : (
+        online !== undefined && online !== null && <span className={`presence${online ? " on" : ""}`} aria-label={online ? "Online" : "Offline"} />
+      )}
     </span>
   );
 }

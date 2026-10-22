@@ -1,4 +1,4 @@
-import { Bell, BellOff, LogOut, Menu as MenuIcon, Monitor, Moon, Search, Settings, Smartphone, Smile, Sun, UserRound } from "lucide-react";
+import { Bell, BellOff, CircleDot, LogOut, Menu as MenuIcon, Monitor, Moon, Search, Settings, Smartphone, Smile, Sun, UserRound } from "lucide-react";
 import { useState } from "react";
 import { useEngine, useOrbit } from "../../app/orbit";
 import { setPrefs, usePrefs } from "../../app/prefs";
@@ -7,7 +7,8 @@ import { Avatar } from "../components/Avatar";
 import { Menu, useMenu } from "../components/Overlay";
 import { mentionCount } from "../selectors";
 import { paused, statusLine } from "../../sync/status";
-import { PauseDialog, StatusDialog } from "../dialogs/StatusDialogs";
+import { PauseDialog, PresenceDialog, StatusDialog } from "../dialogs/StatusDialogs";
+import { currentPresence, PRESENCE_LABEL } from "../../sync/social";
 
 const CONN_LABEL = { online: "Online", connecting: "Connecting…", reconnecting: "Reconnecting…", offline: "Offline" } as const;
 
@@ -21,7 +22,8 @@ export function TopBar({ onMenu, onSearch }: { onMenu: () => void; onSearch: () 
   const mac = typeof navigator !== "undefined" && /Mac|iPhone|iPad/.test(navigator.platform);
   // Round 3 (the reference's profile popover): status and pausing notifications, on servers that keep them.
   const statusOffered = useOrbit((s) => s.server?.features.includes("status-expiry") ?? false);
-  const [dialog, setDialog] = useState<"status" | "pause" | null>(null);
+  const [dialog, setDialog] = useState<"status" | "pause" | "presence" | null>(null);
+  const presenceOffered = useOrbit((s) => s.server?.features.includes("presence-modes") ?? false);
   const now = Date.now();
   const myStatus = statusLine(me, now);
   const pausedUntil = paused(me?.notificationsPausedUntil, now) ? (me?.notificationsPausedUntil ?? null) : null;
@@ -80,6 +82,15 @@ export function TopBar({ onMenu, onSearch }: { onMenu: () => void; onSearch: () 
                 ),
               },
               "separator",
+              ...(presenceOffered
+                ? [
+                    {
+                      label: `Presence: ${PRESENCE_LABEL[currentPresence(me.presenceMode, me.presenceUntil, now)].label}…`,
+                      icon: <CircleDot size={16} />,
+                      onSelect: () => setDialog("presence"),
+                    },
+                  ]
+                : []),
               ...(statusOffered
                 ? [
                     { label: myStatus ? "Change status…" : "Set a status…", icon: <Smile size={16} />, onSelect: () => setDialog("status") },
@@ -107,6 +118,7 @@ export function TopBar({ onMenu, onSearch }: { onMenu: () => void; onSearch: () 
       </div>
       {dialog === "status" && <StatusDialog onClose={() => setDialog(null)} />}
       {dialog === "pause" && <PauseDialog onClose={() => setDialog(null)} />}
+      {dialog === "presence" && <PresenceDialog onClose={() => setDialog(null)} />}
     </header>
   );
 }

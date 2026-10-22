@@ -408,3 +408,80 @@ button.e2ee-badge:hover {
 .room-people .icon-btn {
   color: var(--call-text-2);
 }
+
+/* Batch B10/B11: the Deafen pill and what you're sharing, above the call buttons. */
+.call-controls-wrap {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+}
+.call-pills {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.call-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: var(--r-pill);
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  font-size: 12.5px;
+  font-weight: 600;
+}
+button.call-pill:hover {
+  background: rgba(255, 255, 255, 0.18);
+}
+.call-pill.on {
+  background: var(--danger);
+}
+.call-pill.quiet {
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 500;
+}
+
+/* Settings › Calls › Check microphone and camera. */
+.precall {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: 16px;
+}
+.precall-video {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: var(--surface-sunken);
+  border-radius: var(--r-md);
+  object-fit: cover;
+  transform: scaleX(-1);
+}
+.precall-side {
+  display: grid;
+  gap: 12px;
+  align-content: start;
+}
+.meter {
+  height: 8px;
+  border-radius: var(--r-pill);
+  background: var(--surface-sunken);
+  overflow: hidden;
+}
+.meter span {
+  display: block;
+  height: 100%;
+  background: var(--success);
+  transition: width 80ms linear;
+}
+@media (max-width: 640px) {
+  .precall {
+    grid-template-columns: 1fr;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .meter span {
+    transition: none;
+  }
+}

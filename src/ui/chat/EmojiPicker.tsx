@@ -1,9 +1,13 @@
-import { Clock, Coffee, Flag, Lightbulb, type LucideIcon, PawPrint, PersonStanding, Plane, Shapes, Smile, Trophy } from "lucide-react";
+import { Clock, Coffee, Flag, Lightbulb, type LucideIcon, PawPrint, PersonStanding, Plane, Shapes, Smile, Trophy, UsersRound } from "lucide-react";
+import type { Expression, ExpressionList } from "../../sync/expressions";
+import { CustomEmojiImage } from "../community/CustomEmoji";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { type EmojiGroup, type EmojiItem, emojiUsed, inTone, loadCatalog, searchEmoji, setEmojiTone, useEmojiPrefs } from "../../emoji/catalog";
 
 const RECENT = "recent";
+const COMMUNITY = "community";
 const TABS: { id: string; label: string; icon: LucideIcon }[] = [
+  { id: COMMUNITY, label: "Community", icon: UsersRound },
   { id: RECENT, label: "Recently used", icon: Clock },
   { id: "smileys", label: "Smileys & emotion", icon: Smile },
   { id: "people", label: "People & body", icon: PersonStanding },
@@ -25,7 +29,18 @@ const MAX_QUERY = 60;
  * that jump to their section, recent emoji first, and one skin tone for every emoji that has them. [onPick] gets the
  * emoji in the chosen tone; it's then remembered as recent. Lives inside a Menu: the emoji are its menu items.
  */
-export function EmojiPicker({ onPick }: { onPick: (emoji: string) => void }) {
+/**
+ * Batch B9: a community's own emoji (and, outside reactions, its stickers) in a Community section. In a reaction
+ * picker an emoji picks its `:name:` (B12); in the composer [onEmoji] and [onSticker] take them.
+ */
+export interface CommunityPick {
+  list: ExpressionList;
+  reactions?: boolean;
+  onEmoji?: (e: Expression) => void;
+  onSticker?: (e: Expression) => void;
+}
+
+export function EmojiPicker({ onPick, community }: { onPick: (emoji: string) => void; community?: CommunityPick }) {
   const [groups, setGroups] = useState<EmojiGroup[] | null>(null);
   const [failed, setFailed] = useState(false);
   const [query, setQuery] = useState("");
@@ -67,7 +82,9 @@ export function EmojiPicker({ onPick }: { onPick: (emoji: string) => void }) {
     const top = box.scrollTop + 4;
     setCurrent(sections.filter((s) => s.offsetTop <= top).pop()?.dataset.section ?? null);
   };
-  const available = new Set([...(recent.length ? [RECENT] : []), ...(groups ?? []).map((g) => g.id)]);
+  const customEmoji = community?.list.expressions.filter((e) => e.kind === "emoji") ?? [];
+  const customStickers = community && !community.reactions ? community.list.expressions.filter((e) => e.kind === "sticker") : [];
+  const available = new Set([...(customEmoji.length || customStickers.length ? [COMMUNITY] : []), ...(recent.length ? [RECENT] : []), ...(groups ?? []).map((g) => g.id)]);
 
   return (
     <div className="emoji-picker">
@@ -117,6 +134,37 @@ export function EmojiPicker({ onPick }: { onPick: (emoji: string) => void }) {
           )
         ) : (
           <>
+            {(customEmoji.length > 0 || customStickers.length > 0) && (
+              <section data-section={COMMUNITY} aria-label="Community">
+                <h4 className="emoji-heading">Community</h4>
+                <div className="emoji-grid">
+                  {customEmoji.map((e) => (
+                    <button
+                      key={e.id}
+                      type="button"
+                      role="menuitem"
+                      aria-label={`:${e.name}:`}
+                      title={`:${e.name}:`}
+                      onClick={() => (community?.reactions ? onPick(`:${e.name}:`) : community?.onEmoji?.(e))}
+                    >
+                      <CustomEmojiImage id={e.id} name={e.name} sha256={e.sha256} size={24} />
+                    </button>
+                  ))}
+                </div>
+                {customStickers.length > 0 && (
+                  <>
+                    <h4 className="emoji-heading">Stickers</h4>
+                    <div className="sticker-grid">
+                      {customStickers.map((e) => (
+                        <button key={e.id} type="button" role="menuitem" aria-label={`Send sticker :${e.name}:`} title={`:${e.name}:`} onClick={() => community?.onSticker?.(e)}>
+                          <CustomEmojiImage id={e.id} name={e.name} sha256={e.sha256} size={64} />
+                        </button>
+                      ))}
+                    </div>
+                  </>
+                )}
+              </section>
+            )}
             {recent.length > 0 && <Section id={RECENT} title="Recently used" items={recent.map((e) => [e, e])} onPick={pick} />}
             {groups?.map((g) => (
               <Section key={g.id} id={g.id} title={TABS.find((t) => t.id === g.id)?.label ?? g.name} items={g.items.map((it) => [inTone(it, tone), it.name])} onPick={pick} />

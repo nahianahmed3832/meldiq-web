@@ -200,3 +200,60 @@ export function deviceIssueOf(e: unknown): DeviceIssue {
 export function mirrorPreview(isLocal: boolean, facingMode: string | undefined): boolean {
   return isLocal && facingMode !== "environment";
 }
+
+/**
+ * Screen sharing modes (batch B11, android ShareMode): "text" keeps text sharp (up to 1080p at 15 fps, 2.5 Mbit/s,
+ * keeps resolution under congestion); "motion" (games and video) keeps it smooth (720p at 30 fps, 3.5 Mbit/s, keeps
+ * the frame rate).
+ */
+export type ShareMode = "text" | "motion";
+export const SHARE_MODES: Record<
+  ShareMode,
+  { width: number; height: number; frameRate: number; maxBitrate: number; contentHint: "detail" | "motion"; degradation: RTCDegradationPreference; label: string; hint: string }
+> = {
+  text: {
+    width: 1920,
+    height: 1080,
+    frameRate: 15,
+    maxBitrate: 2_500_000,
+    contentHint: "detail",
+    degradation: "maintain-resolution",
+    label: "Text and apps",
+    hint: "Sharp text, up to 1080p at 15 frames a second",
+  },
+  motion: {
+    width: 1280,
+    height: 720,
+    frameRate: 30,
+    maxBitrate: 3_500_000,
+    contentHint: "motion",
+    degradation: "maintain-framerate",
+    label: "Games and video",
+    hint: "Smooth motion, 720p at 30 frames a second",
+  },
+};
+
+/** The saved choice, or text for anything unknown (android ShareMode.fromSaved). */
+export const shareModeOf = (saved: string | null | undefined): ShareMode => (saved === "motion" ? "motion" : "text");
+
+/**
+ * Deafen (batch B10, android CallManager.toggleDeafen): deafened, you hear nobody and your microphone is off; undeafened,
+ * sound comes back and the microphone only comes back on if it was on before.
+ */
+export function deafenChange(deafened: boolean, micOn: boolean, micBeforeDeafen: boolean): { deafened: boolean; micOn: boolean; micBeforeDeafen: boolean } {
+  return deafened ? { deafened: false, micOn: micBeforeDeafen, micBeforeDeafen } : { deafened: true, micOn: false, micBeforeDeafen: micOn };
+}
+
+/** Microphone processing for a call (batch B10 Noise reduction): echo cancellation always; noise and level when on. */
+export const audioProcessing = (noiseReduction: boolean): MediaTrackConstraints => ({ echoCancellation: true, noiseSuppression: noiseReduction, autoGainControl: noiseReduction });
+
+/**
+ * A level meter's value (0–1) from an analyser's float time-domain samples (-1…1), as android MicMeter.level: the
+ * square root of the RMS, so quiet speech still moves the bar.
+ */
+export function micLevel(samples: ArrayLike<number>): number {
+  if (!samples.length) return 0;
+  let sum = 0;
+  for (let i = 0; i < samples.length; i++) sum += samples[i] * samples[i];
+  return Math.min(1, Math.max(0, Math.sqrt(Math.sqrt(sum / samples.length))));
+}

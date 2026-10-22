@@ -1,4 +1,29 @@
-import { AlertTriangle, Hand, Info, Lock, Mic, MicOff, Minimize2, MonitorOff, MonitorUp, PhoneOff, Settings2, ShieldAlert, ShieldQuestion, Video, VideoOff, Volume2, WifiOff, X } from "lucide-react";
+import {
+  AlertTriangle,
+  Hand,
+  HeadphoneOff,
+  Headphones,
+  Info,
+  Lock,
+  Mic,
+  MicOff,
+  Minimize2,
+  MonitorOff,
+  MonitorUp,
+  PhoneOff,
+  Settings2,
+  ShieldAlert,
+  ShieldQuestion,
+  Video,
+  VideoOff,
+  Volume2,
+  WifiOff,
+  X,
+} from "lucide-react";
+import { SHARE_MODES, type ShareMode, shareModeOf } from "../../call/rules";
+import { setPrefs, usePrefs } from "../../app/prefs";
+import { Toggle } from "../components/Toggle";
+import { Dialog } from "../components/Overlay";
 import { useEffect, useRef, useState } from "react";
 import { useEngine, useOrbit } from "../../app/orbit";
 import { CallFailure } from "../../call/rules";
@@ -215,45 +240,113 @@ function Controls({ call, people }: { call: CallUiState; people: { open: boolean
   const engine = useEngine();
   const live = call.phase !== "ended";
   const media = live && call.phase !== "incoming" && call.verification !== null;
+  const [sharing, setSharing] = useState(false);
   return (
-    <div className="call-controls">
-      <button
-        className={`call-btn${call.devices.microphone ? " warn" : ""}`}
-        onClick={() => void engine.calls.toggleMicrophone()}
-        aria-pressed={call.micOn}
-        aria-label={call.micOn ? "Mute" : "Unmute"}
-        disabled={!media}
-      >
-        {call.micOn ? <Mic size={22} /> : <MicOff size={22} />}
-      </button>
-      <button
-        className={`call-btn${call.devices.camera ? " warn" : ""}`}
-        onClick={() => void engine.calls.toggleCamera()}
-        aria-pressed={call.cameraOn}
-        aria-label={call.cameraOn ? "Turn camera off" : "Turn camera on"}
-        disabled={!media}
-      >
-        {call.cameraOn ? <Video size={22} /> : <VideoOff size={22} />}
-      </button>
-      {canShareScreen() && (
+    <div className="call-controls-wrap">
+      {media && (
+        <div className="call-pills">
+          {/* Batch B10 (android CallOverlay's Deafen pill). */}
+          <button className={`call-pill${call.deafened ? " on" : ""}`} aria-pressed={call.deafened} onClick={() => void engine.calls.toggleDeafen()}>
+            {call.deafened ? <HeadphoneOff size={15} /> : <Headphones size={15} />} {call.deafened ? "Deafened" : "Deafen"}
+          </button>
+          {call.listenOnly && <span className="call-pill quiet">Listen only</span>}
+          {call.screenSharing && call.shareMode && (
+            <span className="call-pill quiet">
+              Sharing · {call.shareMode === "motion" ? "games and video" : "text and apps"}
+              {call.shareAudio ? " · with sound" : ""}
+            </span>
+          )}
+        </div>
+      )}
+      <div className="call-controls">
         <button
-          className={`call-btn${call.screenSharing ? " on" : ""}`}
-          onClick={() => void engine.calls.toggleScreenShare()}
-          aria-pressed={call.screenSharing}
-          aria-label={call.screenSharing ? "Stop sharing your screen" : "Share your screen"}
-          title={call.screenSharing ? "Stop sharing" : "Share your screen"}
+          className={`call-btn${call.devices.microphone ? " warn" : ""}`}
+          onClick={() => void engine.calls.toggleMicrophone()}
+          aria-pressed={call.micOn}
+          aria-label={call.listenOnly ? "You can only listen in this voice channel" : call.micOn ? "Mute" : "Unmute"}
+          disabled={!media || call.listenOnly}
+        >
+          {call.micOn ? <Mic size={22} /> : <MicOff size={22} />}
+        </button>
+        <button
+          className={`call-btn${call.devices.camera ? " warn" : ""}`}
+          onClick={() => void engine.calls.toggleCamera()}
+          aria-pressed={call.cameraOn}
+          aria-label={call.cameraOn ? "Turn camera off" : "Turn camera on"}
           disabled={!media}
         >
-          {call.screenSharing ? <MonitorOff size={22} /> : <MonitorUp size={22} />}
+          {call.cameraOn ? <Video size={22} /> : <VideoOff size={22} />}
         </button>
-      )}
-      {call.voiceRoom && <HandButton call={call} />}
-      {people && <PeopleButton open={people.open} onToggle={people.toggle} count={roomRows(call).length} />}
-      <DeviceMenu disabled={!media} />
-      <button className="call-btn end" onClick={() => engine.calls.hangup()} aria-label="Hang up" disabled={!live}>
-        <PhoneOff size={22} />
-      </button>
+        {canShareScreen() && (
+          <button
+            className={`call-btn${call.screenSharing ? " on" : ""}`}
+            onClick={() => (call.screenSharing ? void engine.calls.toggleScreenShare() : setSharing(true))}
+            aria-pressed={call.screenSharing}
+            aria-label={call.screenSharing ? "Stop sharing your screen" : "Share your screen"}
+            title={call.screenSharing ? "Stop sharing" : "Share your screen"}
+            disabled={!media}
+          >
+            {call.screenSharing ? <MonitorOff size={22} /> : <MonitorUp size={22} />}
+          </button>
+        )}
+        {call.voiceRoom && <HandButton call={call} />}
+        {people && <PeopleButton open={people.open} onToggle={people.toggle} count={roomRows(call).length} />}
+        <DeviceMenu disabled={!media} />
+        <button className="call-btn end" onClick={() => engine.calls.hangup()} aria-label="Hang up" disabled={!live}>
+          <PhoneOff size={22} />
+        </button>
+      </div>
+      {sharing && <ShareDialog onClose={() => setSharing(false)} />}
     </div>
+  );
+}
+
+/**
+ * Share your screen (batch B11, android ShareSheet): the warning, then Text and apps or Games and video, and the
+ * shared tab's or screen's sound where the browser offers it. The last choice is the default next time; then the
+ * browser asks which screen, window or tab.
+ */
+function ShareDialog({ onClose }: { onClose: () => void }) {
+  const engine = useEngine();
+  const prefs = usePrefs();
+  const [mode, setMode] = useState<ShareMode>(shareModeOf(prefs.shareMode));
+  const [audio, setAudio] = useState(prefs.shareAudio);
+  const share = () => {
+    setPrefs({ shareMode: mode, shareAudio: audio });
+    onClose();
+    void engine.calls.toggleScreenShare({ mode, audio });
+  };
+  return (
+    <Dialog title="Share your screen" onClose={onClose}>
+      <div className="dialog-body">
+        <div className="banner warn">Everyone in the call sees what you share, including notifications that appear on it.</div>
+        <div role="radiogroup" aria-label="What you're sharing" style={{ display: "grid", gap: 2 }}>
+          {(["text", "motion"] as const).map((m) => (
+            <button key={m} role="radio" aria-checked={mode === m} aria-pressed={mode === m} className="list-row" onClick={() => setMode(m)}>
+              <span className="lines">
+                <span style={{ fontWeight: 600 }}>{SHARE_MODES[m].label}</span>
+                <small>{SHARE_MODES[m].hint}</small>
+              </span>
+            </button>
+          ))}
+        </div>
+        <div className="setting">
+          <span className="lines">
+            <strong>Include sound</strong>
+            <small>The shared tab's or screen's sound, as its own track, where this browser offers it (Chrome and Edge). Muting yourself doesn't silence it: stop sharing to stop the sound.</small>
+          </span>
+          <Toggle checked={audio} onChange={setAudio} label="Include sound" />
+        </div>
+        <div className="row" style={{ justifyContent: "flex-end", gap: 8 }}>
+          <button className="btn btn-secondary" onClick={onClose}>
+            Cancel
+          </button>
+          <button className="btn btn-primary" onClick={share}>
+            <MonitorUp size={15} /> Share
+          </button>
+        </div>
+      </div>
+    </Dialog>
   );
 }
 

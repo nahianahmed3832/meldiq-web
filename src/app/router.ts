@@ -8,14 +8,37 @@ import { useSyncExternalStore } from "react";
  *   #/workspace/<page>                            the current workspace's settings and administration
  */
 export type Section = "home" | "dms" | "activity" | "later" | "settings" | "workspace";
-export type SettingsPage = "profile" | "account" | "devices" | "notifications" | "appearance" | "storage" | "security" | "about" | "health" | "usage";
+export type SettingsPage = "profile" | "account" | "devices" | "notifications" | "calls" | "appearance" | "storage" | "security" | "about" | "health" | "usage";
 export type WorkspacePage =
-  "overview" | "people" | "invitations" | "channels" | "structure" | "roles" | "apps" | "audit" | "usage" | "documents" | "workflows" | "groups" | "meetings" | "developer" | "ai" | "inbox";
+  | "overview"
+  | "people"
+  | "invitations"
+  | "channels"
+  | "structure"
+  | "roles"
+  | "apps"
+  | "audit"
+  | "usage"
+  | "documents"
+  | "workflows"
+  | "groups"
+  | "meetings"
+  | "developer"
+  | "ai"
+  | "inbox"
+  // Communities (batches B4–B9).
+  | "applications"
+  | "reports"
+  | "security"
+  | "bans"
+  | "guide"
+  | "onboarding"
+  | "expressions";
 
 export interface Route {
   section: Section;
   conversationId: string | null;
-  panel: "details" | "thread" | "search" | "pinned" | null;
+  panel: "details" | "thread" | "search" | "pinned" | "threads" | null;
   threadRoot: string | null;
   settingsPage: SettingsPage;
   workspacePage: WorkspacePage;
@@ -27,7 +50,7 @@ export interface Route {
 export const isFullPage = (s: Section): boolean => s === "settings" || s === "workspace";
 
 const SECTIONS: Section[] = ["home", "dms", "activity", "later", "settings", "workspace"];
-const PAGES: SettingsPage[] = ["profile", "account", "devices", "notifications", "appearance", "storage", "security", "about", "health", "usage"];
+const PAGES: SettingsPage[] = ["profile", "account", "devices", "notifications", "calls", "appearance", "storage", "security", "about", "health", "usage"];
 const WORKSPACE_PAGES: WorkspacePage[] = [
   "overview",
   "people",
@@ -45,6 +68,13 @@ const WORKSPACE_PAGES: WorkspacePage[] = [
   "developer",
   "ai",
   "inbox",
+  "applications",
+  "reports",
+  "security",
+  "bans",
+  "guide",
+  "onboarding",
+  "expressions",
 ];
 const ID = /^[A-Za-z0-9_-]{1,128}$/;
 
@@ -60,6 +90,7 @@ export function parseRoute(hash: string): Route {
     if (parts[3] === "details") route.panel = "details";
     if (parts[3] === "search") route.panel = "search";
     if (parts[3] === "pinned") route.panel = "pinned";
+    if (parts[3] === "threads") route.panel = "threads";
     if (parts[3] === "thread" && parts[4] && ID.test(parts[4])) {
       route.panel = "thread";
       route.threadRoot = parts[4];
@@ -77,6 +108,7 @@ export function routeHash(r: Partial<Route> & { section: Section }): string {
     if (r.panel === "details") h += "/details";
     if (r.panel === "search") h += "/search";
     if (r.panel === "pinned") h += "/pinned";
+    if (r.panel === "threads") h += "/threads";
     if (r.panel === "thread" && r.threadRoot) h += `/thread/${encodeURIComponent(r.threadRoot)}`;
   }
   return h;

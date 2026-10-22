@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { OrgRole } from "../src/api/workspaceSchemas";
-import { assignableRoles, cleanInviteCode, invitableRoles, removalAllowed, roleName, titleChangeAllowed } from "../src/sync/workspaceRules";
+import { assignableRoles, cleanInviteCode, invitableRoles, memberGroups, removalAllowed, roleName, titleChangeAllowed } from "../src/sync/workspaceRules";
 import { members, untilWhen } from "../src/ui/format";
 
 /**
@@ -58,5 +58,19 @@ describe("workspace role rules (same table as the server)", () => {
     expect(untilWhen(now + 5 * 3_600_000, now)).toBe("in 5 h");
     expect(untilWhen(now + 3 * 86_400_000, now)).toBe("in 3 days");
     expect(untilWhen(now + 86_400_000, now)).toBe("in 1 day");
+  });
+});
+
+describe("member groups (batch B12, android MemberGroupsTest)", () => {
+  const role = (id: string, position: number, hoist = true) => ({ id, name: id, color: null, hoist, position });
+  const m = (id: string, ...customRoles: ReturnType<typeof role>[]) => ({ id, customRoles });
+  it("puts each person once, under their highest role shown separately, in role order, then everyone else", () => {
+    const g = memberGroups([m("ada", role("painter", 2)), m("bo"), m("cy", role("painter", 2), role("mod", 1)), m("di", role("quiet", 0, false))]);
+    expect(g.map((x) => [x.role?.id ?? null, x.members.map((y) => y.id)])).toEqual([
+      ["mod", ["cy"]],
+      ["painter", ["ada"]],
+      [null, ["bo", "di"]],
+    ]);
+    expect(memberGroups([m("a"), m("b")]).map((x) => x.role)).toEqual([null]);
   });
 });
