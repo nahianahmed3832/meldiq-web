@@ -1,4 +1,4 @@
-import { AtSign, BarChart3, FileUp, Lock, MapPin, Mic, Paperclip, ScrollText, SendHorizontal, Smile, Sparkles, UserRound, X } from "lucide-react";
+import { AtSign, BarChart3, FileUp, Lock, MapPin, Mic, Paperclip, Plus, ScrollText, SendHorizontal, Smile, Sparkles, UserRound, X } from "lucide-react";
 import { useExpressions } from "../community/CustomEmoji";
 import { forSending, refOf } from "../../sync/expressions";
 import type { CustomEmojiRef } from "../../protocol/payload";
@@ -312,51 +312,17 @@ export function Composer(props: ComposerProps) {
             <label className="sr-only" htmlFor={`composer-${c.id}-${props.threadRoot ?? "main"}`}>
               {props.threadRoot ? "Reply in thread" : `Message ${props.title}`}
             </label>
-            <textarea
-              id={`composer-${c.id}-${props.threadRoot ?? "main"}`}
-              ref={input}
-              rows={1}
-              value={text}
-              placeholder={props.threadRoot ? "Reply in thread…" : `Message ${c.type === "CHANNEL" ? "#" : ""}${props.title}`}
-              onChange={(e) => onChange(e.target.value)}
-              onBlur={() => engine.setTyping(c.id, false)}
-              onPaste={(e: ClipboardEvent<HTMLTextAreaElement>) => {
-                const pasted = Array.from(e.clipboardData.files);
-                if (pasted.length) {
-                  e.preventDefault();
-                  addFiles(pasted);
-                }
-              }}
-              onKeyDown={(e) => {
-                if (suggest) {
-                  if (e.key === "ArrowDown" || e.key === "ArrowUp") {
-                    e.preventDefault();
-                    const d = e.key === "ArrowDown" ? 1 : -1;
-                    setSuggest({ ...suggest, index: (suggest.index + d + suggest.items.length) % suggest.items.length });
-                    return;
-                  }
-                  if (e.key === "Enter" || e.key === "Tab") {
-                    e.preventDefault();
-                    pick(suggest.items[suggest.index]);
-                    return;
-                  }
-                  if (e.key === "Escape") {
-                    setSuggest(null);
-                    return;
-                  }
-                }
-                if (e.key === "Escape" && props.replyTo) props.onCancelReply();
-                if (e.key === "Enter" && !e.shiftKey && !e.nativeEvent.isComposing && (prefs.enterToSend || e.metaKey || e.ctrlKey)) {
-                  e.preventDefault();
-                  void send();
-                }
-              }}
-              aria-describedby={busy ? `composer-status-${c.id}` : undefined}
-              disabled={!!busy}
-            />
-            <div className="composer-tools">
-              <button className="icon-btn" onClick={(e) => attach.open(e.currentTarget)} aria-label="Attach" aria-haspopup="menu" title="Attach files, a contact or your location" disabled={!!busy}>
-                <Paperclip size={18} />
+            {/* B14 (android one-row composer): actions, the text, emoji, and the microphone that becomes Send. */}
+            <div className="composer-row">
+              <button
+                className="icon-btn composer-plus"
+                onClick={(e) => attach.open(e.currentTarget)}
+                aria-label="Add files, a poll and more"
+                aria-haspopup="menu"
+                title="Add files, a poll and more"
+                disabled={!!busy}
+              >
+                <Plus size={19} />
               </button>
               <input
                 ref={fileInput}
@@ -368,12 +334,54 @@ export function Composer(props: ComposerProps) {
                   e.target.value = "";
                 }}
               />
+              <textarea
+                id={`composer-${c.id}-${props.threadRoot ?? "main"}`}
+                ref={input}
+                rows={1}
+                value={text}
+                placeholder={props.threadRoot ? "Reply in thread…" : `Message ${c.type === "CHANNEL" ? "#" : ""}${props.title}`}
+                onChange={(e) => onChange(e.target.value)}
+                onBlur={() => engine.setTyping(c.id, false)}
+                onPaste={(e: ClipboardEvent<HTMLTextAreaElement>) => {
+                  const pasted = Array.from(e.clipboardData.files);
+                  if (pasted.length) {
+                    e.preventDefault();
+                    addFiles(pasted);
+                  }
+                }}
+                onKeyDown={(e) => {
+                  if (suggest) {
+                    if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+                      e.preventDefault();
+                      const d = e.key === "ArrowDown" ? 1 : -1;
+                      setSuggest({ ...suggest, index: (suggest.index + d + suggest.items.length) % suggest.items.length });
+                      return;
+                    }
+                    if (e.key === "Enter" || e.key === "Tab") {
+                      e.preventDefault();
+                      pick(suggest.items[suggest.index]);
+                      return;
+                    }
+                    if (e.key === "Escape") {
+                      setSuggest(null);
+                      return;
+                    }
+                  }
+                  if (e.key === "Escape" && props.replyTo) props.onCancelReply();
+                  if (e.key === "Enter" && !e.shiftKey && !e.nativeEvent.isComposing && (prefs.enterToSend || e.metaKey || e.ctrlKey)) {
+                    e.preventDefault();
+                    void send();
+                  }
+                }}
+                aria-describedby={busy ? `composer-status-${c.id}` : undefined}
+                disabled={!!busy}
+              />
               <button className="icon-btn" onClick={(e) => emoji.open(e.currentTarget)} aria-label="Insert emoji" aria-haspopup="menu">
                 <Smile size={18} />
               </button>
               {c.type !== "DM" && (
                 <button
-                  className="icon-btn"
+                  className="icon-btn hide-sm"
                   aria-label="Mention someone"
                   onClick={() => {
                     const next = `${text}${text && !text.endsWith(" ") ? " " : ""}@`;
@@ -388,24 +396,33 @@ export function Composer(props: ComposerProps) {
                   <AtSign size={18} />
                 </button>
               )}
-              <span className="hint" id={`composer-status-${c.id}`} aria-live="polite">
-                {busy ?? (prefs.enterToSend ? "Enter to send · Shift+Enter for a new line" : "Ctrl+Enter to send")}
-              </span>
-              {busy && upload.current && (
-                <button className="btn btn-ghost btn-sm" onClick={() => upload.current?.abort()}>
-                  Cancel
-                </button>
-              )}
               {canRecord && !text.trim() && !files.length && !busy ? (
-                <button className="send-btn" onClick={() => setVoice(true)} aria-label="Record a voice message">
+                <button key="mic" className="send-btn" onClick={() => setVoice(true)} aria-label="Record a voice message">
                   <Mic size={17} />
                 </button>
               ) : (
-                <button className="send-btn" onClick={() => void send()} disabled={(!text.trim() && !files.length) || !!busy} aria-label="Send">
+                <button
+                  key="send"
+                  className="send-btn"
+                  onClick={() => void send()}
+                  disabled={(!text.trim() && !files.length) || !!busy}
+                  aria-label="Send"
+                  title={prefs.enterToSend ? "Send (Enter) · Shift+Enter for a new line" : "Send (Ctrl+Enter)"}
+                >
                   <SendHorizontal size={17} />
                 </button>
               )}
             </div>
+            {busy && (
+              <div className="composer-status" id={`composer-status-${c.id}`} aria-live="polite">
+                <span className="grow">{busy}</span>
+                {upload.current && (
+                  <button className="btn btn-ghost btn-sm" onClick={() => upload.current?.abort()}>
+                    Cancel
+                  </button>
+                )}
+              </div>
+            )}
           </>
         )}
       </div>

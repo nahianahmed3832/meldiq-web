@@ -1,4 +1,4 @@
-import { BellOff, Fingerprint, Hash, Images, Lock, LogOut, MessageSquare, ShieldCheck, X } from "lucide-react";
+import { BellOff, Fingerprint, Hash, Images, Lock, LogOut, MessageSquare, ShieldCheck, UsersRound, X } from "lucide-react";
 import { titleOf } from "../../sync/forumRules";
 import { ThreadsPanel } from "./ThreadsPanel";
 import { GroupPhotoCard } from "../people/GroupPhotoCard";
@@ -16,7 +16,10 @@ import { levelOf, type NotifyLevel, workspaceOf } from "../../sync/navPrefs";
 import { removeConversationMember } from "../../sync/workspaces";
 import { Composer } from "./Composer";
 import { AddMembersButton, BlockToggle, EditConversationButton } from "./ConversationManage";
-import { galleryOf } from "./gallery";
+import { galleryOf, linksOf } from "./gallery";
+import { DetailsTabBar, type DetailsTab, FilesTab, LinksTab, MediaTab, PinsTab } from "./DetailsTabs";
+import { NewGroupDialog } from "../dialogs/NewGroupDialog";
+import { usePinned } from "./PinnedPanel";
 import { MediaGalleryDialog } from "./MediaGalleryDialog";
 import { MessageList } from "./MessageList";
 import { SearchPanel } from "./SearchPanel";
@@ -61,6 +64,9 @@ function DetailsPanel({ conversationId, onClose }: { conversationId: string; onC
   const [safety, setSafety] = useState<string | null>(null);
   const [verified, setVerified] = useState<boolean | null>(null);
   const [galleryOpen, setGalleryOpen] = useState(false);
+  const [tab, setTab] = useState<DetailsTab>("about");
+  const [newGroup, setNewGroup] = useState(false);
+  const pinnedCount = usePinned(conversationId).length;
   const peer = c && me && c.type === "DM" ? dmPeer(c, me.userId) : null;
   const memberCount = c?.memberCount;
 
@@ -77,6 +83,7 @@ function DetailsPanel({ conversationId, onClose }: { conversationId: string; onC
   }, [loadMembers, memberCount]);
 
   const gallery = useMemo(() => galleryOf(loaded ?? []), [loaded]);
+  const links = useMemo(() => linksOf(loaded ?? []), [loaded]);
   const memberIds = useMemo(() => new Set((members ?? []).map((m) => m.id)), [members]);
 
   useEffect(() => {
@@ -97,91 +104,112 @@ function DetailsPanel({ conversationId, onClose }: { conversationId: string; onC
   if (!c || !me) return null;
   const title = conversationTitle(c, me.userId, users);
   const senderName = (i: { outgoing: boolean; senderUserId: string }) => (i.outgoing ? "You" : (users[i.senderUserId]?.displayName ?? "Unknown"));
+  // Batch B14: a direct message or group opens a details page with tabs; a channel keeps its single page.
+  const tabbed = c.type !== "CHANNEL";
+  const show = (t: DetailsTab) => !tabbed || tab === t;
+  const peerMember = peer && members?.find((m) => m.id === peer.id);
 
   return (
     <aside className="panel" aria-label="Details">
       <PanelHead title="Details" sub={c.type === "CHANNEL" ? `#${title}` : title} onClose={onClose} />
-      <div className="panel-body scroll">
-        <div className="panel-card">
-          <dl style={{ margin: 0 }}>
-            {c.type === "CHANNEL" && (
-              <div>
-                <dt>Topic</dt>
-                <dd>{c.topic ?? <span className="faint">No topic</span>}</dd>
+      {tabbed && <DetailsTabBar tab={tab} onTab={setTab} counts={{ members: c.memberCount, media: gallery.media.length, pins: pinnedCount, links: links.length, files: gallery.files.length }} />}
+      <div className="panel-body scroll" key={tab}>
+        {show("about") && (
+          <>
+            <div className="panel-card">
+              <dl style={{ margin: 0 }}>
+                {c.type === "CHANNEL" && (
+                  <div>
+                    <dt>Topic</dt>
+                    <dd>{c.topic ?? <span className="faint">No topic</span>}</dd>
+                  </div>
+                )}
+                <div>
+                  <dt>Type</dt>
+                  <dd className="row" style={{ gap: 6 }}>
+                    {c.type === "CHANNEL" ? c.kind === "PRIVATE" ? <Lock size={14} /> : <Hash size={14} /> : <MessageSquare size={14} />}
+                    {c.type === "CHANNEL"
+                      ? `${c.kind === "PRIVATE" ? "Private" : c.kind === "ANNOUNCEMENT" ? "Announcement" : "Public"} channel${c.scopeName ? ` in ${c.scopeName}` : ""}`
+                      : c.type === "GROUP"
+                        ? "Group"
+                        : "Direct message"}
+                  </dd>
+                </div>
+                <div>
+                  <dt>Created</dt>
+                  <dd>{dayLabel(c.createdAt)}</dd>
+                </div>
+                <div>
+                  <dt>Encryption</dt>
+                  <dd className="row" style={{ gap: 6 }}>
+                    <ShieldCheck size={14} /> End-to-end encrypted on your devices
+                  </dd>
+                </div>
+              </dl>
+              {c.type !== "DM" && c.canManage && (
+                <div>
+                  <EditConversationButton c={c} />
+                </div>
+              )}
+            </div>
+
+            {peer && safety && (
+              <div className="panel-card">
+                <div style={{ display: "grid", gap: 8 }}>
+                  <div className="panel-section-title">
+                    <span className="row" style={{ gap: 6 }}>
+                      <Fingerprint size={14} /> Safety number
+                    </span>
+                    {verified ? <span className="tag ok">Verified</span> : <span className="tag">Not verified</span>}
+                  </div>
+                  <span className="fingerprint" style={{ fontSize: 13, whiteSpace: "pre-line" }}>
+                    {safety}
+                  </span>
+                  <span className="faint" style={{ fontSize: 12 }}>
+                    Compare it with {peer.displayName} in person or on a call. If it matches on both screens, nobody is in between.
+                  </span>
+                  <button
+                    className="btn btn-secondary btn-sm"
+                    onClick={() => {
+                      void engine.markVerified(peer.id, !verified).then(() => setVerified(!verified));
+                    }}
+                  >
+                    {verified ? "Clear verified" : "Mark as verified"}
+                  </button>
+                </div>
               </div>
             )}
-            <div>
-              <dt>Type</dt>
-              <dd className="row" style={{ gap: 6 }}>
-                {c.type === "CHANNEL" ? c.kind === "PRIVATE" ? <Lock size={14} /> : <Hash size={14} /> : <MessageSquare size={14} />}
-                {c.type === "CHANNEL"
-                  ? `${c.kind === "PRIVATE" ? "Private" : c.kind === "ANNOUNCEMENT" ? "Announcement" : "Public"} channel${c.scopeName ? ` in ${c.scopeName}` : ""}`
-                  : c.type === "GROUP"
-                    ? "Group"
-                    : "Direct message"}
-              </dd>
-            </div>
-            <div>
-              <dt>Created</dt>
-              <dd>{dayLabel(c.createdAt)}</dd>
-            </div>
-            <div>
-              <dt>Encryption</dt>
-              <dd className="row" style={{ gap: 6 }}>
-                <ShieldCheck size={14} /> End-to-end encrypted on your devices
-              </dd>
-            </div>
-          </dl>
-          {c.type !== "DM" && c.canManage && (
-            <div>
-              <EditConversationButton c={c} />
-            </div>
-          )}
-        </div>
 
-        {peer && safety && (
-          <div className="panel-card">
-            <div style={{ display: "grid", gap: 8 }}>
-              <div className="panel-section-title">
-                <span className="row" style={{ gap: 6 }}>
-                  <Fingerprint size={14} /> Safety number
-                </span>
-                {verified ? <span className="tag ok">Verified</span> : <span className="tag">Not verified</span>}
+            {peer && (
+              <div className="panel-card">
+                <div>
+                  <BlockToggle userId={peer.id} name={peer.displayName} />
+                </div>
               </div>
-              <span className="fingerprint" style={{ fontSize: 13, whiteSpace: "pre-line" }}>
-                {safety}
-              </span>
-              <span className="faint" style={{ fontSize: 12 }}>
-                Compare it with {peer.displayName} in person or on a call. If it matches on both screens, nobody is in between.
-              </span>
-              <button
-                className="btn btn-secondary btn-sm"
-                onClick={() => {
-                  void engine.markVerified(peer.id, !verified).then(() => setVerified(!verified));
-                }}
-              >
-                {verified ? "Clear verified" : "Mark as verified"}
-              </button>
-            </div>
-          </div>
-        )}
+            )}
 
-        {peer && (
-          <div className="panel-card">
-            <div>
-              <BlockToggle userId={peer.id} name={peer.displayName} />
-            </div>
-          </div>
+            <GroupPhotoCard c={c} title={c.name ?? "Group"} />
+          </>
         )}
-
-        <GroupPhotoCard c={c} title={c.name ?? "Group"} />
-        {c.type !== "DM" && (
+        {show("members") && (
           <div style={{ display: "grid", gap: 4 }}>
             <div className="panel-section-title">
               <span>Members</span>
               <span>{c.memberCount}</span>
             </div>
-            <AddMembersButton c={c} memberIds={memberIds} onAdded={loadMembers} />
+            {c.type !== "DM" && <AddMembersButton c={c} memberIds={memberIds} onAdded={loadMembers} />}
+            {c.type === "DM" && peerMember && (
+              <button className="panel-action-row" onClick={() => setNewGroup(true)}>
+                <span className="circle">
+                  <UsersRound size={16} />
+                </span>
+                <span className="lines grow">
+                  <span>New group with {peerMember.displayName}</span>
+                  <small>Start a group; this conversation stays as it is</small>
+                </span>
+              </button>
+            )}
+            {newGroup && peerMember && <NewGroupDialog initial={[peerMember]} onClose={() => setNewGroup(false)} />}
             {error && <div className="banner danger">{error}</div>}
             {!members && !error && <span className="skeleton" style={{ height: 120 }} />}
             {members?.map((m) => (
@@ -216,20 +244,27 @@ function DetailsPanel({ conversationId, onClose }: { conversationId: string; onC
           </div>
         )}
 
-        <button className="panel-action-row" onClick={() => setGalleryOpen(true)}>
-          <span className="circle">
-            <Images size={16} />
-          </span>
-          <span className="lines grow">
-            <span>Media and files</span>
-            <small>
-              {gallery.media.length} photos and videos · {gallery.files.length} files
-            </small>
-          </span>
-        </button>
+        {tabbed && tab === "media" && <MediaTab gallery={gallery} nameOf={senderName} />}
+        {tabbed && tab === "files" && <FilesTab gallery={gallery} nameOf={senderName} />}
+        {tabbed && tab === "pins" && <PinsTab conversationId={conversationId} />}
+        {tabbed && tab === "links" && <LinksTab conversationId={conversationId} links={links} nameOf={senderName} />}
+
+        {!tabbed && (
+          <button className="panel-action-row" onClick={() => setGalleryOpen(true)}>
+            <span className="circle">
+              <Images size={16} />
+            </span>
+            <span className="lines grow">
+              <span>Media and files</span>
+              <small>
+                {gallery.media.length} photos and videos · {gallery.files.length} files
+              </small>
+            </span>
+          </button>
+        )}
         {galleryOpen && <MediaGalleryDialog gallery={gallery} nameOf={senderName} onClose={() => setGalleryOpen(false)} />}
 
-        <ConversationSettings conversationId={conversationId} />
+        {show("about") && <ConversationSettings conversationId={conversationId} />}
       </div>
     </aside>
   );

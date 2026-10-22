@@ -1,4 +1,5 @@
 import { AppUpdatesBar } from "./AppUpdatesBar";
+import { ConversationMenu } from "./ConversationMenu";
 import { ChannelGlyph } from "../community/ChannelDialogs";
 import { ForumView } from "./ForumView";
 import { presenceWords } from "../../sync/social";
@@ -81,26 +82,40 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
         <button className="icon-btn back" onClick={() => navigate({ section: route.section })} aria-label="Back to conversations">
           <ArrowLeft size={19} />
         </button>
-        {c.type === "DM" ? (
-          <Avatar name={title} colorIndex={peer?.color ?? 0} size={34} online={peer?.online} presence={peer?.presence} decorative />
-        ) : c.type === "GROUP" ? (
-          <GroupAvatar conversationId={c.id} name={title} photoRev={c.photoRev} size={34} />
-        ) : null}
-        <div className="conv-title">
-          <h1>
-            {glyph}
-            <span className="ellipsis">{title}</span>
-            {c.archived && (
-              <span className="tag">
-                <Archive size={11} /> Archived
-              </span>
-            )}
-          </h1>
-          <p className="ellipsis">{subtitle}</p>
-        </div>
+        {(() => {
+          const titleBlock = (
+            <>
+              {c.type === "DM" ? (
+                <Avatar name={title} colorIndex={peer?.color ?? 0} size={34} online={peer?.online} presence={peer?.presence} decorative />
+              ) : c.type === "GROUP" ? (
+                <GroupAvatar conversationId={c.id} name={title} photoRev={c.photoRev} size={34} />
+              ) : null}
+              <div className="conv-title">
+                <h1>
+                  {glyph}
+                  <span className="ellipsis">{title}</span>
+                  {c.archived && (
+                    <span className="tag">
+                      <Archive size={11} /> Archived
+                    </span>
+                  )}
+                </h1>
+                <p className="ellipsis">{subtitle}</p>
+              </div>
+            </>
+          );
+          // B14: in a DM or group the name opens the details (members, media, pins, links, files).
+          return c.type === "CHANNEL" ? (
+            titleBlock
+          ) : (
+            <button className="conv-title-btn" onClick={() => navigate({ section: route.section, conversationId: id, panel: panelOpen ? null : "details" })} aria-label={`${title}: details`}>
+              {titleBlock}
+            </button>
+          );
+        })()}
         {/* Calls in a workspace happen in its voice rooms; a text channel has none to start (android round 7). */}
         {c.type !== "CHANNEL" && !c.request && <CallButtons conversationId={id} canPost={c.canPost} archived={c.archived} serverCalling={calling} busy={myCall !== null} running={!!call} />}
-        {c.type !== "DM" && (
+        {c.type === "CHANNEL" && (
           <button
             className="btn btn-ghost btn-sm"
             onClick={() => navigate({ section: route.section, conversationId: id, panel: panelOpen ? null : "details" })}
@@ -129,16 +144,22 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
             <MessagesSquare size={18} />
           </button>
         )}
-        <PinnedButton conversationId={id} />
-        <SecurityPadlock conversationId={id} />
-        <button
-          className="icon-btn"
-          aria-pressed={panelOpen}
-          onClick={() => navigate({ section: route.section, conversationId: id, panel: panelOpen ? null : "details" })}
-          aria-label={panelOpen ? "Hide details" : "Show details"}
-        >
-          <Info size={19} />
-        </button>
+        {c.type === "CHANNEL" ? (
+          <>
+            <PinnedButton conversationId={id} />
+            <SecurityPadlock conversationId={id} />
+            <button
+              className="icon-btn"
+              aria-pressed={panelOpen}
+              onClick={() => navigate({ section: route.section, conversationId: id, panel: panelOpen ? null : "details" })}
+              aria-label={panelOpen ? "Hide details" : "Show details"}
+            >
+              <Info size={19} />
+            </button>
+          </>
+        ) : (
+          <ConversationMenu conversationId={id} route={route} />
+        )}
       </header>
 
       {c.type === "CHANNEL" && <AppUpdatesBar conversationId={id} />}

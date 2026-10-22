@@ -38,3 +38,44 @@ export function galleryOf(messages: readonly StoredMessage[]): Gallery {
   }
   return { media, files };
 }
+
+export interface LinkItem {
+  url: string;
+  /** The host without "www.", shown under the link. */
+  domain: string;
+  messageId: string;
+  senderUserId: string;
+  outgoing: boolean;
+  at: number;
+}
+
+/** The same links the message text makes clickable (RichText). */
+const LINK = /https?:\/\/[^\s<>"']+[^\s<>"'.,;:!?)\]]/g;
+
+/** Links shared in a conversation on this browser (batch B14 details › Links), newest first, each once. */
+export function linksOf(messages: readonly StoredMessage[]): LinkItem[] {
+  const seen = new Set<string>();
+  const out: LinkItem[] = [];
+  for (let i = messages.length - 1; i >= 0; i--) {
+    const m = messages[i];
+    if (m.deleted || !m.text) continue;
+    for (const [url] of m.text.matchAll(LINK)) {
+      if (seen.has(url)) continue;
+      seen.add(url);
+      let domain: string;
+      try {
+        domain = new URL(url).hostname.replace(/^www\./, "");
+      } catch {
+        continue;
+      }
+      out.push({ url, domain, messageId: m.id, senderUserId: m.senderUserId, outgoing: m.outgoing, at: m.sortTs });
+    }
+  }
+  return out;
+}
+
+/** Files whose name contains [query] (case ignored); an empty query keeps them all. */
+export function filterFiles(items: readonly GalleryItem[], query: string): GalleryItem[] {
+  const q = query.trim().toLowerCase();
+  return q ? items.filter((i) => i.ref.name.toLowerCase().includes(q)) : [...items];
+}
