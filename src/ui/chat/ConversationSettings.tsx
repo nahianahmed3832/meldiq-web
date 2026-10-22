@@ -11,7 +11,7 @@ const LEVELS: { level: NotifyLevel; label: string }[] = [
   { level: "none", label: "Off" },
 ];
 
-/** Notifications (synced to every device of the person) and leaving the group or channel. */
+/** Notifications (synced to every device of the person) and leaving a group. */
 export function ConversationSettings({ conversationId }: { conversationId: string }) {
   const engine = useEngine();
   const c = useOrbit((s) => s.conversations[conversationId]);
@@ -19,12 +19,13 @@ export function ConversationSettings({ conversationId }: { conversationId: strin
   const [confirm, setConfirm] = useState(false);
   const [error, setError] = useState<string | null>(null);
   if (!c) return null;
-  const leavable = c.type === "GROUP" || (c.type === "CHANNEL" && !(c.kind === "ANNOUNCEMENT" && !c.canManage));
+  // People leave a community, not one of its channels (as on Android, batch B14b); a group can still be left.
+  const leavable = c.type === "GROUP";
   const leave = async () => {
     try {
       await removeConversationMember(engine, conversationId, engine.device.userId);
       await engine.refreshAll();
-      navigate({ section: c.type === "CHANNEL" ? "home" : "dms" });
+      navigate({ section: "dms" });
     } catch (e) {
       setError(e instanceof Error ? e.message : "Couldn't leave.");
     }
@@ -55,7 +56,7 @@ export function ConversationSettings({ conversationId }: { conversationId: strin
           )}
           {confirm ? (
             <div className="row" style={{ gap: 8 }}>
-              <span className="grow">Leave {c.type === "GROUP" ? "this group" : "this channel"}?</span>
+              <span className="grow">Leave this group?</span>
               <button className="btn btn-secondary btn-sm" onClick={() => setConfirm(false)}>
                 Cancel
               </button>
@@ -65,7 +66,7 @@ export function ConversationSettings({ conversationId }: { conversationId: strin
             </div>
           ) : (
             <button className="btn btn-danger-quiet btn-sm" style={{ justifySelf: "start" }} onClick={() => setConfirm(true)}>
-              <LogOut size={14} /> Leave {c.type === "GROUP" ? "group" : "channel"}
+              <LogOut size={14} /> Leave group
             </button>
           )}
         </>
