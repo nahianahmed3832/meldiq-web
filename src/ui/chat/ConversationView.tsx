@@ -1,11 +1,13 @@
 import { AppUpdatesBar } from "./AppUpdatesBar";
+import { ChannelGlyph } from "../community/ChannelDialogs";
+import { ForumView } from "./ForumView";
 import { presenceWords } from "../../sync/social";
 import { GroupAvatar } from "../components/OrgAvatar";
 import { RequestBar, RequestSentBanner } from "../people/RequestBar";
 import { VoiceRoomBanner } from "./VoiceRoomBanner";
 import { SecurityPadlock } from "./SecuritySheet";
 import { PinnedButton } from "./PinnedPanel";
-import { Archive, ArrowLeft, BellOff, Hash, Headphones, Info, Lock, Megaphone, Phone, Search, ShieldAlert, UsersRound, Video } from "lucide-react";
+import { Archive, ArrowLeft, BellOff, Info, MessagesSquare, Phone, Search, ShieldAlert, UsersRound, Video } from "lucide-react";
 import { useCallback, useMemo, useState } from "react";
 import { shallowEqual, useEngine, useOrbit } from "../../app/orbit";
 import { navigate, type Route } from "../../app/router";
@@ -64,7 +66,7 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
   }, [engine, onDialog]);
 
   if (!c || !me) return null;
-  const glyph = c.type !== "CHANNEL" ? null : c.voice ? <Headphones size={18} /> : c.kind === "PRIVATE" ? <Lock size={18} /> : c.kind === "ANNOUNCEMENT" ? <Megaphone size={18} /> : <Hash size={19} />;
+  const glyph = c.type !== "CHANNEL" ? null : <ChannelGlyph kind={c.kind} voice={c.voice} format={c.format} size={18} />;
   const subtitle =
     c.type === "DM"
       ? [`@${peer?.username ?? ""}`, peer?.pronouns, presenceWords(peer?.presence, peer?.online)?.toLowerCase(), peer?.status].filter(Boolean).join(" · ")
@@ -116,6 +118,17 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
         >
           <Search size={18} />
         </button>
+        {c.type === "CHANNEL" && !c.voice && c.format !== "forum" && (
+          <button
+            className="icon-btn"
+            aria-pressed={route.panel === "threads"}
+            onClick={() => navigate({ section: route.section, conversationId: id, panel: route.panel === "threads" ? null : "threads" })}
+            aria-label="Threads"
+            title="Threads"
+          >
+            <MessagesSquare size={18} />
+          </button>
+        )}
         <PinnedButton conversationId={id} />
         <SecurityPadlock conversationId={id} />
         <button
@@ -169,7 +182,9 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
         </div>
       )}
 
-      {loaded ? (
+      {c.type === "CHANNEL" && c.format === "forum" ? (
+        <ForumView c={c} section={route.section} />
+      ) : loaded ? (
         <MessageList
           conversationId={id}
           items={loaded.items}
@@ -204,7 +219,7 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
         </div>
       )}
 
-      {c.request?.incoming ? (
+      {c.type === "CHANNEL" && c.format === "forum" ? null : c.request?.incoming ? (
         <RequestBar conversation={c} name={title} />
       ) : (
         <Composer

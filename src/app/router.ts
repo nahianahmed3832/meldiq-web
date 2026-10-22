@@ -38,7 +38,7 @@ export type WorkspacePage =
 export interface Route {
   section: Section;
   conversationId: string | null;
-  panel: "details" | "thread" | "search" | "pinned" | null;
+  panel: "details" | "thread" | "search" | "pinned" | "threads" | null;
   threadRoot: string | null;
   settingsPage: SettingsPage;
   workspacePage: WorkspacePage;
@@ -90,6 +90,7 @@ export function parseRoute(hash: string): Route {
     if (parts[3] === "details") route.panel = "details";
     if (parts[3] === "search") route.panel = "search";
     if (parts[3] === "pinned") route.panel = "pinned";
+    if (parts[3] === "threads") route.panel = "threads";
     if (parts[3] === "thread" && parts[4] && ID.test(parts[4])) {
       route.panel = "thread";
       route.threadRoot = parts[4];
@@ -107,6 +108,7 @@ export function routeHash(r: Partial<Route> & { section: Section }): string {
     if (r.panel === "details") h += "/details";
     if (r.panel === "search") h += "/search";
     if (r.panel === "pinned") h += "/pinned";
+    if (r.panel === "threads") h += "/threads";
     if (r.panel === "thread" && r.threadRoot) h += `/thread/${encodeURIComponent(r.threadRoot)}`;
   }
   return h;

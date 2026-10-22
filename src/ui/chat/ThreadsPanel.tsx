@@ -1,0 +1,68 @@
+import { MessagesSquare, Search, X } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useEngine, useOrbit } from "../../app/orbit";
+import { navigate, type Section } from "../../app/router";
+import { filterThreads, threadRows, type ThreadRow } from "../../sync/threads";
+import { relative } from "../format";
+
+/** Messages a channel's thread list reads from this browser's store. */
+const WINDOW = 5000;
+
+/**
+ * A channel's Threads (batch B5, android ThreadsSheet): every thread this browser has, latest reply first, with who
+ * started it, its replies and when; searchable by name. Built here, because messages are end-to-end encrypted.
+ */
+export function ThreadsPanel({ conversationId, section, onClose }: { conversationId: string; section: Section; onClose: () => void }) {
+  const engine = useEngine();
+  const users = useOrbit((s) => s.users);
+  const rev = useOrbit((s) => s.threadRev);
+  const [rows, setRows] = useState<ThreadRow[] | null>(null);
+  const [q, setQ] = useState("");
+  useEffect(() => {
+    let alive = true;
+    void engine.conversationMessages(conversationId, WINDOW).then((m) => alive && setRows(threadRows(m)));
+    return () => {
+      alive = false;
+    };
+  }, [engine, conversationId, rev]);
+  const shown = rows ? filterThreads(rows, q) : null;
+  return (
+    <aside className="panel" aria-label="Threads">
+      <div className="panel-head">
+        <div className="grow">
+          <h2>Threads</h2>
+        </div>
+        <button className="icon-btn" onClick={onClose} aria-label="Close panel">
+          <X size={18} />
+        </button>
+      </div>
+      <div className="panel-body scroll" style={{ display: "grid", gap: 8, alignContent: "start", padding: 12 }}>
+        <label className="forum-search">
+          <Search size={15} aria-hidden />
+          <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search threads" aria-label="Search threads" />
+        </label>
+        {!shown && <span className="skeleton" style={{ height: 80 }} />}
+        {shown?.length === 0 && (
+          <div className="empty" style={{ padding: 16 }}>
+            <span className="empty-orb">
+              <MessagesSquare size={20} />
+            </span>
+            <p className="muted">{q ? "No thread matches." : "No threads here yet. To start one, open a message's menu and choose Reply in thread."}</p>
+          </div>
+        )}
+        {shown?.map((r) => (
+          <button key={r.rootId} className="list-row" onClick={() => navigate({ section, conversationId, panel: "thread", threadRoot: r.rootId })}>
+            <span className="lines">
+              <span className="ellipsis" style={{ fontWeight: 600 }}>
+                {r.title}
+              </span>
+              <small className="ellipsis">
+                {r.outgoing ? "You" : (users[r.senderId]?.displayName ?? "Someone")} · {r.replies === 1 ? "1 reply" : `${r.replies} replies`} · {relative(r.lastReplyTs)}
+              </small>
+            </span>
+          </button>
+        ))}
+      </div>
+    </aside>
+  );
+}

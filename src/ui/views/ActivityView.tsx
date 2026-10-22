@@ -8,7 +8,7 @@ import { orgActivity } from "../../sync/account";
 import type { ThreadActivity } from "../../sync/threads";
 import { Avatar, colorIndexOf } from "../components/Avatar";
 import { conversationTitle, relative } from "../format";
-import { type ActivityFilter, activityShows, mentionConversations } from "../selectors";
+import { type ActivityFilter, activityShows, mentionConversations, unreadGroups } from "../selectors";
 
 /**
  * What needs you (android ActivityFeedScreen): unread @mentions in every workspace (opening the chat clears them), then the
@@ -51,12 +51,13 @@ export function ActivityView({ orgId }: { orgId: string | null }) {
             <p className="view-sub">Mentions of you, and what changed in {org?.name ?? "your workspace"}.</p>
           </div>
           <div className="search-filters" role="tablist" aria-label="Show">
-            {(["all", "mentions", "threads", "calls"] as const).map((f) => (
+            {(["all", "mentions", "unreads", "threads", "calls"] as const).map((f) => (
               <button key={f} role="tab" aria-selected={filter === f} className="chip" onClick={() => setFilter(f)}>
-                {{ all: "All", mentions: "Mentions", threads: "Threads", calls: "Calls" }[f]}
+                {{ all: "All", mentions: "Mentions", unreads: "Unreads", threads: "Threads", calls: "Calls" }[f]}
               </button>
             ))}
           </div>
+          {activityShows(filter, "unreads") && <Unreads />}
           {activityShows(filter, "mentions") && (
             <div className="card list-card">
               <h2>Unread mentions</h2>
@@ -277,6 +278,68 @@ function ActivityRow({ a }: { a: Activity }) {
         </span>
         <small>{relative(a.at)}</small>
       </span>
+    </div>
+  );
+}
+
+/** Activity › Unreads (batch B5): by DMs and groups, then each community; Mark as read per row, and Mark all read. */
+function Unreads() {
+  const engine = useEngine();
+  const groups = useOrbit(unreadGroups, (a, b) => JSON.stringify(a) === JSON.stringify(b));
+  const rows = useOrbit(
+    (s) =>
+      Object.fromEntries(
+        groups
+          .flatMap((g) => g.ids)
+          .map((id) => {
+            const c = s.conversations[id];
+            return [id, { title: c && s.me ? conversationTitle(c, s.me.userId, s.users) : "", type: c?.type ?? "DM", count: s.local[id]?.unread ?? 0, preview: s.local[id]?.lastPreview ?? "" }];
+          }),
+      ),
+    (a, b) => JSON.stringify(a) === JSON.stringify(b),
+  );
+  const all = groups.flatMap((g) => g.ids);
+  return (
+    <div className="card list-card">
+      <div className="row" style={{ justifyContent: "space-between" }}>
+        <h2>Unreads</h2>
+        {all.length > 0 && (
+          <button className="btn btn-ghost btn-sm" onClick={() => void Promise.all(all.map((id) => engine.markRead(id)))}>
+            Mark all read
+          </button>
+        )}
+      </div>
+      {groups.length === 0 ? (
+        <div className="empty" style={{ padding: 28 }}>
+          <p>All caught up.</p>
+        </div>
+      ) : (
+        groups.map((g) => (
+          <section key={g.orgId ?? "direct"} aria-label={g.title}>
+            <h3 className="ws-subhead" style={{ padding: "0 12px" }}>
+              {g.title}
+            </h3>
+            {g.ids.map((id) => {
+              const r = rows[id];
+              if (!r) return null;
+              return (
+                <div key={id} className="list-row">
+                  <button className="lines grow" style={{ textAlign: "left" }} onClick={() => navigate({ section: r.type === "CHANNEL" ? "home" : "dms", conversationId: id })}>
+                    <span className="ellipsis" style={{ fontWeight: 700 }}>
+                      {r.type === "CHANNEL" ? `#${r.title}` : r.title}
+                    </span>
+                    <small className="ellipsis">{r.preview}</small>
+                  </button>
+                  <span className="count accent">{r.count}</span>
+                  <button className="btn btn-ghost btn-sm" onClick={() => void engine.markRead(id)}>
+                    Mark as read
+                  </button>
+                </div>
+              );
+            })}
+          </section>
+        ))
+      )}
     </div>
   );
 }

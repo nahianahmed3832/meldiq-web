@@ -1,4 +1,5 @@
 import { CalendarPlus, Headphones, Pencil, Plus, X } from "lucide-react";
+import { EVENT_REPEATS, type EventRepeatChoice, repeatLabel } from "../../sync/workspaceC5";
 import { useState } from "react";
 import type { OrgAdminDetail } from "../../api/workspaceSchemas";
 import { shallowEqual, useEngine, useOrbit } from "../../app/orbit";
@@ -75,7 +76,8 @@ export function MeetingsPage({ detail }: { detail: OrgAdminDetail }) {
               <span className="lines grow">
                 <strong>{m.title}</strong>
                 <small>
-                  {whenText(m.startsAt, m.endsAt, zone())} · {m.room?.name ? `#${m.room.name}` : "room gone"} · organized by {m.organizer.name ?? "someone"}
+                  {whenText(m.startsAt, m.endsAt, zone())}
+                  {m.repeat ? ` · ${repeatLabel(m.repeat, m.startsAt, m.timeZone)}` : ""} · {m.room?.name ? `#${m.room.name}` : "room gone"} · organized by {m.organizer.name ?? "someone"}
                 </small>
                 {m.description && <small className="faint">{m.description}</small>}
                 <small className="faint">
@@ -140,6 +142,8 @@ function MeetingDialog({ orgId, meeting, onClose, onSaved }: { orgId: string; me
   const [date, setDate] = useState(d0);
   const [time, setTime] = useState(t0);
   const [minutes, setMinutes] = useState<number>(dur0);
+  const repeats = useOrbit((s) => s.server?.features.includes("event-repeat") ?? false);
+  const [repeat, setRepeat] = useState<EventRepeatChoice>(meeting?.repeat ?? "none");
   const [people, setPeople] = useState<{ id: string; name: string }[]>(meeting?.participants.map((p) => ({ id: p.id, name: p.name ?? "someone" })) ?? []);
   const [groupIds, setGroupIds] = useState<string[]>([]);
   const [q, setQ] = useState("");
@@ -159,6 +163,7 @@ function MeetingDialog({ orgId, meeting, onClose, onSaved }: { orgId: string; me
         timeZone: tz,
         participantIds: people.map((p) => p.id),
         groupIds,
+        ...(repeats ? { repeat: repeat === "none" ? null : repeat } : {}),
       };
       await (meeting ? updateMeeting(engine, meeting.id, meeting.rev, input) : createMeeting(engine, orgId, input));
       onSaved();
@@ -201,6 +206,18 @@ function MeetingDialog({ orgId, meeting, onClose, onSaved }: { orgId: string; me
           </select>
         </div>
         <small className="faint">Times are in {tz}.</small>
+        {repeats && (
+          <label className="field">
+            <span>Repeats</span>
+            <select className="input" value={repeat} onChange={(e) => setRepeat(e.target.value as EventRepeatChoice)}>
+              {EVENT_REPEATS.map((r) => (
+                <option key={r} value={r}>
+                  {repeatLabel(r, startMs(date, time, tz) ?? Date.now(), tz)}
+                </option>
+              ))}
+            </select>
+          </label>
+        )}
         <label className="field">
           <span>Notes (optional)</span>
           <textarea className="input" rows={2} maxLength={2000} value={description} onChange={(e) => setDescription(e.target.value)} />

@@ -1,4 +1,6 @@
 import { BellOff, Fingerprint, Hash, Images, Lock, LogOut, MessageSquare, ShieldCheck, X } from "lucide-react";
+import { titleOf } from "../../sync/forumRules";
+import { ThreadsPanel } from "./ThreadsPanel";
 import { GroupPhotoCard } from "../people/GroupPhotoCard";
 import { openProfile } from "../people/ProfileDialog";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -25,6 +27,7 @@ export function SidePanel({ route }: { route: Route }) {
   if (!route.conversationId) return null;
   if (route.panel === "search") return <SearchPanel conversationId={route.conversationId} onClose={close} />;
   if (route.panel === "pinned") return <PinnedPanel conversationId={route.conversationId} onClose={close} />;
+  if (route.panel === "threads") return <ThreadsPanel conversationId={route.conversationId} section={route.section} onClose={close} />;
   return route.panel === "thread" && route.threadRoot ? (
     <ThreadPanel conversationId={route.conversationId} root={route.threadRoot} onClose={close} />
   ) : (
@@ -32,13 +35,14 @@ export function SidePanel({ route }: { route: Route }) {
   );
 }
 
-function PanelHead({ title, sub, onClose }: { title: string; sub?: string; onClose: () => void }) {
+function PanelHead({ title, sub, onClose, actions }: { title: string; sub?: string; onClose: () => void; actions?: React.ReactNode }) {
   return (
     <div className="panel-head">
       <div className="grow" style={{ minWidth: 0 }}>
-        <h2>{title}</h2>
+        <h2 className="ellipsis">{title}</h2>
         {sub && <small className="ellipsis">{sub}</small>}
       </div>
+      {actions}
       <button className="icon-btn" onClick={onClose} aria-label="Close panel">
         <X size={18} />
       </button>
@@ -303,25 +307,57 @@ function ConversationSettings({ conversationId }: { conversationId: string }) {
 function ThreadPanel({ conversationId, root, onClose }: { conversationId: string; root: string; onClose: () => void }) {
   const engine = useEngine();
   const c = useOrbit((s) => s.conversations[conversationId]);
-  const items = useOrbit((s) => s.messages[conversationId]?.items);
+  const loaded = useOrbit((s) => s.messages[conversationId]?.items);
   const me = useOrbit((s) => s.me);
   const users = useOrbit((s) => s.users);
-  const rootMsg: StoredMessage | undefined = items?.find((m) => m.id === root);
-  const replies = (items ?? []).filter((m) => m.threadRootId === root).length;
+  // An older post or thread (beyond the conversation's loaded page) comes from this browser's store.
+  const [older, setOlder] = useState<StoredMessage[]>([]);
+  const inLoaded = !!loaded?.some((m) => m.id === root);
+  useEffect(() => {
+    if (inLoaded) return setOlder([]);
+    let alive = true;
+    void engine.conversationMessages(conversationId, 5000).then((list) => alive && setOlder(list.filter((m) => m.id === root || m.threadRootId === root)));
+    return () => {
+      alive = false;
+    };
+  }, [engine, conversationId, root, inLoaded]);
+  const items = useMemo(() => {
+    const byId = new Map(older.map((m) => [m.id, m]));
+    for (const m of loaded ?? []) byId.set(m.id, m);
+    return [...byId.values()].sort((a, b) => a.sortTs - b.sortTs);
+  }, [loaded, older]);
+  const rootMsg: StoredMessage | undefined = items.find((m) => m.id === root);
+  const replies = items.filter((m) => m.threadRootId === root).length;
+  const [following, setFollowing] = useState<boolean | null>(null);
+  useEffect(() => {
+    void engine.isFollowed(root).then(setFollowing);
+  }, [engine, root]);
   // Looking at the thread sees its replies (Activity › Thread replies), including ones that arrive while it's open.
   useEffect(() => {
     void engine.markThreadSeen(root);
   }, [engine, root, replies]);
   if (!c || !me) return null;
   const title = conversationTitle(c, me.userId, users);
+  const postTitle = c.format === "forum" && rootMsg ? titleOf(rootMsg.rich?.title, rootMsg.text) : null;
   return (
     <aside className="panel" aria-label="Thread">
-      <PanelHead title="Thread" sub={c.type === "CHANNEL" ? `#${title}` : title} onClose={onClose} />
+      <PanelHead
+        title={postTitle || "Thread"}
+        sub={c.type === "CHANNEL" ? `#${title}` : title}
+        onClose={onClose}
+        actions={
+          following !== null && (
+            <button className="btn btn-secondary btn-sm" aria-pressed={following} onClick={() => void engine.setFollowed(root, !following).then(() => setFollowing(!following))}>
+              {following ? "Following" : "Follow"}
+            </button>
+          )
+        }
+      />
       {rootMsg ? (
         <>
           <MessageList
             conversationId={conversationId}
-            items={items ?? []}
+            items={items}
             hasMore={false}
             onLoadOlder={() => undefined}
             threadRoot={root}

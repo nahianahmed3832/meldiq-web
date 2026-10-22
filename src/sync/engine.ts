@@ -33,7 +33,7 @@ import { Receiver } from "./receiver";
 import { CallLog } from "./callLog";
 import { Compose } from "./compose";
 import { ConversationLocals } from "./locals";
-import { loadThreadActivity, markThreadSeen, type ThreadActivity } from "./threads";
+import { followedThreads, loadThreadActivity, markThreadSeen, setFollowed, type ThreadActivity } from "./threads";
 import { preview, sendsReadReceipts } from "./rules";
 import { type RevokedReason, SessionManager } from "./session";
 
@@ -672,6 +672,16 @@ export class Engine implements EngineContext {
   /** Threads this account takes part in, with replies not yet seen here (Activity › Thread replies). */
   threadActivity(): Promise<ThreadActivity[]> {
     return loadThreadActivity(this.store);
+  }
+
+  /** Follows a thread or forum post (batch B8): its replies come into Activity › Threads. Kept on this browser. */
+  async setFollowed(rootId: string, on: boolean): Promise<void> {
+    await setFollowed(this.store, rootId, on);
+    this.set((s) => ({ ...s, threadRev: s.threadRev + 1 }));
+  }
+
+  isFollowed(rootId: string): Promise<boolean> {
+    return followedThreads(this.store).then((s) => s.has(rootId));
   }
 
   /** The thread was opened here: its replies so far are seen. */

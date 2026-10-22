@@ -1,4 +1,6 @@
 import {
+  BookOpen,
+  HelpCircle,
   Ban,
   Blocks,
   Building2,
@@ -23,6 +25,7 @@ import {
 } from "lucide-react";
 import { ApplicationsPage, BansPage, SecurityPage } from "./ModerationPages";
 import { ReportsPage } from "./ReportsPage";
+import { GuidePage, OnboardingPage } from "./GuidePages";
 import type { ReactNode } from "react";
 import { useEngine, useOrbit } from "../../app/orbit";
 import { navigate, type WorkspacePage } from "../../app/router";
@@ -72,6 +75,8 @@ const COMMUNITY_GROUPS: { key: CommunityGroup; label: string }[] = [
 const can = (p: OrgPermissions, perm: string) => p.isOwner || p.effective.includes(perm);
 const COMMUNITY_PAGES: { key: WorkspacePage; label: string; icon: ReactNode; group: CommunityGroup; shown?: (p: OrgPermissions) => boolean; feature?: string }[] = [
   { key: "overview", label: "Overview", icon: <LayoutGrid size={17} />, group: "community" },
+  { key: "guide", label: "Community guide", icon: <BookOpen size={17} />, group: "community", feature: "community-guide", shown: (p) => p.canManageOrg },
+  { key: "onboarding", label: "Onboarding questions", icon: <HelpCircle size={17} />, group: "community", feature: "onboarding" },
   { key: "people", label: "Members", icon: <UsersRound size={17} />, group: "people", shown: (p) => p.canViewDirectory },
   { key: "roles", label: "Roles", icon: <ShieldCheck size={17} />, group: "people", shown: (p) => p.canViewRoles },
   { key: "invitations", label: "Invitations", icon: <Ticket size={17} />, group: "people", shown: (p) => p.canInvite },
@@ -227,6 +232,10 @@ export function WorkspaceView({ orgId, page, itemId, onDialog }: { orgId: string
               <GroupsPage detail={d} />
             ) : page === "meetings" ? (
               <MeetingsPage detail={d} />
+            ) : page === "guide" ? (
+              <GuidePage detail={d} />
+            ) : page === "onboarding" ? (
+              <OnboardingPage detail={d} />
             ) : page === "applications" ? (
               <ApplicationsPage detail={d} />
             ) : page === "reports" ? (

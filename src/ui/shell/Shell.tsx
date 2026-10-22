@@ -14,6 +14,8 @@ import { SearchDialog } from "../dialogs/SearchDialog";
 import { CreateCommunityDialog } from "../community/CreateCommunityDialog";
 import { DiscoverDialog } from "../community/DiscoverDialog";
 import { JOIN_INVITE_EVENT } from "../chat/inAppLinks";
+import { noteGuideVisit } from "../../sync/guide";
+import { GUIDE_EVENT } from "../community/GuideOnboarding";
 import { OPEN_PROFILE_EVENT, ProfileDialog } from "../people/ProfileDialog";
 import { ConnectionsDialog, MessageRequestsDialog } from "../people/ConnectionsDialog";
 import { ActivityView } from "../views/ActivityView";
@@ -90,6 +92,10 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
   useEffect(() => {
     void engine.openConversation(isFullPage(route.section) ? null : route.conversationId);
     setDrawer(false);
+    // Batch B8b: opening a channel ticks the community guide's tasks that point to it (kept on this browser).
+    const c = route.conversationId ? engine.state.get().conversations[route.conversationId] : null;
+    const guide = c?.orgId ? (engine.state.get().orgs.find((o) => o.id === c.orgId)?.guide ?? null) : null;
+    if (c?.orgId && guide) void noteGuideVisit(engine.store, c.orgId, guide, c.id).then((changed) => changed && window.dispatchEvent(new Event(GUIDE_EVENT)));
   }, [engine, route.conversationId, route.section]);
 
   // A conversation this account can no longer see (removed, or another workspace's link) closes.

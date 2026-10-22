@@ -73,3 +73,13 @@ describe("Activity › Thread replies (android ThreadActivityRules)", () => {
     expect(threadActivity(many, new Map(), {})).toHaveLength(THREADS_SHOWN);
   });
 });
+
+describe("followed threads (batch B8)", () => {
+  it("bring replies into Activity even when you never wrote in the thread", async () => {
+    const { threadActivity } = await import("../src/sync/threads");
+    const root = { id: "r", conversationId: "c", outgoing: false, sortTs: 1, threadRootId: null, deleted: false, senderUserId: "u2" } as unknown as import("../src/model/types").StoredMessage;
+    const reply = { ...root, id: "x", threadRootId: "r", sortTs: 5 } as typeof root;
+    expect(threadActivity([reply], new Map([["r", root]]), {})).toEqual([]);
+    expect(threadActivity([reply], new Map([["r", root]]), {}, new Set(["r"])).map((t) => [t.rootId, t.unseen])).toEqual([["r", 1]]);
+  });
+});

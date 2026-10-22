@@ -230,3 +230,121 @@ button.chip[aria-pressed="true"] {
   border-radius: var(--r-lg);
   background: var(--surface);
 }
+
+/* Forum channels (batch B8): guidelines, tools, and post cards. */
+.forum {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  align-content: start;
+  gap: 12px;
+  padding: 16px 20px 24px;
+}
+.forum-guidelines {
+  padding: 12px 14px;
+  display: grid;
+  gap: 6px;
+}
+.forum-guidelines h3 {
+  margin: 0;
+  font-size: 13px;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.forum-guidelines p {
+  margin: 0;
+  white-space: pre-wrap;
+  color: var(--text-2);
+  font-size: 13.5px;
+}
+.forum-tools {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.forum-search {
+  flex: 1 1 220px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--surface);
+  color: var(--text-3);
+}
+.forum-search input {
+  flex: 1;
+  border: 0;
+  outline: none;
+  background: transparent;
+  padding: 8px 0;
+  color: var(--text);
+}
+.forum-posts {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+.forum-post {
+  width: 100%;
+  text-align: left;
+  display: grid;
+  gap: 6px;
+  padding: 12px 14px;
+  cursor: pointer;
+  transition: border-color var(--t-fast) var(--ease);
+}
+.forum-post:hover {
+  border-color: var(--border-strong);
+}
+.forum-post-head {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  min-width: 0;
+}
+.forum-post-head strong {
+  font-size: 15px;
+}
+.forum-post-body {
+  color: var(--text-2);
+  font-size: 13.5px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  white-space: pre-wrap;
+}
+.forum-post-foot {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  font-size: 12.5px;
+  color: var(--text-3);
+  flex-wrap: wrap;
+}
+.forum-top-reaction {
+  margin-left: auto;
+  padding: 1px 8px;
+  border-radius: var(--r-pill);
+  background: var(--surface-sunken);
+  color: var(--text-2);
+}
+
+/* The community guide card (batch B8b). */
+.guide-card {
+  padding: 16px;
+  display: grid;
+  gap: 8px;
+}
+.guide-card h2 {
+  font-size: 15px;
+}
+.ok-text {
+  color: var(--success);
+}

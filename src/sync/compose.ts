@@ -46,7 +46,7 @@ export class Compose {
     if (!conv?.canPost) throw new ApiError(403, "forbidden", conv?.archived ? "This channel is archived" : "You can't post in this conversation");
     const body = text.trim();
     const mentions =
-      conv.type === "DM" || opts.forwarded || opts.rich
+      conv.type === "DM" || opts.forwarded || structured(opts.rich)
         ? { ids: [], all: false }
         : resolveMentions(body, await this.host.membersOf(conversationId).catch(() => []), conv.canMentionAll, this.host.device.userId);
     const payload: Payload = {
@@ -63,6 +63,10 @@ export class Compose {
       link: opts.rich?.link,
       poll: opts.rich?.poll,
       sticker: opts.rich?.sticker,
+      title: opts.rich?.title,
+      tags: opts.rich?.tags?.length ? opts.rich.tags : undefined,
+      customEmoji: opts.rich?.customEmoji?.length ? opts.rich.customEmoji : undefined,
+      customSticker: opts.rich?.customSticker,
       forwarded: opts.forwarded ? true : undefined,
     };
     const id = opts.presetId ?? crypto.randomUUID();
@@ -202,4 +206,9 @@ export class Compose {
       held: false,
     });
   }
+}
+
+/** A card, place, poll, sticker or animated emoji replaces the text (no mentions); a forum title or emoji doesn't. */
+function structured(r: RichContent | null | undefined): boolean {
+  return !!(r && (r.contact || r.location || r.animoji || r.poll || r.sticker || r.customSticker));
 }
