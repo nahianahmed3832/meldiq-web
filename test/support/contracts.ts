@@ -1,4 +1,6 @@
+import { execFileSync } from "node:child_process";
 import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
 import { WEB_ROOT } from "./serverDir";
 
@@ -52,6 +54,25 @@ export function contractsRepo(): string | null {
 
 const METHODS = ["get", "post", "put", "patch", "delete"];
 
+const CONTRACT_PATHS = ["shared/contracts/fixtures", "docs/api/openapi.json", "docs/api/realtime.schema.json"];
+
+/**
+ * The contract files as committed (MELDIQ_CONTRACTS_REF, default HEAD), so another session's uncommitted work in that
+ * checkout never changes the copy; a folder that isn't a git checkout is read as it is.
+ */
+function committed(repo: string): string {
+  const ref = process.env.MELDIQ_CONTRACTS_REF ?? "HEAD";
+  let tar: Buffer;
+  try {
+    tar = execFileSync("git", ["-C", repo, "archive", "--format=tar", ref, ...CONTRACT_PATHS], { maxBuffer: 64 * 1024 * 1024 });
+  } catch {
+    return repo;
+  }
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "meldiq-contracts-"));
+  execFileSync("tar", ["-x", "-C", dir], { input: tar });
+  return dir;
+}
+
 /** The route table derived from openapi.json (the 1.3 MB file itself isn't copied). */
 function routeTable(repo: string): RouteTable {
   const api = JSON.parse(fs.readFileSync(path.join(repo, "docs/api/openapi.json"), "utf8")) as {
@@ -75,8 +96,9 @@ function readTree(dir: string, base = dir): Map<string, string> {
   return out;
 }
 
-/** What test/contract-fixtures should hold: the fixtures as they are, routes.json, and the frames clients may send. */
-export function expectedCopy(repo: string): Map<string, string> {
+/** What test/contract-fixtures should hold: the committed fixtures, routes.json, and the frames clients may send. */
+export function expectedCopy(checkout: string): Map<string, string> {
+  const repo = committed(checkout);
   const files = readTree(path.join(repo, "shared/contracts/fixtures"));
   files.set("routes.json", `${JSON.stringify(routeTable(repo), null, 2)}\n`);
   const realtime = JSON.parse(fs.readFileSync(path.join(repo, "docs/api/realtime.schema.json"), "utf8")) as { $defs: { ClientEvent: unknown } };
