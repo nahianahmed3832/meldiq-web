@@ -1,8 +1,8 @@
 import { Bell, BellOff, Fingerprint, Hash, Lock, MessageSquare, Search, Shield, ShieldCheck, User, UserPlus, UsersRound } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { Conversation, Member } from "../../api/schemas";
-import { useEngine, useOrbit } from "../../app/orbit";
-import { navigate, useRoute } from "../../app/router";
+import { useEngine, useOrbit } from "../../application/orbit";
+import { navigate, useRoute } from "../../application/router";
 import { safetyNumber } from "../../crypto/identity";
 import { conversationMembers, startDirect, userProfile } from "../../sync/account";
 import { levelOf, muteToggle, workspaceOf } from "../../sync/navPrefs";

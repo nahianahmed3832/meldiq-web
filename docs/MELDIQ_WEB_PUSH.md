@@ -27,7 +27,7 @@ server ──{"w":"1"} (Firebase, no content)──▶ browser push service ─�
                               one notification per conversation / ringing call → click opens that conversation
 ```
 
-- **Page** (`src/app/webPush.ts`, `src/app/boot.ts`): notifies as before, now through the service worker's
+- **Page** (`src/application/webPush.ts`, `src/application/boot.ts`): notifies as before, now through the service worker's
   `showNotification` with `renotify`. A click works even after the tab is gone, and so does Chrome on Android.
   - The Desktop notifications switch follows the site's permission until the person chooses (`notifyChoice`).
   - The page copies the few choices the worker needs into its own IndexedDB (`meldiq-sw`).

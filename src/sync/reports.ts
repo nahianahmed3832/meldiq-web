@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { openEnum } from "../api/enums";
 import type { Engine } from "./engine";
 
 /**
@@ -59,7 +60,7 @@ export function goesToCommunity(reason: ReportReason, conversationType: string |
   return personInCommunity;
 }
 
-const zSent = z.object({ report: z.object({ id: z.string(), status: z.string(), to: z.enum(["community", "meldiq"]).catch("meldiq"), repeated: z.boolean().default(false) }) });
+const zSent = z.object({ report: z.object({ id: z.string(), status: z.string(), to: openEnum(["community", "meldiq"]), repeated: z.boolean().default(false) }) });
 export type SentReport = z.infer<typeof zSent>["report"];
 
 export async function sendReport(
@@ -83,7 +84,7 @@ export const zReport = z.object({
   orgId: nullableString,
   reason: z.string(),
   note: nullableString,
-  status: z.enum(["open", "actioned", "dismissed"]).catch("open"),
+  status: openEnum(["open", "actioned", "dismissed"]),
   createdAt: z.number(),
   handledAt: z
     .number()

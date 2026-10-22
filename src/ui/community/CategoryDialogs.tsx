@@ -2,7 +2,7 @@ import { BellOff, Timer, Trash2 } from "lucide-react";
 import { type FormEvent, useState } from "react";
 import { ApiError } from "../../api/client";
 import type { Category } from "../../api/communitySchemas";
-import { useEngine } from "../../app/orbit";
+import { useEngine } from "../../application/orbit";
 import { createCategory, deleteCategory, renameCategory } from "../../sync/community";
 import { MUTE_CHOICES } from "../../sync/communityRules";
 import { Dialog } from "../components/Overlay";

@@ -1,7 +1,7 @@
 import { Archive, ArchiveRestore, Plus, Trash2, UserMinus, UsersRound } from "lucide-react";
 import { useState } from "react";
 import type { OrgAdminDetail } from "../../api/workspaceSchemas";
-import { useEngine } from "../../app/orbit";
+import { useEngine } from "../../application/orbit";
 import { assignRole, deleteRole, type Role, roleMembers, rolesOverview, unassignRole, updateRole } from "../../sync/roles";
 import { directory } from "../../sync/workspaces";
 import { Avatar } from "../components/Avatar";

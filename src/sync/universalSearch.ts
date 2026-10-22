@@ -4,13 +4,13 @@ import type { Engine } from "./engine";
 import { resultBucket } from "./signals";
 
 /**
- * Universal search (server docs/SEARCH.md, android round 7 slice C2 SearchRules): people, channels, workspaces, groups
- * and documents from the server, which checks each one's own access rule; messages, files and pinned messages from
+ * Universal search (server docs/SEARCH.md, android round 7 slice C2 SearchRules): people, channels, workspaces and
+ * groups from the server, which checks each one's own access rule; messages, files and pinned messages from
  * this browser's history (end-to-end encrypted, so the server can't search them).
  */
-export const FILTERS = ["all", "messages", "files", "pinned", "people", "channels", "documents", "workspaces"] as const;
+export const FILTERS = ["all", "messages", "files", "pinned", "people", "channels", "workspaces"] as const;
 export type Filter = (typeof FILTERS)[number];
-export const SECTIONS = ["conversations", "channels", "documents", "workspaces", "groups", "people", "messages", "files", "pinned"] as const;
+export const SECTIONS = ["conversations", "channels", "workspaces", "groups", "people", "messages", "files", "pinned"] as const;
 export type Section = (typeof SECTIONS)[number];
 
 export const DEBOUNCE_MS = 250;
@@ -27,10 +27,9 @@ export function sections(filter: Filter): Section[] {
 export function serverTypes(filter: Filter): string | null {
   switch (filter) {
     case "all":
-      return "people,channels,workspaces,groups,documents";
+      return "people,channels,workspaces,groups";
     case "people":
     case "channels":
-    case "documents":
     case "workspaces":
       return filter;
     default:
@@ -51,14 +50,6 @@ export function remember(recent: readonly string[], q: string): string[] {
   return [t, ...recent.filter((r) => r.toLowerCase() !== t.toLowerCase())].slice(0, RECENT_MAX);
 }
 
-const zDocHit = z.object({
-  id: z.string(),
-  orgId: z.string(),
-  title: z.string(),
-  channel: z.object({ id: z.string(), name: z.string().nullable() }).nullable().optional(),
-  snippet: z.string().nullable().optional(),
-  updatedAt: z.number(),
-});
 const page = <T extends z.ZodTypeAny>(item: T) => z.object({ items: z.array(item), next: z.string().nullable() }).optional();
 const zResults = z.object({
   results: z.object({
@@ -66,11 +57,9 @@ const zResults = z.object({
     channels: page(zConversation.extend({ orgName: z.string().nullable().optional() })),
     workspaces: page(z.object({ id: z.string(), name: z.string(), myRole: z.string().nullable().optional() })),
     groups: page(zConversation),
-    documents: page(zDocHit),
   }),
 });
 export type SearchResults = z.infer<typeof zResults>["results"];
-export type DocHit = z.infer<typeof zDocHit>;
 
 export async function serverSearch(engine: Engine, q: string, opts: { types: string; limit: number; cursor?: string | null; orgId?: string | null }): Promise<SearchResults> {
   const p = new URLSearchParams({ q, types: opts.types, limit: String(opts.limit) });
@@ -90,6 +79,5 @@ export function analyticsScope(types: string): "all" | "people" | "channels" | "
   if (types.includes(",")) return "all";
   if (types === "people") return "people";
   if (types === "channels") return "channels";
-  if (types === "documents") return "files";
   return "all";
 }

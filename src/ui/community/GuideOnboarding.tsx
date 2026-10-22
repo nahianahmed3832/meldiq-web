@@ -1,8 +1,8 @@
 import { BookOpen, CheckCircle2, Circle, HelpCircle, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { ApiError } from "../../api/client";
-import { useEngine, useOrbit } from "../../app/orbit";
-import { navigate } from "../../app/router";
+import { useEngine, useOrbit } from "../../application/orbit";
+import { navigate } from "../../application/router";
 import { answerOnboarding, guideDone, guideHidden, guideProgress, guideSignature, hideGuide, missingAnswer, onboarding, type Onboarding, toggleAnswer } from "../../sync/guide";
 import { Dialog } from "../components/Overlay";
 

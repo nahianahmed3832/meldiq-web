@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useOrbit } from "../../app/orbit";
+import { useOrbit } from "../../application/orbit";
 import { PERSONAL, savedOpen } from "../../sync/navPrefs";
 import { RemindersList } from "./RemindersList";
 import { SavedList } from "./SavedList";

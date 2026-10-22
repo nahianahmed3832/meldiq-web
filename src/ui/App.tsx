@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { createEngine, holdDeviceLock, missingCapabilities, startNotifications } from "../app/boot";
-import { hideSplash } from "../app/splash";
-import { EngineProvider } from "../app/orbit";
-import { resetPrefs } from "../app/prefs";
+import { createEngine, holdDeviceLock, missingCapabilities, startNotifications } from "../application/boot";
+import { hideSplash } from "../application/splash";
+import { EngineProvider } from "../application/orbit";
+import { resetPrefs } from "../application/prefs";
+import { forgetRecentSearches } from "./dialogs/SearchDialog";
 import type { AccountSessionGrant } from "../api/accountSchemas";
 import type { SessionGrant } from "../api/schemas";
 import { tokensOf } from "../auth/accountSession";
@@ -104,6 +105,7 @@ export function App() {
 
   const signedOut = useCallback(async () => {
     resetPrefs();
+    forgetRecentSearches();
     setBoot({ s: "signedOut", store: await LocalStore.open() });
   }, []);
 

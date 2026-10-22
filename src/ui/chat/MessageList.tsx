@@ -1,6 +1,6 @@
 import { ArrowDown, Hash, Lock, Megaphone, Pencil, UserPlus } from "lucide-react";
 import { Fragment, type ReactNode, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { useOrbit } from "../../app/orbit";
+import { useOrbit } from "../../application/orbit";
 import type { StoredMessage } from "../../model/types";
 import { Avatar } from "../components/Avatar";
 import { dayLabel, sameDay } from "../format";

@@ -1,14 +1,14 @@
-import { Building2, FileText, Hash, MessageSquareText, Paperclip, Pin, Search, UsersRound, X } from "lucide-react";
+import { Building2, Hash, MessageSquareText, Paperclip, Pin, Search, UsersRound, X } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import type { Conversation, Member } from "../../api/schemas";
-import { useEngine, useOrbit } from "../../app/orbit";
-import { setPrefs } from "../../app/prefs";
-import { navigate } from "../../app/router";
+import { useEngine, useOrbit } from "../../application/orbit";
+import { setPrefs } from "../../application/prefs";
+import { navigate } from "../../application/router";
 import type { StoredMessage } from "../../model/types";
 import type { AttachmentRef } from "../../protocol/payload";
 import { joinChannel, searchPeople, startDirect } from "../../sync/account";
-import { type DocHit, type Filter, FILTERS, PREVIEW_COUNT, remember, type SearchResults, type Section, sections, serverSearch, serverTypes, usable, DEBOUNCE_MS } from "../../sync/universalSearch";
+import { type Filter, FILTERS, PREVIEW_COUNT, remember, type SearchResults, type Section, sections, serverSearch, serverTypes, usable, DEBOUNCE_MS } from "../../sync/universalSearch";
 import { Avatar, colorIndexOf } from "../components/Avatar";
 import { jumpTo } from "../chat/jump";
 import { conversationTitle, members, shortWhen } from "../format";
@@ -25,7 +25,6 @@ interface Result {
 const LABEL: Record<Section, string> = {
   conversations: "Conversations",
   channels: "Channels",
-  documents: "Documents",
   workspaces: "Workspaces",
   groups: "Groups",
   people: "People",
@@ -40,7 +39,6 @@ const FILTER_LABEL: Record<Filter, string> = {
   pinned: "Pinned",
   people: "People",
   channels: "Channels",
-  documents: "Documents",
   workspaces: "Workspaces",
 };
 /** How many results a single-kind filter shows at first, and adds on Show more. */
@@ -54,6 +52,14 @@ function loadRecent(): string[] {
     return Array.isArray(v) ? v.filter((x): x is string => typeof x === "string") : [];
   } catch {
     return [];
+  }
+}
+/** Signing out forgets them: what someone searched for isn't left for the next person on this browser. */
+export function forgetRecentSearches(): void {
+  try {
+    localStorage.removeItem(RECENT_KEY);
+  } catch {
+    /* nothing stored */
   }
 }
 function saveRecent(list: string[]): void {
@@ -73,7 +79,7 @@ const NO_LOCAL: Local = { messages: [], files: [], pinned: [] };
 
 /**
  * ⌘K search (android round 7 C2 search screen): conversations, messages, files and pinned messages on this browser,
- * and, where the server offers `search`, people, channels, documents, workspaces and groups from the server, which
+ * and, where the server offers `search`, people, channels, workspaces and groups from the server, which
  * checks each one's own access. Filters, a page per kind with Show more, and recent searches kept on this browser.
  */
 export function SearchDialog({ orgId: _orgId, onClose }: { orgId: string | null; onClose: () => void }) {
@@ -163,7 +169,7 @@ export function SearchDialog({ orgId: _orgId, onClose }: { orgId: string | null;
   const who = (m: StoredMessage) => (m.outgoing ? "You" : (users[m.senderUserId]?.displayName ?? "Someone"));
 
   const all = useMemo<Record<Section, Result[]>>(() => {
-    const out: Record<Section, Result[]> = { conversations: [], channels: [], documents: [], workspaces: [], groups: [], people: [], messages: [], files: [], pinned: [] };
+    const out: Record<Section, Result[]> = { conversations: [], channels: [], workspaces: [], groups: [], people: [], messages: [], files: [], pinned: [] };
     if (!me) return out;
     const t = term?.toLowerCase() ?? "";
     const convRow = (c: Conversation, section: Section, orgName?: string | null): Result => {
@@ -215,17 +221,6 @@ export function SearchDialog({ orgId: _orgId, onClose }: { orgId: string | null;
       go: () => {
         setPrefs({ orgId: o.id });
         navigate({ section: "home" });
-      },
-    }));
-    out.documents = (server.documents?.items ?? []).map((d: DocHit) => ({
-      key: `documents:${d.id}`,
-      section: "documents",
-      title: d.title,
-      sub: [d.channel?.name ? `#${d.channel.name}` : null, d.snippet ? d.snippet : `updated ${shortWhen(d.updatedAt)}`].filter(Boolean).join(" · "),
-      icon: <FileText size={18} />,
-      go: () => {
-        setPrefs({ orgId: d.orgId });
-        navigate({ section: "workspace", workspacePage: "documents", itemId: d.id });
       },
     }));
     out.messages = local.messages
@@ -288,7 +283,7 @@ export function SearchDialog({ orgId: _orgId, onClose }: { orgId: string | null;
             ref={input}
             value={q}
             onChange={(e) => setQ(e.target.value)}
-            placeholder={universal ? "Search people, channels, documents and messages" : "Search conversations, people and messages"}
+            placeholder={universal ? "Search people, channels and messages" : "Search conversations, people and messages"}
             aria-label="Search"
             role="combobox"
             aria-expanded="true"
@@ -312,7 +307,7 @@ export function SearchDialog({ orgId: _orgId, onClose }: { orgId: string | null;
           </button>
         </div>
         <div className="search-filters" role="tablist" aria-label="Show">
-          {FILTERS.filter((f) => universal || (f !== "documents" && f !== "workspaces" && f !== "channels")).map((f) => (
+          {FILTERS.filter((f) => universal || (f !== "workspaces" && f !== "channels")).map((f) => (
             <button key={f} role="tab" aria-selected={filter === f} className="chip" onClick={() => setFilter(f)}>
               {FILTER_LABEL[f]}
             </button>
@@ -362,8 +357,8 @@ export function SearchDialog({ orgId: _orgId, onClose }: { orgId: string | null;
           ))}
           {term && universal && filter === "all" && (
             <p className="faint search-note">
-              <UsersRound size={12} /> People, channels, documents and workspaces come from the server, which only shows what you may see. Messages and files are searched on this browser: they're
-              end-to-end encrypted.
+              <UsersRound size={12} /> People, channels and workspaces come from the server, which only shows what you may see. Messages and files are searched on this browser: they're end-to-end
+              encrypted.
             </p>
           )}
         </div>

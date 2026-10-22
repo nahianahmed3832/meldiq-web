@@ -1,14 +1,12 @@
 import { z } from "zod";
 import { type Conversation, type Org, type OrgKind, zConversation } from "../api/schemas";
 import {
-  type Archived,
   type DirectoryMember,
   type Invite,
   type InvitePreview,
   type NewInvite,
   type OrgAdminDetail,
   type OrgRole,
-  zArchived,
   zChannelOut,
   zConversationOut,
   zDirectoryMember,
@@ -140,27 +138,7 @@ export async function revokeInvitation(engine: Engine, inviteId: string): Promis
   await engine.api.call("DELETE", `/v1/invites/${enc(inviteId)}`);
 }
 
-// ───────────── structure: branches, teams, channels ─────────────
-
-export async function archivedScopes(engine: Engine, orgId: string): Promise<Archived> {
-  return engine.api.json("GET", `/v1/orgs/${enc(orgId)}/archived`, zArchived);
-}
-
-export async function createBranch(engine: Engine, orgId: string, name: string, location: string | null): Promise<void> {
-  await engine.api.call("POST", `/v1/orgs/${enc(orgId)}/branches`, { body: { name: name.trim(), location: location?.trim() || null } });
-}
-
-export async function createTeam(engine: Engine, orgId: string, name: string, branchId: string | null): Promise<void> {
-  await engine.api.call("POST", `/v1/orgs/${enc(orgId)}/teams`, { body: { name: name.trim(), branchId } });
-}
-
-export async function setBranchArchived(engine: Engine, branchId: string, archived: boolean): Promise<void> {
-  await engine.api.call("PATCH", `/v1/branches/${enc(branchId)}`, { body: { archived } });
-}
-
-export async function setTeamArchived(engine: Engine, teamId: string, archived: boolean): Promise<void> {
-  await engine.api.call("PATCH", `/v1/teams/${enc(teamId)}`, { body: { archived } });
-}
+// ───────────── channels ─────────────
 
 export type ChannelKind = "PUBLIC" | "PRIVATE" | "ANNOUNCEMENT";
 export type ChannelScope = "ORG" | "BRANCH" | "TEAM";

@@ -1,9 +1,9 @@
 import { Users } from "lucide-react";
 import { type FormEvent, useMemo, useState } from "react";
 import { ApiError } from "../../api/client";
-import { useEngine, useOrbit } from "../../app/orbit";
-import { setPrefs } from "../../app/prefs";
-import { navigate } from "../../app/router";
+import { useEngine, useOrbit } from "../../application/orbit";
+import { setPrefs } from "../../application/prefs";
+import { navigate } from "../../application/router";
 import { communityTemplates, createCommunity } from "../../sync/community";
 import { requestId } from "../../sync/workspaces";
 import { Dialog } from "../components/Overlay";

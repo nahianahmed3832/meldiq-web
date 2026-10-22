@@ -1,7 +1,7 @@
 import { AtSign, Bookmark, House, MessagesSquare } from "lucide-react";
-import { shallowEqual, useOrbit } from "../../app/orbit";
-import { setPrefs } from "../../app/prefs";
-import { navigate, type Section } from "../../app/router";
+import { shallowEqual, useOrbit } from "../../application/orbit";
+import { setPrefs } from "../../application/prefs";
+import { navigate, type Section } from "../../application/router";
 import { Avatar, colorIndexOf } from "../components/Avatar";
 import { BrandMark } from "../components/BrandMark";
 import { laterDue, mentionCount, orgUnread, unreadPeopleCount } from "../selectors";
@@ -23,7 +23,7 @@ export function Rail({ orgId, section }: { orgId: string | null; section: Sectio
   ];
   return (
     <nav className="rail" aria-label="Workspaces and sections">
-      <a className="rail-logo" href="#/home" aria-label="Meldiq home">
+      <a className="rail-logo" href="/home" aria-label="Meldiq home">
         <BrandMark size={40} />
       </a>
       {orgs.length > 0 && (
@@ -48,7 +48,7 @@ export function Rail({ orgId, section }: { orgId: string | null; section: Sectio
       )}
       <div className="rail-sep" />
       {nav.map((n) => (
-        <a key={n.key} href={`#/${n.key}`} className="rail-nav" aria-current={section === n.key ? "page" : undefined} aria-label={`${n.label}${n.count ? `, ${n.count} unread` : ""}`}>
+        <a key={n.key} href={`/${n.key}`} className="rail-nav" aria-current={section === n.key ? "page" : undefined} aria-label={`${n.label}${n.count ? `, ${n.count} unread` : ""}`}>
           <span className="rail-icon">{n.icon}</span>
           {n.label}
           {n.count > 0 && <span className="count accent">{n.count > 99 ? "99+" : n.count}</span>}

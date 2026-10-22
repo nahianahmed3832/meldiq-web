@@ -126,6 +126,7 @@ Every item is backed by the real server (API 0.7.1). No mock APIs and no browser
 | 2026-10-20 10:46 (UTC+8) | Web release **0.1.0-1286588**: both Android sync passes (§0) and the scroll fix | This session; see §2b |
 | 2026-10-20 12:36 (UTC+8) | Web release **0.2.4-beta-ba154b1**: round 8 Unified Inbox and the 0.2.4-beta version (§0, pass 3) | This session; see §2c |
 | 2026-10-20 13:39 (UTC+8) | Web release **0.2.4-beta-e95c739**: files from S3 open in the browser without a bucket CORS rule (reported bug: "Can't reach the server" on a photo) | This session; see §2d |
+| 2026-10-23 02:37 (UTC+8) | Web release **0.5.0-beta-ff0dd9c**: Architecture 1.0, Meldiq Web on Next.js (PR #4) | Architecture 1.0 web session; see `MELDIQ_WEB_ARCHITECTURE_1_0.md` §6 |
 
 ### 2a. Web deploy
 

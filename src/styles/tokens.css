@@ -6,11 +6,11 @@
  *  2. Neutrals: surfaces, text, borders and states, shared by every palette.
  *  3. Palettes: the brand colour plates (indigo, the default from the logo's cyan → blue → violet ribbon; plum; amber).
  *     A palette sets only brand hues: the frame (rail and top bar), the sidebar tint, the accent and its soft and text
- *     forms, mentions, badges and the brand gradient. `data-palette` on <html> picks one (src/app/prefs.ts).
+ *     forms, mentions, badges and the brand gradient. `data-palette` on <html> picks one (src/application/prefs.ts).
  *
  * Light and dark come from `color-scheme` (system, or `data-theme`), and every colour token is `light-dark(light, dark)`,
  * so each palette is written once for both. Browsers without light-dark() get the static light values in the first block
- * and are told on the unsupported screen (src/app/boot.ts).
+ * and are told on the unsupported screen (src/application/boot.ts).
  *
  * Hierarchy: the frame carries the brand colour; the sidebar is a soft tint of it; the conversation stays neutral. The
  * accent is for selection, focus, primary actions, unread counts and mentions, never for whole panels.

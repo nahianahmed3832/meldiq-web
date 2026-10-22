@@ -2,8 +2,8 @@ import { Check, ShieldBan, X } from "lucide-react";
 import { useState } from "react";
 import { ApiError } from "../../api/client";
 import type { Conversation } from "../../api/schemas";
-import { useEngine } from "../../app/orbit";
-import { navigate } from "../../app/router";
+import { useEngine } from "../../application/orbit";
+import { navigate } from "../../application/router";
 import { answerRequest, remaining } from "../../sync/social";
 
 /**

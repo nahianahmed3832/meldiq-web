@@ -1,7 +1,7 @@
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
-import { shallowEqual, useEngine, useOrbit } from "../../app/orbit";
-import { getPrefs, setPrefs, usePrefs } from "../../app/prefs";
-import { isFullPage, navigate, useRoute } from "../../app/router";
+import { shallowEqual, useEngine, useOrbit } from "../../application/orbit";
+import { getPrefs, setPrefs, usePrefs } from "../../application/prefs";
+import { isFullPage, navigate, useRoute } from "../../application/router";
 import { ConversationView } from "../chat/ConversationView";
 import { SidePanel } from "../chat/SidePanel";
 import { CallLayer } from "../call/CallLayer";
@@ -168,7 +168,7 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
 
   let main;
   if (section === "settings") main = <SettingsView page={route.settingsPage} onSignedOut={onSignedOut} />;
-  else if (section === "workspace") main = <WorkspaceView orgId={orgId} page={route.workspacePage} itemId={route.itemId} onDialog={ctx.open} />;
+  else if (section === "workspace") main = <WorkspaceView orgId={orgId} page={route.workspacePage} onDialog={ctx.open} />;
   // Settings and administration load on first use, keeping the first page load small.
   if (settings) main = <Suspense fallback={<section className="main" aria-busy="true" />}>{main}</Suspense>;
   else if (route.conversationId && known) main = <ConversationView key={route.conversationId} id={route.conversationId} route={route} onDialog={ctx.open} />;

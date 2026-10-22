@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { openEnum } from "./enums";
 import { zConversation, zOrg } from "./schemas";
 
 /**
@@ -30,7 +31,7 @@ export const zCategories = z.object({ categories: z.array(zCategory) });
 export const zCapability = z.object({ key: z.string(), label: z.string(), description: nullableString });
 export const zOverwrite = z.object({
   subject: z.string(),
-  kind: z.enum(["everyone", "role", "member"]).catch("role"),
+  kind: openEnum(["everyone", "role", "member"]),
   label: z.string(),
   color: nullableString,
   allow: z.array(z.string()).default([]),
@@ -53,14 +54,14 @@ export const zDiscovered = z.object({
   description: nullableString,
   memberCount: z.number().int().default(0),
   photoRev: nullableNumber,
-  joinPolicy: z.enum(["invite", "open"]).catch("invite"),
+  joinPolicy: openEnum(["invite", "open"]),
   applications: z.boolean().default(false),
   joined: z.boolean().default(false),
 });
 export type Discovered = z.infer<typeof zDiscovered>;
 export const zDiscoverPage = z.object({ communities: z.array(zDiscovered), nextCursor: nullableNumber });
 
-export const zApplicationStatus = z.enum(["pending", "approved", "denied", "withdrawn"]).catch("pending");
+export const zApplicationStatus = openEnum(["pending", "approved", "denied", "withdrawn"]);
 export const zPreview = z.object({
   community: zOrg,
   channels: z.array(z.object({ id: z.string(), name: nullableString, topic: nullableString, kind: nullableString, voice: z.boolean().default(false), format: z.string().default("text") })),

@@ -1,0 +1,3 @@
+# Known contract gaps (test/contract-fixtures.test.ts); this list may only shrink.
+# strict <fixture> <path>: the web reads the answer only because a .catch() replaced a value it doesn't know.
+# unrouted <call>: a web call with no route on the server.

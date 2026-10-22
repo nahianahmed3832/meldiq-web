@@ -60,14 +60,14 @@ test("with Meldiq closed, a wake-up shows who wrote, without the text, and opens
   await deliverPush(context, page);
   const viewer = await context.newPage();
   await viewer.goto(origin() + "/#/settings/notifications");
-  await expect.poll(() => shown(viewer), { timeout: 15_000 }).toContainEqual({ title: "Bob Chen", body: "2 new messages", tag: dm, url: `/#/dms/c/${dm}` });
+  await expect.poll(() => shown(viewer), { timeout: 15_000 }).toContainEqual({ title: "Bob Chen", body: "2 new messages", tag: dm, url: `/dms/c/${dm}` });
   const all = await shown(viewer);
   expect(JSON.stringify(all)).not.toContain("are you there");
   // A click (the service worker tells the open page where to go): the conversation opens, once the app is running.
   await expect(viewer.locator(".conn.online")).toBeVisible({ timeout: 15_000 });
   await viewer.waitForTimeout(500);
-  await viewer.evaluate((hash) => navigator.serviceWorker.dispatchEvent(new MessageEvent("message", { data: { type: "meldiq-open", hash } })), `#/dms/c/${dm}`);
-  await expect(viewer).toHaveURL(new RegExp(`#/dms/c/${dm}$`));
+  await viewer.evaluate((href) => navigator.serviceWorker.dispatchEvent(new MessageEvent("message", { data: { type: "meldiq-open", href } })), `/dms/c/${dm}`);
+  await expect(viewer).toHaveURL(new RegExp(`/dms/c/${dm}$`));
 });
 
 test("a muted conversation's messages wake nothing; with Meldiq open, the page shows them itself", async ({ page, context }) => {
@@ -102,6 +102,6 @@ test("with Meldiq closed, a ringing call shows as an incoming call that opens it
   await deliverPush(context, page);
   const viewer = await context.newPage();
   await viewer.goto(origin() + "/#/settings/notifications");
-  await expect.poll(() => shown(viewer), { timeout: 15_000 }).toContainEqual({ title: "Bob Chen", body: "Incoming voice call", tag: `call-${dm}`, url: `/#/dms/c/${dm}` });
+  await expect.poll(() => shown(viewer), { timeout: 15_000 }).toContainEqual({ title: "Bob Chen", body: "Incoming voice call", tag: `call-${dm}`, url: `/dms/c/${dm}` });
   await bob.req("POST", `/v1/calls/${res.call.id}/end`).catch(() => undefined);
 });

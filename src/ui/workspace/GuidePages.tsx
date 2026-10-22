@@ -1,7 +1,7 @@
 import { Minus, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { OrgAdminDetail } from "../../api/workspaceSchemas";
-import { useEngine, useOrbit } from "../../app/orbit";
+import { useEngine, useOrbit } from "../../application/orbit";
 import { type GuideItemInput, ONBOARDING_LIMITS, onboarding, type OnboardingPromptInput, setGuide, setOnboarding } from "../../sync/guide";
 import { rolesOverview } from "../../sync/roles";
 import { workspaceChannels } from "../../sync/workspaces";

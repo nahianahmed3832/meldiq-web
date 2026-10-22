@@ -1,8 +1,8 @@
 import { Check, CheckCheck, ChevronDown, Compass, Inbox, LogIn, PenSquare, Plus, Settings2, Ticket, UsersRound } from "lucide-react";
-import { shallowEqual, useEngine, useOrbit } from "../../app/orbit";
+import { shallowEqual, useEngine, useOrbit } from "../../application/orbit";
 import { markAllReadTargets } from "../selectors";
-import { setPrefs, usePrefs } from "../../app/prefs";
-import { navigate, type Section } from "../../app/router";
+import { setPrefs, usePrefs } from "../../application/prefs";
+import { navigate, type Section } from "../../application/router";
 import { Avatar } from "../components/Avatar";
 import { OrgAvatar } from "../components/OrgAvatar";
 import { Menu, useMenu } from "../components/Overlay";

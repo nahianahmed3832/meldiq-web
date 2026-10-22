@@ -1,7 +1,7 @@
 import { Flag, Paperclip } from "lucide-react";
 import { useState } from "react";
 import type { OrgAdminDetail } from "../../api/workspaceSchemas";
-import { useEngine, useOrbit } from "../../app/orbit";
+import { useEngine, useOrbit } from "../../application/orbit";
 import { communityReports, REASON_LABEL, type ReportReason, setReportStatus } from "../../sync/reports";
 import { bytes, shortWhen } from "../format";
 import { useAction, useLoad } from "./useLoad";
@@ -74,7 +74,7 @@ export function ReportsPage({ detail }: { detail: OrgAdminDetail }) {
             )}
             {r.status !== "open" && (
               <p className="faint" style={{ margin: 0 }}>
-                {r.status === "actioned" ? "Handled" : "Dismissed"} by {r.handledBy?.displayName ?? "a moderator"}
+                {r.status === "actioned" ? "Handled" : r.status === "dismissed" ? "Dismissed" : "Changed in a newer version of Meldiq"} by {r.handledBy?.displayName ?? "a moderator"}
                 {r.handledNote ? ` · ${r.handledNote}` : ""}
               </p>
             )}

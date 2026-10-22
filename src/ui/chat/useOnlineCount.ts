@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { z } from "zod";
-import { useEngine, useOrbit } from "../../app/orbit";
+import { useEngine, useOrbit } from "../../application/orbit";
 
 /** How often an open channel asks who is online (round 3; the server allows 60 a minute). */
 export const ONLINE_REFRESH_MS = 60_000;

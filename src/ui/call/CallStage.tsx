@@ -22,11 +22,11 @@ import {
   X,
 } from "lucide-react";
 import { SHARE_MODES, type ShareMode, shareModeOf } from "../../call/rules";
-import { setPrefs, usePrefs } from "../../app/prefs";
+import { setPrefs, usePrefs } from "../../application/prefs";
 import { Toggle } from "../components/Toggle";
 import { Dialog } from "../components/Overlay";
 import { useEffect, useRef, useState } from "react";
-import { useEngine, useOrbit } from "../../app/orbit";
+import { useEngine, useOrbit } from "../../application/orbit";
 import { CallFailure, frameShape } from "../../call/rules";
 import type { CallParticipantView, CallUiState, DeviceKind, MediaDeviceChoice } from "../../call/types";
 import { Avatar } from "../components/Avatar";

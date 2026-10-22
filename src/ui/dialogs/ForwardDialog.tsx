@@ -1,6 +1,6 @@
 import { Forward, Hash, Search } from "lucide-react";
 import { useMemo, useState } from "react";
-import { shallowEqual, useEngine, useOrbit } from "../../app/orbit";
+import { shallowEqual, useEngine, useOrbit } from "../../application/orbit";
 import type { StoredMessage } from "../../model/types";
 import { forwardMessage } from "../../sync/forward";
 import { Avatar, colorIndexOf } from "../components/Avatar";

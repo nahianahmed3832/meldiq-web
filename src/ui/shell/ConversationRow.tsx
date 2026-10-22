@@ -21,8 +21,8 @@ import {
   UsersRound,
 } from "lucide-react";
 import { memo, type MouseEvent, useState } from "react";
-import { useEngine, useOrbit } from "../../app/orbit";
-import { navigate, useRoute } from "../../app/router";
+import { useEngine, useOrbit } from "../../application/orbit";
+import { navigate, useRoute } from "../../application/router";
 import type { ConversationLocal } from "../../model/types";
 import { levelOf, newSectionId, type NotifyLevel, placeOf, workspaceOf } from "../../sync/navPrefs";
 import { GroupAvatar, UserAvatar } from "../components/OrgAvatar";
@@ -97,7 +97,7 @@ export const ConversationRow = memo(function ConversationRow({ id, twoLine, hide
     );
   const label = `${c.type === "CHANNEL" ? "Channel " : ""}${title}${unread ? `, ${unread} unread` : ""}${mentions ? `, ${mentions} mentions` : ""}${muted ? ", muted" : ""}`;
   const count = unread > 0 && <span className={`count${!muted && (mentions > 0 || c.type !== "CHANNEL") ? " accent" : ""}`}>{mentions > 0 ? `@${mentions}` : unread}</span>;
-  const href = `#/${section}/c/${encodeURIComponent(id)}`;
+  const href = `/${section}/c/${encodeURIComponent(id)}`;
   const openMenu = (e: MouseEvent<HTMLElement>) => {
     e.preventDefault();
     e.stopPropagation();

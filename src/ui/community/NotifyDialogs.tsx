@@ -1,6 +1,6 @@
 import { ArrowDown, ArrowUp, Eye, EyeOff, RotateCcw } from "lucide-react";
 import { useState } from "react";
-import { shallowEqual, useEngine, useOrbit } from "../../app/orbit";
+import { shallowEqual, useEngine, useOrbit } from "../../application/orbit";
 import { moved, type PanelChannel } from "../../sync/communityRules";
 import { communityLevel, countsEveryone, type NotifyLevel, PERSONAL } from "../../sync/navPrefs";
 import { Dialog } from "../components/Overlay";

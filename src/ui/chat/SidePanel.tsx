@@ -1,8 +1,8 @@
 import { titleOf } from "../../sync/forumRules";
 import { ThreadsPanel } from "./ThreadsPanel";
 import { useEffect, useMemo, useState } from "react";
-import { useEngine, useOrbit } from "../../app/orbit";
-import { navigate, type Route } from "../../app/router";
+import { useEngine, useOrbit } from "../../application/orbit";
+import { navigate, type Route } from "../../application/router";
 import type { StoredMessage } from "../../model/types";
 import { conversationTitle } from "../format";
 import { Composer } from "./Composer";

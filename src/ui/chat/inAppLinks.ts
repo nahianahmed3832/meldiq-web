@@ -1,4 +1,4 @@
-import { navigate } from "../../app/router";
+import { navigate } from "../../application/router";
 import type { Engine } from "../../sync/engine";
 import { inviteFromScan } from "../../sync/inviteCodes";
 import { parseMessageLink } from "../../sync/messageLinks";

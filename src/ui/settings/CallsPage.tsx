@@ -1,6 +1,6 @@
 import { Camera, Mic } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { setPrefs, usePrefs } from "../../app/prefs";
+import { setPrefs, usePrefs } from "../../application/prefs";
 import { audioProcessing, micLevel, SHARE_MODES } from "../../call/rules";
 import { Toggle } from "../components/Toggle";
 

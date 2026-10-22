@@ -72,7 +72,13 @@ server {
     try_files $uri =404;
   }
 
-  # Content-hashed build files: cached for a year.
+  # Content-hashed build files: cached for a year. /_next/static/ is the Next.js build (0.6+); /assets/ the Vite builds
+  # before it, kept so a rollback to one still gets its caching.
+  location /_next/static/ {
+    add_header Cache-Control "public, max-age=31536000, immutable" always;
+    include /etc/nginx/snippets/meldiq-web-headers.conf;
+    try_files $uri =404;
+  }
   location /assets/ {
     add_header Cache-Control "public, max-age=31536000, immutable" always;
     include /etc/nginx/snippets/meldiq-web-headers.conf;

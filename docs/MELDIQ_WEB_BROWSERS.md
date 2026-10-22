@@ -10,7 +10,7 @@ Sources: MDN browser-compat-data 6.0.10 and the code.
 
 | Needed | Safari / iOS | What happened on iOS 16 |
 |---|---|---|
-| WebCrypto **Ed25519** (signing in, signing every message) | 17.0 | `missingCapabilities()` (src/app/boot.ts) stopped at "This browser is missing … Ed25519 signatures", before sign-in |
+| WebCrypto **Ed25519** (signing in, signing every message) | 17.0 | `missingCapabilities()` (src/application/boot.ts) stopped at "This browser is missing … Ed25519 signatures", before sign-in |
 | WebCrypto **X25519** (opening messages, HPKE) | 17.0 | The same screen ("X25519 key agreement") |
 | CSS **light-dark()** (every colour) | 17.5 | The same screen ("light and dark colours"); without the check, most colours would be unset |
 
@@ -52,7 +52,7 @@ Nothing else in the app or its dependencies needs more than Safari 16.4. The che
 | Problem | Cause | Fix |
 |---|---|---|
 | The page zooms in when typing | iOS Safari zooms into any field under 16px when it's focused (fields and the composer were 14–15px) | Fields are 16px on touch screens; controls use `touch-action: manipulation` (no double-tap zoom). Pinch zoom is untouched |
-| The keyboard covers the composer | iOS slides the page under its keyboard instead of resizing it | The frame follows the visual viewport (`src/app/viewport.ts`); Android Chrome resizes the page (`interactive-widget`) |
+| The keyboard covers the composer | iOS slides the page under its keyboard instead of resizing it | The frame follows the visual viewport (`src/application/viewport.ts`); Android Chrome resizes the page (`interactive-widget`) |
 | A tap on a reaction didn't toggle it | The message toolbar appeared on `:hover`; iOS swallows the tap that reveals hover content | Hover reveals the toolbar only where there's hover; on touch screens a long press opens the message's menu (quick reactions, Add reaction, Reply, …). A scroll never opens it |
 | A channel's name vanished on a 320px phone | Six header buttons | `# name ›` and search (batch B14b) |
 

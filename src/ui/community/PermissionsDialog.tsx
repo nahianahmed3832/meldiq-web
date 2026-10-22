@@ -2,7 +2,7 @@ import { Check, Minus, RefreshCw, X } from "lucide-react";
 import { useState } from "react";
 import { ApiError } from "../../api/client";
 import type { Overwrite, Overwrites } from "../../api/communitySchemas";
-import { useEngine } from "../../app/orbit";
+import { useEngine } from "../../application/orbit";
 import { type OverwriteTarget, overwrites, setOverwrite } from "../../sync/community";
 import { EVERYONE, orderedOverwrites, type OverwriteState, overwritesSynced, overwriteState, syncTargets, withState } from "../../sync/communityRules";
 import { Dialog } from "../components/Overlay";

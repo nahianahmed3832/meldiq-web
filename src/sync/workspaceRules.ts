@@ -59,17 +59,6 @@ export function cleanInviteCode(code: string): string {
 }
 
 /**
- * Meldiq 2.0: workspace pages a community doesn't show up front (organisation structure and the customer inbox are
- * for companies). Hiding is only presentation: the pages, their data and their links keep working, and an owner who
- * switches the workspace to a team sees them again.
- */
-export const TEAM_ONLY_PAGES: readonly string[] = ["structure", "inbox"];
-
-export function pageShownForKind(page: string, kind: "team" | "community", current: string | null = null): boolean {
-  return kind === "team" || !TEAM_ONLY_PAGES.includes(page) || page === current;
-}
-
-/**
  * The member list in groups (batch B12, android MemberGroups): each role shown separately heads its own group, in role
  * order, and a person appears once, under their highest such role; everyone else comes last under Members (null).
  */

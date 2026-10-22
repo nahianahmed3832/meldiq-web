@@ -1,7 +1,7 @@
 import { Ban, Check, Minus, Plus, Shield, UserCheck, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { OrgAdminDetail } from "../../api/workspaceSchemas";
-import { useEngine, useOrbit } from "../../app/orbit";
+import { useEngine, useOrbit } from "../../application/orbit";
 import { answerApplication, applications, bans, setJoinQuestions, setSecurity, unban, updateCommunityAccess } from "../../sync/community";
 import { PAUSE_CHOICES, running } from "../../sync/reports";
 import { Toggle } from "../components/Toggle";
@@ -263,7 +263,13 @@ export function ApplicationsPage({ detail }: { detail: OrgAdminDetail }) {
           ) : (
             <p className="faint" style={{ margin: 0 }}>
               {a.status === "approved" ? <Check size={13} /> : null}{" "}
-              {a.status === "approved" ? `Let in by ${a.handledByName ?? "a moderator"}` : a.status === "denied" ? `Declined by ${a.handledByName ?? "a moderator"}` : "Withdrawn"}
+              {a.status === "approved"
+                ? `Let in by ${a.handledByName ?? "a moderator"}`
+                : a.status === "denied"
+                  ? `Declined by ${a.handledByName ?? "a moderator"}`
+                  : a.status === "withdrawn"
+                    ? "Withdrawn"
+                    : "Status set in a newer version of Meldiq"}
               {a.note ? ` · ${a.note}` : ""}
             </p>
           )}

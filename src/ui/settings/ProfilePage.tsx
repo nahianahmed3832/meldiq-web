@@ -1,6 +1,6 @@
 import { AtSign, Camera, Check, Copy } from "lucide-react";
 import { type FormEvent, useEffect, useRef, useState } from "react";
-import { useEngine, useOrbit } from "../../app/orbit";
+import { useEngine, useOrbit } from "../../application/orbit";
 import { AccountApi } from "../../auth/accountApi";
 import { networkAddress } from "../../sync/account";
 import { birthdayProblem, myProfile, phoneProblem, removeMyPhoto, setMyPhoto, updateMyProfile } from "../../sync/profile";

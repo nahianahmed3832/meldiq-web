@@ -1,3 +1,5 @@
+import { type ClientFrame, type Frame, readFrame, writeFrame } from "./frames";
+
 /**
  * The realtime connection (server/src/ws.ts). Browsers can't set headers on a WebSocket, so the session token goes in the
  * first frame, {t:"auth"} (docs/ORBIT_WEB_ARCHITECTURE.md › G1); it never appears in the URL.
@@ -9,11 +11,6 @@
  */
 
 export type ConnectionState = "connecting" | "online" | "reconnecting" | "offline";
-
-export interface Frame {
-  t: string;
-  [key: string]: unknown;
-}
 
 export interface RealtimeOptions {
   url: string;
@@ -70,9 +67,9 @@ export class RealtimeClient {
   }
 
   /** Sends a frame if the connection is open and authenticated; false otherwise (callers fall back to REST). */
-  send(frame: Frame): boolean {
+  send(frame: ClientFrame): boolean {
     if (!this.ws || this.ws.readyState !== WebSocket.OPEN || this.state !== "online") return false;
-    this.ws.send(JSON.stringify(frame));
+    this.ws.send(writeFrame(frame));
     return true;
   }
 
@@ -110,13 +107,13 @@ export class RealtimeClient {
     this.ws = ws;
     ws.onopen = () => {
       if (this.ws !== ws) return;
-      ws.send(JSON.stringify({ t: "auth", token }));
+      ws.send(writeFrame({ t: "auth", token }));
       this.lastFrameAt = Date.now();
     };
     ws.onmessage = (ev: MessageEvent) => {
       if (this.ws !== ws) return;
       this.lastFrameAt = Date.now();
-      const frame = parseFrame(ev.data);
+      const frame = readFrame(ev.data);
       if (!frame) return;
       if (frame.t === "hello") {
         this.attempt = 0;
@@ -169,7 +166,7 @@ export class RealtimeClient {
         this.scheduleRetry();
         return;
       }
-      if (ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify({ t: "ping" }));
+      if (ws.readyState === WebSocket.OPEN) ws.send(writeFrame({ t: "ping" }));
     }, PING_MS);
   }
 
@@ -181,14 +178,4 @@ export class RealtimeClient {
 
   private onOnline = (): void => this.reconnectNow();
   private onOffline = (): void => this.setState("offline");
-}
-
-function parseFrame(data: unknown): Frame | null {
-  if (typeof data !== "string" || data.length > 4 * 1024 * 1024) return null;
-  try {
-    const f = JSON.parse(data) as unknown;
-    return f && typeof f === "object" && typeof (f as Frame).t === "string" ? (f as Frame) : null;
-  } catch {
-    return null;
-  }
 }

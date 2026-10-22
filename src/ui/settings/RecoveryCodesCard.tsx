@@ -1,8 +1,8 @@
 import { Copy, Download, LifeBuoy } from "lucide-react";
 import { type FormEvent, useState } from "react";
-import { useEngine, useOrbit } from "../../app/orbit";
+import { useEngine, useOrbit } from "../../application/orbit";
 import { AccountApi } from "../../auth/accountApi";
-import { BRAND } from "../../app/brand";
+import { BRAND } from "../../application/brand";
 import { dayLabel } from "../format";
 import { useAction, useLoad } from "../workspace/useLoad";
 

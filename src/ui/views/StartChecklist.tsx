@@ -1,7 +1,7 @@
 import { CheckCircle2, Circle, X } from "lucide-react";
-import { useCommunityServer, useOrbit } from "../../app/orbit";
-import { setPrefs, usePrefs } from "../../app/prefs";
-import { navigate } from "../../app/router";
+import { useCommunityServer, useOrbit } from "../../application/orbit";
+import { setPrefs, usePrefs } from "../../application/prefs";
+import { navigate } from "../../application/router";
 import type { ShellDialog } from "../shell/Shell";
 import { type StartStep, startProgress, startVisible } from "./startRules";
 

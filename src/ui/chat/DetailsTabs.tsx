@@ -1,6 +1,6 @@
 import { ExternalLink, MessageSquareText, Search } from "lucide-react";
 import { type ReactNode, useState } from "react";
-import { useEngine, useOrbit } from "../../app/orbit";
+import { useEngine, useOrbit } from "../../application/orbit";
 import { isInlineImage } from "../../sync/attachments";
 import { dayLabel, shortWhen } from "../format";
 import { FileAttachment, ImageAttachment, MediaAttachment } from "./Attachments";

@@ -9,3 +9,8 @@ test-results/
 .env.*
 release/
 !.env.example
+out/
+.next/
+next-env.d.ts
+public/sw.js
+public/sw.js.map

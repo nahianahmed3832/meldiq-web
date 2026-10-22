@@ -1,67 +1,12 @@
 import { z } from "zod";
+import { openEnum } from "../api/enums";
 import type { Engine } from "./engine";
 
 /**
- * Workspace templates, user groups, guest end dates and scheduled meetings (server docs/WORKSPACE_C5.md, android round 7
- * slice C5). Every rule is the server's; these are its calls and the meeting editor's time rules (android MeetingRules).
+ * Guest end dates and scheduled meetings (server docs/WORKSPACE_C5.md, android round 7 slice C5; templates and user
+ * groups went with the community rebuild, API 0.12). Every rule is the server's; these are its calls and the meeting editor's time rules (android MeetingRules).
  */
 const enc = encodeURIComponent;
-
-// ───────────── Templates ─────────────
-
-const zWsTemplate = z.object({
-  id: z.string(),
-  name: z.string(),
-  description: z.string(),
-  channels: z.array(z.object({ name: z.string(), topic: z.string().nullable().optional(), kind: z.string(), voice: z.boolean().optional() })),
-});
-export type WorkspaceTemplate = z.infer<typeof zWsTemplate>;
-
-export async function workspaceTemplates(engine: Engine): Promise<WorkspaceTemplate[]> {
-  return (await engine.api.json("GET", "/v1/workspace-templates", z.object({ templates: z.array(zWsTemplate) }))).templates;
-}
-/** Adds only what's missing (by channel name) and a welcome document; never people, apps or private channels. */
-export async function applyWorkspaceTemplate(engine: Engine, orgId: string, templateId: string): Promise<{ channels: unknown[]; document: string | null }> {
-  return (
-    await engine.api.json("POST", `/v1/orgs/${enc(orgId)}/apply-template`, z.object({ applied: z.object({ channels: z.array(z.unknown()), document: z.string().nullable() }) }), {
-      body: { templateId },
-    })
-  ).applied;
-}
-
-// ───────────── Groups ─────────────
-
-const zGroup = z.object({
-  id: z.string(),
-  name: z.string(),
-  handle: z.string(),
-  description: z.string().nullable(),
-  members: z.array(z.object({ id: z.string(), name: z.string().nullable(), username: z.string() })),
-  updatedAt: z.number(),
-});
-export type Group = z.infer<typeof zGroup>;
-export interface GroupInput {
-  name: string;
-  description: string | null;
-  memberIds: string[];
-}
-
-export async function listGroups(engine: Engine, orgId: string): Promise<Group[]> {
-  return (await engine.api.json("GET", `/v1/orgs/${enc(orgId)}/groups`, z.object({ groups: z.array(zGroup) }))).groups;
-}
-export async function createGroup(engine: Engine, orgId: string, input: GroupInput): Promise<Group> {
-  return (await engine.api.json("POST", `/v1/orgs/${enc(orgId)}/groups`, z.object({ group: zGroup }), { body: input })).group;
-}
-export async function updateGroup(engine: Engine, orgId: string, id: string, input: GroupInput): Promise<Group> {
-  return (await engine.api.json("PUT", `/v1/orgs/${enc(orgId)}/groups/${enc(id)}`, z.object({ group: zGroup }), { body: input })).group;
-}
-export async function deleteGroup(engine: Engine, orgId: string, id: string): Promise<void> {
-  await engine.api.call("DELETE", `/v1/orgs/${enc(orgId)}/groups/${enc(id)}`);
-}
-/** Adds the group's current members to a channel, each checked like adding them one by one; a group grants nothing itself. */
-export async function addGroupToChannel(engine: Engine, conversationId: string, groupId: string): Promise<{ added: number; skipped: number }> {
-  return engine.api.json("POST", `/v1/conversations/${enc(conversationId)}/add-group`, z.object({ added: z.number(), skipped: z.number() }), { body: { groupId } });
-}
 
 // ───────────── Guests ─────────────
 
@@ -96,10 +41,8 @@ const zMeeting = z.object({
   canEdit: z.boolean(),
   rev: z.number(),
   /** Batch B8b: how it repeats (null: once). */
-  repeat: z
-    .enum(["weekly", "biweekly", "monthly", "yearly"])
+  repeat: openEnum(["weekly", "biweekly", "monthly", "yearly"])
     .nullish()
-    .catch(null)
     .transform((v) => v ?? null),
 });
 export type Meeting = z.infer<typeof zMeeting>;
@@ -144,7 +87,6 @@ export interface MeetingInput {
   endsAt: number;
   timeZone: string;
   participantIds: string[];
-  groupIds: string[];
   /** Batch B8b (servers with `event-repeat`): null repeats nothing. */
   repeat?: Exclude<EventRepeatChoice, "none"> | null;
 }

@@ -1,4 +1,4 @@
-import { apiBase, serverHost } from "../app/config";
+import { apiBase, serverHost } from "../application/config";
 import { ArrowLeft, Check, Copy, KeyRound, Laptop, Lock, RefreshCw, ShieldCheck, Smartphone } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ApiClient, ApiError } from "../api/client";

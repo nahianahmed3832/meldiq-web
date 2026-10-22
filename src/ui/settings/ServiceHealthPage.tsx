@@ -1,6 +1,6 @@
 import { CheckCircle2, RotateCw } from "lucide-react";
 import { useState } from "react";
-import { useEngine } from "../../app/orbit";
+import { useEngine } from "../../application/orbit";
 import { ageText, busyRoutes, type Health, serviceHealth } from "../../sync/ops";
 import { bytes } from "../format";
 import { useLoad } from "../workspace/useLoad";

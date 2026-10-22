@@ -1,4 +1,4 @@
-import { useOrbit } from "../../app/orbit";
+import { useOrbit } from "../../application/orbit";
 import type { MessageStatus, StoredMessage } from "../../model/types";
 import { Dialog } from "../components/Overlay";
 import { clock, dayLabel } from "../format";
