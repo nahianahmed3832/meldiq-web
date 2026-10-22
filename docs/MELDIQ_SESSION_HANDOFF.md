@@ -79,6 +79,33 @@ status is **`docs/product/MELDIQ_WEB_PARITY_MATRIX.md`**.
 - Roll back: `bash /root/meldiq-web-0.5.0-beta-4f4c289/rollback.sh` on the VPS (previous: `0.2.4-beta-e9f8d2b`).
 - After PR #1 is merged, `main` matches production; until then a deploy built from `main` would roll these changes back.
 
+## Urgent fixes after release (2026-10-22, later; not deployed)
+
+**Screen sharing (reported with a laptop photo: a portrait phone screen cropped to a strip).**
+- Reproduced first with a new e2e test, `e2e/screen-share.spec.ts`. The native peer shares a frame with coloured edges;
+  at 1280×620 a 1920×1080 share was drawn 684 px tall in a 241 px panel.
+- Cause: the video's `height: 100%` didn't resolve inside the panel's auto-sized grid track. Its height came from its
+  width, and `overflow: hidden` cut it off, so `object-fit: contain` never applied.
+- Fix (`e35c55f`): the video fills the panel absolutely, letterboxed. A portrait share puts the people column beside
+  it; tiles are compact; there's a full-screen button.
+- The test passes for portrait and landscape at four window sizes, and checks that stopping the share restores the
+  layout.
+
+**Notifications.** See `MELDIQ_WEB_PUSH.md`.
+- Foreground fixes: notifications now follow the site's permission until the person chooses, a second message alerts
+  again, and clicks work after the tab is gone.
+- Background notifications through the Android app's Firebase project and the server's existing content-free wake-up:
+  no server change. The service worker signs in as this browser, reads (never acknowledges) the queue, and applies the
+  app's rules.
+- **Needs the owner's Firebase web app and Web Push key** (§3 there) and a deploy before it works in production.
+- Real Firebase delivery hasn't been tested. The service worker was tested with wake-ups delivered through Chromium's
+  DevTools protocol (`e2e/notifications.spec.ts`, 3 tests).
+
+**Checks:**
+- `vitest`: 86 files, 505 passed, 21 skipped, 0 failed (server 0.25.0).
+- Chromium e2e: 17 of 18 passed in the full run. The failure was the known intermittent video call test, which then
+  passed 2 of 2 on its own.
+
 ## Open items
 
 Listed in the matrix's last section. In short: timeline media sizing,

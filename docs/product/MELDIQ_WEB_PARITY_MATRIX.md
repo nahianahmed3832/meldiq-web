@@ -52,6 +52,7 @@ Columns: **ID** · **Android** · **Web** · **UI changes** · **Backend changes
 | ID | Android | Web | UI changes | Backend changes | Data and permissions | Tests | Responsive | Status | Known limitations |
 |---|---|---|---|---|---|---|---|---|---|
 | NAV-01 Community rail order (B2) | Approved | Drag order synced to every device | Sidebar rail | None (nav preferences) | `/v1/me/preferences/:id` `railOrder` | `live-nav`, `community-rules` | Rail at all widths | tested | — |
+| NAV-07 Notifications while a tab is open | Built | Fixed: Desktop notifications follow the site's permission until chosen; a second message alerts again (renotify); clicks work after the tab is gone | `prefs.ts`, `boot.ts`, `webPush.ts` | None | Local choices | `push-rules.test.ts` | — | tested | — |
 | NAV-02 Community notification level and Ignore @everyone (B2) | Approved | Community menu › Notifications | `NotifyDialogs` | None | NavPrefs `community {level, suppressEveryone}`; receiver drops @everyone when set | `community-rules`, `live-nav` | Dialog | tested | — |
 | NAV-03 Timed mutes, category levels, hidden channels (B3) | Approved | Channel and category menus; level resolution timed mute → own → category → community | `CommunityPanel`, `NotifyDialogs` | None | NavPrefs `mutedUntil`, `categoryNotify`, `hidden` | `community-rules`, `live-nav` | Menus | tested | — |
 | NAV-04 Unreads view (B5) | Built, not phone-tested | Activity › Unreads grouped by community | `Activity` | None | Local unread state | unit (`unreadGroups`) | List | tested | — |
@@ -130,6 +131,7 @@ Covered by COM-08 and COM-09; the full Unicode picker (search, categories, recen
 | CALL-05 Reconnect (B10) | Built | Existing reconnect | — | None | — | e2e "survives losing the network" passed | — | tested | — |
 | CALL-06 Screen share modes and sound (B11) | Built | Text and apps / Motion and video; tab or system sound where offered; stop from the browser bar ends cleanly | `ShareDialog`, `livekitSession` | None | — | `call-controls` | Dialog | tested | Shared sound only where the browser offers it (Chromium); not checked by hand on a real screen share |
 | CALL-07 Listen-only voice channels | Built | No microphone opened without `voice.speak`; no join without `voice.connect` | `manager`, `engine` | None | Server permissions | unit; e2e listen-only path | — | tested | — |
+| CALL-09 A shared screen shows whole (reported 2026-10-22) | — | Fix: the video is letterboxed inside its panel; a portrait share puts the people beside it; full-screen button | `CallStage.tsx`, `call.css` | None | — | e2e `screen-share.spec.ts`: 540×1170 and 1920×1080 shares at 1280×620, 1440×900, 820×560, 390×780, all edges inside, unstretched; stop sharing restores the layout (reproduced the crop first) | Side column on wide windows, strip under it on phones | tested | Not checked with a real phone sharing to a real browser |
 | CALL-08 Calls from the phone app | Built | Existing | — | None | E2EE media | e2e "video call from the phone app" | — | tested | Known intermittent: can stick at "Verifying encryption…" (passed this run) |
 
 ### J. Platform, admin and AI readiness
@@ -138,13 +140,14 @@ Covered by COM-08 and COM-09; the full Unicode picker (search, categories, recen
 |---|---|---|---|---|---|---|---|---|---|
 | ADM-01 Super-admin controls hidden from community admins | Built | Service health and platform pages only for platform admins | — | None | Server checks platform admin | Existing tests (`makePlatformAdmin`) | — | tested | — |
 | AI-01 No E2EE content to AI without consent | Consent per request (round 7 C8) | Same consent design, unchanged | — | None | Nothing sent without consent | Existing tests | — | tested | No new AI feature this round |
-| PLAT-01 Web Push | Phone notifications | Notifications only while a tab is open | — | Needs a Web Push service | — | — | — | blocked | Server and service work |
+| PLAT-01 Background notifications (Web Push through Firebase) | FCM wake-ups (phone-tested 2026-10-20) | Service worker shows what's waiting when Meldiq is closed (no text); this browser's FCM token registered for its device; page notifications through the worker; Settings states | `src/sw/*`, `webPush.ts`, `BackgroundNotifications.tsx` | None (existing `PUT /v1/devices/current/fcm`) | Same content-free `{"w":"1"}`; the worker signs in as this browser and reads, never acknowledges | `wake-rules`, `push-rules`, `config` tests; e2e `notifications.spec.ts` (Chromium; wake-up delivered through DevTools) | — | blocked | Needs the owner's Firebase web app and Web Push key (`MELDIQ_WEB_PUSH.md` §3) and a deploy; real Firebase delivery not tested; Brave needs Google push messaging allowed |
 | PLAT-02 Dates and interface in your language (B12) | Built (dates) | English only | — | — | — | — | — | not started | — |
 
 ## Open items, in order
 
 1. DM-06 timeline media sizing and quiet call notes (the last B14 item on the web).
 2. CALL-04 camera choice in a call; run the pre-call check by hand.
-3. Server: broadcast onboarding changes; files domain on MongoDB; Web Push.
-4. Owner checks: a phone with this web build, Safari and Firefox, a 1 GiB upload on a real network, production after an
+3. Owner: Firebase web app and Web Push key for background notifications (`MELDIQ_WEB_PUSH.md` §3), then a deploy.
+4. Server: broadcast onboarding changes; files domain on MongoDB.
+5. Owner checks: a phone with this web build, Safari and Firefox, a 1 GiB upload on a real network, production after an
    approved deployment.
