@@ -32,13 +32,8 @@ export function StartChecklist({ orgId, onDialog }: { orgId: string | null; onDi
       go: () => (orgId ? navigate({ section: "workspace", workspacePage: "invitations" }) : onDialog({ kind: "createWorkspace" })),
     },
     { key: "notifications", label: "Turn on notifications", done: prefs.notifications && notificationsAllowed(), go: () => navigate({ section: "settings", settingsPage: "notifications" }) },
-    {
-      key: "apps",
-      label: "Connect the tools you use",
-      done: false,
-      optional: true,
-      go: () => (orgId ? navigate({ section: "workspace", workspacePage: "apps" }) : onDialog({ kind: "joinWorkspace" })),
-    },
+    // Meldiq B15: no "Connect the tools you use" step: app connections were retired with the community rebuild, and the
+    // step led to a page the server no longer offers.
   ];
   if (!startVisible(prefs.startHidden, steps)) return null;
   const { done, total } = startProgress(steps);

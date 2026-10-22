@@ -1,4 +1,4 @@
-import { Blocks, Bell, Headphones, IdCard, MessagesSquare } from "lucide-react";
+import { Bell, Headphones, MessagesSquare, ShieldCheck, Users } from "lucide-react";
 import { type ReactNode, useState } from "react";
 import { createPortal } from "react-dom";
 import { BrandMark } from "../components/BrandMark";
@@ -20,8 +20,13 @@ const PAGES: Page[] = [
   },
   { icon: <Bell size={52} />, title: "Never lose track", body: "Save messages for later and set reminders. They reach every device you're signed in on, even after a restart." },
   { icon: <Headphones size={52} />, title: "Talk it through", body: "Voice and video calls with screen sharing, and voice rooms your team can drop into any time." },
-  { icon: <Blocks size={52} />, title: "Bring your tools", body: "Connect Figma, GitHub, GitLab and more to your workspace, with permissions your admins control." },
-  { icon: <IdCard size={52} />, title: "People and HR", body: "Team directory, attendance, shifts and leave are coming to Meldiq workspaces, with access based on roles.", soon: true },
+  // Meldiq B15: the same pages as the Android app since the community rebuild (no integrations or HR pages).
+  {
+    icon: <Users size={52} />,
+    title: "Find your communities",
+    body: "Join public communities or start your own, with channels in categories, forums for organised topics and announcements.",
+  },
+  { icon: <ShieldCheck size={52} />, title: "Roles you control", body: "Give people roles, decide who sees and posts in each channel, and keep the community safe with bans." },
 ];
 
 const SEEN_KEY = "meldiq.introSeen";
