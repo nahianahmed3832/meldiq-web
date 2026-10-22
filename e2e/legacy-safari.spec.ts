@@ -39,8 +39,9 @@ test("without Ed25519/X25519 in WebCrypto (iOS 16), Meldiq links, sends and rece
   await alice.connect();
   await bob.connect();
 
-  // The gap is real on this site: the browser itself refuses the curves (checked on a page the app doesn't run on).
-  await page.goto("/manifest.webmanifest");
+  // The gap is real on this site: the browser itself refuses the curves (checked on a page the app doesn't run on: an
+  // image, which every engine shows rather than downloads, unlike the manifest Firefox saves).
+  await page.goto("/favicon-32.png");
   expect(
     await page.evaluate(async () =>
       crypto.subtle.generateKey({ name: "Ed25519" }, false, ["sign"]).then(
