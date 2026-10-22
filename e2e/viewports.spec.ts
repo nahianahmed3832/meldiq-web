@@ -53,6 +53,26 @@ async function noSidewaysScroll(page: Page, what: string): Promise<void> {
   expect(r.wide, `${what}: elements past the right edge`).toEqual([]);
 }
 
+/**
+ * The conversation list (a scrolling box, so the page-wide check above skips it): no row is wider than the list, so
+ * names, previews and times end inside it (reported: long previews and "Yesterday" ran past the sidebar's edge).
+ */
+async function listFits(page: Page, what: string): Promise<void> {
+  const r = await page.evaluate(() => {
+    const list = document.querySelector<HTMLElement>(".side-scroll");
+    if (!list || !list.getClientRects().length) return null;
+    const edge = list.getBoundingClientRect().right;
+    const past = Array.from(list.querySelectorAll<HTMLElement>(".side-item, .side-item .time, .side-item small"))
+      .filter((el) => el.getClientRects().length && el.getBoundingClientRect().right > edge + 1)
+      .slice(0, 3)
+      .map((el) => `${el.className}: ${el.textContent?.slice(0, 30)}`);
+    return { scrolls: list.scrollWidth > list.clientWidth + 1, past };
+  });
+  if (!r) return;
+  expect(r.scrolls, `${what}: the conversation list scrolls sideways`).toBe(false);
+  expect(r.past, `${what}: list rows past the list's edge`).toEqual([]);
+}
+
 test("every screen fits from 320 px phones to desktop, with the composer on screen", async ({ page }) => {
   const alice = await newPhone("alice", "Alice Rahman");
   const bob = await newPhone("bob", "Bob Chen");
@@ -60,8 +80,9 @@ test("every screen fits from 320 px phones to desktop, with the composer on scre
   const { org } = await alice.req("POST", "/v1/orgs", { name: "Layout Lab" });
   await alice.connect();
   await bob.connect();
-  await bob.send(dm, { type: "text", text: "A long message that wraps on a small phone, with a link https://example.com/a/rather/long/path/that/could/overflow and more words." });
   await link(page, alice);
+  // After linking, so this browser receives it (sent before, it would be for the phone's devices only).
+  await bob.send(dm, { type: "text", text: "A long message that wraps on a small phone, with a link https://example.com/a/rather/long/path/that/could/overflow and more words." });
   const channels = (await alice.req("GET", "/v1/conversations")).conversations as { id: string; orgId: string | null; name: string | null; voice: boolean }[];
   const channel = channels.find((c) => c.orgId === org.id && !c.voice)!;
 
@@ -80,6 +101,7 @@ test("every screen fits from 320 px phones to desktop, with the composer on scre
       await page.waitForTimeout(600);
       if (SHOTS) await page.screenshot({ path: `${SHOTS}/${width}x${height}-${name}.png` });
       await noSidewaysScroll(page, `${width}x${height} ${name}`);
+      await listFits(page, `${width}x${height} ${name}`);
       if (name === "dm" || name === "channel") {
         const composer = page.locator(".composer textarea").first();
         await expect(composer, `${width}x${height} ${name}: composer`).toBeVisible();
