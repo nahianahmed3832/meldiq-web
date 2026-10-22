@@ -6,7 +6,7 @@ import { answerOnboarding, onboarding, setGuide, setOnboarding } from "../src/sy
 import { postText } from "../src/sync/forumRules";
 import { threadRows } from "../src/sync/threads";
 import { createRole } from "../src/sync/roles";
-import { acceptInvite, createInvitation, requestId } from "../src/sync/workspaces";
+import { acceptInvite, createInvitation, removeConversationMember, requestId } from "../src/sync/workspaces";
 import { serverFeatures } from "./support/features";
 import { linkBrowser, type Phone, type Server, startServer, until } from "./support/live";
 
@@ -101,7 +101,8 @@ describe("community guide and onboarding", () => {
     const painter = await createRole(web, orgId, { name: "Observer", permissions: [] });
     const admin = await createRole(web, orgId, { name: "Banhammer", permissions: ["members.ban"] });
     const hidden = await createCommunityChannel(web, orgId, { name: "deep-sky", topic: null, kind: "PUBLIC", voice: false, format: "text", categoryId: null });
-    await bob.req("DELETE", `/v1/conversations/${hidden.id}/members/${bob.userId}`);
+    // Bob isn't in it (the owner takes him out: since API 0.26.0 nobody leaves one channel of a community by themselves).
+    await removeConversationMember(web, hidden.id, bob.userId);
     const refused = (await setOnboarding(web, orgId, true, [{ title: "Role?", single: true, required: true, options: [{ title: "Ban", roleIds: [admin.id], channelIds: [] }] }]).catch(
       (e: unknown) => e,
     )) as ApiError;

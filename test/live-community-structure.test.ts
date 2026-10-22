@@ -29,7 +29,7 @@ import {
 } from "../src/sync/community";
 import { layoutPositions } from "../src/sync/communityRules";
 import type { Engine } from "../src/sync/engine";
-import { acceptInvite, createInvitation, requestId, workspaceDetail } from "../src/sync/workspaces";
+import { acceptInvite, createInvitation, removeConversationMember, requestId, workspaceDetail } from "../src/sync/workspaces";
 import { serverFeatures } from "./support/features";
 import { linkBrowser, type Phone, type Server, startServer, until } from "./support/live";
 
@@ -215,8 +215,9 @@ describe("moderation", () => {
   it("a channel you may see but haven't joined opens and joins", async (t) => {
     if (!community) return t.skip();
     const ch = await createCommunityChannel(web, orgId, { name: "opt-in", topic: null, kind: "PUBLIC", voice: false, format: "text", categoryId: null });
-    // Bob leaves it, so it shows dimmed in his panel; opening it joins it again.
-    await bob.req("DELETE", `/v1/conversations/${ch.id}/members/${bob.userId}`);
+    // Bob isn't in it (the owner takes him out: since API 0.26.0 people leave a community, not one of its channels), so it
+    // shows dimmed in his panel; opening it joins it again.
+    await removeConversationMember(web, ch.id, bob.userId);
     await until(() => !bobWeb.state.get().conversations[ch.id]?.joined, 8000, "Bob left");
     await bobWeb.community.refresh(orgId);
     expect(bobWeb.state.get().communities[orgId]!.channels.find((c) => c.id === ch.id)?.joined).toBe(false);
