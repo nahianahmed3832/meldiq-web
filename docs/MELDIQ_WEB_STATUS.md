@@ -1,4 +1,15 @@
-# Meldiq Web status (2026-10-20)
+# Meldiq Web status (2026-10-22)
+
+## Android parity round B1–B16 (2026-10-22, not deployed)
+
+Branch `claude/meldiq-web-android-parity-a6333c` brings Android's batches B1–B16 to the web: community structure and
+settings, moderation, connections and message requests, forums and the guide, community emoji, call controls (B10,
+B11), the minimal DM screen (B14) and motion (B16). Behaviour-by-behaviour status, with what's missing and what wasn't
+verified: **`product/MELDIQ_WEB_PARITY_MATRIX.md`**. Commits and how it was checked: `MELDIQ_SESSION_HANDOFF.md`.
+**The web is not at full parity**: the matrix lists the gaps. Nothing from this round is in production.
+
+The sections below are from 2026-10-20.
+
 
 This document covers the current round and where to pick up again. The feature-by-feature inventory, with an ID, the
 Android source, backend, tests and verification level for every row, is `MELDIQ_WEB_FEATURE_PARITY.md`. Earlier rounds
