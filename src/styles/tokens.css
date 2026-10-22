@@ -3,10 +3,10 @@
  *
  * Structure:
  *  1. Scale: type, radii, spacing, motion, elevation shape (palette-independent).
- *  2. Neutrals: surfaces, text, borders and states, shared by every palette.
- *  3. Palettes: the brand colour plates (indigo, the default from the logo's cyan → blue → violet ribbon; plum; amber).
- *     A palette sets only brand hues: the frame (rail and top bar), the sidebar tint, the accent and its soft and text
- *     forms, mentions, badges and the brand gradient. `data-palette` on <html> picks one (src/app/prefs.ts).
+ *  2. Shared: states (success, warning, danger, info), presence, overlays, the call screen and fixed parts.
+ *  3. Palettes: Android's presets (Graphite, the default; Aurora; Sunset; Meadow), each with its tinted neutrals, frame
+ *     (rail and top bar), sidebar, accent and actions, badges and outgoing bubble. `data-palette` on <html> picks one
+ *     (src/app/prefs.ts). Dark is the default theme, as on Android.
  *
  * Light and dark come from `color-scheme` (system, or `data-theme`), and every colour token is `light-dark(light, dark)`,
  * so each palette is written once for both. Browsers without light-dark() get the static light values in the first block
@@ -88,27 +88,27 @@
   --msg-text-size: 16.5px;
 }
 
-/* Static light values for browsers without light-dark() (they see the unsupported screen, readably). */
+/* Static light values first (build/lightDarkFallback.ts adds every token for browsers without light-dark()). */
 :root {
-  --bg: #f5f5f9;
+  --bg: #f4f5f7;
   --surface: #ffffff;
   --surface-raised: #ffffff;
-  --surface-sunken: #f0f0f5;
-  --surface-hover: #f2f2f7;
-  --surface-selected: #e9e9f1;
-  --border: #e3e3ec;
-  --border-strong: #cfd0dc;
-  --text: #16172b;
-  --text-2: #474960;
-  --text-3: #686a80;
+  --surface-sunken: #ebecef;
+  --surface-hover: #f3f4f5;
+  --surface-selected: #e3e4f7;
+  --border: #dcdee3;
+  --border-strong: #bfc1c9;
+  --text: #17181c;
+  --text-2: #4a4d57;
+  --text-3: #5d616c;
   --accent: #4b4fc9;
-  --accent-text: #353aa6;
-  --accent-soft: #ecebfd;
+  --accent-text: #4b4fc9;
+  --accent-soft: #e8e9fb;
   --on-accent: #ffffff;
   --action: #4b4fc9;
   --on-action: #ffffff;
-  --danger: #c0262d;
-  --rail: #241f63;
+  --danger: #c42b2b;
+  --rail: #ffffff;
 }
 
 @supports (color: light-dark(#000, #fff)) {
@@ -124,34 +124,17 @@
 
   /* ── 2. Neutrals ────────────────────────────────────────────────────────── */
   :root {
-    --bg: light-dark(#f5f5f9, #0e0f17);
-    --surface: light-dark(#ffffff, #14151f);
-    --surface-raised: light-dark(#ffffff, #1b1c28);
-    --surface-sunken: light-dark(#f1f1f6, #10111a);
-    --surface-hover: light-dark(#f3f3f8, #1d1e2b);
-    --surface-selected: light-dark(#ebebf3, #252637);
-    --border: light-dark(#e5e5ee, #262838);
-    --border-strong: light-dark(#d2d3df, #343649);
-    --hairline: light-dark(rgba(22, 23, 43, 0.07), rgba(255, 255, 255, 0.06));
-    --text: light-dark(#16172b, #f1f1f8);
-    --text-2: light-dark(#474960, #b5b6c9);
-    --text-3: light-dark(#686a80, #8b8da3);
-    --outline: light-dark(#8e90a6, #6e7088);
-
-    /* Primary actions take the accent; --action stays as the name the styles use. */
-    --action: var(--accent);
-    --action-hover: var(--accent-hover);
-    --on-action: var(--on-accent);
+    /* Filled actions are Android's action colour (each palette sets them); links are accent text. */
     --link: var(--accent-text);
 
-    --success: light-dark(#1d7a4c, #5fd49a);
-    --success-soft: light-dark(#e3f4ea, #15301f);
-    --warning: light-dark(#8a5a00, #f3c461);
-    --warning-soft: light-dark(#fbf0d6, #352a12);
-    --danger: light-dark(#c0262d, #ff8a8a);
-    --danger-soft: light-dark(#fce6e6, #3a1a1d);
+    --success: light-dark(#13784a, #6edaa4);
+    --success-soft: light-dark(#e0f2e8, #16352a);
+    --warning: light-dark(#8a5a00, #f2c26b);
+    --warning-soft: light-dark(#fbf0da, #3a2f1a);
+    --danger: light-dark(#c42b2b, #ff8a80);
+    --danger-soft: light-dark(#fbe6e4, #3e1f1d);
     --on-danger: light-dark(#ffffff, #2b0d0f);
-    --info: light-dark(#2563c7, #8ab8ff);
+    --info: light-dark(#2563d9, #7cc0ff);
     --info-soft: light-dark(#e6effc, #182640);
 
     /* Presence and connection */
@@ -159,7 +142,7 @@
     --presence-off: light-dark(#a3a5b8, #5d5f75);
 
     /* Overlays */
-    --scrim: light-dark(rgba(14, 15, 30, 0.42), rgba(0, 0, 0, 0.62));
+    --scrim: light-dark(rgba(0, 0, 0, 0.42), rgba(0, 0, 0, 0.6));
     --tooltip-bg: light-dark(#1b1c2e, #f1f1f8);
     --tooltip-text: light-dark(#f6f6fb, #16172b);
 
@@ -170,8 +153,8 @@
     --focus: 0 0 0 2px var(--surface), 0 0 0 4px var(--accent);
     --focus-on-frame: 0 0 0 2px var(--rail), 0 0 0 4px var(--rail-text-active);
 
-    /* The call screen is always dark, whatever the theme, with a trace of the palette's frame. */
-    --call-bg: color-mix(in srgb, var(--rail-2) 38%, #05060c);
+    /* The call screen is always dark, whatever the theme (Android's callStage). */
+    --call-bg: #070b1f;
     --call-text-2: #b6b8cc;
     --call-bad-strong: rgba(150, 30, 36, 0.88);
     --media-scrim: rgba(0, 0, 0, 0.55);
@@ -223,113 +206,255 @@
     --sticker-shape-alpha: light-dark(0.16, 0.3);
     --sticker-confetti: conic-gradient(from 0deg, #f59e0b 0 20%, #10b981 0 40%, #3b82f6 0 60%, #ec4899 0 80%, currentColor 0);
 
-    /* Palette previews (Appearance › Colour): each plate's frame, sidebar and accent, whatever plate is active. */
-    --swatch-indigo-1: #231d62;
-    --swatch-indigo-2: #e2dffa;
-    --swatch-indigo-3: #4b4fc9;
-    --swatch-plum-1: #4a1340;
-    --swatch-plum-2: #f4d8e7;
-    --swatch-plum-3: #b0236e;
-    --swatch-amber-1: #3d2610;
-    --swatch-amber-2: #f2e1c4;
-    --swatch-amber-3: #a85a06;
+    /* Palette previews (Appearance › Colour): each preset's dark frame, light frame and action, whatever is active. */
+    --swatch-graphite-1: #26282e;
+    --swatch-graphite-2: #ebecef;
+    --swatch-graphite-3: #4b4fc9;
+    --swatch-aurora-1: #172352;
+    --swatch-aurora-2: #f1e4fa;
+    --swatch-aurora-3: #4441d0;
+    --swatch-sunset-1: #3a1b28;
+    --swatch-sunset-2: #ffe8d6;
+    --swatch-sunset-3: #a12460;
+    --swatch-meadow-1: #0f2d22;
+    --swatch-meadow-2: #e3f7e2;
+    --swatch-meadow-3: #0e7340;
     --brand-gradient: linear-gradient(120deg, #22d3ee 0%, #3b82f6 45%, #8b5cf6 80%, #c4b5fd 100%);
   }
 
   /* ── 3. Palettes ──────────────────────────────────────────────────────── */
 
   /*
-   * Indigo (default): the logo's blue-violet. Frame deep indigo, sidebar lavender mist, accent indigo, badges cyan.
-   * The accent is Meldiq's one brand indigo, #4b4fc9 (dark mode #8b93ff), the same as Android's Graphite palette and the
-   * account emails (meldiq docs/product/MELDIQ_2_DECISIONS.md §3).
+   * Android's four presets, colour for colour (meldiq_android ui/theme/MeldiqPalettes.kt, contrast unit-tested there):
+   * each sets the tinted neutrals, the frame (Android's header), the sidebar, the accent and actions, badges and the
+   * outgoing bubble, in light and dark.
    */
+  /* Graphite (default, Android's since round 6): charcoal and slate in dark mode, neutral greys in light, a flat frame and one restrained indigo from the logo's ribbon. */
   :root,
-  :root[data-palette="indigo"] {
-    --rail: light-dark(#231d62, #100f2a);
-    --rail-2: light-dark(#1b1650, #0c0b20);
-    --rail-hover: light-dark(rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.07));
-    --rail-active: light-dark(rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.12));
-    --rail-text: light-dark(#c4c1f0, #a9a7d6);
-    --rail-text-active: #ffffff;
-    --rail-line: rgba(255, 255, 255, 0.12);
-    --rail-input: rgba(255, 255, 255, 0.1);
-    --rail-input-hover: rgba(255, 255, 255, 0.16);
+  :root[data-palette="graphite"] {
+    /* Neutrals, tinted like Android's preset. */
+    --bg: light-dark(#f4f5f7, #1e1f24);
+    --surface: light-dark(#ffffff, #26282e);
+    --surface-raised: light-dark(#ffffff, #2f3138);
+    --surface-sunken: light-dark(#ebecef, #1e1f24);
+    --surface-hover: light-dark(#f3f4f5, #2c2e35);
+    --surface-selected: light-dark(#e3e4f7, #383b52);
+    --border: light-dark(#dcdee3, #383b43);
+    --border-strong: light-dark(#bfc1c9, #4c4f59);
+    --hairline: light-dark(rgba(23, 24, 28, 0.08), rgba(255, 255, 255, 0.08));
+    --text: light-dark(#17181c, #ecedf0);
+    --text-2: light-dark(#4a4d57, #b6bac3);
+    --text-3: light-dark(#5d616c, #989da8);
+    --outline: light-dark(#7a7f8c, #7a7f8c);
 
-    --sidebar: light-dark(#f4f3fd, #15142a);
-    --sidebar-hover: light-dark(#eae8fb, #1f1e3a);
-    --sidebar-selected: light-dark(#e2dffa, #2a2852);
-    --sidebar-text: light-dark(#4a4a68, #b3b2d0);
+    /* The frame (rail and top bar): Android's header. */
+    --rail: light-dark(#ffffff, #26282e);
+    --rail-2: light-dark(#ffffff, #26282e);
+    --rail-hover: light-dark(rgba(23, 24, 28, 0.06), rgba(255, 255, 255, 0.07));
+    --rail-active: light-dark(#e3e4f7, #383b52);
+    --rail-text: light-dark(#4a4d57, #b6bac3);
+    --rail-text-active: light-dark(#17181c, #ecedf0);
+    --rail-line: light-dark(#dcdee3, #383b43);
+    --rail-input: light-dark(#ebecef, #1e1f24);
+    --rail-input-hover: light-dark(#ebecef, #2f3138);
 
-    --accent: light-dark(#4b4fc9, #8b93ff);
-    --accent-hover: light-dark(#353aa6, #a5adff);
-    --accent-soft: light-dark(#ecebfd, #25244a);
-    --accent-text: light-dark(#353aa6, #b8beff);
-    --on-accent: light-dark(#ffffff, #12112e);
-    --accent-2: light-dark(#0e7fa0, #4fd9f2);
+    --sidebar: light-dark(#ffffff, #26282e);
+    --sidebar-hover: light-dark(#f3f4f5, #2c2e35);
+    --sidebar-selected: light-dark(#e3e4f7, #383b52);
+    --sidebar-text: light-dark(#4a4d57, #b6bac3);
 
-    --mention-bg: light-dark(#eceafd, #2a2858);
-    --mention-text: light-dark(#3a30c0, #cfccff);
-    --bubble-out: light-dark(#f0effd, #1f1e3d);
-    --badge: light-dark(#4b4fc9, #8b93ff);
-    --on-badge: light-dark(#ffffff, #12112e);
-    --rail-badge: #5ee0f5;
-    --on-rail-badge: #071a2e;
-    --accent-start: #22d3ee;
-    --accent-end: #8b5cf6;
-    --theme-color: #231d62;
+    /* Accent (selection, focus, links, mentions) and filled actions, as Android's primary and action. */
+    --accent: light-dark(#4b4fc9, #a5adff);
+    --accent-hover: light-dark(#353aa6, #b8beff);
+    --accent-soft: light-dark(#e8e9fb, #2e3150);
+    --accent-text: light-dark(#4b4fc9, #b8beff);
+    --on-accent: light-dark(#ffffff, #14163a);
+    --accent-2: light-dark(#4b4fc9, #8b93ff);
+    --action: light-dark(#4b4fc9, #5a5fd8);
+    --action-hover: light-dark(#353aa6, color-mix(in srgb, #5a5fd8 85%, #ffffff));
+    --on-action: light-dark(#ffffff, #ffffff);
+    --mention-bg: light-dark(#e8e9fb, #2e3150);
+    --mention-text: light-dark(#353aa6, #c8cdff);
+    --bubble-out: light-dark(#e6e7fa, #33365a);
+    --badge: light-dark(#c42b32, #f06a6f);
+    --on-badge: light-dark(#ffffff, #2a0a0c);
+    --rail-badge: light-dark(#c42b32, #f06a6f);
+    --on-rail-badge: light-dark(#ffffff, #2a0a0c);
+    --accent-start: light-dark(#4b4fc9, #8b93ff);
+    --accent-end: light-dark(#4b4fc9, #8b93ff);
+    /* The browser's frame colour (src/app/prefs.ts picks one; a light-dark() value can't go in a <meta>). */
+    --theme-color-light: #ffffff;
+    --theme-color-dark: #26282e;
   }
 
-  /* Plum: magenta and plum. */
-  :root[data-palette="plum"] {
-    --rail: light-dark(#4a1340, #220a1e);
-    --rail-2: light-dark(#3a0f33, #1a0817);
-    --rail-text: light-dark(#ecc3dc, #d3a9c4);
-    --sidebar: light-dark(#fcf2f7, #1f1220);
-    --sidebar-hover: light-dark(#f8e5ef, #2c1a2c);
-    --sidebar-selected: light-dark(#f4d8e7, #3b2139);
-    --sidebar-text: light-dark(#5c4256, #d0b5c8);
-    --accent: light-dark(#b0236e, #f17cb8);
-    --accent-hover: light-dark(#931c5c, #f598c8);
-    --accent-soft: light-dark(#fbe6f0, #3a1c30);
-    --accent-text: light-dark(#9a1f61, #f8a7cf);
-    --on-accent: light-dark(#ffffff, #2a0b1d);
-    --accent-2: light-dark(#7c3aed, #c4a2ff);
-    --mention-bg: light-dark(#fbe4ef, #42203a);
-    --mention-text: light-dark(#8c1a57, #ffcfe4);
-    --bubble-out: light-dark(#fcedf4, #2f1a2b);
-    --badge: light-dark(#b0236e, #f17cb8);
-    --on-badge: light-dark(#ffffff, #2a0b1d);
-    --rail-badge: #ff9ccc;
-    --on-rail-badge: #3a0a24;
-    --accent-start: #f472b6;
-    --accent-end: #a21caf;
-    --theme-color: #4a1340;
+  /* Aurora: lavender → sky frame, indigo actions and a violet accent, like the logo's ribbon; dark mode on the logo's own navy. */
+  :root[data-palette="aurora"] {
+    /* Neutrals, tinted like Android's preset. */
+    --bg: light-dark(#f4f5fb, #0a0e27);
+    --surface: light-dark(#ffffff, #121736);
+    --surface-raised: light-dark(#ffffff, #1b2145);
+    --surface-sunken: light-dark(#eceef8, #0a0e27);
+    --surface-hover: light-dark(#f4f5fb, #181e40);
+    --surface-selected: light-dark(#e3e2fb, #272b63);
+    --border: light-dark(#dde0ee, #272e57);
+    --border-strong: light-dark(#c0c4d9, #3d446f);
+    --hairline: light-dark(rgba(18, 20, 51, 0.08), rgba(255, 255, 255, 0.08));
+    --text: light-dark(#121433, #eceefb);
+    --text-2: light-dark(#444868, #b4b9da);
+    --text-3: light-dark(#5a5e80, #959bc2);
+    --outline: light-dark(#7c82a8, #6f77a6);
+
+    /* The frame (rail and top bar): Android's header. */
+    --rail: light-dark(#e4e5fb, #172352);
+    --rail-2: light-dark(#d8e7fc, #112a55);
+    --rail-hover: light-dark(rgba(18, 20, 51, 0.06), rgba(255, 255, 255, 0.07));
+    --rail-active: light-dark(#e3e2fb, #272b63);
+    --rail-text: light-dark(#444868, #b4b9da);
+    --rail-text-active: light-dark(#121433, #eceefb);
+    --rail-line: light-dark(#dde0ee, #272e57);
+    --rail-input: light-dark(rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.1));
+    --rail-input-hover: light-dark(#eceef8, #1b2145);
+
+    --sidebar: light-dark(#ffffff, #121736);
+    --sidebar-hover: light-dark(#f4f5fb, #181e40);
+    --sidebar-selected: light-dark(#e3e2fb, #272b63);
+    --sidebar-text: light-dark(#444868, #b4b9da);
+
+    /* Accent (selection, focus, links, mentions) and filled actions, as Android's primary and action. */
+    --accent: light-dark(#4441d0, #a3a5ff);
+    --accent-hover: light-dark(#2e2b9e, #b9baff);
+    --accent-soft: light-dark(#e9e8fd, #25295c);
+    --accent-text: light-dark(#4441d0, #b9baff);
+    --on-accent: light-dark(#ffffff, #10123a);
+    --accent-2: light-dark(#7b35d9, #b49bfa);
+    --action: light-dark(#4441d0, #5552e0);
+    --action-hover: light-dark(#2e2b9e, color-mix(in srgb, #5552e0 85%, #ffffff));
+    --on-action: light-dark(#ffffff, #ffffff);
+    --mention-bg: light-dark(#e9e8fd, #25295c);
+    --mention-text: light-dark(#2e2b9e, #c9caff);
+    --bubble-out: light-dark(#e7e6fc, #2a2d6a);
+    --badge: light-dark(#d1245a, #ff7aa2);
+    --on-badge: light-dark(#ffffff, #2b0715);
+    --rail-badge: light-dark(#d1245a, #ff7aa2);
+    --on-rail-badge: light-dark(#ffffff, #2b0715);
+    --accent-start: light-dark(#4441d0, #3cd6ee);
+    --accent-end: light-dark(#7b35d9, #b49bfa);
+    /* The browser's frame colour (src/app/prefs.ts picks one; a light-dark() value can't go in a <meta>). */
+    --theme-color-light: #e4e5fb;
+    --theme-color-dark: #172352;
   }
 
-  /* Amber: gold and brown. */
-  :root[data-palette="amber"] {
-    --rail: light-dark(#3d2610, #1e1409);
-    --rail-2: light-dark(#301e0c, #170f07);
-    --rail-text: light-dark(#ecd2ab, #d2b893);
-    --sidebar: light-dark(#fcf6ec, #1d1710);
-    --sidebar-hover: light-dark(#f7ecda, #2a2117);
-    --sidebar-selected: light-dark(#f2e1c4, #3a2d1d);
-    --sidebar-text: light-dark(#5e4b33, #d2bfa4);
-    --accent: light-dark(#a85a06, #f2b046);
-    --accent-hover: light-dark(#8c4a04, #f6c26c);
-    --accent-soft: light-dark(#fcefd9, #3a2a14);
-    --accent-text: light-dark(#8f4c05, #f6c578);
-    --on-accent: light-dark(#ffffff, #2a1a04);
-    --accent-2: light-dark(#b45309, #fbbf24);
-    --mention-bg: light-dark(#fcecd2, #41301a);
-    --mention-text: light-dark(#7c4104, #ffe0ad);
-    --bubble-out: light-dark(#fdf3e3, #2c2214);
-    --badge: light-dark(#a85a06, #f2b046);
-    --on-badge: light-dark(#ffffff, #2a1a04);
-    --rail-badge: #fcc65a;
-    --on-rail-badge: #3a2404;
-    --accent-start: #fbbf24;
-    --accent-end: #b45309;
-    --theme-color: #3d2610;
+  /* Sunset: peach → pink frame with magenta actions. */
+  :root[data-palette="sunset"] {
+    /* Neutrals, tinted like Android's preset. */
+    --bg: light-dark(#fbf5f3, #170e12);
+    --surface: light-dark(#ffffff, #22151b);
+    --surface-raised: light-dark(#ffffff, #2e1e25);
+    --surface-sunken: light-dark(#f6ece9, #170e12);
+    --surface-hover: light-dark(#faf4f2, #2a1b22);
+    --surface-selected: light-dark(#f8dce8, #4a2333);
+    --border: light-dark(#ebddd8, #3d2a32);
+    --border-strong: light-dark(#d3c3be, #543f47);
+    --hairline: light-dark(rgba(36, 19, 26, 0.08), rgba(255, 255, 255, 0.08));
+    --text: light-dark(#24131a, #fbeff2);
+    --text-2: light-dark(#5b4450, #d3bcc4);
+    --text-3: light-dark(#6e5662, #b49da6);
+    --outline: light-dark(#9a8780, #8a7079);
+
+    /* The frame (rail and top bar): Android's header. */
+    --rail: light-dark(#fde2e0, #3a1b28);
+    --rail-2: light-dark(#fbdcea, #3a1830);
+    --rail-hover: light-dark(rgba(36, 19, 26, 0.06), rgba(255, 255, 255, 0.07));
+    --rail-active: light-dark(#f8dce8, #4a2333);
+    --rail-text: light-dark(#5b4450, #d3bcc4);
+    --rail-text-active: light-dark(#24131a, #fbeff2);
+    --rail-line: light-dark(#ebddd8, #3d2a32);
+    --rail-input: light-dark(rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.1));
+    --rail-input-hover: light-dark(#f6ece9, #2e1e25);
+
+    --sidebar: light-dark(#ffffff, #22151b);
+    --sidebar-hover: light-dark(#faf4f2, #2a1b22);
+    --sidebar-selected: light-dark(#f8dce8, #4a2333);
+    --sidebar-text: light-dark(#5b4450, #d3bcc4);
+
+    /* Accent (selection, focus, links, mentions) and filled actions, as Android's primary and action. */
+    --accent: light-dark(#a12460, #ff9dc5);
+    --accent-hover: light-dark(#7a1747, #ffb3d2);
+    --accent-soft: light-dark(#fbe4ee, #47202f);
+    --accent-text: light-dark(#a12460, #ffb3d2);
+    --on-accent: light-dark(#ffffff, #3a0a1e);
+    --accent-2: light-dark(#a12460, #ff8db8);
+    --action: light-dark(#a12460, #b23a70);
+    --action-hover: light-dark(#7a1747, color-mix(in srgb, #b23a70 85%, #ffffff));
+    --on-action: light-dark(#ffffff, #ffffff);
+    --mention-bg: light-dark(#fbe4ee, #47202f);
+    --mention-text: light-dark(#7a1747, #ffc6dd);
+    --bubble-out: light-dark(#fbe3ec, #4a2333);
+    --badge: light-dark(#b4281e, #ff8a7a);
+    --on-badge: light-dark(#ffffff, #2d0905);
+    --rail-badge: light-dark(#b4281e, #ff8a7a);
+    --on-rail-badge: light-dark(#ffffff, #2d0905);
+    --accent-start: light-dark(#b83a1e, #ffae7a);
+    --accent-end: light-dark(#a12460, #ff8db8);
+    /* The browser's frame colour (src/app/prefs.ts picks one; a light-dark() value can't go in a <meta>). */
+    --theme-color-light: #fde2e0;
+    --theme-color-dark: #3a1b28;
+  }
+
+  /* Meadow: mint frame with green actions. */
+  :root[data-palette="meadow"] {
+    /* Neutrals, tinted like Android's preset. */
+    --bg: light-dark(#f3f8f4, #08130d);
+    --surface: light-dark(#ffffff, #0f1d15);
+    --surface-raised: light-dark(#ffffff, #18291f);
+    --surface-sunken: light-dark(#e8f1ea, #08130d);
+    --surface-hover: light-dark(#f1f7f2, #15251c);
+    --surface-selected: light-dark(#d5eedc, #1a4029);
+    --border: light-dark(#d7e4da, #22372a);
+    --border-strong: light-dark(#bccbc0, #385041);
+    --hairline: light-dark(rgba(15, 30, 21, 0.08), rgba(255, 255, 255, 0.08));
+    --text: light-dark(#0f1e15, #e9f4ec);
+    --text-2: light-dark(#3e5246, #afc6b6);
+    --text-3: light-dark(#536759, #91aa99);
+    --outline: light-dark(#7e9284, #6c8a76);
+
+    /* The frame (rail and top bar): Android's header. */
+    --rail: light-dark(#d7f3dd, #0f2d22);
+    --rail-2: light-dark(#cbefd8, #0e2a26);
+    --rail-hover: light-dark(rgba(15, 30, 21, 0.06), rgba(255, 255, 255, 0.07));
+    --rail-active: light-dark(#d5eedc, #1a4029);
+    --rail-text: light-dark(#3e5246, #afc6b6);
+    --rail-text-active: light-dark(#0f1e15, #e9f4ec);
+    --rail-line: light-dark(#d7e4da, #22372a);
+    --rail-input: light-dark(rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.1));
+    --rail-input-hover: light-dark(#e8f1ea, #18291f);
+
+    --sidebar: light-dark(#ffffff, #0f1d15);
+    --sidebar-hover: light-dark(#f1f7f2, #15251c);
+    --sidebar-selected: light-dark(#d5eedc, #1a4029);
+    --sidebar-text: light-dark(#3e5246, #afc6b6);
+
+    /* Accent (selection, focus, links, mentions) and filled actions, as Android's primary and action. */
+    --accent: light-dark(#0e7340, #6edb9e);
+    --accent-hover: light-dark(#0a5730, #8ae5b2);
+    --accent-soft: light-dark(#ddf3e4, #173b27);
+    --accent-text: light-dark(#0e7340, #8ae5b2);
+    --on-accent: light-dark(#ffffff, #052414);
+    --accent-2: light-dark(#0b6b5e, #5ed6c8);
+    --action: light-dark(#0e7340, #17804a);
+    --action-hover: light-dark(#0a5730, color-mix(in srgb, #17804a 85%, #ffffff));
+    --on-action: light-dark(#ffffff, #ffffff);
+    --mention-bg: light-dark(#ddf3e4, #173b27);
+    --mention-text: light-dark(#0a5730, #a5eec4);
+    --bubble-out: light-dark(#dcf1e2, #164a2e);
+    --badge: light-dark(#0e6b3a, #6edb9e);
+    --on-badge: light-dark(#ffffff, #052414);
+    --rail-badge: light-dark(#0e6b3a, #6edb9e);
+    --on-rail-badge: light-dark(#ffffff, #052414);
+    --accent-start: light-dark(#0e7340, #6edb9e);
+    --accent-end: light-dark(#0b6b5e, #5ed6c8);
+    /* The browser's frame colour (src/app/prefs.ts picks one; a light-dark() value can't go in a <meta>). */
+    --theme-color-light: #d7f3dd;
+    --theme-color-dark: #0f2d22;
   }
 }

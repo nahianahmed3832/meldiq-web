@@ -9,7 +9,7 @@ import { IntroPages } from "../auth/IntroPages";
 import { BackgroundNotifications } from "./BackgroundNotifications";
 
 const THEME_LABELS: Record<Prefs["theme"], string> = { system: "System", light: "Light", dark: "Dark" };
-const PALETTE_LABELS: Record<Palette, string> = { indigo: "Indigo", plum: "Plum", amber: "Amber" };
+const PALETTE_LABELS: Record<Palette, string> = { graphite: "Graphite", aurora: "Aurora", sunset: "Sunset", meadow: "Meadow" };
 const TEXT_SIZE_LABELS: Record<TextSize, string> = { small: "Small", default: "Default", large: "Large" };
 
 export function NotificationsPage() {
@@ -114,7 +114,7 @@ export function AppearancePage() {
         <div className="setting">
           <div className="lines">
             <strong>Colour</strong>
-            <small>The frame, sidebar and highlights. Messages stay on a calm, neutral background.</small>
+            <small>The same colour presets as the Android app: the whole look, in light and dark.</small>
           </div>
           <div className="palette-picker" role="radiogroup" aria-label="Colour">
             {PALETTES.map((p) => (
