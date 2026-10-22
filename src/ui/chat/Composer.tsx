@@ -1,4 +1,7 @@
 import { AtSign, BarChart3, FileUp, Lock, MapPin, Mic, Paperclip, ScrollText, SendHorizontal, Smile, Sparkles, UserRound, X } from "lucide-react";
+import { useExpressions } from "../community/CustomEmoji";
+import { forSending, refOf } from "../../sync/expressions";
+import type { CustomEmojiRef } from "../../protocol/payload";
 import { type ClipboardEvent, type DragEvent, useCallback, useEffect, useRef, useState } from "react";
 import type { Conversation, Member } from "../../api/schemas";
 import { useEngine } from "../../app/orbit";
@@ -63,6 +66,9 @@ export function Composer(props: ComposerProps) {
   const ai = useAiStatus(c.orgId ?? null);
   const canRecord = !props.threadRoot && voiceMime() !== null;
   const draftTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
+  // Batch B9: a community's own emoji and stickers in its channels; the ones picked for this message by name.
+  const communityEmoji = useExpressions(c.type === "CHANNEL" ? c.orgId : null);
+  const picked = useRef(new Map<string, CustomEmojiRef>());
   // Batch B3 slowmode: when this person may post next (the server's answer, or one interval after their last message).
   const slowed = c.type === "CHANNEL" && c.slowmodeSec > 0 && !c.slowmodeExempt;
   const [lastSent, setLastSent] = useState(0);
@@ -173,7 +179,11 @@ export function Composer(props: ComposerProps) {
             onProgress: (name, p) => setBusy(`${p.phase === "hashing" ? "Encrypting" : "Uploading"} ${name}… ${Math.floor((100 * p.done) / Math.max(1, p.total))}%`),
           },
         );
-      } else await engine.sendText(c.id, body, opts);
+      } else {
+        // Batch B9: the community emoji the text still names go with it (id, community and image hash).
+        const customEmoji = forSending(body, picked.current.values());
+        await engine.sendText(c.id, body, customEmoji.length ? { ...opts, rich: { customEmoji } } : opts);
+      }
       if (slowed && !props.threadRoot) setLastSent(Date.now());
       setFiles([]);
       props.onCancelReply();
@@ -450,6 +460,26 @@ export function Composer(props: ComposerProps) {
             {
               custom: (
                 <EmojiPicker
+                  community={
+                    communityEmoji
+                      ? {
+                          list: communityEmoji,
+                          onEmoji: (e) => {
+                            emoji.close();
+                            picked.current.set(e.name, refOf(e));
+                            onChange(`${text}${text && !text.endsWith(" ") ? " " : ""}:${e.name}: `);
+                            input.current?.focus();
+                          },
+                          onSticker: (e) => {
+                            emoji.close();
+                            void engine
+                              .sendText(c.id, `:${e.name}:`, { rich: { customSticker: refOf(e) }, replyTo: props.replyTo?.id, threadRoot: props.threadRoot })
+                              .then(() => props.onCancelReply())
+                              .catch((err: unknown) => engine.notice("error", err instanceof Error ? err.message : "Couldn't send the sticker."));
+                          },
+                        }
+                      : undefined
+                  }
                   onPick={(em) => {
                     emoji.close();
                     onChange(text + em);

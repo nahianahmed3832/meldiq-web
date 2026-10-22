@@ -28,6 +28,8 @@ import {
   Video,
 } from "lucide-react";
 import { memo, useState } from "react";
+import { CustomEmojiImage, ReactionEmoji, useExpressions } from "../community/CustomEmoji";
+import { reactionName } from "../../sync/expressions";
 import { useEngine, useOrbit } from "../../app/orbit";
 import { PERSONAL } from "../../sync/navPrefs";
 import { RemindMeDialog } from "../later/RemindMeDialog";
@@ -89,6 +91,13 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
   const [reminding, setReminding] = useState(false);
   const [reporting, setReporting] = useState(false);
   const reportable = useOrbit((st) => st.server?.features.includes("reports") ?? false);
+  const inCommunity = useOrbit((st) => {
+    const c = st.conversations[m.conversationId];
+    return c?.type === "CHANNEL" && c.orgId ? c.orgId : null;
+  });
+  // Batch B12: community emoji reactions are drawn from the community's current emoji (only loaded where used).
+  const hasCustomReaction = Object.keys(m.reactions).some((e) => reactionName(e) !== null);
+  const communityEmoji = useExpressions(hasCustomReaction || inCommunity ? inCommunity : null);
   const conv = useOrbit((st) => st.conversations[m.conversationId]);
   const orgName = useOrbit((st) => (conv?.orgId ? (st.orgs.find((o) => o.id === conv.orgId)?.name ?? null) : null));
   // Saved for later (android Home › Later): synced in the personal document when the server keeps saved items.
@@ -123,7 +132,7 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
     if (m.deleted) return <span className="msg-deleted">This message was deleted.</span>;
     if (editing) return <EditBox m={m} onDone={() => setEditing(false)} />;
     // A poll, contact, location, sticker or animated emoji is the message itself: no card under it (android MessageBubble).
-    const structured = !!(m.rich?.poll || m.rich?.contact || m.rich?.location || m.rich?.sticker || m.rich?.animoji);
+    const structured = !!(m.rich?.poll || m.rich?.contact || m.rich?.location || m.rich?.sticker || m.rich?.animoji || m.rich?.customSticker);
     const mediaLink = mediaCards && !structured ? findMediaLink(m.text) : null;
     return (
       <>
@@ -146,6 +155,11 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
         ) : m.rich?.sticker ? (
           <div>
             <StickerView sticker={m.rich.sticker} fallback={m.text} />
+            {mine && <Status m={m} onRetry={() => void engine.retry(m.id)} onReview={p.onReview} />}
+          </div>
+        ) : m.rich?.customSticker ? (
+          <div>
+            <CustomEmojiImage id={m.rich.customSticker.id} name={m.rich.customSticker.name} sha256={m.rich.customSticker.sha256} sticker />
             {mine && <Status m={m} onRetry={() => void engine.retry(m.id)} onReview={p.onReview} />}
           </div>
         ) : m.rich?.animoji ? (
@@ -174,7 +188,7 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
           </a>
         ) : m.text ? (
           <div className={`msg-text${isEmojiOnly(m.text) ? " big-emoji" : ""}`}>
-            <RichText text={m.text} mentionNames={p.mentionNames} myUsername={p.myUsername} />
+            <RichText text={m.text} mentionNames={p.mentionNames} myUsername={p.myUsername} customEmoji={m.rich?.customEmoji} />
             {m.editedAt && <span className="msg-meta">(edited)</span>}
             {translation && <TranslationView text={translation} onHide={() => setTranslation(null)} />}
             {mine && <Status m={m} onRetry={() => void engine.retry(m.id)} onReview={p.onReview} />}
@@ -252,7 +266,7 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
                 onClick={() => void engine.react(m, emoji)}
                 aria-label={`${emoji} ${users.length}, ${users.includes(p.myUserId) ? "remove your reaction" : "react"}`}
               >
-                <span>{emoji}</span>
+                <span>{reactionName(emoji) ? <ReactionEmoji name={reactionName(emoji)!} list={communityEmoji} /> : emoji}</span>
                 {users.length}
               </button>
             ))}
@@ -303,6 +317,7 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
             {
               custom: (
                 <EmojiPicker
+                  community={communityEmoji ? { list: communityEmoji, reactions: true } : undefined}
                   onPick={(e) => {
                     picker.close();
                     void engine.react(m, e);

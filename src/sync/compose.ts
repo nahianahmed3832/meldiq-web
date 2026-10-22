@@ -7,7 +7,7 @@ import type { Member } from "../api/schemas";
 import { resolveMentions } from "./mentions";
 import { applyPin, applyReaction } from "./rules";
 import { applyClose, applyVote } from "./polls";
-import { isReaction } from "../emoji/rules";
+import { reactionAllowed } from "./expressions";
 import { contactWire } from "./rich";
 
 /** What sending needs from the engine. */
@@ -132,7 +132,8 @@ export class Compose {
   }
 
   async react(m: StoredMessage, emoji: string): Promise<void> {
-    if (!this.canPost(m.conversationId) || !isReaction(emoji)) return;
+    const conv = this.host.state().conversations[m.conversationId];
+    if (!this.canPost(m.conversationId) || !reactionAllowed(emoji, conv?.type === "CHANNEL" && !!conv.orgId)) return;
     const fresh = (await this.host.store.message(m.id)) ?? m;
     const add = !(fresh.reactions[emoji] ?? []).includes(this.host.device.userId);
     const next = applyReaction(fresh, this.host.device.userId, emoji, add);
