@@ -36,6 +36,8 @@ export interface ProfileChange {
   birthday?: string | null;
   phone?: string | null;
   username?: string;
+  /** Batch B12: shown after the username, under the same privacy setting as the bio. */
+  pronouns?: string | null;
 }
 
 export async function updateMyProfile(engine: Engine, change: ProfileChange): Promise<MyProfile> {

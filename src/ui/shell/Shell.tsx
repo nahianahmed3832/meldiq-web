@@ -14,6 +14,8 @@ import { SearchDialog } from "../dialogs/SearchDialog";
 import { CreateCommunityDialog } from "../community/CreateCommunityDialog";
 import { DiscoverDialog } from "../community/DiscoverDialog";
 import { JOIN_INVITE_EVENT } from "../chat/inAppLinks";
+import { OPEN_PROFILE_EVENT, ProfileDialog } from "../people/ProfileDialog";
+import { ConnectionsDialog, MessageRequestsDialog } from "../people/ConnectionsDialog";
 import { ActivityView } from "../views/ActivityView";
 import { LaterView } from "../later/LaterView";
 import { HomeView } from "../views/HomeView";
@@ -36,6 +38,8 @@ export type ShellDialog =
   | { kind: "createWorkspace" }
   | { kind: "joinWorkspace"; code?: string }
   | { kind: "discover" }
+  | { kind: "connections" }
+  | { kind: "requests" }
   | null;
 
 /**
@@ -95,6 +99,17 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
       navigate({ section: isFullPage(route.section) ? "home" : route.section }, true);
     }
   }, [synced, known, route.conversationId, route.section, engine]);
+
+  // Someone's profile, opened from a name or a member list anywhere.
+  const [profile, setProfile] = useState<{ userId: string; name: string } | null>(null);
+  useEffect(() => {
+    const onOpen = (e: Event) => {
+      const d = (e as CustomEvent<{ userId: string; name?: string }>).detail;
+      if (d?.userId) setProfile({ userId: d.userId, name: d.name ?? "Profile" });
+    };
+    window.addEventListener(OPEN_PROFILE_EVENT, onOpen);
+    return () => window.removeEventListener(OPEN_PROFILE_EVENT, onOpen);
+  }, []);
 
   // An invite link clicked inside a chat opens Join with its code (batch B4b).
   useEffect(() => {
@@ -177,6 +192,9 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
       {dialog?.kind === "newGroup" && <NewGroupDialog onClose={() => setDialog(null)} />}
       {dialog?.kind === "createWorkspace" && (communities ? <CreateCommunityDialog onClose={() => setDialog(null)} /> : <CreateWorkspaceDialog onClose={() => setDialog(null)} />)}
       {dialog?.kind === "discover" && <DiscoverDialog onClose={() => setDialog(null)} />}
+      {dialog?.kind === "connections" && <ConnectionsDialog onClose={() => setDialog(null)} />}
+      {dialog?.kind === "requests" && <MessageRequestsDialog onClose={() => setDialog(null)} />}
+      {profile && <ProfileDialog key={profile.userId} userId={profile.userId} fallbackName={profile.name} onClose={() => setProfile(null)} />}
       {dialog?.kind === "joinWorkspace" && <JoinWorkspaceDialog initialCode={dialog.code} onClose={() => setDialog(null)} />}
     </div>
   );

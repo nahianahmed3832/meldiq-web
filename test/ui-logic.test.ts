@@ -39,6 +39,7 @@ const conv = (over: Partial<Conversation>): Conversation => ({
   slowmodeSec: 0,
   slowmodeExempt: false,
   nextPostAt: null,
+  request: null,
   ...over,
 });
 
@@ -109,6 +110,8 @@ describe("formatting", () => {
           role: null,
           orgRole: null,
           online: null,
+          presence: null,
+          pronouns: null,
         },
         {
           id: "u2",
@@ -123,6 +126,8 @@ describe("formatting", () => {
           role: null,
           orgRole: null,
           online: true,
+          presence: null,
+          pronouns: null,
         },
       ],
     });

@@ -172,3 +172,61 @@ button.chip[aria-pressed="true"] {
   border-color: var(--accent);
   color: var(--accent-text);
 }
+
+/* Presence (batch B6b): idle is amber, do not disturb red, like the phone's PresenceDot. */
+.avatar .presence.on.idle {
+  background: var(--warning, #d08a1c);
+}
+.avatar .presence.on.dnd {
+  background: var(--danger);
+}
+.presence-line {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  color: var(--text-2);
+}
+.presence-line .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--success);
+}
+.presence-line .dot.idle {
+  background: var(--warning, #d08a1c);
+}
+.presence-line .dot.dnd {
+  background: var(--danger);
+}
+
+/* Names and avatars in messages and member lists open the person's profile. */
+.msg-name,
+.person-name {
+  font: inherit;
+  font-weight: 700;
+  color: inherit;
+  text-align: left;
+  padding: 0;
+  cursor: pointer;
+}
+.person-name {
+  font-weight: 500;
+}
+.msg-name:hover,
+.person-name:hover {
+  text-decoration: underline;
+}
+.msg-avatar-btn {
+  padding: 0;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.request-bar {
+  display: grid;
+  gap: 10px;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--surface);
+}

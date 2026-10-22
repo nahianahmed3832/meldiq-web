@@ -1,6 +1,7 @@
 import { BellOff, Clock } from "lucide-react";
 import { type FormEvent, useState } from "react";
 import { ApiError } from "../../api/client";
+import { currentPresence, PRESENCE_DURATIONS, PRESENCE_LABEL, PRESENCE_MODES, type PresenceMode, setPresence } from "../../sync/social";
 import { useEngine, useOrbit } from "../../app/orbit";
 import {
   CLEAR_AFTER_LABEL,
@@ -156,6 +157,69 @@ export function PauseDialog({ onClose }: { onClose: () => void }) {
             <span className="grow">{PAUSE_LABEL[k]}</span>
           </button>
         ))}
+      </div>
+    </Dialog>
+  );
+}
+
+/**
+ * Presence (batch B6b, android PresenceSheet): Online (automatic), Idle, Do not disturb (also pauses notifications on
+ * every device for as long), Invisible (offline to everyone, last seen unchanged); for 1 hour to 7 days or until changed.
+ */
+export function PresenceDialog({ onClose }: { onClose: () => void }) {
+  const engine = useEngine();
+  const me = useOrbit((s) => s.me);
+  const current = currentPresence(me?.presenceMode, me?.presenceUntil, Date.now());
+  const [mode, setMode] = useState<PresenceMode>(current);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const choose = (ms: number | null) => {
+    setBusy(true);
+    setError(null);
+    setPresence(engine, mode, mode === "auto" || ms === null ? null : Date.now() + ms, current === "dnd")
+      .then(onClose)
+      .catch((e: unknown) => setError(e instanceof ApiError ? e.message : "Couldn't change your presence."))
+      .finally(() => setBusy(false));
+  };
+  return (
+    <Dialog title="Presence" onClose={onClose}>
+      <div className="dialog-body">
+        {error && (
+          <div className="banner danger" role="alert">
+            {error}
+          </div>
+        )}
+        <div role="radiogroup" aria-label="How you appear" style={{ display: "grid", gap: 2 }}>
+          {PRESENCE_MODES.map((m) => (
+            <button key={m} role="radio" aria-checked={mode === m} aria-pressed={mode === m} className="list-row" onClick={() => setMode(m)}>
+              <span className={`presence-line`}>
+                <span className={`dot${m === "idle" ? " idle" : m === "dnd" ? " dnd" : ""}`} style={m === "invisible" ? { background: "var(--presence-off)" } : undefined} aria-hidden />
+              </span>
+              <span className="lines">
+                <span style={{ fontWeight: 600 }}>{PRESENCE_LABEL[m].label}</span>
+                <small>{PRESENCE_LABEL[m].hint}</small>
+              </span>
+            </button>
+          ))}
+        </div>
+        {mode === "auto" ? (
+          <div className="row" style={{ justifyContent: "flex-end" }}>
+            <button className="btn btn-primary" disabled={busy} onClick={() => choose(null)}>
+              Save
+            </button>
+          </div>
+        ) : (
+          <>
+            <h3 className="ws-subhead">For how long</h3>
+            <div className="row" style={{ gap: 6, flexWrap: "wrap" }}>
+              {PRESENCE_DURATIONS.map((d) => (
+                <button key={d.label} className="btn btn-secondary btn-sm" disabled={busy} onClick={() => choose(d.ms)}>
+                  {d.label}
+                </button>
+              ))}
+            </div>
+          </>
+        )}
       </div>
     </Dialog>
   );

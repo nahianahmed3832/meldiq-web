@@ -19,7 +19,8 @@ export function ProfilePage() {
   const [version, setVersion] = useState(0);
   const profile = useLoad(() => myProfile(engine), [engine, version]);
   const address = useLoad(() => networkAddress(engine), [engine]);
-  const [form, setForm] = useState({ displayName: "", firstName: "", lastName: "", username: "", statusText: "", birthday: "", phone: "" });
+  const [form, setForm] = useState({ displayName: "", firstName: "", lastName: "", username: "", statusText: "", birthday: "", phone: "", pronouns: "" });
+  const pronounsOffered = useOrbit((s) => s.server?.features.includes("pronouns") ?? false);
   const [saved, setSaved] = useState(false);
   const save = useAction();
   const photo = useAction();
@@ -36,6 +37,7 @@ export function ProfilePage() {
       statusText: p.statusText ?? "",
       birthday: p.birthday ?? "",
       phone: p.phone ?? "",
+      pronouns: p.pronouns ?? "",
     });
   }, [p]);
 
@@ -53,6 +55,7 @@ export function ProfilePage() {
         lastName: form.lastName.trim() || null,
         birthday: form.birthday.trim() || null,
         phone: form.phone.trim() || null,
+        ...(pronounsOffered ? { pronouns: form.pronouns.trim() || null } : {}),
         ...(form.username.trim() !== p.username ? { username: form.username.trim() } : {}),
       };
       // An Orbit 2.0 account keeps its name and the encryption identity's display name together (PATCH /v2/account).
@@ -115,6 +118,12 @@ export function ProfilePage() {
             <span>Last name</span>
             <input className="input" maxLength={40} autoComplete="family-name" {...field("lastName")} />
           </label>
+          {pronounsOffered && (
+            <label className="field">
+              <span>Pronouns (optional)</span>
+              <input className="input" maxLength={40} placeholder="e.g. she/her" {...field("pronouns")} />
+            </label>
+          )}
           <label className="field ws-wide">
             <span>Bio</span>
             <input className="input" maxLength={140} placeholder="What are you up to?" {...field("statusText")} />

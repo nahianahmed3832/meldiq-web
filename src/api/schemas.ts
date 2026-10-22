@@ -33,6 +33,14 @@ export const zMember = z.object({
     .boolean()
     .nullish()
     .transform((v) => v ?? null),
+  /** Batch B6b: online, idle, do not disturb or offline, where their last-seen setting lets you see it. */
+  presence: z
+    .enum(["online", "idle", "dnd", "offline"])
+    .nullish()
+    .catch(null)
+    .transform((v) => v ?? null),
+  /** Batch B12: pronouns, under the same privacy setting as the bio. */
+  pronouns: nullableString,
 });
 export type Member = z.infer<typeof zMember>;
 
@@ -109,6 +117,11 @@ export const zConversation = z.object({
   /** Voice channels: whether this person may join the call, and speak in it (listen-only otherwise). */
   canConnect: z.boolean().optional(),
   canSpeak: z.boolean().optional(),
+  /** Batch B6: a message request (DMs): waiting for you ([incoming]), or yours waiting for them with how many you sent. */
+  request: z
+    .object({ state: z.string(), incoming: z.boolean(), sent: z.number().int().optional(), limit: z.number().int().default(3) })
+    .nullish()
+    .transform((v) => v ?? null),
 });
 export type Conversation = z.infer<typeof zConversation>;
 
@@ -224,6 +237,22 @@ export const zProfile = z.object({
     .nullish()
     .transform((v) => v ?? null),
   lastSeenAt: z
+    .number()
+    .nullish()
+    .transform((v) => v ?? null),
+  presence: z
+    .enum(["online", "idle", "dnd", "offline"])
+    .nullish()
+    .catch(null)
+    .transform((v) => v ?? null),
+  pronouns: nullableString,
+  /** Your own profile: your presence choice and until when (batch B6b). */
+  presenceMode: z
+    .enum(["auto", "idle", "dnd", "invisible"])
+    .nullish()
+    .catch(null)
+    .transform((v) => v ?? null),
+  presenceUntil: z
     .number()
     .nullish()
     .transform((v) => v ?? null),

@@ -57,16 +57,24 @@ export function isMuted(s: AppState, c: Conversation): boolean {
   return levelOf(s.nav[workspaceOf(c.orgId)], c.id, c.categoryId) === "none";
 }
 
-/** Direct messages and groups, newest first, without the ones archived here. */
+/** Batch B6: a message request waiting for you, listed apart (DMs › Message requests) with no badge. */
+export const isRequest = (c: Conversation): boolean => c.request?.incoming === true;
+
+/** Message requests waiting for this person, newest first. */
+export function messageRequests(s: AppState): Conversation[] {
+  return Object.values(s.conversations).filter(isRequest).sort(byActivity(s));
+}
+
+/** Direct messages and groups, newest first, without the ones archived here or requests waiting for you. */
 export function people(s: AppState): Conversation[] {
   return Object.values(s.conversations)
-    .filter((c) => isPeople(c) && !isArchived(s, c.id))
+    .filter((c) => isPeople(c) && !isArchived(s, c.id) && !isRequest(c))
     .sort(byActivity(s));
 }
 
 export function archivedPeople(s: AppState): Conversation[] {
   return Object.values(s.conversations)
-    .filter((c) => isPeople(c) && isArchived(s, c.id))
+    .filter((c) => isPeople(c) && isArchived(s, c.id) && !isRequest(c))
     .sort(byActivity(s));
 }
 
@@ -76,7 +84,7 @@ export function unreadOf(s: AppState, id: string): number {
 
 /** Unread direct messages and groups (archived and muted ones aside). */
 export function unreadPeopleCount(s: AppState): number {
-  return Object.values(s.conversations).filter((c) => isPeople(c) && unreadOf(s, c.id) > 0 && !isArchived(s, c.id) && !isMuted(s, c)).length;
+  return Object.values(s.conversations).filter((c) => isPeople(c) && unreadOf(s, c.id) > 0 && !isArchived(s, c.id) && !isMuted(s, c) && !isRequest(c)).length;
 }
 
 export interface HomeSection {

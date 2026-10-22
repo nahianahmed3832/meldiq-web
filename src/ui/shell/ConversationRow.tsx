@@ -25,9 +25,7 @@ import { useEngine, useOrbit } from "../../app/orbit";
 import { navigate, useRoute } from "../../app/router";
 import type { ConversationLocal } from "../../model/types";
 import { levelOf, newSectionId, type NotifyLevel, placeOf, workspaceOf } from "../../sync/navPrefs";
-import { colorIndexOf } from "../components/Avatar";
-import { UserAvatar } from "../components/OrgAvatar";
-import { Avatar } from "../components/Avatar";
+import { GroupAvatar, UserAvatar } from "../components/OrgAvatar";
 import { Dialog, Menu, type MenuEntry, useMenu } from "../components/Overlay";
 import { conversationTitle, dmPeer, shortWhen } from "../format";
 import { isMuted, isPeople } from "../selectors";
@@ -56,6 +54,7 @@ export const ConversationRow = memo(function ConversationRow({ id, twoLine, hide
         local: s.local[id] as ConversationLocal | undefined,
         title: conversationTitle(c, s.me.userId, s.users),
         online: peer ? (s.users[peer.id]?.online ?? null) : null,
+        presence: peer ? (s.users[peer.id]?.presence ?? null) : null,
         peerId: peer?.id ?? null,
         peerColor: peer?.avatarColor ?? 0,
         peerPhoto: peer ? (s.users[peer.id]?.photoRev ?? null) : null,
@@ -63,10 +62,20 @@ export const ConversationRow = memo(function ConversationRow({ id, twoLine, hide
         muted: isMuted(s, c),
       };
     },
-    (a, b) => !!a && !!b && a.c === b.c && a.local === b.local && a.title === b.title && a.online === b.online && a.typing === b.typing && a.muted === b.muted && a.peerPhoto === b.peerPhoto,
+    (a, b) =>
+      !!a &&
+      !!b &&
+      a.c === b.c &&
+      a.local === b.local &&
+      a.title === b.title &&
+      a.online === b.online &&
+      a.presence === b.presence &&
+      a.typing === b.typing &&
+      a.muted === b.muted &&
+      a.peerPhoto === b.peerPhoto,
   );
   if (!data) return null;
-  const { c, local, title, online, peerId, peerColor, peerPhoto, typing, muted } = data;
+  const { c, local, title, online, presence, peerId, peerColor, peerPhoto, typing, muted } = data;
   const unread = local?.unread ?? 0;
   const mentions = local?.mentions ?? 0;
   const current = route.conversationId === id;
@@ -82,9 +91,9 @@ export const ConversationRow = memo(function ConversationRow({ id, twoLine, hide
         <Hash size={16} />
       )
     ) : c.type === "GROUP" ? (
-      <Avatar name={title} colorIndex={colorIndexOf(c.id)} size={twoLine ? 36 : 22} decorative />
+      <GroupAvatar conversationId={c.id} name={title} photoRev={c.photoRev} size={twoLine ? 36 : 22} />
     ) : (
-      <UserAvatar userId={peerId ?? ""} name={title} colorIndex={peerColor} photoRev={peerPhoto} size={twoLine ? 36 : 22} online={online} decorative />
+      <UserAvatar userId={peerId ?? ""} name={title} colorIndex={peerColor} photoRev={peerPhoto} size={twoLine ? 36 : 22} online={online} presence={presence} decorative />
     );
   const label = `${c.type === "CHANNEL" ? "Channel " : ""}${title}${unread ? `, ${unread} unread` : ""}${mentions ? `, ${mentions} mentions` : ""}${muted ? ", muted" : ""}`;
   const count = unread > 0 && <span className={`count${!muted && (mentions > 0 || c.type !== "CHANNEL") ? " accent" : ""}`}>{mentions > 0 ? `@${mentions}` : unread}</span>;

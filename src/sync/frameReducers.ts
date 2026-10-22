@@ -14,8 +14,12 @@ export function typingFrame(s: AppState, conversationId: string, userId: string,
   return { ...s, typing: { ...s.typing, [conversationId]: cur } };
 }
 
-export function presenceFrame(s: AppState, userId: string, online: boolean): AppState {
-  return s.users[userId] ? { ...s, users: { ...s.users, [userId]: { ...s.users[userId], online } } } : s;
+const SHOWN = ["online", "idle", "dnd", "offline"] as const;
+
+/** Someone's presence changed: online or not, and (batch B6b) idle or do not disturb. */
+export function presenceFrame(s: AppState, userId: string, online: boolean, presence: string | null = null): AppState {
+  const shown = (SHOWN as readonly string[]).includes(presence ?? "") ? (presence as (typeof SHOWN)[number]) : online ? "online" : "offline";
+  return s.users[userId] ? { ...s, users: { ...s.users, [userId]: { ...s.users[userId], online, presence: shown } } } : s;
 }
 
 /** A workspace was deleted: it and its conversations disappear. */

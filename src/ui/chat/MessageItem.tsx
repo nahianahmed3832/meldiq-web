@@ -53,6 +53,7 @@ import { findMediaLink } from "../../sync/mediaLinks";
 import { usePrefs } from "../../app/prefs";
 import { EmojiPicker } from "./EmojiPicker";
 import { ReportDialog } from "./ReportDialog";
+import { openProfile } from "../people/ProfileDialog";
 import { canLink, messageLink } from "../../sync/messageLinks";
 
 export const QUICK_EMOJI = ["👍", "❤️", "😂", "🎉", "🙏", "👀"];
@@ -215,12 +216,20 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
       tabIndex={-1}
     >
       <div className="msg-gutter">
-        {p.first ? <Avatar name={p.senderName} colorIndex={p.senderColor} size={38} decorative /> : <time dateTime={new Date(m.sortTs).toISOString()}>{clock(m.sortTs)}</time>}
+        {p.first ? (
+          <button className="msg-avatar-btn" onClick={() => openProfile(m.senderUserId, p.senderName)} aria-label={`${p.senderName}'s profile`} tabIndex={-1}>
+            <Avatar name={p.senderName} colorIndex={p.senderColor} size={38} decorative />
+          </button>
+        ) : (
+          <time dateTime={new Date(m.sortTs).toISOString()}>{clock(m.sortTs)}</time>
+        )}
       </div>
       <div className="msg-main">
         {p.first && (
           <div className="msg-head">
-            <strong className="ellipsis">{p.senderName}</strong>
+            <button className="msg-name ellipsis" onClick={() => openProfile(m.senderUserId, p.senderName)}>
+              {p.senderName}
+            </button>
             <time dateTime={new Date(m.sortTs).toISOString()} title={fullTime(m.sortTs)}>
               {clock(m.sortTs)}
             </time>

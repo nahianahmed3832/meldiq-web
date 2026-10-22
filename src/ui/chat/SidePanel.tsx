@@ -1,4 +1,6 @@
 import { BellOff, Fingerprint, Hash, Images, Lock, LogOut, MessageSquare, ShieldCheck, X } from "lucide-react";
+import { GroupPhotoCard } from "../people/GroupPhotoCard";
+import { openProfile } from "../people/ProfileDialog";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { Member } from "../../api/schemas";
 import { useEngine, useOrbit } from "../../app/orbit";
@@ -168,6 +170,7 @@ function DetailsPanel({ conversationId, onClose }: { conversationId: string; onC
           </div>
         )}
 
+        <GroupPhotoCard c={c} title={c.name ?? "Group"} />
         {c.type !== "DM" && (
           <div style={{ display: "grid", gap: 4 }}>
             <div className="panel-section-title">
@@ -179,12 +182,12 @@ function DetailsPanel({ conversationId, onClose }: { conversationId: string; onC
             {!members && !error && <span className="skeleton" style={{ height: 120 }} />}
             {members?.map((m) => (
               <div key={m.id} className="person">
-                <Avatar name={m.displayName} colorIndex={m.avatarColor} size={32} online={m.online} decorative />
+                <Avatar name={m.displayName} colorIndex={m.avatarColor} size={32} online={m.online} presence={m.presence} decorative />
                 <div className="lines grow">
-                  <span className="ellipsis">
+                  <button className="ellipsis person-name" onClick={() => openProfile(m.id, m.displayName)}>
                     {m.displayName}
                     {m.id === me.userId ? " (you)" : ""}
-                  </span>
+                  </button>
                   <small className="ellipsis">
                     @{m.username}
                     {m.role === "ADMIN" ? " · admin" : ""}

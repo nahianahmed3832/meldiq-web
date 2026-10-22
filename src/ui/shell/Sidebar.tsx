@@ -8,7 +8,7 @@ import { OrgAvatar } from "../components/OrgAvatar";
 import { Menu, useMenu } from "../components/Overlay";
 import { members } from "../format";
 import type { ShellDialog } from "./Shell";
-import { ArchivedList, ChannelSections, Collapsible, LaterLink, MentionsLink, PeopleList, PersonalSections, SkeletonRows } from "./SidebarSections";
+import { ArchivedList, ChannelSections, Collapsible, LaterLink, MentionsLink, PeopleExtras, PeopleList, PersonalSections, SkeletonRows } from "./SidebarSections";
 import { VoiceRoomsSection } from "./VoiceRooms";
 import { CommunityHeader, hideMutedKey } from "../community/CommunityHeader";
 import { CommunityPanel } from "../community/CommunityPanel";
@@ -35,6 +35,7 @@ export function Sidebar({ orgId, section, open, onDialog }: SidebarProps) {
   const communities = useOrbit((s) => s.server?.features.includes("community-channels") ?? false);
   const { perms } = useCommunityDetail(communities ? orgId : null);
   const hideMuted = !!orgId && prefs.collapsed.includes(hideMutedKey(orgId));
+  const hasConnections = useOrbit((s) => s.server?.features.includes("connections") ?? false);
 
   return (
     <aside className={`sidebar${open ? " open" : ""}`} aria-label="Conversations">
@@ -114,6 +115,7 @@ export function Sidebar({ orgId, section, open, onDialog }: SidebarProps) {
           <SkeletonRows />
         ) : section === "dms" ? (
           <>
+            <PeopleExtras onRequests={() => onDialog({ kind: "requests" })} onConnections={hasConnections ? () => onDialog({ kind: "connections" }) : undefined} />
             <PeopleList twoLine />
             <ArchivedList />
           </>
@@ -129,6 +131,7 @@ export function Sidebar({ orgId, section, open, onDialog }: SidebarProps) {
               </>
             )}
             <Collapsible id="people" title="Direct messages">
+              <PeopleExtras onRequests={() => onDialog({ kind: "requests" })} />
               <PeopleList unreadOnly={unreadOnly} orgId={orgId} excludePlaced />
               <button className="side-item" onClick={() => onDialog({ kind: "new" })}>
                 <span className="glyph">

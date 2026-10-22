@@ -415,7 +415,7 @@ export class Engine implements EngineContext {
       this.set((s) => {
         const users = { ...s.users };
         for (const c of convs.conversations) for (const m of c.members ?? []) users[m.id] = toUser(m, users[m.id]);
-        users[u.id] = { id: u.id, username: u.username, displayName: u.displayName, avatarColor: u.avatarColor, statusText: u.statusText, online: true, photoRev: u.photoRev };
+        users[u.id] = { id: u.id, username: u.username, displayName: u.displayName, avatarColor: u.avatarColor, statusText: u.statusText, online: true, photoRev: u.photoRev, pronouns: u.pronouns };
         const calls: Record<string, Call> = {};
         for (const c of convs.conversations)
           if (c.activeCall)
@@ -444,6 +444,9 @@ export class Engine implements EngineContext {
             statusEmoji: u.statusEmoji,
             statusExpiresAt: u.statusExpiresAt,
             notificationsPausedUntil: u.notificationsPausedUntil,
+            presenceMode: u.presenceMode,
+            presenceUntil: u.presenceUntil,
+            pronouns: u.pronouns,
           },
           orgs: orgs.orgs,
           conversations: Object.fromEntries(convs.conversations.map((c) => [c.id, c])),
@@ -501,9 +504,12 @@ export class Engine implements EngineContext {
       case "presence": {
         const id = str(f.userId);
         if (!id) return;
-        this.set((s) => presenceFrame(s, id, f.online === true));
+        this.set((s) => presenceFrame(s, id, f.online === true, typeof f.presence === "string" ? f.presence : null));
         return;
       }
+      case "connections.updated":
+        this.set((s) => ({ ...s, connectionsRev: s.connectionsRev + 1 }));
+        return;
       case "conv.updated": {
         const id = str(f.conversationId);
         if (!id) return;
@@ -633,7 +639,20 @@ export class Engine implements EngineContext {
         .then(({ user: u }) =>
           this.set((s) => ({
             ...s,
-            users: { ...s.users, [u.id]: { id: u.id, username: u.username, displayName: u.displayName, avatarColor: u.avatarColor, statusText: u.statusText, online: u.online, photoRev: u.photoRev } },
+            users: {
+              ...s.users,
+              [u.id]: {
+                id: u.id,
+                username: u.username,
+                displayName: u.displayName,
+                avatarColor: u.avatarColor,
+                statusText: u.statusText,
+                online: u.online,
+                photoRev: u.photoRev,
+                presence: u.presence,
+                pronouns: u.pronouns,
+              },
+            },
           })),
         )
         .catch(() => undefined)
@@ -706,6 +725,8 @@ export class Engine implements EngineContext {
    */
   notifyIncoming(m: StoredMessage, conversation: Conversation | null, mention: "me" | "all" | null): void {
     if (!this.opts.notify) return;
+    // Batch B6: a message request arrives without a notification (it waits under DMs › Message requests).
+    if (conversation?.request?.incoming) return;
     const st = this.state.get();
     // Paused from the profile menu (round 3): the message arrives and counts as unread, without a notification.
     if (paused(st.me?.notificationsPausedUntil ?? null, Date.now())) return;
@@ -975,5 +996,7 @@ function toUser(m: Member, prev?: UserLite): UserLite {
     notificationsPaused: m.notificationsPaused,
     online: m.online ?? prev?.online ?? null,
     photoRev: m.photoRev ?? null,
+    presence: m.presence ?? prev?.presence ?? null,
+    pronouns: m.pronouns ?? prev?.pronouns ?? null,
   };
 }

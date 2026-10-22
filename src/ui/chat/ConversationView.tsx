@@ -1,4 +1,7 @@
 import { AppUpdatesBar } from "./AppUpdatesBar";
+import { presenceWords } from "../../sync/social";
+import { GroupAvatar } from "../components/OrgAvatar";
+import { RequestBar, RequestSentBanner } from "../people/RequestBar";
 import { VoiceRoomBanner } from "./VoiceRoomBanner";
 import { SecurityPadlock } from "./SecuritySheet";
 import { PinnedButton } from "./PinnedPanel";
@@ -31,6 +34,8 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
           name: u?.displayName ?? p.displayName,
           color: p.avatarColor,
           online: u?.online ?? null,
+          presence: u?.presence ?? null,
+          pronouns: u?.pronouns ?? null,
           // Round 3: their status, and whether they paused notifications (when their last-seen setting lets you know).
           status: [u?.statusEmoji, u?.statusText].filter((x) => !!x).join(" ") || null,
           paused: u?.notificationsPaused === true,
@@ -62,10 +67,10 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
   const glyph = c.type !== "CHANNEL" ? null : c.voice ? <Headphones size={18} /> : c.kind === "PRIVATE" ? <Lock size={18} /> : c.kind === "ANNOUNCEMENT" ? <Megaphone size={18} /> : <Hash size={19} />;
   const subtitle =
     c.type === "DM"
-      ? [`@${peer?.username ?? ""}`, peer?.online === true ? "online" : null, peer?.status].filter(Boolean).join(" · ")
+      ? [`@${peer?.username ?? ""}`, peer?.pronouns, presenceWords(peer?.presence, peer?.online)?.toLowerCase(), peer?.status].filter(Boolean).join(" · ")
       : c.type === "GROUP"
         ? members(c.memberCount)
-        : [c.topic, members(c.memberCount), online ? `${online} online` : null, c.scope === "ORG" ? null : c.scopeName].filter(Boolean).join(" · ");
+        : [c.topic, members(c.memberCount), online ? `${online} online` : null, c.categoryName ?? (c.scope === "ORG" ? null : c.scopeName)].filter(Boolean).join(" · ");
   const panelOpen = route.panel === "details";
 
   return (
@@ -75,9 +80,9 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
           <ArrowLeft size={19} />
         </button>
         {c.type === "DM" ? (
-          <Avatar name={title} colorIndex={peer?.color ?? 0} size={34} online={peer?.online} decorative />
+          <Avatar name={title} colorIndex={peer?.color ?? 0} size={34} online={peer?.online} presence={peer?.presence} decorative />
         ) : c.type === "GROUP" ? (
-          <Avatar name={title} colorIndex={colorIndexOf(c.id)} size={34} decorative />
+          <GroupAvatar conversationId={c.id} name={title} photoRev={c.photoRev} size={34} />
         ) : null}
         <div className="conv-title">
           <h1>
@@ -92,7 +97,7 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
           <p className="ellipsis">{subtitle}</p>
         </div>
         {/* Calls in a workspace happen in its voice rooms; a text channel has none to start (android round 7). */}
-        {c.type !== "CHANNEL" && <CallButtons conversationId={id} canPost={c.canPost} archived={c.archived} serverCalling={calling} busy={myCall !== null} running={!!call} />}
+        {c.type !== "CHANNEL" && !c.request && <CallButtons conversationId={id} canPost={c.canPost} archived={c.archived} serverCalling={calling} busy={myCall !== null} running={!!call} />}
         {c.type !== "DM" && (
           <button
             className="btn btn-ghost btn-sm"
@@ -124,8 +129,9 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
       </header>
 
       {c.type === "CHANNEL" && <AppUpdatesBar conversationId={id} />}
-      {(alerts.length > 0 || call || c.voice || c.archived || history === "running" || peer?.paused) && (
+      {(alerts.length > 0 || call || c.voice || c.archived || history === "running" || peer?.paused || (c.request && !c.request.incoming)) && (
         <div className="conv-banners">
+          {c.request && !c.request.incoming && <RequestSentBanner conversation={c} />}
           {peer?.paused && (
             <div className="banner" role="status">
               <BellOff size={16} aria-hidden />
@@ -198,15 +204,19 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
         </div>
       )}
 
-      <Composer
-        conversation={c}
-        title={title}
-        replyTo={replyTo}
-        replyName={replyTo ? (replyTo.outgoing ? "yourself" : (users[replyTo.senderUserId]?.displayName ?? "Unknown")) : null}
-        onCancelReply={() => setReplyTo(null)}
-        dropped={drop.dropped}
-        onDroppedTaken={drop.take}
-      />
+      {c.request?.incoming ? (
+        <RequestBar conversation={c} name={title} />
+      ) : (
+        <Composer
+          conversation={c}
+          title={title}
+          replyTo={replyTo}
+          replyName={replyTo ? (replyTo.outgoing ? "yourself" : (users[replyTo.senderUserId]?.displayName ?? "Unknown")) : null}
+          onCancelReply={() => setReplyTo(null)}
+          dropped={drop.dropped}
+          onDroppedTaken={drop.take}
+        />
+      )}
       {drop.over && <div className="drop-overlay">Drop files to send them, encrypted, to {title}</div>}
     </section>
   );
