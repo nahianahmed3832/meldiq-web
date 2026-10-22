@@ -120,8 +120,38 @@ export class NativeMedia {
     return this.received.audio.audibleAt.filter((i) => i > START_UP_FRAMES).length;
   }
 
+  /**
+   * Shares a "screen" of [width]×[height] (a phone in portrait is taller than wide), as the Android app publishes one: a
+   * grey picture with a coloured band on each edge (red top, green bottom, blue left, yellow right), so a crop shows.
+   */
+  async shareScreen(width: number, height: number): Promise<void> {
+    const lk = await rtc();
+    const source = new lk.VideoSource(width, height);
+    const pub = await this.room.localParticipant.publishTrack(lk.LocalVideoTrack.createVideoTrack("screen", source), new lk.TrackPublishOptions({ source: lk.TrackSource.SOURCE_SCREENSHARE }));
+    this.screenSid = pub.sid;
+    const band = Math.max(8, Math.round(Math.min(width, height) / 12));
+    const px = new Uint8Array(width * height * 4);
+    for (let y = 0; y < height; y++)
+      for (let x = 0; x < width; x++) {
+        const rgb = y < band ? [230, 30, 30] : y >= height - band ? [30, 200, 60] : x < band ? [40, 80, 230] : x >= width - band ? [240, 210, 30] : [128, 128, 128];
+        px.set([...rgb, 255], (y * width + x) * 4);
+      }
+    this.screenTimer = setInterval(() => source.captureFrame(new lk.VideoFrame(px, width, height, lk.VideoBufferType.RGBA)), 100);
+  }
+
+  private screenTimer: ReturnType<typeof setInterval> | undefined;
+  private screenSid: string | undefined;
+
+  /** Stops the shared screen, as the phone's Stop sharing does (the track is unpublished). */
+  async stopScreen(): Promise<void> {
+    clearInterval(this.screenTimer);
+    if (this.screenSid) await this.room.localParticipant.unpublishTrack(this.screenSid);
+    this.screenSid = undefined;
+  }
+
   async leave(): Promise<void> {
     clearInterval(this.timer);
+    clearInterval(this.screenTimer);
     await this.room.disconnect().catch(() => undefined);
   }
 }

@@ -5,6 +5,7 @@ import {
   Headphones,
   Info,
   Lock,
+  Maximize,
   Mic,
   MicOff,
   Minimize2,
@@ -26,7 +27,7 @@ import { Toggle } from "../components/Toggle";
 import { Dialog } from "../components/Overlay";
 import { useEffect, useRef, useState } from "react";
 import { useEngine, useOrbit } from "../../app/orbit";
-import { CallFailure } from "../../call/rules";
+import { CallFailure, frameShape } from "../../call/rules";
 import type { CallParticipantView, CallUiState, DeviceKind, MediaDeviceChoice } from "../../call/types";
 import { Avatar } from "../components/Avatar";
 import { Menu, useFocusTrap, useMenu } from "../components/Overlay";
@@ -154,13 +155,15 @@ function Tiles({ participants, hands, ended, title, colorIndex }: { participants
   // A shared screen takes the stage, everyone in a strip under it (android GROUP_CALL_TILES.md); your own share isn't
   // shown back to you (it would show itself), only noted.
   const sharer = participants.find((p) => p.screenOn && !p.isLocal);
+  // A phone shared upright is tall: the people go beside it on a wide window, not under it, so it gets the height.
+  const [shape, setShape] = useState<"portrait" | "landscape" | null>(null);
   if (sharer)
     return (
-      <div className="call-screen-layout">
-        <ScreenView p={sharer} />
+      <div className={`call-screen-layout${shape === "portrait" ? " side" : ""}`}>
+        <ScreenView key={sharer.identity} p={sharer} onShape={setShape} />
         <div className="call-strip" aria-label="People in the call">
           {participants.map((p) => (
-            <Tile key={p.identity} p={p} hand={hands.includes(p.userId)} />
+            <Tile key={p.identity} p={p} hand={hands.includes(p.userId)} compact />
           ))}
         </div>
       </div>
@@ -183,7 +186,7 @@ function Tiles({ participants, hands, ended, title, colorIndex }: { participants
   );
 }
 
-function Tile({ p, hand }: { p: CallParticipantView; hand: boolean }) {
+function Tile({ p, hand, compact = false }: { p: CallParticipantView; hand: boolean; compact?: boolean }) {
   const engine = useEngine();
   const video = useRef<HTMLVideoElement>(null);
   const epoch = useOrbit((s) => s.call.mediaEpoch);
@@ -201,7 +204,7 @@ function Tile({ p, hand }: { p: CallParticipantView; hand: boolean }) {
       {p.cameraOn ? (
         <video ref={video} className={p.mirrored ? "mirrored" : undefined} autoPlay playsInline muted aria-hidden="true" />
       ) : (
-        <Avatar name={p.name} colorIndex={color} size={88} decorative />
+        <Avatar name={p.name} colorIndex={color} size={compact ? 40 : 88} decorative />
       )}
       <figcaption className={`who${p.e2eeProblem ? " problem" : ""}`}>
         {hand && <Hand size={13} aria-hidden="true" className="hand" />}
@@ -214,21 +217,46 @@ function Tile({ p, hand }: { p: CallParticipantView; hand: boolean }) {
   );
 }
 
-function ScreenView({ p }: { p: CallParticipantView }) {
+/**
+ * Someone's shared screen, always whole (contain, never cropped like a camera tile). Its shape follows the frames, so a
+ * phone turned mid-share re-lays the call; it can also go full screen.
+ */
+function ScreenView({ p, onShape }: { p: CallParticipantView; onShape: (shape: "portrait" | "landscape" | null) => void }) {
   const engine = useEngine();
+  const figure = useRef<HTMLElement>(null);
   const video = useRef<HTMLVideoElement>(null);
   const epoch = useOrbit((s) => s.call.mediaEpoch);
   useEffect(() => {
     const el = video.current;
     if (!el) return;
-    return engine.calls.attachScreen(p.identity, el);
-  }, [engine, p.identity, epoch]);
+    const resized = () => onShape(frameShape(el.videoWidth, el.videoHeight));
+    el.addEventListener("resize", resized);
+    el.addEventListener("loadedmetadata", resized);
+    const detach = engine.calls.attachScreen(p.identity, el);
+    return () => {
+      el.removeEventListener("resize", resized);
+      el.removeEventListener("loadedmetadata", resized);
+      detach();
+      onShape(null);
+    };
+  }, [engine, p.identity, epoch, onShape]);
+  const fullScreen = () => {
+    const el = figure.current;
+    if (!el) return;
+    if (document.fullscreenElement) void document.exitFullscreen();
+    else void el.requestFullscreen?.().catch(() => undefined);
+  };
   return (
-    <figure className="call-screen" aria-label={`${p.name}'s screen`} style={{ margin: 0 }}>
+    <figure ref={figure} className="call-screen" aria-label={`${p.name}'s screen`} style={{ margin: 0 }}>
       <video ref={video} autoPlay playsInline muted aria-hidden="true" />
       <figcaption className="who">
         <MonitorUp size={13} aria-hidden="true" /> {p.name} is sharing their screen
       </figcaption>
+      {typeof document !== "undefined" && document.fullscreenEnabled && (
+        <button className="icon-btn call-screen-full" onClick={fullScreen} aria-label="Show the shared screen full screen" title="Full screen">
+          <Maximize size={17} />
+        </button>
+      )}
     </figure>
   );
 }
