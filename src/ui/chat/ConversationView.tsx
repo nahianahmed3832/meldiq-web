@@ -198,15 +198,20 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
         </div>
       )}
 
-      <Composer
-        conversation={c}
-        title={title}
-        replyTo={replyTo}
-        replyName={replyTo ? (replyTo.outgoing ? "yourself" : (users[replyTo.senderUserId]?.displayName ?? "Unknown")) : null}
-        onCancelReply={() => setReplyTo(null)}
-        dropped={drop.dropped}
-        onDroppedTaken={drop.take}
-      />
+      {/* A voice channel is for talking: no messages (meldiq batch B14; the server refuses them too). */}
+      {c.voice ? (
+        <p className="muted" style={{ padding: "12px 16px", margin: 0 }}>Voice channels are for talking only. Join the room to talk.</p>
+      ) : (
+        <Composer
+          conversation={c}
+          title={title}
+          replyTo={replyTo}
+          replyName={replyTo ? (replyTo.outgoing ? "yourself" : (users[replyTo.senderUserId]?.displayName ?? "Unknown")) : null}
+          onCancelReply={() => setReplyTo(null)}
+          dropped={drop.dropped}
+          onDroppedTaken={drop.take}
+        />
+      )}
       {drop.over && <div className="drop-overlay">Drop files to send them, encrypted, to {title}</div>}
     </section>
   );
