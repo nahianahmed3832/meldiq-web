@@ -12,9 +12,9 @@ redirecting there. Docker, MongoDB, the API, OAuth registrations and the Android
 
 | Area | What it is |
 |---|---|
-| Framework | Vite 7 + React 19 + TypeScript 5.9 SPA; npm; hash routes (`src/app/router.ts`): `#/home`, `#/dms`, `#/activity`, `#/settings/<page>`, `#/workspace/<page>` |
+| Framework | Vite 7 + React 19 + TypeScript 5.9 SPA; npm; hash routes (`src/application/router.ts`): `#/home`, `#/dms`, `#/activity`, `#/settings/<page>`, `#/workspace/<page>` |
 | Authentication | Email-and-password accounts (`/v2/auth/*`, `src/auth/`), access token in memory, refresh token sealed in IndexedDB; older phone-linked browsers sign in with their device key (`/v1/auth/login`) |
-| API | `src/api/client.ts`, base from `/config.json` (`src/app/config.ts`): same origin by default, nginx or Vite proxies `/v1` and `/v2` to the existing API |
+| API | `src/api/client.ts`, base from `/config.json` (`src/application/config.ts`): same origin by default, nginx or Vite proxies `/v1` and `/v2` to the existing API |
 | Realtime | One WebSocket `/v1/ws` (first-frame auth), frames `queue`, `typing`, `presence`, `call`, `conv.updated`, `org.updated`, `prefs.updated`, … (`src/realtime/socket.ts`) |
 | Features | DMs, groups, channels, workspaces and administration, synced sections, voice messages, files up to 1 GiB (S3 presigned parts), calls and screen share (LiveKit, frame-encrypted), notifications while a tab is open, profile and privacy |
 | Connectors / OAuth | **None in this repository or on the committed server.** No OAuth callbacks, redirect URIs or connector settings exist here to change |
@@ -27,7 +27,7 @@ redirecting there. Docker, MongoDB, the API, OAuth registrations and the Android
 
 | Area | Change |
 |---|---|
-| Brand in one place | `src/app/brand.ts` (`Meldiq`, `Meldiq Web`, formerly Orbit) |
+| Brand in one place | `src/application/brand.ts` (`Meldiq`, `Meldiq Web`, formerly Orbit) |
 | Logo | The official logo, `brand/meldiq-logo.webp`, is the only source. `scripts/render-brand-assets.ts` crops and scales it into the in-app mark (`BrandMark`), favicon, Apple and manifest icons and the share image. The provisional drawn mark and `public/meldiq.svg` are gone (`MELDIQ_DESIGN_SYSTEM.md`) |
 | Visible text | Every sign-in, sign-up, verification, reset and recovery screen; status screens (loading, unsupported, another tab, signed out, config error); rail, top bar, sidebar, settings (about, privacy, notifications, account, devices), call screen, identity review, errors and permission messages, system notifications ("Meldiq" when message text is hidden) |
 | Old accounts | Migration screens say "Used Orbit (now Meldiq) before email sign-in?" and "Move your Orbit account to Meldiq": people who knew the old name find the way |
@@ -50,9 +50,9 @@ names.
 |---|---|---|
 | `orbit-history-v1` (HKDF salt and AAD), `orbit-att-chunk` (file chunk AAD), `orbit-call-verify-v1` (call code HKDF info) | `src/crypto/history.ts`, `src/crypto/attachment.ts`, `src/crypto/fileStream.ts`, `src/call/callKeys.ts` | Cryptographic labels shared byte-for-byte with the Android app and server. Renaming them would make every existing message history, file and call code unreadable or mismatched across devices |
 | `griip-envelope-v1`, `griip-device-cert-v1`, `griip-auth-v1`, `griip-pairing-v1`, `griip-legacy-migration-v1` | `src/crypto/` | Protocol strings signed and verified by the server and phones |
-| IndexedDB database `orbit-web`, `localStorage` key `orbit.prefs.v1`, Web Lock `orbit-web-device`, stored keys (`calls.log`, `nav.pending`, …) | `src/store/db.ts`, `src/app/prefs.ts`, `src/app/boot.ts` | Every browser already set up keeps its keys, messages and session under these names. Renaming would sign everyone out and lose local history |
+| IndexedDB database `orbit-web`, `localStorage` key `orbit.prefs.v1`, Web Lock `orbit-web-device`, stored keys (`calls.log`, `nav.pending`, …) | `src/store/db.ts`, `src/application/prefs.ts`, `src/application/boot.ts` | Every browser already set up keeps its keys, messages and session under these names. Renaming would sign everyone out and lose local history |
 | Worker name `orbit-call-e2ee`, message type `orbit.frameAudit`, probe `orbit-web-seed-check` | `src/call/`, `src/crypto/ed25519.ts` | Internal plumbing, never shown; renaming gains nothing and risks the call encryption wrapper |
-| `useOrbit`, `src/app/orbit.tsx`, `OrbitDB` type | code identifiers | Internal names in ~60 files; churn without user benefit (a later code-only rename is safe) |
+| `useOrbit`, `src/application/orbit.tsx`, `OrbitDB` type | code identifiers | Internal names in ~60 files; churn without user benefit (a later code-only rename is safe) |
 | "Orbit 2.0" (account system version), "Orbit repository", `docs/ORBIT_*.md` file names, `ORBIT_SERVER_DIR`, `ORBIT_E2E_*` | docs, tests, tooling | They name the server repository and its documents, which still carry those names; the test variables are used by CI and other sessions |
 | Server name in server-info (`instanceName`) | API environment | The web app shows the server's `INSTANCE_NAME` if set, else "Meldiq" (§4) |
 

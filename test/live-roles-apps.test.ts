@@ -1,7 +1,6 @@
 import nodeCrypto from "node:crypto";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { ApiError } from "../src/api/client";
-import { appDirectory, channelAppEvents, createWebhook, deleteWebhook, installApp, rotateWebhook, setAppEnabled, webhooks } from "../src/sync/apps";
 import type { Engine } from "../src/sync/engine";
 import { assignRole, auditLog, createRole, deleteRole, roleMembers, rolesOverview, transferOwnership, unassignRole, updateRole } from "../src/sync/roles";
 import { workspacePlan, workspaceUsage } from "../src/sync/usage";
@@ -104,42 +103,6 @@ describe("ownership", () => {
     expect((await workspaceDetail(web, orgId)).permissions.isOwner).toBe(true);
     expect((await workspaceDetail(bobWeb, orgId)).org.myRole).toBe("ADMIN");
     await changeMember(web, orgId, bob.userId, { role: "MEMBER" });
-  });
-});
-
-describe("apps and incoming webhooks", () => {
-  it("installs incoming webhooks, posts into a channel with the secret, and the browser hears of it at once", async (t) => {
-    // Apps and webhooks were retired with the community rebuild (API 0.12): servers since then don't offer them.
-    if (!(await serverFeatures(server)).includes("integrations")) return t.skip();
-    const dir = await appDirectory(web, orgId);
-    expect(dir.permissions.canInstall).toBe(true);
-    expect(dir.apps.some((a) => a.id === "incoming-webhooks")).toBe(true);
-    expect((await appDirectory(bobWeb, orgId)).permissions.canInstall).toBe(false);
-
-    const ch = await createChannel(web, orgId, { name: "builds", topic: null, scope: "ORG", scopeId: null, kind: "PUBLIC" });
-    // The connector has to be installed first.
-    expect((await fail(createWebhook(web, orgId, ch.id, "CI"))).status).toBe(409);
-    await installApp(web, orgId, "incoming-webhooks");
-    expect((await fail(createWebhook(bobWeb, orgId, ch.id, "Rogue"))).status).toBe(403);
-    const { hook, secret } = await createWebhook(web, orgId, ch.id, "Jenkins");
-    expect(JSON.stringify(await webhooks(web, orgId))).not.toContain(secret);
-
-    const post = (s: string, body: object) =>
-      fetch(hook.url.replace(PUBLIC, server.baseUrl), { method: "POST", headers: { "content-type": "application/json", authorization: `Bearer ${s}` }, body: JSON.stringify(body) });
-    const before = web.state.get().appEventsRev[ch.id] ?? 0;
-    expect((await post(secret, { title: "Build #42 passed", text: "main · 3m 12s", url: "https://ci.example.com/42", actor: "jenkins" })).status).toBe(202);
-    await until(() => (web.state.get().appEventsRev[ch.id] ?? 0) > before, 8000, "integration.event in the browser");
-    expect((await channelAppEvents(web, ch.id))[0]).toMatchObject({ title: "Build #42 passed", summary: "main · 3m 12s", actor: "jenkins" });
-
-    // A rotated secret replaces the old one; a turned-off app takes no posts.
-    const rotated = await rotateWebhook(web, orgId, hook.id);
-    expect((await post(secret, { title: "old secret" })).status).toBe(401);
-    await setAppEnabled(web, orgId, "incoming-webhooks", false);
-    expect((await post(rotated.secret, { title: "while off" })).status).not.toBe(202);
-    await setAppEnabled(web, orgId, "incoming-webhooks", true);
-    expect((await post(rotated.secret, { title: "back on" })).status).toBe(202);
-    await deleteWebhook(web, orgId, hook.id);
-    expect(await webhooks(web, orgId)).toEqual([]);
   });
 });
 

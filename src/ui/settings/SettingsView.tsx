@@ -1,11 +1,11 @@
 import { Activity, BarChart3, Bell, HardDrive, Info, KeyRound, Laptop, Palette, PhoneCall, Shield, Smartphone, UserRound } from "lucide-react";
 import { CallsPage } from "./CallsPage";
-import { useEngine } from "../../app/orbit";
+import { useEngine } from "../../application/orbit";
 import { isPlatformAdmin } from "../../sync/ops";
 import { useLoad } from "../workspace/useLoad";
 import { ServiceHealthPage } from "./ServiceHealthPage";
 import { AdminUsagePage } from "./AdminUsagePage";
-import { navigate, type SettingsPage } from "../../app/router";
+import { navigate, type SettingsPage } from "../../application/router";
 import { AboutPage, AppearancePage, NotificationsPage } from "./PreferencePages";
 import { AccountSettingsPage } from "./AccountSettingsPage";
 import { DevicesPage, SecurityPage } from "./AccountPages";

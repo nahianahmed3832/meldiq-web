@@ -1,14 +1,14 @@
 import { CalendarPlus, Headphones, Pencil, Plus, X } from "lucide-react";
+import { UNKNOWN } from "../../api/enums";
 import { EVENT_REPEATS, type EventRepeatChoice, repeatLabel } from "../../sync/workspaceC5";
 import { useState } from "react";
 import type { OrgAdminDetail } from "../../api/workspaceSchemas";
-import { shallowEqual, useCommunityServer, useEngine, useOrbit } from "../../app/orbit";
-import { navigate } from "../../app/router";
+import { shallowEqual, useCommunityServer, useEngine, useOrbit } from "../../application/orbit";
+import { navigate } from "../../application/router";
 import {
   cancelMeeting,
   createMeeting,
   DURATIONS,
-  listGroups,
   listMeetings,
   type Meeting,
   meetingFields,
@@ -78,7 +78,8 @@ export function MeetingsPage({ detail }: { detail: OrgAdminDetail }) {
                 <strong>{m.title}</strong>
                 <small>
                   {whenText(m.startsAt, m.endsAt, zone())}
-                  {m.repeat ? ` · ${repeatLabel(m.repeat, m.startsAt, m.timeZone)}` : ""} · {m.room?.name ? `#${m.room.name}` : "room gone"} · organized by {m.organizer.name ?? "someone"}
+                  {m.repeat === UNKNOWN ? " · repeats (set in a newer app)" : m.repeat ? ` · ${repeatLabel(m.repeat, m.startsAt, m.timeZone)}` : ""} · {m.room?.name ? `#${m.room.name}` : "room gone"}{" "}
+                  · organized by {m.organizer.name ?? "someone"}
                 </small>
                 {m.description && <small className="faint">{m.description}</small>}
                 <small className="faint">
@@ -145,12 +146,11 @@ function MeetingDialog({ orgId, meeting, onClose, onSaved }: { orgId: string; me
   const [time, setTime] = useState(t0);
   const [minutes, setMinutes] = useState<number>(dur0);
   const repeats = useOrbit((s) => s.server?.features.includes("event-repeat") ?? false);
-  const [repeat, setRepeat] = useState<EventRepeatChoice>(meeting?.repeat ?? "none");
+  // null: a repeat this version can't read (a newer app's), kept as it is unless the person picks another.
+  const [repeat, setRepeat] = useState<EventRepeatChoice | null>(meeting?.repeat === UNKNOWN ? null : (meeting?.repeat ?? "none"));
   const [people, setPeople] = useState<{ id: string; name: string }[]>(meeting?.participants.map((p) => ({ id: p.id, name: p.name ?? "someone" })) ?? []);
-  const [groupIds, setGroupIds] = useState<string[]>([]);
   const [q, setQ] = useState("");
   const found = useLoad(() => (q.trim().length >= 2 ? directory(engine, orgId, q) : Promise.resolve([])), [engine, orgId, q]);
-  const groups = useLoad(() => listGroups(engine, orgId).catch(() => []), [engine, orgId]);
   const act = useAction();
   const problems = meetingProblems(title, roomId, date, time, tz, Date.now());
   const save = () =>
@@ -164,8 +164,7 @@ function MeetingDialog({ orgId, meeting, onClose, onSaved }: { orgId: string; me
         endsAt: start + minutes * 60_000,
         timeZone: tz,
         participantIds: people.map((p) => p.id),
-        groupIds,
-        ...(repeats ? { repeat: repeat === "none" ? null : repeat } : {}),
+        ...(repeats && repeat !== null ? { repeat: repeat === "none" ? null : repeat } : {}),
       };
       await (meeting ? updateMeeting(engine, meeting.id, meeting.rev, input) : createMeeting(engine, orgId, input));
       onSaved();
@@ -211,7 +210,12 @@ function MeetingDialog({ orgId, meeting, onClose, onSaved }: { orgId: string; me
         {repeats && (
           <label className="field">
             <span>Repeats</span>
-            <select className="input" value={repeat} onChange={(e) => setRepeat(e.target.value as EventRepeatChoice)}>
+            <select className="input" value={repeat ?? UNKNOWN} onChange={(e) => setRepeat(e.target.value as EventRepeatChoice)}>
+              {repeat === null && (
+                <option value={UNKNOWN} disabled>
+                  As set in a newer app
+                </option>
+              )}
               {EVENT_REPEATS.map((r) => (
                 <option key={r} value={r}>
                   {repeatLabel(r, startMs(date, time, tz) ?? Date.now(), tz)}
@@ -234,11 +238,6 @@ function MeetingDialog({ orgId, meeting, onClose, onSaved }: { orgId: string; me
                   <X size={11} />
                 </button>
               </span>
-            ))}
-            {(groups.data ?? []).map((g) => (
-              <label key={g.id} className="chip">
-                <input type="checkbox" checked={groupIds.includes(g.id)} onChange={(e) => setGroupIds(e.target.checked ? [...groupIds, g.id] : groupIds.filter((x) => x !== g.id))} />@{g.handle}
-              </label>
             ))}
           </div>
           <input className="input" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Add people (they must be able to open the room)" aria-label="Find someone to invite" />

@@ -3,7 +3,7 @@ import { ApiError } from "../api/client";
 import { type Activity, type Conversation, type Device, type Member, type OrgDetail, zActivity, zConversation, zDevice, zMember, zOrgDetail, zProfile } from "../api/schemas";
 import { AccountApi } from "../auth/accountApi";
 import { normalizeEmail } from "../auth/rules";
-import { forgetPush } from "../app/webPush";
+import { forgetPush } from "../application/webPush";
 import { LocalStore } from "../store/db";
 import type { Engine } from "./engine";
 

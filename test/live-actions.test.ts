@@ -1,6 +1,7 @@
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { browseChannels, conversationMembers, joinChannel, listDevices, orgActivity, orgDetail, revokeDevice, searchPeople, startDirect, updateProfile, userProfile } from "../src/sync/account";
 import type { Engine } from "../src/sync/engine";
+import { UNSUPPORTED_TEXT } from "../src/sync/rules";
 import { linkBrowser, type Phone, type Server, startServer, until } from "./support/live";
 
 /** What the browser does (rather than receives), against the real server, with reference clients as other people. */
@@ -122,6 +123,14 @@ describe("actions from the browser reach everyone", () => {
     const placeholder = await until(() => web.store.message("m-wrong-wrap-00001"), 5000, "placeholder");
     expect(placeholder).toMatchObject({ kind: "undecryptable", errorText: "key unwrap failed" });
     expect(await until(() => web.store.message("m-after-wrong-0001"), 5000, "next message")).toMatchObject({ text: "but this one is fine" });
+  });
+
+  it("a message type from a newer app is kept as a placeholder, not acknowledged and dropped", async () => {
+    await bob.send(dm, { type: "hologram", text: "from the future" }, "message", "m-newer-type-0001");
+    await bob.send(dm, { type: "text", text: "and back to text" }, "message", "m-after-newer-001");
+    const placeholder = await until(() => web.store.message("m-newer-type-0001"), 5000, "placeholder");
+    expect(placeholder).toMatchObject({ kind: "undecryptable", text: UNSUPPORTED_TEXT, errorText: "payload type hologram" });
+    expect(await until(() => web.store.message("m-after-newer-001"), 5000, "next message")).toMatchObject({ text: "and back to text" });
   });
 });
 

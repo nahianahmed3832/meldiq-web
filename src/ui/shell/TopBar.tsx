@@ -1,8 +1,8 @@
 import { Bell, BellOff, CircleDot, LogOut, Menu as MenuIcon, Monitor, Moon, Search, Settings, Smartphone, Smile, Sun, UserRound } from "lucide-react";
 import { useState } from "react";
-import { useEngine, useOrbit } from "../../app/orbit";
-import { setPrefs, usePrefs } from "../../app/prefs";
-import { navigate } from "../../app/router";
+import { useEngine, useOrbit } from "../../application/orbit";
+import { setPrefs, usePrefs } from "../../application/prefs";
+import { navigate } from "../../application/router";
 import { Avatar } from "../components/Avatar";
 import { Menu, useMenu } from "../components/Overlay";
 import { mentionCount } from "../selectors";

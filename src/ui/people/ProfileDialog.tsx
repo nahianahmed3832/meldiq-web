@@ -1,8 +1,8 @@
 import { Check, Flag, MessageSquare, ShieldBan, ShieldCheck, Ticket, UserCheck, UserPlus, UserX } from "lucide-react";
 import { useEffect, useState } from "react";
 import { ApiError } from "../../api/client";
-import { shallowEqual, useEngine, useOrbit } from "../../app/orbit";
-import { navigate } from "../../app/router";
+import { shallowEqual, useEngine, useOrbit } from "../../application/orbit";
+import { navigate } from "../../application/router";
 import { startDirect, userProfile } from "../../sync/account";
 import { block, blockedIds, unblock } from "../../sync/profile";
 import { acceptConnection, connect, connections, connectionState, invitableCommunities, inviteFromProfile, presenceWords, removeConnection } from "../../sync/social";

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { iosNeedsHomeScreen, needsRegistration, pushState, type PushStateInput, REGISTER_AGAIN_MS } from "../src/app/pushRules";
+import { iosNeedsHomeScreen, needsRegistration, pushState, type PushStateInput, REGISTER_AGAIN_MS } from "../src/application/pushRules";
 
 const base: PushStateInput = { supported: true, secure: true, serverOffers: true, configured: true, permission: "granted", enabled: true, registered: true, busy: false, error: null };
 
@@ -36,7 +36,7 @@ describe("when this browser registers its token again", () => {
 
 describe("Desktop notifications before the person chose (the 'allowed but nothing shows' bug)", () => {
   it("follow the site's permission until chosen; a choice wins either way", async () => {
-    const { notificationChoice } = await import("../src/app/prefs");
+    const { notificationChoice } = await import("../src/application/prefs");
     expect(notificationChoice({ notifications: false }, true)).toEqual({ notifyChoice: "unset", notifications: true });
     expect(notificationChoice({ notifications: false }, false)).toEqual({ notifyChoice: "unset", notifications: false });
     expect(notificationChoice({ notifications: true }, false)).toEqual({ notifyChoice: "on", notifications: true });

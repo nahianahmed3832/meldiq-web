@@ -6,8 +6,7 @@ import { createIdentity } from "../src/auth/deviceSetup";
 import { SetupCredentials } from "../src/auth/setupCredentials";
 import { TokenVault } from "../src/auth/tokenVault";
 import type { DeviceRecord } from "../src/model/types";
-import { appDirectory } from "../src/sync/apps";
-import { createWorkspace, requestId, setWorkspaceKind } from "../src/sync/workspaces";
+import { createWorkspace, requestId } from "../src/sync/workspaces";
 import { setNotificationsPaused, setStatus } from "../src/sync/status";
 import { z } from "zod";
 import { freshStore, type Mailbox, mailbox, type Server, startBrowser, startServer, until } from "./support/live";
@@ -45,7 +44,7 @@ async function browserAccount(name: string) {
 }
 
 describe("communities and the curated directory in the browser", () => {
-  it("creates a community with its welcome channels, switches it to a team, and lists only connectable apps", async () => {
+  it("creates a community with its welcome channels, and starts with nobody in an experiment", async () => {
     const b = await browserAccount("webcommunity");
     try {
       const engine = b.engine;
@@ -58,14 +57,6 @@ describe("communities and the curated directory in the browser", () => {
         6000,
         "community channels",
       );
-      // Before the community rebuild (API 0.12) a workspace could be a team, with an app directory.
-      if (engine.state.get().server?.features.includes("integrations")) {
-        expect((await setWorkspaceKind(engine, org.id, "team")).kind).toBe("team");
-        const dir = await appDirectory(engine, org.id);
-        expect(dir.apps.some((a) => a.state === "coming_soon")).toBe(false);
-        expect(dir.apps.find((a) => a.id === "github")?.tier).toBe("essential");
-      }
-
       // Off by default: nobody is in an experiment and nothing is collected.
       await engine.signals.refresh();
       expect(engine.signals.enabled).toBe(false);

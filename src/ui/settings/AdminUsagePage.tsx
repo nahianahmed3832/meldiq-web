@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useEngine } from "../../app/orbit";
+import { useEngine } from "../../application/orbit";
 import { type AdminUsage, adminUsage, isBytes, LIMIT_LABEL, setWorkspaceLimits } from "../../sync/usage";
 import { Dialog } from "../components/Overlay";
 import { bytes, dayLabel } from "../format";

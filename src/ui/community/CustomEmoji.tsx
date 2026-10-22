@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useEngine, useOrbit } from "../../app/orbit";
+import { useEngine, useOrbit } from "../../application/orbit";
 import type { CustomEmojiRef } from "../../protocol/payload";
 import { type Expression, expressionImage, type ExpressionList, expressions } from "../../sync/expressions";
 

@@ -34,7 +34,7 @@ export interface Me {
   statusExpiresAt?: number | null;
   notificationsPausedUntil?: number | null;
   /** Batch B6b: your presence choice and until when; B12: your pronouns. */
-  presenceMode?: "auto" | "idle" | "dnd" | "invisible" | null;
+  presenceMode?: "auto" | "idle" | "dnd" | "invisible" | "unknown" | null;
   presenceUntil?: number | null;
   pronouns?: string | null;
   /** This browser's device-key fingerprint, as the phone shows it. */
@@ -107,12 +107,8 @@ export interface AppState {
   callLog: CallLogItem[];
   /** Reminders kept by the server (Later › Reminders). */
   reminders: RemindersState;
-  /** Bumped per channel when an app posts an update there (server `integration.event`): its App updates bar reloads. */
-  appEventsRev: Record<string, number>;
   /** Bumped on each meeting.updated / meeting.soon frame (round 7 meetings): open lists reload. */
   meetingsRev: number;
-  /** Bumped on each inbox.* frame (round 8 Unified Inbox; ids only): open inbox screens reload. */
-  inboxRev: number;
   /** Communities opened in this session: their categories and every channel the person may see (joined or not). */
   communities: Record<string, CommunityData>;
   /** Bumped when join applications or reports change (server `org.applications`, `org.application`, `org.reports`). */
@@ -141,9 +137,7 @@ export const initialState: AppState = {
   threadRev: 0,
   callLog: [],
   reminders: NO_REMINDERS,
-  appEventsRev: {},
   meetingsRev: 0,
-  inboxRev: 0,
   communities: {},
   moderationRev: 0,
   connectionsRev: 0,

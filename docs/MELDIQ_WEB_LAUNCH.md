@@ -26,7 +26,7 @@ same, so the still and the end match.
 3. Data Saver and 2G remove the video. A video that can't play (unsupported, blocked, Low Power Mode, out of memory)
    leaves the still.
 4. The screen fades out (260 ms) as soon as the app shows anything: sign-in, the app, an unsupported-browser or an
-   error screen (`src/app/splash.ts`, called from `App.tsx` and `main.tsx`). Nothing waits for the 5 seconds.
+   error screen (`src/application/splash.ts`, called from `App.tsx` and `main.tsx`). Nothing waits for the 5 seconds.
 5. It never stays over sign-in, errors or recovery, and it goes after 10 s at the latest.
 6. It shows only on a full page load. Moving around the app never shows it again; loading inside the app uses the
    existing skeletons.

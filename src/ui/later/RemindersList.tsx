@@ -1,6 +1,6 @@
 import { AlarmClock, Check, Lock, MoreHorizontal, Pencil, Plus, TriangleAlert } from "lucide-react";
 import { type FormEvent, useState } from "react";
-import { useEngine, useOrbit } from "../../app/orbit";
+import { useEngine, useOrbit } from "../../application/orbit";
 import { decodeRecoveryCode } from "../../crypto/recoveryCode";
 import { groupReminders, type Reminder, type Snooze, snoozeUntil } from "../../sync/reminderRules";
 import { Menu, useMenu } from "../components/Overlay";

@@ -1,0 +1,82 @@
+{
+  "anyOf": [
+    {
+      "type": "object",
+      "properties": {
+        "t": {
+          "type": "string",
+          "const": "auth"
+        },
+        "token": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "t",
+        "token"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "t": {
+          "type": "string",
+          "const": "ping"
+        }
+      },
+      "required": [
+        "t"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "t": {
+          "type": "string",
+          "const": "ack"
+        },
+        "ids": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          }
+        },
+        "backlog": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "t",
+        "ids"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "t": {
+          "type": "string",
+          "const": "typing"
+        },
+        "c": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "on": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "t",
+        "c",
+        "on"
+      ],
+      "additionalProperties": false
+    }
+  ]
+}

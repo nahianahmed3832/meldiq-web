@@ -9,7 +9,8 @@ status is **`docs/product/MELDIQ_WEB_PARITY_MATRIX.md`**.
 - **Branch:** `meldiq-web-android-parity` on GitHub (pushed 2026-10-22 under the owner's name), pull request
   https://github.com/nahianahmed3832/meldiq-web/pull/1 into `main` (not merged: pushing `main` directly was refused by the
   session's permission check, so it waits for review). Local worktree: `orbit_web/.claude/worktrees/meldiq-web-android-parity-a6333c`.
-- **Production:** release **0.5.0-beta-ea703df** live at https://web.meldiq.app since 2026-10-22 05:10 UTC (screen-share and
+- **Production:** release **0.5.0-beta-b327e82** (iPhone 8, phones, launch screen, B14b) live at https://web.meldiq.app;
+  before it **0.5.0-beta-ea703df** since 2026-10-22 05:10 UTC (screen-share and
   notification fixes, below); before it 0.5.0-beta-4f4c289 from 03:49 UTC.
 - **Commits, in order:**
 
@@ -158,6 +159,23 @@ reactions and touch under B12/B14, the channel screen under B14b, the launch scr
   - Safari 16 itself;
   - drag to reorder;
   - timeline media sizing (DM-06).
+
+### Release 0.5.0-beta-b327e82 (2026-10-22, at the owner's request)
+
+- Tested against production's API **0.26.0** (Android commit `cca7ccb`, exported read-only):
+  - `vitest`: 89 files, 521 passed, 0 failed.
+  - Browser tests on the production build in Chromium, WebKit and at phone width: 56 passed, 10 skipped, 6 failed.
+    All six are `accounts`/`emoji` reading a dev-only hook; those two pass on the dev server (9 of 9).
+  - Two live tests were updated for 0.26.0: the owner takes Bob out of a channel instead of Bob leaving it.
+- Deploy:
+  - Built with `build-release.sh` (363 unit tests), installed with the same settings as `ea703df` (no Firebase file
+    yet). The API wasn't touched.
+  - `verify.sh` passed every check. Live: `/launch/meldiq-launch.mp4` (video/mp4, 59,670 B) and `.jpg` (11,012 B);
+    `/sw.js` identical to the build; the colour fallback is in the CSS.
+  - The launch screen gives way to the intro and sign-in in a test browser, with no console errors.
+- GitHub: PR #2 merged into `main` (`70d7c15`), so `main` matches production.
+- Roll back: `bash /root/meldiq-web-0.5.0-beta-b327e82/rollback.sh` (to `0.5.0-beta-ea703df`).
+- Not checked in production: a real iPhone 8 or any phone, anything after signing in, calls.
 
 ## Open items
 

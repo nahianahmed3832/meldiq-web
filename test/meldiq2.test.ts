@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
 import { zOrg } from "../src/api/schemas";
-import { type App, directoryGroups } from "../src/sync/apps";
 import { AnalyticsQueue, type AnalyticsEvent, resultBucket, Signals } from "../src/sync/signals";
 import { analyticsScope } from "../src/sync/universalSearch";
 
@@ -112,48 +111,31 @@ describe("signals when the network or server fails", () => {
 describe("closed analytics values", () => {
   it("bucket result counts and map search kinds to the catalogue's scopes", () => {
     expect([0, 1, 2, 5, 40].map(resultBucket)).toEqual(["0", "1", "2-5", "2-5", "6+"]);
-    expect(analyticsScope("people,channels,documents")).toBe("all");
+    expect(analyticsScope("people,channels,groups")).toBe("all");
     expect(analyticsScope("people")).toBe("people");
-    expect(analyticsScope("documents")).toBe("files");
     expect(analyticsScope("workspaces")).toBe("all");
   });
 });
 
-describe("the app directory", () => {
-  const app = (id: string, state: string, extra: Partial<App> = {}): App => ({ id, name: id, state, actions: [], capabilities: [], ...extra }) as App;
-
-  it("leads with essential apps and never lists planned ones", () => {
-    const { recommended, more } = directoryGroups([
-      app("github", "available", { tier: "essential" }),
-      app("zoom", "available", { tier: "optional", featured: true }),
-      app("gmail", "coming_soon", { tier: "planned", availability: "coming_soon" }),
-    ]);
-    expect(recommended.map((a) => a.id)).toEqual(["github"]);
-    expect(more.map((a) => a.id)).toEqual(["zoom"]);
-  });
-
-  it("falls back to featured apps on a server without tiers", () => {
-    const { recommended, more } = directoryGroups([app("a", "available", { featured: true }), app("b", "available")]);
-    expect([recommended.map((a) => a.id), more.map((a) => a.id)]).toEqual([["a"], ["b"]]);
-  });
-});
-
 describe("workspace kind", () => {
-  it("is a team unless the server says community", () => {
+  it("is a team when the server says nothing, and unknown (not a team) when it says something newer", () => {
     const base = { id: "o1", name: "Acme", slug: "acme", description: null, myRole: "OWNER", memberCount: 1, createdAt: 1 };
     expect(zOrg.parse(base).kind).toBe("team");
     expect(zOrg.parse({ ...base, kind: "community" }).kind).toBe("community");
-    expect(zOrg.parse({ ...base, kind: "something-new" }).kind).toBe("team");
+    expect(zOrg.parse({ ...base, kind: "something-new" }).kind).toBe("unknown");
   });
 });
 
-describe("workspace pages for a community", () => {
-  it("leave out organisation structure and the customer inbox, unless that page is open", async () => {
-    const { pageShownForKind } = await import("../src/sync/workspaceRules");
-    expect(pageShownForKind("structure", "team")).toBe(true);
-    expect(pageShownForKind("structure", "community")).toBe(false);
-    expect(pageShownForKind("inbox", "community")).toBe(false);
-    expect(pageShownForKind("inbox", "community", "inbox")).toBe(true);
-    expect(pageShownForKind("channels", "community")).toBe(true);
+describe("enums the server may extend", () => {
+  it("keep a value this version doesn't know as unknown instead of a real one", async () => {
+    const { zOverwrite, zApplicationStatus } = await import("../src/api/communitySchemas");
+    const { zConversation } = await import("../src/api/schemas");
+    const { readCopy } = await import("./support/contracts");
+    expect(zApplicationStatus.parse("waitlisted")).toBe("unknown");
+    expect(zApplicationStatus.parse("approved")).toBe("approved");
+    expect(zOverwrite.parse({ subject: "g_1", kind: "group", label: "Group", color: null, allow: [], deny: [] }).kind).toBe("unknown");
+    const [real] = readCopy<{ conversations: Record<string, unknown>[] }>("http/GET_v1_conversations.json").conversations;
+    expect(zConversation.parse({ ...real, format: "canvas" }).format).toBe("unknown");
+    expect(zConversation.parse(real).format).toBe("text");
   });
 });

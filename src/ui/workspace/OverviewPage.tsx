@@ -2,9 +2,9 @@ import { TransferOwnership } from "./TransferOwnership";
 import { Camera, LogOut, Trash2 } from "lucide-react";
 import { type FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import type { OrgAdminDetail } from "../../api/workspaceSchemas";
-import { useCommunityServer, useEngine, useOrbit } from "../../app/orbit";
-import { setPrefs } from "../../app/prefs";
-import { navigate } from "../../app/router";
+import { useCommunityServer, useEngine, useOrbit } from "../../application/orbit";
+import { setPrefs } from "../../application/prefs";
+import { navigate } from "../../application/router";
 import { deleteWorkspace, leaveWorkspace, removeWorkspacePhoto, requestId, setWorkspaceKind, setWorkspacePhoto, updateWorkspace } from "../../sync/workspaces";
 import type { OrgKind } from "../../api/schemas";
 import { roleName } from "../../sync/workspaceRules";
@@ -13,7 +13,7 @@ import { Dialog } from "../components/Overlay";
 import { squareJpeg } from "./photo";
 import { useAction } from "./useLoad";
 import { Card, ErrorLine } from "./WorkspaceView";
-import { GuestPolicyCard, TemplatesCard } from "./WorkspaceSetupCards";
+import { GuestPolicyCard } from "./WorkspaceSetupCards";
 import { AccessCard, JoinQuestionsCard } from "./ModerationPages";
 
 export function OverviewPage({ detail, onChanged }: { detail: OrgAdminDetail; onChanged: () => void }) {
@@ -35,7 +35,6 @@ export function OverviewPage({ detail, onChanged }: { detail: OrgAdminDetail; on
       {can.canManageOrg ? <Identity detail={detail} onChanged={onChanged} /> : <ReadOnlyAbout description={org.description} />}
       {features.includes("community-channels") && <AccessCard detail={detail} />}
       {features.includes("community-channels") && can.canManageOrg && features.includes("join-applications") && <JoinQuestionsCard detail={detail} />}
-      {can.canManageOrg && features.includes("workspace-templates") && <TemplatesCard detail={detail} onChanged={onChanged} />}
       {can.canManageOrg && features.includes("guest-expiry") && <GuestPolicyCard detail={detail} onChanged={onChanged} />}
       {/* Every workspace is a community since API 0.12: the team/community switch is only for older servers. */}
       {features.includes("communities") && !features.includes("community-channels") && <KindCard detail={detail} onChanged={onChanged} />}

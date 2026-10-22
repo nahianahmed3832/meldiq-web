@@ -2,8 +2,8 @@ import { Archive, ArchiveRestore, Hash, Lock, Megaphone, Plus } from "lucide-rea
 import { type FormEvent, useState } from "react";
 import type { Conversation } from "../../api/schemas";
 import type { OrgAdminDetail } from "../../api/workspaceSchemas";
-import { useEngine, useOrbit } from "../../app/orbit";
-import { navigate } from "../../app/router";
+import { useEngine, useOrbit } from "../../application/orbit";
+import { navigate } from "../../application/router";
 import { joinChannel } from "../../sync/account";
 import { type ChannelKind, type ChannelScope, createChannel, updateConversation, workspaceChannels } from "../../sync/workspaces";
 import { useAction, useLoad } from "./useLoad";
@@ -65,7 +65,7 @@ function ChannelRow({ c, onChanged }: { c: Conversation; onChanged: () => void }
       </span>
       <span className="lines grow">
         {c.joined && !c.archived ? (
-          <a className="ellipsis" href={`#/home/c/${encodeURIComponent(c.id)}`} onClick={() => navigate({ section: "home", conversationId: c.id })}>
+          <a className="ellipsis" href={`/home/c/${encodeURIComponent(c.id)}`} onClick={() => navigate({ section: "home", conversationId: c.id })}>
             {c.name}
           </a>
         ) : !c.archived ? (

@@ -30,7 +30,7 @@ import {
 import { memo, useState } from "react";
 import { CustomEmojiImage, ReactionEmoji, useExpressions } from "../community/CustomEmoji";
 import { reactionName } from "../../sync/expressions";
-import { useEngine, useOrbit } from "../../app/orbit";
+import { useEngine, useOrbit } from "../../application/orbit";
 import { PERSONAL } from "../../sync/navPrefs";
 import { RemindMeDialog } from "../later/RemindMeDialog";
 import type { StoredMessage } from "../../model/types";
@@ -53,7 +53,7 @@ import { MessageInfoDialog } from "./MessageInfo";
 import { TranslateDialog, TranslationView } from "./Translate";
 import { translationSupported } from "../../sync/translate";
 import { findMediaLink } from "../../sync/mediaLinks";
-import { usePrefs } from "../../app/prefs";
+import { usePrefs } from "../../application/prefs";
 import { EmojiPicker } from "./EmojiPicker";
 import { ReportDialog } from "./ReportDialog";
 import { openProfile } from "../people/ProfileDialog";

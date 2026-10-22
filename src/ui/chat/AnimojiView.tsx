@@ -1,4 +1,4 @@
-import { usePrefs } from "../../app/prefs";
+import { usePrefs } from "../../application/prefs";
 import { motionOf } from "../../sync/animoji";
 
 /**

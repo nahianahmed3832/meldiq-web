@@ -1,6 +1,6 @@
 import { KeyRound, Laptop, LogOut, Trash2 } from "lucide-react";
 import { type FormEvent, useState } from "react";
-import { useEngine } from "../../app/orbit";
+import { useEngine } from "../../application/orbit";
 import { AccountApi } from "../../auth/accountApi";
 import { canDeleteAccount, type DeletionProblem, deletionProblem, deletionProblemText } from "../../auth/deleteAccount";
 import { PASSWORD_MIN_LENGTH, passwordProblem } from "../../auth/rules";

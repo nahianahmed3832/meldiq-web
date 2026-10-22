@@ -17,7 +17,11 @@ headers="$(curl -fsSI "$url/")" && ok "the app answers" || bad "the app doesn't 
 for h in content-security-policy strict-transport-security x-content-type-options permissions-policy; do
   echo "$headers" | grep -qi "^$h:" && ok "header $h" || bad "missing header $h"
 done
-curl -fsS "$url/index.html" | grep -q '<div id="root">' && ok "index.html is the Meldiq app" || bad "index.html isn't the app"
+curl -fsS "$url/index.html" | grep -qE '<div id="(root|__next)">' && ok "index.html is the Meldiq app" || bad "index.html isn't the app"
+curl -fsS "$url/dms" | grep -qE '<div id="(root|__next)">' && ok "app paths are served by the app (/dms)" || bad "an app path (/dms) isn't served by the app"
+if curl -fsS "$url/index.html" | grep -q '/_next/static/'; then
+  curl -fsS "$url/index.html" | grep -qE '<script(>| (async|defer|nomodule|crossorigin)[^>]*>)[^<]' && bad "index.html has an inline script (the CSP would block it)" || ok "no inline scripts (script-src 'self')"
+fi
 cfg="$(curl -fsS "$url/config.json")" && echo "$cfg" | grep -q '"environment"' && ok "config.json: $(echo "$cfg" | tr -d '\n ' | cut -c1-120)" || bad "config.json missing or unreadable"
 curl -fsSI "$url/config.json" | grep -qi 'cache-control: no-store' && ok "config.json isn't cached" || bad "config.json may be cached"
 info="$(curl -fsS "$url/v1/server-info")" && ok "API through this origin: $(echo "$info" | grep -o '"version":"[^"]*"')" || bad "API not reachable through $url/v1"

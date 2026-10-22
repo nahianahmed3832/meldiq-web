@@ -1,7 +1,7 @@
 import { Pencil, Trash2, Upload } from "lucide-react";
 import { useRef, useState } from "react";
 import type { OrgAdminDetail } from "../../api/workspaceSchemas";
-import { useEngine } from "../../app/orbit";
+import { useEngine } from "../../application/orbit";
 import { EXPRESSION_MAX_BYTES, EXPRESSION_NAME, type Expression, expressions, removeExpression, renameExpression, SHRINK_TO, suggestName, uploadExpression } from "../../sync/expressions";
 import { CustomEmojiImage } from "../community/CustomEmoji";
 import { Dialog } from "../components/Overlay";

@@ -2,8 +2,8 @@ import { BellOff, ChevronDown, Eye, MoreHorizontal, Plus } from "lucide-react";
 import { memo, type MouseEvent, useEffect, useMemo, useState } from "react";
 import type { Category } from "../../api/communitySchemas";
 import type { Conversation } from "../../api/schemas";
-import { shallowEqual, useEngine, useOrbit } from "../../app/orbit";
-import { navigate, useRoute } from "../../app/router";
+import { shallowEqual, useEngine, useOrbit } from "../../application/orbit";
+import { navigate, useRoute } from "../../application/router";
 import { joinCommunityChannel, saveLayout, updateChannel } from "../../sync/community";
 import {
   allMuted,
@@ -354,7 +354,7 @@ const ChannelItem = memo(function ChannelItem({
     <div className="side-row">
       <a
         className={`side-item channel-item${ch.unread && !ch.muted ? " unread" : ""}${ch.muted ? " muted" : ""}${ch.joined ? "" : " unjoined"}`}
-        href={`#/home/c/${encodeURIComponent(ch.id)}`}
+        href={`/home/c/${encodeURIComponent(ch.id)}`}
         aria-current={current ? "page" : undefined}
         aria-label={label}
         aria-busy={joining || undefined}

@@ -1,5 +1,5 @@
 import { Hand, MicOff, MoreHorizontal, UsersRound } from "lucide-react";
-import { useEngine } from "../../app/orbit";
+import { useEngine } from "../../application/orbit";
 import type { ModerationAction } from "../../call/manager";
 import type { CallParticipantView, CallUiState } from "../../call/types";
 import { Menu, type MenuEntry, useMenu } from "../components/Overlay";

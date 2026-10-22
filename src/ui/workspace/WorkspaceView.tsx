@@ -1,57 +1,23 @@
-import {
-  BookOpen,
-  HelpCircle,
-  Smile,
-  Ban,
-  Blocks,
-  Building2,
-  CalendarDays,
-  Code2,
-  Flag,
-  Inbox,
-  Sparkles,
-  FileText,
-  Gauge,
-  Hash,
-  Workflow,
-  Laptop,
-  LayoutGrid,
-  ScrollText,
-  Shield,
-  ShieldCheck,
-  Ticket,
-  UserCheck,
-  Users,
-  UsersRound,
-} from "lucide-react";
+import { BookOpen, HelpCircle, Smile, Ban, Building2, CalendarDays, Flag, Gauge, Hash, Laptop, LayoutGrid, ScrollText, Shield, ShieldCheck, Ticket, UserCheck, UsersRound } from "lucide-react";
 import { ApplicationsPage, BansPage, SecurityPage } from "./ModerationPages";
 import { ReportsPage } from "./ReportsPage";
 import { GuidePage, OnboardingPage } from "./GuidePages";
 import { ExpressionsPage } from "./ExpressionsPage";
 import type { ReactNode } from "react";
-import { useEngine, useOrbit } from "../../app/orbit";
-import { navigate, type WorkspacePage } from "../../app/router";
+import { useEngine, useOrbit } from "../../application/orbit";
+import { navigate, type WorkspacePage } from "../../application/router";
 import { workspaceDetail } from "../../sync/workspaces";
 import type { ShellDialog } from "../shell/Shell";
 import { ChannelsPage } from "./ChannelsPage";
 import { InvitationsPage } from "./InvitationsPage";
 import { OverviewPage } from "./OverviewPage";
 import { PeoplePage } from "./PeoplePage";
-import { StructurePage } from "./StructurePage";
 import { useLoad } from "./useLoad";
 import { RolesPage } from "./RolesPage";
 import { AuditPage } from "./AuditPage";
-import { AppsPage } from "./AppsPage";
 import { UsagePage } from "./UsagePage";
-import { WorkflowsPage } from "./WorkflowsPage";
-import { DocumentsPage } from "./documents/DocumentsPage";
-import { AiPage } from "./AiPage";
-import { InboxPage } from "./inbox/InboxPage";
-import { DeveloperPage } from "./DeveloperPage";
-import { GroupsPage } from "./GroupsPage";
 import { MeetingsPage } from "./MeetingsPage";
 import type { OrgAdminDetail, OrgPermissions } from "../../api/workspaceSchemas";
-import { pageShownForKind } from "../../sync/workspaceRules";
 
 /** Pages, with the permission flag that shows them (the server decides; older servers don't send the newer flags). */
 /** Meldiq 2.0: the pages in three groups (people and channels; tools; administration) instead of one long list. */
@@ -97,17 +63,9 @@ const PAGES: { key: WorkspacePage; label: string; icon: ReactNode; group: PageGr
   { key: "people", label: "People", icon: <UsersRound size={17} />, group: "workspace" },
   { key: "invitations", label: "Invitations", icon: <Ticket size={17} />, group: "workspace" },
   { key: "channels", label: "Channels", icon: <Hash size={17} />, group: "workspace" },
-  { key: "groups", label: "Groups", icon: <Users size={17} />, group: "workspace", feature: "groups", shown: (_p, d) => d.org.myRole !== "GUEST" },
-  { key: "structure", label: "Branches & teams", icon: <Building2 size={17} />, group: "workspace" },
-  { key: "documents", label: "Documents", icon: <FileText size={17} />, group: "tools", feature: "documents" },
   { key: "meetings", label: "Meetings", icon: <CalendarDays size={17} />, group: "tools", feature: "meetings" },
-  { key: "apps", label: "Apps", icon: <Blocks size={17} />, group: "tools", shown: (p) => p.canViewApps },
-  { key: "workflows", label: "Workflows", icon: <Workflow size={17} />, group: "tools", shown: (p) => p.canManageWorkflows },
-  { key: "ai", label: "AI", icon: <Sparkles size={17} />, group: "tools", feature: "ai" },
-  { key: "inbox", label: "Customer inbox", icon: <Inbox size={17} />, group: "tools", feature: "unified-inbox", shown: (p) => p.effective.includes("inbox.view") },
   { key: "roles", label: "Roles", icon: <ShieldCheck size={17} />, group: "admin", shown: (p) => p.canViewRoles },
   { key: "audit", label: "Audit log", icon: <ScrollText size={17} />, group: "admin", shown: (p) => p.canViewAudit },
-  { key: "developer", label: "API keys & webhooks", icon: <Code2 size={17} />, group: "admin", feature: "developer-api", shown: (p) => p.canManageDevelopers },
   { key: "usage", label: "Usage", icon: <Gauge size={17} />, group: "admin", shown: (p) => p.canViewUsage },
 ];
 
@@ -115,7 +73,7 @@ const PAGES: { key: WorkspacePage; label: string; icon: ReactNode; group: PageGr
  * The current workspace's settings and administration (docs/WORKSPACE_ADMINISTRATION.md). What each page offers follows
  * the permissions the server sends; the server decides every change.
  */
-export function WorkspaceView({ orgId, page, itemId, onDialog }: { orgId: string | null; page: WorkspacePage; itemId: string | null; onDialog: (d: ShellDialog) => void }) {
+export function WorkspaceView({ orgId, page, onDialog }: { orgId: string | null; page: WorkspacePage; onDialog: (d: ShellDialog) => void }) {
   const engine = useEngine();
   const features = useOrbit((s) => s.server?.features ?? []);
   // Any change to the workspace (here, on another device, by an admin) refreshes the org list; that reloads the detail.
@@ -171,9 +129,7 @@ export function WorkspaceView({ orgId, page, itemId, onDialog }: { orgId: string
             })}
           {!community &&
             GROUPS.map((g) => {
-              const pages = PAGES.filter(
-                (p) => p.group === g.key && (!p.shown || (d && p.shown(d.permissions, d))) && (!p.feature || features.includes(p.feature)) && pageShownForKind(p.key, org.kind, page),
-              );
+              const pages = PAGES.filter((p) => p.group === g.key && (!p.shown || (d && p.shown(d.permissions, d))) && (!p.feature || features.includes(p.feature)));
               if (pages.length === 0) return null;
               return (
                 <div key={g.key} role="group" aria-labelledby={`ws-group-${g.key}`} className="settings-nav-group">
@@ -207,8 +163,6 @@ export function WorkspaceView({ orgId, page, itemId, onDialog }: { orgId: string
               </div>
             ) : !d ? (
               <div aria-busy="true" className="skeleton" style={{ height: 160, borderRadius: 16 }} />
-            ) : page === "overview" ? (
-              <OverviewPage detail={d} onChanged={detail.reload} />
             ) : page === "people" ? (
               <PeoplePage detail={d} />
             ) : page === "invitations" ? (
@@ -217,22 +171,10 @@ export function WorkspaceView({ orgId, page, itemId, onDialog }: { orgId: string
               <ChannelsPage detail={d} />
             ) : page === "roles" ? (
               <RolesPage detail={d} />
-            ) : page === "apps" ? (
-              <AppsPage detail={d} />
             ) : page === "audit" ? (
               <AuditPage detail={d} />
             ) : page === "usage" ? (
               <UsagePage detail={d} />
-            ) : page === "workflows" ? (
-              <WorkflowsPage detail={d} />
-            ) : page === "inbox" ? (
-              <InboxPage detail={d} itemId={itemId} />
-            ) : page === "ai" ? (
-              <AiPage detail={d} />
-            ) : page === "developer" ? (
-              <DeveloperPage detail={d} />
-            ) : page === "groups" ? (
-              <GroupsPage detail={d} />
             ) : page === "meetings" ? (
               <MeetingsPage detail={d} />
             ) : page === "expressions" ? (
@@ -249,10 +191,8 @@ export function WorkspaceView({ orgId, page, itemId, onDialog }: { orgId: string
               <SecurityPage detail={d} />
             ) : page === "bans" ? (
               <BansPage detail={d} />
-            ) : page === "documents" ? (
-              <DocumentsPage detail={d} docId={itemId} />
             ) : (
-              <StructurePage detail={d} onChanged={detail.reload} />
+              <OverviewPage detail={d} onChanged={detail.reload} />
             )}
           </div>
         </div>

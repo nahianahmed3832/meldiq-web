@@ -1,6 +1,6 @@
 import { X } from "lucide-react";
 import { useEffect } from "react";
-import { useEngine, useOrbit } from "../../app/orbit";
+import { useEngine, useOrbit } from "../../application/orbit";
 
 /** Short-lived messages: errors stay until dismissed or 10 s, information 5 s. */
 export function Notices() {

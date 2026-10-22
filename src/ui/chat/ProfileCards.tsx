@@ -1,7 +1,7 @@
 import { CircleUserRound, Search } from "lucide-react";
 import { openProfile } from "../people/ProfileDialog";
 import { useMemo, useState } from "react";
-import { useOrbit } from "../../app/orbit";
+import { useOrbit } from "../../application/orbit";
 import type { ContactCard } from "../../protocol/payload";
 import { profileCard } from "../../sync/rich";
 import { UserAvatar } from "../components/OrgAvatar";

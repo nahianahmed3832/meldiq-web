@@ -1,8 +1,8 @@
 import { Search, UsersRound } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { Member } from "../../api/schemas";
-import { useCommunityServer, useEngine, useOrbit } from "../../app/orbit";
-import { navigate } from "../../app/router";
+import { useCommunityServer, useEngine, useOrbit } from "../../application/orbit";
+import { navigate } from "../../application/router";
 import { resolveAddress, searchPeople, startDirect } from "../../sync/account";
 import { lookupKind, normalAddress } from "../../sync/lookup";
 import { findByPhone } from "../../sync/profile";

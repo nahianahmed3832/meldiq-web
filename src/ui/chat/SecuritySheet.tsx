@@ -1,7 +1,7 @@
 import { Blocks, Info, MessageSquare, Paperclip, Phone, Server, ShieldAlert, ShieldCheck, ShieldQuestion } from "lucide-react";
 import { type ReactNode, useEffect, useState } from "react";
-import { useEngine, useOrbit } from "../../app/orbit";
-import { navigate, useRoute } from "../../app/router";
+import { useEngine, useOrbit } from "../../application/orbit";
+import { navigate, useRoute } from "../../application/router";
 import { isRemoteUsername, type SecurityFacts, type SecurityPoint, securityPoints } from "../../sync/conversationSecurity";
 import { Dialog } from "../components/Overlay";
 import { dmPeer } from "../format";

@@ -1,8 +1,8 @@
 import { ChevronLeft, ChevronRight, Download, FileText, Film, Image as ImageIcon, Mic, Pause, Play, TriangleAlert, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { useEngine } from "../../app/orbit";
-import { usePrefs } from "../../app/prefs";
+import { useEngine } from "../../application/orbit";
+import { usePrefs } from "../../application/prefs";
 import type { AttachmentRef } from "../../protocol/payload";
 import { isInlineImage, openAttachment, safeMime, saveAttachment } from "../../sync/attachments";
 import { clock, isVoice, shownDuration } from "../../sync/voice";

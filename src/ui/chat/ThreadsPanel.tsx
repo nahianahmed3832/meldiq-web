@@ -1,7 +1,7 @@
 import { MessagesSquare, Search, X } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useEngine, useOrbit } from "../../app/orbit";
-import { navigate, type Section } from "../../app/router";
+import { useEngine, useOrbit } from "../../application/orbit";
+import { navigate, type Section } from "../../application/router";
 import { filterThreads, threadRows, type ThreadRow } from "../../sync/threads";
 import { relative } from "../format";
 

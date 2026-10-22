@@ -11,7 +11,7 @@ redirects). The app is live at **https://web.meldiq.app**.
 
 - The rebrand from Orbit to Meldiq, what changed and what keeps the old name on purpose, and the plan for
   `web.meldiq.app`: [`docs/MELDIQ_REBRAND.md`](docs/MELDIQ_REBRAND.md)
-- Configuration: [`.env.example`](.env.example) and `/config.json` (`src/app/config.ts`)
+- Configuration: [`.env.example`](.env.example) and `/config.json` (`src/application/config.ts`)
 - Where things stand and what's next: [`docs/MELDIQ_WEB_STATUS.md`](docs/MELDIQ_WEB_STATUS.md); the Android parity
   inventory: [`docs/MELDIQ_WEB_FEATURE_PARITY.md`](docs/MELDIQ_WEB_FEATURE_PARITY.md)
 - Design system: the logo and its icons, colour tokens and the Indigo, Plum and Amber plates, scale, messaging:
@@ -42,13 +42,14 @@ A server with local data in its `data/` folder, open sign-up and no calling:
 bash scripts/local-server.sh
 ```
 
-The web app on `http://localhost:5173`, proxying `/v1` to `ORBIT_API_URL` (default `http://127.0.0.1:8080`):
+The web app (Next.js, `docs/MELDIQ_WEB_NEXTJS.md`) on `http://127.0.0.1:5173`, proxying `/v1` and `/v2` to `ORBIT_API_URL`
+(default `http://127.0.0.1:8080`):
 
 ```bash
 npm install && npm run dev
 ```
 
-Use `localhost`, not a LAN address: browsers allow WebCrypto only on HTTPS or localhost. Link the browser from a phone
+Use `127.0.0.1`, not a LAN address: browsers allow WebCrypto only on HTTPS or this machine. Link the browser from a phone
 signed in to the same server (Settings › Devices › Approve new device), or with the test tool for a local server:
 
 ```bash
@@ -80,7 +81,9 @@ Design, tests and the phone test: `../docs/ORBIT_WEB_CALLS.md`.
 npm run typecheck && npm run lint && npm run format:check
 ```
 
-Unit tests (no server needed): cryptography against the shared vectors, protocol rules, key storage, routing.
+Unit tests (no server needed): cryptography against the shared vectors, protocol rules, key storage, routing, and the
+server's contract fixtures decoded with the web's own schemas (`test/contract-fixtures.test.ts`; refresh the copy with
+`npx tsx scripts/sync-contract-fixtures.ts`, known gaps in `test/contract-allowlist.txt`).
 
 ```bash
 npm test
@@ -111,7 +114,8 @@ skipped and say why. Playwright starts its own LiveKit.
 | `src/protocol`, `src/api` | validated payloads, history records and server responses; the API client |
 | `src/realtime`, `src/sync`, `src/store` | WebSocket, receive pipeline, outbox, history restore, directory and trust, IndexedDB |
 | `src/call` | calls: manager, keys, LiveKit session, encryption worker and frame audit, badge rules |
-| `src/state`, `src/app` | app state, React bindings, boot, routes, preferences |
+| `src/pages`, `src/client` | the Next.js page shell and the app's start in the browser |
+| `src/state`, `src/application` | app state, React bindings, boot, routes, preferences |
 | `src/ui` | the interface |
-| `test`, `e2e` | Vitest and Playwright; `test/vectors` holds copies of the shared protocol vectors |
-| `scripts` | `local-server.sh` (start the Orbit server for development), `demo-phone.ts` (test participants on a local server) |
+| `test`, `e2e` | Vitest and Playwright; `test/vectors` and `test/contract-fixtures` hold copies of the shared protocol vectors and the server's contract fixtures |
+| `scripts` | `local-server.sh` (start the Orbit server for development), `demo-phone.ts` (test participants on a local server), `sync-contract-fixtures.ts` (copy the server's contract fixtures), `web-server.ts` (a build or `next dev` behind production's headers and `/v1` proxy), `finish-export.mjs` (the build's last step) |

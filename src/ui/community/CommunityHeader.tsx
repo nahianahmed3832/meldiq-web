@@ -1,9 +1,9 @@
 import { ArrowUpDown, Bell, CalendarDays, Check, CheckCheck, ChevronDown, Compass, Copy, EyeOff, FolderPlus, LogIn, LogOut, PenSquare, Plus, Settings2, Ticket, UsersRound } from "lucide-react";
 import { useState } from "react";
 import { ApiError } from "../../api/client";
-import { shallowEqual, useEngine, useOrbit } from "../../app/orbit";
-import { setPrefs, usePrefs } from "../../app/prefs";
-import { navigate } from "../../app/router";
+import { shallowEqual, useEngine, useOrbit } from "../../application/orbit";
+import { setPrefs, usePrefs } from "../../application/prefs";
+import { navigate } from "../../application/router";
 import { leaveWorkspace } from "../../sync/workspaces";
 import { Avatar } from "../components/Avatar";
 import { OrgAvatar } from "../components/OrgAvatar";

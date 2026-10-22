@@ -1,9 +1,9 @@
 import { Copy, ExternalLink, TriangleAlert } from "lucide-react";
 import { type ReactNode, useState } from "react";
-import { getPrefs } from "../../app/prefs";
+import { getPrefs } from "../../application/prefs";
 import { linkWarning, readableDomain } from "../../sync/linkRules";
 import { Dialog } from "../components/Overlay";
-import { useEngine } from "../../app/orbit";
+import { useEngine } from "../../application/orbit";
 import { openInApp } from "./inAppLinks";
 
 /**

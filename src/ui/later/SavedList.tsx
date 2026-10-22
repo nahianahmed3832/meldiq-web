@@ -1,7 +1,7 @@
 import { AlarmClock, Check, MessageSquare, RotateCcw, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useEngine, useOrbit } from "../../app/orbit";
-import { navigate } from "../../app/router";
+import { useEngine, useOrbit } from "../../application/orbit";
+import { navigate } from "../../application/router";
 import type { StoredMessage } from "../../model/types";
 import { PERSONAL, type SavedItem, savedDone, savedOpen } from "../../sync/navPrefs";
 import { preview } from "../../sync/rules";

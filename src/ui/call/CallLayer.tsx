@@ -1,6 +1,6 @@
 import { Maximize2, Phone, PhoneOff, Video } from "lucide-react";
 import { useEffect } from "react";
-import { useEngine, useOrbit } from "../../app/orbit";
+import { useEngine, useOrbit } from "../../application/orbit";
 import { Avatar } from "../components/Avatar";
 import { CallStage } from "./CallStage";
 import { callStatus } from "./callText";

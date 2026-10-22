@@ -1,5 +1,5 @@
-import { AppUpdatesBar } from "./AppUpdatesBar";
 import { ConversationMenu } from "./ConversationMenu";
+import { UNKNOWN } from "../../api/enums";
 import { ChannelGlyph } from "../community/ChannelDialogs";
 import { ForumView } from "./ForumView";
 import { presenceWords } from "../../sync/social";
@@ -8,8 +8,8 @@ import { RequestBar, RequestSentBanner } from "../people/RequestBar";
 import { VoiceRoomView } from "./VoiceRoomView";
 import { Archive, ArrowLeft, BellOff, ChevronRight, Phone, Search, ShieldAlert, Video } from "lucide-react";
 import { useCallback, useMemo, useState } from "react";
-import { shallowEqual, useEngine, useOrbit } from "../../app/orbit";
-import { navigate, type Route } from "../../app/router";
+import { shallowEqual, useEngine, useOrbit } from "../../application/orbit";
+import { navigate, type Route } from "../../application/router";
 import type { StoredMessage } from "../../model/types";
 import { CallFailure } from "../../call/rules";
 import { Avatar, colorIndexOf } from "../components/Avatar";
@@ -149,7 +149,6 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
         {c.type !== "CHANNEL" && <ConversationMenu conversationId={id} route={route} />}
       </header>
 
-      {c.type === "CHANNEL" && <AppUpdatesBar conversationId={id} />}
       {(alerts.length > 0 || (call && !c.voice) || c.archived || history === "running" || peer?.paused || (c.request && !c.request.incoming)) && (
         <div className="conv-banners">
           {c.request && !c.request.incoming && <RequestSentBanner conversation={c} />}
@@ -229,7 +228,11 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
       )}
 
       {/* A voice channel is for talking: no messages (batch B14; the server refuses them too). Its room page has Join. */}
-      {(c.type === "CHANNEL" && c.format === "forum") || c.voice ? null : c.request?.incoming ? (
+      {(c.type === "CHANNEL" && c.format === "forum") || c.voice ? null : c.format === UNKNOWN ? (
+        <div className="banner info" role="status" style={{ margin: 12 }}>
+          This channel is of a kind this version of Meldiq Web can't post in yet. Its messages are shown above.
+        </div>
+      ) : c.request?.incoming ? (
         <RequestBar conversation={c} name={title} />
       ) : (
         <Composer

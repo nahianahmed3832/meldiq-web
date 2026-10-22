@@ -1,6 +1,6 @@
 import { ShieldAlert } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useEngine, useOrbit } from "../../app/orbit";
+import { useEngine, useOrbit } from "../../application/orbit";
 import { safetyNumber } from "../../crypto/identity";
 import { Dialog } from "../components/Overlay";
 

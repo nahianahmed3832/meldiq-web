@@ -1,6 +1,7 @@
 import { ShieldBan } from "lucide-react";
+import { UNKNOWN } from "../../api/enums";
 import { useState } from "react";
-import { useEngine, useOrbit } from "../../app/orbit";
+import { useEngine, useOrbit } from "../../application/orbit";
 import { DM_POLICIES, DM_POLICY_LABEL, type DmPolicy, messagingSettings, REQUEST_POLICIES, REQUEST_POLICY_LABEL, type RequestPolicy, setMessagingSettings } from "../../sync/social";
 import { type Audience, AUDIENCES, blockedIds, myProfile, type Privacy, type PrivacyField, setPrivacy, unblock } from "../../sync/profile";
 import { userProfile } from "../../sync/account";
@@ -139,6 +140,11 @@ export function MessagingSettings() {
           value={s?.dmPolicy ?? "everyone"}
           onChange={(e) => void act.act(async () => setLocal(await setMessagingSettings(engine, { dmPolicy: e.target.value as DmPolicy })))}
         >
+          {s?.dmPolicy === UNKNOWN && (
+            <option value={UNKNOWN} disabled>
+              Set in a newer version of Meldiq
+            </option>
+          )}
           {DM_POLICIES.map((p) => (
             <option key={p} value={p}>
               {DM_POLICY_LABEL[p]}
@@ -158,6 +164,11 @@ export function MessagingSettings() {
           value={s?.requestPolicy ?? "everyone"}
           onChange={(e) => void act.act(async () => setLocal(await setMessagingSettings(engine, { requestPolicy: e.target.value as RequestPolicy })))}
         >
+          {s?.requestPolicy === UNKNOWN && (
+            <option value={UNKNOWN} disabled>
+              Set in a newer version of Meldiq
+            </option>
+          )}
           {REQUEST_POLICIES.map((p) => (
             <option key={p} value={p}>
               {REQUEST_POLICY_LABEL[p]}

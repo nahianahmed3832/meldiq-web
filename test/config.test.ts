@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { apiBase, config, loadConfig, serverHost, wsUrl } from "../src/app/config";
+import { apiBase, config, loadConfig, serverHost, wsUrl } from "../src/application/config";
 
 const serve = (body: unknown, type = "application/json") => (async () => new Response(JSON.stringify(body), { headers: { "content-type": type } })) as typeof fetch;
 

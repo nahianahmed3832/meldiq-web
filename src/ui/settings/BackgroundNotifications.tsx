@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { useEngine, useOrbit } from "../../app/orbit";
-import { usePrefs } from "../../app/prefs";
-import { iosNeedsHomeScreen, type PushState, pushState } from "../../app/pushRules";
-import { pushAvailable, pushRegistered, pushSupported, PushError, registerPush, systemNotify, unregisterPush } from "../../app/webPush";
-import { config } from "../../app/config";
+import { useEngine, useOrbit } from "../../application/orbit";
+import { usePrefs } from "../../application/prefs";
+import { iosNeedsHomeScreen, type PushState, pushState } from "../../application/pushRules";
+import { pushAvailable, pushRegistered, pushSupported, PushError, registerPush, systemNotify, unregisterPush } from "../../application/webPush";
+import { config } from "../../application/config";
 
 /** What each state says (docs/MELDIQ_WEB_PUSH.md). */
 const TEXT: Record<PushState, string> = {
@@ -80,7 +80,7 @@ export function BackgroundNotifications({ permission }: { permission: Notificati
           {permission === "granted" && prefs.notifications && (
             <button
               className="btn btn-ghost btn-sm"
-              onClick={() => systemNotify({ title: "Meldiq", body: "Notifications work on this browser.", tag: "meldiq-test", hash: "#/settings/notifications" })}
+              onClick={() => systemNotify({ title: "Meldiq", body: "Notifications work on this browser.", tag: "meldiq-test", href: "/settings/notifications" })}
             >
               Send a test notification
             </button>

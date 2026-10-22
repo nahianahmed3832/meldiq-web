@@ -2,8 +2,8 @@ import { members } from "../format";
 import { Hash, Lock, Megaphone } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import type { Conversation } from "../../api/schemas";
-import { useEngine } from "../../app/orbit";
-import { navigate } from "../../app/router";
+import { useEngine } from "../../application/orbit";
+import { navigate } from "../../application/router";
 import { browseChannels, joinChannel } from "../../sync/account";
 import { Dialog } from "../components/Overlay";
 

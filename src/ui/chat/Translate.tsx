@@ -1,6 +1,6 @@
 import { Copy, Languages } from "lucide-react";
 import { useState } from "react";
-import { setPrefs, usePrefs } from "../../app/prefs";
+import { setPrefs, usePrefs } from "../../application/prefs";
 import { TRANSLATE_TARGETS, type TranslateTarget, translateText } from "../../sync/translate";
 import { Dialog } from "../components/Overlay";
 

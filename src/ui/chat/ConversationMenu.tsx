@@ -1,7 +1,7 @@
 import { Info, Lock, MoreHorizontal, Pin, ShieldAlert } from "lucide-react";
 import { useState } from "react";
-import { shallowEqual, useOrbit } from "../../app/orbit";
-import { navigate, type Route } from "../../app/router";
+import { shallowEqual, useOrbit } from "../../application/orbit";
+import { navigate, type Route } from "../../application/router";
 import { Menu, type MenuEntry, useMenu } from "../components/Overlay";
 import { usePinned } from "./PinnedPanel";
 import { SecuritySheet } from "./SecuritySheet";

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { OrgAdminDetail } from "../../api/workspaceSchemas";
-import { useEngine, useOrbit } from "../../app/orbit";
+import { useEngine, useOrbit } from "../../application/orbit";
 import { AUDIT_FILTERS } from "../../sync/reports";
 import { type AuditPage as Page, auditLog } from "../../sync/roles";
 import { directory } from "../../sync/workspaces";

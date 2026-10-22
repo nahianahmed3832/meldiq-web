@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { openEnum } from "./enums";
 
 /**
  * The parts of the server's responses this client uses (server/src/routes). Validated at the boundary; unknown fields are
@@ -88,7 +89,7 @@ export const zConversation = z.object({
   categoryName: nullableString,
   position: z.number().int().default(0),
   /** "text", or "forum": posts with a title, each with its replies in a thread. */
-  format: z.enum(["text", "forum"]).catch("text").default("text"),
+  format: openEnum(["text", "forum"]).default("text"),
   forumTags: z
     .array(z.object({ id: z.string(), name: z.string() }))
     .max(50)
@@ -145,11 +146,11 @@ export const zOrg = z.object({
     .nullish()
     .transform((v) => v ?? null),
   /** Meldiq 2.0 (docs/product/MELDIQ_2_DECISIONS.md): a team or a community; older servers send nothing (a team). */
-  kind: z.enum(["team", "community"]).catch("team").default("team"),
+  kind: openEnum(["team", "community"]).default("team"),
   // ── Communities (API 0.12+); older servers leave these out. ──
   /** Listed in Discover, and whether anyone may join from there or only with an invitation. */
-  visibility: z.enum(["private", "public"]).catch("private").default("private"),
-  joinPolicy: z.enum(["invite", "open"]).catch("invite").default("invite"),
+  visibility: openEnum(["private", "public"]).default("private"),
+  joinPolicy: openEnum(["invite", "open"]).default("invite"),
   rules: nullableString,
   /** Batch B4 Security actions: until when joining, and new DMs between members, are paused (null: not paused). */
   invitesPausedUntil: z
@@ -247,10 +248,8 @@ export const zProfile = z.object({
     .transform((v) => v ?? null),
   pronouns: nullableString,
   /** Your own profile: your presence choice and until when (batch B6b). */
-  presenceMode: z
-    .enum(["auto", "idle", "dnd", "invisible"])
+  presenceMode: openEnum(["auto", "idle", "dnd", "invisible"])
     .nullish()
-    .catch(null)
     .transform((v) => v ?? null),
   presenceUntil: z
     .number()
@@ -323,6 +322,21 @@ export const zQueueItem = z.object({
   }),
 });
 export type QueueItem = z.infer<typeof zQueueItem>;
+
+/**
+ * What identifies a queue item even when the rest doesn't parse (a newer item kind or payload): enough to keep a
+ * placeholder in its conversation instead of dropping it (docs/api/README.md › Rules for clients).
+ */
+export const zQueueItemIdentity = z.object({
+  id: z.number().int(),
+  kind: z.string(),
+  conversationId: z.string().min(1).max(128),
+  messageId: z.string().min(1).max(128),
+  senderUserId: z.string().min(1).max(128),
+  senderDeviceId: z.string().max(128).catch(""),
+  createdAt: z.number().catch(() => Date.now()),
+  expiresAt: z.number().catch(0),
+});
 
 export const zHistoryPage = z.object({
   items: z.array(z.object({ tag: z.string(), conv: z.string(), seq: z.number(), ts: z.number(), body: z.string().nullable() })),

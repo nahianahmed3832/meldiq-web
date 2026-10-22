@@ -1,7 +1,7 @@
 import { MoreHorizontal, Search } from "lucide-react";
 import { useState } from "react";
 import type { DirectoryMember, OrgAdminDetail, OrgRole } from "../../api/workspaceSchemas";
-import { useEngine, useOrbit } from "../../app/orbit";
+import { useEngine, useOrbit } from "../../application/orbit";
 import { changeMember, directory, removeMember } from "../../sync/workspaces";
 import { setGuestExpiry } from "../../sync/workspaceC5";
 import { assignableRoles, memberGroups, removalAllowed, roleName, titleChangeAllowed } from "../../sync/workspaceRules";

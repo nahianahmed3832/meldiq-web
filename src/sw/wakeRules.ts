@@ -38,7 +38,7 @@ export interface WakeNotice {
   call: boolean;
 }
 
-const urlOf = (c: Conversation): string => `/#/${c.type === "CHANNEL" ? "home" : "dms"}/c/${encodeURIComponent(c.id)}`;
+const urlOf = (c: Conversation): string => `/${c.type === "CHANNEL" ? "home" : "dms"}/c/${encodeURIComponent(c.id)}`;
 const titleOf = (c: Conversation, me: string): string => {
   const t = conversationTitle(c, me, {});
   return c.type === "CHANNEL" ? `#${t}` : t;

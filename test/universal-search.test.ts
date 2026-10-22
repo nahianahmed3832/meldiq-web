@@ -8,7 +8,7 @@ describe("universal search rules", () => {
     expect(serverTypes("files")).toBeNull();
     expect(serverTypes("pinned")).toBeNull();
     expect(serverTypes("people")).toBe("people");
-    expect(serverTypes("all")).toBe("people,channels,workspaces,groups,documents");
+    expect(serverTypes("all")).toBe("people,channels,workspaces,groups");
   });
 
   it("each filter shows its own section, all shows everything", () => {

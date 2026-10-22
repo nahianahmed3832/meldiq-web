@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { Conversation } from "../src/api/schemas";
-import { parseRoute, routeHash } from "../src/app/router";
+import { appHref, parseRoute, routeHref } from "../src/application/router";
 import { initialState, type AppState, upsertLoaded, withMessages } from "../src/state/store";
 import { bytes, conversationTitle, dayLabel, relative, sameDay, shortWhen } from "../src/ui/format";
 import { channelGroups, inWorkspace, mentionConversations, mentionCount, orgUnread, people, unreadPeopleCount } from "../src/ui/selectors";
@@ -64,7 +64,8 @@ describe("routes", () => {
       { section: "home" as const, conversationId: "c_abc", panel: "thread" as const, threadRoot: "m-1" },
       { section: "settings" as const, settingsPage: "devices" as const },
     ]) {
-      const parsed = parseRoute(routeHash(r));
+      expect(routeHref(r).startsWith("/")).toBe(true);
+      const parsed = parseRoute(routeHref(r));
       expect(parsed.section).toBe(r.section);
       if ("conversationId" in r) expect(parsed.conversationId).toBe(r.conversationId);
       if ("panel" in r) expect(parsed.panel).toBe(r.panel);
@@ -72,6 +73,19 @@ describe("routes", () => {
     expect(parseRoute("#/nowhere/c/<script>")).toMatchObject({ section: "home", conversationId: null });
     expect(parseRoute("#/settings/nope").settingsPage).toBe("profile");
     expect(parseRoute("").section).toBe("home");
+    expect(parseRoute("/nowhere/c/<script>")).toMatchObject({ section: "home", conversationId: null });
+    expect(parseRoute("/dms/c/%E0%A4%A")).toMatchObject({ section: "dms", conversationId: null });
+  });
+
+  it("old hash links and this app's own paths open in the app; nothing else does", () => {
+    const origin = "https://web.meldiq.app";
+    expect(appHref("/dms/c/c_abc/details", origin)).toBe("/dms/c/c_abc/details");
+    expect(appHref("https://web.meldiq.app/#/home/c/c_abc", origin)).toBe("/home/c/c_abc");
+    expect(appHref("#/settings/devices", origin)).toBe("/settings/devices");
+    expect(appHref("/settings/nope", origin)).toBe("/settings/profile");
+    for (const other of ["https://evil.example/dms", "/invite/abc", "/meldiq-og.png", "/v1/queue", "javascript:alert(1)", "//evil.example/home"]) expect(appHref(other, origin)).toBeNull();
+    // A malformed id is dropped: the section opens, never the raw text.
+    expect(appHref("/dms/c/<script>", origin)).toBe("/dms");
   });
 });
 

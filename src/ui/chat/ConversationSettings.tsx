@@ -1,7 +1,7 @@
 import { BellOff, LogOut } from "lucide-react";
 import { useState } from "react";
-import { useEngine, useOrbit } from "../../app/orbit";
-import { navigate } from "../../app/router";
+import { useEngine, useOrbit } from "../../application/orbit";
+import { navigate } from "../../application/router";
 import { levelOf, type NotifyLevel, workspaceOf } from "../../sync/navPrefs";
 import { removeConversationMember } from "../../sync/workspaces";
 

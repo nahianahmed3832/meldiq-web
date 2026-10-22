@@ -46,7 +46,7 @@ the config files and the install, rollback and verify scripts. The build contain
 
 ## 3. Configuration (per server, not per build)
 
-`/config.json` is read when the page loads (`src/app/config.ts`):
+`/config.json` is read when the page loads (`src/application/config.ts`):
 
 | Field | Production value | Meaning |
 |---|---|---|
@@ -113,7 +113,8 @@ the new site on a first install), so a refused install never blocks other sites'
   token; when the API answers with a link to the bucket, nginx follows it itself, only to `MELDIQ_MEDIA_ORIGIN` (default:
   the `amazonaws.com` entry of `MELDIQ_CONNECT_EXTRA`) and without the token or cookies, keeping `Range`. Any other
   host gets 502; the API's own errors pass through; GET only.
-- `/config.json`: `no-store`. `/assets/`: content-hashed, cached a year. Everything else falls back to `index.html`.
+- `/config.json`: `no-store`. `/_next/static/` (and `/assets/` of releases before Next.js): content-hashed, cached a year.
+  Everything else falls back to `index.html`, the app's one page (`docs/MELDIQ_WEB_NEXTJS.md`).
 - Its own access and error logs (`/var/log/nginx/meldiq-web.*.log`).
 
 ### Headers (`deploy/nginx/meldiq-web-headers.conf.template`)
@@ -200,7 +201,7 @@ until `WEB_ORIGINS` is set.
 |---|---|---|---|
 | App | `npm run dev` at http://localhost:5173 | a second site, e.g. `staging-web.griipbuddy.cloud`, same scripts | `web.griipbuddy.cloud` |
 | API | `bash scripts/local-server.sh` (local data, emails to files) | the staging compose project (`ORBIT_2_ARCHITECTURE` §9, needs the owner) | `msg.griipbuddy.cloud` container via the proxy |
-| config.json | none (same origin through Vite's proxy) | `environment: "staging"` | `deploy/config/production.json` |
+| config.json | none (same origin through `next dev`'s proxy) | `environment: "staging"` | `deploy/config/production.json` |
 | Email | `MAIL_TRANSPORT=file` | SES sandbox | SES |
 
 ## 9. Logs, health and restarts

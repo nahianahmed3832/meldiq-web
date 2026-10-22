@@ -1,6 +1,6 @@
 import { PinOff, X } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useEngine, useOrbit } from "../../app/orbit";
+import { useEngine, useOrbit } from "../../application/orbit";
 import type { StoredMessage } from "../../model/types";
 import { shortWhen } from "../format";
 import { jumpTo } from "./jump";

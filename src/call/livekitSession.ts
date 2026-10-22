@@ -1,3 +1,4 @@
+import { DEV } from "../application/env";
 import {
   ConnectionQuality,
   createLocalTracks,
@@ -109,7 +110,7 @@ export class LiveKitSession implements MediaSession {
     this.room = room;
     this.wire(room);
     // Development builds only (removed from production bundles): what the badge rests on, for the browser tests.
-    if (import.meta.env.DEV) (globalThis as { __orbitCallTracks?: () => unknown }).__orbitCallTracks = () => this.tracker.snapshot();
+    if (DEV) (globalThis as { __orbitCallTracks?: () => unknown }).__orbitCallTracks = () => this.tracker.snapshot();
     document.body.appendChild(this.audioBox);
     await keyProvider.setKey(key);
     await room.setE2EEEnabled(true);
