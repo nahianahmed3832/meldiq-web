@@ -80,7 +80,9 @@ Design, tests and the phone test: `../docs/ORBIT_WEB_CALLS.md`.
 npm run typecheck && npm run lint && npm run format:check
 ```
 
-Unit tests (no server needed): cryptography against the shared vectors, protocol rules, key storage, routing.
+Unit tests (no server needed): cryptography against the shared vectors, protocol rules, key storage, routing, and the
+server's contract fixtures decoded with the web's own schemas (`test/contract-fixtures.test.ts`; refresh the copy with
+`npx tsx scripts/sync-contract-fixtures.ts`, known gaps in `test/contract-allowlist.txt`).
 
 ```bash
 npm test
@@ -113,5 +115,5 @@ skipped and say why. Playwright starts its own LiveKit.
 | `src/call` | calls: manager, keys, LiveKit session, encryption worker and frame audit, badge rules |
 | `src/state`, `src/app` | app state, React bindings, boot, routes, preferences |
 | `src/ui` | the interface |
-| `test`, `e2e` | Vitest and Playwright; `test/vectors` holds copies of the shared protocol vectors |
-| `scripts` | `local-server.sh` (start the Orbit server for development), `demo-phone.ts` (test participants on a local server) |
+| `test`, `e2e` | Vitest and Playwright; `test/vectors` and `test/contract-fixtures` hold copies of the shared protocol vectors and the server's contract fixtures |
+| `scripts` | `local-server.sh` (start the Orbit server for development), `demo-phone.ts` (test participants on a local server), `sync-contract-fixtures.ts` (copy the server's contract fixtures) |

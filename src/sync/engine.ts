@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { ApiClient, ApiError } from "../api/client";
 import type { AccountSessionGrant } from "../api/accountSchemas";
-import { type Call, type Conversation, type Member, type Org, type SessionGrant, zCall, zConversation, zMember, zOrg, zProfile, zServerInfo } from "../api/schemas";
+import { type Call, type Conversation, type Member, type Org, type SessionGrant, zConversation, zMember, zOrg, zProfile, zServerInfo } from "../api/schemas";
 import { Signals, zExperiments } from "./signals";
 import { CommunitySync } from "./community";
 import { paused } from "./status";
@@ -24,6 +24,7 @@ import { Outbox, sealAndPost } from "./outbox";
 import { levelOf, type NavOp, NavSync, PERSONAL, shouldNotify, workspaceOf } from "./navPrefs";
 import { firstShowing, ReminderSync } from "./reminders";
 import { callFrame, orgDeletedFrame, presenceFrame, typingFrame } from "./frameReducers";
+import { parseFrame } from "./frames";
 import { meetingSoon } from "./workspaceC5";
 import { NOTICE_TEXT } from "./inbox";
 import type { Reminder } from "./reminderRules";
@@ -480,47 +481,38 @@ export class Engine implements EngineContext {
 
   // ───────────────────────── realtime frames ─────────────────────────
 
-  private async onFrame(f: Frame): Promise<void> {
+  private async onFrame(raw: Frame): Promise<void> {
     if (this.stopped) return;
+    const f = parseFrame(raw);
+    if (!f) return;
     switch (f.t) {
       case "hello":
         void this.refreshAll();
         this.outbox.kick();
         return;
       case "queue": {
-        const items = Array.isArray(f.items) ? (f.items as unknown[]) : [];
-        const acks = await this.receiver.process(items);
-        const backlog = f.backlog === true;
-        if (acks.length || backlog) {
-          const sent = this.realtime.send({ t: "ack", ids: acks, backlog });
+        const acks = await this.receiver.process(f.items);
+        if (acks.length || f.backlog) {
+          const sent = this.realtime.send({ t: "ack", ids: acks, backlog: f.backlog });
           if (!sent && acks.length) await this.api.call("POST", "/v1/queue/ack", { body: { ids: acks } }).catch(() => undefined);
         }
         return;
       }
-      case "typing": {
-        const c = str(f.c);
-        const u = str(f.u);
-        if (!c || !u || u === this.device.userId) return;
-        this.set((s) => typingFrame(s, c, u, f.on === true));
+      case "typing":
+        if (f.u === this.device.userId) return;
+        this.set((s) => typingFrame(s, f.c, f.u, f.on));
         return;
-      }
-      case "presence": {
-        const id = str(f.userId);
-        if (!id) return;
-        this.set((s) => presenceFrame(s, id, f.online === true, typeof f.presence === "string" ? f.presence : null));
+      case "presence":
+        this.set((s) => presenceFrame(s, f.userId, f.online, f.presence));
         return;
-      }
       case "connections.updated":
         this.set((s) => ({ ...s, connectionsRev: s.connectionsRev + 1 }));
         return;
-      case "conv.updated": {
-        const id = str(f.conversationId);
-        if (!id) return;
-        this.members.delete(id);
-        this.directory.invalidateConversation(id);
-        await this.fetchConversation(id);
+      case "conv.updated":
+        this.members.delete(f.conversationId);
+        this.directory.invalidateConversation(f.conversationId);
+        await this.fetchConversation(f.conversationId);
         return;
-      }
       case "org.updated":
         await this.refreshAll();
         this.community.refreshLoaded(this.state.get().orgs.map((o) => o.id));
@@ -533,14 +525,14 @@ export class Engine implements EngineContext {
         if (f.t === "org.application") void this.refreshAll();
         return;
       case "integration.event": {
-        const id = str(f.conversationId);
-        if (id) this.set((s) => ({ ...s, appEventsRev: { ...s.appEventsRev, [id]: (s.appEventsRev[id] ?? 0) + 1 } }));
+        const id = f.conversationId;
+        this.set((s) => ({ ...s, appEventsRev: { ...s.appEventsRev, [id]: (s.appEventsRev[id] ?? 0) + 1 } }));
         return;
       }
       case "meeting.updated":
       case "meeting.soon":
         this.set((s) => ({ ...s, meetingsRev: s.meetingsRev + 1 }));
-        if (f.t === "meeting.soon" && typeof f.meetingId === "string") void meetingSoon(this, f.meetingId, this.opts.notifyMeeting);
+        if (f.t === "meeting.soon" && f.meetingId) void meetingSoon(this, f.meetingId, this.opts.notifyMeeting);
         return;
       case "inbox.updated":
       case "inbox.escalated":
@@ -550,44 +542,33 @@ export class Engine implements EngineContext {
         // Ids only: the frame never carries a customer's name or text (docs/UNIFIED_INBOX.md).
         this.set((s) => ({ ...s, inboxRev: s.inboxRev + 1 }));
         const notice = NOTICE_TEXT[f.t];
-        if (notice) this.opts.notifyInbox?.(notice, str(f.conversationId) ?? null);
+        if (notice) this.opts.notifyInbox?.(notice, f.conversationId);
         return;
       }
       case "reminders.changed":
       case "reminder.due":
         await this.reminders.refresh();
         return;
-      case "prefs.updated": {
-        const ws = str(f.workspaceId);
-        if (ws) await this.nav.refresh([ws]);
+      case "prefs.updated":
+        await this.nav.refresh([f.workspaceId]);
         return;
-      }
-      case "org.deleted": {
-        const id = str(f.orgId);
-        if (!id) return;
-        this.set((s) => orgDeletedFrame(s, id));
-        this.community.forget(id);
+      case "org.deleted":
+        this.set((s) => orgDeletedFrame(s, f.orgId));
+        this.community.forget(f.orgId);
         return;
-      }
-      case "devices.changed": {
-        const id = str(f.userId);
-        if (id) this.directory.invalidateUser(id);
+      case "devices.changed":
+        this.directory.invalidateUser(f.userId);
         return;
-      }
       case "call": {
-        const parsed = zCall.safeParse(f.call);
-        if (!parsed.success) return;
-        const call = parsed.data;
+        const call = f.call;
         this.set((s) => callFrame(s, call));
-        if (typeof f.event === "string") void this.calls.onCallEvent(f.event, call, f as { from?: { displayName?: unknown }; reason?: unknown; action?: unknown });
+        if (f.event) void this.calls.onCallEvent(f.event, call, f.extra);
         void this.callLog.upsert(call);
         return;
       }
       case "queue.drained":
         // The backlog, and with it any call key, has arrived: look for calls that rang while this browser was away.
         void this.calls.recoverRinging();
-        return;
-      default:
         return;
     }
   }
@@ -1001,10 +982,6 @@ export class Engine implements EngineContext {
 const unavailableMedia: MediaFactory = () => {
   throw new Error("call media isn't available here");
 };
-
-function str(v: unknown): string | null {
-  return typeof v === "string" && v.length > 0 && v.length <= 128 ? v : null;
-}
 
 function toUser(m: Member, prev?: UserLite): UserLite {
   return {
