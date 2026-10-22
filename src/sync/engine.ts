@@ -63,6 +63,8 @@ export interface EngineOptions {
   ringAlert?: (title: string, video: boolean, conversationId: string) => void;
   /** Call timing for tests. */
   callTiming?: { keyWaitMs?: number; peerWindowMs?: number; rejoinWindowMs?: number };
+  /** Settings › Calls (batches B10, B11): noise reduction, and how this browser shares its screen. */
+  callPrefs?: () => { noiseReduction: boolean; shareMode: "text" | "motion"; shareAudio: boolean };
 }
 
 const PAGE = 60;
@@ -152,6 +154,7 @@ export class Engine implements EngineContext {
         media: opts.media ?? unavailableMedia,
         supported: opts.callSupported ?? (() => !!opts.media && callSupport().ok),
         ringtone: opts.ringtone,
+        callPrefs: opts.callPrefs,
         ...opts.callTiming,
       },
     );
@@ -918,7 +921,15 @@ export class Engine implements EngineContext {
     const c = await this.ensureConversation(id).catch(() => null);
     if (!c) return { title: "Call", isGroup: false, colorIndex: 0, voiceRoom: false, canModerate: false };
     if (c.type !== "DM")
-      return { title: c.type === "CHANNEL" ? `#${c.name ?? "channel"}` : (c.name ?? "Group"), isGroup: true, colorIndex: 0, voiceRoom: c.voice, canModerate: c.voice && c.canManage };
+      return {
+        title: c.type === "CHANNEL" ? `#${c.name ?? "channel"}` : (c.name ?? "Group"),
+        isGroup: true,
+        colorIndex: 0,
+        voiceRoom: c.voice,
+        canModerate: c.voice && c.canManage,
+        // Voice permissions (voice.speak): a channel you may only listen in opens no microphone.
+        listenOnly: c.voice && c.canSpeak === false,
+      };
     const peer = c.members?.find((m) => m.id !== this.device.userId);
     const title = (peer && (this.state.get().users[peer.id]?.displayName ?? peer.displayName)) || "Call";
     return { title, isGroup: false, colorIndex: peer?.avatarColor ?? 0, voiceRoom: false, canModerate: false };

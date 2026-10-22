@@ -52,6 +52,11 @@ export interface Prefs {
   translateConsent: boolean;
   /** The language messages are translated into. */
   translateTarget: TranslateTarget;
+  /** Batch B10 (android Settings › Calls › Noise reduction): background noise reduction and automatic level. */
+  noiseReduction: boolean;
+  /** Batch B11: the last screen share choice, the default next time (android SettingsStore.shareMode, shareAppSound). */
+  shareMode: "text" | "motion";
+  shareAudio: boolean;
 }
 
 const KEY = "orbit.prefs.v1";
@@ -77,6 +82,9 @@ const defaults: Prefs = {
   startHidden: false,
   translateConsent: false,
   translateTarget: "en",
+  noiseReduction: true,
+  shareMode: "text",
+  shareAudio: false,
 };
 
 function load(): Prefs {
@@ -94,6 +102,9 @@ function load(): Prefs {
       animatedEmoji: typeof stored.animatedEmoji === "boolean" ? stored.animatedEmoji : defaults.animatedEmoji,
       mediaCards: typeof stored.mediaCards === "boolean" ? stored.mediaCards : defaults.mediaCards,
       translateTarget: TRANSLATE_TARGETS.some((t) => t.code === stored.translateTarget) ? stored.translateTarget : defaults.translateTarget,
+      noiseReduction: typeof stored.noiseReduction === "boolean" ? stored.noiseReduction : defaults.noiseReduction,
+      shareMode: stored.shareMode === "motion" ? "motion" : "text",
+      shareAudio: typeof stored.shareAudio === "boolean" ? stored.shareAudio : defaults.shareAudio,
     };
   } catch {
     return defaults;

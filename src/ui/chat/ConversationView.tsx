@@ -160,7 +160,7 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
               </button>
             </div>
           ))}
-          {c.voice && myCall !== id && <VoiceRoomBanner conversationId={id} canJoin={calling && engine.calls.supported() && myCall === null && !c.archived} />}
+          {c.voice && myCall !== id && <VoiceRoomBanner conversationId={id} canJoin={calling && engine.calls.supported() && myCall === null && !c.archived && c.canConnect !== false} />}
           {call && !c.voice && myCall !== id && (
             <div className="banner info call-banner">
               {call.video ? <Video size={16} /> : <Phone size={16} />}

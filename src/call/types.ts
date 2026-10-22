@@ -82,6 +82,13 @@ export interface CallUiState {
   canModerate: boolean;
   /** Something to tell the person during the call (a manager muted them, a request failed). */
   notice: string | null;
+  /** Batch B10: you hear nobody and your microphone is off. */
+  deafened: boolean;
+  /** Batch B11: how this browser shares its screen, and whether with sound. */
+  shareMode: "text" | "motion" | null;
+  shareAudio: boolean;
+  /** A voice channel you may join but not talk in (voice.speak): listen only. */
+  listenOnly: boolean;
 }
 
 export const idleCall: CallUiState = {
@@ -116,6 +123,10 @@ export const idleCall: CallUiState = {
   hands: [],
   canModerate: false,
   notice: null,
+  deafened: false,
+  shareMode: null,
+  shareAudio: false,
+  listenOnly: false,
 };
 
 /** What the server's call API hands a device that may join: a room-scoped LiveKit token. */
@@ -149,6 +160,18 @@ export class DeviceError extends Error {
   }
 }
 
+/** How the microphone opens (batch B10): noise reduction, and none at all in a listen-only voice channel. */
+export interface PrepareOptions {
+  noiseReduction?: boolean;
+  microphone?: boolean;
+}
+
+/** How a screen is shared (batch B11): text or motion, and the shared tab's or system's sound where the browser allows. */
+export interface ShareOptions {
+  mode: "text" | "motion";
+  audio: boolean;
+}
+
 /** What a media session tells the call manager. */
 export interface MediaEvents {
   /** Participants, tracks, mute or speaking changed: read [MediaSession.participants] again. */
@@ -162,6 +185,8 @@ export interface MediaEvents {
   remoteJoined(): void;
   remoteLeft(remaining: number): void;
   audioBlocked(blocked: boolean): void;
+  /** Batch B11: someone else stopped sharing their screen. */
+  shareEnded?(name: string): void;
 }
 
 /**
@@ -173,7 +198,7 @@ export interface MediaSession {
    * Opens the microphone (and camera for [video]) before joining: this is when the browser asks for permission. Never
    * rejects; says which device couldn't be used and why.
    */
-  prepare(video: boolean): Promise<DeviceIssues>;
+  prepare(video: boolean, opts?: PrepareOptions): Promise<DeviceIssues>;
   /** Joins with frame encryption under [key] and publishes what [prepare] opened; rejects if the room can't be reached. */
   connect(grant: MediaGrant, key: string): Promise<void>;
   /** Rejects with [DeviceError] when the device can't be used. */
@@ -184,7 +209,9 @@ export interface MediaSession {
   /** Shows [identity]'s camera in [el]; returns a function that stops. */
   attachVideo(identity: string, el: HTMLVideoElement): () => void;
   /** Starts or stops sharing this browser's screen (the browser asks which screen or window). Rejects with [DeviceError]. */
-  setScreenShare(on: boolean): Promise<void>;
+  setScreenShare(on: boolean, opts?: ShareOptions): Promise<void>;
+  /** Batch B10 deafen: nobody's sound plays (people who join later too) until turned off. */
+  setDeafened(on: boolean): void;
   /** Shows [identity]'s shared screen in [el]; returns a function that stops. */
   attachScreen(identity: string, el: HTMLVideoElement): () => void;
   /** The microphones, cameras or speakers the browser offers (labels once permission was given). */

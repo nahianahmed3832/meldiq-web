@@ -121,6 +121,10 @@ export function createEngine(device: DeviceRecord, store: LocalStore): Engine {
     notifyInbox,
     media: liveKitMedia,
     ringtone: new Ringtone(() => getPrefs().callRingtone),
+    callPrefs: () => {
+      const p = getPrefs();
+      return { noiseReduction: p.noiseReduction, shareMode: p.shareMode, shareAudio: p.shareAudio };
+    },
     ringAlert,
     prefs: () => {
       const p = getPrefs();

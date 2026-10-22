@@ -15,7 +15,7 @@ import {
   VideoPresets,
 } from "livekit-client";
 import { isAuditMessage } from "./frameAudit";
-import { describePath, deviceIssueOf, MediaFlowMonitor, mirrorPreview } from "./rules";
+import { audioProcessing, describePath, deviceIssueOf, MediaFlowMonitor, mirrorPreview, SHARE_MODES } from "./rules";
 import { MediaSecurityTracker } from "./security";
 import {
   type CallParticipantView,
@@ -28,6 +28,8 @@ import {
   type MediaGrant,
   type MediaSecurity,
   type MediaSession,
+  type PrepareOptions,
+  type ShareOptions,
 } from "./types";
 
 // LiveKit's own logging stays at warnings: its signalling URL carries the call pass (android keeps SDK logging off).
@@ -60,19 +62,26 @@ export class LiveKitSession implements MediaSession {
    * played or shown before the frame audit vouches for it.
    */
   private readonly pendingAudio = new Map<string, RemoteTrack>();
+  /** Batch B10: nobody's sound plays while deafened, including people who join later. */
+  private deafened = false;
+  private audioOptions: MediaTrackConstraints | undefined;
 
   constructor(private readonly events: MediaEvents) {
     this.audioBox.hidden = true;
     this.audioBox.dataset.orbitCallAudio = "";
   }
 
-  async prepare(video: boolean): Promise<DeviceIssues> {
-    const both = await open({ audio: true, video: video ? CAMERA : false });
+  async prepare(video: boolean, opts: PrepareOptions = {}): Promise<DeviceIssues> {
+    // Batch B10: noise reduction and automatic level unless turned off; a listen-only voice channel opens no microphone.
+    const audio = opts.microphone === false ? false : audioProcessing(opts.noiseReduction !== false);
+    this.audioOptions = audio || undefined;
+    if (!audio && !video) return { microphone: null, camera: null };
+    const both = await open({ audio, video: video ? CAMERA : false });
     if (!both.issue) this.prepared = both.tracks;
     else if (!video) return this.settle({ microphone: both.issue, camera: null });
     else {
       // One of the two failed: open each alone to tell which (the browser remembers the answer, so no second prompt).
-      const mic = await open({ audio: true, video: false });
+      const mic = await open({ audio, video: false });
       const cam = await open({ audio: false, video: CAMERA });
       this.prepared = [...mic.tracks, ...cam.tracks];
       return this.settle({ microphone: mic.issue, camera: cam.issue });
@@ -114,7 +123,7 @@ export class LiveKitSession implements MediaSession {
 
   async setMicrophone(on: boolean): Promise<void> {
     try {
-      await this.room?.localParticipant.setMicrophoneEnabled(on);
+      await this.room?.localParticipant.setMicrophoneEnabled(on, this.audioOptions);
     } catch (e) {
       throw new DeviceError("microphone", deviceIssueOf(e));
     }
@@ -128,15 +137,26 @@ export class LiveKitSession implements MediaSession {
     }
   }
 
-  async setScreenShare(on: boolean): Promise<void> {
+  async setScreenShare(on: boolean, opts: ShareOptions = { mode: "text", audio: false }): Promise<void> {
     try {
-      // Up to 1080p at 15 fps, as the phone shares (UI-003); no tab audio. Frame encryption covers it like any track.
-      await this.room?.localParticipant.setScreenShareEnabled(on, { audio: false, resolution: { width: 1920, height: 1080, frameRate: 15 }, contentHint: "detail" });
+      // Batch B11 modes (android ShareMode): text keeps resolution, motion keeps the frame rate. The shared tab's or
+      // system's sound comes along where the browser offers it (Chromium); frame encryption covers every track.
+      const m = SHARE_MODES[opts.mode];
+      await this.room?.localParticipant.setScreenShareEnabled(
+        on,
+        { audio: on && opts.audio, resolution: { width: m.width, height: m.height, frameRate: m.frameRate }, contentHint: m.contentHint, systemAudio: opts.audio ? "include" : "exclude" },
+        { videoEncoding: { maxBitrate: m.maxBitrate, maxFramerate: m.frameRate }, degradationPreference: m.degradation, simulcast: false },
+      );
     } catch (e) {
       // Closing the browser's picker isn't an error worth showing.
       if (e instanceof DOMException && e.name === "NotAllowedError" && on) throw new DeviceError("screen", "denied");
       throw new DeviceError("screen", deviceIssueOf(e));
     }
+  }
+
+  setDeafened(on: boolean): void {
+    this.deafened = on;
+    for (const el of this.audioBox.querySelectorAll("audio")) el.muted = on;
   }
 
   attachScreen(identity: string, el: HTMLVideoElement): () => void {
@@ -236,6 +256,10 @@ export class LiveKitSession implements MediaSession {
         changed();
       })
       .on(RoomEvent.TrackSubscribed, (track, pub, p) => this.onSubscribed(track, pub, p))
+      .on(RoomEvent.TrackUnpublished, (pub, p) => {
+        // Batch B11: "<name> stopped sharing their screen".
+        if (pub.source === Track.Source.ScreenShare) this.events.shareEnded?.(p.name || "Someone");
+      })
       .on(RoomEvent.TrackUnsubscribed, (track, _pub, p) => {
         track.detach().forEach((el) => el.remove());
         const k = key(p, track);
@@ -301,7 +325,9 @@ export class LiveKitSession implements MediaSession {
     for (const [k, track] of this.pendingAudio) {
       if (!this.tracker.proven(k)) continue;
       this.pendingAudio.delete(k);
-      this.audioBox.appendChild(track.attach());
+      const el = track.attach();
+      el.muted = this.deafened;
+      this.audioBox.appendChild(el);
     }
   }
 

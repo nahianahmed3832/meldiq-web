@@ -4,7 +4,7 @@ import type { Payload } from "../protocol/payload";
 import type { AppState, Store } from "../state/store";
 import { IdentityChangedError } from "../sync/outbox";
 import { CallKeyRing, inRoomCall, judgeKey, type KeyVerdict, KeyRequestPacer, newCallKey, verificationCode } from "./callKeys";
-import { backoff, CallFailure, KEY_POLL_MS, KEY_WAIT_MS, PEER_WINDOW_MS, REJOIN_WINDOW_MS, retryable, shouldRing } from "./rules";
+import { backoff, CallFailure, deafenChange, KEY_POLL_MS, KEY_WAIT_MS, PEER_WINDOW_MS, REJOIN_WINDOW_MS, retryable, shouldRing } from "./rules";
 import { type CallUiState, DeviceError, type DeviceKind, idleCall, type MediaDeviceChoice, type MediaEvents, type MediaFactory, type MediaGrant, type MediaSession } from "./types";
 
 /** What the call manager needs from the engine that owns it. */
@@ -29,6 +29,8 @@ export interface CallTarget {
   colorIndex: number;
   voiceRoom: boolean;
   canModerate: boolean;
+  /** A voice channel this person may join but not talk in (voice.speak): no microphone opens. */
+  listenOnly?: boolean;
 }
 
 /** What a voice room's manager can do to someone in its call (server POST /v1/calls/:id/moderate). */
@@ -44,6 +46,8 @@ export interface CallOptions {
   keyWaitMs?: number;
   peerWindowMs?: number;
   rejoinWindowMs?: number;
+  /** This browser's call settings (Settings › Calls): noise reduction, and how a screen is shared. */
+  callPrefs?(): { noiseReduction: boolean; shareMode: "text" | "motion"; shareAudio: boolean };
 }
 
 /** A failure whose message is already what the person should read. */
@@ -189,11 +193,12 @@ export class CallManager {
 
   /** Opens the devices first: this is when the browser asks. Placing a call needs the microphone; answering doesn't. */
   private async prepare(gen: number, session: MediaSession, video: boolean, needMicrophone: boolean): Promise<void> {
+    const listenOnly = this.state.listenOnly;
     this.patch({ askingPermission: true });
-    const devices = await session.prepare(video);
+    const devices = await session.prepare(video, { noiseReduction: this.opts.callPrefs?.().noiseReduction ?? true, microphone: !listenOnly });
     this.check(gen);
-    this.patch({ askingPermission: false, devices, micOn: !devices.microphone, cameraOn: video && !devices.camera });
-    if (needMicrophone && devices.microphone) throw new CallError(CallFailure.device("microphone", devices.microphone));
+    this.patch({ askingPermission: false, devices, micOn: !listenOnly && !devices.microphone, cameraOn: video && !devices.camera });
+    if (needMicrophone && !listenOnly && devices.microphone) throw new CallError(CallFailure.device("microphone", devices.microphone));
   }
 
   /** The key arrives as an encrypted control message, possibly after the ring; late joiners ask the creator (T5.3). */
@@ -234,6 +239,9 @@ export class CallManager {
       throw new CallError(CallFailure.forConnect(e));
     }
     this.check(gen);
+    // Still deafened after a rejoin; a screen share doesn't come back by itself (batch B11 clean stop).
+    if (this.state.deafened) session.setDeafened(true);
+    if (this.state.screenSharing) this.patch({ shareMode: null, shareAudio: false });
     void this.host.api.call("POST", `/v1/calls/${encodeURIComponent(callId)}/connected`).catch(() => undefined);
     const alone = session.remoteCount() === 0 && !this.state.isGroup;
     this.patch({ phase: alone ? (this.created ? "outgoing" : "connecting") : "connected", connectedAt: alone ? null : this.now(), mediaEpoch: this.state.mediaEpoch + 1 });
@@ -255,6 +263,7 @@ export class CallManager {
       remoteJoined: () => live() && this.onRemoteJoined(),
       remoteLeft: (remaining) => live() && this.onRemoteLeft(remaining),
       audioBlocked: (audioBlocked) => live() && this.patch({ audioBlocked }),
+      shareEnded: (name) => live() && this.patch({ notice: `${name} stopped sharing their screen` }),
     };
     self = this.opts.media(events);
     this.session = self;
@@ -465,7 +474,27 @@ export class CallManager {
   // ───────────────────────── controls ─────────────────────────
 
   async toggleMicrophone(): Promise<void> {
+    if (this.state.listenOnly) return;
+    // Unmuting while deafened brings the sound back too (as on the phone: you can't talk without hearing).
+    if (this.state.deafened && !this.state.micOn) {
+      this.session?.setDeafened(false);
+      this.patch({ deafened: false });
+    }
     await this.setDevice("microphone", !this.state.micOn || this.state.devices.microphone !== null);
+  }
+
+  /** Mic state before deafening, so undeafening only turns it back on if it was on (batch B10). */
+  private micBeforeDeafen = false;
+
+  /** Deafen (batch B10): you hear nobody and your microphone is off; again, both come back as they were. */
+  async toggleDeafen(): Promise<void> {
+    const session = this.session;
+    if (!session) return;
+    const next = deafenChange(this.state.deafened, this.state.micOn, this.micBeforeDeafen);
+    this.micBeforeDeafen = next.micBeforeDeafen;
+    session.setDeafened(next.deafened);
+    this.patch({ deafened: next.deafened });
+    if (next.micOn !== this.state.micOn && !this.state.listenOnly) await this.setDevice("microphone", next.micOn);
   }
 
   async toggleCamera(): Promise<void> {
@@ -485,12 +514,15 @@ export class CallManager {
   }
 
   /** Shares this browser's screen, or stops (the browser's own "Stop sharing" also stops it; the state follows). */
-  async toggleScreenShare(): Promise<void> {
+  async toggleScreenShare(opts?: { mode: "text" | "motion"; audio: boolean }): Promise<void> {
     const session = this.session;
     if (!session) return;
+    const prefs = this.opts.callPrefs?.();
+    const share = opts ?? { mode: prefs?.shareMode ?? "text", audio: prefs?.shareAudio ?? false };
     try {
-      await session.setScreenShare(!this.state.screenSharing);
-      this.patch({ error: null });
+      const on = !this.state.screenSharing;
+      await session.setScreenShare(on, share);
+      this.patch({ error: null, shareMode: on ? share.mode : null, shareAudio: on && share.audio });
     } catch (e) {
       // Closing the browser's screen picker isn't a failure to show.
       if (!(e instanceof DeviceError && e.issue === "denied")) this.patch({ error: "Your screen couldn't be shared." });

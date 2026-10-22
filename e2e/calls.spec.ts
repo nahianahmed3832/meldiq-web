@@ -211,3 +211,29 @@ test("a call survives losing the network for a few seconds", async ({ page, cont
     await call.media.leave();
   }
 });
+
+test("deafen silences the call both ways and undeafen puts it back as it was (batch B10)", async ({ page }) => {
+  const { bob } = await setUp(page);
+  await page.getByRole("link", { name: /Bob Chen/ }).click();
+  await page.getByRole("button", { name: "Start a voice call" }).click();
+  const s = stage(page);
+  const call = await answerCall(bob, false);
+  try {
+    await expectEncrypted(page, s);
+    await heardBrowser(call.media);
+    await s.getByRole("button", { name: "Deafen" }).click();
+    await expect(s.getByRole("button", { name: "Deafened" })).toHaveAttribute("aria-pressed", "true");
+    // The microphone went off with it, and every incoming audio element is muted.
+    await expect(s.getByRole("button", { name: "Unmute" })).toBeVisible();
+    await expect.poll(() => page.evaluate(() => Array.from(document.querySelectorAll("[data-orbit-call-audio] audio")).map((a) => (a as HTMLAudioElement).muted))).not.toContain(false);
+    const heardBefore = call.media.received.audio.audible;
+    await page.waitForTimeout(2_000);
+    expect(call.media.received.audio.audible - heardBefore).toBeLessThan(10);
+    await s.getByRole("button", { name: "Deafened" }).click();
+    await expect(s.getByRole("button", { name: "Mute" })).toBeVisible();
+    await expect.poll(() => page.evaluate(() => Array.from(document.querySelectorAll("[data-orbit-call-audio] audio")).every((a) => !(a as HTMLAudioElement).muted))).toBe(true);
+    await expect.poll(() => call.media.received.audio.audible, { timeout: 15_000 }).toBeGreaterThan(heardBefore + 20);
+  } finally {
+    await call.media.leave();
+  }
+});
