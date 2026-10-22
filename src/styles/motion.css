@@ -1,0 +1,38 @@
+/*
+ * Batch B16 motion polish (android Motion tokens in meaning): side panels slide in, a tab's content fades in, a
+ * category's channels arrive as it opens, and the composer's mic and send swap with a small scale. Dialogs and menus
+ * already rise (views.css). Every duration is a token, and prefers-reduced-motion turns all of it off (base.css).
+ */
+@keyframes panel-in {
+  from {
+    opacity: 0;
+    transform: translateX(14px);
+  }
+}
+@keyframes swap-in {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+}
+
+.panel {
+  animation: panel-in var(--t-std) var(--ease-enter);
+}
+[role="tabpanel"],
+.details-tabs + .panel-body {
+  animation: fade var(--t-fast) var(--ease);
+}
+.side-section-row:has(> .side-section-head[aria-expanded="true"]) ~ .side-channels > * {
+  animation: rise var(--t-fast) var(--ease-enter);
+}
+.composer-row .send-btn {
+  animation: swap-in var(--t-fast) var(--ease-enter);
+}
+.list-row,
+.panel-action-row,
+.forum-post {
+  transition:
+    background var(--t-fast) var(--ease),
+    box-shadow var(--t-fast) var(--ease);
+}
