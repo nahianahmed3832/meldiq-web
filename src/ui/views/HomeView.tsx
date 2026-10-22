@@ -156,7 +156,7 @@ export function HomeView({ orgId, section, onDialog }: { orgId: string | null; s
                   <MessagesSquare size={24} />
                 </span>
                 <h2>No conversations yet</h2>
-                <p>Start a direct message, or join a channel in your workspace.</p>
+                <p>Start a direct message, or join a channel in your {communities ? "community" : "workspace"}.</p>
                 <div className="row">
                   <button className="btn btn-primary" onClick={() => onDialog({ kind: "new" })}>
                     <PenSquare size={16} /> New message

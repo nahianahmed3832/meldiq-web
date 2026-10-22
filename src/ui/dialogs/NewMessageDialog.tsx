@@ -1,7 +1,7 @@
 import { Search, UsersRound } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { Member } from "../../api/schemas";
-import { useEngine, useOrbit } from "../../app/orbit";
+import { useCommunityServer, useEngine, useOrbit } from "../../app/orbit";
 import { navigate } from "../../app/router";
 import { resolveAddress, searchPeople, startDirect } from "../../sync/account";
 import { lookupKind, normalAddress } from "../../sync/lookup";
@@ -16,6 +16,7 @@ import { Dialog } from "../components/Overlay";
  */
 export function NewMessageDialog({ onClose, onNewGroup }: { onClose: () => void; onNewGroup?: () => void }) {
   const engine = useEngine();
+  const community = useCommunityServer();
   const [q, setQ] = useState("");
   const [people, setPeople] = useState<Member[]>([]);
   const [busy, setBusy] = useState(false);
@@ -102,7 +103,7 @@ export function NewMessageDialog({ onClose, onNewGroup }: { onClose: () => void;
                   ? federates
                     ? "No one found at that address."
                     : "This Meldiq server doesn't connect to other servers, so addresses like @name:server can't be reached."
-                  : "No one found. People appear here when you share a workspace, or by their exact @username."}
+                  : `No one found. People appear here when you share a ${community ? "community" : "workspace"}, or by their exact @username.`}
             </p>
           )}
           {!q.trim() && (

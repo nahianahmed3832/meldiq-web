@@ -2,7 +2,7 @@ import { CalendarPlus, Headphones, Pencil, Plus, X } from "lucide-react";
 import { EVENT_REPEATS, type EventRepeatChoice, repeatLabel } from "../../sync/workspaceC5";
 import { useState } from "react";
 import type { OrgAdminDetail } from "../../api/workspaceSchemas";
-import { shallowEqual, useEngine, useOrbit } from "../../app/orbit";
+import { shallowEqual, useCommunityServer, useEngine, useOrbit } from "../../app/orbit";
 import { navigate } from "../../app/router";
 import {
   cancelMeeting,
@@ -39,6 +39,7 @@ export function MeetingsPage({ detail }: { detail: OrgAdminDetail }) {
   const engine = useEngine();
   const orgId = detail.org.id;
   const rev = useOrbit((s) => s.meetingsRev);
+  const community = useCommunityServer();
   const [tick, setTick] = useState(0);
   const meetings = useLoad(() => listMeetings(engine, orgId), [engine, orgId, tick, rev]);
   const [editing, setEditing] = useState<Meeting | "new" | null>(null);
@@ -58,8 +59,8 @@ export function MeetingsPage({ detail }: { detail: OrgAdminDetail }) {
   return (
     <div className="ws-page">
       <Card
-        title="Meetings"
-        sub="Meetings happen in the workspace's voice rooms: joining one joins its room. Titles and times are readable by the server, like a channel's name."
+        title={community ? "Events" : "Meetings"}
+        sub={`${community ? "Events happen in the community's" : "Meetings happen in the workspace's"} voice rooms: joining one joins its room. Titles and times are readable by the server, like a channel's name.`}
         actions={
           !guest && (
             <button className="btn btn-primary btn-sm" onClick={() => setEditing("new")}>
@@ -69,7 +70,7 @@ export function MeetingsPage({ detail }: { detail: OrgAdminDetail }) {
         }
       >
         <ErrorLine text={meetings.error ?? act.error} />
-        {meetings.data && upcoming.length === 0 && <p className="faint">No meetings in the next 30 days.</p>}
+        {meetings.data && upcoming.length === 0 && <p className="faint">No {community ? "events" : "meetings"} in the next 30 days.</p>}
         <ul className="ws-list">
           {upcoming.map((m) => (
             <li key={m.id} className="ws-row" style={{ alignItems: "flex-start" }}>
@@ -134,6 +135,7 @@ export function MeetingsPage({ detail }: { detail: OrgAdminDetail }) {
 function MeetingDialog({ orgId, meeting, onClose, onSaved }: { orgId: string; meeting: Meeting | null; onClose: () => void; onSaved: () => void }) {
   const engine = useEngine();
   const rooms = useOrbit((s) => voiceRooms(s, orgId), shallowEqual);
+  const community = useCommunityServer();
   const tz = meeting?.timeZone ?? zone();
   const [d0, t0, dur0] = meeting ? meetingFields(meeting.startsAt, meeting.endsAt, tz) : [...nextSlot(Date.now(), tz), 30];
   const [title, setTitle] = useState(meeting?.title ?? "");
@@ -170,7 +172,7 @@ function MeetingDialog({ orgId, meeting, onClose, onSaved }: { orgId: string; me
     });
   return (
     <Dialog
-      title={meeting ? "Edit meeting" : "Schedule a meeting"}
+      title={community ? (meeting ? "Edit event" : "Schedule an event") : meeting ? "Edit meeting" : "Schedule a meeting"}
       onClose={onClose}
       footer={
         <button className="btn btn-primary" disabled={problems.length > 0 || act.busy} onClick={save}>

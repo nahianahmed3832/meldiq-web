@@ -95,7 +95,7 @@ export function LinkScreen({ onLinked, onBack }: { onLinked: (device: DeviceReco
         </div>
         <div>
           <h1>
-            Your team, <em>on every screen.</em>
+            Your people, <em>on every screen.</em>
           </h1>
           <p>Meldiq Web is another device of your Meldiq account. Messages stay end-to-end encrypted, and your phone and this computer stay in sync through your Meldiq server.</p>
         </div>

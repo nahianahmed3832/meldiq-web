@@ -2,7 +2,7 @@ import { TransferOwnership } from "./TransferOwnership";
 import { Camera, LogOut, Trash2 } from "lucide-react";
 import { type FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import type { OrgAdminDetail } from "../../api/workspaceSchemas";
-import { useEngine, useOrbit } from "../../app/orbit";
+import { useCommunityServer, useEngine, useOrbit } from "../../app/orbit";
 import { setPrefs } from "../../app/prefs";
 import { navigate } from "../../app/router";
 import { deleteWorkspace, leaveWorkspace, removeWorkspacePhoto, requestId, setWorkspaceKind, setWorkspacePhoto, updateWorkspace } from "../../sync/workspaces";
@@ -83,6 +83,7 @@ function ReadOnlyAbout({ description }: { description: string | null }) {
 function Identity({ detail, onChanged }: { detail: OrgAdminDetail; onChanged: () => void }) {
   const engine = useEngine();
   const { org } = detail;
+  const community = useCommunityServer();
   const [name, setName] = useState(org.name);
   const [description, setDescription] = useState(org.description ?? "");
   const save = useAction();
@@ -109,7 +110,7 @@ function Identity({ detail, onChanged }: { detail: OrgAdminDetail; onChanged: ()
   };
 
   return (
-    <Card title="Workspace details" sub="Members see the name, description and photo. They aren't end-to-end encrypted.">
+    <Card title={community ? "Community details" : "Workspace details"} sub="Members see the name, description and photo. They aren't end-to-end encrypted.">
       <div className="row" style={{ gap: 16, alignItems: "center", flexWrap: "wrap" }}>
         <OrgAvatar orgId={org.id} name={org.name} photoRev={org.photoRev} size={56} />
         <input ref={file} type="file" accept="image/*" hidden onChange={(e) => pick(e.target.files?.[0])} />

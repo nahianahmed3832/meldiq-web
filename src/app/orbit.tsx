@@ -34,6 +34,11 @@ export function useOrbit<T>(select: (s: AppState) => T, equal: (a: T, b: T) => b
   });
 }
 
+/** The server runs communities (channels, categories, roles as on Android): copy says "community", not "workspace". */
+export function useCommunityServer(): boolean {
+  return useOrbit((s) => s.server?.features.includes("community-channels") ?? false);
+}
+
 export function shallowEqual<T>(a: T, b: T): boolean {
   if (Object.is(a, b)) return true;
   if (Array.isArray(a) && Array.isArray(b)) return a.length === b.length && a.every((x, i) => Object.is(x, b[i]));
