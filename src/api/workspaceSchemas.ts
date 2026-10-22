@@ -134,12 +134,6 @@ export const zInvitePreview = z.object({
 });
 export type InvitePreview = z.infer<typeof zInvitePreview>;
 
-export const zArchived = z.object({
-  branches: z.array(z.object({ id: z.string(), name: z.string(), archivedAt: z.number().nullable() })),
-  teams: z.array(z.object({ id: z.string(), name: z.string(), branchId: nullableString, archivedAt: z.number().nullable(), branchArchived: z.boolean().default(false) })),
-});
-export type Archived = z.infer<typeof zArchived>;
-
 export const zConversationOut = z.object({ conversation: zConversation });
 export const zChannelOut = z.object({ channel: zConversation });
 export const zOrgOut = z.object({ org: zOrg });

@@ -1,8 +1,5 @@
 import { type Call, zCall } from "../api/schemas";
 import type { Frame } from "../realtime/socket";
-import { INBOX_FRAMES } from "./inbox";
-
-type InboxFrame = "inbox.updated" | "inbox.escalated" | "inbox.overdue" | "inbox.delivery_failed" | "inbox.account_failed";
 
 /** A server frame the engine acts on, with the fields it needs checked (docs/api/realtime.schema.json on the server). */
 export type ServerFrame =
@@ -14,10 +11,8 @@ export type ServerFrame =
   | { t: "conv.updated"; conversationId: string }
   | { t: "org.updated" }
   | { t: "org.applications" | "org.application" | "org.reports" }
-  | { t: "integration.event"; conversationId: string }
   | { t: "meeting.updated" }
   | { t: "meeting.soon"; meetingId: string | null }
-  | { t: InboxFrame; conversationId: string | null }
   | { t: "reminders.changed" | "reminder.due" }
   | { t: "prefs.updated"; workspaceId: string }
   | { t: "org.deleted"; orgId: string }
@@ -25,7 +20,7 @@ export type ServerFrame =
   | { t: "call"; call: Call; event: string | null; extra: { from?: { displayName?: unknown }; reason?: unknown; action?: unknown } }
   | { t: "queue.drained" };
 
-/** Frame names the engine handles. Others (pong, which the socket answers, org.alert, …) are ignored, as the contract asks. */
+/** Frame names the engine handles. Others (pong, which the socket answers, org.alert, frames of retired modules such as inbox.* and integration.event, …) are ignored, as the contract asks. */
 export const HANDLED_FRAMES: ReadonlySet<string> = new Set<ServerFrame["t"]>([
   "hello",
   "queue",
@@ -37,10 +32,8 @@ export const HANDLED_FRAMES: ReadonlySet<string> = new Set<ServerFrame["t"]>([
   "org.applications",
   "org.application",
   "org.reports",
-  "integration.event",
   "meeting.updated",
   "meeting.soon",
-  ...(INBOX_FRAMES as readonly InboxFrame[]),
   "reminders.changed",
   "reminder.due",
   "prefs.updated",
@@ -55,14 +48,9 @@ export function str(v: unknown): string | null {
   return typeof v === "string" && v.length > 0 && v.length <= 128 ? v : null;
 }
 
-function isInbox(t: string): t is InboxFrame {
-  return (INBOX_FRAMES as readonly string[]).includes(t);
-}
-
 /** The frame as the engine acts on it, or null when it's one to ignore: unknown, or missing what it needs. */
 export function parseFrame(f: Frame): ServerFrame | null {
   const t = f.t;
-  if (isInbox(t)) return { t, conversationId: str(f.conversationId) };
   switch (t) {
     case "hello":
     case "connections.updated":
@@ -86,8 +74,7 @@ export function parseFrame(f: Frame): ServerFrame | null {
       const userId = str(f.userId);
       return userId ? { t, userId, online: f.online === true, presence: typeof f.presence === "string" ? f.presence : null } : null;
     }
-    case "conv.updated":
-    case "integration.event": {
+    case "conv.updated": {
       const conversationId = str(f.conversationId);
       return conversationId ? { t, conversationId } : null;
     }

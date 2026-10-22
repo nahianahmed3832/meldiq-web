@@ -8,7 +8,6 @@ import {
   cancelMeeting,
   createMeeting,
   DURATIONS,
-  listGroups,
   listMeetings,
   type Meeting,
   meetingFields,
@@ -147,10 +146,8 @@ function MeetingDialog({ orgId, meeting, onClose, onSaved }: { orgId: string; me
   const repeats = useOrbit((s) => s.server?.features.includes("event-repeat") ?? false);
   const [repeat, setRepeat] = useState<EventRepeatChoice>(meeting?.repeat ?? "none");
   const [people, setPeople] = useState<{ id: string; name: string }[]>(meeting?.participants.map((p) => ({ id: p.id, name: p.name ?? "someone" })) ?? []);
-  const [groupIds, setGroupIds] = useState<string[]>([]);
   const [q, setQ] = useState("");
   const found = useLoad(() => (q.trim().length >= 2 ? directory(engine, orgId, q) : Promise.resolve([])), [engine, orgId, q]);
-  const groups = useLoad(() => listGroups(engine, orgId).catch(() => []), [engine, orgId]);
   const act = useAction();
   const problems = meetingProblems(title, roomId, date, time, tz, Date.now());
   const save = () =>
@@ -164,7 +161,6 @@ function MeetingDialog({ orgId, meeting, onClose, onSaved }: { orgId: string; me
         endsAt: start + minutes * 60_000,
         timeZone: tz,
         participantIds: people.map((p) => p.id),
-        groupIds,
         ...(repeats ? { repeat: repeat === "none" ? null : repeat } : {}),
       };
       await (meeting ? updateMeeting(engine, meeting.id, meeting.rev, input) : createMeeting(engine, orgId, input));
@@ -234,11 +230,6 @@ function MeetingDialog({ orgId, meeting, onClose, onSaved }: { orgId: string; me
                   <X size={11} />
                 </button>
               </span>
-            ))}
-            {(groups.data ?? []).map((g) => (
-              <label key={g.id} className="chip">
-                <input type="checkbox" checked={groupIds.includes(g.id)} onChange={(e) => setGroupIds(e.target.checked ? [...groupIds, g.id] : groupIds.filter((x) => x !== g.id))} />@{g.handle}
-              </label>
             ))}
           </div>
           <input className="input" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Add people (they must be able to open the room)" aria-label="Find someone to invite" />

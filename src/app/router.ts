@@ -14,18 +14,10 @@ export type WorkspacePage =
   | "people"
   | "invitations"
   | "channels"
-  | "structure"
   | "roles"
-  | "apps"
   | "audit"
   | "usage"
-  | "documents"
-  | "workflows"
-  | "groups"
   | "meetings"
-  | "developer"
-  | "ai"
-  | "inbox"
   // Communities (batches B4–B9).
   | "applications"
   | "reports"
@@ -42,8 +34,6 @@ export interface Route {
   threadRoot: string | null;
   settingsPage: SettingsPage;
   workspacePage: WorkspacePage;
-  /** A workspace page's item, e.g. a document (#/workspace/documents/<id>). */
-  itemId: string | null;
 }
 
 /** Sections that take the whole page (no conversation list). */
@@ -56,18 +46,10 @@ const WORKSPACE_PAGES: WorkspacePage[] = [
   "people",
   "invitations",
   "channels",
-  "structure",
   "roles",
-  "apps",
   "audit",
   "usage",
-  "documents",
-  "workflows",
-  "groups",
   "meetings",
-  "developer",
-  "ai",
-  "inbox",
   "applications",
   "reports",
   "security",
@@ -81,10 +63,9 @@ const ID = /^[A-Za-z0-9_-]{1,128}$/;
 export function parseRoute(hash: string): Route {
   const parts = hash.replace(/^#\/?/, "").split("/").filter(Boolean).map(decodeURIComponent);
   const section = SECTIONS.includes(parts[0] as Section) ? (parts[0] as Section) : "home";
-  const route: Route = { section, conversationId: null, panel: null, threadRoot: null, settingsPage: "profile", workspacePage: "overview", itemId: null };
+  const route: Route = { section, conversationId: null, panel: null, threadRoot: null, settingsPage: "profile", workspacePage: "overview" };
   if (section === "settings") return { ...route, settingsPage: PAGES.includes(parts[1] as SettingsPage) ? (parts[1] as SettingsPage) : "profile" };
-  if (section === "workspace")
-    return { ...route, workspacePage: WORKSPACE_PAGES.includes(parts[1] as WorkspacePage) ? (parts[1] as WorkspacePage) : "overview", itemId: parts[2] && ID.test(parts[2]) ? parts[2] : null };
+  if (section === "workspace") return { ...route, workspacePage: WORKSPACE_PAGES.includes(parts[1] as WorkspacePage) ? (parts[1] as WorkspacePage) : "overview" };
   if (parts[1] === "c" && parts[2] && ID.test(parts[2])) {
     route.conversationId = parts[2];
     if (parts[3] === "details") route.panel = "details";
@@ -101,7 +82,7 @@ export function parseRoute(hash: string): Route {
 
 export function routeHash(r: Partial<Route> & { section: Section }): string {
   if (r.section === "settings") return `#/settings/${r.settingsPage ?? "profile"}`;
-  if (r.section === "workspace") return `#/workspace/${r.workspacePage ?? "overview"}${r.itemId ? `/${encodeURIComponent(r.itemId)}` : ""}`;
+  if (r.section === "workspace") return `#/workspace/${r.workspacePage ?? "overview"}`;
   let h = `#/${r.section}`;
   if (r.conversationId) {
     h += `/c/${encodeURIComponent(r.conversationId)}`;

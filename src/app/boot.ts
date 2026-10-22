@@ -65,13 +65,6 @@ function notifyMeeting(title: string, body: string, roomId: string | null): void
   });
 }
 
-/** A customer inbox notice (round 8): never the customer's name or text, which the event doesn't carry. */
-function notifyInbox(text: string, conversationId: string | null): void {
-  if (!allowed()) return;
-  const hash = conversationId ? `#/workspace/inbox/${encodeURIComponent(conversationId)}` : "#/workspace/inbox";
-  systemNotify({ title: "Customer inbox", body: text, tag: `inbox:${text}:${conversationId ?? ""}`, hash, silent: !getPrefs().messageSound });
-}
-
 /** A ringing call while this tab isn't looked at: a system notification that brings the tab forward to its conversation. */
 function ringAlert(title: string, video: boolean, conversationId: string): void {
   if (!allowed() || lookedAt()) return;
@@ -92,7 +85,6 @@ export function createEngine(device: DeviceRecord, store: LocalStore): Engine {
     notify,
     notifyReminder,
     notifyMeeting,
-    notifyInbox,
     media: liveKitMedia,
     ringtone: new Ringtone(() => getPrefs().callRingtone),
     callPrefs: () => {

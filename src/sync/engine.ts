@@ -26,7 +26,6 @@ import { firstShowing, ReminderSync } from "./reminders";
 import { callFrame, orgDeletedFrame, presenceFrame, typingFrame } from "./frameReducers";
 import { parseFrame } from "./frames";
 import { meetingSoon } from "./workspaceC5";
-import { NOTICE_TEXT } from "./inbox";
 import type { Reminder } from "./reminderRules";
 import { deriveReminderKey } from "../crypto/reminderKeys";
 import { publicKeyFromSeed } from "../crypto/ed25519";
@@ -50,8 +49,6 @@ export interface EngineOptions {
   notifyReminder?: (title: string, body: string, conversationId: string | null) => void;
   /** A scheduled meeting starts in ten minutes (round 7): [roomId] is the voice room it happens in. */
   notifyMeeting?: (title: string, body: string, roomId: string | null) => void;
-  /** A customer inbox event that needs someone (round 8): escalated, overdue, undelivered reply, broken account. */
-  notifyInbox?: (text: string, conversationId: string | null) => void;
   /** Per-browser preferences. */
   prefs?: () => { readReceipts: boolean; typing: boolean; groupNotifications?: boolean };
   onRevoked?: (reason: RevokedReason) => void;
@@ -524,27 +521,11 @@ export class Engine implements EngineContext {
         this.set((s) => ({ ...s, moderationRev: s.moderationRev + 1 }));
         if (f.t === "org.application") void this.refreshAll();
         return;
-      case "integration.event": {
-        const id = f.conversationId;
-        this.set((s) => ({ ...s, appEventsRev: { ...s.appEventsRev, [id]: (s.appEventsRev[id] ?? 0) + 1 } }));
-        return;
-      }
       case "meeting.updated":
       case "meeting.soon":
         this.set((s) => ({ ...s, meetingsRev: s.meetingsRev + 1 }));
         if (f.t === "meeting.soon" && f.meetingId) void meetingSoon(this, f.meetingId, this.opts.notifyMeeting);
         return;
-      case "inbox.updated":
-      case "inbox.escalated":
-      case "inbox.overdue":
-      case "inbox.delivery_failed":
-      case "inbox.account_failed": {
-        // Ids only: the frame never carries a customer's name or text (docs/UNIFIED_INBOX.md).
-        this.set((s) => ({ ...s, inboxRev: s.inboxRev + 1 }));
-        const notice = NOTICE_TEXT[f.t];
-        if (notice) this.opts.notifyInbox?.(notice, f.conversationId);
-        return;
-      }
       case "reminders.changed":
       case "reminder.due":
         await this.reminders.refresh();

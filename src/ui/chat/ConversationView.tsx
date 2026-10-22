@@ -1,4 +1,3 @@
-import { AppUpdatesBar } from "./AppUpdatesBar";
 import { ConversationMenu } from "./ConversationMenu";
 import { ChannelGlyph } from "../community/ChannelDialogs";
 import { ForumView } from "./ForumView";
@@ -149,7 +148,6 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
         {c.type !== "CHANNEL" && <ConversationMenu conversationId={id} route={route} />}
       </header>
 
-      {c.type === "CHANNEL" && <AppUpdatesBar conversationId={id} />}
       {(alerts.length > 0 || (call && !c.voice) || c.archived || history === "running" || peer?.paused || (c.request && !c.request.incoming)) && (
         <div className="conv-banners">
           {c.request && !c.request.incoming && <RequestSentBanner conversation={c} />}
