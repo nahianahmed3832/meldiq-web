@@ -1,9 +1,10 @@
-import { Maximize2, Phone, PhoneOff, Video } from "lucide-react";
-import { useEffect } from "react";
+import { GripVertical, Maximize2, Phone, PhoneOff, Video } from "lucide-react";
+import { type KeyboardEvent, type PointerEvent, useCallback, useEffect, useRef, useState } from "react";
 import { useEngine, useOrbit } from "../../application/orbit";
 import { Avatar } from "../components/Avatar";
 import { CallStage } from "./CallStage";
 import { callStatus } from "./callText";
+import { clampToViewport, loadPosition, nudge, type Point, savePosition } from "./miniPosition";
 import { useNow } from "./useNow";
 
 /** Whatever this browser's call needs on screen: the ringing card, the call stage, or the minimised bar. */
@@ -69,13 +70,68 @@ function IncomingCall() {
   );
 }
 
+/**
+ * The minimised call: a small window that can be dragged anywhere by its grip or its text (pointer or touch), or moved
+ * with the arrow keys from the grip; it stays fully on screen and this browser remembers where it was left. It starts
+ * at the top right, clear of the message box and its Send button (reported: it covered them and couldn't be moved).
+ */
 function MiniCall() {
   const engine = useEngine();
   const call = useOrbit((s) => s.call);
   const now = useNow(call.phase === "connected");
+  const ref = useRef<HTMLElement>(null);
+  const drag = useRef<{ id: number; dx: number; dy: number } | null>(null);
+  const [pos, setPos] = useState<Point | null>(loadPosition);
+
+  const fit = useCallback((p: Point): Point => {
+    const box = ref.current?.getBoundingClientRect();
+    return clampToViewport(p, { width: box?.width ?? 0, height: box?.height ?? 0 }, { width: window.innerWidth, height: window.innerHeight });
+  }, []);
+  // A remembered place from a larger window, or a window made smaller: pulled back on screen.
+  useEffect(() => {
+    const refit = () => setPos((p) => (p ? fit(p) : p));
+    refit();
+    window.addEventListener("resize", refit);
+    return () => window.removeEventListener("resize", refit);
+  }, [fit]);
+
+  const start = (e: PointerEvent<HTMLElement>) => {
+    if (e.button !== 0 || !ref.current) return;
+    const box = ref.current.getBoundingClientRect();
+    drag.current = { id: e.pointerId, dx: e.clientX - box.left, dy: e.clientY - box.top };
+    e.currentTarget.setPointerCapture(e.pointerId);
+    e.preventDefault();
+  };
+  const move = (e: PointerEvent<HTMLElement>) => {
+    const d = drag.current;
+    if (d && d.id === e.pointerId) setPos(fit({ x: e.clientX - d.dx, y: e.clientY - d.dy }));
+  };
+  const end = (e: PointerEvent<HTMLElement>) => {
+    if (drag.current?.id !== e.pointerId) return;
+    drag.current = null;
+    setPos((p) => {
+      if (p) savePosition(p);
+      return p;
+    });
+  };
+  const keys = (e: KeyboardEvent<HTMLElement>) => {
+    const box = ref.current?.getBoundingClientRect();
+    if (!box) return;
+    const next = nudge(pos ?? { x: box.left, y: box.top }, e.key, e.shiftKey);
+    if (!next) return;
+    e.preventDefault();
+    const p = fit(next);
+    setPos(p);
+    savePosition(p);
+  };
+  const handlers = { onPointerDown: start, onPointerMove: move, onPointerUp: end, onPointerCancel: end };
+
   return (
-    <section className="call-mini" aria-label={`Call with ${call.title}`}>
-      <div className="text">
+    <section ref={ref} className={`call-mini${pos ? " placed" : ""}`} style={pos ? { left: pos.x, top: pos.y } : undefined} aria-label={`Call with ${call.title}`}>
+      <span className="call-mini-grip" role="button" tabIndex={0} aria-label="Move the call window (arrow keys)" onKeyDown={keys} {...handlers}>
+        <GripVertical size={16} />
+      </span>
+      <div className="text" {...handlers}>
         <strong className="ellipsis">{call.title}</strong>
         <span>{callStatus(call, now)}</span>
       </div>

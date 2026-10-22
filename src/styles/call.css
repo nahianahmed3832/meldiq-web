@@ -248,20 +248,43 @@ button.e2ee-badge:hover {
 }
 
 /* Minimised call: a bar over the bottom right of the workspace. */
+/* At the top right, under the top bar, clear of the message box; dragged anywhere ("placed": left/top inline). */
 .call-mini {
   position: fixed;
+  top: calc(var(--app-top, 0px) + var(--topbar-h) + 8px);
   right: 16px;
-  bottom: 16px;
   z-index: 60;
   display: flex;
   align-items: center;
   gap: 10px;
   max-width: calc(100vw - 32px);
-  padding: 8px 8px 8px 14px;
+  padding: 8px 8px 8px 6px;
   border-radius: var(--r-pill);
   background: var(--call-bg);
   color: var(--call-text);
   box-shadow: var(--shadow-lg);
+}
+.call-mini.placed {
+  right: auto;
+  bottom: auto;
+}
+.call-mini-grip,
+.call-mini .text {
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+.call-mini-grip {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 38px;
+  border-radius: var(--r-sm);
+  color: var(--call-text-2);
+}
+.call-mini-grip:active,
+.call-mini .text:active {
+  cursor: grabbing;
 }
 .call-mini .text {
   display: grid;
@@ -304,11 +327,10 @@ button.e2ee-badge:hover {
     width: calc(100vw - 16px);
   }
   /* At the top on phones: the bottom holds the composer and the tab bar. */
-  .call-mini {
-    top: 8px;
+  .call-mini:not(.placed) {
+    top: calc(var(--app-top, 0px) + 8px);
     right: 8px;
     left: 8px;
-    bottom: auto;
   }
 }
 
