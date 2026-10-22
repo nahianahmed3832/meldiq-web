@@ -97,7 +97,7 @@ export const ConversationRow = memo(function ConversationRow({ id, twoLine, hide
     );
   const label = `${c.type === "CHANNEL" ? "Channel " : ""}${title}${unread ? `, ${unread} unread` : ""}${mentions ? `, ${mentions} mentions` : ""}${muted ? ", muted" : ""}`;
   const count = unread > 0 && <span className={`count${!muted && (mentions > 0 || c.type !== "CHANNEL") ? " accent" : ""}`}>{mentions > 0 ? `@${mentions}` : unread}</span>;
-  const href = `#/${section}/c/${encodeURIComponent(id)}`;
+  const href = `/${section}/c/${encodeURIComponent(id)}`;
   const openMenu = (e: MouseEvent<HTMLElement>) => {
     e.preventDefault();
     e.stopPropagation();

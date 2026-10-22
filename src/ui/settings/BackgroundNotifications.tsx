@@ -80,7 +80,7 @@ export function BackgroundNotifications({ permission }: { permission: Notificati
           {permission === "granted" && prefs.notifications && (
             <button
               className="btn btn-ghost btn-sm"
-              onClick={() => systemNotify({ title: "Meldiq", body: "Notifications work on this browser.", tag: "meldiq-test", hash: "#/settings/notifications" })}
+              onClick={() => systemNotify({ title: "Meldiq", body: "Notifications work on this browser.", tag: "meldiq-test", href: "/settings/notifications" })}
             >
               Send a test notification
             </button>

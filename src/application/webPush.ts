@@ -1,6 +1,7 @@
 import { z } from "zod";
 import type { Engine } from "../sync/engine";
-import { isAppHash, SW_OPEN, SW_WAKE } from "../sw/messages";
+import { isAppPath, SW_OPEN, SW_WAKE } from "../sw/messages";
+import { go } from "./router";
 import { saveWakePrefs } from "../sw/swPrefs";
 import { config, type FirebaseWebConfig } from "./config";
 import { getPrefs, subscribePrefs } from "./prefs";
@@ -33,11 +34,11 @@ export const pushSupported = (): boolean =>
 export async function startServiceWorker(engine: Engine): Promise<void> {
   if (typeof navigator === "undefined" || !("serviceWorker" in navigator) || !window.isSecureContext) return;
   navigator.serviceWorker.addEventListener("message", (e: MessageEvent) => {
-    const d = e.data as { type?: unknown; hash?: unknown } | null;
+    const d = e.data as { type?: unknown; href?: unknown } | null;
     if (d?.type === SW_WAKE) engine.reconnect();
-    else if (d?.type === SW_OPEN && isAppHash(d.hash)) {
+    else if (d?.type === SW_OPEN && isAppPath(d.href)) {
       window.focus();
-      location.hash = d.hash;
+      go(d.href);
     }
   });
   const mirror = () => {
@@ -47,8 +48,8 @@ export async function startServiceWorker(engine: Engine): Promise<void> {
   mirror();
   subscribePrefs(mirror);
   try {
-    // Development serves the worker's source as a module (Vite sends Service-Worker-Allowed: / for it).
-    registration = await navigator.serviceWorker.register(import.meta.env.DEV ? "/src/sw/sw.ts" : "/sw.js", { type: import.meta.env.DEV ? "module" : "classic", scope: "/" });
+    // One classic script at the root (vite.sw.config.ts), in development too (npm run dev builds it into public/).
+    registration = await navigator.serviceWorker.register("/sw.js", { type: "classic", scope: "/" });
   } catch {
     registration = null; // notifications fall back to the page's own
   }
@@ -59,8 +60,8 @@ export interface SystemNotice {
   body: string;
   /** Same tag: the newer notification replaces the older, and still alerts (renotify). */
   tag: string;
-  /** A route of this app opened on click ("#/home/c/…"). */
-  hash: string | null;
+  /** A path of this app opened on click ("/home/c/…"). */
+  href: string | null;
   silent?: boolean;
   requireInteraction?: boolean;
 }
@@ -75,7 +76,7 @@ export function systemNotify(n: SystemNotice): void {
     requireInteraction: n.requireInteraction ?? false,
     icon: ICON,
     badge: BADGE,
-    data: { url: `/${n.hash ?? ""}` },
+    data: { url: n.href ?? "/" },
   };
   if (registration?.active) {
     void registration.showNotification(n.title, options as NotificationOptions).catch(() => fallback(n));
@@ -89,7 +90,7 @@ function fallback(n: SystemNotice): void {
     const shown = new Notification(n.title, { body: n.body, tag: n.tag, silent: n.silent ?? false, requireInteraction: n.requireInteraction ?? false, icon: ICON });
     shown.onclick = () => {
       window.focus();
-      if (n.hash) location.hash = n.hash;
+      if (n.href) go(n.href);
       shown.close();
     };
   } catch {

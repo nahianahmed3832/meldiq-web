@@ -65,7 +65,7 @@ function ChannelRow({ c, onChanged }: { c: Conversation; onChanged: () => void }
       </span>
       <span className="lines grow">
         {c.joined && !c.archived ? (
-          <a className="ellipsis" href={`#/home/c/${encodeURIComponent(c.id)}`} onClick={() => navigate({ section: "home", conversationId: c.id })}>
+          <a className="ellipsis" href={`/home/c/${encodeURIComponent(c.id)}`} onClick={() => navigate({ section: "home", conversationId: c.id })}>
             {c.name}
           </a>
         ) : !c.archived ? (

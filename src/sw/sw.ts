@@ -5,7 +5,7 @@ import { installLegacyCurves } from "../crypto/legacyCurves";
 import { LocalStore } from "../store/db";
 import { type NavPrefs, PERSONAL, workspaceOf, zNavDoc } from "../sync/navPrefs";
 import { SessionManager } from "../sync/session";
-import { isAppHash, SW_OPEN, SW_WAKE } from "./messages";
+import { notificationPath, SW_OPEN, SW_WAKE } from "./messages";
 import { loadWakePrefs } from "./swPrefs";
 import { type WakeNotice, wakeNotices, type WakePrefs } from "./wakeRules";
 
@@ -112,13 +112,13 @@ const defaultPrefs = (): WakePrefs => ({ notifications: true, groupNotifications
 async function openApp(url: unknown): Promise<void> {
   const target = new URL(typeof url === "string" ? url : "/", sw.location.origin);
   // Only this site, and only its own routes.
-  const hash = target.origin === sw.location.origin && isAppHash(target.hash) ? target.hash : "";
+  const href = notificationPath(target, sw.location.origin);
   const pages = await sw.clients.matchAll({ type: "window", includeUncontrolled: true });
   const page = pages.find((p) => p.visibilityState === "visible") ?? pages[0];
   if (page) {
     await page.focus().catch(() => undefined);
-    if (hash) page.postMessage({ type: SW_OPEN, hash });
+    if (href) page.postMessage({ type: SW_OPEN, href });
     return;
   }
-  await sw.clients.openWindow(`${sw.location.origin}/${hash}`);
+  await sw.clients.openWindow(`${sw.location.origin}${href ?? "/"}`);
 }

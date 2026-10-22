@@ -272,7 +272,7 @@ function ActivityRow({ a }: { a: Activity }) {
           {target ? (
             <>
               {" "}
-              <a href={`#/activity/c/${encodeURIComponent(a.target!)}`}>#{target}</a>
+              <a href={`/activity/c/${encodeURIComponent(a.target!)}`}>#{target}</a>
             </>
           ) : null}
         </span>

@@ -4,8 +4,14 @@
 *::after {
   box-sizing: border-box;
 }
+/* Next.js's route announcer speaks on its own router's page changes; the app moves with its own router (routes are
+   paths in one page), so it would only ever announce nothing. Hidden, so assistive technology meets the app as before. */
+next-route-announcer {
+  display: none;
+}
 html,
 body,
+#__next,
 #root {
   height: 100%;
   margin: 0;

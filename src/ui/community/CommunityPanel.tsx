@@ -354,7 +354,7 @@ const ChannelItem = memo(function ChannelItem({
     <div className="side-row">
       <a
         className={`side-item channel-item${ch.unread && !ch.muted ? " unread" : ""}${ch.muted ? " muted" : ""}${ch.joined ? "" : " unjoined"}`}
-        href={`#/home/c/${encodeURIComponent(ch.id)}`}
+        href={`/home/c/${encodeURIComponent(ch.id)}`}
         aria-current={current ? "page" : undefined}
         aria-label={label}
         aria-busy={joining || undefined}

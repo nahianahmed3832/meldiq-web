@@ -10,6 +10,8 @@ import path from "node:path";
  */
 const API_PORT = 8091;
 const WEB_PORT = 5181;
+/** `next dev` behind the web server in development mode (scripts/web-server.ts proxies to it). */
+const NEXT_DEV_PORT = 5182;
 process.env.ORBIT_E2E_API ??= `http://127.0.0.1:${API_PORT}`;
 process.env.ORBIT_E2E_DATA ??= fs.mkdtempSync(path.join(os.tmpdir(), "orbit-e2e-"));
 
@@ -95,14 +97,33 @@ export default defineConfig({
           },
         ]
       : []),
-    {
-      // ORBIT_E2E_BUILD=1: the production bundle (what users get: minified, the built /sw.js, the Safari 16.4 target),
-      // served by `vite preview` with the same proxy; otherwise the development server.
-      command: process.env.ORBIT_E2E_BUILD === "1" ? `npm run -s build && npx vite preview --port ${WEB_PORT} --strictPort` : `npx vite --port ${WEB_PORT} --strictPort`,
-      url: `http://127.0.0.1:${WEB_PORT}`,
-      reuseExistingServer: false,
-      timeout: process.env.ORBIT_E2E_BUILD === "1" ? 240_000 : 60_000,
-      env: { ORBIT_API_URL: `http://127.0.0.1:${API_PORT}`, ORBIT_E2E_FORWARD: "1" },
-    },
+    // ORBIT_E2E_BUILD=1: the production build (what users get: minified, the built /sw.js, the Safari 16.4 target) with
+    // production's security headers and CSP (scripts/web-server.ts); otherwise `next dev` behind the same server.
+    ...(process.env.ORBIT_E2E_BUILD === "1"
+      ? [
+          {
+            command: `npm run -s build && node scripts/web-server.ts dist ${WEB_PORT}`,
+            url: `http://127.0.0.1:${WEB_PORT}`,
+            reuseExistingServer: false,
+            timeout: 300_000,
+            env: { ORBIT_API_URL: `http://127.0.0.1:${API_PORT}`, ORBIT_E2E_FORWARD: "1" },
+          },
+        ]
+      : [
+          {
+            command: `npm run -s sw:dev && npx next dev --hostname 127.0.0.1 --port ${NEXT_DEV_PORT}`,
+            url: `http://127.0.0.1:${NEXT_DEV_PORT}`,
+            reuseExistingServer: false,
+            timeout: 120_000,
+            env: { ORBIT_API_URL: `http://127.0.0.1:${API_PORT}` },
+          },
+          {
+            command: `node scripts/web-server.ts dist ${WEB_PORT}`,
+            url: `http://127.0.0.1:${WEB_PORT}/v1/server-info`,
+            reuseExistingServer: false,
+            timeout: 60_000,
+            env: { ORBIT_API_URL: `http://127.0.0.1:${API_PORT}`, MELDIQ_APP_UPSTREAM: `http://127.0.0.1:${NEXT_DEV_PORT}`, ORBIT_E2E_FORWARD: "1" },
+          },
+        ]),
   ],
 });

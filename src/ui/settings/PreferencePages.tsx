@@ -1,4 +1,5 @@
 import { fileLimit, MAX_FILES_PER_MESSAGE } from "../../sync/attachments";
+import { APP_VERSION } from "../../application/env";
 import { serverHost } from "../../application/config";
 import { useState } from "react";
 import { useOrbit } from "../../application/orbit";
@@ -205,7 +206,7 @@ export function AboutPage() {
       <h1>About</h1>
       {intro && <IntroPages onDone={() => setIntro(false)} />}
       <p className="faint" style={{ margin: "0 0 12px" }}>
-        Meldiq Web by GriipBuddy · version {__APP_VERSION__}
+        Meldiq Web by GriipBuddy · version {APP_VERSION}
       </p>
       <div className="card">
         <div className="setting">

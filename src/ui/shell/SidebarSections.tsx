@@ -215,7 +215,7 @@ export function ArchivedList() {
 export function MentionsLink({ orgId, active }: { orgId: string | null; active: boolean }) {
   const n = useOrbit((s) => mentionConversations(s, orgId).reduce((a, c) => a + (s.local[c.id]?.mentions ?? 0), 0));
   return (
-    <a className="side-item" href="#/activity" aria-current={active ? "page" : undefined}>
+    <a className="side-item" href="/activity" aria-current={active ? "page" : undefined}>
       <span className="glyph">
         <AtSign size={16} />
       </span>
@@ -229,7 +229,7 @@ export function MentionsLink({ orgId, active }: { orgId: string | null; active: 
 export function LaterLink({ active }: { active: boolean }) {
   const due = useOrbit(laterDue);
   return (
-    <a className="side-item" href="#/later" aria-current={active ? "page" : undefined}>
+    <a className="side-item" href="/later" aria-current={active ? "page" : undefined}>
       <span className="glyph">
         <Bookmark size={16} />
       </span>

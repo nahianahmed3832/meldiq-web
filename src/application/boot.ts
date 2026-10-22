@@ -1,4 +1,5 @@
 import { apiBase, wsUrl } from "./config";
+import { DEV } from "./env";
 import { liveKitMedia } from "../call/media";
 import { Ringtone } from "../call/ringtone";
 import { LocalStore } from "../store/db";
@@ -35,13 +36,13 @@ export async function missingCapabilities(): Promise<string[]> {
 
 const allowed = (): boolean => getPrefs().notifications && typeof Notification !== "undefined" && Notification.permission === "granted";
 const lookedAt = (): boolean => document.visibilityState === "visible" && document.hasFocus();
-const room = (id: string | null): string | null => (id ? `#/home/c/${encodeURIComponent(id)}` : null);
+const room = (id: string | null): string | null => (id ? `/home/c/${encodeURIComponent(id)}` : null);
 
 /** System notifications for messages that arrive while this tab isn't looked at (src/application/webPush.ts shows them). */
 function notify(title: string, body: string, conversationId: string): void {
   if (!allowed() || lookedAt()) return;
   const p = getPrefs();
-  systemNotify({ title: p.notificationText ? title : "Meldiq", body: p.notificationText ? body : "New message", tag: conversationId, hash: room(conversationId), silent: !p.messageSound });
+  systemNotify({ title: p.notificationText ? title : "Meldiq", body: p.notificationText ? body : "New message", tag: conversationId, href: room(conversationId), silent: !p.messageSound });
 }
 
 /** A reminder that went off (Later): a system notification (when allowed) that opens Later or the saved message. */
@@ -49,7 +50,7 @@ function notifyReminder(title: string, body: string, conversationId: string | nu
   if (!allowed()) return;
   const p = getPrefs();
   // Reminders are private by default: with message text hidden, the notification doesn't say what it's about.
-  systemNotify({ title: p.notificationText ? title : "Meldiq reminder", body: p.notificationText ? body : "You have a reminder", tag: `reminder:${title}`, hash: room(conversationId) ?? "#/later" });
+  systemNotify({ title: p.notificationText ? title : "Meldiq reminder", body: p.notificationText ? body : "You have a reminder", tag: `reminder:${title}`, href: room(conversationId) ?? "/later" });
 }
 
 /** A scheduled meeting starting in ten minutes (round 7): opens its voice room. */
@@ -60,7 +61,7 @@ function notifyMeeting(title: string, body: string, roomId: string | null): void
     title: p.notificationText ? title : "Meldiq meeting",
     body: p.notificationText ? body : "A meeting starts soon",
     tag: `meeting:${title}`,
-    hash: room(roomId),
+    href: room(roomId),
     silent: !p.messageSound,
   });
 }
@@ -73,7 +74,7 @@ function ringAlert(title: string, video: boolean, conversationId: string): void 
     title: p.notificationText ? title : "Meldiq",
     body: video ? "Incoming video call" : "Incoming voice call",
     tag: `call-${conversationId}`,
-    hash: room(conversationId),
+    href: room(conversationId),
     requireInteraction: true,
   });
 }
@@ -98,7 +99,7 @@ export function createEngine(device: DeviceRecord, store: LocalStore): Engine {
     },
   });
   // Development builds only (removed from production bundles): lets the browser tests and a developer inspect state.
-  if (import.meta.env.DEV) (window as unknown as { __orbit?: Engine }).__orbit = engine;
+  if (DEV) (window as unknown as { __orbit?: Engine }).__orbit = engine;
   return engine;
 }
 

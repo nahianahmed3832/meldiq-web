@@ -7,11 +7,23 @@ export interface WakeMessage {
   type: typeof SW_WAKE;
 }
 
-/** A notification was clicked: the page goes to [hash] (a route of this app, e.g. "#/dms/c/<id>"). */
+/** A notification was clicked: the page goes to [href] (a path of this app, e.g. "/dms/c/<id>"). */
 export interface OpenMessage {
   type: typeof SW_OPEN;
-  hash: string;
+  href: string;
 }
 
+const APP_PATH = /^\/(home|dms|activity|later|settings|workspace)(\/[A-Za-z0-9_%-]{1,128}){0,4}$/;
+
 /** Only this app's own routes, so a notification can never send the page anywhere else. */
-export const isAppHash = (hash: unknown): hash is string => typeof hash === "string" && /^#\/[A-Za-z0-9/_%-]{0,300}$/.test(hash);
+export const isAppPath = (href: unknown): href is string => typeof href === "string" && APP_PATH.test(href);
+
+/**
+ * The app path a notification opens: its URL's path, or the hash route of a notification shown before the move to
+ * paths ("/#/dms/c/<id>"). Null for anything that isn't one of this app's routes.
+ */
+export function notificationPath(url: URL, origin: string): string | null {
+  if (url.origin !== origin) return null;
+  const where = url.hash.startsWith("#/") && url.pathname === "/" ? url.hash.slice(1) : url.pathname;
+  return isAppPath(where) ? where : null;
+}
