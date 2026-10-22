@@ -6,6 +6,7 @@ import { Engine } from "../sync/engine";
 import type { SessionGrant } from "../api/schemas";
 import type { DeviceRecord } from "../model/types";
 import { getPrefs } from "./prefs";
+import { refreshPush, startServiceWorker, systemNotify } from "./webPush";
 
 /** What this browser needs: a secure context, WebCrypto with Ed25519 and X25519, IndexedDB and WebSockets. */
 export async function missingCapabilities(): Promise<string[]> {
@@ -29,86 +30,56 @@ export async function missingCapabilities(): Promise<string[]> {
   return missing;
 }
 
-/** System notifications for messages that arrive while this tab isn't looked at. */
+const allowed = (): boolean => getPrefs().notifications && typeof Notification !== "undefined" && Notification.permission === "granted";
+const lookedAt = (): boolean => document.visibilityState === "visible" && document.hasFocus();
+const room = (id: string | null): string | null => (id ? `#/home/c/${encodeURIComponent(id)}` : null);
+
+/** System notifications for messages that arrive while this tab isn't looked at (src/app/webPush.ts shows them). */
 function notify(title: string, body: string, conversationId: string): void {
+  if (!allowed() || lookedAt()) return;
   const p = getPrefs();
-  if (!p.notifications || typeof Notification === "undefined" || Notification.permission !== "granted") return;
-  if (document.visibilityState === "visible" && document.hasFocus()) return;
-  try {
-    const n = new Notification(p.notificationText ? title : "Meldiq", { body: p.notificationText ? body : "New message", tag: conversationId, silent: !p.messageSound });
-    n.onclick = () => {
-      window.focus();
-      location.hash = `#/home/c/${encodeURIComponent(conversationId)}`;
-      n.close();
-    };
-  } catch {
-    /* notifications unavailable in this context */
-  }
+  systemNotify({ title: p.notificationText ? title : "Meldiq", body: p.notificationText ? body : "New message", tag: conversationId, hash: room(conversationId), silent: !p.messageSound });
 }
 
 /** A reminder that went off (Later): a system notification (when allowed) that opens Later or the saved message. */
 function notifyReminder(title: string, body: string, conversationId: string | null): void {
+  if (!allowed()) return;
   const p = getPrefs();
-  if (!p.notifications || typeof Notification === "undefined" || Notification.permission !== "granted") return;
-  try {
-    // Reminders are private by default: with message text hidden, the notification doesn't say what it's about.
-    const n = new Notification(p.notificationText ? title : "Meldiq reminder", { body: p.notificationText ? body : "You have a reminder", tag: `reminder:${title}` });
-    n.onclick = () => {
-      window.focus();
-      location.hash = conversationId ? `#/home/c/${encodeURIComponent(conversationId)}` : "#/later";
-      n.close();
-    };
-  } catch {
-    /* notifications unavailable in this context */
-  }
+  // Reminders are private by default: with message text hidden, the notification doesn't say what it's about.
+  systemNotify({ title: p.notificationText ? title : "Meldiq reminder", body: p.notificationText ? body : "You have a reminder", tag: `reminder:${title}`, hash: room(conversationId) ?? "#/later" });
 }
 
 /** A scheduled meeting starting in ten minutes (round 7): opens its voice room. */
 function notifyMeeting(title: string, body: string, roomId: string | null): void {
+  if (!allowed()) return;
   const p = getPrefs();
-  if (!p.notifications || typeof Notification === "undefined" || Notification.permission !== "granted") return;
-  try {
-    const n = new Notification(p.notificationText ? title : "Meldiq meeting", { body: p.notificationText ? body : "A meeting starts soon", tag: `meeting:${title}`, silent: !p.messageSound });
-    n.onclick = () => {
-      window.focus();
-      if (roomId) location.hash = `#/home/c/${encodeURIComponent(roomId)}`;
-      n.close();
-    };
-  } catch {
-    /* notifications unavailable in this context */
-  }
+  systemNotify({
+    title: p.notificationText ? title : "Meldiq meeting",
+    body: p.notificationText ? body : "A meeting starts soon",
+    tag: `meeting:${title}`,
+    hash: room(roomId),
+    silent: !p.messageSound,
+  });
 }
 
 /** A customer inbox notice (round 8): never the customer's name or text, which the event doesn't carry. */
 function notifyInbox(text: string, conversationId: string | null): void {
-  const p = getPrefs();
-  if (!p.notifications || typeof Notification === "undefined" || Notification.permission !== "granted") return;
-  try {
-    const n = new Notification("Customer inbox", { body: text, tag: `inbox:${text}:${conversationId ?? ""}`, silent: !p.messageSound });
-    n.onclick = () => {
-      window.focus();
-      location.hash = conversationId ? `#/workspace/inbox/${encodeURIComponent(conversationId)}` : "#/workspace/inbox";
-      n.close();
-    };
-  } catch {
-    /* notifications unavailable in this context */
-  }
+  if (!allowed()) return;
+  const hash = conversationId ? `#/workspace/inbox/${encodeURIComponent(conversationId)}` : "#/workspace/inbox";
+  systemNotify({ title: "Customer inbox", body: text, tag: `inbox:${text}:${conversationId ?? ""}`, hash, silent: !getPrefs().messageSound });
 }
 
-/** A ringing call while this tab isn't looked at: a system notification that brings the tab forward. */
+/** A ringing call while this tab isn't looked at: a system notification that brings the tab forward to its conversation. */
 function ringAlert(title: string, video: boolean, conversationId: string): void {
+  if (!allowed() || lookedAt()) return;
   const p = getPrefs();
-  if (!p.notifications || typeof Notification === "undefined" || Notification.permission !== "granted") return;
-  if (document.visibilityState === "visible" && document.hasFocus()) return;
-  try {
-    const n = new Notification(p.notificationText ? title : "Meldiq", { body: video ? "Incoming video call" : "Incoming voice call", tag: `call-${conversationId}`, requireInteraction: true });
-    n.onclick = () => {
-      window.focus();
-      n.close();
-    };
-  } catch {
-    /* notifications unavailable in this context */
-  }
+  systemNotify({
+    title: p.notificationText ? title : "Meldiq",
+    body: video ? "Incoming video call" : "Incoming voice call",
+    tag: `call-${conversationId}`,
+    hash: room(conversationId),
+    requireInteraction: true,
+  });
 }
 
 export function createEngine(device: DeviceRecord, store: LocalStore): Engine {
@@ -139,7 +110,13 @@ export function createEngine(device: DeviceRecord, store: LocalStore): Engine {
 export async function startEngine(device: DeviceRecord, store: LocalStore, grant?: SessionGrant): Promise<Engine> {
   const engine = createEngine(device, store);
   await engine.start(grant);
+  startNotifications(engine);
   return engine;
+}
+
+/** After the engine started: notifications through the service worker, and the background-notification token kept current. */
+export function startNotifications(engine: Engine): void {
+  void startServiceWorker(engine).then(() => refreshPush(engine));
 }
 
 const LOCK = "orbit-web-device";

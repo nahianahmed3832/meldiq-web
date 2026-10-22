@@ -32,7 +32,8 @@ const proxy = {
 export default defineConfig({
   plugins: [react()],
   define: { __APP_VERSION__: JSON.stringify(appVersion) },
-  server: { host: "127.0.0.1", port: 5173, strictPort: true, proxy },
+  // The service worker's source lives under /src/sw/ in development: this lets it control the whole app ("/").
+  server: { host: "127.0.0.1", port: 5173, strictPort: true, proxy, headers: { "Service-Worker-Allowed": "/" } },
   preview: { host: "127.0.0.1", port: 4173, strictPort: true, proxy },
   build: { target: "es2022", sourcemap: true },
   test: {

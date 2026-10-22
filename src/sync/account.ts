@@ -3,6 +3,7 @@ import { ApiError } from "../api/client";
 import { type Activity, type Conversation, type Device, type Member, type OrgDetail, zActivity, zConversation, zDevice, zMember, zOrgDetail, zProfile } from "../api/schemas";
 import { AccountApi } from "../auth/accountApi";
 import { normalizeEmail } from "../auth/rules";
+import { forgetPush } from "../app/webPush";
 import { LocalStore } from "../store/db";
 import type { Engine } from "./engine";
 
@@ -92,6 +93,8 @@ export async function signOut(engine: Engine, force = false): Promise<void> {
   }
   engine.stop();
   engine.session.forget();
+  // This browser stops receiving background notifications (the server removed its token with the device).
+  forgetPush();
   await LocalStore.erase(engine.store);
 }
 
@@ -104,5 +107,7 @@ export async function deleteAccount(engine: Engine, password: string, typedEmail
   engine.setSigningOut(true);
   engine.stop();
   engine.session.forget();
+  // This browser stops receiving background notifications (the server removed its token with the device).
+  forgetPush();
   await LocalStore.erase(engine.store);
 }

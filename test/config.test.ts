@@ -33,4 +33,13 @@ describe("runtime configuration (/config.json)", () => {
     await loadConfig(serve("<html>", "text/html"));
     expect(apiBase()).toBe("");
   });
+
+  it("takes the Firebase web settings for background notifications, and refuses an Android app id", async () => {
+    const firebase = { apiKey: "AIzaSyTestKeyForUnitTests000", projectId: "meldiq", messagingSenderId: "123456789012", appId: "1:123456789012:web:0a1b2c3d4e5f", vapidKey: "B".repeat(87) };
+    await loadConfig(serve({ firebase }));
+    expect(config().firebase).toEqual(firebase);
+    await loadConfig(serve({}));
+    expect(config().firebase).toBeNull();
+    await expect(loadConfig(serve({ firebase: { ...firebase, appId: "1:123456789012:android:0a1b2c3d4e5f" } }))).rejects.toThrow(/web app/);
+  });
 });

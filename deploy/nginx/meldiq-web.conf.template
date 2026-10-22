@@ -79,6 +79,13 @@ server {
     try_files $uri =404;
   }
 
+  # The service worker (background notifications): always checked for a new version, never the app page instead.
+  location = /sw.js {
+    add_header Cache-Control "no-cache" always;
+    include /etc/nginx/snippets/meldiq-web-headers.conf;
+    try_files $uri =404;
+  }
+
   # Batch B4b: invitation links (meldiq.app/invite/CODE) land on a small static page, not the web app.
   location ^~ /invite/ {
     add_header Cache-Control "no-cache" always;
