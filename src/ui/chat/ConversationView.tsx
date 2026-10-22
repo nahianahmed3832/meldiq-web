@@ -65,7 +65,8 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
       ? [`@${peer?.username ?? ""}`, peer?.online === true ? "online" : null, peer?.status].filter(Boolean).join(" · ")
       : c.type === "GROUP"
         ? members(c.memberCount)
-        : [c.topic, members(c.memberCount), online ? `${online} online` : null, c.scope === "ORG" ? null : c.scopeName].filter(Boolean).join(" · ");
+        : // Who's online here, or the member count (as on Android, batch B14b), after the topic on a wide screen.
+          [c.topic, online ? `${online} online` : members(c.memberCount)].filter(Boolean).join(" · ");
   const panelOpen = route.panel === "details";
 
   return (
