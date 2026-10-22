@@ -132,21 +132,23 @@ export function PinsTab({ conversationId }: { conversationId: string }) {
   const [missing, setMissing] = useState(false);
   if (pinned.length === 0) return <Empty text="Nothing is pinned here. Pin a message from its menu so everyone in the conversation can find it." />;
   return (
-    <ul className="search-results" role="tabpanel" aria-label="Pinned messages">
+    <>
       {missing && <Missing />}
-      {pinned.map((m) => (
-        <li key={m.id} className="pinned-row">
-          <button className="list-row" onClick={() => void jumpTo(engine, conversationId, m.id).then((ok) => setMissing(!ok))}>
-            <span className="lines">
-              <small>
-                {m.outgoing ? "You" : (users[m.senderUserId]?.displayName ?? "Someone")} · {shortWhen(m.sortTs)}
-              </small>
-              <span className="clamp-2">{m.text || (m.attachments.length ? "Attachment" : "Message")}</span>
-            </span>
-          </button>
-        </li>
-      ))}
-    </ul>
+      <ul className="search-results" role="tabpanel" aria-label="Pinned messages">
+        {pinned.map((m) => (
+          <li key={m.id} className="pinned-row">
+            <button className="list-row" onClick={() => void jumpTo(engine, conversationId, m.id).then((ok) => setMissing(!ok))}>
+              <span className="lines">
+                <small>
+                  {m.outgoing ? "You" : (users[m.senderUserId]?.displayName ?? "Someone")} · {shortWhen(m.sortTs)}
+                </small>
+                <span className="clamp-2">{m.text || (m.attachments.length ? "Attachment" : "Message")}</span>
+              </span>
+            </button>
+          </li>
+        ))}
+      </ul>
+    </>
   );
 }
 
@@ -154,25 +156,27 @@ export function LinksTab({ conversationId, links, nameOf }: { conversationId: st
   const [missing, setMissing] = useState(false);
   if (links.length === 0) return <Empty text="No links in this conversation on this browser yet." />;
   return (
-    <ul className="search-results" role="tabpanel" aria-label="Links">
+    <>
       {missing && <Missing />}
-      {links.map((l) => (
-        <li key={l.url} className="pinned-row details-link">
-          <span className="circle" aria-hidden>
-            <ExternalLink size={14} />
-          </span>
-          <span className="lines grow">
-            <SafeLink href={l.url} className="ellipsis">
-              {l.url}
-            </SafeLink>
-            <small className="ellipsis">
-              {l.domain} · {nameOf(l)} · {shortWhen(l.at)}
-            </small>
-          </span>
-          <ShowInChat conversationId={conversationId} messageId={l.messageId} onMissing={() => setMissing(true)} />
-        </li>
-      ))}
-    </ul>
+      <ul className="search-results" role="tabpanel" aria-label="Links">
+        {links.map((l) => (
+          <li key={l.url} className="pinned-row details-link">
+            <span className="circle" aria-hidden>
+              <ExternalLink size={14} />
+            </span>
+            <span className="lines grow">
+              <SafeLink href={l.url} className="ellipsis">
+                {l.url}
+              </SafeLink>
+              <small className="ellipsis">
+                {l.domain} · {nameOf(l)} · {shortWhen(l.at)}
+              </small>
+            </span>
+            <ShowInChat conversationId={conversationId} messageId={l.messageId} onMissing={() => setMissing(true)} />
+          </li>
+        ))}
+      </ul>
+    </>
   );
 }
 

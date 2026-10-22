@@ -30,7 +30,10 @@ function useMembers(conversationId: string, memberCount: number | undefined) {
   const [error, setError] = useState<string | null>(null);
   const reload = useCallback(() => {
     conversationMembers(engine, conversationId)
-      .then(setMembers)
+      .then((list) => {
+        setMembers(list);
+        setError(null);
+      })
       .catch((e: unknown) => setError(e instanceof Error ? e.message : "Couldn't load members"));
   }, [engine, conversationId]);
   useEffect(() => {
@@ -58,7 +61,8 @@ export function DetailsPanel({ conversationId, onClose }: { conversationId: stri
   const me = useOrbit((s) => s.me);
   if (!c || !me) return null;
   // Batch B14: a direct message or group has a details page of its own; a channel keeps its single page.
-  return c.type === "CHANNEL" ? <ChannelDetails c={c} onClose={onClose} /> : <ChatDetails c={c} me={me.userId} onClose={onClose} />;
+  // Keyed by conversation: another conversation's details start on their own first tab, with nothing carried over.
+  return c.type === "CHANNEL" ? <ChannelDetails key={c.id} c={c} onClose={onClose} /> : <ChatDetails key={c.id} c={c} me={me.userId} onClose={onClose} />;
 }
 
 function ChannelDetails({ c, onClose }: { c: Conversation; onClose: () => void }) {

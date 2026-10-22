@@ -1,6 +1,7 @@
 import { ChevronRight, Headphones, UserPlus } from "lucide-react";
 import type { Conversation } from "../../api/schemas";
 import { shallowEqual, useEngine, useOrbit } from "../../app/orbit";
+import { setPrefs } from "../../app/prefs";
 import { navigate } from "../../app/router";
 import { UserAvatar } from "../components/OrgAvatar";
 import { CallFailure } from "../../call/rules";
@@ -62,7 +63,14 @@ export function VoiceRoomView({ c }: { c: Conversation }) {
       )}
       <div className="voice-room-foot">
         {c.orgId && (
-          <button className="panel-action-row" onClick={() => navigate({ section: "workspace", workspacePage: "invitations" })}>
+          <button
+            className="panel-action-row"
+            onClick={() => {
+              // The invitations page shows the selected community: this channel's, whichever was selected before.
+              setPrefs({ orgId: c.orgId });
+              navigate({ section: "workspace", workspacePage: "invitations" });
+            }}
+          >
             <span className="circle">
               <UserPlus size={16} />
             </span>

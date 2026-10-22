@@ -37,6 +37,19 @@ export function CallsPage() {
   );
 }
 
+/** No camera, or it's busy or gone: the microphone can still be checked on its own. */
+const CAMERA_MISSING = ["NotFoundError", "NotReadableError", "OverconstrainedError"];
+
+/** The microphone and camera for the check; without a usable camera, the microphone alone (cameraMissing). */
+async function openForCheck(audio: MediaTrackConstraints, cam: string): Promise<{ stream: MediaStream; cameraMissing: boolean }> {
+  try {
+    return { stream: await navigator.mediaDevices.getUserMedia({ audio, video: cam ? { deviceId: { exact: cam } } : true }), cameraMissing: false };
+  } catch (e) {
+    if (!(e instanceof DOMException && CAMERA_MISSING.includes(e.name))) throw e;
+    return { stream: await navigator.mediaDevices.getUserMedia({ audio, video: false }), cameraMissing: true };
+  }
+}
+
 /** Check microphone and camera (android PreCallCheckSheet): a level bar that moves when you speak, and your picture. */
 function PreCallCheck({ noiseReduction }: { noiseReduction: boolean }) {
   const [on, setOn] = useState(false);
@@ -45,6 +58,7 @@ function PreCallCheck({ noiseReduction }: { noiseReduction: boolean }) {
   const [devices, setDevices] = useState<MediaDeviceInfo[]>([]);
   const [mic, setMic] = useState("");
   const [cam, setCam] = useState("");
+  const [cameraMissing, setCameraMissing] = useState(false);
   const video = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
@@ -56,12 +70,14 @@ function PreCallCheck({ noiseReduction }: { noiseReduction: boolean }) {
     const el = video.current;
     (async () => {
       try {
-        stream = await navigator.mediaDevices.getUserMedia({
-          audio: { ...audioProcessing(noiseReduction), ...(mic ? { deviceId: { exact: mic } } : {}) },
-          video: cam ? { deviceId: { exact: cam } } : true,
-        });
+        const opened = await openForCheck({ ...audioProcessing(noiseReduction), ...(mic ? { deviceId: { exact: mic } } : {}) }, cam);
+        stream = opened.stream;
         if (!alive) return stream.getTracks().forEach((t) => t.stop());
-        setDevices(await navigator.mediaDevices.enumerateDevices());
+        const list = await navigator.mediaDevices.enumerateDevices();
+        // Stopped (or a device changed) while the list loaded: the cleanup already released the stream.
+        if (!alive) return;
+        setDevices(list);
+        setCameraMissing(opened.cameraMissing);
         if (el) el.srcObject = stream;
         ctx = new AudioContext();
         const analyser = ctx.createAnalyser();
@@ -70,12 +86,14 @@ function PreCallCheck({ noiseReduction }: { noiseReduction: boolean }) {
         const buf = new Float32Array(analyser.fftSize);
         const tick = () => {
           analyser.getFloatTimeDomainData(buf);
-          setLevel(micLevel(buf));
+          // Whole percents only: the card re-renders when the bar visibly moves, not on every frame.
+          setLevel(Math.round(micLevel(buf) * 100) / 100);
           frame = requestAnimationFrame(tick);
         };
         tick();
         setError(null);
       } catch (e) {
+        if (!alive) return;
         setError(
           e instanceof DOMException && e.name === "NotAllowedError"
             ? "This browser isn't allowed to use your microphone or camera. Allow them in the address bar, then try again."
@@ -105,6 +123,11 @@ function PreCallCheck({ noiseReduction }: { noiseReduction: boolean }) {
       {error && (
         <div className="banner danger" role="alert">
           {error}
+        </div>
+      )}
+      {on && cameraMissing && (
+        <div className="banner info" role="status">
+          No camera could be started, so only your microphone is being checked.
         </div>
       )}
       {on && (

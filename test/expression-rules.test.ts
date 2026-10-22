@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { cleanRef, cleanRefs, emojiTokens, forSending, reactionAllowed, reactionName, sha256Hex, suggestName } from "../src/sync/expressions";
+import { cleanRef, cleanRefs, emojiTokens, expressionImage, forSending, reactionAllowed, reactionName, sha256Hex, suggestName } from "../src/sync/expressions";
+import type { Engine } from "../src/sync/engine";
 import { parsePayload, encodePayload } from "../src/protocol/payload";
 
 /** The phone's cases (android ExpressionRulesTest, CustomReactionRulesTest). */
@@ -49,5 +50,24 @@ describe("community emoji reactions (batch B12)", () => {
     expect(reactionAllowed(":a:", true)).toBe(false);
     expect(reactionName(":party:")).toBe("party");
     expect(reactionName("👍")).toBeNull();
+  });
+});
+
+describe("community emoji images", () => {
+  const bytes = new Uint8Array([1, 2, 3]);
+  const engineWith = (bytesOf: () => Promise<ArrayBuffer>) => ({ api: { bytes: bytesOf } }) as unknown as Engine;
+
+  it("tries again after a failed download, but keeps refusing an image with the wrong hash", async () => {
+    const hash = await sha256Hex(bytes);
+    let calls = 0;
+    const engine = engineWith(() => (++calls === 1 ? Promise.reject(new Error("offline")) : Promise.resolve(bytes.buffer.slice(0))));
+    expect(await expressionImage(engine, "emj_retry", hash)).toBeNull();
+    expect(await expressionImage(engine, "emj_retry", hash)).toMatch(/^blob:/);
+    expect(calls).toBe(2);
+
+    const wrong = "0".repeat(64);
+    expect(await expressionImage(engine, "emj_wrong", wrong)).toBeNull();
+    expect(await expressionImage(engine, "emj_wrong", wrong)).toBeNull();
+    expect(calls).toBe(3);
   });
 });

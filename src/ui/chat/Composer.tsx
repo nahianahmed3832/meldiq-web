@@ -491,7 +491,10 @@ export function Composer(props: ComposerProps) {
                             emoji.close();
                             void engine
                               .sendText(c.id, `:${e.name}:`, { rich: { customSticker: refOf(e) }, replyTo: props.replyTo?.id, threadRoot: props.threadRoot })
-                              .then(() => props.onCancelReply())
+                              .then(() => {
+                                props.onCancelReply();
+                                if (slowed && !props.threadRoot) setLastSent(Date.now());
+                              })
                               .catch((err: unknown) => engine.notice("error", err instanceof Error ? err.message : "Couldn't send the sticker."));
                           },
                         }

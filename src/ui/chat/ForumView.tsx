@@ -1,5 +1,5 @@
 import { MessageSquare, PenSquare, Search, ScrollText } from "lucide-react";
-import { type FormEvent, useEffect, useMemo, useState } from "react";
+import { type FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import type { Conversation } from "../../api/schemas";
 import { useEngine, useOrbit } from "../../app/orbit";
 import { navigate, type Section } from "../../app/router";
@@ -11,6 +11,8 @@ import { relative } from "../format";
 
 /** How many of the forum's newest messages this browser reads to build the post list. */
 const FORUM_WINDOW = 2000;
+/** A burst of new posts or replies reloads the list once, this long after the last of them. */
+const RELOAD_AFTER_MS = 400;
 
 /**
  * A forum channel (communities, batch B8; android Forum.kt): post guidelines at the top, search, tags (any or all of
@@ -30,11 +32,18 @@ export function ForumView({ c, section }: { c: Conversation; section: Section })
   const [writing, setWriting] = useState(false);
   const [showGuidelines, setShowGuidelines] = useState(false);
 
+  const loadedFor = useRef<string | null>(null);
   useEffect(() => {
     let alive = true;
-    void engine.conversationMessages(c.id, FORUM_WINDOW).then((m) => alive && setAll(m));
+    const load = () => void engine.conversationMessages(c.id, FORUM_WINDOW).then((m) => alive && setAll(m));
+    // A forum opened just now loads at once; later changes wait for the burst to end instead of rereading every time.
+    const first = loadedFor.current !== c.id;
+    loadedFor.current = c.id;
+    const t = first ? undefined : setTimeout(load, RELOAD_AFTER_MS);
+    if (first) load();
     return () => {
       alive = false;
+      clearTimeout(t);
     };
   }, [engine, c.id, live, threadRev]);
 

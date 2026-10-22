@@ -134,7 +134,7 @@ const images = new Map<string, Promise<string | null>>();
 
 /**
  * The image of [ref] as an object URL, or null: not a member, gone, or (when [sha256] is given) not the image the
- * message meant. Kept for the page's life.
+ * message meant. Kept for the page's life; a failed download isn't kept.
  */
 export function expressionImage(engine: Engine, id: string, sha256: string | null): Promise<string | null> {
   const key = `${id}:${sha256 ?? ""}`;
@@ -147,7 +147,11 @@ export function expressionImage(engine: Engine, id: string, sha256: string | nul
         if (sha256 && (await sha256Hex(bytes)) !== sha256) return null;
         return URL.createObjectURL(new Blob([bytes]));
       })
-      .catch(() => null);
+      .catch(() => {
+        // Offline or a server error: the next render tries again (a wrong hash above stays refused).
+        images.delete(key);
+        return null;
+      });
     images.set(key, p);
   }
   return p;
