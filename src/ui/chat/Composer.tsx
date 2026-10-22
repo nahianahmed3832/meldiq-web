@@ -14,7 +14,7 @@ import { UploadCancelled } from "../../sync/largeUpload";
 import { fallbackText } from "../../sync/rich";
 import { type Recording, voiceFileName, voiceMime } from "../../sync/voice";
 import { activeMentionQuery } from "../../sync/mentions";
-import { Avatar } from "../components/Avatar";
+import { UserAvatar } from "../components/OrgAvatar";
 import { Menu, useMenu } from "../components/Overlay";
 import { bytes } from "../format";
 import { EmojiPicker } from "./EmojiPicker";
@@ -246,7 +246,7 @@ export function Composer(props: ComposerProps) {
         <div className="suggest card" role="listbox" aria-label="People to mention">
           {suggest.items.map((m, i) => (
             <button key={m.id} role="option" aria-selected={i === suggest.index} onMouseDown={(e) => e.preventDefault()} onClick={() => pick(m)}>
-              {m.id === "everyone" ? <AtSign size={18} /> : <Avatar name={m.displayName} colorIndex={m.avatarColor} size={24} decorative />}
+              {m.id === "everyone" ? <AtSign size={18} /> : <UserAvatar userId={m.id} name={m.displayName} colorIndex={m.avatarColor} photoRev={m.photoRev} size={24} decorative />}
               <span className="grow ellipsis">{m.displayName}</span>
               <span className="faint">@{m.username}</span>
             </button>

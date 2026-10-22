@@ -5,7 +5,7 @@ import { useEngine, useOrbit } from "../../application/orbit";
 import { navigate, type Section } from "../../application/router";
 import type { StoredMessage } from "../../model/types";
 import { cleanTitle, filterPosts, guidelinesPreview, MAX_TAGS_PER_POST, MAX_TITLE, postBody, posts, type PostSort, postText, titleOf, topReaction } from "../../sync/forumRules";
-import { Avatar } from "../components/Avatar";
+import { UserAvatar } from "../components/OrgAvatar";
 import { Dialog } from "../components/Overlay";
 import { relative } from "../format";
 
@@ -164,7 +164,7 @@ export function ForumView({ c, section }: { c: Conversation; section: Section })
                   </span>
                   {body && <span className="forum-post-body">{body.slice(0, 280)}</span>}
                   <span className="forum-post-foot">
-                    <Avatar name={author} colorIndex={users[m.senderUserId]?.avatarColor ?? 0} size={18} decorative />
+                    <UserAvatar userId={m.senderUserId} name={author} colorIndex={users[m.senderUserId]?.avatarColor ?? 0} photoRev={users[m.senderUserId]?.photoRev} size={18} decorative />
                     <span>{author}</span>
                     <span>· {replies === 1 ? "1 reply" : `${replies} replies`}</span>
                     <span>· {relative(lastActivity)}</span>

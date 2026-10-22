@@ -17,7 +17,8 @@ export interface Phone {
   received: { messageId: string; conversationId: string; senderUserId: string; senderDeviceId: string; payload: { type: string; text?: string; callId?: string; e2eeKey?: string } }[];
   /** Realtime frames as they arrived (calls: `{ t: "call", event, call }`). */
   events: any[];
-  req(method: string, path: string, body?: unknown): Promise<any>;
+  /** [raw]: a binary body (a profile photo), sent as application/octet-stream. */
+  req(method: string, path: string, body?: unknown, raw?: Buffer): Promise<any>;
   send(conversationId: string, payload: unknown, cls?: "message" | "control", messageId?: string): Promise<{ serverTs: number }>;
   connect(): Promise<void>;
   disconnect(): Promise<void>;

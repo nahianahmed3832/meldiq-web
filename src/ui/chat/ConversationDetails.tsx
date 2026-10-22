@@ -7,7 +7,6 @@ import { safetyNumber } from "../../crypto/identity";
 import { conversationMembers, startDirect, userProfile } from "../../sync/account";
 import { levelOf, muteToggle, workspaceOf } from "../../sync/navPrefs";
 import { presenceWords } from "../../sync/social";
-import { Avatar } from "../components/Avatar";
 import { GroupAvatar, UserAvatar } from "../components/OrgAvatar";
 import { NewGroupDialog } from "../dialogs/NewGroupDialog";
 import { conversationTitle, dayLabel, dmPeer, members as membersText } from "../format";
@@ -266,7 +265,7 @@ export function MembersList({ c, members, error, onAdded, showAdd }: MembersList
       {!members && !error && <span className="skeleton" style={{ height: 120 }} />}
       {members?.map((m) => (
         <div key={m.id} className="person">
-          <Avatar name={m.displayName} colorIndex={m.avatarColor} size={32} online={m.online} presence={m.presence} decorative />
+          <UserAvatar userId={m.id} name={m.displayName} colorIndex={m.avatarColor} photoRev={m.photoRev} size={32} online={m.online} presence={m.presence} decorative />
           <div className="lines grow">
             <button className="ellipsis person-name" onClick={() => openProfile(m.id, m.displayName)}>
               {m.displayName}
