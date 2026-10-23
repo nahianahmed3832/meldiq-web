@@ -9,7 +9,8 @@ import { newPhone, testAddress } from "./phone";
  * messages (people by role while here, then offline) and a DM's profile, both open by default and hidden from the
  * header; the charcoal theme; and Discord-sized message toolbar and reactions. ORBIT_E2E_SHOTS=<folder> keeps screenshots.
  */
-test.skip(({ browserName }) => browserName !== "chromium", "one engine is enough for the layout of these panels");
+// Desktop Chromium only: one engine is enough for these panels, and touch screens have no hover toolbar (a long press opens the menu).
+test.skip(({ browserName, isMobile }) => browserName !== "chromium" || isMobile, "desktop Chromium only");
 test.describe.configure({ timeout: 150_000 });
 test.beforeEach(async ({ context }) => {
   await context.setExtraHTTPHeaders({ "x-orbit-test-ip": testAddress() });
