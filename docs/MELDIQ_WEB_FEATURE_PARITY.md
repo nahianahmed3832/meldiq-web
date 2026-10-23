@@ -64,6 +64,7 @@ protocol, which the phone shares.
 | ACC-15 | Legacy username sign-up | Implemented · `SignUpScreen` | `/v1/auth/register` | Unsupported on web | Being retired | — | — |
 | ACC-16 | **New:** First-run introduction, replayable from About | Implemented · `IntroScreen` | — | Built | Shown once per browser (local convenience); nothing asks for permissions | — | by hand (Chromium: five pages, Coming soon, Get started) |
 | ACC-17 | **New (remediation round 1):** Delete your account (email typed, password); this browser erases its copy | Implemented · `DeleteAccount` (Settings › Security) | `DELETE /v2/account` (`account-delete`) | Built | Refused while the only owner of a workspace (409, nothing changes); offered only when the server advertises it | `delete-account-rules`, `live-account-delete` | live. **Not device-verified; server change not deployed** |
+| ACC-18 | **New (2026-10-23):** Passkeys: sign in with one; Settings › Account › Passkeys (list, add, remove) | Implemented · `Passkeys.kt`, sign-in screen | `/v2/auth/passkey/*`, `/v2/account/passkeys*`; API 0.30.0 `server-info.passkeys.webOrigins` | Built | The web is its own relying party (`web.meldiq.app`, `rpId` sent with the options): Android passkeys (`msg.meldiq.app`) work in the app only. User verification required; a passkey never unlocks encrypted history (the key backup asks for the password). Hidden unless the server lists this origin | `passkeys`, `e2e/passkeys` (CDP virtual authenticator) | browser. **Needs API 0.30.0 with `PASSKEY_WEB_ORIGINS`** |
 
 ## WS · Workspaces and administration
 

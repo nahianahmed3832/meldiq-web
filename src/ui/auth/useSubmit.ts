@@ -1,12 +1,13 @@
 import { useCallback, useState } from "react";
 import { ApiError } from "../../api/client";
 import { SetupError } from "../../auth/deviceSetup";
+import { PasskeyError } from "../../auth/passkeys";
 import { waitText } from "../../auth/rules";
 import { LinkError } from "../../sync/session";
 
 /** What to tell the person about a failed account request. Server messages are written for people; others aren't shown. */
 export function authErrorText(e: unknown): string {
-  if (e instanceof SetupError || e instanceof LinkError) return e.message;
+  if (e instanceof SetupError || e instanceof LinkError || e instanceof PasskeyError) return e.message;
   if (e instanceof ApiError) {
     if (e.isNetwork) return "Can't reach the Meldiq server. Check your connection and try again.";
     if (e.status === 429) return `Too many attempts. Try again in ${waitText(e.retryAfterMs)}.`;

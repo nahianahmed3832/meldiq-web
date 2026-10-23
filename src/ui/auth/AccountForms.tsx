@@ -1,9 +1,10 @@
-import { ArrowLeft, ArrowLeftRight, ChevronRight, LockKeyhole, MailX, Smartphone } from "lucide-react";
+import { ArrowLeft, ArrowLeftRight, ChevronRight, KeyRound, LockKeyhole, MailX, Smartphone } from "lucide-react";
 import { type FormEvent, type ReactNode, useState } from "react";
 import type { AccountSessionGrant, LegacyTicket } from "../../api/accountSchemas";
 import { ApiError } from "../../api/client";
 import type { AccountApi } from "../../auth/accountApi";
 import { verifyLegacyAccount } from "../../auth/legacyMove";
+import { PasskeyCancelled, signInWithPasskey } from "../../auth/passkeys";
 import { cleanVerifyCode, emailProblem, nameProblem, normalizeEmail, PASSWORD_MIN_LENGTH, passwordProblem } from "../../auth/rules";
 import { AuthHeading, FormError, FormNotice, LinkButton } from "./AuthFrame";
 import { useSubmit } from "./useSubmit";
@@ -48,7 +49,10 @@ export function SignInForm(props: {
   canSignUp: boolean;
   canMove: boolean;
   canLinkWithPhone: boolean;
-  onSignedIn: (grant: AccountSessionGrant, password: string) => void;
+  /** This page's relying party when the server offers passkeys here (auth/passkeys.ts passkeyRpId), else null. */
+  passkeyRpId: string | null;
+  /** [password] is absent after a passkey sign-in. */
+  onSignedIn: (grant: AccountSessionGrant, password?: string) => void;
   onUnverified: (email: string, password: string) => void;
   onSignUp: () => void;
   onForgot: (email: string) => void;
@@ -61,7 +65,19 @@ export function SignInForm(props: {
   const [password, setPassword] = useState("");
   const [help, setHelp] = useState(false);
   const { busy, error, setError, run } = useSubmit();
+  const [withPasskey, setWithPasskey] = useState(false);
   const t = useT();
+
+  const passkey = (rpId: string) => {
+    setWithPasskey(true);
+    void run(async () => {
+      try {
+        props.onSignedIn(await signInWithPasskey(props.ctx.accounts, rpId, props.ctx.deviceName));
+      } catch (e) {
+        if (!(e instanceof PasskeyCancelled)) throw e;
+      }
+    }).finally(() => setWithPasskey(false));
+  };
 
   const submit = () => {
     const problem = emailProblem(email) ?? (password ? null : t("signin_enter_password"));
@@ -100,8 +116,13 @@ export function SignInForm(props: {
         <input id="si-password" className="input" type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} />
       </Field>
       <button className="btn btn-primary btn-lg" disabled={busy}>
-        {busy ? t("signin_busy") : t("signin_button")}
+        {busy && !withPasskey ? t("signin_busy") : t("signin_button")}
       </button>
+      {props.passkeyRpId && (
+        <button type="button" className="btn btn-secondary btn-lg" disabled={busy} onClick={() => passkey(props.passkeyRpId!)}>
+          <KeyRound size={16} /> {withPasskey ? t("signin_passkey_busy") : t("signin_passkey")}
+        </button>
+      )}
       <div className="auth-links">
         <LinkButton onClick={() => setHelp(true)}>{t("signin_trouble")}</LinkButton>
         {props.canSignUp && <LinkButton onClick={props.onSignUp}>{t("signin_create")}</LinkButton>}

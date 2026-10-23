@@ -43,6 +43,11 @@ const zKeyBackupStatus = z.object({ exists: z.boolean(), updatedAt: z.number().n
 const zKeyBackup = z.object({ version: z.number(), iterations: z.number(), salt: z.string(), nonce: z.string(), ciphertext: z.string(), identityKey: z.string() });
 const zKeyUnlockStarted = z.object({ email: z.string(), expiresAt: z.number() });
 export type RecoveryStatus = z.infer<typeof zRecoveryStatus>;
+/** Options for the browser's passkey prompt (WebAuthn JSON), and this ceremony's id to send back with the answer. */
+const zPasskeyOptions = z.object({ challengeId: z.string(), options: z.record(z.string(), z.unknown()) });
+const zPasskey = z.object({ id: z.string(), name: z.string(), createdAt: z.number(), lastUsedAt: z.number().nullable(), synced: z.boolean() });
+const zPasskeyList = z.object({ available: z.boolean(), passkeys: z.array(zPasskey) });
+export type Passkey = z.infer<typeof zPasskey>;
 
 /**
  * The Orbit 2.0 account routes (docs/ORBIT_2_ARCHITECTURE §6). Calls before sign-in go without a token; the rest use the
@@ -98,6 +103,16 @@ export class AccountApi {
   /** The emailed code and a new password: the account moves to the new address and every session signs out. */
   recoverComplete(ticket: string, code: string, newPassword: string) {
     return this.api.json("POST", "/v2/auth/recover/complete", zRecovered, { auth: false, body: { ticket, code, newPassword } });
+  }
+
+  /** Sign in with a passkey, step 1: options for [rpId] (this page's host) that offer any of the person's passkeys. */
+  passkeyLoginOptions(rpId: string) {
+    return this.api.json("POST", "/v2/auth/passkey/options", zPasskeyOptions, { auth: false, body: { rpId } });
+  }
+
+  /** Step 2: the browser's signed answer; the same session a password sign-in gives. */
+  passkeyLogin(challengeId: string, response: Record<string, unknown>, deviceName: string): Promise<AccountSessionGrant> {
+    return this.api.json("POST", "/v2/auth/passkey/login", zAccountSession, { auth: false, body: { challengeId, response, deviceName } });
   }
 
   legacyVerify(username: string, nonce: string, signature: string) {
@@ -170,6 +185,25 @@ export class AccountApi {
   /** The emailed code gets the sealed keys back (single use). */
   keyUnlock(code: string): Promise<KeyBackup> {
     return this.api.json("POST", "/v2/account/key-backup/unlock", zKeyBackup, { body: { code } });
+  }
+
+  /** The account's passkeys (made here and in the apps), and whether this server offers them. */
+  passkeys() {
+    return this.api.json("GET", "/v2/account/passkeys", zPasskeyList);
+  }
+
+  /** Add a passkey, step 1: create options for [rpId] that leave out the passkeys the account already has. */
+  passkeyCreateOptions(rpId: string) {
+    return this.api.json("POST", "/v2/account/passkeys/options", zPasskeyOptions, { body: { rpId } });
+  }
+
+  /** Step 2: the browser's new passkey, named [name] in the list. */
+  addPasskey(challengeId: string, response: Record<string, unknown>, name: string) {
+    return this.api.json("POST", "/v2/account/passkeys", z.object({ passkey: zPasskey }), { body: { challengeId, response, name } }).then((r) => r.passkey);
+  }
+
+  removePasskey(id: string): Promise<unknown> {
+    return this.api.json("DELETE", `/v2/account/passkeys/${encodeURIComponent(id)}`, zOk);
   }
 
   sessions() {
