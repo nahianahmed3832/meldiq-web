@@ -7,6 +7,7 @@ import { type UploadProgress, uploadLarge } from "./largeUpload";
 import type { AttachmentRef } from "../protocol/payload";
 import type { Engine } from "./engine";
 import { cachedMedia, forgetMediaEntry, keepMedia } from "../store/mediaCache";
+import { holdUpdates } from "../application/updates";
 
 /**
  * Files travel as ciphertext only (docs/ATTACHMENTS.md): encrypted here, uploaded through the existing authorised upload
@@ -57,37 +58,43 @@ export async function uploadFiles(
   const empty = files.find((f) => f.size === 0);
   if (empty) throw new AttachmentError(`"${empty.name}" is empty.`);
   const refs: AttachmentRef[] = [];
-  for (const [i, f] of files.entries()) {
-    if (f.size > SINGLE_FORMAT_BYTES) {
-      if (!f.source) throw new AttachmentError(`"${f.name}" is too large to send this way.`);
-      refs.push(
-        await uploadLarge(
-          engine,
-          conversationId,
-          { name: f.name, type: f.type, size: f.size, slice: (a, b) => f.source!.slice(a, b) },
-          {
-            onProgress: (p) => large?.onProgress?.(f.name, p),
-            signal: large?.signal,
-            voiceDurationMs: f.voiceDurationMs,
-          },
-        ),
-      );
+  // A new release waits for the upload before the tab reloads by itself.
+  const release = holdUpdates();
+  try {
+    for (const [i, f] of files.entries()) {
+      if (f.size > SINGLE_FORMAT_BYTES) {
+        if (!f.source) throw new AttachmentError(`"${f.name}" is too large to send this way.`);
+        refs.push(
+          await uploadLarge(
+            engine,
+            conversationId,
+            { name: f.name, type: f.type, size: f.size, slice: (a, b) => f.source!.slice(a, b) },
+            {
+              onProgress: (p) => large?.onProgress?.(f.name, p),
+              signal: large?.signal,
+              voiceDurationMs: f.voiceDurationMs,
+            },
+          ),
+        );
+        onProgress?.(i + 1, files.length);
+        continue;
+      }
+      const enc = await encryptFile(await f.bytes());
+      const res = await engine.api.json("POST", `/v1/attachments?conversationId=${encodeURIComponent(conversationId)}`, zUploadRes, { raw: enc.ciphertext });
+      refs.push({
+        id: res.id,
+        name: f.name.slice(0, 200) || "file",
+        mime: f.type || "application/octet-stream",
+        size: f.size,
+        key: enc.key,
+        nonce: enc.nonce,
+        sha256: enc.sha256,
+        ...(f.voiceDurationMs !== undefined ? { voice: true, durationMs: Math.round(f.voiceDurationMs) } : {}),
+      });
       onProgress?.(i + 1, files.length);
-      continue;
     }
-    const enc = await encryptFile(await f.bytes());
-    const res = await engine.api.json("POST", `/v1/attachments?conversationId=${encodeURIComponent(conversationId)}`, zUploadRes, { raw: enc.ciphertext });
-    refs.push({
-      id: res.id,
-      name: f.name.slice(0, 200) || "file",
-      mime: f.type || "application/octet-stream",
-      size: f.size,
-      key: enc.key,
-      nonce: enc.nonce,
-      sha256: enc.sha256,
-      ...(f.voiceDurationMs !== undefined ? { voice: true, durationMs: Math.round(f.voiceDurationMs) } : {}),
-    });
-    onProgress?.(i + 1, files.length);
+  } finally {
+    release();
   }
   return refs;
 }

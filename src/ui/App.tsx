@@ -17,6 +17,8 @@ import { ReauthScreen } from "./auth/ReauthScreen";
 import { LinkScreen } from "./LinkScreen";
 import { Shell } from "./shell/Shell";
 import { ElsewhereScreen, LoadingScreen, RevokedScreen, UnsupportedScreen } from "./StatusScreens";
+import { watchForUpdates } from "../application/updates";
+import { UpdateNotice } from "./UpdateNotice";
 
 type Boot =
   | { s: "loading" }
@@ -64,6 +66,9 @@ export function App() {
       setBoot({ s: "error", message: e instanceof Error ? e.message : "Meldiq couldn't start." });
     }
   }, []);
+
+  // New releases reach this tab without a manual refresh (src/application/updates.ts).
+  useEffect(() => watchForUpdates(), []);
 
   // Once per page: React's development mode runs effects twice, and two boots would start two engines.
   const booted = useRef(false);
@@ -118,29 +123,38 @@ export function App() {
     [signedOut],
   );
 
-  switch (boot.s) {
-    case "loading":
-      return <LoadingScreen />;
-    case "unsupported":
-      return <UnsupportedScreen missing={boot.missing} />;
-    case "elsewhere":
-      return <ElsewhereScreen onUseHere={() => void begin(true)} />;
-    case "revoked":
-      return <RevokedScreen reason={boot.reason} onLinkAgain={() => void begin()} />;
-    case "error":
-      return <RevokedScreen reason={null} message={boot.message} onLinkAgain={() => void begin()} />;
-    case "signedOut":
-      return (
-        <AuthScreen onSave={(d, g) => saveAccountDevice(boot.store, d, g)} onReady={(d, g) => void linked(boot.store, d, g)} onLinkWithPhone={() => setBoot({ s: "phoneLink", store: boot.store })} />
-      );
-    case "phoneLink":
-      return <LinkScreen onLinked={(d, g) => void linked(boot.store, d, g)} onBack={() => setBoot({ s: "signedOut", store: boot.store })} />;
-    case "ready":
-      if (boot.reauth) return <ReauthScreen engine={boot.engine} onSignOut={() => void eraseAndSignOut(boot.engine)} />;
-      return (
-        <EngineProvider engine={boot.engine}>
-          <Shell onSignedOut={() => void signedOut()} />
-        </EngineProvider>
-      );
+  return (
+    <>
+      {screenFor()}
+      <UpdateNotice />
+    </>
+  );
+
+  function screenFor() {
+    switch (boot.s) {
+      case "loading":
+        return <LoadingScreen />;
+      case "unsupported":
+        return <UnsupportedScreen missing={boot.missing} />;
+      case "elsewhere":
+        return <ElsewhereScreen onUseHere={() => void begin(true)} />;
+      case "revoked":
+        return <RevokedScreen reason={boot.reason} onLinkAgain={() => void begin()} />;
+      case "error":
+        return <RevokedScreen reason={null} message={boot.message} onLinkAgain={() => void begin()} />;
+      case "signedOut":
+        return (
+          <AuthScreen onSave={(d, g) => saveAccountDevice(boot.store, d, g)} onReady={(d, g) => void linked(boot.store, d, g)} onLinkWithPhone={() => setBoot({ s: "phoneLink", store: boot.store })} />
+        );
+      case "phoneLink":
+        return <LinkScreen onLinked={(d, g) => void linked(boot.store, d, g)} onBack={() => setBoot({ s: "signedOut", store: boot.store })} />;
+      case "ready":
+        if (boot.reauth) return <ReauthScreen engine={boot.engine} onSignOut={() => void eraseAndSignOut(boot.engine)} />;
+        return (
+          <EngineProvider engine={boot.engine}>
+            <Shell onSignedOut={() => void signedOut()} />
+          </EngineProvider>
+        );
+    }
   }
 }

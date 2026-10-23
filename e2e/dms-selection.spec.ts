@@ -28,6 +28,14 @@ test("in DMs no community is selected, and a community in the rail opens its cha
   await expect(selected).toHaveCount(1);
   await expect(sidebar).toContainText("Rail Lab");
 
+  // As on Discord: no Home button beside a community, and the logo opens the direct messages.
+  const rail = page.getByRole("navigation", { name: "Workspaces and sections" });
+  await expect(rail.getByRole("link", { name: /^Home/ })).toHaveCount(0);
+  await rail.getByRole("link", { name: "Direct messages" }).click();
+  await expect(page).toHaveURL(/\/dms$/);
+  await expect(selected).toHaveCount(0);
+  await page.goto("/home");
+
   await page.getByRole("link", { name: /^DMs/ }).click();
   await expect(page).toHaveURL(/\/dms$/);
   await expect(selected).toHaveCount(0);
