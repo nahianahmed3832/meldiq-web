@@ -7,7 +7,10 @@ import { OrgAvatar } from "../components/OrgAvatar";
 import { useIncomingRequestCount } from "../people/connectionRequests";
 import { laterDue, mentionCount, orgUnread, unreadPeopleCount } from "../selectors";
 
-/** Workspaces (the organisation switcher), then the three sections, as on the phone's tab bar. */
+/**
+ * The logo (direct messages) and the communities, then DMs, Activity and Later, as on Discord: a community opens its
+ * channels, so there's no Home button unless there's no community to open.
+ */
 export function Rail({ orgId, section }: { orgId: string | null; section: Section }) {
   const orgs = useOrbit(
     (s) => s.orgs.map((o) => ({ id: o.id, name: o.name, photoRev: o.photoRev, unread: orgUnread(s, o.id) })),
@@ -18,14 +21,16 @@ export function Rail({ orgId, section }: { orgId: string | null; section: Sectio
   const mentions = useOrbit(mentionCount);
   const later = useOrbit(laterDue);
   const nav = [
-    { key: "home" as const, label: "Home", icon: <House />, count: 0 },
+    // As on Discord, a community in the rail is its home, so Home is shown only to people in no community.
+    ...(orgs.length === 0 ? [{ key: "home" as const, label: "Home", icon: <House />, count: 0 }] : []),
     { key: "dms" as const, label: "DMs", icon: <MessagesSquare />, count: dms },
     { key: "activity" as const, label: "Activity", icon: <AtSign />, count: mentions },
     { key: "later" as const, label: "Later", icon: <Bookmark />, count: later },
   ];
   return (
     <nav className="rail" aria-label="Workspaces and sections">
-      <a className="rail-logo" href="/home" aria-label="Meldiq home">
+      {/* Discord's top button: your direct messages. */}
+      <a className="rail-logo" href="/dms" aria-label="Direct messages">
         <BrandMark size={40} />
       </a>
       {orgs.length > 0 && (
