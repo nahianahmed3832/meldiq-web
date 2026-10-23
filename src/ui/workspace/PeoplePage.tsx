@@ -102,6 +102,8 @@ function MemberRow(props: { member: DirectoryMember; detail: OrgAdminDetail; myR
       onSelect: () => void act.act(() => changeMember(engine, orgId, m.id, { role: r }).then(onChanged)),
     })),
     ...(canTitle ? [{ label: "Edit title…", onSelect: () => setEditing("title") }] : []),
+    // Android B1: from least to most severe, so Report comes before timeout, removing and banning.
+    ...(!self && features.includes("reports") ? [{ label: "Report…", onSelect: () => setEditing("report") }] : []),
     ...(canTimeout
       ? [
           "separator" as const,
@@ -114,7 +116,6 @@ function MemberRow(props: { member: DirectoryMember; detail: OrgAdminDetail; myR
       ? ["separator" as const, { label: features.includes("community-channels") ? "Remove from community…" : "Remove from workspace…", danger: true, onSelect: () => setEditing("remove") }]
       : []),
     ...(canBan ? [{ label: "Ban…", danger: true, onSelect: () => setEditing("ban") }] : []),
-    ...(!self && features.includes("reports") ? [{ label: "Report…", onSelect: () => setEditing("report") }] : []),
   ];
   return (
     <li className="ws-row">

@@ -339,3 +339,28 @@ export function waitText(at: number, now: number): string {
   const h = Math.floor(m / 60);
   return `${h} h ${m % 60 ? `${m % 60} min` : ""}`.trim();
 }
+
+// ───────────── permissions, Basic view (android A3, OverwriteRules.privacy / access / whoCanView) ─────────────
+
+/** The one capability the Basic view changes: who can see the channel (or the category's channels). */
+export const VIEW = "channels.view";
+
+/** Private: @everyone can't see it. */
+export const isPrivate = (list: readonly Pick<Overwrite, "subject" | "deny">[]): boolean => overwritesGated(list);
+
+/** The roles and members allowed to see it (its "Who can access" list), @everyone aside. */
+export function whoCanView<T extends Pick<Overwrite, "subject" | "kind" | "label" | "allow">>(list: readonly T[]): T[] {
+  return orderedOverwrites(list.filter((o) => o.subject !== EVERYONE && o.allow.includes(VIEW)));
+}
+
+/** @everyone's rule after making it private (deny seeing it) or not (seeing it inherits again); its other rules stay. */
+export function privacyRule(list: readonly Pick<Overwrite, "subject" | "allow" | "deny">[], makePrivate: boolean): { subject: string; allow: string[]; deny: string[] } {
+  const everyone = list.find((o) => o.subject === EVERYONE);
+  return { subject: EVERYONE, ...withState(everyone, VIEW, makePrivate ? "deny" : "inherit") };
+}
+
+/** [subject]'s rule after giving it access (allow seeing it) or taking it away (inherit again); its other rules stay. */
+export function accessRule(list: readonly Pick<Overwrite, "subject" | "allow" | "deny">[], subject: string, grant: boolean): { subject: string; allow: string[]; deny: string[] } {
+  const current = list.find((o) => o.subject === subject);
+  return { subject, ...withState(current, VIEW, grant ? "allow" : "inherit") };
+}

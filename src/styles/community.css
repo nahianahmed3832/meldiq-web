@@ -377,3 +377,13 @@ img.custom-sticker {
 .sticker-grid button:hover {
   background: var(--surface-hover);
 }
+
+/* Channel permissions, Basic view (android A3). */
+.perm-basic {
+  display: grid;
+  gap: 14px;
+}
+.switch:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

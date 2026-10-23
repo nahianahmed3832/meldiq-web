@@ -13,6 +13,7 @@ import {
   type Meeting,
   meetingFields,
   meetingIcs,
+  eventStepReady,
   meetingProblems,
   nextSlot,
   respondToMeeting,
@@ -152,6 +153,7 @@ function MeetingDialog({ orgId, meeting, onClose, onSaved }: { orgId: string; me
   const [q, setQ] = useState("");
   const found = useLoad(() => (q.trim().length >= 2 ? directory(engine, orgId, q) : Promise.resolve([])), [engine, orgId, q]);
   const act = useAction();
+  const [step, setStep] = useState(0);
   const problems = meetingProblems(title, roomId, date, time, tz, Date.now());
   const save = () =>
     void act.act(async () => {
@@ -169,98 +171,169 @@ function MeetingDialog({ orgId, meeting, onClose, onSaved }: { orgId: string; me
       await (meeting ? updateMeeting(engine, meeting.id, meeting.rev, input) : createMeeting(engine, orgId, input));
       onSaved();
     });
+  // Android B5: a new event in three steps (where, then what and when, then a preview card); editing shows them together.
+  const stepped = !meeting;
+  const ready = eventStepReady(step, roomId, problems);
+  const start = startMs(date, time, tz);
+  const where = (
+    <>
+      <label className="field">
+        <span>Voice room</span>
+        <select className="input" value={roomId ?? ""} onChange={(e) => setRoomId(e.target.value || null)}>
+          {rooms.length === 0 && <option value="">No voice rooms: make one in Channels</option>}
+          {rooms.map((r) => (
+            <option key={r.id} value={r.id}>
+              #{r.name}
+            </option>
+          ))}
+        </select>
+      </label>
+    </>
+  );
+  const what = (
+    <>
+      <label className="field">
+        <span>Title</span>
+        <input className="input" value={title} maxLength={120} onChange={(e) => setTitle(e.target.value)} placeholder="e.g. Weekly sync" />
+      </label>
+      <div className="wf-row">
+        <input className="input" type="date" value={date} onChange={(e) => setDate(e.target.value)} aria-label="Date" />
+        <input className="input" type="time" value={time} onChange={(e) => setTime(e.target.value)} aria-label="Time" />
+        <select className="input" value={minutes} onChange={(e) => setMinutes(Number(e.target.value))} aria-label="Length">
+          {DURATIONS.map((m) => (
+            <option key={m} value={m}>
+              {m} min
+            </option>
+          ))}
+        </select>
+      </div>
+      <small className="faint">Times are in {tz}.</small>
+      {repeats && (
+        <label className="field">
+          <span>Repeats</span>
+          <select className="input" value={repeat ?? UNKNOWN} onChange={(e) => setRepeat(e.target.value as EventRepeatChoice)}>
+            {repeat === null && (
+              <option value={UNKNOWN} disabled>
+                As set in a newer app
+              </option>
+            )}
+            {EVENT_REPEATS.map((r) => (
+              <option key={r} value={r}>
+                {repeatLabel(r, startMs(date, time, tz) ?? Date.now(), tz)}
+              </option>
+            ))}
+          </select>
+        </label>
+      )}
+      <label className="field">
+        <span>Notes (optional)</span>
+        <textarea className="input" rows={2} maxLength={2000} value={description} onChange={(e) => setDescription(e.target.value)} />
+      </label>
+      <div className="field">
+        <span>Invite</span>
+        <div className="wf-channels">
+          {people.map((p) => (
+            <span key={p.id} className="chip">
+              {p.name}
+              <button className="icon-btn" style={{ width: 18, height: 18 }} aria-label={`Remove ${p.name}`} onClick={() => setPeople(people.filter((x) => x.id !== p.id))}>
+                <X size={11} />
+              </button>
+            </span>
+          ))}
+        </div>
+        <input className="input" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Add people (they must be able to open the room)" aria-label="Find someone to invite" />
+        <ul className="ws-list">
+          {(found.data ?? [])
+            .filter((p) => !people.some((x) => x.id === p.id))
+            .slice(0, 6)
+            .map((p) => (
+              <li key={p.id}>
+                <button
+                  className="list-row"
+                  onClick={() => {
+                    setPeople([...people, { id: p.id, name: p.displayName }]);
+                    setQ("");
+                  }}
+                >
+                  {p.displayName} <small className="faint">@{p.username}</small>
+                </button>
+              </li>
+            ))}
+        </ul>
+      </div>
+    </>
+  );
+  const preview = (
+    <div className="event-preview card" aria-label="Preview">
+      <small className="faint">{community ? "Event" : "Meeting"} preview</small>
+      <strong className="event-preview-title">{title.trim() || "Untitled"}</strong>
+      <span>{start !== null ? whenText(start, start + minutes * 60_000, tz) : ""}</span>
+      <span className="row" style={{ gap: 6 }}>
+        <Headphones size={14} /> #{rooms.find((r) => r.id === roomId)?.name ?? "room"}
+      </span>
+      {repeat && repeat !== "none" && start !== null && <span>{repeatLabel(repeat, start, tz)}</span>}
+      {description.trim() && (
+        <p className="muted" style={{ margin: 0, whiteSpace: "pre-wrap" }}>
+          {description.trim()}
+        </p>
+      )}
+      {people.length > 0 && <span className="faint">Invited: {people.map((p) => p.name).join(", ")}</span>}
+    </div>
+  );
+  const STEP_TITLES = ["Where", "What and when", "Preview"];
   return (
     <Dialog
       title={community ? (meeting ? "Edit event" : "Schedule an event") : meeting ? "Edit meeting" : "Schedule a meeting"}
       onClose={onClose}
       footer={
-        <button className="btn btn-primary" disabled={problems.length > 0 || act.busy} onClick={save}>
-          {act.busy ? "Saving…" : "Save"}
-        </button>
+        stepped && step < 2 ? (
+          <>
+            {step > 0 && (
+              <button className="btn btn-secondary" onClick={() => setStep(step - 1)}>
+                Back
+              </button>
+            )}
+            <button className="btn btn-primary" disabled={!ready} onClick={() => setStep(step + 1)}>
+              Next
+            </button>
+          </>
+        ) : (
+          <>
+            {stepped && (
+              <button className="btn btn-secondary" onClick={() => setStep(1)}>
+                Back
+              </button>
+            )}
+            <button className="btn btn-primary" disabled={problems.length > 0 || act.busy} onClick={save}>
+              {act.busy ? "Saving…" : stepped ? (community ? "Create event" : "Create meeting") : "Save"}
+            </button>
+          </>
+        )
       }
     >
       <div className="dialog-body">
-        <label className="field">
-          <span>Title</span>
-          <input className="input" value={title} maxLength={120} onChange={(e) => setTitle(e.target.value)} placeholder="e.g. Weekly sync" />
-        </label>
-        <label className="field">
-          <span>Voice room</span>
-          <select className="input" value={roomId ?? ""} onChange={(e) => setRoomId(e.target.value || null)}>
-            {rooms.length === 0 && <option value="">No voice rooms: make one in Channels</option>}
-            {rooms.map((r) => (
-              <option key={r.id} value={r.id}>
-                #{r.name}
-              </option>
+        {stepped && (
+          <ol className="event-steps" aria-label="Steps">
+            {STEP_TITLES.map((t, i) => (
+              <li key={t} aria-current={i === step ? "step" : undefined} className={i < step ? "done" : undefined}>
+                {t}
+              </li>
             ))}
-          </select>
-        </label>
-        <div className="wf-row">
-          <input className="input" type="date" value={date} onChange={(e) => setDate(e.target.value)} aria-label="Date" />
-          <input className="input" type="time" value={time} onChange={(e) => setTime(e.target.value)} aria-label="Time" />
-          <select className="input" value={minutes} onChange={(e) => setMinutes(Number(e.target.value))} aria-label="Length">
-            {DURATIONS.map((m) => (
-              <option key={m} value={m}>
-                {m} min
-              </option>
-            ))}
-          </select>
-        </div>
-        <small className="faint">Times are in {tz}.</small>
-        {repeats && (
-          <label className="field">
-            <span>Repeats</span>
-            <select className="input" value={repeat ?? UNKNOWN} onChange={(e) => setRepeat(e.target.value as EventRepeatChoice)}>
-              {repeat === null && (
-                <option value={UNKNOWN} disabled>
-                  As set in a newer app
-                </option>
-              )}
-              {EVENT_REPEATS.map((r) => (
-                <option key={r} value={r}>
-                  {repeatLabel(r, startMs(date, time, tz) ?? Date.now(), tz)}
-                </option>
-              ))}
-            </select>
-          </label>
+          </ol>
         )}
-        <label className="field">
-          <span>Notes (optional)</span>
-          <textarea className="input" rows={2} maxLength={2000} value={description} onChange={(e) => setDescription(e.target.value)} />
-        </label>
-        <div className="field">
-          <span>Invite</span>
-          <div className="wf-channels">
-            {people.map((p) => (
-              <span key={p.id} className="chip">
-                {p.name}
-                <button className="icon-btn" style={{ width: 18, height: 18 }} aria-label={`Remove ${p.name}`} onClick={() => setPeople(people.filter((x) => x.id !== p.id))}>
-                  <X size={11} />
-                </button>
-              </span>
-            ))}
-          </div>
-          <input className="input" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Add people (they must be able to open the room)" aria-label="Find someone to invite" />
-          <ul className="ws-list">
-            {(found.data ?? [])
-              .filter((p) => !people.some((x) => x.id === p.id))
-              .slice(0, 6)
-              .map((p) => (
-                <li key={p.id}>
-                  <button
-                    className="list-row"
-                    onClick={() => {
-                      setPeople([...people, { id: p.id, name: p.displayName }]);
-                      setQ("");
-                    }}
-                  >
-                    {p.displayName} <small className="faint">@{p.username}</small>
-                  </button>
-                </li>
-              ))}
-          </ul>
-        </div>
-        {problems.length > 0 && (
+        {!stepped ? (
+          <>
+            {what}
+            {where}
+          </>
+        ) : step === 0 ? (
+          where
+        ) : step === 1 ? (
+          what
+        ) : (
+          preview
+        )}
+        {(!stepped || step === 1) && problems.length > 0 && (
           <ul className="wf-problems">
             {problems.map((p) => (
               <li key={p}>{p}</li>

@@ -4,7 +4,22 @@ import { ApiError } from "../../api/client";
 import type { Overwrite, Overwrites } from "../../api/communitySchemas";
 import { useEngine } from "../../application/orbit";
 import { type OverwriteTarget, overwrites, setOverwrite } from "../../sync/community";
-import { EVERYONE, orderedOverwrites, type OverwriteState, overwritesSynced, overwriteState, syncTargets, withState } from "../../sync/communityRules";
+import {
+  accessRule,
+  EVERYONE,
+  isPrivate,
+  orderedOverwrites,
+  type OverwriteState,
+  overwritesSynced,
+  overwriteState,
+  privacyRule,
+  syncTargets,
+  USER_PREFIX,
+  whoCanView,
+  withState,
+} from "../../sync/communityRules";
+import { directory } from "../../sync/workspaces";
+import { Toggle } from "../components/Toggle";
 import { Dialog } from "../components/Overlay";
 import { useLoad } from "../workspace/useLoad";
 
@@ -24,6 +39,8 @@ export function PermissionsDialog({ orgId, target, title, onClose }: { orgId: st
   const loaded = useLoad(() => overwrites(engine, target), [engine, target.type, target.id]);
   const [data, setData] = useState<Overwrites | null>(null);
   const [subject, setSubject] = useState<string>(EVERYONE);
+  // Android A3: Basic (private or not, and who can see it) first; Advanced is every capability for every subject.
+  const [mode, setMode] = useState<"basic" | "advanced">("basic");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const d = data ?? loaded.data;
@@ -82,53 +99,65 @@ export function PermissionsDialog({ orgId, target, title, onClose }: { orgId: st
                 {error}
               </div>
             )}
-            <div className="perm-grid">
-              <div className="perm-subjects" role="listbox" aria-label="Roles and members">
-                {subjects.map((s) => {
-                  const o = listed.find((x) => x.subject === s.subject);
-                  const set = !!o && (o.allow.length > 0 || o.deny.length > 0);
-                  return (
-                    <button key={s.subject} role="option" aria-selected={subject === s.subject} className="side-item" onClick={() => setSubject(s.subject)}>
-                      <span className="grow ellipsis">{s.label}</span>
-                      {set && <span className="dot" aria-label="has rules" />}
-                    </button>
-                  );
-                })}
-              </div>
-              <div className="perm-caps">
-                {d.capabilities.map((cap) => {
-                  const st = overwriteState(current, cap.key);
-                  return (
-                    <div key={cap.key} className="perm-row">
-                      <span className="lines">
-                        <strong>{cap.label}</strong>
-                        {cap.description && <small>{cap.description}</small>}
-                      </span>
-                      <div className="segmented perm-tri" role="radiogroup" aria-label={cap.label}>
-                        {STATES.map((x) => (
-                          <button
-                            key={x.state}
-                            role="radio"
-                            aria-checked={st === x.state}
-                            aria-pressed={st === x.state}
-                            aria-label={x.label}
-                            title={x.label}
-                            className={`perm-${x.state}`}
-                            disabled={busy || !d.canManage}
-                            onClick={() => {
-                              const next = withState(current, cap.key, x.state);
-                              void write(subject, next.allow, next.deny);
-                            }}
-                          >
-                            {x.icon}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
+            <div className="segmented" role="group" aria-label="Permissions view">
+              <button aria-pressed={mode === "basic"} onClick={() => setMode("basic")}>
+                Basic
+              </button>
+              <button aria-pressed={mode === "advanced"} onClick={() => setMode("advanced")}>
+                Advanced
+              </button>
             </div>
+            {mode === "basic" ? (
+              <BasicPermissions orgId={orgId} d={d} kind={target.type} busy={busy} write={write} />
+            ) : (
+              <div className="perm-grid">
+                <div className="perm-subjects" role="listbox" aria-label="Roles and members">
+                  {subjects.map((s) => {
+                    const o = listed.find((x) => x.subject === s.subject);
+                    const set = !!o && (o.allow.length > 0 || o.deny.length > 0);
+                    return (
+                      <button key={s.subject} role="option" aria-selected={subject === s.subject} className="side-item" onClick={() => setSubject(s.subject)}>
+                        <span className="grow ellipsis">{s.label}</span>
+                        {set && <span className="dot" aria-label="has rules" />}
+                      </button>
+                    );
+                  })}
+                </div>
+                <div className="perm-caps">
+                  {d.capabilities.map((cap) => {
+                    const st = overwriteState(current, cap.key);
+                    return (
+                      <div key={cap.key} className="perm-row">
+                        <span className="lines">
+                          <strong>{cap.label}</strong>
+                          {cap.description && <small>{cap.description}</small>}
+                        </span>
+                        <div className="segmented perm-tri" role="radiogroup" aria-label={cap.label}>
+                          {STATES.map((x) => (
+                            <button
+                              key={x.state}
+                              role="radio"
+                              aria-checked={st === x.state}
+                              aria-pressed={st === x.state}
+                              aria-label={x.label}
+                              title={x.label}
+                              className={`perm-${x.state}`}
+                              disabled={busy || !d.canManage}
+                              onClick={() => {
+                                const next = withState(current, cap.key, x.state);
+                                void write(subject, next.allow, next.deny);
+                              }}
+                            >
+                              {x.icon}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
             {!d.canManage && (
               <p className="faint" style={{ margin: 0 }}>
                 You can see these rules but not change them.
@@ -138,5 +167,95 @@ export function PermissionsDialog({ orgId, target, title, onClose }: { orgId: st
         )}
       </div>
     </Dialog>
+  );
+}
+
+/**
+ * The Basic view (android A3): a Private switch (@everyone can't see it), "Who can access" with remove, and adding roles or
+ * members. Only seeing the channel changes; every other rule stays as set in Advanced.
+ */
+function BasicPermissions(props: { orgId: string; d: Overwrites; kind: "category" | "channel"; busy: boolean; write: (subject: string, allow: string[], deny: string[]) => Promise<void> }) {
+  const { orgId, d, kind, busy, write } = props;
+  const engine = useEngine();
+  const [q, setQ] = useState("");
+  const found = useLoad(() => (q.trim().length >= 2 ? directory(engine, orgId, q) : Promise.resolve([])), [engine, orgId, q]);
+  const priv = isPrivate(d.overwrites);
+  const access = whoCanView(d.overwrites);
+  const has = new Set(access.map((o) => o.subject));
+  const roles = d.roles.filter((r) => !has.has(r.id));
+  const set = (rule: { subject: string; allow: string[]; deny: string[] }) => void write(rule.subject, rule.allow, rule.deny);
+  const what = kind === "category" ? "this category's channels" : "this channel";
+  return (
+    <div className="perm-basic">
+      <div className="setting">
+        <div className="lines">
+          <strong>Private {kind}</strong>
+          <small>Only the roles and members below can see {what}. Owners and admins always can.</small>
+        </div>
+        <Toggle label={`Private ${kind}`} checked={priv} disabled={busy || !d.canManage} onChange={(v) => set(privacyRule(d.overwrites, v))} />
+      </div>
+      {priv && access.length === 0 && (
+        <div className="banner warn" role="status">
+          <span className="grow">Only owners and admins can see {what} now. Add the roles or members who should.</span>
+        </div>
+      )}
+      <section aria-label="Who can access">
+        <h3 className="ws-subhead">Who can access</h3>
+        {access.length === 0 ? (
+          <p className="faint" style={{ margin: 0 }}>
+            {priv ? "Nobody besides owners and admins." : "Everyone in the community (it isn't private)."}
+          </p>
+        ) : (
+          <ul className="ws-list">
+            {access.map((o) => (
+              <li key={o.subject} className="list-row">
+                <span className="grow" style={o.color ? { color: o.color } : undefined}>
+                  {o.kind === "role" ? `@${o.label}` : o.label}
+                </span>
+                {d.canManage && (
+                  <button className="btn btn-ghost btn-sm" disabled={busy} onClick={() => set(accessRule(d.overwrites, o.subject, false))}>
+                    Remove
+                  </button>
+                )}
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
+      {d.canManage && (
+        <section aria-label="Add members or roles">
+          <h3 className="ws-subhead">Add members or roles</h3>
+          {roles.length > 0 && (
+            <div className="row" style={{ gap: 6, flexWrap: "wrap" }}>
+              {roles.map((r) => (
+                <button key={r.id} className="chip" disabled={busy} onClick={() => set(accessRule(d.overwrites, r.id, true))} style={r.color ? { color: r.color } : undefined}>
+                  + @{r.name}
+                </button>
+              ))}
+            </div>
+          )}
+          <input className="input" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Add a member by name or @username" aria-label="Find a member to add" style={{ marginTop: 8 }} />
+          <ul className="ws-list">
+            {(found.data ?? [])
+              .filter((p) => !has.has(`${USER_PREFIX}${p.id}`))
+              .slice(0, 6)
+              .map((p) => (
+                <li key={p.id}>
+                  <button
+                    className="list-row"
+                    disabled={busy}
+                    onClick={() => {
+                      set(accessRule(d.overwrites, `${USER_PREFIX}${p.id}`, true));
+                      setQ("");
+                    }}
+                  >
+                    {p.displayName} <small className="faint">@{p.username}</small>
+                  </button>
+                </li>
+              ))}
+          </ul>
+        </section>
+      )}
+    </div>
   );
 }

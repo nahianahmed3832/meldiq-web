@@ -1405,3 +1405,49 @@ select.input {
   right: 16px;
   z-index: 1;
 }
+
+/* Creating an event in three steps (android B5): the steps, then the preview card. */
+.event-steps {
+  display: flex;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: step;
+  font-size: var(--fs-sm);
+  color: var(--text-3);
+}
+.event-steps li {
+  counter-increment: step;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.event-steps li::before {
+  content: counter(step);
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1px solid var(--border-strong);
+  font-size: 11px;
+}
+.event-steps li[aria-current="step"] {
+  color: var(--text);
+  font-weight: 650;
+}
+.event-steps li[aria-current="step"]::before,
+.event-steps li.done::before {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--on-accent);
+}
+.event-preview {
+  display: grid;
+  gap: 6px;
+  padding: 16px;
+}
+.event-preview-title {
+  font-size: var(--fs-xl);
+}
