@@ -16,7 +16,7 @@ test.beforeEach(async ({ context }) => {
 /** There's a picture, and every one has really loaded. */
 const loaded = (els: Element[]) => els.length > 0 && els.every((e) => (e as HTMLImageElement).complete && (e as HTMLImageElement).naturalWidth > 0);
 
-test("a person's profile photo shows beside their messages and in the conversation, not only in the list", async ({ page }) => {
+test("a person's profile photo shows beside their messages and in the conversation, not only in the list", async ({ page, isMobile }) => {
   const alice = await newPhone("alice", "Alice Rahman");
   const bob = await newPhone("bob", "Bob Chen");
   const jpeg = fs.readFileSync(path.join(import.meta.dirname, "../public/launch/meldiq-launch.jpg"));
@@ -39,7 +39,8 @@ test("a person's profile photo shows beside their messages and in the conversati
     await expect.poll(() => page.locator(selector).evaluateAll(loaded), { message: `Bob's photo ${where}`, timeout: 10_000 }).toBe(true);
   }
 
-  // Home's recent direct messages (reported 2026-10-23: initials only).
+  // Home's recent direct messages (reported 2026-10-23: initials only); phones show the conversation list there instead.
+  if (isMobile) return;
   await page.goto("/dms");
   await expect(page.getByRole("heading", { name: "Recent direct messages" })).toBeVisible();
   await expect.poll(() => page.locator("section.main .list-row .avatar-photo").evaluateAll(loaded), { message: "Bob's photo on Home", timeout: 10_000 }).toBe(true);

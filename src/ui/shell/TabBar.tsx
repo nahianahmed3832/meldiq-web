@@ -2,10 +2,12 @@ import { AtSign, House, MessagesSquare, Settings } from "lucide-react";
 import { useOrbit } from "../../application/orbit";
 import { navigate, type Section } from "../../application/router";
 import { mentionCount, unreadPeopleCount } from "../selectors";
+import { useIncomingRequestCount } from "../people/connectionRequests";
 
 /** Phones: the bottom tab bar (hidden inside a conversation, like the phone app). */
 export function TabBar({ section, hidden }: { section: Section; hidden: boolean }) {
-  const dms = useOrbit(unreadPeopleCount);
+  // Unread DMs and people waiting for an answer to their connection request, as on the rail.
+  const dms = useOrbit(unreadPeopleCount) + useIncomingRequestCount();
   const mentions = useOrbit(mentionCount);
   const tabs = [
     { key: "home" as const, label: "Home", icon: <House size={21} />, count: 0 },
