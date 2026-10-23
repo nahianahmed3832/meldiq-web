@@ -18,7 +18,7 @@ export default function Document() {
     <Html lang="en">
       <Head>
         <meta name="color-scheme" content="light dark" />
-        <meta name="theme-color" content="#231d62" />
+        <meta name="theme-color" content="#1e1f22" />
         <meta name="referrer" content="no-referrer" />
         <meta name="application-name" content="Meldiq" />
         <meta name="apple-mobile-web-app-title" content="Meldiq" />

@@ -12,6 +12,11 @@ const TONES: [string, string][] = [
   ["#677b84", "#52666f"],
 ];
 
+/** The avatar tone's deeper shade, for a profile's banner. */
+export function toneOf(colorIndex: number): string {
+  return TONES[((colorIndex % TONES.length) + TONES.length) % TONES.length][1];
+}
+
 /** android ui/components/Display.kt `initialsOf`. */
 export function initialsOf(name: string): string {
   const parts = name.trim().split(/\s+/).filter(Boolean);

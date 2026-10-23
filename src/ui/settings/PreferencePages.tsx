@@ -10,7 +10,7 @@ import { IntroPages } from "../auth/IntroPages";
 import { BackgroundNotifications } from "./BackgroundNotifications";
 
 const THEME_LABELS: Record<Prefs["theme"], string> = { system: "System", light: "Light", dark: "Dark" };
-const PALETTE_LABELS: Record<Palette, string> = { indigo: "Indigo", plum: "Plum", amber: "Amber" };
+const PALETTE_LABELS: Record<Palette, string> = { charcoal: "Charcoal", indigo: "Indigo", plum: "Plum", amber: "Amber" };
 const TEXT_SIZE_LABELS: Record<TextSize, string> = { small: "Small", default: "Default", large: "Large" };
 
 export function NotificationsPage() {
@@ -119,7 +119,7 @@ export function AppearancePage() {
           </div>
           <div className="palette-picker" role="radiogroup" aria-label="Colour">
             {PALETTES.map((p) => (
-              <button key={p} role="radio" aria-checked={prefs.palette === p} className="palette-swatch" data-swatch={p} onClick={() => setPrefs({ palette: p })}>
+              <button key={p} role="radio" aria-checked={prefs.palette === p} className="palette-swatch" data-swatch={p} onClick={() => setPrefs({ palette: p, paletteChosen: true })}>
                 <span className="swatch" aria-hidden="true">
                   <i />
                   <i />

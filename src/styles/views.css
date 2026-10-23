@@ -190,6 +190,15 @@
 .palette-swatch .swatch i {
   flex: 1;
 }
+.palette-swatch[data-swatch="charcoal"] .swatch i:nth-child(1) {
+  background: var(--swatch-charcoal-1);
+}
+.palette-swatch[data-swatch="charcoal"] .swatch i:nth-child(2) {
+  background: var(--swatch-charcoal-2);
+}
+.palette-swatch[data-swatch="charcoal"] .swatch i:nth-child(3) {
+  background: var(--swatch-charcoal-3);
+}
 .palette-swatch[data-swatch="indigo"] .swatch i:nth-child(1) {
   background: var(--swatch-indigo-1);
 }

@@ -4,7 +4,7 @@ import { useSyncExternalStore } from "react";
 /**
  * The app's routes, as paths (Next.js serves the one client-side page for every path; docs/MELDIQ_WEB_NEXTJS.md):
  *   /home  /dms  /activity  /later              the sections (Later: saved messages and reminders)
- *   /<section>/c/<id>[/details|/search|/pinned|/thread/<root>]   a conversation (and its side panel)
+ *   /<section>/c/<id>[/details|/search|/pinned|/members|/thread/<root>]   a conversation (and its side panel)
  *   /settings/<page>
  *   /workspace/<page>                          the current workspace's settings and administration
  * Links from before (hash routes, "/#/dms/c/<id>": old notifications, bookmarks, links in messages) still work: the
@@ -33,7 +33,7 @@ export type WorkspacePage =
 export interface Route {
   section: Section;
   conversationId: string | null;
-  panel: "details" | "thread" | "search" | "pinned" | "threads" | null;
+  panel: "details" | "thread" | "search" | "pinned" | "threads" | "members" | null;
   threadRoot: string | null;
   settingsPage: SettingsPage;
   workspacePage: WorkspacePage;
@@ -81,6 +81,7 @@ export function parseRoute(where: string): Route {
     if (parts[3] === "search") route.panel = "search";
     if (parts[3] === "pinned") route.panel = "pinned";
     if (parts[3] === "threads") route.panel = "threads";
+    if (parts[3] === "members") route.panel = "members";
     if (parts[3] === "thread" && parts[4] && ID.test(parts[4])) {
       route.panel = "thread";
       route.threadRoot = parts[4];
@@ -100,6 +101,7 @@ export function routeHref(r: Partial<Route> & { section: Section }): string {
     if (r.panel === "search") h += "/search";
     if (r.panel === "pinned") h += "/pinned";
     if (r.panel === "threads") h += "/threads";
+    if (r.panel === "members") h += "/members";
     if (r.panel === "thread" && r.threadRoot) h += `/thread/${encodeURIComponent(r.threadRoot)}`;
   }
   return h;

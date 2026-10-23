@@ -4,6 +4,7 @@ import { getPrefs, setPrefs, usePrefs } from "../../application/prefs";
 import { isFullPage, navigate, useRoute } from "../../application/router";
 import { ConversationView } from "../chat/ConversationView";
 import { SidePanel } from "../chat/SidePanel";
+import { DockedPeoplePanel } from "../chat/PeoplePanels";
 import { CallLayer } from "../call/CallLayer";
 import { ChannelBrowser } from "../dialogs/ChannelBrowser";
 import { IdentityReview } from "../dialogs/IdentityReview";
@@ -186,6 +187,7 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
           {drawer && !settings && <div className="sidebar-scrim" onClick={() => setDrawer(false)} aria-hidden="true" />}
           {main}
           {!settings && route.conversationId && known && route.panel && <SidePanel route={route} />}
+          {!settings && route.conversationId && known && !route.panel && <DockedPeoplePanel conversationId={route.conversationId} route={route} />}
         </div>
       </div>
       <TabBar section={section} hidden={!!route.conversationId && !settings} />

@@ -4,7 +4,8 @@
  * Structure:
  *  1. Scale: type, radii, spacing, motion, elevation shape (palette-independent).
  *  2. Neutrals: surfaces, text, borders and states, shared by every palette.
- *  3. Palettes: the brand colour plates (indigo, the default from the logo's cyan → blue → violet ribbon; plum; amber).
+ *  3. Palettes: the colour plates (charcoal, the default: neutral greys like Discord's; indigo, from the logo's
+ *     cyan → blue → violet ribbon; plum; amber).
  *     A palette sets only brand hues: the frame (rail and top bar), the sidebar tint, the accent and its soft and text
  *     forms, mentions, badges and the brand gradient. `data-palette` on <html> picks one (src/application/prefs.ts).
  *
@@ -108,7 +109,7 @@
   --action: #4b4fc9;
   --on-action: #ffffff;
   --danger: #c0262d;
-  --rail: #241f63;
+  --rail: #2b2d31;
 }
 
 @supports (color: light-dark(#000, #fff)) {
@@ -224,6 +225,9 @@
     --sticker-confetti: conic-gradient(from 0deg, #f59e0b 0 20%, #10b981 0 40%, #3b82f6 0 60%, #ec4899 0 80%, currentColor 0);
 
     /* Palette previews (Appearance › Colour): each plate's frame, sidebar and accent, whatever plate is active. */
+    --swatch-charcoal-1: #1e1f22;
+    --swatch-charcoal-2: #dfe1e5;
+    --swatch-charcoal-3: #4e5058;
     --swatch-indigo-1: #231d62;
     --swatch-indigo-2: #e2dffa;
     --swatch-indigo-3: #4b4fc9;
@@ -277,6 +281,56 @@
     --accent-start: #22d3ee;
     --accent-end: #8b5cf6;
     --theme-color: #231d62;
+  }
+
+  /*
+   * Charcoal (the default since 2026-10-23): neutral greys like Discord's, with no brand hue. The frame is charcoal in
+   * both themes; the accent is graphite (light) or near white (dark); unread counts are red so they still stand out.
+   * It also replaces the blue-tinted neutrals. Before a page's preferences apply there's no data-palette: charcoal too.
+   */
+  :root:not([data-palette]),
+  :root[data-palette="charcoal"] {
+    --bg: light-dark(#f2f3f5, #1e1f22);
+    --surface: light-dark(#ffffff, #313338);
+    --surface-raised: light-dark(#ffffff, #2b2d31);
+    --surface-sunken: light-dark(#ebedef, #2b2d31);
+    --surface-hover: light-dark(#f2f3f5, #2e3035);
+    --surface-selected: light-dark(#e3e5e8, #404249);
+    --border: light-dark(#e1e2e4, #3f4147);
+    --border-strong: light-dark(#c9cbcf, #4e5058);
+    --text: light-dark(#1e1f22, #f2f3f5);
+    --text-2: light-dark(#4e5058, #b5bac1);
+    --text-3: light-dark(#6d6f78, #949ba4);
+    --outline: light-dark(#8e9097, #80848e);
+    --tooltip-bg: light-dark(#1e1f22, #111214);
+    --tooltip-text: light-dark(#f2f3f5, #f2f3f5);
+
+    --rail: light-dark(#2b2d31, #1e1f22);
+    --rail-2: light-dark(#232428, #1a1b1e);
+    --rail-text: light-dark(#c4c7cc, #b5bac1);
+
+    --sidebar: light-dark(#f2f3f5, #2b2d31);
+    --sidebar-hover: light-dark(#e8e9ec, #35373c);
+    --sidebar-selected: light-dark(#dfe1e5, #404249);
+    --sidebar-text: light-dark(#4e5058, #b5bac1);
+
+    --accent: light-dark(#2b2d31, #e3e5e8);
+    --accent-hover: light-dark(#1e1f22, #ffffff);
+    --accent-soft: light-dark(#e3e5e8, #404249);
+    --accent-text: light-dark(#1e1f22, #f2f3f5);
+    --on-accent: light-dark(#ffffff, #1e1f22);
+    --accent-2: light-dark(#4e5058, #b5bac1);
+
+    --mention-bg: light-dark(#e3e5e8, #3f4147);
+    --mention-text: light-dark(#1e1f22, #f2f3f5);
+    --bubble-out: light-dark(#ebedef, #383a40);
+    --badge: light-dark(#da373c, #f23f43);
+    --on-badge: #ffffff;
+    --rail-badge: #f23f43;
+    --on-rail-badge: #ffffff;
+    --accent-start: #949ba4;
+    --accent-end: #4e5058;
+    --theme-color: #1e1f22;
   }
 
   /* Plum: magenta and plum. */

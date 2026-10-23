@@ -268,19 +268,20 @@
 .reactions {
   display: flex;
   flex-wrap: wrap;
-  gap: 4px;
+  gap: 6px;
   margin-top: 6px;
 }
+/* As large as Discord's: a 20px emoji and its count on a 32px chip. */
 .reaction {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  height: 26px;
-  padding: 0 9px;
-  border-radius: var(--r-pill);
+  gap: 6px;
+  height: 32px;
+  padding: 0 10px;
+  border-radius: var(--r-md);
   border: 1px solid var(--border);
   background: var(--surface-sunken);
-  font-size: 12.5px;
+  font-size: 14px;
   font-weight: 650;
   color: var(--text-2);
   font-variant-numeric: tabular-nums;
@@ -290,6 +291,12 @@
 }
 .reaction:hover {
   border-color: var(--border-strong);
+}
+.reaction-emoji {
+  display: inline-flex;
+  align-items: center;
+  font-size: 20px;
+  line-height: 1;
 }
 .reaction[aria-pressed="true"] {
   border-color: var(--accent);
@@ -314,10 +321,10 @@
 }
 .msg-actions {
   position: absolute;
-  top: -16px;
+  top: -22px;
   right: 20px;
   display: none;
-  gap: 1px;
+  gap: 2px;
   padding: 3px;
   border-radius: var(--r-md);
   border: 1px solid var(--border);
@@ -359,11 +366,11 @@
   font-size: 20px;
 }
 .msg-actions .icon-btn {
-  width: 30px;
-  height: 30px;
+  width: 36px;
+  height: 36px;
 }
 .quick-emoji {
-  font-size: 16px;
+  font-size: 20px;
 }
 .attachments {
   display: flex;
@@ -2046,4 +2053,124 @@
   color: var(--text-2);
   font-size: 13px;
   overflow-wrap: anywhere;
+}
+
+/* ───────────────────────── member list and profile beside the messages ───────────────────────── */
+.panel.member-list {
+  width: 260px;
+  background: var(--sidebar);
+}
+.member-list-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 48px;
+  padding: 0 8px 0 16px;
+  border-bottom: 1px solid var(--hairline);
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  color: var(--text-2);
+}
+.member-list-body {
+  flex: 1;
+  min-height: 0;
+  padding: 4px 8px 16px;
+}
+.member-list-note {
+  padding: 8px;
+  font-size: var(--fs-sm);
+}
+.member-group {
+  margin: 16px 8px 4px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+.member-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 5px 8px;
+  border-radius: var(--r-sm);
+  text-align: left;
+  color: var(--text);
+}
+.member-row:hover {
+  background: var(--sidebar-hover);
+}
+.member-row .lines {
+  min-width: 0;
+}
+.member-name {
+  font-size: var(--fs-lg);
+  font-weight: 600;
+}
+.member-row small {
+  font-size: var(--fs-xs);
+  color: var(--text-3);
+}
+/* Offline members are dimmed, as on Discord. */
+.member-row.away {
+  opacity: 0.5;
+}
+.member-row.away:hover {
+  opacity: 1;
+}
+
+.panel.profile-panel {
+  width: 320px;
+  background: var(--sidebar);
+}
+.profile-banner {
+  position: relative;
+  flex-shrink: 0;
+  height: 110px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+  padding: 8px;
+}
+.profile-banner .icon-btn {
+  color: var(--on-avatar);
+  background: rgba(0, 0, 0, 0.28);
+}
+.profile-banner .icon-btn:hover {
+  background: rgba(0, 0, 0, 0.45);
+}
+.profile-panel-scroll {
+  flex: 1;
+  min-height: 0;
+}
+.profile-panel-body {
+  padding: 0 16px 20px;
+  display: grid;
+  align-content: start;
+  gap: 8px;
+}
+.profile-panel-avatar {
+  position: relative;
+  margin-top: -46px;
+  width: fit-content;
+  border-radius: 50%;
+  box-shadow: 0 0 0 6px var(--sidebar);
+}
+.profile-panel-body h2 {
+  margin: 6px 0 0;
+  font-size: var(--fs-2xl);
+}
+.profile-handle,
+.profile-status {
+  margin: 0;
+  color: var(--text-2);
+  font-size: var(--fs-md);
+}
+.profile-panel-body .panel-card {
+  margin-top: 8px;
+}
+.profile-panel-full {
+  margin-top: 8px;
+  width: 100%;
 }
