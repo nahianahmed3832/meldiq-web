@@ -60,6 +60,12 @@ const zSticker = z.object({ pack: z.string().max(64), id: z.string().max(64) });
  */
 const zCustomEmoji = z.object({ id: z.string().max(64), orgId: z.string().max(64), name: z.string().max(64), sha256: z.string().max(128), animated: z.boolean().default(false) });
 
+/**
+ * Where a forwarded message came from (android ForwardOrigin, 2026-10-23): the community's name, when the original was
+ * sent, and its ids so members of that channel can open it. Only for messages forwarded out of a community channel.
+ */
+const zOrigin = z.object({ place: opt(z.string().max(200)), at: opt(z.number()), conversationId: opt(z.string().max(128)), messageId: opt(z.string().max(128)) });
+
 export const zPayload = z.object({
   type: z.string().max(40),
   text: opt(z.string().max(100_000)),
@@ -80,6 +86,7 @@ export const zPayload = z.object({
   location: opt(zLocation),
   animoji: opt(z.string().max(64)),
   forwarded: opt(z.boolean()),
+  origin: opt(zOrigin),
   link: opt(zLink),
   poll: opt(zPoll),
   sticker: opt(zSticker),
@@ -95,6 +102,7 @@ export const zPayload = z.object({
 });
 export type CustomEmojiRef = z.infer<typeof zCustomEmoji>;
 export type Payload = z.infer<typeof zPayload>;
+export type ForwardOrigin = z.infer<typeof zOrigin>;
 export type Poll = z.infer<typeof zPoll>;
 export type StickerRef = z.infer<typeof zSticker>;
 
