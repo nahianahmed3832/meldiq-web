@@ -3,7 +3,22 @@ import { APP_VERSION } from "../../application/env";
 import { serverHost } from "../../application/config";
 import { useState } from "react";
 import { useOrbit } from "../../application/orbit";
-import { MESSAGE_LAYOUTS, type Palette, PALETTES, type Prefs, setPrefs, TEXT_SIZES, type TextSize, THEMES, usePrefs } from "../../application/prefs";
+import {
+  LIST_PREVIEWS,
+  MESSAGE_LAYOUTS,
+  type Palette,
+  PALETTES,
+  type Prefs,
+  QUICK_REACTIONS,
+  setPrefs,
+  TEXT_SIZES,
+  type TextSize,
+  THEMES,
+  TIME_FORMATS,
+  UPLOAD_QUALITIES,
+  usePrefs,
+} from "../../application/prefs";
+import { QUALITY_LABEL } from "../../sync/photoQuality";
 import { bytes } from "../format";
 import { Toggle } from "../components/Toggle";
 import { IntroPages } from "../auth/IntroPages";
@@ -168,6 +183,32 @@ export function AppearancePage() {
         </div>
         <div className="setting">
           <div className="lines">
+            <strong>Time format</strong>
+            <small>Message times and clocks: as your language writes them, or always 12- or 24-hour.</small>
+          </div>
+          <div className="segmented" role="group" aria-label="Time format">
+            {TIME_FORMATS.map((f) => (
+              <button key={f} aria-pressed={prefs.timeFormat === f} onClick={() => setPrefs({ timeFormat: f })}>
+                {f === "auto" ? "Automatic" : f === "12" ? "12-hour" : "24-hour"}
+              </button>
+            ))}
+          </div>
+        </div>
+        <div className="setting">
+          <div className="lines">
+            <strong>Message previews</strong>
+            <small>The last message under each conversation in the list: always, only while it's unread, or never.</small>
+          </div>
+          <div className="segmented" role="group" aria-label="Message previews">
+            {LIST_PREVIEWS.map((v) => (
+              <button key={v} aria-pressed={prefs.listPreview === v} onClick={() => setPrefs({ listPreview: v })}>
+                {v === "all" ? "All" : v === "unread" ? "Unread only" : "None"}
+              </button>
+            ))}
+          </div>
+        </div>
+        <div className="setting">
+          <div className="lines">
             <strong>Animated emoji</strong>
             <small>Animated emoji play in conversations. Off: they're shown still (they're still sent animated).</small>
           </div>
@@ -179,6 +220,44 @@ export function AppearancePage() {
             <small>Received photos are decrypted and shown as they arrive. Off: each waits for a click. Videos and files always wait.</small>
           </div>
           <Toggle label="Download photos automatically" checked={prefs.autoLoadPhotos} onChange={(v) => setPrefs({ autoLoadPhotos: v })} />
+        </div>
+        <div className="setting">
+          <div className="lines">
+            <strong>Photo upload quality</strong>
+            <small>Where sending photos starts; each send can still change it. Standard and HD also remove camera details such as location.</small>
+          </div>
+          <div className="segmented" role="group" aria-label="Photo upload quality">
+            {UPLOAD_QUALITIES.map((q) => (
+              <button key={q} aria-pressed={prefs.uploadQuality === q} onClick={() => setPrefs({ uploadQuality: q })}>
+                {QUALITY_LABEL[q]}
+              </button>
+            ))}
+          </div>
+        </div>
+        <div className="setting">
+          <div className="lines">
+            <strong>Swipe to reply</strong>
+            <small>On a touch screen, swipe a message to the left to reply to it.</small>
+          </div>
+          <Toggle label="Swipe to reply" checked={prefs.swipeToReply} onChange={(v) => setPrefs({ swipeToReply: v })} />
+        </div>
+        <div className="setting">
+          <div className="lines">
+            <strong>Double-tap to react</strong>
+            <small>Double-tap a message (with a mouse, double-click beside its text) to react with this emoji; again takes it back.</small>
+          </div>
+          <div className="row" style={{ gap: 8 }}>
+            {prefs.doubleTapReact && (
+              <div className="segmented" role="group" aria-label="Double-tap reaction">
+                {QUICK_REACTIONS.map((e) => (
+                  <button key={e} aria-pressed={prefs.quickReaction === e} onClick={() => setPrefs({ quickReaction: e })} aria-label={`React with ${e}`}>
+                    {e}
+                  </button>
+                ))}
+              </div>
+            )}
+            <Toggle label="Double-tap to react" checked={prefs.doubleTapReact} onChange={(v) => setPrefs({ doubleTapReact: v })} />
+          </div>
         </div>
         <div className="setting">
           <div className="lines">

@@ -39,6 +39,7 @@ import { callLine } from "../../sync/callHistory";
 import { ForwardDialog } from "../dialogs/ForwardDialog";
 import { Dialog, Menu, type MenuEntry, useMenu } from "../components/Overlay";
 import { useLongPress } from "./longPress";
+import { mergeHandlers, useMessageGestures } from "./gestures";
 import { clock, fullTime } from "../format";
 import { isWebUrl } from "../../protocol/payload";
 import { Attachments } from "./Attachments";
@@ -107,7 +108,7 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
   const orgName = useOrbit((st) => (conv?.orgId ? (st.orgs.find((o) => o.id === conv.orgId)?.name ?? null) : null));
   // Saved for later (android Home › Later): synced in the personal document when the server keeps saved items.
   const savable = useOrbit((st) => st.server?.features.includes("saved-items") ?? false);
-  const { mediaCards } = usePrefs();
+  const { mediaCards, swipeToReply, doubleTapReact, quickReaction } = usePrefs();
   const saved = useOrbit((st) => st.nav[PERSONAL]?.saved?.find((x) => x.messageId === m.id));
   const more = useMenu();
   const picker = useMenu();
@@ -235,6 +236,9 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
     },
     !editing && m.kind !== "call",
   );
+  // Swipe left to reply (touch), double-tap or double-click to react (Settings › Appearance › Gestures).
+  const canAct = live && p.canPost && !editing;
+  const gestures = useMessageGestures(canAct && swipeToReply ? () => p.onReply(m) : null, canAct && doubleTapReact ? () => void engine.react(m, quickReaction) : null);
   const quickRow: MenuEntry[] =
     pressed && live && p.canPost
       ? [
@@ -275,8 +279,9 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
       : [];
   return (
     <div
-      {...press}
-      className={`msg${mine ? " mine" : ""}${p.first ? " first" : ""}${mentioned ? " mentioned" : ""}${p.highlighted ? " highlight" : ""}${more.anchor || picker.anchor ? " menu-open" : ""}`}
+      {...mergeHandlers(press, gestures.handlers)}
+      style={gestures.offset ? { transform: `translateX(${gestures.offset}px)` } : undefined}
+      className={`msg${gestures.offset ? " swiping" : ""}${mine ? " mine" : ""}${p.first ? " first" : ""}${mentioned ? " mentioned" : ""}${p.highlighted ? " highlight" : ""}${more.anchor || picker.anchor ? " menu-open" : ""}`}
       id={`msg-${m.id}`}
       role="article"
       aria-label={`${p.senderName}, ${fullTime(m.sortTs)}`}

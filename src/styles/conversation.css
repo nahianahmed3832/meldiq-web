@@ -86,7 +86,19 @@
   grid-template-columns: 38px minmax(0, 1fr);
   column-gap: 12px;
   padding: 2px 20px;
+  transition:
+    background var(--t-fast),
+    transform var(--t-std) var(--ease);
+}
+/* Swipe to reply: the message follows the finger, then slides back. */
+.msg.swiping {
   transition: background var(--t-fast);
+}
+@media (pointer: coarse) {
+  /* Vertical moves scroll the list; horizontal ones (and double taps, without zooming) reach the message's gestures. */
+  .msg {
+    touch-action: pan-y;
+  }
 }
 .msg.first {
   padding-top: 8px;
@@ -2173,4 +2185,12 @@
 .profile-panel-full {
   margin-top: 8px;
   width: 100%;
+}
+
+/* Search filters added by a tap (from:, has:, before:, after:). */
+.search-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 10px 16px 0;
 }

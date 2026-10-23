@@ -1,5 +1,5 @@
 {
-  "version": "0.28.0",
+  "version": "0.29.0",
   "routes": [
     {
       "method": "GET",
@@ -160,6 +160,34 @@
     {
       "method": "POST",
       "path": "/v2/auth/recover/complete"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/auth/passkey/options"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/auth/passkey/login"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/account/passkeys"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/account/passkeys"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/account/passkeys/options"
+    },
+    {
+      "method": "DELETE",
+      "path": "/v2/account/passkeys/{id}"
+    },
+    {
+      "method": "GET",
+      "path": "/.well-known/assetlinks.json"
     },
     {
       "method": "GET",
@@ -1110,6 +1138,18 @@
     ],
     "owns_workspaces": [
       409
+    ],
+    "passkey_failed": [
+      401
+    ],
+    "passkey_limit": [
+      409
+    ],
+    "passkey_unavailable": [
+      503
+    ],
+    "passkey_unknown": [
+      401
     ],
     "push_endpoint_invalid": [
       400

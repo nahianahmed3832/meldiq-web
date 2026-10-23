@@ -4,6 +4,18 @@ import { useEngine, useOrbit } from "../../application/orbit";
 import type { StoredMessage } from "../../model/types";
 import { shortWhen } from "../format";
 import { jumpTo } from "./jump";
+import { hasFilters, parseSearchQuery } from "../../sync/searchQuery";
+
+/** Filters added by a tap (android search chips): the text typed after them narrows further. */
+const CHIPS: { label: string; token: string }[] = [
+  { label: "From", token: "from:" },
+  { label: "Photos", token: "has:image " },
+  { label: "Videos", token: "has:video " },
+  { label: "Files", token: "has:file " },
+  { label: "Links", token: "has:link " },
+  { label: "Before", token: "before:" },
+  { label: "After", token: "after:" },
+];
 
 const MIN_QUERY = 2;
 /** Characters of text shown before a match. */
@@ -22,9 +34,11 @@ export function SearchPanel({ conversationId, onClose }: { conversationId: strin
   const [missing, setMissing] = useState<string | null>(null);
   const input = useRef<HTMLInputElement>(null);
   useEffect(() => input.current?.focus(), []);
+  const parsed = parseSearchQuery(q);
   useEffect(() => {
     const term = q.trim();
-    if (term.length < MIN_QUERY) return setResults(null);
+    const query = parseSearchQuery(term);
+    if (query.text.length < MIN_QUERY && !hasFilters(query)) return setResults(null);
     let alive = true;
     const t = setTimeout(() => {
       engine
@@ -48,11 +62,26 @@ export function SearchPanel({ conversationId, onClose }: { conversationId: strin
       <div className="panel-head">
         <div className="search-input grow" style={{ border: 0, padding: 0 }}>
           <Search size={16} className="faint" />
-          <input ref={input} value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search in this conversation" aria-label="Search in this conversation" />
+          <input ref={input} value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search, or from: has: before: after:" aria-label="Search in this conversation" />
         </div>
         <button className="icon-btn" onClick={onClose} aria-label="Close search">
           <X size={18} />
         </button>
+      </div>
+      <div className="search-chips" role="group" aria-label="Filters">
+        {CHIPS.map((c) => (
+          <button
+            key={c.token}
+            type="button"
+            className="chip"
+            onClick={() => {
+              setQ((v) => `${v.trim() ? `${v.trim()} ` : ""}${c.token}`);
+              input.current?.focus();
+            }}
+          >
+            {c.label}
+          </button>
+        ))}
       </div>
       <div className="panel-body scroll">
         {missing && (
@@ -62,11 +91,12 @@ export function SearchPanel({ conversationId, onClose }: { conversationId: strin
         )}
         {results === null ? (
           <p className="faint" style={{ padding: "8px 4px" }}>
-            Searches the messages kept in this browser. Meldiq's server can't search them: it only holds encrypted copies.
+            Searches the messages kept in this browser. Meldiq's server can't search them: it only holds encrypted copies. Narrow it with from:name, has:image, has:video, has:file, has:link,
+            before:2026-10-01 or after:2026-10-01.
           </p>
         ) : results.length === 0 ? (
           <p className="faint" style={{ padding: "8px 4px" }}>
-            No messages here contain “{q.trim()}”.
+            {parsed.text ? <>No messages here match “{q.trim()}”.</> : "No messages here match these filters."}
           </p>
         ) : (
           <ul className="search-results" aria-label={`${results.length} results`}>
@@ -77,9 +107,7 @@ export function SearchPanel({ conversationId, onClose }: { conversationId: strin
                     <small>
                       {m.outgoing || m.senderUserId === me?.userId ? "You" : (users[m.senderUserId]?.displayName ?? "Someone")} · {shortWhen(m.sortTs)}
                     </small>
-                    <span className="clamp-2">
-                      <Highlight text={m.text} term={q.trim()} />
-                    </span>
+                    <span className="clamp-2">{parsed.text ? <Highlight text={m.text} term={parsed.text} /> : m.text || "Attachment"}</span>
                   </span>
                 </button>
               </li>
