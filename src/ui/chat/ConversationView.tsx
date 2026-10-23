@@ -21,6 +21,7 @@ import { Composer, useFileDrop } from "./Composer";
 import { ConversationStart, MessageList } from "./MessageList";
 import { useOnlineCount } from "./useOnlineCount";
 import { PeopleToggle } from "./PeoplePanels";
+import { ChannelBell } from "./ChannelBell";
 
 export function ConversationView({ id, route, onDialog }: { id: string; route: Route; onDialog: (d: ShellDialog) => void }) {
   const engine = useEngine();
@@ -150,6 +151,8 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
             <Search size={18} />
           </button>
         )}
+        {/* Android A7: a text channel's bell (mute for a while, the channel's level). */}
+        {c.type === "CHANNEL" && !c.voice && <ChannelBell c={c} />}
         <PeopleToggle c={c} route={route} />
         {/* B14b: a channel's header is its name and search; pins, threads and security are in its details. */}
         {c.type !== "CHANNEL" && <ConversationMenu conversationId={id} route={route} />}

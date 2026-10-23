@@ -183,6 +183,14 @@ export function meetingProblems(title: string, roomId: string | null, date: stri
   return out;
 }
 
+/**
+ * Whether a step of the three-step event creation can go on (android B5): Where needs a voice room; What and when needs
+ * everything else right ([problems] from meetingProblems); the preview creates.
+ */
+export function eventStepReady(step: number, roomId: string | null, problems: readonly string[]): boolean {
+  return step === 0 ? roomId !== null : problems.length === 0;
+}
+
 /** "Mon 20 Oct, 14:30–15:00" in [zone]. */
 export function whenText(startsAt: number, endsAt: number, zone: string): string {
   const day = new Intl.DateTimeFormat("en-GB", { timeZone: zone, weekday: "short", day: "numeric", month: "short" }).format(startsAt).replace(",", "");
