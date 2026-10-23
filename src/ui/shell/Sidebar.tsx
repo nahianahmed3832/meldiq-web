@@ -134,7 +134,7 @@ export function Sidebar({ orgId, section, open, onDialog }: SidebarProps) {
               </>
             )}
             <Collapsible id="people" title="Direct messages">
-              <PeopleExtras onRequests={() => onDialog({ kind: "requests" })} />
+              <PeopleExtras onRequests={() => onDialog({ kind: "requests" })} onConnections={hasConnections ? () => onDialog({ kind: "connections" }) : undefined} onlyWhenAsked />
               <PeopleList unreadOnly={unreadOnly} orgId={orgId} excludePlaced />
               <button className="side-item" onClick={() => onDialog({ kind: "new" })}>
                 <span className="glyph">

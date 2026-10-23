@@ -5,6 +5,7 @@ import { setPrefs, usePrefs } from "../../application/prefs";
 import { Menu, useMenu } from "../components/Overlay";
 import { archivedPeople, channelGroups, homeLayout, type HomeSection, laterDue, mentionConversations, messageRequests, people } from "../selectors";
 import { ConversationRow, SectionNameDialog } from "./ConversationRow";
+import { useIncomingRequestCount } from "../people/connectionRequests";
 
 /**
  * A group in the sidebar. [synced]: its open/closed state is kept in a workspace's preferences document (the phone's
@@ -260,8 +261,13 @@ export function SkeletonRows() {
  * Batch B6: "Message requests · N waiting" (when there are any) and Connections, at the top of the direct messages
  * (android ChatsScreen). Requests make no sound and count in no badge.
  */
-export function PeopleExtras({ onRequests, onConnections }: { onRequests: () => void; onConnections?: () => void }) {
+/**
+ * Message requests, and Connections with the connection requests waiting for you. [onlyWhenAsked]: the Connections row
+ * shows only while someone is waiting (Home's Direct messages section); DMs always show it.
+ */
+export function PeopleExtras({ onRequests, onConnections, onlyWhenAsked }: { onRequests: () => void; onConnections?: () => void; onlyWhenAsked?: boolean }) {
   const waiting = useOrbit((s) => messageRequests(s).length);
+  const asked = useIncomingRequestCount();
   return (
     <>
       {waiting > 0 && (
@@ -272,12 +278,13 @@ export function PeopleExtras({ onRequests, onConnections }: { onRequests: () => 
           <span className="grow">Message requests · {waiting} waiting</span>
         </button>
       )}
-      {onConnections && (
-        <button className="side-item" onClick={onConnections}>
+      {onConnections && (asked > 0 || !onlyWhenAsked) && (
+        <button className={`side-item${asked > 0 ? " unread" : ""}`} onClick={onConnections} aria-label={asked > 0 ? `Connection requests, ${asked} waiting` : "Connections"}>
           <span className="glyph">
             <Contact size={16} />
           </span>
-          <span className="grow">Connections</span>
+          <span className="grow">{asked > 0 ? "Connection requests" : "Connections"}</span>
+          {asked > 0 && <span className="count accent">{asked}</span>}
         </button>
       )}
     </>

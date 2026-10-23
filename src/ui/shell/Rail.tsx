@@ -4,6 +4,7 @@ import { setPrefs } from "../../application/prefs";
 import { navigate, type Section } from "../../application/router";
 import { BrandMark } from "../components/BrandMark";
 import { OrgAvatar } from "../components/OrgAvatar";
+import { useIncomingRequestCount } from "../people/connectionRequests";
 import { laterDue, mentionCount, orgUnread, unreadPeopleCount } from "../selectors";
 
 /** Workspaces (the organisation switcher), then the three sections, as on the phone's tab bar. */
@@ -12,7 +13,8 @@ export function Rail({ orgId, section }: { orgId: string | null; section: Sectio
     (s) => s.orgs.map((o) => ({ id: o.id, name: o.name, photoRev: o.photoRev, unread: orgUnread(s, o.id) })),
     (a, b) => a.length === b.length && a.every((x, i) => shallowEqual(x, b[i])),
   );
-  const dms = useOrbit(unreadPeopleCount);
+  // Unread DMs and people waiting for an answer to their connection request.
+  const dms = useOrbit(unreadPeopleCount) + useIncomingRequestCount();
   const mentions = useOrbit(mentionCount);
   const later = useOrbit(laterDue);
   const nav = [

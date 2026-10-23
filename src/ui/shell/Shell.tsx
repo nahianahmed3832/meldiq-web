@@ -18,6 +18,7 @@ import { JOIN_INVITE_EVENT } from "../chat/inAppLinks";
 import { noteGuideVisit } from "../../sync/guide";
 import { GUIDE_EVENT } from "../community/GuideOnboarding";
 import { OPEN_PROFILE_EVENT, ProfileDialog } from "../people/ProfileDialog";
+import { ConnectionRequestWatcher } from "../people/ConnectionRequestViews";
 import { ConnectionsDialog, MessageRequestsDialog } from "../people/ConnectionsDialog";
 import { ActivityView } from "../views/ActivityView";
 import { LaterView } from "../later/LaterView";
@@ -192,6 +193,7 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
       </div>
       <TabBar section={section} hidden={!!route.conversationId && !settings} />
       <Notices />
+      <ConnectionRequestWatcher />
       <CallLayer />
       {dialog?.kind === "search" && <SearchDialog orgId={orgId} onClose={() => setDialog(null)} />}
       {dialog?.kind === "new" && <NewMessageDialog onClose={() => setDialog(null)} onNewGroup={() => setDialog({ kind: "newGroup" })} />}
