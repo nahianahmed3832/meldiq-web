@@ -1,14 +1,34 @@
 import type { Conversation } from "../api/schemas";
 import type { UserLite } from "../state/store";
+import { getPrefs, type TimeFormat } from "../application/prefs";
 
-const time = new Intl.DateTimeFormat(undefined, { hour: "numeric", minute: "2-digit" });
 const weekday = new Intl.DateTimeFormat(undefined, { weekday: "long" });
 const date = new Intl.DateTimeFormat(undefined, { month: "short", day: "numeric" });
 const fullDate = new Intl.DateTimeFormat(undefined, { year: "numeric", month: "long", day: "numeric" });
-const full = new Intl.DateTimeFormat(undefined, { dateStyle: "full", timeStyle: "short" });
 
-export const clock = (t: number): string => time.format(t);
-export const fullTime = (t: number): string => full.format(t);
+/** The clock as chosen in Settings › Appearance › Time format (android TimeFmt): the language's own, 12- or 24-hour. */
+export function hourCycle(choice: TimeFormat): { hourCycle?: "h12" | "h23" } {
+  return choice === "12" ? { hourCycle: "h12" } : choice === "24" ? { hourCycle: "h23" } : {};
+}
+
+const formatters = new Map<TimeFormat, { time: Intl.DateTimeFormat; full: Intl.DateTimeFormat }>();
+function timeFormatters(): { time: Intl.DateTimeFormat; full: Intl.DateTimeFormat } {
+  const choice = getPrefs().timeFormat;
+  let f = formatters.get(choice);
+  if (!f) {
+    const cycle = hourCycle(choice);
+    f = {
+      time: new Intl.DateTimeFormat(undefined, { hour: "numeric", minute: "2-digit", ...cycle }),
+      // dateStyle and timeStyle can't take an hour cycle: spelled out instead.
+      full: new Intl.DateTimeFormat(undefined, { weekday: "long", year: "numeric", month: "long", day: "numeric", hour: "numeric", minute: "2-digit", ...cycle }),
+    };
+    formatters.set(choice, f);
+  }
+  return f;
+}
+
+export const clock = (t: number): string => timeFormatters().time.format(t);
+export const fullTime = (t: number): string => timeFormatters().full.format(t);
 
 function startOfDay(t: number): number {
   const d = new Date(t);

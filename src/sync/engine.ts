@@ -36,6 +36,7 @@ import { ConversationLocals } from "./locals";
 import { followedThreads, loadThreadActivity, markThreadSeen, setFollowed, type ThreadActivity } from "./threads";
 import { preview, sendsReadReceipts } from "./rules";
 import { type RevokedReason, SessionManager } from "./session";
+import { matchesSearch, parseSearchQuery } from "./searchQuery";
 
 export interface EngineOptions {
   /** API origin: "" in the browser (same origin), absolute in tests. */
@@ -965,8 +966,15 @@ export class Engine implements EngineContext {
     return this.store.recentSent(limit);
   }
 
+  /** Messages on this browser matching [query]: words and filters (from:, has:, before:, after:; src/sync/searchQuery.ts). */
   searchMessages(query: string, conversationId?: string): Promise<StoredMessage[]> {
-    return this.store.searchMessages(query, conversationId ? 100 : 50, conversationId);
+    const q = parseSearchQuery(query);
+    const sender = (m: StoredMessage) => {
+      const mine = m.outgoing || m.senderUserId === this.device.userId;
+      const u = this.state.get().users[m.senderUserId];
+      return { name: u?.displayName ?? "", username: u?.username ?? "", me: mine };
+    };
+    return this.store.findMessages((m) => matchesSearch(m, q, sender), conversationId ? 100 : 50, conversationId);
   }
 
   /** Up to [limit] newest messages of a conversation, for threads, pins and files. */

@@ -49,7 +49,8 @@ export function Composer(props: ComposerProps) {
   const t = useT();
   const [text, setText] = useState("");
   const [files, setFiles] = useState<File[]>([]);
-  const [quality, setQuality] = useState<PhotoQuality>("standard");
+  // Starts at the default chosen in Settings › Appearance › Photo upload quality (android upload quality).
+  const [quality, setQuality] = useState<PhotoQuality>(() => prefs.uploadQuality);
   const hasPhotos = files.some((f) => reencodable(f.type));
   const [busy, setBusy] = useState<string | null>(null);
   const [members, setMembers] = useState<Member[]>([]);

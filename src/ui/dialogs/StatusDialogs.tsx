@@ -19,9 +19,11 @@ import {
   statusLine,
 } from "../../sync/status";
 import { Dialog } from "../components/Overlay";
+import { hourCycle } from "../format";
+import { getPrefs } from "../../application/prefs";
 
 const errorText = (e: unknown) => (e instanceof ApiError ? e.message : "Couldn't save. Check the connection and try again.");
-const clock = (t: number) => new Date(t).toLocaleString([], { weekday: "short", hour: "numeric", minute: "2-digit" });
+const clock = (t: number) => new Date(t).toLocaleString([], { weekday: "short", hour: "numeric", minute: "2-digit", ...hourCycle(getPrefs().timeFormat) });
 
 /** "Set a status" (round 3, the reference's status screen): suggestions, your own text and emoji, and when it clears. */
 export function StatusDialog({ onClose }: { onClose: () => void }) {

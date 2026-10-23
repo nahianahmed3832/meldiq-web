@@ -13,6 +13,7 @@ import { Avatar, colorIndexOf } from "../components/Avatar";
 import { jumpTo } from "../chat/jump";
 import { conversationTitle, members, shortWhen } from "../format";
 import { UserAvatar } from "../components/OrgAvatar";
+import { parseSearchQuery } from "../../sync/searchQuery";
 
 interface Result {
   key: string;
@@ -117,20 +118,23 @@ export function SearchDialog({ orgId: _orgId, onClose }: { orgId: string | null;
       return;
     }
     let alive = true;
+    // from:, has:, before: and after: narrow messages in this browser; the server and file names get the words only.
+    const words = parseSearchQuery(term).text;
     const t = setTimeout(() => {
       const types = serverTypes(filter);
-      if (types && universal)
-        serverSearch(engine, term, { types, limit: filter === "all" ? PREVIEW_COUNT : PAGE })
+      if (!words) setServer({});
+      else if (types && universal)
+        serverSearch(engine, words, { types, limit: filter === "all" ? PREVIEW_COUNT : PAGE })
           .then((r) => alive && setServer(r))
           .catch(() => alive && setServer({}));
       else if (!universal && (filter === "all" || filter === "people"))
-        searchPeople(engine, term)
+        searchPeople(engine, words)
           .then((r) => alive && setLegacyPeople(r))
           .catch(() => alive && setLegacyPeople([]));
       void Promise.all([
         filter === "all" || filter === "messages" ? engine.searchMessages(term) : [],
-        filter === "all" || filter === "files" ? engine.searchFiles(term, LOCAL_LIMIT) : [],
-        filter === "all" || filter === "pinned" ? engine.searchPinned(term, LOCAL_LIMIT) : [],
+        words && (filter === "all" || filter === "files") ? engine.searchFiles(words, LOCAL_LIMIT) : [],
+        words && (filter === "all" || filter === "pinned") ? engine.searchPinned(words, LOCAL_LIMIT) : [],
       ])
         .then(([messages, files, pinned]) => alive && setLocal({ messages, files, pinned }))
         .catch(() => alive && setLocal(NO_LOCAL));

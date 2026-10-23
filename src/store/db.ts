@@ -183,12 +183,16 @@ export class LocalStore {
   /** Message text on this browser containing [query]; in one conversation when [conversationId] is given. */
   async searchMessages(query: string, limit = 50, conversationId?: string): Promise<StoredMessage[]> {
     const q = query.toLowerCase();
+    return this.findMessages((m) => !m.deleted && m.kind === "text" && m.text.toLowerCase().includes(q), limit, conversationId);
+  }
+
+  /** Messages on this browser that [match] accepts, newest first; in one conversation when [conversationId] is given. */
+  async findMessages(match: (m: StoredMessage) => boolean, limit = 50, conversationId?: string): Promise<StoredMessage[]> {
     const out: StoredMessage[] = [];
     const store = this.db.transaction("messages").store;
     let cursor = conversationId ? await store.index("byConversation").openCursor(IDBKeyRange.bound([conversationId, -Infinity], [conversationId, Infinity])) : await store.openCursor();
     while (cursor) {
-      const m = cursor.value;
-      if (!m.deleted && m.kind === "text" && m.text.toLowerCase().includes(q)) out.push(m);
+      if (match(cursor.value)) out.push(cursor.value);
       cursor = await cursor.continue();
     }
     return out.sort((a, b) => b.sortTs - a.sortTs).slice(0, limit);

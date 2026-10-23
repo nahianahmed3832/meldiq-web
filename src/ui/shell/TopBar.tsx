@@ -6,6 +6,7 @@ import { navigate } from "../../application/router";
 import { UserAvatar } from "../components/OrgAvatar";
 import { Menu, useMenu } from "../components/Overlay";
 import { mentionCount } from "../selectors";
+import { clock } from "../format";
 import { paused, statusLine } from "../../sync/status";
 import { PauseDialog, PresenceDialog, StatusDialog } from "../dialogs/StatusDialogs";
 import { currentPresence, PRESENCE_LABEL } from "../../sync/social";
@@ -98,7 +99,7 @@ export function TopBar({ onMenu, onSearch }: { onMenu: () => void; onSearch: () 
                 ? [
                     { label: myStatus ? "Change status…" : "Set a status…", icon: <Smile size={16} />, onSelect: () => setDialog("status") },
                     {
-                      label: pausedUntil ? `Notifications paused until ${new Date(pausedUntil).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}…` : "Pause notifications…",
+                      label: pausedUntil ? `Notifications paused until ${clock(pausedUntil)}…` : "Pause notifications…",
                       icon: <BellOff size={16} />,
                       onSelect: () => setDialog("pause"),
                     },

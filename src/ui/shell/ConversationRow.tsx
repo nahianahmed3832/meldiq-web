@@ -29,6 +29,7 @@ import { GroupAvatar, UserAvatar } from "../components/OrgAvatar";
 import { Dialog, Menu, type MenuEntry, useMenu } from "../components/Overlay";
 import { conversationTitle, dmPeer, shortWhen } from "../format";
 import { isMuted, isPeople } from "../selectors";
+import { usePrefs } from "../../application/prefs";
 
 const LEVELS: { level: NotifyLevel; label: string }[] = [
   { level: "all", label: "All new messages" },
@@ -74,9 +75,12 @@ export const ConversationRow = memo(function ConversationRow({ id, twoLine, hide
       a.muted === b.muted &&
       a.peerPhoto === b.peerPhoto,
   );
+  // Settings › Appearance › Message previews (android chat-list previews): all, unread ones only, or none.
+  const { listPreview } = usePrefs();
   if (!data) return null;
   const { c, local, title, online, presence, peerId, peerColor, peerPhoto, typing, muted } = data;
   const unread = local?.unread ?? 0;
+  const showPreview = listPreview === "all" || (listPreview === "unread" && unread > 0);
   const mentions = local?.mentions ?? 0;
   const current = route.conversationId === id;
   if (hideRead && unread === 0 && !current) return null;
@@ -122,11 +126,13 @@ export const ConversationRow = memo(function ConversationRow({ id, twoLine, hide
           <small className="grow ellipsis">
             {typing
               ? "typing…"
-              : local?.lastPreview
-                ? `${local.lastSenderName && c.type !== "DM" ? `${local.lastSenderName}: ` : local.lastSenderName === "You" ? "You: " : ""}${local.lastPreview}`
-                : c.type === "GROUP"
-                  ? `${c.memberCount} members`
-                  : "No messages yet"}
+              : !showPreview
+                ? ""
+                : local?.lastPreview
+                  ? `${local.lastSenderName && c.type !== "DM" ? `${local.lastSenderName}: ` : local.lastSenderName === "You" ? "You: " : ""}${local.lastPreview}`
+                  : c.type === "GROUP"
+                    ? `${c.memberCount} members`
+                    : "No messages yet"}
           </small>
           {muted && <BellOff size={12} className="faint" aria-hidden="true" />}
           {count}

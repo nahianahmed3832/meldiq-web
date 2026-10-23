@@ -14,6 +14,18 @@ export type Palette = (typeof PALETTES)[number];
 export const TEXT_SIZES = ["small", "default", "large"] as const;
 export type TextSize = (typeof TEXT_SIZES)[number];
 
+/** Clock times (android TimeFmt.hourFormat): the language's own, or always 12- or 24-hour. */
+export const TIME_FORMATS = ["auto", "12", "24"] as const;
+export type TimeFormat = (typeof TIME_FORMATS)[number];
+/** The conversation list's second line (android chat-list previews): every message, unread ones only, or none. */
+export const LIST_PREVIEWS = ["all", "unread", "none"] as const;
+export type ListPreview = (typeof LIST_PREVIEWS)[number];
+/** Photos as sent (android upload quality): Standard (1600 px), HD (2560 px), or the original file. */
+export const UPLOAD_QUALITIES = ["standard", "hd", "original"] as const;
+export type UploadQuality = (typeof UPLOAD_QUALITIES)[number];
+/** Double-tap (or double-click) reactions (android Gestures). */
+export const QUICK_REACTIONS = ["👍", "❤️", "✅", "😂", "🔥", "🙏"] as const;
+
 /** How conversations are drawn (android MessageLayout): a left-aligned stream with names (default), or bubbles. */
 export const MESSAGE_LAYOUTS = ["stream", "bubbles"] as const;
 export type MessageLayout = (typeof MESSAGE_LAYOUTS)[number];
@@ -71,6 +83,14 @@ export interface Prefs {
   dmProfile: boolean;
   /** The person picked a colour plate themselves; until then the default applies (it moved from indigo to charcoal). */
   paletteChosen: boolean;
+  timeFormat: TimeFormat;
+  listPreview: ListPreview;
+  uploadQuality: UploadQuality;
+  /** Swiping a message to the left on a touch screen replies to it. */
+  swipeToReply: boolean;
+  /** Double-tapping (double-clicking) a message reacts with [quickReaction]; again takes it back. */
+  doubleTapReact: boolean;
+  quickReaction: string;
 }
 
 const KEY = "orbit.prefs.v1";
@@ -104,6 +124,12 @@ const defaults: Prefs = {
   memberList: true,
   dmProfile: true,
   paletteChosen: false,
+  timeFormat: "auto",
+  listPreview: "all",
+  uploadQuality: "standard",
+  swipeToReply: true,
+  doubleTapReact: true,
+  quickReaction: "👍",
 };
 
 function load(): Prefs {
@@ -128,6 +154,12 @@ function load(): Prefs {
       memberList: typeof stored.memberList === "boolean" ? stored.memberList : defaults.memberList,
       dmProfile: typeof stored.dmProfile === "boolean" ? stored.dmProfile : defaults.dmProfile,
       paletteChosen: stored.paletteChosen === true,
+      timeFormat: TIME_FORMATS.includes(stored.timeFormat) ? stored.timeFormat : defaults.timeFormat,
+      listPreview: LIST_PREVIEWS.includes(stored.listPreview) ? stored.listPreview : defaults.listPreview,
+      uploadQuality: UPLOAD_QUALITIES.includes(stored.uploadQuality) ? stored.uploadQuality : defaults.uploadQuality,
+      swipeToReply: typeof stored.swipeToReply === "boolean" ? stored.swipeToReply : defaults.swipeToReply,
+      doubleTapReact: typeof stored.doubleTapReact === "boolean" ? stored.doubleTapReact : defaults.doubleTapReact,
+      quickReaction: QUICK_REACTIONS.some((e) => e === stored.quickReaction) ? stored.quickReaction : defaults.quickReaction,
       ...notificationChoice(stored),
     };
   } catch {
