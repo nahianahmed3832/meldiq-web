@@ -8,6 +8,8 @@ import { bytes } from "../format";
 import { Toggle } from "../components/Toggle";
 import { IntroPages } from "../auth/IntroPages";
 import { BackgroundNotifications } from "./BackgroundNotifications";
+import { useT } from "../../i18n";
+import { LanguagePicker } from "../components/LanguagePicker";
 
 const THEME_LABELS: Record<Prefs["theme"], string> = { system: "System", light: "Light", dark: "Dark" };
 const PALETTE_LABELS: Record<Palette, string> = { charcoal: "Charcoal", indigo: "Indigo", plum: "Plum", amber: "Amber" };
@@ -95,10 +97,18 @@ export function NotificationsPage() {
 
 export function AppearancePage() {
   const prefs = usePrefs();
+  const t = useT();
   return (
     <>
-      <h1>Appearance</h1>
+      <h1>{t("settings_appearance")}</h1>
       <div className="card">
+        <div className="setting">
+          <div className="lines">
+            <strong>{t("lang_label")}</strong>
+            <small>{t("lang_note")}</small>
+          </div>
+          <LanguagePicker />
+        </div>
         <div className="setting">
           <div className="lines">
             <strong>Theme</strong>

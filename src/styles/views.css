@@ -697,9 +697,14 @@
   margin-top: 1px;
 }
 .link-main {
+  position: relative;
   display: grid;
   place-items: center;
   padding: 40px 24px;
+}
+/* Room for the language picker above the card. */
+.link-main:has(.auth-lang) {
+  padding-top: 64px;
 }
 .link-card {
   width: min(520px, 100%);
@@ -1121,6 +1126,7 @@ select.input {
 .intro-head {
   display: flex;
   align-items: center;
+  gap: 8px;
   justify-content: space-between;
   width: min(560px, 100%);
 }
@@ -1364,4 +1370,38 @@ select.input {
 }
 .settings-nav .ws-subhead {
   margin: var(--s-2) var(--s-3) var(--s-1);
+}
+
+/* The interface language picker (sign-in screens, the introduction, Settings › Appearance). */
+.lang-picker {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 10px;
+  height: 34px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-2);
+  font-size: var(--fs-sm);
+}
+.lang-picker:hover {
+  border-color: var(--border-strong);
+}
+.lang-picker select {
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  cursor: pointer;
+  outline: none;
+}
+.lang-picker:focus-within {
+  box-shadow: var(--focus);
+}
+.link-main .lang-picker.auth-lang {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 1;
 }

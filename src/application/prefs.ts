@@ -1,5 +1,6 @@
 import { useSyncExternalStore } from "react";
 import { TRANSLATE_TARGETS, type TranslateTarget } from "../sync/translate";
+import { LANGUAGES, type LanguageChoice, resolveLanguage } from "../i18n/languages";
 
 /**
  * Per-browser preferences. They hold no account data, so they live in localStorage, and every read and write tolerates
@@ -19,6 +20,8 @@ export type MessageLayout = (typeof MESSAGE_LAYOUTS)[number];
 
 export interface Prefs {
   theme: (typeof THEMES)[number];
+  /** The interface language (src/i18n): the browser's, or one picked on the sign-in screens or in Settings › Appearance. */
+  language: LanguageChoice;
   palette: Palette;
   textSize: TextSize;
   messageLayout: MessageLayout;
@@ -73,6 +76,7 @@ export interface Prefs {
 const KEY = "orbit.prefs.v1";
 const defaults: Prefs = {
   theme: "system",
+  language: "system",
   palette: "charcoal",
   textSize: "default",
   messageLayout: "stream",
@@ -111,6 +115,7 @@ function load(): Prefs {
     return {
       ...stored,
       theme: THEMES.includes(stored.theme) ? stored.theme : defaults.theme,
+      language: stored.language === "system" || LANGUAGES.some((l) => l === stored.language) ? stored.language : defaults.language,
       palette: paletteOf(stored),
       textSize: TEXT_SIZES.includes(stored.textSize) ? stored.textSize : defaults.textSize,
       messageLayout: MESSAGE_LAYOUTS.includes(stored.messageLayout) ? stored.messageLayout : defaults.messageLayout,
@@ -186,8 +191,10 @@ export function usePrefs(): Prefs {
 }
 
 /** Light, dark or the system's, and the colour plate; the browser's own chrome takes the frame colour. */
-export function applyTheme({ theme, palette, textSize, messageLayout }: Pick<Prefs, "theme" | "palette" | "textSize" | "messageLayout">): void {
+export function applyTheme({ theme, palette, textSize, messageLayout, language }: Pick<Prefs, "theme" | "palette" | "textSize" | "messageLayout"> & Partial<Pick<Prefs, "language">>): void {
   const root = document.documentElement;
+  // The page's language follows the interface's (screen readers, fonts, spelling).
+  root.setAttribute("lang", resolveLanguage(language ?? "system"));
   root.setAttribute("data-text-size", textSize);
   root.setAttribute("data-message-layout", messageLayout);
   if (theme === "system") root.removeAttribute("data-theme");

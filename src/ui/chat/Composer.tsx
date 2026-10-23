@@ -28,6 +28,7 @@ import { VoiceBar } from "./VoiceBar";
 import { slowmodeLabel, waitText } from "../../sync/communityRules";
 import { untilWhen } from "../format";
 import { useNow } from "../call/useNow";
+import { useT } from "../../i18n";
 
 interface ComposerProps {
   conversation: Conversation;
@@ -45,6 +46,7 @@ export function Composer(props: ComposerProps) {
   const { conversation: c } = props;
   const engine = useEngine();
   const prefs = usePrefs();
+  const t = useT();
   const [text, setText] = useState("");
   const [files, setFiles] = useState<File[]>([]);
   const [quality, setQuality] = useState<PhotoQuality>("standard");
@@ -334,7 +336,7 @@ export function Composer(props: ComposerProps) {
                 ref={input}
                 rows={1}
                 value={text}
-                placeholder={props.threadRoot ? "Reply in thread…" : `Message ${c.type === "CHANNEL" ? "#" : ""}${props.title}`}
+                placeholder={props.threadRoot ? t("composer_thread") : t("composer_message", { name: `${c.type === "CHANNEL" ? "#" : ""}${props.title}` })}
                 onChange={(e) => onChange(e.target.value)}
                 onBlur={() => engine.setTyping(c.id, false)}
                 onPaste={(e: ClipboardEvent<HTMLTextAreaElement>) => {

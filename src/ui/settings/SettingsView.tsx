@@ -11,31 +11,34 @@ import { AccountSettingsPage } from "./AccountSettingsPage";
 import { DevicesPage, SecurityPage } from "./AccountPages";
 import { ProfilePage } from "./ProfilePage";
 import { StoragePage } from "./StoragePage";
+import { type StringKey, useT } from "../../i18n";
 
-const PAGES: { key: SettingsPage; label: string; icon: React.ReactNode }[] = [
-  { key: "profile", label: "Profile", icon: <UserRound size={17} /> },
-  { key: "account", label: "Account", icon: <KeyRound size={17} /> },
-  { key: "devices", label: "Devices", icon: <Smartphone size={17} /> },
-  { key: "notifications", label: "Notifications", icon: <Bell size={17} /> },
-  { key: "calls", label: "Calls", icon: <PhoneCall size={17} /> },
-  { key: "appearance", label: "Appearance", icon: <Palette size={17} /> },
-  { key: "storage", label: "Storage", icon: <HardDrive size={17} /> },
-  { key: "security", label: "Privacy & security", icon: <Shield size={17} /> },
-  { key: "about", label: "About", icon: <Info size={17} /> },
+const PAGES: { key: SettingsPage; label: StringKey; icon: React.ReactNode }[] = [
+  { key: "profile", label: "settings_profile", icon: <UserRound size={17} /> },
+  { key: "account", label: "settings_account", icon: <KeyRound size={17} /> },
+  { key: "devices", label: "settings_devices", icon: <Smartphone size={17} /> },
+  { key: "notifications", label: "settings_notifications", icon: <Bell size={17} /> },
+  { key: "calls", label: "settings_calls", icon: <PhoneCall size={17} /> },
+  { key: "appearance", label: "settings_appearance", icon: <Palette size={17} /> },
+  { key: "storage", label: "settings_storage", icon: <HardDrive size={17} /> },
+  { key: "security", label: "settings_security", icon: <Shield size={17} /> },
+  { key: "about", label: "settings_about", icon: <Info size={17} /> },
 ];
 
 export function SettingsView({ page, onSignedOut }: { page: SettingsPage; onSignedOut: () => void }) {
   const engine = useEngine();
   // Service health and workspace usage are for platform administrators only (android round 7 C1, C7); the server checks again.
   const admin = useLoad(() => isPlatformAdmin(engine).catch(() => false), [engine]).data === true;
+  const t = useT();
+  const shown: { key: SettingsPage; label: string; icon: React.ReactNode }[] = PAGES.map((p) => ({ ...p, label: t(p.label) }));
   const pages = admin
-    ? [...PAGES, { key: "health" as const, label: "Service health", icon: <Activity size={17} /> }, { key: "usage" as const, label: "Workspace usage", icon: <BarChart3 size={17} /> }]
-    : PAGES;
+    ? [...shown, { key: "health" as const, label: "Service health", icon: <Activity size={17} /> }, { key: "usage" as const, label: "Workspace usage", icon: <BarChart3 size={17} /> }]
+    : shown;
   return (
     <section className="main" aria-label="Settings" style={{ display: "flex", flexDirection: "column" }}>
       <div className="settings">
         <nav className="settings-nav" aria-label="Settings pages">
-          <h2>Settings</h2>
+          <h2>{t("settings_title")}</h2>
           {pages.map((p) => (
             <button key={p.key} className="side-item" aria-current={page === p.key ? "page" : undefined} onClick={() => navigate({ section: "settings", settingsPage: p.key })}>
               <span className="glyph">{p.icon}</span>
