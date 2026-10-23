@@ -38,4 +38,9 @@ test("a person's profile photo shows beside their messages and in the conversati
   ] as const) {
     await expect.poll(() => page.locator(selector).evaluateAll(loaded), { message: `Bob's photo ${where}`, timeout: 10_000 }).toBe(true);
   }
+
+  // Home's recent direct messages (reported 2026-10-23: initials only).
+  await page.goto("/dms");
+  await expect(page.getByRole("heading", { name: "Recent direct messages" })).toBeVisible();
+  await expect.poll(() => page.locator("section.main .list-row .avatar-photo").evaluateAll(loaded), { message: "Bob's photo on Home", timeout: 10_000 }).toBe(true);
 });

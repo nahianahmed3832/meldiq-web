@@ -6,8 +6,8 @@ import { navigate } from "../../application/router";
 import { resolveAddress, searchPeople, startDirect } from "../../sync/account";
 import { lookupKind, normalAddress } from "../../sync/lookup";
 import { findByPhone } from "../../sync/profile";
-import { Avatar } from "../components/Avatar";
 import { Dialog } from "../components/Overlay";
+import { UserAvatar } from "../components/OrgAvatar";
 
 /**
  * Start a direct message: people who share a workspace with you, anyone by exact @username (server search rules), by exact
@@ -88,7 +88,7 @@ export function NewMessageDialog({ onClose, onNewGroup }: { onClose: () => void;
         <div aria-label="People" style={{ display: "grid", gap: 2 }}>
           {people.map((p) => (
             <button key={p.id} className="list-row" disabled={busy} onClick={() => void open(p.id)}>
-              <Avatar name={p.displayName} colorIndex={p.avatarColor} size={34} online={p.online} decorative />
+              <UserAvatar userId={p.id} name={p.displayName} colorIndex={p.avatarColor} photoRev={p.photoRev} size={34} online={p.online} decorative />
               <span className="lines">
                 <span className="ellipsis">{p.displayName}</span>
                 <small>@{p.username}</small>

@@ -12,6 +12,7 @@ import { type Filter, FILTERS, PREVIEW_COUNT, remember, type SearchResults, type
 import { Avatar, colorIndexOf } from "../components/Avatar";
 import { jumpTo } from "../chat/jump";
 import { conversationTitle, members, shortWhen } from "../format";
+import { UserAvatar } from "../components/OrgAvatar";
 
 interface Result {
   key: string;
@@ -204,7 +205,7 @@ export function SearchDialog({ orgId: _orgId, onClose }: { orgId: string | null;
       section: "people",
       title: p.displayName,
       sub: `@${p.username}`,
-      icon: <Avatar name={p.displayName} colorIndex={p.avatarColor} size={28} decorative />,
+      icon: <UserAvatar userId={p.id} name={p.displayName} colorIndex={p.avatarColor} photoRev={p.photoRev} size={28} decorative />,
       go: () =>
         void startDirect(engine, p.id)
           .then((id) => navigate({ section: "dms", conversationId: id }))

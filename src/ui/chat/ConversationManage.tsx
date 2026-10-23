@@ -5,8 +5,8 @@ import { useEngine } from "../../application/orbit";
 import { searchPeople } from "../../sync/account";
 import { block, blockedIds, unblock } from "../../sync/profile";
 import { addConversationMember, directory, updateConversation } from "../../sync/workspaces";
-import { Avatar } from "../components/Avatar";
 import { Dialog } from "../components/Overlay";
+import { UserAvatar } from "../components/OrgAvatar";
 
 const NAME_MAX = 60;
 const TOPIC_MAX = 250;
@@ -191,7 +191,7 @@ export function AddMembersDialog({ c, memberIds, onAdded, onClose }: { c: Conver
           <div style={{ display: "grid", gap: 2 }}>
             {candidates.slice(0, 30).map((m) => (
               <div key={m.id} className="person">
-                <Avatar name={m.displayName} colorIndex={m.avatarColor} size={32} decorative />
+                <UserAvatar userId={m.id} name={m.displayName} colorIndex={m.avatarColor} photoRev={m.photoRev} size={32} decorative />
                 <div className="lines grow">
                   <span className="ellipsis">{m.displayName}</span>
                   <small className="ellipsis">@{m.username}</small>
