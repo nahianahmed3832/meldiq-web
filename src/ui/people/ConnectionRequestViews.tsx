@@ -6,6 +6,7 @@ import { getPrefs } from "../../application/prefs";
 import { systemNotify } from "../../application/webPush";
 import { acceptConnection, type Connections, removeConnection } from "../../sync/social";
 import { forgetConnections, newRequests, refreshConnections, rememberTold, toldUntil, useConnectionLists } from "./connectionRequests";
+import { useT } from "../../i18n";
 
 const lookedAt = (): boolean => document.visibilityState === "visible" && document.hasFocus();
 const mayNotify = (): boolean => getPrefs().notifications && typeof Notification !== "undefined" && Notification.permission === "granted";
@@ -60,6 +61,7 @@ export function ConnectionRequestBanner({ userId, name }: { userId: string; name
   const engine = useEngine();
   const lists = useConnectionLists();
   const [busy, setBusy] = useState(false);
+  const t = useT();
   if (!lists?.incoming.some((e) => e.user.id === userId)) return null;
   const answer = (fn: () => Promise<void>, done: string) => {
     setBusy(true);
@@ -72,12 +74,12 @@ export function ConnectionRequestBanner({ userId, name }: { userId: string; name
   return (
     <div className="banner info" role="status">
       <UserPlus size={16} aria-hidden />
-      <span className="grow">{name} wants to connect with you.</span>
-      <button className="btn btn-primary btn-sm" disabled={busy} onClick={() => answer(() => acceptConnection(engine, userId), `You're connected with ${name}.`)}>
-        <UserCheck size={14} /> Accept
+      <span className="grow">{t("conn_wants", { name })}</span>
+      <button className="btn btn-primary btn-sm" disabled={busy} onClick={() => answer(() => acceptConnection(engine, userId), t("conn_connected", { name }))}>
+        <UserCheck size={14} /> {t("conn_accept")}
       </button>
-      <button className="btn btn-secondary btn-sm" disabled={busy} onClick={() => answer(() => removeConnection(engine, userId), "Request declined.")}>
-        <X size={14} /> Decline
+      <button className="btn btn-secondary btn-sm" disabled={busy} onClick={() => answer(() => removeConnection(engine, userId), t("conn_declined"))}>
+        <X size={14} /> {t("conn_decline")}
       </button>
     </div>
   );

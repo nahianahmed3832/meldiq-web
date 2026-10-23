@@ -22,9 +22,11 @@ import { ConversationStart, MessageList } from "./MessageList";
 import { useOnlineCount } from "./useOnlineCount";
 import { PeopleToggle } from "./PeoplePanels";
 import { ChannelBell } from "./ChannelBell";
+import { useT } from "../../i18n";
 
 export function ConversationView({ id, route, onDialog }: { id: string; route: Route; onDialog: (d: ShellDialog) => void }) {
   const engine = useEngine();
+  const t = useT();
   const c = useOrbit((s) => s.conversations[id]);
   const me = useOrbit((s) => s.me);
   const title = useOrbit((s) => (s.me && c ? conversationTitle(c, s.me.userId, s.users) : ""));
@@ -83,7 +85,7 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
   return (
     <section className="main conversation" aria-label={`Conversation: ${title}`} {...drop.handlers} style={{ position: "relative" }}>
       <header className="conv-head">
-        <button className="icon-btn back" onClick={() => navigate({ section: route.section })} aria-label="Back to conversations">
+        <button className="icon-btn back" onClick={() => navigate({ section: route.section })} aria-label={t("conv_back")}>
           <ArrowLeft size={19} />
         </button>
         {(() => {
@@ -113,7 +115,7 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
                       {online ? (
                         <>
                           <span className="online-dot" aria-hidden />
-                          {online} online
+                          {t("conv_online", { n: online })}
                         </>
                       ) : (
                         members(c.memberCount)
@@ -145,8 +147,8 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
             className="icon-btn"
             aria-pressed={route.panel === "search"}
             onClick={() => navigate({ section: route.section, conversationId: id, panel: route.panel === "search" ? null : "search" })}
-            aria-label={route.panel === "search" ? "Close search" : "Search in this conversation"}
-            title="Search in this conversation"
+            aria-label={route.panel === "search" ? t("conv_close_search") : t("conv_search")}
+            title={t("conv_search")}
           >
             <Search size={18} />
           </button>
@@ -165,15 +167,15 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
           {peer?.paused && (
             <div className="banner" role="status">
               <BellOff size={16} aria-hidden />
-              <span className="grow">{peer.name} has paused notifications</span>
+              <span className="grow">{t("conv_paused", { name: peer.name })}</span>
             </div>
           )}
           {alerts.map((a) => (
             <div key={a.userId} className="banner warn" role="alert">
               <ShieldAlert size={16} />
-              <span className="grow">{users[a.userId]?.displayName ?? "Someone"}'s security key changed. Messages to and from them are paused until you review it.</span>
+              <span className="grow">{t("conv_key_changed", { name: users[a.userId]?.displayName ?? t("conv_someone") })}</span>
               <button className="btn btn-secondary btn-sm" onClick={() => onDialog({ kind: "identity", userId: a.userId })}>
-                Review
+                {t("conv_review")}
               </button>
             </div>
           ))}
@@ -181,18 +183,18 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
             <div className="banner info call-banner">
               {call.video ? <Video size={16} /> : <Phone size={16} />}
               <span className="grow">
-                A {call.video ? "video" : "voice"} call is in progress{call.createdAt ? `, started ${relative(call.createdAt)}` : ""}.
+                {call.createdAt ? t(call.video ? "conv_video_call_since" : "conv_voice_call_since", { when: relative(call.createdAt) }) : t(call.video ? "conv_video_call" : "conv_voice_call")}
               </span>
               {calling && engine.calls.supported() && myCall === null && (
                 <button className="btn btn-secondary btn-sm" onClick={() => void engine.calls.join(id, call.id, call.video)}>
-                  Join
+                  {t("conv_join")}
                 </button>
               )}
             </div>
           )}
           {history === "running" && (
             <div className="banner info">
-              <span className="grow">Restoring earlier messages from your encrypted history…</span>
+              <span className="grow">{t("conv_restoring")}</span>
             </div>
           )}
         </div>

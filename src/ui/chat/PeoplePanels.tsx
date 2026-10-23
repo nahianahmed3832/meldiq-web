@@ -14,6 +14,7 @@ import { dmPeer, relative } from "../format";
 import { openProfile } from "../people/ProfileDialog";
 import { useMembers } from "./ConversationDetails";
 import { isHere, type ListedRole, memberListGroups, nameColor } from "./memberListRules";
+import { useT } from "../../i18n";
 
 /** Wide enough to keep a member list or profile beside the messages; narrower screens open them over the messages. */
 const WIDE = "(min-width: 1241px)";
@@ -73,6 +74,7 @@ function useCommunityRoles(engine: Engine, orgId: string | null): Map<string, Li
 /** A channel's or group's members beside the messages, as Discord lists them: by role while here, then offline. */
 export function MemberListPanel({ c, onClose }: { c: Conversation; onClose: () => void }) {
   const engine = useEngine();
+  const t = useT();
   const users = useOrbit((s) => s.users);
   const { members, error } = useMembers(c.id, c.memberCount);
   const roles = useCommunityRoles(engine, c.type === "CHANNEL" ? c.orgId : null);
@@ -90,8 +92,8 @@ export function MemberListPanel({ c, onClose }: { c: Conversation; onClose: () =
   return (
     <aside className="panel member-list" aria-label="Members">
       <div className="member-list-head">
-        <span className="grow">Members</span>
-        <button className="icon-btn" onClick={onClose} aria-label="Hide the member list">
+        <span className="grow">{t("people_members")}</span>
+        <button className="icon-btn" onClick={onClose} aria-label={t("people_hide_members")}>
           <X size={16} />
         </button>
       </div>
@@ -101,7 +103,7 @@ export function MemberListPanel({ c, onClose }: { c: Conversation; onClose: () =
         {groups.map((g) => (
           <section key={g.key} aria-label={`${g.label}, ${g.members.length}`}>
             <h3 className="member-group" style={g.color ? { color: g.color } : undefined}>
-              {g.label} — {g.members.length}
+              {g.key === "online" ? t("people_online") : g.key === "offline" ? t("people_offline") : g.label} — {g.members.length}
             </h3>
             {g.members.map((m) => (
               <MemberRow key={m.id} m={m} away={!isHere(m)} color={nameColor(roles.get(m.id))} />
@@ -133,6 +135,7 @@ type Profile = Awaited<ReturnType<typeof userProfile>>;
 /** The other person in a direct message beside the messages (Discord's user profile): photo, names, status, presence. */
 export function ProfilePanel({ c, onClose }: { c: Conversation; onClose: () => void }) {
   const engine = useEngine();
+  const t = useT();
   const me = useOrbit((s) => s.me?.userId ?? "");
   const peer = dmPeer(c, me);
   const known = useOrbit((s) => (peer ? s.users[peer.id] : undefined));
@@ -163,7 +166,7 @@ export function ProfilePanel({ c, onClose }: { c: Conversation; onClose: () => v
     <aside className="panel profile-panel" aria-label={`${name}'s profile`}>
       <div className="profile-panel-scroll scroll">
         <div className="profile-banner" style={{ background: toneOf(color) }}>
-          <button className="icon-btn" onClick={onClose} aria-label="Hide the profile">
+          <button className="icon-btn" onClick={onClose} aria-label={t("people_hide_profile")}>
             <X size={16} />
           </button>
         </div>
@@ -179,7 +182,7 @@ export function ProfilePanel({ c, onClose }: { c: Conversation; onClose: () => v
           {status && <p className="profile-status">{status}</p>}
           <div className="panel-card">
             <div>
-              <dt>{words ? "Now" : "Last seen"}</dt>
+              <dt>{words ? t("people_now") : t("people_last_seen")}</dt>
               <dd>
                 {words ? (
                   <span className="presence-line">
@@ -189,13 +192,13 @@ export function ProfilePanel({ c, onClose }: { c: Conversation; onClose: () => v
                 ) : profile?.lastSeenAt ? (
                   relative(profile.lastSeenAt)
                 ) : (
-                  "Not shared"
+                  t("people_not_shared")
                 )}
               </dd>
             </div>
           </div>
           <button className="btn btn-secondary profile-panel-full" onClick={() => openProfile(peer.id, name)}>
-            View full profile
+            {t("people_full_profile")}
           </button>
         </div>
       </div>
@@ -225,9 +228,10 @@ export function DockedPeoplePanel({ conversationId, route }: { conversationId: s
 export function PeopleToggle({ c, route }: { c: Conversation; route: Route }) {
   const wide = useWideLayout();
   const shown = usePeopleShown(c, route);
+  const t = useT();
   if (!hasPeoplePanel(c)) return null;
   const dm = c.type === "DM";
-  const label = `${shown ? "Hide" : "Show"} ${dm ? "the profile" : "the member list"}`;
+  const label = t(dm ? (shown ? "people_hide_profile" : "people_show_profile") : shown ? "people_hide_members" : "people_show_members");
   const toggle = () => {
     const at = { section: route.section, conversationId: c.id };
     if (wide) {

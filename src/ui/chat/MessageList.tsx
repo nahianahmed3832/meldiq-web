@@ -6,6 +6,7 @@ import { Avatar } from "../components/Avatar";
 import { dayLabel, sameDay } from "../format";
 import { MessageItem } from "./MessageItem";
 import { JUMP_EVENT } from "./jump";
+import { useT } from "../../i18n";
 
 const GROUP_MS = 5 * 60_000;
 const NEAR_BOTTOM = 120;
@@ -225,6 +226,7 @@ export function ConversationStart({
   /** Round 3 (the reference's "Add description" / "Add people"): opens the channel's details, for its managers. */
   onManage?: () => void;
 }) {
+  const t = useT();
   return (
     <div className="conv-start">
       {type === "CHANNEL" ? (
@@ -234,24 +236,18 @@ export function ConversationStart({
       ) : (
         (avatar ?? <Avatar name={title} colorIndex={color} size={52} decorative />)
       )}
-      <h2>{type === "CHANNEL" ? `Welcome to #${title}` : title}</h2>
-      <p>
-        {type === "CHANNEL"
-          ? (topic ?? "This is the start of the channel.")
-          : type === "DM"
-            ? `This is the beginning of your direct messages with ${title}. Messages are end-to-end encrypted.`
-            : "This is the beginning of the group. Messages are end-to-end encrypted."}
-      </p>
+      <h2>{type === "CHANNEL" ? t("start_welcome", { name: title }) : title}</h2>
+      <p>{type === "CHANNEL" ? (topic ?? t("start_channel")) : type === "DM" ? t("start_dm", { name: title }) : t("start_group")}</p>
       <p className="faint" style={{ fontSize: 12.5 }}>
-        Earlier messages appear here if one of your devices kept them in your encrypted history.
+        {t("start_history")}
       </p>
       {onManage && (
         <div className="row" style={{ gap: 8, justifyContent: "center" }}>
           <button className="btn btn-secondary btn-sm" onClick={onManage}>
-            <Pencil size={14} /> Add description
+            <Pencil size={14} /> {t("start_add_description")}
           </button>
           <button className="btn btn-secondary btn-sm" onClick={onManage}>
-            <UserPlus size={14} /> Add people
+            <UserPlus size={14} /> {t("start_add_people")}
           </button>
         </div>
       )}

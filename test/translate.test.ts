@@ -62,3 +62,13 @@ describe("when the browser's translator misbehaves", () => {
     await expect(translateText("hola", "en", undefined, { ask: 50, model: 50 })).rejects.toThrow(/couldn't be loaded/);
   });
 });
+
+describe("the language to translate into", () => {
+  it("is the person's last choice, else the interface's", async () => {
+    const { defaultTarget } = await import("../src/sync/translate");
+    expect(defaultTarget(true, "bn", "zh-CN")).toBe("bn");
+    expect(defaultTarget(false, "en", "zh-CN")).toBe("zh");
+    expect(defaultTarget(false, "en", "bn")).toBe("bn");
+    expect(defaultTarget(false, "zh", "en")).toBe("en");
+  });
+});

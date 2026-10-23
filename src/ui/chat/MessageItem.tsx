@@ -42,6 +42,7 @@ import { useLongPress } from "./longPress";
 import { mergeHandlers, useMessageGestures } from "./gestures";
 import { clock, dayLabel, fullTime } from "../format";
 import { openInApp } from "./inAppLinks";
+import { useT } from "../../i18n";
 import { isWebUrl } from "../../protocol/payload";
 import { Attachments } from "./Attachments";
 import { isEmojiOnly, RichText } from "./RichText";
@@ -53,7 +54,6 @@ import { MediaLinkCard } from "./MediaLinkCard";
 import { ProfileCardView } from "./ProfileCards";
 import { MessageInfoDialog } from "./MessageInfo";
 import { TranslateDialog, TranslationView } from "./Translate";
-import { translationSupported } from "../../sync/translate";
 import { findMediaLink } from "../../sync/mediaLinks";
 import { usePrefs } from "../../application/prefs";
 import { EmojiPicker } from "./EmojiPicker";
@@ -88,6 +88,7 @@ export interface MessageItemProps {
 
 export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
   const engine = useEngine();
+  const t = useT();
   const { m } = p;
   const [editing, setEditing] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
@@ -143,7 +144,7 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
           <ShieldAlert size={15} /> {m.text}
         </span>
       );
-    if (m.deleted) return <span className="msg-deleted">This message was deleted.</span>;
+    if (m.deleted) return <span className="msg-deleted">{t("msg_deleted")}</span>;
     if (editing) return <EditBox m={m} onDone={() => setEditing(false)} />;
     // A poll, contact, location, sticker or animated emoji is the message itself: no card under it (android MessageBubble).
     const structured = !!(m.rich?.poll || m.rich?.contact || m.rich?.location || m.rich?.sticker || m.rich?.animoji || m.rich?.customSticker);
@@ -258,7 +259,7 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
       ? [
           {
             custom: (
-              <div className="menu-quick" role="group" aria-label="Quick reactions">
+              <div className="menu-quick" role="group" aria-label={t("msg_quick_reactions")}>
                 {QUICK_EMOJI.map((e) => (
                   <button
                     key={e}
@@ -274,7 +275,7 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
                 ))}
                 <button
                   className="icon-btn"
-                  aria-label="Add reaction"
+                  aria-label={t("msg_add_reaction")}
                   onClick={() => {
                     const anchor = more.anchor;
                     more.close();
@@ -286,8 +287,8 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
               </div>
             ),
           },
-          { label: "Reply", icon: <MessageSquareReply size={16} />, onSelect: () => p.onReply(m) },
-          ...(p.onThread && !m.threadRootId ? [{ label: "Reply in thread", icon: <MessagesSquare size={16} />, onSelect: () => p.onThread?.(m) }] : []),
+          { label: t("msg_reply"), icon: <MessageSquareReply size={16} />, onSelect: () => p.onReply(m) },
+          ...(p.onThread && !m.threadRootId ? [{ label: t("msg_reply_thread"), icon: <MessagesSquare size={16} />, onSelect: () => p.onThread?.(m) }] : []),
           "separator",
         ]
       : [];
@@ -352,7 +353,7 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
       </div>
 
       {live && !editing && (
-        <div className="msg-actions" role="toolbar" aria-label="Message actions">
+        <div className="msg-actions" role="toolbar" aria-label={t("msg_actions")}>
           {p.canPost &&
             QUICK_EMOJI.slice(0, 3).map((e) => (
               <button key={e} className="icon-btn quick-emoji" onClick={() => void engine.react(m, e)} aria-label={`React ${e}`}>
@@ -360,29 +361,29 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
               </button>
             ))}
           {p.canPost && (
-            <button className="icon-btn" onClick={(e) => picker.open(e.currentTarget)} aria-label="Add reaction" title="Add reaction" aria-haspopup="menu">
+            <button className="icon-btn" onClick={(e) => picker.open(e.currentTarget)} aria-label={t("msg_add_reaction")} title={t("msg_add_reaction")} aria-haspopup="menu">
               <SmilePlus size={TOOL_ICON} />
             </button>
           )}
           {p.canPost && (
-            <button className="icon-btn" onClick={() => p.onReply(m)} aria-label="Reply" title="Reply">
+            <button className="icon-btn" onClick={() => p.onReply(m)} aria-label={t("msg_reply")} title={t("msg_reply")}>
               <MessageSquareReply size={TOOL_ICON} />
             </button>
           )}
           {p.onThread && !m.threadRootId && (
-            <button className="icon-btn" onClick={() => p.onThread?.(m)} aria-label="Reply in thread" title="Reply in thread">
+            <button className="icon-btn" onClick={() => p.onThread?.(m)} aria-label={t("msg_reply_thread")} title={t("msg_reply_thread")}>
               <MessagesSquare size={TOOL_ICON} />
             </button>
           )}
           {mine && p.canPost && (
-            <button className="icon-btn" onClick={() => setEditing(true)} aria-label="Edit" title="Edit">
+            <button className="icon-btn" onClick={() => setEditing(true)} aria-label={t("msg_edit")} title={t("msg_edit")}>
               <Pencil size={TOOL_ICON} />
             </button>
           )}
-          <button className="icon-btn" onClick={() => setForwarding(true)} aria-label="Forward" title="Forward">
+          <button className="icon-btn" onClick={() => setForwarding(true)} aria-label={t("msg_forward")} title={t("msg_forward")}>
             <Forward size={TOOL_ICON} />
           </button>
-          <button className="icon-btn" onClick={(e) => more.open(e.currentTarget)} aria-label="More actions" title="More actions" aria-haspopup="menu">
+          <button className="icon-btn" onClick={(e) => more.open(e.currentTarget)} aria-label={t("msg_more")} title={t("msg_more")} aria-haspopup="menu">
             <MoreHorizontal size={TOOL_ICON} />
           </button>
         </div>
@@ -419,40 +420,39 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
           }}
           entries={[
             ...quickRow,
-            ...(mine && p.canPost ? [{ label: "Edit", icon: <Pencil size={16} />, onSelect: () => setEditing(true) }] : []),
-            ...(p.canPost
-              ? [{ label: m.pinned ? "Unpin" : "Pin to conversation", icon: m.pinned ? <PinOff size={16} /> : <Pin size={16} />, onSelect: () => void engine.setPinned(m, !m.pinned) }]
-              : []),
+            ...(mine && p.canPost ? [{ label: t("msg_edit"), icon: <Pencil size={16} />, onSelect: () => setEditing(true) }] : []),
+            ...(p.canPost ? [{ label: m.pinned ? t("msg_unpin") : t("msg_pin"), icon: m.pinned ? <PinOff size={16} /> : <Pin size={16} />, onSelect: () => void engine.setPinned(m, !m.pinned) }] : []),
             ...(live && savable
               ? [
                   saved
-                    ? { label: "Remove from Later", icon: <BookmarkX size={16} />, onSelect: () => void engine.later({ op: "unsave", messageId: m.id }) }
+                    ? { label: t("msg_remove_later"), icon: <BookmarkX size={16} />, onSelect: () => void engine.later({ op: "unsave", messageId: m.id }) }
                     : {
-                        label: "Save for later",
+                        label: t("msg_save_later"),
                         icon: <Bookmark size={16} />,
                         onSelect: () => void engine.later({ op: "save", conversationId: m.conversationId, messageId: m.id, savedAt: Date.now(), remindAt: null }),
                       },
-                  { label: saved?.remindAt ? "Change reminder…" : "Remind me…", icon: <AlarmClock size={16} />, onSelect: () => setReminding(true) },
+                  { label: saved?.remindAt ? t("msg_change_reminder") : t("msg_remind"), icon: <AlarmClock size={16} />, onSelect: () => setReminding(true) },
                 ]
               : []),
-            ...(live ? [{ label: "Forward…", icon: <Forward size={16} />, onSelect: () => setForwarding(true) }] : []),
-            ...(m.text ? [{ label: "Copy text", icon: <Copy size={16} />, onSelect: () => void navigator.clipboard?.writeText(m.text) }] : []),
-            ...(!mine && m.text && translationSupported() ? [{ label: "Translate…", icon: <Languages size={16} />, onSelect: () => setTranslating(true) }] : []),
+            ...(live ? [{ label: t("msg_forward_dots"), icon: <Forward size={16} />, onSelect: () => setForwarding(true) }] : []),
+            ...(m.text ? [{ label: t("msg_copy_text"), icon: <Copy size={16} />, onSelect: () => void navigator.clipboard?.writeText(m.text) }] : []),
+            // Offered on every received message (2026-10-23): where the browser can't translate on the device, it says why.
+            ...(!mine && m.text ? [{ label: t("msg_translate"), icon: <Languages size={16} />, onSelect: () => setTranslating(true) }] : []),
             ...(live && canLink(m.deleted, m.status)
               ? [
                   {
-                    label: "Copy message link",
+                    label: t("msg_copy_link"),
                     icon: <Link2 size={16} />,
                     onSelect: () => {
                       void navigator.clipboard?.writeText(messageLink(m.conversationId, m.id)).catch(() => undefined);
-                      engine.notice("info", "Message link copied. It opens only for people in this conversation.");
+                      engine.notice("info", t("msg_link_copied"));
                     },
                   },
                 ]
               : []),
-            ...(mine ? [{ label: "Message info", icon: <Info size={16} />, onSelect: () => setInfo(true) }] : []),
-            ...(!mine && live && reportable && conv ? ["separator" as const, { label: "Report…", icon: <Flag size={16} />, danger: true, onSelect: () => setReporting(true) }] : []),
-            ...(mine && p.canPost ? ["separator" as const, { label: "Delete for everyone", icon: <Trash2 size={16} />, danger: true, onSelect: () => setConfirmDelete(true) }] : []),
+            ...(mine ? [{ label: t("msg_info"), icon: <Info size={16} />, onSelect: () => setInfo(true) }] : []),
+            ...(!mine && live && reportable && conv ? ["separator" as const, { label: t("msg_report"), icon: <Flag size={16} />, danger: true, onSelect: () => setReporting(true) }] : []),
+            ...(mine && p.canPost ? ["separator" as const, { label: t("msg_delete_all"), icon: <Trash2 size={16} />, danger: true, onSelect: () => setConfirmDelete(true) }] : []),
           ]}
         />
       )}
@@ -608,17 +608,18 @@ function EditBox({ m, onDone }: { m: StoredMessage; onDone: () => void }) {
  */
 function ForwardedLine({ origin }: { origin: RichContent["origin"] }) {
   const engine = useEngine();
+  const t = useT();
   if (!origin)
     return (
       <div className="msg-forwarded">
-        <Forward size={12} aria-hidden="true" /> Forwarded
+        <Forward size={12} aria-hidden="true" /> {t("msg_forwarded")}
       </div>
     );
   const where = `${origin.place}${origin.at ? ` • ${dayLabel(origin.at)} ${clock(origin.at)}` : ""}`;
   const link = origin.conversationId && origin.messageId ? messageLink(origin.conversationId, origin.messageId) : null;
   return (
     <div className="msg-forwarded">
-      <Forward size={12} aria-hidden="true" /> Forwarded ·{" "}
+      <Forward size={12} aria-hidden="true" /> {t("msg_forwarded")} ·{" "}
       {link ? (
         <button className="msg-forwarded-origin" onClick={() => openInApp(engine, link)} aria-label={`Open the original in ${origin.place}`}>
           {where} ›
