@@ -28,22 +28,27 @@ export function Rail({ orgId, section }: { orgId: string | null; section: Sectio
       </a>
       {orgs.length > 0 && (
         <div role="group" aria-label="Workspaces" style={{ display: "grid", gap: 10, justifyItems: "center", marginTop: 4 }}>
-          {orgs.map((o) => (
-            <button
-              key={o.id}
-              className="rail-org"
-              aria-current={o.id === orgId}
-              title={o.name}
-              aria-label={`${o.name}${o.unread ? `, ${o.unread} channels with unread messages` : ""}`}
-              onClick={() => {
-                setPrefs({ orgId: o.id });
-                navigate({ section: section === "dms" ? "dms" : "home" });
-              }}
-            >
-              <OrgAvatar orgId={o.id} name={o.name} photoRev={o.photoRev} size={42} />
-              {o.unread > 0 && o.id !== orgId && <span className="count accent">{o.unread}</span>}
-            </button>
-          ))}
+          {orgs.map((o) => {
+            // Direct messages belong to no community, so none is selected there (as on Discord).
+            const selected = section !== "dms" && o.id === orgId;
+            return (
+              <button
+                key={o.id}
+                className="rail-org"
+                aria-current={selected}
+                title={o.name}
+                aria-label={`${o.name}${o.unread ? `, ${o.unread} channels with unread messages` : ""}`}
+                onClick={() => {
+                  setPrefs({ orgId: o.id });
+                  // A community opens its own channels, from DMs too (it used to stay in DMs, under the community's name).
+                  navigate({ section: "home" });
+                }}
+              >
+                <OrgAvatar orgId={o.id} name={o.name} photoRev={o.photoRev} size={42} />
+                {o.unread > 0 && !selected && <span className="count accent">{o.unread}</span>}
+              </button>
+            );
+          })}
         </div>
       )}
       <div className="rail-sep" />
