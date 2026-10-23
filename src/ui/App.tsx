@@ -19,6 +19,7 @@ import { Shell } from "./shell/Shell";
 import { ElsewhereScreen, LoadingScreen, RevokedScreen, UnsupportedScreen } from "./StatusScreens";
 import { watchForUpdates } from "../application/updates";
 import { UpdateNotice } from "./UpdateNotice";
+import { voicePlayback } from "../application/voicePlayback";
 
 type Boot =
   | { s: "loading" }
@@ -85,6 +86,8 @@ export function App() {
     if (!engine) return;
     return engine.state.subscribe(() => {
       const st = engine.state.get();
+      // Nothing keeps playing once the account is no longer signed in here.
+      if (st.phase === "revoked" || st.phase === "reauth") voicePlayback.reset();
       if (st.phase === "revoked") {
         engine.stop();
         void LocalStore.erase(engine.store).finally(() => setBoot({ s: "revoked", reason: st.phaseReason }));
@@ -109,6 +112,7 @@ export function App() {
   }, []);
 
   const signedOut = useCallback(async () => {
+    voicePlayback.reset();
     resetPrefs();
     forgetRecentSearches();
     setBoot({ s: "signedOut", store: await LocalStore.open() });

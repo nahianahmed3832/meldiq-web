@@ -1,8 +1,9 @@
 import { ChevronLeft, ChevronRight, Download, FileText, Film, Image as ImageIcon, Mic, Pause, Play, TriangleAlert, X } from "lucide-react";
-import { createContext, useContext, useEffect, useRef, useState } from "react";
+import { createContext, useContext, useEffect, useId, useState } from "react";
 import { createPortal } from "react-dom";
 import { useEngine } from "../../application/orbit";
 import { usePrefs } from "../../application/prefs";
+import { useVoicePlayback, voicePlayback } from "../../application/voicePlayback";
 import type { AttachmentRef } from "../../protocol/payload";
 import { isInlineImage, openAttachment, safeMime, saveAttachment } from "../../sync/attachments";
 import { clock, isVoice, shownDuration } from "../../sync/voice";
@@ -57,62 +58,62 @@ export function Attachments({ refs, viewer }: { refs: AttachmentRef[]; viewer?: 
 
 const isPlayable = (r: AttachmentRef): boolean => /^(audio|video)\//.test(safeMime(r.mime));
 
-/** A voice message: play/pause, a seek bar and its length; the first play downloads and decrypts it. */
+/**
+ * A voice message: play/pause, a seek bar, its length and speed; the first play downloads and decrypts it. It plays
+ * through the page's one voice player (application/voicePlayback.ts), so starting it pauses any other at once.
+ */
 function VoiceAttachment({ r }: { r: AttachmentRef }) {
+  // Each drawing of a message is its own clip: the same message in a panel and in the conversation has two players.
+  const key = `${r.id}${useId()}`;
+  const playback = useVoicePlayback();
   const [wanted, setWanted] = useState(false);
   const { url, error, loading } = useBlobUrl(r, wanted);
-  const audio = useRef<HTMLAudioElement | null>(null);
-  const [playing, setPlaying] = useState(false);
-  const [pos, setPos] = useState(0);
-  const total = shownDuration(r.durationMs);
   useEffect(() => {
-    if (url && wanted) void audio.current?.play().catch(() => setPlaying(false));
-  }, [url, wanted]);
+    if (url) voicePlayback.provide(key, url);
+  }, [key, url]);
+  // Leaving the conversation or closing the panel stops it.
+  useEffect(() => () => voicePlayback.release(key), [key]);
+  const total = shownDuration(r.durationMs);
   if (error) return <FileAttachment r={r} error={error} />;
+  const mine = playback.key === key;
+  const playing = mine && playback.status === "playing";
+  const busy = mine && playback.status === "loading" && (loading || !url);
+  const pos = mine ? playback.positionMs : voicePlayback.positionOf(key);
   const seconds = Math.round(total / 1000);
   return (
-    <div className="voice-msg" role="group" aria-label={`Voice message, ${seconds} seconds`}>
+    <div className={`voice-msg${playing ? " playing" : ""}`} role="group" aria-label={`Voice message, ${seconds} seconds`} data-voice-state={mine ? playback.status : "idle"}>
       <button
         className="voice-play"
-        aria-label={playing ? "Pause voice message" : `Play voice message, ${seconds} seconds`}
+        aria-label={playing || busy ? "Pause voice message" : `Play voice message, ${seconds} seconds`}
+        aria-pressed={playing}
         onClick={() => {
-          if (!url) return setWanted(true);
-          if (playing) audio.current?.pause();
-          else void audio.current?.play();
+          if (!url) setWanted(true);
+          voicePlayback.toggle(key, url);
         }}
-        disabled={loading && wanted}
       >
-        {loading && wanted ? <span className="spinner" aria-hidden="true" /> : playing ? <Pause size={16} /> : <Play size={16} />}
+        {busy ? <span className="spinner" aria-hidden="true" /> : playing ? <Pause size={16} /> : <Play size={16} />}
       </button>
       <input
         type="range"
         className="voice-seek"
         min={0}
         max={Math.max(1, total)}
-        value={pos}
+        value={Math.min(pos, Math.max(1, total))}
         aria-label="Position"
         aria-valuetext={`${Math.round(pos / 1000)} seconds of ${seconds} seconds`}
         disabled={!url}
-        onChange={(e) => {
-          const v = Number(e.target.value);
-          setPos(v);
-          if (audio.current) audio.current.currentTime = v / 1000;
-        }}
+        onChange={(e) => voicePlayback.seek(key, Number(e.target.value))}
       />
       <span className="voice-len">{playing || pos > 0 ? `${clock(pos)} / ${clock(total)}` : clock(total)}</span>
-      {url && (
-        <audio
-          ref={audio}
-          src={url}
-          preload="auto"
-          onPlay={() => setPlaying(true)}
-          onPause={() => setPlaying(false)}
-          onEnded={() => {
-            setPlaying(false);
-            setPos(0);
-          }}
-          onTimeUpdate={(e) => setPos(Math.round(e.currentTarget.currentTime * 1000))}
-        />
+      {mine && playback.status !== "idle" && (
+        <button className="voice-rate" onClick={() => voicePlayback.cycleRate()} aria-label={`Playback speed ${playback.rate} times. Change speed`}>
+          {playback.rate}×
+        </button>
+      )}
+      {mine && playback.failed && (
+        <span className="voice-failed" role="alert">
+          {playback.failed}
+        </span>
       )}
     </div>
   );

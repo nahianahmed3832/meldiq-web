@@ -271,12 +271,13 @@ describe("call status lines", () => {
   });
 
   it("names every way a call can end, and formats long calls", () => {
-    expect(["declined", "missed", "lost", "answered elsewhere", "removed", "disconnected", "hangup", null].map(endedText)).toEqual([
+    expect(["declined", "missed", "lost", "answered elsewhere", "removed", "joined_elsewhere", "disconnected", "hangup", null].map(endedText)).toEqual([
       "Declined",
       "No answer",
       "The connection was lost",
       "Answered on another device",
       "You're no longer in this call",
+      "You joined this call on another device",
       "Disconnected",
       "Call ended",
       "Call ended",

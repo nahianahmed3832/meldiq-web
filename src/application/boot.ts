@@ -90,7 +90,7 @@ export function createEngine(device: DeviceRecord, store: LocalStore): Engine {
     ringtone: new Ringtone(() => getPrefs().callRingtone),
     callPrefs: () => {
       const p = getPrefs();
-      return { noiseReduction: p.noiseReduction, shareMode: p.shareMode, shareAudio: p.shareAudio };
+      return { noiseReduction: p.noiseReduction, shareQuality: p.shareQuality, shareAudio: p.shareAudio };
     },
     ringAlert,
     prefs: () => {

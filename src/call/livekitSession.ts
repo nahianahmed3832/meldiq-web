@@ -1,5 +1,6 @@
 import { DEV } from "../application/env";
 import {
+  AudioPresets,
   ConnectionQuality,
   createLocalTracks,
   DisconnectReason,
@@ -7,6 +8,7 @@ import {
   type LocalTrack,
   type Participant,
   type RemoteTrack,
+  type RemoteTrackPublication,
   LogLevel,
   Room,
   RoomEvent,
@@ -14,10 +16,14 @@ import {
   Track,
   type TrackPublication,
   VideoPresets,
+  VideoQuality,
 } from "livekit-client";
 import { isAuditMessage } from "./frameAudit";
-import { audioProcessing, describePath, deviceIssueOf, MediaFlowMonitor, mirrorPreview, SHARE_MODES } from "./rules";
+import { audioProcessing, describePath, deviceIssueOf, MediaFlowMonitor, mirrorPreview } from "./rules";
 import { MediaSecurityTracker } from "./security";
+import { receivedVideo, type ShareQuality } from "./shareQuality";
+import { type CallShareView, shareKey } from "./shares";
+import { ShareSender } from "./shareSender";
 import {
   type CallParticipantView,
   DeviceError,
@@ -39,6 +45,7 @@ setLogLevel(LogLevel.warn);
 /** Camera capture and sending, as the Android app does (CallMediaPolicy: 720p, simulcast, VP8). */
 const CAMERA = { resolution: VideoPresets.h720.resolution };
 const FLOW_SAMPLE_MS = 2_000;
+const SCREEN_SOURCES: readonly Track.Source[] = [Track.Source.ScreenShare, Track.Source.ScreenShareAudio];
 
 /**
  * One connection to a call's LiveKit room with end-to-end frame encryption (docs/ORBIT_WEB_CALLS.md). The call key is
@@ -66,6 +73,12 @@ export class LiveKitSession implements MediaSession {
   /** Batch B10: nobody's sound plays while deafened, including people who join later. */
   private deafened = false;
   private audioOptions: MediaTrackConstraints | undefined;
+  /** The share this browser watches: the only screen share received (2026-10-24). */
+  private watched: string | null = null;
+  private readonly share = new ShareSender(
+    () => this.room?.localParticipant ?? null,
+    (stats) => this.events.shareStats?.(stats),
+  );
 
   constructor(private readonly events: MediaEvents) {
     this.audioBox.hidden = true;
@@ -104,18 +117,28 @@ export class LiveKitSession implements MediaSession {
       adaptiveStream: true,
       dynacast: true,
       e2ee: { keyProvider, worker },
-      publishDefaults: { simulcast: true, videoCodec: "vp8", dtx: true },
+      // Microphones go first when the connection is short (screen and camera video give way before speech does).
+      publishDefaults: { simulcast: true, videoCodec: "vp8", dtx: true, audioPreset: { ...AudioPresets.music, priority: "high" } },
       videoCaptureDefaults: CAMERA,
     });
     this.room = room;
     this.wire(room);
     // Development builds only (removed from production bundles): what the badge rests on, for the browser tests.
     if (DEV) (globalThis as { __orbitCallTracks?: () => unknown }).__orbitCallTracks = () => this.tracker.snapshot();
+    // Which screen-share tracks this browser receives (the browser tests check only the watched one is).
+    if (DEV)
+      (globalThis as { __orbitShareSubscriptions?: () => unknown }).__orbitShareSubscriptions = () =>
+        [...room.remoteParticipants.values()].flatMap((p) =>
+          [...p.trackPublications.values()].filter((t) => SCREEN_SOURCES.includes(t.source)).map((t) => ({ identity: p.identity, source: t.source, subscribed: t.isSubscribed })),
+        );
     document.body.appendChild(this.audioBox);
     await keyProvider.setKey(key);
     await room.setE2EEEnabled(true);
-    await room.connect(grant.url, grant.token, { autoSubscribe: true });
+    // Subscriptions are this session's choice (syncSubscriptions): everyone's microphone and camera, and only the
+    // watched screen share, so several shares at once cost each viewer one.
+    await room.connect(grant.url, grant.token, { autoSubscribe: false });
     if (this.closed) throw new Error("call closed while connecting");
+    this.syncSubscriptions();
     for (const t of this.prepared) await room.localParticipant.publishTrack(t, { simulcast: t.kind === Track.Kind.Video });
     this.prepared = [];
     this.events.audioBlocked(!room.canPlaybackAudio);
@@ -138,16 +161,12 @@ export class LiveKitSession implements MediaSession {
     }
   }
 
-  async setScreenShare(on: boolean, opts: ShareOptions = { mode: "text", audio: false }): Promise<void> {
+  async setScreenShare(on: boolean, opts: ShareOptions = { quality: "standard", audio: false }): Promise<void> {
     try {
-      // Batch B11 modes (android ShareMode): text keeps resolution, motion keeps the frame rate. The shared tab's or
-      // system's sound comes along where the browser offers it (Chromium); frame encryption covers every track.
-      const m = SHARE_MODES[opts.mode];
-      await this.room?.localParticipant.setScreenShareEnabled(
-        on,
-        { audio: on && opts.audio, resolution: { width: m.width, height: m.height, frameRate: m.frameRate }, contentHint: m.contentHint, systemAudio: opts.audio ? "include" : "exclude" },
-        { videoEncoding: { maxBitrate: m.maxBitrate, maxFramerate: m.frameRate }, degradationPreference: m.degradation, simulcast: false },
-      );
+      // The shared tab's or system's sound comes along where the browser offers it (Chromium); frame encryption covers
+      // every track.
+      if (on) await this.share.start(opts);
+      else await this.share.stop();
     } catch (e) {
       // Closing the browser's picker isn't an error worth showing.
       if (e instanceof DOMException && e.name === "NotAllowedError" && on) throw new DeviceError("screen", "denied");
@@ -155,18 +174,64 @@ export class LiveKitSession implements MediaSession {
     }
   }
 
-  setDeafened(on: boolean): void {
-    this.deafened = on;
-    for (const el of this.audioBox.querySelectorAll("audio")) el.muted = on;
+  async setShareQuality(quality: ShareQuality): Promise<void> {
+    await this.share.setQuality(quality);
   }
 
-  attachScreen(identity: string, el: HTMLVideoElement): () => void {
+  shares(): CallShareView[] {
     const room = this.room;
-    const p = room && (identity === room.localParticipant.identity ? room.localParticipant : room.getParticipantByIdentity(identity));
+    if (!room) return [];
+    const view = (p: Participant, isLocal: boolean): CallShareView[] => {
+      const pub = p.getTrackPublication(Track.Source.ScreenShare);
+      if (!pub?.trackSid || pub.isMuted) return [];
+      const key = shareKey(p.identity, pub.trackSid);
+      // Someone else's share is shown once its frames are proven to decrypt with the call key (see pendingAudio).
+      const ready = isLocal || (!!pub.track && this.tracker.proven(MediaSecurityTracker.key(p.identity, pub.track.mediaStreamID)));
+      const withAudio = !!p.getTrackPublication(Track.Source.ScreenShareAudio);
+      return [{ key, identity: p.identity, userId: userIdOf(p), name: p.name || (isLocal ? "You" : "Participant"), isLocal, withAudio, ready }];
+    };
+    return [...[...room.remoteParticipants.values()].flatMap((p) => view(p, false)), ...view(room.localParticipant, true)];
+  }
+
+  watchShare(key: string | null): void {
+    if (this.watched === key) return;
+    this.watched = key;
+    this.events.watchStats?.(null);
+    this.syncSubscriptions();
+  }
+
+  attachShare(key: string, el: HTMLVideoElement): () => void {
+    const room = this.room;
+    const share = this.shares().find((s) => s.key === key);
+    if (!room || !share || !share.ready) return () => undefined;
+    const p = share.isLocal ? room.localParticipant : room.getParticipantByIdentity(share.identity);
     const track = p?.getTrackPublication(Track.Source.ScreenShare)?.track;
     if (!track) return () => undefined;
     track.attach(el);
     return () => void track.detach(el);
+  }
+
+  /**
+   * Subscribes to what this browser receives: everyone's microphone and camera, and of the screen shares only the
+   * watched one (its video and its sound), at full quality; the others' screens aren't received at all.
+   */
+  private syncSubscriptions(): void {
+    const room = this.room;
+    if (!room) return;
+    const watchedIdentity = this.watched ? (this.shares().find((s) => s.key === this.watched)?.identity ?? null) : null;
+    for (const p of room.remoteParticipants.values()) {
+      for (const pub of p.trackPublications.values()) {
+        const remote = pub as RemoteTrackPublication;
+        const want = !SCREEN_SOURCES.includes(remote.source) || p.identity === watchedIdentity;
+        if (remote.isDesired !== want) remote.setSubscribed(want);
+        if (want && remote.source === Track.Source.ScreenShare) remote.setVideoQuality(VideoQuality.HIGH);
+      }
+    }
+  }
+
+  setDeafened(on: boolean): void {
+    this.deafened = on;
+    for (const el of this.audioBox.querySelectorAll("audio")) el.muted = on;
   }
 
   async listDevices(kind: DeviceKind): Promise<MediaDeviceChoice[]> {
@@ -226,6 +291,7 @@ export class LiveKitSession implements MediaSession {
   async disconnect(): Promise<void> {
     this.closed = true;
     clearInterval(this.flowTimer);
+    this.events.shareStats?.(null);
     this.stopPrepared();
     const room = this.room;
     const worker = this.worker;
@@ -247,7 +313,14 @@ export class LiveKitSession implements MediaSession {
     const changed = () => this.events.changed();
     room
       .on(RoomEvent.ParticipantConnected, () => {
+        this.syncSubscriptions();
         this.events.remoteJoined();
+        changed();
+      })
+      // A track someone publishes (a new share, a camera turned on, a republish after their reconnect) is subscribed or
+      // not by syncSubscriptions; the share list changes with it.
+      .on(RoomEvent.TrackPublished, () => {
+        this.syncSubscriptions();
         changed();
       })
       .on(RoomEvent.ParticipantDisconnected, (p) => {
@@ -260,6 +333,7 @@ export class LiveKitSession implements MediaSession {
       .on(RoomEvent.TrackUnpublished, (pub, p) => {
         // Batch B11: "<name> stopped sharing their screen".
         if (pub.source === Track.Source.ScreenShare) this.events.shareEnded?.(p.name || "Someone");
+        changed();
       })
       .on(RoomEvent.TrackUnsubscribed, (track, _pub, p) => {
         track.detach().forEach((el) => el.remove());
@@ -273,7 +347,11 @@ export class LiveKitSession implements MediaSession {
         this.publishSecurity();
         changed();
       })
-      .on(RoomEvent.LocalTrackUnpublished, (pub, p) => this.forget(key(p, pub.track)))
+      .on(RoomEvent.LocalTrackUnpublished, (pub, p) => {
+        // The browser's own "Stop sharing" ends the track: livekit-client unpublishes it, and the stats stop.
+        if (pub.source === Track.Source.ScreenShare) this.events.shareStats?.(null);
+        this.forget(key(p, pub.track));
+      })
       .on(RoomEvent.TrackMuted, (pub, p) => this.muted(key(p, pub.track), true))
       .on(RoomEvent.TrackUnmuted, (pub, p) => this.muted(key(p, pub.track), false))
       .on(RoomEvent.EncryptionError, (_e, p) => {
@@ -285,7 +363,10 @@ export class LiveKitSession implements MediaSession {
       .on(RoomEvent.ConnectionQualityChanged, changed)
       .on(RoomEvent.Reconnecting, () => this.events.reconnecting())
       .on(RoomEvent.SignalReconnecting, () => this.events.reconnecting())
-      .on(RoomEvent.Reconnected, () => this.events.reconnected())
+      .on(RoomEvent.Reconnected, () => {
+        this.syncSubscriptions();
+        this.events.reconnected();
+      })
       .on(RoomEvent.AudioPlaybackStatusChanged, () => this.events.audioBlocked(!room.canPlaybackAudio))
       .on(RoomEvent.Disconnected, (reason?: DisconnectReason) => {
         if (!this.closed) this.events.disconnected(reason === undefined ? undefined : DisconnectReason[reason]);
@@ -345,6 +426,7 @@ export class LiveKitSession implements MediaSession {
     if (!room) return;
     let bytes: number | null = null;
     let path: string | null = null;
+    const watched = this.watched;
     for (const p of room.remoteParticipants.values()) {
       for (const pub of p.trackPublications.values()) {
         const report = await pub.track?.getRTCStatsReport().catch(() => undefined);
@@ -352,10 +434,12 @@ export class LiveKitSession implements MediaSession {
         const stats = [...report.values()] as { id: string; type: string; bytesReceived?: number }[];
         bytes = (bytes ?? 0) + stats.filter((s) => s.type === "inbound-rtp").reduce((n, s) => n + (s.bytesReceived ?? 0), 0);
         path ??= describePath(stats);
+        if (watched && pub.trackSid && shareKey(p.identity, pub.trackSid) === watched) this.events.watchStats?.(receivedVideo(stats));
       }
     }
     if (this.room !== room) return;
     this.events.flow(this.monitor.sample(bytes), path);
+    await this.share.sample(Date.now());
   }
 
   private stopPrepared(): void {

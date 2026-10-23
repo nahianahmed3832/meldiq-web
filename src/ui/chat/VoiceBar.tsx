@@ -1,5 +1,6 @@
 import { Mic, Pause, Play, SendHorizontal, Square, Trash2 } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
+import { useVoicePlayback, voicePlayback } from "../../application/voicePlayback";
 import { clock, type Recording, RecordingError, VOICE_MAX_MS, VoiceRecorder } from "../../sync/voice";
 
 type Phase = { k: "starting" } | { k: "recording" } | { k: "ready"; rec: Recording; url: string } | { k: "error"; message: string };
@@ -12,10 +13,13 @@ export function VoiceBar({ onSend, onClose }: { onSend: (rec: Recording) => Prom
   const [phase, setPhase] = useState<Phase>({ k: "starting" });
   const [elapsed, setElapsed] = useState(0);
   const [note, setNote] = useState<string | null>(null);
-  const [playing, setPlaying] = useState(false);
   const [sending, setSending] = useState(false);
   const recorder = useRef<VoiceRecorder | null>(null);
-  const audio = useRef<HTMLAudioElement | null>(null);
+  // The preview plays through the page's one voice player too: it pauses any message playing, and they pause it.
+  const key = `draft${useId()}`;
+  const playback = useVoicePlayback();
+  const playing = playback.key === key && playback.status === "playing";
+  useEffect(() => () => voicePlayback.release(key), [key]);
 
   const stop = async () => {
     const r = recorder.current;
@@ -70,12 +74,7 @@ export function VoiceBar({ onSend, onClose }: { onSend: (rec: Recording) => Prom
         <button className="icon-btn" onClick={onClose} aria-label="Delete voice message" disabled={sending}>
           <Trash2 size={18} />
         </button>
-        <audio ref={audio} src={phase.url} onEnded={() => setPlaying(false)} onPause={() => setPlaying(false)} onPlay={() => setPlaying(true)} preload="metadata" />
-        <button
-          className="icon-btn"
-          aria-label={playing ? "Pause" : `Play voice message, ${Math.round(phase.rec.durationMs / 1000)} seconds`}
-          onClick={() => (playing ? audio.current?.pause() : void audio.current?.play())}
-        >
+        <button className="icon-btn" aria-label={playing ? "Pause" : `Play voice message, ${Math.round(phase.rec.durationMs / 1000)} seconds`} onClick={() => voicePlayback.toggle(key, phase.url)}>
           {playing ? <Pause size={18} /> : <Play size={18} />}
         </button>
         <span className="grow voice-len">{clock(phase.rec.durationMs)}</span>

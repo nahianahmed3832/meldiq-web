@@ -1,4 +1,6 @@
 import type { VerificationCode } from "./callKeys";
+import type { ShareQuality, ShareStats } from "./shareQuality";
+import type { CallShareView } from "./shares";
 
 /** Where a call is, from this browser's point of view (android CallPhase). */
 export type CallPhase = "idle" | "incoming" | "outgoing" | "connecting" | "connected" | "reconnecting" | "ended";
@@ -84,9 +86,19 @@ export interface CallUiState {
   notice: string | null;
   /** Batch B10: you hear nobody and your microphone is off. */
   deafened: boolean;
-  /** Batch B11: how this browser shares its screen, and whether with sound. */
-  shareMode: "text" | "motion" | null;
+  /** The quality this browser shares its screen at (2026-10-24: Standard 720p30 or High 1080p60), and whether with sound. */
+  shareQuality: ShareQuality | null;
   shareAudio: boolean;
+  /** What this browser's share actually captures and sends (null when not sharing). */
+  shareStats: ShareStats | null;
+  /** Every screen shared in the call now, yours included, in the order they started. */
+  shares: CallShareView[];
+  /** The share this browser watches (only it is received in full); null shows the people. Local to this browser. */
+  watching: string | null;
+  /** The person went back to the people themselves: a new share waits in the tray instead of opening. */
+  watchDismissed: boolean;
+  /** The watched share as it arrives here (null until its first frames). */
+  watchStats: { width: number; height: number; fps: number } | null;
   /** A voice channel you may join but not talk in (voice.speak): listen only. */
   listenOnly: boolean;
 }
@@ -124,8 +136,13 @@ export const idleCall: CallUiState = {
   canModerate: false,
   notice: null,
   deafened: false,
-  shareMode: null,
+  shareQuality: null,
   shareAudio: false,
+  shareStats: null,
+  shares: [],
+  watching: null,
+  watchDismissed: false,
+  watchStats: null,
   listenOnly: false,
 };
 
@@ -166,9 +183,9 @@ export interface PrepareOptions {
   microphone?: boolean;
 }
 
-/** How a screen is shared (batch B11): text or motion, and the shared tab's or system's sound where the browser allows. */
+/** How a screen is shared: Standard or High, and the shared tab's or system's sound where the browser allows. */
 export interface ShareOptions {
-  mode: "text" | "motion";
+  quality: ShareQuality;
   audio: boolean;
 }
 
@@ -187,6 +204,10 @@ export interface MediaEvents {
   audioBlocked(blocked: boolean): void;
   /** Batch B11: someone else stopped sharing their screen. */
   shareEnded?(name: string): void;
+  /** This browser's share: what it captures and sends (every few seconds while sharing; null when it stops). */
+  shareStats?(stats: ShareStats | null): void;
+  /** The watched share as received here. */
+  watchStats?(stats: { width: number; height: number; fps: number } | null): void;
 }
 
 /**
@@ -212,8 +233,14 @@ export interface MediaSession {
   setScreenShare(on: boolean, opts?: ShareOptions): Promise<void>;
   /** Batch B10 deafen: nobody's sound plays (people who join later too) until turned off. */
   setDeafened(on: boolean): void;
-  /** Shows [identity]'s shared screen in [el]; returns a function that stops. */
-  attachScreen(identity: string, el: HTMLVideoElement): () => void;
+  /** Changes the quality of this browser's share while it runs. */
+  setShareQuality(quality: ShareQuality): Promise<void>;
+  /** Every screen shared in the call now, this browser's included. */
+  shares(): CallShareView[];
+  /** Receives only [key]'s share (at full quality) and none of the others' video or sound; null receives none. */
+  watchShare(key: string | null): void;
+  /** Shows the share [key] in [el]; returns a function that stops. */
+  attachShare(key: string, el: HTMLVideoElement): () => void;
   /** The microphones, cameras or speakers the browser offers (labels once permission was given). */
   listDevices(kind: DeviceKind): Promise<MediaDeviceChoice[]>;
   /** Switches the call to another microphone, camera or speaker. */

@@ -1,21 +1,32 @@
 import { describe, expect, it } from "vitest";
 import type { ApiClient } from "../src/api/client";
 import { CallManager, type CallHost, type CallTarget } from "../src/call/manager";
-import { audioProcessing, deafenChange, frameShape, micLevel, SHARE_MODES, shareModeOf } from "../src/call/rules";
+import { audioProcessing, deafenChange, frameShape, micLevel } from "../src/call/rules";
+import { SHARE_QUALITIES, type ShareQuality, shareQualityOf } from "../src/call/shareQuality";
+import type { CallShareView } from "../src/call/shares";
 import { Store } from "../src/state/store";
 import { MediaRig } from "./support/fakeMedia";
 
 /** Batches B10 and B11 (android CallManager, ShareModeTest, PreCallCheckTest): deafen, listen-only, noise reduction, sharing. */
 const call = (id: string) => ({ id, conversationId: "c1", createdBy: "me", video: false, state: "RINGING", createdAt: Date.now(), endedAt: null, endReason: null, conversationType: "DM" });
 
-function setup(target: Partial<CallTarget> = {}, prefs = { noiseReduction: true, shareMode: "text" as const, shareAudio: false }) {
+const posted: string[] = [];
+
+function setup(
+  target: Partial<CallTarget> = {},
+  prefs: { noiseReduction: boolean; shareQuality: ShareQuality; shareAudio: boolean } = { noiseReduction: true, shareQuality: "standard", shareAudio: false },
+  maxScreenShares?: number,
+) {
   const rig = new MediaRig();
   const api = {
     json: async (method: string, path: string, schema: { parse(v: unknown): unknown }) => {
       if (method === "POST" && path === "/v1/calls") return schema.parse({ call: call("k1"), media: { url: "ws://lk", token: "t", room: "r1" }, joinedExisting: false });
       throw new Error(`unexpected ${method} ${path}`);
     },
-    call: async () => new Response(null, { status: 204 }),
+    call: async (method: string, path: string) => {
+      posted.push(`${method} ${path}`);
+      return new Response(null, { status: 204 });
+    },
   } as unknown as ApiClient;
   const host: CallHost = {
     api,
@@ -26,7 +37,7 @@ function setup(target: Partial<CallTarget> = {}, prefs = { noiseReduction: true,
     displayName: () => null,
     recordCall: async () => undefined,
   };
-  const calls = new CallManager(host, { media: rig.factory, supported: () => true, keyWaitMs: 500, callPrefs: () => prefs });
+  const calls = new CallManager(host, { media: rig.factory, supported: () => true, keyWaitMs: 500, callPrefs: () => prefs, maxScreenShares });
   return { calls, rig, host };
 }
 
@@ -38,12 +49,12 @@ describe("call rules", () => {
     expect(deafenChange(true, false, false).micOn).toBe(false);
   });
 
-  it("share modes: text keeps 1080p sharp at 15 fps, motion keeps 720p smooth at 30 fps; unknown saves read as text", () => {
-    expect(SHARE_MODES.text).toMatchObject({ width: 1920, height: 1080, frameRate: 15, maxBitrate: 2_500_000, degradation: "maintain-resolution" });
-    expect(SHARE_MODES.motion).toMatchObject({ width: 1280, height: 720, frameRate: 30, maxBitrate: 3_500_000, degradation: "maintain-framerate" });
-    expect(shareModeOf("motion")).toBe("motion");
-    expect(shareModeOf("game")).toBe("text");
-    expect(shareModeOf(null)).toBe("text");
+  it("share qualities: Standard is 1280×720 at 30 fps, High 1920×1080 at 60; anything else saved reads as Standard", () => {
+    expect(SHARE_QUALITIES.standard).toMatchObject({ width: 1280, height: 720, frameRate: 30 });
+    expect(SHARE_QUALITIES.high).toMatchObject({ width: 1920, height: 1080, frameRate: 60 });
+    expect(shareQualityOf("high")).toBe("high");
+    expect(shareQualityOf("motion")).toBe("standard");
+    expect(shareQualityOf(null)).toBe("standard");
   });
 
   it("noise reduction turns noise suppression and level on or off, echo cancellation stays; the meter is the root of the RMS", () => {
@@ -71,7 +82,7 @@ describe("call controls", () => {
   });
 
   it("a listen-only voice channel opens no microphone and can't be unmuted", async () => {
-    const { calls, rig, host } = setup({ voiceRoom: true, isGroup: true, listenOnly: true }, { noiseReduction: false, shareMode: "text", shareAudio: false });
+    const { calls, rig, host } = setup({ voiceRoom: true, isGroup: true, listenOnly: true }, { noiseReduction: false, shareQuality: "standard", shareAudio: false });
     await calls.startCall("c1", false);
     expect(rig.last?.prepareOptions).toEqual({ noiseReduction: false, microphone: false });
     expect(host.state.get().call).toMatchObject({ listenOnly: true, micOn: false });
@@ -79,16 +90,105 @@ describe("call controls", () => {
     expect(rig.last?.mic).toBe(false);
   });
 
-  it("shares with the chosen mode and sound, and says when someone else stops sharing", async () => {
+  it("shares with the chosen quality and sound, changes it during the share, and says when someone else stops", async () => {
     const { calls, rig, host } = setup();
     await calls.startCall("c1", false);
-    await calls.toggleScreenShare({ mode: "motion", audio: true });
-    expect(rig.last?.shareOptions).toEqual({ mode: "motion", audio: true });
-    expect(host.state.get().call).toMatchObject({ shareMode: "motion", shareAudio: true });
+    await calls.toggleScreenShare({ quality: "high", audio: true });
+    expect(rig.last?.shareOptions).toEqual({ quality: "high", audio: true });
+    expect(host.state.get().call).toMatchObject({ shareQuality: "high", shareAudio: true, screenSharing: true });
+    await calls.setShareQuality("standard");
+    expect(rig.last?.qualityChanges).toEqual(["standard"]);
+    expect(host.state.get().call.shareQuality).toBe("standard");
+    rig.last?.events.shareStats?.({ quality: "standard", captured: { width: 1280, height: 720, frameRate: 30 }, sent: { width: 1280, height: 720, fps: 29 }, level: 0, limitation: "none" });
+    expect(host.state.get().call.shareStats?.sent).toEqual({ width: 1280, height: 720, fps: 29 });
     await calls.toggleScreenShare();
-    expect(host.state.get().call).toMatchObject({ shareMode: null, shareAudio: false });
+    expect(host.state.get().call).toMatchObject({ shareQuality: null, shareAudio: false, shareStats: null });
     rig.last?.events.shareEnded?.("Bo");
     expect(host.state.get().call.notice).toBe("Bo stopped sharing their screen");
+  });
+});
+
+const share = (identity: string, sid: string, isLocal = false): CallShareView => ({
+  key: `${identity}#${sid}`,
+  identity,
+  userId: identity.split(".")[0],
+  name: identity,
+  isLocal,
+  withAudio: false,
+  ready: true,
+});
+
+describe("several screens shared at once (2026-10-24)", () => {
+  it("watches the first share, keeps it when another starts, and moves on when it ends", async () => {
+    const { calls, rig, host } = setup({ isGroup: true });
+    await calls.startCall("c1", false);
+    const media = rig.last!;
+    media.remoteShares = [share("ann.d1", "TR_a")];
+    media.events.changed();
+    expect(host.state.get().call).toMatchObject({ watching: "ann.d1#TR_a" });
+    expect(media.watched).toBe("ann.d1#TR_a");
+    // A second share doesn't take over.
+    media.remoteShares = [share("ann.d1", "TR_a"), share("bob.d2", "TR_b")];
+    media.events.changed();
+    expect(host.state.get().call.watching).toBe("ann.d1#TR_a");
+    expect(host.state.get().call.shares.map((s) => s.key)).toEqual(["ann.d1#TR_a", "bob.d2#TR_b"]);
+    // The viewer picks the other one: only this browser's view changes.
+    calls.watchShare("bob.d2#TR_b");
+    expect(media.watched).toBe("bob.d2#TR_b");
+    // It ends: back to the remaining one.
+    media.remoteShares = [share("ann.d1", "TR_a")];
+    media.events.changed();
+    expect(host.state.get().call.watching).toBe("ann.d1#TR_a");
+    // All end: back to the people.
+    media.remoteShares = [];
+    media.events.changed();
+    expect(host.state.get().call).toMatchObject({ watching: null, shares: [] });
+    expect(media.watched).toBeNull();
+  });
+
+  it("keeps the people on screen after the viewer goes back to them, until they pick a share", async () => {
+    const { calls, rig, host } = setup({ isGroup: true });
+    await calls.startCall("c1", false);
+    const media = rig.last!;
+    media.remoteShares = [share("ann.d1", "TR_a")];
+    media.events.changed();
+    calls.watchShare(null);
+    expect(host.state.get().call).toMatchObject({ watching: null, watchDismissed: true });
+    media.remoteShares = [share("ann.d1", "TR_a"), share("bob.d2", "TR_b")];
+    media.events.changed();
+    expect(host.state.get().call.watching).toBeNull();
+    calls.watchShare("bob.d2#TR_b");
+    expect(host.state.get().call).toMatchObject({ watching: "bob.d2#TR_b", watchDismissed: false });
+  });
+
+  it("follows a presenter who shares again (a republish or rejoin gives a new track)", async () => {
+    const { rig, host, calls } = setup({ isGroup: true });
+    await calls.startCall("c1", false);
+    const media = rig.last!;
+    media.remoteShares = [share("ann.d1", "TR_a"), share("bob.d2", "TR_b")];
+    media.events.changed();
+    calls.watchShare("bob.d2#TR_b");
+    media.remoteShares = [share("ann.d1", "TR_a"), share("bob.d2", "TR_b2")];
+    media.events.changed();
+    expect(host.state.get().call.watching).toBe("bob.d2#TR_b2");
+  });
+
+  it("refuses to start a share past the cap, and never watches your own", async () => {
+    const { calls, rig, host } = setup({ isGroup: true }, undefined, 2);
+    await calls.startCall("c1", false);
+    const media = rig.last!;
+    media.remoteShares = [share("ann.d1", "TR_a"), share("bob.d2", "TR_b")];
+    media.events.changed();
+    await calls.toggleScreenShare({ quality: "standard", audio: false });
+    expect(media.screen).toBe(false);
+    expect(host.state.get().call.notice).toMatch(/Up to 2 screens/);
+    media.remoteShares = [share("ann.d1", "TR_a")];
+    media.events.changed();
+    await calls.toggleScreenShare({ quality: "standard", audio: false });
+    expect(media.screen).toBe(true);
+    expect(host.state.get().call.shares.some((s) => s.isLocal)).toBe(true);
+    calls.watchShare("me.dev#TR_local");
+    expect(host.state.get().call.watching).toBe("ann.d1#TR_a");
   });
 });
 
@@ -98,5 +198,28 @@ describe("a shared screen's shape (screen-share crop fix, 2026-10-22)", () => {
     expect(frameShape(1920, 1080)).toBe("landscape");
     expect(frameShape(1000, 1000)).toBe("landscape");
     expect(frameShape(0, 0)).toBeNull();
+  });
+});
+
+describe("one device per person in a call (API 0.31)", () => {
+  it("leaves when the server says this person joined on another device, without ending the call for anyone", async () => {
+    const { calls, host } = setup();
+    await calls.startCall("c1", false);
+    posted.length = 0;
+    await calls.onCallEvent("ended", { ...call("k1"), state: "ACTIVE", endReason: "joined_elsewhere" } as never, {});
+    expect(host.state.get().call).toMatchObject({ phase: "ended", endReason: "joined_elsewhere" });
+    expect(posted.filter((p) => /\/(end|leave)$/.test(p))).toEqual([]);
+  });
+
+  it("when the room drops it first (removed by the server), it neither rejoins nor hangs up, and still says why", async () => {
+    const { calls, rig, host } = setup();
+    await calls.startCall("c1", false);
+    posted.length = 0;
+    rig.last!.events.disconnected("PARTICIPANT_REMOVED");
+    expect(host.state.get().call).toMatchObject({ phase: "ended", endReason: "removed" });
+    expect(posted.filter((p) => /\/(end|leave)$/.test(p))).toEqual([]);
+    expect(rig.sessions).toHaveLength(1);
+    await calls.onCallEvent("ended", { ...call("k1"), state: "ACTIVE", endReason: "joined_elsewhere" } as never, {});
+    expect(host.state.get().call.endReason).toBe("joined_elsewhere");
   });
 });

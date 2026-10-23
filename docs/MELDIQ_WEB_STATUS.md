@@ -1,4 +1,45 @@
-# Meldiq Web status (2026-10-22)
+# Meldiq Web status (2026-10-24)
+
+## Calls and voice messages round (2026-10-24)
+
+Four fixes, web plus API 0.33.0 (server `internal-beta` b48436f, `docs/CALLING_AND_E2EE.md` › One device per person in a call).
+
+| # | Issue | Root cause | Fix |
+|---|---|---|---|
+| 1 | Screen shares looked ~720p30 | For a screen share livekit-client ignores `videoEncoding` (what we passed) and uses `screenShareEncoding`, default **1080p at 15 fps / 2.5 Mbit/s**; the capture used the old Text (1080p15) or Games (720p30) modes through livekit's `resolution` option (an `ideal` size only). Nothing read back what the browser delivered. | Two modes, picked before or during a share: **Standard 1280×720@30** (default, 2.5 Mbit/s, detail) and **High 1920×1080@60** (6 Mbit/s, motion). `getDisplayMedia` gets `ideal`+`max` size and rate (Safari: rate only, it captures low-res when a size is asked); the encoding goes in `screenShareEncoding`, VP8, no simulcast, `degradationPreference: balanced`. `src/call/shareSender.ts` reads the track settings and the sender's stats every 2 s: the pill shows what is sent (`Sharing · High · 1920×1080 · 58 fps`), a note says when the browser captures less or the share stepped down. Adaptive ladder (`src/call/shareQuality.ts`): down one rung after 3 limited samples (bandwidth/CPU), at most every 8 s; up only after 10 clean samples and 20 s, doubling to 160 s after an upgrade that fails within 30 s (no flapping). Microphones publish with priority `high`, screen video `medium`: video gives way first. Viewers: the share is drawn whole (`object-fit: contain`, full screen too) with the received size and fps. |
+| 2 | Voice messages played over each other | Every voice message rendered its own `<audio>`; nothing coordinated them. | One controller and one audio element for the page (`src/application/voicePlayback.ts`): starting B pauses A at once (any conversation, panel or route, and the composer's preview of a recording), a stale `play()` answer is ignored (request generations), a refused `play()` shows why, a player that unmounts stops its clip, signing out or the session ending resets it. Seek, resume from the same place, and speed (1×, 1.5×, 2×, new: there was no speed control before) work per clip. Call audio and notification sounds don't use it. |
+| 3 | Only one screen share could be watched | The stage took `participants.find(p => p.screenOn && !p.isLocal)` (the first sharer), `attachScreen` looked a share up by person, and every track was auto-subscribed. | Shares are keyed `<identity>#<track sid>` (`src/call/shares.ts`); the call state lists them all (`shares`) and the viewer's own choice (`watching`, `watchDismissed`). A tray above the call buttons lists every share (avatar, name, LIVE, Watch/Watching); the main viewer shows the watched one. A new share never takes over; when the watched one ends the same presenter's new share (republish, rejoin) or another is picked, else the people grid; going back to the people by choice keeps new shares in the tray. Subscriptions are manual now (`autoSubscribe: false`): microphones and cameras always, of the screen shares **only the watched one** (video and its sound, `VideoQuality.HIGH`), re-applied on join, publish, reconnect. Cap: `MAX_SCREEN_SHARES = 3` (CallOptions `maxScreenShares`, at least 2), checked before starting a share. |
+| 4 | "Newest login wins" | The owner clarified (2026-10-24) this is about **calls**, not account sign-in: the screenshot showed the same person twice in a call, joined from two devices. Accounts stay signed in on every device. | Server: when a device joins a call (its `/connected` confirmation or LiveKit's `participant_joined` webhook), the same account's other devices in it are told `call ended` with `endReason: "joined_elsewhere"`, removed from the LiveKit room and marked as left; the call goes on. Web: says "You joined this call on another device", and a server-side removal (`PARTICIPANT_REMOVED`) no longer makes the browser end the call on the server (in a 1:1 that would have hung up the call the other device just joined). Android ends its call on the event (generic "call ended" text). |
+
+**Automated tests (passed)**
+- Web unit: `test/share-quality.test.ts`, `test/voice-playback.test.ts`, `test/call-controls.test.ts` (several shares, cap,
+  republish, moved to another device), `test/call-rules.test.ts`; `npm test` all green, typecheck, lint, format, production build.
+- Server: `server/test/call_newest_device.test.ts` (DM, group, webhook first, the older device coming back); full suite
+  825 passed on the 0.33.0 sources (production 0.32.0 + this change).
+- Browser (Chromium, local LiveKit, native LiveKit peers as the Android app):
+  - `e2e/screen-shares.spec.ts`: two real encrypted screen tracks published at once by two native participants; tray,
+    no focus steal, only the watched share subscribed (checked from LiveKit's publications), switching, full screen,
+    a share ending, back to the people, a presenter leaving.
+  - `e2e/screen-share-quality.spec.ts`: this browser shares at High then switches to Standard mid-share; the native peer
+    decodes it. Observed with Chromium's fake screen source: **High: capture 1920×1080 but at most 30 fps (the fake
+    source's limit), sent 1920×1080 at ~19 fps, peer decoded 1920 wide, the UI showed the shortfall; Standard: sent
+    1280×720 at ~19 fps, peer decoded 1280 wide.** No bandwidth/CPU limitation reported on loopback.
+  - `e2e/voice-playback.spec.ts`: two voice messages recorded from the fake microphone; B pauses A, rapid clicks, speed,
+    pause/resume, leaving the conversation stops it.
+  - `e2e/call-other-device.spec.ts`: the browser answers a call, the same account joins from its phone; the browser
+    leaves with the message, stays signed in and in sync, the call goes on (the phone hears the other side).
+  - Existing `e2e/calls.spec.ts`, `e2e/screen-share.spec.ts`, `e2e/voice-room.spec.ts` on Chromium, Firefox, WebKit and
+    phone width (subscriptions are manual now): all pass. The first run failed the portrait phone-screen test by 2 px of
+    height (the stream tray had its own row); the tray now shares the pill row and the run passes.
+
+**Not tested**
+- **60 fps from a real screen**: headless Chromium's fake screen capture gives 30 fps at most, so 1080p60 end to end was
+  not observed; it needs a real Chrome/Edge on a real screen (and the owner's production account).
+- **A physical Android phone**: the Android side was played by LiveKit's native SDK and the server's reference client;
+  Android's reaction to `joined_elsewhere` was checked by reading its code (it ends the call on the event), not on a phone.
+- Two people starting a share at the same instant can exceed the cap by one (the cap is checked in each browser).
+- No production sign-in by agents: nothing was checked with real accounts on web.meldiq.app.
+
 
 ## Android parity round B1–B16 (2026-10-22, not deployed)
 
