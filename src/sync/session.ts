@@ -160,7 +160,12 @@ export async function pollLink(base: string, link: PendingLink): Promise<LinkPol
 
 /** "Chrome on macOS": how this browser appears in the account's device list. */
 export function browserDeviceName(ua: string = typeof navigator === "undefined" ? "" : navigator.userAgent): string {
+  return `Meldiq Web · ${browserLabel(ua)}`;
+}
+
+/** "Chrome on macOS": this browser and its system, as the person would name it (a passkey's name, for one). */
+export function browserLabel(ua: string = typeof navigator === "undefined" ? "" : navigator.userAgent): string {
   const browser = /Edg\//.test(ua) ? "Edge" : /Firefox\//.test(ua) ? "Firefox" : /Chrome\//.test(ua) ? "Chrome" : /Safari\//.test(ua) ? "Safari" : "Browser";
   const os = /Mac OS X|Macintosh/.test(ua) ? "macOS" : /Windows/.test(ua) ? "Windows" : /Android/.test(ua) ? "Android" : /iPhone|iPad/.test(ua) ? "iOS" : /Linux/.test(ua) ? "Linux" : "the web";
-  return `Meldiq Web · ${browser} on ${os}`;
+  return `${browser} on ${os}`;
 }

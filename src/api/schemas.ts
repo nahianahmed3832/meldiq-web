@@ -410,6 +410,11 @@ export const zServerInfo = z.object({
   features: z.array(z.string()).default([]),
   /** Federation with other servers (@name:domain addresses); null when this server doesn't federate. */
   federation: z.object({ domain: z.string() }).nullable().optional(),
+  /** Passkeys (API 0.30.0, server docs/PASSKEYS.md): the web origins that are relying parties of their own; null when off. */
+  passkeys: z
+    .object({ webOrigins: z.array(z.string()) })
+    .nullable()
+    .optional(),
 });
 export type ServerInfo = z.infer<typeof zServerInfo>;
 

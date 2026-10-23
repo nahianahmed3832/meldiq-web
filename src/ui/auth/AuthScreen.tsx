@@ -5,6 +5,7 @@ import { ApiClient } from "../../api/client";
 import { type ServerInfo, zServerInfo } from "../../api/schemas";
 import { AccountApi } from "../../auth/accountApi";
 import { enrollWithSeed } from "../../auth/deviceSetup";
+import { passkeyRpId } from "../../auth/passkeys";
 import { SetupCredentials, type SetupSessionEnd } from "../../auth/setupCredentials";
 import { RecoverCompleteForm, RecoverStartForm } from "./RecoverForms";
 import type { DeviceRecord } from "../../model/types";
@@ -125,6 +126,7 @@ export function AuthScreen(props: {
           canSignUp={accounts?.registration ?? false}
           canMove={(accounts?.legacyMigration ?? false) && (accounts?.registration ?? false)}
           canLinkWithPhone={!accounts || accounts.legacyLogin}
+          passkeyRpId={passkeyRpId(server)}
           onSignedIn={(g, password) => void signedIn(g, password)}
           onUnverified={(email, password) => setStep({ k: "verify", email, password })}
           onSignUp={() => setStep({ k: "signUp" })}

@@ -73,6 +73,9 @@ export default defineConfig({
         NEW_ACCOUNT_LIMIT_DAYS: "0",
         // Trusts the forwarded address from the local test proxy and test phones (each test is its own client address).
         TRUST_PROXY: "loopback",
+        // Passkeys (e2e/passkeys.spec.ts): the pages at localhost are a relying party of their own, as web.meldiq.app is.
+        PASSKEY_RP_ID: "msg.example.test",
+        PASSKEY_WEB_ORIGINS: `http://localhost:${WEB_PORT}`,
         ...livekitEnv,
       },
     },

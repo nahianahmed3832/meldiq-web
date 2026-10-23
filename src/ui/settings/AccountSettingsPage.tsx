@@ -10,6 +10,7 @@ import { deleteAccount } from "../../sync/account";
 import { relative } from "../format";
 import { useAction, useLoad } from "../workspace/useLoad";
 import { KeyBackupCard } from "./KeyBackupCard";
+import { PasskeysCard } from "./PasskeysCard";
 import { RecoveryCodesCard } from "./RecoveryCodesCard";
 
 /**
@@ -40,6 +41,7 @@ export function AccountSettingsPage({ onSignedOut }: { onSignedOut: () => void }
       <AccountInformation email={account.email} />
       <h2 className="settings-group">How you sign in</h2>
       <ChangePassword email={account.email} />
+      <PasskeysCard />
       <KeyBackupCard />
       <RecoveryCodesCard />
       <Sessions accounts={new AccountApi(engine.api)} />

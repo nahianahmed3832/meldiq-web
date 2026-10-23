@@ -60,6 +60,8 @@ export const STRINGS = {
   signin_sub: ["Use the email and password of your Meldiq account.", "使用你 Meldiq 账户的邮箱和密码。", "আপনার Meldiq অ্যাকাউন্টের ইমেইল ও পাসওয়ার্ড দিন।"],
   signin_button: ["Sign in", "登录", "সাইন ইন"],
   signin_busy: ["Signing in…", "正在登录…", "সাইন ইন হচ্ছে…"],
+  signin_passkey: ["Sign in with a passkey", "使用通行密钥登录", "পাসকি দিয়ে সাইন ইন করুন"],
+  signin_passkey_busy: ["Waiting for your passkey…", "正在等待通行密钥…", "আপনার পাসকির অপেক্ষায়…"],
   signin_trouble: ["Having trouble signing in?", "登录遇到问题？", "সাইন ইন করতে সমস্যা হচ্ছে?"],
   signin_create: ["Create an account", "创建账户", "অ্যাকাউন্ট খুলুন"],
   signin_enter_password: ["Enter your password.", "请输入密码。", "আপনার পাসওয়ার্ড দিন।"],
