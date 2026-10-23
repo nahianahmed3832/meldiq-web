@@ -18,20 +18,21 @@ import {
   UPLOAD_QUALITIES,
   usePrefs,
 } from "../../application/prefs";
-import { QUALITY_LABEL } from "../../sync/photoQuality";
 import { bytes } from "../format";
 import { Toggle } from "../components/Toggle";
 import { IntroPages } from "../auth/IntroPages";
 import { BackgroundNotifications } from "./BackgroundNotifications";
-import { useT } from "../../i18n";
+import { type StringKey, useT } from "../../i18n";
 import { LanguagePicker } from "../components/LanguagePicker";
 
-const THEME_LABELS: Record<Prefs["theme"], string> = { system: "System", light: "Light", dark: "Dark" };
-const PALETTE_LABELS: Record<Palette, string> = { charcoal: "Charcoal", indigo: "Indigo", plum: "Plum", amber: "Amber" };
-const TEXT_SIZE_LABELS: Record<TextSize, string> = { small: "Small", default: "Default", large: "Large" };
+const THEME_KEY = { system: "ap_system", light: "ap_light", dark: "ap_dark" } as const satisfies Record<Prefs["theme"], StringKey>;
+const PALETTE_KEY = { charcoal: "ap_charcoal", indigo: "ap_indigo", plum: "ap_plum", amber: "ap_amber" } as const satisfies Record<Palette, StringKey>;
+const SIZE_KEY = { small: "ap_small", default: "ap_default", large: "ap_large" } as const satisfies Record<TextSize, StringKey>;
+const QUALITY_KEY = { standard: "ap_standard", hd: "ap_hd", original: "ap_original" } as const satisfies Record<"standard" | "hd" | "original", StringKey>;
 
 export function NotificationsPage() {
   const prefs = usePrefs();
+  const t = useT();
   const supported = typeof Notification !== "undefined";
   const [permission, setPermission] = useState<NotificationPermission | "unsupported">(supported ? Notification.permission : "unsupported");
   const enable = async (on: boolean) => {
@@ -44,66 +45,60 @@ export function NotificationsPage() {
   };
   return (
     <>
-      <h1>Notifications</h1>
+      <h1>{t("settings_notifications")}</h1>
       <div className="card">
         <div className="setting">
           <div className="lines">
-            <strong>Desktop notifications</strong>
-            <small>
-              {permission === "unsupported"
-                ? "This browser doesn't support notifications."
-                : permission === "denied"
-                  ? "Blocked in your browser's site settings. Allow notifications for this site there, then turn this on."
-                  : "A notification when a message or call arrives while you're looking elsewhere."}
-            </small>
+            <strong>{t("nt_desktop")}</strong>
+            <small>{permission === "unsupported" ? t("nt_desktop_unsupported") : permission === "denied" ? t("nt_desktop_blocked") : t("nt_desktop_sub")}</small>
           </div>
-          <Toggle label="Desktop notifications" checked={prefs.notifications && permission === "granted"} onChange={(v) => void enable(v)} />
+          <Toggle label={t("nt_desktop")} checked={prefs.notifications && permission === "granted"} onChange={(v) => void enable(v)} />
         </div>
         <BackgroundNotifications permission={permission} />
         <div className="setting">
           <div className="lines">
-            <strong>Show message text</strong>
-            <small>Off: notifications only say "New message".</small>
+            <strong>{t("nt_text")}</strong>
+            <small>{t("nt_text_sub")}</small>
           </div>
-          <Toggle label="Show message text in notifications" checked={prefs.notificationText} onChange={(v) => setPrefs({ notificationText: v })} />
+          <Toggle label={t("nt_text")} checked={prefs.notificationText} onChange={(v) => setPrefs({ notificationText: v })} />
         </div>
         <div className="setting">
           <div className="lines">
-            <strong>Group notifications</strong>
-            <small>Off: groups and channels stay quiet; mentions of you still notify.</small>
+            <strong>{t("nt_groups")}</strong>
+            <small>{t("nt_groups_sub")}</small>
           </div>
-          <Toggle label="Group notifications" checked={prefs.groupNotifications} onChange={(v) => setPrefs({ groupNotifications: v })} />
+          <Toggle label={t("nt_groups")} checked={prefs.groupNotifications} onChange={(v) => setPrefs({ groupNotifications: v })} />
         </div>
         <div className="setting">
           <div className="lines">
-            <strong>Message sound</strong>
-            <small>Notifications play your system's notification sound. Off: they arrive silently.</small>
+            <strong>{t("nt_sound")}</strong>
+            <small>{t("nt_sound_sub")}</small>
           </div>
-          <Toggle label="Message sound" checked={prefs.messageSound} onChange={(v) => setPrefs({ messageSound: v })} />
+          <Toggle label={t("nt_sound")} checked={prefs.messageSound} onChange={(v) => setPrefs({ messageSound: v })} />
         </div>
         <div className="setting">
           <div className="lines">
-            <strong>Incoming call ringtone</strong>
-            <small>Meldiq's own ringtone while a call rings in this tab. Off: the call card and notification only.</small>
+            <strong>{t("nt_ring")}</strong>
+            <small>{t("nt_ring_sub")}</small>
           </div>
-          <Toggle label="Incoming call ringtone" checked={prefs.callRingtone} onChange={(v) => setPrefs({ callRingtone: v })} />
+          <Toggle label={t("nt_ring")} checked={prefs.callRingtone} onChange={(v) => setPrefs({ callRingtone: v })} />
         </div>
       </div>
-      <h1 style={{ fontSize: 17, marginTop: 8 }}>Conversations</h1>
+      <h1 style={{ fontSize: 17, marginTop: 8 }}>{t("nt_conversations")}</h1>
       <div className="card">
         <div className="setting">
           <div className="lines">
-            <strong>Send read receipts</strong>
-            <small>In direct messages and groups of up to 20, people see when you've read their messages. Reading here also clears unread on your phone.</small>
+            <strong>{t("nt_receipts")}</strong>
+            <small>{t("nt_receipts_sub")}</small>
           </div>
-          <Toggle label="Send read receipts" checked={prefs.readReceipts} onChange={(v) => setPrefs({ readReceipts: v })} />
+          <Toggle label={t("nt_receipts")} checked={prefs.readReceipts} onChange={(v) => setPrefs({ readReceipts: v })} />
         </div>
         <div className="setting">
           <div className="lines">
-            <strong>Typing indicators</strong>
-            <small>Let others see when you're typing.</small>
+            <strong>{t("nt_typing")}</strong>
+            <small>{t("nt_typing_sub")}</small>
           </div>
-          <Toggle label="Typing indicators" checked={prefs.typing} onChange={(v) => setPrefs({ typing: v })} />
+          <Toggle label={t("nt_typing")} checked={prefs.typing} onChange={(v) => setPrefs({ typing: v })} />
         </div>
       </div>
     </>
@@ -126,23 +121,23 @@ export function AppearancePage() {
         </div>
         <div className="setting">
           <div className="lines">
-            <strong>Theme</strong>
-            <small>Light, dark, or whatever this computer uses.</small>
+            <strong>{t("ap_theme")}</strong>
+            <small>{t("ap_theme_sub")}</small>
           </div>
-          <div className="segmented" role="group" aria-label="Theme">
-            {THEMES.map((t) => (
-              <button key={t} aria-pressed={prefs.theme === t} onClick={() => setPrefs({ theme: t })}>
-                {THEME_LABELS[t]}
+          <div className="segmented" role="group" aria-label={t("ap_theme")}>
+            {THEMES.map((th) => (
+              <button key={th} aria-pressed={prefs.theme === th} onClick={() => setPrefs({ theme: th })}>
+                {t(THEME_KEY[th])}
               </button>
             ))}
           </div>
         </div>
         <div className="setting">
           <div className="lines">
-            <strong>Colour</strong>
-            <small>The frame, sidebar and highlights. Messages stay on a calm, neutral background.</small>
+            <strong>{t("ap_colour")}</strong>
+            <small>{t("ap_colour_sub")}</small>
           </div>
-          <div className="palette-picker" role="radiogroup" aria-label="Colour">
+          <div className="palette-picker" role="radiogroup" aria-label={t("ap_colour")}>
             {PALETTES.map((p) => (
               <button key={p} role="radio" aria-checked={prefs.palette === p} className="palette-swatch" data-swatch={p} onClick={() => setPrefs({ palette: p, paletteChosen: true })}>
                 <span className="swatch" aria-hidden="true">
@@ -150,142 +145,142 @@ export function AppearancePage() {
                   <i />
                   <i />
                 </span>
-                {PALETTE_LABELS[p]}
+                {t(PALETTE_KEY[p])}
               </button>
             ))}
           </div>
         </div>
         <div className="setting">
           <div className="lines">
-            <strong>Text size</strong>
-            <small>Messages and the message box. Everything else keeps its size.</small>
+            <strong>{t("ap_text_size")}</strong>
+            <small>{t("ap_text_size_sub")}</small>
           </div>
-          <div className="segmented" role="group" aria-label="Text size">
-            {TEXT_SIZES.map((t) => (
-              <button key={t} aria-pressed={prefs.textSize === t} onClick={() => setPrefs({ textSize: t })}>
-                {TEXT_SIZE_LABELS[t]}
+          <div className="segmented" role="group" aria-label={t("ap_text_size")}>
+            {TEXT_SIZES.map((ts) => (
+              <button key={ts} aria-pressed={prefs.textSize === ts} onClick={() => setPrefs({ textSize: ts })}>
+                {t(SIZE_KEY[ts])}
               </button>
             ))}
           </div>
         </div>
         <div className="setting">
           <div className="lines">
-            <strong>Message layout</strong>
-            <small>A stream with names, or bubbles with your messages on the right.</small>
+            <strong>{t("ap_layout")}</strong>
+            <small>{t("ap_layout_sub")}</small>
           </div>
-          <div className="segmented" role="group" aria-label="Message layout">
+          <div className="segmented" role="group" aria-label={t("ap_layout")}>
             {MESSAGE_LAYOUTS.map((l) => (
               <button key={l} aria-pressed={prefs.messageLayout === l} onClick={() => setPrefs({ messageLayout: l })}>
-                {l === "stream" ? "Stream" : "Bubbles"}
+                {l === "stream" ? t("ap_stream") : t("ap_bubbles")}
               </button>
             ))}
           </div>
         </div>
         <div className="setting">
           <div className="lines">
-            <strong>Time format</strong>
-            <small>Message times and clocks: as your language writes them, or always 12- or 24-hour.</small>
+            <strong>{t("ap_time")}</strong>
+            <small>{t("ap_time_sub")}</small>
           </div>
-          <div className="segmented" role="group" aria-label="Time format">
+          <div className="segmented" role="group" aria-label={t("ap_time")}>
             {TIME_FORMATS.map((f) => (
               <button key={f} aria-pressed={prefs.timeFormat === f} onClick={() => setPrefs({ timeFormat: f })}>
-                {f === "auto" ? "Automatic" : f === "12" ? "12-hour" : "24-hour"}
+                {f === "auto" ? t("ap_auto") : f === "12" ? t("ap_12h") : t("ap_24h")}
               </button>
             ))}
           </div>
         </div>
         <div className="setting">
           <div className="lines">
-            <strong>Message previews</strong>
-            <small>The last message under each conversation in the list: always, only while it's unread, or never.</small>
+            <strong>{t("ap_previews")}</strong>
+            <small>{t("ap_previews_sub")}</small>
           </div>
-          <div className="segmented" role="group" aria-label="Message previews">
+          <div className="segmented" role="group" aria-label={t("ap_previews")}>
             {LIST_PREVIEWS.map((v) => (
               <button key={v} aria-pressed={prefs.listPreview === v} onClick={() => setPrefs({ listPreview: v })}>
-                {v === "all" ? "All" : v === "unread" ? "Unread only" : "None"}
+                {v === "all" ? t("ap_all") : v === "unread" ? t("ap_unread_only") : t("ap_none")}
               </button>
             ))}
           </div>
         </div>
         <div className="setting">
           <div className="lines">
-            <strong>Animated emoji</strong>
-            <small>Animated emoji play in conversations. Off: they're shown still (they're still sent animated).</small>
+            <strong>{t("ap_animoji")}</strong>
+            <small>{t("ap_animoji_sub")}</small>
           </div>
-          <Toggle label="Animated emoji" checked={prefs.animatedEmoji} onChange={(v) => setPrefs({ animatedEmoji: v })} />
+          <Toggle label={t("ap_animoji")} checked={prefs.animatedEmoji} onChange={(v) => setPrefs({ animatedEmoji: v })} />
         </div>
         <div className="setting">
           <div className="lines">
-            <strong>Download photos automatically</strong>
-            <small>Received photos are decrypted and shown as they arrive. Off: each waits for a click. Videos and files always wait.</small>
+            <strong>{t("ap_autophoto")}</strong>
+            <small>{t("ap_autophoto_sub")}</small>
           </div>
-          <Toggle label="Download photos automatically" checked={prefs.autoLoadPhotos} onChange={(v) => setPrefs({ autoLoadPhotos: v })} />
+          <Toggle label={t("ap_autophoto")} checked={prefs.autoLoadPhotos} onChange={(v) => setPrefs({ autoLoadPhotos: v })} />
         </div>
         <div className="setting">
           <div className="lines">
-            <strong>Photo upload quality</strong>
-            <small>Where sending photos starts; each send can still change it. Standard and HD also remove camera details such as location.</small>
+            <strong>{t("ap_quality")}</strong>
+            <small>{t("ap_quality_sub")}</small>
           </div>
-          <div className="segmented" role="group" aria-label="Photo upload quality">
+          <div className="segmented" role="group" aria-label={t("ap_quality")}>
             {UPLOAD_QUALITIES.map((q) => (
               <button key={q} aria-pressed={prefs.uploadQuality === q} onClick={() => setPrefs({ uploadQuality: q })}>
-                {QUALITY_LABEL[q]}
+                {t(QUALITY_KEY[q])}
               </button>
             ))}
           </div>
         </div>
         <div className="setting">
           <div className="lines">
-            <strong>Swipe to reply</strong>
-            <small>On a touch screen, swipe a message to the left to reply to it.</small>
+            <strong>{t("ap_swipe")}</strong>
+            <small>{t("ap_swipe_sub")}</small>
           </div>
-          <Toggle label="Swipe to reply" checked={prefs.swipeToReply} onChange={(v) => setPrefs({ swipeToReply: v })} />
+          <Toggle label={t("ap_swipe")} checked={prefs.swipeToReply} onChange={(v) => setPrefs({ swipeToReply: v })} />
         </div>
         <div className="setting">
           <div className="lines">
-            <strong>Double-tap to react</strong>
-            <small>Double-tap a message (with a mouse, double-click beside its text) to react with this emoji; again takes it back.</small>
+            <strong>{t("ap_doubletap")}</strong>
+            <small>{t("ap_doubletap_sub")}</small>
           </div>
           <div className="row" style={{ gap: 8 }}>
             {prefs.doubleTapReact && (
-              <div className="segmented" role="group" aria-label="Double-tap reaction">
+              <div className="segmented" role="group" aria-label={t("ap_doubletap_emoji")}>
                 {QUICK_REACTIONS.map((e) => (
-                  <button key={e} aria-pressed={prefs.quickReaction === e} onClick={() => setPrefs({ quickReaction: e })} aria-label={`React with ${e}`}>
+                  <button key={e} aria-pressed={prefs.quickReaction === e} onClick={() => setPrefs({ quickReaction: e })} aria-label={t("ap_react_with", { emoji: e })}>
                     {e}
                   </button>
                 ))}
               </div>
             )}
-            <Toggle label="Double-tap to react" checked={prefs.doubleTapReact} onChange={(v) => setPrefs({ doubleTapReact: v })} />
+            <Toggle label={t("ap_doubletap")} checked={prefs.doubleTapReact} onChange={(v) => setPrefs({ doubleTapReact: v })} />
           </div>
         </div>
         <div className="setting">
           <div className="lines">
-            <strong>Ask before opening links</strong>
-            <small>Every link shows where it goes before it opens. Off: only links that look misleading ask.</small>
+            <strong>{t("ap_links")}</strong>
+            <small>{t("ap_links_sub")}</small>
           </div>
-          <Toggle label="Ask before opening links" checked={prefs.askBeforeLinks} onChange={(v) => setPrefs({ askBeforeLinks: v })} />
+          <Toggle label={t("ap_links")} checked={prefs.askBeforeLinks} onChange={(v) => setPrefs({ askBeforeLinks: v })} />
         </div>
         <div className="setting">
           <div className="lines">
-            <strong>Music and video cards</strong>
-            <small>Show YouTube, Spotify and similar links as cards that open the provider's site. Nothing is fetched.</small>
+            <strong>{t("ap_media")}</strong>
+            <small>{t("ap_media_sub")}</small>
           </div>
-          <Toggle label="Music and video cards" checked={prefs.mediaCards} onChange={(v) => setPrefs({ mediaCards: v })} />
+          <Toggle label={t("ap_media")} checked={prefs.mediaCards} onChange={(v) => setPrefs({ mediaCards: v })} />
         </div>
         <div className="setting">
           <div className="lines">
-            <strong>Play YouTube in Meldiq</strong>
-            <small>YouTube videos play here in YouTube's privacy-enhanced player, loaded only when you press Play. Off: they open on YouTube.</small>
+            <strong>{t("ap_youtube")}</strong>
+            <small>{t("ap_youtube_sub")}</small>
           </div>
-          <Toggle label="Play YouTube in Meldiq" checked={prefs.youtubeInApp} onChange={(v) => setPrefs({ youtubeInApp: v })} />
+          <Toggle label={t("ap_youtube")} checked={prefs.youtubeInApp} onChange={(v) => setPrefs({ youtubeInApp: v })} />
         </div>
         <div className="setting">
           <div className="lines">
-            <strong>Enter sends the message</strong>
-            <small>Off: Enter adds a line and Ctrl+Enter (⌘+Enter) sends.</small>
+            <strong>{t("ap_enter")}</strong>
+            <small>{t("ap_enter_sub")}</small>
           </div>
-          <Toggle label="Enter sends" checked={prefs.enterToSend} onChange={(v) => setPrefs({ enterToSend: v })} />
+          <Toggle label={t("ap_enter")} checked={prefs.enterToSend} onChange={(v) => setPrefs({ enterToSend: v })} />
         </div>
       </div>
     </>

@@ -27,9 +27,10 @@ import type { ConversationLocal } from "../../model/types";
 import { levelOf, newSectionId, type NotifyLevel, placeOf, workspaceOf } from "../../sync/navPrefs";
 import { GroupAvatar, UserAvatar } from "../components/OrgAvatar";
 import { Dialog, Menu, type MenuEntry, useMenu } from "../components/Overlay";
-import { conversationTitle, dmPeer, shortWhen } from "../format";
+import { conversationTitle, dmPeer, members, shortWhen } from "../format";
 import { isMuted, isPeople } from "../selectors";
 import { usePrefs } from "../../application/prefs";
+import { useT } from "../../i18n";
 
 const LEVELS: { level: NotifyLevel; label: string }[] = [
   { level: "all", label: "All new messages" },
@@ -77,6 +78,7 @@ export const ConversationRow = memo(function ConversationRow({ id, twoLine, hide
   );
   // Settings › Appearance › Message previews (android chat-list previews): all, unread ones only, or none.
   const { listPreview } = usePrefs();
+  const t = useT();
   if (!data) return null;
   const { c, local, title, online, presence, peerId, peerColor, peerPhoto, typing, muted } = data;
   const unread = local?.unread ?? 0;
@@ -125,14 +127,14 @@ export const ConversationRow = memo(function ConversationRow({ id, twoLine, hide
         <span className="row">
           <small className="grow ellipsis">
             {typing
-              ? "typing…"
+              ? t("row_typing")
               : !showPreview
                 ? ""
                 : local?.lastPreview
                   ? `${local.lastSenderName && c.type !== "DM" ? `${local.lastSenderName}: ` : local.lastSenderName === "You" ? "You: " : ""}${local.lastPreview}`
                   : c.type === "GROUP"
-                    ? `${c.memberCount} members`
-                    : "No messages yet"}
+                    ? members(c.memberCount)
+                    : t("row_no_messages")}
           </small>
           {muted && <BellOff size={12} className="faint" aria-hidden="true" />}
           {count}
@@ -143,7 +145,7 @@ export const ConversationRow = memo(function ConversationRow({ id, twoLine, hide
     <a className={`side-item${unread ? " unread" : ""}${muted ? " muted" : ""}`} href={href} aria-current={current ? "page" : undefined} aria-label={label} onContextMenu={openMenu}>
       <span className="glyph">{glyph}</span>
       <span className="grow ellipsis">{title}</span>
-      {local?.draft && !current ? <span className="draft">Draft</span> : null}
+      {local?.draft && !current ? <span className="draft">{t("row_draft")}</span> : null}
       {c.type === "GROUP" && <UsersRound size={13} className="faint" aria-hidden="true" />}
       {muted && <BellOff size={12} className="faint" aria-hidden="true" />}
       {count}

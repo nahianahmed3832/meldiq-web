@@ -8,6 +8,7 @@ import { colorIndexOf } from "../components/Avatar";
 import { GroupAvatar, UserAvatar } from "../components/OrgAvatar";
 import { Dialog } from "../components/Overlay";
 import { conversationTitle, dmPeer } from "../format";
+import { useT } from "../../i18n";
 
 /**
  * Forward To (android, 2026-10-23): up to five conversations at once, a preview of what goes, an optional message sent
@@ -15,6 +16,7 @@ import { conversationTitle, dmPeer } from "../format";
  */
 export function ForwardDialog({ message, onClose }: { message: StoredMessage; onClose: () => void }) {
   const engine = useEngine();
+  const t = useT();
   const [q, setQ] = useState("");
   const [to, setTo] = useState<string[]>([]);
   const [note, setNote] = useState("");
@@ -43,8 +45,8 @@ export function ForwardDialog({ message, onClose }: { message: StoredMessage; on
   const full = to.length >= MAX_FORWARD_TARGETS;
   const toggle = (id: string) => setTo((list) => (list.includes(id) ? list.filter((x) => x !== id) : list.length < MAX_FORWARD_TARGETS ? [...list, id] : list));
   const name = (id: string) => {
-    const t = targets.find((x) => x.id === id);
-    return t ? `${t.type === "CHANNEL" ? "#" : ""}${t.title}` : "the conversation";
+    const target = targets.find((x) => x.id === id);
+    return target ? `${target.type === "CHANNEL" ? "#" : ""}${target.title}` : t("fwd_the_conversation");
   };
   const send = async () => {
     if (!to.length) return;
@@ -55,29 +57,29 @@ export function ForwardDialog({ message, onClose }: { message: StoredMessage; on
       const missed = to.length - done.length;
       engine.notice(
         missed ? "error" : "info",
-        done.length === 1 ? `Forwarded to ${name(done[0].conversationId)}.` : `Forwarded to ${done.length} conversations${missed ? `; ${missed} couldn't be reached` : ""}.`,
+        done.length === 1 ? t("fwd_done_one", { name: name(done[0].conversationId) }) : missed ? t("fwd_done_some", { n: done.length, missed }) : t("fwd_done_n", { n: done.length }),
       );
       onClose();
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Couldn't forward.");
+      setError(e instanceof Error ? e.message : t("fwd_failed"));
     } finally {
       setBusy(false);
     }
   };
   const copyLink = () => {
     void navigator.clipboard?.writeText(messageLink(message.conversationId, message.id)).catch(() => undefined);
-    engine.notice("info", "Message link copied. It opens only for people in this conversation.");
+    engine.notice("info", t("msg_link_copied"));
   };
   const files = message.attachments.length;
   return (
-    <Dialog title="Forward to…" onClose={onClose}>
+    <Dialog title={t("fwd_title")} onClose={onClose}>
       <div className="dialog-body">
-        <div className="forward-preview" aria-label="What's forwarded">
+        <div className="forward-preview" aria-label={t("fwd_what")}>
           <Forward size={14} aria-hidden="true" />
-          <span className="grow clamp-2">{message.text || (files ? "" : "Message")}</span>
+          <span className="grow clamp-2">{message.text || (files ? "" : t("fwd_message"))}</span>
           {files > 0 && (
             <span className="faint row" style={{ gap: 4 }}>
-              <Paperclip size={13} aria-hidden="true" /> {files === 1 ? "1 file" : `${files} files`}
+              <Paperclip size={13} aria-hidden="true" /> {t(files === 1 ? "fwd_file" : "fwd_files", { n: files })}
             </span>
           )}
         </div>
@@ -87,13 +89,13 @@ export function ForwardDialog({ message, onClose }: { message: StoredMessage; on
             data-autofocus
             value={q}
             onChange={(e) => setQ(e.target.value)}
-            placeholder="Find a conversation"
-            aria-label="Find a conversation"
+            placeholder={t("fwd_find")}
+            aria-label={t("fwd_find")}
             style={{ border: 0, outline: "none", background: "transparent", flex: 1, padding: "10px 0" }}
           />
         </div>
-        <small className="faint">{full ? `You can forward to ${MAX_FORWARD_TARGETS} conversations at once.` : `Choose up to ${MAX_FORWARD_TARGETS}.`}</small>
-        <div role="listbox" aria-multiselectable="true" aria-label="Conversations" style={{ display: "grid", gap: 2, maxHeight: 260, overflow: "auto" }}>
+        <small className="faint">{full ? t("fwd_full", { n: MAX_FORWARD_TARGETS }) : t("fwd_choose", { n: MAX_FORWARD_TARGETS })}</small>
+        <div role="listbox" aria-multiselectable="true" aria-label={t("fwd_conversations")} style={{ display: "grid", gap: 2, maxHeight: 260, overflow: "auto" }}>
           {shown.map((t) => {
             const on = to.includes(t.id);
             return (
@@ -115,9 +117,9 @@ export function ForwardDialog({ message, onClose }: { message: StoredMessage; on
             );
           })}
         </div>
-        <textarea className="input" rows={2} maxLength={MAX_FORWARD_NOTE} value={note} onChange={(e) => setNote(e.target.value)} placeholder="Add a message (optional)" aria-label="Add a message" />
+        <textarea className="input" rows={2} maxLength={MAX_FORWARD_NOTE} value={note} onChange={(e) => setNote(e.target.value)} placeholder={t("fwd_note_placeholder")} aria-label={t("fwd_note")} />
         <p className="faint" style={{ margin: 0, fontSize: 12.5 }}>
-          Sent as a new message marked "Forwarded". The original sender isn't named; files are encrypted again for each conversation.
+          {t("fwd_explain")}
         </p>
         {error && (
           <div className="banner danger" role="alert">
@@ -127,15 +129,15 @@ export function ForwardDialog({ message, onClose }: { message: StoredMessage; on
         <div className="row" style={{ gap: 8 }}>
           {canLink(message.deleted, message.status) && (
             <button className="btn btn-ghost" onClick={copyLink}>
-              <Link2 size={16} /> Copy link
+              <Link2 size={16} /> {t("fwd_copy_link")}
             </button>
           )}
           <span className="grow" />
           <button className="btn btn-secondary" onClick={onClose}>
-            Cancel
+            {t("common_cancel")}
           </button>
           <button className="btn btn-primary" disabled={!to.length || busy} onClick={() => void send()}>
-            <Forward size={16} /> {busy ? "Forwarding…" : to.length > 1 ? `Forward to ${to.length}` : "Forward"}
+            <Forward size={16} /> {busy ? t("fwd_busy") : to.length > 1 ? t("fwd_to_n", { n: to.length }) : t("msg_forward")}
           </button>
         </div>
       </div>

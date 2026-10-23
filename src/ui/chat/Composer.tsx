@@ -265,7 +265,7 @@ export function Composer(props: ComposerProps) {
         {props.replyTo && (
           <div className="composer-context">
             <span className="grow ellipsis">
-              Replying to <b>{props.replyName}</b>: {props.replyTo.text || "attachment"}
+              {t("composer_replying")} <b>{props.replyName}</b>: {props.replyTo.text || t("composer_attachment")}
             </span>
             <button className="icon-btn" style={{ width: 26, height: 26 }} onClick={props.onCancelReply} aria-label="Cancel reply">
               <X size={14} />
@@ -312,14 +312,7 @@ export function Composer(props: ComposerProps) {
             </label>
             {/* B14 (android one-row composer): actions, the text, emoji, and the microphone that becomes Send. */}
             <div className="composer-row">
-              <button
-                className="icon-btn composer-plus"
-                onClick={(e) => attach.open(e.currentTarget)}
-                aria-label="Add files, a poll and more"
-                aria-haspopup="menu"
-                title="Add files, a poll and more"
-                disabled={!!busy}
-              >
+              <button className="icon-btn composer-plus" onClick={(e) => attach.open(e.currentTarget)} aria-label={t("composer_add")} aria-haspopup="menu" title={t("composer_add")} disabled={!!busy}>
                 <Plus size={19} />
               </button>
               <input
@@ -395,7 +388,7 @@ export function Composer(props: ComposerProps) {
                 </button>
               )}
               {canRecord && !text.trim() && !files.length && !busy ? (
-                <button key="mic" className="send-btn" onClick={() => setVoice(true)} aria-label="Record a voice message">
+                <button key="mic" className="send-btn" onClick={() => setVoice(true)} aria-label={t("composer_voice")}>
                   <Mic size={17} />
                 </button>
               ) : (
@@ -404,7 +397,7 @@ export function Composer(props: ComposerProps) {
                   className="send-btn"
                   onClick={() => void send()}
                   disabled={(!text.trim() && !files.length) || !!busy}
-                  aria-label="Send"
+                  aria-label={t("composer_send")}
                   title={prefs.enterToSend ? "Send (Enter) · Shift+Enter for a new line" : "Send (Ctrl+Enter)"}
                 >
                   <SendHorizontal size={17} />

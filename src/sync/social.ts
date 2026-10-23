@@ -5,6 +5,8 @@ import { createInvitation } from "./workspaces";
 import type { Engine } from "./engine";
 import { setNotificationsPaused } from "./status";
 import { inviteLink } from "./inviteCodes";
+import { getPrefs } from "../application/prefs";
+import { resolveLanguage, translate } from "../i18n";
 
 /**
  * People and DMs (batches B6, B6b, B12; server routes/connections.ts, users.ts; android ConnectionRules, RequestRules,
@@ -119,10 +121,12 @@ export function currentPresence(mode: string | null | undefined, until: number |
 export const dndPauseUntil = (until: number | null, now: number): number => until ?? now + PRESENCE_MAX_MS;
 
 /** What others see: "Idle", "Do not disturb", "Online", or nothing for offline (last seen is said elsewhere). */
+/** How someone appears, in the interface's language: online, idle or do not disturb; null when offline or not shown. */
 export function presenceWords(p: ShownPresence | null | undefined, online: boolean | null | undefined): string | null {
-  if (p === "idle") return "Idle";
-  if (p === "dnd") return "Do not disturb";
-  if (p === "online" || (p == null && online)) return "Online";
+  const t = (key: "presence_idle" | "presence_dnd" | "presence_online") => translate(resolveLanguage(getPrefs().language), key);
+  if (p === "idle") return t("presence_idle");
+  if (p === "dnd") return t("presence_dnd");
+  if (p === "online" || (p == null && online)) return t("presence_online");
   return null;
 }
 

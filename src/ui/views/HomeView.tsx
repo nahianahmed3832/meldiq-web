@@ -12,15 +12,17 @@ import type { ShellDialog } from "../shell/Shell";
 import { StartChecklist } from "./StartChecklist";
 import { DraftsAndSent } from "./DraftsAndSent";
 import { GuideCard, OnboardingBanner } from "../community/GuideOnboarding";
+import { type Translate, useT } from "../../i18n";
 
-function greeting(): string {
+function greeting(t: Translate): string {
   const h = new Date().getHours();
-  return h < 5 ? "Good evening" : h < 12 ? "Good morning" : h < 18 ? "Good afternoon" : "Good evening";
+  return t(h < 5 ? "home_evening" : h < 12 ? "home_morning" : h < 18 ? "home_afternoon" : "home_evening");
 }
 
 /** The selected workspace at a glance (android WorkspaceHomeScreen): what needs you, from real data only. */
 export function HomeView({ orgId, section, onDialog }: { orgId: string | null; section: Section; onDialog: (d: ShellDialog) => void }) {
   const engine = useEngine();
+  const t = useT();
   const me = useOrbit((s) => s.me);
   const org = useOrbit((s) => s.orgs.find((o) => o.id === orgId) ?? null);
   const synced = useOrbit((s) => s.synced);
@@ -60,28 +62,20 @@ export function HomeView({ orgId, section, onDialog }: { orgId: string | null; s
       <div className="view scroll">
         <div className="view-inner">
           <div>
-            <h1>
-              {greeting()}, {me.displayName.split(" ")[0]} 👋
-            </h1>
-            <p className="view-sub">
-              {org
-                ? `Here's what's happening in ${org.name}.`
-                : communities
-                  ? "Your direct messages and groups are here. Start a community, find one in Discover, or join one with an invitation code."
-                  : "Your direct messages and groups are here. Create a workspace for your team, start a community, or join one with an invitation code."}
-            </p>
+            <h1>{t("home_greeting", { greeting: greeting(t), name: me.displayName.split(" ")[0] })} 👋</h1>
+            <p className="view-sub">{org ? t("home_happening", { name: org.name }) : communities ? t("home_intro_communities") : t("home_intro_workspaces")}</p>
             {!org && section === "home" && (
               <div className="row" style={{ gap: 8, marginTop: 12, flexWrap: "wrap" }}>
                 <button className="btn btn-primary btn-sm" onClick={() => onDialog({ kind: "createWorkspace" })}>
-                  {communities ? "Start a community" : "Create a workspace"}
+                  {communities ? t("home_start_community") : t("home_create_workspace")}
                 </button>
                 {communities && (
                   <button className="btn btn-secondary btn-sm" onClick={() => onDialog({ kind: "discover" })}>
-                    Discover communities
+                    {t("home_discover")}
                   </button>
                 )}
                 <button className="btn btn-secondary btn-sm" onClick={() => onDialog({ kind: "joinWorkspace" })}>
-                  Join with a code
+                  {t("home_join_code")}
                 </button>
               </div>
             )}
@@ -112,31 +106,31 @@ export function HomeView({ orgId, section, onDialog }: { orgId: string | null; s
             <button className="card stat" onClick={() => unread[0] && navigate({ section: "home", conversationId: unread[0] })} disabled={!unread.length}>
               <Inbox size={18} className="faint" />
               <strong>{unread.length}</strong>
-              <span>conversations with unread messages</span>
+              <span>{t("home_stat_unread")}</span>
             </button>
             <button className="card stat" onClick={() => navigate({ section: "activity" })}>
               <AtSign size={18} className="faint" />
               <strong>{mentions.length}</strong>
-              <span>{mentions.length === 1 ? "conversation mentions you" : "conversations mention you"}</span>
+              <span>{t(mentions.length === 1 ? "home_stat_mention_one" : "home_stat_mentions")}</span>
             </button>
             {detail ? (
               <>
                 <div className="card stat">
                   <UsersRound size={18} className="faint" />
                   <strong>{detail.stats.members}</strong>
-                  <span>members in {detail.org.name}</span>
+                  <span>{t("home_stat_members", { name: detail.org.name })}</span>
                 </div>
                 <button className="card stat" onClick={() => onDialog({ kind: "channels" })}>
                   <Hash size={18} className="faint" />
                   <strong>{detail.stats.channels}</strong>
-                  <span>channels · browse and join</span>
+                  <span>{t("home_stat_channels")}</span>
                 </button>
               </>
             ) : (
               <button className="card stat" onClick={() => onDialog({ kind: "new" })}>
                 <PenSquare size={18} className="faint" />
-                <strong>New</strong>
-                <span>start a direct message</span>
+                <strong>{t("home_stat_new")}</strong>
+                <span>{t("home_stat_new_sub")}</span>
               </button>
             )}
           </div>
@@ -144,7 +138,7 @@ export function HomeView({ orgId, section, onDialog }: { orgId: string | null; s
           {section === "home" && <DraftsAndSent orgId={orgId} />}
 
           <div className="card list-card">
-            <h2>{section === "dms" ? "Recent direct messages" : "Recent conversations"}</h2>
+            <h2>{section === "dms" ? t("home_recent_dms") : t("home_recent")}</h2>
             {!synced && recent.length === 0 ? (
               <div style={{ padding: 12, display: "grid", gap: 10 }}>
                 {[0, 1, 2].map((i) => (
@@ -156,7 +150,7 @@ export function HomeView({ orgId, section, onDialog }: { orgId: string | null; s
                 <span className="empty-orb">
                   <MessagesSquare size={24} />
                 </span>
-                <h2>No conversations yet</h2>
+                <h2>{t("home_empty")}</h2>
                 <p>Start a direct message, or join a channel in your {communities ? "community" : "workspace"}.</p>
                 <div className="row">
                   <button className="btn btn-primary" onClick={() => onDialog({ kind: "new" })}>

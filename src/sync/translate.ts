@@ -6,10 +6,16 @@
  */
 export const TRANSLATE_TARGETS = [
   { code: "en", label: "English" },
-  { code: "zh", label: "Chinese (Simplified)" },
-  { code: "bn", label: "Bengali" },
+  { code: "zh", label: "中文（简体）" },
+  { code: "bn", label: "বাংলা" },
 ] as const;
 export type TranslateTarget = (typeof TRANSLATE_TARGETS)[number]["code"];
+
+/** The language to translate into first: the person's last choice, else the interface's (2026-10-23). */
+export function defaultTarget(chosen: boolean, last: TranslateTarget, interfaceLanguage: string): TranslateTarget {
+  if (chosen) return last;
+  return interfaceLanguage.startsWith("zh") ? "zh" : interfaceLanguage === "bn" ? "bn" : "en";
+}
 
 export class TranslateError extends Error {}
 

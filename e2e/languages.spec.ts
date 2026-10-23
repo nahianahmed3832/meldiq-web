@@ -48,4 +48,20 @@ test("the language is chosen before signing in, kept after a reload, and changed
   if (!isMobile) await expect(page.getByRole("navigation", { name: "Settings pages" })).toContainText("নোটিফিকেশন");
   await page.getByLabel("ভাষা").selectOption("system");
   await expect(page.getByRole("heading", { name: "Appearance" })).toBeVisible();
+
+  // A conversation in Chinese (round 2): the day, the message box and the message menu.
+  const bob = await newPhone("bob", "Bob Chen");
+  const dm = (await alice.req("POST", "/v1/conversations/dm", { userId: bob.userId })).conversation.id as string;
+  await bob.connect();
+  await bob.send(dm, { type: "text", text: "你好" });
+  await page.getByLabel("Language").selectOption("zh-CN");
+  await page.goto(`/dms/c/${dm}`);
+  await expect(page.getByPlaceholder("发消息给 Bob Chen")).toBeVisible();
+  await expect(page.locator(".day").filter({ hasText: "今天" }).first()).toBeVisible();
+  const msg = page.locator(".msg").filter({ hasText: "你好" });
+  await msg.click({ button: "right" });
+  await expect(page.getByRole("menuitem", { name: "回复", exact: true })).toBeVisible();
+  await expect(page.getByRole("menuitem", { name: "翻译…" })).toBeVisible();
+  await shot(page, `conversation-zh${isMobile ? "-phone" : ""}`);
+  await page.keyboard.press("Escape");
 });
