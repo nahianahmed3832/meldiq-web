@@ -53,7 +53,10 @@ export function ForwardDialog({ message, onClose }: { message: StoredMessage; on
     try {
       const done = await forwardMessage(engine, message, to, note);
       const missed = to.length - done.length;
-      engine.notice(missed ? "error" : "info", done.length === 1 ? `Forwarded to ${name(done[0].conversationId)}.` : `Forwarded to ${done.length} conversations${missed ? `; ${missed} couldn't be reached` : ""}.`);
+      engine.notice(
+        missed ? "error" : "info",
+        done.length === 1 ? `Forwarded to ${name(done[0].conversationId)}.` : `Forwarded to ${done.length} conversations${missed ? `; ${missed} couldn't be reached` : ""}.`,
+      );
       onClose();
     } catch (e) {
       setError(e instanceof Error ? e.message : "Couldn't forward.");

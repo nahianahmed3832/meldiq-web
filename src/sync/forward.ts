@@ -11,7 +11,11 @@ export const MAX_FORWARD_NOTE = 2000;
  * Where a message forwarded out of a community channel came from (android ForwardOrigin): the community's name, when
  * it was sent, and its ids, so people in that channel can open it. A DM's or group's origin is never sent.
  */
-export function originOf(m: Pick<StoredMessage, "id" | "conversationId" | "sentAt" | "sortTs">, source: { type: string; orgId: string | null } | undefined, communityName: string | null): RichContent["origin"] | undefined {
+export function originOf(
+  m: Pick<StoredMessage, "id" | "conversationId" | "sentAt" | "sortTs">,
+  source: { type: string; orgId: string | null } | undefined,
+  communityName: string | null,
+): RichContent["origin"] | undefined {
   if (!source || source.type !== "CHANNEL" || !source.orgId || !communityName) return undefined;
   return { place: communityName.trim().slice(0, 60), at: m.sentAt || m.sortTs || null, conversationId: m.conversationId, messageId: m.id };
 }
