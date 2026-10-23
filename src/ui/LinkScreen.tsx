@@ -2,7 +2,7 @@ import { apiBase, serverHost } from "../application/config";
 import { ArrowLeft, Check, Copy, KeyRound, Laptop, Lock, RefreshCw, ShieldCheck, Smartphone } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ApiClient, ApiError } from "../api/client";
-import { type ServerInfo, type SessionGrant, zServerInfo } from "../api/schemas";
+import { type SessionGrant, zServerInfo } from "../api/schemas";
 import { fingerprint } from "../crypto/identity";
 import type { DeviceRecord } from "../model/types";
 import { browserDeviceName, LinkError, type PendingLink, pollLink, startLink } from "../sync/session";
@@ -18,7 +18,6 @@ type Phase = { k: "starting" } | { k: "waiting"; link: PendingLink; deviceFp: st
  */
 export function LinkScreen({ onLinked, onBack }: { onLinked: (device: DeviceRecord, grant: SessionGrant) => void; onBack?: () => void }) {
   const [phase, setPhase] = useState<Phase>({ k: "starting" });
-  const [server, setServer] = useState<ServerInfo | null>(null);
   const [now, setNow] = useState(Date.now());
   const [copied, setCopied] = useState(false);
   const gen = useRef(0);
@@ -27,9 +26,9 @@ export function LinkScreen({ onLinked, onBack }: { onLinked: (device: DeviceReco
     const mine = ++gen.current;
     setPhase({ k: "starting" });
     try {
-      const info = await new ApiClient(apiBase()).json("GET", "/v1/server-info", zServerInfo, { auth: false });
+      // Reachable and a Meldiq server, before asking it for a link code.
+      await new ApiClient(apiBase()).json("GET", "/v1/server-info", zServerInfo, { auth: false });
       if (mine !== gen.current) return;
-      setServer(info);
       const link = await startLink(apiBase(), browserDeviceName());
       if (mine !== gen.current) return;
       setPhase({ k: "waiting", link, deviceFp: await fingerprint(link.keys.signingPublic) });
@@ -208,10 +207,6 @@ export function LinkScreen({ onLinked, onBack }: { onLinked: (device: DeviceReco
           <div className="link-meta">
             <span className="row" style={{ gap: 6 }}>
               <Laptop size={14} /> {browserDeviceName()}
-            </span>
-            <span>
-              Server: {serverHost()}
-              {server ? ` · ${server.instanceName ?? "Meldiq"} ${server.version}` : ""}
             </span>
           </div>
         </div>

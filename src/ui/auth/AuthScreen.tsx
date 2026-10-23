@@ -1,4 +1,4 @@
-import { apiBase, serverHost } from "../../application/config";
+import { apiBase } from "../../application/config";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { AccountSessionGrant, AccountView, LegacyTicket } from "../../api/accountSchemas";
 import { ApiClient } from "../../api/client";
@@ -241,12 +241,6 @@ export function AuthScreen(props: {
     <AuthFrame>
       {intro && <IntroPages onDone={() => setIntro(false)} />}
       {body}
-      <div className="link-meta">
-        <span>
-          Server: {serverHost()}
-          {server ? ` · ${server.instanceName ?? "Meldiq"} ${server.version}` : ""}
-        </span>
-      </div>
     </AuthFrame>
   );
 }

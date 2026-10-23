@@ -104,6 +104,24 @@ test("sign up, set up encryption, come back after a reload, and add a second bro
     await expect(p.getByText("Both of your browsers get this")).toBeVisible();
   }
   await other.close();
+
+  // A third browser with the emailed code (reported 2026-10-23): the code is sent as the screen opens, so it asks only
+  // for the code; no "Email me a code" step, and no server line.
+  const third = await browser.newContext({ extraHTTPHeaders: { "x-orbit-test-ip": testAddress() } });
+  const t = await third.newPage();
+  await t.goto("/");
+  await signIn(t, email);
+  await expect(t.getByRole("heading", { name: "Set up this browser" })).toBeVisible();
+  await expect(t.getByText(/Enter the 6-digit code we sent to/)).toBeVisible();
+  await expect(t.getByRole("button", { name: "Email me a code" })).toHaveCount(0);
+  await expect(t.getByText(/^Server:/)).toHaveCount(0);
+  await expect(t.getByRole("button", { name: "Account recovery" })).toBeVisible();
+  await t.getByRole("button", { name: "Having trouble?" }).click();
+  await expect(t.getByRole("button", { name: "Send a new code" })).toBeVisible();
+  await t.getByLabel("Verification code").fill(await emailedCode(email, "verify"));
+  await t.getByRole("button", { name: "Unlock" }).click();
+  await expect(t.locator(".conn.online")).toBeVisible({ timeout: 15_000 });
+  await third.close();
 });
 
 test("a wrong password and a forgotten password", async ({ page }) => {
@@ -121,7 +139,7 @@ test("a wrong password and a forgotten password", async ({ page }) => {
 
 /** "Set up this browser" offers the emailed code first when the keys are backed up; the other ways sit behind a link. */
 async function openOtherWays(page: Page): Promise<void> {
-  const help = page.getByRole("button", { name: "Can't access your email?" });
+  const help = page.getByRole("button", { name: "Account recovery" });
   await expect(help.or(page.getByRole("tab", { name: "Use my recovery key" }))).toBeVisible();
   if (await help.isVisible()) await help.click();
 }
