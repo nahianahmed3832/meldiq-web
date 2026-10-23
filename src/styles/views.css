@@ -1487,3 +1487,37 @@ select.input {
 .event-preview-title {
   font-size: var(--fs-xl);
 }
+
+/* Settings pages grouped as on Android (2026-10-23): a small heading over each group of cards. */
+.settings-group {
+  margin: 18px 0 -4px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+.account-info {
+  padding: 16px 20px;
+  display: grid;
+  gap: 10px;
+}
+.account-info dl {
+  margin: 0;
+  display: grid;
+  gap: 10px;
+}
+.account-info dl > div {
+  display: grid;
+  grid-template-columns: 140px minmax(0, 1fr);
+  gap: 12px;
+}
+.account-info dt {
+  color: var(--text-3);
+  font-size: var(--fs-sm);
+}
+.account-info dd {
+  margin: 0;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}

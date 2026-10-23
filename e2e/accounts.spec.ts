@@ -62,6 +62,17 @@ test("sign up, set up encryption, come back after a reload, and add a second bro
   await page.getByRole("button", { name: "Open Meldiq" }).click();
   await expect(page.locator(".conn.online")).toBeVisible({ timeout: 15_000 });
 
+  // Settings › Account, grouped as on Android: account information (with the phone from the profile), how you sign
+  // in, account management.
+  await page.goto("/settings/account");
+  await expect(page.getByRole("heading", { name: "Account information" })).toBeVisible();
+  const info = page.locator(".account-info");
+  await expect(info).toContainText(email);
+  await expect(info).toContainText("Nadia Rahman");
+  await expect(info).toContainText("PhoneNot added");
+  await expect(page.getByRole("heading", { name: "How you sign in" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Account management" })).toBeVisible();
+
   // The session survives a reload (stored sealed); no password asked.
   await page.reload();
   await expect(page.locator(".conn.online")).toBeVisible({ timeout: 15_000 });

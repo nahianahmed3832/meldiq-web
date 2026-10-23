@@ -1,6 +1,8 @@
 import { KeyRound, Laptop, LogOut, Trash2 } from "lucide-react";
 import { type FormEvent, useState } from "react";
-import { useEngine } from "../../application/orbit";
+import { useEngine, useOrbit } from "../../application/orbit";
+import { navigate } from "../../application/router";
+import { myProfile } from "../../sync/profile";
 import { AccountApi } from "../../auth/accountApi";
 import { canDeleteAccount, type DeletionProblem, deletionProblem, deletionProblemText } from "../../auth/deleteAccount";
 import { PASSWORD_MIN_LENGTH, passwordProblem } from "../../auth/rules";
@@ -30,21 +32,53 @@ export function AccountSettingsPage({ onSignedOut }: { onSignedOut: () => void }
       </>
     );
   }
+  // Grouped as on Android (2026-10-23): account information, how you sign in, account management.
   return (
     <>
       <h1>Account</h1>
-      <div className="card" style={{ padding: 20, display: "grid", gap: 6 }}>
-        <span className="faint" style={{ fontSize: 12.5 }}>
-          Email
-        </span>
-        <strong>{account.email}</strong>
-      </div>
+      <h2 className="settings-group">Account information</h2>
+      <AccountInformation email={account.email} />
+      <h2 className="settings-group">How you sign in</h2>
       <ChangePassword email={account.email} />
       <KeyBackupCard />
       <RecoveryCodesCard />
       <Sessions accounts={new AccountApi(engine.api)} />
+      <h2 className="settings-group">Account management</h2>
       <DeleteAccount email={account.email} onDeleted={onSignedOut} />
     </>
+  );
+}
+
+/** Who the account is (android Account information): username, display name, email and the phone from the profile. */
+function AccountInformation({ email }: { email: string }) {
+  const engine = useEngine();
+  const me = useOrbit((s) => s.me);
+  const profilesRev = useOrbit((s) => s.profilesRev);
+  const profile = useLoad(() => myProfile(engine), [engine, profilesRev]);
+  const rows: [string, string | null][] = [
+    ["Username", me ? `@${me.username}` : null],
+    ["Display name", me?.displayName ?? null],
+    ["Email", email],
+    ["Phone", profile.data ? (profile.data.phone ?? "Not added") : null],
+  ];
+  return (
+    <div className="card account-info">
+      <dl>
+        {rows.map(([label, value]) => (
+          <div key={label}>
+            <dt>{label}</dt>
+            <dd>{value ?? <span className="skeleton" style={{ width: 120, height: 14, display: "inline-block" }} />}</dd>
+          </div>
+        ))}
+      </dl>
+      <p className="faint" style={{ margin: 0, fontSize: 12.5 }}>
+        Change your name, username and phone in{" "}
+        <button className="text-link" onClick={() => navigate({ section: "settings", settingsPage: "profile" })}>
+          Profile
+        </button>
+        .
+      </p>
+    </div>
   );
 }
 
