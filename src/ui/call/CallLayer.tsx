@@ -6,12 +6,17 @@ import { CallStage } from "./CallStage";
 import { callStatus } from "./callText";
 import { clampToViewport, loadPosition, nudge, type Point, savePosition } from "./miniPosition";
 import { useNow } from "./useNow";
+import { holdUpdates } from "../../application/updates";
 
 /** Whatever this browser's call needs on screen: the ringing card, the call stage, or the minimised bar. */
 export function CallLayer() {
   const engine = useEngine();
   const phase = useOrbit((s) => s.call.phase);
   const minimized = useOrbit((s) => s.call.minimized);
+
+  // A new release waits for the call to end before the tab reloads by itself (src/application/updates.ts).
+  const inCall = phase !== "idle";
+  useEffect(() => (inCall ? holdUpdates() : undefined), [inCall]);
 
   // Closing the tab mid-call tells the server at once, so the other side isn't left waiting for a reconnect.
   useEffect(() => {

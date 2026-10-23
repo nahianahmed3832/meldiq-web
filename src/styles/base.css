@@ -462,3 +462,23 @@ select,
 .list-row {
   touch-action: manipulation;
 }
+
+/* A newer release is ready (src/ui/UpdateNotice.tsx): under the top bar, clear of the message box. */
+.update-notice {
+  position: fixed;
+  z-index: 200;
+  left: 50%;
+  top: calc(var(--app-top, 0px) + var(--topbar-h) + 8px);
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: calc(100vw - 32px);
+  padding: 8px 8px 8px 16px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--border);
+  background: var(--surface-raised);
+  box-shadow: var(--shadow-lg);
+  color: var(--text);
+  font-size: var(--fs-md);
+}
