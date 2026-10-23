@@ -3,7 +3,7 @@ import { cleanTags, cleanTitle } from "./forumRules";
 import { cleanRef, cleanRefs } from "./expressions";
 import type { ConversationType, QueueItem } from "../api/schemas";
 import type { RichContent, StoredMessage } from "../model/types";
-import { type AttachmentRef, MAX_RECEIVED_ATTACHMENTS, type Payload, safeFileName } from "../protocol/payload";
+import { type AttachmentRef, type ForwardOrigin, MAX_RECEIVED_ATTACHMENTS, type Payload, safeFileName } from "../protocol/payload";
 import { cleanPoll } from "./polls";
 import { cleanSticker } from "./stickers";
 import { cleanContact } from "./rich";
@@ -43,7 +43,22 @@ function richOf(p: Payload): RichContent | null {
   if (emoji.length) r.customEmoji = emoji;
   const customSticker = cleanRef(p.customSticker);
   if (customSticker) r.customSticker = customSticker;
+  const origin = p.forwarded === true ? cleanOrigin(p.origin) : null;
+  if (origin) r.origin = origin;
   return Object.keys(r).length ? r : null;
+}
+
+const ORIGIN_ID = /^[A-Za-z0-9_-]{1,64}$/;
+
+/**
+ * A forward's origin (android RichRules.cleanOrigin): a short place name (required), a plausible time and well-formed
+ * ids (both or neither); null when nothing usable.
+ */
+export function cleanOrigin(o: ForwardOrigin | null | undefined): NonNullable<RichContent["origin"]> | null {
+  const place = o?.place?.trim().replace(/\s+/g, " ").slice(0, 60);
+  if (!o || !place) return null;
+  const ids = o.conversationId && o.messageId && ORIGIN_ID.test(o.conversationId) && ORIGIN_ID.test(o.messageId);
+  return { place, at: typeof o.at === "number" && o.at > 0 ? o.at : null, conversationId: ids ? o.conversationId! : null, messageId: ids ? o.messageId! : null };
 }
 
 export function attachmentsOf(p: Payload): AttachmentRef[] {

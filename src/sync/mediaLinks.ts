@@ -10,6 +10,16 @@ export interface MediaLink {
   provider: MediaProvider;
   kind: MediaKind;
   url: string;
+  /** A YouTube video, Short or live stream, which plays inside Meldiq when chosen (android, 2026-10-23). */
+  videoId?: string;
+}
+
+/**
+ * The privacy-enhanced YouTube player for [videoId] (youtube-nocookie.com: no cookies until playback). Only built for
+ * ids of the 11-character pattern, so nothing else can be loaded through it (android MediaLinks.embedUrl).
+ */
+export function embedUrl(videoId: string): string | null {
+  return YOUTUBE_ID.test(videoId) ? `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&playsinline=1&rel=0` : null;
 }
 
 export const KIND_LABEL: Record<MediaKind, string> = {
@@ -61,7 +71,7 @@ export function detectMediaLink(url: string): MediaLink | null {
     case "music.youtube.com":
       return youtube(path, q, "YouTube Music", link);
     case "youtu.be":
-      return YOUTUBE_ID.test(path[0] ?? "") ? link("YouTube", "video") : null;
+      return YOUTUBE_ID.test(path[0] ?? "") ? { ...link("YouTube", "video"), videoId: path[0] } : null;
     case "open.spotify.com": {
       // Spotify adds a locale segment to some links: open.spotify.com/intl-de/track/…
       const p = path[0]?.startsWith("intl-") ? path.slice(1) : path;
@@ -81,9 +91,11 @@ export function detectMediaLink(url: string): MediaLink | null {
 
 function youtube(path: string[], q: URLSearchParams, provider: MediaProvider, link: (p: MediaProvider, k: MediaKind) => MediaLink): MediaLink | null {
   const v = q.get("v");
-  if (path[0] === "watch" && v && YOUTUBE_ID.test(v)) return link(provider, provider === "YouTube Music" ? "track" : "video");
+  // YouTube Music opens in its own app: only YouTube's videos, Shorts and live streams play inside Meldiq.
+  const playable = (id: string) => (provider === "YouTube" ? { videoId: id } : {});
+  if (path[0] === "watch" && v && YOUTUBE_ID.test(v)) return { ...link(provider, provider === "YouTube Music" ? "track" : "video"), ...playable(v) };
   if (path[0] === "playlist" && q.get("list")) return link(provider, "playlist");
-  if (path[0] === "shorts" && YOUTUBE_ID.test(path[1] ?? "")) return link(provider, "short");
-  if (path[0] === "live" && YOUTUBE_ID.test(path[1] ?? "")) return link(provider, "live");
+  if (path[0] === "shorts" && YOUTUBE_ID.test(path[1] ?? "")) return { ...link(provider, "short"), ...playable(path[1]) };
+  if (path[0] === "live" && YOUTUBE_ID.test(path[1] ?? "")) return { ...link(provider, "live"), ...playable(path[1]) };
   return null;
 }

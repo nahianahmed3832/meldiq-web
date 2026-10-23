@@ -1,6 +1,6 @@
 import { ApiError } from "../api/client";
 import type { DeviceRecord, OutboxItem, RichContent, StoredMessage } from "../model/types";
-import { encodePayload, type Payload } from "../protocol/payload";
+import { encodePayload, type ForwardOrigin, type Payload } from "../protocol/payload";
 import type { AppState } from "../state/store";
 import type { LocalStore } from "../store/db";
 import type { Member } from "../api/schemas";
@@ -68,6 +68,7 @@ export class Compose {
       customEmoji: opts.rich?.customEmoji?.length ? opts.rich.customEmoji : undefined,
       customSticker: opts.rich?.customSticker,
       forwarded: opts.forwarded ? true : undefined,
+      origin: opts.forwarded && opts.rich?.origin ? originWire(opts.rich.origin) : undefined,
     };
     const id = opts.presetId ?? crypto.randomUUID();
     const now = Date.now();
@@ -212,4 +213,9 @@ export class Compose {
 /** A card, place, poll, sticker or animated emoji replaces the text (no mentions); a forum title or emoji doesn't. */
 function structured(r: RichContent | null | undefined): boolean {
   return !!(r && (r.contact || r.location || r.animoji || r.poll || r.sticker || r.customSticker));
+}
+
+/** A forward's origin as it's sent: fields without a value are left out (android ForwardOrigin's nulls). */
+function originWire(o: NonNullable<RichContent["origin"]>): ForwardOrigin {
+  return { place: o.place, ...(o.at !== null ? { at: o.at } : {}), ...(o.conversationId && o.messageId ? { conversationId: o.conversationId, messageId: o.messageId } : {}) };
 }

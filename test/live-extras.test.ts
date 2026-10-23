@@ -70,7 +70,7 @@ describe("rich messages from the browser", () => {
     const plan = nodeCrypto.randomBytes(20_000);
     const original = await sendFiles(web, dmBob, [{ name: "plan.pdf", type: "application/pdf", size: plan.length, bytes: async () => new Uint8Array(plan) }], "the plan @bob");
     const stored = (await web.store.message(original))!;
-    const fwd = await forwardMessage(web, stored, dmCarol);
+    const [{ messageId: fwd }] = await forwardMessage(web, stored, dmCarol);
     const m = await at(carol, fwd);
     expect(m.payload).toMatchObject({ type: "text", text: "the plan @bob", forwarded: true });
     expect(m.payload.mentions).toBeUndefined();

@@ -1,12 +1,12 @@
 import { ChevronLeft, ChevronRight, Download, FileText, Film, Image as ImageIcon, Mic, Pause, Play, TriangleAlert, X } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { useEngine } from "../../application/orbit";
 import { usePrefs } from "../../application/prefs";
 import type { AttachmentRef } from "../../protocol/payload";
 import { isInlineImage, openAttachment, safeMime, saveAttachment } from "../../sync/attachments";
 import { clock, isVoice, shownDuration } from "../../sync/voice";
-import { bytes } from "../format";
+import { bytes, clock as timeOfDay, dayLabel } from "../format";
 import { albumOverflow, albumRows } from "./album";
 import { useNearScreen } from "./useNearScreen";
 
@@ -14,27 +14,44 @@ import { useNearScreen } from "./useNearScreen";
  * Decrypts on demand. Images show inline once scrolled near; voice messages play in place (android VoiceViews); audio and video play inline
  * once opened (a click, so nothing large downloads unasked); anything else is a file card that downloads.
  */
-export function Attachments({ refs }: { refs: AttachmentRef[] }) {
+/**
+ * The message a photo belongs to, for the viewer (android, 2026-10-23): who sent it, when, its text under the picture,
+ * and reacting without leaving ([onReact] null where the person can't react).
+ */
+export interface ViewerInfo {
+  sender: string;
+  at: number;
+  text: string;
+  quick: readonly string[];
+  /** The emoji this person already reacted with. */
+  reacted: readonly string[];
+  onReact: ((emoji: string) => void) | null;
+}
+const Viewer = createContext<ViewerInfo | null>(null);
+
+export function Attachments({ refs, viewer }: { refs: AttachmentRef[]; viewer?: ViewerInfo }) {
   if (!refs.length) return null;
   // Several photos sent together are an album (android AlbumGrid); everything else is listed under it.
   const images = refs.filter((r) => !isVoice(r) && isInlineImage(r));
   const album = images.length >= 2 ? images : [];
   const rest = album.length ? refs.filter((r) => !album.includes(r)) : refs;
   return (
-    <div className="attachments">
-      {album.length > 0 && <AlbumGrid items={album} />}
-      {rest.map((r) =>
-        isVoice(r) ? (
-          <VoiceAttachment key={r.id} r={r} />
-        ) : isInlineImage(r) ? (
-          <ImageAttachment key={r.id} r={r} />
-        ) : isPlayable(r) ? (
-          <MediaAttachment key={r.id} r={r} />
-        ) : (
-          <FileAttachment key={r.id} r={r} />
-        ),
-      )}
-    </div>
+    <Viewer.Provider value={viewer ?? null}>
+      <div className="attachments">
+        {album.length > 0 && <AlbumGrid items={album} />}
+        {rest.map((r) =>
+          isVoice(r) ? (
+            <VoiceAttachment key={r.id} r={r} />
+          ) : isInlineImage(r) ? (
+            <ImageAttachment key={r.id} r={r} />
+          ) : isPlayable(r) ? (
+            <MediaAttachment key={r.id} r={r} />
+          ) : (
+            <FileAttachment key={r.id} r={r} />
+          ),
+        )}
+      </div>
+    </Viewer.Provider>
   );
 }
 
@@ -187,6 +204,7 @@ interface Steps {
 }
 
 function Lightbox({ url, name, onClose, steps }: { url: string | null; name: string; onClose: () => void; steps?: Steps }) {
+  const info = useContext(Viewer);
   useEffect(() => {
     const k = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
@@ -220,6 +238,7 @@ function Lightbox({ url, name, onClose, steps }: { url: string | null; name: str
         </button>
       </div>
       {url ? <img src={url} alt={name} /> : <span className="spinner" aria-label={`Decrypting ${name}`} />}
+      {info && <ViewerCaption info={info} />}
     </div>,
     document.body,
   );
@@ -299,5 +318,26 @@ export function FileAttachment({ r, error: initialError }: { r: AttachmentRef; e
       </span>
       {!error && <Download size={16} className="faint" />}
     </button>
+  );
+}
+
+/** Under the picture: who sent it and when, the message's text, and quick reactions. */
+function ViewerCaption({ info }: { info: ViewerInfo }) {
+  return (
+    <div className="lightbox-caption">
+      <small>
+        <strong>{info.sender}</strong> · {dayLabel(info.at)} {timeOfDay(info.at)}
+      </small>
+      {info.text && <p className="clamp-3">{info.text}</p>}
+      {info.onReact && (
+        <div className="lightbox-react" role="group" aria-label="React">
+          {info.quick.map((e) => (
+            <button key={e} className="icon-btn quick-emoji" aria-pressed={info.reacted.includes(e)} aria-label={`React ${e}`} onClick={() => info.onReact?.(e)}>
+              {e}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
   );
 }

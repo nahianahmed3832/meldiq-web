@@ -33,14 +33,15 @@ import { reactionName } from "../../sync/expressions";
 import { useEngine, useOrbit } from "../../application/orbit";
 import { PERSONAL } from "../../sync/navPrefs";
 import { RemindMeDialog } from "../later/RemindMeDialog";
-import type { StoredMessage } from "../../model/types";
+import type { RichContent, StoredMessage } from "../../model/types";
 import { UserAvatar } from "../components/OrgAvatar";
 import { callLine } from "../../sync/callHistory";
 import { ForwardDialog } from "../dialogs/ForwardDialog";
 import { Dialog, Menu, type MenuEntry, useMenu } from "../components/Overlay";
 import { useLongPress } from "./longPress";
 import { mergeHandlers, useMessageGestures } from "./gestures";
-import { clock, fullTime } from "../format";
+import { clock, dayLabel, fullTime } from "../format";
+import { openInApp } from "./inAppLinks";
 import { isWebUrl } from "../../protocol/payload";
 import { Attachments } from "./Attachments";
 import { isEmojiOnly, RichText } from "./RichText";
@@ -120,14 +121,19 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
 
   const body = () => {
     if (m.kind === "call") {
+      // A call card (android, 2026-10-23): the outcome, its details, when it was, and who called; missed in red.
       const line = callLine(m.call?.info, m.call?.video ?? false, mine, p.senderName);
+      const when = `${dayLabel(m.sortTs)} ${clock(m.sortTs)}`;
       return (
         <span className={`msg-call${line.missed ? " missed" : ""}`}>
-          {m.call?.video ? <Video size={16} /> : line.missed ? <PhoneMissed size={16} /> : <Phone size={16} />}
-          <span>
-            {line.title}
-            {line.detail && <small className="msg-call-detail">{line.detail}</small>}
+          <span className="msg-call-icon" aria-hidden="true">
+            {m.call?.video ? <Video size={17} /> : line.missed ? <PhoneMissed size={17} /> : <Phone size={17} />}
           </span>
+          <span className="msg-call-lines">
+            <strong>{line.title}</strong>
+            <small className="msg-call-detail">{[line.detail, when].filter(Boolean).join(" · ")}</small>
+          </span>
+          <UserAvatar userId={m.senderUserId} name={p.senderName} colorIndex={p.senderColor} photoRev={p.senderPhotoRev} size={28} decorative />
         </span>
       );
     }
@@ -150,11 +156,7 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
             <span className="ellipsis">{p.replyTo.text || "Attachment"}</span>
           </button>
         )}
-        {m.forwarded && (
-          <div className="msg-forwarded">
-            <Forward size={12} aria-hidden="true" /> Forwarded
-          </div>
-        )}
+        {m.forwarded && <ForwardedLine origin={m.rich?.origin} />}
         {m.rich?.poll ? (
           <div>
             <PollView m={m} myUserId={p.myUserId} canPost={p.canPost} />
@@ -208,7 +210,19 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
             </div>
           )
         )}
-        <Attachments refs={m.attachments} />
+        <Attachments
+          refs={m.attachments}
+          viewer={{
+            sender: p.senderName,
+            at: m.sortTs,
+            text: m.text,
+            quick: QUICK_EMOJI,
+            reacted: Object.entries(m.reactions)
+              .filter(([, who]) => who.includes(p.myUserId))
+              .map(([e]) => e),
+            onReact: live && p.canPost ? (e) => void engine.react(m, e) : null,
+          }}
+        />
         {mediaLink ? (
           <MediaLinkCard link={mediaLink} preview={m.rich?.link?.url === mediaLink.url ? m.rich.link : null} />
         ) : (
@@ -584,6 +598,34 @@ function EditBox({ m, onDone }: { m: StoredMessage; onDone: () => void }) {
           Save
         </button>
       </div>
+    </div>
+  );
+}
+
+/**
+ * "Forwarded", and for a message forwarded out of a community channel where it came from (android, 2026-10-23):
+ * "Forwarded · Community • time ›", which opens the original for people in that channel.
+ */
+function ForwardedLine({ origin }: { origin: RichContent["origin"] }) {
+  const engine = useEngine();
+  if (!origin)
+    return (
+      <div className="msg-forwarded">
+        <Forward size={12} aria-hidden="true" /> Forwarded
+      </div>
+    );
+  const where = `${origin.place}${origin.at ? ` • ${dayLabel(origin.at)} ${clock(origin.at)}` : ""}`;
+  const link = origin.conversationId && origin.messageId ? messageLink(origin.conversationId, origin.messageId) : null;
+  return (
+    <div className="msg-forwarded">
+      <Forward size={12} aria-hidden="true" /> Forwarded ·{" "}
+      {link ? (
+        <button className="msg-forwarded-origin" onClick={() => openInApp(engine, link)} aria-label={`Open the original in ${origin.place}`}>
+          {where} ›
+        </button>
+      ) : (
+        <span>{where}</span>
+      )}
     </div>
   );
 }

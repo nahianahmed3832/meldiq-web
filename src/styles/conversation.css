@@ -846,8 +846,35 @@
 .msg-call.missed {
   color: var(--danger);
 }
-.msg-call > span {
+/* Call cards (android, 2026-10-23): a round icon, the outcome over its details and time, the caller's avatar. */
+.msg-call {
+  gap: 12px;
+  min-width: min(260px, 100%);
+  max-width: 100%;
+  padding: 10px 12px;
+}
+.msg-call-icon {
   display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--surface-sunken);
+  color: var(--text-2);
+  flex-shrink: 0;
+}
+.msg-call.missed .msg-call-icon {
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+.msg-call-lines {
+  display: grid;
+  flex: 1;
+  min-width: 0;
+  color: var(--text);
+}
+.msg-call.missed .msg-call-lines strong {
+  color: var(--danger);
 }
 .msg-call-detail {
   color: var(--text-2);
@@ -2193,4 +2220,64 @@
   flex-wrap: wrap;
   gap: 6px;
   padding: 10px 16px 0;
+}
+
+/* Forward To (android, 2026-10-23): what goes, and a tick on each chosen conversation. */
+.forward-preview {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-left: 3px solid var(--border-strong);
+  border-radius: var(--r-sm);
+  background: var(--surface-sunken);
+  font-size: var(--fs-sm);
+  color: var(--text-2);
+}
+.forward-check {
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border-strong);
+  flex-shrink: 0;
+}
+.forward-check.on {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--on-accent);
+}
+.msg-forwarded-origin {
+  color: var(--text-2);
+  font: inherit;
+}
+.msg-forwarded-origin:hover {
+  color: var(--text);
+  text-decoration: underline;
+}
+
+/* YouTube inside Meldiq (android, 2026-10-23): the privacy-enhanced player at 16:9. */
+.yt-player {
+  display: grid;
+  gap: 6px;
+  max-width: 480px;
+  margin-top: 6px;
+}
+.yt-player iframe {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 0;
+  border-radius: var(--r-md);
+  background: var(--media-bg);
+}
+.yt-player-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+button.media-card {
+  text-align: left;
+  font: inherit;
+  color: inherit;
 }

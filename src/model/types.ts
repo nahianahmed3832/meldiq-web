@@ -23,6 +23,8 @@ export interface RichContent {
   /** Batch B9: community emoji shown inside the text, and a community sticker. */
   customEmoji?: CustomEmojiRef[];
   customSticker?: CustomEmojiRef;
+  /** A forwarded message's source (android ForwardOrigin): shown as "Forwarded · place • time ›". */
+  origin?: { place: string; at: number | null; conversationId: string | null; messageId: string | null };
 }
 
 export interface CallEntry {

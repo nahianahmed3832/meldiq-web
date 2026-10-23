@@ -518,6 +518,42 @@
   color: var(--on-media);
   background: var(--media-control);
 }
+/* Under the picture (android viewer, 2026-10-23): sender and time, the message's text, quick reactions. */
+.lightbox:has(.lightbox-caption) img {
+  max-height: calc(100vh - 220px);
+}
+.lightbox-caption {
+  position: absolute;
+  left: 50%;
+  bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  transform: translateX(-50%);
+  width: min(640px, calc(100vw - 32px));
+  display: grid;
+  gap: 6px;
+  color: var(--on-media);
+  text-align: center;
+}
+.lightbox-caption p {
+  margin: 0;
+  font-size: var(--fs-md);
+}
+.lightbox-caption small {
+  opacity: 0.8;
+}
+.lightbox-react {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+}
+.lightbox-react .icon-btn[aria-pressed="true"] {
+  box-shadow: 0 0 0 2px var(--on-media);
+}
+.clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
 @keyframes fade {
   from {
     opacity: 0;
@@ -1450,4 +1486,38 @@ select.input {
 }
 .event-preview-title {
   font-size: var(--fs-xl);
+}
+
+/* Settings pages grouped as on Android (2026-10-23): a small heading over each group of cards. */
+.settings-group {
+  margin: 18px 0 -4px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+.account-info {
+  padding: 16px 20px;
+  display: grid;
+  gap: 10px;
+}
+.account-info dl {
+  margin: 0;
+  display: grid;
+  gap: 10px;
+}
+.account-info dl > div {
+  display: grid;
+  grid-template-columns: 140px minmax(0, 1fr);
+  gap: 12px;
+}
+.account-info dt {
+  color: var(--text-3);
+  font-size: var(--fs-sm);
+}
+.account-info dd {
+  margin: 0;
+  font-weight: 600;
+  overflow-wrap: anywhere;
 }

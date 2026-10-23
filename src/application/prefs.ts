@@ -91,6 +91,8 @@ export interface Prefs {
   /** Double-tapping (double-clicking) a message reacts with [quickReaction]; again takes it back. */
   doubleTapReact: boolean;
   quickReaction: string;
+  /** YouTube videos play inside Meldiq (privacy-enhanced player) instead of opening YouTube (android, 2026-10-23). */
+  youtubeInApp: boolean;
 }
 
 const KEY = "orbit.prefs.v1";
@@ -130,6 +132,7 @@ const defaults: Prefs = {
   swipeToReply: true,
   doubleTapReact: true,
   quickReaction: "👍",
+  youtubeInApp: true,
 };
 
 function load(): Prefs {
@@ -160,6 +163,7 @@ function load(): Prefs {
       swipeToReply: typeof stored.swipeToReply === "boolean" ? stored.swipeToReply : defaults.swipeToReply,
       doubleTapReact: typeof stored.doubleTapReact === "boolean" ? stored.doubleTapReact : defaults.doubleTapReact,
       quickReaction: QUICK_REACTIONS.some((e) => e === stored.quickReaction) ? stored.quickReaction : defaults.quickReaction,
+      youtubeInApp: typeof stored.youtubeInApp === "boolean" ? stored.youtubeInApp : defaults.youtubeInApp,
       ...notificationChoice(stored),
     };
   } catch {

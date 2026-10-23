@@ -275,6 +275,13 @@ export function AppearancePage() {
         </div>
         <div className="setting">
           <div className="lines">
+            <strong>Play YouTube in Meldiq</strong>
+            <small>YouTube videos play here in YouTube's privacy-enhanced player, loaded only when you press Play. Off: they open on YouTube.</small>
+          </div>
+          <Toggle label="Play YouTube in Meldiq" checked={prefs.youtubeInApp} onChange={(v) => setPrefs({ youtubeInApp: v })} />
+        </div>
+        <div className="setting">
+          <div className="lines">
             <strong>Enter sends the message</strong>
             <small>Off: Enter adds a line and Ctrl+Enter (⌘+Enter) sends.</small>
           </div>
