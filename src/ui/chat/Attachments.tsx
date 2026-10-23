@@ -8,9 +8,10 @@ import { isInlineImage, openAttachment, safeMime, saveAttachment } from "../../s
 import { clock, isVoice, shownDuration } from "../../sync/voice";
 import { bytes } from "../format";
 import { albumOverflow, albumRows } from "./album";
+import { useNearScreen } from "./useNearScreen";
 
 /**
- * Decrypts on demand. Images show inline; voice messages play in place (android VoiceViews); audio and video play inline
+ * Decrypts on demand. Images show inline once scrolled near; voice messages play in place (android VoiceViews); audio and video play inline
  * once opened (a click, so nothing large downloads unasked); anything else is a file card that downloads.
  */
 export function Attachments({ refs }: { refs: AttachmentRef[] }) {
@@ -149,7 +150,9 @@ export function ImageAttachment({ r }: { r: AttachmentRef }) {
   // Download photos automatically off (android Settings › Chats): each photo waits for a click.
   const { autoLoadPhotos } = usePrefs();
   const [asked, setAsked] = useState(false);
-  const { url, error, loading } = useBlobUrl(r, autoLoadPhotos || asked);
+  // Loaded when scrolled near, not with the whole history (and then kept in this browser: src/store/mediaCache.ts).
+  const [spot, near] = useNearScreen<HTMLDivElement>();
+  const { url, error, loading } = useBlobUrl(r, (autoLoadPhotos && near) || asked);
   const [open, setOpen] = useState(false);
   if (error) return <FileAttachment r={r} error={error} />;
   if (!autoLoadPhotos && !asked)
@@ -166,7 +169,7 @@ export function ImageAttachment({ r }: { r: AttachmentRef }) {
         </span>
       </button>
     );
-  if (loading || !url) return <div className="att-image att-pending skeleton" aria-label={`Loading ${r.name}`} />;
+  if (loading || !url) return <div ref={spot} className="att-image att-pending skeleton" aria-label={`Loading ${r.name}`} />;
   return (
     <>
       <button className="att-image" onClick={() => setOpen(true)} aria-label={`Open image ${r.name}`}>
@@ -242,9 +245,10 @@ function AlbumGrid({ items }: { items: AttachmentRef[] }) {
 
 function AlbumTile({ r, more, onOpen }: { r: AttachmentRef; more: number; onOpen: () => void }) {
   const { autoLoadPhotos } = usePrefs();
-  const { url, error } = useBlobUrl(r, autoLoadPhotos);
+  const [spot, near] = useNearScreen<HTMLButtonElement>();
+  const { url, error } = useBlobUrl(r, autoLoadPhotos && near);
   return (
-    <button className="album-tile" onClick={onOpen} aria-label={more ? `Open photos, ${more} more` : `Open image ${r.name}`}>
+    <button ref={spot} className="album-tile" onClick={onOpen} aria-label={more ? `Open photos, ${more} more` : `Open image ${r.name}`}>
       {url ? (
         <img src={url} alt="" loading="lazy" />
       ) : error ? (

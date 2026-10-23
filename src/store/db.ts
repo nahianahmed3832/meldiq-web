@@ -3,6 +3,7 @@ import type { QueueItem } from "../api/schemas";
 import { fromB64 } from "../crypto/bytes";
 import { importEd25519Public, importX25519Public, unsealEd25519, unsealX25519 } from "../crypto/keyStorage";
 import type { ConversationLocal, DeviceRecord, OutboxItem, PinnedIdentity, StoredMessage } from "../model/types";
+import { forgetAllMedia } from "./mediaCache";
 
 /**
  * Everything this browser keeps, in IndexedDB on this computer (one database per origin, so per Orbit server). Key
@@ -78,9 +79,10 @@ export class LocalStore {
     this.db.close();
   }
 
-  /** Closes and deletes everything this browser stored. */
+  /** Closes and deletes everything this browser stored, the kept media included. */
   static async erase(store: LocalStore | null, name = store?.name ?? DB_NAME): Promise<void> {
     store?.close();
+    await forgetAllMedia();
     await new Promise<void>((resolve, reject) => {
       const req = indexedDB.deleteDatabase(name);
       req.onsuccess = () => resolve();
