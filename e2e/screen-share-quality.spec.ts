@@ -72,12 +72,10 @@ test("shares at High and at Standard: the capture and encoding follow the mode, 
     await expect.poll(() => call.media.received.video.frames, { timeout: 20_000 }).toBeGreaterThan(before + 20);
     await page.waitForTimeout(4_000);
     const standard = parsePill((await pill.textContent()) ?? "")!;
-    test
-      .info()
-      .annotations.push({
-        type: "standard",
-        description: `sent ${standard.width}×${standard.height} at ${standard.fps} fps; peer decoded width ${call.media.received.video.width}; stats ${JSON.stringify(await stats())}`,
-      });
+    test.info().annotations.push({
+      type: "standard",
+      description: `sent ${standard.width}×${standard.height} at ${standard.fps} fps; peer decoded width ${call.media.received.video.width}; stats ${JSON.stringify(await stats())}`,
+    });
     expect(standard.fps).toBeLessThanOrEqual(31);
     expect(call.media.received.video.width ?? 0).toBeLessThanOrEqual(1280);
 
