@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { useEngine } from "../../application/orbit";
 import type { Engine } from "../../sync/engine";
+import { cachedMedia, keepMedia } from "../../store/mediaCache";
 
 /**
  * Profile and workspace photos. They need the session (members only), so they're fetched with the API client and shown
- * as object URLs, one per photo revision, kept for the page's life (a bounded number, oldest let go first).
+ * as object URLs, one per photo revision, kept for the page's life (a bounded number, oldest let go first); the bytes are
+ * kept in this browser's media cache, so another visit doesn't download them again.
  */
 const MAX_KEPT = 300;
 const cache = new Map<string, Promise<string | null>>();
@@ -12,8 +14,14 @@ const cache = new Map<string, Promise<string | null>>();
 function load(engine: Engine, path: string, key: string): Promise<string | null> {
   const hit = cache.get(key);
   if (hit) return hit;
-  const p = engine.api
-    .bytes(path)
+  // Kept in this browser between visits, one entry per photo revision (a new photo has a new revision).
+  const p = cachedMedia(`photo:${key}`)
+    .then(async (kept) => {
+      if (kept) return kept;
+      const b = new Uint8Array(await engine.api.bytes(path));
+      void keepMedia(`photo:${key}`, b);
+      return b;
+    })
     .then((b) => URL.createObjectURL(new Blob([new Uint8Array(b)], { type: "image/jpeg" })))
     .catch(() => null);
   cache.set(key, p);

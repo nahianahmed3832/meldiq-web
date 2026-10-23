@@ -6,6 +6,7 @@ import { decryptStream } from "../crypto/fileStream";
 import { type UploadProgress, uploadLarge } from "./largeUpload";
 import type { AttachmentRef } from "../protocol/payload";
 import type { Engine } from "./engine";
+import { cachedMedia, forgetMediaEntry, keepMedia } from "../store/mediaCache";
 
 /**
  * Files travel as ciphertext only (docs/ATTACHMENTS.md): encrypted here, uploaded through the existing authorised upload
@@ -110,7 +111,10 @@ const cache = new Map<string, Promise<Blob>>();
 /** Files up to this size are kept decrypted for the page's life (instant reopening); larger ones are fetched each time. */
 const CACHE_LIMIT = 64 * 1024 * 1024;
 
-/** Downloads, verifies and decrypts a file (once per page load when small). Object URLs are made by the caller and revoked by it. */
+/**
+ * Downloads, verifies and decrypts a file: once per page load when small, and single-message files once per browser
+ * (their ciphertext is kept in the media cache). Object URLs are made by the caller and revoked by it.
+ */
 export function openAttachment(engine: Engine, ref: AttachmentRef): Promise<Blob> {
   if (ref.chunk !== undefined) {
     const parts: Blob[] = [];
@@ -122,23 +126,37 @@ export function openAttachment(engine: Engine, ref: AttachmentRef): Promise<Blob
   }
   let p = cache.get(ref.id);
   if (!p) {
-    p = (async () => {
-      let ct: Uint8Array;
-      try {
-        ct = new Uint8Array(await (await attachmentResponse(engine, ref.id)).arrayBuffer());
-      } catch (e) {
-        if (e instanceof ApiError && e.status === 404) throw new AttachmentError("This file has expired on the server (files are kept 7 days unless saved with history).");
-        throw e;
-      }
-      const plain = await decryptFile(ct, ref).catch(() => {
-        throw new AttachmentError("This file didn't pass its integrity check and wasn't opened.");
-      });
-      return new Blob([new Uint8Array(plain)], { type: safeMime(ref.mime) });
-    })();
+    p = openSingle(engine, ref);
     p.catch(() => cache.delete(ref.id));
     cache.set(ref.id, p);
   }
   return p;
+}
+
+/**
+ * A single-message file: its ciphertext from this browser's media cache when an earlier visit downloaded it, else from
+ * the server (then kept). A kept copy that fails its check is dropped and downloaded again.
+ */
+async function openSingle(engine: Engine, ref: AttachmentRef): Promise<Blob> {
+  const key = `attachment:${ref.id}`;
+  const kept = await cachedMedia(key);
+  if (kept) {
+    const plain = await decryptFile(kept, ref).catch(() => null);
+    if (plain) return new Blob([new Uint8Array(plain)], { type: safeMime(ref.mime) });
+    await forgetMediaEntry(key);
+  }
+  let ct: Uint8Array;
+  try {
+    ct = new Uint8Array(await (await attachmentResponse(engine, ref.id)).arrayBuffer());
+  } catch (e) {
+    if (e instanceof ApiError && e.status === 404) throw new AttachmentError("This file has expired on the server (files are kept 7 days unless saved with history).");
+    throw e;
+  }
+  const plain = await decryptFile(ct, ref).catch(() => {
+    throw new AttachmentError("This file didn't pass its integrity check and wasn't opened.");
+  });
+  void keepMedia(key, ct);
+  return new Blob([new Uint8Array(plain)], { type: safeMime(ref.mime) });
 }
 
 /**
