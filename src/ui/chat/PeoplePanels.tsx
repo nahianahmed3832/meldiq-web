@@ -137,6 +137,7 @@ export function ProfilePanel({ c, onClose }: { c: Conversation; onClose: () => v
   const peer = dmPeer(c, me);
   const known = useOrbit((s) => (peer ? s.users[peer.id] : undefined));
   const peerId = peer?.id ?? null;
+  const profilesRev = useOrbit((s) => s.profilesRev);
   const [profile, setProfile] = useState<Profile | null>(null);
   useEffect(() => {
     if (!peerId) return;
@@ -148,7 +149,7 @@ export function ProfilePanel({ c, onClose }: { c: Conversation; onClose: () => v
     return () => {
       alive = false;
     };
-  }, [engine, peerId]);
+  }, [engine, peerId, profilesRev]);
   if (!peer) return null;
   const name = known?.displayName ?? profile?.displayName ?? peer.displayName;
   const presence = known?.presence ?? profile?.presence ?? null;

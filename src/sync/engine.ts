@@ -403,6 +403,29 @@ export class Engine implements EngineContext {
     }));
   }
 
+  /**
+   * Someone's profile or settings changed (API 0.28 `user.updated`; reported 2026-10-23: such changes showed on other
+   * devices only after a refresh). Your own: everything is loaded again, as after a reconnect. Someone else's: their
+   * profile is fetched again, so the server's privacy rules decide what shows, never the frame.
+   */
+  private async userUpdated(userId: string): Promise<void> {
+    this.directory.invalidateUser(userId);
+    if (userId === this.device.userId) {
+      await this.refreshAll();
+    } else {
+      const p = await this.api.json("GET", `/v1/users/${encodeURIComponent(userId)}`, z.object({ user: zProfile })).catch(() => null);
+      if (p)
+        this.set((s) => {
+          const prev = s.users[userId];
+          if (!prev) return s; // not someone this browser shows
+          const u = p.user;
+          const member = { ...u, notificationsPaused: prev.notificationsPaused ?? null, homeServer: null, role: null, orgRole: null };
+          return { ...s, users: { ...s.users, [userId]: toUser(member, prev) } };
+        });
+    }
+    this.set((s) => ({ ...s, profilesRev: s.profilesRev + 1 }));
+  }
+
   /** Server info, profile, workspaces and conversations: on start and after every reconnect (what changed while away). */
   async refreshAll(): Promise<void> {
     try {
@@ -539,6 +562,9 @@ export class Engine implements EngineContext {
         return;
       case "devices.changed":
         this.directory.invalidateUser(f.userId);
+        return;
+      case "user.updated":
+        await this.userUpdated(f.userId);
         return;
       case "call": {
         const call = f.call;

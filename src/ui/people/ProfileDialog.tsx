@@ -27,6 +27,8 @@ export function ProfileDialog({ userId, fallbackName, onClose }: { userId: strin
   const me = useOrbit((s) => s.me?.userId);
   const features = useOrbit((s) => s.server?.features ?? [], shallowEqual);
   const rev = useOrbit((s) => s.connectionsRev);
+  // Their profile changed elsewhere (API 0.28 user.updated): loaded again.
+  const profilesRev = useOrbit((s) => s.profilesRev);
   const orgs = useOrbit((s) => invitableCommunities(s.orgs), shallowEqual);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [state, setState] = useState<ReturnType<typeof connectionState> | null>(null);
@@ -51,7 +53,7 @@ export function ProfileDialog({ userId, fallbackName, onClose }: { userId: strin
     return () => {
       alive = false;
     };
-  }, [engine, userId]);
+  }, [engine, userId, profilesRev]);
   useEffect(() => {
     if (!hasConnections || self) return;
     let alive = true;

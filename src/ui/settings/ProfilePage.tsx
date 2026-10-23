@@ -17,7 +17,9 @@ export function ProfilePage() {
   const me = useOrbit((s) => s.me);
   const photoRev = useOrbit((s) => (s.me ? (s.users[s.me.userId]?.photoRev ?? null) : null));
   const [version, setVersion] = useState(0);
-  const profile = useLoad(() => myProfile(engine), [engine, version]);
+  // Changed on another device (API 0.28 user.updated): loaded again; what's being edited here is kept (below).
+  const profilesRev = useOrbit((s) => s.profilesRev);
+  const profile = useLoad(() => myProfile(engine), [engine, version, profilesRev]);
   const address = useLoad(() => networkAddress(engine), [engine]);
   const [form, setForm] = useState({ displayName: "", firstName: "", lastName: "", username: "", statusText: "", birthday: "", phone: "", pronouns: "" });
   const pronounsOffered = useOrbit((s) => s.server?.features.includes("pronouns") ?? false);
@@ -27,9 +29,11 @@ export function ProfilePage() {
   const file = useRef<HTMLInputElement>(null);
   const p = profile.data;
 
+  // The values last loaded: a newer load replaces the form only while it still shows them (nothing edited here).
+  const shown = useRef<typeof form | null>(null);
   useEffect(() => {
     if (!p) return;
-    setForm({
+    const next = {
       displayName: p.displayName,
       firstName: p.firstName ?? "",
       lastName: p.lastName ?? "",
@@ -38,7 +42,11 @@ export function ProfilePage() {
       birthday: p.birthday ?? "",
       phone: p.phone ?? "",
       pronouns: p.pronouns ?? "",
-    });
+    };
+    const edited = shown.current !== null && JSON.stringify(form) !== JSON.stringify(shown.current);
+    shown.current = next;
+    if (!edited) setForm(next);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- the form as it is when a newer profile arrives
   }, [p]);
 
   if (!me) return null;
