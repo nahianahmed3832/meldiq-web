@@ -9,6 +9,7 @@ import type { DeviceRecord } from "../../model/types";
 import { type LinkApproval, LinkError, type PendingLink, pollLinkApproval, startLink } from "../../sync/session";
 import { AuthHeading, FormError, LinkButton } from "./AuthFrame";
 import { authErrorText, useSubmit } from "./useSubmit";
+import { useT } from "../../i18n";
 
 const POLL_MS = 2000;
 
@@ -24,12 +25,12 @@ export function CreateIdentityView(props: {
   onSignOut: () => void;
 }) {
   const { busy, error, run } = useSubmit();
+  const t = useT();
   return (
     <div className="auth-form">
-      <AuthHeading title="Set up end-to-end encryption" sub={`Signed in as ${props.account.email}.`} />
+      <AuthHeading title={t("create_title")} sub={t("create_signed_in", { email: props.account.email })} />
       <p className="muted" style={{ margin: 0 }}>
-        This browser will make your account's encryption keys. They're backed up locked with your password, so a new device needs your password and a code sent to your email. You'll also get a{" "}
-        <b>recovery key</b> for when the email can't work, for example after a password reset.
+        {t("create_body")}
       </p>
       <FormError text={error} />
       <button
@@ -42,10 +43,10 @@ export function CreateIdentityView(props: {
           })
         }
       >
-        <ShieldCheck size={16} /> {busy ? "Making keys…" : "Set up encryption"}
+        <ShieldCheck size={16} /> {busy ? t("create_busy") : t("create_button")}
       </button>
       <div className="auth-links">
-        <LinkButton onClick={props.onSignOut}>Use a different account</LinkButton>
+        <LinkButton onClick={props.onSignOut}>{t("common_use_other_account")}</LinkButton>
       </div>
     </div>
   );
@@ -55,6 +56,7 @@ export function CreateIdentityView(props: {
 export function RecoveryKeyReveal({ code, onDone }: { code: string; onDone: () => void }) {
   const [saved, setSaved] = useState(false);
   const [copied, setCopied] = useState(false);
+  const t = useT();
   // The key exists only on this page now: leaving before it's stored loses it.
   useEffect(() => {
     if (saved) return;
@@ -73,8 +75,8 @@ export function RecoveryKeyReveal({ code, onDone }: { code: string; onDone: () =
   };
   return (
     <div className="auth-form">
-      <AuthHeading title="Save your recovery key" sub="It's shown only now. You'll need it if you can't get into your email, or after a password reset." />
-      <div className="recovery-key" aria-label="Recovery key">
+      <AuthHeading title={t("reveal_title")} sub={t("reveal_sub")} />
+      <div className="recovery-key" aria-label={t("common_recovery_key")}>
         {code.split("-").map((g, i) => (
           <span key={i}>{g}</span>
         ))}
@@ -90,22 +92,22 @@ export function RecoveryKeyReveal({ code, onDone }: { code: string; onDone: () =
             })
           }
         >
-          {copied ? <Check size={14} /> : <Copy size={14} />} {copied ? "Copied" : "Copy"}
+          {copied ? <Check size={14} /> : <Copy size={14} />} {copied ? t("common_copied") : t("common_copy")}
         </button>
         <button type="button" className="btn btn-secondary btn-sm" onClick={download}>
-          <Download size={14} /> Save as a file
+          <Download size={14} /> {t("reveal_save_file")}
         </button>
       </div>
       <div className="banner warn">
         <KeyRound size={16} />
-        <span className="grow">Anyone with this key can read your messages. Keep it private, in a password manager or on paper.</span>
+        <span className="grow">{t("reveal_warning")}</span>
       </div>
       <div className="row" style={{ gap: 10, alignItems: "flex-start" }}>
         <input id="rk-saved" type="checkbox" checked={saved} onChange={(e) => setSaved(e.target.checked)} style={{ marginTop: 3 }} />
-        <label htmlFor="rk-saved">I've stored my recovery key somewhere safe.</label>
+        <label htmlFor="rk-saved">{t("reveal_stored")}</label>
       </div>
       <button className="btn btn-primary btn-lg" disabled={!saved} onClick={onDone}>
-        Open Meldiq
+        {t("reveal_open")}
       </button>
     </div>
   );
@@ -138,6 +140,7 @@ export function AddDeviceView(props: AddDeviceProps & { onSignOut: () => void })
   const [way, setWay] = useState<OtherWay>("phone");
   const [others, setOthers] = useState(false);
   const { creds } = props;
+  const t = useT();
   useEffect(() => {
     let live = true;
     creds.accounts
@@ -154,10 +157,10 @@ export function AddDeviceView(props: AddDeviceProps & { onSignOut: () => void })
   const emailWay = backup === true && !others;
   return (
     <div className="auth-form">
-      <AuthHeading title="Set up this browser" sub={`Signed in as ${props.account.email}. To read your messages here, this browser needs your account's keys.`} />
+      <AuthHeading title={t("setup_title")} sub={t("setup_sub", { email: props.account.email })} />
       {checking ? (
         <p className="muted" role="status" style={{ margin: 0 }}>
-          Checking for a backup of your keys…
+          {t("setup_checking")}
         </p>
       ) : emailWay ? (
         <EmailUnlock {...props} onRecovery={() => setOthers(true)} />
@@ -165,41 +168,41 @@ export function AddDeviceView(props: AddDeviceProps & { onSignOut: () => void })
         <>
           {backup === true && (
             <p className="muted" style={{ margin: 0 }}>
-              Other ways to unlock: if the email code can't reach you, use one of these.
+              {t("setup_other_ways")}
             </p>
           )}
           {backup === false && (
             <p className="hint" style={{ margin: 0 }}>
-              There's no key backup for your current password (for example after a password reset), so use your phone or your recovery key.
+              {t("setup_no_backup")}
             </p>
           )}
           {backup === null && (
             <div className="banner warn" role="alert">
-              <span className="grow">Couldn't check whether your keys are backed up. Try again, or use another way below.</span>
+              <span className="grow">{t("setup_check_failed")}</span>
               <button type="button" className="btn btn-secondary btn-sm" onClick={() => setAttempt((n) => n + 1)}>
-                <RefreshCw size={14} /> Try again
+                <RefreshCw size={14} /> {t("setup_try_again")}
               </button>
             </div>
           )}
-          <div className="segmented auth-ways" role="tablist" aria-label="How to set up this browser">
+          <div className="segmented auth-ways" role="tablist" aria-label={t("setup_ways")}>
             <button role="tab" aria-selected={way === "phone"} onClick={() => setWay("phone")}>
-              <Smartphone size={14} /> Approve from my phone
+              <Smartphone size={14} /> {t("setup_way_phone")}
             </button>
             <button role="tab" aria-selected={way === "recovery"} onClick={() => setWay("recovery")}>
-              <KeyRound size={14} /> Use my recovery key
+              <KeyRound size={14} /> {t("setup_way_recovery")}
             </button>
           </div>
           {way === "phone" ? <ApproveFromDevice {...props} /> : <RecoveryKeyEntry {...props} />}
           {backup === true && (
             <div className="auth-links">
-              <LinkButton onClick={() => setOthers(false)}>Back to the email code</LinkButton>
+              <LinkButton onClick={() => setOthers(false)}>{t("setup_back_to_email")}</LinkButton>
             </div>
           )}
         </>
       )}
       {!emailWay && (
         <div className="auth-links">
-          <LinkButton onClick={props.onSignOut}>Use a different account</LinkButton>
+          <LinkButton onClick={props.onSignOut}>{t("common_use_other_account")}</LinkButton>
         </div>
       )}
     </div>
@@ -238,6 +241,7 @@ function EmailUnlock(props: AddDeviceProps & { onSignOut: () => void; onRecovery
   const [password, setPassword] = useState("");
   const [trouble, setTrouble] = useState(false);
   const { busy, error, run } = useSubmit();
+  const t = useT();
   const send = () =>
     void run(async () => {
       const to = (await props.creds.accounts.startKeyUnlock()).email;
@@ -261,43 +265,31 @@ function EmailUnlock(props: AddDeviceProps & { onSignOut: () => void; onRecovery
   return (
     <form className="auth-form" onSubmit={submit} noValidate>
       <p className="muted" role="status" style={{ margin: 0 }}>
-        {sentTo ? (
-          <>
-            Enter the 6-digit code we sent to <b>{sentTo}</b>.
-          </>
-        ) : busy ? (
-          <>
-            Sending a code to <b>{email}</b>…
-          </>
-        ) : (
-          <>
-            We'll send a code to <b>{email}</b>.
-          </>
-        )}
+        {sentTo ? t("setup_code_sent", { email: sentTo }) : busy ? t("setup_code_sending", { email }) : t("setup_code_will_send", { email })}
       </p>
       <FormError text={error} />
       <div className="field">
-        <label htmlFor="ku-code">Verification code</label>
+        <label htmlFor="ku-code">{t("setup_code_label")}</label>
         <input id="ku-code" className="input mono" inputMode="numeric" autoComplete="one-time-code" maxLength={7} value={code} onChange={(e) => setCode(e.target.value)} autoFocus />
       </div>
       {!props.password && (
         <div className="field">
-          <label htmlFor="ku-password">Password</label>
+          <label htmlFor="ku-password">{t("common_password")}</label>
           <input id="ku-password" className="input" type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} />
-          <span className="hint">Your password opens the backup in this browser.</span>
+          <span className="hint">{t("setup_password_hint")}</span>
         </div>
       )}
       <button className="btn btn-primary btn-lg" disabled={busy || !ready}>
-        {busy && sentTo ? "Unlocking…" : "Unlock"}
+        {busy && sentTo ? t("setup_unlocking") : t("setup_unlock")}
       </button>
       <div className="auth-links">
-        <LinkButton onClick={() => setTrouble((t) => !t)}>Having trouble?</LinkButton>
-        <LinkButton onClick={props.onRecovery}>Account recovery</LinkButton>
+        <LinkButton onClick={() => setTrouble((open) => !open)}>{t("setup_trouble")}</LinkButton>
+        <LinkButton onClick={props.onRecovery}>{t("setup_recovery")}</LinkButton>
       </div>
       {trouble && (
         <div className="auth-links">
-          <LinkButton onClick={send}>Send a new code</LinkButton>
-          <LinkButton onClick={props.onSignOut}>Use a different account</LinkButton>
+          <LinkButton onClick={send}>{t("common_send_new_code")}</LinkButton>
+          <LinkButton onClick={props.onSignOut}>{t("common_use_other_account")}</LinkButton>
         </div>
       )}
     </form>
@@ -307,11 +299,12 @@ function EmailUnlock(props: AddDeviceProps & { onSignOut: () => void; onRecovery
 function RecoveryKeyEntry(props: AddDeviceProps) {
   const [code, setCode] = useState("");
   const { busy, error, setError, run } = useSubmit();
+  const t = useT();
   const submit = (e: FormEvent) => {
     e.preventDefault();
     void run(async () => {
       const seed = await decodeRecoveryCode(code);
-      if (!seed) return setError("That recovery key isn't complete or has a typo. Check it and try again.");
+      if (!seed) return setError(t("setup_recovery_bad"));
       try {
         props.onEnrolled((await enrollWithSeed(props.creds.accounts, props.account, seed, props.deviceName, undefined, props.password)).device);
       } finally {
@@ -323,12 +316,12 @@ function RecoveryKeyEntry(props: AddDeviceProps) {
     <form className="auth-form" onSubmit={submit} noValidate>
       <FormError text={error} />
       <div className="field">
-        <label htmlFor="rk-code">Recovery key</label>
+        <label htmlFor="rk-code">{t("common_recovery_key")}</label>
         <textarea id="rk-code" className="textarea mono" rows={3} autoComplete="off" spellCheck={false} value={code} onChange={(e) => setCode(e.target.value)} autoFocus />
-        <span className="hint">It stays in this browser: only a signature made with it is sent.</span>
+        <span className="hint">{t("setup_recovery_hint")}</span>
       </div>
       <button className="btn btn-primary btn-lg" disabled={busy || !code.trim()}>
-        {busy ? "Setting up…" : "Set up this browser"}
+        {busy ? t("setup_busy") : t("setup_button")}
       </button>
     </form>
   );
@@ -340,6 +333,7 @@ function ApproveFromDevice(props: AddDeviceProps) {
   const [state, setState] = useState<Pairing>({ k: "starting" });
   const gen = useRef(0);
   const { creds, account, deviceName, password, onEnrolled } = props;
+  const t = useT();
 
   const begin = async () => {
     const mine = ++gen.current;
@@ -402,15 +396,13 @@ function ApproveFromDevice(props: AddDeviceProps) {
     <ol className="steps">
       <li>
         <div>
-          <strong>On your phone, open Meldiq</strong>
-          <div className="muted">
-            Go to <b>Settings › Devices</b> and tap <b>Approve new device</b>.
-          </div>
+          <strong>{t("phone_step_open")}</strong>
+          <div className="muted">{t("phone_step_open_sub")}</div>
         </div>
       </li>
       <li>
         <div style={{ display: "grid", gap: 10 }}>
-          <strong>Enter this code</strong>
+          <strong>{t("phone_step_code")}</strong>
           {state.k === "waiting" ? (
             <div className="code-box">
               <span className="code" aria-label={`Link code ${state.link.code.split("").join(" ")}`}>
@@ -419,9 +411,9 @@ function ApproveFromDevice(props: AddDeviceProps) {
             </div>
           ) : state.k === "expired" || state.k === "error" ? (
             <div className={`banner ${state.k === "error" ? "danger" : "warn"}`} role="alert">
-              <span className="grow">{state.k === "error" ? state.message : "That code expired."}</span>
+              <span className="grow">{state.k === "error" ? state.message : t("phone_expired")}</span>
               <button type="button" className="btn btn-secondary btn-sm" onClick={() => void begin()}>
-                <RefreshCw size={14} /> New code
+                <RefreshCw size={14} /> {t("phone_new_code")}
               </button>
             </div>
           ) : (
@@ -433,13 +425,13 @@ function ApproveFromDevice(props: AddDeviceProps) {
       </li>
       <li>
         <div style={{ display: "grid", gap: 6 }}>
-          <strong>Check the device key, then approve</strong>
-          <span className="muted">Your phone shows a device key. It must match this one exactly:</span>
+          <strong>{t("phone_step_check")}</strong>
+          <span className="muted">{t("phone_step_check_sub")}</span>
           <span className="fingerprint" aria-label="Device key">
             {state.k === "waiting" ? state.deviceFp : "····· ····· ····· ····· ····· ·····"}
           </span>
           <span className="faint" aria-live="polite" style={{ fontSize: 12.5 }}>
-            {state.k === "finishing" ? "Approved. Setting up this browser…" : state.k === "waiting" ? "Waiting for your phone to approve…" : ""}
+            {state.k === "finishing" ? t("phone_finishing") : state.k === "waiting" ? t("phone_waiting") : ""}
           </span>
         </div>
       </li>

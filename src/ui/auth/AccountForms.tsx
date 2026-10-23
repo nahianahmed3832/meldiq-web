@@ -7,6 +7,7 @@ import { verifyLegacyAccount } from "../../auth/legacyMove";
 import { cleanVerifyCode, emailProblem, nameProblem, normalizeEmail, PASSWORD_MIN_LENGTH, passwordProblem } from "../../auth/rules";
 import { AuthHeading, FormError, FormNotice, LinkButton } from "./AuthFrame";
 import { useSubmit } from "./useSubmit";
+import { useT } from "../../i18n";
 
 /** Shared by every form: the server's account API and this browser's name in the account's session list. */
 export interface FormContext {
@@ -24,10 +25,11 @@ export function Field({ id, label, hint, children }: { id: string; label: string
   );
 }
 
-export function Back({ onClick, label = "Back" }: { onClick: () => void; label?: string }) {
+export function Back({ onClick, label }: { onClick: () => void; label?: string }) {
+  const t = useT();
   return (
     <button type="button" className="btn btn-ghost btn-sm auth-back" onClick={onClick}>
-      <ArrowLeft size={14} /> {label}
+      <ArrowLeft size={14} /> {label ?? t("common_back")}
     </button>
   );
 }
@@ -59,9 +61,10 @@ export function SignInForm(props: {
   const [password, setPassword] = useState("");
   const [help, setHelp] = useState(false);
   const { busy, error, setError, run } = useSubmit();
+  const t = useT();
 
   const submit = () => {
-    const problem = emailProblem(email) ?? (password ? null : "Enter your password.");
+    const problem = emailProblem(email) ?? (password ? null : t("signin_enter_password"));
     if (problem) return setError(problem);
     void run(async () => {
       try {
@@ -87,21 +90,21 @@ export function SignInForm(props: {
 
   return (
     <form className="auth-form" onSubmit={submitHandler(submit)} noValidate>
-      <AuthHeading title="Sign in to Meldiq" sub="Use the email and password of your Meldiq account." />
+      <AuthHeading title={t("signin_title")} sub={t("signin_sub")} />
       <FormNotice text={props.notice ?? null} />
       <FormError text={error} />
-      <Field id="si-email" label="Email">
+      <Field id="si-email" label={t("common_email")}>
         <input id="si-email" className="input" type="email" autoComplete="username" value={email} onChange={(e) => setEmail(e.target.value)} autoFocus />
       </Field>
-      <Field id="si-password" label="Password">
+      <Field id="si-password" label={t("common_password")}>
         <input id="si-password" className="input" type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} />
       </Field>
       <button className="btn btn-primary btn-lg" disabled={busy}>
-        {busy ? "Signing in…" : "Sign in"}
+        {busy ? t("signin_busy") : t("signin_button")}
       </button>
       <div className="auth-links">
-        <LinkButton onClick={() => setHelp(true)}>Having trouble signing in?</LinkButton>
-        {props.canSignUp && <LinkButton onClick={props.onSignUp}>Create an account</LinkButton>}
+        <LinkButton onClick={() => setHelp(true)}>{t("signin_trouble")}</LinkButton>
+        {props.canSignUp && <LinkButton onClick={props.onSignUp}>{t("signin_create")}</LinkButton>}
       </div>
     </form>
   );
@@ -112,27 +115,17 @@ export function SignInForm(props: {
  * docs/product/MELDIQ_AUTH_FLOW_AUDIT.md). A way is offered only when this server and this browser allow it.
  */
 function SignInHelp(props: { onForgot: () => void; onRecover?: () => void; onMove?: () => void; onLinkWithPhone?: () => void; onBack: () => void }) {
+  const t = useT();
   return (
     <div className="auth-form">
-      <AuthHeading title="Having trouble signing in?" sub="Choose what happened. What you typed stays here if you come back." />
+      <AuthHeading title={t("signin_trouble")} sub={t("help_sub")} />
       <div className="auth-choices">
-        <ChoiceButton icon={<LockKeyhole size={18} />} title="I forgot my password" sub="We'll email you a code to set a new one." onClick={props.onForgot} />
-        {props.onRecover && (
-          <ChoiceButton icon={<MailX size={18} />} title="I can't get into my email" sub="Use one of your saved recovery codes to move the account to a new address." onClick={props.onRecover} />
-        )}
-        {props.onMove && (
-          <ChoiceButton icon={<ArrowLeftRight size={18} />} title="Move an existing account" sub="Used Orbit before email sign-in? Use your username and recovery key once." onClick={props.onMove} />
-        )}
-        {props.onLinkWithPhone && (
-          <ChoiceButton
-            icon={<Smartphone size={18} />}
-            title="Link with your phone instead"
-            sub="Haven't moved your account yet? Approve this browser from your phone."
-            onClick={props.onLinkWithPhone}
-          />
-        )}
+        <ChoiceButton icon={<LockKeyhole size={18} />} title={t("help_forgot")} sub={t("help_forgot_sub")} onClick={props.onForgot} />
+        {props.onRecover && <ChoiceButton icon={<MailX size={18} />} title={t("help_no_email")} sub={t("help_no_email_sub")} onClick={props.onRecover} />}
+        {props.onMove && <ChoiceButton icon={<ArrowLeftRight size={18} />} title={t("help_move")} sub={t("help_move_sub")} onClick={props.onMove} />}
+        {props.onLinkWithPhone && <ChoiceButton icon={<Smartphone size={18} />} title={t("help_phone")} sub={t("help_phone_sub")} onClick={props.onLinkWithPhone} />}
       </div>
-      <Back onClick={props.onBack} label="Back to sign in" />
+      <Back onClick={props.onBack} label={t("help_back")} />
     </div>
   );
 }
@@ -161,9 +154,10 @@ export function SignUpForm(props: { ctx: FormContext; inviteRequired: boolean; o
   const [password, setPassword] = useState("");
   const [invite, setInvite] = useState("");
   const { busy, error, setError, run } = useSubmit();
+  const t = useT();
 
   const submit = () => {
-    const problem = nameProblem(name) ?? emailProblem(email) ?? passwordProblem(password, email) ?? (props.inviteRequired && !invite.trim() ? "Enter your invitation code." : null);
+    const problem = nameProblem(name) ?? emailProblem(email) ?? passwordProblem(password, email) ?? (props.inviteRequired && !invite.trim() ? t("signup_invite_missing") : null);
     if (problem) return setError(problem);
     void run(async () => {
       await props.ctx.accounts.register(name.trim(), normalizeEmail(email), password, invite.trim() || undefined);
@@ -173,25 +167,25 @@ export function SignUpForm(props: { ctx: FormContext; inviteRequired: boolean; o
 
   return (
     <form className="auth-form" onSubmit={submitHandler(submit)} noValidate>
-      <Back onClick={props.onBack} label="Sign in instead" />
-      <AuthHeading title="Create your Meldiq account" sub="We'll email you a code to confirm the address." />
+      <Back onClick={props.onBack} label={t("signup_back")} />
+      <AuthHeading title={t("signup_title")} sub={t("signup_sub")} />
       <FormError text={error} />
-      <Field id="su-name" label="Your name" hint="Shown to the people you talk to.">
+      <Field id="su-name" label={t("common_your_name")} hint={t("signup_name_hint")}>
         <input id="su-name" className="input" autoComplete="name" value={name} maxLength={80} onChange={(e) => setName(e.target.value)} autoFocus />
       </Field>
-      <Field id="su-email" label="Email">
+      <Field id="su-email" label={t("common_email")}>
         <input id="su-email" className="input" type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} />
       </Field>
-      <Field id="su-password" label="Password" hint={`At least ${PASSWORD_MIN_LENGTH} characters. A few unrelated words make a strong one.`}>
+      <Field id="su-password" label={t("common_password")} hint={t("signup_password_hint", { n: PASSWORD_MIN_LENGTH })}>
         <input id="su-password" className="input" type="password" autoComplete="new-password" value={password} onChange={(e) => setPassword(e.target.value)} />
       </Field>
       {props.inviteRequired && (
-        <Field id="su-invite" label="Invitation code" hint="This server only admits people with an invitation.">
+        <Field id="su-invite" label={t("signup_invite")} hint={t("signup_invite_hint")}>
           <input id="su-invite" className="input" value={invite} onChange={(e) => setInvite(e.target.value)} autoComplete="off" />
         </Field>
       )}
       <button className="btn btn-primary btn-lg" disabled={busy}>
-        {busy ? "Creating…" : "Create account"}
+        {busy ? t("signup_busy") : t("signup_button")}
       </button>
     </form>
   );
@@ -200,13 +194,14 @@ export function SignUpForm(props: { ctx: FormContext; inviteRequired: boolean; o
 // ───────────────────────── email code ─────────────────────────
 
 export function VerifyEmailForm(props: { ctx: FormContext; email: string; password: string; onVerified: (grant: AccountSessionGrant) => void; onBack: () => void }) {
+  const t = useT();
   const [code, setCode] = useState("");
-  const [notice, setNotice] = useState<string | null>(`We sent a 6-digit code to ${props.email}. It's valid for 15 minutes.`);
+  const [notice, setNotice] = useState<string | null>(() => t("verify_sent", { email: props.email }));
   const { busy, error, setError, run } = useSubmit();
 
   const submit = () => {
     const c = cleanVerifyCode(code);
-    if (c.length !== 6) return setError("Enter the 6-digit code from the email.");
+    if (c.length !== 6) return setError(t("verify_enter"));
     void run(async () => {
       await props.ctx.accounts.verifyEmail(props.email, c, props.password);
       props.onVerified(await props.ctx.accounts.login(props.email, props.password, props.ctx.deviceName));
@@ -216,23 +211,23 @@ export function VerifyEmailForm(props: { ctx: FormContext; email: string; passwo
   const resend = () =>
     void run(async () => {
       await props.ctx.accounts.resendVerification(props.email);
-      setNotice(`If ${props.email} is waiting for a code, a new one is on its way.`);
+      setNotice(t("verify_resent", { email: props.email }));
     });
 
   return (
     <form className="auth-form" onSubmit={submitHandler(submit)} noValidate>
       <Back onClick={props.onBack} />
-      <AuthHeading title="Check your email" />
+      <AuthHeading title={t("verify_title")} />
       <FormNotice text={notice} />
       <FormError text={error} />
-      <Field id="ve-code" label="Code">
+      <Field id="ve-code" label={t("common_code")}>
         <input id="ve-code" className="input code-input" inputMode="numeric" autoComplete="one-time-code" value={code} maxLength={9} onChange={(e) => setCode(e.target.value)} autoFocus />
       </Field>
       <button className="btn btn-primary btn-lg" disabled={busy}>
-        {busy ? "Checking…" : "Confirm"}
+        {busy ? t("common_checking") : t("verify_button")}
       </button>
       <div className="auth-links">
-        <LinkButton onClick={resend}>Send a new code</LinkButton>
+        <LinkButton onClick={resend}>{t("common_send_new_code")}</LinkButton>
       </div>
     </form>
   );
@@ -243,6 +238,7 @@ export function VerifyEmailForm(props: { ctx: FormContext; email: string; passwo
 export function ForgotPasswordForm(props: { ctx: FormContext; initialEmail: string; onSent: (email: string) => void; onBack: () => void }) {
   const [email, setEmail] = useState(props.initialEmail);
   const { busy, error, setError, run } = useSubmit();
+  const t = useT();
   const submit = () => {
     const problem = emailProblem(email);
     if (problem) return setError(problem);
@@ -254,13 +250,13 @@ export function ForgotPasswordForm(props: { ctx: FormContext; initialEmail: stri
   return (
     <form className="auth-form" onSubmit={submitHandler(submit)} noValidate>
       <Back onClick={props.onBack} />
-      <AuthHeading title="Reset your password" sub="We'll email you a code. Resetting signs you out everywhere; your messages and keys stay on your devices." />
+      <AuthHeading title={t("forgot_title")} sub={t("forgot_sub")} />
       <FormError text={error} />
-      <Field id="fp-email" label="Email">
+      <Field id="fp-email" label={t("common_email")}>
         <input id="fp-email" className="input" type="email" autoComplete="username" value={email} onChange={(e) => setEmail(e.target.value)} autoFocus />
       </Field>
       <button className="btn btn-primary btn-lg" disabled={busy}>
-        {busy ? "Sending…" : "Send code"}
+        {busy ? t("common_sending") : t("forgot_button")}
       </button>
     </form>
   );
@@ -270,8 +266,9 @@ export function ResetPasswordForm(props: { ctx: FormContext; email: string; onDo
   const [code, setCode] = useState("");
   const [password, setPassword] = useState("");
   const { busy, error, setError, run } = useSubmit();
+  const t = useT();
   const submit = () => {
-    const problem = (code.trim() ? null : "Enter the code from the email.") ?? passwordProblem(password, props.email);
+    const problem = (code.trim() ? null : t("reset_enter_code")) ?? passwordProblem(password, props.email);
     if (problem) return setError(problem);
     void run(async () => {
       await props.ctx.accounts.resetPassword(props.email, code.trim(), password);
@@ -281,17 +278,17 @@ export function ResetPasswordForm(props: { ctx: FormContext; email: string; onDo
   return (
     <form className="auth-form" onSubmit={submitHandler(submit)} noValidate>
       <Back onClick={props.onBack} />
-      <AuthHeading title="Choose a new password" />
-      <FormNotice text={`If ${props.email} has a Meldiq account, we sent it a reset code. It's valid for 15 minutes.`} />
+      <AuthHeading title={t("reset_title")} />
+      <FormNotice text={t("reset_sent", { email: props.email })} />
       <FormError text={error} />
-      <Field id="rp-code" label="Reset code">
+      <Field id="rp-code" label={t("reset_code")}>
         <input id="rp-code" className="input code-input" autoComplete="one-time-code" value={code} maxLength={32} onChange={(e) => setCode(e.target.value)} autoFocus />
       </Field>
-      <Field id="rp-password" label="New password" hint={`At least ${PASSWORD_MIN_LENGTH} characters.`}>
+      <Field id="rp-password" label={t("reset_new_password")} hint={t("common_password_min", { n: PASSWORD_MIN_LENGTH })}>
         <input id="rp-password" className="input" type="password" autoComplete="new-password" value={password} onChange={(e) => setPassword(e.target.value)} />
       </Field>
       <button className="btn btn-primary btn-lg" disabled={busy}>
-        {busy ? "Saving…" : "Set password"}
+        {busy ? t("common_saving") : t("reset_button")}
       </button>
     </form>
   );

@@ -2,11 +2,13 @@ import { Bell, Compass, Headphones, MessagesSquare, ShieldCheck } from "lucide-r
 import { type ReactNode, useState } from "react";
 import { createPortal } from "react-dom";
 import { BrandMark } from "../components/BrandMark";
+import { type StringKey, useT } from "../../i18n";
+import { LanguagePicker } from "../components/LanguagePicker";
 
 interface Page {
   icon: ReactNode;
-  title: string;
-  body: string;
+  title: StringKey;
+  body: StringKey;
   /** Planned, not in the app yet: the page says so. */
   soon?: boolean;
 }
@@ -15,17 +17,17 @@ interface Page {
 const PAGES: Page[] = [
   {
     icon: <MessagesSquare size={52} />,
-    title: "Talk in one place",
-    body: "Channels, groups and direct messages with threads, polls and files. Everything is end-to-end encrypted on your devices.",
+    title: "intro_1_title",
+    body: "intro_1_body",
   },
-  { icon: <Bell size={52} />, title: "Never lose track", body: "Save messages for later and set reminders. They reach every device you're signed in on, even after a restart." },
-  { icon: <Headphones size={52} />, title: "Talk it through", body: "Voice and video calls with screen sharing, and voice channels anyone can drop into any time." },
+  { icon: <Bell size={52} />, title: "intro_2_title", body: "intro_2_body" },
+  { icon: <Headphones size={52} />, title: "intro_3_title", body: "intro_3_body" },
   {
     icon: <Compass size={52} />,
-    title: "Find your communities",
-    body: "Join public communities or start your own, with channels in categories, forums for organised topics and announcements.",
+    title: "intro_4_title",
+    body: "intro_4_body",
   },
-  { icon: <ShieldCheck size={52} />, title: "Roles you control", body: "Give people roles, decide who sees and posts in each channel, and keep the community safe with bans." },
+  { icon: <ShieldCheck size={52} />, title: "intro_5_title", body: "intro_5_body" },
 ];
 
 const SEEN_KEY = "meldiq.introSeen";
@@ -53,6 +55,7 @@ function markSeen(): void {
  */
 export function IntroPages({ onDone }: { onDone: () => void }) {
   const [at, setAt] = useState(0);
+  const t = useT();
   const page = PAGES[at];
   const last = at === PAGES.length - 1;
   const done = () => {
@@ -60,20 +63,23 @@ export function IntroPages({ onDone }: { onDone: () => void }) {
     onDone();
   };
   return createPortal(
-    <div className="intro" role="dialog" aria-modal="true" aria-label="Introduction to Meldiq">
+    <div className="intro" role="dialog" aria-modal="true" aria-label={t("intro_label")}>
       <header className="intro-head">
         <BrandMark size={32} />
+        <span className="grow" />
+        {/* The language can be chosen before anything else (2026-10-23). */}
+        <LanguagePicker />
         <button className="btn btn-ghost btn-sm" onClick={done}>
-          Skip
+          {t("intro_skip")}
         </button>
       </header>
-      <section className="intro-page" aria-live="polite" aria-label={`Page ${at + 1} of ${PAGES.length}`}>
+      <section className="intro-page" aria-live="polite" aria-label={t("intro_page", { n: at + 1, total: PAGES.length })}>
         <span className="intro-art" aria-hidden="true">
           {page.icon}
         </span>
         {page.soon && <span className="tag">Coming soon</span>}
-        <h1>{page.title}</h1>
-        <p>{page.body}</p>
+        <h1>{t(page.title)}</h1>
+        <p>{t(page.body)}</p>
       </section>
       <div className="intro-dots" aria-hidden="true">
         {PAGES.map((p, i) => (
@@ -83,11 +89,11 @@ export function IntroPages({ onDone }: { onDone: () => void }) {
       <footer className="intro-foot">
         {at > 0 && (
           <button className="btn btn-secondary btn-lg" onClick={() => setAt(at - 1)}>
-            Back
+            {t("common_back")}
           </button>
         )}
         <button className="btn btn-primary btn-lg grow" onClick={() => (last ? done() : setAt(at + 1))} autoFocus>
-          {last ? "Get started" : "Next"}
+          {last ? t("intro_start") : t("intro_next")}
         </button>
       </footer>
     </div>,

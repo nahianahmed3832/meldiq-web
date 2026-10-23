@@ -9,11 +9,13 @@ import { mentionCount } from "../selectors";
 import { paused, statusLine } from "../../sync/status";
 import { PauseDialog, PresenceDialog, StatusDialog } from "../dialogs/StatusDialogs";
 import { currentPresence, PRESENCE_LABEL } from "../../sync/social";
+import { useT } from "../../i18n";
 
 const CONN_LABEL = { online: "Online", connecting: "Connecting…", reconnecting: "Reconnecting…", offline: "Offline" } as const;
 
 export function TopBar({ onMenu, onSearch }: { onMenu: () => void; onSearch: () => void }) {
   const engine = useEngine();
+  const t = useT();
   const me = useOrbit((s) => s.me);
   const myPhoto = useOrbit((s) => (s.me ? s.users[s.me.userId]?.photoRev : null));
   const connection = useOrbit((s) => s.connection);
@@ -38,7 +40,7 @@ export function TopBar({ onMenu, onSearch }: { onMenu: () => void; onSearch: () 
       </div>
       <button className="searchbox" onClick={onSearch} aria-label="Search Meldiq" aria-keyshortcuts={mac ? "Meta+K" : "Control+K"}>
         <Search size={16} />
-        <span>Search conversations, people and messages</span>
+        <span>{t("search_placeholder")}</span>
         <kbd className="kbd">{mac ? "⌘K" : "Ctrl K"}</kbd>
       </button>
       <div className="topbar-right">

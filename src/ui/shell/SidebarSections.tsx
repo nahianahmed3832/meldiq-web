@@ -6,6 +6,7 @@ import { Menu, useMenu } from "../components/Overlay";
 import { archivedPeople, channelGroups, homeLayout, type HomeSection, laterDue, mentionConversations, messageRequests, people } from "../selectors";
 import { ConversationRow, SectionNameDialog } from "./ConversationRow";
 import { useIncomingRequestCount } from "../people/connectionRequests";
+import { useT } from "../../i18n";
 
 /**
  * A group in the sidebar. [synced]: its open/closed state is kept in a workspace's preferences document (the phone's
@@ -215,12 +216,13 @@ export function ArchivedList() {
 
 export function MentionsLink({ orgId, active }: { orgId: string | null; active: boolean }) {
   const n = useOrbit((s) => mentionConversations(s, orgId).reduce((a, c) => a + (s.local[c.id]?.mentions ?? 0), 0));
+  const t = useT();
   return (
     <a className="side-item" href="/activity" aria-current={active ? "page" : undefined}>
       <span className="glyph">
         <AtSign size={16} />
       </span>
-      <span className="grow">Mentions</span>
+      <span className="grow">{t("side_mentions")}</span>
       {n > 0 && <span className="count accent">{n}</span>}
     </a>
   );
@@ -229,12 +231,13 @@ export function MentionsLink({ orgId, active }: { orgId: string | null; active: 
 /** Later: saved messages and reminders (android Home › Later); the count is what's due. */
 export function LaterLink({ active }: { active: boolean }) {
   const due = useOrbit(laterDue);
+  const t = useT();
   return (
     <a className="side-item" href="/later" aria-current={active ? "page" : undefined}>
       <span className="glyph">
         <Bookmark size={16} />
       </span>
-      <span className="grow">Later</span>
+      <span className="grow">{t("nav_later")}</span>
       {due > 0 && (
         <span className="count accent" aria-label={`${due} due`}>
           {due}
@@ -268,6 +271,7 @@ export function SkeletonRows() {
 export function PeopleExtras({ onRequests, onConnections, onlyWhenAsked }: { onRequests: () => void; onConnections?: () => void; onlyWhenAsked?: boolean }) {
   const waiting = useOrbit((s) => messageRequests(s).length);
   const asked = useIncomingRequestCount();
+  const t = useT();
   return (
     <>
       {waiting > 0 && (
@@ -275,7 +279,7 @@ export function PeopleExtras({ onRequests, onConnections, onlyWhenAsked }: { onR
           <span className="glyph">
             <MailQuestion size={16} />
           </span>
-          <span className="grow">Message requests · {waiting} waiting</span>
+          <span className="grow">{t("side_message_requests", { n: waiting })}</span>
         </button>
       )}
       {onConnections && (asked > 0 || !onlyWhenAsked) && (
@@ -283,7 +287,7 @@ export function PeopleExtras({ onRequests, onConnections, onlyWhenAsked }: { onR
           <span className="glyph">
             <Contact size={16} />
           </span>
-          <span className="grow">{asked > 0 ? "Connection requests" : "Connections"}</span>
+          <span className="grow">{asked > 0 ? t("side_connection_requests") : t("side_connections")}</span>
           {asked > 0 && <span className="count accent">{asked}</span>}
         </button>
       )}

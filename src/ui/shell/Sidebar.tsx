@@ -13,6 +13,7 @@ import { VoiceRoomsSection } from "./VoiceRooms";
 import { CommunityHeader, hideMutedKey } from "../community/CommunityHeader";
 import { CommunityPanel } from "../community/CommunityPanel";
 import { useCommunityDetail } from "../community/useCommunityPermissions";
+import { useT } from "../../i18n";
 
 interface SidebarProps {
   orgId: string | null;
@@ -36,13 +37,14 @@ export function Sidebar({ orgId, section, open, onDialog }: SidebarProps) {
   const { perms } = useCommunityDetail(communities ? orgId : null);
   const hideMuted = !!orgId && prefs.collapsed.includes(hideMutedKey(orgId));
   const hasConnections = useOrbit((s) => s.server?.features.includes("connections") ?? false);
+  const t = useT();
 
   return (
     <aside className={`sidebar${open ? " open" : ""}`} aria-label="Conversations">
       <div className="side-head">
         {section === "dms" ? (
           // Direct messages aren't part of a community: their own heading, not the community's.
-          <h2 className="side-title grow">Direct messages</h2>
+          <h2 className="side-title grow">{t("side_direct_messages")}</h2>
         ) : communities ? (
           <CommunityHeader orgId={orgId} perms={perms} onDialog={onDialog} />
         ) : (
@@ -63,7 +65,7 @@ export function Sidebar({ orgId, section, open, onDialog }: SidebarProps) {
             <ChevronDown size={16} className="faint" />
           </button>
         )}
-        <button className="icon-btn" onClick={() => onDialog({ kind: "new" })} aria-label="New message" title="New message">
+        <button className="icon-btn" onClick={() => onDialog({ kind: "new" })} aria-label={t("side_new_message")} title={t("side_new_message")}>
           <PenSquare size={18} />
         </button>
       </div>
@@ -106,7 +108,7 @@ export function Sidebar({ orgId, section, open, onDialog }: SidebarProps) {
             onClick={() => setPrefs({ collapsed: unreadOnly ? prefs.collapsed.filter((k) => k !== "::unread-only") : [...prefs.collapsed, "::unread-only"] })}
           >
             <span className="glyph">{unreadOnly ? <Check size={16} /> : <Inbox size={16} />}</span>
-            <span className="grow">{unreadOnly ? "Showing unreads only" : "Unreads"}</span>
+            <span className="grow">{unreadOnly ? t("side_unreads_only") : t("side_unreads")}</span>
           </button>
           <MentionsLink orgId={orgId} active={section === "activity"} />
           <LaterLink active={section === "later"} />
@@ -133,14 +135,14 @@ export function Sidebar({ orgId, section, open, onDialog }: SidebarProps) {
                 <ChannelSections orgId={orgId} unreadOnly={unreadOnly} onBrowse={org ? () => onDialog({ kind: "channels" }) : undefined} />
               </>
             )}
-            <Collapsible id="people" title="Direct messages">
+            <Collapsible id="people" title={t("side_direct_messages")}>
               <PeopleExtras onRequests={() => onDialog({ kind: "requests" })} onConnections={hasConnections ? () => onDialog({ kind: "connections" }) : undefined} onlyWhenAsked />
               <PeopleList unreadOnly={unreadOnly} orgId={orgId} excludePlaced />
               <button className="side-item" onClick={() => onDialog({ kind: "new" })}>
                 <span className="glyph">
                   <Plus size={16} />
                 </span>
-                <span className="grow">New message</span>
+                <span className="grow">{t("side_new_message")}</span>
               </button>
               <button className="side-item" onClick={() => onDialog({ kind: "newGroup" })}>
                 <span className="glyph">

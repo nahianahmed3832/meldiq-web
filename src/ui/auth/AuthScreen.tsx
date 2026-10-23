@@ -14,6 +14,7 @@ import { ForgotPasswordForm, type FormContext, LegacyDetailsForm, LegacyVerifyFo
 import { AddDeviceView, CreateIdentityView, RecoveryKeyReveal } from "./DeviceSetupViews";
 import { authErrorText } from "./useSubmit";
 import { IntroPages, introSeen } from "./IntroPages";
+import { useT } from "../../i18n";
 
 type Step =
   | { k: "signIn"; notice?: string; email?: string }
@@ -54,6 +55,7 @@ export function AuthScreen(props: {
   const [step, setStep] = useState<Step>({ k: "signIn" });
   const [intro, setIntro] = useState(() => !introSeen());
   const [server, setServer] = useState<ServerInfo | null>(null);
+  const t = useT();
   // A legacy account's identity seed, from its recovery key: sets up this browser right after the move, then is wiped.
   const [legacySeed, setLegacySeed] = useState<Uint8Array | null>(null);
   const ctx: FormContext = useMemo(() => ({ accounts: AccountApi.anonymous(base), deviceName: browserDeviceName() }), [base]);
@@ -118,7 +120,7 @@ export function AuthScreen(props: {
       body = (
         <SignInForm
           ctx={ctx}
-          notice={step.notice ?? (server && !accounts ? "This Meldiq server is older than email accounts. Link this browser with your phone instead." : null)}
+          notice={step.notice ?? (server && !accounts ? t("signin_old_server") : null)}
           initialEmail={step.email}
           canSignUp={accounts?.registration ?? false}
           canMove={(accounts?.legacyMigration ?? false) && (accounts?.registration ?? false)}
@@ -164,14 +166,7 @@ export function AuthScreen(props: {
       body = <ForgotPasswordForm ctx={ctx} initialEmail={step.email} onSent={(email) => setStep({ k: "reset", email })} onBack={() => toSignIn(undefined, step.email)} />;
       break;
     case "reset":
-      body = (
-        <ResetPasswordForm
-          ctx={ctx}
-          email={step.email}
-          onDone={() => toSignIn("Your password was changed and every session signed out. Sign in with the new one.", step.email)}
-          onBack={() => setStep({ k: "forgot", email: step.email })}
-        />
-      );
+      body = <ResetPasswordForm ctx={ctx} email={step.email} onDone={() => toSignIn(t("reset_done"), step.email)} onBack={() => setStep({ k: "forgot", email: step.email })} />;
       break;
     case "legacy":
       body = (

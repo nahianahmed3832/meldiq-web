@@ -3,17 +3,19 @@ import { useOrbit } from "../../application/orbit";
 import { navigate, type Section } from "../../application/router";
 import { mentionCount, unreadPeopleCount } from "../selectors";
 import { useIncomingRequestCount } from "../people/connectionRequests";
+import { useT } from "../../i18n";
 
 /** Phones: the bottom tab bar (hidden inside a conversation, like the phone app). */
 export function TabBar({ section, hidden }: { section: Section; hidden: boolean }) {
   // Unread DMs and people waiting for an answer to their connection request, as on the rail.
   const dms = useOrbit(unreadPeopleCount) + useIncomingRequestCount();
   const mentions = useOrbit(mentionCount);
+  const t = useT();
   const tabs = [
-    { key: "home" as const, label: "Home", icon: <House size={21} />, count: 0 },
-    { key: "dms" as const, label: "DMs", icon: <MessagesSquare size={21} />, count: dms },
-    { key: "activity" as const, label: "Activity", icon: <AtSign size={21} />, count: mentions },
-    { key: "settings" as const, label: "Settings", icon: <Settings size={21} />, count: 0 },
+    { key: "home" as const, label: t("nav_home"), icon: <House size={21} />, count: 0 },
+    { key: "dms" as const, label: t("nav_dms"), icon: <MessagesSquare size={21} />, count: dms },
+    { key: "activity" as const, label: t("nav_activity"), icon: <AtSign size={21} />, count: mentions },
+    { key: "settings" as const, label: t("nav_settings"), icon: <Settings size={21} />, count: 0 },
   ];
   return (
     <nav className={`tabbar${hidden ? " hidden" : ""}`} aria-label="Sections">
