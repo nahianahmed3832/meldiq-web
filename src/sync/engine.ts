@@ -15,6 +15,7 @@ import { fingerprint } from "../crypto/identity";
 import type { ConversationLocal, DeviceRecord, OutboxItem, PinnedIdentity, RichContent, StoredMessage } from "../model/types";
 import { encodePayload, type Payload } from "../protocol/payload";
 import { RealtimeClient } from "../realtime/socket";
+import type { ShareQuality } from "../call/shareQuality";
 import { type AppState, initialState, Store, type UserLite, upsertLoaded, withMessages } from "../state/store";
 import type { LocalStore } from "../store/db";
 import type { EngineContext } from "./context";
@@ -63,7 +64,7 @@ export interface EngineOptions {
   /** Call timing for tests. */
   callTiming?: { keyWaitMs?: number; peerWindowMs?: number; rejoinWindowMs?: number };
   /** Settings › Calls (batches B10, B11): noise reduction, and how this browser shares its screen. */
-  callPrefs?: () => { noiseReduction: boolean; shareMode: "text" | "motion"; shareAudio: boolean };
+  callPrefs?: () => { noiseReduction: boolean; shareQuality: ShareQuality; shareAudio: boolean };
 }
 
 const PAGE = 60;

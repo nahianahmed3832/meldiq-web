@@ -1,7 +1,8 @@
 import { Camera, Mic } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { setPrefs, usePrefs } from "../../application/prefs";
-import { audioProcessing, micLevel, SHARE_MODES } from "../../call/rules";
+import { audioProcessing, micLevel } from "../../call/rules";
+import { SHARE_QUALITIES } from "../../call/shareQuality";
 import { Toggle } from "../components/Toggle";
 
 /**
@@ -26,7 +27,8 @@ export function CallsPage() {
           <span className="lines">
             <strong>Screen sharing</strong>
             <small>
-              {SHARE_MODES[prefs.shareMode].label}
+              {SHARE_QUALITIES[prefs.shareQuality].label} ({SHARE_QUALITIES[prefs.shareQuality].width}×{SHARE_QUALITIES[prefs.shareQuality].height} at {SHARE_QUALITIES[prefs.shareQuality].frameRate}{" "}
+              fps)
               {prefs.shareAudio ? ", with sound" : ""}. You choose each time you share; this is the last choice.
             </small>
           </span>

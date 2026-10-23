@@ -1,3 +1,5 @@
+import type { ShareQuality } from "./shareQuality";
+import type { CallShareView } from "./shares";
 import type { CallParticipantView, DeviceIssues, DeviceKind, MediaDeviceChoice, MediaFactory, MediaGrant, MediaSession, PrepareOptions, ShareOptions } from "./types";
 
 /**
@@ -52,8 +54,20 @@ class DeferredSession implements MediaSession {
     void this.inner.then((s) => s.setDeafened(on));
   }
 
-  attachScreen(identity: string, el: HTMLVideoElement): () => void {
-    return this.ready?.attachScreen(identity, el) ?? (() => undefined);
+  async setShareQuality(quality: ShareQuality): Promise<void> {
+    return (await this.inner).setShareQuality(quality);
+  }
+
+  shares(): CallShareView[] {
+    return this.ready?.shares() ?? [];
+  }
+
+  watchShare(key: string | null): void {
+    void this.inner.then((s) => s.watchShare(key));
+  }
+
+  attachShare(key: string, el: HTMLVideoElement): () => void {
+    return this.ready?.attachShare(key, el) ?? (() => undefined);
   }
 
   async listDevices(kind: DeviceKind): Promise<MediaDeviceChoice[]> {

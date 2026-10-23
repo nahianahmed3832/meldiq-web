@@ -5,6 +5,8 @@ import type { AppState, Store } from "../state/store";
 import { IdentityChangedError } from "../sync/outbox";
 import { CallKeyRing, inRoomCall, judgeKey, type KeyVerdict, KeyRequestPacer, newCallKey, verificationCode } from "./callKeys";
 import { backoff, CallFailure, deafenChange, KEY_POLL_MS, KEY_WAIT_MS, PEER_WINDOW_MS, REJOIN_WINDOW_MS, retryable, shouldRing } from "./rules";
+import type { ShareQuality } from "./shareQuality";
+import { type CallShareView, MAX_SCREEN_SHARES, mayShare, nextWatched } from "./shares";
 import { type CallUiState, DeviceError, type DeviceKind, idleCall, type MediaDeviceChoice, type MediaEvents, type MediaFactory, type MediaGrant, type MediaSession } from "./types";
 
 /** What the call manager needs from the engine that owns it. */
@@ -47,7 +49,9 @@ export interface CallOptions {
   peerWindowMs?: number;
   rejoinWindowMs?: number;
   /** This browser's call settings (Settings › Calls): noise reduction, and how a screen is shared. */
-  callPrefs?(): { noiseReduction: boolean; shareMode: "text" | "motion"; shareAudio: boolean };
+  callPrefs?(): { noiseReduction: boolean; shareQuality: ShareQuality; shareAudio: boolean };
+  /** How many screens may be shared in one call at once (default [MAX_SCREEN_SHARES]; at least 2). */
+  maxScreenShares?: number;
 }
 
 /** A failure whose message is already what the person should read. */
@@ -241,7 +245,7 @@ export class CallManager {
     this.check(gen);
     // Still deafened after a rejoin; a screen share doesn't come back by itself (batch B11 clean stop).
     if (this.state.deafened) session.setDeafened(true);
-    if (this.state.screenSharing) this.patch({ shareMode: null, shareAudio: false });
+    if (this.state.screenSharing) this.patch({ shareQuality: null, shareAudio: false, shareStats: null });
     void this.host.api.call("POST", `/v1/calls/${encodeURIComponent(callId)}/connected`).catch(() => undefined);
     const alone = session.remoteCount() === 0 && !this.state.isGroup;
     this.patch({ phase: alone ? (this.created ? "outgoing" : "connecting") : "connected", connectedAt: alone ? null : this.now(), mediaEpoch: this.state.mediaEpoch + 1 });
@@ -264,6 +268,13 @@ export class CallManager {
       remoteLeft: (remaining) => live() && this.onRemoteLeft(remaining),
       audioBlocked: (audioBlocked) => live() && this.patch({ audioBlocked }),
       shareEnded: (name) => live() && this.patch({ notice: `${name} stopped sharing their screen` }),
+      shareStats: (shareStats) => live() && this.patch({ shareStats }),
+      watchStats: (stats) => {
+        if (!live()) return;
+        const prev = this.state.watchStats;
+        if (prev && stats && prev.width === stats.width && prev.height === stats.height && prev.fps === stats.fps) return;
+        this.patch({ watchStats: stats });
+      },
     };
     self = this.opts.media(events);
     this.session = self;
@@ -297,6 +308,9 @@ export class CallManager {
     const phase = this.state.phase;
     if (phase === "idle" || phase === "ended" || this.rejoining) return;
     if (retryable(reason)) void this.rejoin(gen);
+    // The server took this device out of the call (a manager removed it, or the person joined on another device): it
+    // already knows, and telling it this device ended the call would hang up the call the other device just joined.
+    else if (reason === "PARTICIPANT_REMOVED") this.finish("removed", false);
     else this.finish("disconnected", true);
   }
 
@@ -374,6 +388,8 @@ export class CallManager {
         return this.onRing(call, typeof extra.from?.displayName === "string" ? extra.from.displayName : null);
       case "ended":
         if (current) this.finish(call.endReason ?? "ended", false);
+        // Moved out because this person joined on another device: says so even when the media connection closed first.
+        if (current && this.state.phase === "ended" && call.endReason === "joined_elsewhere") this.patch({ endReason: "joined_elsewhere" });
         this.keys.drop(call.id);
         return;
       case "dismissed":
@@ -514,15 +530,20 @@ export class CallManager {
   }
 
   /** Shares this browser's screen, or stops (the browser's own "Stop sharing" also stops it; the state follows). */
-  async toggleScreenShare(opts?: { mode: "text" | "motion"; audio: boolean }): Promise<void> {
+  async toggleScreenShare(opts?: { quality: ShareQuality; audio: boolean }): Promise<void> {
     const session = this.session;
     if (!session) return;
     const prefs = this.opts.callPrefs?.();
-    const share = opts ?? { mode: prefs?.shareMode ?? "text", audio: prefs?.shareAudio ?? false };
+    const share = opts ?? { quality: prefs?.shareQuality ?? "standard", audio: prefs?.shareAudio ?? false };
+    const on = !this.state.screenSharing;
+    const max = Math.max(2, this.opts.maxScreenShares ?? MAX_SCREEN_SHARES);
+    if (on && !mayShare(session.shares(), max)) {
+      this.patch({ notice: `Up to ${max} screens can be shared at once. Ask someone to stop sharing first.` });
+      return;
+    }
     try {
-      const on = !this.state.screenSharing;
       await session.setScreenShare(on, share);
-      this.patch({ error: null, shareMode: on ? share.mode : null, shareAudio: on && share.audio });
+      this.patch({ error: null, shareQuality: on ? share.quality : null, shareAudio: on && share.audio, ...(on ? {} : { shareStats: null }) });
     } catch (e) {
       // Closing the browser's screen picker isn't a failure to show.
       if (!(e instanceof DeviceError && e.issue === "denied")) this.patch({ error: "Your screen couldn't be shared." });
@@ -530,8 +551,23 @@ export class CallManager {
     if (this.session === session) this.refresh();
   }
 
-  attachScreen(identity: string, el: HTMLVideoElement): () => void {
-    return this.session?.attachScreen(identity, el) ?? (() => undefined);
+  /** Changes the quality of this browser's share while it runs (also remembered for next time by the caller). */
+  async setShareQuality(quality: ShareQuality): Promise<void> {
+    const session = this.session;
+    if (!session || !this.state.screenSharing || this.state.shareQuality === quality) return;
+    await session.setShareQuality(quality).catch(() => this.patch({ notice: "The share's quality couldn't be changed." }));
+    this.patch({ shareQuality: quality });
+  }
+
+  /** Watches the share [key], or goes back to the people (null). Only this browser's view changes. */
+  watchShare(key: string | null): void {
+    if (key !== null && !this.state.shares.some((s) => s.key === key && !s.isLocal)) return;
+    this.patch({ watching: key, watchDismissed: key === null, watchStats: null });
+    this.session?.watchShare(key);
+  }
+
+  attachShare(key: string, el: HTMLVideoElement): () => void {
+    return this.session?.attachShare(key, el) ?? (() => undefined);
   }
 
   async listDevices(kind: DeviceKind): Promise<MediaDeviceChoice[]> {
@@ -710,7 +746,20 @@ export class CallManager {
     if (!session) return;
     const participants = session.participants();
     const local = participants.find((p) => p.isLocal);
-    this.patch({ participants, ...(local ? { micOn: local.micOn, cameraOn: local.cameraOn, screenSharing: local.screenOn } : {}) });
+    const shares = session.shares();
+    const same = shares.length === this.state.shares.length && shares.every((s, i) => sameShare(s, this.state.shares[i]));
+    const watching = nextWatched(this.state.watching, this.state.watchDismissed, shares);
+    // Back to the people once every share has ended: the next share opens by itself again.
+    const watchDismissed = shares.some((s) => !s.isLocal) ? this.state.watchDismissed : false;
+    if (watching !== this.state.watching) session.watchShare(watching);
+    this.patch({
+      participants,
+      ...(same ? {} : { shares }),
+      watching,
+      watchDismissed,
+      ...(watching !== this.state.watching ? { watchStats: null } : {}),
+      ...(local ? { micOn: local.micOn, cameraOn: local.cameraOn, screenSharing: local.screenOn } : {}),
+    });
   }
 
   private markHandled(id: string | null): void {
@@ -740,3 +789,5 @@ export class CallManager {
     return this.opts.sleep?.(ms) ?? new Promise((r) => setTimeout(r, ms));
   }
 }
+
+const sameShare = (a: CallShareView, b: CallShareView | undefined): boolean => !!b && a.key === b.key && a.ready === b.ready && a.name === b.name && a.withAudio === b.withAudio;

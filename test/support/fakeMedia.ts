@@ -11,6 +11,8 @@ import {
   type PrepareOptions,
   type ShareOptions,
 } from "../../src/call/types";
+import type { ShareQuality } from "../../src/call/shareQuality";
+import type { CallShareView } from "../../src/call/shares";
 
 /**
  * A stand-in for the LiveKit media connection: records what the call manager asked for (above all, which key it
@@ -28,6 +30,10 @@ export class FakeMedia implements MediaSession {
   prepareOptions: PrepareOptions | null = null;
   shareOptions: ShareOptions | null = null;
   deafened = false;
+  remoteShares: CallShareView[] = [];
+  watched: string | null = null;
+  watchCalls: (string | null)[] = [];
+  qualityChanges: ShareQuality[] = [];
 
   constructor(
     readonly events: MediaEvents,
@@ -93,7 +99,22 @@ export class FakeMedia implements MediaSession {
     this.deafened = on;
   }
 
-  attachScreen(): () => void {
+  async setShareQuality(quality: ShareQuality): Promise<void> {
+    this.qualityChanges.push(quality);
+  }
+
+  /** Others' shares (set by a test), then this browser's own while it shares. */
+  shares(): CallShareView[] {
+    const own: CallShareView[] = this.screen ? [{ key: "me.dev#TR_local", identity: "me.dev", userId: "me", name: "You", isLocal: true, withAudio: false, ready: true }] : [];
+    return [...this.remoteShares, ...own];
+  }
+
+  watchShare(key: string | null): void {
+    this.watched = key;
+    this.watchCalls.push(key);
+  }
+
+  attachShare(): () => void {
     return () => undefined;
   }
 

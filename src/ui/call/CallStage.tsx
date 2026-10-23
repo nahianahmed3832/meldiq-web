@@ -5,7 +5,6 @@ import {
   Headphones,
   Info,
   Lock,
-  Maximize,
   Mic,
   MicOff,
   Minimize2,
@@ -21,13 +20,11 @@ import {
   WifiOff,
   X,
 } from "lucide-react";
-import { SHARE_MODES, type ShareMode, shareModeOf } from "../../call/rules";
-import { setPrefs, usePrefs } from "../../application/prefs";
-import { Toggle } from "../components/Toggle";
-import { Dialog } from "../components/Overlay";
 import { useEffect, useRef, useState } from "react";
 import { useEngine, useOrbit } from "../../application/orbit";
-import { CallFailure, frameShape } from "../../call/rules";
+import { CallFailure } from "../../call/rules";
+import { shareShortfall } from "../../call/shareQuality";
+import { ScreenView, ShareDialog, SharePill, StreamTray } from "./ShareViews";
 import type { CallParticipantView, CallUiState, DeviceKind, MediaDeviceChoice } from "../../call/types";
 import { Avatar } from "../components/Avatar";
 import { Menu, useFocusTrap, useMenu } from "../components/Overlay";
@@ -65,7 +62,7 @@ export function CallStage() {
         {call.voiceRoom && peopleOpen && !ended && <RoomPeople call={call} />}
         <CallNotes call={call} />
       </div>
-      <Tiles participants={call.participants} hands={call.hands} ended={ended} title={call.title} colorIndex={call.colorIndex} />
+      <Tiles call={call} ended={ended} />
       <Controls call={call} people={call.voiceRoom ? { open: peopleOpen, toggle: () => setPeopleOpen((o) => !o) } : null} />
     </section>
   );
@@ -116,6 +113,9 @@ function CallNotes({ call }: { call: CallUiState }) {
     if (issue && call.phase !== "ended") notes.push({ key: device, icon: <AlertTriangle size={16} />, text: CallFailure.device(device, issue), retry: device });
   }
   if (call.path && call.path.startsWith("tcp")) notes.push({ key: "tcp", icon: <WifiOff size={16} />, text: "Connected over TCP: this network may block UDP, so the call can lag." });
+  // Less than the presenter chose: the browser captures less, or the connection made the share step down.
+  const shortfall = call.shareStats && shareShortfall(call.shareStats);
+  if (shortfall && call.phase !== "ended") notes.push({ key: "share", icon: <Info size={16} />, text: shortfall });
   return (
     <>
       {call.notice && call.phase !== "ended" && (
@@ -151,16 +151,17 @@ function CallNotes({ call }: { call: CallUiState }) {
   );
 }
 
-function Tiles({ participants, hands, ended, title, colorIndex }: { participants: CallParticipantView[]; hands: string[]; ended: boolean; title: string; colorIndex: number }) {
-  // A shared screen takes the stage, everyone in a strip under it (android GROUP_CALL_TILES.md); your own share isn't
-  // shown back to you (it would show itself), only noted.
-  const sharer = participants.find((p) => p.screenOn && !p.isLocal);
+function Tiles({ call, ended }: { call: CallUiState; ended: boolean }) {
+  const { participants, hands, title, colorIndex } = call;
+  // The watched share takes the stage, everyone in a strip under it (android GROUP_CALL_TILES.md); the other shares wait
+  // in the tray beside the call's pills (StreamTray). Your own share isn't shown back to you (it would show itself), only listed.
+  const watched = call.shares.find((s) => s.key === call.watching && !s.isLocal);
   // A phone shared upright is tall: the people go beside it on a wide window, not under it, so it gets the height.
   const [shape, setShape] = useState<"portrait" | "landscape" | null>(null);
-  if (sharer)
+  if (watched)
     return (
       <div className={`call-screen-layout${shape === "portrait" ? " side" : ""}`}>
-        <ScreenView key={sharer.identity} p={sharer} onShape={setShape} />
+        <ScreenView key={watched.key} share={watched} stats={call.watchStats} onShape={setShape} />
         <div className="call-strip" aria-label="People in the call">
           {participants.map((p) => (
             <Tile key={p.identity} p={p} hand={hands.includes(p.userId)} compact />
@@ -217,50 +218,6 @@ function Tile({ p, hand, compact = false }: { p: CallParticipantView; hand: bool
   );
 }
 
-/**
- * Someone's shared screen, always whole (contain, never cropped like a camera tile). Its shape follows the frames, so a
- * phone turned mid-share re-lays the call; it can also go full screen.
- */
-function ScreenView({ p, onShape }: { p: CallParticipantView; onShape: (shape: "portrait" | "landscape" | null) => void }) {
-  const engine = useEngine();
-  const figure = useRef<HTMLElement>(null);
-  const video = useRef<HTMLVideoElement>(null);
-  const epoch = useOrbit((s) => s.call.mediaEpoch);
-  useEffect(() => {
-    const el = video.current;
-    if (!el) return;
-    const resized = () => onShape(frameShape(el.videoWidth, el.videoHeight));
-    el.addEventListener("resize", resized);
-    el.addEventListener("loadedmetadata", resized);
-    const detach = engine.calls.attachScreen(p.identity, el);
-    return () => {
-      el.removeEventListener("resize", resized);
-      el.removeEventListener("loadedmetadata", resized);
-      detach();
-      onShape(null);
-    };
-  }, [engine, p.identity, epoch, onShape]);
-  const fullScreen = () => {
-    const el = figure.current;
-    if (!el) return;
-    if (document.fullscreenElement) void document.exitFullscreen();
-    else void el.requestFullscreen?.().catch(() => undefined);
-  };
-  return (
-    <figure ref={figure} className="call-screen" aria-label={`${p.name}'s screen`} style={{ margin: 0 }}>
-      <video ref={video} autoPlay playsInline muted aria-hidden="true" />
-      <figcaption className="who">
-        <MonitorUp size={13} aria-hidden="true" /> {p.name} is sharing their screen
-      </figcaption>
-      {typeof document !== "undefined" && document.fullscreenEnabled && (
-        <button className="icon-btn call-screen-full" onClick={fullScreen} aria-label="Show the shared screen full screen" title="Full screen">
-          <Maximize size={17} />
-        </button>
-      )}
-    </figure>
-  );
-}
-
 /** Screen sharing needs getDisplayMedia, which phones' browsers don't offer. */
 const canShareScreen = (): boolean => typeof navigator !== "undefined" && typeof navigator.mediaDevices?.getDisplayMedia === "function" && !/Android|iPhone|iPad/.test(navigator.userAgent);
 
@@ -271,19 +228,20 @@ function Controls({ call, people }: { call: CallUiState; people: { open: boolean
   const [sharing, setSharing] = useState(false);
   return (
     <div className="call-controls-wrap">
-      {media && (
+      {/* The pills and the screens being shared share one row (wrapping on narrow windows), so a share costs the stage no height. */}
+      {(media || (live && call.shares.length > 0)) && (
         <div className="call-pills">
-          {/* Batch B10 (android CallOverlay's Deafen pill). */}
-          <button className={`call-pill${call.deafened ? " on" : ""}`} aria-pressed={call.deafened} onClick={() => void engine.calls.toggleDeafen()}>
-            {call.deafened ? <HeadphoneOff size={15} /> : <Headphones size={15} />} {call.deafened ? "Deafened" : "Deafen"}
-          </button>
-          {call.listenOnly && <span className="call-pill quiet">Listen only</span>}
-          {call.screenSharing && call.shareMode && (
-            <span className="call-pill quiet">
-              Sharing · {call.shareMode === "motion" ? "games and video" : "text and apps"}
-              {call.shareAudio ? " · with sound" : ""}
-            </span>
+          {media && (
+            <>
+              {/* Batch B10 (android CallOverlay's Deafen pill). */}
+              <button className={`call-pill${call.deafened ? " on" : ""}`} aria-pressed={call.deafened} onClick={() => void engine.calls.toggleDeafen()}>
+                {call.deafened ? <HeadphoneOff size={15} /> : <Headphones size={15} />} {call.deafened ? "Deafened" : "Deafen"}
+              </button>
+              {call.listenOnly && <span className="call-pill quiet">Listen only</span>}
+              <SharePill call={call} />
+            </>
           )}
+          {live && <StreamTray call={call} />}
         </div>
       )}
       <div className="call-controls">
@@ -326,55 +284,6 @@ function Controls({ call, people }: { call: CallUiState; people: { open: boolean
       </div>
       {sharing && <ShareDialog onClose={() => setSharing(false)} />}
     </div>
-  );
-}
-
-/**
- * Share your screen (batch B11, android ShareSheet): the warning, then Text and apps or Games and video, and the
- * shared tab's or screen's sound where the browser offers it. The last choice is the default next time; then the
- * browser asks which screen, window or tab.
- */
-function ShareDialog({ onClose }: { onClose: () => void }) {
-  const engine = useEngine();
-  const prefs = usePrefs();
-  const [mode, setMode] = useState<ShareMode>(shareModeOf(prefs.shareMode));
-  const [audio, setAudio] = useState(prefs.shareAudio);
-  const share = () => {
-    setPrefs({ shareMode: mode, shareAudio: audio });
-    onClose();
-    void engine.calls.toggleScreenShare({ mode, audio });
-  };
-  return (
-    <Dialog title="Share your screen" onClose={onClose}>
-      <div className="dialog-body">
-        <div className="banner warn">Everyone in the call sees what you share, including notifications that appear on it.</div>
-        <div role="radiogroup" aria-label="What you're sharing" style={{ display: "grid", gap: 2 }}>
-          {(["text", "motion"] as const).map((m) => (
-            <button key={m} role="radio" aria-checked={mode === m} aria-pressed={mode === m} className="list-row" onClick={() => setMode(m)}>
-              <span className="lines">
-                <span style={{ fontWeight: 600 }}>{SHARE_MODES[m].label}</span>
-                <small>{SHARE_MODES[m].hint}</small>
-              </span>
-            </button>
-          ))}
-        </div>
-        <div className="setting">
-          <span className="lines">
-            <strong>Include sound</strong>
-            <small>The shared tab's or screen's sound, as its own track, where this browser offers it (Chrome and Edge). Muting yourself doesn't silence it: stop sharing to stop the sound.</small>
-          </span>
-          <Toggle checked={audio} onChange={setAudio} label="Include sound" />
-        </div>
-        <div className="row" style={{ justifyContent: "flex-end", gap: 8 }}>
-          <button className="btn btn-secondary" onClick={onClose}>
-            Cancel
-          </button>
-          <button className="btn btn-primary" onClick={share}>
-            <MonitorUp size={15} /> Share
-          </button>
-        </div>
-      </div>
-    </Dialog>
   );
 }
 

@@ -202,41 +202,6 @@ export function mirrorPreview(isLocal: boolean, facingMode: string | undefined):
 }
 
 /**
- * Screen sharing modes (batch B11, android ShareMode): "text" keeps text sharp (up to 1080p at 15 fps, 2.5 Mbit/s,
- * keeps resolution under congestion); "motion" (games and video) keeps it smooth (720p at 30 fps, 3.5 Mbit/s, keeps
- * the frame rate).
- */
-export type ShareMode = "text" | "motion";
-export const SHARE_MODES: Record<
-  ShareMode,
-  { width: number; height: number; frameRate: number; maxBitrate: number; contentHint: "detail" | "motion"; degradation: RTCDegradationPreference; label: string; hint: string }
-> = {
-  text: {
-    width: 1920,
-    height: 1080,
-    frameRate: 15,
-    maxBitrate: 2_500_000,
-    contentHint: "detail",
-    degradation: "maintain-resolution",
-    label: "Text and apps",
-    hint: "Sharp text, up to 1080p at 15 frames a second",
-  },
-  motion: {
-    width: 1280,
-    height: 720,
-    frameRate: 30,
-    maxBitrate: 3_500_000,
-    contentHint: "motion",
-    degradation: "maintain-framerate",
-    label: "Games and video",
-    hint: "Smooth motion, 720p at 30 frames a second",
-  },
-};
-
-/** The saved choice, or text for anything unknown (android ShareMode.fromSaved). */
-export const shareModeOf = (saved: string | null | undefined): ShareMode => (saved === "motion" ? "motion" : "text");
-
-/**
  * Deafen (batch B10, android CallManager.toggleDeafen): deafened, you hear nobody and your microphone is off; undeafened,
  * sound comes back and the microphone only comes back on if it was on before.
  */

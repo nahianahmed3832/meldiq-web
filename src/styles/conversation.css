@@ -802,6 +802,26 @@
   color: var(--text-2);
   white-space: nowrap;
 }
+.voice-msg {
+  flex-wrap: wrap;
+}
+.voice-rate {
+  min-width: 34px;
+  height: 24px;
+  padding: 0 6px;
+  border-radius: var(--r-pill);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  font-size: 12px;
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+}
+.voice-failed {
+  flex-basis: 100%;
+  font-size: 12px;
+  color: var(--danger);
+}
 .voice-bar {
   display: flex;
   align-items: center;

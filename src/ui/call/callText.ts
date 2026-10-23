@@ -42,6 +42,8 @@ export function endedText(reason: string | null): string {
       return "Answered on another device";
     case "removed":
       return "You're no longer in this call";
+    case "joined_elsewhere":
+      return "You joined this call on another device";
     case "disconnected":
       return "Disconnected";
     default:
