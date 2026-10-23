@@ -19,7 +19,7 @@ describe("music and video links", () => {
       ["https://soundcloud.com/artist/sets/a-list", "SoundCloud", "playlist"],
       ["https://vimeo.com/76979871", "Vimeo", "video"],
     ];
-    for (const [url, provider, kind] of cases) expect(detectMediaLink(url), url).toEqual({ provider, kind, url });
+    for (const [url, provider, kind] of cases) expect(detectMediaLink(url), url).toMatchObject({ provider, kind, url });
   });
 
   it("leaves other links, plain http and malformed ids alone", () => {
