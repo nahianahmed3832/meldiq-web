@@ -268,19 +268,20 @@
 .reactions {
   display: flex;
   flex-wrap: wrap;
-  gap: 4px;
+  gap: 6px;
   margin-top: 6px;
 }
+/* As large as Discord's: a 20px emoji and its count on a 32px chip. */
 .reaction {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  height: 26px;
-  padding: 0 9px;
-  border-radius: var(--r-pill);
+  gap: 6px;
+  height: 32px;
+  padding: 0 10px;
+  border-radius: var(--r-md);
   border: 1px solid var(--border);
   background: var(--surface-sunken);
-  font-size: 12.5px;
+  font-size: 14px;
   font-weight: 650;
   color: var(--text-2);
   font-variant-numeric: tabular-nums;
@@ -290,6 +291,12 @@
 }
 .reaction:hover {
   border-color: var(--border-strong);
+}
+.reaction-emoji {
+  display: inline-flex;
+  align-items: center;
+  font-size: 20px;
+  line-height: 1;
 }
 .reaction[aria-pressed="true"] {
   border-color: var(--accent);
@@ -314,10 +321,10 @@
 }
 .msg-actions {
   position: absolute;
-  top: -16px;
+  top: -22px;
   right: 20px;
   display: none;
-  gap: 1px;
+  gap: 2px;
   padding: 3px;
   border-radius: var(--r-md);
   border: 1px solid var(--border);
@@ -359,11 +366,11 @@
   font-size: 20px;
 }
 .msg-actions .icon-btn {
-  width: 30px;
-  height: 30px;
+  width: 36px;
+  height: 36px;
 }
 .quick-emoji {
-  font-size: 16px;
+  font-size: 20px;
 }
 .attachments {
   display: flex;

@@ -47,5 +47,5 @@ export const InlineEmoji = ({ r, size }: { r: CustomEmojiRef; size?: number }) =
 /** A reaction's `:name:` drawn as the community's current emoji of that name (its name if it was removed). */
 export function ReactionEmoji({ name, list }: { name: string; list: ExpressionList | null }) {
   const e: Expression | undefined = list?.expressions.find((x) => x.kind === "emoji" && x.name === name);
-  return e ? <CustomEmojiImage id={e.id} name={name} sha256={null} size={18} /> : <span className="custom-emoji-text">:{name}:</span>;
+  return e ? <CustomEmojiImage id={e.id} name={name} sha256={null} size={20} /> : <span className="custom-emoji-text">:{name}:</span>;
 }

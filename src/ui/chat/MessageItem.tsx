@@ -60,6 +60,8 @@ import { openProfile } from "../people/ProfileDialog";
 import { canLink, messageLink } from "../../sync/messageLinks";
 
 export const QUICK_EMOJI = ["👍", "❤️", "😂", "🎉", "🙏", "👀"];
+/** The hover toolbar's icon size, as large as Discord's so each action is easy to hit. */
+const TOOL_ICON = 20;
 
 export interface MessageItemProps {
   m: StoredMessage;
@@ -317,7 +319,7 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
                 onClick={() => void engine.react(m, emoji)}
                 aria-label={`${emoji} ${users.length}, ${users.includes(p.myUserId) ? "remove your reaction" : "react"}`}
               >
-                <span>{reactionName(emoji) ? <ReactionEmoji name={reactionName(emoji)!} list={communityEmoji} /> : emoji}</span>
+                <span className="reaction-emoji">{reactionName(emoji) ? <ReactionEmoji name={reactionName(emoji)!} list={communityEmoji} /> : emoji}</span>
                 {users.length}
               </button>
             ))}
@@ -339,22 +341,30 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
               </button>
             ))}
           {p.canPost && (
-            <button className="icon-btn" onClick={(e) => picker.open(e.currentTarget)} aria-label="Add reaction" aria-haspopup="menu">
-              <SmilePlus size={17} />
+            <button className="icon-btn" onClick={(e) => picker.open(e.currentTarget)} aria-label="Add reaction" title="Add reaction" aria-haspopup="menu">
+              <SmilePlus size={TOOL_ICON} />
             </button>
           )}
           {p.canPost && (
-            <button className="icon-btn" onClick={() => p.onReply(m)} aria-label="Reply">
-              <MessageSquareReply size={17} />
+            <button className="icon-btn" onClick={() => p.onReply(m)} aria-label="Reply" title="Reply">
+              <MessageSquareReply size={TOOL_ICON} />
             </button>
           )}
           {p.onThread && !m.threadRootId && (
-            <button className="icon-btn" onClick={() => p.onThread?.(m)} aria-label="Reply in thread">
-              <MessagesSquare size={17} />
+            <button className="icon-btn" onClick={() => p.onThread?.(m)} aria-label="Reply in thread" title="Reply in thread">
+              <MessagesSquare size={TOOL_ICON} />
             </button>
           )}
-          <button className="icon-btn" onClick={(e) => more.open(e.currentTarget)} aria-label="More actions" aria-haspopup="menu">
-            <MoreHorizontal size={17} />
+          {mine && p.canPost && (
+            <button className="icon-btn" onClick={() => setEditing(true)} aria-label="Edit" title="Edit">
+              <Pencil size={TOOL_ICON} />
+            </button>
+          )}
+          <button className="icon-btn" onClick={() => setForwarding(true)} aria-label="Forward" title="Forward">
+            <Forward size={TOOL_ICON} />
+          </button>
+          <button className="icon-btn" onClick={(e) => more.open(e.currentTarget)} aria-label="More actions" title="More actions" aria-haspopup="menu">
+            <MoreHorizontal size={TOOL_ICON} />
           </button>
         </div>
       )}
