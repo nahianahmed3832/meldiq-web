@@ -1,4 +1,4 @@
-import { Check, Copy, Download, KeyRound, MailCheck, RefreshCw, ShieldCheck, Smartphone } from "lucide-react";
+import { Check, Copy, Download, KeyRound, RefreshCw, ShieldCheck, Smartphone } from "lucide-react";
 import { type FormEvent, useEffect, useRef, useState } from "react";
 import type { AccountView } from "../../api/accountSchemas";
 import { createIdentity, enrollWithEmailCode, enrollWithSeed } from "../../auth/deviceSetup";
@@ -128,7 +128,7 @@ interface AddDeviceProps {
 /**
  * Adds this browser to an account that already has keys. With a key backup for the current password, the emailed code
  * is the one way shown (server docs/KEY_BACKUP.md); approving from the phone and the recovery key open only from
- * "Can't access your email?". Without a backup they are the only ways, so they're shown at once (meldiq
+ * "Account recovery". Without a backup they are the only ways, so they're shown at once (meldiq
  * docs/product/MELDIQ_AUTH_FLOW_AUDIT.md).
  */
 export function AddDeviceView(props: AddDeviceProps & { onSignOut: () => void }) {
@@ -160,12 +160,7 @@ export function AddDeviceView(props: AddDeviceProps & { onSignOut: () => void })
           Checking for a backup of your keys…
         </p>
       ) : emailWay ? (
-        <>
-          <EmailUnlock {...props} />
-          <div className="auth-links">
-            <LinkButton onClick={() => setOthers(true)}>Can't access your email?</LinkButton>
-          </div>
-        </>
+        <EmailUnlock {...props} onRecovery={() => setOthers(true)} />
       ) : (
         <>
           {backup === true && (
@@ -202,51 +197,87 @@ export function AddDeviceView(props: AddDeviceProps & { onSignOut: () => void })
           )}
         </>
       )}
-      <div className="auth-links">
-        <LinkButton onClick={props.onSignOut}>Use a different account</LinkButton>
-      </div>
+      {!emailWay && (
+        <div className="auth-links">
+          <LinkButton onClick={props.onSignOut}>Use a different account</LinkButton>
+        </div>
+      )}
     </div>
   );
 }
 
-/** The key backup: a code emailed to the account's address, and the password (asked again if this page lost it). */
-function EmailUnlock(props: AddDeviceProps) {
-  const [sentTo, setSentTo] = useState<string | null>(null);
+/** A code emailed this long ago is still the one to type: opening the page again doesn't send another. */
+const RESEND_AFTER_MS = 2 * 60_000;
+const SENT_KEY = "meldiq.keyUnlock.sent";
+
+function recentlySentTo(email: string): boolean {
+  try {
+    const sent = JSON.parse(sessionStorage.getItem(SENT_KEY) ?? "null") as { to?: unknown; at?: unknown } | null;
+    return sent?.to === email && typeof sent.at === "number" && Date.now() - sent.at < RESEND_AFTER_MS;
+  } catch {
+    return false;
+  }
+}
+
+function rememberSent(email: string): void {
+  try {
+    sessionStorage.setItem(SENT_KEY, JSON.stringify({ to: email, at: Date.now() }));
+  } catch {
+    /* a reload sends a new code */
+  }
+}
+/**
+ * The key backup (reported 2026-10-23: asking "Email me a code" first was a needless step): the code is emailed as soon
+ * as this opens and the screen asks only for it (and the password, if this page lost it). Having trouble? sends a new
+ * code or switches account; Account recovery opens the other ways (phone, recovery key).
+ */
+function EmailUnlock(props: AddDeviceProps & { onSignOut: () => void; onRecovery: () => void }) {
+  const email = props.account.email;
+  const [sentTo, setSentTo] = useState<string | null>(() => (recentlySentTo(email) ? email : null));
   const [code, setCode] = useState("");
   const [password, setPassword] = useState("");
+  const [trouble, setTrouble] = useState(false);
   const { busy, error, run } = useSubmit();
   const send = () =>
     void run(async () => {
-      setSentTo((await props.creds.accounts.startKeyUnlock()).email);
+      const to = (await props.creds.accounts.startKeyUnlock()).email;
+      rememberSent(email);
+      setSentTo(to);
     });
+  const sentOnce = useRef(false);
+  useEffect(() => {
+    if (sentOnce.current || recentlySentTo(email)) return;
+    sentOnce.current = true;
+    send();
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- sends once when the screen opens; Send a new code sends again
+  }, []);
   const submit = (e: FormEvent) => {
     e.preventDefault();
     void run(async () => {
       props.onEnrolled((await enrollWithEmailCode(props.creds.accounts, props.account, code, props.password ?? password, props.deviceName)).device);
     });
   };
-  if (!sentTo) {
-    return (
-      <div className="auth-form">
-        <p className="muted" style={{ margin: 0 }}>
-          Your keys are backed up locked with your password. We'll email a code to your address to unlock them in this browser.
-        </p>
-        <FormError text={error} />
-        <button className="btn btn-primary btn-lg" disabled={busy} onClick={send}>
-          <MailCheck size={16} /> {busy ? "Sending…" : "Email me a code"}
-        </button>
-      </div>
-    );
-  }
   const ready = code.replace(/\D/g, "").length === 6 && (!!props.password || password.length > 0);
   return (
     <form className="auth-form" onSubmit={submit} noValidate>
-      <p className="muted" style={{ margin: 0 }}>
-        We sent a code to <b>{sentTo}</b>.
+      <p className="muted" role="status" style={{ margin: 0 }}>
+        {sentTo ? (
+          <>
+            Enter the 6-digit code we sent to <b>{sentTo}</b>.
+          </>
+        ) : busy ? (
+          <>
+            Sending a code to <b>{email}</b>…
+          </>
+        ) : (
+          <>
+            We'll send a code to <b>{email}</b>.
+          </>
+        )}
       </p>
       <FormError text={error} />
       <div className="field">
-        <label htmlFor="ku-code">Code</label>
+        <label htmlFor="ku-code">Verification code</label>
         <input id="ku-code" className="input mono" inputMode="numeric" autoComplete="one-time-code" maxLength={7} value={code} onChange={(e) => setCode(e.target.value)} autoFocus />
       </div>
       {!props.password && (
@@ -257,11 +288,18 @@ function EmailUnlock(props: AddDeviceProps) {
         </div>
       )}
       <button className="btn btn-primary btn-lg" disabled={busy || !ready}>
-        {busy ? "Unlocking…" : "Unlock"}
+        {busy && sentTo ? "Unlocking…" : "Unlock"}
       </button>
       <div className="auth-links">
-        <LinkButton onClick={send}>Send a new code</LinkButton>
+        <LinkButton onClick={() => setTrouble((t) => !t)}>Having trouble?</LinkButton>
+        <LinkButton onClick={props.onRecovery}>Account recovery</LinkButton>
       </div>
+      {trouble && (
+        <div className="auth-links">
+          <LinkButton onClick={send}>Send a new code</LinkButton>
+          <LinkButton onClick={props.onSignOut}>Use a different account</LinkButton>
+        </div>
+      )}
     </form>
   );
 }
