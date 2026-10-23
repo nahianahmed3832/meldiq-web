@@ -59,6 +59,8 @@ export type ServerFrame =
   | { t: "prefs.updated"; workspaceId: string }
   | { t: "org.deleted"; orgId: string }
   | { t: "devices.changed"; userId: string }
+  /** API 0.28: someone's profile or settings changed (name, status, photo, privacy; for yourself also blocks and more). */
+  | { t: "user.updated"; userId: string }
   | { t: "call"; call: Call; event: string | null; extra: { from?: { displayName?: unknown }; reason?: unknown; action?: unknown } }
   | { t: "queue.drained" };
 
@@ -81,6 +83,7 @@ export const HANDLED_FRAMES: ReadonlySet<string> = new Set<ServerFrame["t"]>([
   "prefs.updated",
   "org.deleted",
   "devices.changed",
+  "user.updated",
   "call",
   "queue.drained",
 ]);
@@ -130,7 +133,8 @@ export function parseFrame(f: Frame): ServerFrame | null {
       const orgId = str(f.orgId);
       return orgId ? { t, orgId } : null;
     }
-    case "devices.changed": {
+    case "devices.changed":
+    case "user.updated": {
       const userId = str(f.userId);
       return userId ? { t, userId } : null;
     }

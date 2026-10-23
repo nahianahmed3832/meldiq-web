@@ -115,6 +115,8 @@ export interface AppState {
   moderationRev: number;
   /** Bumped on `connections.updated` (batch B6): the connections list and profile buttons reload. */
   connectionsRev: number;
+  /** Bumped on `user.updated` (API 0.28): open profiles load again, so a change shows without a refresh. */
+  profilesRev: number;
 }
 
 export const initialState: AppState = {
@@ -141,6 +143,7 @@ export const initialState: AppState = {
   communities: {},
   moderationRev: 0,
   connectionsRev: 0,
+  profilesRev: 0,
   history: { status: "idle", restored: 0, unreadable: 0, error: null },
   notices: [],
 };
