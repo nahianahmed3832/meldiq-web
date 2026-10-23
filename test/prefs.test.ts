@@ -21,9 +21,19 @@ afterEach(() => {
 });
 
 describe("preferences", () => {
-  it("defaults to the system theme and the indigo palette", async () => {
+  it("defaults to the system theme, the charcoal palette and the side panels open", async () => {
     const { getPrefs } = await loadWith(undefined);
-    expect(getPrefs()).toMatchObject({ theme: "system", palette: "indigo" });
+    expect(getPrefs()).toMatchObject({ theme: "system", palette: "charcoal", memberList: true, dmProfile: true });
+  });
+
+  it("moves indigo stored as the old default to charcoal, and keeps indigo the person picked", async () => {
+    expect((await loadWith({ palette: "indigo" })).getPrefs().palette).toBe("charcoal");
+    expect((await loadWith({ palette: "indigo", paletteChosen: true })).getPrefs().palette).toBe("indigo");
+  });
+
+  it("keeps hidden side panels hidden", async () => {
+    const { getPrefs } = await loadWith({ memberList: false, dmProfile: false });
+    expect(getPrefs()).toMatchObject({ memberList: false, dmProfile: false });
   });
 
   it("keeps a stored theme and palette that are allowed", async () => {
@@ -33,11 +43,11 @@ describe("preferences", () => {
 
   it("falls back to the defaults for an unknown or tampered theme or palette", async () => {
     const { getPrefs } = await loadWith({ theme: 'x" onload="', palette: "neon", textSize: "huge" });
-    expect(getPrefs()).toMatchObject({ theme: "system", palette: "indigo", textSize: "default" });
+    expect(getPrefs()).toMatchObject({ theme: "system", palette: "charcoal", textSize: "default" });
   });
 
   it("gives browsers that stored preferences before palettes existed the default palette", async () => {
     const { getPrefs } = await loadWith({ theme: "light", notifications: true });
-    expect(getPrefs()).toMatchObject({ theme: "light", palette: "indigo", notifications: true });
+    expect(getPrefs()).toMatchObject({ theme: "light", palette: "charcoal", notifications: true });
   });
 });

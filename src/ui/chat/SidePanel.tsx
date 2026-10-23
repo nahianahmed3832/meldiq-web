@@ -11,18 +11,25 @@ import { MessageList } from "./MessageList";
 import { PanelHead } from "./PanelHead";
 import { SearchPanel } from "./SearchPanel";
 import { PinnedPanel } from "./PinnedPanel";
+import { hasPeoplePanel, PeoplePanel } from "./PeoplePanels";
 
 export function SidePanel({ route }: { route: Route }) {
   const close = () => navigate({ section: route.section, conversationId: route.conversationId });
   if (!route.conversationId) return null;
   if (route.panel === "search") return <SearchPanel conversationId={route.conversationId} onClose={close} />;
   if (route.panel === "pinned") return <PinnedPanel conversationId={route.conversationId} onClose={close} />;
+  if (route.panel === "members") return <PeopleRoutePanel conversationId={route.conversationId} onClose={close} />;
   if (route.panel === "threads") return <ThreadsPanel conversationId={route.conversationId} section={route.section} onClose={close} />;
   return route.panel === "thread" && route.threadRoot ? (
     <ThreadPanel conversationId={route.conversationId} root={route.threadRoot} onClose={close} />
   ) : (
     <DetailsPanel conversationId={route.conversationId} onClose={close} />
   );
+}
+
+function PeopleRoutePanel({ conversationId, onClose }: { conversationId: string; onClose: () => void }) {
+  const c = useOrbit((s) => s.conversations[conversationId]);
+  return c && hasPeoplePanel(c) ? <PeoplePanel c={c} onClose={onClose} /> : null;
 }
 
 function ThreadPanel({ conversationId, root, onClose }: { conversationId: string; root: string; onClose: () => void }) {

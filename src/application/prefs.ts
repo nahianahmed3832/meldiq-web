@@ -7,7 +7,7 @@ import { TRANSLATE_TARGETS, type TranslateTarget } from "../sync/translate";
  */
 export const THEMES = ["system", "light", "dark"] as const;
 /** The brand colour plates (src/styles/tokens.css › Palettes). */
-export const PALETTES = ["indigo", "plum", "amber"] as const;
+export const PALETTES = ["charcoal", "indigo", "plum", "amber"] as const;
 export type Palette = (typeof PALETTES)[number];
 /** Message text size (android Settings › Chats): conversation text only, the rest of the interface stays as it is. */
 export const TEXT_SIZES = ["small", "default", "large"] as const;
@@ -62,12 +62,18 @@ export interface Prefs {
   /** Batch B11: the last screen share choice, the default next time (android SettingsStore.shareMode, shareAppSound). */
   shareMode: "text" | "motion";
   shareAudio: boolean;
+  /** Channels and groups show their member list beside the messages, on screens wide enough for it. */
+  memberList: boolean;
+  /** Direct messages show the other person's profile beside the messages, on screens wide enough for it. */
+  dmProfile: boolean;
+  /** The person picked a colour plate themselves; until then the default applies (it moved from indigo to charcoal). */
+  paletteChosen: boolean;
 }
 
 const KEY = "orbit.prefs.v1";
 const defaults: Prefs = {
   theme: "system",
-  palette: "indigo",
+  palette: "charcoal",
   textSize: "default",
   messageLayout: "stream",
   animatedEmoji: true,
@@ -91,6 +97,9 @@ const defaults: Prefs = {
   noiseReduction: true,
   shareMode: "text",
   shareAudio: false,
+  memberList: true,
+  dmProfile: true,
+  paletteChosen: false,
 };
 
 function load(): Prefs {
@@ -102,7 +111,7 @@ function load(): Prefs {
     return {
       ...stored,
       theme: THEMES.includes(stored.theme) ? stored.theme : defaults.theme,
-      palette: PALETTES.includes(stored.palette) ? stored.palette : defaults.palette,
+      palette: paletteOf(stored),
       textSize: TEXT_SIZES.includes(stored.textSize) ? stored.textSize : defaults.textSize,
       messageLayout: MESSAGE_LAYOUTS.includes(stored.messageLayout) ? stored.messageLayout : defaults.messageLayout,
       animatedEmoji: typeof stored.animatedEmoji === "boolean" ? stored.animatedEmoji : defaults.animatedEmoji,
@@ -111,11 +120,24 @@ function load(): Prefs {
       noiseReduction: typeof stored.noiseReduction === "boolean" ? stored.noiseReduction : defaults.noiseReduction,
       shareMode: stored.shareMode === "motion" ? "motion" : "text",
       shareAudio: typeof stored.shareAudio === "boolean" ? stored.shareAudio : defaults.shareAudio,
+      memberList: typeof stored.memberList === "boolean" ? stored.memberList : defaults.memberList,
+      dmProfile: typeof stored.dmProfile === "boolean" ? stored.dmProfile : defaults.dmProfile,
+      paletteChosen: stored.paletteChosen === true,
       ...notificationChoice(stored),
     };
   } catch {
     return defaults;
   }
+}
+
+/**
+ * The stored colour plate. Indigo was the default before charcoal, and every browser that saved any preference saved it
+ * too, so a stored indigo counts as a choice only once the person picked a plate themselves (Appearance › Colour).
+ */
+export function paletteOf(stored: { palette?: unknown; paletteChosen?: unknown }): Palette {
+  const palette = PALETTES.find((p) => p === stored.palette);
+  if (!palette) return defaults.palette;
+  return palette === "indigo" && stored.paletteChosen !== true ? defaults.palette : palette;
 }
 
 const permitted = (): boolean => typeof Notification !== "undefined" && Notification.permission === "granted";
