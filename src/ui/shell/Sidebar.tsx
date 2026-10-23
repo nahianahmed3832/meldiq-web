@@ -40,7 +40,10 @@ export function Sidebar({ orgId, section, open, onDialog }: SidebarProps) {
   return (
     <aside className={`sidebar${open ? " open" : ""}`} aria-label="Conversations">
       <div className="side-head">
-        {communities ? (
+        {section === "dms" ? (
+          // Direct messages aren't part of a community: their own heading, not the community's.
+          <h2 className="side-title grow">Direct messages</h2>
+        ) : communities ? (
           <CommunityHeader orgId={orgId} perms={perms} onDialog={onDialog} />
         ) : (
           <button
@@ -64,7 +67,7 @@ export function Sidebar({ orgId, section, open, onDialog }: SidebarProps) {
           <PenSquare size={18} />
         </button>
       </div>
-      {!communities && switcher.anchor && (
+      {!communities && section !== "dms" && switcher.anchor && (
         <Menu
           anchor={switcher.anchor}
           label="Workspaces"
@@ -131,7 +134,7 @@ export function Sidebar({ orgId, section, open, onDialog }: SidebarProps) {
               </>
             )}
             <Collapsible id="people" title="Direct messages">
-              <PeopleExtras onRequests={() => onDialog({ kind: "requests" })} />
+              <PeopleExtras onRequests={() => onDialog({ kind: "requests" })} onConnections={hasConnections ? () => onDialog({ kind: "connections" }) : undefined} onlyWhenAsked />
               <PeopleList unreadOnly={unreadOnly} orgId={orgId} excludePlaced />
               <button className="side-item" onClick={() => onDialog({ kind: "new" })}>
                 <span className="glyph">

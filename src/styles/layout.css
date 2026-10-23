@@ -277,6 +277,13 @@
   gap: 6px;
   padding: 12px 10px 8px 12px;
 }
+.side-title {
+  margin: 0;
+  padding: 10px 8px;
+  font-size: var(--fs-lg);
+  font-weight: 700;
+  color: var(--text);
+}
 .org-switch {
   display: flex;
   align-items: center;

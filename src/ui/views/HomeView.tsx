@@ -4,7 +4,8 @@ import type { OrgDetail } from "../../api/schemas";
 import { shallowEqual, useEngine, useOrbit } from "../../application/orbit";
 import { navigate, type Section } from "../../application/router";
 import { orgDetail } from "../../sync/account";
-import { Avatar, colorIndexOf } from "../components/Avatar";
+import { colorIndexOf } from "../components/Avatar";
+import { GroupAvatar, UserAvatar } from "../components/OrgAvatar";
 import { conversationTitle, dmPeer, shortWhen } from "../format";
 import { byActivity, inWorkspace, isPeople, mentionConversations } from "../selectors";
 import type { ShellDialog } from "../shell/Shell";
@@ -192,6 +193,9 @@ function RecentRow({ id, section }: { id: string; section: Section }) {
       type: c.type,
       title: conversationTitle(c, s.me.userId, s.users),
       color: peer?.avatarColor ?? colorIndexOf(id),
+      peerId: peer?.id ?? null,
+      // The person's or group's photo, where they have one (the list showed only initials).
+      photoRev: peer ? (s.users[peer.id]?.photoRev ?? null) : c.photoRev,
       preview: l?.lastPreview ?? null,
       sender: l?.lastSenderName ?? null,
       at: l?.lastActivityAt ?? 0,
@@ -205,8 +209,10 @@ function RecentRow({ id, section }: { id: string; section: Section }) {
         <span className="empty-orb" style={{ width: 36, height: 36 }}>
           <Hash size={16} />
         </span>
+      ) : row.peerId ? (
+        <UserAvatar userId={row.peerId} name={row.title} colorIndex={row.color} photoRev={row.photoRev} size={36} decorative />
       ) : (
-        <Avatar name={row.title} colorIndex={row.color} size={36} decorative />
+        <GroupAvatar conversationId={id} name={row.title} photoRev={row.photoRev} size={36} />
       )}
       <span className="lines">
         <span className="ellipsis" style={{ fontWeight: row.unread ? 700 : 600 }}>

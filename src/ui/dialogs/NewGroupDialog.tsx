@@ -6,8 +6,8 @@ import { useEngine } from "../../application/orbit";
 import { navigate } from "../../application/router";
 import { searchPeople } from "../../sync/account";
 import { createGroup } from "../../sync/workspaces";
-import { Avatar } from "../components/Avatar";
 import { Dialog } from "../components/Overlay";
+import { UserAvatar } from "../components/OrgAvatar";
 
 /** Groups hold up to 50 people on this server (server/src/routes/conversations.ts MAX_GROUP); people on other servers can't be added. */
 const MAX_OTHERS = 49;
@@ -92,7 +92,7 @@ export function NewGroupDialog({ onClose, initial = [] }: { onClose: () => void;
             const on = picked.some((x) => x.id === p.id);
             return (
               <button type="button" key={p.id} className="list-row" aria-pressed={on} onClick={() => toggle(p)}>
-                <Avatar name={p.displayName} colorIndex={p.avatarColor} size={32} decorative />
+                <UserAvatar userId={p.id} name={p.displayName} colorIndex={p.avatarColor} photoRev={p.photoRev} size={32} decorative />
                 <span className="lines grow">
                   <span className="ellipsis">{p.displayName}</span>
                   <small>@{p.username}</small>

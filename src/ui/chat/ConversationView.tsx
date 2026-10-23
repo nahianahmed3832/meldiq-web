@@ -5,6 +5,8 @@ import { ForumView } from "./ForumView";
 import { presenceWords } from "../../sync/social";
 import { GroupAvatar, UserAvatar } from "../components/OrgAvatar";
 import { RequestBar, RequestSentBanner } from "../people/RequestBar";
+import { ConnectionRequestBanner } from "../people/ConnectionRequestViews";
+import { useConnectionLists } from "../people/connectionRequests";
 import { VoiceRoomView } from "./VoiceRoomView";
 import { Archive, ArrowLeft, BellOff, ChevronRight, Phone, Search, ShieldAlert, Video } from "lucide-react";
 import { useCallback, useMemo, useState } from "react";
@@ -59,6 +61,7 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
   const [replyTo, setReplyTo] = useState<StoredMessage | null>(null);
   const drop = useFileDrop(!!c?.canPost);
   const users = useOrbit((s) => s.users);
+  const askedToConnect = !!useConnectionLists()?.incoming.some((e) => e.user.id === peer?.id);
 
   const onThread = useCallback((m: StoredMessage) => navigate({ section: route.section, conversationId: id, panel: "thread", threadRoot: m.id }), [id, route.section]);
   const onReview = useCallback(() => {
@@ -152,9 +155,10 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
         {c.type !== "CHANNEL" && <ConversationMenu conversationId={id} route={route} />}
       </header>
 
-      {(alerts.length > 0 || (call && !c.voice) || c.archived || history === "running" || peer?.paused || (c.request && !c.request.incoming)) && (
+      {(askedToConnect || alerts.length > 0 || (call && !c.voice) || c.archived || history === "running" || peer?.paused || (c.request && !c.request.incoming)) && (
         <div className="conv-banners">
           {c.request && !c.request.incoming && <RequestSentBanner conversation={c} />}
+          {askedToConnect && peer && <ConnectionRequestBanner userId={peer.id} name={peer.name} />}
           {peer?.paused && (
             <div className="banner" role="status">
               <BellOff size={16} aria-hidden />
