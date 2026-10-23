@@ -2,6 +2,12 @@
 
 ## Calls and voice messages round (2026-10-24)
 
+**Live since 2026-10-23 19:55 UTC:** web release **0.5.0-beta-da5a7f9** (PR #18; previous 0.5.0-beta-22bd2e9, rollback
+`bash /root/meldiq-web-0.5.0-beta-da5a7f9/rollback.sh`) on API **0.33.0** (switched 19:53 UTC: backup
+`pre-0.33.0-20261023T194822Z`, rehearsal on a snapshot copy ok, 39 users, schema 47; rollback image
+`griip-internal-messaging-api:0.32.0-rollback`; post backup `post-0.33.0-20261023T195528Z`). Web `verify.sh` all
+green; API healthy, 0 restarts, no errors in the log.
+
 Four fixes, web plus API 0.33.0 (server `internal-beta` b48436f, `docs/CALLING_AND_E2EE.md` › One device per person in a call).
 
 | # | Issue | Root cause | Fix |
