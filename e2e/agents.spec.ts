@@ -210,3 +210,38 @@ test("an agent can be removed straight from the list, after a confirmation", asy
   await page.getByRole("button", { name: "Add agents" }).click();
   await expect(page.getByRole("dialog", { name: "Agent catalog" }).locator("article", { hasText: "General Assistant" }).getByRole("button", { name: "Install" })).toBeVisible();
 });
+
+test("a channel's agents are listed beside its people, marked AI, and open Ask", async ({ page }, info) => {
+  test.skip(info.project.name !== "chromium", "one engine is enough for this flow");
+  platformReady();
+  const alice = await newPhone("alice", "Alice Rahman");
+  const { org } = await alice.req("POST", "/v1/orgs", { name: "Bot Corner" });
+  const channel = (await alice.req("POST", `/v1/orgs/${org.id}/channels`, { name: "help", scope: "ORG" })).channel.id as string;
+  const helper = (await alice.req("POST", `/v1/orgs/${org.id}/ai/agents`, { agentId: "general_assistant" })).agent.id as string;
+  await alice.req("PUT", `/v1/orgs/${org.id}/ai/agents/${helper}/channels/${channel}`, { activation: "mention" });
+  // Installed but not in this channel: not listed here.
+  await alice.req("POST", `/v1/orgs/${org.id}/ai/agents`, { agentId: "product_video_editor" });
+  await link(page, alice);
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto(`/#/home/c/${channel}`);
+
+  const members = page.getByRole("complementary", { name: "Members" });
+  if (!(await members.isVisible()))
+    await page
+      .getByRole("button", { name: /members/i })
+      .first()
+      .click();
+  const agents = members.getByRole("region", { name: "AI agents, 1" });
+  await expect(agents).toBeVisible();
+  await expect(agents).toContainText("They can't read this channel: they see only what you send them.");
+  await expect(agents.locator(".ai-tag")).toHaveText("AI");
+  await expect(agents).not.toContainText("Product Video Editor");
+  // People are still listed, below.
+  await expect(members).toContainText("Alice Rahman");
+  if (SHOTS) await page.screenshot({ path: `${SHOTS}/agents-07-member-list.png` });
+
+  await agents.getByRole("button", { name: "General Assistant, AI agent: ask" }).click();
+  const ask = page.getByRole("dialog", { name: "Ask an AI agent" });
+  await expect(ask.getByLabel("Agent")).toHaveValue(helper);
+  await expect(ask.getByText(/n't end-to-end encrypted/)).toBeVisible();
+});

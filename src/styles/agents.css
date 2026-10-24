@@ -184,3 +184,13 @@
 .agent-row-toggle:focus-visible strong {
   text-decoration: underline;
 }
+
+/* A channel's agents in its member list (AgentMembers): name and AI tag above the role, like a person's status. */
+.agent-members .member-row .lines {
+  display: grid;
+  flex: 1;
+}
+.agent-members .member-list-note {
+  margin: 0 8px 4px;
+  padding: 0;
+}
