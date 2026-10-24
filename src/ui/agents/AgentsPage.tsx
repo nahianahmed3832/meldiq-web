@@ -11,13 +11,14 @@ import { AgentAvatar, AgentFileView, RemoveAgentDialog } from "./AgentBits";
 import { AgentSettings } from "./AgentSettings";
 import { AskAgentDialog } from "./AskAgentDialog";
 import { TasksTab } from "./AgentTasks";
+import { SystemCheckTab } from "./SystemCheckTab";
 import { JobView } from "./JobView";
 
-type Tab = "agents" | "manager" | "tasks" | "requests" | "approvals" | "deliverables";
+type Tab = "agents" | "manager" | "tasks" | "requests" | "approvals" | "deliverables" | "health";
 
 /**
  * Community › AI agents (server docs/AI_WORKFORCE.md): the installed agents and the catalog, the Agent Manager,
- * tasks for people, requests, approvals and deliverables. Members with "Ask AI agents" use them; "Manage AI agents" installs and
+ * tasks for people, requests, approvals, deliverables and (for managers) the System Check. Members with "Ask AI agents" use them; "Manage AI agents" installs and
  * configures them; "Approve AI agent actions" approves. The server checks every one of these again.
  */
 export function AgentsPage({ detail }: { detail: OrgAdminDetail }) {
@@ -37,6 +38,7 @@ export function AgentsPage({ detail }: { detail: OrgAdminDetail }) {
     ["requests", "Requests"],
     ...(o?.permissions.canApprove ? ([["approvals", "Approvals"]] as [Tab, string][]) : []),
     ["deliverables", "Deliverables"],
+    ...(o?.permissions.canManage ? ([["health", "Health"]] as [Tab, string][]) : []),
   ];
   return (
     <div className="ws-page">
@@ -64,6 +66,7 @@ export function AgentsPage({ detail }: { detail: OrgAdminDetail }) {
           {tab === "requests" && <RequestsTab orgId={orgId} o={o} />}
           {tab === "approvals" && <ApprovalsTab orgId={orgId} o={o} />}
           {tab === "deliverables" && <DeliverablesTab orgId={orgId} />}
+          {tab === "health" && <SystemCheckTab orgId={orgId} o={o} />}
         </>
       )}
     </div>

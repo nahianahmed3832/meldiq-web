@@ -417,6 +417,34 @@ test("tasks for people: an admin gives one, the person hands it in, the admin ac
   await expect(page.getByRole("region", { name: "History" })).toContainText("approved by Alice Rahman");
 });
 
+test("Health: an admin runs the full system check and sees what needs attention, with evidence and what to do", async ({ page }, info) => {
+  test.skip(info.project.name !== "chromium", "one engine is enough for this flow");
+  platformReady();
+  testModel(false);
+  const alice = await newPhone("alice", "Alice Rahman");
+  const { org } = await alice.req("POST", "/v1/orgs", { name: "Health Lab" });
+  await alice.req("POST", `/v1/orgs/${org.id}/ai/agents`, { agentId: "general_assistant" });
+  await link(page, alice);
+  await page.goto("/#/workspace/agents");
+  await page.getByRole("tab", { name: "Health" }).click();
+  await expect(page.getByText("No check has run here yet.")).toBeVisible();
+  await page.getByRole("button", { name: "Run full system check" }).click();
+  // No verified model on this test server: the agent can't work, and the report says so first, with what to do.
+  const attention = page.getByRole("list", { name: "Needs attention" });
+  await expect(attention).toContainText("General Assistant");
+  await expect(attention).toContainText("Failed");
+  await expect(attention).toContainText("What to do:");
+  // Real smoke tests ran (the AI file store round-trip), and what couldn't be proved safely says why.
+  await page.getByText(/^Healthy \(\d+\)$/).click();
+  await expect(page.getByText(/SHA-256 matched/)).toBeVisible();
+  await expect(page.getByText(/^Not tested \(\d+\)/)).toBeVisible();
+  await expect(page.getByRole("button", { name: "Export" })).toBeVisible();
+  if (SHOTS) await page.screenshot({ path: `${SHOTS}/agents-13-health.png`, fullPage: true });
+  // A second run keeps the first in the history.
+  await page.getByRole("button", { name: "Run full system check" }).click();
+  await expect(page.getByRole("region", { name: "Earlier checks" }).getByRole("listitem")).toHaveCount(2);
+});
+
 /** The platform setting that lets channels' managers switch an agent's reading on (off by default). */
 function readingAllowed(on: boolean): void {
   const db = testDb();

@@ -284,3 +284,51 @@
 .reader-choice p {
   margin: 0;
 }
+
+/* System check (SystemCheckTab.tsx) */
+.check-list .glyph {
+  display: inline-flex;
+  margin-top: 2px;
+}
+.check-healthy .glyph {
+  color: var(--success);
+}
+.check-failed .glyph {
+  color: var(--danger);
+}
+.check-warning .glyph {
+  color: var(--accent-text);
+}
+.check-not_configured .glyph,
+.check-not_tested .glyph {
+  color: var(--text-3);
+}
+.check-row {
+  align-items: flex-start;
+}
+.check-row .lines small {
+  overflow-wrap: anywhere;
+}
+.check-level {
+  margin-left: 6px;
+  font-size: 11px;
+  color: var(--text-3);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.check-counts {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  vertical-align: middle;
+}
+.check-links {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.check-group summary {
+  cursor: pointer;
+  padding: 8px 0;
+  color: var(--text-2, inherit);
+}

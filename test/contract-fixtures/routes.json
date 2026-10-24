@@ -1,5 +1,5 @@
 {
-  "version": "0.40.0",
+  "version": "0.41.0",
   "routes": [
     {
       "method": "GET",
@@ -1088,6 +1088,18 @@
     {
       "method": "POST",
       "path": "/v1/ai/hooks/{triggerId}"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/orgs/{orgId}/ai/system-check"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/orgs/{orgId}/ai/system-check"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/orgs/{orgId}/ai/system-check/{checkId}"
     },
     {
       "method": "GET",
