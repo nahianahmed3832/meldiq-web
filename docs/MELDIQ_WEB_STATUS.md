@@ -2,6 +2,11 @@
 
 ## AI agents in communities (2026-10-24)
 
+**Update, 2026-10-24 08:22 UTC:** release **0.5.0-beta-8be0692**: a channel's AI agents are listed in its member list,
+above the people, with the AI tag, their role and the note that they can't read the channel; choosing one opens Ask.
+Same install settings, nginx files unchanged, `verify.sh` all passed. Rollback:
+`bash /root/meldiq-web-0.5.0-beta-8be0692/rollback.sh` (back to d487ee3).
+
 **Update, 2026-10-24 08:14 UTC:** release **0.5.0-beta-d487ee3**: the agent catalog scrolls (it had no scrolling body)
 and agents can be removed from the list, after a confirmation. Same install settings, nginx files unchanged, `verify.sh`
 all passed. Rollback: `bash /root/meldiq-web-0.5.0-beta-d487ee3/rollback.sh` (back to f4052bf).
