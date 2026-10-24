@@ -9,18 +9,43 @@ import { newPhone } from "./phone";
  * AI Workforce in Meldiq Web (server docs/AI_WORKFORCE.md) against the throwaway test server: a community owner opens
  * AI agents, installs Product Video Editor from the catalog, renames it and assigns it to a channel; in the channel the
  * agents bar shows it, a message naming it opens the agent request (with its notice) instead of being sent, the
- * request asks for footage; then the General Assistant is asked, and the job fails plainly because this test server has
- * no AI provider. Screenshots go to E2E_SHOTS when set.
+ * request asks for footage; then the General Assistant is asked, and the request is refused plainly because this test
+ * server has no verified model. Tests that need a request accepted get testModel(): a verified model whose provider key
+ * can't be opened, so the job fails without anything leaving this machine. Screenshots go to E2E_SHOTS when set.
  *
  * The platform side (AI on, AI Workforce on, two agents published) is what an operator does in the Platform Admin
  * Console, whose own browser test covers it; here those rows are written straight into the test server's database.
  */
 const SHOTS = process.env.E2E_SHOTS;
 
-function platformReady(): void {
+function testDb() {
   const req = createRequire(path.join(serverDir(), "package.json"));
   const Database = req("better-sqlite3") as new (file: string) => { prepare(sql: string): { run(...a: unknown[]): unknown }; close(): void };
-  const db = new Database(path.join(process.env.ORBIT_E2E_DATA!, "griip.sqlite"));
+  return new Database(path.join(process.env.ORBIT_E2E_DATA!, "griip.sqlite"));
+}
+
+/**
+ * A text model the server treats as verified (an operator's Set up in the console), on a provider whose stored key
+ * isn't a sealed key: requests are accepted and routed, and fail at the gateway without a network call. Off removes it.
+ */
+function testModel(on: boolean): void {
+  const db = testDb();
+  const t = Date.now();
+  db.prepare("DELETE FROM ai_model_capabilities WHERE provider_id = 'aip_e2e'").run();
+  db.prepare("DELETE FROM ai_models WHERE provider_id = 'aip_e2e'").run();
+  db.prepare("DELETE FROM ai_providers WHERE id = 'aip_e2e'").run();
+  if (on) {
+    db.prepare(
+      "INSERT INTO ai_providers (id, kind, name, enabled, secret_ciphertext, secret_set_at, max_retries, created_by, created_at, updated_at) VALUES ('aip_e2e', 'openai', 'E2E', 1, 'not-a-sealed-key', ?, 0, 'e2e', ?, ?)",
+    ).run(t, t, t);
+    db.prepare("INSERT INTO ai_models (provider_id, model, enabled) VALUES ('aip_e2e', 'gpt-e2e', 1)").run();
+    db.prepare("INSERT INTO ai_model_capabilities (provider_id, model, capability, verified_at, verify_ok, verify_detail) VALUES ('aip_e2e', 'gpt-e2e', 'text', ?, 1, 'e2e')").run(t);
+  }
+  db.close();
+}
+
+function platformReady(): void {
+  const db = testDb();
   const t = Date.now();
   for (const key of ["ai.enabled", "ai.workforce.enabled"]) {
     db.prepare("INSERT INTO platform_settings (key, value, updated_by, updated_at) VALUES (?, 'true', 'e2e', ?) ON CONFLICT (key) DO UPDATE SET value = 'true'").run(key, t);
@@ -83,7 +108,8 @@ test("a community installs an agent, assigns it to a channel and asks it from th
   if (SHOTS) await page.screenshot({ path: `${SHOTS}/agents-03-ask-from-channel.png` });
   await ask.getByRole("button", { name: "Cancel" }).click();
 
-  // The General Assistant, from the AI agents page: the job is real, and fails plainly without a provider.
+  // The General Assistant, from the AI agents page: without a verified model the server refuses the request plainly
+  // (nothing is queued that could only fail).
   await page.goto("/#/workspace/agents");
   await page.getByRole("button", { name: "Add agents" }).click();
   await page.getByRole("dialog", { name: "Agent catalog" }).locator("article", { hasText: "General Assistant" }).getByRole("button", { name: "Install" }).click();
@@ -93,16 +119,17 @@ test("a community installs an agent, assigns it to a channel and asks it from th
   const ask2 = page.getByRole("dialog", { name: "Ask an AI agent" });
   await ask2.getByLabel("What should it do?").fill("Summarise our launch plan in three bullet points.");
   await ask2.getByRole("button", { name: "Send to the agent" }).click();
+  await expect(ask2.getByText(/General Assistant can't work yet: no verified model for quick replies and classification/)).toBeVisible();
+  if (SHOTS) await page.screenshot({ path: `${SHOTS}/agents-04-request-refused.png`, fullPage: true });
+  await ask2.getByRole("button", { name: "Cancel" }).click();
   await page.getByRole("tab", { name: "Requests" }).click();
-  await page.locator(".ws-row", { hasText: "General Assistant" }).first().getByRole("button").first().click();
-  await expect(page.getByText("No verified model offers quick replies and classification right now.")).toBeVisible({ timeout: 20_000 });
-  await expect(page.getByText("Failed").first()).toBeVisible();
-  if (SHOTS) await page.screenshot({ path: `${SHOTS}/agents-04-request-failed.png`, fullPage: true });
+  await expect(page.locator(".ws-row", { hasText: "General Assistant" })).toHaveCount(0);
 });
 
 test("a request from a channel can share the channel's recent messages, decrypted in the browser", async ({ page }, info) => {
   test.skip(info.project.name !== "chromium", "one engine is enough for this flow");
   platformReady();
+  testModel(true);
   const [alice, bob] = await Promise.all([newPhone("alice", "Alice Rahman"), newPhone("bob", "Bob Okafor")]);
   const { org } = await alice.req("POST", "/v1/orgs", { name: "Launch Crew" });
   const channel = (await alice.req("POST", `/v1/orgs/${org.id}/channels`, { name: "launch", scope: "ORG" })).channel.id as string;
@@ -142,6 +169,7 @@ test("a request from a channel can share the channel's recent messages, decrypte
   const { posts } = await bob.req("GET", `/v1/conversations/${channel}/ai/posts`);
   expect(posts.some((p: { body: string }) => p.body.includes("Shared the last message here with the agent"))).toBe(true);
   if (SHOTS) await page.screenshot({ path: `${SHOTS}/agents-06-shared-in-channel.png` });
+  testModel(false);
 });
 
 test("a community's settings list scrolls to AI agents in a short window", async ({ page }, info) => {
@@ -253,6 +281,7 @@ test("a channel's agents are listed beside its people, marked AI, and open Ask",
 test("agents work like bots: @Agent sends at once, and the request and the answer show in the chat", async ({ page }, info) => {
   test.skip(info.project.name !== "chromium", "one engine is enough for this flow");
   platformReady();
+  testModel(true);
   const alice = await newPhone("alice", "Alice Rahman");
   const { org } = await alice.req("POST", "/v1/orgs", { name: "Bot Chat" });
   const channel = (await alice.req("POST", `/v1/orgs/${org.id}/channels`, { name: "ask", scope: "ORG" })).channel.id as string;
@@ -272,7 +301,7 @@ test("agents work like bots: @Agent sends at once, and the request and the answe
   const request = log.locator(".agent-msg.request");
   await expect(request).toContainText("what is our refund policy?");
   await expect(request).toContainText("to General Assistant · not end-to-end encrypted");
-  // The agent answers in the chat with its AI tag (this test server has no AI provider, so the answer is its failure).
+  // The agent answers in the chat with its AI tag (the test model's provider can't be reached, so the answer is its failure).
   const answer = log.locator(".agent-msg.error");
   await expect(answer).toContainText("I couldn't finish this", { timeout: 60_000 });
   await expect(answer.locator(".ai-tag")).toHaveText("AI");
@@ -283,6 +312,7 @@ test("agents work like bots: @Agent sends at once, and the request and the answe
   await composer.press("Enter");
   await expect(log.locator(".agent-msg.request", { hasText: "and the shipping times?" })).toBeVisible();
   await expect(page.getByRole("dialog")).toHaveCount(0);
+  testModel(false);
 });
 
 test("an admin configures an agent step by step: readiness says what's missing, autonomy, triggers, a real test", async ({ page }, info) => {
@@ -337,12 +367,12 @@ test("an admin configures an agent step by step: readiness says what's missing, 
   expect(triggers.map((t: { kind: string }) => t.kind).sort()).toEqual(["schedule", "webhook"]);
   if (SHOTS) await page.screenshot({ path: `${SHOTS}/agents-09-triggers.png`, fullPage: true });
 
-  // Test & activate: every check, and a real test request that fails plainly without a provider.
+  // Test & activate: every check, and a real test request, refused plainly without a verified model.
   await page.getByRole("tab", { name: "9. Test & activate" }).click();
   await expect(page.getByRole("region", { name: "Readiness" })).toContainText("Triggers to run on its own");
   await page.getByRole("button", { name: "Test this agent" }).click();
-  await expect(page.locator(".agent-job .banner.danger")).toHaveText("No verified model offers quick replies and classification right now.", { timeout: 30_000 });
-  // The activity counts it, and names the last failure.
-  await expect(page.getByRole("region", { name: "Activity" })).toContainText("1 failed");
+  await expect(page.getByRole("region", { name: "Test" }).getByRole("alert")).toContainText("can't work yet: no verified model for quick replies and classification");
+  // Nothing was queued, so nothing failed.
+  await expect(page.getByRole("region", { name: "Activity" })).toContainText("0 failed");
   if (SHOTS) await page.screenshot({ path: `${SHOTS}/agents-10-test.png`, fullPage: true });
 });
