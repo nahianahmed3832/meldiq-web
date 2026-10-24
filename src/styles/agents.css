@@ -263,3 +263,24 @@
   gap: 10px;
   padding: 12px;
 }
+
+/* A channel's agents in the member list: the row, and its Message button beside it. */
+.member-row-wrap {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.member-row-wrap > .member-row {
+  flex: 1;
+  min-width: 0;
+}
+
+/* In place of the composer until the person chooses whether an agent reading the channel gets their messages. */
+.reader-choice {
+  display: grid;
+  gap: 8px;
+  padding: 12px 16px;
+}
+.reader-choice p {
+  margin: 0;
+}

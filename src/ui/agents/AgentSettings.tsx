@@ -1,3 +1,4 @@
+import { ReadingCard } from "./AgentReaders";
 import { ArrowLeft, ImageUp, Trash2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { shallowEqual, useEngine, useOrbit } from "../../application/orbit";
@@ -280,6 +281,7 @@ export function AgentSettings({ orgId, installId, onBack, onChanged }: { orgId: 
               </ul>
             )}
           </Card>
+          <ReadingCard orgId={orgId} installId={a.id} channels={channels} manage={manage} />
         </>
       )}
 

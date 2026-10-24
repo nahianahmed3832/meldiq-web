@@ -1,3 +1,4 @@
+import { ReaderBanner, ReaderChoice, useReaders } from "../agents/AgentReaders";
 import { ConversationMenu } from "./ConversationMenu";
 import { AgentsBar, ChannelAsk, useChannelAgents } from "../agents/AgentsBar";
 import { useAgentMention, useAgentTimeline } from "../agents/AgentChat";
@@ -34,9 +35,11 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
   const channelAgents = useChannelAgents(id, c?.type === "CHANNEL");
   const [agentAsk, setAgentAsk] = useState<{ installId?: string; brief?: string } | null>(null);
   // Agents behave like bots here: "@Agent …" goes straight to them, and their answers show among the messages.
-  const agentOrg = c?.type === "CHANNEL" ? (c.orgId ?? null) : null;
-  const agentTimeline = useAgentTimeline(agentOrg, id, channelAgents.agents, channelAgents.permissions.canApprove);
-  const agentMention = useAgentMention(agentOrg, id, channelAgents.agents);
+  // Agents reading here (opt-in per channel, or a direct conversation with one): the notice and this person's choice.
+  const readers = useReaders(id);
+  const agentOrg = c?.type === "CHANNEL" ? (c.orgId ?? null) : (readers.direct?.orgId ?? null);
+  const agentTimeline = useAgentTimeline(agentOrg, id, channelAgents.agents, channelAgents.permissions.canApprove, readers.direct !== null);
+  const agentMention = useAgentMention(agentOrg, id, channelAgents.agents, readers.sharing);
   const me = useOrbit((s) => s.me);
   const title = useOrbit((s) => (s.me && c ? conversationTitle(c, s.me.userId, s.users) : ""));
   const peer = useOrbit((s) => {
@@ -173,6 +176,7 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
         <AgentsBar orgId={c.orgId} conversationId={id} agents={channelAgents.agents} canApprove={channelAgents.permissions.canApprove} ask={(installId) => setAgentAsk({ installId })} />
       )}
       {agentAsk && c.orgId && <ChannelAsk orgId={c.orgId} conversationId={id} agents={channelAgents.agents} request={agentAsk} close={() => setAgentAsk(null)} />}
+      <ReaderBanner r={readers} />
       {agentTimeline.ui}
       {agentMention.ui}
       {(askedToConnect || alerts.length > 0 || (call && !c.voice) || c.archived || history === "running" || peer?.paused || (c.request && !c.request.incoming)) && (
@@ -269,6 +273,8 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
         </div>
       ) : c.request?.incoming ? (
         <RequestBar conversation={c} name={title} />
+      ) : readers.pending.length ? (
+        <ReaderChoice r={readers} />
       ) : (
         <Composer
           conversation={c}
@@ -279,6 +285,7 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
           dropped={drop.dropped}
           onDroppedTaken={drop.take}
           onAgentRequest={agentMention.onAgentRequest}
+          agents={channelAgents.agents.filter((a) => a.canInvoke)}
         />
       )}
       {drop.over && <div className="drop-overlay">Drop files to send them, encrypted, to {title}</div>}

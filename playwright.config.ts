@@ -1,3 +1,4 @@
+import crypto from "node:crypto";
 import { defineConfig, devices } from "@playwright/test";
 import { spawnSync } from "node:child_process";
 import fs from "node:fs";
@@ -76,6 +77,8 @@ export default defineConfig({
         // Passkeys (e2e/passkeys.spec.ts): the pages at localhost are a relying party of their own, as web.meldiq.app is.
         PASSKEY_RP_ID: "msg.example.test",
         PASSKEY_WEB_ORIGINS: `http://localhost:${WEB_PORT}`,
+        // AI agents reading channels (e2e/agents.spec.ts) hold their keys under the platform's key: a throwaway one here.
+        PLATFORM_SECRETS_KEY: crypto.randomBytes(32).toString("hex"),
         ...livekitEnv,
       },
     },

@@ -52,8 +52,9 @@ export function chatPosts(posts: readonly AgentPost[]): AgentPost[] {
 }
 
 /** The channel's agent posts as timeline entries for MessageList. */
-export function useAgentTimeline(orgId: string | null, conversationId: string, agents: ChannelAgent[], canApprove: boolean): { extras: TimelineExtra[]; ui: ReactNode } {
-  const posts = useChannelPosts(conversationId, !!orgId && agents.length > 0);
+export function useAgentTimeline(orgId: string | null, conversationId: string, agents: ChannelAgent[], canApprove: boolean, direct = false): { extras: TimelineExtra[]; ui: ReactNode } {
+  // A channel with agents, or a direct conversation with one.
+  const posts = useChannelPosts(conversationId, !!orgId && (agents.length > 0 || direct));
   const me = useOrbit((s) => s.me);
   const users = useOrbit((s) => s.users);
   const [job, setJob] = useState<string | null>(null);
@@ -127,7 +128,13 @@ function AgentChatPost({ orgId, post: p, author, canApprove, open }: { orgId: st
  * it leaves end-to-end encryption is asked once per browser; a request the agent can't take as it stands (it needs a
  * file or more options) opens the full form with the text kept.
  */
-export function useAgentMention(orgId: string | null, conversationId: string, agents: ChannelAgent[]): { onAgentRequest: (text: string) => boolean; ui: ReactNode } {
+export function useAgentMention(
+  orgId: string | null,
+  conversationId: string,
+  agents: ChannelAgent[],
+  /** Agents reading here that this person shares with: "@Agent …" then goes as an ordinary message, which the agent reads. */
+  sharing: ReadonlySet<string> = new Set(),
+): { onAgentRequest: (text: string) => boolean; ui: ReactNode } {
   const engine = useEngine();
   const [form, setForm] = useState<{ installId?: string; brief?: string } | null>(null);
   const [notice, setNotice] = useState<{ installId: string; brief: string; name: string } | null>(null);
@@ -150,7 +157,7 @@ export function useAgentMention(orgId: string | null, conversationId: string, ag
   const onAgentRequest = (text: string): boolean => {
     if (!orgId) return false;
     const inv = agentInvocation(text, agents);
-    if (!inv) return false;
+    if (!inv || sharing.has(inv.installId)) return false;
     if (!inv.canInvoke || !inv.brief) setForm({ installId: inv.installId, brief: inv.brief });
     else if (!noticeSeen()) setNotice({ installId: inv.installId, brief: inv.brief, name: inv.displayName });
     else void send(inv.installId, inv.brief, inv.displayName);

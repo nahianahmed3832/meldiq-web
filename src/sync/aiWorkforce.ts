@@ -509,3 +509,48 @@ export async function taskAction(
 export const taskSettings = async (e: Engine, orgId: string) => (await e.api.json("GET", `${tasksPath(orgId)}/settings`, z.object({ settings: zTaskSettings }))).settings;
 export const setTaskSettings = async (e: Engine, orgId: string, roles: string[], users: string[]) =>
   (await e.api.json("PUT", `${tasksPath(orgId)}/settings`, z.object({ settings: zTaskSettings }), { body: { roles, users } })).settings;
+
+// ───────────── Agents reading conversations (server docs/AI_WORKFORCE_2_PLAN.md phase 5) ─────────────
+
+const zReaderView = z.object({
+  readerId: z.string(),
+  orgId: z.string(),
+  installId: z.string(),
+  agentUserId: z.string(),
+  name: z.string(),
+  conversationId: z.string(),
+  conversationName: nullableString,
+  mode: z.enum(["channel", "direct"]),
+  state: z.enum(["on", "off"]),
+  since: z.number(),
+  turnedOnBy: z.object({ id: z.string(), name: z.string() }),
+  reason: z.string(),
+});
+export type ReaderView = z.infer<typeof zReaderView>;
+const zConversationReaders = z.object({ readingEnabled: z.boolean(), readers: z.array(zReaderView.extend({ myChoice: z.enum(["share", "keep"]).nullable() })) });
+export type ConversationReaders = z.infer<typeof zConversationReaders>;
+
+/** The agents reading [conversationId] and this person's choice for each (the same cache the send path uses). */
+export async function conversationReaders(e: Engine, conversationId: string, force = false): Promise<ConversationReaders> {
+  return zConversationReaders.parse(await e.directory.readerChoices(conversationId, force));
+}
+/** Share this person's messages here with a reader, or keep them out: their apps wrap to it, or don't. */
+export async function chooseReader(e: Engine, conversationId: string, readerId: string, choice: "share" | "keep"): Promise<ConversationReaders> {
+  const r = await e.api.json("PUT", `/v1/conversations/${enc(conversationId)}/ai/readers/${enc(readerId)}/choice`, zConversationReaders, { body: { choice } });
+  e.directory.setReaderChoices(conversationId, r);
+  return r;
+}
+export const installReaders = (e: Engine, orgId: string, installId: string) =>
+  e.api.json("GET", `${agentPath(orgId, installId)}/readers`, z.object({ readingEnabled: z.boolean(), readers: z.array(zReaderView) }));
+export const turnOnReader = async (e: Engine, orgId: string, installId: string, conversationId: string, reason: string) =>
+  (await e.api.json("POST", `${agentPath(orgId, installId)}/readers`, z.object({ reader: zReaderView }), { body: { conversationId, reason } })).reader;
+export const readEverywhere = async (e: Engine, orgId: string, installId: string, scope: "assigned" | "all", reason: string) =>
+  (await e.api.json("POST", `${agentPath(orgId, installId)}/read-scope`, z.object({ readers: z.array(zReaderView) }), { body: { scope, reason } })).readers;
+export const turnOffReader = async (e: Engine, orgId: string, installId: string, readerId: string, reason: string) =>
+  (await e.api.json("POST", `${agentPath(orgId, installId)}/readers/${enc(readerId)}/off`, z.object({ reader: zReaderView }), { body: { reason } })).reader;
+/** The person's direct conversation with an agent (created on first use). */
+export async function directConversation(e: Engine, orgId: string, installId: string): Promise<string> {
+  const { conversationId } = await e.api.json("POST", `${agentPath(orgId, installId)}/direct`, z.object({ conversationId: z.string(), reader: zReaderView }));
+  await e.ensureConversation(conversationId);
+  return conversationId;
+}

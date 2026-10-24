@@ -416,3 +416,77 @@ test("tasks for people: an admin gives one, the person hands it in, the admin ac
   await expect(page.getByRole("region", { name: "Count shelf B" })).toContainText("Done · for Bob Okafor");
   await expect(page.getByRole("region", { name: "History" })).toContainText("approved by Alice Rahman");
 });
+
+/** The platform setting that lets channels' managers switch an agent's reading on (off by default). */
+function readingAllowed(on: boolean): void {
+  const db = testDb();
+  db.prepare("INSERT INTO platform_settings (key, value, updated_by, updated_at) VALUES ('ai.workforce.channel_reading', ?, 'e2e', ?) ON CONFLICT (key) DO UPDATE SET value = excluded.value").run(
+    on ? "true" : "false",
+    Date.now(),
+  );
+  db.close();
+}
+
+test("an agent that reads a channel: the notice and choice, @mention as a message, commands, and a direct conversation", async ({ page }, info) => {
+  test.skip(info.project.name !== "chromium", "one engine is enough for this flow");
+  platformReady();
+  readingAllowed(true);
+  testModel(true);
+  const alice = await newPhone("alice", "Alice Rahman");
+  const { org } = await alice.req("POST", "/v1/orgs", { name: "Reading Lab" });
+  const channel = (await alice.req("POST", `/v1/orgs/${org.id}/channels`, { name: "support", scope: "ORG" })).channel.id as string;
+  const helper = (await alice.req("POST", `/v1/orgs/${org.id}/ai/agents`, { agentId: "general_assistant" })).agent.id as string;
+  await alice.req("PUT", `/v1/orgs/${org.id}/ai/agents/${helper}/channels/${channel}`, { activation: "mention" });
+  await link(page, alice);
+
+  // Agent settings › Channels: let it read #support, with a reason everyone in the channel sees.
+  await page.goto("/#/workspace/agents");
+  await page.locator(".ws-row", { hasText: "General Assistant" }).getByRole("button", { name: "Settings" }).click();
+  await page.getByRole("tab", { name: "4. Channels" }).click();
+  const reading = page.getByRole("region", { name: "Reading channels" });
+  await expect(reading).toContainText("It doesn't read any channel.");
+  await reading.getByLabel("Reason (shown to the channel)").fill("Answer support questions from the team");
+  await reading.getByLabel("Channel to read").selectOption({ label: "#support" });
+  await reading.getByRole("button", { name: "Let it read this channel" }).click();
+  await expect(reading).toContainText("#support");
+  if (SHOTS) await page.screenshot({ path: `${SHOTS}/agents-12-reading-settings.png`, fullPage: true });
+
+  // The channel: the notice, and the composer waits for this person's choice.
+  await page.goto(`/#/home/c/${channel}`);
+  await expect(page.getByText(/General Assistant \(AI agent\) reads new messages here from members who share theirs/)).toBeVisible();
+  const choice = page.getByRole("group", { name: "Share your messages with General Assistant?" });
+  await expect(choice).toBeVisible();
+  await expect(page.locator(".composer textarea")).toHaveCount(0);
+  if (SHOTS) await page.screenshot({ path: `${SHOTS}/agents-13-reader-choice.png` });
+  await choice.getByRole("button", { name: "Share my messages with General Assistant" }).click();
+  await expect(page.getByText("You share yours.")).toBeVisible();
+
+  // "/" lists the agents' commands.
+  const composer = page.locator(".composer textarea").first();
+  await composer.fill("/gen");
+  await expect(page.getByRole("listbox", { name: "Agent commands" })).toContainText("/generalassistant");
+  // "@General Assistant …" now goes as an ordinary encrypted message: the agent reads it and answers in its thread.
+  await composer.fill("@General Assistant what is our refund window?");
+  await composer.press("Escape");
+  await composer.press("Enter");
+  const log = page.getByRole("log", { name: "Messages" });
+  await expect(log.getByText("@General Assistant what is our refund window?")).toBeVisible();
+  await expect(page.getByRole("dialog")).toHaveCount(0);
+  // The job is the agent's answer to that message (the test model's provider can't be reached, so it reports a failure).
+  await expect.poll(async () => (await alice.req("GET", `/v1/orgs/${org.id}/ai/jobs?scope=mine`)).jobs.length, { timeout: 30_000 }).toBeGreaterThan(0);
+  if (SHOTS) await page.screenshot({ path: `${SHOTS}/agents-14-mention-as-message.png` });
+
+  // A direct conversation from the member list (which says the agent reads here): everything written there is for it.
+  const members = page.getByRole("complementary", { name: "Members" });
+  if (!(await members.isVisible()))
+    await page
+      .getByRole("button", { name: /members/i })
+      .first()
+      .click();
+  await expect(members.getByRole("region", { name: "AI agents, 1" })).toContainText("reads here");
+  await page.getByRole("button", { name: "Message General Assistant" }).click();
+  await expect(page.getByText(/A direct conversation with General Assistant \(AI agent\)/)).toBeVisible({ timeout: 20_000 });
+  if (SHOTS) await page.screenshot({ path: `${SHOTS}/agents-15-direct.png` });
+  testModel(false);
+  readingAllowed(false);
+});

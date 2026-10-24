@@ -37,6 +37,8 @@ interface RequestOptions {
   signal?: AbortSignal;
   /** Lets the request finish while the page unloads (ending a call when the tab closes). */
   keepalive?: boolean;
+  /** Extra request headers (e.g. what this app supports). */
+  headers?: Record<string, string>;
 }
 
 /**
@@ -84,7 +86,7 @@ export class ApiClient {
 
   private async send(method: string, path: string, opts: RequestOptions, retried = false): Promise<Response> {
     const auth = opts.auth ?? true;
-    const headers: Record<string, string> = { accept: "application/json" };
+    const headers: Record<string, string> = { ...opts.headers, accept: "application/json" };
     const token = auth ? this.credentials?.token() : null;
     if (auth && token) headers.authorization = `Bearer ${token}`;
     let body: BodyInit | undefined;

@@ -284,6 +284,8 @@ export const zUserKeys = z.object({
   devices: z.array(zDeviceKeys),
   /** Servers with the T1.5 fix list devices revoked within the queue lifetime; older ones omit it. */
   revokedDevices: z.array(zRevokedDeviceKeys).default([]),
+  /** An AI agent reading the conversation (API 0.40.0, asked for with x-meldiq-ai-reader): only its device there. */
+  agent: z.object({ installId: z.string(), readerId: z.string(), name: z.string() }).optional(),
 });
 export type UserKeys = z.infer<typeof zUserKeys>;
 
