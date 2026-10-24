@@ -1,5 +1,24 @@
 # Meldiq Web status (2026-10-24)
 
+## AI agents in communities (2026-10-24)
+
+**Live since 2026-10-24 06:54 UTC:** web release **0.5.0-beta-e41839b** (branch `ai-workforce-web`, commit `e41839b`, not
+yet merged to `main`; previous 0.5.0-beta-da5a7f9, rollback `bash /root/meldiq-web-0.5.0-beta-e41839b/rollback.sh`) on
+API **0.35.0** (AI Workforce 1.0, switched off on the platform until an operator turns it on; server
+`docs/AI_WORKFORCE.md`, deployment record in its `docs/DEPLOYMENT.md`).
+- New: Community > AI agents (agents and catalog, settings, Agent Manager, requests, approvals, deliverables); in
+  channels the agents bar, agent posts (server-stored, labelled not end-to-end encrypted), asking with "@Name" /
+  "/name" or Ask; the Ask dialog can share the channel's last 20, 50 or 150 messages, decrypted in the browser, only
+  when the person picks a number, and the channel is told.
+- Checks: typecheck, lint, format, 466 unit tests (contract fixtures synced from the 0.35.0 contracts, which are
+  uncommitted in meldiq_android: run the contract test with `MELDIQ_CONTRACTS_DIR` pointing at an export of them);
+  45 browser tests in Chromium: 41 passed, 2 skipped, `message-extras` failed once and passed alone,
+  `accounts.spec.ts:42` fails the same way on clean `origin/main` against API 0.34.0 too (an existing failure, not
+  this change).
+- Installed with the previous release's settings; the three nginx files are byte-identical to before. `verify.sh` all
+  passed (API 0.35.0 through the site, realtime 101); `web.griipbuddy.cloud` 301s; the sign-in page loads without
+  console errors. **Not checked in production:** anything after signing in.
+
 ## Calls and voice messages round (2026-10-24)
 
 **Live since 2026-10-23 19:55 UTC:** web release **0.5.0-beta-da5a7f9** (PR #18; previous 0.5.0-beta-22bd2e9, rollback
@@ -174,6 +193,7 @@ Every item is backed by the real server (API 0.7.1). No mock APIs and no browser
 | 2026-10-20 12:36 (UTC+8) | Web release **0.2.4-beta-ba154b1**: round 8 Unified Inbox and the 0.2.4-beta version (§0, pass 3) | This session; see §2c |
 | 2026-10-20 13:39 (UTC+8) | Web release **0.2.4-beta-e95c739**: files from S3 open in the browser without a bucket CORS rule (reported bug: "Can't reach the server" on a photo) | This session; see §2d |
 | 2026-10-23 02:37 (UTC+8) | Web release **0.5.0-beta-ff0dd9c**: Architecture 1.0, Meldiq Web on Next.js (PR #4) | Architecture 1.0 web session; see `MELDIQ_WEB_ARCHITECTURE_1_0.md` §6 |
+| 2026-10-24 14:54 (UTC+8) | Web release **0.5.0-beta-e41839b**: AI agents in communities, sharing a channel's recent messages | AI Workforce session; see "AI agents in communities" above |
 
 ### 2a. Web deploy
 
