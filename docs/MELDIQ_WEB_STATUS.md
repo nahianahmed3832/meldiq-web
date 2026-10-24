@@ -2,6 +2,10 @@
 
 ## AI agents in communities (2026-10-24)
 
+**Update, 2026-10-24 08:14 UTC:** release **0.5.0-beta-d487ee3**: the agent catalog scrolls (it had no scrolling body)
+and agents can be removed from the list, after a confirmation. Same install settings, nginx files unchanged, `verify.sh`
+all passed. Rollback: `bash /root/meldiq-web-0.5.0-beta-d487ee3/rollback.sh` (back to f4052bf).
+
 **Update, 2026-10-24 07:21 UTC:** release **0.5.0-beta-f4052bf** fixes the community settings list, which couldn't
 scroll on a laptop-height window (everything below MORE, including AI agents, was cut off). Same install settings,
 nginx files unchanged, `verify.sh` all passed. Rollback: `bash /root/meldiq-web-0.5.0-beta-f4052bf/rollback.sh`
