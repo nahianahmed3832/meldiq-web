@@ -2,6 +2,11 @@
 
 ## AI agents in communities (2026-10-24)
 
+**Update, 2026-10-24 07:21 UTC:** release **0.5.0-beta-f4052bf** fixes the community settings list, which couldn't
+scroll on a laptop-height window (everything below MORE, including AI agents, was cut off). Same install settings,
+nginx files unchanged, `verify.sh` all passed. Rollback: `bash /root/meldiq-web-0.5.0-beta-f4052bf/rollback.sh`
+(back to e41839b).
+
 **Live since 2026-10-24 06:54 UTC:** web release **0.5.0-beta-e41839b** (branch `ai-workforce-web`, commit `e41839b`, not
 yet merged to `main`; previous 0.5.0-beta-da5a7f9, rollback `bash /root/meldiq-web-0.5.0-beta-e41839b/rollback.sh`) on
 API **0.35.0** (AI Workforce 1.0, switched off on the platform until an operator turns it on; server
