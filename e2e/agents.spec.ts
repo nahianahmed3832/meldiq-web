@@ -139,3 +139,24 @@ test("a request from a channel can share the channel's recent messages, decrypte
   expect(posts.some((p: { body: string }) => p.body.includes("Shared the last message here with the agent"))).toBe(true);
   if (SHOTS) await page.screenshot({ path: `${SHOTS}/agents-06-shared-in-channel.png` });
 });
+
+test("a community's settings list scrolls to AI agents in a short window", async ({ page }, info) => {
+  test.skip(info.project.name !== "chromium", "one engine is enough for this layout check");
+  platformReady();
+  const alice = await newPhone("alice", "Alice Rahman");
+  await alice.req("POST", "/v1/orgs", { name: "Tall Settings" });
+  await link(page, alice);
+  await page.setViewportSize({ width: 1280, height: 600 });
+  await page.goto("/#/workspace/overview");
+  const nav = page.locator(".settings-nav");
+  await expect(nav).toBeVisible();
+  // The list is taller than the window, and the mouse wheel scrolls it (it used to be cut off at MORE).
+  expect(await nav.evaluate((n) => n.scrollHeight > n.clientHeight)).toBe(true);
+  await nav.hover();
+  await page.mouse.wheel(0, 2000);
+  await expect.poll(() => nav.evaluate((n) => n.scrollTop)).toBeGreaterThan(0);
+  const agents = nav.getByRole("button", { name: "AI agents" });
+  await expect(agents).toBeInViewport();
+  await agents.click();
+  await expect(page.getByRole("button", { name: "AI agents" }).first()).toHaveAttribute("aria-current", "page");
+});

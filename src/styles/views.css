@@ -88,6 +88,12 @@
   display: grid;
   align-content: start;
   gap: 2px;
+  /* A community's settings list is taller than a laptop window: it scrolls on its own, like the page beside it. */
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
 }
 .settings-nav h2 {
   margin: 0 10px 12px;
