@@ -1,5 +1,5 @@
 {
-  "version": "0.36.0",
+  "version": "0.39.0",
   "routes": [
     {
       "method": "GET",
@@ -964,6 +964,66 @@
     {
       "method": "GET",
       "path": "/v1/conversations/{id}/ai/agents"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/orgs/{orgId}/ai/tasks"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/orgs/{orgId}/ai/tasks"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/orgs/{orgId}/ai/tasks/settings"
+    },
+    {
+      "method": "PUT",
+      "path": "/v1/orgs/{orgId}/ai/tasks/settings"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/orgs/{orgId}/ai/tasks/{taskId}"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/orgs/{orgId}/ai/tasks/{taskId}/accept"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/orgs/{orgId}/ai/tasks/{taskId}/start"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/orgs/{orgId}/ai/tasks/{taskId}/block"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/orgs/{orgId}/ai/tasks/{taskId}/submit"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/orgs/{orgId}/ai/tasks/{taskId}/approve"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/orgs/{orgId}/ai/tasks/{taskId}/return"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/orgs/{orgId}/ai/tasks/{taskId}/cancel"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/orgs/{orgId}/ai/tasks/{taskId}/reassign"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/orgs/{orgId}/ai/skills"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/orgs/{orgId}/ai/skills/discover"
     },
     {
       "method": "GET",

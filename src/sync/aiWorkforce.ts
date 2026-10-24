@@ -381,3 +381,131 @@ export const updateTrigger = async (e: Engine, orgId: string, installId: string,
 export const removeTrigger = (e: Engine, orgId: string, installId: string, triggerId: string) => e.api.call("DELETE", `${agentPath(orgId, installId)}/triggers/${enc(triggerId)}`);
 export const runTrigger = async (e: Engine, orgId: string, installId: string, triggerId: string) =>
   (await e.api.json("POST", `${agentPath(orgId, installId)}/triggers/${enc(triggerId)}/run`, z.object({ job: zJobDetail }))).job;
+
+// ───────────── Tasks for people (server docs/AI_WORKFORCE_2_PLAN.md, phase 4) ─────────────
+
+const zPerson = z.object({ id: z.string(), name: z.string() });
+export const TASK_STATES = ["waiting", "open", "accepted", "in_progress", "blocked", "submitted", "done", "cancelled"] as const;
+export type TaskState = (typeof TASK_STATES)[number];
+export const TASK_STATE_LABEL: Record<TaskState, string> = {
+  waiting: "Waiting for an agent",
+  open: "New",
+  accepted: "Accepted",
+  in_progress: "In progress",
+  blocked: "Blocked",
+  submitted: "Handed in",
+  done: "Done",
+  cancelled: "Cancelled",
+};
+const zTaskSummary = z.object({
+  id: z.string(),
+  title: z.string(),
+  state: z.enum(TASK_STATES),
+  priority: z.enum(["low", "normal", "high", "urgent"]),
+  overdue: z.boolean(),
+  dueAt: z.number().nullable(),
+  assignee: zPerson,
+  createdBy: zPerson,
+  agent: z.object({ installId: z.string(), name: z.string() }).nullable(),
+  jobId: nullableString,
+  updatedAt: z.number(),
+});
+export type TaskSummary = z.infer<typeof zTaskSummary>;
+const zTaskActions = z.object({
+  accept: z.boolean(),
+  start: z.boolean(),
+  block: z.boolean(),
+  submit: z.boolean(),
+  approve: z.boolean(),
+  return: z.boolean(),
+  cancel: z.boolean(),
+  reassign: z.boolean(),
+});
+export type TaskAction = keyof z.infer<typeof zTaskActions>;
+const zTask = zTaskSummary.extend({
+  instructions: z.string(),
+  deliverables: z.string(),
+  conversationId: nullableString,
+  blockedReason: nullableString,
+  submissionNote: nullableString,
+  returnReason: nullableString,
+  returns: z.number(),
+  reminders: z.number(),
+  escalatedAt: z.number().nullable(),
+  cancelReason: nullableString,
+  rev: z.number(),
+  createdAt: z.number(),
+  openedAt: z.number().nullable(),
+  acceptedAt: z.number().nullable(),
+  submittedAt: z.number().nullable(),
+  doneAt: z.number().nullable(),
+  doneBy: zPerson.nullable(),
+  files: z.array(zFile),
+  references: z.array(zFile),
+  can: zTaskActions,
+});
+export type Task = z.infer<typeof zTask>;
+const zTaskEvent = z.object({ at: z.number(), actor: zPerson.nullable(), kind: z.string(), detail: z.record(z.string(), z.unknown()) });
+export type TaskEvent = z.infer<typeof zTaskEvent>;
+const zTaskReport = z.object({
+  byState: z.record(z.string(), z.number()),
+  overdue: z.number(),
+  byAssignee: z.array(z.object({ person: zPerson, active: z.number(), overdue: z.number() })),
+});
+export type TaskReport = z.infer<typeof zTaskReport>;
+const zTaskSettings = z.object({
+  roles: z.array(z.string()),
+  users: z.array(z.string()),
+  updatedAt: z.number().nullable(),
+  eligible: z.array(z.object({ id: z.string(), name: z.string(), roles: z.array(z.string()) })),
+});
+export type TaskSettings = z.infer<typeof zTaskSettings>;
+
+const tasksPath = (orgId: string) => `${base(orgId)}/tasks`;
+export const listTasks = (e: Engine, orgId: string, scope: "mine" | "created" | "all", state?: TaskState) =>
+  e.api.json("GET", `${tasksPath(orgId)}?scope=${scope}${state ? `&state=${state}` : ""}`, z.object({ tasks: z.array(zTaskSummary), next: z.number().nullable(), report: zTaskReport.nullable() }));
+export const getTask = (e: Engine, orgId: string, taskId: string) => e.api.json("GET", `${tasksPath(orgId)}/${enc(taskId)}`, z.object({ task: zTask, events: z.array(zTaskEvent) }));
+export interface NewTask {
+  title: string;
+  instructions: string;
+  deliverables: string;
+  assigneeId: string;
+  dueAt: number | null;
+  priority: "low" | "normal" | "high" | "urgent";
+  conversationId: string | null;
+}
+export const createTask = async (e: Engine, orgId: string, t: NewTask) => (await e.api.json("POST", tasksPath(orgId), z.object({ task: zTask }), { body: t })).task;
+/** Any change: the version it was read at, and what that change needs (a reason, a note, files, a person). */
+const zTaskAnswer = z.object({ task: zTask });
+/** Any change: the version it was read at, and what that change needs. One call per route, spelled out, so the contract test can match each to the server's. */
+export async function taskAction(
+  e: Engine,
+  orgId: string,
+  task: Pick<Task, "id" | "rev">,
+  action: TaskAction,
+  body: { reason?: string; note?: string; fileIds?: string[]; assigneeId?: string } = {},
+): Promise<Task> {
+  const o = { body: { rev: task.rev, ...body } };
+  const id = enc(task.id);
+  switch (action) {
+    case "accept":
+      return (await e.api.json("POST", `${tasksPath(orgId)}/${id}/accept`, zTaskAnswer, o)).task;
+    case "start":
+      return (await e.api.json("POST", `${tasksPath(orgId)}/${id}/start`, zTaskAnswer, o)).task;
+    case "block":
+      return (await e.api.json("POST", `${tasksPath(orgId)}/${id}/block`, zTaskAnswer, o)).task;
+    case "submit":
+      return (await e.api.json("POST", `${tasksPath(orgId)}/${id}/submit`, zTaskAnswer, o)).task;
+    case "approve":
+      return (await e.api.json("POST", `${tasksPath(orgId)}/${id}/approve`, zTaskAnswer, o)).task;
+    case "return":
+      return (await e.api.json("POST", `${tasksPath(orgId)}/${id}/return`, zTaskAnswer, o)).task;
+    case "cancel":
+      return (await e.api.json("POST", `${tasksPath(orgId)}/${id}/cancel`, zTaskAnswer, o)).task;
+    case "reassign":
+      return (await e.api.json("POST", `${tasksPath(orgId)}/${id}/reassign`, zTaskAnswer, o)).task;
+  }
+}
+export const taskSettings = async (e: Engine, orgId: string) => (await e.api.json("GET", `${tasksPath(orgId)}/settings`, z.object({ settings: zTaskSettings }))).settings;
+export const setTaskSettings = async (e: Engine, orgId: string, roles: string[], users: string[]) =>
+  (await e.api.json("PUT", `${tasksPath(orgId)}/settings`, z.object({ settings: zTaskSettings }), { body: { roles, users } })).settings;

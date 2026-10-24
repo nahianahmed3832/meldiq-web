@@ -376,3 +376,43 @@ test("an admin configures an agent step by step: readiness says what's missing, 
   await expect(page.getByRole("region", { name: "Activity" })).toContainText("0 failed");
   if (SHOTS) await page.screenshot({ path: `${SHOTS}/agents-10-test.png`, fullPage: true });
 });
+
+test("tasks for people: an admin gives one, the person hands it in, the admin accepts it", async ({ page }, info) => {
+  test.skip(info.project.name !== "chromium", "one engine is enough for this flow");
+  platformReady();
+  const [alice, bob] = await Promise.all([newPhone("alice", "Alice Rahman"), newPhone("bob", "Bob Okafor")]);
+  const { org } = await alice.req("POST", "/v1/orgs", { name: "Task Lab" });
+  const code = (await alice.req("POST", `/v1/orgs/${org.id}/invites`, { role: "MEMBER", maxUses: 1 })).invite.code;
+  await bob.req("POST", "/v1/invites/accept", { code });
+  await link(page, alice);
+  await page.goto("/#/workspace/agents");
+  await page.getByRole("tab", { name: "Tasks" }).click();
+  await expect(page.getByText(/Tasks, notes and files handed in aren't end-to-end encrypted/)).toBeVisible();
+  // Nobody may be given work by the Agent Manager until an admin says so.
+  await expect(page.getByText("Nobody yet: the Agent Manager can't give work to people.")).toBeVisible();
+
+  await page.getByRole("button", { name: "New task" }).click();
+  const dialog = page.getByRole("dialog", { name: "New task" });
+  await dialog.getByLabel("Title").fill("Count shelf B");
+  await dialog.getByLabel("What to do").fill("Count the grips on shelf B and note the number.");
+  await dialog.getByLabel("For").selectOption({ label: "Bob Okafor" });
+  await dialog.getByRole("button", { name: "Give the task" }).click();
+  // The new task opens: Alice can cancel or reassign it, but only Bob can accept it.
+  await expect(page.getByRole("region", { name: "Count shelf B" })).toContainText("New · for Bob Okafor");
+  await expect(page.getByRole("button", { name: "Accept", exact: true })).toHaveCount(0);
+  await expect(page.getByRole("button", { name: "Cancel task" })).toBeVisible();
+  if (SHOTS) await page.screenshot({ path: `${SHOTS}/agents-11-task.png`, fullPage: true });
+
+  // Bob accepts and hands it in (from his phone).
+  const { tasks } = await bob.req("GET", `/v1/orgs/${org.id}/ai/tasks?scope=mine`);
+  const id = tasks[0].id as string;
+  let rev = (await bob.req("GET", `/v1/orgs/${org.id}/ai/tasks/${id}`)).task.rev;
+  rev = (await bob.req("POST", `/v1/orgs/${org.id}/ai/tasks/${id}/accept`, { rev })).task.rev;
+  await bob.req("POST", `/v1/orgs/${org.id}/ai/tasks/${id}/submit`, { rev, note: "42 grips on shelf B." });
+
+  // Alice sees what he handed in, and accepts the work.
+  await expect(page.getByText("42 grips on shelf B.").first()).toBeVisible({ timeout: 20_000 });
+  await page.getByRole("button", { name: "Accept the work" }).click();
+  await expect(page.getByRole("region", { name: "Count shelf B" })).toContainText("Done · for Bob Okafor");
+  await expect(page.getByRole("region", { name: "History" })).toContainText("approved by Alice Rahman");
+});

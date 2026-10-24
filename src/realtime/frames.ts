@@ -58,6 +58,8 @@ export type ServerFrame =
   /** AI Workforce (server docs/AI_WORKFORCE.md): ids only; what changed is fetched, and the fetch is permission-checked. */
   | { t: "ai.posts"; conversationId: string }
   | { t: "ai.job" }
+  /** A task assigned to you or created by you changed (server AI_WORKFORCE_2_PLAN.md, phase 4). */
+  | { t: "ai.task" }
   | { t: "reminders.changed" | "reminder.due" }
   | { t: "prefs.updated"; workspaceId: string }
   | { t: "org.deleted"; orgId: string }
@@ -83,6 +85,7 @@ export const HANDLED_FRAMES: ReadonlySet<string> = new Set<ServerFrame["t"]>([
   "meeting.soon",
   "ai.posts",
   "ai.job",
+  "ai.task",
   "reminders.changed",
   "reminder.due",
   "prefs.updated",
@@ -113,6 +116,7 @@ export function parseFrame(f: Frame): ServerFrame | null {
     case "reminder.due":
     case "queue.drained":
     case "ai.job":
+    case "ai.task":
       return { t };
     case "queue":
       return { t, items: Array.isArray(f.items) ? (f.items as unknown[]) : [], backlog: f.backlog === true };

@@ -10,13 +10,14 @@ import { useAction, useLoad } from "../workspace/useLoad";
 import { AgentAvatar, AgentFileView, RemoveAgentDialog } from "./AgentBits";
 import { AgentSettings } from "./AgentSettings";
 import { AskAgentDialog } from "./AskAgentDialog";
+import { TasksTab } from "./AgentTasks";
 import { JobView } from "./JobView";
 
-type Tab = "agents" | "manager" | "requests" | "approvals" | "deliverables";
+type Tab = "agents" | "manager" | "tasks" | "requests" | "approvals" | "deliverables";
 
 /**
  * Community › AI agents (server docs/AI_WORKFORCE.md): the installed agents and the catalog, the Agent Manager,
- * requests, approvals and deliverables. Members with "Ask AI agents" use them; "Manage AI agents" installs and
+ * tasks for people, requests, approvals and deliverables. Members with "Ask AI agents" use them; "Manage AI agents" installs and
  * configures them; "Approve AI agent actions" approves. The server checks every one of these again.
  */
 export function AgentsPage({ detail }: { detail: OrgAdminDetail }) {
@@ -32,6 +33,7 @@ export function AgentsPage({ detail }: { detail: OrgAdminDetail }) {
   const tabs: [Tab, string][] = [
     ["agents", "Agents"],
     ["manager", "Agent Manager"],
+    ["tasks", "Tasks"],
     ["requests", "Requests"],
     ...(o?.permissions.canApprove ? ([["approvals", "Approvals"]] as [Tab, string][]) : []),
     ["deliverables", "Deliverables"],
@@ -58,6 +60,7 @@ export function AgentsPage({ detail }: { detail: OrgAdminDetail }) {
           </span>
           {tab === "agents" && <AgentsTab orgId={orgId} o={o} reload={overview.reload} open={setOpened} />}
           {tab === "manager" && <ManagerTab orgId={orgId} o={o} />}
+          {tab === "tasks" && <TasksTab orgId={orgId} o={o} />}
           {tab === "requests" && <RequestsTab orgId={orgId} o={o} />}
           {tab === "approvals" && <ApprovalsTab orgId={orgId} o={o} />}
           {tab === "deliverables" && <DeliverablesTab orgId={orgId} />}

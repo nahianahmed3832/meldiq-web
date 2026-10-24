@@ -553,6 +553,7 @@ export class Engine implements EngineContext {
         return;
       }
       case "ai.job":
+      case "ai.task":
         this.set((s) => ({ ...s, aiJobsRev: s.aiJobsRev + 1 }));
         return;
       case "meeting.updated":
