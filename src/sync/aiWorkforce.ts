@@ -31,6 +31,9 @@ export const zInstall = z.object({
   effectiveMode: z.enum(["review", "auto"]),
   maxJobsPerDay: z.number().nullable(),
   maxConcurrent: z.number().nullable(),
+  /** Monthly AI budget here, micro-USD (null: none of its own), and what it has cost this month (server 0.41.0). */
+  maxCostMicroPerMonth: z.number().nullable().catch(null),
+  costMicroThisMonth: z.number().catch(0),
   invokers: z.object({ everyone: z.boolean(), roles: z.array(z.string()) }),
   /** How much it does on its own (server docs/AI_WORKFORCE.md §5b); older servers don't send it. */
   autonomy: z.enum(["manual", "assisted", "guarded", "continuous"]).default("assisted"),

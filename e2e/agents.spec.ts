@@ -372,9 +372,18 @@ test("an admin configures an agent step by step: readiness says what's missing, 
   expect(triggers.map((t: { kind: string }) => t.kind).sort()).toEqual(["schedule", "webhook"]);
   if (SHOTS) await page.screenshot({ path: `${SHOTS}/agents-09-triggers.png`, fullPage: true });
 
+  // Limits: a monthly AI budget, with what the agent has cost this month; readiness then tracks it.
+  await page.getByRole("tab", { name: "8. Limits" }).click();
+  await expect(page.getByText("$0 this month")).toBeVisible();
+  await page.getByLabel("Monthly AI budget (USD)").fill("5");
+  await page.getByRole("button", { name: "Save limits" }).click();
+  await expect(page.getByText("Limits saved.")).toBeVisible();
+  expect((await alice.req("GET", `/v1/orgs/${org.id}/ai/agents/${helper}`)).agent.maxCostMicroPerMonth).toBe(5_000_000);
+
   // Test & activate: every check, and a real test request, refused plainly without a verified model.
   await page.getByRole("tab", { name: "9. Test & activate" }).click();
   await expect(page.getByRole("region", { name: "Readiness" })).toContainText("Triggers to run on its own");
+  await expect(page.getByRole("region", { name: "Readiness" })).toContainText("$0.00 of $5.00 used this month");
   await page.getByRole("button", { name: "Test this agent" }).click();
   await expect(page.getByRole("region", { name: "Test" }).getByRole("alert")).toContainText("can't work yet: no verified model for quick replies and classification");
   // Nothing was queued, so nothing failed.

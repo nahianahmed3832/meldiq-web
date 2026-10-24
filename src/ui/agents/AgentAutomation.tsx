@@ -15,6 +15,7 @@ import {
   type Trigger,
   updateTrigger,
 } from "../../sync/aiWorkforce";
+import { formatCost } from "../../sync/work";
 import { relative } from "../format";
 import { Card, ErrorLine } from "../workspace/WorkspaceView";
 import { useAction, useLoad } from "../workspace/useLoad";
@@ -261,6 +262,7 @@ export function LimitsStep({
   const [f, setF] = useState({
     maxJobsPerDay: a.maxJobsPerDay,
     maxConcurrent: a.maxConcurrent,
+    budgetUsd: a.maxCostMicroPerMonth === null ? "" : String(a.maxCostMicroPerMonth / 1_000_000),
     maxRuntimeSec: a.maxRuntimeSec,
     maxAttempts: a.maxAttempts,
     hours: a.activeHours !== null,
@@ -279,6 +281,22 @@ export function LimitsStep({
         <label className="field">
           <span>At the same time</span>
           <input type="number" min={1} max={16} value={f.maxConcurrent ?? ""} placeholder="platform's" disabled={!manage} onChange={(e) => setF({ ...f, maxConcurrent: num(e.target.value) })} />
+        </label>
+        <label className="field">
+          <span>Monthly AI budget (USD)</span>
+          <input
+            type="number"
+            min={0}
+            step="0.01"
+            value={f.budgetUsd}
+            placeholder="no budget"
+            disabled={!manage}
+            aria-describedby="agent-budget-spent"
+            onChange={(e) => setF({ ...f, budgetUsd: e.target.value })}
+          />
+          <small id="agent-budget-spent" className="muted">
+            {formatCost(a.costMicroThisMonth)} this month
+          </small>
         </label>
         <label className="field">
           <span>Longest run (seconds)</span>
@@ -334,6 +352,7 @@ export function LimitsStep({
               {
                 maxJobsPerDay: f.maxJobsPerDay,
                 maxConcurrent: f.maxConcurrent,
+                maxCostMicroPerMonth: f.budgetUsd.trim() === "" ? null : Math.round(Number(f.budgetUsd) * 1_000_000),
                 maxRuntimeSec: f.maxRuntimeSec,
                 maxAttempts: f.maxAttempts,
                 activeHours: f.hours ? { from: f.from, to: f.to, timeZone: f.timeZone } : null,
