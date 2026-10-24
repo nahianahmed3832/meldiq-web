@@ -1,5 +1,5 @@
 {
-  "version": "0.30.0",
+  "version": "0.35.0",
   "routes": [
     {
       "method": "GET",
@@ -872,6 +872,102 @@
     {
       "method": "GET",
       "path": "/v1/federation/resolve"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/orgs/{orgId}/ai"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/orgs/{orgId}/ai/catalog"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/orgs/{orgId}/ai/agents"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/orgs/{orgId}/ai/agents/{installId}"
+    },
+    {
+      "method": "PATCH",
+      "path": "/v1/orgs/{orgId}/ai/agents/{installId}"
+    },
+    {
+      "method": "DELETE",
+      "path": "/v1/orgs/{orgId}/ai/agents/{installId}"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/orgs/{orgId}/ai/agents/{installId}/avatar"
+    },
+    {
+      "method": "PUT",
+      "path": "/v1/orgs/{orgId}/ai/agents/{installId}/avatar"
+    },
+    {
+      "method": "PUT",
+      "path": "/v1/orgs/{orgId}/ai/agents/{installId}/channels/{conversationId}"
+    },
+    {
+      "method": "DELETE",
+      "path": "/v1/orgs/{orgId}/ai/agents/{installId}/channels/{conversationId}"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/orgs/{orgId}/ai/files"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/orgs/{orgId}/ai/jobs"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/orgs/{orgId}/ai/jobs"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/orgs/{orgId}/ai/jobs/{jobId}"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/orgs/{orgId}/ai/jobs/{jobId}/cancel"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/orgs/{orgId}/ai/jobs/{jobId}/retry"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/orgs/{orgId}/ai/jobs/{jobId}/revise"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/orgs/{orgId}/ai/jobs/{jobId}/answer"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/orgs/{orgId}/ai/approvals"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/orgs/{orgId}/ai/approvals/{approvalId}"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/orgs/{orgId}/ai/deliverables"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/orgs/{orgId}/ai/files/{fileId}"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/conversations/{id}/ai/agents"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/conversations/{id}/ai/posts"
     }
   ],
   "errors": {
@@ -881,6 +977,55 @@
     "account_disabled": [
       401,
       403
+    ],
+    "ai_disabled": [
+      503
+    ],
+    "ai_not_configured": [
+      409,
+      503
+    ],
+    "agent_not_assigned": [
+      403
+    ],
+    "agent_unavailable": [
+      409
+    ],
+    "ai_paused": [
+      503
+    ],
+    "ai_workforce_disabled": [
+      503
+    ],
+    "approval_required": [
+      409
+    ],
+    "approval_stale": [
+      409
+    ],
+    "integration_not_configured": [
+      409
+    ],
+    "job_cancelled": [
+      409
+    ],
+    "job_timeout": [
+      504
+    ],
+    "job_not_retryable": [
+      409
+    ],
+    "media_engine_unavailable": [
+      503
+    ],
+    "name_not_allowed": [
+      400
+    ],
+    "tool_not_allowed": [
+      403
+    ],
+    "unsafe_url": [
+      400
     ],
     "allow_and_deny": [
       400
@@ -983,6 +1128,9 @@
     "email_unverified": [
       403
     ],
+    "enrolment_required": [
+      403
+    ],
     "federated_calls_unavailable": [
       409
     ],
@@ -1034,6 +1182,9 @@
     "invalid_invite": [
       403
     ],
+    "invalid_policy": [
+      400
+    ],
     "invalid_proof": [
       401
     ],
@@ -1063,6 +1214,15 @@
     ],
     "invites_paused": [
       403
+    ],
+    "loadtest_disabled": [
+      403
+    ],
+    "loadtest_network": [
+      403
+    ],
+    "loadtest_quota": [
+      429
     ],
     "leave_community": [
       403
@@ -1096,6 +1256,9 @@
     ],
     "migration_closed": [
       410
+    ],
+    "mode_not_supported": [
+      400
     ],
     "no_key_backup": [
       404
@@ -1151,6 +1314,9 @@
     "passkey_unknown": [
       401
     ],
+    "provider_error": [
+      502
+    ],
     "push_endpoint_invalid": [
       400
     ],
@@ -1169,8 +1335,17 @@
     "rate_limited": [
       429
     ],
+    "reauth_required": [
+      403
+    ],
     "recovery_throttled": [
       429
+    ],
+    "secrets_unavailable": [
+      503
+    ],
+    "synthetic_scope": [
+      403
     ],
     "registration_limited": [
       429

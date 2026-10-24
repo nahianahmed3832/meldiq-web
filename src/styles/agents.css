@@ -1,0 +1,186 @@
+/* AI Workforce (src/ui/agents): agents' avatars and badge, their posts, jobs and files. Colours come from tokens.css. */
+
+.agent-avatar {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  border-radius: 10px;
+  color: var(--on-accent);
+  font-weight: 600;
+  overflow: visible;
+}
+
+.agent-avatar img {
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  object-fit: cover;
+}
+
+.agent-badge,
+.ai-tag {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  padding: 2px 4px;
+  border-radius: 4px;
+  background: var(--info-soft);
+  color: var(--info);
+}
+
+.agent-badge {
+  position: absolute;
+  right: -6px;
+  bottom: -4px;
+  border: 1px solid var(--surface);
+}
+
+.status-pill {
+  display: inline-block;
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--surface-sunken);
+  color: var(--text-2, inherit);
+  white-space: nowrap;
+}
+.status-pill.ok {
+  background: var(--success-soft);
+  color: var(--success);
+}
+.status-pill.warn {
+  background: var(--accent-soft);
+  color: var(--accent-text);
+}
+.status-pill.danger {
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+.status-pill.muted {
+  opacity: 0.75;
+}
+
+.link-button {
+  border: 0;
+  padding: 0;
+  background: none;
+  color: var(--link);
+  cursor: pointer;
+  font: inherit;
+}
+.link-button:hover {
+  text-decoration: underline;
+}
+
+.agent-bar {
+  gap: 8px;
+}
+
+.agent-post .agent-body {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.agent-post.request {
+  opacity: 0.85;
+}
+
+.agent-file {
+  display: grid;
+  gap: 6px;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface-raised);
+}
+
+.agent-preview {
+  display: block;
+  max-width: 100%;
+  max-height: 360px;
+  border-radius: 8px;
+  background: var(--media-bg);
+}
+
+.agent-text {
+  margin: 0;
+  max-height: 260px;
+  overflow: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-size: 13px;
+  padding: 8px;
+  border-radius: 8px;
+  background: var(--surface-sunken);
+}
+
+.agent-fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr));
+  gap: 10px;
+}
+
+.agent-job {
+  display: grid;
+  gap: 10px;
+}
+
+.agent-progress {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--surface-sunken);
+  overflow: hidden;
+}
+.agent-progress span {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+  transition: width 0.3s ease;
+}
+
+.agent-approval {
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+}
+
+.agent-catalog {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr));
+  gap: 12px;
+}
+
+.agent-card {
+  display: grid;
+  gap: 8px;
+  align-content: start;
+  padding: 12px;
+}
+
+.agent-card p {
+  margin: 0;
+}
+
+.agent-caps {
+  margin: 0;
+  padding-left: 1.1em;
+  font-size: 13px;
+}
+
+.agent-row-toggle {
+  gap: 8px;
+  width: 100%;
+  border: 0;
+  padding: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.agent-row-toggle:hover strong,
+.agent-row-toggle:focus-visible strong {
+  text-decoration: underline;
+}

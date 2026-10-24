@@ -1,0 +1,141 @@
+import { expect, test } from "@playwright/test";
+import { createRequire } from "node:module";
+import path from "node:path";
+import { serverDir } from "../test/support/serverDir";
+import { link } from "./link";
+import { newPhone } from "./phone";
+
+/**
+ * AI Workforce in Meldiq Web (server docs/AI_WORKFORCE.md) against the throwaway test server: a community owner opens
+ * AI agents, installs Product Video Editor from the catalog, renames it and assigns it to a channel; in the channel the
+ * agents bar shows it, a message naming it opens the agent request (with its notice) instead of being sent, the
+ * request asks for footage; then the General Assistant is asked, and the job fails plainly because this test server has
+ * no AI provider. Screenshots go to E2E_SHOTS when set.
+ *
+ * The platform side (AI on, AI Workforce on, two agents published) is what an operator does in the Platform Admin
+ * Console, whose own browser test covers it; here those rows are written straight into the test server's database.
+ */
+const SHOTS = process.env.E2E_SHOTS;
+
+function platformReady(): void {
+  const req = createRequire(path.join(serverDir(), "package.json"));
+  const Database = req("better-sqlite3") as new (file: string) => { prepare(sql: string): { run(...a: unknown[]): unknown }; close(): void };
+  const db = new Database(path.join(process.env.ORBIT_E2E_DATA!, "griip.sqlite"));
+  const t = Date.now();
+  for (const key of ["ai.enabled", "ai.workforce.enabled"]) {
+    db.prepare("INSERT INTO platform_settings (key, value, updated_by, updated_at) VALUES (?, 'true', 'e2e', ?) ON CONFLICT (key) DO UPDATE SET value = 'true'").run(key, t);
+  }
+  for (const agent of ["general_assistant", "product_video_editor"]) {
+    db.prepare(
+      "INSERT INTO ai_agent_templates (agent_id, version, status, availability, policy, updated_by, created_at, updated_at) VALUES (?, 1, 'published', 'all', '{}', 'e2e', ?, ?) ON CONFLICT DO NOTHING",
+    ).run(agent, t, t);
+  }
+  db.close();
+}
+
+test("a community installs an agent, assigns it to a channel and asks it from the channel", async ({ page }, info) => {
+  test.skip(info.project.name !== "chromium", "one engine is enough for this flow");
+  platformReady();
+  const alice = await newPhone("alice", "Alice Rahman");
+  const { org } = await alice.req("POST", "/v1/orgs", { name: "Agent Lab" });
+  const channel = (await alice.req("POST", `/v1/orgs/${org.id}/channels`, { name: "marketing", scope: "ORG" })).channel.id as string;
+  await link(page, alice);
+
+  // AI agents: nothing installed; the catalog shows what the platform published, with what's missing to work.
+  await page.goto("/#/workspace/agents");
+  await expect(page.getByText("No agent is installed yet.")).toBeVisible();
+  await expect(page.getByText(/n't end-to-end encrypted/).first()).toBeVisible();
+  await page.getByRole("button", { name: "Add agents" }).click();
+  const catalog = page.getByRole("dialog", { name: "Agent catalog" });
+  await expect(catalog.getByText("Product Video Editor")).toBeVisible();
+  await expect(catalog.getByText(/Setup needed: .*No verified model/).first()).toBeVisible();
+  if (SHOTS) await page.screenshot({ path: `${SHOTS}/agents-01-catalog.png` });
+  await catalog.locator("article", { hasText: "Product Video Editor" }).getByRole("button", { name: "Install" }).click();
+
+  // Its settings: a name of the community's own, and the channel.
+  await expect(page.getByRole("heading", { name: "Product Video Editor", level: 3 })).toBeVisible();
+  await page.getByLabel(/^Name/).fill("Reel Maker");
+  await page.getByRole("button", { name: "Save" }).click();
+  await expect(page.getByText("Saved.")).toBeVisible();
+  // The box follows the server's answer (it's checked once the assignment is saved).
+  await page.getByRole("checkbox", { name: "In #marketing" }).click();
+  await expect(page.getByRole("checkbox", { name: "In #marketing" })).toBeChecked();
+  await expect(page.getByLabel("How Reel Maker is asked in #marketing")).toHaveValue("mention");
+  if (SHOTS) await page.screenshot({ path: `${SHOTS}/agents-02-settings.png`, fullPage: true });
+
+  // The channel: the agents bar, and a message naming the agent opens its request instead of being sent.
+  await page.goto(`/#/home/c/${channel}`);
+  await expect(page.locator(".agent-bar")).toContainText("Reel Maker works here");
+  const composer = page.locator(".composer textarea").first();
+  await composer.fill("@Reel Maker a 20-second teaser for the launch");
+  await composer.press("Enter");
+  const ask = page.getByRole("dialog", { name: "Ask an AI agent" });
+  await expect(ask.getByLabel("What should it do?")).toHaveValue("a 20-second teaser for the launch");
+  await expect(ask.getByText(/needs a file/)).toBeVisible();
+  await expect(ask.getByRole("button", { name: "Send to the agent" })).toBeDisabled();
+  await expect(ask.getByText(/n't end-to-end encrypted/)).toBeVisible();
+  await expect(composer).toHaveValue("");
+  if (SHOTS) await page.screenshot({ path: `${SHOTS}/agents-03-ask-from-channel.png` });
+  await ask.getByRole("button", { name: "Cancel" }).click();
+
+  // The General Assistant, from the AI agents page: the job is real, and fails plainly without a provider.
+  await page.goto("/#/workspace/agents");
+  await page.getByRole("button", { name: "Add agents" }).click();
+  await page.getByRole("dialog", { name: "Agent catalog" }).locator("article", { hasText: "General Assistant" }).getByRole("button", { name: "Install" }).click();
+  // Installing opens the agent's settings; their back button returns to the list.
+  await page.locator("button.btn-secondary", { hasText: "AI agents" }).click();
+  await page.locator(".ws-row", { hasText: "General Assistant" }).getByRole("button", { name: "Ask" }).click();
+  const ask2 = page.getByRole("dialog", { name: "Ask an AI agent" });
+  await ask2.getByLabel("What should it do?").fill("Summarise our launch plan in three bullet points.");
+  await ask2.getByRole("button", { name: "Send to the agent" }).click();
+  await page.getByRole("tab", { name: "Requests" }).click();
+  await page.locator(".ws-row", { hasText: "General Assistant" }).first().getByRole("button").first().click();
+  await expect(page.getByText("No verified model offers quick replies and classification right now.")).toBeVisible({ timeout: 20_000 });
+  await expect(page.getByText("Failed").first()).toBeVisible();
+  if (SHOTS) await page.screenshot({ path: `${SHOTS}/agents-04-request-failed.png`, fullPage: true });
+});
+
+test("a request from a channel can share the channel's recent messages, decrypted in the browser", async ({ page }, info) => {
+  test.skip(info.project.name !== "chromium", "one engine is enough for this flow");
+  platformReady();
+  const [alice, bob] = await Promise.all([newPhone("alice", "Alice Rahman"), newPhone("bob", "Bob Okafor")]);
+  const { org } = await alice.req("POST", "/v1/orgs", { name: "Launch Crew" });
+  const channel = (await alice.req("POST", `/v1/orgs/${org.id}/channels`, { name: "launch", scope: "ORG" })).channel.id as string;
+  const code = (await alice.req("POST", `/v1/orgs/${org.id}/invites`, { role: "MEMBER", maxUses: 2 })).invite.code;
+  await bob.req("POST", "/v1/invites/accept", { code });
+  await bob.req("POST", `/v1/conversations/${channel}/join`).catch(() => undefined);
+  const agent = (await alice.req("POST", `/v1/orgs/${org.id}/ai/agents`, { agentId: "general_assistant" })).agent.id as string;
+  await alice.req("PUT", `/v1/orgs/${org.id}/ai/agents/${agent}/channels/${channel}`, { activation: "mention" });
+  await link(page, alice);
+
+  // A real end-to-end encrypted message in the channel: only members' devices, this browser among them, can read it.
+  await bob.send(channel, { type: "text", text: "The launch moves to Thursday because the build failed." });
+  await page.goto(`/#/home/c/${channel}`);
+  await expect(page.getByText("The launch moves to Thursday because the build failed.")).toBeVisible();
+
+  // Asking the agent: nothing from the channel goes unless a number of messages is chosen, and the notice says so.
+  const composer = page.locator(".composer textarea").first();
+  await composer.fill("@General Assistant what did we decide?");
+  await composer.press("Enter");
+  const ask = page.getByRole("dialog", { name: "Ask an AI agent" });
+  await expect(ask.getByText("Only what you put here is sent, never the channel's messages.")).toBeVisible();
+  const share = ask.getByLabel("Share recent messages from this channel");
+  await expect(share).toHaveValue("0");
+  await share.selectOption({ label: "The one recent message" });
+  await expect(ask.getByText(/The last message here, as this browser shows it, is sent with your request, whoever wrote it\. Everyone in the channel is told\./)).toBeVisible();
+  if (SHOTS) await page.screenshot({ path: `${SHOTS}/agents-05-share-messages.png` });
+
+  // What leaves the browser: the decrypted text, its author's name and time, and nothing else from the channel.
+  const sent = page.waitForRequest((r) => r.method() === "POST" && r.url().endsWith(`/v1/orgs/${org.id}/ai/jobs`));
+  await ask.getByRole("button", { name: "Send to the agent" }).click();
+  const body = (await sent).postDataJSON();
+  expect(body.channelMessages).toEqual([{ author: "Bob Okafor", text: "The launch moves to Thursday because the build failed.", at: expect.any(Number) }]);
+  expect(body.conversationId).toBe(channel);
+
+  // The channel is told, for everyone in it (the agents bar lists the requests once opened).
+  await page.locator(".agent-bar .link-button").first().click();
+  await expect(page.getByText(/Shared the last message here with the agent \(not end-to-end encrypted\)/)).toBeVisible();
+  const { posts } = await bob.req("GET", `/v1/conversations/${channel}/ai/posts`);
+  expect(posts.some((p: { body: string }) => p.body.includes("Shared the last message here with the agent"))).toBe(true);
+  if (SHOTS) await page.screenshot({ path: `${SHOTS}/agents-06-shared-in-channel.png` });
+});

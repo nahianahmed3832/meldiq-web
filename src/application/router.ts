@@ -28,7 +28,9 @@ export type WorkspacePage =
   | "bans"
   | "guide"
   | "onboarding"
-  | "expressions";
+  | "expressions"
+  // AI Workforce (server docs/AI_WORKFORCE.md).
+  | "agents";
 
 export interface Route {
   section: Section;
@@ -60,6 +62,7 @@ const WORKSPACE_PAGES: WorkspacePage[] = [
   "guide",
   "onboarding",
   "expressions",
+  "agents",
 ];
 const ID = /^[A-Za-z0-9_-]{1,128}$/;
 

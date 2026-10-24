@@ -546,6 +546,15 @@ export class Engine implements EngineContext {
         this.set((s) => ({ ...s, moderationRev: s.moderationRev + 1 }));
         if (f.t === "org.application") void this.refreshAll();
         return;
+      case "ai.posts": {
+        // Ids only: the posts are fetched, and that fetch decides what this person may see.
+        const id = f.conversationId;
+        this.set((s) => ({ ...s, aiPostsRev: { ...s.aiPostsRev, [id]: (s.aiPostsRev[id] ?? 0) + 1 } }));
+        return;
+      }
+      case "ai.job":
+        this.set((s) => ({ ...s, aiJobsRev: s.aiJobsRev + 1 }));
+        return;
       case "meeting.updated":
       case "meeting.soon":
         this.set((s) => ({ ...s, meetingsRev: s.meetingsRev + 1 }));

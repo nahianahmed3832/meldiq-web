@@ -40,6 +40,11 @@ interface ComposerProps {
   /** Files dropped on the conversation. */
   dropped: File[];
   onDroppedTaken: () => void;
+  /**
+   * AI Workforce: true when [text] asks an agent ("@Agent …", "/agent …"). It then opens the agent request (with its
+   * notice) instead of being sent as an encrypted message.
+   */
+  onAgentRequest?: (text: string) => boolean;
 }
 
 export function Composer(props: ComposerProps) {
@@ -153,6 +158,10 @@ export function Composer(props: ComposerProps) {
   const send = async () => {
     const body = text.trim();
     if ((!body && !files.length) || busy) return;
+    if (!files.length && !props.threadRoot && props.onAgentRequest?.(body)) {
+      setText("");
+      return;
+    }
     clearTimeout(draftTimer.current); // before anything async: a pending draft save must not bring the text back
     const opts = { replyTo: props.replyTo?.id, threadRoot: props.threadRoot };
     // The box empties at once (the message shows as Sending), so whatever is typed while it encrypts and goes out
