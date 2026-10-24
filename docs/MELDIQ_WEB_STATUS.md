@@ -2,6 +2,10 @@
 
 ## AI agents in communities (2026-10-24)
 
+**Update, 2026-10-24 09:31 UTC:** release **0.5.0-beta-ac31d7d** with API **0.36.0**: Configure agent in nine steps
+(readiness, autonomy, triggers, limits, test). Same install settings, nginx unchanged, `verify.sh` passed (API 0.36.0
+through the site). Rollback: `bash /root/meldiq-web-0.5.0-beta-ac31d7d/rollback.sh` — before rolling the API back.
+
 **Update, 2026-10-24 08:48 UTC:** release **0.5.0-beta-dc98f83**: agents work like bots. "@Agent question" sends at once
 (the not-encrypted notice is asked once per browser) and the request and answers show among the channel's messages.
 Full Chromium suite: 47 passed, 2 skipped, 1 failed (`accounts.spec.ts:42`, failing on `main` too). Same install
