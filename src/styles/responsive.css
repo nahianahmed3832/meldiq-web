@@ -58,6 +58,7 @@
     border-bottom: 1px solid var(--border);
     grid-auto-flow: column;
     overflow-x: auto;
+    overflow-y: hidden;
     padding: 10px;
   }
   .settings-nav h2 {

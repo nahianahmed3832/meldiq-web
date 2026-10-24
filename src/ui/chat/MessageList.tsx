@@ -23,7 +23,22 @@ interface MessageListProps {
   onThread: ((m: StoredMessage) => void) | null;
   onReview: (userId: string) => void;
   start?: ReactNode;
+  /**
+   * Other things to show among the messages, in time order (AI agents' posts in a channel: server-stored, not
+   * end-to-end encrypted, and drawn by their own component). Main view only, never in a thread.
+   */
+  extras?: TimelineExtra[];
 }
+
+export interface TimelineExtra {
+  id: string;
+  at: number;
+  /** Written by this person: the list follows it to the bottom, as it does for their own messages. */
+  mine: boolean;
+  node: ReactNode;
+}
+
+type Entry = { kind: "msg"; id: string; at: number; m: StoredMessage } | { kind: "extra"; id: string; at: number; e: TimelineExtra };
 
 export function MessageList(props: MessageListProps) {
   const { items, threadRoot } = props;
@@ -44,6 +59,14 @@ export function MessageList(props: MessageListProps) {
     return counts;
   }, [items]);
   const byId = useMemo(() => new Map(items.map((m) => [m.id, m])), [items]);
+  const extras = props.extras;
+  // Messages and extras by time; sorting is stable, so messages keep their own order.
+  const timeline = useMemo<Entry[]>(() => {
+    const out: Entry[] = visible.map((m) => ({ kind: "msg", id: m.id, at: m.sortTs, m }));
+    if (threadRoot || !extras?.length) return out;
+    for (const e of extras) out.push({ kind: "extra", id: `x-${e.id}`, at: e.at, e });
+    return out.sort((a, b) => a.at - b.at);
+  }, [visible, extras, threadRoot]);
 
   const isNearBottom = () => {
     const el = scroller.current;
@@ -54,20 +77,21 @@ export function MessageList(props: MessageListProps) {
   useLayoutEffect(() => {
     const el = scroller.current;
     if (!el) return;
-    const first = visible[0]?.id ?? null;
-    const last = visible[visible.length - 1]?.id ?? null;
+    const first = timeline[0]?.id ?? null;
+    const last = timeline[timeline.length - 1]?.id ?? null;
     const p = prev.current;
     if (p.first === null && p.last === null) el.scrollTop = el.scrollHeight;
     else if (first !== p.first && last === p.last) el.scrollTop += el.scrollHeight - p.height;
     else if (last !== p.last) {
-      const lastMsg = visible[visible.length - 1];
-      if (p.atBottom || lastMsg?.outgoing) {
+      const lastEntry = timeline[timeline.length - 1];
+      const mine = lastEntry?.kind === "msg" ? lastEntry.m.outgoing : lastEntry?.e.mine;
+      if (p.atBottom || mine) {
         el.scrollTop = el.scrollHeight;
         setUnseen(0);
       } else setUnseen((n) => n + 1);
     }
     prev.current = { first, last, height: el.scrollHeight, atBottom: isNearBottom() };
-  }, [visible]);
+  }, [timeline]);
 
   const onScroll = useCallback(() => {
     const el = scroller.current;
@@ -89,7 +113,7 @@ export function MessageList(props: MessageListProps) {
     });
     for (const child of Array.from(el.children)) ro.observe(child);
     return () => ro.disconnect();
-  }, [visible.length]);
+  }, [timeline.length]);
 
   // Typing indicators expire on their own.
   useEffect(() => {
@@ -131,9 +155,24 @@ export function MessageList(props: MessageListProps) {
         ) : (
           props.start
         )}
-        {visible.map((m, i) => {
-          const before = visible[i - 1];
-          const newDay = !before || !sameDay(before.sortTs, m.sortTs);
+        {timeline.map((entry, i) => {
+          const prevEntry = timeline[i - 1];
+          const newDay = !prevEntry || !sameDay(prevEntry.at, entry.at);
+          if (entry.kind === "extra") {
+            return (
+              <Fragment key={entry.id}>
+                {newDay && (
+                  <div className="day" role="separator">
+                    <span>{dayLabel(entry.at)}</span>
+                  </div>
+                )}
+                {entry.e.node}
+              </Fragment>
+            );
+          }
+          const m = entry.m;
+          // A message right after an extra starts its own group (name and avatar shown again).
+          const before = prevEntry?.kind === "msg" ? prevEntry.m : undefined;
           const first =
             newDay ||
             !before ||

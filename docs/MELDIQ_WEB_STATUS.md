@@ -1,5 +1,58 @@
 # Meldiq Web status (2026-10-24)
 
+## AI agents in communities (2026-10-24)
+
+**Update, 2026-10-24 17:35 UTC:** release **0.5.0-beta-08ba69d** with API **0.40.0**: agents that read channels (the
+notice and each member's choice, the wrap rule, `@`/`/` suggestions, direct conversations, reading settings). The
+platform's channel reading stays off, so none of it shows until an operator switches it on. Same install settings,
+nginx unchanged, `verify.sh` passed. Rollback: `bash /root/meldiq-web-0.5.0-beta-08ba69d/rollback.sh` (back to
+`5f2b28d`), before rolling the API back.
+
+**Update, 2026-10-24 15:41 UTC:** release **0.5.0-beta-5f2b28d** with API **0.39.0**: the Tasks tab (tasks for people,
+handed in with notes and files, accepted by someone else; who the Agent Manager may give work to). Same install
+settings, nginx unchanged, `verify.sh` passed (API 0.39.0 through the site). Rollback:
+`bash /root/meldiq-web-0.5.0-beta-5f2b28d/rollback.sh` (back to `ac31d7d`), before rolling the API back.
+
+**Update, 2026-10-24 09:31 UTC:** release **0.5.0-beta-ac31d7d** with API **0.36.0**: Configure agent in nine steps
+(readiness, autonomy, triggers, limits, test). Same install settings, nginx unchanged, `verify.sh` passed (API 0.36.0
+through the site). Rollback: `bash /root/meldiq-web-0.5.0-beta-ac31d7d/rollback.sh` — before rolling the API back.
+
+**Update, 2026-10-24 08:48 UTC:** release **0.5.0-beta-dc98f83**: agents work like bots. "@Agent question" sends at once
+(the not-encrypted notice is asked once per browser) and the request and answers show among the channel's messages.
+Full Chromium suite: 47 passed, 2 skipped, 1 failed (`accounts.spec.ts:42`, failing on `main` too). Same install
+settings, nginx unchanged, `verify.sh` passed. Rollback: `bash /root/meldiq-web-0.5.0-beta-dc98f83/rollback.sh`.
+
+**Update, 2026-10-24 08:22 UTC:** release **0.5.0-beta-8be0692**: a channel's AI agents are listed in its member list,
+above the people, with the AI tag, their role and the note that they can't read the channel; choosing one opens Ask.
+Same install settings, nginx files unchanged, `verify.sh` all passed. Rollback:
+`bash /root/meldiq-web-0.5.0-beta-8be0692/rollback.sh` (back to d487ee3).
+
+**Update, 2026-10-24 08:14 UTC:** release **0.5.0-beta-d487ee3**: the agent catalog scrolls (it had no scrolling body)
+and agents can be removed from the list, after a confirmation. Same install settings, nginx files unchanged, `verify.sh`
+all passed. Rollback: `bash /root/meldiq-web-0.5.0-beta-d487ee3/rollback.sh` (back to f4052bf).
+
+**Update, 2026-10-24 07:21 UTC:** release **0.5.0-beta-f4052bf** fixes the community settings list, which couldn't
+scroll on a laptop-height window (everything below MORE, including AI agents, was cut off). Same install settings,
+nginx files unchanged, `verify.sh` all passed. Rollback: `bash /root/meldiq-web-0.5.0-beta-f4052bf/rollback.sh`
+(back to e41839b).
+
+**Live since 2026-10-24 06:54 UTC:** web release **0.5.0-beta-e41839b** (branch `ai-workforce-web`, commit `e41839b`, not
+yet merged to `main`; previous 0.5.0-beta-da5a7f9, rollback `bash /root/meldiq-web-0.5.0-beta-e41839b/rollback.sh`) on
+API **0.35.0** (AI Workforce 1.0, switched off on the platform until an operator turns it on; server
+`docs/AI_WORKFORCE.md`, deployment record in its `docs/DEPLOYMENT.md`).
+- New: Community > AI agents (agents and catalog, settings, Agent Manager, requests, approvals, deliverables); in
+  channels the agents bar, agent posts (server-stored, labelled not end-to-end encrypted), asking with "@Name" /
+  "/name" or Ask; the Ask dialog can share the channel's last 20, 50 or 150 messages, decrypted in the browser, only
+  when the person picks a number, and the channel is told.
+- Checks: typecheck, lint, format, 466 unit tests (contract fixtures synced from the 0.35.0 contracts, which are
+  uncommitted in meldiq_android: run the contract test with `MELDIQ_CONTRACTS_DIR` pointing at an export of them);
+  45 browser tests in Chromium: 41 passed, 2 skipped, `message-extras` failed once and passed alone,
+  `accounts.spec.ts:42` fails the same way on clean `origin/main` against API 0.34.0 too (an existing failure, not
+  this change).
+- Installed with the previous release's settings; the three nginx files are byte-identical to before. `verify.sh` all
+  passed (API 0.35.0 through the site, realtime 101); `web.griipbuddy.cloud` 301s; the sign-in page loads without
+  console errors. **Not checked in production:** anything after signing in.
+
 ## Calls and voice messages round (2026-10-24)
 
 **Live since 2026-10-23 19:55 UTC:** web release **0.5.0-beta-da5a7f9** (PR #18; previous 0.5.0-beta-22bd2e9, rollback
@@ -174,6 +227,7 @@ Every item is backed by the real server (API 0.7.1). No mock APIs and no browser
 | 2026-10-20 12:36 (UTC+8) | Web release **0.2.4-beta-ba154b1**: round 8 Unified Inbox and the 0.2.4-beta version (§0, pass 3) | This session; see §2c |
 | 2026-10-20 13:39 (UTC+8) | Web release **0.2.4-beta-e95c739**: files from S3 open in the browser without a bucket CORS rule (reported bug: "Can't reach the server" on a photo) | This session; see §2d |
 | 2026-10-23 02:37 (UTC+8) | Web release **0.5.0-beta-ff0dd9c**: Architecture 1.0, Meldiq Web on Next.js (PR #4) | Architecture 1.0 web session; see `MELDIQ_WEB_ARCHITECTURE_1_0.md` §6 |
+| 2026-10-24 14:54 (UTC+8) | Web release **0.5.0-beta-e41839b**: AI agents in communities, sharing a channel's recent messages | AI Workforce session; see "AI agents in communities" above |
 
 ### 2a. Web deploy
 

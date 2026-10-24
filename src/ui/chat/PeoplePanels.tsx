@@ -13,6 +13,7 @@ import { UserAvatar } from "../components/OrgAvatar";
 import { dmPeer, relative } from "../format";
 import { openProfile } from "../people/ProfileDialog";
 import { useMembers } from "./ConversationDetails";
+import { AgentMembers } from "../agents/AgentMembers";
 import { isHere, type ListedRole, memberListGroups, nameColor } from "./memberListRules";
 import { useT } from "../../i18n";
 
@@ -100,6 +101,7 @@ export function MemberListPanel({ c, onClose }: { c: Conversation; onClose: () =
       <div className="member-list-body scroll">
         {error && <p className="faint member-list-note">{error}</p>}
         {!members && !error && <div className="skeleton" style={{ height: 40, margin: "8px 12px" }} aria-busy="true" />}
+        {c.type === "CHANNEL" && c.orgId && <AgentMembers orgId={c.orgId} conversationId={c.id} />}
         {groups.map((g) => (
           <section key={g.key} aria-label={`${g.label}, ${g.members.length}`}>
             <h3 className="member-group" style={g.color ? { color: g.color } : undefined}>

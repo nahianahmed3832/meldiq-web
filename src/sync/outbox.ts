@@ -42,7 +42,7 @@ export async function sealAndPost(ctx: EngineContext, o: Outgoing, refresh = fal
     const sealed = await sealEnvelope(
       { messageId: o.messageId, conversationId: o.conversationId, senderUserId: device.userId, senderDeviceId: device.deviceId, sentAt: o.sentAt, cls: o.cls },
       o.payloadJson,
-      r.devices,
+      [...r.devices, ...(await readersFor(ctx, o, r, pass > 0))],
       device.keys.signing.privateKey,
     );
     const mentionAll = o.cls === "message" && parsePayload(o.payloadJson)?.mentionAll === true;
@@ -70,6 +70,20 @@ export async function sealAndPost(ctx: EngineContext, o: Outgoing, refresh = fal
     }
   }
   throw new ApiError(409, "device_mismatch", "The conversation's devices keep changing. Try again.");
+}
+
+/**
+ * The AI readers [o] goes to: only text messages and their edits and deletes (never calls, reactions or anything
+ * else), and only readers this person chose to share with. No choice yet counts as keep.
+ */
+async function readersFor(ctx: EngineContext, o: Outgoing, r: Awaited<ReturnType<EngineContext["directory"]["recipients"]>>, force: boolean) {
+  if (!r.readers.length) return [];
+  const type = parsePayload(o.payloadJson)?.type;
+  const shareable = (o.cls === "message" && type === "text") || (o.cls === "control" && (type === "edit" || type === "delete"));
+  if (!shareable) return [];
+  const choices = await ctx.directory.readerChoices(o.conversationId, force);
+  const sharing = new Set(choices.readers.filter((c) => c.myChoice === "share").map((c) => c.readerId));
+  return r.readers.filter((x) => sharing.has(x.readerId)).map((x) => ({ deviceId: x.deviceId, encryptionKey: x.encryptionKey }));
 }
 
 /**
