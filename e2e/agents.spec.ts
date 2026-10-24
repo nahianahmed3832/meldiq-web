@@ -160,3 +160,53 @@ test("a community's settings list scrolls to AI agents in a short window", async
   await agents.click();
   await expect(page.getByRole("button", { name: "AI agents" }).first()).toHaveAttribute("aria-current", "page");
 });
+
+test("the agent catalog scrolls when it's taller than the window, with its search kept in view", async ({ page }, info) => {
+  test.skip(info.project.name !== "chromium", "one engine is enough for this layout check");
+  platformReady();
+  const alice = await newPhone("alice", "Alice Rahman");
+  await alice.req("POST", "/v1/orgs", { name: "Short Window" });
+  await link(page, alice);
+  await page.setViewportSize({ width: 1280, height: 500 });
+  await page.goto("/#/workspace/agents");
+  await page.getByRole("button", { name: "Add agents" }).click();
+  const catalog = page.getByRole("dialog", { name: "Agent catalog" });
+  const body = catalog.locator(".scroll");
+  await expect(catalog.getByText("Product Video Editor")).toBeVisible();
+  // Taller than the dialog, and the mouse wheel scrolls it (it used to be cut off with no way down).
+  expect(await body.evaluate((n) => n.scrollHeight > n.clientHeight)).toBe(true);
+  await body.hover();
+  await page.mouse.wheel(0, 3000);
+  await expect.poll(() => body.evaluate((n) => n.scrollTop)).toBeGreaterThan(0);
+  await expect(catalog.getByRole("button", { name: "Install" }).last()).toBeInViewport();
+  await expect(catalog.getByLabel("Search agents")).toBeInViewport();
+  // Escape closes it, as other dialogs do.
+  await page.keyboard.press("Escape");
+  await expect(catalog).toBeHidden();
+});
+
+test("an agent can be removed straight from the list, after a confirmation", async ({ page }, info) => {
+  test.skip(info.project.name !== "chromium", "one engine is enough for this flow");
+  platformReady();
+  const alice = await newPhone("alice", "Alice Rahman");
+  const { org } = await alice.req("POST", "/v1/orgs", { name: "Tidy Lab" });
+  await alice.req("POST", `/v1/orgs/${org.id}/ai/agents`, { agentId: "general_assistant" });
+  await link(page, alice);
+  await page.goto("/#/workspace/agents");
+  const row = page.locator(".ws-row", { hasText: "General Assistant" });
+  await expect(row).toBeVisible();
+
+  // Cancel keeps it; Remove takes it out of the community, and the catalog offers it again.
+  await row.getByRole("button", { name: "Remove General Assistant" }).click();
+  const confirm = page.getByRole("dialog", { name: "Remove General Assistant?" });
+  await expect(confirm).toContainText("requests in progress are cancelled");
+  await confirm.getByRole("button", { name: "Cancel" }).click();
+  await expect(row).toBeVisible();
+  await row.getByRole("button", { name: "Remove General Assistant" }).click();
+  await page.getByRole("dialog", { name: "Remove General Assistant?" }).getByRole("button", { name: "Remove" }).click();
+  await expect(page.getByText("No agent is installed yet.")).toBeVisible();
+  const { agents } = await alice.req("GET", `/v1/orgs/${org.id}/ai`);
+  expect(agents).toEqual([]);
+  await page.getByRole("button", { name: "Add agents" }).click();
+  await expect(page.getByRole("dialog", { name: "Agent catalog" }).locator("article", { hasText: "General Assistant" }).getByRole("button", { name: "Install" })).toBeVisible();
+});

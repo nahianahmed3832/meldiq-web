@@ -39,11 +39,13 @@ interface DialogProps {
   children: ReactNode;
   footer?: ReactNode;
   wide?: boolean;
+  /** A CSS width for dialogs wider than `wide` (e.g. a catalog grid); wins over `wide`. */
+  width?: string;
   /** Replaces the title row (search). */
   header?: ReactNode;
 }
 
-export function Dialog({ title, onClose, children, footer, wide, header }: DialogProps) {
+export function Dialog({ title, onClose, children, footer, wide, width, header }: DialogProps) {
   const ref = useRef<HTMLDivElement>(null);
   useFocusTrap(ref, true);
   useEffect(() => {
@@ -53,7 +55,7 @@ export function Dialog({ title, onClose, children, footer, wide, header }: Dialo
   }, [onClose]);
   return createPortal(
     <div className="scrim" onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
-      <div ref={ref} className="dialog" role="dialog" aria-modal="true" aria-label={title} style={wide ? { width: "min(680px, 100%)" } : undefined}>
+      <div ref={ref} className="dialog" role="dialog" aria-modal="true" aria-label={title} style={width ? { width } : wide ? { width: "min(680px, 100%)" } : undefined}>
         {header ?? (
           <div className="dialog-head">
             <h2>{title}</h2>

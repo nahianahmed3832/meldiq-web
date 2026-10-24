@@ -1,12 +1,13 @@
-import { Bot, Download, Plus, Sparkles } from "lucide-react";
+import { Bot, Download, Plus, Sparkles, Trash2 } from "lucide-react";
 import { useState } from "react";
 import type { OrgAdminDetail } from "../../api/workspaceSchemas";
 import { useEngine, useOrbit } from "../../application/orbit";
 import { type AiOverview, aiCatalog, aiOverview, type CatalogEntry, deliverables, installAgent, JOB_STATE_LABEL, listJobs, pendingApprovals } from "../../sync/aiWorkforce";
 import { relative } from "../format";
+import { Dialog } from "../components/Overlay";
 import { Card, ErrorLine } from "../workspace/WorkspaceView";
 import { useAction, useLoad } from "../workspace/useLoad";
-import { AgentAvatar, AgentFileView } from "./AgentBits";
+import { AgentAvatar, AgentFileView, RemoveAgentDialog } from "./AgentBits";
 import { AgentSettings } from "./AgentSettings";
 import { AskAgentDialog } from "./AskAgentDialog";
 import { JobView } from "./JobView";
@@ -69,6 +70,7 @@ export function AgentsPage({ detail }: { detail: OrgAdminDetail }) {
 function AgentsTab({ orgId, o, reload, open }: { orgId: string; o: AiOverview; reload: () => void; open: (installId: string) => void }) {
   const [browsing, setBrowsing] = useState(false);
   const [asking, setAsking] = useState<string | null>(null);
+  const [removing, setRemoving] = useState<{ id: string; displayName: string } | null>(null);
   return (
     <>
       <Card
@@ -104,10 +106,26 @@ function AgentsTab({ orgId, o, reload, open }: { orgId: string; o: AiOverview; r
                   Settings
                 </button>
               )}
+              {o.permissions.canManage && (
+                <button className="btn btn-sm btn-secondary" aria-label={`Remove ${a.displayName}`} title="Remove from this community" onClick={() => setRemoving(a)}>
+                  <Trash2 size={14} />
+                </button>
+              )}
             </li>
           ))}
         </ul>
       </Card>
+      {removing && (
+        <RemoveAgentDialog
+          orgId={orgId}
+          agent={removing}
+          onClose={() => setRemoving(null)}
+          onRemoved={() => {
+            setRemoving(null);
+            reload();
+          }}
+        />
+      )}
       {browsing && (
         <CatalogDialog
           orgId={orgId}
@@ -141,16 +159,21 @@ function CatalogDialog({ orgId, onClose, onInstalled }: { orgId: string; onClose
     (e: CatalogEntry) => (!category || e.agent.category === category) && (!q || `${e.agent.name} ${e.agent.description} ${e.agent.capabilities.join(" ")}`.toLowerCase().includes(q.toLowerCase())),
   );
   const categories = [...new Set((catalog.data ?? []).map((e) => e.agent.category))].sort();
+  // The shared dialog: its body scrolls (the catalog is taller than most windows), and Escape and focus work as elsewhere.
+  // The search stays above the list while it scrolls.
   return (
-    <div className="scrim" onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
-      <div className="dialog" role="dialog" aria-modal="true" aria-label="Agent catalog" style={{ width: "min(860px, 100%)" }}>
-        <div className="dialog-head">
-          <h2 className="grow">Agent catalog</h2>
-          <button className="btn btn-secondary btn-sm" onClick={onClose}>
-            Close
-          </button>
-        </div>
-        <div className="dialog-body">
+    <Dialog
+      title="Agent catalog"
+      onClose={onClose}
+      width="min(860px, 100%)"
+      header={
+        <div className="dialog-head" style={{ display: "grid", gap: 12 }}>
+          <div className="row" style={{ gap: 8 }}>
+            <h2 className="grow">Agent catalog</h2>
+            <button className="btn btn-secondary btn-sm" onClick={onClose}>
+              Close
+            </button>
+          </div>
           <div className="row" style={{ gap: 8 }}>
             <input className="grow" placeholder="Search agents" value={q} onChange={(e) => setQ(e.target.value)} aria-label="Search agents" />
             <select value={category} onChange={(e) => setCategory(e.target.value)} aria-label="Kind">
@@ -162,55 +185,58 @@ function CatalogDialog({ orgId, onClose, onInstalled }: { orgId: string; onClose
               ))}
             </select>
           </div>
-          <ErrorLine text={catalog.error ?? act.error} />
-          {catalog.data && list.length === 0 && <p className="muted">No published agent matches.</p>}
-          <div className="agent-catalog">
-            {list.map((e) => (
-              <article key={e.agent.id} className="card agent-card">
-                <header className="row" style={{ gap: 8 }}>
-                  <span className="agent-avatar" style={{ width: 32, height: 32, background: e.agent.avatarColor }} aria-hidden="true">
-                    <Bot size={18} />
-                    <span className="agent-badge">AI</span>
-                  </span>
-                  <span className="lines grow">
-                    <strong>{e.agent.name}</strong>
-                    <small className="faint">
-                      {e.agent.category} · {e.agent.skill.id} v{e.agent.skill.version}
-                    </small>
-                  </span>
-                </header>
-                <p className="muted">{e.agent.description}</p>
-                <ul className="agent-caps">
-                  {e.agent.capabilities.map((c) => (
-                    <li key={c}>{c}</li>
-                  ))}
-                </ul>
-                {e.setup.missing.length > 0 && <small className="warn-text">Setup needed: {e.setup.missing.join(" ")}</small>}
-                {e.setup.unavailableActions.length > 0 && <small className="faint">Not available here: {e.setup.unavailableActions.join(" ")}</small>}
-                {e.installed ? (
-                  <span className="status-pill ok">Installed{e.installed.upgradeAvailable ? " · update available" : ""}</span>
-                ) : e.available ? (
-                  <button
-                    className="btn btn-primary btn-sm"
-                    disabled={act.busy}
-                    onClick={() =>
-                      void act.act(async () => {
-                        const r = await installAgent(engine, orgId, e.agent.id);
-                        onInstalled(r.agent.id);
-                      })
-                    }
-                  >
-                    Install
-                  </button>
-                ) : (
-                  <small className="faint">{e.unavailableReason}</small>
-                )}
-              </article>
-            ))}
-          </div>
+        </div>
+      }
+    >
+      <div className="dialog-body">
+        <ErrorLine text={catalog.error ?? act.error} />
+        {catalog.data && list.length === 0 && <p className="muted">No published agent matches.</p>}
+        <div className="agent-catalog">
+          {list.map((e) => (
+            <article key={e.agent.id} className="card agent-card">
+              <header className="row" style={{ gap: 8 }}>
+                <span className="agent-avatar" style={{ width: 32, height: 32, background: e.agent.avatarColor }} aria-hidden="true">
+                  <Bot size={18} />
+                  <span className="agent-badge">AI</span>
+                </span>
+                <span className="lines grow">
+                  <strong>{e.agent.name}</strong>
+                  <small className="faint">
+                    {e.agent.category} · {e.agent.skill.id} v{e.agent.skill.version}
+                  </small>
+                </span>
+              </header>
+              <p className="muted">{e.agent.description}</p>
+              <ul className="agent-caps">
+                {e.agent.capabilities.map((c) => (
+                  <li key={c}>{c}</li>
+                ))}
+              </ul>
+              {e.setup.missing.length > 0 && <small className="warn-text">Setup needed: {e.setup.missing.join(" ")}</small>}
+              {e.setup.unavailableActions.length > 0 && <small className="faint">Not available here: {e.setup.unavailableActions.join(" ")}</small>}
+              {e.installed ? (
+                <span className="status-pill ok">Installed{e.installed.upgradeAvailable ? " · update available" : ""}</span>
+              ) : e.available ? (
+                <button
+                  className="btn btn-primary btn-sm"
+                  disabled={act.busy}
+                  onClick={() =>
+                    void act.act(async () => {
+                      const r = await installAgent(engine, orgId, e.agent.id);
+                      onInstalled(r.agent.id);
+                    })
+                  }
+                >
+                  Install
+                </button>
+              ) : (
+                <small className="faint">{e.unavailableReason}</small>
+              )}
+            </article>
+          ))}
         </div>
       </div>
-    </div>
+    </Dialog>
   );
 }
 

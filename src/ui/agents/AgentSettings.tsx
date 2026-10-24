@@ -1,11 +1,11 @@
 import { ArrowLeft, ImageUp, Trash2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { shallowEqual, useEngine, useOrbit } from "../../application/orbit";
-import { agentDetail, assignChannel, type Assignment, type Install, setAgentAvatar, unassignChannel, uninstallAgent, updateAgent } from "../../sync/aiWorkforce";
+import { agentDetail, assignChannel, type Assignment, type Install, setAgentAvatar, unassignChannel, updateAgent } from "../../sync/aiWorkforce";
 import { rolesOverview } from "../../sync/roles";
 import { Card, ErrorLine } from "../workspace/WorkspaceView";
 import { useAction, useLoad } from "../workspace/useLoad";
-import { AgentAvatar } from "./AgentBits";
+import { AgentAvatar, RemoveAgentDialog } from "./AgentBits";
 
 const STYLES = ["balanced", "concise", "detailed", "friendly", "formal"] as const;
 const ACTIVATION: Record<Assignment["activation"], string> = { mention: "When @mentioned", command: "By /command", explicit: "Only from Ask an agent" };
@@ -29,6 +29,7 @@ export function AgentSettings({ orgId, installId, onBack, onChanged }: { orgId: 
   const act = useAction();
   const [form, setForm] = useState<Partial<Install>>({});
   const [saved, setSaved] = useState<string | null>(null);
+  const [removing, setRemoving] = useState(false);
   const picker = useRef<HTMLInputElement>(null);
   const d = loaded.data;
   useEffect(() => {
@@ -280,23 +281,22 @@ export function AgentSettings({ orgId, installId, onBack, onChanged }: { orgId: 
             >
               {a.state === "active" ? "Turn off" : "Turn on"}
             </button>
-            <button
-              className="btn btn-danger"
-              disabled={act.busy}
-              onClick={() => {
-                if (window.confirm(`Remove ${a.displayName} from this community? Its requests in progress are cancelled; its past files stay until they expire.`)) {
-                  void act.act(async () => {
-                    await uninstallAgent(engine, orgId, a.id);
-                    onChanged();
-                    onBack();
-                  });
-                }
-              }}
-            >
+            <button className="btn btn-danger" disabled={act.busy} onClick={() => setRemoving(true)}>
               <Trash2 size={14} /> Remove
             </button>
           </div>
         </Card>
+      )}
+      {removing && (
+        <RemoveAgentDialog
+          orgId={orgId}
+          agent={a}
+          onClose={() => setRemoving(false)}
+          onRemoved={() => {
+            onChanged();
+            onBack();
+          }}
+        />
       )}
     </div>
   );

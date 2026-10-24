@@ -1,7 +1,9 @@
-import { Bot, Download, Eye } from "lucide-react";
+import { Bot, Download, Eye, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useEngine } from "../../application/orbit";
-import { type AiFile, avatarUrl, fileUrl } from "../../sync/aiWorkforce";
+import { type AiFile, avatarUrl, fileUrl, uninstallAgent } from "../../sync/aiWorkforce";
+import { Dialog } from "../components/Overlay";
+import { useAction } from "../workspace/useLoad";
 
 /**
  * Small pieces of the AI Workforce screens: an agent's avatar (always with the AI badge, so an agent never passes for
@@ -226,5 +228,43 @@ export function SkillFields({ schema, value, onChange }: { schema: unknown; valu
         return null;
       })}
     </div>
+  );
+}
+
+/**
+ * Removing an agent from the community ("Manage AI agents"; the server checks it again): its requests in progress are
+ * cancelled, its channels unassigned, and its past files stay until they expire. Asked from the list and from its settings.
+ */
+export function RemoveAgentDialog({ orgId, agent, onClose, onRemoved }: { orgId: string; agent: { id: string; displayName: string }; onClose: () => void; onRemoved: () => void }) {
+  const engine = useEngine();
+  const act = useAction();
+  const remove = () =>
+    void act.act(async () => {
+      await uninstallAgent(engine, orgId, agent.id);
+      onRemoved();
+    });
+  return (
+    <Dialog
+      title={`Remove ${agent.displayName}?`}
+      onClose={onClose}
+      footer={
+        <>
+          <button className="btn btn-secondary" onClick={onClose}>
+            Cancel
+          </button>
+          <button className="btn btn-danger" disabled={act.busy} onClick={remove}>
+            <Trash2 size={14} /> {act.busy ? "Removing…" : "Remove"}
+          </button>
+        </>
+      }
+    >
+      <div className="dialog-body">
+        <p style={{ margin: 0 }}>
+          {agent.displayName} leaves this community: its requests in progress are cancelled and it's taken out of its channels. Its past files and answers stay until they expire. You can install it
+          again from the catalog.
+        </p>
+        {act.error && <div className="banner danger">{act.error}</div>}
+      </div>
+    </Dialog>
   );
 }
