@@ -69,6 +69,10 @@ test("a community installs an agent, assigns it to a channel and asks it from th
   const composer = page.locator(".composer textarea").first();
   await composer.fill("@Reel Maker a 20-second teaser for the launch");
   await composer.press("Enter");
+  // The first request from this browser asks for the notice once; this agent needs footage, so the form opens.
+  const notice = page.getByRole("dialog", { name: "Send to Reel Maker?" });
+  await expect(notice.getByText(/n't end-to-end encrypted/)).toBeVisible();
+  await notice.getByRole("button", { name: "Send" }).click();
   const ask = page.getByRole("dialog", { name: "Ask an AI agent" });
   await expect(ask.getByLabel("What should it do?")).toHaveValue("a 20-second teaser for the launch");
   await expect(ask.getByText(/needs a file/)).toBeVisible();
@@ -114,10 +118,10 @@ test("a request from a channel can share the channel's recent messages, decrypte
   await expect(page.getByText("The launch moves to Thursday because the build failed.")).toBeVisible();
 
   // Asking the agent: nothing from the channel goes unless a number of messages is chosen, and the notice says so.
-  const composer = page.locator(".composer textarea").first();
-  await composer.fill("@General Assistant what did we decide?");
-  await composer.press("Enter");
+  // Sharing messages is in the full form (the Ask button); "@Agent …" sends just the text.
+  await page.getByRole("button", { name: "Ask an agent" }).click();
   const ask = page.getByRole("dialog", { name: "Ask an AI agent" });
+  await ask.getByLabel("What should it do?").fill("what did we decide?");
   await expect(ask.getByText("Only what you put here is sent, never the channel's messages.")).toBeVisible();
   const share = ask.getByLabel("Share recent messages from this channel");
   await expect(share).toHaveValue("0");
@@ -132,9 +136,8 @@ test("a request from a channel can share the channel's recent messages, decrypte
   expect(body.channelMessages).toEqual([{ author: "Bob Okafor", text: "The launch moves to Thursday because the build failed.", at: expect.any(Number) }]);
   expect(body.conversationId).toBe(channel);
 
-  // The channel is told, for everyone in it (the agents bar lists the requests once opened).
-  await page.locator(".agent-bar .link-button").first().click();
-  await expect(page.getByText(/Shared the last message here with the agent \(not end-to-end encrypted\)/)).toBeVisible();
+  // The channel is told, for everyone in it: the request shows among the messages.
+  await expect(page.getByRole("log", { name: "Messages" }).getByText(/Shared the last message here with the agent \(not end-to-end encrypted\)/)).toBeVisible();
   const { posts } = await bob.req("GET", `/v1/conversations/${channel}/ai/posts`);
   expect(posts.some((p: { body: string }) => p.body.includes("Shared the last message here with the agent"))).toBe(true);
   if (SHOTS) await page.screenshot({ path: `${SHOTS}/agents-06-shared-in-channel.png` });
@@ -244,4 +247,39 @@ test("a channel's agents are listed beside its people, marked AI, and open Ask",
   const ask = page.getByRole("dialog", { name: "Ask an AI agent" });
   await expect(ask.getByLabel("Agent")).toHaveValue(helper);
   await expect(ask.getByText(/n't end-to-end encrypted/)).toBeVisible();
+});
+
+test("agents work like bots: @Agent sends at once, and the request and the answer show in the chat", async ({ page }, info) => {
+  test.skip(info.project.name !== "chromium", "one engine is enough for this flow");
+  platformReady();
+  const alice = await newPhone("alice", "Alice Rahman");
+  const { org } = await alice.req("POST", "/v1/orgs", { name: "Bot Chat" });
+  const channel = (await alice.req("POST", `/v1/orgs/${org.id}/channels`, { name: "ask", scope: "ORG" })).channel.id as string;
+  const helper = (await alice.req("POST", `/v1/orgs/${org.id}/ai/agents`, { agentId: "general_assistant" })).agent.id as string;
+  await alice.req("PUT", `/v1/orgs/${org.id}/ai/agents/${helper}/channels/${channel}`, { activation: "mention" });
+  await link(page, alice);
+  await page.goto(`/#/home/c/${channel}`);
+  await expect(page.locator(".agent-bar")).toContainText("type @General Assistant and your question");
+
+  const composer = page.locator(".composer textarea").first();
+  const log = page.getByRole("log", { name: "Messages" });
+  await composer.fill("@General Assistant what is our refund policy?");
+  await composer.press("Enter");
+  // Asked once on this browser, then straight to the agent.
+  await page.getByRole("dialog", { name: "Send to General Assistant?" }).getByRole("button", { name: "Send" }).click();
+  await expect(composer).toHaveValue("");
+  const request = log.locator(".agent-msg.request");
+  await expect(request).toContainText("what is our refund policy?");
+  await expect(request).toContainText("to General Assistant · not end-to-end encrypted");
+  // The agent answers in the chat with its AI tag (this test server has no AI provider, so the answer is its failure).
+  const answer = log.locator(".agent-msg.error");
+  await expect(answer).toContainText("I couldn't finish this", { timeout: 60_000 });
+  await expect(answer.locator(".ai-tag")).toHaveText("AI");
+  if (SHOTS) await page.screenshot({ path: `${SHOTS}/agents-08-bot-chat.png` });
+
+  // A second request goes straight through: no notice, no form.
+  await composer.fill("@General Assistant and the shipping times?");
+  await composer.press("Enter");
+  await expect(log.locator(".agent-msg.request", { hasText: "and the shipping times?" })).toBeVisible();
+  await expect(page.getByRole("dialog")).toHaveCount(0);
 });

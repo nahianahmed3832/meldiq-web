@@ -1,6 +1,6 @@
 import { ConversationMenu } from "./ConversationMenu";
 import { AgentsBar, ChannelAsk, useChannelAgents } from "../agents/AgentsBar";
-import { agentInvocation } from "../../sync/agentRules";
+import { useAgentMention, useAgentTimeline } from "../agents/AgentChat";
 import { UNKNOWN } from "../../api/enums";
 import { ChannelGlyph } from "../community/ChannelDialogs";
 import { ForumView } from "./ForumView";
@@ -33,6 +33,10 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
   // AI Workforce: the channel's agents, and a request to one (from the bar, or a message that names it).
   const channelAgents = useChannelAgents(id, c?.type === "CHANNEL");
   const [agentAsk, setAgentAsk] = useState<{ installId?: string; brief?: string } | null>(null);
+  // Agents behave like bots here: "@Agent …" goes straight to them, and their answers show among the messages.
+  const agentOrg = c?.type === "CHANNEL" ? (c.orgId ?? null) : null;
+  const agentTimeline = useAgentTimeline(agentOrg, id, channelAgents.agents, channelAgents.permissions.canApprove);
+  const agentMention = useAgentMention(agentOrg, id, channelAgents.agents);
   const me = useOrbit((s) => s.me);
   const title = useOrbit((s) => (s.me && c ? conversationTitle(c, s.me.userId, s.users) : ""));
   const peer = useOrbit((s) => {
@@ -169,6 +173,8 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
         <AgentsBar orgId={c.orgId} conversationId={id} agents={channelAgents.agents} canApprove={channelAgents.permissions.canApprove} ask={(installId) => setAgentAsk({ installId })} />
       )}
       {agentAsk && c.orgId && <ChannelAsk orgId={c.orgId} conversationId={id} agents={channelAgents.agents} request={agentAsk} close={() => setAgentAsk(null)} />}
+      {agentTimeline.ui}
+      {agentMention.ui}
       {(askedToConnect || alerts.length > 0 || (call && !c.voice) || c.archived || history === "running" || peer?.paused || (c.request && !c.request.incoming)) && (
         <div className="conv-banners">
           {c.request && !c.request.incoming && <RequestSentBanner conversation={c} />}
@@ -223,6 +229,7 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
           onReply={setReplyTo}
           onThread={onThread}
           onReview={onReview}
+          extras={agentTimeline.extras}
           start={
             <ConversationStart
               type={c.type}
@@ -271,12 +278,7 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
           onCancelReply={() => setReplyTo(null)}
           dropped={drop.dropped}
           onDroppedTaken={drop.take}
-          onAgentRequest={(text) => {
-            const inv = agentInvocation(text, channelAgents.agents);
-            if (!inv) return false;
-            setAgentAsk({ installId: inv.installId, brief: inv.brief });
-            return true;
-          }}
+          onAgentRequest={agentMention.onAgentRequest}
         />
       )}
       {drop.over && <div className="drop-overlay">Drop files to send them, encrypted, to {title}</div>}
