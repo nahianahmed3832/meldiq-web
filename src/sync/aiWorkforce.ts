@@ -32,6 +32,11 @@ export const zInstall = z.object({
   maxJobsPerDay: z.number().nullable(),
   maxConcurrent: z.number().nullable(),
   invokers: z.object({ everyone: z.boolean(), roles: z.array(z.string()) }),
+  /** How much it does on its own (server docs/AI_WORKFORCE.md §5b); older servers don't send it. */
+  autonomy: z.enum(["manual", "assisted", "guarded", "continuous"]).default("assisted"),
+  maxRuntimeSec: z.number().nullable().default(null),
+  maxAttempts: z.number().nullable().default(null),
+  activeHours: z.object({ from: z.string(), to: z.string(), timeZone: z.string() }).nullable().default(null),
   rev: z.number(),
   skill: z.object({ id: z.string(), version: z.number(), name: z.string(), category: z.string() }).nullable(),
   badge: z.string(),
@@ -65,6 +70,8 @@ const zSkill = z.object({
   files: z.object({ min: z.number().default(0), max: z.number(), maxBytes: z.number(), types: z.array(z.string()) }),
   /** Whether a channel request may share recent messages with it (agents that read text). */
   readsMessages: z.boolean().default(false),
+  /** maxRuntimeSec, maxAttempts, maxModelCalls, maxOutputFiles: an installation can only tighten them. */
+  limits: z.record(z.string(), z.number()).default({}),
   approvals: z.array(z.string()),
   errors: z.array(z.string()),
   inputSchema: z.unknown(),
@@ -302,3 +309,75 @@ export async function avatarUrl(e: Engine, orgId: string, installId: string): Pr
   const bytes = await e.api.bytes(`${base(orgId)}/agents/${enc(installId)}/avatar`);
   return URL.createObjectURL(new Blob([new Uint8Array(bytes)]));
 }
+
+// ───────────── Operations: readiness, activity, test, triggers (server docs/AI_WORKFORCE.md §5b) ─────────────
+
+export type Autonomy = Install["autonomy"];
+export const AUTONOMY_LABEL: Record<Autonomy, { title: string; body: string }> = {
+  manual: { title: "Manual", body: "Works only when a person asks it (Ask, @mention). The Agent Manager can't hand it work; no triggers. Results are reviewed." },
+  assisted: { title: "Assisted", body: "People and the Agent Manager can ask it. It prepares results and people review them before they're delivered." },
+  guarded: { title: "Guarded autonomous", body: "Delivers its own internal results without review, within its limits. Anything outside Meldiq still needs approval." },
+  continuous: { title: "Continuous", body: "As guarded, and its triggers (schedules, webhooks, handoffs) start work with nobody present, within its active hours." },
+};
+
+const zCheck = z.object({ key: z.string(), label: z.string(), status: z.enum(["ok", "missing", "advice"]), detail: z.string(), fixBy: z.enum(["operator", "community"]).nullable() });
+const zReadiness = z.object({ ready: z.boolean(), checks: z.array(zCheck) });
+export type Readiness = z.infer<typeof zReadiness>;
+
+const zTrigger = z.object({
+  id: z.string(),
+  installId: z.string(),
+  kind: z.enum(["schedule", "webhook", "after_agent"]),
+  enabled: z.boolean(),
+  label: z.string(),
+  brief: z.string(),
+  conversationId: nullableString,
+  config: z.unknown(),
+  sourceInstallId: nullableString,
+  runAs: z.string(),
+  nextRunAt: z.number().nullable(),
+  lastFiredAt: z.number().nullable(),
+  lastJobId: nullableString,
+  lastError: nullableString,
+  failures: z.number(),
+  rev: z.number(),
+  createdAt: z.number(),
+  updatedAt: z.number(),
+});
+export type Trigger = z.infer<typeof zTrigger>;
+
+const zActivity = z.object({
+  now: z.object({ running: z.number(), queued: z.number(), waiting: z.number() }),
+  week: z.object({ completed: z.number(), failed: z.number(), cancelled: z.number(), averageMs: z.number().nullable(), retries: z.number() }),
+  lastSuccessAt: z.number().nullable(),
+  lastFailure: z.object({ at: z.number(), code: nullableString, message: z.string() }).nullable(),
+  nextRunAt: z.number().nullable(),
+  triggers: z.array(zTrigger),
+});
+export type Activity = z.infer<typeof zActivity>;
+
+export interface NewTrigger {
+  kind: Trigger["kind"];
+  label: string;
+  brief: string;
+  conversationId: string | null;
+  config?: Record<string, unknown>;
+  sourceInstallId?: string | null;
+}
+
+const agentPath = (orgId: string, installId: string) => `${base(orgId)}/agents/${enc(installId)}`;
+export const agentReadiness = async (e: Engine, orgId: string, installId: string) =>
+  (await e.api.json("GET", `${agentPath(orgId, installId)}/readiness`, z.object({ readiness: zReadiness }))).readiness;
+export const agentActivity = async (e: Engine, orgId: string, installId: string) => (await e.api.json("GET", `${agentPath(orgId, installId)}/activity`, z.object({ activity: zActivity }))).activity;
+/** A real short request through the normal path; the job shows its outcome. */
+export const testAgent = async (e: Engine, orgId: string, installId: string) => (await e.api.json("POST", `${agentPath(orgId, installId)}/test`, z.object({ job: zJobDetail }))).job;
+export const agentTriggers = async (e: Engine, orgId: string, installId: string) =>
+  (await e.api.json("GET", `${agentPath(orgId, installId)}/triggers`, z.object({ triggers: z.array(zTrigger) }))).triggers;
+/** A webhook's secret comes back this once. */
+export const addTrigger = (e: Engine, orgId: string, installId: string, t: NewTrigger) =>
+  e.api.json("POST", `${agentPath(orgId, installId)}/triggers`, z.object({ trigger: zTrigger, secret: nullableString, hookUrl: nullableString }), { body: t });
+export const updateTrigger = async (e: Engine, orgId: string, installId: string, triggerId: string, patch: Record<string, unknown> & { rev: number }) =>
+  (await e.api.json("PATCH", `${agentPath(orgId, installId)}/triggers/${enc(triggerId)}`, z.object({ trigger: zTrigger }), { body: patch })).trigger;
+export const removeTrigger = (e: Engine, orgId: string, installId: string, triggerId: string) => e.api.call("DELETE", `${agentPath(orgId, installId)}/triggers/${enc(triggerId)}`);
+export const runTrigger = async (e: Engine, orgId: string, installId: string, triggerId: string) =>
+  (await e.api.json("POST", `${agentPath(orgId, installId)}/triggers/${enc(triggerId)}/run`, z.object({ job: zJobDetail }))).job;

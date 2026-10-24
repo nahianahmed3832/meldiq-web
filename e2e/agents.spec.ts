@@ -58,6 +58,7 @@ test("a community installs an agent, assigns it to a channel and asks it from th
   await page.getByRole("button", { name: "Save" }).click();
   await expect(page.getByText("Saved.")).toBeVisible();
   // The box follows the server's answer (it's checked once the assignment is saved).
+  await page.getByRole("tab", { name: "4. Channels" }).click();
   await page.getByRole("checkbox", { name: "In #marketing" }).click();
   await expect(page.getByRole("checkbox", { name: "In #marketing" })).toBeChecked();
   await expect(page.getByLabel("How Reel Maker is asked in #marketing")).toHaveValue("mention");
@@ -282,4 +283,66 @@ test("agents work like bots: @Agent sends at once, and the request and the answe
   await composer.press("Enter");
   await expect(log.locator(".agent-msg.request", { hasText: "and the shipping times?" })).toBeVisible();
   await expect(page.getByRole("dialog")).toHaveCount(0);
+});
+
+test("an admin configures an agent step by step: readiness says what's missing, autonomy, triggers, a real test", async ({ page }, info) => {
+  test.skip(info.project.name !== "chromium", "one engine is enough for this flow");
+  platformReady();
+  const alice = await newPhone("alice", "Alice Rahman");
+  const { org } = await alice.req("POST", "/v1/orgs", { name: "Configure Lab" });
+  const channel = (await alice.req("POST", `/v1/orgs/${org.id}/channels`, { name: "digest", scope: "ORG" })).channel.id as string;
+  const helper = (await alice.req("POST", `/v1/orgs/${org.id}/ai/agents`, { agentId: "general_assistant" })).agent.id as string;
+  await alice.req("PUT", `/v1/orgs/${org.id}/ai/agents/${helper}/channels/${channel}`, { activation: "mention" });
+  await link(page, alice);
+  await page.goto("/#/workspace/agents");
+  await page.locator(".ws-row", { hasText: "General Assistant" }).getByRole("button", { name: "Settings" }).click();
+  await expect(page.getByText("Configure General Assistant")).toBeVisible();
+
+  // This test server has no AI provider: the readiness says so, and who fixes it.
+  await expect(page.locator(".agent-config-head .status-pill")).toContainText("missing");
+  await page.getByRole("tab", { name: "2. Models" }).click();
+  await expect(page.getByText(/No verified model for quick replies/)).toBeVisible();
+  await expect(page.getByText(/A platform operator fixes this in the AI Control Center/).first()).toBeVisible();
+
+  // Permissions are least privilege, and reading channel messages is never possible.
+  await page.getByRole("tab", { name: "5. Permissions" }).click();
+  await expect(page.locator(".ws-row", { hasText: "Read channel messages and history" })).toContainText("Never");
+
+  // Autonomy: continuous, which runs triggers (none yet, and it says so).
+  await page.getByRole("tab", { name: "6. Autonomy" }).click();
+  await expect(page.getByRole("radio", { name: /Assisted/ })).toBeChecked();
+  // The choice shows once the server has saved it.
+  await page.getByRole("radio", { name: /Continuous/ }).click();
+  await expect(page.getByText("Autonomy: Continuous.")).toBeVisible();
+  await expect(page.getByRole("radio", { name: /Continuous/ })).toBeChecked();
+  await expect(page.getByText(/no trigger yet/)).toBeVisible();
+
+  // Triggers: a daily schedule posting in #digest, and a webhook whose secret shows once.
+  await page.getByRole("tab", { name: "7. Triggers" }).click();
+  await page.getByRole("button", { name: "Add a trigger" }).click();
+  await page.getByLabel("Name").fill("Daily digest");
+  await page.getByLabel("What it should do each time").fill("Summarise what was decided today.");
+  await page.getByLabel("Post the request and answers in").selectOption({ label: "#digest" });
+  await page.getByRole("button", { name: "Save trigger" }).click();
+  const row = page.locator(".ws-row", { hasText: "Daily digest" });
+  await expect(row).toContainText("every day at 09:00");
+  await expect(row).toContainText("posts in #digest");
+  await page.getByRole("button", { name: "Add a trigger" }).click();
+  await page.getByLabel("When").selectOption("webhook");
+  await page.getByLabel("Name").fill("Help desk");
+  await page.getByLabel("What it should do each time").fill("Draft a reply to the customer.");
+  await page.getByRole("button", { name: "Save trigger" }).click();
+  await expect(page.getByText("Copy the webhook secret now: it isn't shown again.")).toBeVisible();
+  const { triggers } = await alice.req("GET", `/v1/orgs/${org.id}/ai/agents/${helper}/triggers`);
+  expect(triggers.map((t: { kind: string }) => t.kind).sort()).toEqual(["schedule", "webhook"]);
+  if (SHOTS) await page.screenshot({ path: `${SHOTS}/agents-09-triggers.png`, fullPage: true });
+
+  // Test & activate: every check, and a real test request that fails plainly without a provider.
+  await page.getByRole("tab", { name: "9. Test & activate" }).click();
+  await expect(page.getByRole("region", { name: "Readiness" })).toContainText("Triggers to run on its own");
+  await page.getByRole("button", { name: "Test this agent" }).click();
+  await expect(page.locator(".agent-job .banner.danger")).toHaveText("No verified model offers quick replies and classification right now.", { timeout: 30_000 });
+  // The activity counts it, and names the last failure.
+  await expect(page.getByRole("region", { name: "Activity" })).toContainText("1 failed");
+  if (SHOTS) await page.screenshot({ path: `${SHOTS}/agents-10-test.png`, fullPage: true });
 });

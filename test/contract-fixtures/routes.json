@@ -1,5 +1,5 @@
 {
-  "version": "0.35.0",
+  "version": "0.36.0",
   "routes": [
     {
       "method": "GET",
@@ -964,6 +964,42 @@
     {
       "method": "GET",
       "path": "/v1/conversations/{id}/ai/agents"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/orgs/{orgId}/ai/agents/{installId}/readiness"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/orgs/{orgId}/ai/agents/{installId}/activity"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/orgs/{orgId}/ai/agents/{installId}/test"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/orgs/{orgId}/ai/agents/{installId}/triggers"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/orgs/{orgId}/ai/agents/{installId}/triggers"
+    },
+    {
+      "method": "PATCH",
+      "path": "/v1/orgs/{orgId}/ai/agents/{installId}/triggers/{triggerId}"
+    },
+    {
+      "method": "DELETE",
+      "path": "/v1/orgs/{orgId}/ai/agents/{installId}/triggers/{triggerId}"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/orgs/{orgId}/ai/agents/{installId}/triggers/{triggerId}/run"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/ai/hooks/{triggerId}"
     },
     {
       "method": "GET",

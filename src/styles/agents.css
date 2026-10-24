@@ -194,3 +194,72 @@
   margin: 0 8px 4px;
   padding: 0;
 }
+
+/* Configure an agent (AgentSettings): the steps wrap on narrow screens instead of scrolling sideways. */
+.agent-steps {
+  flex-wrap: wrap;
+  max-width: 100%;
+}
+.agent-steps button {
+  white-space: nowrap;
+}
+.autonomy-options {
+  display: grid;
+  gap: 8px;
+}
+.autonomy-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  cursor: pointer;
+}
+.autonomy-option.on {
+  border-color: var(--accent);
+  background: var(--surface-sunken);
+}
+.autonomy-option .lines {
+  display: grid;
+}
+.readiness-list .glyph {
+  display: inline-flex;
+  margin-top: 2px;
+}
+.readiness-ok .glyph {
+  color: var(--success);
+}
+.readiness-missing .glyph {
+  color: var(--danger);
+}
+.readiness-advice .glyph {
+  color: var(--text-3);
+}
+.agent-activity {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+}
+.agent-activity div {
+  display: grid;
+  grid-template-columns: 160px minmax(0, 1fr);
+  gap: 12px;
+}
+.agent-activity dt {
+  color: var(--text-3);
+}
+.agent-activity dd {
+  margin: 0;
+}
+@media (max-width: 640px) {
+  .agent-activity div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2px;
+  }
+}
+.trigger-form {
+  display: grid;
+  gap: 10px;
+  padding: 12px;
+}
