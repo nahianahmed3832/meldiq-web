@@ -2,6 +2,11 @@
 
 ## AI agents in communities (2026-10-24)
 
+**Update, 2026-10-24 08:48 UTC:** release **0.5.0-beta-dc98f83**: agents work like bots. "@Agent question" sends at once
+(the not-encrypted notice is asked once per browser) and the request and answers show among the channel's messages.
+Full Chromium suite: 47 passed, 2 skipped, 1 failed (`accounts.spec.ts:42`, failing on `main` too). Same install
+settings, nginx unchanged, `verify.sh` passed. Rollback: `bash /root/meldiq-web-0.5.0-beta-dc98f83/rollback.sh`.
+
 **Update, 2026-10-24 08:22 UTC:** release **0.5.0-beta-8be0692**: a channel's AI agents are listed in its member list,
 above the people, with the AI tag, their role and the note that they can't read the channel; choosing one opens Ask.
 Same install settings, nginx files unchanged, `verify.sh` all passed. Rollback:
