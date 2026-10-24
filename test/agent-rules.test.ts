@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { StoredMessage } from "../src/model/types";
 import { agentInvocation, commandName, type InvocableAgent, messagesToShare, SHARE_CHOICES } from "../src/sync/agentRules";
+import { readCopy } from "./support/contracts";
 
 const agents: InvocableAgent[] = [
   { id: "a1", displayName: "Reel Maker", activation: "mention", canInvoke: true },
@@ -10,24 +11,22 @@ const agents: InvocableAgent[] = [
 ];
 
 describe("asking an agent from the composer", () => {
-  it("matches a mention by its whole name, the longest first", () => {
-    expect(agentInvocation("@Reel Maker a 30-second teaser", agents)).toEqual({ installId: "a1", displayName: "Reel Maker", brief: "a 30-second teaser", canInvoke: true });
-    expect(agentInvocation("@reel, cut this", agents)).toMatchObject({ installId: "a2", brief: "cut this" });
-    // The name must end where it ends: with only "Reel Maker", "@Reel Maker2" names nobody.
-    expect(agentInvocation("@Reel Maker2 hi", [agents[0]!])).toBeNull();
+  // The server's cases (shared/contracts/fixtures/rules), which its channel readers and the Android app pass too.
+  const shared = readCopy<{ agents: Omit<InvocableAgent, "canInvoke">[]; cases: { why: string; text: string; expect: { installId: string; brief: string } | null }[] }>("rules/agent-invocation.json");
+  const sharedAgents = shared.agents.map((a) => ({ ...a, canInvoke: true }));
+
+  it.each(shared.cases.map((c) => [c.why, c] as const))("%s", (_why, c) => {
+    const inv = agentInvocation(c.text, sharedAgents);
+    expect(inv && { installId: inv.installId, brief: inv.brief }).toEqual(c.expect);
   });
 
-  it("matches commands by their slug and keeps whether the person may ask", () => {
+  it("names commands as the server does, and keeps whether the person may ask", () => {
     expect(commandName("Data Désk!")).toBe("data-desk");
-    expect(agentInvocation("/data-desk revenue by region", agents)).toMatchObject({ installId: "a3", canInvoke: false });
-    expect(agentInvocation("@Data Desk revenue", agents)).toBeNull();
+    expect(agentInvocation("/data-desk revenue by region", agents)).toEqual({ installId: "a3", displayName: "Data Desk", brief: "revenue by region", canInvoke: false });
   });
 
-  it("leaves ordinary messages, empty requests and explicit-only agents alone", () => {
-    expect(agentInvocation("hello @Reel Maker", agents)).toBeNull();
-    expect(agentInvocation("@Reel Maker   ", agents)).toBeNull();
-    expect(agentInvocation("@Quiet One do it", agents)).toBeNull();
-    expect(agentInvocation("/quiet-one do it", agents)).toBeNull();
+  it("with only the longer name, a longer word after it names nobody", () => {
+    expect(agentInvocation("@Reel Maker2 hi", [agents[0]!])).toBeNull();
   });
 });
 
