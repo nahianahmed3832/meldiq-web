@@ -2,6 +2,12 @@
 
 ## AI agents in communities (2026-10-24)
 
+**Update, 2026-10-24 17:35 UTC:** release **0.5.0-beta-08ba69d** with API **0.40.0**: agents that read channels (the
+notice and each member's choice, the wrap rule, `@`/`/` suggestions, direct conversations, reading settings). The
+platform's channel reading stays off, so none of it shows until an operator switches it on. Same install settings,
+nginx unchanged, `verify.sh` passed. Rollback: `bash /root/meldiq-web-0.5.0-beta-08ba69d/rollback.sh` (back to
+`5f2b28d`), before rolling the API back.
+
 **Update, 2026-10-24 15:41 UTC:** release **0.5.0-beta-5f2b28d** with API **0.39.0**: the Tasks tab (tasks for people,
 handed in with notes and files, accepted by someone else; who the Agent Manager may give work to). Same install
 settings, nginx unchanged, `verify.sh` passed (API 0.39.0 through the site). Rollback:
