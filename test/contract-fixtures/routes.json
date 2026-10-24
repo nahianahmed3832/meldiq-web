@@ -1091,6 +1091,10 @@
     },
     {
       "method": "GET",
+      "path": "/v1/orgs/{orgId}/ai/work"
+    },
+    {
+      "method": "GET",
       "path": "/v1/orgs/{orgId}/ai/system-check"
     },
     {

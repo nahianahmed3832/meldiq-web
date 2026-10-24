@@ -68,6 +68,7 @@ test("a community installs an agent, assigns it to a channel and asks it from th
 
   // AI agents: nothing installed; the catalog shows what the platform published, with what's missing to work.
   await page.goto("/#/workspace/agents");
+  await page.getByRole("tab", { name: "Agents" }).click();
   await expect(page.getByText("No agent is installed yet.")).toBeVisible();
   await expect(page.getByText(/n't end-to-end encrypted/).first()).toBeVisible();
   await page.getByRole("button", { name: "Add agents" }).click();
@@ -111,6 +112,7 @@ test("a community installs an agent, assigns it to a channel and asks it from th
   // The General Assistant, from the AI agents page: without a verified model the server refuses the request plainly
   // (nothing is queued that could only fail).
   await page.goto("/#/workspace/agents");
+  await page.getByRole("tab", { name: "Agents" }).click();
   await page.getByRole("button", { name: "Add agents" }).click();
   await page.getByRole("dialog", { name: "Agent catalog" }).locator("article", { hasText: "General Assistant" }).getByRole("button", { name: "Install" }).click();
   // Installing opens the agent's settings; their back button returns to the list.
@@ -201,6 +203,7 @@ test("the agent catalog scrolls when it's taller than the window, with its searc
   await link(page, alice);
   await page.setViewportSize({ width: 1280, height: 500 });
   await page.goto("/#/workspace/agents");
+  await page.getByRole("tab", { name: "Agents" }).click();
   await page.getByRole("button", { name: "Add agents" }).click();
   const catalog = page.getByRole("dialog", { name: "Agent catalog" });
   const body = catalog.locator(".scroll");
@@ -225,6 +228,7 @@ test("an agent can be removed straight from the list, after a confirmation", asy
   await alice.req("POST", `/v1/orgs/${org.id}/ai/agents`, { agentId: "general_assistant" });
   await link(page, alice);
   await page.goto("/#/workspace/agents");
+  await page.getByRole("tab", { name: "Agents" }).click();
   const row = page.locator(".ws-row", { hasText: "General Assistant" });
   await expect(row).toBeVisible();
 
@@ -325,6 +329,7 @@ test("an admin configures an agent step by step: readiness says what's missing, 
   await alice.req("PUT", `/v1/orgs/${org.id}/ai/agents/${helper}/channels/${channel}`, { activation: "mention" });
   await link(page, alice);
   await page.goto("/#/workspace/agents");
+  await page.getByRole("tab", { name: "Agents" }).click();
   await page.locator(".ws-row", { hasText: "General Assistant" }).getByRole("button", { name: "Settings" }).click();
   await expect(page.getByText("Configure General Assistant")).toBeVisible();
 
@@ -417,6 +422,29 @@ test("tasks for people: an admin gives one, the person hands it in, the admin ac
   await expect(page.getByRole("region", { name: "History" })).toContainText("approved by Alice Rahman");
 });
 
+test("Overview: what needs you comes first, and each item opens its record", async ({ page }, info) => {
+  test.skip(info.project.name !== "chromium", "one engine is enough for this flow");
+  platformReady();
+  const [alice, bob] = await Promise.all([newPhone("alice", "Alice Rahman"), newPhone("bob", "Bob Okafor")]);
+  const { org } = await alice.req("POST", "/v1/orgs", { name: "Work Lab" });
+  const code = (await alice.req("POST", `/v1/orgs/${org.id}/invites`, { role: "MEMBER", maxUses: 1 })).invite.code;
+  await bob.req("POST", "/v1/invites/accept", { code });
+  await alice.req("POST", `/v1/orgs/${org.id}/ai/tasks`, { title: "Photograph the new grips", instructions: "Three photos on white.", assigneeId: bob.userId });
+  await link(page, bob);
+  await page.goto("/#/workspace/agents");
+  // The overview is the first tab: Bob's new task is the first thing he needs to do.
+  await expect(page.getByRole("tab", { name: "Overview" })).toHaveAttribute("aria-selected", "true");
+  const needs = page.getByRole("list", { name: "Needs you" });
+  await expect(needs).toContainText("Photograph the new grips");
+  await expect(needs).toContainText("A new task for you");
+  await expect(page.getByRole("group", { name: "At a glance" })).toContainText("1 need you");
+  if (SHOTS) await page.screenshot({ path: `${SHOTS}/agents-12-overview.png`, fullPage: true });
+  // Opening it lands on the task itself, in Tasks.
+  await needs.getByRole("button", { name: "Open the task" }).click();
+  await expect(page.getByRole("tab", { name: "Tasks" })).toHaveAttribute("aria-selected", "true");
+  await expect(page.getByRole("region", { name: "Photograph the new grips" })).toBeVisible();
+});
+
 test("Health: an admin runs the full system check and sees what needs attention, with evidence and what to do", async ({ page }, info) => {
   test.skip(info.project.name !== "chromium", "one engine is enough for this flow");
   platformReady();
@@ -469,6 +497,7 @@ test("an agent that reads a channel: the notice and choice, @mention as a messag
 
   // Agent settings › Channels: let it read #support, with a reason everyone in the channel sees.
   await page.goto("/#/workspace/agents");
+  await page.getByRole("tab", { name: "Agents" }).click();
   await page.locator(".ws-row", { hasText: "General Assistant" }).getByRole("button", { name: "Settings" }).click();
   await page.getByRole("tab", { name: "4. Channels" }).click();
   const reading = page.getByRole("region", { name: "Reading channels" });

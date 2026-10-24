@@ -12,12 +12,14 @@ import { AgentSettings } from "./AgentSettings";
 import { AskAgentDialog } from "./AskAgentDialog";
 import { TasksTab } from "./AgentTasks";
 import { SystemCheckTab } from "./SystemCheckTab";
+import { WorkTab } from "./WorkTab";
 import { JobView } from "./JobView";
 
-type Tab = "agents" | "manager" | "tasks" | "requests" | "approvals" | "deliverables" | "health";
+type Tab = "work" | "agents" | "manager" | "tasks" | "requests" | "approvals" | "deliverables" | "health";
 
 /**
- * Community › AI agents (server docs/AI_WORKFORCE.md): the installed agents and the catalog, the Agent Manager,
+ * Community › AI agents (server docs/AI_WORKFORCE.md): the work overview (what needs you, what's running, finished
+ * and failed), the installed agents and the catalog, the Agent Manager,
  * tasks for people, requests, approvals, deliverables and (for managers) the System Check. Members with "Ask AI agents" use them; "Manage AI agents" installs and
  * configures them; "Approve AI agent actions" approves. The server checks every one of these again.
  */
@@ -26,12 +28,15 @@ export function AgentsPage({ detail }: { detail: OrgAdminDetail }) {
   const orgId = detail.org.id;
   const rev = useOrbit((s) => s.aiJobsRev);
   const overview = useLoad(() => aiOverview(engine, orgId), [engine, orgId, rev]);
-  const [tab, setTab] = useState<Tab>("agents");
+  const [tab, setTab] = useState<Tab>("work");
+  // A task the work overview asked to open in Tasks.
+  const [task, setTask] = useState<string | null>(null);
   // The agent whose settings are open (in this page: routes don't carry an item id).
   const [opened, setOpened] = useState<string | null>(null);
   const o = overview.data;
   if (opened) return <AgentSettings orgId={orgId} installId={opened} onBack={() => setOpened(null)} onChanged={overview.reload} />;
   const tabs: [Tab, string][] = [
+    ["work", "Overview"],
     ["agents", "Agents"],
     ["manager", "Agent Manager"],
     ["tasks", "Tasks"],
@@ -55,14 +60,34 @@ export function AgentsPage({ detail }: { detail: OrgAdminDetail }) {
           </div>
           <span className="segmented" role="tablist" aria-label="AI agents">
             {tabs.map(([k, label]) => (
-              <button key={k} role="tab" aria-selected={tab === k} aria-pressed={tab === k} onClick={() => setTab(k)}>
+              <button
+                key={k}
+                role="tab"
+                aria-selected={tab === k}
+                aria-pressed={tab === k}
+                onClick={() => {
+                  setTask(null);
+                  setTab(k);
+                }}
+              >
                 {label}
               </button>
             ))}
           </span>
+          {tab === "work" && (
+            <WorkTab
+              orgId={orgId}
+              o={o}
+              openTask={(id) => {
+                setTask(id);
+                setTab("tasks");
+              }}
+              openHealth={() => setTab("health")}
+            />
+          )}
           {tab === "agents" && <AgentsTab orgId={orgId} o={o} reload={overview.reload} open={setOpened} />}
           {tab === "manager" && <ManagerTab orgId={orgId} o={o} />}
-          {tab === "tasks" && <TasksTab orgId={orgId} o={o} />}
+          {tab === "tasks" && <TasksTab key={task ?? "list"} orgId={orgId} o={o} open={task} />}
           {tab === "requests" && <RequestsTab orgId={orgId} o={o} />}
           {tab === "approvals" && <ApprovalsTab orgId={orgId} o={o} />}
           {tab === "deliverables" && <DeliverablesTab orgId={orgId} />}

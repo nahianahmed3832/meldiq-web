@@ -34,11 +34,11 @@ const PRIORITY_LABEL = { low: "Low", normal: "Normal", high: "High", urgent: "Ur
 
 const due = (t: Pick<TaskSummary, "dueAt" | "overdue">) => (t.dueAt === null ? "No due time" : `${t.overdue ? "Overdue: due" : "Due"} ${new Date(t.dueAt).toLocaleString()}`);
 
-export function TasksTab({ orgId, o }: { orgId: string; o: AiOverview }) {
+export function TasksTab({ orgId, o, open }: { orgId: string; o: AiOverview; /** A task to show first (from the work overview). */ open?: string | null }) {
   const engine = useEngine();
   const rev = useOrbit((s) => s.aiJobsRev);
   const [scope, setScope] = useState<Scope>("mine");
-  const [opened, setOpened] = useState<string | null>(null);
+  const [opened, setOpened] = useState<string | null>(open ?? null);
   const [creating, setCreating] = useState(false);
   const list = useLoad(() => listTasks(engine, orgId, scope), [engine, orgId, scope, rev]);
   if (opened) return <TaskDetail orgId={orgId} taskId={opened} onBack={() => setOpened(null)} />;

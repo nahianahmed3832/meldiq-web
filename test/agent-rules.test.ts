@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { StoredMessage } from "../src/model/types";
 import { agentInvocation, commandName, type InvocableAgent, messagesToShare, SHARE_CHOICES } from "../src/sync/agentRules";
+import { formatCost } from "../src/sync/work";
 import { readCopy } from "./support/contracts";
 
 const agents: InvocableAgent[] = [
@@ -52,5 +53,14 @@ describe("sharing recent channel messages with a request", () => {
     const picked = messagesToShare(long, names, 150);
     expect(picked.every((m) => m.text.length === 2_000)).toBe(true);
     expect(picked.reduce((n, m) => n + m.text.length + m.author.length + 2, 0)).toBeLessThanOrEqual(30_000);
+  });
+});
+
+describe("estimated costs", () => {
+  it("show nothing as $0 and keep small amounts readable", () => {
+    expect(formatCost(0)).toBe("$0");
+    expect(formatCost(6_000)).toBe("$0.0060");
+    expect(formatCost(125_000)).toBe("$0.125");
+    expect(formatCost(2_500_000)).toBe("$2.50");
   });
 });
