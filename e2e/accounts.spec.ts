@@ -76,6 +76,8 @@ test("sign up, set up encryption, come back after a reload, and add a second bro
   // The session survives a reload (stored sealed); no password asked.
   await page.reload();
   await expect(page.locator(".conn.online")).toBeVisible({ timeout: 15_000 });
+  // Back to the conversations, where a new direct message shows.
+  await page.getByRole("button", { name: "Back to conversations" }).click();
 
   // Someone writes to the new account from their phone.
   const me = await page.evaluate(() => (window as unknown as { __orbit: { device: { userId: string } } }).__orbit.device.userId);
