@@ -1,4 +1,23 @@
-import { ArrowUpDown, Bell, CalendarDays, Check, CheckCheck, ChevronDown, Compass, Copy, EyeOff, FolderPlus, LogIn, LogOut, PenSquare, Plus, Settings2, Ticket, UsersRound } from "lucide-react";
+import {
+  ArrowUpDown,
+  Bell,
+  CalendarDays,
+  Check,
+  CheckCheck,
+  ChevronDown,
+  Compass,
+  Copy,
+  EyeOff,
+  FolderPlus,
+  LogIn,
+  LogOut,
+  PenSquare,
+  Plus,
+  Settings2,
+  Ticket,
+  UserPlus,
+  UsersRound,
+} from "lucide-react";
 import { useState } from "react";
 import { ApiError } from "../../api/client";
 import { shallowEqual, useEngine, useOrbit } from "../../application/orbit";
@@ -51,7 +70,11 @@ export function CommunityHeader({ orgId, perms, onDialog }: { orgId: string | nu
     "separator",
   ];
   if (org && orgId) {
-    if (perms.canInvite) entries.push({ label: "Invite people", icon: <Ticket size={16} />, onSelect: () => navigate({ section: "workspace", workspacePage: "invitations" }) });
+    if (perms.canInvite) {
+      entries.push({ label: "Invite people", icon: <Ticket size={16} />, onSelect: () => navigate({ section: "workspace", workspacePage: "invitations" }) });
+      // Community-first brief §F: existing accounts straight in (the server decides who can be added).
+      entries.push({ label: "Add members", icon: <UserPlus size={16} />, onSelect: () => onDialog({ kind: "addMembers" }) });
+    }
     if (features.includes("community-preferences")) entries.push({ label: "Notification settings…", icon: <Bell size={16} />, onSelect: () => setDialog("notifications") });
     entries.push({ label: "Community settings", icon: <Settings2 size={16} />, onSelect: () => navigate({ section: "workspace", workspacePage: "overview" }) });
     if (readTargets.length > 0) entries.push({ label: "Mark all as read", icon: <CheckCheck size={16} />, onSelect: () => void Promise.all(readTargets.map((cid) => engine.markRead(cid))) });

@@ -1536,3 +1536,32 @@ select.input {
   font-weight: 600;
   overflow-wrap: anywhere;
 }
+
+/* Add members: each person found is one row-sized button; chosen ones are checked and tinted. */
+.add-person {
+  width: 100%;
+  gap: 10px;
+  padding: 6px 8px;
+  min-height: 44px;
+  border-radius: var(--r-md);
+  color: var(--text);
+}
+.add-person:hover:not(:disabled) {
+  background: var(--surface-hover);
+}
+.add-person[aria-pressed="true"] {
+  background: var(--accent-soft);
+  color: var(--accent-text);
+}
+.invite-preview {
+  justify-items: start;
+}
+.invite-share {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+.invite-share .input {
+  flex: 1 1 100%;
+}

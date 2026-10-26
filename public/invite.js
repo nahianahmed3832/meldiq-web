@@ -32,8 +32,12 @@
   el("code").textContent = code;
   // On Android this opens the app when it's installed; App Links usually open it before this page loads at all.
   el("open-app").href = "meldiq://invite/" + encodeURIComponent(code);
+  // Meldiq Web keeps the code through signing in and opens the community's preview with Join (src/application/pendingInvite.ts).
+  el("open-web").href = "/join/" + encodeURIComponent(code);
+  // On Android the app comes first.
+  if (/Android/i.test(navigator.userAgent)) { el("open-app").className = "button primary"; el("open-web").className = "button"; el("open-app").parentNode.insertBefore(el("open-app"), el("open-web")); }
   el("copy").addEventListener("click", function () {
-    var done = function () { el("copy").textContent = "Copied"; };
+    var done = function () { el("copy").textContent = "Copied"; el("copy").setAttribute("aria-live", "polite"); };
     if (navigator.clipboard) navigator.clipboard.writeText(code).then(done, function () {});
   });
 
