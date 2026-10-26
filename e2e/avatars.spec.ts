@@ -19,7 +19,7 @@ const loaded = (els: Element[]) => els.length > 0 && els.every((e) => (e as HTML
 test("a person's profile photo shows beside their messages and in the conversation, not only in the list", async ({ page, isMobile }) => {
   const alice = await newPhone("alice", "Alice Rahman");
   const bob = await newPhone("bob", "Bob Chen");
-  const jpeg = fs.readFileSync(path.join(import.meta.dirname, "../public/launch/meldiq-launch.jpg"));
+  const jpeg = fs.readFileSync(path.join(import.meta.dirname, "fixtures/photo.jpg"));
   await bob.req("PUT", "/v1/users/me/photo", undefined, jpeg);
   const dm = (await alice.req("POST", "/v1/conversations/dm", { userId: bob.userId })).conversation.id as string;
   await alice.connect();

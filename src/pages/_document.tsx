@@ -3,15 +3,9 @@ import { Head, Html, Main, NextScript } from "next/document";
 /**
  * The page every route is served from (a static export, docs/MELDIQ_WEB_NEXTJS.md). Rendered once, at build time, with
  * no data: the launch screen (docs/MELDIQ_WEB_LAUNCH.md) is plain markup so it shows before any script runs, and goes
- * as soon as the app shows something (src/application/splash.ts). Never hydrated, so the app can remove it.
+ * as soon as the app shows something (src/application/splash.ts): Meldling on its own teal. Never hydrated, so the app can remove it.
  */
-const SPLASH = [
-  '<img src="/launch/meldiq-launch.jpg" alt="" width="480" height="480" decoding="async">',
-  // As markup, not JSX: React leaves `muted` out of server-rendered HTML, and a video autoplays only when muted.
-  '<video muted autoplay playsinline preload="auto" poster="/launch/meldiq-launch.jpg" disablepictureinpicture disableremoteplayback>',
-  '<source src="/launch/meldiq-launch.mp4" type="video/mp4" media="(prefers-reduced-motion: no-preference)">',
-  "</video>",
-].join("");
+const SPLASH = '<img src="/launch/meldling-launch.png" alt="" width="480" height="480" decoding="async">';
 
 export default function Document() {
   return (
@@ -32,8 +26,8 @@ export default function Document() {
         <meta property="og:image:height" content="630" />
         <meta name="twitter:card" content="summary_large_image" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
-        <link rel="icon" type="image/png" sizes="192x192" href="/meldiq-192.png" />
-        <link rel="apple-touch-icon" href="/meldiq-180.png" />
+        <link rel="icon" type="image/png" sizes="192x192" href="/meldling-192.png" />
+        <link rel="apple-touch-icon" href="/meldling-180.png" />
         <link rel="manifest" href="/manifest.webmanifest" />
       </Head>
       <body>

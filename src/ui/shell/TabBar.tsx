@@ -15,7 +15,7 @@ export function TabBar({ section, hidden }: { section: Section; hidden: boolean 
   const tabs = [
     { key: "home" as const, label: t("nav_home"), icon: <House size={21} />, count: 0 },
     // The mascot is the messages entry here too (community-first brief §G).
-    { key: "dms" as const, label: t("nav_messages"), icon: <img className="tab-mascot" src="/meldiq-mascot-96.webp" width={24} height={24} alt="" draggable={false} />, count: dms },
+    { key: "dms" as const, label: t("nav_messages"), icon: <img className="tab-mascot" src="/meldling-96.webp" width={24} height={24} alt="" draggable={false} />, count: dms },
     { key: "activity" as const, label: t("nav_activity"), icon: <AtSign size={21} />, count: mentions },
     { key: "settings" as const, label: t("nav_settings"), icon: <Settings size={21} />, count: 0 },
   ];

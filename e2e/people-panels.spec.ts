@@ -27,7 +27,7 @@ test("community photos in the rail, a member list in channels and a profile in D
   const alice = await newPhone("alice", "Alice Rahman");
   const bob = await newPhone("bob", "Bob Chen");
   const carol = await newPhone("carol", "Carol Diaz");
-  const jpeg = fs.readFileSync(path.join(import.meta.dirname, "../public/launch/meldiq-launch.jpg"));
+  const jpeg = fs.readFileSync(path.join(import.meta.dirname, "fixtures/photo.jpg"));
 
   const { org } = await alice.req("POST", "/v1/orgs", { name: "Panel Lab" });
   await alice.req("PUT", `/v1/orgs/${org.id}/photo`, undefined, jpeg);

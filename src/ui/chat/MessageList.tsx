@@ -5,6 +5,7 @@ import type { StoredMessage } from "../../model/types";
 import { Avatar } from "../components/Avatar";
 import { dayLabel, sameDay } from "../format";
 import { MessageItem } from "./MessageItem";
+import { TypingIndicator } from "./TypingIndicator";
 import { JUMP_EVENT } from "./jump";
 import { useT } from "../../i18n";
 
@@ -217,18 +218,7 @@ export function MessageList(props: MessageListProps) {
           );
         })}
       </div>
-      <div className="typing" aria-live="polite">
-        {typers.length > 0 && (
-          <>
-            <span className="typing-dots" aria-hidden="true">
-              <i />
-              <i />
-              <i />
-            </span>
-            {`${typers.slice(0, 2).join(" and ")}${typers.length > 2 ? " and others" : ""} ${typers.length === 1 ? "is" : "are"} typing…`}
-          </>
-        )}
-      </div>
+      <TypingIndicator names={typers} />
       {unseen > 0 && (
         <button
           className="btn btn-primary btn-sm jump-latest"

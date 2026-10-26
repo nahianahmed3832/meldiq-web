@@ -25,7 +25,7 @@ export function Rail({ orgId, section, onDialog }: { orgId: string | null; secti
   return (
     <nav className="rail" aria-label={t("rail_label")}>
       <a className="rail-home" href="/dms" aria-current={home ? "page" : undefined} aria-label={homeLabel} title={t("rail_home")}>
-        <img className="rail-mascot" src="/meldiq-mascot-96.webp" srcSet="/meldiq-mascot-96.webp 96w, /meldiq-mascot-192.webp 192w" sizes="46px" width={46} height={46} alt="" draggable={false} />
+        <img className="rail-mascot" src="/meldling-96.webp" srcSet="/meldling-96.webp 96w, /meldling-192.webp 192w" sizes="46px" width={46} height={46} alt="" draggable={false} />
         {dms > 0 && (
           <span className="count accent" aria-hidden="true">
             {capCount(dms)}

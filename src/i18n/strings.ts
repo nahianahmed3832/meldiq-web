@@ -422,6 +422,10 @@ export const STRINGS = {
   bell_menu: ["Channel notifications", "频道通知", "চ্যানেলের নোটিফিকেশন"],
   bell_failed: ["Couldn't change notifications", "无法更改通知设置", "নোটিফিকেশন বদলানো গেল না"],
   // ── conversation list and message box ──
+  typing_meldling: ["Meldling", "Meldling", "Meldling"],
+  typing_one: ["{a} is typing", "{a} 正在输入", "{a} লিখছেন"],
+  typing_two: ["{a} and {b} are typing", "{a} 和 {b} 正在输入", "{a} এবং {b} লিখছেন"],
+  typing_many: ["{a}, {b} and {n} others are typing", "{a}、{b} 和另外 {n} 人正在输入", "{a}, {b} এবং আরও {n} জন লিখছেন"],
   row_typing: ["typing…", "正在输入…", "লিখছেন…"],
   row_no_messages: ["No messages yet", "还没有消息", "এখনো কোনো মেসেজ নেই"],
   row_draft: ["Draft", "草稿", "খসড়া"],
