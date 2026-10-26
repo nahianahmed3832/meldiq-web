@@ -215,6 +215,32 @@ export function roomPeople(s: AppState, conversationId: string): string[] {
   return s.conversations[conversationId]?.activeCall?.participantIds ?? [];
 }
 
+export interface LiveCallSummary {
+  video: boolean;
+  /** Who is in the call (each once). */
+  people: string[];
+  /** Who is sharing their screen, among them. */
+  sharing: string[];
+}
+
+/**
+ * A conversation's live call for its row (community-first brief §E): voice or video, who is in it and who is sharing,
+ * from the call's own events, or the server's conversation list before any arrive. Null when nothing is live. Rows only
+ * exist for conversations this account may see, and call events reach only their members.
+ */
+export function liveCallOf(s: AppState, conversationId: string): LiveCallSummary | null {
+  const call = s.calls[conversationId];
+  const listed = s.conversations[conversationId]?.activeCall ?? s.communities[s.conversations[conversationId]?.orgId ?? ""]?.channels.find((c) => c.id === conversationId)?.activeCall ?? null;
+  if (!call && !listed) return null;
+  const people = roomPeople(s, conversationId);
+  const fromList = people.length ? people : (listed?.participantIds ?? []);
+  return {
+    video: call?.video ?? listed?.video ?? false,
+    people: fromList,
+    sharing: (call?.sharing ?? []).filter((u) => fromList.includes(u)),
+  };
+}
+
 /** The workspace's voice rooms this person is in, alphabetical (android WorkspaceHomeScreen voiceRooms). */
 export function voiceRooms(s: AppState, orgId: string | null): Conversation[] {
   if (!orgId) return [];

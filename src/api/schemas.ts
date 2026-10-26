@@ -377,6 +377,8 @@ export const zCall = z.object({
   voiceRoom: z.boolean().default(false),
   /** Voice rooms: who raised a hand, in order. */
   hands: z.array(z.string()).max(500).default([]),
+  /** Live calls: people sharing their screen now, from the media server (servers from 2026-10-26 send it). */
+  sharing: z.array(z.string()).max(500).default([]),
 });
 export type Call = z.infer<typeof zCall>;
 

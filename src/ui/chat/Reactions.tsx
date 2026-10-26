@@ -71,10 +71,12 @@ function ReactionChip({ message, emoji, userIds, myUserId, canPost, communityEmo
   }, [card]);
 
   // The message's own long press and right-click menu don't also open from a reaction.
-  const stop = <E extends ReactPointerEvent | ReactMouseEvent>(fn: ((e: E) => void) | undefined) => (e: E) => {
-    e.stopPropagation();
-    fn?.(e);
-  };
+  const stop =
+    <E extends ReactPointerEvent | ReactMouseEvent>(fn: ((e: E) => void) | undefined) =>
+    (e: E) => {
+      e.stopPropagation();
+      fn?.(e);
+    };
   const names = reactors.map((r) => r.name).join(", ");
   return (
     <>

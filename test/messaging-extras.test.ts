@@ -24,6 +24,7 @@ const call = (
     endReason: state === "ENDED" ? (o.reason === undefined ? "hangup" : o.reason) : null,
     voiceRoom: false,
     hands: [],
+    sharing: [],
     ...(o.attended ? { attended: o.attended } : {}),
   };
 };

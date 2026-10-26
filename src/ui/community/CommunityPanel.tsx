@@ -1,6 +1,8 @@
 import { isHighlighted, unreadLabel, unreadMarker } from "../unread";
 import { UnreadBadge } from "../components/UnreadBadge";
-import { BellOff, ChevronDown, Eye, MoreHorizontal, Plus } from "lucide-react";
+import { BellOff, ChevronDown, Eye, MonitorUp, MoreHorizontal, Plus } from "lucide-react";
+import { LiveCallBadge } from "../components/LiveCallBadge";
+import { useT } from "../../i18n";
 import { memo, type MouseEvent, useEffect, useMemo, useState } from "react";
 import type { Category } from "../../api/communitySchemas";
 import type { Conversation } from "../../api/schemas";
@@ -25,7 +27,7 @@ import {
 import { placeOf } from "../../sync/navPrefs";
 import { UserAvatar } from "../components/OrgAvatar";
 import { Menu, type MenuEntry, useMenu } from "../components/Overlay";
-import { homeLayout, roomPeople } from "../selectors";
+import { homeLayout, liveCallOf, roomPeople } from "../selectors";
 import { useTickAt } from "./useTickAt";
 import { CategoryNameDialog, DeleteCategoryDialog, MuteForDialog } from "./CategoryDialogs";
 import { ChannelGlyph, CreateChannelDialog, DeleteChannelDialog, EditChannelDialog, MoveChannelDialog } from "./ChannelDialogs";
@@ -331,6 +333,8 @@ const ChannelItem = memo(function ChannelItem({
   const engine = useEngine();
   const m = useMenu();
   const people = useOrbit((s) => (ch.voice ? roomPeople(s, ch.id) : []), shallowEqual);
+  const sharing = useOrbit((s) => liveCallOf(s, ch.id)?.sharing ?? [], shallowEqual);
+  const t = useT();
   const users = useOrbit((s) => s.users);
   const [joining, setJoining] = useState(false);
   const open = (e: MouseEvent<HTMLElement>) => {
@@ -368,6 +372,7 @@ const ChannelItem = memo(function ChannelItem({
           <ChannelGlyph kind={ch.kind} voice={ch.voice} format={ch.format} />
         </span>
         <span className="grow ellipsis">{ch.name}</span>
+        {ch.liveCall && <LiveCallBadge conversationId={ch.id} />}
         {ch.muted && <BellOff size={12} className="faint" aria-hidden="true" />}
         <UnreadBadge marker={marker} />
       </a>
@@ -381,6 +386,11 @@ const ChannelItem = memo(function ChannelItem({
             <span key={u} className="voice-person">
               <UserAvatar userId={u} name={users[u]?.displayName ?? "Someone"} colorIndex={users[u]?.avatarColor ?? 0} photoRev={users[u]?.photoRev} size={18} decorative />
               <span className="ellipsis">{users[u]?.displayName ?? "Someone"}</span>
+              {sharing.includes(u) && (
+                <span className="voice-sharing">
+                  <MonitorUp size={11} aria-hidden="true" /> {t("live_sharing_short")}
+                </span>
+              )}
             </span>
           ))}
         </div>

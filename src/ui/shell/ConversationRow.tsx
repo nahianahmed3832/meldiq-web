@@ -1,3 +1,4 @@
+import { LiveCallBadge } from "../components/LiveCallBadge";
 import { isHighlighted, unreadLabel, unreadMarker } from "../unread";
 import { UnreadBadge } from "../components/UnreadBadge";
 import {
@@ -140,6 +141,7 @@ export const ConversationRow = memo(function ConversationRow({ id, twoLine, hide
                     ? members(c.memberCount)
                     : t("row_no_messages")}
           </small>
+          <LiveCallBadge conversationId={id} />
           {muted && <BellOff size={12} className="faint" aria-hidden="true" />}
           {count}
         </span>
@@ -151,6 +153,7 @@ export const ConversationRow = memo(function ConversationRow({ id, twoLine, hide
       <span className="grow ellipsis">{title}</span>
       {local?.draft && !current ? <span className="draft">{t("row_draft")}</span> : null}
       {c.type === "GROUP" && <UsersRound size={13} className="faint" aria-hidden="true" />}
+      <LiveCallBadge conversationId={id} />
       {muted && <BellOff size={12} className="faint" aria-hidden="true" />}
       {count}
     </a>
