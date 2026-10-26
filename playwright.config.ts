@@ -66,6 +66,9 @@ export default defineConfig({
         PORT: String(API_PORT),
         HOST: "127.0.0.1",
         DATA_DIR: process.env.ORBIT_E2E_DATA,
+        // Presence changes at once here, as in the server's own tests; its settle and grace delays have their own suite.
+        PRESENCE_SETTLE_MS: "0",
+        PRESENCE_GRACE_MS: "0",
         LOG_LEVEL: "warn",
         RATE_LIMIT_PER_MINUTE: "100000",
         REGISTRATION_PER_ADDRESS_PER_HOUR: "0",

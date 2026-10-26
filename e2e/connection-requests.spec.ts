@@ -24,7 +24,7 @@ test("a connection request is announced, counted, and accepted from the DM", asy
   await expect(page.locator(".notice")).toContainText("Bob Chen sent you a connection request");
   await expect(page.getByRole("link", { name: /^Home and messages, 1 unread/ })).toBeVisible();
 
-  await page.getByRole("link", { name: /^DMs/ }).click();
+  await page.getByRole("link", { name: /^Home and messages/ }).click();
   await expect(page.getByRole("button", { name: "Connection requests, 1 waiting" })).toBeVisible();
 
   // A reload doesn't announce it again, but still counts it.
