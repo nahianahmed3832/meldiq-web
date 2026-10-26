@@ -9,7 +9,7 @@ import { LANGUAGES, type LanguageChoice, resolveLanguage } from "../i18n/languag
  */
 export const THEMES = ["system", "light", "dark"] as const;
 /** The brand colour plates (src/styles/tokens.css › Palettes). */
-export const PALETTES = ["charcoal", "indigo", "plum", "amber"] as const;
+export const PALETTES = ["meldiq", "charcoal", "indigo", "plum", "amber"] as const;
 export type Palette = (typeof PALETTES)[number];
 /** Message text size (android Settings › Chats): conversation text only, the rest of the interface stays as it is. */
 export const TEXT_SIZES = ["small", "default", "large"] as const;
@@ -82,7 +82,7 @@ export interface Prefs {
   memberList: boolean;
   /** Direct messages show the other person's profile beside the messages, on screens wide enough for it. */
   dmProfile: boolean;
-  /** The person picked a colour plate themselves; until then the default applies (it moved from indigo to charcoal). */
+  /** The person picked a colour plate themselves; until then the default applies (indigo, then charcoal, now meldiq). */
   paletteChosen: boolean;
   timeFormat: TimeFormat;
   listPreview: ListPreview;
@@ -100,7 +100,7 @@ const KEY = "orbit.prefs.v1";
 const defaults: Prefs = {
   theme: "system",
   language: "system",
-  palette: "charcoal",
+  palette: "meldiq",
   textSize: "default",
   messageLayout: "stream",
   animatedEmoji: true,
@@ -173,14 +173,17 @@ function load(): Prefs {
   }
 }
 
+/** Earlier defaults (indigo, then charcoal until the community-first design): saved by every browser that saved anything. */
+const FORMER_DEFAULTS: readonly Palette[] = ["indigo", "charcoal"];
+
 /**
- * The stored colour plate. Indigo was the default before charcoal, and every browser that saved any preference saved it
- * too, so a stored indigo counts as a choice only once the person picked a plate themselves (Appearance › Colour).
+ * The stored colour plate. A former default counts as a choice only once the person picked a plate themselves
+ * (Appearance › Colour); otherwise the current default, Meldiq's navy, applies.
  */
 export function paletteOf(stored: { palette?: unknown; paletteChosen?: unknown }): Palette {
   const palette = PALETTES.find((p) => p === stored.palette);
   if (!palette) return defaults.palette;
-  return palette === "indigo" && stored.paletteChosen !== true ? defaults.palette : palette;
+  return FORMER_DEFAULTS.includes(palette) && stored.paletteChosen !== true ? defaults.palette : palette;
 }
 
 const permitted = (): boolean => typeof Notification !== "undefined" && Notification.permission === "granted";

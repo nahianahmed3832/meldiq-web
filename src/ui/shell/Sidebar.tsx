@@ -8,7 +8,7 @@ import { OrgAvatar } from "../components/OrgAvatar";
 import { Menu, useMenu } from "../components/Overlay";
 import { members } from "../format";
 import type { ShellDialog } from "./Shell";
-import { ArchivedList, ChannelSections, Collapsible, LaterLink, MentionsLink, PeopleExtras, PeopleList, PersonalSections, SkeletonRows } from "./SidebarSections";
+import { ArchivedList, ChannelSections, Collapsible, PeopleExtras, PeopleList, PersonalSections, SkeletonRows } from "./SidebarSections";
 import { VoiceRoomsSection } from "./VoiceRooms";
 import { CommunityHeader, hideMutedKey } from "../community/CommunityHeader";
 import { CommunityPanel } from "../community/CommunityPanel";
@@ -110,8 +110,6 @@ export function Sidebar({ orgId, section, open, onDialog }: SidebarProps) {
             <span className="glyph">{unreadOnly ? <Check size={16} /> : <Inbox size={16} />}</span>
             <span className="grow">{unreadOnly ? t("side_unreads_only") : t("side_unreads")}</span>
           </button>
-          <MentionsLink orgId={orgId} active={section === "activity"} />
-          <LaterLink active={section === "later"} />
         </div>
       )}
 

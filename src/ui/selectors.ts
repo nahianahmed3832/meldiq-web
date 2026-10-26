@@ -180,6 +180,21 @@ export function unreadGroups(s: AppState): UnreadGroup[] {
   ];
 }
 
+/**
+ * A community's rolled-up activity for its rail icon: unread events and mentions of you across the channels this account
+ * can see (the conversation list holds only those), muted channels left out except for mentions.
+ */
+export function orgActivity(s: AppState, orgId: string): { unread: number; mentions: number } {
+  let unread = 0;
+  let mentions = 0;
+  for (const c of Object.values(s.conversations)) {
+    if (c.type !== "CHANNEL" || c.orgId !== orgId) continue;
+    mentions += s.local[c.id]?.mentions ?? 0;
+    if (!isMuted(s, c)) unread += unreadOf(s, c.id);
+  }
+  return { unread, mentions };
+}
+
 export function orgUnread(s: AppState, orgId: string): number {
   return Object.values(s.conversations).filter((c) => c.type === "CHANNEL" && c.orgId === orgId && unreadOf(s, c.id) > 0 && !isMuted(s, c)).length;
 }

@@ -26,7 +26,7 @@ import { type StringKey, useT } from "../../i18n";
 import { LanguagePicker } from "../components/LanguagePicker";
 
 const THEME_KEY = { system: "ap_system", light: "ap_light", dark: "ap_dark" } as const satisfies Record<Prefs["theme"], StringKey>;
-const PALETTE_KEY = { charcoal: "ap_charcoal", indigo: "ap_indigo", plum: "ap_plum", amber: "ap_amber" } as const satisfies Record<Palette, StringKey>;
+const PALETTE_KEY = { meldiq: "ap_meldiq", charcoal: "ap_charcoal", indigo: "ap_indigo", plum: "ap_plum", amber: "ap_amber" } as const satisfies Record<Palette, StringKey>;
 const SIZE_KEY = { small: "ap_small", default: "ap_default", large: "ap_large" } as const satisfies Record<TextSize, StringKey>;
 const QUALITY_KEY = { standard: "ap_standard", hd: "ap_hd", original: "ap_original" } as const satisfies Record<"standard" | "hd" | "original", StringKey>;
 

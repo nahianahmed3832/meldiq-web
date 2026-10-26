@@ -1,11 +1,12 @@
-import { Bell, BellOff, CircleDot, LogOut, Menu as MenuIcon, Monitor, Moon, Search, Settings, Smartphone, Smile, Sun, UserRound } from "lucide-react";
+import { AtSign, Bell, BellOff, Bookmark, CircleDot, LogOut, Menu as MenuIcon, Monitor, Moon, Search, Settings, Smartphone, Smile, Sun, UserRound } from "lucide-react";
 import { useState } from "react";
 import { useEngine, useOrbit } from "../../application/orbit";
 import { setPrefs, usePrefs } from "../../application/prefs";
-import { navigate } from "../../application/router";
+import { navigate, type Section } from "../../application/router";
 import { UserAvatar } from "../components/OrgAvatar";
 import { Menu, useMenu } from "../components/Overlay";
-import { mentionCount } from "../selectors";
+import { laterDue, mentionCount } from "../selectors";
+import { capCount } from "../unread";
 import { clock } from "../format";
 import { paused, statusLine } from "../../sync/status";
 import { PauseDialog, PresenceDialog, StatusDialog } from "../dialogs/StatusDialogs";
@@ -14,13 +15,14 @@ import { useT } from "../../i18n";
 
 const CONN_LABEL = { online: "Online", connecting: "Connecting…", reconnecting: "Reconnecting…", offline: "Offline" } as const;
 
-export function TopBar({ onMenu, onSearch }: { onMenu: () => void; onSearch: () => void }) {
+export function TopBar({ onMenu, onSearch, section }: { onMenu: () => void; onSearch: () => void; section: Section }) {
   const engine = useEngine();
   const t = useT();
   const me = useOrbit((s) => s.me);
   const myPhoto = useOrbit((s) => (s.me ? s.users[s.me.userId]?.photoRev : null));
   const connection = useOrbit((s) => s.connection);
   const mentions = useOrbit(mentionCount);
+  const due = useOrbit(laterDue);
   const prefs = usePrefs();
   const profile = useMenu();
   const mac = typeof navigator !== "undefined" && /Mac|iPhone|iPad/.test(navigator.platform);
@@ -54,9 +56,34 @@ export function TopBar({ onMenu, onSearch }: { onMenu: () => void; onSearch: () 
           <i aria-hidden="true" />
           <span>{CONN_LABEL[connection]}</span>
         </button>
-        <button className="icon-btn" onClick={() => navigate({ section: "activity" })} aria-label={mentions ? `Notifications, ${mentions} unread mentions` : "Notifications"}>
+        {/* Activity (mentions, unreads, threads, calls) and Later moved here from the rail (community-first brief §G). */}
+        <button
+          className="icon-btn top-count"
+          onClick={() => navigate({ section: "activity" })}
+          aria-current={section === "activity" ? "page" : undefined}
+          aria-label={mentions ? t("top_activity_count", { n: mentions }) : t("top_activity")}
+          title={t("top_activity")}
+        >
           <Bell size={19} />
-          {mentions > 0 && <span className="dot" />}
+          {mentions > 0 && (
+            <span className="count mention-count" aria-hidden="true">
+              {capCount(mentions)}
+            </span>
+          )}
+        </button>
+        <button
+          className="icon-btn top-count"
+          onClick={() => navigate({ section: "later" })}
+          aria-current={section === "later" ? "page" : undefined}
+          aria-label={due ? t("top_saved_count", { n: due }) : t("top_saved")}
+          title={t("top_saved")}
+        >
+          <Bookmark size={19} />
+          {due > 0 && (
+            <span className="count accent" aria-hidden="true">
+              {capCount(due)}
+            </span>
+          )}
         </button>
         <button className="icon-btn hide-sm" onClick={() => navigate({ section: "settings", settingsPage: "notifications" })} aria-label="Settings">
           <Settings size={19} />
@@ -106,6 +133,9 @@ export function TopBar({ onMenu, onSearch }: { onMenu: () => void; onSearch: () 
                     "separator" as const,
                   ]
                 : []),
+              { label: t("top_activity"), icon: <AtSign size={16} />, onSelect: () => navigate({ section: "activity" }) },
+              { label: t("top_saved"), icon: <Bookmark size={16} />, onSelect: () => navigate({ section: "later" }) },
+              "separator",
               { label: "Profile", icon: <UserRound size={16} />, onSelect: () => navigate({ section: "settings", settingsPage: "profile" }) },
               { label: "Devices", icon: <Smartphone size={16} />, onSelect: () => navigate({ section: "settings", settingsPage: "devices" }) },
               { label: "Settings", icon: <Settings size={16} />, onSelect: () => navigate({ section: "settings", settingsPage: "notifications" }) },

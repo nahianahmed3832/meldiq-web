@@ -21,14 +21,17 @@ afterEach(() => {
 });
 
 describe("preferences", () => {
-  it("defaults to the system theme, the charcoal palette and the side panels open", async () => {
+  it("defaults to the system theme, the Meldiq palette and the side panels open", async () => {
     const { getPrefs } = await loadWith(undefined);
-    expect(getPrefs()).toMatchObject({ theme: "system", palette: "charcoal", memberList: true, dmProfile: true });
+    expect(getPrefs()).toMatchObject({ theme: "system", palette: "meldiq", memberList: true, dmProfile: true });
   });
 
-  it("moves indigo stored as the old default to charcoal, and keeps indigo the person picked", async () => {
-    expect((await loadWith({ palette: "indigo" })).getPrefs().palette).toBe("charcoal");
+  it("moves a former default (indigo, charcoal) to Meldiq, and keeps either one the person picked", async () => {
+    expect((await loadWith({ palette: "indigo" })).getPrefs().palette).toBe("meldiq");
+    expect((await loadWith({ palette: "charcoal" })).getPrefs().palette).toBe("meldiq");
     expect((await loadWith({ palette: "indigo", paletteChosen: true })).getPrefs().palette).toBe("indigo");
+    expect((await loadWith({ palette: "charcoal", paletteChosen: true })).getPrefs().palette).toBe("charcoal");
+    expect((await loadWith({ palette: "plum" })).getPrefs().palette).toBe("plum");
   });
 
   it("keeps hidden side panels hidden", async () => {
@@ -43,11 +46,11 @@ describe("preferences", () => {
 
   it("falls back to the defaults for an unknown or tampered theme or palette", async () => {
     const { getPrefs } = await loadWith({ theme: 'x" onload="', palette: "neon", textSize: "huge" });
-    expect(getPrefs()).toMatchObject({ theme: "system", palette: "charcoal", textSize: "default" });
+    expect(getPrefs()).toMatchObject({ theme: "system", palette: "meldiq", textSize: "default" });
   });
 
   it("gives browsers that stored preferences before palettes existed the default palette", async () => {
     const { getPrefs } = await loadWith({ theme: "light", notifications: true });
-    expect(getPrefs()).toMatchObject({ theme: "light", palette: "charcoal", notifications: true });
+    expect(getPrefs()).toMatchObject({ theme: "light", palette: "meldiq", notifications: true });
   });
 });

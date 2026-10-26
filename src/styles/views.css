@@ -196,6 +196,15 @@
 .palette-swatch .swatch i {
   flex: 1;
 }
+.palette-swatch[data-swatch="meldiq"] .swatch i:nth-child(1) {
+  background: var(--swatch-meldiq-1);
+}
+.palette-swatch[data-swatch="meldiq"] .swatch i:nth-child(2) {
+  background: var(--swatch-meldiq-2);
+}
+.palette-swatch[data-swatch="meldiq"] .swatch i:nth-child(3) {
+  background: var(--swatch-meldiq-3);
+}
 .palette-swatch[data-swatch="charcoal"] .swatch i:nth-child(1) {
   background: var(--swatch-charcoal-1);
 }

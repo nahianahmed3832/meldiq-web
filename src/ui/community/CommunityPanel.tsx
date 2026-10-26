@@ -1,3 +1,5 @@
+import { isHighlighted, unreadLabel, unreadMarker } from "../unread";
+import { UnreadBadge } from "../components/UnreadBadge";
 import { BellOff, ChevronDown, Eye, MoreHorizontal, Plus } from "lucide-react";
 import { memo, type MouseEvent, useEffect, useMemo, useState } from "react";
 import type { Category } from "../../api/communitySchemas";
@@ -349,11 +351,12 @@ const ChannelItem = memo(function ChannelItem({
       setJoining(false);
     }
   };
-  const label = `${ch.voice ? "Voice channel" : "Channel"} ${ch.name}${ch.joined ? "" : ", not joined yet"}${ch.unread ? `, ${ch.unread} unread` : ""}${ch.mentions ? `, ${ch.mentions} mentions` : ""}${ch.muted ? ", muted" : ""}`;
+  const marker = unreadMarker(ch.unread, ch.mentions, ch.muted);
+  const label = `${ch.voice ? "Voice channel" : "Channel"} ${ch.name}${ch.joined ? "" : ", not joined yet"}${unreadLabel(ch.unread, ch.mentions, ch.muted, { unread: (n) => `${n} unread`, mentions: (n) => `${n} mentions`, muted: "muted" })}`;
   return (
     <div className="side-row">
       <a
-        className={`side-item channel-item${ch.unread && !ch.muted ? " unread" : ""}${ch.muted ? " muted" : ""}${ch.joined ? "" : " unjoined"}`}
+        className={`side-item channel-item${isHighlighted(marker) ? " unread" : ""}${ch.muted ? " muted" : ""}${ch.joined ? "" : " unjoined"}`}
         href={`/home/c/${encodeURIComponent(ch.id)}`}
         aria-current={current ? "page" : undefined}
         aria-label={label}
@@ -366,7 +369,7 @@ const ChannelItem = memo(function ChannelItem({
         </span>
         <span className="grow ellipsis">{ch.name}</span>
         {ch.muted && <BellOff size={12} className="faint" aria-hidden="true" />}
-        {ch.unread > 0 && <span className={`count${!ch.muted && ch.mentions > 0 ? " accent" : ""}`}>{ch.mentions > 0 ? `@${ch.mentions}` : ch.unread}</span>}
+        <UnreadBadge marker={marker} />
       </a>
       <button className="row-more" aria-label={`More for ${ch.name}`} aria-haspopup="menu" onClick={open}>
         <MoreHorizontal size={16} />

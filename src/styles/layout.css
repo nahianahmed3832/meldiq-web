@@ -27,106 +27,144 @@
 .rail :focus-visible {
   box-shadow: var(--focus-on-frame);
 }
-.rail-logo {
+/* The mascot: Home and messages (the DM list). Selected like a community, with the same side bar. */
+.rail-home {
+  position: relative;
   display: grid;
   place-items: center;
-  margin-bottom: var(--s-2);
-  border-radius: 10px;
-  transition: transform var(--t-fast) var(--ease);
+  width: 48px;
+  height: 48px;
+  margin-bottom: var(--s-1);
+  border-radius: 16px;
+  transition:
+    transform var(--t-fast) var(--ease),
+    border-radius var(--t-fast) var(--ease);
 }
-.rail-logo:hover {
-  transform: scale(1.04);
+.rail-mascot {
+  width: 46px;
+  height: 46px;
+  border-radius: 15px;
+  box-shadow: 0 0 0 1px var(--rail-line);
+  transition: border-radius var(--t-fast) var(--ease);
+}
+.rail-home:hover {
+  transform: translateY(-1px);
+}
+.rail-home:hover .rail-mascot,
+.rail-home[aria-current="page"] .rail-mascot {
+  border-radius: 13px;
+  box-shadow:
+    0 0 0 2px var(--rail),
+    0 0 0 4px var(--rail-glow);
+}
+.rail-home .count {
+  position: absolute;
+  bottom: -4px;
+  right: -6px;
 }
 .rail-sep {
-  width: 28px;
-  height: 1px;
+  width: 32px;
+  height: 2px;
+  border-radius: 2px;
   background: var(--rail-line);
-  margin: var(--s-2) 0;
+  margin: var(--s-1) 0 var(--s-2);
+  flex-shrink: 0;
+}
+.rail-orgs {
+  display: grid;
+  gap: 10px;
+  justify-items: center;
 }
 .rail-org {
   position: relative;
-  width: 44px;
-  height: 44px;
-  border-radius: 14px;
+  width: 48px;
+  height: 48px;
+  border-radius: 16px;
   display: grid;
   place-items: center;
-  transition: transform var(--t-fast) var(--ease);
+}
+.rail-org .avatar {
+  transition:
+    border-radius var(--t-fast) var(--ease),
+    filter var(--t-fast);
 }
 .rail-org:hover .avatar {
-  filter: brightness(1.08);
+  filter: brightness(1.1);
+  border-radius: 12px;
 }
-.rail-org[aria-current="true"]::before {
+/* The side marker (Discord's pill): a short one for unread, a tall one for the community on screen, a medium one on
+   hover. White on the frame, so it reads on every palette; shape, not only colour, tells the states apart. */
+.rail-home::before,
+.rail-org::before {
   content: "";
   position: absolute;
   left: -12px;
-  top: 10px;
-  bottom: 10px;
+  top: 50%;
   width: 4px;
+  height: 0;
   border-radius: 0 4px 4px 0;
   background: var(--rail-text-active);
+  transform: translateY(-50%);
+  transition: height var(--t-fast) var(--ease);
+}
+.rail-org.unread::before {
+  height: 8px;
+}
+.rail-home:hover::before,
+.rail-org:hover::before {
+  height: 20px;
+}
+.rail-home[aria-current="page"]::before,
+.rail-org[aria-current="true"]::before {
+  height: 36px;
 }
 .rail-org[aria-current="true"] .avatar {
+  border-radius: 12px;
   box-shadow:
     0 0 0 2px var(--rail),
-    0 0 0 4px var(--rail-text-active);
+    0 0 0 4px var(--rail-glow);
 }
 .rail-org .count {
   position: absolute;
-  top: -5px;
-  right: -7px;
+  bottom: -4px;
+  right: -6px;
+  box-shadow: 0 0 0 3px var(--rail);
 }
-.rail-nav {
-  width: 56px;
-  display: grid;
-  justify-items: center;
-  gap: 3px;
-  padding: 6px 0 5px;
-  border-radius: var(--r-md);
-  color: var(--rail-text);
-  font-size: 10.5px;
-  font-weight: 600;
-  letter-spacing: 0.01em;
-  position: relative;
-}
-.rail-nav svg {
-  width: var(--icon-lg);
-  height: var(--icon-lg);
-}
-.rail-nav .rail-icon {
-  width: 38px;
-  height: 32px;
-  border-radius: var(--r-md);
+/* Create and Discover: round, outlined in the frame, filling with the brand colour on hover. */
+.rail-round {
+  width: 48px;
+  height: 48px;
+  margin-top: 10px;
+  border-radius: 50%;
   display: grid;
   place-items: center;
+  flex-shrink: 0;
+  color: var(--rail-round-icon);
+  background: var(--rail-round);
+  border: 1px solid var(--rail-line);
   transition:
     background var(--t-fast),
-    color var(--t-fast);
+    color var(--t-fast),
+    border-radius var(--t-fast) var(--ease),
+    transform var(--t-fast) var(--ease);
 }
-.rail-nav:hover {
-  color: var(--rail-text-active);
+.rail-round + .rail-round {
+  margin-top: 8px;
 }
-.rail-nav:hover .rail-icon {
-  background: var(--rail-hover);
+.rail-round:hover {
+  color: var(--on-brand);
+  background: var(--brand-gradient);
+  border-color: transparent;
+  border-radius: 16px;
 }
-.rail-nav[aria-current="page"] {
-  color: var(--rail-text-active);
-}
-.rail-nav[aria-current="page"] .rail-icon {
-  background: var(--rail-active);
-}
-.rail-nav .count {
-  position: absolute;
-  top: 1px;
-  right: 4px;
-  min-width: 18px;
-  height: 18px;
-  font-size: 10.5px;
+.rail-round:active {
+  transform: scale(0.96);
 }
 /* Counts on the frame: the palette's bright badge, ringed in the frame colour. */
 .rail .count.accent {
   background: var(--rail-badge);
   color: var(--on-rail-badge);
-  box-shadow: 0 0 0 2px var(--rail);
+  box-shadow: 0 0 0 3px var(--rail);
 }
 .rail-spacer {
   flex: 1;
@@ -166,6 +204,23 @@
 }
 .topbar .icon-btn .dot {
   background: var(--rail-badge);
+  box-shadow: 0 0 0 2px var(--rail);
+}
+.topbar .top-count {
+  position: relative;
+}
+.topbar .top-count[aria-current="page"] {
+  background: var(--rail-active);
+  color: var(--rail-text-active);
+}
+.topbar .top-count .count {
+  position: absolute;
+  top: -3px;
+  right: -5px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  font-size: 10.5px;
   box-shadow: 0 0 0 2px var(--rail);
 }
 .topbar .avatar .presence {
@@ -378,9 +433,28 @@
   border-radius: 0 3px 3px 0;
   background: var(--accent);
 }
+/* Unread (community-first brief §C): bright text and a short white marker at the edge; selected keeps its tinted
+   row and tall accent bar, so the two read apart, together too. */
 .side-item.unread {
-  color: var(--text);
+  color: var(--unread-text);
   font-weight: 700;
+}
+.side-item.unread:not([aria-current="page"])::before {
+  content: "";
+  position: absolute;
+  left: -8px;
+  top: 50%;
+  width: 4px;
+  height: 8px;
+  border-radius: 0 4px 4px 0;
+  background: var(--unread-mark);
+  transform: translateY(-50%);
+  animation: unread-in var(--t-std) var(--ease-enter);
+}
+@keyframes unread-in {
+  from {
+    height: 0;
+  }
 }
 .side-item .glyph {
   width: 22px;
@@ -390,7 +464,7 @@
   flex-shrink: 0;
 }
 .side-item.unread .glyph {
-  color: var(--text);
+  color: var(--unread-text);
 }
 .side-item .draft {
   color: var(--accent-text);

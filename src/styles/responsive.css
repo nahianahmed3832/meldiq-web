@@ -91,7 +91,7 @@
     height: 28px;
     flex-shrink: 0;
     border-radius: 7px;
-    background: url("/meldiq-mark-128.png") center / cover;
+    background: url("/meldiq-mascot-96.webp") center / cover;
   }
   .searchbox span,
   .searchbox .kbd,
