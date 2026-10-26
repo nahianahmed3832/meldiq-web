@@ -58,6 +58,10 @@ export interface Prefs {
   messageSound: boolean;
   /** Incoming calls ring in this tab (off: the call card and notification only). */
   callRingtone: boolean;
+  /** A chime in this tab for new messages that would notify, with or without system notifications (messageChime.ts). */
+  inAppSound: boolean;
+  /** The chime's volume, 0–100. */
+  soundVolume: number;
   /** Show the sender and message text in system notifications (off: "New message"). */
   notificationText: boolean;
   readReceipts: boolean;
@@ -112,6 +116,8 @@ const defaults: Prefs = {
   groupNotifications: true,
   messageSound: true,
   callRingtone: true,
+  inAppSound: true,
+  soundVolume: 60,
   notificationText: true,
   readReceipts: true,
   typing: true,
@@ -166,11 +172,18 @@ function load(): Prefs {
       doubleTapReact: typeof stored.doubleTapReact === "boolean" ? stored.doubleTapReact : defaults.doubleTapReact,
       quickReaction: QUICK_REACTIONS.some((e) => e === stored.quickReaction) ? stored.quickReaction : defaults.quickReaction,
       youtubeInApp: typeof stored.youtubeInApp === "boolean" ? stored.youtubeInApp : defaults.youtubeInApp,
+      inAppSound: typeof stored.inAppSound === "boolean" ? stored.inAppSound : defaults.inAppSound,
+      soundVolume: volumeOf(stored.soundVolume),
       ...notificationChoice(stored),
     };
   } catch {
     return defaults;
   }
+}
+
+/** A stored volume as a whole number from 0 to 100; anything else is the default. */
+export function volumeOf(v: unknown): number {
+  return typeof v === "number" && Number.isFinite(v) ? Math.round(Math.min(100, Math.max(0, v))) : defaults.soundVolume;
 }
 
 /** Earlier defaults (indigo, then charcoal until the community-first design): saved by every browser that saved anything. */

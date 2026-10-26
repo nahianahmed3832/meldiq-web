@@ -28,6 +28,7 @@ import { Rail } from "./Rail";
 import { Sidebar } from "./Sidebar";
 import { TabBar } from "./TabBar";
 import { TopBar } from "./TopBar";
+import { TabIndicators } from "./TabIndicators";
 import { accountSelection, rememberSelection } from "../../sync/workspaceSelection";
 
 const SettingsView = lazy(() => import("../settings/SettingsView").then((m) => ({ default: m.SettingsView })));
@@ -193,6 +194,7 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
       </div>
       <TabBar section={section} hidden={!!route.conversationId && !settings} />
       <Notices />
+      <TabIndicators />
       <ConnectionRequestWatcher />
       <CallLayer />
       {dialog?.kind === "search" && <SearchDialog orgId={orgId} onClose={() => setDialog(null)} />}

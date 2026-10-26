@@ -573,6 +573,21 @@ export const STRINGS = {
     "关闭后：群组和频道不通知；提到你时仍会通知。",
     "বন্ধ থাকলে গ্রুপ ও চ্যানেল চুপ থাকে; আপনার মেনশনে তবুও জানানো হয়।",
   ],
+  nt_in_app: ["Sound in this tab", "此标签页内的提示音", "এই ট্যাবে শব্দ"],
+  nt_in_app_sub: [
+    "A short chime for new direct messages, mentions and conversations you follow, even without desktop notifications. Never for your own messages, the conversation you're reading, or muted ones.",
+    "收到新私信、提及和你关注的对话时播放简短提示音，即使未开启桌面通知。不会为你自己的消息、正在阅读的对话或已静音的对话播放。",
+    "নতুন সরাসরি মেসেজ, উল্লেখ আর আপনার অনুসরণ করা কথোপকথনে ছোট একটি শব্দ, ডেস্কটপ নোটিফিকেশন ছাড়াও। নিজের মেসেজ, যে কথোপকথন পড়ছেন বা মিউট করা কথোপকথনে কখনো নয়।",
+  ],
+  nt_in_app_locked: [
+    "Your browser plays sound only after you click on the page. Click anywhere, or press Play a test sound.",
+    "浏览器只有在你点击页面后才会播放声音。请点击页面任意处，或按“播放测试音”。",
+    "পেজে ক্লিক করার পরেই ব্রাউজার শব্দ বাজায়। যেকোনো জায়গায় ক্লিক করুন, অথবা পরীক্ষার শব্দ বাজান চাপুন।",
+  ],
+  nt_in_app_unsupported: ["This browser can't play sounds for Meldiq.", "此浏览器无法为 Meldiq 播放声音。", "এই ব্রাউজার Meldiq-এর জন্য শব্দ বাজাতে পারে না।"],
+  nt_volume: ["Volume", "音量", "ভলিউম"],
+  nt_volume_value: ["{n}%", "{n}%", "{n}%"],
+  nt_test_sound: ["Play a test sound", "播放测试音", "পরীক্ষার শব্দ বাজান"],
   nt_sound: ["Message sound", "消息提示音", "মেসেজের শব্দ"],
   nt_sound_sub: [
     "Notifications play your system's notification sound. Off: they arrive silently.",
