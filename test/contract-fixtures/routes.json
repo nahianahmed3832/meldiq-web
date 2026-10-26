@@ -502,6 +502,10 @@
       "path": "/v1/orgs/{orgId}/members"
     },
     {
+      "method": "POST",
+      "path": "/v1/orgs/{orgId}/members"
+    },
+    {
       "method": "PATCH",
       "path": "/v1/orgs/{orgId}/members/{userId}"
     },
