@@ -1,13 +1,13 @@
-import { Check, Search, Ticket, UserPlus, X } from "lucide-react";
+import { Check, Search, UserPlus, X } from "lucide-react";
 import { type FormEvent, useState } from "react";
 import type { Member } from "../../api/schemas";
 import { useEngine, useOrbit } from "../../application/orbit";
-import { navigate } from "../../application/router";
 import { searchPeople } from "../../sync/account";
 import { type AddOutcome, addMembers, MAX_ADD } from "../../sync/addMembers";
 import { UserAvatar } from "../components/OrgAvatar";
 import { Dialog } from "../components/Overlay";
 import { ApiError } from "../../api/client";
+import { QuickInvite } from "./InviteLink";
 
 interface AddMembersDialogProps {
   orgId: string;
@@ -17,9 +17,10 @@ interface AddMembersDialogProps {
 }
 
 /**
- * Add Members (community-first brief §F): find people, pick up to twenty, add them. The server decides who can be added
- * directly (people you know who'd accept a message from you); anyone else gets a clear "invite them instead" with the
- * Invitations page one click away. Search shows only who the server's privacy rules let you find.
+ * Invite people (community-first brief §F, the reference's "Invite friends to …"): find people, pick up to twenty, add
+ * them; or make an invitation link with an expiry and a use limit, and copy or share it. The server decides who can be
+ * added directly (people you know who'd accept a message from you); anyone else gets the link instead. Search shows only
+ * who the server's privacy rules let you find.
  */
 export function AddMembersDialog({ orgId, orgName, onClose, onAdded }: AddMembersDialogProps) {
   const engine = useEngine();
@@ -65,22 +66,11 @@ export function AddMembersDialog({ orgId, orgName, onClose, onAdded }: AddMember
   const refused = results ? picked.filter((m) => results[m.id] === "not_available") : [];
   return (
     <Dialog
-      title={`Add members to ${orgName}`}
+      title={`Invite people to ${orgName}`}
       onClose={onClose}
       footer={
         results ? (
           <div className="row" style={{ justifyContent: "flex-end", gap: 8 }}>
-            {refused.length > 0 && (
-              <button
-                className="btn btn-secondary"
-                onClick={() => {
-                  onClose();
-                  navigate({ section: "workspace", workspacePage: "invitations" });
-                }}
-              >
-                <Ticket size={16} /> Create an invite link
-              </button>
-            )}
             <button className="btn btn-primary" onClick={onClose}>
               Done
             </button>
@@ -112,6 +102,12 @@ export function AddMembersDialog({ orgId, orgName, onClose, onAdded }: AddMember
                 <span className={results[m.id] === "added" ? "tag ok" : "faint"}>{OUTCOME_TEXT[results[m.id] ?? "not_available"]}</span>
               </li>
             ))}
+            {refused.length > 0 && (
+              <li className="invite-or">
+                <p className="muted">For anyone who can't be added directly, send an invitation link:</p>
+                <QuickInvite orgId={orgId} />
+              </li>
+            )}
           </ul>
         ) : (
           <>
@@ -160,6 +156,12 @@ export function AddMembersDialog({ orgId, orgName, onClose, onAdded }: AddMember
                 })}
               </ul>
             )}
+            <div className="invite-or" role="group" aria-labelledby="invite-or-title">
+              <h3 id="invite-or-title" className="invite-or-title">
+                Or send an invitation link
+              </h3>
+              <QuickInvite orgId={orgId} />
+            </div>
           </>
         )}
       </div>

@@ -1,5 +1,5 @@
 {
-  "version": "0.42.0",
+  "version": "0.43.0",
   "routes": [
     {
       "method": "GET",
@@ -596,6 +596,38 @@
     {
       "method": "GET",
       "path": "/v1/orgs/{orgId}/audit"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/discord/status"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/discord/connect"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/discord/callback"
+    },
+    {
+      "method": "DELETE",
+      "path": "/v1/discord/connections/{id}"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/discord/connections/{id}/preview"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/discord/imports"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/discord/imports/{id}"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/discord/imports/{id}/retry"
     },
     {
       "method": "GET",
@@ -1254,6 +1286,18 @@
     ],
     "direct_upload_unavailable": [
       409
+    ],
+    "discord_bot_missing": [
+      409
+    ],
+    "discord_not_allowed": [
+      403
+    ],
+    "discord_not_configured": [
+      409
+    ],
+    "discord_unreachable": [
+      502
     ],
     "dm_not_allowed": [
       403

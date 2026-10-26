@@ -8,6 +8,8 @@ import { communityTemplates, createCommunity } from "../../sync/community";
 import { requestId } from "../../sync/workspaces";
 import { Dialog } from "../components/Overlay";
 import { useLoad } from "../workspace/useLoad";
+import type { DiscordReturn } from "../../application/discordReturn";
+import { DiscordImport } from "./DiscordImport";
 
 /** The starter templates' names and what they're for (android CommunityTemplates; ids from the server). */
 const TEMPLATE_TEXT: Record<string, { name: string; hint: string }> = {
@@ -22,8 +24,10 @@ const TEMPLATE_TEXT: Record<string, { name: string; hint: string }> = {
  * Start a community (batch B2 starter templates, android CreateCommunitySheet): name, description, a template whose
  * categories and channels the server creates, and whether it's listed in Discover and open to join.
  */
-export function CreateCommunityDialog({ onClose }: { onClose: () => void }) {
+export function CreateCommunityDialog({ onClose, discord = null }: { onClose: () => void; discord?: DiscordReturn | null }) {
   const engine = useEngine();
+  const canImport = useOrbit((s) => s.server?.features.includes("discord-import") ?? false);
+  const [tab, setTab] = useState<"new" | "discord">(discord ? "discord" : "new");
   const reqId = useMemo(requestId, []);
   const hasTemplates = useOrbit((s) => s.server?.features.includes("community-templates") ?? false);
   const templates = useLoad(() => (hasTemplates ? communityTemplates(engine) : Promise.resolve([])), [engine, hasTemplates]);
@@ -57,9 +61,30 @@ export function CreateCommunityDialog({ onClose }: { onClose: () => void }) {
     }
   };
 
+  const tabs = canImport && (
+    <div className="segmented create-tabs" role="tablist" aria-label="How to start">
+      <button type="button" role="tab" aria-selected={tab === "new"} aria-pressed={tab === "new"} onClick={() => setTab("new")}>
+        New community
+      </button>
+      <button type="button" role="tab" aria-selected={tab === "discord"} aria-pressed={tab === "discord"} onClick={() => setTab("discord")}>
+        Import from Discord
+      </button>
+    </div>
+  );
+  if (tab === "discord" && canImport) {
+    return (
+      <Dialog title="Import from Discord" onClose={onClose} wide>
+        <div className="dialog-body">
+          {tabs}
+          <DiscordImport returned={discord} onClose={onClose} />
+        </div>
+      </Dialog>
+    );
+  }
   return (
     <Dialog title="Start a community" onClose={onClose} wide>
       <form className="dialog-body" onSubmit={(e) => void submit(e)} noValidate>
+        {tabs}
         {error && (
           <div className="banner danger" role="alert">
             {error}

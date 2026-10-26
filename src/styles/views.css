@@ -1565,3 +1565,339 @@ select.input {
 .invite-share .input {
   flex: 1 1 100%;
 }
+
+/* Invite people: the invitation-link part of the dialog (community-first brief §F). */
+.invite-or {
+  display: grid;
+  gap: 8px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+  list-style: none;
+}
+.invite-or .muted {
+  margin: 0;
+}
+.invite-or-title {
+  margin: 0;
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+.quick-invite {
+  display: grid;
+  gap: 8px;
+}
+.quick-invite .field {
+  display: grid;
+  gap: 4px;
+  font-size: var(--fs-xs);
+  color: var(--text-2);
+}
+
+/* Discover (community-first brief §3B): a search and a grid of public communities, from the server only. */
+.discover-head h1 {
+  margin: 0;
+  font-size: var(--fs-lg);
+}
+.discover {
+  width: 100%;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: var(--s-6) var(--s-5) var(--s-8);
+  display: grid;
+  gap: var(--s-5);
+}
+.discover-hero {
+  display: grid;
+  justify-items: center;
+  gap: var(--s-2);
+  text-align: center;
+}
+.discover-hero h2 {
+  margin: 0;
+  font-size: var(--fs-2xl);
+}
+.discover-hero .view-sub {
+  margin: 0;
+}
+.discover-search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: min(560px, 100%);
+  margin-top: var(--s-2);
+  padding: 0 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--surface-sunken);
+  color: var(--text-3);
+}
+.discover-search:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--focus);
+}
+.discover-search input {
+  flex: 1;
+  min-width: 0;
+  padding: 12px 0;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+}
+.discover-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
+  gap: var(--s-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.discover-card-skeleton {
+  height: 220px;
+  border-radius: var(--r-lg);
+}
+.discover-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--surface-raised);
+  overflow: hidden;
+  transition:
+    border-color var(--t-fast) var(--ease),
+    transform var(--t-fast) var(--ease);
+}
+.discover-card:hover {
+  border-color: var(--border-strong);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .discover-card:hover {
+    transform: translateY(-1px);
+  }
+}
+.discover-card-body {
+  position: relative;
+  display: grid;
+  justify-items: start;
+  align-content: start;
+  gap: 6px;
+  flex: 1;
+  padding: 52px var(--s-4) var(--s-3);
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+.discover-card-body:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: -2px;
+}
+/* A quiet band behind the icon: the brand's gradient, softened. Communities have no banners of their own (yet). */
+.discover-card-band {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 72px;
+  background: var(--brand-gradient);
+  opacity: 0.35;
+}
+.discover-card-body > :not(.discover-card-band) {
+  position: relative;
+}
+.discover-card-body strong {
+  max-width: 100%;
+  font-size: var(--fs-md);
+}
+.discover-desc {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  color: var(--text-2);
+  font-size: var(--fs-sm);
+}
+.discover-card-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: var(--s-3) var(--s-4) var(--s-4);
+}
+.discover-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  font-size: var(--fs-xs);
+}
+.discover-error {
+  margin: 0;
+  padding: 0 var(--s-4) var(--s-3);
+  color: var(--danger);
+  font-size: var(--fs-xs);
+}
+.discover-more {
+  justify-self: center;
+}
+@media (max-width: 600px) {
+  .discover {
+    padding: var(--s-4) var(--s-4) var(--s-6);
+  }
+  .discover-hero h2 {
+    font-size: var(--fs-xl);
+  }
+}
+
+/* Import from Discord (community-first brief §3D). */
+.create-tabs {
+  justify-self: start;
+}
+.discord-import {
+  display: grid;
+  gap: var(--s-3);
+}
+.discord-lists {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+  gap: var(--s-3);
+}
+.discord-bullets,
+.discord-steps {
+  display: grid;
+  gap: 6px;
+  margin: 6px 0 0;
+  font-size: var(--fs-sm);
+}
+.discord-bullets {
+  padding: 0;
+  list-style: none;
+}
+.discord-bullets li {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+}
+.discord-bullets svg {
+  flex-shrink: 0;
+  margin-top: 3px;
+  color: var(--success);
+}
+.discord-steps {
+  padding-left: 20px;
+  color: var(--text-2);
+}
+.discord-connect {
+  justify-self: start;
+}
+.discord-connections {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.discord-options {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.discord-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--fs-sm);
+}
+.discord-toggle.disabled {
+  color: var(--text-3);
+}
+.discord-preview {
+  display: grid;
+  gap: 8px;
+}
+.discord-items {
+  display: grid;
+  gap: var(--s-3);
+  max-height: min(40vh, 360px);
+  overflow: auto;
+  padding: var(--s-3);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--surface-sunken);
+}
+.discord-items ul {
+  display: grid;
+  gap: 4px;
+  margin: 4px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.discord-kind {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  font-size: var(--fs-xs);
+  color: var(--text-2);
+}
+.discord-item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 8px;
+  font-size: var(--fs-sm);
+}
+.discord-state {
+  font-size: var(--fs-xs);
+  color: var(--text-3);
+}
+.discord-item.done .discord-state,
+.discord-item.create .discord-state {
+  color: var(--success);
+}
+.discord-item.failed .discord-state {
+  color: var(--danger);
+  font-weight: 600;
+}
+.discord-item.skip,
+.discord-item.skipped {
+  color: var(--text-3);
+}
+.discord-note {
+  flex-basis: 100%;
+  color: var(--text-3);
+  font-size: var(--fs-xs);
+}
+.discord-excluded {
+  display: flex;
+  gap: 6px;
+  margin: 0;
+  font-size: var(--fs-xs);
+}
+.discord-excluded svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.discord-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.discord-leave {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--fs-xs);
+  color: var(--text-2);
+}
+.discord-progress {
+  width: 100%;
+  height: 8px;
+  accent-color: var(--accent);
+}

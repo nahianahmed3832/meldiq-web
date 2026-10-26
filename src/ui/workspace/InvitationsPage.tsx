@@ -1,4 +1,4 @@
-import { Check, Copy, Link2, Share2, Ticket } from "lucide-react";
+import { Ticket } from "lucide-react";
 import { type FormEvent, useState } from "react";
 import type { Invite, NewInvite, OrgAdminDetail, OrgRole } from "../../api/workspaceSchemas";
 import { useEngine, useOrbit } from "../../application/orbit";
@@ -9,18 +9,8 @@ import { useAction, useLoad } from "./useLoad";
 import { Card, ErrorLine } from "./WorkspaceView";
 import { QrCode } from "../components/QrCode";
 import { inviteLink } from "../../sync/inviteCodes";
+import { EXPIRY, InviteShare, USES } from "./InviteLink";
 import { rolesOverview } from "../../sync/roles";
-
-/** Batch B4 (android InviteChoices): 1 hour to 30 days, and 1 to 500 uses. */
-const EXPIRY: { hours: number; label: string }[] = [
-  { hours: 1, label: "1 hour" },
-  { hours: 24, label: "1 day" },
-  { hours: 72, label: "3 days" },
-  { hours: 24 * 7, label: "7 days" },
-  { hours: 24 * 30, label: "30 days" },
-];
-
-const USES = [1, 10, 50, 100, 500];
 
 const STATUS: Record<Invite["status"], string> = { active: "Active", revoked: "Revoked", expired: "Expired", used_up: "Used up" };
 
@@ -233,36 +223,3 @@ function NewInvitation({ detail, onCreated }: { detail: OrgAdminDetail; onCreate
  * Copy the link, copy the code, or the device's own share sheet where there is one (community-first brief §F). Feedback
  * stays on the button for a moment; where the clipboard is unavailable (some mobile browsers), the link is shown to select.
  */
-function InviteShare({ code }: { code: string }) {
-  const link = inviteLink(code);
-  const [done, setDone] = useState<"link" | "code" | null>(null);
-  const [manual, setManual] = useState(false);
-  const canShare = typeof navigator !== "undefined" && typeof navigator.share === "function";
-  const copy = (what: "link" | "code") => {
-    const write = navigator.clipboard?.writeText(what === "link" ? link : code);
-    if (!write) return setManual(true);
-    void write.then(
-      () => {
-        setDone(what);
-        setTimeout(() => setDone(null), 1500);
-      },
-      () => setManual(true),
-    );
-  };
-  return (
-    <div className="invite-share" role="group" aria-label="Share this invitation">
-      <button className="btn btn-primary btn-sm" onClick={() => copy("link")} aria-live="polite">
-        {done === "link" ? <Check size={14} /> : <Link2 size={14} />} {done === "link" ? "Link copied" : "Copy link"}
-      </button>
-      <button className="btn btn-secondary btn-sm" onClick={() => copy("code")} aria-live="polite">
-        {done === "code" ? <Check size={14} /> : <Copy size={14} />} {done === "code" ? "Copied" : "Copy code"}
-      </button>
-      {canShare && (
-        <button className="btn btn-secondary btn-sm" onClick={() => void navigator.share({ title: "Join me on Meldiq", url: link }).catch(() => undefined)}>
-          <Share2 size={14} /> Share…
-        </button>
-      )}
-      {manual && <input className="input mono" readOnly value={link} aria-label="Invitation link" onFocus={(e) => e.currentTarget.select()} />}
-    </div>
-  );
-}

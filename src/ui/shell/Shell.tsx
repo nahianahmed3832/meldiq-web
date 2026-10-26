@@ -13,7 +13,6 @@ import { NewMessageDialog } from "../dialogs/NewMessageDialog";
 import { CreateWorkspaceDialog, JoinWorkspaceDialog } from "../dialogs/WorkspaceDialogs";
 import { SearchDialog } from "../dialogs/SearchDialog";
 import { CreateCommunityDialog } from "../community/CreateCommunityDialog";
-import { DiscoverDialog } from "../community/DiscoverDialog";
 import { JOIN_INVITE_EVENT } from "../chat/inAppLinks";
 import { noteGuideVisit } from "../../sync/guide";
 import { GUIDE_EVENT } from "../community/GuideOnboarding";
@@ -21,6 +20,7 @@ import { OPEN_PROFILE_EVENT, ProfileDialog } from "../people/ProfileDialog";
 import { ConnectionRequestWatcher } from "../people/ConnectionRequestViews";
 import { ConnectionsDialog, MessageRequestsDialog } from "../people/ConnectionsDialog";
 import { ActivityView } from "../views/ActivityView";
+import { DiscoverView } from "../views/DiscoverView";
 import { LaterView } from "../later/LaterView";
 import { HomeView } from "../views/HomeView";
 import { Notices } from "./Notices";
@@ -31,6 +31,7 @@ import { TopBar } from "./TopBar";
 import { TabIndicators } from "./TabIndicators";
 import { AddMembersDialog } from "../workspace/AddMembersDialog";
 import { takePendingInvite } from "../../application/pendingInvite";
+import { type DiscordReturn, takeDiscordReturn } from "../../application/discordReturn";
 import { accountSelection, rememberSelection } from "../../sync/workspaceSelection";
 
 const SettingsView = lazy(() => import("../settings/SettingsView").then((m) => ({ default: m.SettingsView })));
@@ -42,9 +43,8 @@ export type ShellDialog =
   | { kind: "newGroup" }
   | { kind: "channels" }
   | { kind: "identity"; userId: string }
-  | { kind: "createWorkspace" }
+  | { kind: "createWorkspace"; discord?: DiscordReturn | null }
   | { kind: "joinWorkspace"; code?: string }
-  | { kind: "discover" }
   | { kind: "connections" }
   | { kind: "requests" }
   | { kind: "addMembers" }
@@ -128,7 +128,10 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
   useEffect(() => {
     if (!synced) return;
     const code = takePendingInvite();
-    if (code) setDialog({ kind: "joinWorkspace", code });
+    if (code) return setDialog({ kind: "joinWorkspace", code });
+    // Back from Discord after adding Meldiq's bot (or cancelling): the import picks up where it left off.
+    const discord = takeDiscordReturn();
+    if (discord) setDialog({ kind: "createWorkspace", discord });
   }, [synced]);
 
   // An invite link clicked inside a chat opens Join with its code (batch B4b).
@@ -188,6 +191,7 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
   else if (route.conversationId && known) main = <ConversationView key={route.conversationId} id={route.conversationId} route={route} onDialog={ctx.open} />;
   else if (section === "activity") main = <ActivityView orgId={orgId} />;
   else if (section === "later") main = <LaterView />;
+  else if (section === "discover") main = <DiscoverView />;
   else main = <HomeView orgId={orgId} section={section} onDialog={ctx.open} />;
 
   return (
@@ -196,7 +200,7 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
       <div className="workspace">
         <TopBar onMenu={() => setDrawer((d) => !d)} onSearch={() => setDialog({ kind: "search" })} section={section} />
         <div className={`body${route.conversationId ? " has-conversation" : ""}${phoneList ? " phone-list" : " phone-main"}${settings ? " settings-mode" : ""}`}>
-          {!settings && <Sidebar orgId={orgId} section={section} open={drawer} onDialog={ctx.open} />}
+          {!settings && <Sidebar orgId={orgId} section={section === "discover" ? "dms" : section} open={drawer} onDialog={ctx.open} />}
           {drawer && !settings && <div className="sidebar-scrim" onClick={() => setDrawer(false)} aria-hidden="true" />}
           {main}
           {!settings && route.conversationId && known && route.panel && <SidePanel route={route} />}
@@ -213,8 +217,8 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
       {dialog?.kind === "channels" && orgId && <ChannelBrowser orgId={orgId} onClose={() => setDialog(null)} />}
       {dialog?.kind === "identity" && <IdentityReview userId={dialog.userId} onClose={() => setDialog(null)} />}
       {dialog?.kind === "newGroup" && <NewGroupDialog onClose={() => setDialog(null)} />}
-      {dialog?.kind === "createWorkspace" && (communities ? <CreateCommunityDialog onClose={() => setDialog(null)} /> : <CreateWorkspaceDialog onClose={() => setDialog(null)} />)}
-      {dialog?.kind === "discover" && <DiscoverDialog onClose={() => setDialog(null)} />}
+      {dialog?.kind === "createWorkspace" &&
+        (communities ? <CreateCommunityDialog discord={dialog.discord ?? null} onClose={() => setDialog(null)} /> : <CreateWorkspaceDialog onClose={() => setDialog(null)} />)}
       {dialog?.kind === "connections" && <ConnectionsDialog onClose={() => setDialog(null)} />}
       {dialog?.kind === "requests" && <MessageRequestsDialog onClose={() => setDialog(null)} />}
       {dialog?.kind === "addMembers" && orgId && <AddMembersDialog orgId={orgId} orgName={orgName} onClose={() => setDialog(null)} onAdded={() => undefined} />}

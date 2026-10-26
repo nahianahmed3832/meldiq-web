@@ -824,7 +824,7 @@ export class Engine implements EngineContext {
     if (!conv) return;
     const receipts = sendsReadReceipts(conv.type, conv.memberCount, conv.canPost) && this.opts.prefs?.().readReceipts !== false;
     // Channels and large groups send no read receipts; there, only this person's own devices hear about it (below).
-    const selfOnly = !sendsReadReceipts(conv.type, conv.memberCount, conv.canPost);
+    const selfOnly = !sendsReadReceipts(conv.type, conv.memberCount, conv.canPost) && (this.state.get().server?.features.includes("self-controls") ?? false);
     if (!receipts && !selfOnly) return;
     const latest = await this.store.newestMessage(id, (m) => !m.outgoing && m.kind === "text");
     if (!latest) return;

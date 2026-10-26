@@ -71,9 +71,9 @@ export function CommunityHeader({ orgId, perms, onDialog }: { orgId: string | nu
   ];
   if (org && orgId) {
     if (perms.canInvite) {
-      entries.push({ label: "Invite people", icon: <Ticket size={16} />, onSelect: () => navigate({ section: "workspace", workspacePage: "invitations" }) });
-      // Community-first brief §F: existing accounts straight in (the server decides who can be added).
-      entries.push({ label: "Add members", icon: <UserPlus size={16} />, onSelect: () => onDialog({ kind: "addMembers" }) });
+      // Community-first brief §F: add people you know, or make a link (the server decides who can be added directly).
+      entries.push({ label: "Invite people", icon: <UserPlus size={16} />, onSelect: () => onDialog({ kind: "addMembers" }) });
+      entries.push({ label: "Manage invitations", icon: <Ticket size={16} />, onSelect: () => navigate({ section: "workspace", workspacePage: "invitations" }) });
     }
     if (features.includes("community-preferences")) entries.push({ label: "Notification settings…", icon: <Bell size={16} />, onSelect: () => setDialog("notifications") });
     entries.push({ label: "Community settings", icon: <Settings2 size={16} />, onSelect: () => navigate({ section: "workspace", workspacePage: "overview" }) });
@@ -100,7 +100,7 @@ export function CommunityHeader({ orgId, perms, onDialog }: { orgId: string | nu
   }
   if (orgs.length > 1 && features.includes("community-preferences")) entries.push({ label: "Arrange communities…", icon: <ArrowUpDown size={16} />, onSelect: () => setDialog("arrange") });
   entries.push("separator");
-  if (features.includes("community-discovery")) entries.push({ label: "Discover communities", icon: <Compass size={16} />, onSelect: () => onDialog({ kind: "discover" }) });
+  if (features.includes("community-discovery")) entries.push({ label: "Discover communities", icon: <Compass size={16} />, onSelect: () => navigate({ section: "discover" }) });
   entries.push({ label: "Start a community", icon: <Plus size={16} />, onSelect: () => onDialog({ kind: "createWorkspace" }) });
   entries.push({ label: "Join with a code", icon: <LogIn size={16} />, onSelect: () => onDialog({ kind: "joinWorkspace" }) });
   if (org && org.myRole !== "OWNER") entries.push("separator", { label: "Leave community…", icon: <LogOut size={16} />, danger: true, onSelect: () => setDialog("leave") });

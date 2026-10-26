@@ -151,6 +151,8 @@
 .rail-round + .rail-round {
   margin-top: 8px;
 }
+/* Discover open: filled and squarer, like a selected community (shape, not only colour). */
+.rail-round[aria-current="page"],
 .rail-round:hover {
   color: var(--on-brand);
   background: var(--brand-gradient);

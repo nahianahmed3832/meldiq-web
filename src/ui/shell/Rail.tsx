@@ -21,6 +21,7 @@ export function Rail({ orgId, section, onDialog }: { orgId: string | null; secti
   const dms = useOrbit(unreadPeopleCount) + useIncomingRequestCount();
   const t = useT();
   const home = section === "dms";
+  const discovering = section === "discover";
   const homeLabel = `${t("rail_home")}${dms ? `, ${t("nav_unread", { n: dms })}` : ""}`;
   return (
     <nav className="rail" aria-label={t("rail_label")}>
@@ -37,7 +38,7 @@ export function Rail({ orgId, section, onDialog }: { orgId: string | null; secti
         <div role="group" aria-label={t("rail_communities")} className="rail-orgs">
           {orgs.map((o) => {
             // Direct messages belong to no community, so none is selected there (as on Discord).
-            const selected = section !== "dms" && o.id === orgId;
+            const selected = !home && !discovering && o.id === orgId;
             return <CommunityButton key={o.id} org={o} selected={selected} size={44} />;
           })}
         </div>
@@ -45,9 +46,9 @@ export function Rail({ orgId, section, onDialog }: { orgId: string | null; secti
       <button className="rail-round" onClick={() => onDialog({ kind: "createWorkspace" })} aria-label={t("rail_create")} title={t("rail_create")}>
         <Plus size={22} aria-hidden="true" />
       </button>
-      <button className="rail-round" onClick={() => onDialog({ kind: "discover" })} aria-label={t("rail_discover")} title={t("rail_discover")}>
+      <a className="rail-round" href="/discover" aria-current={discovering ? "page" : undefined} aria-label={t("rail_discover")} title={t("rail_discover")}>
         <Compass size={22} aria-hidden="true" />
-      </button>
+      </a>
       <div className="rail-spacer" />
     </nav>
   );
@@ -100,9 +101,9 @@ export function PhoneRail({ orgId, onDialog }: { orgId: string | null; onDialog:
       <button className="rail-round" onClick={() => onDialog({ kind: "createWorkspace" })} aria-label={t("rail_create")} title={t("rail_create")}>
         <Plus size={22} aria-hidden="true" />
       </button>
-      <button className="rail-round" onClick={() => onDialog({ kind: "discover" })} aria-label={t("rail_discover")} title={t("rail_discover")}>
+      <a className="rail-round" href="/discover" aria-label={t("rail_discover")} title={t("rail_discover")}>
         <Compass size={22} aria-hidden="true" />
-      </button>
+      </a>
     </nav>
   );
 }

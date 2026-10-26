@@ -89,7 +89,7 @@ export const ConversationRow = memo(function ConversationRow({ id, twoLine, hide
   const mentions = local?.mentions ?? 0;
   const current = route.conversationId === id;
   if (hideRead && unread === 0 && !current) return null;
-  const section = route.section === "dms" ? "dms" : route.section === "activity" ? "activity" : "home";
+  const section = route.section === "dms" || route.section === "discover" ? "dms" : route.section === "activity" ? "activity" : "home";
   const glyph =
     c.type === "CHANNEL" ? (
       c.kind === "PRIVATE" ? (

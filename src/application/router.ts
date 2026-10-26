@@ -3,14 +3,14 @@ import { useSyncExternalStore } from "react";
 
 /**
  * The app's routes, as paths (Next.js serves the one client-side page for every path; docs/MELDIQ_WEB_NEXTJS.md):
- *   /home  /dms  /activity  /later              the sections (Later: saved messages and reminders)
+ *   /home  /dms  /activity  /later  /discover    the sections (Later: saved messages and reminders; Discover: public communities)
  *   /<section>/c/<id>[/details|/search|/pinned|/members|/thread/<root>]   a conversation (and its side panel)
  *   /settings/<page>
  *   /workspace/<page>                          the current workspace's settings and administration
  * Links from before (hash routes, "/#/dms/c/<id>": old notifications, bookmarks, links in messages) still work: the
  * page moves them to their path on load. Moving around is the History API, so Back and Forward work and nothing reloads.
  */
-export type Section = "home" | "dms" | "activity" | "later" | "settings" | "workspace";
+export type Section = "home" | "dms" | "activity" | "later" | "discover" | "settings" | "workspace";
 export type SettingsPage = "profile" | "account" | "devices" | "notifications" | "calls" | "appearance" | "storage" | "security" | "about" | "health" | "usage";
 export type WorkspacePage =
   | "overview"
@@ -44,7 +44,7 @@ export interface Route {
 /** Sections that take the whole page (no conversation list). */
 export const isFullPage = (s: Section): boolean => s === "settings" || s === "workspace";
 
-const SECTIONS: Section[] = ["home", "dms", "activity", "later", "settings", "workspace"];
+const SECTIONS: Section[] = ["home", "dms", "activity", "later", "discover", "settings", "workspace"];
 const PAGES: SettingsPage[] = ["profile", "account", "devices", "notifications", "calls", "appearance", "storage", "security", "about", "health", "usage"];
 const WORKSPACE_PAGES: WorkspacePage[] = [
   "overview",
