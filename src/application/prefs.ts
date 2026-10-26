@@ -9,7 +9,7 @@ import { LANGUAGES, type LanguageChoice, resolveLanguage } from "../i18n/languag
  */
 export const THEMES = ["system", "light", "dark"] as const;
 /** The brand colour plates (src/styles/tokens.css › Palettes). */
-export const PALETTES = ["charcoal", "indigo", "plum", "amber"] as const;
+export const PALETTES = ["meldiq", "charcoal", "indigo", "plum", "amber"] as const;
 export type Palette = (typeof PALETTES)[number];
 /** Message text size (android Settings › Chats): conversation text only, the rest of the interface stays as it is. */
 export const TEXT_SIZES = ["small", "default", "large"] as const;
@@ -58,6 +58,10 @@ export interface Prefs {
   messageSound: boolean;
   /** Incoming calls ring in this tab (off: the call card and notification only). */
   callRingtone: boolean;
+  /** A chime in this tab for new messages that would notify, with or without system notifications (messageChime.ts). */
+  inAppSound: boolean;
+  /** The chime's volume, 0–100. */
+  soundVolume: number;
   /** Show the sender and message text in system notifications (off: "New message"). */
   notificationText: boolean;
   readReceipts: boolean;
@@ -82,7 +86,7 @@ export interface Prefs {
   memberList: boolean;
   /** Direct messages show the other person's profile beside the messages, on screens wide enough for it. */
   dmProfile: boolean;
-  /** The person picked a colour plate themselves; until then the default applies (it moved from indigo to charcoal). */
+  /** The person picked a colour plate themselves; until then the default applies (indigo, then charcoal, now meldiq). */
   paletteChosen: boolean;
   timeFormat: TimeFormat;
   listPreview: ListPreview;
@@ -100,7 +104,7 @@ const KEY = "orbit.prefs.v1";
 const defaults: Prefs = {
   theme: "system",
   language: "system",
-  palette: "charcoal",
+  palette: "meldiq",
   textSize: "default",
   messageLayout: "stream",
   animatedEmoji: true,
@@ -112,6 +116,8 @@ const defaults: Prefs = {
   groupNotifications: true,
   messageSound: true,
   callRingtone: true,
+  inAppSound: true,
+  soundVolume: 60,
   notificationText: true,
   readReceipts: true,
   typing: true,
@@ -166,6 +172,8 @@ function load(): Prefs {
       doubleTapReact: typeof stored.doubleTapReact === "boolean" ? stored.doubleTapReact : defaults.doubleTapReact,
       quickReaction: QUICK_REACTIONS.some((e) => e === stored.quickReaction) ? stored.quickReaction : defaults.quickReaction,
       youtubeInApp: typeof stored.youtubeInApp === "boolean" ? stored.youtubeInApp : defaults.youtubeInApp,
+      inAppSound: typeof stored.inAppSound === "boolean" ? stored.inAppSound : defaults.inAppSound,
+      soundVolume: volumeOf(stored.soundVolume),
       ...notificationChoice(stored),
     };
   } catch {
@@ -173,14 +181,22 @@ function load(): Prefs {
   }
 }
 
+/** A stored volume as a whole number from 0 to 100; anything else is the default. */
+export function volumeOf(v: unknown): number {
+  return typeof v === "number" && Number.isFinite(v) ? Math.round(Math.min(100, Math.max(0, v))) : defaults.soundVolume;
+}
+
+/** Earlier defaults (indigo, then charcoal until the community-first design): saved by every browser that saved anything. */
+const FORMER_DEFAULTS: readonly Palette[] = ["indigo", "charcoal"];
+
 /**
- * The stored colour plate. Indigo was the default before charcoal, and every browser that saved any preference saved it
- * too, so a stored indigo counts as a choice only once the person picked a plate themselves (Appearance › Colour).
+ * The stored colour plate. A former default counts as a choice only once the person picked a plate themselves
+ * (Appearance › Colour); otherwise the current default, Meldiq's navy, applies.
  */
 export function paletteOf(stored: { palette?: unknown; paletteChosen?: unknown }): Palette {
   const palette = PALETTES.find((p) => p === stored.palette);
   if (!palette) return defaults.palette;
-  return palette === "indigo" && stored.paletteChosen !== true ? defaults.palette : palette;
+  return FORMER_DEFAULTS.includes(palette) && stored.paletteChosen !== true ? defaults.palette : palette;
 }
 
 const permitted = (): boolean => typeof Notification !== "undefined" && Notification.permission === "granted";

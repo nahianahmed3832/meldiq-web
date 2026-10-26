@@ -1,4 +1,5 @@
-import { MoreHorizontal, Search } from "lucide-react";
+import { MoreHorizontal, Search, UserPlus } from "lucide-react";
+import { AddMembersDialog } from "./AddMembersDialog";
 import { useState } from "react";
 import type { DirectoryMember, OrgAdminDetail, OrgRole } from "../../api/workspaceSchemas";
 import { useEngine, useOrbit } from "../../application/orbit";
@@ -24,6 +25,7 @@ export function PeoplePage({ detail }: { detail: OrgAdminDetail }) {
   const people = useLoad(() => (detail.permissions.canViewDirectory ? directory(engine, orgId, term) : Promise.resolve([])), [engine, orgId, term, version, detail]);
   const myRole = (detail.org.myRole ?? "MEMBER") as OrgRole;
   const owners = (people.data ?? []).filter((m) => m.orgRole === "OWNER").length;
+  const [adding, setAdding] = useState(false);
 
   if (!detail.permissions.canViewDirectory) {
     return <Card title="People" sub="Guests can't browse the workspace directory. People you share channels with appear in those channels' details." />;
@@ -31,7 +33,17 @@ export function PeoplePage({ detail }: { detail: OrgAdminDetail }) {
 
   return (
     <div className="ws-page">
-      <Card title="People" sub={`${detail.stats.members} ${detail.stats.members === 1 ? "member" : "members"}. Owners and admins manage roles; everyone may set their own title.`}>
+      <Card
+        title="People"
+        sub={`${detail.stats.members} ${detail.stats.members === 1 ? "member" : "members"}. Owners and admins manage roles; everyone may set their own title.`}
+        actions={
+          detail.permissions.canInvite && (
+            <button className="btn btn-primary btn-sm" onClick={() => setAdding(true)}>
+              <UserPlus size={16} /> Add members
+            </button>
+          )
+        }
+      >
         <form
           className="row input"
           style={{ padding: "0 12px" }}
@@ -67,6 +79,7 @@ export function PeoplePage({ detail }: { detail: OrgAdminDetail }) {
         ))}
         {people.data?.length === 0 && <p className="faint">No one matches.</p>}
       </Card>
+      {adding && <AddMembersDialog orgId={orgId} orgName={detail.org.name} onClose={() => setAdding(false)} onAdded={() => setVersion((v) => v + 1)} />}
     </div>
   );
 }

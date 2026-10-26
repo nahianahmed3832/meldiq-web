@@ -1,9 +1,9 @@
-import { Archive, AtSign, Bookmark, ChevronDown, Compass, Contact, MailQuestion, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
+import { Archive, ChevronDown, Compass, Contact, MailQuestion, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
 import { type ReactNode, useState } from "react";
 import { shallowEqual, useEngine, useOrbit } from "../../application/orbit";
 import { setPrefs, usePrefs } from "../../application/prefs";
 import { Menu, useMenu } from "../components/Overlay";
-import { archivedPeople, channelGroups, homeLayout, type HomeSection, laterDue, mentionConversations, messageRequests, people } from "../selectors";
+import { archivedPeople, channelGroups, homeLayout, type HomeSection, messageRequests, people } from "../selectors";
 import { ConversationRow, SectionNameDialog } from "./ConversationRow";
 import { useIncomingRequestCount } from "../people/connectionRequests";
 import { useT } from "../../i18n";
@@ -211,39 +211,6 @@ export function ArchivedList() {
         </>
       )}
     </section>
-  );
-}
-
-export function MentionsLink({ orgId, active }: { orgId: string | null; active: boolean }) {
-  const n = useOrbit((s) => mentionConversations(s, orgId).reduce((a, c) => a + (s.local[c.id]?.mentions ?? 0), 0));
-  const t = useT();
-  return (
-    <a className="side-item" href="/activity" aria-current={active ? "page" : undefined}>
-      <span className="glyph">
-        <AtSign size={16} />
-      </span>
-      <span className="grow">{t("side_mentions")}</span>
-      {n > 0 && <span className="count accent">{n}</span>}
-    </a>
-  );
-}
-
-/** Later: saved messages and reminders (android Home › Later); the count is what's due. */
-export function LaterLink({ active }: { active: boolean }) {
-  const due = useOrbit(laterDue);
-  const t = useT();
-  return (
-    <a className="side-item" href="/later" aria-current={active ? "page" : undefined}>
-      <span className="glyph">
-        <Bookmark size={16} />
-      </span>
-      <span className="grow">{t("nav_later")}</span>
-      {due > 0 && (
-        <span className="count accent" aria-label={`${due} due`}>
-          {due}
-        </span>
-      )}
-    </a>
   );
 }
 

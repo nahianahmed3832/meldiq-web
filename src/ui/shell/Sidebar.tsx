@@ -8,8 +8,9 @@ import { OrgAvatar } from "../components/OrgAvatar";
 import { Menu, useMenu } from "../components/Overlay";
 import { members } from "../format";
 import type { ShellDialog } from "./Shell";
-import { ArchivedList, ChannelSections, Collapsible, LaterLink, MentionsLink, PeopleExtras, PeopleList, PersonalSections, SkeletonRows } from "./SidebarSections";
+import { ArchivedList, ChannelSections, Collapsible, PeopleExtras, PeopleList, PersonalSections, SkeletonRows } from "./SidebarSections";
 import { VoiceRoomsSection } from "./VoiceRooms";
+import { PhoneRail } from "./Rail";
 import { CommunityHeader, hideMutedKey } from "../community/CommunityHeader";
 import { CommunityPanel } from "../community/CommunityPanel";
 import { useCommunityDetail } from "../community/useCommunityPermissions";
@@ -41,6 +42,7 @@ export function Sidebar({ orgId, section, open, onDialog }: SidebarProps) {
 
   return (
     <aside className={`sidebar${open ? " open" : ""}`} aria-label="Conversations">
+      {section !== "dms" && <PhoneRail orgId={orgId} onDialog={onDialog} />}
       <div className="side-head">
         {section === "dms" ? (
           // Direct messages aren't part of a community: their own heading, not the community's.
@@ -110,8 +112,6 @@ export function Sidebar({ orgId, section, open, onDialog }: SidebarProps) {
             <span className="glyph">{unreadOnly ? <Check size={16} /> : <Inbox size={16} />}</span>
             <span className="grow">{unreadOnly ? t("side_unreads_only") : t("side_unreads")}</span>
           </button>
-          <MentionsLink orgId={orgId} active={section === "activity"} />
-          <LaterLink active={section === "later"} />
         </div>
       )}
 

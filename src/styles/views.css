@@ -196,6 +196,15 @@
 .palette-swatch .swatch i {
   flex: 1;
 }
+.palette-swatch[data-swatch="meldiq"] .swatch i:nth-child(1) {
+  background: var(--swatch-meldiq-1);
+}
+.palette-swatch[data-swatch="meldiq"] .swatch i:nth-child(2) {
+  background: var(--swatch-meldiq-2);
+}
+.palette-swatch[data-swatch="meldiq"] .swatch i:nth-child(3) {
+  background: var(--swatch-meldiq-3);
+}
 .palette-swatch[data-swatch="charcoal"] .swatch i:nth-child(1) {
   background: var(--swatch-charcoal-1);
 }
@@ -1526,4 +1535,33 @@ select.input {
   margin: 0;
   font-weight: 600;
   overflow-wrap: anywhere;
+}
+
+/* Add members: each person found is one row-sized button; chosen ones are checked and tinted. */
+.add-person {
+  width: 100%;
+  gap: 10px;
+  padding: 6px 8px;
+  min-height: 44px;
+  border-radius: var(--r-md);
+  color: var(--text);
+}
+.add-person:hover:not(:disabled) {
+  background: var(--surface-hover);
+}
+.add-person[aria-pressed="true"] {
+  background: var(--accent-soft);
+  color: var(--accent-text);
+}
+.invite-preview {
+  justify-items: start;
+}
+.invite-share {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+.invite-share .input {
+  flex: 1 1 100%;
 }

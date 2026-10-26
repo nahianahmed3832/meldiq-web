@@ -11,7 +11,7 @@ import { RequestBar, RequestSentBanner } from "../people/RequestBar";
 import { ConnectionRequestBanner } from "../people/ConnectionRequestViews";
 import { useConnectionLists } from "../people/connectionRequests";
 import { VoiceRoomView } from "./VoiceRoomView";
-import { Archive, ArrowLeft, BellOff, ChevronRight, Phone, Search, ShieldAlert, Video } from "lucide-react";
+import { Archive, ArrowLeft, BellOff, ChevronRight, MonitorUp, Phone, Search, ShieldAlert, Video } from "lucide-react";
 import { useCallback, useMemo, useState } from "react";
 import { shallowEqual, useEngine, useOrbit } from "../../application/orbit";
 import { navigate, type Route } from "../../application/router";
@@ -67,6 +67,7 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
   const call = useOrbit((s) => s.calls[id]);
   const myCall = useOrbit((s) => (s.call.phase === "idle" || s.call.phase === "ended" ? null : s.call.conversationId));
   const calling = useOrbit((s) => s.server?.calling === true);
+  const sharers = useOrbit((s) => (s.calls[id]?.sharing ?? []).map((u) => s.users[u]?.displayName ?? t("react_someone")), shallowEqual);
   const history = useOrbit((s) => s.history.status);
   const memberIds = useMemo(() => new Set((c?.members ?? []).map((m) => m.id)), [c?.members]);
   const alerts = useOrbit(
@@ -204,10 +205,18 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
               <span className="grow">
                 {call.createdAt ? t(call.video ? "conv_video_call_since" : "conv_voice_call_since", { when: relative(call.createdAt) }) : t(call.video ? "conv_video_call" : "conv_voice_call")}
               </span>
-              {calling && engine.calls.supported() && myCall === null && (
+              {sharers.length > 0 && (
+                <span className="voice-sharing">
+                  <MonitorUp size={12} aria-hidden="true" /> {t("live_sharing", { names: sharers.join(", ") })}
+                </span>
+              )}
+              {calling && engine.calls.supported() && myCall === null ? (
                 <button className="btn btn-secondary btn-sm" onClick={() => void engine.calls.join(id, call.id, call.video)}>
                   {t("conv_join")}
                 </button>
+              ) : (
+                // Why there's no Join (community-first brief §E): never a silent missing button.
+                <small className="faint">{!calling ? t("call_why_server") : !engine.calls.supported() ? t("call_why_browser") : t("call_why_busy")}</small>
               )}
             </div>
           )}

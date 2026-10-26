@@ -1,5 +1,5 @@
 {
-  "version": "0.41.0",
+  "version": "0.42.0",
   "routes": [
     {
       "method": "GET",
@@ -499,6 +499,10 @@
     },
     {
       "method": "GET",
+      "path": "/v1/orgs/{orgId}/members"
+    },
+    {
+      "method": "POST",
       "path": "/v1/orgs/{orgId}/members"
     },
     {

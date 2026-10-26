@@ -1,5 +1,6 @@
+import { OrgAvatar } from "../components/OrgAvatar";
 import { Building2, Ticket, Users } from "lucide-react";
-import { type FormEvent, useMemo, useState } from "react";
+import { type FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { ApiError } from "../../api/client";
 import type { InvitePreview } from "../../api/workspaceSchemas";
 import { useEngine, useOrbit } from "../../application/orbit";
@@ -105,11 +106,11 @@ export function JoinWorkspaceDialog({ onClose, initialCode }: { onClose: () => v
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const check = async (e: FormEvent) => {
-    e.preventDefault();
+  const check = async (e?: FormEvent, raw = code) => {
+    e?.preventDefault();
     // A pasted invite link or invite message works as well as the code itself (android InviteCodes).
-    const typed = checkInvite(code);
-    const c = extractInvite(code) ?? (typed.kind === "ok" ? typed.code : null);
+    const typed = checkInvite(raw);
+    const c = extractInvite(raw) ?? (typed.kind === "ok" ? typed.code : null);
     if (!c) return setError(typed.kind === "invalid" ? typed.reason : "Enter the invitation code you were given.");
     setCode(c);
     setBusy(true);
@@ -122,6 +123,16 @@ export function JoinWorkspaceDialog({ onClose, initialCode }: { onClose: () => v
       setBusy(false);
     }
   };
+
+  // Opened from an invitation link (application/pendingInvite.ts): straight to the community's preview.
+  const opened = useRef(false);
+  useEffect(() => {
+    if (opened.current || !initialCode) return;
+    opened.current = true;
+    void check(undefined, initialCode);
+    // Once, for the code it opened with.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialCode]);
 
   const join = async () => {
     setBusy(true);
@@ -164,9 +175,11 @@ export function JoinWorkspaceDialog({ onClose, initialCode }: { onClose: () => v
           </form>
         ) : (
           <div style={{ display: "grid", gap: 14 }}>
-            <div className="card" style={{ padding: 16, display: "grid", gap: 4 }}>
+            <div className="card invite-preview" style={{ padding: 16, display: "grid", gap: 4 }}>
+              <OrgAvatar orgId={preview.org.id} name={preview.org.name} photoRev={null} size={56} />
               <strong style={{ fontSize: 17 }}>{preview.org.name}</strong>
               {preview.org.description && <span className="muted">{preview.org.description}</span>}
+              {preview.org.memberCount !== undefined && <span className="faint">{preview.org.memberCount === 1 ? "1 member" : `${preview.org.memberCount} members`}</span>}
               <span className="faint" style={{ fontSize: 13 }}>
                 You'll join as {roleName(preview.role).toLowerCase()}
                 {preview.branch ? ` in ${preview.branch.name}` : ""}
@@ -174,11 +187,13 @@ export function JoinWorkspaceDialog({ onClose, initialCode }: { onClose: () => v
               </span>
             </div>
             {preview.alreadyMember && <div className="banner info">You're already a member of this {noun}.</div>}
+            {!preview.alreadyMember && preview.banned && <div className="banner danger">You've been banned from this {noun}, so you can't join it.</div>}
+            {!preview.alreadyMember && !preview.banned && preview.invitesPaused && <div className="banner warn">This {noun} has paused new members for now. Try again later.</div>}
             <div className="row" style={{ justifyContent: "flex-end", gap: 8 }}>
               <button type="button" className="btn btn-secondary" onClick={() => setPreview(null)}>
                 Back
               </button>
-              <button className="btn btn-primary" disabled={busy} onClick={() => void join()}>
+              <button className="btn btn-primary" disabled={busy || (!preview.alreadyMember && (preview.banned || preview.invitesPaused))} onClick={() => void join()}>
                 {busy ? "Joining…" : preview.alreadyMember ? `Open ${noun}` : `Join ${noun}`}
               </button>
             </div>

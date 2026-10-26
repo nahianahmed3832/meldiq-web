@@ -1,3 +1,6 @@
+import { LiveCallBadge } from "../components/LiveCallBadge";
+import { isHighlighted, unreadLabel, unreadMarker } from "../unread";
+import { UnreadBadge } from "../components/UnreadBadge";
 import {
   Archive,
   ArchiveRestore,
@@ -101,8 +104,10 @@ export const ConversationRow = memo(function ConversationRow({ id, twoLine, hide
     ) : (
       <UserAvatar userId={peerId ?? ""} name={title} colorIndex={peerColor} photoRev={peerPhoto} size={twoLine ? 36 : 22} online={online} presence={presence} decorative />
     );
-  const label = `${c.type === "CHANNEL" ? "Channel " : ""}${title}${unread ? `, ${unread} unread` : ""}${mentions ? `, ${mentions} mentions` : ""}${muted ? ", muted" : ""}`;
-  const count = unread > 0 && <span className={`count${!muted && (mentions > 0 || c.type !== "CHANNEL") ? " accent" : ""}`}>{mentions > 0 ? `@${mentions}` : unread}</span>;
+  const marker = unreadMarker(unread, mentions, muted, c.type !== "CHANNEL");
+  const label = `${c.type === "CHANNEL" ? "Channel " : ""}${title}${unreadLabel(unread, mentions, muted, { unread: (n) => `${n} unread`, mentions: (n) => `${n} mentions`, muted: "muted" })}`;
+  const count = <UnreadBadge marker={marker} />;
+  const highlight = isHighlighted(marker) ? " unread" : "";
   const href = `/${section}/c/${encodeURIComponent(id)}`;
   const openMenu = (e: MouseEvent<HTMLElement>) => {
     e.preventDefault();
@@ -115,7 +120,7 @@ export const ConversationRow = memo(function ConversationRow({ id, twoLine, hide
     </button>
   );
   const body = twoLine ? (
-    <a className={`side-item two-line${unread ? " unread" : ""}${muted ? " muted" : ""}`} href={href} aria-current={current ? "page" : undefined} aria-label={label} onContextMenu={openMenu}>
+    <a className={`side-item two-line${highlight}${muted ? " muted" : ""}`} href={href} aria-current={current ? "page" : undefined} aria-label={label} onContextMenu={openMenu}>
       <span className="glyph" style={{ width: 36 }}>
         {glyph}
       </span>
@@ -136,17 +141,19 @@ export const ConversationRow = memo(function ConversationRow({ id, twoLine, hide
                     ? members(c.memberCount)
                     : t("row_no_messages")}
           </small>
+          <LiveCallBadge conversationId={id} />
           {muted && <BellOff size={12} className="faint" aria-hidden="true" />}
           {count}
         </span>
       </span>
     </a>
   ) : (
-    <a className={`side-item${unread ? " unread" : ""}${muted ? " muted" : ""}`} href={href} aria-current={current ? "page" : undefined} aria-label={label} onContextMenu={openMenu}>
+    <a className={`side-item${highlight}${muted ? " muted" : ""}`} href={href} aria-current={current ? "page" : undefined} aria-label={label} onContextMenu={openMenu}>
       <span className="glyph">{glyph}</span>
       <span className="grow ellipsis">{title}</span>
       {local?.draft && !current ? <span className="draft">{t("row_draft")}</span> : null}
       {c.type === "GROUP" && <UsersRound size={13} className="faint" aria-hidden="true" />}
+      <LiveCallBadge conversationId={id} />
       {muted && <BellOff size={12} className="faint" aria-hidden="true" />}
       {count}
     </a>

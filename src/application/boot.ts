@@ -8,6 +8,7 @@ import type { SessionGrant } from "../api/schemas";
 import type { DeviceRecord } from "../model/types";
 import { getPrefs } from "./prefs";
 import { refreshPush, startServiceWorker, systemNotify } from "./webPush";
+import { armChimeOnInteraction, playChime } from "./messageChime";
 
 /**
  * What this browser needs: a secure context, WebCrypto with Ed25519 and X25519 (natively, or the fallback that main.tsx
@@ -38,11 +39,16 @@ const allowed = (): boolean => getPrefs().notifications && typeof Notification !
 const lookedAt = (): boolean => document.visibilityState === "visible" && document.hasFocus();
 const room = (id: string | null): string | null => (id ? `/home/c/${encodeURIComponent(id)}` : null);
 
-/** System notifications for messages that arrive while this tab isn't looked at (src/application/webPush.ts shows them). */
+/**
+ * A message the notification pipeline let through (engine.notifyIncoming): a system notification while this tab isn't
+ * looked at (src/application/webPush.ts shows it), and otherwise the in-app chime. Never both: a system notification
+ * with sound already makes one.
+ */
 function notify(title: string, body: string, conversationId: string): void {
-  if (!allowed() || lookedAt()) return;
   const p = getPrefs();
-  systemNotify({ title: p.notificationText ? title : "Meldiq", body: p.notificationText ? body : "New message", tag: conversationId, href: room(conversationId), silent: !p.messageSound });
+  const system = allowed() && !lookedAt();
+  if (system) systemNotify({ title: p.notificationText ? title : "Meldiq", body: p.notificationText ? body : "New message", tag: conversationId, href: room(conversationId), silent: !p.messageSound });
+  if (p.inAppSound && !(system && p.messageSound)) playChime(p.soundVolume);
 }
 
 /** A reminder that went off (Later): a system notification (when allowed) that opens Later or the saved message. */
@@ -80,6 +86,8 @@ function ringAlert(title: string, video: boolean, conversationId: string): void 
 }
 
 export function createEngine(device: DeviceRecord, store: LocalStore): Engine {
+  // Sound is prepared on the person's first click or key press here, as browsers require; never at load.
+  armChimeOnInteraction();
   const engine = new Engine(device, store, {
     base: apiBase(),
     wsUrl: wsUrl(),

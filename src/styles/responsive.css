@@ -91,7 +91,7 @@
     height: 28px;
     flex-shrink: 0;
     border-radius: 7px;
-    background: url("/meldiq-mark-128.png") center / cover;
+    background: url("/meldiq-mascot-96.webp") center / cover;
   }
   .searchbox span,
   .searchbox .kbd,
@@ -210,4 +210,57 @@
   .code-box .code {
     font-size: 22px;
   }
+}
+
+/* Phones: the rail's communities, Create and Discover as a strip above the conversation list (Rail.tsx PhoneRail). */
+.phone-rail {
+  display: none;
+}
+@media (max-width: 640px) {
+  .phone-rail {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px 6px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    scroll-snap-type: x proximity;
+  }
+  .phone-rail > * {
+    scroll-snap-align: start;
+    flex-shrink: 0;
+  }
+  .phone-rail .rail-round {
+    margin-top: 0;
+    width: 44px;
+    height: 44px;
+    color: var(--accent-2);
+    background: var(--surface-sunken);
+    border-color: var(--border);
+  }
+  .phone-rail .rail-org::before {
+    display: none;
+  }
+  .phone-rail .rail-org[aria-current="true"] .avatar {
+    box-shadow:
+      0 0 0 2px var(--sidebar),
+      0 0 0 4px var(--accent-2);
+  }
+  .phone-rail .rail-org.unread:not([aria-current="true"]) .avatar {
+    box-shadow:
+      0 0 0 2px var(--sidebar),
+      0 0 0 4px var(--unread-mark);
+  }
+  .phone-rail .rail-org .count {
+    box-shadow: 0 0 0 2px var(--sidebar);
+  }
+  /* Unread markers sit inside the row on phones, not on the screen's edge. */
+  .side-item.unread:not([aria-current="page"])::before {
+    left: 2px;
+  }
+}
+.tab-mascot {
+  width: 24px;
+  height: 24px;
+  border-radius: 7px;
 }

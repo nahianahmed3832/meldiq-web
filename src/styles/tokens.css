@@ -155,6 +155,15 @@
     --info: light-dark(#2563c7, #8ab8ff);
     --info-soft: light-dark(#e6effc, #182640);
 
+    /* Unread and mentions (community-first brief §C): light marks on dark, dark on light, never the error red. */
+    --unread-text: var(--text);
+    --unread-mark: light-dark(#16172b, #ffffff);
+    --unread-badge: light-dark(#16172b, #f4f6ff);
+    --on-unread-badge: light-dark(#ffffff, #0b1024);
+    --mention-badge: var(--badge);
+    --on-mention-badge: var(--on-badge);
+    --on-brand: #ffffff;
+
     /* Presence and connection */
     --presence-on: light-dark(#1fa463, #4ad991);
     --presence-off: light-dark(#a3a5b8, #5d5f75);
@@ -225,6 +234,9 @@
     --sticker-confetti: conic-gradient(from 0deg, #f59e0b 0 20%, #10b981 0 40%, #3b82f6 0 60%, #ec4899 0 80%, currentColor 0);
 
     /* Palette previews (Appearance › Colour): each plate's frame, sidebar and accent, whatever plate is active. */
+    --swatch-meldiq-1: #0f1630;
+    --swatch-meldiq-2: #dde4f7;
+    --swatch-meldiq-3: #3a5bd9;
     --swatch-charcoal-1: #1e1f22;
     --swatch-charcoal-2: #dfe1e5;
     --swatch-charcoal-3: #4e5058;
@@ -258,6 +270,9 @@
     --rail-line: rgba(255, 255, 255, 0.12);
     --rail-input: rgba(255, 255, 255, 0.1);
     --rail-input-hover: rgba(255, 255, 255, 0.16);
+    --rail-glow: var(--rail-text-active);
+    --rail-round: rgba(255, 255, 255, 0.06);
+    --rail-round-icon: var(--rail-text);
 
     --sidebar: light-dark(#f4f3fd, #15142a);
     --sidebar-hover: light-dark(#eae8fb, #1f1e3a);
@@ -284,11 +299,10 @@
   }
 
   /*
-   * Charcoal (the default since 2026-10-23): neutral greys like Discord's, with no brand hue. The frame is charcoal in
+   * Charcoal (the default from 2026-10-23 until the community-first design): neutral greys like Discord's, with no brand hue. The frame is charcoal in
    * both themes; the accent is graphite (light) or near white (dark); unread counts are red so they still stand out.
-   * It also replaces the blue-tinted neutrals. Before a page's preferences apply there's no data-palette: charcoal too.
+   * It also replaces the blue-tinted neutrals.
    */
-  :root:not([data-palette]),
   :root[data-palette="charcoal"] {
     --bg: light-dark(#f2f3f5, #1e1f22);
     --surface: light-dark(#ffffff, #313338);
@@ -331,6 +345,66 @@
     --accent-start: #949ba4;
     --accent-end: #4e5058;
     --theme-color: #1e1f22;
+  }
+
+  /*
+   * Meldiq (the default, community-first design 2026-10-26): deep navy surfaces, the logo's cyan → blue → violet for
+   * selection, focus and actions, pink only for mentions of you, and white marks for unread. Before a page's preferences
+   * apply there's no data-palette: Meldiq too.
+   */
+  :root:not([data-palette]),
+  :root[data-palette="meldiq"] {
+    --bg: light-dark(#f4f6fb, #0b1020);
+    --surface: light-dark(#ffffff, #10172b);
+    --surface-raised: light-dark(#ffffff, #151d34);
+    --surface-sunken: light-dark(#eef1f8, #0c1326);
+    --surface-hover: light-dark(#f1f4fa, #18213b);
+    --surface-selected: light-dark(#e6eaf6, #1f2a4a);
+    --border: light-dark(#e1e6f0, #1f2944);
+    --border-strong: light-dark(#cdd4e4, #2c3858);
+    --hairline: light-dark(rgba(18, 25, 51, 0.07), rgba(200, 215, 255, 0.07));
+    --text: light-dark(#121933, #eef2ff);
+    --text-2: light-dark(#434c6b, #b4bddb);
+    --text-3: light-dark(#5f6887, #8a94b6);
+    --outline: light-dark(#8890ab, #6b7598);
+
+    --rail: light-dark(#0f1630, #070b18);
+    --rail-2: light-dark(#0b1126, #050812);
+    --rail-hover: rgba(255, 255, 255, 0.08);
+    --rail-active: rgba(255, 255, 255, 0.14);
+    --rail-text: light-dark(#b9c3e6, #9aa6cf);
+    --rail-text-active: #ffffff;
+    --rail-line: rgba(160, 190, 255, 0.14);
+    --rail-input: rgba(255, 255, 255, 0.08);
+    --rail-input-hover: rgba(255, 255, 255, 0.14);
+    --rail-glow: #5ee0f5;
+    --rail-round: rgba(94, 224, 245, 0.08);
+    --rail-round-icon: #5ee0f5;
+
+    --sidebar: light-dark(#f2f5fc, #0e152a);
+    --sidebar-hover: light-dark(#e7ecf8, #162039);
+    --sidebar-selected: light-dark(#dde4f7, #1d2a4d);
+    --sidebar-text: light-dark(#44507a, #aeb8da);
+
+    --accent: light-dark(#3a5bd9, #7aa2ff);
+    --accent-hover: light-dark(#2c48b8, #9ab8ff);
+    --accent-soft: light-dark(#e6ecfd, #1b2850);
+    --accent-text: light-dark(#2c48b8, #a9c2ff);
+    --on-accent: light-dark(#ffffff, #0a1230);
+    --accent-2: light-dark(#0e7fa0, #4fd9f2);
+
+    --mention-bg: light-dark(#fde7f3, #36183a);
+    --mention-text: light-dark(#a3135f, #ffc2e2);
+    --bubble-out: light-dark(#eaf0fe, #172245);
+    --badge: light-dark(#3a5bd9, #7aa2ff);
+    --on-badge: light-dark(#ffffff, #0a1230);
+    --mention-badge: light-dark(#c81e66, #ff5fa8);
+    --on-mention-badge: light-dark(#ffffff, #2a0517);
+    --rail-badge: #5ee0f5;
+    --on-rail-badge: #071a2e;
+    --accent-start: #22d3ee;
+    --accent-end: #8b5cf6;
+    --theme-color: #0b1126;
   }
 
   /* Plum: magenta and plum. */

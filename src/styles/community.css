@@ -387,3 +387,48 @@ img.custom-sticker {
   opacity: 0.5;
   cursor: not-allowed;
 }
+
+/* A live call on a row (community-first brief §E): green for voice and video, cyan while someone shares a screen. The
+   label says which; the icon and count are the glance. */
+.live-call {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  height: 18px;
+  padding: 0 6px;
+  border-radius: var(--r-pill);
+  flex-shrink: 0;
+  font-size: 11px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--presence-on);
+  background: color-mix(in srgb, var(--presence-on) 16%, transparent);
+}
+.live-call.sharing {
+  color: var(--accent-2);
+  background: color-mix(in srgb, var(--accent-2) 18%, transparent);
+}
+.voice-sharing {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  margin-left: auto;
+  padding: 0 5px;
+  border-radius: var(--r-pill);
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--accent-2);
+  background: color-mix(in srgb, var(--accent-2) 18%, transparent);
+  flex-shrink: 0;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .live-call {
+    animation: live-in var(--t-std) var(--ease-enter);
+  }
+}
+@keyframes live-in {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+}

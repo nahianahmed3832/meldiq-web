@@ -28,6 +28,9 @@ import { Rail } from "./Rail";
 import { Sidebar } from "./Sidebar";
 import { TabBar } from "./TabBar";
 import { TopBar } from "./TopBar";
+import { TabIndicators } from "./TabIndicators";
+import { AddMembersDialog } from "../workspace/AddMembersDialog";
+import { takePendingInvite } from "../../application/pendingInvite";
 import { accountSelection, rememberSelection } from "../../sync/workspaceSelection";
 
 const SettingsView = lazy(() => import("../settings/SettingsView").then((m) => ({ default: m.SettingsView })));
@@ -44,6 +47,7 @@ export type ShellDialog =
   | { kind: "discover" }
   | { kind: "connections" }
   | { kind: "requests" }
+  | { kind: "addMembers" }
   | null;
 
 /**
@@ -62,6 +66,7 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
   const [dialog, setDialog] = useState<ShellDialog>(null);
 
   const orgId = prefs.orgId && orgIds.includes(prefs.orgId) ? prefs.orgId : (orgIds[0] ?? null);
+  const orgName = useOrbit((s) => s.orgs.find((o) => o.id === orgId)?.name ?? "");
   useEffect(() => {
     if (orgId !== prefs.orgId && synced) setPrefs({ orgId });
   }, [orgId, prefs.orgId, synced]);
@@ -118,6 +123,13 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
     window.addEventListener(OPEN_PROFILE_EVENT, onOpen);
     return () => window.removeEventListener(OPEN_PROFILE_EVENT, onOpen);
   }, []);
+
+  // An invitation link opened in this tab (/join/<code>, kept through signing in): Join with its preview, once.
+  useEffect(() => {
+    if (!synced) return;
+    const code = takePendingInvite();
+    if (code) setDialog({ kind: "joinWorkspace", code });
+  }, [synced]);
 
   // An invite link clicked inside a chat opens Join with its code (batch B4b).
   useEffect(() => {
@@ -180,9 +192,9 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
 
   return (
     <div className="app">
-      <Rail orgId={orgId} section={section} />
+      <Rail orgId={orgId} section={section} onDialog={ctx.open} />
       <div className="workspace">
-        <TopBar onMenu={() => setDrawer((d) => !d)} onSearch={() => setDialog({ kind: "search" })} />
+        <TopBar onMenu={() => setDrawer((d) => !d)} onSearch={() => setDialog({ kind: "search" })} section={section} />
         <div className={`body${route.conversationId ? " has-conversation" : ""}${phoneList ? " phone-list" : " phone-main"}${settings ? " settings-mode" : ""}`}>
           {!settings && <Sidebar orgId={orgId} section={section} open={drawer} onDialog={ctx.open} />}
           {drawer && !settings && <div className="sidebar-scrim" onClick={() => setDrawer(false)} aria-hidden="true" />}
@@ -193,6 +205,7 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
       </div>
       <TabBar section={section} hidden={!!route.conversationId && !settings} />
       <Notices />
+      <TabIndicators />
       <ConnectionRequestWatcher />
       <CallLayer />
       {dialog?.kind === "search" && <SearchDialog orgId={orgId} onClose={() => setDialog(null)} />}
@@ -204,6 +217,7 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
       {dialog?.kind === "discover" && <DiscoverDialog onClose={() => setDialog(null)} />}
       {dialog?.kind === "connections" && <ConnectionsDialog onClose={() => setDialog(null)} />}
       {dialog?.kind === "requests" && <MessageRequestsDialog onClose={() => setDialog(null)} />}
+      {dialog?.kind === "addMembers" && orgId && <AddMembersDialog orgId={orgId} orgName={orgName} onClose={() => setDialog(null)} onAdded={() => undefined} />}
       {profile && <ProfileDialog key={profile.userId} userId={profile.userId} fallbackName={profile.name} onClose={() => setProfile(null)} />}
       {dialog?.kind === "joinWorkspace" && <JoinWorkspaceDialog initialCode={dialog.code} onClose={() => setDialog(null)} />}
     </div>

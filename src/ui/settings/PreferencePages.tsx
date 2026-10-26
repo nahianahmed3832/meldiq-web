@@ -17,16 +17,18 @@ import {
   TIME_FORMATS,
   UPLOAD_QUALITIES,
   usePrefs,
+  volumeOf,
 } from "../../application/prefs";
 import { bytes } from "../format";
 import { Toggle } from "../components/Toggle";
 import { IntroPages } from "../auth/IntroPages";
 import { BackgroundNotifications } from "./BackgroundNotifications";
+import { type ChimeState, chimeState, playChime, unlockChime } from "../../application/messageChime";
 import { type StringKey, useT } from "../../i18n";
 import { LanguagePicker } from "../components/LanguagePicker";
 
 const THEME_KEY = { system: "ap_system", light: "ap_light", dark: "ap_dark" } as const satisfies Record<Prefs["theme"], StringKey>;
-const PALETTE_KEY = { charcoal: "ap_charcoal", indigo: "ap_indigo", plum: "ap_plum", amber: "ap_amber" } as const satisfies Record<Palette, StringKey>;
+const PALETTE_KEY = { meldiq: "ap_meldiq", charcoal: "ap_charcoal", indigo: "ap_indigo", plum: "ap_plum", amber: "ap_amber" } as const satisfies Record<Palette, StringKey>;
 const SIZE_KEY = { small: "ap_small", default: "ap_default", large: "ap_large" } as const satisfies Record<TextSize, StringKey>;
 const QUALITY_KEY = { standard: "ap_standard", hd: "ap_hd", original: "ap_original" } as const satisfies Record<"standard" | "hd" | "original", StringKey>;
 
@@ -76,6 +78,7 @@ export function NotificationsPage() {
           </div>
           <Toggle label={t("nt_sound")} checked={prefs.messageSound} onChange={(v) => setPrefs({ messageSound: v })} />
         </div>
+        <InAppSoundSettings />
         <div className="setting">
           <div className="lines">
             <strong>{t("nt_ring")}</strong>
@@ -101,6 +104,51 @@ export function NotificationsPage() {
           <Toggle label={t("nt_typing")} checked={prefs.typing} onChange={(v) => setPrefs({ typing: v })} />
         </div>
       </div>
+    </>
+  );
+}
+
+/** The chime in this tab (application/messageChime.ts): on or off, its volume, and a test that also unlocks sound. */
+function InAppSoundSettings() {
+  const prefs = usePrefs();
+  const t = useT();
+  const [state, setState] = useState<ChimeState>(chimeState());
+  const test = async () => {
+    const now = await unlockChime();
+    setState(now);
+    if (now === "ready") playChime(Math.max(prefs.soundVolume, 1));
+  };
+  return (
+    <>
+      <div className="setting">
+        <div className="lines">
+          <strong>{t("nt_in_app")}</strong>
+          <small>{state === "unsupported" ? t("nt_in_app_unsupported") : state === "locked" && prefs.inAppSound ? t("nt_in_app_locked") : t("nt_in_app_sub")}</small>
+        </div>
+        <Toggle label={t("nt_in_app")} checked={prefs.inAppSound} disabled={state === "unsupported"} onChange={(v) => setPrefs({ inAppSound: v })} />
+      </div>
+      {prefs.inAppSound && state !== "unsupported" && (
+        <div className="setting">
+          <div className="lines">
+            <strong id="nt-volume-label">{t("nt_volume")}</strong>
+            <small>{t("nt_volume_value", { n: prefs.soundVolume })}</small>
+          </div>
+          <div className="row" style={{ gap: 10 }}>
+            <input
+              type="range"
+              min={0}
+              max={100}
+              step={5}
+              value={prefs.soundVolume}
+              aria-labelledby="nt-volume-label"
+              onChange={(e) => setPrefs({ soundVolume: volumeOf(Number(e.currentTarget.value)) })}
+            />
+            <button className="btn btn-secondary btn-sm" onClick={() => void test()}>
+              {t("nt_test_sound")}
+            </button>
+          </div>
+        </div>
+      )}
     </>
   );
 }

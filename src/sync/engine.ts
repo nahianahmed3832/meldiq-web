@@ -456,6 +456,7 @@ export class Engine implements EngineContext {
               endReason: null,
               voiceRoom: c.voice,
               hands: [],
+              sharing: [],
             };
         return {
           ...s,

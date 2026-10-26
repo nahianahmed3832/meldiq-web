@@ -81,7 +81,7 @@ test("a community installs an agent, assigns it to a channel and asks it from th
   // Its settings: a name of the community's own, and the channel.
   await expect(page.getByRole("heading", { name: "Product Video Editor", level: 3 })).toBeVisible();
   await page.getByLabel(/^Name/).fill("Reel Maker");
-  await page.getByRole("button", { name: "Save" }).click();
+  await page.getByRole("button", { name: "Save", exact: true }).click();
   await expect(page.getByText("Saved.")).toBeVisible();
   // The box follows the server's answer (it's checked once the assignment is saved).
   await page.getByRole("tab", { name: "4. Channels" }).click();

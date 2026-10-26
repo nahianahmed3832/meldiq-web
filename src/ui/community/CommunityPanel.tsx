@@ -1,4 +1,8 @@
-import { BellOff, ChevronDown, Eye, MoreHorizontal, Plus } from "lucide-react";
+import { isHighlighted, unreadLabel, unreadMarker } from "../unread";
+import { UnreadBadge } from "../components/UnreadBadge";
+import { BellOff, ChevronDown, Eye, MonitorUp, MoreHorizontal, Plus } from "lucide-react";
+import { LiveCallBadge } from "../components/LiveCallBadge";
+import { useT } from "../../i18n";
 import { memo, type MouseEvent, useEffect, useMemo, useState } from "react";
 import type { Category } from "../../api/communitySchemas";
 import type { Conversation } from "../../api/schemas";
@@ -23,7 +27,7 @@ import {
 import { placeOf } from "../../sync/navPrefs";
 import { UserAvatar } from "../components/OrgAvatar";
 import { Menu, type MenuEntry, useMenu } from "../components/Overlay";
-import { homeLayout, roomPeople } from "../selectors";
+import { homeLayout, liveCallOf, roomPeople } from "../selectors";
 import { useTickAt } from "./useTickAt";
 import { CategoryNameDialog, DeleteCategoryDialog, MuteForDialog } from "./CategoryDialogs";
 import { ChannelGlyph, CreateChannelDialog, DeleteChannelDialog, EditChannelDialog, MoveChannelDialog } from "./ChannelDialogs";
@@ -329,6 +333,8 @@ const ChannelItem = memo(function ChannelItem({
   const engine = useEngine();
   const m = useMenu();
   const people = useOrbit((s) => (ch.voice ? roomPeople(s, ch.id) : []), shallowEqual);
+  const sharing = useOrbit((s) => liveCallOf(s, ch.id)?.sharing ?? [], shallowEqual);
+  const t = useT();
   const users = useOrbit((s) => s.users);
   const [joining, setJoining] = useState(false);
   const open = (e: MouseEvent<HTMLElement>) => {
@@ -349,11 +355,12 @@ const ChannelItem = memo(function ChannelItem({
       setJoining(false);
     }
   };
-  const label = `${ch.voice ? "Voice channel" : "Channel"} ${ch.name}${ch.joined ? "" : ", not joined yet"}${ch.unread ? `, ${ch.unread} unread` : ""}${ch.mentions ? `, ${ch.mentions} mentions` : ""}${ch.muted ? ", muted" : ""}`;
+  const marker = unreadMarker(ch.unread, ch.mentions, ch.muted);
+  const label = `${ch.voice ? "Voice channel" : "Channel"} ${ch.name}${ch.joined ? "" : ", not joined yet"}${unreadLabel(ch.unread, ch.mentions, ch.muted, { unread: (n) => `${n} unread`, mentions: (n) => `${n} mentions`, muted: "muted" })}`;
   return (
     <div className="side-row">
       <a
-        className={`side-item channel-item${ch.unread && !ch.muted ? " unread" : ""}${ch.muted ? " muted" : ""}${ch.joined ? "" : " unjoined"}`}
+        className={`side-item channel-item${isHighlighted(marker) ? " unread" : ""}${ch.muted ? " muted" : ""}${ch.joined ? "" : " unjoined"}`}
         href={`/home/c/${encodeURIComponent(ch.id)}`}
         aria-current={current ? "page" : undefined}
         aria-label={label}
@@ -365,8 +372,9 @@ const ChannelItem = memo(function ChannelItem({
           <ChannelGlyph kind={ch.kind} voice={ch.voice} format={ch.format} />
         </span>
         <span className="grow ellipsis">{ch.name}</span>
+        {ch.liveCall && <LiveCallBadge conversationId={ch.id} />}
         {ch.muted && <BellOff size={12} className="faint" aria-hidden="true" />}
-        {ch.unread > 0 && <span className={`count${!ch.muted && ch.mentions > 0 ? " accent" : ""}`}>{ch.mentions > 0 ? `@${ch.mentions}` : ch.unread}</span>}
+        <UnreadBadge marker={marker} />
       </a>
       <button className="row-more" aria-label={`More for ${ch.name}`} aria-haspopup="menu" onClick={open}>
         <MoreHorizontal size={16} />
@@ -378,6 +386,11 @@ const ChannelItem = memo(function ChannelItem({
             <span key={u} className="voice-person">
               <UserAvatar userId={u} name={users[u]?.displayName ?? "Someone"} colorIndex={users[u]?.avatarColor ?? 0} photoRev={users[u]?.photoRev} size={18} decorative />
               <span className="ellipsis">{users[u]?.displayName ?? "Someone"}</span>
+              {sharing.includes(u) && (
+                <span className="voice-sharing">
+                  <MonitorUp size={11} aria-hidden="true" /> {t("live_sharing_short")}
+                </span>
+              )}
             </span>
           ))}
         </div>

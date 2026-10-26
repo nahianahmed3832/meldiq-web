@@ -45,8 +45,7 @@ a {
   color: var(--accent-text);
 }
 a.side-item,
-a.rail-nav,
-a.rail-logo,
+a.rail-home,
 a.msg-call,
 a.icon-btn {
   text-decoration: none;
@@ -286,6 +285,16 @@ a.icon-btn {
 .count.accent {
   background: var(--badge);
   color: var(--on-badge);
+}
+/* Two or more unread: a light badge on the dark palette (dark on light), never the error red. */
+.count.unread-count {
+  background: var(--unread-badge);
+  color: var(--on-unread-badge);
+}
+/* A mention of you: the palette's mention colour with its "@", apart from plain unread. */
+.count.mention-count {
+  background: var(--mention-badge);
+  color: var(--on-mention-badge);
 }
 .tag {
   display: inline-flex;

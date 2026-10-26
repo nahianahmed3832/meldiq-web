@@ -2301,3 +2301,62 @@ button.media-card {
   font: inherit;
   color: inherit;
 }
+
+/* Who reacted: the hover card above a reaction, and the Reactions dialog. */
+.reactor-card {
+  position: fixed;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: min(320px, calc(100vw - 16px));
+  padding: 8px 12px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--border);
+  background: var(--surface-raised);
+  color: var(--text-1);
+  font-size: 13px;
+  line-height: 1.35;
+  box-shadow: var(--shadow-lg);
+  pointer-events: none;
+  animation: reactor-in 120ms ease-out;
+}
+.reactor-card-emoji {
+  font-size: 22px;
+  line-height: 1;
+}
+@keyframes reactor-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .reactor-card {
+    animation: none;
+  }
+}
+.reactor-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 4px 16px 12px;
+}
+.reactor-tabs .reaction[aria-selected="true"] {
+  border-color: var(--accent);
+  color: var(--text-1);
+}
+.reactor-list {
+  list-style: none;
+  margin: 0;
+  padding: 0 8px 12px;
+  max-height: min(360px, 55vh);
+  overflow-y: auto;
+}
+.reactor-list li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 44px;
+  padding: 4px 8px;
+}
