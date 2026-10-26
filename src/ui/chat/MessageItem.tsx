@@ -28,7 +28,7 @@ import {
   Video,
 } from "lucide-react";
 import { memo, useState } from "react";
-import { CustomEmojiImage, ReactionEmoji, useExpressions } from "../community/CustomEmoji";
+import { CustomEmojiImage, useExpressions } from "../community/CustomEmoji";
 import { reactionName } from "../../sync/expressions";
 import { useEngine, useOrbit } from "../../application/orbit";
 import { PERSONAL } from "../../sync/navPrefs";
@@ -38,6 +38,7 @@ import { UserAvatar } from "../components/OrgAvatar";
 import { callLine } from "../../sync/callHistory";
 import { ForwardDialog } from "../dialogs/ForwardDialog";
 import { Dialog, Menu, type MenuEntry, useMenu } from "../components/Overlay";
+import { ReactionList, ReactionsDialog } from "./Reactions";
 import { useLongPress } from "./longPress";
 import { mergeHandlers, useMessageGestures } from "./gestures";
 import { clock, dayLabel, fullTime } from "../format";
@@ -98,6 +99,7 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
   const [translation, setTranslation] = useState<string | null>(null);
   const [reminding, setReminding] = useState(false);
   const [reporting, setReporting] = useState(false);
+  const [showReactions, setShowReactions] = useState(false);
   const reportable = useOrbit((st) => st.server?.features.includes("reports") ?? false);
   const inCommunity = useOrbit((st) => {
     const c = st.conversations[m.conversationId];
@@ -328,23 +330,7 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
           </div>
         )}
         {body()}
-        {reactions.length > 0 && (
-          <div className="reactions">
-            {reactions.map(([emoji, users]) => (
-              <button
-                key={emoji}
-                className="reaction"
-                aria-pressed={users.includes(p.myUserId)}
-                disabled={!p.canPost}
-                onClick={() => void engine.react(m, emoji)}
-                aria-label={`${emoji} ${users.length}, ${users.includes(p.myUserId) ? "remove your reaction" : "react"}`}
-              >
-                <span className="reaction-emoji">{reactionName(emoji) ? <ReactionEmoji name={reactionName(emoji)!} list={communityEmoji} /> : emoji}</span>
-                {users.length}
-              </button>
-            ))}
-          </div>
-        )}
+        <ReactionList message={m} myUserId={p.myUserId} canPost={p.canPost} communityEmoji={communityEmoji} />
         {p.threadCount > 0 && p.onThread && (
           <button className="thread-link" onClick={() => p.onThread?.(m)}>
             <MessagesSquare size={15} /> {p.threadCount} {p.threadCount === 1 ? "reply" : "replies"}
@@ -420,6 +406,7 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
           }}
           entries={[
             ...quickRow,
+            ...(reactions.length > 0 ? [{ label: t("react_dialog_title"), icon: <SmilePlus size={16} />, onSelect: () => setShowReactions(true) }] : []),
             ...(mine && p.canPost ? [{ label: t("msg_edit"), icon: <Pencil size={16} />, onSelect: () => setEditing(true) }] : []),
             ...(p.canPost ? [{ label: m.pinned ? t("msg_unpin") : t("msg_pin"), icon: m.pinned ? <PinOff size={16} /> : <Pin size={16} />, onSelect: () => void engine.setPinned(m, !m.pinned) }] : []),
             ...(live && savable
@@ -456,6 +443,7 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
           ]}
         />
       )}
+      {showReactions && <ReactionsDialog message={m} initial={null} myUserId={p.myUserId} communityEmoji={communityEmoji} onClose={() => setShowReactions(false)} />}
       {forwarding && <ForwardDialog message={m} onClose={() => setForwarding(false)} />}
       {reporting && conv && <ReportDialog target={{ kind: "message", message: m, conversationId: m.conversationId, conversationType: conv.type, orgName }} onClose={() => setReporting(false)} />}
       {info && <MessageInfoDialog m={m} onClose={() => setInfo(false)} />}
