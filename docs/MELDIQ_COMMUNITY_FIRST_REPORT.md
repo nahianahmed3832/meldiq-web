@@ -89,11 +89,13 @@ following `meldiq_android/docs/DEPLOYMENT.md` as for 0.41.0:
    - `compose.yaml` image 0.42.0, `validate-env.sh`, `up -d --no-deps --no-build api`, then `/healthz` shows 0.42.0.
    - Rollback: image `0.41.0-rollback`, `up -d --no-deps --no-build api`.
 2. **Web** from branch `community-first` in `/Volumes/code_files/meldiq_web`:
-   - `bash deploy/scripts/build-release.sh` → `release/meldiq-web-0.5.0-beta-<commit>.tar.gz` (+ `.sha256`);
+   - already built from `9e42f38`: `release/meldiq-web-0.5.0-beta-9e42f38.tar.gz`, SHA-256
+     `beb48b91af6731117e5bbcb1741ce34ea0eb5addfad4af315c05161244c0ced4` (typecheck, lint, 504 unit tests, build; secret scan
+     clean). To rebuild: `MELDIQ_CONTRACTS_DIR=<API branch checkout> bash deploy/scripts/build-release.sh`;
    - `scp release/meldiq-web-*.tar.gz* root@72.60.107.88:/root/`, `sha256sum -c` there;
    - `install-release.sh` with the same settings as 0.5.0-beta-0f42277 (DEPLOYMENT.md);
    - `bash verify.sh https://web.meldiq.app`.
-   - Rollback: `bash /root/meldiq-web-0.5.0-beta-<commit>/rollback.sh` (back to 0f42277).
+   - Rollback: `bash /root/meldiq-web-0.5.0-beta-9e42f38/rollback.sh` (back to 0f42277).
 3. **Smoke checks** (test accounts only): presence stays steady while sending, reaction hover, unread rule and clearing,
    title and favicon, Settings › Notifications sound test, Add members, an invite link through `/join/<code>`, a call's
    badge in a channel row.
