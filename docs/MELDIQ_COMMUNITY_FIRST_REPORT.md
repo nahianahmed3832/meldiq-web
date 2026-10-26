@@ -13,7 +13,7 @@ The brief: [`MELDIQ_COMMUNITY_FIRST_BRIEF.md`](MELDIQ_COMMUNITY_FIRST_BRIEF.md).
 An earlier copy of the web work based on `main` is on `community-first-redesign`, and of the server work based on 0.33.0 on
 `community-first-server`; both are superseded.
 
-## Shipped (in the branches; not deployed, see Production)
+## Shipped
 
 1. **Navigation (§G, §H, §3).** The mascot, cropped from the owner's app icon (`scripts/render-mascot-assets.mjs`), is the
    rail's Home and messages button with the unread DM count; DMs, Activity and Later left the rail. Activity (with the
@@ -74,31 +74,27 @@ Not tested: Firefox and WebKit browser projects, a physical phone, real push not
 
 ## Production
 
-**Not deployed.** Production still runs API 0.41.0 and web 0.5.0-beta-0f42277. The session's permission settings refused
-even a read-only SSH check of the VPS (`root@72.60.107.88`), so no backup, build or switch was attempted there.
+**Live since 2026-10-26 22:26 UTC: API 0.42.0 and Meldiq Web 0.5.0-beta-9e42f38** (owner's go-ahead in chat).
 
-To release, in this order (the API first: the current web works with 0.42.0, the new web needs 0.42.0 for Add members),
-following `meldiq_android/docs/DEPLOYMENT.md` as for 0.41.0:
+| Step | Result |
+|---|---|
+| Pre-flight | running API 0.41.0 (healthy, 2 days) and web 0f42277; VPS `server/` byte-equal to `internal-beta` a95fb82 outside tests (`rsync -c` dry run); 49 GB free |
+| Backup | `backups/pre-0.42.0-20261026T221714Z`: integrity ok, schema 55, 43 users, `.env` + `compose.yaml` copies; image tagged `0.41.0-rollback`; sources kept as `server.pre-0.42.0` |
+| Build | the 15 files of this release synced (dry run listed exactly them); `docker build -t griip-internal-messaging-api:0.42.0 server` (`build-0.42.0.log`, done, no errors) |
+| Rehearsal | snapshot copy, `--network none`, env without FCM lines: healthy, `/healthz` 0.42.0, schema 55 unchanged (no migration), integrity ok, 43 users; removed after |
+| Switch | `compose.yaml` image 0.42.0, `validate-env.sh` 0 errors (the 2 known warnings), `config -q`, `up -d --no-deps --no-build api`: healthy, 0 restarts |
+| Checks after (API) | `/healthz` 0.42.0 on msg.meldiq.app and msg.griipbuddy.cloud; `POST /v1/orgs/:id/members` answers "Authentication required"; deployment `verify.sh` clean; 0 errors in the log |
+| Web | release `0.5.0-beta-9e42f38` (`sha256sum -c` OK on the VPS) installed with the live settings (read back from the running config.json and CSP); `nginx -t` ok (the two known warnings); CSP and site file byte-identical; `verify.sh https://web.meldiq.app` all passed (API 0.42.0 through the site, realtime 101) |
+| Smoke | sign-in page serves the new bundle (Meldiq palette) with no console errors; mascot assets, `/join/<code>`, `/sw.js` served; web.griipbuddy.cloud 301; the invite page shows the new layout and a clear message for an unknown code |
+| Post backup | `backups/post-0.42.0-20261026T222757Z` verified (schema 55, 43 users) |
 
-1. **API 0.42.0** from branch `community-first-api` (4 commits on production's `internal-beta`):
-   - backup `bash deploy/scripts/backup.sh` → `backups/pre-0.42.0-…`, tag the running image `0.41.0-rollback`;
-   - sync the changed `server/` files (`git diff --stat a95fb82 community-first-api -- server`);
-   - `docker build -t griip-internal-messaging-api:0.42.0 server`;
-   - **no migration** (nothing new is stored), so no rehearsal is needed beyond starting the image;
-   - optional `.env`: `PRESENCE_SETTLE_MS` (default 4000), `PRESENCE_GRACE_MS` (default 10000);
-   - `compose.yaml` image 0.42.0, `validate-env.sh`, `up -d --no-deps --no-build api`, then `/healthz` shows 0.42.0.
-   - Rollback: image `0.41.0-rollback`, `up -d --no-deps --no-build api`.
-2. **Web** from branch `community-first` in `/Volumes/code_files/meldiq_web`:
-   - already built from `9e42f38`: `release/meldiq-web-0.5.0-beta-9e42f38.tar.gz`, SHA-256
-     `beb48b91af6731117e5bbcb1741ce34ea0eb5addfad4af315c05161244c0ced4` (typecheck, lint, 504 unit tests, build; secret scan
-     clean). To rebuild: `MELDIQ_CONTRACTS_DIR=<API branch checkout> bash deploy/scripts/build-release.sh`;
-   - `scp release/meldiq-web-*.tar.gz* root@72.60.107.88:/root/`, `sha256sum -c` there;
-   - `install-release.sh` with the same settings as 0.5.0-beta-0f42277 (DEPLOYMENT.md);
-   - `bash verify.sh https://web.meldiq.app`.
-   - Rollback: `bash /root/meldiq-web-0.5.0-beta-9e42f38/rollback.sh` (back to 0f42277).
-3. **Smoke checks** (test accounts only): presence stays steady while sending, reaction hover, unread rule and clearing,
-   title and favicon, Settings › Notifications sound test, Add members, an invite link through `/join/<code>`, a call's
-   badge in a channel row.
+**Not checked in production:** anything after signing in (presence while sending, reactions, unread, sound, Add members,
+a real invite, call badges). There's no production test account, and creating one or using a real person's account wasn't
+in scope. These were all checked against a local 0.42.0 server.
+
+Rollback, web first: `bash /root/meldiq-web-0.5.0-beta-9e42f38/rollback.sh` (back to 0f42277); then the API:
+`compose.yaml` image `griip-internal-messaging-api:0.41.0-rollback` and `docker compose -p griip-internal-messaging -f
+compose.yaml up -d --no-deps --no-build api` in `/opt/griip-internal-messaging` (no migration to undo).
 
 ## Mobile parity
 
@@ -114,8 +110,9 @@ following `meldiq_android/docs/DEPLOYMENT.md` as for 0.41.0:
 
 ## Remaining risks and follow-up
 
-- **Not deployed.** See Production: the session's permission settings refused reading the production server, so nothing
-  was released. Both branches are ready to release with the commands there.
+- **Signed-in production smoke tests** are still to do with a test account (see Production).
+- **Branches are local:** `community-first` (web) and `community-first-api` (API) aren't pushed or merged; production now
+  runs them, so merge them into `ai-workforce-web`/`main` and `internal-beta` before anyone releases from those.
 - **Channel read state across devices.** DMs and small groups sync read state through encrypted read receipts; channels
   don't (by design since before this work: `sendsReadReceipts` excludes channels), so reading a channel on the phone
   doesn't clear it on the web. Fixing it needs a self-only read control (or a server cursor) that Android also sends and
