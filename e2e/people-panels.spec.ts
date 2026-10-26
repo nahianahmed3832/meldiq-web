@@ -7,7 +7,7 @@ import { newPhone, testAddress } from "./phone";
 /**
  * Discord-like side panels and look (2026-10-23): the community's photo in the rail; a channel's member list beside the
  * messages (people by role while here, then offline) and a DM's profile, both open by default and hidden from the
- * header; the charcoal theme; and Discord-sized message toolbar and reactions. ORBIT_E2E_SHOTS=<folder> keeps screenshots.
+ * header; the Meldiq navy theme; and Discord-sized message toolbar and reactions. ORBIT_E2E_SHOTS=<folder> keeps screenshots.
  */
 // Desktop Chromium only: one engine is enough for these panels, and touch screens have no hover toolbar (a long press opens the menu).
 test.skip(({ browserName, isMobile }) => browserName !== "chromium" || isMobile, "desktop Chromium only");
@@ -48,9 +48,9 @@ test("community photos in the rail, a member list in channels and a profile in D
   await link(page, alice);
   await expect.poll(() => page.locator(".rail-org .avatar-photo").evaluateAll(loaded), { message: "the community's photo in the rail" }).toBe(true);
 
-  // The charcoal theme by default: a neutral grey frame, not the logo's indigo.
-  expect(await page.evaluate(() => document.documentElement.dataset.palette)).toBe("charcoal");
-  expect(await page.locator(".app").evaluate((el) => getComputedStyle(el).backgroundImage)).toContain("rgb(43, 45, 49)");
+  // The Meldiq navy theme by default (community-first design; charcoal and indigo stay available in Appearance).
+  expect(await page.evaluate(() => document.documentElement.dataset.palette)).toBe("meldiq");
+  expect(await page.locator(".app").evaluate((el) => getComputedStyle(el).backgroundImage)).toContain("rgb(15, 22, 48)");
 
   // A channel: the member list beside the messages, Staff first, then Online, then Offline.
   await page.goto(`/home/c/${channel.id}`);
