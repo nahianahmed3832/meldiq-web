@@ -821,7 +821,11 @@ export class Engine implements EngineContext {
       return cur.unread || cur.mentions ? { ...cur, unread: 0, mentions: 0 } : null;
     });
     const conv = this.state.get().conversations[id];
-    if (!conv || !sendsReadReceipts(conv.type, conv.memberCount, conv.canPost) || this.opts.prefs?.().readReceipts === false) return;
+    if (!conv) return;
+    const receipts = sendsReadReceipts(conv.type, conv.memberCount, conv.canPost) && this.opts.prefs?.().readReceipts !== false;
+    // Channels and large groups send no read receipts; there, only this person's own devices hear about it (below).
+    const selfOnly = !sendsReadReceipts(conv.type, conv.memberCount, conv.canPost);
+    if (!receipts && !selfOnly) return;
     const latest = await this.store.newestMessage(id, (m) => !m.outgoing && m.kind === "text");
     if (!latest) return;
     const upTo = latest.serverTs ?? latest.sortTs;
@@ -829,7 +833,22 @@ export class Engine implements EngineContext {
     if (Math.max(this.lastReadSent.get(id) ?? 0, l.readUpTo) >= upTo) return;
     this.lastReadSent.set(id, upTo);
     await this.locals.update(id, (cur) => ({ ...cur, readUpTo: Math.max(cur.readUpTo, upTo) }));
-    await this.enqueueControl(id, { type: "read", upTo });
+    if (receipts) return this.enqueueControl(id, { type: "read", upTo });
+    await this.syncReadToOwnDevices(id, upTo);
+  }
+
+  /**
+   * "Read up to here" for this person's other devices only (API 0.43.0, audience "self"), encrypted like everything
+   * else, so reading a channel here clears it in their other browsers and nobody else learns what was read. Best
+   * effort: not written to the outbox; the next read says it again.
+   */
+  private async syncReadToOwnDevices(conversationId: string, upTo: number): Promise<void> {
+    const o = { messageId: crypto.randomUUID(), conversationId, cls: "control" as const, payloadJson: encodePayload({ type: "read", upTo }), sentAt: Date.now() };
+    try {
+      await sealAndPost(this, o, false, "self");
+    } catch {
+      this.lastReadSent.delete(conversationId);
+    }
   }
 
   /** Marks a conversation read or unread on this browser only: no read receipt is sent either way (as on the phone). */
