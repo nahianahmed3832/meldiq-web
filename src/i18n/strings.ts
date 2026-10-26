@@ -293,6 +293,7 @@ export const STRINGS = {
   nav_home: ["Home", "主页", "হোম"],
   nav_dms: ["DMs", "私信", "মেসেজ"],
   nav_activity: ["Activity", "动态", "অ্যাক্টিভিটি"],
+  nav_messages: ["Messages", "消息", "মেসেজ"],
   nav_later: ["Later", "稍后", "পরে"],
   nav_settings: ["Settings", "设置", "সেটিংস"],
   live_voice: ["Voice call", "语音通话", "ভয়েস কল"],

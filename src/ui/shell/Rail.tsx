@@ -16,10 +16,7 @@ import type { ShellDialog } from "./Shell";
  * §G); their routes are unchanged.
  */
 export function Rail({ orgId, section, onDialog }: { orgId: string | null; section: Section; onDialog: (d: ShellDialog) => void }) {
-  const orgs = useOrbit(
-    (s) => s.orgs.map((o) => ({ id: o.id, name: o.name, photoRev: o.photoRev, ...orgActivity(s, o.id) })),
-    (a, b) => a.length === b.length && a.every((x, i) => shallowEqual(x, b[i])),
-  );
+  const orgs = useRailOrgs();
   // Unread DMs and people waiting for an answer to their connection request.
   const dms = useOrbit(unreadPeopleCount) + useIncomingRequestCount();
   const t = useT();
@@ -41,25 +38,7 @@ export function Rail({ orgId, section, onDialog }: { orgId: string | null; secti
           {orgs.map((o) => {
             // Direct messages belong to no community, so none is selected there (as on Discord).
             const selected = section !== "dms" && o.id === orgId;
-            const marker = unreadMarker(o.unread, o.mentions, false);
-            const label = `${o.name}${o.mentions ? `, ${t("rail_mentions", { n: o.mentions })}` : ""}${o.unread ? `, ${t("nav_unread", { n: o.unread })}` : ""}`;
-            return (
-              <button
-                key={o.id}
-                className={`rail-org${isHighlighted(marker) ? " unread" : ""}`}
-                aria-current={selected}
-                title={o.name}
-                aria-label={label}
-                onClick={() => {
-                  setPrefs({ orgId: o.id });
-                  // A community opens its own channels, from DMs too (it used to stay in DMs, under the community's name).
-                  navigate({ section: "home" });
-                }}
-              >
-                <OrgAvatar orgId={o.id} name={o.name} photoRev={o.photoRev} size={44} />
-                {!selected && <UnreadBadge marker={marker} />}
-              </button>
-            );
+            return <CommunityButton key={o.id} org={o} selected={selected} size={44} />;
           })}
         </div>
       )}
@@ -70,6 +49,60 @@ export function Rail({ orgId, section, onDialog }: { orgId: string | null; secti
         <Compass size={22} aria-hidden="true" />
       </button>
       <div className="rail-spacer" />
+    </nav>
+  );
+}
+
+type RailOrg = { id: string; name: string; photoRev: number | null; unread: number; mentions: number };
+
+/** The communities in rail order, with their rolled-up unread activity. */
+function useRailOrgs(): RailOrg[] {
+  return useOrbit(
+    (s) => s.orgs.map((o) => ({ id: o.id, name: o.name, photoRev: o.photoRev, ...orgActivity(s, o.id) })),
+    (a, b) => a.length === b.length && a.every((x, i) => shallowEqual(x, b[i])),
+  );
+}
+
+/** One community's icon: selects it and opens its channels (from DMs too); its side marker and badge say what's new. */
+function CommunityButton({ org: o, selected, size }: { org: RailOrg; selected: boolean; size: number }) {
+  const t = useT();
+  const marker = unreadMarker(o.unread, o.mentions, false);
+  const label = `${o.name}${o.mentions ? `, ${t("rail_mentions", { n: o.mentions })}` : ""}${o.unread ? `, ${t("nav_unread", { n: o.unread })}` : ""}`;
+  return (
+    <button
+      className={`rail-org${isHighlighted(marker) ? " unread" : ""}`}
+      aria-current={selected}
+      title={o.name}
+      aria-label={label}
+      onClick={() => {
+        setPrefs({ orgId: o.id });
+        navigate({ section: "home" });
+      }}
+    >
+      <OrgAvatar orgId={o.id} name={o.name} photoRev={o.photoRev} size={size} />
+      {!selected && <UnreadBadge marker={marker} />}
+    </button>
+  );
+}
+
+/**
+ * Phones have no rail (the tab bar takes its place): this strip at the top of the conversation list carries the same
+ * communities and the round Create and Discover, scrolling sideways when there are many.
+ */
+export function PhoneRail({ orgId, onDialog }: { orgId: string | null; onDialog: (d: ShellDialog) => void }) {
+  const orgs = useRailOrgs();
+  const t = useT();
+  return (
+    <nav className="phone-rail" aria-label={t("rail_communities")}>
+      {orgs.map((o) => (
+        <CommunityButton key={o.id} org={o} selected={o.id === orgId} size={44} />
+      ))}
+      <button className="rail-round" onClick={() => onDialog({ kind: "createWorkspace" })} aria-label={t("rail_create")} title={t("rail_create")}>
+        <Plus size={22} aria-hidden="true" />
+      </button>
+      <button className="rail-round" onClick={() => onDialog({ kind: "discover" })} aria-label={t("rail_discover")} title={t("rail_discover")}>
+        <Compass size={22} aria-hidden="true" />
+      </button>
     </nav>
   );
 }

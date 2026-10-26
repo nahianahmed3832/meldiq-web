@@ -1,9 +1,10 @@
-import { AtSign, House, MessagesSquare, Settings } from "lucide-react";
+import { AtSign, House, Settings } from "lucide-react";
 import { useOrbit } from "../../application/orbit";
 import { navigate, type Section } from "../../application/router";
 import { mentionCount, unreadPeopleCount } from "../selectors";
 import { useIncomingRequestCount } from "../people/connectionRequests";
 import { useT } from "../../i18n";
+import { capCount } from "../unread";
 
 /** Phones: the bottom tab bar (hidden inside a conversation, like the phone app). */
 export function TabBar({ section, hidden }: { section: Section; hidden: boolean }) {
@@ -13,7 +14,8 @@ export function TabBar({ section, hidden }: { section: Section; hidden: boolean 
   const t = useT();
   const tabs = [
     { key: "home" as const, label: t("nav_home"), icon: <House size={21} />, count: 0 },
-    { key: "dms" as const, label: t("nav_dms"), icon: <MessagesSquare size={21} />, count: dms },
+    // The mascot is the messages entry here too (community-first brief §G).
+    { key: "dms" as const, label: t("nav_messages"), icon: <img className="tab-mascot" src="/meldiq-mascot-96.webp" width={24} height={24} alt="" draggable={false} />, count: dms },
     { key: "activity" as const, label: t("nav_activity"), icon: <AtSign size={21} />, count: mentions },
     { key: "settings" as const, label: t("nav_settings"), icon: <Settings size={21} />, count: 0 },
   ];
@@ -23,7 +25,7 @@ export function TabBar({ section, hidden }: { section: Section; hidden: boolean 
         <button key={t.key} aria-current={section === t.key ? "page" : undefined} onClick={() => navigate({ section: t.key })}>
           {t.icon}
           {t.label}
-          {t.count > 0 && <span className="count accent">{t.count}</span>}
+          {t.count > 0 && <span className="count accent">{capCount(t.count)}</span>}
         </button>
       ))}
     </nav>

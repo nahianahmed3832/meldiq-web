@@ -26,10 +26,12 @@ export function DiscoverDialog({ onClose }: { onClose: () => void }) {
   const [next, setNext] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [open, setOpen] = useState<string | null>(null);
+  const [attempt, setAttempt] = useState(0);
 
   useEffect(() => {
     let live = true;
     setList(null);
+    setError(null);
     discover(engine, query)
       .then((p) => {
         if (!live) return;
@@ -40,7 +42,7 @@ export function DiscoverDialog({ onClose }: { onClose: () => void }) {
     return () => {
       live = false;
     };
-  }, [engine, query]);
+  }, [engine, query, attempt]);
 
   const more = async () => {
     if (next === null) return;
@@ -72,7 +74,10 @@ export function DiscoverDialog({ onClose }: { onClose: () => void }) {
         </form>
         {error && (
           <div className="banner danger" role="alert">
-            {error}
+            <span className="grow">{error}</span>
+            <button className="btn btn-secondary btn-sm" onClick={() => setAttempt((n) => n + 1)}>
+              Try again
+            </button>
           </div>
         )}
         {!list && !error && <span className="skeleton" style={{ height: 160 }} />}
