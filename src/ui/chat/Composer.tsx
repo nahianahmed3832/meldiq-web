@@ -1,4 +1,4 @@
-import { AtSign, BarChart3, Bot, FileUp, Lock, MapPin, Mic, Paperclip, Plus, SendHorizontal, UserRound, X } from "lucide-react";
+import { AtSign, BarChart3, FileUp, Lock, MapPin, Mic, Paperclip, Plus, SendHorizontal, UserRound, X } from "lucide-react";
 import { useExpressions } from "../community/CustomEmoji";
 import { forSending, refOf } from "../../sync/expressions";
 import type { CustomEmojiRef } from "../../protocol/payload";
@@ -39,18 +39,7 @@ interface ComposerProps {
   /** Files dropped on the conversation. */
   dropped: File[];
   onDroppedTaken: () => void;
-  /**
-   * AI Workforce: true when [text] asks an agent ("@Agent …", "/agent …"). It then opens the agent request (with its
-   * notice) instead of being sent as an encrypted message.
-   */
-  onAgentRequest?: (text: string) => boolean;
-  /** AI agents here that this person may ask: suggested after "@" and, as commands, after a leading "/". */
-  agents?: { id: string; displayName: string; roleTitle: string }[];
 }
-
-/** An agent's command: its name in lower case letters and digits ("General Assistant" → "/generalassistant"). */
-export const agentHandle = (name: string) => name.toLowerCase().replace(/[^a-z0-9]+/g, "");
-const AGENT_PREFIX = "agent:";
 
 export function Composer(props: ComposerProps) {
   const { conversation: c } = props;
@@ -64,7 +53,7 @@ export function Composer(props: ComposerProps) {
   const hasPhotos = files.some((f) => reencodable(f.type));
   const [busy, setBusy] = useState<string | null>(null);
   const [members, setMembers] = useState<Member[]>([]);
-  const [suggest, setSuggest] = useState<{ start: number; items: Member[]; index: number; command?: boolean } | null>(null);
+  const [suggest, setSuggest] = useState<{ start: number; items: Member[]; index: number } | null>(null);
   const input = useRef<HTMLTextAreaElement>(null);
   const fileInput = useRef<HTMLInputElement>(null);
   const emoji = useMenu();
@@ -148,19 +137,11 @@ export function Composer(props: ComposerProps) {
     }
     engine.setTyping(c.id, value.trim().length > 0);
     const caret = input.current?.selectionStart ?? value.length;
-    const agentItems = (props.agents ?? []).map((a) => ({ id: `${AGENT_PREFIX}${a.id}`, username: a.displayName, displayName: `${a.displayName} · AI agent`, avatarColor: 5 }) as Member);
-    // A leading "/": the agents' commands.
-    const command = /^\/([a-z0-9]*)$/i.exec(value.slice(0, caret));
-    if (command && agentItems.length) {
-      const items = agentItems.filter((m) => agentHandle(m.username).startsWith(command[1]!.toLowerCase())).slice(0, 8);
-      return setSuggest(items.length ? { start: 0, items, index: 0, command: true } : null);
-    }
     const q = c.type === "DM" ? null : activeMentionQuery(value, caret);
     if (!q) return setSuggest(null);
     const pool = [...members.filter((m) => m.id !== engine.device.userId)];
     const items = [
       ...(c.canMentionAll && "everyone".startsWith(q.query) ? [{ id: "everyone", username: "everyone", displayName: "Everyone in this conversation", avatarColor: 7 } as Member] : []),
-      ...agentItems.filter((m) => m.username.toLowerCase().startsWith(q.query) || agentHandle(m.username).startsWith(q.query)),
       ...pool.filter((m) => m.username.toLowerCase().startsWith(q.query) || m.displayName.toLowerCase().includes(q.query)),
     ].slice(0, 8);
     setSuggest(items.length ? { start: q.start, items, index: 0 } : null);
@@ -169,8 +150,7 @@ export function Composer(props: ComposerProps) {
   const pick = (m: Member) => {
     if (!suggest) return;
     const caret = input.current?.selectionStart ?? text.length;
-    // An agent's command, or a mention (an agent by its display name, as agents recognise it; a person by username).
-    const token = suggest.command ? `/${agentHandle(m.username)}` : `@${m.username}`;
+    const token = `@${m.username}`;
     const next = `${text.slice(0, suggest.start)}${token} ${text.slice(caret)}`;
     setText(next);
     setSuggest(null);
@@ -184,10 +164,6 @@ export function Composer(props: ComposerProps) {
   const send = async () => {
     const body = text.trim();
     if ((!body && !files.length) || busy) return;
-    if (!files.length && !props.threadRoot && props.onAgentRequest?.(body)) {
-      setText("");
-      return;
-    }
     clearTimeout(draftTimer.current); // before anything async: a pending draft save must not bring the text back
     const opts = { replyTo: props.replyTo?.id, threadRoot: props.threadRoot };
     // The box empties at once (the message shows as Sending), so whatever is typed while it encrypts and goes out
@@ -278,18 +254,12 @@ export function Composer(props: ComposerProps) {
     <div className="composer-wrap">
       <TransferList conversationId={c.id} />
       {suggest && (
-        <div className="suggest card" role="listbox" aria-label={suggest.command ? "Agent commands" : "People and agents to mention"}>
+        <div className="suggest card" role="listbox" aria-label="People to mention">
           {suggest.items.map((m, i) => (
             <button key={m.id} role="option" aria-selected={i === suggest.index} onMouseDown={(e) => e.preventDefault()} onClick={() => pick(m)}>
-              {m.id === "everyone" ? (
-                <AtSign size={18} />
-              ) : m.id.startsWith(AGENT_PREFIX) ? (
-                <Bot size={18} aria-hidden />
-              ) : (
-                <UserAvatar userId={m.id} name={m.displayName} colorIndex={m.avatarColor} photoRev={m.photoRev} size={24} decorative />
-              )}
+              {m.id === "everyone" ? <AtSign size={18} /> : <UserAvatar userId={m.id} name={m.displayName} colorIndex={m.avatarColor} photoRev={m.photoRev} size={24} decorative />}
               <span className="grow ellipsis">{m.displayName}</span>
-              <span className="faint">{m.id.startsWith(AGENT_PREFIX) ? (suggest.command ? `/${agentHandle(m.username)}` : "AI") : `@${m.username}`}</span>
+              <span className="faint">@{m.username}</span>
             </button>
           ))}
         </div>

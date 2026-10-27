@@ -119,9 +119,6 @@ export interface AppState {
   reminders: RemindersState;
   /** Bumped on each meeting.updated / meeting.soon frame (round 7 meetings): open lists reload. */
   meetingsRev: number;
-  /** AI Workforce: bumped when an agent posts in a channel (frame ai.posts) and when a job of yours changes (ai.job). */
-  aiPostsRev: Record<string, number>;
-  aiJobsRev: number;
   /** Communities opened in this session: their categories and every channel the person may see (joined or not). */
   communities: Record<string, CommunityData>;
   /** Bumped when join applications or reports change (server `org.applications`, `org.application`, `org.reports`). */
@@ -153,8 +150,6 @@ export const initialState: AppState = {
   callLog: [],
   reminders: NO_REMINDERS,
   meetingsRev: 0,
-  aiPostsRev: {},
-  aiJobsRev: 0,
   communities: {},
   moderationRev: 0,
   connectionsRev: 0,

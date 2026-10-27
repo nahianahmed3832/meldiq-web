@@ -19,27 +19,14 @@ export interface Recipients {
   devices: (RecipientDevice & { userId: string })[];
   /** Members whose identity key changed: nothing may be encrypted until each is accepted. */
   changed: string[];
-  /**
-   * AI agents reading the conversation (server AI_WORKFORCE_2_PLAN.md phase 5), certified like anyone's devices. Never in
-   * [devices]: the sender adds one only for messages and only when their person chose to share with it.
-   */
-  readers: (RecipientDevice & { readerId: string; installId: string; name: string })[];
 }
-
-/** This person's choice per reader in a conversation (null: not chosen yet, treated as keep). */
-const zReaderChoices = z.object({
-  readingEnabled: z.boolean(),
-  readers: z.array(z.object({ readerId: z.string(), installId: z.string(), name: z.string(), mode: z.enum(["channel", "direct"]), myChoice: z.enum(["share", "keep"]).nullable() }).passthrough()),
-});
-export type ReaderChoices = z.infer<typeof zReaderChoices>;
 
 const zUsersKeys = z.object({ users: z.array(zUserKeys) });
 const CACHE_MS = 60_000;
 
 export class Directory {
   private users = new Map<string, { keys: UserKeys; at: number }>();
-  private conversations = new Map<string, { userIds: string[]; readers: UserKeys[]; at: number }>();
-  private choices = new Map<string, { value: ReaderChoices; at: number }>();
+  private conversations = new Map<string, { userIds: string[]; at: number }>();
   private verified = new Set<string>();
 
   constructor(
@@ -56,46 +43,19 @@ export class Directory {
 
   invalidateConversation(conversationId: string): void {
     this.conversations.delete(conversationId);
-    this.choices.delete(conversationId);
-  }
-
-  /** This person's choice for each agent reading [conversationId] (cached a minute; refreshed when it changes). */
-  async readerChoices(conversationId: string, force = false): Promise<ReaderChoices> {
-    const cached = this.choices.get(conversationId);
-    if (!force && cached && Date.now() - cached.at < CACHE_MS) return cached.value;
-    const value = await this.api.json("GET", `/v1/conversations/${encodeURIComponent(conversationId)}/ai/readers`, zReaderChoices).catch(() => ({ readingEnabled: false, readers: [] }));
-    this.choices.set(conversationId, { value, at: Date.now() });
-    return value;
-  }
-
-  setReaderChoices(conversationId: string, value: ReaderChoices): void {
-    this.choices.set(conversationId, { value, at: Date.now() });
   }
 
   /** Every certified device of every member except this browser, refetched when [force] or older than a minute. */
   async recipients(conversationId: string, force = false): Promise<Recipients> {
     const cached = this.conversations.get(conversationId);
     let users: UserKeys[];
-    let readerKeys: UserKeys[];
     if (!force && cached && Date.now() - cached.at < CACHE_MS && cached.userIds.every((u) => this.users.has(u))) {
       users = cached.userIds.map((u) => this.users.get(u)!.keys);
-      readerKeys = cached.readers;
     } else {
-      // This app shows the notice and honours each member's choice, so it asks for readers too (they're kept apart:
-      // an agent's identity has a different device in each conversation, so it isn't cached as a person).
-      const all = (await this.api.json("GET", `/v1/conversations/${encodeURIComponent(conversationId)}/devices`, zUsersKeys, { headers: { "x-meldiq-ai-reader": "1" } })).users;
-      users = all.filter((u) => !u.agent);
-      readerKeys = all.filter((u) => u.agent);
+      users = (await this.api.json("GET", `/v1/conversations/${encodeURIComponent(conversationId)}/devices`, zUsersKeys)).users;
       const at = Date.now();
       for (const u of users) this.users.set(u.userId, { keys: u, at });
-      this.conversations.set(conversationId, { userIds: users.map((u) => u.userId), readers: readerKeys, at });
-    }
-    const readers: Recipients["readers"] = [];
-    for (const u of readerKeys) {
-      const key = await this.trustedKey(u);
-      if (key === null || !u.agent) continue; // an agent whose key changed is never shared with
-      for (const d of await this.certified(u.devices, key))
-        readers.push({ deviceId: d.id, encryptionKey: d.encryptionKey, readerId: u.agent.readerId, installId: u.agent.installId, name: u.agent.name });
+      this.conversations.set(conversationId, { userIds: users.map((u) => u.userId), at });
     }
     const devices: Recipients["devices"] = [];
     const changed: string[] = [];
@@ -107,7 +67,7 @@ export class Directory {
       }
       for (const d of await this.certified(u.devices, key)) if (d.id !== this.me.deviceId) devices.push({ deviceId: d.id, encryptionKey: d.encryptionKey, userId: u.userId });
     }
-    return { devices, changed, readers };
+    return { devices, changed };
   }
 
   /**

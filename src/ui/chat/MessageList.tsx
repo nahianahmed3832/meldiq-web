@@ -25,8 +25,8 @@ interface MessageListProps {
   onReview: (userId: string) => void;
   start?: ReactNode;
   /**
-   * Other things to show among the messages, in time order (AI agents' posts in a channel: server-stored, not
-   * end-to-end encrypted, and drawn by their own component). Main view only, never in a thread.
+   * Other things to show among the messages, in time order, each drawn by its own component. Main view only, never in a
+   * thread.
    */
   extras?: TimelineExtra[];
 }
