@@ -8,7 +8,7 @@ import type { Engine } from "../../sync/engine";
 import { userProfile } from "../../sync/account";
 import { presenceWords } from "../../sync/social";
 import { directory } from "../../sync/workspaces";
-import { toneOf } from "../components/Avatar";
+import { nameTone, toneOf } from "../components/Avatar";
 import { UserAvatar } from "../components/OrgAvatar";
 import { dmPeer, relative } from "../format";
 import { openProfile } from "../people/ProfileDialog";
@@ -108,7 +108,7 @@ export function MemberListPanel({ c, onClose }: { c: Conversation; onClose: () =
               {g.key === "online" ? t("people_online") : g.key === "offline" ? t("people_offline") : g.label} — {g.members.length}
             </h3>
             {g.members.map((m) => (
-              <MemberRow key={m.id} m={m} away={!isHere(m)} color={nameColor(roles.get(m.id))} />
+              <MemberRow key={m.id} m={m} away={!isHere(m)} color={nameColor(roles.get(m.id))} orgId={c.type === "CHANNEL" ? c.orgId : null} />
             ))}
           </section>
         ))}
@@ -117,13 +117,17 @@ export function MemberListPanel({ c, onClose }: { c: Conversation; onClose: () =
   );
 }
 
-function MemberRow({ m, away, color }: { m: Member; away: boolean; color: string | null }) {
+function MemberRow({ m, away, color, orgId }: { m: Member; away: boolean; color: string | null; orgId: string | null }) {
   const status = [m.statusEmoji, m.statusText].filter(Boolean).join(" ");
   return (
-    <button className={`member-row${away ? " away" : ""}`} onClick={() => openProfile(m.id, m.displayName)} aria-label={`${m.displayName}${away ? ", offline" : ""}: profile`}>
-      <UserAvatar userId={m.id} name={m.displayName} colorIndex={m.avatarColor} photoRev={m.photoRev} size={34} online={away ? null : true} presence={away ? null : m.presence} decorative />
+    <button
+      className={`member-row${away ? " away" : ""}`}
+      onClick={(e) => openProfile(m.id, m.displayName, { orgId, anchor: e.currentTarget })}
+      aria-label={`${m.displayName}${away ? ", offline" : ""}: profile`}
+    >
+      <UserAvatar userId={m.id} name={m.displayName} colorIndex={m.avatarColor} photoRev={m.photoRev} size={40} online={away ? null : true} presence={away ? null : m.presence} decorative />
       <span className="lines">
-        <span className="member-name ellipsis" style={color ? { color } : undefined}>
+        <span className={`member-name ellipsis${color ? "" : ` ${nameTone(m.avatarColor)}`}`} style={color ? { color } : undefined}>
           {m.displayName}
         </span>
         {status && <small className="ellipsis">{status}</small>}

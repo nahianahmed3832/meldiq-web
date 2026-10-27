@@ -11,7 +11,7 @@ import { RequestBar, RequestSentBanner } from "../people/RequestBar";
 import { ConnectionRequestBanner } from "../people/ConnectionRequestViews";
 import { useConnectionLists } from "../people/connectionRequests";
 import { VoiceRoomView } from "./VoiceRoomView";
-import { Archive, ArrowLeft, BellOff, ChevronRight, MonitorUp, Phone, Search, ShieldAlert, Video } from "lucide-react";
+import { Archive, ArrowLeft, BellOff, MonitorUp, Phone, Pin, Search, ShieldAlert, Video } from "lucide-react";
 import { useCallback, useMemo, useState } from "react";
 import { shallowEqual, useEngine, useOrbit } from "../../application/orbit";
 import { navigate, type Route } from "../../application/router";
@@ -22,7 +22,6 @@ import { conversationTitle, dmPeer, members, relative } from "../format";
 import type { ShellDialog } from "../shell/Shell";
 import { Composer, useFileDrop } from "./Composer";
 import { ConversationStart, MessageList } from "./MessageList";
-import { useOnlineCount } from "./useOnlineCount";
 import { PeopleToggle } from "./PeoplePanels";
 import { ChannelBell } from "./ChannelBell";
 import { useT } from "../../i18n";
@@ -62,7 +61,6 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
         }
       : null;
   }, shallowEqual);
-  const online = useOnlineCount(id, c?.type === "CHANNEL");
   const loaded = useOrbit((s) => s.messages[id]);
   const call = useOrbit((s) => s.calls[id]);
   const myCall = useOrbit((s) => (s.call.phase === "idle" || s.call.phase === "ended" ? null : s.call.conversationId));
@@ -113,31 +111,15 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
                 <h1>
                   {glyph}
                   <span className="ellipsis">{title}</span>
-                  {c.type === "CHANNEL" && <ChevronRight size={16} className="conv-title-chevron" aria-hidden />}
+                  {c.type === "CHANNEL" && c.topic && <span className="conv-topic ellipsis hide-sm">{c.topic}</span>}
                   {c.archived && (
                     <span className="tag">
                       <Archive size={11} /> Archived
                     </span>
                   )}
                 </h1>
-                <p className="ellipsis">
-                  {c.type === "CHANNEL" ? (
-                    <>
-                      {/* As on Android (B14b): who's online, with a green dot, or the member count; the topic too where there's room. */}
-                      {c.topic && <span className="hide-sm">{c.topic} · </span>}
-                      {online ? (
-                        <>
-                          <span className="online-dot" aria-hidden />
-                          {t("conv_online", { n: online })}
-                        </>
-                      ) : (
-                        members(c.memberCount)
-                      )}
-                    </>
-                  ) : (
-                    subtitle
-                  )}
-                </p>
+                {/* A channel's header is one line, its name and topic (the reference); people's and groups' have a second. */}
+                {c.type !== "CHANNEL" && <p className="ellipsis">{subtitle}</p>}
               </div>
             </>
           );
@@ -155,22 +137,23 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
         })()}
         {/* Calls in a workspace happen in its voice rooms; a text channel has none to start (android round 7). */}
         {c.type !== "CHANNEL" && !c.request && <CallButtons conversationId={id} canPost={c.canPost} archived={c.archived} serverCalling={calling} busy={myCall !== null} running={!!call} />}
+        {/* Android A7: a text channel's bell (mute for a while, the channel's level). */}
+        {c.type === "CHANNEL" && !c.voice && <ChannelBell c={c} />}
+        {/* The reference header: bell, pins, members, then a search box. */}
         {!c.voice && (
           <button
             className="icon-btn"
-            aria-pressed={route.panel === "search"}
-            onClick={() => navigate({ section: route.section, conversationId: id, panel: route.panel === "search" ? null : "search" })}
-            aria-label={route.panel === "search" ? t("conv_close_search") : t("conv_search")}
-            title={t("conv_search")}
+            aria-pressed={route.panel === "pinned"}
+            onClick={() => navigate({ section: route.section, conversationId: id, panel: route.panel === "pinned" ? null : "pinned" })}
+            aria-label={t("conv_pins")}
+            title={t("conv_pins")}
           >
-            <Search size={18} />
+            <Pin size={18} />
           </button>
         )}
-        {/* Android A7: a text channel's bell (mute for a while, the channel's level). */}
-        {c.type === "CHANNEL" && !c.voice && <ChannelBell c={c} />}
         <PeopleToggle c={c} route={route} />
-        {/* B14b: a channel's header is its name and search; pins, threads and security are in its details. */}
         {c.type !== "CHANNEL" && <ConversationMenu conversationId={id} route={route} />}
+        <HeaderSearch orgId={c.orgId ?? null} onSearch={() => onDialog({ kind: "search" })} />
       </header>
 
       {c.type === "CHANNEL" && c.orgId && (
@@ -338,5 +321,22 @@ function CallButtons({ conversationId, canPost, archived, serverCalling, busy, r
         <Video size={19} />
       </button>
     </span>
+  );
+}
+
+/**
+ * The header's search box (the reference's "Search MINECRAFT"): Meldiq's search for this community (conversations,
+ * people, and messages found on this device: the server can't read them). The same as ⌘K.
+ */
+function HeaderSearch({ orgId, onSearch }: { orgId: string | null; onSearch: () => void }) {
+  const t = useT();
+  const orgName = useOrbit((s) => (orgId ? (s.orgs.find((o) => o.id === orgId)?.name ?? null) : null));
+  const label = orgName ? t("conv_search_in", { name: orgName }) : t("search_short");
+  const mac = typeof navigator !== "undefined" && /Mac|iPhone|iPad/.test(navigator.platform);
+  return (
+    <button className="header-search" onClick={onSearch} aria-label={label} aria-keyshortcuts={mac ? "Meta+K" : "Control+K"}>
+      <span className="ellipsis">{label}</span>
+      <Search size={15} aria-hidden="true" />
+    </button>
   );
 }

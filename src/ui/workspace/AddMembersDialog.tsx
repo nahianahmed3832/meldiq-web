@@ -1,12 +1,12 @@
-import { Check, Search, UserPlus, X } from "lucide-react";
-import { type FormEvent, useState } from "react";
-import type { Member } from "../../api/schemas";
-import { useEngine, useOrbit } from "../../application/orbit";
+import { Check, Search } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { ApiError } from "../../api/client";
+import { shallowEqual, useEngine, useOrbit } from "../../application/orbit";
 import { searchPeople } from "../../sync/account";
-import { type AddOutcome, addMembers, MAX_ADD } from "../../sync/addMembers";
+import { type AddOutcome, addMembers } from "../../sync/addMembers";
 import { UserAvatar } from "../components/OrgAvatar";
 import { Dialog } from "../components/Overlay";
-import { ApiError } from "../../api/client";
+import { dmPeer } from "../format";
 import { QuickInvite } from "./InviteLink";
 
 interface AddMembersDialogProps {
@@ -16,156 +16,128 @@ interface AddMembersDialogProps {
   onAdded: () => void;
 }
 
+interface Person {
+  id: string;
+  displayName: string;
+  username: string;
+  avatarColor: number;
+  photoRev?: number | null;
+}
+
+/** Waits this long after typing stops before searching. */
+const SEARCH_DELAY_MS = 300;
+const MIN_QUERY = 2;
+
 /**
- * Invite people (community-first brief §F, the reference's "Invite friends to …"): find people, pick up to twenty, add
- * them; or make an invitation link with an expiry and a use limit, and copy or share it. The server decides who can be
- * added directly (people you know who'd accept a message from you); anyone else gets the link instead. Search shows only
+ * Invite friends (community-first brief §F, the reference's "Invite friends to …"): the people you message, or anyone
+ * found as you type, each with its own Invite; then an invitation link to send yourself. The server decides who can be
+ * added directly (people you know who'd accept a message from you); anyone else is pointed at the link. Search shows only
  * who the server's privacy rules let you find.
  */
 export function AddMembersDialog({ orgId, orgName, onClose, onAdded }: AddMembersDialogProps) {
   const engine = useEngine();
   const me = useOrbit((s) => s.me?.userId ?? "");
+  const conversations = useOrbit((s) => s.conversations, shallowEqual);
+  const users = useOrbit((s) => s.users);
   const [q, setQ] = useState("");
-  const [found, setFound] = useState<Member[] | null>(null);
-  const [picked, setPicked] = useState<Member[]>([]);
-  const [results, setResults] = useState<Record<string, AddOutcome> | null>(null);
-  const [busy, setBusy] = useState(false);
+  const [found, setFound] = useState<Person[] | null>(null);
+  const [searching, setSearching] = useState(false);
+  const [outcomes, setOutcomes] = useState<Record<string, AddOutcome | "adding">>({});
   const [error, setError] = useState<string | null>(null);
 
-  const search = async (e: FormEvent) => {
-    e.preventDefault();
-    setError(null);
-    setBusy(true);
-    try {
-      setFound((await searchPeople(engine, q)).filter((m) => m.id !== me));
-    } catch (err) {
-      setError(errorText(err, "Couldn't search right now."));
-    } finally {
-      setBusy(false);
+  // The people you message, most recent first: the reference's list before anything is typed.
+  const contacts = useMemo(() => {
+    const seen = new Set<string>();
+    return Object.values(conversations)
+      .filter((c) => c.type === "DM")
+      .sort((a, b) => b.updatedAt - a.updatedAt)
+      .map((c) => dmPeer(c, me))
+      .filter((p): p is NonNullable<typeof p> => !!p && !seen.has(p.id) && !!seen.add(p.id))
+      .map((p) => ({ ...p, displayName: users[p.id]?.displayName ?? p.displayName, photoRev: users[p.id]?.photoRev ?? null }));
+  }, [conversations, users, me]);
+
+  const term = q.trim();
+  useEffect(() => {
+    if (term.length < MIN_QUERY) {
+      setFound(null);
+      return;
     }
-  };
-  const toggle = (m: Member) => setPicked((p) => (p.some((x) => x.id === m.id) ? p.filter((x) => x.id !== m.id) : p.length >= MAX_ADD ? p : [...p, m]));
-  const add = async () => {
+    let alive = true;
+    setSearching(true);
+    const timer = setTimeout(() => {
+      searchPeople(engine, term)
+        .then((r) => alive && setFound(r.filter((m) => m.id !== me)))
+        .catch((e: unknown) => alive && setError(errorText(e, "Couldn't search right now.")))
+        .finally(() => alive && setSearching(false));
+    }, SEARCH_DELAY_MS);
+    return () => {
+      alive = false;
+      clearTimeout(timer);
+    };
+  }, [engine, term, me]);
+
+  const invite = async (p: Person) => {
     setError(null);
-    setBusy(true);
+    setOutcomes((o) => ({ ...o, [p.id]: "adding" }));
     try {
-      const r = await addMembers(
-        engine,
-        orgId,
-        picked.map((m) => m.id),
-      );
-      setResults(Object.fromEntries(r.map((x) => [x.userId, x.outcome])));
-      if (r.some((x) => x.outcome === "added")) onAdded();
-    } catch (err) {
-      setError(errorText(err, "Couldn't add them. Try again."));
-    } finally {
-      setBusy(false);
+      const outcome = (await addMembers(engine, orgId, [p.id]))[0]?.outcome ?? "not_available";
+      setOutcomes((o) => ({ ...o, [p.id]: outcome }));
+      if (outcome === "added") onAdded();
+    } catch (e) {
+      setOutcomes(({ [p.id]: _, ...rest }) => rest);
+      setError(errorText(e, `Couldn't add ${p.displayName}. Try again.`));
     }
   };
 
-  const refused = results ? picked.filter((m) => results[m.id] === "not_available") : [];
+  const list = found ?? contacts;
   return (
-    <Dialog
-      title={`Invite people to ${orgName}`}
-      onClose={onClose}
-      footer={
-        results ? (
-          <div className="row" style={{ justifyContent: "flex-end", gap: 8 }}>
-            <button className="btn btn-primary" onClick={onClose}>
-              Done
-            </button>
-          </div>
-        ) : (
-          <div className="row" style={{ justifyContent: "flex-end", gap: 8 }}>
-            <button className="btn btn-secondary" onClick={onClose}>
-              Cancel
-            </button>
-            <button className="btn btn-primary" disabled={busy || picked.length === 0} onClick={() => void add()}>
-              <UserPlus size={16} /> {busy ? "Adding…" : picked.length > 1 ? `Add ${picked.length} people` : "Add"}
-            </button>
-          </div>
-        )
-      }
-    >
-      <div className="dialog-body" style={{ display: "grid", gap: 12 }}>
+    <Dialog title={`Invite friends to ${orgName}`} onClose={onClose} className="invite-dialog">
+      <div className="dialog-body">
+        <label className="search-input invite-search">
+          <Search size={16} className="faint" aria-hidden="true" />
+          <input data-autofocus type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search for friends" aria-label="Search for friends" />
+        </label>
         {error && (
           <div className="banner danger" role="alert">
             {error}
           </div>
         )}
-        {results ? (
-          <ul className="ws-list" aria-label="Results">
-            {picked.map((m) => (
-              <li key={m.id} className="row" style={{ gap: 10 }}>
-                <UserAvatar userId={m.id} name={m.displayName} colorIndex={m.avatarColor} photoRev={m.photoRev} size={32} decorative />
-                <span className="grow ellipsis">{m.displayName}</span>
-                <span className={results[m.id] === "added" ? "tag ok" : "faint"}>{OUTCOME_TEXT[results[m.id] ?? "not_available"]}</span>
-              </li>
-            ))}
-            {refused.length > 0 && (
-              <li className="invite-or">
-                <p className="muted">For anyone who can't be added directly, send an invitation link:</p>
-                <QuickInvite orgId={orgId} />
-              </li>
-            )}
-          </ul>
-        ) : (
-          <>
-            <p className="muted" style={{ margin: 0 }}>
-              You can add people you know who accept messages from you. Others get an invite link instead.
-            </p>
-            <form className="row input" style={{ padding: "0 12px" }} onSubmit={(e) => void search(e)}>
-              <Search size={16} className="faint" aria-hidden="true" />
-              <input
-                data-autofocus
-                value={q}
-                onChange={(e) => setQ(e.target.value)}
-                placeholder="Name or @username"
-                aria-label="Search people to add"
-                style={{ border: 0, outline: "none", background: "transparent", flex: 1, padding: "10px 0" }}
-              />
-              <button className="btn btn-secondary btn-sm" disabled={busy || !q.trim()}>
-                Search
-              </button>
-            </form>
-            {picked.length > 0 && (
-              <div className="row" style={{ flexWrap: "wrap", gap: 6 }} aria-label="Chosen">
-                {picked.map((m) => (
-                  <button key={m.id} className="chip" onClick={() => toggle(m)} aria-label={`Remove ${m.displayName}`}>
-                    {m.displayName} <X size={12} aria-hidden="true" />
-                  </button>
-                ))}
-              </div>
-            )}
-            {found !== null && found.length === 0 && <p className="faint">No one found. Try their exact @username.</p>}
-            {found && found.length > 0 && (
-              <ul className="ws-list" aria-label="People found" aria-busy={busy}>
-                {found.map((m) => {
-                  const on = picked.some((x) => x.id === m.id);
-                  return (
-                    <li key={m.id}>
-                      <button className="row add-person" aria-pressed={on} onClick={() => toggle(m)} disabled={!on && picked.length >= MAX_ADD}>
-                        <UserAvatar userId={m.id} name={m.displayName} colorIndex={m.avatarColor} photoRev={m.photoRev} size={32} decorative />
-                        <span className="grow ellipsis" style={{ textAlign: "start" }}>
-                          {m.displayName} <span className="faint">@{m.username}</span>
-                        </span>
-                        {on && <Check size={16} aria-hidden="true" />}
-                      </button>
-                    </li>
-                  );
-                })}
-              </ul>
-            )}
-            <div className="invite-or" role="group" aria-labelledby="invite-or-title">
-              <h3 id="invite-or-title" className="invite-or-title">
-                Or send an invitation link
-              </h3>
-              <QuickInvite orgId={orgId} />
-            </div>
-          </>
-        )}
+        <ul className="invite-people" aria-label={found ? "People found" : "People you message"} aria-busy={searching}>
+          {list.map((p) => (
+            <InviteRow key={p.id} person={p} outcome={outcomes[p.id]} onInvite={() => void invite(p)} />
+          ))}
+          {list.length === 0 && <li className="faint invite-empty">{found ? "No one found. Try their exact @username." : searching ? "Searching…" : "Search by name or @username."}</li>}
+        </ul>
+        <div className="invite-or" role="group" aria-labelledby="invite-or-title">
+          <h3 id="invite-or-title" className="invite-or-title">
+            Or, send a community invite link to a friend
+          </h3>
+          <QuickInvite orgId={orgId} />
+        </div>
       </div>
     </Dialog>
+  );
+}
+
+function InviteRow({ person: p, outcome, onInvite }: { person: Person; outcome: AddOutcome | "adding" | undefined; onInvite: () => void }) {
+  return (
+    <li className="invite-person">
+      <UserAvatar userId={p.id} name={p.displayName} colorIndex={p.avatarColor} photoRev={p.photoRev ?? null} size={36} decorative />
+      <span className="lines grow">
+        <strong className="ellipsis">{p.displayName}</strong>
+        <small className="ellipsis">@{p.username}</small>
+      </span>
+      {outcome === undefined || outcome === "adding" ? (
+        <button className="btn btn-secondary btn-sm" disabled={outcome === "adding"} onClick={onInvite} aria-label={`Invite ${p.displayName}`}>
+          {outcome === "adding" ? "Adding…" : "Invite"}
+        </button>
+      ) : (
+        <span className={outcome === "added" ? "tag ok" : "faint invite-outcome"} role="status">
+          {outcome === "added" && <Check size={12} aria-hidden="true" />}
+          {OUTCOME_TEXT[outcome]}
+        </span>
+      )}
+    </li>
   );
 }
 
@@ -174,5 +146,5 @@ const errorText = (e: unknown, fallback: string) => (e instanceof ApiError ? e.m
 const OUTCOME_TEXT: Record<AddOutcome, string> = {
   added: "Added",
   already_member: "Already a member",
-  not_available: "Can't be added directly: send an invite",
+  not_available: "Send them the link below",
 };

@@ -63,8 +63,13 @@ stand-in for Discord's API), Firefox and WebKit, a physical phone.
 `viewports.spec` reloads the app about 50 times in one test. Late in the run, the page sometimes shows "Reconnecting…"
 and an "Authentication required" notice, and then a conversation's composer can be missing, which is what fails the test
 now and then. The **production code before this round (b653a6b) shows the same** against the same server, so this round
-didn't cause it. Not investigated further here: it needs its own look at how a browser's session is re-established
-after many quick reloads (real use rarely reloads like that).
+didn't cause it.
+
+**Cause (found afterwards, 2026-10-27):** every reload signs the browser in again (`/v1/auth/challenge` then
+`/v1/auth/login`; the session token lives only in memory), and those two routes have their own per-address limit of 30
+a minute, which the test's ~50 reloads a minute exceed; the test server's `RATE_LIMIT_PER_MINUTE` raises the general
+limit, not that one. The 429 leaves the page unauthenticated until the limit window passes. It's the abuse limit working
+as designed, not a production bug: a person would need to reload more than 30 times in a minute from one address.
 
 ## Production
 
@@ -113,5 +118,5 @@ four new tables are only added; nothing it reads changed), so nothing in the dat
 - **Signed-in production smoke tests** with a test account.
 - **Merge** `meldling` into `ai-workforce-web` and `meldling-api` into `internal-beta`: production now runs them.
 - **Community accents and banners** (brief §5): still no server field for either; not added, as in version 1.
-- **The reconnect-after-many-reloads issue** above.
+- ~~The reconnect-after-many-reloads issue~~: explained above (the sign-in rate limit), not a production bug.
 - Firefox and WebKit browser projects weren't run.

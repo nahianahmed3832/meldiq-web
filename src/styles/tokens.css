@@ -66,7 +66,7 @@
   --frame-gap: 8px;
 
   /* Message text (Appearance › Text size): conversation text only. */
-  --msg-text-size: 14.5px;
+  --msg-text-size: 15.5px;
 
   /*
    * Motion (Meldiq 2.0, shared with Android's Motion tokens in meaning, not code): instant 90ms for what leaves first,
@@ -83,10 +83,10 @@
 }
 
 :root[data-text-size="small"] {
-  --msg-text-size: 13.5px;
+  --msg-text-size: 14px;
 }
 :root[data-text-size="large"] {
-  --msg-text-size: 16.5px;
+  --msg-text-size: 17px;
 }
 
 /* Static light values for browsers without light-dark() (they see the unsupported screen, readably). */
@@ -144,6 +144,17 @@
     --action-hover: var(--accent-hover);
     --on-action: var(--on-accent);
     --link: var(--accent-text);
+
+    /* People's names in messages and member lists: each person's own colour (their avatar tone, made vivid), unless a
+     * community role gives them one. Light mode deepens them to stay readable on white. */
+    --name-0: light-dark(#0f766e, #2dd4bf);
+    --name-1: light-dark(#4338ca, #a5b4fc);
+    --name-2: light-dark(#c2410c, #fb923c);
+    --name-3: light-dark(#15803d, #4ade80);
+    --name-4: light-dark(#1d4ed8, #60a5fa);
+    --name-5: light-dark(#be185d, #f472b6);
+    --name-6: light-dark(#7e22ce, #c084fc);
+    --name-7: light-dark(#a16207, #facc15);
 
     --success: light-dark(#1d7a4c, #5fd49a);
     --success-soft: light-dark(#e3f4ea, #15301f);
@@ -404,6 +415,10 @@
     --on-rail-badge: #071a2e;
     --accent-start: #22d3ee;
     --accent-end: #8b5cf6;
+    /* Calls to action (Join, Invite, Copy, Send): blue into violet, white text (5:1 or more on both ends). */
+    --cta: linear-gradient(135deg, #2563eb, #7c3aed);
+    --cta-hover: linear-gradient(135deg, #3b6ff0, #8b4cf0);
+    --on-cta: #ffffff;
     --theme-color: #0b1126;
   }
 

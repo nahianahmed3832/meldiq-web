@@ -2375,3 +2375,26 @@ button.media-card {
   min-height: 44px;
   padding: 4px 8px;
 }
+
+/* The member list as in the reference: no header of its own on wide screens (the conversation header toggles it), and
+ * roomier rows with larger avatars and names. */
+@media (min-width: 1241px) {
+  .member-list-head {
+    display: none;
+  }
+  .member-list-body {
+    padding-top: 8px;
+  }
+}
+.member-list .member-row {
+  gap: 12px;
+  padding: 6px 8px;
+}
+.member-list .member-name {
+  font-size: var(--fs-lg);
+  font-weight: 700;
+}
+.member-list .member-row small {
+  font-size: var(--fs-xs);
+  color: var(--text-3);
+}

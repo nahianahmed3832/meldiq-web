@@ -60,7 +60,7 @@ test("sign up, set up encryption, come back after a reload, and add a second bro
   await expect(page.getByRole("button", { name: "Open Meldiq" })).toBeDisabled();
   await page.getByLabel("I've stored my recovery key somewhere safe.").check();
   await page.getByRole("button", { name: "Open Meldiq" }).click();
-  await expect(page.locator(".conn.online")).toBeVisible({ timeout: 15_000 });
+  await expect(page.locator(":is(.conn.online, .user-panel[data-connection=online]):visible")).toBeVisible({ timeout: 15_000 });
 
   // Settings › Account, grouped as on Android: account information (with the phone from the profile), how you sign
   // in, account management.
@@ -75,7 +75,7 @@ test("sign up, set up encryption, come back after a reload, and add a second bro
 
   // The session survives a reload (stored sealed); no password asked.
   await page.reload();
-  await expect(page.locator(".conn.online")).toBeVisible({ timeout: 15_000 });
+  await expect(page.locator(":is(.conn.online, .user-panel[data-connection=online]):visible")).toBeVisible({ timeout: 15_000 });
   // Back to the conversations, where a new direct message shows.
   await page.getByRole("button", { name: "Back to conversations" }).click();
 
@@ -110,7 +110,7 @@ test("sign up, set up encryption, come back after a reload, and add a second bro
   await second.getByRole("tab", { name: "Use my recovery key" }).click();
   await second.getByLabel("Recovery key", { exact: true }).fill(recovery.toLowerCase());
   await second.getByRole("button", { name: "Set up this browser" }).click();
-  await expect(second.locator(".conn.online")).toBeVisible({ timeout: 15_000 });
+  await expect(second.locator(":is(.conn.online, .user-panel[data-connection=online]):visible")).toBeVisible({ timeout: 15_000 });
   await bob.send(dm, { type: "text", text: "Both of your browsers get this" });
   for (const p of [page, second]) {
     await p.getByRole("link", { name: /Bob Chen/ }).click();
@@ -133,7 +133,7 @@ test("sign up, set up encryption, come back after a reload, and add a second bro
   await expect(t.getByRole("button", { name: "Send a new code" })).toBeVisible();
   await t.getByLabel("Verification code").fill(await emailedCode(email, "verify"));
   await t.getByRole("button", { name: "Unlock" }).click();
-  await expect(t.locator(".conn.online")).toBeVisible({ timeout: 15_000 });
+  await expect(t.locator(":is(.conn.online, .user-panel[data-connection=online]):visible")).toBeVisible({ timeout: 15_000 });
   await third.close();
 });
 

@@ -73,7 +73,7 @@ export function CreateCommunityDialog({ onClose, discord = null }: { onClose: ()
   );
   if (tab === "discord" && canImport) {
     return (
-      <Dialog title="Import from Discord" onClose={onClose} wide>
+      <Dialog title="Import from Discord" subtitle="Channels, categories, roles, emoji and the icon come over. People join with an invitation." onClose={onClose} wide className="create-dialog">
         <div className="dialog-body">
           {tabs}
           <DiscordImport returned={discord} onClose={onClose} />
@@ -82,7 +82,7 @@ export function CreateCommunityDialog({ onClose, discord = null }: { onClose: ()
     );
   }
   return (
-    <Dialog title="Start a community" onClose={onClose} wide>
+    <Dialog title="Start a community" subtitle="Your place to hang out with friends, your team or your fans." onClose={onClose} wide className="create-dialog">
       <form className="dialog-body" onSubmit={(e) => void submit(e)} noValidate>
         {tabs}
         {error && (

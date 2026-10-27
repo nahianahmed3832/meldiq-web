@@ -8,7 +8,10 @@ import { navigate } from "../../application/router";
 import { useT } from "../../i18n";
 import { discover, joinCommunity } from "../../sync/community";
 import { CommunityPreviewDialog } from "../community/CommunityPreviewDialog";
+import { colorIndexOf } from "../components/Avatar";
 import { OrgAvatar } from "../components/OrgAvatar";
+import { usePhoto } from "../components/photos";
+import { accentBand } from "../community/accent";
 import { members } from "../format";
 
 /** How long typing pauses before the search runs. */
@@ -102,6 +105,7 @@ export function DiscoverView() {
               <p className="muted">{query ? t("discover_none_match") : t("discover_none")}</p>
             </div>
           )}
+          {list && list.length > 0 && <h3 className="discover-section">{query ? t("discover_results") : t("discover_all")}</h3>}
           {list && list.length > 0 && (
             <ul className="discover-grid" aria-label={t("discover_results")}>
               {list.map((c) => (
@@ -146,13 +150,17 @@ function CommunityCard({ c, onPreview, onJoined }: { c: Discovered; onPreview: (
       setBusy(false);
     }
   };
+  // API 0.44.0: its own banner, or a band in its accent; otherwise one of Meldiq's.
+  const bannerUrl = usePhoto("banner", c.id, c.bannerRev);
   // One clear action: Open when joined, Join when anyone may, otherwise View (to apply, or to read that it's invite-only).
   const directJoin = !c.joined && c.joinPolicy === "open" && !c.applications;
   return (
     <article className="discover-card" aria-labelledby={`dc-${c.id}`}>
       <button className="discover-card-body" onClick={onPreview} aria-describedby={`dc-${c.id}-how`}>
-        <span className="discover-card-band" aria-hidden="true" />
-        <OrgAvatar orgId={c.id} name={c.name} photoRev={c.photoRev} size={56} />
+        <span className="discover-card-band" style={bannerUrl ? { backgroundImage: `url(${bannerUrl})` } : { background: c.accent ? accentBand(c.accent) : bandOf(c.id) }} aria-hidden="true" />
+        <span className="discover-card-icon">
+          <OrgAvatar orgId={c.id} name={c.name} photoRev={c.photoRev} size={64} />
+        </span>
         <strong id={`dc-${c.id}`} className="ellipsis">
           {c.name}
         </strong>
@@ -184,5 +192,16 @@ function CommunityCard({ c, onPreview, onJoined }: { c: Discovered; onPreview: (
     </article>
   );
 }
+
+/** Vivid bands in Meldiq's palette (cyan, blue, violet, pink, orange), one per community without a banner or accent. */
+const BANDS = [
+  "linear-gradient(120deg, #22d3ee, #6366f1)",
+  "linear-gradient(120deg, #8b5cf6, #ec4899)",
+  "linear-gradient(120deg, #f97316, #ec4899)",
+  "linear-gradient(120deg, #0ea5e9, #22c55e)",
+  "linear-gradient(120deg, #6366f1, #a855f7)",
+  "linear-gradient(120deg, #14b8a6, #3b82f6)",
+];
+const bandOf = (id: string) => BANDS[colorIndexOf(id) % BANDS.length];
 
 const errorText = (e: unknown, fallback: string) => (e instanceof ApiError ? e.message : fallback);

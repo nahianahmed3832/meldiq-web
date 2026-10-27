@@ -1,4 +1,4 @@
-import { Check, CheckCheck, ChevronDown, Compass, Inbox, LogIn, PenSquare, Plus, Settings2, Ticket, UsersRound } from "lucide-react";
+import { CheckCheck, ChevronDown, Compass, LogIn, PenSquare, Plus, Settings2, Ticket, UsersRound } from "lucide-react";
 import { shallowEqual, useEngine, useOrbit } from "../../application/orbit";
 import { markAllReadTargets } from "../selectors";
 import { setPrefs, usePrefs } from "../../application/prefs";
@@ -8,13 +8,16 @@ import { OrgAvatar } from "../components/OrgAvatar";
 import { Menu, useMenu } from "../components/Overlay";
 import { members } from "../format";
 import type { ShellDialog } from "./Shell";
-import { ArchivedList, ChannelSections, Collapsible, PeopleExtras, PeopleList, PersonalSections, SkeletonRows } from "./SidebarSections";
+import { ArchivedList, ChannelSections, Collapsible, DmHub, PeopleExtras, PeopleList, PersonalSections, SkeletonRows } from "./SidebarSections";
 import { VoiceRoomsSection } from "./VoiceRooms";
 import { PhoneRail } from "./Rail";
 import { CommunityHeader, hideMutedKey } from "../community/CommunityHeader";
 import { CommunityPanel } from "../community/CommunityPanel";
+import { ACCENT_CLASS, accentStyle } from "../community/accent";
+import { usePhoto } from "../components/photos";
 import { useCommunityDetail } from "../community/useCommunityPermissions";
 import { useT } from "../../i18n";
+import { UserPanel } from "./UserPanel";
 
 interface SidebarProps {
   orgId: string | null;
@@ -39,11 +42,17 @@ export function Sidebar({ orgId, section, open, onDialog }: SidebarProps) {
   const hideMuted = !!orgId && prefs.collapsed.includes(hideMutedKey(orgId));
   const hasConnections = useOrbit((s) => s.server?.features.includes("connections") ?? false);
   const t = useT();
+  // API 0.44.0: the community's own accent and banner, on its channel list only (never the DMs or other communities).
+  const branded = communities && section !== "dms" && !!org;
+  const bannerUrl = usePhoto("banner", org?.id ?? "", branded ? org?.bannerRev : null);
 
   return (
-    <aside className={`sidebar${open ? " open" : ""}`} aria-label="Conversations">
+    <aside className={`sidebar${open ? " open" : ""}${branded && org?.accent ? ` ${ACCENT_CLASS}` : ""}`} style={branded ? accentStyle(org?.accent) : undefined} aria-label="Conversations">
       {section !== "dms" && <PhoneRail orgId={orgId} onDialog={onDialog} />}
-      <div className="side-head">
+      <div
+        className={`side-head${branded && bannerUrl ? " has-banner" : ""}`}
+        style={branded && bannerUrl ? { backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0) 70%), url(${bannerUrl})` } : undefined}
+      >
         {section === "dms" ? (
           // Direct messages aren't part of a community: their own heading, not the community's.
           <h2 className="side-title grow">{t("side_direct_messages")}</h2>
@@ -67,9 +76,11 @@ export function Sidebar({ orgId, section, open, onDialog }: SidebarProps) {
             <ChevronDown size={16} className="faint" />
           </button>
         )}
-        <button className="icon-btn" onClick={() => onDialog({ kind: "new" })} aria-label={t("side_new_message")} title={t("side_new_message")}>
-          <PenSquare size={18} />
-        </button>
+        {!communities && section !== "dms" && (
+          <button className="icon-btn" onClick={() => onDialog({ kind: "new" })} aria-label={t("side_new_message")} title={t("side_new_message")}>
+            <PenSquare size={18} />
+          </button>
+        )}
       </div>
       {!communities && section !== "dms" && switcher.anchor && (
         <Menu
@@ -102,25 +113,12 @@ export function Sidebar({ orgId, section, open, onDialog }: SidebarProps) {
         />
       )}
 
-      {section !== "dms" && (
-        <div className="side-quick">
-          <button
-            className="side-item"
-            aria-pressed={unreadOnly}
-            onClick={() => setPrefs({ collapsed: unreadOnly ? prefs.collapsed.filter((k) => k !== "::unread-only") : [...prefs.collapsed, "::unread-only"] })}
-          >
-            <span className="glyph">{unreadOnly ? <Check size={16} /> : <Inbox size={16} />}</span>
-            <span className="grow">{unreadOnly ? t("side_unreads_only") : t("side_unreads")}</span>
-          </button>
-        </div>
-      )}
-
       <div className="side-scroll scroll">
         {!synced && empty ? (
           <SkeletonRows />
         ) : section === "dms" ? (
           <>
-            <PeopleExtras onRequests={() => onDialog({ kind: "requests" })} onConnections={hasConnections ? () => onDialog({ kind: "connections" }) : undefined} />
+            <DmHub onDialog={(kind) => onDialog({ kind })} />
             <PeopleList twoLine />
             <ArchivedList />
           </>
@@ -135,25 +133,29 @@ export function Sidebar({ orgId, section, open, onDialog }: SidebarProps) {
                 <ChannelSections orgId={orgId} unreadOnly={unreadOnly} onBrowse={org ? () => onDialog({ kind: "channels" }) : undefined} />
               </>
             )}
-            <Collapsible id="people" title={t("side_direct_messages")}>
-              <PeopleExtras onRequests={() => onDialog({ kind: "requests" })} onConnections={hasConnections ? () => onDialog({ kind: "connections" }) : undefined} onlyWhenAsked />
-              <PeopleList unreadOnly={unreadOnly} orgId={orgId} excludePlaced />
-              <button className="side-item" onClick={() => onDialog({ kind: "new" })}>
-                <span className="glyph">
-                  <Plus size={16} />
-                </span>
-                <span className="grow">{t("side_new_message")}</span>
-              </button>
-              <button className="side-item" onClick={() => onDialog({ kind: "newGroup" })}>
-                <span className="glyph">
-                  <UsersRound size={16} />
-                </span>
-                <span className="grow">New group</span>
-              </button>
-            </Collapsible>
+            {/* Direct messages live under Home and messages (the mascot), not inside a community (the reference layout). */}
+            {!communities && (
+              <Collapsible id="people" title={t("side_direct_messages")}>
+                <PeopleExtras onRequests={() => onDialog({ kind: "requests" })} onConnections={hasConnections ? () => onDialog({ kind: "connections" }) : undefined} onlyWhenAsked />
+                <PeopleList unreadOnly={unreadOnly} orgId={orgId} excludePlaced />
+                <button className="side-item" onClick={() => onDialog({ kind: "new" })}>
+                  <span className="glyph">
+                    <Plus size={16} />
+                  </span>
+                  <span className="grow">{t("side_new_message")}</span>
+                </button>
+                <button className="side-item" onClick={() => onDialog({ kind: "newGroup" })}>
+                  <span className="glyph">
+                    <UsersRound size={16} />
+                  </span>
+                  <span className="grow">New group</span>
+                </button>
+              </Collapsible>
+            )}
           </>
         )}
       </div>
+      <UserPanel />
     </aside>
   );
 }

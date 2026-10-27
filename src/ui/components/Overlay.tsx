@@ -43,10 +43,32 @@ interface DialogProps {
   width?: string;
   /** Replaces the title row (search). */
   header?: ReactNode;
+  /** A line under the title (the reference's dialog subtitles). */
+  subtitle?: ReactNode;
+  /** Extra class on the dialog (a card's own look). */
+  className?: string;
+  /**
+   * On wide screens, shown as a card beside this point (the left edge of what opened it) instead of centred, over a clear
+   * backdrop: a profile from the member list (the reference's popover). Narrow screens keep the centred dialog.
+   */
+  near?: { x: number; y: number } | null;
 }
 
-export function Dialog({ title, onClose, children, footer, wide, width, header }: DialogProps) {
+/** Wider than this, a dialog with [near] is placed beside its anchor. */
+const NEAR_MIN_WIDTH = 961;
+const NEAR_GAP = 12;
+
+export function Dialog({ title, onClose, children, footer, wide, width, header, subtitle, className, near }: DialogProps) {
   const ref = useRef<HTMLDivElement>(null);
+  const [placed, setPlaced] = useState<{ top: number; left: number } | null>(null);
+  const anchored = !!near && typeof window !== "undefined" && window.innerWidth >= NEAR_MIN_WIDTH;
+  useLayoutEffect(() => {
+    if (!anchored || !near || !ref.current) return;
+    const { offsetWidth: w, offsetHeight: h } = ref.current;
+    const left = Math.max(8, Math.min(near.x - w - NEAR_GAP, window.innerWidth - w - 8));
+    const top = Math.max(8, Math.min(near.y - 24, window.innerHeight - h - 8));
+    setPlaced({ top, left });
+  }, [anchored, near]);
   useFocusTrap(ref, true);
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
@@ -54,11 +76,28 @@ export function Dialog({ title, onClose, children, footer, wide, width, header }
     return () => document.removeEventListener("keydown", onKey);
   }, [onClose]);
   return createPortal(
-    <div className="scrim" onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
-      <div ref={ref} className="dialog" role="dialog" aria-modal="true" aria-label={title} style={width ? { width } : wide ? { width: "min(680px, 100%)" } : undefined}>
+    <div className={`scrim${anchored ? " scrim-clear" : ""}`} onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
+      <div
+        ref={ref}
+        className={`dialog${className ? ` ${className}` : ""}${anchored ? " dialog-near" : ""}`}
+        role="dialog"
+        aria-modal="true"
+        aria-label={title}
+        style={{
+          ...(width ? { width } : wide ? { width: "min(680px, 100%)" } : {}),
+          ...(anchored ? (placed ? { position: "fixed", top: placed.top, left: placed.left } : { visibility: "hidden" }) : {}),
+        }}
+      >
         {header ?? (
           <div className="dialog-head">
-            <h2>{title}</h2>
+            {subtitle ? (
+              <div className="grow dialog-titles">
+                <h2>{title}</h2>
+                <p className="dialog-sub">{subtitle}</p>
+              </div>
+            ) : (
+              <h2>{title}</h2>
+            )}
             <button className="icon-btn" onClick={onClose} aria-label="Close">
               <X size={18} />
             </button>

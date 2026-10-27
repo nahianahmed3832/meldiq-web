@@ -8,6 +8,7 @@ import {
   Compass,
   Copy,
   EyeOff,
+  Inbox,
   FolderPlus,
   LogIn,
   LogOut,
@@ -24,7 +25,6 @@ import { shallowEqual, useEngine, useOrbit } from "../../application/orbit";
 import { setPrefs, usePrefs } from "../../application/prefs";
 import { navigate } from "../../application/router";
 import { leaveWorkspace } from "../../sync/workspaces";
-import { Avatar } from "../components/Avatar";
 import { OrgAvatar } from "../components/OrgAvatar";
 import { Dialog, Menu, type MenuEntry, useMenu } from "../components/Overlay";
 import { members } from "../format";
@@ -83,6 +83,14 @@ export function CommunityHeader({ orgId, perms, onDialog }: { orgId: string | nu
     if (features.includes("meetings")) entries.push({ label: "Events", icon: <CalendarDays size={16} />, onSelect: () => navigate({ section: "workspace", workspacePage: "meetings" }) });
     entries.push({ label: "Members", icon: <UsersRound size={16} />, onSelect: () => navigate({ section: "workspace", workspacePage: "people" }) });
     entries.push("separator");
+    // The sidebar's former "Unreads" switch (this browser only), here as in the reference's server menu.
+    const unreadOnly = prefs.collapsed.includes("::unread-only");
+    entries.push({
+      label: "Show only unread",
+      icon: unreadOnly ? <Check size={16} /> : <Inbox size={16} />,
+      checked: unreadOnly,
+      onSelect: () => setPrefs({ collapsed: unreadOnly ? prefs.collapsed.filter((k) => k !== "::unread-only") : [...prefs.collapsed, "::unread-only"] }),
+    });
     entries.push({
       label: "Hide muted channels",
       icon: hideMuted ? <Check size={16} /> : <EyeOff size={16} />,
@@ -107,15 +115,16 @@ export function CommunityHeader({ orgId, perms, onDialog }: { orgId: string | nu
 
   return (
     <>
-      <button className="org-switch" onClick={(e) => menu.open(e.currentTarget)} aria-haspopup="menu" aria-expanded={!!menu.anchor} aria-label={`Community: ${org?.name ?? "none"}. Community menu`}>
-        {org ? <OrgAvatar orgId={org.id} name={org.name} photoRev={org.photoRev} size={34} /> : <Avatar name="Meldiq" colorIndex={7} size={34} square decorative />}
-        <span className="grow">
-          <strong className="ellipsis" style={{ display: "block" }}>
-            {org?.name ?? "Meldiq"}
-          </strong>
-          <small>{org ? `${members(org.memberCount)}${org.visibility === "public" ? " · Public" : ""}` : "No community yet"}</small>
-        </span>
-        <ChevronDown size={16} className="faint" />
+      <button
+        className="org-switch community-switch"
+        onClick={(e) => menu.open(e.currentTarget)}
+        aria-haspopup="menu"
+        aria-expanded={!!menu.anchor}
+        aria-label={`Community: ${org?.name ?? "none"}. Community menu`}
+        title={org ? `${org.name} · ${members(org.memberCount)}${org.visibility === "public" ? " · Public" : ""}` : undefined}
+      >
+        <strong className="ellipsis grow">{org?.name ?? "Meldiq"}</strong>
+        <ChevronDown size={18} className="faint" aria-hidden="true" />
       </button>
       {menu.anchor && <Menu anchor={menu.anchor} label="Community" onClose={menu.close} entries={entries} />}
       {dialog === "notifications" && org && <CommunityNotificationsDialog orgId={org.id} name={org.name} onClose={() => setDialog(null)} />}

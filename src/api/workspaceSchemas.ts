@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { zCategory } from "./communitySchemas";
-import { zConversation, zMember, zOrg } from "./schemas";
+import { zAccent, zConversation, zMember, zOrg } from "./schemas";
 
 /** Workspace administration answers (server/src/routes/orgs.ts, docs/WORKSPACE_ADMINISTRATION.md). */
 
@@ -126,7 +126,18 @@ export const zNewInvite = z.object({ id: z.string(), code: z.string(), role: z.s
 export type NewInvite = z.infer<typeof zNewInvite>;
 
 export const zInvitePreview = z.object({
-  org: z.object({ id: z.string(), name: z.string(), description: nullableString, memberCount: z.number().int().nonnegative().optional() }),
+  org: z.object({
+    id: z.string(),
+    name: z.string(),
+    description: nullableString,
+    memberCount: z.number().int().nonnegative().optional(),
+    /** API 0.44.0: its accent and banner (GET /v1/invites/:code/banner); older servers leave them out. */
+    accent: zAccent,
+    bannerRev: z
+      .number()
+      .nullish()
+      .transform((v) => v ?? null),
+  }),
   role: z.string(),
   branch: z.object({ id: z.string(), name: z.string() }).nullable(),
   team: z.object({ id: z.string(), name: z.string() }).nullable(),

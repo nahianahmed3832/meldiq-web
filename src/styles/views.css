@@ -1617,7 +1617,8 @@ select.input {
 }
 .discover-hero h2 {
   margin: 0;
-  font-size: var(--fs-2xl);
+  font-size: 30px;
+  font-weight: 800;
 }
 .discover-hero .view-sub {
   margin: 0;
@@ -1650,14 +1651,14 @@ select.input {
 }
 .discover-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
   gap: var(--s-4);
   margin: 0;
   padding: 0;
   list-style: none;
 }
 .discover-card-skeleton {
-  height: 220px;
+  height: 280px;
   border-radius: var(--r-lg);
 }
 .discover-card {
@@ -1687,7 +1688,7 @@ select.input {
   align-content: start;
   gap: 6px;
   flex: 1;
-  padding: 52px var(--s-4) var(--s-3);
+  padding: 0 var(--s-4) var(--s-2);
   border: 0;
   background: none;
   color: inherit;
@@ -1699,20 +1700,29 @@ select.input {
   outline: 2px solid var(--focus);
   outline-offset: -2px;
 }
-/* A quiet band behind the icon: the brand's gradient, softened. Communities have no banners of their own (yet). */
+/* The banner: the community's own once it sets one, otherwise a vivid band in Meldiq's palette. */
 .discover-card-band {
-  position: absolute;
-  inset: 0 0 auto 0;
-  height: 72px;
-  background: var(--brand-gradient);
-  opacity: 0.35;
+  display: block;
+  width: calc(100% + 2 * var(--s-4));
+  height: 112px;
+  margin: 0 calc(-1 * var(--s-4));
+  background-size: cover;
+  background-position: center;
 }
-.discover-card-body > :not(.discover-card-band) {
-  position: relative;
+.discover-card-icon {
+  margin-top: -34px;
+  border-radius: 18px;
+  box-shadow: 0 0 0 5px var(--surface-raised);
+  line-height: 0;
+}
+.discover-card-icon .avatar {
+  border-radius: 16px;
 }
 .discover-card-body strong {
   max-width: 100%;
-  font-size: var(--fs-md);
+  margin-top: 4px;
+  font-size: var(--fs-xl);
+  font-weight: 800;
 }
 .discover-desc {
   display: -webkit-box;
@@ -1720,7 +1730,15 @@ select.input {
   -webkit-box-orient: vertical;
   overflow: hidden;
   color: var(--text-2);
-  font-size: var(--fs-sm);
+  font-size: var(--fs-md);
+}
+.discover-section {
+  margin: 0;
+  font-size: var(--fs-xs);
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-3);
 }
 .discover-card-foot {
   display: flex;
@@ -1732,9 +1750,13 @@ select.input {
 .discover-meta {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: 5px;
   min-width: 0;
-  font-size: var(--fs-xs);
+  font-size: var(--fs-sm);
+}
+.discover-card-foot .btn {
+  min-width: 72px;
+  font-weight: 700;
 }
 .discover-error {
   margin: 0;
@@ -1757,6 +1779,20 @@ select.input {
 /* Import from Discord (community-first brief §3D). */
 .create-tabs {
   justify-self: start;
+}
+.dialog-titles {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+.dialog-sub {
+  margin: 0;
+  color: var(--text-2);
+  font-size: var(--fs-md);
+}
+.create-dialog .dialog-head h2 {
+  font-size: var(--fs-2xl);
+  font-weight: 800;
 }
 .discord-import {
   display: grid;
@@ -1789,8 +1825,46 @@ select.input {
   color: var(--success);
 }
 .discord-steps {
-  padding-left: 20px;
+  counter-reset: step;
+  padding: 0;
+  list-style: none;
+  gap: 12px;
   color: var(--text-2);
+  font-size: var(--fs-md);
+}
+.discord-steps > li {
+  counter-increment: step;
+  position: relative;
+  display: grid;
+  gap: 10px;
+  padding-left: 38px;
+}
+.discord-steps > li::before {
+  content: counter(step);
+  position: absolute;
+  left: 0;
+  top: -2px;
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--accent-soft);
+  color: var(--accent-text);
+  font-size: var(--fs-sm);
+  font-weight: 800;
+}
+.discord-steps strong {
+  color: var(--text);
+}
+.discord-step-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.discord-footnote {
+  margin: 0;
+  font-size: var(--fs-sm);
 }
 .discord-connect {
   justify-self: start;
@@ -1900,4 +1974,254 @@ select.input {
   width: 100%;
   height: 8px;
   accent-color: var(--accent);
+}
+
+/* Someone's profile as a card (the reference's popover): a banner in their colour, a large avatar over its edge, the
+ * name and handle, boxed sections, and a message box at the foot. Beside the member list on wide screens. */
+.scrim-clear {
+  background: transparent;
+  backdrop-filter: none;
+}
+.dialog.profile-pop {
+  width: min(360px, 100%);
+}
+.dialog-near {
+  box-shadow:
+    var(--shadow-lg),
+    0 0 0 1px var(--border);
+}
+.profile-pop-banner {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+  gap: 6px;
+  height: 104px;
+  padding: 10px;
+  flex-shrink: 0;
+}
+.profile-pop-btn {
+  background: rgb(0 0 0 / 0.38);
+  color: #fff;
+  border-radius: var(--r-pill);
+}
+.profile-pop-btn:hover:not(:disabled) {
+  background: rgb(0 0 0 / 0.55);
+  color: #fff;
+}
+.profile-pop-body {
+  display: grid;
+  gap: 10px;
+  padding: 0 16px 16px;
+}
+.profile-pop-avatar {
+  padding: 0 16px 10px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-top: -48px;
+}
+.profile-pop-avatar > .avatar {
+  border-radius: 50%;
+  box-shadow: 0 0 0 6px var(--surface-raised);
+}
+.profile-pop-connect {
+  margin-bottom: 4px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+}
+.profile-pop-name {
+  margin: 2px 0 0;
+  font-size: var(--fs-2xl);
+  font-weight: 800;
+}
+.profile-pop-handle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: -8px 0 0;
+  color: var(--text-2);
+  font-size: var(--fs-sm);
+}
+.profile-pop-status {
+  margin: 0;
+  color: var(--text-2);
+}
+.profile-box {
+  display: grid;
+  gap: 6px;
+  padding: 10px 12px;
+  border-radius: var(--r-md);
+  background: var(--surface-sunken);
+  border: 1px solid var(--border);
+}
+.profile-box h3 {
+  margin: 0;
+  font-size: var(--fs-xs);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-2);
+}
+.profile-roles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.profile-role {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 9px;
+  border-radius: var(--r-sm);
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+}
+.profile-role i {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+.profile-pop-message {
+  display: flex;
+  gap: 8px;
+  margin-top: 2px;
+}
+.profile-pop-message .input {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Invite friends (the reference's dialog): a search, people each with Invite, then the link with Copy beside it. */
+.dialog.invite-dialog {
+  width: min(500px, 100%);
+}
+.invite-dialog .dialog-head h2 {
+  font-size: var(--fs-2xl);
+  font-weight: 800;
+}
+.invite-search {
+  min-height: 46px;
+  border: 1.5px solid var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+.invite-people {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 2px;
+  max-height: 260px;
+  overflow-y: auto;
+}
+.invite-person {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 8px;
+  border-radius: var(--r-md);
+}
+.invite-person:hover {
+  background: var(--surface-hover);
+}
+.invite-person .lines {
+  display: grid;
+  min-width: 0;
+}
+.invite-person small,
+.invite-outcome {
+  color: var(--text-3);
+  font-size: var(--fs-sm);
+}
+.invite-empty {
+  padding: 6px;
+}
+.invite-link-row {
+  display: flex;
+  gap: 8px;
+}
+.invite-link-row .input {
+  flex: 1;
+  min-width: 0;
+  min-height: 44px;
+  background: var(--surface-sunken);
+}
+.invite-link-row .btn {
+  min-height: 44px;
+  padding-inline: 18px;
+}
+
+/* An invitation, opened (the reference's invite card): the community's icon, name and member count, one big action. */
+.dialog.invite-landing-dialog {
+  width: min(440px, 100%);
+}
+.invite-landing {
+  display: grid;
+  justify-items: center;
+  text-align: center;
+  gap: 6px;
+  padding: 4px 4px 2px;
+}
+.invite-landing-lead {
+  margin: 10px 0 0;
+  color: var(--text-2);
+}
+.invite-landing-name {
+  margin: 0;
+  font-size: var(--fs-3xl);
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+}
+.invite-landing-members {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  color: var(--text-2);
+  font-weight: 600;
+}
+.invite-landing-members i {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--success);
+}
+.invite-landing-about,
+.invite-landing-role {
+  margin: 2px 0 0;
+  font-size: var(--fs-sm);
+}
+.invite-landing .banner {
+  width: 100%;
+}
+.invite-landing-go {
+  width: 100%;
+  margin-top: 14px;
+  min-height: 50px;
+  font-size: var(--fs-lg);
+  font-weight: 700;
+}
+/* The invited community's banner across the top of the card, its icon over the edge, and Join in its accent. */
+.invite-landing-banner {
+  width: calc(100% + 40px);
+  height: 120px;
+  margin: -4px -20px 0;
+  background-size: cover;
+  background-position: center;
+}
+.invite-landing-banner + .invite-landing-icon {
+  margin-top: -48px;
+  border-radius: 24px;
+  box-shadow: 0 0 0 5px var(--surface-raised);
+  line-height: 0;
+}
+.invite-landing-icon {
+  line-height: 0;
+}
+.invite-landing.c-accent .invite-landing-go {
+  background: var(--c-accent);
+  color: var(--c-on-accent);
 }

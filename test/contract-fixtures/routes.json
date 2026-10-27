@@ -1,5 +1,5 @@
 {
-  "version": "0.43.0",
+  "version": "0.44.0",
   "routes": [
     {
       "method": "GET",
@@ -495,6 +495,18 @@
     },
     {
       "method": "GET",
+      "path": "/v1/orgs/{orgId}/banner"
+    },
+    {
+      "method": "PUT",
+      "path": "/v1/orgs/{orgId}/banner"
+    },
+    {
+      "method": "DELETE",
+      "path": "/v1/orgs/{orgId}/banner"
+    },
+    {
+      "method": "GET",
       "path": "/v1/orgs/{orgId}/archived"
     },
     {
@@ -532,6 +544,10 @@
     {
       "method": "GET",
       "path": "/v1/invites/{code}/public"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/invites/{code}/banner"
     },
     {
       "method": "POST",

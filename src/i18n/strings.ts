@@ -311,6 +311,7 @@ export const STRINGS = {
   discover_sub: ["Public communities on Meldiq. Search by name or description.", "Meldiq 上的公开社区。按名称或简介搜索。", "Meldiq-এর পাবলিক কমিউনিটি। নাম বা বিবরণ দিয়ে খুঁজুন।"],
   discover_search: ["Search communities", "搜索社区", "কমিউনিটি খুঁজুন"],
   discover_results: ["Public communities", "公开社区", "পাবলিক কমিউনিটি"],
+  discover_all: ["All communities", "全部社区", "সব কমিউনিটি"],
   discover_error: ["Couldn't load communities.", "无法加载社区。", "কমিউনিটি লোড করা যায়নি।"],
   discover_retry: ["Try again", "重试", "আবার চেষ্টা করুন"],
   discover_none: [
@@ -391,8 +392,10 @@ export const STRINGS = {
 
   // ── conversation ──
   conv_back: ["Back to conversations", "返回会话列表", "কথোপকথনে ফিরে যান"],
-  conv_online: ["{n} online", "{n} 人在线", "{n} জন অনলাইন"],
   conv_search: ["Search in this conversation", "在此会话中搜索", "এই কথোপকথনে খুঁজুন"],
+  search_short: ["Search", "搜索", "খুঁজুন"],
+  conv_search_in: ["Search {name}", "搜索 {name}", "{name}-এ খুঁজুন"],
+  conv_pins: ["Pinned messages", "置顶消息", "পিন করা বার্তা"],
   conv_close_search: ["Close search", "关闭搜索", "খোঁজা বন্ধ করুন"],
   conv_paused: ["{name} has paused notifications", "{name} 已暂停通知", "{name} নোটিফিকেশন বন্ধ রেখেছেন"],
   conv_someone: ["Someone", "某人", "কেউ একজন"],

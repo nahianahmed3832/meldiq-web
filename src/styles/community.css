@@ -205,7 +205,7 @@ button.chip[aria-pressed="true"] {
 .person-name {
   font: inherit;
   font-weight: 700;
-  color: inherit;
+  color: var(--name, inherit);
   text-align: left;
   padding: 0;
   cursor: pointer;
@@ -431,4 +431,178 @@ img.custom-sticker {
     opacity: 0;
     transform: scale(0.9);
   }
+}
+
+/* ── A community's own accent and banner (API 0.44.0, src/ui/community/accent.ts) ─────────────────────────────────
+ * Scoped: the variables live on the element that shows that community (its channel list, its rail icon, a card), never
+ * on :root, so no community colours Meldiq's theme or another community. Text uses the readable variant for the theme. */
+.c-accent {
+  --c-accent-text: var(--c-accent-text-l);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .c-accent {
+    --c-accent-text: var(--c-accent-text-d);
+  }
+}
+:root[data-theme="dark"] .c-accent {
+  --c-accent-text: var(--c-accent-text-d);
+}
+/* The selected channel: the community's tint, text and bar instead of Meldiq's. */
+.sidebar.c-accent .side-item[aria-current="page"] {
+  background: var(--c-accent-soft);
+  color: var(--c-accent-text);
+}
+.sidebar.c-accent .side-item[aria-current="page"] .glyph {
+  color: var(--c-accent-text);
+}
+.sidebar.c-accent .side-item[aria-current="page"]::before {
+  background: var(--c-accent);
+}
+.sidebar.c-accent .side-head {
+  border-bottom: 2px solid var(--c-accent);
+}
+/* Its icon in the rail, when it's on screen. */
+.rail-org.c-accent[aria-current="true"] .avatar {
+  box-shadow:
+    0 0 0 2px var(--rail),
+    0 0 0 4px var(--c-accent);
+}
+/* The banner behind the community's name at the top of its channel list (Discord's server banner). */
+.side-head.has-banner {
+  min-height: 112px;
+  align-items: flex-start;
+  background-size: cover;
+  background-position: center;
+}
+.side-head.has-banner .community-switch {
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+}
+.side-head.has-banner .community-switch svg {
+  color: #fff;
+}
+
+/* Community settings › Appearance: the preview, swatches and banner controls. */
+.brand-preview {
+  overflow: hidden;
+  max-width: 360px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--surface-raised);
+}
+.brand-preview-banner {
+  height: 96px;
+  background: var(--brand-gradient);
+  background-size: cover;
+  background-position: center;
+}
+.brand-preview-body {
+  display: grid;
+  gap: 8px;
+  padding: 0 14px 14px;
+}
+.brand-preview-icon {
+  margin-top: -28px;
+  justify-self: start;
+  border-radius: 16px;
+  box-shadow: 0 0 0 4px var(--surface-raised);
+  line-height: 0;
+}
+.brand-preview-body strong {
+  font-size: var(--fs-xl);
+  font-weight: 800;
+}
+.brand-preview-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.brand-preview-channel {
+  flex: 1;
+  padding: 6px 10px;
+  border-radius: var(--r-sm);
+  border-left: 3px solid var(--c-accent, var(--accent));
+  background: var(--c-accent-soft, var(--surface-selected));
+  color: var(--c-accent-text, var(--accent-text));
+  font-weight: 650;
+}
+.brand-preview-btn {
+  padding: 6px 14px;
+  border-radius: var(--r-sm);
+  background: var(--c-accent, var(--action));
+  color: var(--c-on-accent, var(--on-action));
+  font-weight: 700;
+}
+.brand-swatches {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.brand-swatches legend {
+  width: 100%;
+  margin-bottom: 6px;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--text-2);
+}
+.brand-swatch {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  color: #fff;
+  cursor: pointer;
+}
+.brand-swatch[aria-pressed="true"] {
+  border-color: var(--text);
+}
+.brand-swatch.meldiq {
+  background: var(--brand-gradient);
+}
+.brand-swatch svg {
+  filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.7));
+}
+.brand-custom {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.brand-custom input[type="color"] {
+  width: 36px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  background: none;
+  cursor: pointer;
+}
+.brand-custom .input {
+  width: 110px;
+}
+.brand-banner-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.brand-banner-actions small {
+  flex-basis: 100%;
+}
+.field-error {
+  margin: 0;
+  color: var(--danger);
+  font-size: var(--fs-sm);
+}
+.preview-banner {
+  height: 120px;
+  border-radius: var(--r-lg);
+  background-size: cover;
+  background-position: center;
 }

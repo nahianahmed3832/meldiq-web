@@ -16,7 +16,7 @@ import { CreateCommunityDialog } from "../community/CreateCommunityDialog";
 import { JOIN_INVITE_EVENT } from "../chat/inAppLinks";
 import { noteGuideVisit } from "../../sync/guide";
 import { GUIDE_EVENT } from "../community/GuideOnboarding";
-import { OPEN_PROFILE_EVENT, ProfileDialog } from "../people/ProfileDialog";
+import { OPEN_PROFILE_EVENT, ProfileDialog, type ProfileRequest } from "../people/ProfileDialog";
 import { ConnectionRequestWatcher } from "../people/ConnectionRequestViews";
 import { ConnectionsDialog, MessageRequestsDialog } from "../people/ConnectionsDialog";
 import { ActivityView } from "../views/ActivityView";
@@ -114,11 +114,11 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
   }, [synced, known, route.conversationId, route.section, engine]);
 
   // Someone's profile, opened from a name or a member list anywhere.
-  const [profile, setProfile] = useState<{ userId: string; name: string } | null>(null);
+  const [profile, setProfile] = useState<ProfileRequest | null>(null);
   useEffect(() => {
     const onOpen = (e: Event) => {
-      const d = (e as CustomEvent<{ userId: string; name?: string }>).detail;
-      if (d?.userId) setProfile({ userId: d.userId, name: d.name ?? "Profile" });
+      const d = (e as CustomEvent<ProfileRequest>).detail;
+      if (d?.userId) setProfile({ ...d, name: d.name ?? "Profile" });
     };
     window.addEventListener(OPEN_PROFILE_EVENT, onOpen);
     return () => window.removeEventListener(OPEN_PROFILE_EVENT, onOpen);
@@ -222,7 +222,16 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
       {dialog?.kind === "connections" && <ConnectionsDialog onClose={() => setDialog(null)} />}
       {dialog?.kind === "requests" && <MessageRequestsDialog onClose={() => setDialog(null)} />}
       {dialog?.kind === "addMembers" && orgId && <AddMembersDialog orgId={orgId} orgName={orgName} onClose={() => setDialog(null)} onAdded={() => undefined} />}
-      {profile && <ProfileDialog key={profile.userId} userId={profile.userId} fallbackName={profile.name} onClose={() => setProfile(null)} />}
+      {profile && (
+        <ProfileDialog
+          key={profile.userId}
+          userId={profile.userId}
+          fallbackName={profile.name ?? "Profile"}
+          orgId={profile.orgId ?? null}
+          near={profile.near ?? null}
+          onClose={() => setProfile(null)}
+        />
+      )}
       {dialog?.kind === "joinWorkspace" && <JoinWorkspaceDialog initialCode={dialog.code} onClose={() => setDialog(null)} />}
     </div>
   );

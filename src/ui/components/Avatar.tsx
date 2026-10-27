@@ -17,6 +17,11 @@ export function toneOf(colorIndex: number): string {
   return TONES[((colorIndex % TONES.length) + TONES.length) % TONES.length][1];
 }
 
+/** The class giving a person's name their own colour (base.css .name-tone-*), from their avatar tone. */
+export function nameTone(colorIndex: number): string {
+  return `name-tone-${((colorIndex % TONES.length) + TONES.length) % TONES.length}`;
+}
+
 /** android ui/components/Display.kt `initialsOf`. */
 export function initialsOf(name: string): string {
   const parts = name.trim().split(/\s+/).filter(Boolean);

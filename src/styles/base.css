@@ -126,12 +126,12 @@ a.icon-btn {
   transform: scale(0.98);
 }
 .btn-primary {
-  background: var(--action);
-  color: var(--on-action);
+  background: var(--cta, var(--action));
+  color: var(--on-cta, var(--on-action));
   box-shadow: var(--shadow-sm);
 }
 .btn-primary:hover:not(:disabled) {
-  background: var(--action-hover);
+  background: var(--cta-hover, var(--action-hover));
 }
 .btn-secondary {
   background: var(--surface-raised);
@@ -490,4 +490,38 @@ select,
   box-shadow: var(--shadow-lg);
   color: var(--text);
   font-size: var(--fs-md);
+}
+
+/* Each person's name colour (tokens.css --name-*), by their avatar tone. */
+.name-tone-0 {
+  --name: var(--name-0);
+  color: var(--name);
+}
+.name-tone-1 {
+  --name: var(--name-1);
+  color: var(--name);
+}
+.name-tone-2 {
+  --name: var(--name-2);
+  color: var(--name);
+}
+.name-tone-3 {
+  --name: var(--name-3);
+  color: var(--name);
+}
+.name-tone-4 {
+  --name: var(--name-4);
+  color: var(--name);
+}
+.name-tone-5 {
+  --name: var(--name-5);
+  color: var(--name);
+}
+.name-tone-6 {
+  --name: var(--name-6);
+  color: var(--name);
+}
+.name-tone-7 {
+  --name: var(--name-7);
+  color: var(--name);
 }

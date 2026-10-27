@@ -9,6 +9,8 @@ import { applyToJoin, communityPreview, joinCommunity, withdrawApplication } fro
 import { members } from "../format";
 import { Dialog } from "../components/Overlay";
 import { OrgAvatar } from "../components/OrgAvatar";
+import { usePhoto } from "../components/photos";
+import { accentBand } from "./accent";
 import { ChannelGlyph } from "./ChannelDialogs";
 
 const errorText = (e: unknown, fallback: string) => (e instanceof ApiError ? e.message : fallback);
@@ -69,6 +71,7 @@ export function CommunityPreviewDialog({ id, onClose }: { id: string; onClose: (
         {!p && !error && <span className="skeleton" style={{ height: 200 }} />}
         {p && c && (
           <>
+            <PreviewBanner orgId={c.id} rev={c.bannerRev} accent={c.accent} />
             <div className="row" style={{ gap: 12 }}>
               <OrgAvatar orgId={c.id} name={c.name} photoRev={c.photoRev} size={56} />
               <div className="grow">
@@ -170,4 +173,11 @@ export function CommunityPreviewDialog({ id, onClose }: { id: string; onClose: (
       </div>
     </Dialog>
   );
+}
+
+/** The community's banner (API 0.44.0), or a band in its accent; nothing without either. */
+function PreviewBanner({ orgId, rev, accent }: { orgId: string; rev: number | null; accent: string | null }) {
+  const url = usePhoto("banner", orgId, rev);
+  if (!url && !accent) return null;
+  return <div className="preview-banner" style={url ? { backgroundImage: `url(${url})` } : { background: accentBand(accent ?? "") }} aria-hidden="true" />;
 }

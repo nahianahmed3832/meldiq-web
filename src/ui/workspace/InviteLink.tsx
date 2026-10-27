@@ -54,15 +54,17 @@ export function InviteShare({ code }: { code: string }) {
 }
 
 /**
- * An invitation link made on the spot (community-first brief §F, the reference's "send a server invite link"): the
- * person picks how long it lasts and how many people it admits, explicitly; nothing is made until they ask, and it never
- * lasts forever (the server's longest is 30 days).
+ * An invitation link made on the spot (community-first brief §F, the reference's "send a server invite link"): a link
+ * field with Create, then Copy, beside it. It's made only when asked, with the expiry and use limit stated next to it
+ * (Change picks others), and it never lasts forever (the server's longest is 30 days).
  */
 export function QuickInvite({ orgId }: { orgId: string }) {
   const engine = useEngine();
   const [hours, setHours] = useState(24 * 7);
   const [uses, setUses] = useState(10);
+  const [editing, setEditing] = useState(false);
   const [made, setMade] = useState<NewInvite | null>(null);
+  const [copied, setCopied] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -71,56 +73,88 @@ export function QuickInvite({ orgId }: { orgId: string }) {
     setError(null);
     try {
       setMade(await createInvitation(engine, orgId, { role: "MEMBER", branchId: null, teamId: null, maxUses: uses, expiresInHours: hours }));
+      setEditing(false);
     } catch (e) {
       setError(e instanceof ApiError ? e.message : "Couldn't create the link. Try again.");
     } finally {
       setBusy(false);
     }
   };
-
-  if (made) {
-    return (
-      <div className="quick-invite" aria-live="polite">
-        <input className="input mono" readOnly value={inviteLink(made.code)} aria-label="Invitation link" onFocus={(e) => e.currentTarget.select()} />
-        <InviteShare code={made.code} />
-        <small className="faint">
-          Admits {made.maxUses === 1 ? "one person" : `up to ${made.maxUses} people`} · expires {untilWhen(made.expiresAt)} · revoke it any time in Invitations
-        </small>
-      </div>
+  const copy = () => {
+    if (!made) return;
+    void navigator.clipboard?.writeText(inviteLink(made.code)).then(
+      () => {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 1500);
+      },
+      () => undefined,
     );
-  }
+  };
+  const expiry = EXPIRY.find((x) => x.hours === hours)?.label ?? `${hours} hours`;
+  const admits = (n: number) => (n === 1 ? "one person" : `up to ${n} people`);
+
   return (
-    <div className="quick-invite">
+    <div className="quick-invite" aria-live="polite">
       {error && (
         <div className="banner danger" role="alert">
           {error}
         </div>
       )}
-      <div className="row" style={{ gap: 8, flexWrap: "wrap" }}>
-        <label className="field grow" style={{ minWidth: 120 }}>
-          <span>Expires after</span>
-          <select className="input" value={hours} onChange={(e) => setHours(Number(e.target.value))}>
-            {EXPIRY.map((x) => (
-              <option key={x.hours} value={x.hours}>
-                {x.label}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label className="field grow" style={{ minWidth: 120 }}>
-          <span>Max uses</span>
-          <select className="input" value={uses} onChange={(e) => setUses(Number(e.target.value))}>
-            {USES.map((n) => (
-              <option key={n} value={n}>
-                {n === 1 ? "1 person" : `${n} people`}
-              </option>
-            ))}
-          </select>
-        </label>
+      <div className="invite-link-row">
+        <input
+          className={`input${made ? " mono" : ""}`}
+          readOnly
+          value={made ? inviteLink(made.code) : ""}
+          placeholder="Create a link to share"
+          aria-label="Invitation link"
+          onFocus={(e) => e.currentTarget.select()}
+        />
+        {made ? (
+          <button className="btn btn-primary" onClick={copy} aria-label="Copy link">
+            {copied ? <Check size={16} /> : <Copy size={16} />} {copied ? "Copied" : "Copy"}
+          </button>
+        ) : (
+          <button className="btn btn-primary" disabled={busy} onClick={() => void create()}>
+            <Link2 size={16} /> {busy ? "Creating…" : "Create link"}
+          </button>
+        )}
       </div>
-      <button className="btn btn-secondary" disabled={busy} onClick={() => void create()}>
-        <Link2 size={16} /> {busy ? "Creating…" : "Create invite link"}
-      </button>
+      {editing ? (
+        <div className="row" style={{ gap: 8, flexWrap: "wrap", alignItems: "end" }}>
+          <label className="field grow" style={{ minWidth: 120 }}>
+            <span>Expires after</span>
+            <select className="input" value={hours} onChange={(e) => setHours(Number(e.target.value))}>
+              {EXPIRY.map((x) => (
+                <option key={x.hours} value={x.hours}>
+                  {x.label}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="field grow" style={{ minWidth: 120 }}>
+            <span>Max uses</span>
+            <select className="input" value={uses} onChange={(e) => setUses(Number(e.target.value))}>
+              {USES.map((n) => (
+                <option key={n} value={n}>
+                  {n === 1 ? "1 person" : `${n} people`}
+                </option>
+              ))}
+            </select>
+          </label>
+          {made && (
+            <button className="btn btn-secondary" disabled={busy} onClick={() => void create()}>
+              Make a new link
+            </button>
+          )}
+        </div>
+      ) : (
+        <small className="faint">
+          {made ? `Admits ${admits(made.maxUses)} · expires ${untilWhen(made.expiresAt)}. Revoke it any time in Invitations.` : `Your link will expire after ${expiry} and admit ${admits(uses)}.`}{" "}
+          <button className="link-btn" onClick={() => setEditing(true)}>
+            Change
+          </button>
+        </small>
+      )}
     </div>
   );
 }

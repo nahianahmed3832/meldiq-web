@@ -2,6 +2,7 @@ import { Compass, Plus } from "lucide-react";
 import { shallowEqual, useOrbit } from "../../application/orbit";
 import { setPrefs } from "../../application/prefs";
 import { navigate, type Section } from "../../application/router";
+import { ACCENT_CLASS, accentStyle } from "../community/accent";
 import { OrgAvatar } from "../components/OrgAvatar";
 import { UnreadBadge } from "../components/UnreadBadge";
 import { useIncomingRequestCount } from "../people/connectionRequests";
@@ -54,12 +55,12 @@ export function Rail({ orgId, section, onDialog }: { orgId: string | null; secti
   );
 }
 
-type RailOrg = { id: string; name: string; photoRev: number | null; unread: number; mentions: number };
+type RailOrg = { id: string; name: string; photoRev: number | null; accent: string | null; unread: number; mentions: number };
 
 /** The communities in rail order, with their rolled-up unread activity. */
 function useRailOrgs(): RailOrg[] {
   return useOrbit(
-    (s) => s.orgs.map((o) => ({ id: o.id, name: o.name, photoRev: o.photoRev, ...orgActivity(s, o.id) })),
+    (s) => s.orgs.map((o) => ({ id: o.id, name: o.name, photoRev: o.photoRev, accent: o.accent, ...orgActivity(s, o.id) })),
     (a, b) => a.length === b.length && a.every((x, i) => shallowEqual(x, b[i])),
   );
 }
@@ -71,7 +72,8 @@ function CommunityButton({ org: o, selected, size }: { org: RailOrg; selected: b
   const label = `${o.name}${o.mentions ? `, ${t("rail_mentions", { n: o.mentions })}` : ""}${o.unread ? `, ${t("nav_unread", { n: o.unread })}` : ""}`;
   return (
     <button
-      className={`rail-org${isHighlighted(marker) ? " unread" : ""}`}
+      className={`rail-org${isHighlighted(marker) ? " unread" : ""}${o.accent ? ` ${ACCENT_CLASS}` : ""}`}
+      style={accentStyle(o.accent)}
       aria-current={selected}
       title={o.name}
       aria-label={label}

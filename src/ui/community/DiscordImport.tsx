@@ -142,9 +142,31 @@ export function DiscordImport({ returned, onClose }: { returned: DiscordReturn |
 function Intro(props: { configured: boolean; connections: DiscordConnection[]; busy: boolean; onConnect: () => void; onChoose: (c: DiscordConnection) => void }) {
   return (
     <>
-      <p className="muted" style={{ margin: 0 }}>
-        Bring your Discord server's structure to a new Meldiq community. Your members then join with a Meldiq invitation.
-      </p>
+      {!props.configured ? (
+        <div className="banner info" role="status">
+          Importing from Discord isn't set up on this server yet. Its administrator needs to add a Discord application first.
+        </div>
+      ) : (
+        <ol className="discord-steps">
+          <li>
+            <span>
+              <strong>Connect Discord</strong> and pick your server. Discord asks to add Meldiq's bot, which only views channels.
+            </span>
+            <span className="discord-step-actions">
+              <button className="btn btn-primary discord-connect" disabled={props.busy} onClick={props.onConnect}>
+                <ExternalLink size={16} aria-hidden="true" /> {props.busy ? "Opening Discord…" : "Connect Discord"}
+              </button>
+              {props.connections.map((c) => (
+                <button key={c.id} className="btn btn-secondary" onClick={() => props.onChoose(c)}>
+                  Continue with {c.guildName}
+                </button>
+              ))}
+            </span>
+          </li>
+          <li>Meldiq checks that you own that server or have Manage Server there, then forgets your Discord sign-in.</li>
+          <li>You see every channel, role and emoji that would be made, and choose Import.</li>
+        </ol>
+      )}
       <div className="discord-lists">
         <section aria-labelledby="di-yes">
           <h3 id="di-yes" className="invite-or-title">
@@ -169,31 +191,7 @@ function Intro(props: { configured: boolean; connections: DiscordConnection[]; b
           </ul>
         </section>
       </div>
-      {!props.configured ? (
-        <div className="banner info" role="status">
-          Importing from Discord isn't set up on this server yet. Its administrator needs to add a Discord application first.
-        </div>
-      ) : (
-        <>
-          <ol className="discord-steps">
-            <li>Discord asks which server to add Meldiq's bot to. It only asks to view channels.</li>
-            <li>Meldiq checks that you own that server or have Manage Server there, then forgets your Discord sign-in.</li>
-            <li>You see everything that would be made before anything is.</li>
-          </ol>
-          {props.connections.length > 0 && (
-            <div className="discord-connections" role="group" aria-label="Connected Discord servers">
-              {props.connections.map((c) => (
-                <button key={c.id} className="btn btn-secondary" onClick={() => props.onChoose(c)}>
-                  Continue with {c.guildName}
-                </button>
-              ))}
-            </div>
-          )}
-          <button className="btn btn-primary discord-connect" disabled={props.busy} onClick={props.onConnect}>
-            <ExternalLink size={16} aria-hidden="true" /> {props.busy ? "Opening Discord…" : "Connect Discord"}
-          </button>
-        </>
-      )}
+      <p className="faint discord-footnote">Discord doesn't allow copying messages or members. You can remove the bot from your Discord server afterwards.</p>
     </>
   );
 }

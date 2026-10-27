@@ -34,6 +34,7 @@ import { useEngine, useOrbit } from "../../application/orbit";
 import { PERSONAL } from "../../sync/navPrefs";
 import { RemindMeDialog } from "../later/RemindMeDialog";
 import type { RichContent, StoredMessage } from "../../model/types";
+import { nameTone } from "../components/Avatar";
 import { UserAvatar } from "../components/OrgAvatar";
 import { callLine } from "../../sync/callHistory";
 import { ForwardDialog } from "../dialogs/ForwardDialog";
@@ -316,7 +317,7 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
       <div className="msg-main">
         {p.first && (
           <div className="msg-head">
-            <button className="msg-name ellipsis" onClick={() => openProfile(m.senderUserId, p.senderName)}>
+            <button className={`msg-name ellipsis ${nameTone(p.senderColor)}`} onClick={() => openProfile(m.senderUserId, p.senderName)}>
               {p.senderName}
             </button>
             <time dateTime={new Date(m.sortTs).toISOString()} title={fullTime(m.sortTs)}>
