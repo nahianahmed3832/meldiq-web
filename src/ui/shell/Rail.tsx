@@ -2,6 +2,7 @@ import { Compass, Plus } from "lucide-react";
 import { shallowEqual, useOrbit } from "../../application/orbit";
 import { setPrefs } from "../../application/prefs";
 import { navigate, type Section } from "../../application/router";
+import { ACCENT_CLASS, accentStyle } from "../community/accent";
 import { OrgAvatar } from "../components/OrgAvatar";
 import { UnreadBadge } from "../components/UnreadBadge";
 import { useIncomingRequestCount } from "../people/connectionRequests";
@@ -21,11 +22,12 @@ export function Rail({ orgId, section, onDialog }: { orgId: string | null; secti
   const dms = useOrbit(unreadPeopleCount) + useIncomingRequestCount();
   const t = useT();
   const home = section === "dms";
+  const discovering = section === "discover";
   const homeLabel = `${t("rail_home")}${dms ? `, ${t("nav_unread", { n: dms })}` : ""}`;
   return (
     <nav className="rail" aria-label={t("rail_label")}>
       <a className="rail-home" href="/dms" aria-current={home ? "page" : undefined} aria-label={homeLabel} title={t("rail_home")}>
-        <img className="rail-mascot" src="/meldiq-mascot-96.webp" srcSet="/meldiq-mascot-96.webp 96w, /meldiq-mascot-192.webp 192w" sizes="46px" width={46} height={46} alt="" draggable={false} />
+        <img className="rail-mascot" src="/meldling-96.webp" srcSet="/meldling-96.webp 96w, /meldling-192.webp 192w" sizes="46px" width={46} height={46} alt="" draggable={false} />
         {dms > 0 && (
           <span className="count accent" aria-hidden="true">
             {capCount(dms)}
@@ -37,7 +39,7 @@ export function Rail({ orgId, section, onDialog }: { orgId: string | null; secti
         <div role="group" aria-label={t("rail_communities")} className="rail-orgs">
           {orgs.map((o) => {
             // Direct messages belong to no community, so none is selected there (as on Discord).
-            const selected = section !== "dms" && o.id === orgId;
+            const selected = !home && !discovering && o.id === orgId;
             return <CommunityButton key={o.id} org={o} selected={selected} size={44} />;
           })}
         </div>
@@ -45,20 +47,20 @@ export function Rail({ orgId, section, onDialog }: { orgId: string | null; secti
       <button className="rail-round" onClick={() => onDialog({ kind: "createWorkspace" })} aria-label={t("rail_create")} title={t("rail_create")}>
         <Plus size={22} aria-hidden="true" />
       </button>
-      <button className="rail-round" onClick={() => onDialog({ kind: "discover" })} aria-label={t("rail_discover")} title={t("rail_discover")}>
+      <a className="rail-round" href="/discover" aria-current={discovering ? "page" : undefined} aria-label={t("rail_discover")} title={t("rail_discover")}>
         <Compass size={22} aria-hidden="true" />
-      </button>
+      </a>
       <div className="rail-spacer" />
     </nav>
   );
 }
 
-type RailOrg = { id: string; name: string; photoRev: number | null; unread: number; mentions: number };
+type RailOrg = { id: string; name: string; photoRev: number | null; accent: string | null; unread: number; mentions: number };
 
 /** The communities in rail order, with their rolled-up unread activity. */
 function useRailOrgs(): RailOrg[] {
   return useOrbit(
-    (s) => s.orgs.map((o) => ({ id: o.id, name: o.name, photoRev: o.photoRev, ...orgActivity(s, o.id) })),
+    (s) => s.orgs.map((o) => ({ id: o.id, name: o.name, photoRev: o.photoRev, accent: o.accent, ...orgActivity(s, o.id) })),
     (a, b) => a.length === b.length && a.every((x, i) => shallowEqual(x, b[i])),
   );
 }
@@ -70,7 +72,8 @@ function CommunityButton({ org: o, selected, size }: { org: RailOrg; selected: b
   const label = `${o.name}${o.mentions ? `, ${t("rail_mentions", { n: o.mentions })}` : ""}${o.unread ? `, ${t("nav_unread", { n: o.unread })}` : ""}`;
   return (
     <button
-      className={`rail-org${isHighlighted(marker) ? " unread" : ""}`}
+      className={`rail-org${isHighlighted(marker) ? " unread" : ""}${o.accent ? ` ${ACCENT_CLASS}` : ""}`}
+      style={accentStyle(o.accent)}
       aria-current={selected}
       title={o.name}
       aria-label={label}
@@ -100,9 +103,9 @@ export function PhoneRail({ orgId, onDialog }: { orgId: string | null; onDialog:
       <button className="rail-round" onClick={() => onDialog({ kind: "createWorkspace" })} aria-label={t("rail_create")} title={t("rail_create")}>
         <Plus size={22} aria-hidden="true" />
       </button>
-      <button className="rail-round" onClick={() => onDialog({ kind: "discover" })} aria-label={t("rail_discover")} title={t("rail_discover")}>
+      <a className="rail-round" href="/discover" aria-label={t("rail_discover")} title={t("rail_discover")}>
         <Compass size={22} aria-hidden="true" />
-      </button>
+      </a>
     </nav>
   );
 }

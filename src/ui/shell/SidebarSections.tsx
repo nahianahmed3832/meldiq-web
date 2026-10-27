@@ -1,4 +1,4 @@
-import { Archive, ChevronDown, Compass, Contact, MailQuestion, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
+import { Archive, ChevronDown, Compass, Contact, MailQuestion, MoreHorizontal, Pencil, Plus, Search, Trash2, UserRoundPlus } from "lucide-react";
 import { type ReactNode, useState } from "react";
 import { shallowEqual, useEngine, useOrbit } from "../../application/orbit";
 import { setPrefs, usePrefs } from "../../application/prefs";
@@ -258,6 +258,50 @@ export function PeopleExtras({ onRequests, onConnections, onlyWhenAsked }: { onR
           {asked > 0 && <span className="count accent">{asked}</span>}
         </button>
       )}
+    </>
+  );
+}
+
+/**
+ * The top of Home and messages (the reference's DM hub): Friends (your connections, with requests waiting), message
+ * requests, Find people and Create group; then the "Direct messages" heading with + for a new message.
+ */
+export function DmHub({ onDialog }: { onDialog: (kind: "requests" | "connections" | "new" | "newGroup") => void }) {
+  const hasConnections = useOrbit((s) => s.server?.features.includes("connections") ?? false);
+  const waiting = useOrbit((s) => messageRequests(s).length);
+  const asked = useIncomingRequestCount();
+  const t = useT();
+  return (
+    <>
+      <nav className="dm-hub" aria-label="People">
+        {hasConnections && (
+          <button className={`dm-hub-item${asked > 0 ? " unread" : ""}`} onClick={() => onDialog("connections")} aria-label={asked > 0 ? `Connection requests, ${asked} waiting` : "Friends"}>
+            <Contact size={20} aria-hidden="true" />
+            <span className="grow">Friends</span>
+            {asked > 0 && <span className="count accent">{asked}</span>}
+          </button>
+        )}
+        {waiting > 0 && (
+          <button className="dm-hub-item unread" onClick={() => onDialog("requests")}>
+            <MailQuestion size={20} aria-hidden="true" />
+            <span className="grow">{t("side_message_requests", { n: waiting })}</span>
+          </button>
+        )}
+        <button className="dm-hub-item" onClick={() => onDialog("new")}>
+          <Search size={20} aria-hidden="true" />
+          <span className="grow">Find people</span>
+        </button>
+        <button className="dm-hub-item" onClick={() => onDialog("newGroup")}>
+          <UserRoundPlus size={20} aria-hidden="true" />
+          <span className="grow">Create group</span>
+        </button>
+      </nav>
+      <div className="dm-hub-label">
+        <h3>{t("side_direct_messages")}</h3>
+        <button className="icon-btn" onClick={() => onDialog("new")} aria-label={t("side_new_message")} title={t("side_new_message")}>
+          <Plus size={16} />
+        </button>
+      </div>
     </>
   );
 }

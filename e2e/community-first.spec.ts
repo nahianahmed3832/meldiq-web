@@ -4,7 +4,7 @@ import { newPhone } from "./phone";
 
 /**
  * The community-first redesign (docs/MELDIQ_COMMUNITY_FIRST_BRIEF.md): the mascot opens messages, Activity and Saved sit
- * in the top bar, round Create and Discover, the unread rule (one event: highlight; two or more: a count), the tab's
+ * in the user panel and profile menu, round Create and Discover, the unread rule (one event: highlight; two or more: a count), the tab's
  * title count, and who reacted.
  */
 test.skip(({ browserName, isMobile }) => browserName !== "chromium" || isMobile, "desktop Chromium: the rail and hover");
@@ -23,18 +23,21 @@ test("the mascot, the top bar, Create and Discover replace the old rail entries"
 
   await rail.getByRole("link", { name: /^Home and messages/ }).click();
   await expect(page).toHaveURL(/\/dms$/);
-  await expect(page.getByRole("complementary", { name: "Conversations" }).getByRole("heading", { name: "Direct messages" })).toBeVisible();
+  await expect(page.getByRole("complementary", { name: "Conversations" }).getByRole("heading", { name: "Direct messages", level: 2 })).toBeVisible();
 
+  // Activity sits in the user panel at the foot of the sidebar; Saved for later in the profile menu (the reference layout).
   await page.getByRole("button", { name: /^Activity/ }).click();
   await expect(page).toHaveURL(/\/activity$/);
-  await page.getByRole("button", { name: /^Saved for later/ }).click();
+  await page.getByRole("button", { name: /Your profile and settings/ }).click();
+  await page.getByRole("menuitem", { name: /^Saved for later/ }).click();
   await expect(page).toHaveURL(/\/later$/);
 
   await rail.getByRole("button", { name: "Create a community" }).click();
   await expect(page.getByRole("dialog")).toBeVisible();
   await page.keyboard.press("Escape");
-  await rail.getByRole("button", { name: "Discover communities" }).click();
-  await expect(page.getByRole("dialog", { name: "Discover communities" })).toBeVisible();
+  await rail.getByRole("link", { name: "Discover communities" }).click();
+  await expect(page).toHaveURL(/\/discover$/);
+  await expect(page.getByRole("heading", { name: "Find your people" })).toBeVisible();
 });
 
 test("one unread event highlights a channel without a number; two show a count; the title counts DMs", async ({ page }) => {

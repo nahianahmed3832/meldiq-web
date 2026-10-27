@@ -126,6 +126,12 @@ export const zConversation = z.object({
 });
 export type Conversation = z.infer<typeof zConversation>;
 
+/** A community's accent colour (API 0.44.0): only "#rrggbb" is kept; anything else is dropped (Meldiq's theme). */
+export const zAccent = z
+  .unknown()
+  .optional()
+  .transform((v) => (typeof v === "string" && /^#[0-9a-f]{6}$/i.test(v) ? v.toLowerCase() : null));
+
 export const zOrg = z.object({
   id: z.string(),
   name: z.string(),
@@ -136,6 +142,12 @@ export const zOrg = z.object({
   createdAt: z.number(),
   /** The workspace photo's revision (GET /v1/orgs/:id/photo), null without one. */
   photoRev: z
+    .number()
+    .nullish()
+    .transform((v) => v ?? null),
+  /** API 0.44.0: the community's accent ("#rrggbb") and banner revision; anything else (or older servers) means Meldiq's theme. */
+  accent: zAccent,
+  bannerRev: z
     .number()
     .nullish()
     .transform((v) => v ?? null),

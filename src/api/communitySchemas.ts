@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { openEnum } from "./enums";
-import { zConversation, zOrg } from "./schemas";
+import { zAccent, zConversation, zOrg } from "./schemas";
 
 /**
  * Community answers (server/src/routes/community.ts, applications.ts, reports.ts; docs/COMMUNITY_REBUILD_2026-10-21.md).
@@ -54,6 +54,8 @@ export const zDiscovered = z.object({
   description: nullableString,
   memberCount: z.number().int().default(0),
   photoRev: nullableNumber,
+  accent: zAccent,
+  bannerRev: nullableNumber,
   joinPolicy: openEnum(["invite", "open"]),
   applications: z.boolean().default(false),
   joined: z.boolean().default(false),

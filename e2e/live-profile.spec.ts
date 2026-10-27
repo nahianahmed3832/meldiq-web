@@ -31,7 +31,7 @@ test("a name and photo changed on a phone show in an open browser without a relo
 
   // Bob renames himself and sets a photo on his phone.
   await bob.req("PATCH", "/v1/users/me", { displayName: "Bobby Chen" });
-  await bob.req("PUT", "/v1/users/me/photo", undefined, fs.readFileSync(path.join(import.meta.dirname, "../public/launch/meldiq-launch.jpg")));
+  await bob.req("PUT", "/v1/users/me/photo", undefined, fs.readFileSync(path.join(import.meta.dirname, "fixtures/photo.jpg")));
   await expect(page.locator(".conv-head h1")).toContainText("Bobby Chen");
   await expect(page.locator(".side-item").filter({ hasText: "Bobby Chen" })).toBeVisible();
   await expect.poll(() => page.locator(".conv-head .avatar-photo").evaluateAll(loaded), { message: "Bob's new photo in the header" }).toBe(true);

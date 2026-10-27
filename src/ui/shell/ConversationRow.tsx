@@ -89,7 +89,7 @@ export const ConversationRow = memo(function ConversationRow({ id, twoLine, hide
   const mentions = local?.mentions ?? 0;
   const current = route.conversationId === id;
   if (hideRead && unread === 0 && !current) return null;
-  const section = route.section === "dms" ? "dms" : route.section === "activity" ? "activity" : "home";
+  const section = route.section === "dms" || route.section === "discover" ? "dms" : route.section === "activity" ? "activity" : "home";
   const glyph =
     c.type === "CHANNEL" ? (
       c.kind === "PRIVATE" ? (
@@ -131,15 +131,21 @@ export const ConversationRow = memo(function ConversationRow({ id, twoLine, hide
         </span>
         <span className="row">
           <small className="grow ellipsis">
-            {typing
-              ? t("row_typing")
-              : !showPreview
-                ? ""
-                : local?.lastPreview
-                  ? `${local.lastSenderName && c.type !== "DM" ? `${local.lastSenderName}: ` : local.lastSenderName === "You" ? "You: " : ""}${local.lastPreview}`
-                  : c.type === "GROUP"
-                    ? members(c.memberCount)
-                    : t("row_no_messages")}
+            {typing ? (
+              <span className="row-typing" title={t("row_typing")}>
+                <img src="/meldling-96.webp" width={14} height={14} alt="" draggable={false} />
+                <span aria-hidden="true">{t("typing_meldling")}…</span>
+                <span className="sr-only">{t("row_typing")}</span>
+              </span>
+            ) : !showPreview ? (
+              ""
+            ) : local?.lastPreview ? (
+              `${local.lastSenderName && c.type !== "DM" ? `${local.lastSenderName}: ` : local.lastSenderName === "You" ? "You: " : ""}${local.lastPreview}`
+            ) : c.type === "GROUP" ? (
+              members(c.memberCount)
+            ) : (
+              t("row_no_messages")
+            )}
           </small>
           <LiveCallBadge conversationId={id} />
           {muted && <BellOff size={12} className="faint" aria-hidden="true" />}

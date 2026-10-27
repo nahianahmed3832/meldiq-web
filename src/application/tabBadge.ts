@@ -43,7 +43,7 @@ export function badgeText(signal: TabSignal): string | null {
 }
 
 const ICON_SIZE = 64;
-const ICON_SRC = "/meldiq-192.png";
+const ICON_SRC = "/meldling-192.png";
 let original: string | null = null;
 let base: Promise<HTMLImageElement> | null = null;
 

@@ -62,7 +62,7 @@ test("forward to two chats with a note, a call card, the viewer's caption and Re
 
   // The photo viewer: sender, time and the message's text under the picture, and React without leaving.
   await page.goto(`/dms/c/${dmBob}`);
-  await page.locator(".composer input[type=file]").setInputFiles(path.join(import.meta.dirname, "../public/launch/meldiq-launch.jpg"));
+  await page.locator(".composer input[type=file]").setInputFiles(path.join(import.meta.dirname, "fixtures/photo.jpg"));
   await page.getByPlaceholder(/^Message Bob/).fill("Our new logo");
   await page.getByRole("button", { name: "Send" }).click();
   const photoMsg = page.locator(".msg").filter({ hasText: "Our new logo" });

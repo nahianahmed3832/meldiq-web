@@ -95,6 +95,7 @@ test("every screen fits from 320 px phones to desktop, with the composer on scre
       ["details", `/#/dms/c/${dm}/details`],
       ["channel-details", `/#/home/c/${channel.id}/details`],
       ["settings", "/#/settings/notifications"],
+      ["discover", "/#/discover"],
     ];
     for (const [name, hash] of screens) {
       await page.goto(hash);

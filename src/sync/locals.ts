@@ -69,8 +69,16 @@ export class ConversationLocals {
     });
   }
 
+  /**
+   * Another device of this account read the conversation up to [upTo]. Cleared here too, unless something newer arrived
+   * after that point: then it stays unread (what's newer hasn't been read anywhere).
+   */
   readElsewhere(conversationId: string, upTo: number): Promise<void> {
-    return this.update(conversationId, (l) => ({ ...l, unread: 0, mentions: 0, readUpTo: Math.max(l.readUpTo, upTo) }));
+    return this.update(conversationId, async (l) => {
+      const newer = await this.store.newestMessage(conversationId, (m) => !m.outgoing && m.threadRootId === null && (m.serverTs ?? m.sortTs) > upTo);
+      const readUpTo = Math.max(l.readUpTo, upTo);
+      return newer ? { ...l, readUpTo } : { ...l, unread: 0, mentions: 0, readUpTo };
+    });
   }
 
   setUnread(id: string, unread: boolean): Promise<void> {

@@ -10,41 +10,58 @@
     <title>Meldiq invitation</title>
     <link rel="icon" href="/favicon-32.png" />
     <style>
-      :root { --bg: #f4f6fb; --card: #ffffff; --text: #121933; --muted: #4f5878; --accent: #3a5bd9; --accent-text: #ffffff; --line: #e1e6f0; --warn: #8a5a00; }
-      @media (prefers-color-scheme: dark) { :root { --bg: #070b18; --card: #10172b; --text: #eef2ff; --muted: #a9b3d4; --accent: #7aa2ff; --accent-text: #0a1230; --line: #1f2944; --warn: #f0c060; } }
+      @font-face { font-family: "Plus Jakarta Sans"; src: url("/fonts/PlusJakartaSans.ttf") format("truetype"); font-weight: 200 800; font-display: swap; }
+      :root { --bg: #f4f6fb; --card: #ffffff; --text: #121933; --muted: #4f5878; --accent: #3a5bd9; --accent-text: #ffffff; --line: #e1e6f0; --warn: #8a5a00; --ok: #1d7a4c; --grid: rgba(58, 91, 217, 0.07); }
+      @media (prefers-color-scheme: dark) { :root { --bg: #070b18; --card: #10172b; --text: #eef2ff; --muted: #a9b3d4; --accent: #7aa2ff; --accent-text: #0a1230; --line: #1f2944; --warn: #f0c060; --ok: #5fd49a; --grid: rgba(122, 162, 255, 0.07); } }
       * { box-sizing: border-box; }
-      body { margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 24px 16px; background: var(--bg); color: var(--text); font: 16px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
-      main { width: 100%; max-width: 420px; background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 28px 24px; text-align: center; }
-      img { width: 72px; height: 72px; border-radius: 20px; }
+      body {
+        margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 24px 16px; color: var(--text);
+        font: 16px/1.5 "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+        background: radial-gradient(60% 50% at 20% 10%, rgba(34, 211, 238, 0.12), transparent 70%), radial-gradient(50% 50% at 85% 90%, rgba(139, 92, 246, 0.14), transparent 70%),
+          linear-gradient(var(--grid) 1px, transparent 1px) 0 0 / 48px 48px, linear-gradient(90deg, var(--grid) 1px, transparent 1px) 0 0 / 48px 48px, var(--bg);
+      }
+      main { width: 100%; max-width: 440px; background: var(--card); border: 1px solid var(--line); border-radius: 22px; padding: 32px 28px 26px; text-align: center; box-shadow: 0 24px 60px rgba(0, 0, 0, 0.25); }
+      .icon { width: 88px; height: 88px; margin: 0 auto; border-radius: 24px; display: grid; place-items: center; font-size: 32px; font-weight: 800; color: #fff; background: linear-gradient(135deg, #22d3ee, #8b5cf6); }
+      .icon.brand { background: none; }
+      .icon img { width: 88px; height: 88px; }
       @media (prefers-reduced-motion: no-preference) { main { animation: rise 260ms cubic-bezier(0.05, 0.7, 0.1, 1); } @keyframes rise { from { opacity: 0; transform: translateY(8px); } } }
       a:focus-visible, button:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
-      h1 { font-size: 1.4rem; margin: 14px 0 4px; overflow-wrap: anywhere; }
+      h1 { font-size: 1.75rem; font-weight: 800; letter-spacing: 0.01em; text-transform: uppercase; margin: 2px 0 2px; overflow-wrap: anywhere; }
       p { margin: 6px 0; color: var(--muted); overflow-wrap: anywhere; }
-      .code { font: 600 1.1rem ui-monospace, Menlo, monospace; letter-spacing: 0.06em; color: var(--text); margin: 16px 0 4px; }
+      #lead { margin-top: 18px; }
+      #members { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; }
+      #members::before { content: ""; width: 9px; height: 9px; border-radius: 50%; background: var(--ok); }
+      .code { font: 600 1rem ui-monospace, Menlo, monospace; letter-spacing: 0.06em; color: var(--muted); margin: 14px 0 0; }
       .actions { display: grid; gap: 10px; margin-top: 20px; }
-      a.button, button { display: block; width: 100%; padding: 13px 16px; border-radius: 999px; border: 1px solid var(--line); background: transparent; color: var(--text); font: inherit; font-weight: 600; text-decoration: none; cursor: pointer; }
-      a.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-text); }
+      a.button, button { display: block; width: 100%; padding: 13px 16px; border-radius: 12px; border: 1px solid var(--line); background: transparent; color: var(--text); font: inherit; font-weight: 700; text-decoration: none; cursor: pointer; }
+      a.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-text); padding: 15px 16px; font-size: 1.05rem; }
       .warn { color: var(--warn); }
+      .brandline { display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 22px; color: var(--muted); font-size: 0.85rem; }
+      .brandline img { width: 22px; height: 22px; }
+      .banner { height: 132px; margin: -32px -28px 0; border-radius: 22px 22px 0 0; background: center / cover no-repeat; }
+      .banner + .icon { margin-top: -48px; box-shadow: 0 0 0 6px var(--card); }
       [hidden] { display: none !important; }
     </style>
   </head>
   <body>
     <main>
-      <img src="/meldiq-mascot-192.webp" alt="" width="72" height="72" />
-      <p id="lead">You've been invited to a community on Meldiq</p>
+      <div class="banner" id="banner" hidden></div>
+      <div class="icon brand" id="icon" aria-hidden="true"><img src="/meldling-192.webp" alt="" width="88" height="88" /></div>
+      <p id="lead">You've been invited to join</p>
       <h1 id="name">Loading…</h1>
-      <p id="about" hidden></p>
       <p id="members" hidden></p>
+      <p id="about" hidden></p>
       <p id="problem" class="warn" hidden></p>
       <div id="join" hidden>
-        <div class="code" id="code"></div>
         <div class="actions">
           <a class="button primary" id="open-web" href="/">Join in Meldiq Web</a>
           <a class="button" id="open-app" href="#">Open in the Meldiq app</a>
           <button type="button" id="copy">Copy the code</button>
         </div>
-        <p style="margin-top: 14px; font-size: 0.9rem">Not signed in yet? Sign in or create an account first: you'll come back to this community.</p>
+        <div class="code" id="code"></div>
+        <p style="margin-top: 12px; font-size: 0.9rem">Not signed in yet? Sign in or create an account first: you'll come back to this community.</p>
       </div>
+      <div class="brandline"><img src="/meldling-96.webp" alt="" width="22" height="22" />Meldiq</div>
     </main>
     <script src="/invite.js"></script>
   </body>

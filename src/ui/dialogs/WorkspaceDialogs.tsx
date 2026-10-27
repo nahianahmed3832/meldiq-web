@@ -1,4 +1,6 @@
 import { OrgAvatar } from "../components/OrgAvatar";
+import { usePhoto } from "../components/photos";
+import { ACCENT_CLASS, accentBand, accentStyle } from "../community/accent";
 import { Building2, Ticket, Users } from "lucide-react";
 import { type FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { ApiError } from "../../api/client";
@@ -135,6 +137,12 @@ export function JoinWorkspaceDialog({ onClose, initialCode }: { onClose: () => v
   }, [initialCode]);
 
   const join = async () => {
+    if (preview?.alreadyMember) {
+      setPrefs({ orgId: preview.org.id });
+      onClose();
+      navigate({ section: "home" });
+      return;
+    }
     setBusy(true);
     setError(null);
     try {
@@ -150,7 +158,7 @@ export function JoinWorkspaceDialog({ onClose, initialCode }: { onClose: () => v
   };
 
   return (
-    <Dialog title={`Join a ${noun}`} onClose={onClose}>
+    <Dialog title={preview ? `Join ${preview.org.name}` : `Join a ${noun}`} onClose={onClose} className={preview ? "invite-landing-dialog" : undefined}>
       <div className="dialog-body">
         {error && (
           <div className="banner danger" role="alert">
@@ -174,32 +182,45 @@ export function JoinWorkspaceDialog({ onClose, initialCode }: { onClose: () => v
             </div>
           </form>
         ) : (
-          <div style={{ display: "grid", gap: 14 }}>
-            <div className="card invite-preview" style={{ padding: 16, display: "grid", gap: 4 }}>
-              <OrgAvatar orgId={preview.org.id} name={preview.org.name} photoRev={null} size={56} />
-              <strong style={{ fontSize: 17 }}>{preview.org.name}</strong>
-              {preview.org.description && <span className="muted">{preview.org.description}</span>}
-              {preview.org.memberCount !== undefined && <span className="faint">{preview.org.memberCount === 1 ? "1 member" : `${preview.org.memberCount} members`}</span>}
-              <span className="faint" style={{ fontSize: 13 }}>
+          <div className={`invite-landing${preview.org.accent ? ` ${ACCENT_CLASS}` : ""}`} style={accentStyle(preview.org.accent)}>
+            <InviteBanner code={extractInvite(code) ?? cleanInviteCode(code)} rev={preview.org.bannerRev} accent={preview.org.accent} />
+            <span className="invite-landing-icon">
+              <OrgAvatar orgId={preview.org.id} name={preview.org.name} photoRev={null} size={88} />
+            </span>
+            <p className="invite-landing-lead">You've been invited to join</p>
+            <h3 className="invite-landing-name">{preview.org.name}</h3>
+            {preview.org.memberCount !== undefined && (
+              <p className="invite-landing-members">
+                <i aria-hidden="true" />
+                {preview.org.memberCount === 1 ? "1 member" : `${preview.org.memberCount} members`}
+              </p>
+            )}
+            {preview.org.description && <p className="muted invite-landing-about">{preview.org.description}</p>}
+            {!preview.alreadyMember && (
+              <p className="faint invite-landing-role">
                 You'll join as {roleName(preview.role).toLowerCase()}
                 {preview.branch ? ` in ${preview.branch.name}` : ""}
                 {preview.team ? `, team ${preview.team.name}` : ""}.
-              </span>
-            </div>
-            {preview.alreadyMember && <div className="banner info">You're already a member of this {noun}.</div>}
+              </p>
+            )}
             {!preview.alreadyMember && preview.banned && <div className="banner danger">You've been banned from this {noun}, so you can't join it.</div>}
             {!preview.alreadyMember && !preview.banned && preview.invitesPaused && <div className="banner warn">This {noun} has paused new members for now. Try again later.</div>}
-            <div className="row" style={{ justifyContent: "flex-end", gap: 8 }}>
-              <button type="button" className="btn btn-secondary" onClick={() => setPreview(null)}>
-                Back
-              </button>
-              <button className="btn btn-primary" disabled={busy || (!preview.alreadyMember && (preview.banned || preview.invitesPaused))} onClick={() => void join()}>
-                {busy ? "Joining…" : preview.alreadyMember ? `Open ${noun}` : `Join ${noun}`}
-              </button>
-            </div>
+            <button className="btn btn-primary btn-lg invite-landing-go" disabled={busy || (!preview.alreadyMember && (preview.banned || preview.invitesPaused))} onClick={() => void join()}>
+              {busy ? "Joining…" : preview.alreadyMember ? "You're already in. Open it" : `Join ${preview.org.name}`}
+            </button>
+            <button type="button" className="link-btn" onClick={() => setPreview(null)}>
+              Use a different code
+            </button>
           </div>
         )}
       </div>
     </Dialog>
   );
+}
+
+/** The invited community's banner (API 0.44.0), or a band in its accent; nothing for a community without either. */
+function InviteBanner({ code, rev, accent }: { code: string; rev: number | null; accent: string | null }) {
+  const url = usePhoto("inviteBanner", code, rev);
+  if (!url && !accent) return null;
+  return <div className="invite-landing-banner" style={url ? { backgroundImage: `url(${url})` } : { background: accentBand(accent ?? "") }} aria-hidden="true" />;
 }

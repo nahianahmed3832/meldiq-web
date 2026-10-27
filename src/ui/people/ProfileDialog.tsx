@@ -1,4 +1,4 @@
-import { Check, Flag, MessageSquare, ShieldBan, ShieldCheck, Ticket, UserCheck, UserPlus, UserX } from "lucide-react";
+import { Check, Copy, Flag, MoreHorizontal, SendHorizontal, ShieldBan, ShieldCheck, Ticket, UserCheck, UserPlus, UserX, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { ApiError } from "../../api/client";
 import { shallowEqual, useEngine, useOrbit } from "../../application/orbit";
@@ -8,21 +8,48 @@ import { block, blockedIds, unblock } from "../../sync/profile";
 import { acceptConnection, connect, connections, connectionState, invitableCommunities, inviteFromProfile, presenceWords, removeConnection } from "../../sync/social";
 import { ReportDialog } from "../chat/ReportDialog";
 import { UserAvatar } from "../components/OrgAvatar";
-import { Dialog } from "../components/Overlay";
+import { Dialog, Menu, type MenuEntry, useMenu } from "../components/Overlay";
+import { toneOf } from "../components/Avatar";
+import { directory } from "../../sync/workspaces";
 import { relative } from "../format";
 
 type Profile = Awaited<ReturnType<typeof userProfile>>;
 
 /** Opens someone's profile from anywhere (a name in a message, a member list): the shell shows the dialog. */
 export const OPEN_PROFILE_EVENT = "meldiq:open-profile";
-export const openProfile = (userId: string, name?: string): void => void window.dispatchEvent(new CustomEvent(OPEN_PROFILE_EVENT, { detail: { userId, name } }));
+/** Where a profile was opened: the community it was opened in (for their roles) and what was clicked (to sit beside it). */
+export interface ProfileContext {
+  orgId?: string | null;
+  anchor?: Element | null;
+}
+export interface ProfileRequest {
+  userId: string;
+  name?: string;
+  orgId?: string | null;
+  near?: { x: number; y: number } | null;
+}
+export const openProfile = (userId: string, name?: string, ctx: ProfileContext = {}): void => {
+  const r = ctx.anchor?.getBoundingClientRect();
+  const detail: ProfileRequest = { userId, name, orgId: ctx.orgId ?? null, near: r ? { x: r.left, y: r.top } : null };
+  window.dispatchEvent(new CustomEvent(OPEN_PROFILE_EVENT, { detail }));
+};
 
 /**
  * Someone's profile as the server lets this account see it (android ProfileScreens): name, @username and pronouns, how
  * they appear (online, idle, do not disturb, last seen), their status; Message, Connect (B6), Invite to a community
  * (B4b), Report (B4) and Block.
  */
-export function ProfileDialog({ userId, fallbackName, onClose }: { userId: string; fallbackName: string; onClose: () => void }) {
+interface ProfileDialogProps {
+  userId: string;
+  fallbackName: string;
+  /** The community it was opened in: their roles there are shown. */
+  orgId?: string | null;
+  /** Wide screens: beside this point (the member list), as the reference's profile card. */
+  near?: { x: number; y: number } | null;
+  onClose: () => void;
+}
+
+export function ProfileDialog({ userId, fallbackName, orgId = null, near = null, onClose }: ProfileDialogProps) {
   const engine = useEngine();
   const me = useOrbit((s) => s.me?.userId);
   const features = useOrbit((s) => s.server?.features ?? [], shallowEqual);
@@ -38,6 +65,20 @@ export function ProfileDialog({ userId, fallbackName, onClose }: { userId: strin
   const [view, setView] = useState<"main" | "invite" | "report" | "confirmRemove" | "confirmBlock">("main");
   const self = userId === me;
   const hasConnections = features.includes("connections");
+  const moreMenu = useMenu();
+  const [draft, setDraft] = useState("");
+  // Their roles in the community it was opened from (the member directory; empty where this account can't see it).
+  const [roles, setRoles] = useState<{ id: string; name: string; color: string | null }[] | null>(null);
+  useEffect(() => {
+    if (!orgId || !profile) return;
+    let alive = true;
+    directory(engine, orgId, profile.username)
+      .then((people) => alive && setRoles(people.find((p) => p.id === userId)?.customRoles ?? []))
+      .catch(() => undefined);
+    return () => {
+      alive = false;
+    };
+  }, [engine, orgId, userId, profile]);
 
   useEffect(() => {
     let alive = true;
@@ -76,12 +117,6 @@ export function ProfileDialog({ userId, fallbackName, onClose }: { userId: strin
       setBusy(false);
     }
   };
-  const message = () =>
-    void run(async () => {
-      const id = await startDirect(engine, userId);
-      onClose();
-      navigate({ section: "dms", conversationId: id });
-    });
   const name = profile?.displayName ?? fallbackName;
 
   if (view === "report") {
@@ -126,87 +161,112 @@ export function ProfileDialog({ userId, fallbackName, onClose }: { userId: strin
     );
 
   const words = profile ? presenceWords(profile.presence, profile.online) : null;
+  const more: MenuEntry[] = [
+    ...(features.includes("invite-links") && orgs.length > 0 && !blocked ? [{ label: "Invite to a community…", icon: <Ticket size={16} />, onSelect: () => setView("invite") }] : []),
+    ...(features.includes("reports") ? [{ label: "Report…", icon: <Flag size={16} />, onSelect: () => setView("report") }] : []),
+    ...(blocked !== null
+      ? [
+          blocked
+            ? { label: "Unblock", icon: <ShieldCheck size={16} />, onSelect: () => void run(() => unblock(engine, userId).then(() => setBlocked(false))) }
+            : { label: "Block…", icon: <ShieldBan size={16} />, danger: true, onSelect: () => setView("confirmBlock") },
+        ]
+      : []),
+    ...(profile ? [{ label: "Copy username", icon: <Copy size={16} />, onSelect: () => void navigator.clipboard?.writeText(`@${profile.username}`).catch(() => undefined) }] : []),
+  ];
   return (
     <Dialog
       title={name}
       onClose={onClose}
-      footer={
-        profile && !self ? (
-          <>
-            {features.includes("reports") && (
-              <button className="btn btn-ghost" onClick={() => setView("report")}>
-                <Flag size={15} /> Report
+      className="profile-pop"
+      near={near}
+      header={
+        <>
+          <div className="profile-pop-banner" style={{ background: toneOf(profile?.avatarColor ?? 0) }}>
+            {!self && more.length > 0 && (
+              <button className="icon-btn profile-pop-btn" onClick={(e) => moreMenu.open(e.currentTarget)} aria-label={`More for ${name}`} aria-haspopup="menu" aria-expanded={!!moreMenu.anchor}>
+                <MoreHorizontal size={18} />
               </button>
             )}
-            {blocked !== null && (
-              <button className="btn btn-ghost" disabled={busy} onClick={() => (blocked ? void run(() => unblock(engine, userId).then(() => setBlocked(false))) : setView("confirmBlock"))}>
-                {blocked ? <ShieldCheck size={15} /> : <ShieldBan size={15} />} {blocked ? "Unblock" : "Block"}
-              </button>
-            )}
-            <span className="grow" />
-            {features.includes("invite-links") && orgs.length > 0 && !blocked && (
-              <button className="btn btn-secondary" onClick={() => setView("invite")}>
-                <Ticket size={15} /> Invite
-              </button>
-            )}
-            {!blocked && (
-              <button className="btn btn-primary" disabled={busy} onClick={message}>
-                <MessageSquare size={16} /> Message
-              </button>
-            )}
-          </>
-        ) : undefined
-      }
-    >
-      <div className="dialog-body profile-dialog">
-        {error && (
-          <div className="banner danger" role="alert">
-            {error}
+            <button className="icon-btn profile-pop-btn" onClick={onClose} aria-label="Close">
+              <X size={18} />
+            </button>
           </div>
-        )}
-        {!profile ? (
-          !error && <div className="skeleton" style={{ height: 64 }} aria-busy="true" />
-        ) : (
-          <>
-            <div className="row" style={{ gap: 14 }}>
+          {profile && (
+            <div className="profile-pop-avatar">
               <UserAvatar
                 userId={profile.id}
                 name={profile.displayName}
                 colorIndex={profile.avatarColor}
                 photoRev={profile.photoRev}
-                size={64}
+                size={92}
                 online={profile.online}
                 presence={profile.presence}
                 decorative
               />
-              <span className="lines">
-                <strong style={{ fontSize: 17 }}>{profile.displayName}</strong>
-                <small>
-                  @{profile.username}
-                  {profile.pronouns ? ` · ${profile.pronouns}` : ""}
-                </small>
-                {words ? (
-                  <span className="presence-line">
-                    <span className={`dot${profile.presence === "idle" ? " idle" : profile.presence === "dnd" ? " dnd" : ""}`} aria-hidden />
-                    {words}
-                  </span>
-                ) : profile.lastSeenAt ? (
-                  <small className="faint">Last seen {relative(profile.lastSeenAt)}</small>
-                ) : null}
-                {profile.statusText && <small className="faint">{profile.statusText}</small>}
-              </span>
+              {hasConnections && !self && state === "none" && !blocked && (
+                <button
+                  className="icon-btn profile-pop-connect"
+                  disabled={busy}
+                  onClick={() => void run(async () => setState((await connect(engine, { userId })) === "accepted" ? "connected" : "sent"))}
+                  aria-label={`Connect with ${name}`}
+                  title="Connect"
+                >
+                  <UserPlus size={19} />
+                </button>
+              )}
             </div>
-            {hasConnections && !self && state && !blocked && (
+          )}
+        </>
+      }
+    >
+      <div className="profile-pop-body">
+        {!profile ? (
+          error ? (
+            <div className="banner danger" role="alert">
+              {error}
+            </div>
+          ) : (
+            <div className="skeleton" style={{ height: 120 }} aria-busy="true" />
+          )
+        ) : (
+          <>
+            <h2 className="profile-pop-name ellipsis">{profile.displayName}</h2>
+            <p className="profile-pop-handle">
+              @{profile.username}
+              {profile.pronouns && <span className="tag">{profile.pronouns}</span>}
+            </p>
+            {(profile.statusEmoji || profile.statusText) && <p className="profile-pop-status">{[profile.statusEmoji, profile.statusText].filter(Boolean).join(" ")}</p>}
+            {error && (
+              <div className="banner danger" role="alert">
+                {error}
+              </div>
+            )}
+            <section className="profile-box" aria-label="Presence">
+              <h3>Now</h3>
+              {words ? (
+                <span className="presence-line">
+                  <span className={`dot${profile.presence === "idle" ? " idle" : profile.presence === "dnd" ? " dnd" : ""}`} aria-hidden />
+                  {words}
+                </span>
+              ) : (
+                <span className="faint">{profile.lastSeenAt ? `Last seen ${relative(profile.lastSeenAt)}` : "Not shown"}</span>
+              )}
+            </section>
+            {roles && roles.length > 0 && (
+              <section className="profile-box" aria-label="Roles">
+                <h3>Roles</h3>
+                <div className="profile-roles">
+                  {roles.map((r) => (
+                    <span key={r.id} className="profile-role">
+                      <i style={{ background: r.color ?? "var(--text-3)" }} aria-hidden="true" />
+                      {r.name}
+                    </span>
+                  ))}
+                </div>
+              </section>
+            )}
+            {hasConnections && !self && state && state !== "none" && !blocked && (
               <div className="row" style={{ gap: 8 }}>
-                {state === "none" && (
-                  <button
-                    className="btn btn-secondary btn-sm"
-                    disabled={busy}
-                    onClick={() => void run(async () => setState((await connect(engine, { userId })) === "accepted" ? "connected" : "sent"))}
-                  >
-                    <UserPlus size={14} /> Connect
-                  </button>
-                )}
                 {state === "sent" && (
                   <button className="btn btn-secondary btn-sm" disabled={busy} onClick={() => void run(() => removeConnection(engine, userId).then(() => setState("none")))} title="Cancel request">
                     <Check size={14} /> Request sent
@@ -214,7 +274,7 @@ export function ProfileDialog({ userId, fallbackName, onClose }: { userId: strin
                 )}
                 {state === "received" && (
                   <button className="btn btn-primary btn-sm" disabled={busy} onClick={() => void run(() => acceptConnection(engine, userId).then(() => setState("connected")))}>
-                    <UserCheck size={14} /> Accept
+                    <UserCheck size={14} /> Accept connection
                   </button>
                 )}
                 {state === "connected" && (
@@ -246,9 +306,30 @@ export function ProfileDialog({ userId, fallbackName, onClose }: { userId: strin
                 </button>
               </div>
             )}
+            {!self && !blocked && (
+              <form
+                className="profile-pop-message"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  const text = draft.trim();
+                  void run(async () => {
+                    const id = await startDirect(engine, userId);
+                    if (text) await engine.sendText(id, text);
+                    onClose();
+                    navigate({ section: "dms", conversationId: id });
+                  });
+                }}
+              >
+                <input className="input" value={draft} maxLength={4000} onChange={(e) => setDraft(e.target.value)} placeholder={`Message @${profile.username}`} aria-label={`Message ${name}`} />
+                <button className="btn btn-primary" disabled={busy} aria-label={draft.trim() ? `Send to ${name}` : `Open a conversation with ${name}`}>
+                  <SendHorizontal size={16} />
+                </button>
+              </form>
+            )}
           </>
         )}
       </div>
+      {moreMenu.anchor && <Menu anchor={moreMenu.anchor} label={`More for ${name}`} onClose={moreMenu.close} entries={more} align="end" />}
     </Dialog>
   );
 }

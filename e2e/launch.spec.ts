@@ -3,37 +3,28 @@ import { expectSignedOut } from "./link";
 import { testAddress } from "./phone";
 
 /**
- * The launch screen (docs/MELDIQ_WEB_LAUNCH.md): the logo from the first paint, gone as soon as the app shows
- * something, never in front of sign-in; the animation only where motion is welcome; a failed download changes nothing.
+ * The launch screen (docs/MELDIQ_WEB_LAUNCH.md): Meldling from the first paint, gone as soon as the app shows something,
+ * never in front of sign-in; its breathing only where motion is welcome.
  */
 test.beforeEach(async ({ context }) => {
   await context.setExtraHTTPHeaders({ "x-orbit-test-ip": testAddress() });
 });
 
-test("the logo shows at once and makes way for sign-in", async ({ page }) => {
+test("Meldling shows at once and makes way for sign-in", async ({ page }) => {
   await page.goto("/", { waitUntil: "commit" });
-  await expect(page.locator("#splash img")).toBeAttached();
+  await expect(page.locator('#splash img[src="/launch/meldling-launch.png"]')).toBeAttached();
   await expectSignedOut(page);
   await expect(page.locator("#splash")).toHaveCount(0, { timeout: 5_000 });
-  // Signed out, nothing waits for the 5-second animation.
   await expect(page.getByRole("button", { name: "Sign in" })).toBeEnabled();
 });
 
-test("with reduced motion, only the still logo: the animation isn't even downloaded", async ({ browser }) => {
+test("with reduced motion, Meldling stays still", async ({ browser }) => {
   const context = await browser.newContext({ reducedMotion: "reduce", baseURL: "http://127.0.0.1:5181", extraHTTPHeaders: { "x-orbit-test-ip": testAddress() } });
   const page = await context.newPage();
-  const videos: string[] = [];
-  page.on("request", (r) => r.url().includes("/launch/meldiq-launch.mp4") && videos.push(r.url()));
   await page.goto("/", { waitUntil: "commit" });
-  await expect(page.locator("#splash img")).toBeAttached();
+  const img = page.locator("#splash img");
+  await expect(img).toBeAttached();
+  expect(await img.evaluate((el) => getComputedStyle(el).animationName)).toBe("none");
   await expectSignedOut(page);
-  expect(videos).toEqual([]);
   await context.close();
-});
-
-test("a failed animation download still opens Meldiq", async ({ page }) => {
-  await page.route("**/launch/meldiq-launch.mp4", (r) => r.abort("failed"));
-  await page.goto("/");
-  await expectSignedOut(page);
-  await expect(page.locator("#splash")).toHaveCount(0, { timeout: 5_000 });
 });

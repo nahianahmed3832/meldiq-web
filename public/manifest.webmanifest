@@ -1,26 +1,26 @@
 {
   "name": "Meldiq",
   "short_name": "Meldiq",
-  "description": "End-to-end encrypted team messaging.",
+  "description": "End-to-end encrypted community chat.",
   "id": "/",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
-  "background_color": "#061130",
+  "background_color": "#045349",
   "theme_color": "#231d62",
   "icons": [
     {
-      "src": "/meldiq-192.png",
+      "src": "/meldling-192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "/meldiq-512.png",
+      "src": "/meldling-512.png",
       "sizes": "512x512",
       "type": "image/png"
     },
     {
-      "src": "/meldiq-maskable-512.png",
+      "src": "/meldling-maskable-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"

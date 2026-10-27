@@ -18,8 +18,8 @@ import { needsRegistration, type SavedRegistration } from "./pushRules";
  * queued while its connection is closed, and the service worker (src/sw/sw.ts) shows what's waiting.
  */
 
-const ICON = "/meldiq-192.png";
-const BADGE = "/meldiq-mark-128.png";
+const ICON = "/meldling-192.png";
+const BADGE = "/meldling-badge-96.png";
 const SAVED_KEY = "meldiq.push.v1";
 
 let registration: ServiceWorkerRegistration | null = null;

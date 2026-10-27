@@ -4,21 +4,26 @@ One token file, three colour plates, light and dark from the same definitions. E
 `src/styles/tokens.css`; the stylesheets only reference tokens. The one exception is the avatar tones, which are data
 shared with the phone (`src/ui/components/Avatar.tsx`).
 
-## Logo
+## Mascot and brand mark: Meldling (2026-10-27)
 
-- **Source:** `brand/meldiq-logo.webp`, 2000×2000: the ribbon "M" with its chat bubble on its own navy ground. It's the
-  only logo file. Don't redraw it.
-- **Derivatives:** `scripts/render-brand-assets.ts` crops and scales it. Nothing is drawn by hand. The crops are:
+- **Source:** `brand/meldling.png`, 1254×1254, the owner's canonical asset: **Meldling**, the off-white (`#fdfcf9`) bear
+  cub on a solid deep-teal (`#045349`) square. Two colours, nothing else. Don't redraw it, recolour it, outline it or cut
+  it out: its teal square is part of the art, so small uses are rounded badges. The product is still called **Meldiq**;
+  Meldling is the mascot's name.
+- **Derivatives:** `node scripts/render-brand-assets.mjs` crops and scales it (sharp). Nothing is drawn by hand.
 
-  | Crop        | What it is                                                  | Files                                                                                                                      |
-  | ----------- | ----------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
-  | Tight       | The mark framed with 14% padding                            | `public/meldiq-mark-128/256.png` (in the app), `favicon-32.png`, `meldiq-180.png` (Apple), `meldiq-192/512.png` (manifest) |
-  | Full        | The whole logo, with the mark inside the maskable safe zone | `meldiq-maskable-512.png`                                                                                                  |
-  | Share image | The logo on its own ground colour, with the name            | `meldiq-og.png` (1200×630)                                                                                                 |
+  | Crop        | What it is                                          | Files                                                                                                                                 |
+  | ----------- | --------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+  | Tight       | Meldling framed with 12% padding                    | `favicon-32.png`, `meldling-96/192.webp` (rail, tab bar, typing), `meldling-128/256.png` (BrandMark), `meldling-180.png` (Apple), `meldling-192/512.png` (manifest) |
+  | Full        | The whole square: Meldling inside the maskable zone | `meldling-maskable-512.png`, `launch/meldling-launch.png`                                                                             |
+  | Badge       | The off-white shape as an alpha mask (Android)      | `meldling-badge-96.png`                                                                                                               |
+  | Share image | Meldling on its teal, with the name                 | `meldiq-og.png` (1200×630)                                                                                                            |
 
-- **In the app:** `BrandMark` (`src/ui/components/BrandMark.tsx`) shows the tight crop with rounded corners. It's used
-  in the rail, sign-in, linking and status screens, and the phone top bar.
-- **Replacing the logo:** replace `brand/meldiq-logo.webp`, then run `npx tsx scripts/render-brand-assets.ts`.
+- **In the app:** `BrandMark` (sign-in, linking and status screens), the rail's Home and messages button, the phone tab
+  bar's Messages tab, the typing indicator ("Meldling…"), the launch screen, the favicon (the unread badge is painted on
+  it), notifications and the public invitation page.
+- **Replacing it:** replace `brand/meldling.png`, then run `node scripts/render-brand-assets.mjs`.
+- The earlier ribbon "M" logo is kept only as a reference: `brand/reference/meldiq-logo-ribbon.webp`.
 
 ## Colour
 

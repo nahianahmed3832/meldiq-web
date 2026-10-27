@@ -34,15 +34,17 @@ export interface Outgoing {
  * the outbox, and directly for what must never be written to storage (a call's media key). A changed device list is
  * refreshed and tried once more; a changed identity key throws [IdentityChangedError].
  */
-export async function sealAndPost(ctx: EngineContext, o: Outgoing, refresh = false): Promise<number> {
+export async function sealAndPost(ctx: EngineContext, o: Outgoing, refresh = false, audience?: "self"): Promise<number> {
   const { api, directory, device } = ctx;
   for (const pass of [0, 1]) {
     const r = await directory.recipients(o.conversationId, refresh || pass > 0);
     if (r.changed.length) throw new IdentityChangedError();
+    // Self-only (API 0.43.0): the sender's own other devices and nobody else, never an AI reader.
+    const to = audience === "self" ? r.devices.filter((d) => d.userId === device.userId) : [...r.devices, ...(await readersFor(ctx, o, r, pass > 0))];
     const sealed = await sealEnvelope(
       { messageId: o.messageId, conversationId: o.conversationId, senderUserId: device.userId, senderDeviceId: device.deviceId, sentAt: o.sentAt, cls: o.cls },
       o.payloadJson,
-      [...r.devices, ...(await readersFor(ctx, o, r, pass > 0))],
+      to.map((d) => ({ deviceId: d.deviceId, encryptionKey: d.encryptionKey })),
       device.keys.signing.privateKey,
     );
     const mentionAll = o.cls === "message" && parsePayload(o.payloadJson)?.mentionAll === true;
@@ -58,6 +60,7 @@ export async function sealAndPost(ctx: EngineContext, o: Outgoing, refresh = fal
           signature: sealed.signature,
           recipients: sealed.recipients,
           ...(mentionAll ? { mentionAll: true } : {}),
+          ...(audience ? { audience } : {}),
         },
       });
       return res.serverTs;

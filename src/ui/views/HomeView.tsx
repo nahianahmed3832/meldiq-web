@@ -70,7 +70,7 @@ export function HomeView({ orgId, section, onDialog }: { orgId: string | null; s
                   {communities ? t("home_start_community") : t("home_create_workspace")}
                 </button>
                 {communities && (
-                  <button className="btn btn-secondary btn-sm" onClick={() => onDialog({ kind: "discover" })}>
+                  <button className="btn btn-secondary btn-sm" onClick={() => navigate({ section: "discover" })}>
                     {t("home_discover")}
                   </button>
                 )}

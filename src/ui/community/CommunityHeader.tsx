@@ -8,6 +8,7 @@ import {
   Compass,
   Copy,
   EyeOff,
+  Inbox,
   FolderPlus,
   LogIn,
   LogOut,
@@ -24,7 +25,6 @@ import { shallowEqual, useEngine, useOrbit } from "../../application/orbit";
 import { setPrefs, usePrefs } from "../../application/prefs";
 import { navigate } from "../../application/router";
 import { leaveWorkspace } from "../../sync/workspaces";
-import { Avatar } from "../components/Avatar";
 import { OrgAvatar } from "../components/OrgAvatar";
 import { Dialog, Menu, type MenuEntry, useMenu } from "../components/Overlay";
 import { members } from "../format";
@@ -71,9 +71,9 @@ export function CommunityHeader({ orgId, perms, onDialog }: { orgId: string | nu
   ];
   if (org && orgId) {
     if (perms.canInvite) {
-      entries.push({ label: "Invite people", icon: <Ticket size={16} />, onSelect: () => navigate({ section: "workspace", workspacePage: "invitations" }) });
-      // Community-first brief §F: existing accounts straight in (the server decides who can be added).
-      entries.push({ label: "Add members", icon: <UserPlus size={16} />, onSelect: () => onDialog({ kind: "addMembers" }) });
+      // Community-first brief §F: add people you know, or make a link (the server decides who can be added directly).
+      entries.push({ label: "Invite people", icon: <UserPlus size={16} />, onSelect: () => onDialog({ kind: "addMembers" }) });
+      entries.push({ label: "Manage invitations", icon: <Ticket size={16} />, onSelect: () => navigate({ section: "workspace", workspacePage: "invitations" }) });
     }
     if (features.includes("community-preferences")) entries.push({ label: "Notification settings…", icon: <Bell size={16} />, onSelect: () => setDialog("notifications") });
     entries.push({ label: "Community settings", icon: <Settings2 size={16} />, onSelect: () => navigate({ section: "workspace", workspacePage: "overview" }) });
@@ -83,6 +83,14 @@ export function CommunityHeader({ orgId, perms, onDialog }: { orgId: string | nu
     if (features.includes("meetings")) entries.push({ label: "Events", icon: <CalendarDays size={16} />, onSelect: () => navigate({ section: "workspace", workspacePage: "meetings" }) });
     entries.push({ label: "Members", icon: <UsersRound size={16} />, onSelect: () => navigate({ section: "workspace", workspacePage: "people" }) });
     entries.push("separator");
+    // The sidebar's former "Unreads" switch (this browser only), here as in the reference's server menu.
+    const unreadOnly = prefs.collapsed.includes("::unread-only");
+    entries.push({
+      label: "Show only unread",
+      icon: unreadOnly ? <Check size={16} /> : <Inbox size={16} />,
+      checked: unreadOnly,
+      onSelect: () => setPrefs({ collapsed: unreadOnly ? prefs.collapsed.filter((k) => k !== "::unread-only") : [...prefs.collapsed, "::unread-only"] }),
+    });
     entries.push({
       label: "Hide muted channels",
       icon: hideMuted ? <Check size={16} /> : <EyeOff size={16} />,
@@ -100,22 +108,23 @@ export function CommunityHeader({ orgId, perms, onDialog }: { orgId: string | nu
   }
   if (orgs.length > 1 && features.includes("community-preferences")) entries.push({ label: "Arrange communities…", icon: <ArrowUpDown size={16} />, onSelect: () => setDialog("arrange") });
   entries.push("separator");
-  if (features.includes("community-discovery")) entries.push({ label: "Discover communities", icon: <Compass size={16} />, onSelect: () => onDialog({ kind: "discover" }) });
+  if (features.includes("community-discovery")) entries.push({ label: "Discover communities", icon: <Compass size={16} />, onSelect: () => navigate({ section: "discover" }) });
   entries.push({ label: "Start a community", icon: <Plus size={16} />, onSelect: () => onDialog({ kind: "createWorkspace" }) });
   entries.push({ label: "Join with a code", icon: <LogIn size={16} />, onSelect: () => onDialog({ kind: "joinWorkspace" }) });
   if (org && org.myRole !== "OWNER") entries.push("separator", { label: "Leave community…", icon: <LogOut size={16} />, danger: true, onSelect: () => setDialog("leave") });
 
   return (
     <>
-      <button className="org-switch" onClick={(e) => menu.open(e.currentTarget)} aria-haspopup="menu" aria-expanded={!!menu.anchor} aria-label={`Community: ${org?.name ?? "none"}. Community menu`}>
-        {org ? <OrgAvatar orgId={org.id} name={org.name} photoRev={org.photoRev} size={34} /> : <Avatar name="Meldiq" colorIndex={7} size={34} square decorative />}
-        <span className="grow">
-          <strong className="ellipsis" style={{ display: "block" }}>
-            {org?.name ?? "Meldiq"}
-          </strong>
-          <small>{org ? `${members(org.memberCount)}${org.visibility === "public" ? " · Public" : ""}` : "No community yet"}</small>
-        </span>
-        <ChevronDown size={16} className="faint" />
+      <button
+        className="org-switch community-switch"
+        onClick={(e) => menu.open(e.currentTarget)}
+        aria-haspopup="menu"
+        aria-expanded={!!menu.anchor}
+        aria-label={`Community: ${org?.name ?? "none"}. Community menu`}
+        title={org ? `${org.name} · ${members(org.memberCount)}${org.visibility === "public" ? " · Public" : ""}` : undefined}
+      >
+        <strong className="ellipsis grow">{org?.name ?? "Meldiq"}</strong>
+        <ChevronDown size={18} className="faint" aria-hidden="true" />
       </button>
       {menu.anchor && <Menu anchor={menu.anchor} label="Community" onClose={menu.close} entries={entries} />}
       {dialog === "notifications" && org && <CommunityNotificationsDialog orgId={org.id} name={org.name} onClose={() => setDialog(null)} />}

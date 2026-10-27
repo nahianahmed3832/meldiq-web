@@ -15,7 +15,8 @@ import type { LocalStore } from "../store/db";
 export type SenderKey = { kind: "trusted"; signingKey: string } | { kind: "changed" } | { kind: "unknown" };
 
 export interface Recipients {
-  devices: RecipientDevice[];
+  /** Each with the account it belongs to (a self-only control goes to the sender's own devices alone). */
+  devices: (RecipientDevice & { userId: string })[];
   /** Members whose identity key changed: nothing may be encrypted until each is accepted. */
   changed: string[];
   /**
@@ -96,7 +97,7 @@ export class Directory {
       for (const d of await this.certified(u.devices, key))
         readers.push({ deviceId: d.id, encryptionKey: d.encryptionKey, readerId: u.agent.readerId, installId: u.agent.installId, name: u.agent.name });
     }
-    const devices: RecipientDevice[] = [];
+    const devices: Recipients["devices"] = [];
     const changed: string[] = [];
     for (const u of users) {
       const key = await this.trustedKey(u);
@@ -104,7 +105,7 @@ export class Directory {
         changed.push(u.userId);
         continue;
       }
-      for (const d of await this.certified(u.devices, key)) if (d.id !== this.me.deviceId) devices.push({ deviceId: d.id, encryptionKey: d.encryptionKey });
+      for (const d of await this.certified(u.devices, key)) if (d.id !== this.me.deviceId) devices.push({ deviceId: d.id, encryptionKey: d.encryptionKey, userId: u.userId });
     }
     return { devices, changed, readers };
   }

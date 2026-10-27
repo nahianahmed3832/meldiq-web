@@ -24,7 +24,7 @@ test("a photo isn't downloaded again after a reload, and one far up loads only w
 
   // Alice sends a photo from this browser.
   await page.goto(`/dms/c/${dm}`);
-  await page.locator(".composer input[type=file]").setInputFiles(path.join(import.meta.dirname, "../public/launch/meldiq-launch.jpg"));
+  await page.locator(".composer input[type=file]").setInputFiles(path.join(import.meta.dirname, "fixtures/photo.jpg"));
   await page.getByRole("button", { name: "Send" }).click();
   const photo = page.locator(".msg .att-image img");
   await expect(photo).toBeVisible({ timeout: 20_000 });

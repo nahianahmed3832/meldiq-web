@@ -1,122 +1,26 @@
-import { ArrowLeft, Compass, Search, Users } from "lucide-react";
-import { type FormEvent, useEffect, useState } from "react";
+import { Users } from "lucide-react";
+import { useEffect, useState } from "react";
 import { ApiError } from "../../api/client";
-import type { CommunityPreview, Discovered } from "../../api/communitySchemas";
+import type { CommunityPreview } from "../../api/communitySchemas";
 import { useEngine } from "../../application/orbit";
 import { setPrefs } from "../../application/prefs";
 import { navigate } from "../../application/router";
-import { applyToJoin, communityPreview, discover, joinCommunity, withdrawApplication } from "../../sync/community";
+import { applyToJoin, communityPreview, joinCommunity, withdrawApplication } from "../../sync/community";
 import { members } from "../format";
 import { Dialog } from "../components/Overlay";
 import { OrgAvatar } from "../components/OrgAvatar";
+import { usePhoto } from "../components/photos";
+import { accentBand } from "./accent";
 import { ChannelGlyph } from "./ChannelDialogs";
 
 const errorText = (e: unknown, fallback: string) => (e instanceof ApiError ? e.message : fallback);
 
 /**
- * Discover communities (COM-04, android DiscoverScreen): public communities, most members first, searchable; a preview
- * with the description, rules and the channels everyone can see; then Join (open communities), Apply to join (with
- * questions, batch B4b) or the note that it's invite-only. The server checks bans, paused joining and the member limit.
+ * A community before joining (COM-04, android DiscoverScreen's preview): the description, rules and the channels
+ * everyone can see; then Join (open communities), Apply to join (with questions, batch B4b) or the note that it's
+ * invite-only. The server checks bans, paused joining and the member limit. Opened from the Discover page.
  */
-export function DiscoverDialog({ onClose }: { onClose: () => void }) {
-  const engine = useEngine();
-  const [q, setQ] = useState("");
-  const [query, setQuery] = useState("");
-  const [list, setList] = useState<Discovered[] | null>(null);
-  const [next, setNext] = useState<number | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [open, setOpen] = useState<string | null>(null);
-  const [attempt, setAttempt] = useState(0);
-
-  useEffect(() => {
-    let live = true;
-    setList(null);
-    setError(null);
-    discover(engine, query)
-      .then((p) => {
-        if (!live) return;
-        setList(p.communities);
-        setNext(p.nextCursor);
-      })
-      .catch((e: unknown) => live && setError(errorText(e, "Couldn't load communities.")));
-    return () => {
-      live = false;
-    };
-  }, [engine, query, attempt]);
-
-  const more = async () => {
-    if (next === null) return;
-    try {
-      const p = await discover(engine, query, next);
-      setList((l) => [...(l ?? []), ...p.communities]);
-      setNext(p.nextCursor);
-    } catch (e) {
-      setError(errorText(e, "Couldn't load more."));
-    }
-  };
-
-  if (open) return <PreviewDialog id={open} onBack={() => setOpen(null)} onClose={onClose} />;
-  return (
-    <Dialog title="Discover communities" onClose={onClose} wide>
-      <div className="dialog-body">
-        <form
-          className="row"
-          style={{ gap: 6 }}
-          onSubmit={(e: FormEvent) => {
-            e.preventDefault();
-            setQuery(q);
-          }}
-        >
-          <input className="input" data-autofocus value={q} maxLength={60} onChange={(e) => setQ(e.target.value)} placeholder="Search by name or description" aria-label="Search communities" />
-          <button className="btn btn-secondary" aria-label="Search">
-            <Search size={16} />
-          </button>
-        </form>
-        {error && (
-          <div className="banner danger" role="alert">
-            <span className="grow">{error}</span>
-            <button className="btn btn-secondary btn-sm" onClick={() => setAttempt((n) => n + 1)}>
-              Try again
-            </button>
-          </div>
-        )}
-        {!list && !error && <span className="skeleton" style={{ height: 160 }} />}
-        {list && list.length === 0 && (
-          <div className="empty" style={{ padding: 24 }}>
-            <span className="empty-orb">
-              <Compass size={22} />
-            </span>
-            <p className="muted">{query ? "No public community matches." : "No public communities yet. Owners can list theirs in Community settings › Overview."}</p>
-          </div>
-        )}
-        <div style={{ display: "grid", gap: 2 }}>
-          {list?.map((c) => (
-            <button key={c.id} className="list-row" onClick={() => setOpen(c.id)}>
-              <OrgAvatar orgId={c.id} name={c.name} photoRev={c.photoRev} size={40} />
-              <span className="lines">
-                <span className="ellipsis" style={{ fontWeight: 650 }}>
-                  {c.name}
-                </span>
-                <small className="ellipsis">
-                  {[members(c.memberCount), c.joined ? "Joined" : c.applications ? "Apply to join" : c.joinPolicy === "open" ? "Open to join" : "Invite only", c.description]
-                    .filter(Boolean)
-                    .join(" · ")}
-                </small>
-              </span>
-            </button>
-          ))}
-        </div>
-        {next !== null && (
-          <button className="btn btn-secondary" onClick={() => void more()}>
-            Show more
-          </button>
-        )}
-      </div>
-    </Dialog>
-  );
-}
-
-function PreviewDialog({ id, onBack, onClose }: { id: string; onBack: () => void; onClose: () => void }) {
+export function CommunityPreviewDialog({ id, onClose }: { id: string; onClose: () => void }) {
   const engine = useEngine();
   const [p, setP] = useState<CommunityPreview | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -157,19 +61,7 @@ function PreviewDialog({ id, onBack, onClose }: { id: string; onBack: () => void
   const questions = c?.joinQuestions ?? null;
   const app = p?.application ?? null;
   return (
-    <Dialog
-      title={c?.name ?? "Community"}
-      onClose={onClose}
-      wide
-      header={
-        <div className="dialog-head">
-          <button className="icon-btn" onClick={onBack} aria-label="Back to Discover">
-            <ArrowLeft size={18} />
-          </button>
-          <h2 className="grow ellipsis">{c?.name ?? "Community"}</h2>
-        </div>
-      }
-    >
+    <Dialog title={c?.name ?? "Community"} onClose={onClose} wide>
       <div className="dialog-body">
         {error && (
           <div className="banner danger" role="alert">
@@ -179,6 +71,7 @@ function PreviewDialog({ id, onBack, onClose }: { id: string; onBack: () => void
         {!p && !error && <span className="skeleton" style={{ height: 200 }} />}
         {p && c && (
           <>
+            <PreviewBanner orgId={c.id} rev={c.bannerRev} accent={c.accent} />
             <div className="row" style={{ gap: 12 }}>
               <OrgAvatar orgId={c.id} name={c.name} photoRev={c.photoRev} size={56} />
               <div className="grow">
@@ -280,4 +173,11 @@ function PreviewDialog({ id, onBack, onClose }: { id: string; onBack: () => void
       </div>
     </Dialog>
   );
+}
+
+/** The community's banner (API 0.44.0), or a band in its accent; nothing without either. */
+function PreviewBanner({ orgId, rev, accent }: { orgId: string; rev: number | null; accent: string | null }) {
+  const url = usePhoto("banner", orgId, rev);
+  if (!url && !accent) return null;
+  return <div className="preview-banner" style={url ? { backgroundImage: `url(${url})` } : { background: accentBand(accent ?? "") }} aria-hidden="true" />;
 }

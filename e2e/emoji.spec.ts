@@ -27,7 +27,7 @@ test("search, skin tone and categories, into the composer and as a reaction", as
   await page.getByRole("button", { name: "Set up encryption" }).click();
   await page.getByLabel("I've stored my recovery key somewhere safe.").check();
   await page.getByRole("button", { name: "Open Meldiq" }).click();
-  await expect(page.locator(".conn.online")).toBeVisible({ timeout: 15_000 });
+  await expect(page.locator(":is(.conn.online, .user-panel[data-connection=online]):visible")).toBeVisible({ timeout: 15_000 });
 
   const me = await page.evaluate(() => (window as unknown as { __orbit: { device: { userId: string } } }).__orbit.device.userId);
   const bob = await newPhone("bob", "Bob Chen");
