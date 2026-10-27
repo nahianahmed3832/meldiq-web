@@ -68,7 +68,20 @@ because the server no longer advertises the feature.
 
 ## 6. Production
 
-TBD
+**Live: API 0.48.0 (17:46 UTC), then 0.49.0 from another session's billing work built on it (17:50 UTC); Meldiq Web
+0.5.0-beta-46c016c (17:53 UTC).** Full record: meldiq `docs/DEPLOYMENT.md`.
+
+| Step | Result |
+|---|---|
+| API | backup `pre-0.48.0-20261027T174251Z` (integrity ok, schema 60, 43 users); rehearsal on a copy without network: healthy, 0 errors; switch healthy; `/healthz` 0.48.0 on both hosts; rollback tag `0.47.0-rollback` |
+| Web | release `46c016c` (checksum ok); nginx site, CSP and `config.json` byte-identical; `verify.sh` all passed (API through the site, realtime 101); `/`, `/invite/…`, `/discover`, `/m/…`, manifest, favicons 200 |
+| Signed in (the owner's browser, looking only) | phone width: the rail beside the channels, no top bar, online; the app and its channels on screen 560 ms after a reload; categories in their saved order from the first paint |
+| Git | meldiq-web `continuation-v4` (59140fd, 80222b9, 46c016c), meldiq `v4-api` (27bffb7, 116b8e3); pull requests opened |
+
+Rollback: web `bash /root/meldiq-web-0.5.0-beta-46c016c/rollback.sh`; API `0.48.0-rollback` / `0.47.0-rollback` tags
+(0.49.0 belongs to the billing session: roll back only with it).
+
+Production stays on SQLite; no MongoDB migration was run. No native app file changed.
 
 ## 7. Remaining
 
