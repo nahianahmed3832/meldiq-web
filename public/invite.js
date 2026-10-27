@@ -22,6 +22,8 @@
   }
 
   function problem(text) {
+    // Nothing was invited to: no "You've been invited to join" above the reason.
+    el("lead").hidden = true;
     el("name").textContent = "Invitation";
     show("problem", text);
   }
