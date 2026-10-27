@@ -34,7 +34,7 @@ export function AdminUsagePage() {
   const [open, setOpen] = useState<Workspace | null>(null);
   return (
     <>
-      <h1>Workspace usage</h1>
+      <h1>Community usage</h1>
       <p className="faint">Counts and sizes the server measured: never content, file names or who did what. Nothing charges anyone.</p>
       <span className="segmented" role="group" aria-label="Period">
         {PERIODS.map((d) => (
@@ -113,7 +113,7 @@ function LimitsDialog({ w, days, onClose, onSaved }: { w: Workspace; days: numbe
             </li>
           ))}
         </ul>
-        <strong style={{ fontSize: 13 }}>This workspace's own limits</strong>
+        <strong style={{ fontSize: 13 }}>This community's own limits</strong>
         <small className="faint">Leave a field empty for the server-wide limit, if any. Lowering a limit never removes anything; only adding more is refused.</small>
         <div className="limits-grid">
           {Object.entries(LIMIT_LABEL).map(([k, label]) => (

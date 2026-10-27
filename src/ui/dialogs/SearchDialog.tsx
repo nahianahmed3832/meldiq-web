@@ -27,7 +27,7 @@ interface Result {
 const LABEL: Record<Section, string> = {
   conversations: "Conversations",
   channels: "Channels",
-  workspaces: "Workspaces",
+  workspaces: "Communities",
   groups: "Groups",
   people: "People",
   messages: "Messages on this browser",
@@ -41,7 +41,7 @@ const FILTER_LABEL: Record<Filter, string> = {
   pinned: "Pinned",
   people: "People",
   channels: "Channels",
-  workspaces: "Workspaces",
+  workspaces: "Communities",
 };
 /** How many results a single-kind filter shows at first, and adds on Show more. */
 const PAGE = 20;
@@ -221,7 +221,7 @@ export function SearchDialog({ orgId: _orgId, onClose }: { orgId: string | null;
       key: `workspaces:${o.id}`,
       section: "workspaces",
       title: o.name,
-      sub: o.myRole ? `Workspace · ${o.myRole.toLowerCase()}` : "Workspace",
+      sub: o.myRole ? `Community · ${o.myRole.toLowerCase()}` : "Community",
       icon: <Building2 size={18} />,
       go: () => {
         setPrefs({ orgId: o.id });
@@ -362,7 +362,7 @@ export function SearchDialog({ orgId: _orgId, onClose }: { orgId: string | null;
           ))}
           {term && universal && filter === "all" && (
             <p className="faint search-note">
-              <UsersRound size={12} /> People, channels and workspaces come from the server, which only shows what you may see. Messages and files are searched on this browser: they're end-to-end
+              <UsersRound size={12} /> People, channels and communities come from the server, which only shows what you may see. Messages and files are searched on this browser: they're end-to-end
               encrypted.
             </p>
           )}

@@ -222,6 +222,8 @@ export interface LiveCallSummary {
   people: string[];
   /** Who is sharing their screen, among them. */
   sharing: string[];
+  /** When the call started, when known. */
+  since: number | null;
 }
 
 /**
@@ -239,7 +241,22 @@ export function liveCallOf(s: AppState, conversationId: string): LiveCallSummary
     video: call?.video ?? listed?.video ?? false,
     people: fromList,
     sharing: (call?.sharing ?? []).filter((u) => fromList.includes(u)),
+    since: call?.createdAt ?? listed?.startedAt ?? null,
   };
+}
+
+/** A community's calls on now, for its rail icon: whether any, and whether anyone is sharing a screen in one. */
+export function orgLive(s: AppState, orgId: string): { live: boolean; sharing: boolean } {
+  let live = false;
+  let sharing = false;
+  for (const c of Object.values(s.conversations)) {
+    if (c.orgId !== orgId || c.type !== "CHANNEL") continue;
+    const l = liveCallOf(s, c.id);
+    if (!l || l.people.length === 0) continue;
+    live = true;
+    if (l.sharing.length) sharing = true;
+  }
+  return { live, sharing };
 }
 
 /** The workspace's voice rooms this person is in, alphabetical (android WorkspaceHomeScreen voiceRooms). */

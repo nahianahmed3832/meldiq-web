@@ -16,7 +16,7 @@ export function TransferOwnership({ detail, onChanged }: { detail: OrgAdminDetai
   const [open, setOpen] = useState(false);
   if (!detail.permissions.canTransferOwnership) return null;
   return (
-    <Card title="Ownership" sub="Hand this workspace to another member. They become the owner and you become an admin.">
+    <Card title="Ownership" sub="Hand this community to another member. They become the owner and you become an admin.">
       <button className="btn btn-secondary btn-sm" style={{ justifySelf: "start" }} onClick={() => setOpen(true)}>
         <Crown size={14} /> Transfer ownership…
       </button>
@@ -90,7 +90,7 @@ function TransferDialog({ detail, onDone, onClose }: { detail: OrgAdminDetail; o
           </>
         )}
         <label className="field">
-          <span>Type the workspace's name to confirm</span>
+          <span>Type the community's name to confirm</span>
           <input className="input" value={typed} onChange={(e) => setTyped(e.target.value)} placeholder={detail.org.name} />
         </label>
       </div>

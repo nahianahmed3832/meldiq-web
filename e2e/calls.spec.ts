@@ -46,7 +46,7 @@ async function setUp(page: Page): Promise<Pair> {
   return { alice, bob, dm };
 }
 
-const stage = (page: Page) => page.getByRole("dialog", { name: "Call with Bob Chen" });
+const stage = (page: Page) => page.locator("section.call-stage").and(page.getByRole("region", { name: "Call with Bob Chen" }));
 const badge = (s: Locator) => s.locator(".e2ee-badge");
 
 /**
@@ -81,7 +81,7 @@ async function endedEvent(p: Phone, callId: string): Promise<any> {
   return waitUntil(() => p.events.find((e) => e.t === "call" && e.event === "ended" && e.call?.id === callId), 15_000, "the call to end");
 }
 
-test("a video call from the phone app rings here and connects with media verified encrypted both ways", async ({ page }) => {
+test("a video call from the phone app rings here and connects with media verified encrypted both ways", async ({ page, isMobile }) => {
   const { bob, dm } = await setUp(page);
   const call = await placeCall(bob, dm, true);
   try {
@@ -95,6 +95,15 @@ test("a video call from the phone app rings here and connects with media verifie
     await expect(s.getByRole("status")).toHaveText(/^\d+:\d\d$/); // the call timer
     await remoteVideoPlays(page);
     await expect(page.locator("[data-orbit-call-audio] audio")).toHaveCount(1); // Bob's voice, once proven to decrypt
+    if (!isMobile) {
+      // 2026-10-28: the call fills the middle and leaves the channels usable; its panel sits at the foot of the list.
+      const panel = page.getByRole("region", { name: "Your call" });
+      await expect(panel).toContainText(/Video Connected|Voice Connected/);
+      await expect(panel.getByRole("button", { name: "Disconnect" })).toBeVisible();
+      const side = (await page.getByRole("complementary", { name: "Conversations" }).boundingBox())!;
+      const stageBox = (await s.boundingBox())!;
+      expect(stageBox.x).toBeGreaterThanOrEqual(side.x + side.width - 1);
+    }
     // The native side decrypted the browser's audio and video with the same key (it hears the fake microphone).
     await heardBrowser(call.media);
     await expect.poll(() => call.media.received.video.frames, { timeout: 20_000 }).toBeGreaterThan(20);
@@ -143,10 +152,9 @@ const overlaps = (a: { x: number; y: number; width: number; height: number }, b:
 
 test("a minimised call stays clear of the message box, can be dragged and moved with the keys, and messages still send", async ({ page }) => {
   const { bob, dm } = await setUp(page);
-  await page
-    .getByRole("complementary", { name: "Conversations" })
-    .getByRole("link", { name: /Bob Chen/ })
-    .click();
+  // The floating bar is for narrower windows (2026-10-28): a wide window shows the call's panel in the channel list.
+  await page.setViewportSize({ width: 900, height: 820 });
+  await page.goto(`/dms/c/${dm}`);
   await page.getByRole("button", { name: "Start a voice call" }).click();
   const call = await answerCall(bob, false);
   try {

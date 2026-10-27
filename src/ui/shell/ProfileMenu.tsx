@@ -84,9 +84,10 @@ export function useProfileMenu(): { open: (anchor: HTMLElement) => void; expande
             { label: "Settings", icon: <Settings size={16} />, onSelect: () => navigate({ section: "settings", settingsPage: "notifications" }) },
             "separator",
             { heading: "Theme" },
-            { label: "System", icon: <Monitor size={16} />, checked: prefs.theme === "system", onSelect: () => setPrefs({ theme: "system" }) },
-            { label: "Light", icon: <Sun size={16} />, checked: prefs.theme === "light", onSelect: () => setPrefs({ theme: "light" }) },
-            { label: "Dark", icon: <Moon size={16} />, checked: prefs.theme === "dark", onSelect: () => setPrefs({ theme: "dark" }) },
+            { label: "System", icon: <Monitor size={16} />, checked: prefs.theme === "system", onSelect: () => setPrefs({ theme: "system", themeChosen: true }) },
+            { label: "Light", icon: <Sun size={16} />, checked: prefs.theme === "light", onSelect: () => setPrefs({ theme: "light", themeChosen: true }) },
+            { label: "Dark", icon: <Moon size={16} />, checked: prefs.theme === "dark", onSelect: () => setPrefs({ theme: "dark", themeChosen: true }) },
+            { label: "Black", icon: <Moon size={16} fill="currentColor" />, checked: prefs.theme === "black", onSelect: () => setPrefs({ theme: "black", themeChosen: true }) },
             "separator",
             { label: "Sign out of this browser…", icon: <LogOut size={16} />, danger: true, onSelect: () => navigate({ section: "settings", settingsPage: "security" }) },
           ]}

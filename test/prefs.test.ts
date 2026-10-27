@@ -21,9 +21,9 @@ afterEach(() => {
 });
 
 describe("preferences", () => {
-  it("defaults to the system theme, the Meldiq palette and the side panels open", async () => {
+  it("defaults to the dark theme, the Meldiq palette and the side panels open", async () => {
     const { getPrefs } = await loadWith(undefined);
-    expect(getPrefs()).toMatchObject({ theme: "system", palette: "meldiq", memberList: true, dmProfile: true });
+    expect(getPrefs()).toMatchObject({ theme: "dark", palette: "meldiq", memberList: true, dmProfile: true });
   });
 
   it("moves a former default (indigo, charcoal) to Meldiq, and keeps either one the person picked", async () => {
@@ -46,7 +46,13 @@ describe("preferences", () => {
 
   it("falls back to the defaults for an unknown or tampered theme or palette", async () => {
     const { getPrefs } = await loadWith({ theme: 'x" onload="', palette: "neon", textSize: "huge" });
-    expect(getPrefs()).toMatchObject({ theme: "system", palette: "meldiq", textSize: "default" });
+    expect(getPrefs()).toMatchObject({ theme: "dark", palette: "meldiq", textSize: "default" });
+  });
+
+  it("moves the old default (system, never picked) to dark, and keeps a theme someone picked, black included", async () => {
+    expect((await loadWith({ theme: "system" })).getPrefs().theme).toBe("dark");
+    expect((await loadWith({ theme: "system", themeChosen: true })).getPrefs().theme).toBe("system");
+    expect((await loadWith({ theme: "black", themeChosen: true })).getPrefs().theme).toBe("black");
   });
 
   it("gives browsers that stored preferences before palettes existed the default palette", async () => {

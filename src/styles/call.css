@@ -4,8 +4,8 @@
   position: fixed;
   inset: 0;
   z-index: 60;
-  display: grid;
-  grid-template-rows: auto auto 1fr auto;
+  display: flex;
+  flex-direction: column;
   gap: 12px;
   padding: 16px;
   background: var(--call-bg);
@@ -72,6 +72,7 @@ button.e2ee-badge:hover {
   color: var(--call-bad-text);
 }
 .call-tiles {
+  flex: 1;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
   grid-auto-rows: minmax(160px, 1fr);
@@ -621,5 +622,144 @@ button.call-pill:hover {
 @media (prefers-reduced-motion: reduce) {
   .meter span {
     transition: none;
+  }
+}
+
+/* Desktop (2026-10-28, after the owner's reference): the call fills the middle on black and leaves the rail and the
+   channels usable; the call's panel sits at the foot of the channel list instead of the floating bar. */
+@media (min-width: 961px) {
+  .app:has(.workspace.with-sidebar) .call-stage {
+    left: calc(var(--rail-w) + var(--sidebar-w));
+    border-radius: var(--r-lg) 0 0 0;
+    background: #06070b;
+    box-shadow: 0 0 0 1px var(--panel-ring);
+  }
+  .app:has(.workspace.with-sidebar) .call-mini {
+    display: none;
+  }
+}
+.call-stage .call-tile {
+  background: #15171d;
+  border-radius: 14px;
+}
+.call-stage .call-tile.speaking {
+  box-shadow:
+    inset 0 0 0 3px var(--call-speaking),
+    0 0 18px -4px var(--call-speaking);
+}
+/* A screen being shared is marked LIVE, as on the rail and in the channel list. */
+.call-screen {
+  position: relative;
+}
+.live-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 2;
+  padding: 2px 8px;
+  border-radius: var(--r-pill);
+  background: #ed4245;
+  color: #fff;
+  font-size: 11.5px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+.call-invite-row {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+.call-invite {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 42px;
+  padding: 0 18px;
+  border-radius: var(--r-md);
+  background: #1e2028;
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+.call-invite:hover {
+  background: #2a2d38;
+}
+
+/* The call's panel at the foot of the channel list (ui/call/ConnectedCallPanel.tsx). */
+.call-panel {
+  margin: 6px 8px 0;
+  padding: 8px;
+  border-radius: var(--r-lg);
+  background: var(--surface-sunken);
+  box-shadow: 0 0 0 1px var(--hairline);
+  display: grid;
+  gap: 8px;
+}
+.call-panel-top {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+.call-panel-where {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+  padding: 4px;
+  border-radius: var(--r-md);
+  text-align: start;
+  color: #23a55a;
+}
+.call-panel-where:hover {
+  background: var(--hover);
+}
+.call-panel-where strong {
+  display: block;
+  font-size: 13.5px;
+  color: #23a55a;
+}
+.call-panel-where small {
+  display: block;
+  color: var(--text-3);
+  font-size: 12px;
+}
+.call-panel-where .connecting {
+  color: var(--warning);
+  animation: pulse 1.2s ease-in-out infinite;
+}
+.call-panel-end {
+  color: var(--danger) !important;
+}
+.call-panel-buttons {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: 6px;
+}
+.call-panel-btn {
+  display: grid;
+  place-items: center;
+  height: 34px;
+  border-radius: var(--r-md);
+  background: var(--surface-raised);
+  color: var(--text-2);
+  box-shadow: 0 0 0 1px var(--hairline);
+}
+.call-panel-btn:hover:not(:disabled) {
+  color: var(--text);
+  background: var(--hover);
+}
+.call-panel-btn.on {
+  color: #fff;
+  background: #23a55a;
+}
+.call-panel-btn:disabled {
+  opacity: 0.5;
+}
+@media (max-width: 960px) {
+  .sidebar .call-panel {
+    display: none;
   }
 }

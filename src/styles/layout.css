@@ -947,3 +947,131 @@
   bottom: -4px;
   right: -6px;
 }
+
+/* Rail folders (shell/RailFolder.tsx): closed, a tile of up to four communities; open, a tinted column of them. */
+.rail-folder {
+  --folder: #5865f2;
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  border-radius: 18px;
+}
+.rail-folder.open {
+  padding: 6px 0 8px;
+  background: color-mix(in srgb, var(--folder) 22%, transparent);
+}
+.rail-folder-tile {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 16px;
+  color: color-mix(in srgb, var(--folder) 70%, #fff);
+  background: color-mix(in srgb, var(--folder) 26%, var(--rail-2, var(--rail)));
+  transition: border-radius var(--t-fast) var(--ease);
+}
+.rail-folder.open .rail-folder-tile {
+  background: transparent;
+  height: 32px;
+}
+.rail-folder-tile:hover {
+  border-radius: 13px;
+}
+.rail-folder-tile.holds-selected {
+  box-shadow:
+    0 0 0 2px var(--rail),
+    0 0 0 4px var(--rail-glow);
+}
+.rail-folder-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 18px);
+  gap: 3px;
+}
+.rail-folder-grid .avatar {
+  border-radius: 6px !important;
+}
+.rail-folder-count {
+  position: absolute;
+  right: -6px;
+  bottom: -4px;
+  box-shadow: 0 0 0 3px var(--rail);
+}
+.rail-folder-members {
+  display: grid;
+  gap: 8px;
+  justify-items: center;
+}
+.folder-colors {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.folder-color {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px var(--border);
+}
+.folder-color.none {
+  width: auto;
+  padding: 0 12px;
+  border-radius: var(--r-pill);
+  font-size: 12px;
+}
+.folder-color[aria-checked="true"] {
+  box-shadow:
+    0 0 0 2px var(--surface),
+    0 0 0 4px var(--accent);
+}
+
+/* Dragging to rearrange (components/dragSort.ts): a line where it will land, a ring when dropped onto something. */
+[data-drag] {
+  position: relative;
+}
+.drag-active,
+.drag-active * {
+  cursor: grabbing !important;
+  user-select: none;
+}
+.drag-source {
+  opacity: 0.35;
+}
+.drag-before::before,
+.drag-after::after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  right: 4px;
+  height: 3px;
+  border-radius: 3px;
+  background: var(--accent);
+  box-shadow: 0 0 8px var(--accent);
+  pointer-events: none;
+  z-index: 3;
+}
+.drag-before::before {
+  top: -6px;
+}
+.drag-after::after {
+  bottom: -6px;
+}
+.rail .drag-before::before,
+.rail .drag-after::after {
+  left: -6px;
+  right: -6px;
+}
+.drag-into {
+  box-shadow: 0 0 0 3px var(--accent) !important;
+  border-radius: 16px;
+}
+.drag-ghost {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  pointer-events: none;
+  opacity: 0.9;
+  filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.45));
+  list-style: none;
+}

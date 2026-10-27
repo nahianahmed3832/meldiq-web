@@ -69,7 +69,7 @@ export function SettingsView({ page, onSignedOut }: { page: SettingsPage; onSign
             title: "Administration",
             pages: [
               { key: "health" as const, label: "Service health", icon: <Activity size={17} /> },
-              { key: "usage" as const, label: "Workspace usage", icon: <BarChart3 size={17} /> },
+              { key: "usage" as const, label: "Community usage", icon: <BarChart3 size={17} /> },
             ],
           },
         ]

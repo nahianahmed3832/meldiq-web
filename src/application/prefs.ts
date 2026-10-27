@@ -8,7 +8,8 @@ import { LANGUAGES, type LanguageChoice, resolveLanguage } from "../i18n/languag
  * Per-browser preferences. They hold no account data, so they live in localStorage, and every read and write tolerates
  * storage being unavailable (private windows, blocked site data): the defaults apply then.
  */
-export const THEMES = ["system", "light", "dark"] as const;
+/** "black": dark with true-black surfaces (2026-10-28). */
+export const THEMES = ["system", "light", "dark", "black"] as const;
 /** The brand colour plates (src/styles/tokens.css › Palettes). */
 export const PALETTES = ["meldiq", "charcoal", "indigo", "plum", "amber"] as const;
 export type Palette = (typeof PALETTES)[number];
@@ -34,6 +35,8 @@ export type MessageLayout = (typeof MESSAGE_LAYOUTS)[number];
 
 export interface Prefs {
   theme: (typeof THEMES)[number];
+  /** Whether the person picked the theme themselves; until then it follows the default (dark since 2026-10-28). */
+  themeChosen: boolean;
   /** The interface language (src/i18n): the browser's, or one picked on the sign-in screens or in Settings › Appearance. */
   language: LanguageChoice;
   palette: Palette;
@@ -123,13 +126,16 @@ export interface Prefs {
   communityColors: boolean;
   /** Settings › Appearance: people who just messaged you show as bubbles under Home on the rail. */
   railDmBubbles: boolean;
+  /** Rail folders open on this browser (2026-10-28; the folders themselves sync, this is only how they're shown). */
+  railFoldersOpen: string[];
   /** Settings › Shortcuts (application/shortcuts.ts): changed combinations by action id ("" turns one off). */
   keybinds: Record<string, string>;
 }
 
 const KEY = "orbit.prefs.v1";
 const defaults: Prefs = {
-  theme: "system",
+  theme: "dark",
+  themeChosen: false,
   language: "system",
   palette: "meldiq",
   textSize: "default",
@@ -183,6 +189,7 @@ const defaults: Prefs = {
   vibeStrength: 60,
   communityColors: true,
   railDmBubbles: true,
+  railFoldersOpen: [],
   keybinds: {},
 };
 
@@ -194,7 +201,9 @@ function load(): Prefs {
     // Anything unknown (an older or tampered value) falls back to the default rather than reaching the page's attributes.
     return {
       ...stored,
-      theme: THEMES.includes(stored.theme) ? stored.theme : defaults.theme,
+      // Dark is the default since 2026-10-28: "system" stored as the old default (never picked) becomes dark; a theme the
+      // person picked (light, dark, or system chosen on purpose since) stays.
+      theme: !THEMES.includes(stored.theme) || (stored.theme === "system" && !stored.themeChosen) ? defaults.theme : stored.theme,
       language: stored.language === "system" || LANGUAGES.some((l) => l === stored.language) ? stored.language : defaults.language,
       palette: paletteOf(stored),
       textSize: TEXT_SIZES.includes(stored.textSize) ? stored.textSize : defaults.textSize,
@@ -232,6 +241,7 @@ function load(): Prefs {
       vibeStrength: typeof stored.vibeStrength === "number" && stored.vibeStrength >= 0 && stored.vibeStrength <= 100 ? Math.round(stored.vibeStrength) : defaults.vibeStrength,
       communityColors: stored.communityColors !== false,
       railDmBubbles: stored.railDmBubbles !== false,
+      railFoldersOpen: Array.isArray(stored.railFoldersOpen) ? stored.railFoldersOpen.filter((x) => typeof x === "string" && /^f_[A-Za-z0-9_-]{4,40}$/.test(x)).slice(0, 50) : [],
       keybinds:
         stored.keybinds && typeof stored.keybinds === "object"
           ? Object.fromEntries(Object.entries(stored.keybinds).filter(([k, v]) => /^[a-zA-Z]{1,32}$/.test(k) && typeof v === "string" && v.length <= 40))

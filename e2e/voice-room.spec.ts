@@ -44,7 +44,7 @@ test("a voice channel opens as its room: who's in it, Join voice, then Open the 
     await waitUntil(() => bob.received.find((m: any) => m.payload?.type === "call_key_request" && m.payload.callId === res.call.id), 20_000, "the browser's key request");
     await bob.send(channel.id, { type: "call_invite", callId: res.call.id, video: false, e2eeKey: key }, "control");
 
-    const stage = page.getByRole("dialog", { name: /^Call with/ });
+    const stage = page.locator("section.call-stage").and(page.getByRole("region", { name: /^Call with/ }));
     await expect(stage).toBeVisible();
     await stage.getByRole("button", { name: "Minimise the call" }).click();
     await expect(room.getByRole("button", { name: "Open the call" })).toBeVisible();

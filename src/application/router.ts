@@ -10,7 +10,8 @@ import { useSyncExternalStore } from "react";
  * Links from before (hash routes, "/#/dms/c/<id>": old notifications, bookmarks, links in messages) still work: the
  * page moves them to their path on load. Moving around is the History API, so Back and Forward work and nothing reloads.
  */
-export type Section = "home" | "dms" | "activity" | "later" | "discover" | "settings" | "workspace";
+/** "friends" (2026-10-28): the Friends page, the Messages home on its own route (phones open it from the list). */
+export type Section = "home" | "dms" | "friends" | "activity" | "later" | "discover" | "settings" | "workspace";
 /** "you": the phone's You tab, a list of the pages under your account card (desktop shows the profile page there). */
 export type SettingsPage = "you" | "profile" | "account" | "devices" | "notifications" | "calls" | "appearance" | "storage" | "security" | "about" | "advanced" | "shortcuts" | "health" | "usage";
 export type WorkspacePage =
@@ -43,7 +44,7 @@ export interface Route {
 /** Sections that take the whole page (no conversation list). */
 export const isFullPage = (s: Section): boolean => s === "settings" || s === "workspace";
 
-const SECTIONS: Section[] = ["home", "dms", "activity", "later", "discover", "settings", "workspace"];
+const SECTIONS: Section[] = ["home", "dms", "friends", "activity", "later", "discover", "settings", "workspace"];
 const PAGES: SettingsPage[] = ["you", "profile", "account", "devices", "notifications", "calls", "appearance", "storage", "security", "about", "advanced", "shortcuts", "health", "usage"];
 const WORKSPACE_PAGES: WorkspacePage[] = [
   "overview",

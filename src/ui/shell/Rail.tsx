@@ -1,21 +1,22 @@
 import { CheckCheck, Compass, LogIn, MessageSquarePlus, Plus, Settings2, UsersRound } from "lucide-react";
 import { useRef, useState } from "react";
 import { useScrollStrip } from "../components/scrollStrip";
+import { type DragItem, useDragSort } from "../components/dragSort";
+import { type DragRef, dropOnRail, railItems, type RailState } from "../../sync/railFolders";
+import { PERSONAL } from "../../sync/navPrefs";
+import { railOrdered } from "../../sync/communityRules";
+import { RailFolderItem } from "./RailFolder";
+import { CommunityButton, type RailOrg, useRailOrgs } from "./RailCommunity";
 import { shallowEqual, useEngine, useOrbit } from "../../application/orbit";
 import { contextMenuProps, Menu, type MenuEntry, useMenu } from "../components/Overlay";
-import { useCommunityMenu } from "../community/communityMenu";
-import { useCommunityDetail } from "../community/useCommunityPermissions";
-import { setPrefs, usePrefs } from "../../application/prefs";
+import { usePrefs } from "../../application/prefs";
 import { navigate, type Section } from "../../application/router";
-import { ACCENT_CLASS, accentStyle } from "../community/accent";
-import { OrgAvatar } from "../components/OrgAvatar";
-import { UnreadBadge } from "../components/UnreadBadge";
 import { useIncomingRequestCount } from "../people/connectionRequests";
-import { isMuted, isPeople, orgActivity, people, unreadOf, unreadPeopleCount } from "../selectors";
+import { isMuted, isPeople, people, unreadOf, unreadPeopleCount } from "../selectors";
 import { conversationTitle, dmPeer } from "../format";
 import { GroupAvatar } from "../components/OrgAvatar";
 import { LookAvatar } from "../people/NameStyle";
-import { capCount, isHighlighted, unreadMarker } from "../unread";
+import { capCount } from "../unread";
 import { useT } from "../../i18n";
 import type { ShellDialog } from "./Shell";
 
@@ -30,12 +31,35 @@ export function Rail({ orgId, section, onDialog }: { orgId: string | null; secti
   // Unread DMs and people waiting for an answer to their connection request.
   const dms = useOrbit(unreadPeopleCount) + useIncomingRequestCount();
   const t = useT();
-  const home = section === "dms";
+  const home = section === "dms" || section === "friends";
   const discovering = section === "discover";
   const homeLabel = `${t("rail_home")}${dms ? `, ${t("nav_unread", { n: dms })}` : ""}`;
   const strip = useRef<HTMLElement>(null);
   useScrollStrip(strip, `${section}:${orgId}`);
   const engine = useEngine();
+  // The person's order and folders (synced with their other devices); dragging changes both (sync/railFolders.ts).
+  const folders = useOrbit((s) => s.server?.features.includes("rail-folders") ?? false);
+  const railOrder = useOrbit((s) => s.nav[PERSONAL]?.railOrder);
+  const folderList = useOrbit(
+    (s) => (s.server?.features.includes("rail-folders") ? (s.nav[PERSONAL]?.railFolders ?? []) : []),
+    (a, b) => JSON.stringify(a) === JSON.stringify(b),
+  );
+  const ordered = railOrdered(orgs, railOrder, (o) => o.id);
+  const byId = new Map(orgs.map((o) => [o.id, o]));
+  const items = railItems(
+    ordered.map((o) => o.id),
+    folderList,
+  );
+  const save = (next: RailState) =>
+    void engine.nav
+      .change(PERSONAL, folders ? { op: "railLayout", orgIds: next.order, folders: next.folders } : { op: "railOrder", orgIds: next.order })
+      .catch(() => engine.notice("error", "Couldn't save the new order. Try again."));
+  useDragSort(strip, (drag, target, at) => {
+    const state: RailState = { order: ordered.map((o) => o.id), folders: folderList };
+    const ref = (d: DragItem): DragRef => (d.kind === "folder" ? { kind: "folder", id: d.id } : { kind: "org", id: d.id });
+    const next = dropOnRail(state, ref(drag), ref(target), at, target.group);
+    if (next !== state) save(next);
+  });
   const dmTargets = useOrbit(
     (s) =>
       Object.values(s.conversations)
@@ -77,11 +101,24 @@ export function Rail({ orgId, section, onDialog }: { orgId: string | null; secti
       <div className="rail-sep" />
       {orgs.length > 0 && (
         <div role="group" aria-label={t("rail_communities")} className="rail-orgs">
-          {orgs.map((o) => {
-            // Direct messages belong to no community, so none is selected there (as on Discord).
-            const selected = !home && !discovering && o.id === orgId;
-            return <CommunityButton key={o.id} org={o} selected={selected} size={44} onDialog={onDialog} />;
-          })}
+          {items.map((it) =>
+            it.kind === "org" ? (
+              byId.get(it.id) && (
+                // Direct messages belong to no community, so none is selected there (as on Discord).
+                <CommunityButton key={it.id} org={byId.get(it.id)!} selected={!home && !discovering && it.id === orgId} size={44} onDialog={onDialog} drag={{ group: null, into: folders }} />
+              )
+            ) : (
+              <RailFolderItem
+                key={it.folder.id}
+                folder={it.folder}
+                orgs={it.folder.orgIds.map((id) => byId.get(id)).filter((o): o is RailOrg => !!o)}
+                selectedId={!home && !discovering ? orgId : null}
+                onDialog={onDialog}
+                onChange={(next: RailState) => save(next)}
+                state={{ order: ordered.map((o) => o.id), folders: folderList }}
+              />
+            ),
+          )}
         </div>
       )}
       <button className="rail-round" onClick={() => onDialog({ kind: "createWorkspace" })} aria-label={t("rail_create")} title={t("rail_create")} {...opener("create")}>
@@ -95,55 +132,6 @@ export function Rail({ orgId, section, onDialog }: { orgId: string | null; secti
         <Menu anchor={menu.anchor} point={menu.point} label={which === "home" ? t("rail_home") : t("rail_create")} onClose={menu.close} entries={which === "home" ? homeEntries : createEntries} />
       )}
     </nav>
-  );
-}
-
-type RailOrg = { id: string; name: string; photoRev: number | null; accent: string | null; myRole: string | null; unread: number; mentions: number };
-
-/** The communities in rail order, with their rolled-up unread activity. */
-function useRailOrgs(): RailOrg[] {
-  return useOrbit(
-    (s) => s.orgs.map((o) => ({ id: o.id, name: o.name, photoRev: o.photoRev, accent: o.accent, myRole: o.myRole, ...orgActivity(s, o.id) })),
-    (a, b) => a.length === b.length && a.every((x, i) => shallowEqual(x, b[i])),
-  );
-}
-
-/**
- * One community's icon: selects it and opens its channels (from DMs too); its side marker and badge say what's new.
- * A right-click (or the Menu key) opens its menu: open, invite, mark as read, settings, copy its id, leave.
- */
-function CommunityButton({ org: o, selected, size, onDialog }: { org: RailOrg; selected: boolean; size: number; onDialog: (d: ShellDialog) => void }) {
-  const t = useT();
-  const menu = useMenu();
-  // The permissions behind the menu's items load only once it opens (one request per right-click, not per icon).
-  const { perms } = useCommunityDetail(menu.anchor ? o.id : null);
-  const community = useCommunityMenu(o.id, perms, onDialog);
-  const marker = unreadMarker(o.unread, o.mentions, false);
-  const ownColors = usePrefs().communityColors;
-  const accent = ownColors ? o.accent : null;
-  const label = `${o.name}${o.mentions ? `, ${t("rail_mentions", { n: o.mentions })}` : ""}${o.unread ? `, ${t("nav_unread", { n: o.unread })}` : ""}`;
-  const openIt = () => {
-    setPrefs({ orgId: o.id });
-    navigate({ section: "home" });
-  };
-  return (
-    <>
-      <button
-        className={`rail-org${isHighlighted(marker) ? " unread" : ""}${accent ? ` ${ACCENT_CLASS}` : ""}`}
-        style={accentStyle(accent)}
-        aria-current={selected}
-        title={o.name}
-        aria-label={label}
-        aria-haspopup="menu"
-        onClick={openIt}
-        {...contextMenuProps(menu.openAt)}
-      >
-        <OrgAvatar orgId={o.id} name={o.name} photoRev={o.photoRev} size={size} />
-        {!selected && <UnreadBadge marker={marker} />}
-      </button>
-      {menu.anchor && <Menu anchor={menu.anchor} point={menu.point} label={o.name} onClose={menu.close} entries={community.entries} />}
-      {community.dialogs}
-    </>
   );
 }
 

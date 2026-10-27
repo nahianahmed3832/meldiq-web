@@ -31,7 +31,7 @@ export function PrivacySettings() {
     <div className="card" style={{ padding: 20, display: "grid", gap: 12 }}>
       <h3 style={{ margin: 0 }}>Who can see your profile</h3>
       <p className="muted" style={{ margin: 0, fontSize: 13 }}>
-        "My contacts" are people you share a conversation with, or a workspace where neither of you is a guest. Your username and display name are always visible.
+        "My contacts" are people you share a conversation with, or a community where neither of you is a guest. Your username and display name are always visible.
       </p>
       {(profile.error || act.error) && (
         <div className="banner danger" role="alert">

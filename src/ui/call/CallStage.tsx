@@ -12,6 +12,7 @@ import {
   MonitorUp,
   PhoneOff,
   Settings2,
+  UserPlus,
   ShieldAlert,
   ShieldQuestion,
   Video,
@@ -27,12 +28,17 @@ import { shareShortfall } from "../../call/shareQuality";
 import { ScreenView, ShareDialog, SharePill, StreamTray } from "./ShareViews";
 import type { CallParticipantView, CallUiState, DeviceKind, MediaDeviceChoice } from "../../call/types";
 import { Avatar } from "../components/Avatar";
-import { Menu, useFocusTrap, useMenu } from "../components/Overlay";
+import { Menu, useMenu } from "../components/Overlay";
+import { canShareScreen, INVITE_EVENT } from "./callShared";
 import { useNow } from "./useNow";
 import { callStatus, SECURITY_LABEL } from "./callText";
 import { HandButton, PeopleButton, RoomPeople, roomRows } from "./RoomControls";
 
-/** The full call screen: who's in it, where it stands, what's proven about its encryption, and the controls. */
+/**
+ * The call screen: who's in it, where it stands, what's proven about its encryption, and the controls. On a desktop
+ * window it fills the middle and leaves the rail and channels usable (2026-10-28, after the owner's reference), with
+ * the call's panel at the foot of the channel list (ConnectedCallPanel); on phones it covers the screen.
+ */
 export function CallStage() {
   const engine = useEngine();
   const call = useOrbit((s) => s.call);
@@ -40,11 +46,10 @@ export function CallStage() {
   const [verifyOpen, setVerifyOpen] = useState(false);
   const [peopleOpen, setPeopleOpen] = useState(false);
   const ended = call.phase === "ended";
-  const ref = useRef<HTMLElement>(null);
-  useFocusTrap(ref, true);
+  const orgId = useOrbit((s) => (call.conversationId ? (s.conversations[call.conversationId]?.orgId ?? null) : null));
 
   return (
-    <section ref={ref} className="call-stage" role="dialog" aria-modal="true" aria-label={`Call with ${call.title}`}>
+    <section className="call-stage" role="region" aria-label={`Call with ${call.title}`}>
       <header className="call-head">
         <button className="icon-btn" onClick={() => engine.calls.setMinimized(true)} aria-label="Minimise the call" disabled={ended}>
           <Minimize2 size={18} />
@@ -63,6 +68,13 @@ export function CallStage() {
         <CallNotes call={call} />
       </div>
       <Tiles call={call} ended={ended} />
+      {call.voiceRoom && orgId && !ended && (
+        <div className="call-invite-row">
+          <button className="btn call-invite" onClick={() => window.dispatchEvent(new CustomEvent(INVITE_EVENT, { detail: orgId }))}>
+            <UserPlus size={17} aria-hidden="true" /> Invite to voice
+          </button>
+        </div>
+      )}
       <Controls call={call} people={call.voiceRoom ? { open: peopleOpen, toggle: () => setPeopleOpen((o) => !o) } : null} />
     </section>
   );
@@ -217,9 +229,6 @@ function Tile({ p, hand, compact = false }: { p: CallParticipantView; hand: bool
     </figure>
   );
 }
-
-/** Screen sharing needs getDisplayMedia, which phones' browsers don't offer. */
-const canShareScreen = (): boolean => typeof navigator !== "undefined" && typeof navigator.mediaDevices?.getDisplayMedia === "function" && !/Android|iPhone|iPad/.test(navigator.userAgent);
 
 function Controls({ call, people }: { call: CallUiState; people: { open: boolean; toggle: () => void } | null }) {
   const engine = useEngine();

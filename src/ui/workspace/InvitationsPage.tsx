@@ -85,7 +85,7 @@ function NewInvitation({ detail, onCreated }: { detail: OrgAdminDetail; onCreate
   const grantable = (customRoles.data?.roles ?? []).filter((r) => !r.archived && r.canAssign);
   const [roleId, setRoleId] = useState("");
   const scopes = [
-    ...(isAdmin || community ? [{ value: "", label: community ? "The whole community" : "The whole workspace" }] : []),
+    ...(isAdmin || community ? [{ value: "", label: community ? "The whole community" : "The whole community" }] : []),
     ...detail.branches.filter((b) => isAdmin || b.canManage).map((b) => ({ value: `b:${b.id}`, label: `Branch: ${b.name}` })),
     ...detail.teams.filter((t) => isAdmin || t.canManage).map((t) => ({ value: `t:${t.id}`, label: `Team: ${t.name}` })),
   ];
@@ -181,7 +181,7 @@ function NewInvitation({ detail, onCreated }: { detail: OrgAdminDetail; onCreate
         )}
         {role === "GUEST" && guestsOff && (
           <p className="warn-text ws-wide" style={{ margin: 0, fontSize: 13 }}>
-            Guests are turned off for this workspace, so the server will refuse a guest invitation.
+            Guests are turned off for this community, so the server will refuse a guest invitation.
           </p>
         )}
         <label className="field">

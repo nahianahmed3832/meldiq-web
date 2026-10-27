@@ -4,7 +4,8 @@ import { UnreadBadge } from "../components/UnreadBadge";
 import { BellOff, ChevronDown, Eye, MonitorUp, MoreHorizontal, Plus } from "lucide-react";
 import { LiveCallBadge } from "../components/LiveCallBadge";
 import { useT } from "../../i18n";
-import { memo, type MouseEvent, useEffect, useMemo, useState } from "react";
+import { memo, type MouseEvent, useEffect, useMemo, useRef, useState } from "react";
+import { useDragSort } from "../components/dragSort";
 import type { Category } from "../../api/communitySchemas";
 import type { Conversation } from "../../api/schemas";
 import { shallowEqual, useEngine, useOrbit } from "../../application/orbit";
@@ -18,6 +19,7 @@ import {
   type ChannelMenuItem,
   hasNews,
   layoutPositions,
+  moveToCategory,
   markReadTargets,
   moved,
   muteTargets,
@@ -192,9 +194,38 @@ export function CommunityPanel({ orgId, unreadOnly, hideMuted, perms }: { orgId:
     }
   };
 
+  // Drag channels and categories to rearrange them (2026-10-28), for the people who may: a channel before or after
+  // another (in that one's category), or onto a category; a category before or after another.
+  const dragBox = useRef<HTMLDivElement>(null);
+  useDragSort(
+    dragBox,
+    (drag, target, at) => {
+      const fail = (e: unknown) => engine.notice("error", e instanceof Error ? e.message : "Couldn't move it.");
+      if (drag.kind === "category") {
+        if (target.kind !== "category" || at === "into") return;
+        const rest = keepAllCategories.filter((id) => id !== drag.id);
+        const i = rest.indexOf(target.id);
+        if (i < 0) return;
+        rest.splice(at === "after" ? i + 1 : i, 0, drag.id);
+        return void saveLayout(engine, orgId, { categories: rest }).catch(fail);
+      }
+      if (target.kind === "category") {
+        if (at !== "into") return;
+        return void saveLayout(engine, orgId, { channels: moveToCategory(drag.id, target.id, siblingsOf(target.id)) }).catch(fail);
+      }
+      const category = target.group || null;
+      const ids = siblingsOf(category).filter((id) => id !== drag.id);
+      const i = ids.indexOf(target.id);
+      if (i < 0) return;
+      ids.splice(at === "after" ? i + 1 : i, 0, drag.id);
+      void saveLayout(engine, orgId, { channels: layoutPositions(category, ids) }).catch(fail);
+    },
+    perms.canManageChannels,
+  );
+
   if (!engine.community.available) return null;
   return (
-    <>
+    <div ref={dragBox} className="channel-panel">
       {sections.length === 0 && <div className="side-quiet">No channels here yet.</div>}
       {sections.map((s) => {
         const category = categories.find((c) => c.id === s.categoryId);
@@ -215,6 +246,7 @@ export function CommunityPanel({ orgId, unreadOnly, hideMuted, perms }: { orgId:
         return (
           <CategorySection
             key={s.key}
+            draggable={perms.canManageChannels}
             section={s}
             title={s.title ?? "Channels"}
             menu={items}
@@ -230,6 +262,7 @@ export function CommunityPanel({ orgId, unreadOnly, hideMuted, perms }: { orgId:
                 <ChannelItem
                   key={ch.id}
                   orgId={orgId}
+                  draggable={perms.canManageChannels}
                   ch={ch}
                   current={route.conversationId === ch.id}
                   menu={channelMenu(ch, {
@@ -268,11 +301,12 @@ export function CommunityPanel({ orgId, unreadOnly, hideMuted, perms }: { orgId:
       {dialog?.k === "categoryLevel" && <CategoryLevelDialog orgId={orgId} categoryId={dialog.category.id} name={dialog.category.name} onClose={() => setDialog(null)} />}
       {dialog?.k === "permissions" && <PermissionsDialog orgId={orgId} target={{ type: dialog.type, id: dialog.id }} title={dialog.title} onClose={() => setDialog(null)} />}
       {dialog?.k === "hidden" && <HiddenChannelsDialog orgId={orgId} sections={allSections.map((s) => ({ title: s.title ?? "Channels", channels: s.channels }))} onClose={() => setDialog(null)} />}
-    </>
+    </div>
   );
 }
 
 function CategorySection(props: {
+  draggable: boolean;
   section: PanelSection;
   title: string;
   menu: CategoryMenuItem[];
@@ -282,7 +316,9 @@ function CategorySection(props: {
   onPick: (item: CategoryMenuItem) => void;
   children: React.ReactNode;
 }) {
-  const { section: s, title, menu, canAdd, onToggle, onAdd, onPick, children } = props;
+  const { section: s, title, menu, canAdd, onToggle, onAdd, onPick, children, draggable } = props;
+  // A category can be dragged among categories, and channels dropped onto it (the top "no category" part can't move).
+  const dragProps = draggable && s.categoryId ? { "data-drag": s.categoryId, "data-drag-kind": "category", "data-drag-into": "channel" } : {};
   const m = useMenu();
   const open = (e: MouseEvent<HTMLElement>) => {
     e.preventDefault();
@@ -293,7 +329,7 @@ function CategorySection(props: {
   };
   return (
     <section className="side-section" aria-label={title}>
-      <div className="side-section-row" onContextMenu={open}>
+      <div className="side-section-row" onContextMenu={open} {...dragProps}>
         <button className="side-section-head" aria-expanded={!s.collapsed} onClick={onToggle}>
           <ChevronDown size={14} className="chev" />
           <span className="grow ellipsis" style={{ textAlign: "left" }}>
@@ -332,8 +368,10 @@ const ChannelItem = memo(function ChannelItem({
   current,
   menu,
   onPick,
+  draggable,
 }: {
   orgId: string;
+  draggable: boolean;
   ch: PanelChannel;
   current: boolean;
   menu: ChannelMenuItem[];
@@ -369,7 +407,7 @@ const ChannelItem = memo(function ChannelItem({
   const marker = unreadMarker(ch.unread, ch.mentions, ch.muted);
   const label = `${ch.voice ? "Voice channel" : "Channel"} ${ch.name}${ch.joined ? "" : ", not joined yet"}${unreadLabel(ch.unread, ch.mentions, ch.muted, { unread: (n) => `${n} unread`, mentions: (n) => `${n} mentions`, muted: "muted" })}`;
   return (
-    <div className="side-row">
+    <div className="side-row" {...(draggable ? { "data-drag": ch.id, "data-drag-kind": "channel", "data-drag-group": ch.categoryId ?? "" } : {})}>
       <a
         className={`side-item channel-item${isHighlighted(marker) ? " unread" : ""}${ch.muted ? " muted" : ""}${ch.joined ? "" : " unjoined"}`}
         href={`/home/c/${encodeURIComponent(ch.id)}`}

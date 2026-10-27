@@ -57,7 +57,7 @@ async function joinFromBrowser(page: Page, alice: Phone, bob: Phone, channelId: 
   await page.getByLabel("Voice room").getByRole("button", { name: "Join voice" }).click();
   await waitUntil(() => bob.received.find((m: any) => m.payload?.type === "call_key_request" && m.payload.callId === callId), 20_000, "the browser's key request");
   await bob.send(channelId, { type: "call_invite", callId, video: false, e2eeKey: key }, "control");
-  const stage = page.getByRole("dialog", { name: /^Call with/ });
+  const stage = page.locator("section.call-stage").and(page.getByRole("region", { name: /^Call with/ }));
   await expect(stage).toBeVisible();
   return stage;
 }

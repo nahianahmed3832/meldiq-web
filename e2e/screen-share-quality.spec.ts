@@ -33,7 +33,7 @@ test("shares at High and at Standard: the capture and encoding follow the mode, 
   await page.goto(`/dms/c/${dm}`);
   await page.getByRole("button", { name: "Start a voice call" }).click();
   const call = await answerCall(bob, false);
-  const stage = page.getByRole("dialog", { name: "Call with Bob Chen" });
+  const stage = page.locator("section.call-stage").and(page.getByRole("region", { name: "Call with Bob Chen" }));
   try {
     await expect(stage.getByRole("status")).toHaveText(/^\d+:\d\d$/, { timeout: 30_000 });
     await stage.getByRole("button", { name: "Share your screen" }).click();

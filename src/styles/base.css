@@ -225,6 +225,16 @@ a.icon-btn {
   border-color: var(--accent);
   box-shadow: 0 0 0 3px var(--accent-soft);
 }
+/* A field made of an icon and a bare input inside an `.input` wrapper (search boxes): the wrapper shows the focus, never
+   the bare input, whose own ring was drawn at the wrong size and cut off (reported 2026-10-28). */
+.input:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+.input input:focus-visible,
+.input textarea:focus-visible {
+  box-shadow: none;
+}
 .input[aria-invalid="true"] {
   border-color: var(--danger);
 }

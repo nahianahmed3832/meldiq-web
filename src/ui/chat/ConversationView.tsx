@@ -123,7 +123,7 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
             </button>
           );
         })()}
-        {/* Calls in a workspace happen in its voice rooms; a text channel has none to start (android round 7). */}
+        {/* Calls in a community happen in its voice rooms; a text channel has none to start (android round 7). */}
         {c.type !== "CHANNEL" && !c.request && <CallButtons conversationId={id} canPost={c.canPost} archived={c.archived} serverCalling={calling} busy={myCall !== null} running={!!call} />}
         {/* Android A7: a text channel's bell (mute for a while, the channel's level). */}
         {c.type === "CHANNEL" && !c.voice && <ChannelBell c={c} />}

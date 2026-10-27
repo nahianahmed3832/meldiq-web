@@ -59,9 +59,9 @@ function KindCard({ detail, onChanged }: { detail: OrgAdminDetail; onChanged: ()
     void save.act(() => setWorkspaceKind(engine, org.id, kind).then(onChanged));
   };
   return (
-    <Card title="Kind of workspace" sub={owner ? "Changes what Meldiq shows first. Nothing is added or removed." : "Only owners can change this."}>
+    <Card title="Kind of community" sub={owner ? "Changes what Meldiq shows first. Nothing is added or removed." : "Only owners can change this."}>
       <ErrorLine text={save.error} />
-      <div className="kind-choice" role="radiogroup" aria-label="Kind of workspace">
+      <div className="kind-choice" role="radiogroup" aria-label="Kind of community">
         {(["team", "community"] as const).map((k) => (
           <button key={k} type="button" role="radio" aria-checked={org.kind === k} className="kind-option" disabled={!owner || save.busy} onClick={() => choose(k)}>
             <span>
@@ -77,7 +77,7 @@ function KindCard({ detail, onChanged }: { detail: OrgAdminDetail; onChanged: ()
 
 function ReadOnlyAbout({ description }: { description: string | null }) {
   return (
-    <Card title="About" sub="Only owners and admins can change the workspace's name, description and photo.">
+    <Card title="About" sub="Only owners and admins can change the community's name, description and photo.">
       <p style={{ margin: 0 }}>{description || <span className="faint">No description.</span>}</p>
     </Card>
   );
@@ -113,7 +113,7 @@ function Identity({ detail, onChanged }: { detail: OrgAdminDetail; onChanged: ()
   };
 
   return (
-    <Card title={community ? "Community details" : "Workspace details"} sub="Members see the name, description and photo. They aren't end-to-end encrypted.">
+    <Card title={community ? "Community details" : "Community details"} sub="Members see the name, description and photo. They aren't end-to-end encrypted.">
       <div className="row" style={{ gap: 16, alignItems: "center", flexWrap: "wrap" }}>
         <OrgAvatar orgId={org.id} name={org.name} photoRev={org.photoRev} size={56} />
         <input ref={file} type="file" accept="image/*" hidden onChange={(e) => pick(e.target.files?.[0])} />
@@ -153,15 +153,15 @@ function Membership({ detail }: { detail: OrgAdminDetail }) {
   const leave = useAction();
   const [confirm, setConfirm] = useState<"leave" | "delete" | null>(null);
   return (
-    <Card title="Your membership" sub="Leaving removes you from this workspace's branches, teams and channels. Your direct messages stay.">
+    <Card title="Your membership" sub="Leaving removes you from this community's channels and voice rooms. Your direct messages stay.">
       <ErrorLine text={leave.error} />
       <div className="row" style={{ gap: 8, flexWrap: "wrap" }}>
         <button className="btn btn-danger-quiet btn-sm" disabled={!can.canLeave || leave.busy} onClick={() => setConfirm("leave")}>
-          <LogOut size={14} /> Leave workspace
+          <LogOut size={14} /> Leave community
         </button>
         {can.isOwner && (
           <button className="btn btn-danger-quiet btn-sm" onClick={() => setConfirm("delete")}>
-            <Trash2 size={14} /> Delete workspace…
+            <Trash2 size={14} /> Delete community…
           </button>
         )}
       </div>
@@ -210,9 +210,9 @@ function DeleteDialog({ orgId, name, onClose }: { orgId: string; name: string; o
   return (
     <Dialog title={`Delete ${name}?`} onClose={onClose}>
       <div className="dialog-body">
-        <div className="banner danger">This deletes the workspace's channels and their messages and files, its branches, teams and invitations, for every member. It can't be undone.</div>
-        <p style={{ margin: 0 }}>People's accounts, direct messages and groups stay. Type the workspace's name to confirm.</p>
-        <input className="input" data-autofocus value={typed} onChange={(e) => setTyped(e.target.value)} aria-label="Workspace name" placeholder={name} />
+        <div className="banner danger">This deletes the community's channels and their messages and files, its roles and invitations, for every member. It can't be undone.</div>
+        <p style={{ margin: 0 }}>People's accounts, direct messages and groups stay. Type the community's name to confirm.</p>
+        <input className="input" data-autofocus value={typed} onChange={(e) => setTyped(e.target.value)} aria-label="Community name" placeholder={name} />
         <ErrorLine text={del.error} />
         <div className="row" style={{ justifyContent: "flex-end", gap: 8 }}>
           <button className="btn btn-secondary" onClick={onClose}>
@@ -230,7 +230,7 @@ function DeleteDialog({ orgId, name, onClose }: { orgId: string; name: string; o
               })
             }
           >
-            {del.busy ? "Deleting…" : "Delete workspace"}
+            {del.busy ? "Deleting…" : "Delete community"}
           </button>
         </div>
       </div>

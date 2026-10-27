@@ -65,6 +65,11 @@ export const ConversationRow = memo(function ConversationRow({ id, twoLine, hide
         peerColor: peer?.avatarColor ?? 0,
         peerPhoto: peer ? (s.users[peer.id]?.photoRev ?? null) : null,
         typing: Object.values(s.typing[id] ?? {}).some((t) => t > Date.now()),
+        // Who (the first of them), for "Bob is meldling…" in the row.
+        typer: (() => {
+          const u = Object.entries(s.typing[id] ?? {}).find(([who, until]) => until > Date.now() && who !== s.me?.userId)?.[0];
+          return u ? (s.users[u]?.displayName ?? null) : null;
+        })(),
         muted: isMuted(s, c),
       };
     },
@@ -77,6 +82,7 @@ export const ConversationRow = memo(function ConversationRow({ id, twoLine, hide
       a.online === b.online &&
       a.presence === b.presence &&
       a.typing === b.typing &&
+      a.typer === b.typer &&
       a.muted === b.muted &&
       a.peerPhoto === b.peerPhoto,
   );
@@ -84,7 +90,7 @@ export const ConversationRow = memo(function ConversationRow({ id, twoLine, hide
   const { listPreview } = usePrefs();
   const t = useT();
   if (!data) return null;
-  const { c, local, title, online, presence, peerId, peerColor, peerPhoto, typing, muted } = data;
+  const { c, local, title, online, presence, peerId, peerColor, peerPhoto, typing, typer, muted } = data;
   const unread = local?.unread ?? 0;
   const showPreview = listPreview === "all" || (listPreview === "unread" && unread > 0);
   const mentions = local?.mentions ?? 0;
@@ -137,8 +143,7 @@ export const ConversationRow = memo(function ConversationRow({ id, twoLine, hide
           <small className="grow ellipsis">
             {typing ? (
               <span className="row-typing" title={t("row_typing")}>
-                <img src="/meldling-96.webp" width={14} height={14} alt="" draggable={false} />
-                <span aria-hidden="true">{t("typing_meldling")}…</span>
+                <span aria-hidden="true">{typer ? `${typer} ${t("meldling_one")}…` : `${t("typing_meldling")}…`}</span>
                 <span className="sr-only">{t("row_typing")}</span>
               </span>
             ) : !showPreview ? (

@@ -25,7 +25,7 @@ export function StartChecklist({ orgId, onDialog }: { orgId: string | null; onDi
   );
   const steps: (StartStep & { go: () => void })[] = [
     { key: "profile", label: "Add your name and photo", done: facts.photo, go: () => navigate({ section: "settings", settingsPage: "profile" }) },
-    { key: "workspace", label: community ? "Start or join a community" : "Create or join a workspace", done: facts.workspaces > 0, go: () => onDialog({ kind: "joinWorkspace" }) },
+    { key: "workspace", label: community ? "Start or join a community" : "Create or join a community", done: facts.workspaces > 0, go: () => onDialog({ kind: "joinWorkspace" }) },
     {
       key: "invite",
       label: community ? "Invite your friends" : "Invite your teammates",

@@ -476,3 +476,26 @@
     --theme-color: #3d2610;
   }
 }
+
+/* Black (2026-10-28): dark with true-black surfaces, for any palette; the palette keeps its accent and badges. */
+@supports (color: light-dark(#000, #fff)) {
+  :root:root[data-theme="black"] {
+    color-scheme: dark;
+    --bg: #000000;
+    --surface: #050506;
+    --surface-raised: #0e0e11;
+    --surface-sunken: #000000;
+    --surface-hover: #121216;
+    --surface-selected: #1a1a20;
+    --border: #1c1c22;
+    --border-strong: #2a2a32;
+    --hairline: rgba(255, 255, 255, 0.07);
+    --rail: #000000;
+    --rail-2: #000000;
+    --sidebar: #08080a;
+    --sidebar-hover: #131317;
+    --sidebar-selected: #1c1c22;
+    --panel-ring: rgba(255, 255, 255, 0.06);
+    --theme-color: #000000;
+  }
+}

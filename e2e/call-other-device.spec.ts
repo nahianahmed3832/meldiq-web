@@ -29,7 +29,7 @@ test("joining the call on another device moves this browser out of it, still sig
     const ringing = page.getByRole("alertdialog", { name: "Incoming voice call from Bob Chen" });
     await expect(ringing).toBeVisible({ timeout: 15_000 });
     await ringing.getByRole("button", { name: "Answer" }).click();
-    const stage = page.getByRole("dialog", { name: "Call with Bob Chen" });
+    const stage = page.locator("section.call-stage").and(page.getByRole("region", { name: "Call with Bob Chen" }));
     await expect(stage.getByRole("status")).toHaveText(/^\d+:\d\d$/, { timeout: 30_000 });
 
     // Alice's phone joins the same call with the key its own copy of the invite carried.

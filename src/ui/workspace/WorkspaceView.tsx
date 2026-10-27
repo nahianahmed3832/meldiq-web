@@ -87,11 +87,11 @@ export function WorkspaceView({ orgId, page, onDialog }: { orgId: string | null;
           <span className="empty-orb">
             <Building2 size={26} />
           </span>
-          <h2>No workspace yet</h2>
+          <h2>No community yet</h2>
           <p className="muted">Create one for your organisation, start a community, or join one with an invitation code.</p>
           <div className="row" style={{ gap: 8, justifyContent: "center" }}>
             <button className="btn btn-primary" onClick={() => onDialog({ kind: "createWorkspace" })}>
-              Create a workspace
+              Create a community
             </button>
             <button className="btn btn-secondary" onClick={() => onDialog({ kind: "joinWorkspace" })}>
               Join with a code
@@ -107,7 +107,7 @@ export function WorkspaceView({ orgId, page, onDialog }: { orgId: string | null;
   return (
     <section className="main" aria-label={`${org.name} settings`} style={{ display: "flex", flexDirection: "column" }}>
       <div className="settings">
-        <nav className="settings-nav" aria-label={community ? "Community settings" : "Workspace pages"}>
+        <nav className="settings-nav" aria-label={community ? "Community settings" : "Community pages"}>
           <h2 className="ellipsis">{org.name}</h2>
           {community &&
             COMMUNITY_GROUPS.map((g) => {
