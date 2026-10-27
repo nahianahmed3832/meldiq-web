@@ -8,6 +8,7 @@ import "../styles/views.css";
 import "../styles/call.css";
 import "../styles/community.css";
 import "../styles/profile.css";
+import "../styles/settings.css";
 import "../styles/agents.css";
 import "../styles/motion.css";
 import "../styles/splash.css";

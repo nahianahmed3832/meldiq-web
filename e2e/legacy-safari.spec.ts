@@ -53,7 +53,10 @@ test("without Ed25519/X25519 in WebCrypto (iOS 16), Meldiq links, sends and rece
 
   await link(page, alice);
   await bob.send(dm, { type: "text", text: "Hello iPhone 8" });
-  await page.getByRole("link", { name: /Bob Chen/ }).click();
+  await page
+    .getByRole("complementary", { name: "Conversations" })
+    .getByRole("link", { name: /Bob Chen/ })
+    .click();
   await expect(page.getByText("Hello iPhone 8")).toBeVisible();
 
   const composer = page.getByLabel("Message Bob Chen");

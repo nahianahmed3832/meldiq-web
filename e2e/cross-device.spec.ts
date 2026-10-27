@@ -31,7 +31,7 @@ test("a linked browser and the phone stay in sync through the server, and signin
 
   // Someone else writes: it appears without a reload, decrypted in the browser.
   await bob.send(dm, { type: "text", text: "Hello from Bob's phone" });
-  const row = page.getByRole("link", { name: /Bob Chen/ });
+  const row = page.getByRole("complementary", { name: "Conversations" }).getByRole("link", { name: /Bob Chen/ });
   await expect(row).toBeVisible();
   await expect(row).toHaveAccessibleName(/1 unread/);
   await row.click();

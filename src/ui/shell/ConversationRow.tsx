@@ -28,7 +28,8 @@ import { useEngine, useOrbit } from "../../application/orbit";
 import { navigate, useRoute } from "../../application/router";
 import type { ConversationLocal } from "../../model/types";
 import { levelOf, newSectionId, type NotifyLevel, placeOf, workspaceOf } from "../../sync/navPrefs";
-import { GroupAvatar, UserAvatar } from "../components/OrgAvatar";
+import { GroupAvatar } from "../components/OrgAvatar";
+import { LookAvatar } from "../people/NameStyle";
 import { Dialog, Menu, type MenuEntry, useMenu } from "../components/Overlay";
 import { conversationTitle, dmPeer, members, shortWhen } from "../format";
 import { isMuted, isPeople } from "../selectors";
@@ -102,7 +103,7 @@ export const ConversationRow = memo(function ConversationRow({ id, twoLine, hide
     ) : c.type === "GROUP" ? (
       <GroupAvatar conversationId={c.id} name={title} photoRev={c.photoRev} size={twoLine ? 36 : 22} />
     ) : (
-      <UserAvatar userId={peerId ?? ""} name={title} colorIndex={peerColor} photoRev={peerPhoto} size={twoLine ? 36 : 22} online={online} presence={presence} decorative />
+      <LookAvatar userId={peerId ?? ""} name={title} colorIndex={peerColor} photoRev={peerPhoto} size={twoLine ? 36 : 22} online={online} presence={presence} />
     );
   const marker = unreadMarker(unread, mentions, muted, c.type !== "CHANNEL");
   const label = `${c.type === "CHANNEL" ? "Channel " : ""}${title}${unreadLabel(unread, mentions, muted, { unread: (n) => `${n} unread`, mentions: (n) => `${n} mentions`, muted: "muted" })}`;

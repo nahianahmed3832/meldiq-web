@@ -114,7 +114,10 @@ test("a video call from the phone app rings here and connects with media verifie
 
 test("the browser calls the phone app; each side decrypts the other's audio", async ({ page }) => {
   const { bob } = await setUp(page);
-  await page.getByRole("link", { name: /Bob Chen/ }).click();
+  await page
+    .getByRole("complementary", { name: "Conversations" })
+    .getByRole("link", { name: /Bob Chen/ })
+    .click();
   await page.getByRole("button", { name: "Start a voice call" }).click();
   const s = stage(page);
   await expect(s.getByRole("status")).toHaveText(/Calling…|Ringing…/, { timeout: 15_000 });
@@ -140,7 +143,10 @@ const overlaps = (a: { x: number; y: number; width: number; height: number }, b:
 
 test("a minimised call stays clear of the message box, can be dragged and moved with the keys, and messages still send", async ({ page }) => {
   const { bob, dm } = await setUp(page);
-  await page.getByRole("link", { name: /Bob Chen/ }).click();
+  await page
+    .getByRole("complementary", { name: "Conversations" })
+    .getByRole("link", { name: /Bob Chen/ })
+    .click();
   await page.getByRole("button", { name: "Start a voice call" }).click();
   const call = await answerCall(bob, false);
   try {
@@ -226,7 +232,10 @@ test("a refused microphone is explained: no call goes out, and an answered call 
   const page = await context.newPage();
   const { bob, dm } = await setUp(page);
 
-  await page.getByRole("link", { name: /Bob Chen/ }).click();
+  await page
+    .getByRole("complementary", { name: "Conversations" })
+    .getByRole("link", { name: /Bob Chen/ })
+    .click();
   await page.getByRole("button", { name: "Start a voice call" }).click();
   await expect(stage(page).getByRole("status")).toHaveText(/isn't allowed to use your microphone/, { timeout: 15_000 });
   expect((await bob.req("GET", "/v1/calls/active")).calls).toEqual([]);
@@ -271,7 +280,10 @@ test("a call survives losing the network for a few seconds", async ({ page, cont
 
 test("deafen silences the call both ways and undeafen puts it back as it was (batch B10)", async ({ page }) => {
   const { bob } = await setUp(page);
-  await page.getByRole("link", { name: /Bob Chen/ }).click();
+  await page
+    .getByRole("complementary", { name: "Conversations" })
+    .getByRole("link", { name: /Bob Chen/ })
+    .click();
   await page.getByRole("button", { name: "Start a voice call" }).click();
   const s = stage(page);
   const call = await answerCall(bob, false);

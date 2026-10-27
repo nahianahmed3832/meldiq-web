@@ -26,6 +26,7 @@ import {
   Trash2,
   UserRound,
   Video,
+  IdCard,
 } from "lucide-react";
 import { memo, useState } from "react";
 import { CustomEmojiImage, useExpressions } from "../community/CustomEmoji";
@@ -46,6 +47,7 @@ import { mergeHandlers, useMessageGestures } from "./gestures";
 import { clock, dayLabel, fullTime } from "../format";
 import { openInApp } from "./inAppLinks";
 import { useT } from "../../i18n";
+import { LookAvatar, StyledName, useUserLook } from "../people/NameStyle";
 import { isWebUrl } from "../../protocol/payload";
 import { Attachments } from "./Attachments";
 import { isEmojiOnly, RichText } from "./RichText";
@@ -114,7 +116,7 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
   const orgName = useOrbit((st) => (conv?.orgId ? (st.orgs.find((o) => o.id === conv.orgId)?.name ?? null) : null));
   // Saved for later (android Home › Later): synced in the personal document when the server keeps saved items.
   const savable = useOrbit((st) => st.server?.features.includes("saved-items") ?? false);
-  const { mediaCards, swipeToReply, doubleTapReact, quickReaction } = usePrefs();
+  const { mediaCards, swipeToReply, doubleTapReact, quickReaction, builderMode: builder } = usePrefs();
   const saved = useOrbit((st) => st.nav[PERSONAL]?.saved?.find((x) => x.messageId === m.id));
   const more = useMenu();
   const picker = useMenu();
@@ -329,7 +331,7 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
       <div className="msg-gutter">
         {p.first ? (
           <button className="msg-avatar-btn" onClick={() => openProfile(m.senderUserId, p.senderName)} aria-label={`${p.senderName}'s profile`} tabIndex={-1}>
-            <UserAvatar userId={m.senderUserId} name={p.senderName} colorIndex={p.senderColor} photoRev={p.senderPhotoRev} size={38} decorative />
+            <LookAvatar userId={m.senderUserId} name={p.senderName} colorIndex={p.senderColor} photoRev={p.senderPhotoRev} size={38} />
           </button>
         ) : (
           <time dateTime={new Date(m.sortTs).toISOString()}>{clock(m.sortTs)}</time>
@@ -338,8 +340,8 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
       <div className="msg-main">
         {p.first && (
           <div className="msg-head">
-            <button className={`msg-name ellipsis ${nameTone(p.senderColor)}`} onClick={() => openProfile(m.senderUserId, p.senderName)}>
-              {p.senderName}
+            <button className="msg-name" onClick={() => openProfile(m.senderUserId, p.senderName)}>
+              <SenderName userId={m.senderUserId} name={p.senderName} toneClass={nameTone(p.senderColor)} />
             </button>
             <time dateTime={new Date(m.sortTs).toISOString()} title={fullTime(m.sortTs)}>
               {clock(m.sortTs)}
@@ -461,6 +463,18 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
                 ]
               : []),
             ...(mine ? [{ label: t("msg_info"), icon: <Info size={16} />, onSelect: () => setInfo(true) }] : []),
+            ...(builder
+              ? [
+                  {
+                    label: "Copy message ID",
+                    icon: <IdCard size={16} />,
+                    onSelect: () => {
+                      void navigator.clipboard?.writeText(m.id).catch(() => undefined);
+                      engine.notice("info", "Message ID copied.");
+                    },
+                  },
+                ]
+              : []),
             ...(!mine && live && reportable && conv ? ["separator" as const, { label: t("msg_report"), icon: <Flag size={16} />, danger: true, onSelect: () => setReporting(true) }] : []),
             ...(mine && p.canPost ? ["separator" as const, { label: t("msg_delete_all"), icon: <Trash2 size={16} />, danger: true, onSelect: () => setConfirmDelete(true) }] : []),
           ]}
@@ -640,4 +654,10 @@ function ForwardedLine({ origin }: { origin: RichContent["origin"] }) {
       )}
     </div>
   );
+}
+
+/** The author's name with their name style and tag (API 0.46.0), as this browser knows them. */
+function SenderName({ userId, name, toneClass }: { userId: string; name: string; toneClass: string }) {
+  const look = useUserLook(userId);
+  return <StyledName name={name} style={look.profileStyle} tag={look.tag} toneClass={toneClass} className="ellipsis" />;
 }

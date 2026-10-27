@@ -1,3 +1,8 @@
+import { markAllReadTargets, unreadOf } from "../selectors";
+import { actionFor, comboOf } from "../../application/shortcuts";
+import { ShortcutsDialog } from "../dialogs/ShortcutsDialog";
+import { usePushToTalk } from "../call/usePushToTalk";
+import { quietContextMenu } from "../components/Overlay";
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { shallowEqual, useEngine, useOrbit } from "../../application/orbit";
 import { getPrefs, setPrefs, usePrefs } from "../../application/prefs";
@@ -48,6 +53,7 @@ export type ShellDialog =
   | { kind: "connections" }
   | { kind: "requests" }
   | { kind: "addMembers"; orgId?: string }
+  | { kind: "shortcuts" }
   | null;
 
 /**
@@ -64,6 +70,7 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
   const synced = useOrbit((s) => s.synced);
   const [drawer, setDrawer] = useState(false);
   const [dialog, setDialog] = useState<ShellDialog>(null);
+  usePushToTalk();
 
   const orgId = prefs.orgId && orgIds.includes(prefs.orgId) ? prefs.orgId : (orgIds[0] ?? null);
   const orgName = useOrbit((s) => s.orgs.find((o) => o.id === orgId)?.name ?? "");
@@ -166,21 +173,42 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
     return ids;
   }, shallowEqual);
 
+  const unread = useOrbit((s) => order.filter((id) => unreadOf(s, id) > 0), shallowEqual);
+  const readTargets = useOrbit((s) => markAllReadTargets(s, orgId), shallowEqual);
+  const inCall = useOrbit((s) => s.call.phase !== "idle");
+
+  // Settings › Shortcuts (application/shortcuts.ts): the person's combinations, else the defaults.
   useEffect(() => {
+    const go = (list: string[], delta: number) => {
+      if (!list.length) return;
+      const i = route.conversationId ? list.indexOf(route.conversationId) : -1;
+      const next = i < 0 ? list[delta > 0 ? 0 : list.length - 1] : list[Math.max(0, Math.min(list.length - 1, i + delta))];
+      if (next) navigate({ section: isFullPage(route.section) ? "home" : route.section, conversationId: next });
+    };
     const onKey = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
-        e.preventDefault();
-        setDialog({ kind: "search" });
-      } else if (e.altKey && (e.key === "ArrowUp" || e.key === "ArrowDown") && order.length) {
-        e.preventDefault();
-        const i = route.conversationId ? order.indexOf(route.conversationId) : -1;
-        const next = order[Math.max(0, Math.min(order.length - 1, i + (e.key === "ArrowDown" ? 1 : -1)))];
-        if (next) navigate({ section: isFullPage(route.section) ? "home" : route.section, conversationId: next });
-      } else if (e.key === "Escape" && drawer) setDrawer(false);
+      const combo = comboOf(e);
+      const action = combo ? actionFor(getPrefs().keybinds, combo) : null;
+      if (!action) {
+        if (e.key === "Escape" && drawer) setDrawer(false);
+        return;
+      }
+      if ((action === "toggleMute" || action === "toggleDeafen") && !inCall) return;
+      e.preventDefault();
+      if (action === "search") setDialog({ kind: "search" });
+      else if (action === "showShortcuts") setDialog({ kind: "shortcuts" });
+      else if (action === "prevConversation" || action === "nextConversation") go(order, action === "nextConversation" ? 1 : -1);
+      else if (action === "prevUnread" || action === "nextUnread")
+        go(
+          unread.filter((id) => id !== route.conversationId),
+          action === "nextUnread" ? 1 : -1,
+        );
+      else if (action === "markCommunityRead") void Promise.all(readTargets.map((c) => engine.markRead(c)));
+      else if (action === "toggleMute") void engine.calls.toggleMicrophone();
+      else if (action === "toggleDeafen") void engine.calls.toggleDeafen();
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [order, route, drawer]);
+  }, [order, unread, readTargets, inCall, route, drawer, engine]);
 
   const section = route.section;
   const settings = isFullPage(section);
@@ -199,7 +227,7 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
   else main = <HomeView orgId={orgId} section={section} onDialog={ctx.open} />;
 
   return (
-    <div className="app">
+    <div className="app" onContextMenu={quietContextMenu}>
       <Rail orgId={orgId} section={section} onDialog={ctx.open} />
       {/* Desktop: with the sidebar its user panel replaces the top bar; Settings has no sidebar, so it keeps the top bar. */}
       <div className={`workspace${settings ? "" : " with-sidebar"}`}>
@@ -218,6 +246,7 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
       <ConnectionRequestWatcher />
       <CallLayer />
       {dialog?.kind === "search" && <SearchDialog orgId={orgId} onClose={() => setDialog(null)} />}
+      {dialog?.kind === "shortcuts" && <ShortcutsDialog onClose={() => setDialog(null)} />}
       {dialog?.kind === "new" && <NewMessageDialog onClose={() => setDialog(null)} onNewGroup={() => setDialog({ kind: "newGroup" })} />}
       {dialog?.kind === "channels" && orgId && <ChannelBrowser orgId={orgId} onClose={() => setDialog(null)} />}
       {dialog?.kind === "identity" && <IdentityReview userId={dialog.userId} onClose={() => setDialog(null)} />}

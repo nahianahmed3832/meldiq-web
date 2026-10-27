@@ -623,3 +623,13 @@ img.custom-sticker {
   background-size: cover;
   background-position: center;
 }
+/* API 0.46.0: a styled name and its tag on one line, the name shortened first. */
+.msg-name {
+  display: inline-flex;
+  align-items: center;
+  min-width: 0;
+  max-width: 100%;
+}
+.msg-name > .sname {
+  min-width: 0;
+}

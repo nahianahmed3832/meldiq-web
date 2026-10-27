@@ -181,3 +181,220 @@
 .style-preview {
   max-width: 340px;
 }
+
+/* ───────── Name styles and community tags (API 0.46.0) ───────── */
+@font-face {
+  font-family: "Meldiq Pixel";
+  src: url("/fonts/names/pixel.woff2") format("woff2");
+  font-display: swap;
+}
+@font-face {
+  font-family: "Meldiq Arcade";
+  src: url("/fonts/names/arcade.woff2") format("woff2");
+  font-display: swap;
+}
+@font-face {
+  font-family: "Meldiq Script";
+  src: url("/fonts/names/script.woff2") format("woff2");
+  font-display: swap;
+}
+@font-face {
+  font-family: "Meldiq Block";
+  src: url("/fonts/names/block.woff2") format("woff2");
+  font-display: swap;
+}
+@font-face {
+  font-family: "Meldiq Tech";
+  src: url("/fonts/names/tech.woff2") format("woff2");
+  font-weight: 700;
+  font-display: swap;
+}
+
+/* Each font keeps Meldiq's own as the fallback, for letters it doesn't have (non-Latin names). Sizes even out how
+   wide or tall each family draws, so a styled name sits in the same line as a plain one. */
+.sname {
+  font-weight: inherit;
+}
+.sname.nf-pixel {
+  font-family: "Meldiq Pixel", var(--font);
+  font-size: 0.98em;
+  letter-spacing: 0.02em;
+}
+.sname.nf-arcade {
+  font-family: "Meldiq Arcade", var(--font);
+  font-size: 0.66em;
+  letter-spacing: 0.02em;
+  line-height: 1.6;
+}
+.sname.nf-script {
+  font-family: "Meldiq Script", var(--font);
+  font-size: 1.05em;
+  font-weight: 400;
+}
+.sname.nf-block {
+  font-family: "Meldiq Block", var(--font);
+  font-size: 0.9em;
+  font-weight: 400;
+}
+.sname.nf-tech {
+  font-family: "Meldiq Tech", var(--font);
+  font-size: 0.92em;
+  letter-spacing: 0.03em;
+}
+.sname.nf-mono {
+  font-family: var(--mono);
+  font-size: 0.95em;
+}
+
+/* A gradient across the letters. */
+.sname.grad {
+  background: var(--name-paint);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+.sname.ne-glow {
+  text-shadow: 0 0 10px color-mix(in srgb, currentColor 55%, transparent);
+}
+.sname.grad.ne-glow {
+  text-shadow: none;
+  filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.28));
+}
+@media (prefers-reduced-motion: no-preference) {
+  .sname.grad.ne-shimmer {
+    animation: name-shimmer 3.2s linear infinite;
+  }
+  .sname.ne-shimmer:not(.grad) {
+    animation: name-pulse 2.4s ease-in-out infinite;
+  }
+}
+@keyframes name-shimmer {
+  from {
+    background-position: 0% 50%;
+  }
+  to {
+    background-position: 200% 50%;
+  }
+}
+@keyframes name-pulse {
+  50% {
+    opacity: 0.72;
+  }
+}
+
+/* The tag a person wears: the community's letters on its accent. */
+.wtag {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 6px;
+  padding: 1px 6px;
+  border-radius: 6px;
+  font: 800 10.5px/1.45 var(--font);
+  letter-spacing: 0.04em;
+  vertical-align: 0.12em;
+  color: var(--text-2);
+  background: color-mix(in srgb, var(--tag, var(--text-3)) 18%, transparent);
+  border: 1px solid color-mix(in srgb, var(--tag, var(--text-3)) 45%, transparent);
+  flex: none;
+  white-space: nowrap;
+}
+
+/* Settings › Profile › Name style. */
+.name-preview {
+  display: grid;
+  gap: 4px;
+  padding: 14px 16px;
+  border-radius: var(--r-lg);
+  background: var(--surface-sunken);
+  border: 1px solid var(--border);
+}
+.name-preview-row {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  font-size: 20px;
+  font-weight: 800;
+}
+.font-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 8px;
+}
+.font-choice,
+.tag-choice {
+  display: grid;
+  gap: 4px;
+  justify-items: start;
+  padding: 10px 12px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  text-align: left;
+  min-width: 0;
+}
+.font-choice {
+  font-size: 16px;
+}
+.font-choice > .sname {
+  font-weight: 700;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.font-choice small {
+  font-size: 12px;
+  color: var(--text-3);
+}
+.font-choice[aria-pressed="true"],
+.tag-choice[aria-pressed="true"],
+.color-preset[aria-pressed="true"] {
+  border-color: var(--action);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--action) 35%, transparent);
+}
+.color-presets {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+  gap: 8px;
+}
+.color-preset {
+  display: flex;
+  align-items: flex-end;
+  height: 52px;
+  padding: 6px 8px;
+  border-radius: var(--r-md);
+  border: 1px solid transparent;
+  color: #fff;
+  font-weight: 700;
+  font-size: 12.5px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
+}
+.color-preset.none {
+  background: var(--surface-sunken);
+  border-color: var(--border);
+  color: var(--text-2);
+  text-shadow: none;
+}
+.custom-colors input[type="color"] {
+  width: 38px;
+  height: 30px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  background: none;
+}
+.tag-choices {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 8px;
+}
+.tag-choice {
+  grid-auto-flow: column;
+  align-items: center;
+  justify-content: start;
+}
+.tag-choice .wtag {
+  margin-left: 0;
+}

@@ -1,6 +1,7 @@
 import { Camera, Mic } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { setPrefs, usePrefs } from "../../application/prefs";
+import { useEngine } from "../../application/orbit";
 import { audioProcessing, micLevel } from "../../call/rules";
 import { SHARE_QUALITIES } from "../../call/shareQuality";
 import { Toggle } from "../components/Toggle";
@@ -12,16 +13,156 @@ import { Toggle } from "../components/Toggle";
  */
 export function CallsPage() {
   const prefs = usePrefs();
+  const engine = useEngine();
+  const [mics, setMics] = useState<MediaDeviceInfo[]>([]);
+  const [speakers, setSpeakers] = useState<MediaDeviceInfo[]>([]);
+  const [recording, setRecording] = useState(false);
+  const loadDevices = () =>
+    void navigator.mediaDevices
+      ?.enumerateDevices()
+      .then((all) => {
+        const real = all.filter((d) => d.deviceId && d.deviceId !== "default" && d.deviceId !== "communications");
+        setMics(real.filter((d) => d.kind === "audioinput"));
+        setSpeakers(real.filter((d) => d.kind === "audiooutput"));
+      })
+      .catch(() => undefined);
+  useEffect(() => {
+    loadDevices();
+    navigator.mediaDevices?.addEventListener?.("devicechange", loadDevices);
+    return () => navigator.mediaDevices?.removeEventListener?.("devicechange", loadDevices);
+  }, []);
+  // Push to talk: the next key pressed (Escape cancels) becomes the key.
+  useEffect(() => {
+    if (!recording) return;
+    const pick = (e: KeyboardEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      setRecording(false);
+      if (e.key !== "Escape") setPrefs({ pttKey: e.code, pushToTalk: true });
+    };
+    window.addEventListener("keydown", pick, true);
+    return () => window.removeEventListener("keydown", pick, true);
+  }, [recording]);
+  const label = (d: MediaDeviceInfo, i: number, kind: string) => d.label || `${kind} ${i + 1}`;
+  const speakerChoice = typeof (HTMLMediaElement.prototype as { setSinkId?: unknown }).setSinkId === "function";
   return (
     <>
-      <h1>Calls</h1>
+      <h1>Voice & Audio</h1>
+      <div className="card setting-card">
+        <div className="voice-devices">
+          <label className="field">
+            <span>Microphone</span>
+            <select className="input" value={prefs.microphoneId ?? ""} onChange={(e) => setPrefs({ microphoneId: e.target.value || null })}>
+              <option value="">Default</option>
+              {mics.map((d, i) => (
+                <option key={d.deviceId} value={d.deviceId}>
+                  {label(d, i, "Microphone")}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="field">
+            <span>Speakers</span>
+            <select
+              className="input"
+              value={prefs.speakerId ?? ""}
+              disabled={!speakerChoice}
+              onChange={(e) => {
+                setPrefs({ speakerId: e.target.value || null });
+                engine.calls.applyOutput();
+              }}
+            >
+              <option value="">Default</option>
+              {speakers.map((d, i) => (
+                <option key={d.deviceId} value={d.deviceId}>
+                  {label(d, i, "Speaker")}
+                </option>
+              ))}
+            </select>
+          </label>
+        </div>
+        {!speakerChoice && <small className="faint">This browser always plays calls on the system's default speaker.</small>}
+        {mics.length > 0 && !mics[0].label && <small className="faint">Device names show once you've allowed the microphone (try the mic test below).</small>}
+        <label className="range-row">
+          <span>Output volume</span>
+          <input
+            type="range"
+            min={0}
+            max={100}
+            step={5}
+            value={prefs.outputVolume}
+            onChange={(e) => {
+              setPrefs({ outputVolume: Number(e.target.value) });
+              engine.calls.applyOutput();
+            }}
+          />
+          <strong style={{ width: 44, textAlign: "end" }}>{prefs.outputVolume}%</strong>
+        </label>
+      </div>
+
+      <PreCallCheck noiseReduction={prefs.noiseReduction} />
+
+      <h2 className="settings-group">Input mode</h2>
+      <div className="input-modes" role="radiogroup" aria-label="Input mode">
+        <button type="button" role="radio" aria-checked={!prefs.pushToTalk} className="kind-option" onClick={() => setPrefs({ pushToTalk: false })}>
+          <strong>Voice activity</strong>
+          <small>Your mic is on while you're not muted.</small>
+        </button>
+        <button type="button" role="radio" aria-checked={prefs.pushToTalk} className="kind-option" onClick={() => (prefs.pttKey ? setPrefs({ pushToTalk: true }) : setRecording(true))}>
+          <strong>Push to talk</strong>
+          <small>Hold a key to talk.</small>
+        </button>
+      </div>
+      {(prefs.pushToTalk || recording) && (
+        <div className="card setting-card">
+          <div className="setting-card-head">
+            <span className="lines grow">
+              <strong>Push to talk key</strong>
+              <small>{recording ? "Press the key you want (Escape cancels)." : prefs.pttKey ? `Hold ${keyName(prefs.pttKey)} to talk in calls.` : "No key yet."}</small>
+            </span>
+            <button className="btn btn-secondary btn-sm" onClick={() => setRecording(true)} aria-pressed={recording}>
+              {recording ? "Listening…" : prefs.pttKey ? "Change key" : "Choose key"}
+            </button>
+          </div>
+        </div>
+      )}
+
+      <h2 className="settings-group">Voice processing</h2>
       <div className="card" style={{ padding: "4px 20px" }}>
         <div className="setting">
           <span className="lines">
-            <strong>Noise reduction</strong>
-            <small>Background noise reduction and automatic level on your microphone. Applies from the next call.</small>
+            <strong>Noise suppression</strong>
+            <small>Cuts fans, keyboards and background noise.</small>
           </span>
-          <Toggle checked={prefs.noiseReduction} onChange={(noiseReduction) => setPrefs({ noiseReduction })} label="Noise reduction" />
+          <Toggle checked={prefs.noiseReduction} onChange={(noiseReduction) => setPrefs({ noiseReduction })} label="Noise suppression" />
+        </div>
+        <div className="setting">
+          <span className="lines">
+            <strong>Echo cancellation</strong>
+            <small>Stops others hearing themselves through your speakers.</small>
+          </span>
+          <Toggle checked={prefs.echoCancellation} onChange={(echoCancellation) => setPrefs({ echoCancellation })} label="Echo cancellation" />
+        </div>
+        <div className="setting">
+          <span className="lines">
+            <strong>Automatic gain</strong>
+            <small>Keeps your volume even. Turn off for music or a good mic.</small>
+          </span>
+          <Toggle checked={prefs.autoGain} onChange={(autoGain) => setPrefs({ autoGain })} label="Automatic gain" />
+        </div>
+        <small className="faint" style={{ display: "block", padding: "8px 0 12px" }}>
+          These apply from the next call.
+        </small>
+      </div>
+
+      <h2 className="settings-group">Joining calls</h2>
+      <div className="card" style={{ padding: "4px 20px" }}>
+        <div className="setting">
+          <span className="lines">
+            <strong>Join muted</strong>
+            <small>Your microphone starts off; unmute when you're ready. Also on the microphone button under your name.</small>
+          </span>
+          <Toggle checked={prefs.joinMuted} onChange={(joinMuted) => setPrefs({ joinMuted })} label="Join muted" />
         </div>
         <div className="setting">
           <span className="lines">
@@ -34,9 +175,28 @@ export function CallsPage() {
           </span>
         </div>
       </div>
-      <PreCallCheck noiseReduction={prefs.noiseReduction} />
     </>
   );
+}
+
+/** "Backquote" → "`", "KeyV" → "V", "F13" stays: how a KeyboardEvent.code reads to people. */
+export function keyName(code: string): string {
+  if (code.startsWith("Key")) return code.slice(3);
+  if (code.startsWith("Digit")) return code.slice(5);
+  const named: Record<string, string> = {
+    Backquote: "`",
+    Space: "Space",
+    CapsLock: "Caps Lock",
+    ControlLeft: "Left Ctrl",
+    ControlRight: "Right Ctrl",
+    AltLeft: "Left Alt",
+    AltRight: "Right Alt",
+    ShiftLeft: "Left Shift",
+    ShiftRight: "Right Shift",
+    MetaLeft: "Left ⌘",
+    MetaRight: "Right ⌘",
+  };
+  return named[code] ?? code;
 }
 
 /** No camera, or it's busy or gone: the microphone can still be checked on its own. */

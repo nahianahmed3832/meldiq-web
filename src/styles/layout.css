@@ -614,14 +614,42 @@
   }
 }
 
-/* The user panel: you, your presence or the connection's state, then Activity, Settings and Sign out. */
+/* The user panel (the reference's, 2026-10-28): a raised card at the foot of the sidebar, on your banner when you have
+   one (darkened for the text), with you, then microphone and headphones (each with a device menu) and Settings. */
 .user-panel {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 2px;
-  padding: 8px 8px 10px;
-  border-top: 1px solid var(--hairline);
+  margin: 6px 8px 8px;
+  padding: 6px;
+  border-radius: var(--r-lg);
   background: var(--surface-sunken);
+  box-shadow:
+    0 0 0 1px var(--hairline),
+    0 6px 18px rgba(0, 0, 0, 0.18);
+  overflow: hidden;
+  isolation: isolate;
+}
+.user-panel-banner {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: center / cover no-repeat;
+}
+.user-panel-banner::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(8, 10, 22, 0.78) 0%, rgba(8, 10, 22, 0.52) 55%, rgba(8, 10, 22, 0.38) 100%);
+}
+.user-panel.has-banner,
+.user-panel.has-banner .user-panel-me small,
+.user-panel.has-banner .icon-btn {
+  color: #f4f6ff;
+}
+.user-panel.has-banner .user-panel-me small {
+  opacity: 0.82;
 }
 .user-panel-me {
   display: flex;
@@ -629,21 +657,26 @@
   gap: 10px;
   flex: 1;
   min-width: 0;
-  padding: 4px 6px;
+  padding: 3px 6px 3px 3px;
   border-radius: var(--r-md);
   text-align: start;
 }
 .user-panel-me:hover {
-  background: var(--sidebar-hover);
+  background: color-mix(in srgb, var(--sidebar-hover) 80%, transparent);
 }
 .user-panel-me .lines {
   display: grid;
   min-width: 0;
   line-height: 1.25;
 }
-.user-panel-me strong {
+.user-panel-name {
+  display: flex;
+  min-width: 0;
   font-size: var(--fs-sm);
   color: var(--text);
+}
+.user-panel.has-banner .user-panel-name {
+  color: #fff;
 }
 .user-panel-me small {
   font-size: var(--fs-xs);
@@ -657,19 +690,33 @@
   position: relative;
   flex-shrink: 0;
 }
-.user-panel-btn[aria-current="page"] {
-  background: var(--sidebar-selected);
-  color: var(--text);
+/* Microphone or headphones with their device caret, one rounded pair; red while off, as in a call. */
+.user-panel-pair {
+  display: flex;
+  align-items: center;
+  border-radius: var(--r-md);
+  flex-shrink: 0;
 }
-.user-panel-btn .count {
-  position: absolute;
-  top: -2px;
-  right: -4px;
-  min-width: 18px;
-  height: 18px;
-  padding: 0 5px;
-  font-size: 10.5px;
-  box-shadow: 0 0 0 2px var(--surface-sunken);
+.user-panel-pair:hover {
+  background: color-mix(in srgb, var(--sidebar-hover) 85%, transparent);
+}
+.user-panel-pair .user-panel-btn {
+  width: 32px;
+}
+.user-panel-caret {
+  width: 16px;
+  min-width: 16px;
+  padding: 0;
+  opacity: 0.75;
+}
+.user-panel-pair.off {
+  background: color-mix(in srgb, var(--danger) 18%, transparent);
+}
+.user-panel-pair.off .icon-btn {
+  color: var(--danger);
+}
+.user-panel.has-banner .user-panel-pair.off .icon-btn {
+  color: #ff8a8f;
 }
 
 /* The community's header: its name, uppercase, and the menu's chevron, as tall as the conversation header. */
@@ -787,7 +834,9 @@
 
 /* Invite friends on Home and messages: always there, naming the community it invites to. */
 .invite-card {
-  display: flex;
+  /* A grid, so the community picker can never run under the Invite button (reported 2026-10-28). */
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
   gap: 10px;
   margin: 10px 2px 2px;
@@ -808,15 +857,21 @@
 }
 .invite-card-text {
   display: grid;
-  gap: 2px;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 4px;
   min-width: 0;
-  flex: 1;
+}
+.invite-card > .btn {
+  flex-shrink: 0;
 }
 .invite-card-text small {
   color: var(--text-2);
 }
 .invite-card-select {
+  width: 100%;
+  min-width: 0;
   max-width: 100%;
+  text-overflow: ellipsis;
   padding: 2px 4px;
   border: 1px solid var(--border);
   border-radius: var(--r-sm);
@@ -856,4 +911,28 @@
 }
 .phone-rail {
   overscroll-behavior-x: contain;
+}
+
+/* People who just messaged you, as bubbles under Home (Settings › Appearance, 2026-10-28). */
+.rail-dms {
+  display: grid;
+  gap: 8px;
+  justify-items: center;
+  margin: 4px 0 2px;
+}
+.rail-dm {
+  position: relative;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  transition: transform var(--t-fast) var(--ease);
+  animation: rise var(--t-fast) var(--ease);
+}
+.rail-dm:hover {
+  transform: translateY(-1px);
+}
+.rail-dm .count {
+  position: absolute;
+  bottom: -4px;
+  right: -6px;
 }

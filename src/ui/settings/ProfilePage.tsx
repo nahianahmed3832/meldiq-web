@@ -1,4 +1,6 @@
-import { AtSign, Camera, Check, Copy } from "lucide-react";
+import { NameStyleCard } from "./NameStyleCard";
+import type { ProfileLink } from "../../sync/profile";
+import { AtSign, Camera, Check, Copy, X } from "lucide-react";
 import { type FormEvent, useEffect, useRef, useState } from "react";
 import { useEngine, useOrbit } from "../../application/orbit";
 import { AccountApi } from "../../auth/accountApi";
@@ -22,9 +24,13 @@ export function ProfilePage() {
   const profilesRev = useOrbit((s) => s.profilesRev);
   const profile = useLoad(() => myProfile(engine), [engine, version, profilesRev]);
   const address = useLoad(() => networkAddress(engine), [engine]);
-  const [form, setForm] = useState({ displayName: "", firstName: "", lastName: "", username: "", statusText: "", birthday: "", phone: "", pronouns: "" });
+  const [form, setForm] = useState({ displayName: "", firstName: "", lastName: "", username: "", statusText: "", birthday: "", phone: "", pronouns: "", aboutMe: "" });
+  // API 0.46.0: up to 5 links (https only), edited as rows.
+  const [links, setLinks] = useState<ProfileLink[]>([]);
+  const linksOffered = useOrbit((s) => s.server?.features.includes("profile-links") ?? false);
   const pronounsOffered = useOrbit((s) => s.server?.features.includes("pronouns") ?? false);
   const profileMedia = useOrbit((s) => s.server?.features.includes("profile-media") ?? false);
+  const nameStyles = useOrbit((s) => s.server?.features.includes("name-styles") ?? false);
   const [saved, setSaved] = useState(false);
   const save = useAction();
   const photo = useAction();
@@ -44,16 +50,23 @@ export function ProfilePage() {
       birthday: p.birthday ?? "",
       phone: p.phone ?? "",
       pronouns: p.pronouns ?? "",
+      aboutMe: p.aboutMe ?? "",
     };
     const edited = shown.current !== null && JSON.stringify(form) !== JSON.stringify(shown.current);
     shown.current = next;
-    if (!edited) setForm(next);
+    if (!edited) {
+      setForm(next);
+      setLinks(p.links);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps -- the form as it is when a newer profile arrives
   }, [p]);
 
   if (!me) return null;
   const field = (k: keyof typeof form) => ({ value: form[k], onChange: (e: { target: { value: string } }) => setForm((f) => ({ ...f, [k]: e.target.value })) });
-  const problem = !form.displayName.trim() ? "Your display name can't be empty." : (birthdayProblem(form.birthday) ?? phoneProblem(form.phone));
+  const badLink = links.find((l) => l.label.trim() === "" || !/^https:\/\/\S+\.\S+/.test(l.url.trim()));
+  const problem = !form.displayName.trim()
+    ? "Your display name can't be empty."
+    : (birthdayProblem(form.birthday) ?? phoneProblem(form.phone) ?? (badLink ? "Each link needs a name and an address starting with https://" : null));
 
   const submit = (e: FormEvent) => {
     e.preventDefault();
@@ -66,6 +79,7 @@ export function ProfilePage() {
         birthday: form.birthday.trim() || null,
         phone: form.phone.trim() || null,
         ...(pronounsOffered ? { pronouns: form.pronouns.trim() || null } : {}),
+        ...(linksOffered ? { aboutMe: form.aboutMe.trim() || null, links: links.map((l) => ({ label: l.label.trim(), url: l.url.trim() })) } : {}),
         ...(form.username.trim() !== p.username ? { username: form.username.trim() } : {}),
       };
       // An Orbit 2.0 account keeps its name and the encryption identity's display name together (PATCH /v2/account).
@@ -87,7 +101,7 @@ export function ProfilePage() {
 
   return (
     <>
-      <h1>Profile</h1>
+      <h1>My Profile</h1>
       {address.data && <NetworkAddress address={address.data} />}
       <div className="card" style={{ padding: 20, display: "grid", gap: 18 }}>
         <div className="row" style={{ gap: 16, flexWrap: "wrap" }}>
@@ -138,6 +152,49 @@ export function ProfilePage() {
             <span>Bio</span>
             <input className="input" maxLength={140} placeholder="What are you up to?" {...field("statusText")} />
           </label>
+          {linksOffered && (
+            <label className="field ws-wide">
+              <span>About me</span>
+              <textarea className="input" rows={4} maxLength={300} placeholder="Say something about yourself." {...field("aboutMe")} />
+              <small className="faint" style={{ justifySelf: "end" }}>
+                {300 - form.aboutMe.length} left
+              </small>
+            </label>
+          )}
+          {linksOffered && (
+            <div className="field ws-wide">
+              <span>Links</span>
+              {links.map((l, i) => (
+                <div key={i} className="row link-row" style={{ gap: 8 }}>
+                  <input
+                    className="input"
+                    style={{ maxWidth: 160 }}
+                    maxLength={40}
+                    placeholder="Name"
+                    aria-label={`Link ${i + 1} name`}
+                    value={l.label}
+                    onChange={(e) => setLinks((all) => all.map((x, j) => (j === i ? { ...x, label: e.target.value } : x)))}
+                  />
+                  <input
+                    className="input grow"
+                    maxLength={300}
+                    placeholder="https://"
+                    aria-label={`Link ${i + 1} address`}
+                    value={l.url}
+                    onChange={(e) => setLinks((all) => all.map((x, j) => (j === i ? { ...x, url: e.target.value } : x)))}
+                  />
+                  <button type="button" className="icon-btn" aria-label={`Remove link ${i + 1}`} onClick={() => setLinks((all) => all.filter((_, j) => j !== i))}>
+                    <X size={16} />
+                  </button>
+                </div>
+              ))}
+              {links.length < 5 && (
+                <button type="button" className="btn btn-ghost btn-sm" style={{ justifySelf: "start" }} onClick={() => setLinks((all) => [...all, { label: "", url: "https://" }])}>
+                  + Add link
+                </button>
+              )}
+            </div>
+          )}
           <label className="field">
             <span>Birthday</span>
             <input className="input" placeholder="YYYY-MM-DD or --MM-DD" {...field("birthday")} />
@@ -163,6 +220,7 @@ export function ProfilePage() {
         </form>
       </div>
       {profileMedia && <ProfileStyleCard />}
+      {nameStyles && <NameStyleCard />}
     </>
   );
 }

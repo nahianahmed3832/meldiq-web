@@ -37,10 +37,15 @@ export interface Me {
   presenceMode?: "auto" | "idle" | "dnd" | "invisible" | "unknown" | null;
   presenceUntil?: number | null;
   pronouns?: string | null;
+  /** API 0.45.0: your profile banner (the user panel shows it behind you). */
+  profileBanner?: { kind: "jpeg" | "gif" | "webp"; rev: number } | null;
   /** This browser's device-key fingerprint, as the phone shows it. */
   deviceFingerprint: string;
   deviceName: string;
 }
+
+import type { z } from "zod";
+import type { ProfileStyle, WornTag, zAvatarMedia } from "../api/profileSchemas";
 
 export interface UserLite {
   id: string;
@@ -57,7 +62,12 @@ export interface UserLite {
   pronouns?: string | null;
   /** Profile photo revision (GET /v1/users/:id/photo), where their privacy setting lets this account see it. */
   photoRev?: number | null;
+  /** API 0.46.0: their animated avatar, profile and name style, and the community tag they wear (from lists). */
+  avatarMedia?: AvatarMedia | null;
+  profileStyle?: ProfileStyle | null;
+  tag?: WornTag | null;
 }
+type AvatarMedia = NonNullable<z.infer<typeof zAvatarMedia>>;
 
 export interface ConversationMessages {
   items: StoredMessage[];

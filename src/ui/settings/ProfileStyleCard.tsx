@@ -31,7 +31,7 @@ export function ProfileStyleCard() {
   const avatarInput = useRef<HTMLInputElement>(null);
   const bannerInput = useRef<HTMLInputElement>(null);
   const p = profile.data;
-  const style = p?.profileStyle ?? { decoration: null, effect: null, accent: null };
+  const style = p?.profileStyle ?? { decoration: null, effect: null, accent: null, nameFont: null, nameColors: null, nameEffect: null, tagOrgId: null };
   const bannerKind = p?.profileBanner?.kind;
   const bannerUrl = usePhoto("profileBanner", me?.userId ?? "", p?.profileBanner?.rev, bannerKind === "gif" ? "image/gif" : bannerKind === "webp" ? "image/webp" : "image/jpeg");
 
@@ -121,8 +121,8 @@ export function ProfileStyleCard() {
           )}
         </div>
         <small className="faint">
-          GIF or WebP up to {LIMITS.avatarImageMb} MB and 1024 px, or a video up to {LIMITS.clipSeconds} seconds ({LIMITS.clipMb} MB): it plays as a 3 second silent loop. Lists keep your still photo;
-          with reduced motion it doesn't play.
+          GIF or WebP up to {LIMITS.avatarImageMb} MB and 1024 px, or a video up to {LIMITS.clipSeconds} seconds ({LIMITS.clipMb} MB): it plays as a 3 second silent loop, everywhere you appear:
+          messages, member lists and your profile. With reduced motion it doesn't play.
         </small>
       </section>
 

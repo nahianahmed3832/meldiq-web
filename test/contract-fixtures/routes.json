@@ -1,5 +1,5 @@
 {
-  "version": "0.45.0",
+  "version": "0.46.0",
   "routes": [
     {
       "method": "GET",
@@ -36,6 +36,14 @@
     {
       "method": "GET",
       "path": "/v1/gifs/media"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/bug-reports"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/bug-reports"
     },
     {
       "method": "GET",
@@ -200,6 +208,34 @@
     {
       "method": "DELETE",
       "path": "/v2/account/passkeys/{id}"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/account/totp"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/account/totp/setup"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/account/totp/enable"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/account/totp/disable"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/account/email"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/account/email/confirm"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/account/standing"
     },
     {
       "method": "GET",
@@ -596,6 +632,10 @@
     {
       "method": "GET",
       "path": "/v1/invites/{code}/banner"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/invites/{code}/photo"
     },
     {
       "method": "POST",
@@ -1289,6 +1329,9 @@
     "bad_clock": [
       400
     ],
+    "account_limited": [
+      403
+    ],
     "bad_request": [
       400
     ],
@@ -1680,6 +1723,22 @@
     ],
     "too_large": [
       413
+    ],
+    "totp_already_on": [
+      409
+    ],
+    "totp_invalid": [
+      400,
+      401
+    ],
+    "totp_locked": [
+      429
+    ],
+    "totp_not_pending": [
+      409
+    ],
+    "totp_required": [
+      401
     ],
     "too_many_attempts": [
       429

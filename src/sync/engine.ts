@@ -15,7 +15,7 @@ import { fingerprint } from "../crypto/identity";
 import type { ConversationLocal, DeviceRecord, OutboxItem, PinnedIdentity, RichContent, StoredMessage } from "../model/types";
 import { encodePayload, type Payload } from "../protocol/payload";
 import { RealtimeClient } from "../realtime/socket";
-import type { ShareQuality } from "../call/shareQuality";
+import type { CallPrefs } from "../call/manager";
 import { type AppState, initialState, Store, type UserLite, upsertLoaded, withMessages } from "../state/store";
 import type { LocalStore } from "../store/db";
 import type { EngineContext } from "./context";
@@ -64,7 +64,7 @@ export interface EngineOptions {
   /** Call timing for tests. */
   callTiming?: { keyWaitMs?: number; peerWindowMs?: number; rejoinWindowMs?: number };
   /** Settings › Calls (batches B10, B11): noise reduction, and how this browser shares its screen. */
-  callPrefs?: () => { noiseReduction: boolean; shareQuality: ShareQuality; shareAudio: boolean };
+  callPrefs?: () => CallPrefs;
 }
 
 const PAGE = 60;
@@ -360,11 +360,11 @@ export class Engine implements EngineContext {
    * Signs in again after the account session ended: the password, plus proof that this browser still holds its device
    * key, so the new session is bound to this device. A removed device is told so by the server, and then erased.
    */
-  async signInAgain(password: string, email?: string): Promise<void> {
+  async signInAgain(password: string, email?: string, totpCode?: string): Promise<void> {
     if (!(this.session instanceof AccountSession)) throw new Error("This browser isn't signed in with a Meldiq account.");
     const account = this.record.account;
     try {
-      await this.session.adopt(await signInWithDevice(this.opts.base, this.record, password, email));
+      await this.session.adopt(await signInWithDevice(this.opts.base, this.record, password, email, totpCode));
     } catch (e) {
       if (e instanceof ApiError && (e.code === "device_revoked" || e.code === "account_disabled")) return this.revoked(e.code);
       throw e;
@@ -380,6 +380,14 @@ export class Engine implements EngineContext {
     this.realtime.start();
     void this.refreshAll();
     this.outbox.kick();
+  }
+
+  /** The account's email changed here (Settings › My Account, API 0.46.0): sign-ins from now on use the new address. */
+  async accountEmailChanged(email: string): Promise<void> {
+    const account = this.record.account;
+    if (!account || account.email === email) return;
+    this.record = { ...this.record, account: { ...account, email } };
+    await this.store.saveDevice(this.record);
   }
 
   private revoked(reason: RevokedReason): void {
@@ -441,7 +449,19 @@ export class Engine implements EngineContext {
       this.set((s) => {
         const users = { ...s.users };
         for (const c of convs.conversations) for (const m of c.members ?? []) users[m.id] = toUser(m, users[m.id]);
-        users[u.id] = { id: u.id, username: u.username, displayName: u.displayName, avatarColor: u.avatarColor, statusText: u.statusText, online: true, photoRev: u.photoRev, pronouns: u.pronouns };
+        users[u.id] = {
+          id: u.id,
+          username: u.username,
+          displayName: u.displayName,
+          avatarColor: u.avatarColor,
+          statusText: u.statusText,
+          online: true,
+          photoRev: u.photoRev,
+          pronouns: u.pronouns,
+          avatarMedia: u.avatarMedia,
+          profileStyle: u.profileStyle,
+          tag: u.tag,
+        };
         const calls: Record<string, Call> = {};
         for (const c of convs.conversations)
           if (c.activeCall)
@@ -474,6 +494,7 @@ export class Engine implements EngineContext {
             presenceMode: u.presenceMode,
             presenceUntil: u.presenceUntil,
             pronouns: u.pronouns,
+            profileBanner: u.profileBanner,
           },
           orgs: orgs.orgs,
           conversations: Object.fromEntries(convs.conversations.map((c) => [c.id, c])),
@@ -1042,5 +1063,9 @@ function toUser(m: Member, prev?: UserLite): UserLite {
     photoRev: m.photoRev ?? null,
     presence: m.presence ?? prev?.presence ?? null,
     pronouns: m.pronouns ?? prev?.pronouns ?? null,
+    // API 0.46.0: lists carry them; a list without them (an older server) keeps what a profile already said.
+    avatarMedia: m.avatarMedia ?? prev?.avatarMedia ?? null,
+    profileStyle: m.profileStyle ?? prev?.profileStyle ?? null,
+    tag: m.tag ?? prev?.tag ?? null,
   };
 }

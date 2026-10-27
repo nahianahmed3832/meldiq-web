@@ -188,7 +188,7 @@ export const moveToCategory = (channelId: string, toCategory: string | null, tar
 // ───────────── menus ─────────────
 
 export type ChannelMenuItem =
-  "markRead" | "favourite" | "unfavourite" | "mute" | "unmute" | "hide" | "show" | "copyName" | "edit" | "permissions" | "moveTo" | "moveUp" | "moveDown" | "archive" | "restore" | "delete";
+  "markRead" | "favourite" | "unfavourite" | "mute" | "unmute" | "hide" | "show" | "copyName" | "copyId" | "edit" | "permissions" | "moveTo" | "moveUp" | "moveDown" | "archive" | "restore" | "delete";
 
 export interface ChannelMenuInput {
   starred: boolean;
@@ -198,6 +198,8 @@ export interface ChannelMenuInput {
   canDelete: boolean;
   canHide?: boolean;
   hidden?: boolean;
+  /** Settings › Advanced › Builder mode: Copy channel ID. */
+  builder?: boolean;
 }
 
 /** A channel's menu (android CommunityMenuRules.channel). Channels you haven't joined offer nothing personal. */
@@ -210,6 +212,7 @@ export function channelMenu(ch: PanelChannel, i: ChannelMenuInput): ChannelMenuI
   }
   if (i.canHide) out.push(i.hidden ? "show" : "hide");
   out.push("copyName");
+  if (i.builder) out.push("copyId");
   if (ch.canManage) {
     if (!ch.archived) out.push("edit");
     out.push("permissions");

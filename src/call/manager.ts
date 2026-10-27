@@ -9,6 +9,20 @@ import type { ShareQuality } from "./shareQuality";
 import { type CallShareView, MAX_SCREEN_SHARES, mayShare, nextWatched } from "./shares";
 import { type CallUiState, DeviceError, type DeviceKind, idleCall, type MediaDeviceChoice, type MediaEvents, type MediaFactory, type MediaGrant, type MediaSession } from "./types";
 
+/** This browser's call settings (Settings › Calls and Voice & Audio) as the manager reads them. */
+export interface CallPrefs {
+  noiseReduction: boolean;
+  shareQuality: ShareQuality;
+  shareAudio: boolean;
+  echoCancellation?: boolean;
+  autoGain?: boolean;
+  microphoneId?: string | null;
+  speakerId?: string | null;
+  outputVolume?: number;
+  joinMuted?: boolean;
+  joinDeafened?: boolean;
+  pushToTalk?: boolean;
+}
 /** What the call manager needs from the engine that owns it. */
 export interface CallHost {
   readonly api: ApiClient;
@@ -49,7 +63,7 @@ export interface CallOptions {
   peerWindowMs?: number;
   rejoinWindowMs?: number;
   /** This browser's call settings (Settings › Calls): noise reduction, and how a screen is shared. */
-  callPrefs?(): { noiseReduction: boolean; shareQuality: ShareQuality; shareAudio: boolean };
+  callPrefs?(): CallPrefs;
   /** How many screens may be shared in one call at once (default [MAX_SCREEN_SHARES]; at least 2). */
   maxScreenShares?: number;
 }
@@ -199,7 +213,15 @@ export class CallManager {
   private async prepare(gen: number, session: MediaSession, video: boolean, needMicrophone: boolean): Promise<void> {
     const listenOnly = this.state.listenOnly;
     this.patch({ askingPermission: true });
-    const devices = await session.prepare(video, { noiseReduction: this.opts.callPrefs?.().noiseReduction ?? true, microphone: !listenOnly });
+    const prefs = this.opts.callPrefs?.();
+    const devices = await session.prepare(video, {
+      noiseReduction: prefs?.noiseReduction ?? true,
+      // Only what Settings › Voice & Audio changed from the defaults.
+      ...(prefs?.echoCancellation === false ? { echoCancellation: false } : {}),
+      ...(prefs?.autoGain !== undefined ? { autoGain: prefs.autoGain } : {}),
+      ...(prefs?.microphoneId ? { microphoneId: prefs.microphoneId } : {}),
+      microphone: !listenOnly,
+    });
     this.check(gen);
     this.patch({ askingPermission: false, devices, micOn: !listenOnly && !devices.microphone, cameraOn: video && !devices.camera });
     if (needMicrophone && !listenOnly && devices.microphone) throw new CallError(CallFailure.device("microphone", devices.microphone));
@@ -245,6 +267,15 @@ export class CallManager {
     this.check(gen);
     // Still deafened after a rejoin; a screen share doesn't come back by itself (batch B11 clean stop).
     if (this.state.deafened) session.setDeafened(true);
+    const prefs = this.opts.callPrefs?.();
+    session.setOutput?.({ speakerId: prefs?.speakerId ?? null, volume: prefs?.outputVolume ?? 100 });
+    // Settings › Voice & Audio and the user panel (2026-10-28): join muted or deafened, and push to talk starts muted.
+    // Once per call: a rejoin keeps whatever the person changed since.
+    if (this.joinPrefsFor !== callId) {
+      this.joinPrefsFor = callId;
+      if (prefs?.joinDeafened && !this.state.deafened) await this.toggleDeafen().catch(() => undefined);
+      else if ((prefs?.joinMuted || prefs?.pushToTalk) && this.state.micOn) await this.setDevice("microphone", false).catch(() => undefined);
+    }
     if (this.state.screenSharing) this.patch({ shareQuality: null, shareAudio: false, shareStats: null });
     void this.host.api.call("POST", `/v1/calls/${encodeURIComponent(callId)}/connected`).catch(() => undefined);
     const alone = session.remoteCount() === 0 && !this.state.isGroup;
@@ -497,6 +528,21 @@ export class CallManager {
       this.patch({ deafened: false });
     }
     await this.setDevice("microphone", !this.state.micOn || this.state.devices.microphone !== null);
+  }
+
+  /** The call whose join preferences (join muted or deafened, push to talk) were applied. */
+  private joinPrefsFor: string | null = null;
+
+  /** Push to talk (Settings › Voice & Audio): the microphone is on only while the key is held, never while deafened. */
+  async pushToTalk(down: boolean): Promise<void> {
+    if (!this.session || this.state.listenOnly || this.state.deafened || !this.opts.callPrefs?.().pushToTalk) return;
+    if (down !== this.state.micOn) await this.setDevice("microphone", down).catch(() => undefined);
+  }
+
+  /** The speaker or volume changed in Settings: everyone's sound follows at once. */
+  applyOutput(): void {
+    const prefs = this.opts.callPrefs?.();
+    this.session?.setOutput?.({ speakerId: prefs?.speakerId ?? null, volume: prefs?.outputVolume ?? 100 });
   }
 
   /** Mic state before deafening, so undeafening only turns it back on if it was on (batch B10). */

@@ -1,4 +1,4 @@
-import { BellOff, Bookmark, CircleDot, LogOut, Monitor, Moon, Settings, Smartphone, Smile, Sun, UserRound } from "lucide-react";
+import { AtSign, BellOff, Bookmark, CircleDot, LogOut, Monitor, Moon, Settings, Smartphone, Smile, Sun, UserRound } from "lucide-react";
 import { useState } from "react";
 import { useOrbit } from "../../application/orbit";
 import { setPrefs, usePrefs } from "../../application/prefs";
@@ -10,6 +10,7 @@ import { UserAvatar } from "../components/OrgAvatar";
 import { Menu, useMenu } from "../components/Overlay";
 import { PauseDialog, PresenceDialog, StatusDialog } from "../dialogs/StatusDialogs";
 import { clock } from "../format";
+import { mentionCount } from "../selectors";
 
 /**
  * The profile menu (the reference's profile popover): who you are, presence, status and pausing notifications, Activity
@@ -21,6 +22,7 @@ export function useProfileMenu(): { open: (anchor: HTMLElement) => void; expande
   const me = useOrbit((s) => s.me);
   const myPhoto = useOrbit((s) => (s.me ? s.users[s.me.userId]?.photoRev : null));
   const prefs = usePrefs();
+  const mentions = useOrbit(mentionCount);
   const menu = useMenu();
   const statusOffered = useOrbit((s) => s.server?.features.includes("status-expiry") ?? false);
   const presenceOffered = useOrbit((s) => s.server?.features.includes("presence-modes") ?? false);
@@ -74,6 +76,7 @@ export function useProfileMenu(): { open: (anchor: HTMLElement) => void; expande
                 ]
               : []),
             // Activity has its own button (the user panel on desktop, the top bar on phones); Saved for later lives here.
+            { label: mentions ? `${t("top_activity")} (${mentions})` : t("top_activity"), icon: <AtSign size={16} />, onSelect: () => navigate({ section: "activity" }) },
             { label: t("top_saved"), icon: <Bookmark size={16} />, onSelect: () => navigate({ section: "later" }) },
             "separator",
             { label: "Profile", icon: <UserRound size={16} />, onSelect: () => navigate({ section: "settings", settingsPage: "profile" }) },
