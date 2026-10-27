@@ -45,11 +45,12 @@ export function DiscoverView() {
         setList(p.communities);
         setNext(p.nextCursor);
       })
-      .catch((e: unknown) => live && setError(errorText(e, t("discover_error"))));
+      // The server's own message, or "" for the generic one (worded at render: t isn't a stable dependency).
+      .catch((e: unknown) => live && setError(errorText(e, "")));
     return () => {
       live = false;
     };
-  }, [engine, query, attempt, t]);
+  }, [engine, query, attempt]);
 
   const more = async () => {
     if (next === null) return;
@@ -58,7 +59,7 @@ export function DiscoverView() {
       setList((l) => [...(l ?? []), ...p.communities]);
       setNext(p.nextCursor);
     } catch (e) {
-      setError(errorText(e, t("discover_error")));
+      setError(errorText(e, ""));
     }
   };
 
@@ -78,15 +79,15 @@ export function DiscoverView() {
               <input type="search" value={q} maxLength={60} onChange={(e) => setQ(e.target.value)} placeholder={t("discover_search")} aria-label={t("discover_search")} data-autofocus />
             </label>
           </div>
-          {error && (
+          {error !== null && (
             <div className="banner danger" role="alert">
-              <span className="grow">{error}</span>
+              <span className="grow">{error || t("discover_error")}</span>
               <button className="btn btn-secondary btn-sm" onClick={() => setAttempt((n) => n + 1)}>
                 {t("discover_retry")}
               </button>
             </div>
           )}
-          {!list && !error && (
+          {!list && error === null && (
             <div className="discover-grid" aria-busy="true">
               {[0, 1, 2].map((i) => (
                 <span key={i} className="skeleton discover-card-skeleton" />

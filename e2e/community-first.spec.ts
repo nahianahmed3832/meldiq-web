@@ -33,8 +33,9 @@ test("the mascot, the top bar, Create and Discover replace the old rail entries"
   await rail.getByRole("button", { name: "Create a community" }).click();
   await expect(page.getByRole("dialog")).toBeVisible();
   await page.keyboard.press("Escape");
-  await rail.getByRole("button", { name: "Discover communities" }).click();
-  await expect(page.getByRole("dialog", { name: "Discover communities" })).toBeVisible();
+  await rail.getByRole("link", { name: "Discover communities" }).click();
+  await expect(page).toHaveURL(/\/discover$/);
+  await expect(page.getByRole("heading", { name: "Find your people" })).toBeVisible();
 });
 
 test("one unread event highlights a channel without a number; two show a count; the title counts DMs", async ({ page }) => {
