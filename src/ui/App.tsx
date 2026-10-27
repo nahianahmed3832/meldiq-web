@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { createEngine, holdDeviceLock, missingCapabilities, startNotifications } from "../application/boot";
 import { hideSplash } from "../application/splash";
 import { EngineProvider } from "../application/orbit";
@@ -14,7 +14,6 @@ import { signOut } from "../sync/account";
 import type { Engine } from "../sync/engine";
 import { AuthScreen } from "./auth/AuthScreen";
 import { ReauthScreen } from "./auth/ReauthScreen";
-import { LinkScreen } from "./LinkScreen";
 import { TEST_DEVICE_LINKING } from "../auth/testLinking";
 import { watchInstall } from "../application/install";
 import { Shell } from "./shell/Shell";
@@ -39,6 +38,9 @@ type Boot =
  * or link with the phone. A record: renew the session (account) or sign in with the device key (linked before 2.0), and
  * start syncing (local data shows at once, even offline).
  */
+// The pre-email phone link (auth/testLinking.ts): its own chunk, loaded only where the flag is on, never in a release.
+const LinkScreen = lazy(() => import("./LinkScreen").then((m) => ({ default: m.LinkScreen })));
+
 // The browser may offer installing as soon as the page loads: listen before anything renders (brief v4 §17).
 watchInstall();
 
@@ -161,7 +163,11 @@ export function App() {
         );
       case "phoneLink":
         // Development and the browser tests only (auth/testLinking.ts): release builds leave this screen out.
-        return TEST_DEVICE_LINKING ? <LinkScreen onLinked={(d, g) => void linked(boot.store, d, g)} onBack={() => setBoot({ s: "signedOut", store: boot.store })} /> : null;
+        return TEST_DEVICE_LINKING ? (
+          <Suspense fallback={null}>
+            <LinkScreen onLinked={(d, g) => void linked(boot.store, d, g)} onBack={() => setBoot({ s: "signedOut", store: boot.store })} />
+          </Suspense>
+        ) : null;
       case "ready":
         if (boot.reauth) return <ReauthScreen engine={boot.engine} onSignOut={() => void eraseAndSignOut(boot.engine)} />;
         return (
