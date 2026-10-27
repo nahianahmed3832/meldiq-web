@@ -11,7 +11,8 @@ import { useSyncExternalStore } from "react";
  * page moves them to their path on load. Moving around is the History API, so Back and Forward work and nothing reloads.
  */
 export type Section = "home" | "dms" | "activity" | "later" | "discover" | "settings" | "workspace";
-export type SettingsPage = "profile" | "account" | "devices" | "notifications" | "calls" | "appearance" | "storage" | "security" | "about" | "advanced" | "shortcuts" | "health" | "usage";
+/** "you": the phone's You tab, a list of the pages under your account card (desktop shows the profile page there). */
+export type SettingsPage = "you" | "profile" | "account" | "devices" | "notifications" | "calls" | "appearance" | "storage" | "security" | "about" | "advanced" | "shortcuts" | "health" | "usage";
 export type WorkspacePage =
   | "overview"
   | "people"
@@ -43,7 +44,7 @@ export interface Route {
 export const isFullPage = (s: Section): boolean => s === "settings" || s === "workspace";
 
 const SECTIONS: Section[] = ["home", "dms", "activity", "later", "discover", "settings", "workspace"];
-const PAGES: SettingsPage[] = ["profile", "account", "devices", "notifications", "calls", "appearance", "storage", "security", "about", "advanced", "shortcuts", "health", "usage"];
+const PAGES: SettingsPage[] = ["you", "profile", "account", "devices", "notifications", "calls", "appearance", "storage", "security", "about", "advanced", "shortcuts", "health", "usage"];
 const WORKSPACE_PAGES: WorkspacePage[] = [
   "overview",
   "people",

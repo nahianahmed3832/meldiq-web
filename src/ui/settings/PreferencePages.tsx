@@ -26,6 +26,7 @@ import { IntroPages } from "../auth/IntroPages";
 import { BackgroundNotifications } from "./BackgroundNotifications";
 import { type ChimeState, chimeState, playChime, unlockChime } from "../../application/messageChime";
 import { type StringKey, useT } from "../../i18n";
+import { InstallSetting } from "./InstallButton";
 import { LanguagePicker } from "../components/LanguagePicker";
 
 const THEME_KEY = { system: "ap_system", light: "ap_light", dark: "ap_dark" } as const satisfies Record<Prefs["theme"], StringKey>;
@@ -367,6 +368,7 @@ export function AboutPage() {
             Show
           </button>
         </div>
+        <InstallSetting />
         <div className="setting">
           <div className="lines">
             <strong>Server</strong>

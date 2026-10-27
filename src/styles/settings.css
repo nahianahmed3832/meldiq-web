@@ -427,3 +427,100 @@
   display: grid;
   padding-top: 48px;
 }
+
+/* The phone's You tab (SettingsView, YouCard; brief v4 §18): at /settings/you the page list under your card; any other
+   page full width with a way back. Larger screens keep the list beside the page and never show these. */
+.you-only,
+.settings-back {
+  display: none;
+}
+@media (max-width: 640px) {
+  .settings .settings-nav .not-phone {
+    display: none;
+  }
+  .settings.at-you .settings-page,
+  .settings:not(.at-you) .settings-nav {
+    display: none;
+  }
+  .settings.at-you .settings-nav {
+    display: grid;
+    grid-auto-flow: row;
+    align-content: start;
+    gap: 2px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding: 16px 12px 24px;
+    border-bottom: 0;
+  }
+  .settings.at-you .settings-nav h2 {
+    display: block;
+    margin: 0 4px 12px;
+  }
+  .settings.at-you .settings-nav .side-item {
+    min-height: 48px;
+  }
+  .settings.at-you .you-only {
+    display: inline-flex;
+  }
+  .settings.at-you .side-item.you-only {
+    display: flex;
+  }
+  .settings-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    margin: -8px 0 12px -6px;
+    padding: 6px 8px;
+    border-radius: var(--r-md);
+    color: var(--text-2);
+    font-weight: 600;
+  }
+  .you-card {
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    margin-bottom: 14px;
+    padding: 14px;
+    border-radius: var(--r-lg);
+    background: var(--surface-raised, var(--surface));
+    box-shadow: 0 0 0 1px var(--border);
+    text-align: start;
+  }
+  .settings.at-you .you-card {
+    display: flex;
+  }
+  .you-card-main {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+    flex: 1;
+    text-align: start;
+  }
+  .you-card-lines {
+    display: grid;
+    min-width: 0;
+    gap: 2px;
+  }
+  .you-card-lines small {
+    color: var(--text-3);
+  }
+  .you-card-name {
+    font-size: var(--fs-lg);
+    min-width: 0;
+  }
+  .settings-nav-group {
+    display: grid;
+    gap: 2px;
+    margin-top: 10px;
+  }
+}
+@media (max-width: 640px) {
+  .settings.at-you .you-install {
+    display: grid;
+    margin: -6px 0 10px;
+  }
+  .settings.at-you .you-install:empty {
+    display: none;
+  }
+}

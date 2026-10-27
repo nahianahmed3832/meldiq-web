@@ -22,7 +22,8 @@ import type { ShellDialog } from "./Shell";
 /**
  * The rail, top to bottom: the mascot (Home and messages: the DM list), the communities with their rolled-up unread
  * state, then round Create and Discover. Activity and Later live in the top bar and the sidebar (community-first brief
- * §G); their routes are unchanged.
+ * §G); their routes are unchanged. Phones show it on the Home tab beside the channels, as the Android app does (brief v4
+ * §18), without the mascot and message bubbles: Messages is a tab there.
  */
 export function Rail({ orgId, section, onDialog }: { orgId: string | null; section: Section; onDialog: (d: ShellDialog) => void }) {
   const orgs = useRailOrgs();
@@ -33,7 +34,7 @@ export function Rail({ orgId, section, onDialog }: { orgId: string | null; secti
   const discovering = section === "discover";
   const homeLabel = `${t("rail_home")}${dms ? `, ${t("nav_unread", { n: dms })}` : ""}`;
   const strip = useRef<HTMLElement>(null);
-  useScrollStrip(strip, "vertical", `${section}:${orgId}`);
+  useScrollStrip(strip, `${section}:${orgId}`);
   const engine = useEngine();
   const dmTargets = useOrbit(
     (s) =>
@@ -143,30 +144,6 @@ function CommunityButton({ org: o, selected, size, onDialog }: { org: RailOrg; s
       {menu.anchor && <Menu anchor={menu.anchor} point={menu.point} label={o.name} onClose={menu.close} entries={community.entries} />}
       {community.dialogs}
     </>
-  );
-}
-
-/**
- * Phones have no rail (the tab bar takes its place): this strip at the top of the conversation list carries the same
- * communities and the round Create and Discover, scrolling sideways when there are many.
- */
-export function PhoneRail({ orgId, onDialog }: { orgId: string | null; onDialog: (d: ShellDialog) => void }) {
-  const orgs = useRailOrgs();
-  const t = useT();
-  const strip = useRef<HTMLElement>(null);
-  useScrollStrip(strip, "horizontal", orgId);
-  return (
-    <nav className="phone-rail" aria-label={t("rail_communities")} ref={strip}>
-      {orgs.map((o) => (
-        <CommunityButton key={o.id} org={o} selected={o.id === orgId} size={44} onDialog={onDialog} />
-      ))}
-      <button className="rail-round" onClick={() => onDialog({ kind: "createWorkspace" })} aria-label={t("rail_create")} title={t("rail_create")}>
-        <Plus size={22} aria-hidden="true" />
-      </button>
-      <a className="rail-round" href="/discover" aria-label={t("rail_discover")} title={t("rail_discover")}>
-        <Compass size={22} aria-hidden="true" />
-      </a>
-    </nav>
   );
 }
 

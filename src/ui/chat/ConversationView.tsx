@@ -127,10 +127,11 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
         {c.type !== "CHANNEL" && !c.request && <CallButtons conversationId={id} canPost={c.canPost} archived={c.archived} serverCalling={calling} busy={myCall !== null} running={!!call} />}
         {/* Android A7: a text channel's bell (mute for a while, the channel's level). */}
         {c.type === "CHANNEL" && !c.voice && <ChannelBell c={c} />}
-        {/* The reference header: bell, pins, members, then a search box. */}
+        {/* The reference header: bell, pins, members, then a search box. Phones keep the name, calls and the menu (as the
+            Android app); pins and members are in the details the name opens, and search is on the list's header. */}
         {!c.voice && (
           <button
-            className="icon-btn"
+            className="icon-btn hide-sm"
             aria-pressed={route.panel === "pinned"}
             onClick={() => navigate({ section: route.section, conversationId: id, panel: route.panel === "pinned" ? null : "pinned" })}
             aria-label={t("conv_pins")}
@@ -310,7 +311,7 @@ function HeaderSearch({ orgId, onSearch }: { orgId: string | null; onSearch: () 
   const label = orgName ? t("conv_search_in", { name: orgName }) : t("search_short");
   const mac = typeof navigator !== "undefined" && /Mac|iPhone|iPad/.test(navigator.platform);
   return (
-    <button className="header-search" onClick={onSearch} aria-label={label} aria-keyshortcuts={mac ? "Meta+K" : "Control+K"}>
+    <button className="header-search hide-sm" onClick={onSearch} aria-label={label} aria-keyshortcuts={mac ? "Meta+K" : "Control+K"}>
       <span className="ellipsis">{label}</span>
       <Search size={15} aria-hidden="true" />
     </button>

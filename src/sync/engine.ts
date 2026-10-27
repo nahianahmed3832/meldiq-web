@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { ApiClient, ApiError } from "../api/client";
 import type { AccountSessionGrant } from "../api/accountSchemas";
-import { type Call, type Conversation, type Member, type Org, type SessionGrant, zConversation, zMember, zOrg, zProfile, zServerInfo } from "../api/schemas";
+import { type Call, type Conversation, type Member, type Org, type ServerInfo, type SessionGrant, zConversation, zMember, zOrg, zProfile, zServerInfo } from "../api/schemas";
 import { Signals, zExperiments } from "./signals";
 import { CommunitySync } from "./community";
 import { paused } from "./status";
@@ -399,7 +399,9 @@ export class Engine implements EngineContext {
 
   private async loadLocal(): Promise<void> {
     const locals = await this.store.conversations();
-    const cache = await this.store.getValue<{ orgs: Org[]; conversations: Conversation[]; users: UserLite[] }>(CACHE_KEY);
+    // The server's last known features come back with the rest (brief v4 §15): the first paint lays communities out as
+    // the server does (categories, saved order), not in the older workspace layout until server-info answers.
+    const cache = await this.store.getValue<{ orgs: Org[]; conversations: Conversation[]; users: UserLite[]; server?: ServerInfo | null }>(CACHE_KEY);
     const pins = await this.store.changedPins();
     const callLog = await this.callLog.load();
     this.set((s) => ({
@@ -407,6 +409,7 @@ export class Engine implements EngineContext {
       callLog,
       local: Object.fromEntries(locals.map((l) => [l.id, l])),
       orgs: cache?.orgs ?? s.orgs,
+      server: s.server ?? cache?.server ?? null,
       conversations: cache ? Object.fromEntries(cache.conversations.map((c) => [c.id, c])) : s.conversations,
       users: cache ? Object.fromEntries(cache.users.map((u) => [u.id, u])) : s.users,
       identityAlerts: pins,
@@ -503,7 +506,7 @@ export class Engine implements EngineContext {
         };
       });
       const st = this.state.get();
-      await this.store.setValue(CACHE_KEY, { orgs: st.orgs, conversations: Object.values(st.conversations), users: Object.values(st.users) });
+      await this.store.setValue(CACHE_KEY, { orgs: st.orgs, conversations: Object.values(st.conversations), users: Object.values(st.users), server: st.server });
       void this.nav.refresh([PERSONAL, ...orgs.orgs.map((o) => o.id)]);
       void this.reminders.refresh();
     } catch (e) {
@@ -1024,14 +1027,9 @@ export class Engine implements EngineContext {
     return this.store.latestMessages(conversationId, limit);
   }
 
-  /** The identity key pinned for someone (what safety numbers are computed from), if any. */
+  /** The identity key pinned for someone, if any (a different key from the server pauses messages until reviewed). */
   async pinnedIdentity(userId: string): Promise<PinnedIdentity | null> {
     return this.store.pin(userId);
-  }
-
-  async markVerified(userId: string, verified: boolean): Promise<void> {
-    const pin = await this.store.pin(userId);
-    if (pin) await this.store.putPin({ ...pin, verified });
   }
 }
 

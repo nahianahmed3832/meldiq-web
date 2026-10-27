@@ -1,4 +1,4 @@
-import { CheckCheck, ChevronDown, Compass, Link2, LogIn, PenSquare, Plus, Settings2, Ticket, UsersRound } from "lucide-react";
+import { CheckCheck, ChevronDown, Compass, Link2, LogIn, PenSquare, Plus, Search, Settings2, Ticket, UsersRound } from "lucide-react";
 import { type MouseEvent, useLayoutEffect, useRef } from "react";
 import { shallowEqual, useEngine, useOrbit } from "../../application/orbit";
 import { markAllReadTargets } from "../selectors";
@@ -11,7 +11,6 @@ import { members } from "../format";
 import type { ShellDialog } from "./Shell";
 import { ArchivedList, ChannelSections, Collapsible, DmHub, PeopleExtras, PeopleList, PersonalSections, SkeletonRows } from "./SidebarSections";
 import { VoiceRoomsSection } from "./VoiceRooms";
-import { PhoneRail } from "./Rail";
 import { CommunityHeader, hideMutedKey } from "../community/CommunityHeader";
 import { useCommunityMenu } from "../community/communityMenu";
 import { CommunityPanel } from "../community/CommunityPanel";
@@ -33,6 +32,9 @@ export function Sidebar({ orgId, section, open, onDialog }: SidebarProps) {
   const orgs = useOrbit((s) => s.orgs);
   const synced = useOrbit((s) => s.synced);
   const empty = useOrbit((s) => Object.keys(s.conversations).length === 0);
+  // Until the server's features are known (cached from the last visit, else server-info), the layout isn't: a skeleton
+  // rather than the older workspace layout, which would list categories alphabetically for a moment (brief v4 §15).
+  const layoutKnown = useOrbit((s) => s.server !== null);
   const engine = useEngine();
   const readTargets = useOrbit((s) => markAllReadTargets(s, orgId), shallowEqual);
   const switcher = useMenu();
@@ -74,7 +76,6 @@ export function Sidebar({ orgId, section, open, onDialog }: SidebarProps) {
 
   return (
     <aside className={`sidebar${open ? " open" : ""}${branded && org?.accent ? ` ${ACCENT_CLASS}` : ""}`} style={branded ? accentStyle(org?.accent) : undefined} aria-label="Conversations">
-      {section !== "dms" && <PhoneRail orgId={orgId} onDialog={onDialog} />}
       <div className="side-head">
         {messages ? (
           // Direct messages aren't part of a community: their own heading, not the community's.
@@ -104,6 +105,17 @@ export function Sidebar({ orgId, section, open, onDialog }: SidebarProps) {
             <PenSquare size={18} />
           </button>
         )}
+        {/* Phones have no top bar on the lists (brief v4 §18): search, and in Messages a new message, sit here. */}
+        <span className="side-head-phone">
+          <button className="icon-btn" onClick={() => onDialog({ kind: "search" })} aria-label="Search Meldiq" title="Search">
+            <Search size={18} />
+          </button>
+          {messages && (
+            <button className="icon-btn" onClick={() => onDialog({ kind: "new" })} aria-label={t("side_new_message")} title={t("side_new_message")}>
+              <PenSquare size={18} />
+            </button>
+          )}
+        </span>
       </div>
       {branded && !messages && (bannerUrl || perms.canInvite) && (
         <div className="community-top">
@@ -147,7 +159,7 @@ export function Sidebar({ orgId, section, open, onDialog }: SidebarProps) {
       )}
 
       <div className="side-scroll scroll" ref={list} onScroll={(e) => scrollMemory.set(listKey, e.currentTarget.scrollTop)} onContextMenu={onBlankMenu}>
-        {!synced && empty ? (
+        {(!synced && empty) || (!layoutKnown && !messages) ? (
           <SkeletonRows />
         ) : messages ? (
           <>

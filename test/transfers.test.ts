@@ -92,6 +92,19 @@ describe("one encryption pass", () => {
     await expect(decryptBlob(new Blob([bad]), dk, { chunk: CHUNK_BYTES, size: plain.length, sha256, mime: "x/y" })).rejects.toThrow();
     await expect(decryptBlob(blob.slice(0, blob.size - 1), dk, { chunk: CHUNK_BYTES, size: plain.length, sha256, mime: "x/y" })).rejects.toThrow(/truncated/);
   });
+
+  it("still checks every chunk when the hash matches: a changed or reordered chunk with a recomputed hash fails", async () => {
+    const plain = nodeCrypto.randomBytes(3 * CHUNK_BYTES);
+    const ref = nodeChunkedEncrypt(plain, CHUNK_BYTES);
+    const dk = await importChunkKey(fromB64(ref.key), fromB64(ref.nonce), "decrypt");
+    const meta = (ct: Buffer) => ({ chunk: CHUNK_BYTES, size: plain.length, sha256: nodeCrypto.createHash("sha256").update(ct).digest("base64"), mime: "x/y" });
+    const flipped = Buffer.from(ref.ciphertext);
+    flipped[10] ^= 1;
+    await expect(decryptBlob(new Blob([flipped]), dk, meta(flipped))).rejects.toThrow(/decryption failed/);
+    const block = CHUNK_BYTES + 16;
+    const swapped = Buffer.concat([ref.ciphertext.subarray(block, 2 * block), ref.ciphertext.subarray(0, block), ref.ciphertext.subarray(2 * block)]);
+    await expect(decryptBlob(new Blob([swapped]), dk, meta(swapped))).rejects.toThrow(/decryption failed/);
+  });
 });
 
 describe("transfers", () => {

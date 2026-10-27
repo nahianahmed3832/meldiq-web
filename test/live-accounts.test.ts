@@ -1,10 +1,9 @@
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { z } from "zod";
 import type { AccountSessionGrant } from "../src/api/accountSchemas";
-import { ApiClient, ApiError } from "../src/api/client";
+import { ApiClient } from "../src/api/client";
 import { AccountApi } from "../src/auth/accountApi";
 import { createIdentity, enrollWithSeed, SetupError } from "../src/auth/deviceSetup";
-import { verifyLegacyAccount } from "../src/auth/legacyMove";
 import { SetupCredentials } from "../src/auth/setupCredentials";
 import { TokenVault } from "../src/auth/tokenVault";
 import { accountSelection, rememberSelection } from "../src/sync/workspaceSelection";
@@ -227,28 +226,6 @@ describe("approving a browser from the phone (Orbit 2.0)", () => {
     });
     const grant2 = await anon().login(phone.email, phone.password, "Meldiq Web · Wrong");
     await expect(enrollWithSeed(new SetupCredentials(server.baseUrl, grant2).accounts, grant2.account, wrong.seed, "Meldiq Web · Wrong", link2.keys)).rejects.toBeInstanceOf(SetupError);
-  });
-});
-
-describe("moving an account from before Orbit 2.0", () => {
-  it("username and recovery key move it to email sign-in, keeping its id, and set up the browser", async () => {
-    const legacy = await server.client("oldtimer", "Old Timer");
-    const recovery = await encodeRecoveryCode(legacy.identity.seed);
-    await expect(verifyLegacyAccount(anon(), legacy.username, await encodeRecoveryCode(new Uint8Array(32).fill(3)))).rejects.toMatchObject({ code: "legacy_verification_failed" });
-    const { ticket, seed } = await verifyLegacyAccount(anon(), `@${legacy.username.toUpperCase()}`, recovery.toLowerCase());
-    expect(ticket.legacyUser.username).toBe(legacy.username);
-    const address = email("oldtimer");
-    await anon().legacyComplete(ticket.ticket, "Old Timer", address, PASSWORD);
-    await anon().verifyEmail(address, mail.verifyCode(address), PASSWORD);
-    const grant = await anon().login(address, PASSWORD, "Meldiq Web · Moved");
-    expect(grant.account.identity?.userId).toBe(legacy.userId);
-    const { device } = await enrollWithSeed(new SetupCredentials(server.baseUrl, grant).accounts, grant.account, seed, "Meldiq Web · Moved");
-    seed.fill(0);
-    expect(device.userId).toBe(legacy.userId);
-    // A second move of the same account is refused.
-    const again = await verifyLegacyAccount(anon(), legacy.username, recovery).catch((e) => e);
-    expect(again).toBeInstanceOf(ApiError);
-    expect((again as ApiError).code).toBe("already_migrated");
   });
 });
 

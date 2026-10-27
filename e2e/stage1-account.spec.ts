@@ -50,7 +50,7 @@ async function newAccount(page: Page, name: string): Promise<string> {
   await page.getByRole("button", { name: "Set up encryption" }).click();
   await page.getByLabel("I've stored my recovery key somewhere safe.").check();
   await page.getByRole("button", { name: "Open Meldiq" }).click();
-  await expect(page.locator(":is(.conn.online, .user-panel[data-connection=online]):visible").first()).toBeVisible({ timeout: 15_000 });
+  await expect(page.locator(":is(.app[data-connection=online])").first()).toBeVisible({ timeout: 15_000 });
   return email;
 }
 

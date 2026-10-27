@@ -3,20 +3,7 @@ import { canonical } from "../crypto/canonical";
 import { sign } from "../crypto/ed25519";
 import type { KeyBackup } from "../crypto/keyBackup";
 import type { DeviceRecord } from "../model/types";
-import {
-  type AccountSessionGrant,
-  zAccepted,
-  zAccountMe,
-  zAccountSession,
-  zAccountView,
-  zEnrollResult,
-  zLegacyTicket,
-  zOk,
-  zSelected,
-  zSessionList,
-  zVerified,
-  zWorkspacesV2,
-} from "../api/accountSchemas";
+import { type AccountSessionGrant, zAccepted, zAccountMe, zAccountSession, zAccountView, zEnrollResult, zOk, zSelected, zSessionList, zVerified, zWorkspacesV2 } from "../api/accountSchemas";
 import { z } from "zod";
 
 /** Proof that this browser holds an existing device key: a fresh challenge signed with it (griip-auth-v1 "login"). */
@@ -117,14 +104,6 @@ export class AccountApi {
   /** Step 2: the browser's signed answer; the same session a password sign-in gives. */
   passkeyLogin(challengeId: string, response: Record<string, unknown>, deviceName: string): Promise<AccountSessionGrant> {
     return this.api.json("POST", "/v2/auth/passkey/login", zAccountSession, { auth: false, body: { challengeId, response, deviceName } });
-  }
-
-  legacyVerify(username: string, nonce: string, signature: string) {
-    return this.api.json("POST", "/v2/migration/legacy/verify", zLegacyTicket, { auth: false, body: { username, nonce, signature } });
-  }
-
-  legacyComplete(ticket: string, name: string, email: string, password: string): Promise<unknown> {
-    return this.api.json("POST", "/v2/migration/legacy/complete", zAccepted, { auth: false, body: { ticket, name, email, password } });
   }
 
   // ───────────── signed in ─────────────

@@ -10,7 +10,7 @@ import { usePhoto } from "../components/photos";
 import { contextMenuProps, Menu, type MenuEntry, useMenu } from "../components/Overlay";
 import { LookAvatar, StyledName, useUserLook } from "../people/NameStyle";
 import { useProfileMenu } from "./ProfileMenu";
-import { CONN_LABEL } from "./TopBar";
+import { CONN_LABEL } from "./ConnectionBanner";
 
 /** The browser's microphones or speakers, with their names once the person has allowed the microphone once. */
 async function devices(kind: "audioinput" | "audiooutput"): Promise<MediaDeviceChoice[]> {

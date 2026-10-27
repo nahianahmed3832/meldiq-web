@@ -1,5 +1,5 @@
 import { Bell, Bookmark, Menu as MenuIcon, Search, Settings } from "lucide-react";
-import { useEngine, useOrbit } from "../../application/orbit";
+import { useOrbit } from "../../application/orbit";
 import { navigate, type Section } from "../../application/router";
 import { UserAvatar } from "../components/OrgAvatar";
 import { laterDue, mentionCount } from "../selectors";
@@ -7,10 +7,7 @@ import { capCount } from "../unread";
 import { useT } from "../../i18n";
 import { useProfileMenu } from "./ProfileMenu";
 
-export const CONN_LABEL = { online: "Online", connecting: "Connecting…", reconnecting: "Reconnecting…", offline: "Offline" } as const;
-
 export function TopBar({ onMenu, onSearch, section }: { onMenu: () => void; onSearch: () => void; section: Section }) {
-  const engine = useEngine();
   const t = useT();
   const me = useOrbit((s) => s.me);
   const myPhoto = useOrbit((s) => (s.me ? s.users[s.me.userId]?.photoRev : null));
@@ -33,18 +30,11 @@ export function TopBar({ onMenu, onSearch, section }: { onMenu: () => void; onSe
         <kbd className="kbd">{mac ? "⌘K" : "Ctrl K"}</kbd>
       </button>
       <div className="topbar-right">
+        {/* Activity (mentions, unreads, threads, calls) and Later moved here from the rail (community-first brief §G); phones
+            have Activity as a tab and Saved under You instead (brief v4 §8: one place each). The connection shows only
+            when it's down (ConnectionBanner), and as your avatar's dot. */}
         <button
-          className={`conn ${connection}`}
-          onClick={() => connection !== "online" && engine.reconnect()}
-          title={connection === "online" ? "Connected to your Meldiq server" : "Not connected. Click to reconnect now; messages you send wait and go out when the connection is back."}
-          aria-live="polite"
-        >
-          <i aria-hidden="true" />
-          <span>{CONN_LABEL[connection]}</span>
-        </button>
-        {/* Activity (mentions, unreads, threads, calls) and Later moved here from the rail (community-first brief §G). */}
-        <button
-          className="icon-btn top-count"
+          className="icon-btn top-count hide-sm"
           onClick={() => navigate({ section: "activity" })}
           aria-current={section === "activity" ? "page" : undefined}
           aria-label={mentions ? t("top_activity_count", { n: mentions }) : t("top_activity")}
@@ -58,7 +48,7 @@ export function TopBar({ onMenu, onSearch, section }: { onMenu: () => void; onSe
           )}
         </button>
         <button
-          className="icon-btn top-count"
+          className="icon-btn top-count hide-sm"
           onClick={() => navigate({ section: "later" })}
           aria-current={section === "later" ? "page" : undefined}
           aria-label={due ? t("top_saved_count", { n: due }) : t("top_saved")}

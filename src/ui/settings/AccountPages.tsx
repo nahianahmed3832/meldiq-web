@@ -2,7 +2,6 @@ import { KeyRound, Laptop, LogOut, Smartphone, Trash2 } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import type { Device } from "../../api/schemas";
 import { useEngine, useOrbit } from "../../application/orbit";
-import { fingerprint } from "../../crypto/identity";
 import { listDevices, revokeDevice, signOut, SignOutUnconfirmed } from "../../sync/account";
 import { BlockedPeople, MessagingSettings, PrivacySettings } from "./PrivacyPage";
 import { Dialog } from "../components/Overlay";
@@ -94,13 +93,9 @@ export function DevicesPage() {
 export function SecurityPage({ onSignedOut }: { onSignedOut: () => void }) {
   const engine = useEngine();
   const me = useOrbit((s) => s.me);
-  const [identityFp, setIdentityFp] = useState<string | null>(null);
   const [confirm, setConfirm] = useState<"ask" | "unconfirmed" | null>(null);
   const [busy, setBusy] = useState(false);
   const [unconfirmedReason, setUnconfirmedReason] = useState("");
-  useEffect(() => {
-    if (me) void fingerprint(me.identityKey).then(setIdentityFp);
-  }, [me]);
   if (!me) return null;
   const doSignOut = (force: boolean) => {
     setBusy(true);
@@ -122,19 +117,9 @@ export function SecurityPage({ onSignedOut }: { onSignedOut: () => void }) {
           <KeyRound size={20} className="faint" />
           <div className="lines">
             <strong>This browser's device key</strong>
-            <small>What your phone showed when you approved this browser.</small>
+            <small>What your other device showed when it approved this browser.</small>
             <span className="fingerprint" style={{ fontSize: 13 }}>
               {me.deviceFingerprint}
-            </span>
-          </div>
-        </div>
-        <div className="setting">
-          <KeyRound size={20} className="faint" />
-          <div className="lines">
-            <strong>Your account's identity</strong>
-            <small>Half of every safety number you compare with someone.</small>
-            <span className="fingerprint" style={{ fontSize: 13 }}>
-              {identityFp ?? "…"}
             </span>
           </div>
         </div>

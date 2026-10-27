@@ -91,7 +91,7 @@ function Verification({ call }: { call: CallUiState }) {
       </div>
       <p>
         Everyone in this call should see the same emoji and digits. They come from the call's encryption key, which the caller's device made and sent inside your end-to-end encrypted messages; the key
-        itself never leaves the devices. Matching codes show everyone's media uses that key; safety numbers show who the people are.
+        itself never leaves the devices. Matching codes show everyone's media uses that key.
       </p>
       {call.security !== "encrypted" && (
         <p>

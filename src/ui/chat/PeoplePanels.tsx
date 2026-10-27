@@ -302,7 +302,7 @@ export function PeopleToggle({ c, route }: { c: Conversation; route: Route }) {
     } else navigate({ ...at, panel: shown ? null : "members" });
   };
   return (
-    <button className="icon-btn" aria-pressed={shown} onClick={toggle} aria-label={label} title={label}>
+    <button className="icon-btn hide-sm" aria-pressed={shown} onClick={toggle} aria-label={label} title={label}>
       {dm ? <CircleUserRound size={19} /> : <UsersRound size={19} />}
     </button>
   );

@@ -18,8 +18,9 @@ export function activityAt(s: AppState, c: Conversation): number {
   return Math.max(s.local[c.id]?.lastActivityAt ?? 0, c.createdAt);
 }
 
+/** Newest activity first; equal times by id, so the list never swaps two rows between renders (brief v4 §15). */
 export function byActivity(s: AppState): (a: Conversation, b: Conversation) => number {
-  return (a, b) => activityAt(s, b) - activityAt(s, a);
+  return (a, b) => activityAt(s, b) - activityAt(s, a) || (a.id < b.id ? -1 : a.id > b.id ? 1 : 0);
 }
 
 export interface ChannelGroup {
