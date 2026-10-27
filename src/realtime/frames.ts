@@ -55,11 +55,6 @@ export type ServerFrame =
   | { t: "org.applications" | "org.application" | "org.reports" }
   | { t: "meeting.updated" }
   | { t: "meeting.soon"; meetingId: string | null }
-  /** AI Workforce (server docs/AI_WORKFORCE.md): ids only; what changed is fetched, and the fetch is permission-checked. */
-  | { t: "ai.posts"; conversationId: string }
-  | { t: "ai.job" }
-  /** A task assigned to you or created by you changed (server AI_WORKFORCE_2_PLAN.md, phase 4). */
-  | { t: "ai.task" }
   | { t: "reminders.changed" | "reminder.due" }
   | { t: "prefs.updated"; workspaceId: string }
   | { t: "org.deleted"; orgId: string }
@@ -83,9 +78,6 @@ export const HANDLED_FRAMES: ReadonlySet<string> = new Set<ServerFrame["t"]>([
   "org.reports",
   "meeting.updated",
   "meeting.soon",
-  "ai.posts",
-  "ai.job",
-  "ai.task",
   "reminders.changed",
   "reminder.due",
   "prefs.updated",
@@ -115,8 +107,6 @@ export function parseFrame(f: Frame): ServerFrame | null {
     case "reminders.changed":
     case "reminder.due":
     case "queue.drained":
-    case "ai.job":
-    case "ai.task":
       return { t };
     case "queue":
       return { t, items: Array.isArray(f.items) ? (f.items as unknown[]) : [], backlog: f.backlog === true };
@@ -130,10 +120,6 @@ export function parseFrame(f: Frame): ServerFrame | null {
       return userId ? { t, userId, online: f.online === true, presence: typeof f.presence === "string" ? f.presence : null } : null;
     }
     case "conv.updated": {
-      const conversationId = str(f.conversationId);
-      return conversationId ? { t, conversationId } : null;
-    }
-    case "ai.posts": {
       const conversationId = str(f.conversationId);
       return conversationId ? { t, conversationId } : null;
     }

@@ -39,8 +39,8 @@ export async function sealAndPost(ctx: EngineContext, o: Outgoing, refresh = fal
   for (const pass of [0, 1]) {
     const r = await directory.recipients(o.conversationId, refresh || pass > 0);
     if (r.changed.length) throw new IdentityChangedError();
-    // Self-only (API 0.43.0): the sender's own other devices and nobody else, never an AI reader.
-    const to = audience === "self" ? r.devices.filter((d) => d.userId === device.userId) : [...r.devices, ...(await readersFor(ctx, o, r, pass > 0))];
+    // Self-only (API 0.43.0): the sender's own other devices and nobody else.
+    const to = audience === "self" ? r.devices.filter((d) => d.userId === device.userId) : r.devices;
     const sealed = await sealEnvelope(
       { messageId: o.messageId, conversationId: o.conversationId, senderUserId: device.userId, senderDeviceId: device.deviceId, sentAt: o.sentAt, cls: o.cls },
       o.payloadJson,
@@ -73,20 +73,6 @@ export async function sealAndPost(ctx: EngineContext, o: Outgoing, refresh = fal
     }
   }
   throw new ApiError(409, "device_mismatch", "The conversation's devices keep changing. Try again.");
-}
-
-/**
- * The AI readers [o] goes to: only text messages and their edits and deletes (never calls, reactions or anything
- * else), and only readers this person chose to share with. No choice yet counts as keep.
- */
-async function readersFor(ctx: EngineContext, o: Outgoing, r: Awaited<ReturnType<EngineContext["directory"]["recipients"]>>, force: boolean) {
-  if (!r.readers.length) return [];
-  const type = parsePayload(o.payloadJson)?.type;
-  const shareable = (o.cls === "message" && type === "text") || (o.cls === "control" && (type === "edit" || type === "delete"));
-  if (!shareable) return [];
-  const choices = await ctx.directory.readerChoices(o.conversationId, force);
-  const sharing = new Set(choices.readers.filter((c) => c.myChoice === "share").map((c) => c.readerId));
-  return r.readers.filter((x) => sharing.has(x.readerId)).map((x) => ({ deviceId: x.deviceId, encryptionKey: x.encryptionKey }));
 }
 
 /**

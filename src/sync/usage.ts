@@ -59,7 +59,6 @@ export const LIMIT_LABEL: Record<string, string> = {
   "integrations.webhooks": "Incoming webhooks",
   "integrations.notifications": "App notifications in channels",
   "roles.custom": "Custom roles",
-  "ai.requests_monthly": "AI requests this month",
 };
 
 /** Sizes are bytes; everything else is a count. */

@@ -1,4 +1,4 @@
-import { BookOpen, Bot, HelpCircle, Smile, Ban, Building2, CalendarDays, Flag, Gauge, Hash, Laptop, LayoutGrid, ScrollText, Shield, ShieldCheck, Ticket, UserCheck, UsersRound } from "lucide-react";
+import { BookOpen, HelpCircle, Smile, Ban, Building2, CalendarDays, Flag, Gauge, Hash, Laptop, LayoutGrid, ScrollText, Shield, ShieldCheck, Ticket, UserCheck, UsersRound } from "lucide-react";
 import { ApplicationsPage, BansPage, SecurityPage } from "./ModerationPages";
 import { ReportsPage } from "./ReportsPage";
 import { GuidePage, OnboardingPage } from "./GuidePages";
@@ -17,7 +17,6 @@ import { RolesPage } from "./RolesPage";
 import { AuditPage } from "./AuditPage";
 import { UsagePage } from "./UsagePage";
 import { MeetingsPage } from "./MeetingsPage";
-import { AgentsPage } from "../agents/AgentsPage";
 import type { OrgAdminDetail, OrgPermissions } from "../../api/workspaceSchemas";
 
 /** Pages, with the permission flag that shows them (the server decides; older servers don't send the newer flags). */
@@ -57,7 +56,6 @@ const COMMUNITY_PAGES: { key: WorkspacePage; label: string; icon: ReactNode; gro
   { key: "bans", label: "Bans", icon: <Ban size={17} />, group: "moderation", feature: "community-moderation", shown: (p) => p.canBan },
   { key: "audit", label: "Audit log", icon: <ScrollText size={17} />, group: "moderation", shown: (p) => p.canViewAudit },
   { key: "meetings", label: "Events", icon: <CalendarDays size={17} />, group: "more", feature: "meetings" },
-  { key: "agents", label: "AI agents", icon: <Bot size={17} />, group: "more", feature: "ai-workforce", shown: (p) => can(p, "ai.use") || can(p, "ai.manage") },
   { key: "usage", label: "Usage", icon: <Gauge size={17} />, group: "more", shown: (p) => p.canViewUsage },
 ];
 const PAGES: { key: WorkspacePage; label: string; icon: ReactNode; group: PageGroup; shown?: (p: OrgPermissions, d: OrgAdminDetail) => boolean; feature?: string }[] = [
@@ -66,14 +64,6 @@ const PAGES: { key: WorkspacePage; label: string; icon: ReactNode; group: PageGr
   { key: "invitations", label: "Invitations", icon: <Ticket size={17} />, group: "workspace" },
   { key: "channels", label: "Channels", icon: <Hash size={17} />, group: "workspace" },
   { key: "meetings", label: "Meetings", icon: <CalendarDays size={17} />, group: "tools", feature: "meetings" },
-  {
-    key: "agents",
-    label: "AI agents",
-    icon: <Bot size={17} />,
-    group: "tools",
-    feature: "ai-workforce",
-    shown: (p) => p.isOwner || p.effective.includes("ai.use") || p.effective.includes("ai.manage"),
-  },
   { key: "roles", label: "Roles", icon: <ShieldCheck size={17} />, group: "admin", shown: (p) => p.canViewRoles },
   { key: "audit", label: "Audit log", icon: <ScrollText size={17} />, group: "admin", shown: (p) => p.canViewAudit },
   { key: "usage", label: "Usage", icon: <Gauge size={17} />, group: "admin", shown: (p) => p.canViewUsage },
@@ -187,8 +177,6 @@ export function WorkspaceView({ orgId, page, onDialog }: { orgId: string | null;
               <UsagePage detail={d} />
             ) : page === "meetings" ? (
               <MeetingsPage detail={d} />
-            ) : page === "agents" ? (
-              <AgentsPage detail={d} />
             ) : page === "expressions" ? (
               <ExpressionsPage detail={d} />
             ) : page === "guide" ? (
