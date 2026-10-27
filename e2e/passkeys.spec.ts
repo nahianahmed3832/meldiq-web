@@ -56,7 +56,7 @@ test("add a passkey in Settings, sign in with it in another browser, then remove
   await first.getByRole("button", { name: "Set up encryption" }).click();
   await first.getByLabel("I've stored my recovery key somewhere safe.").check();
   await first.getByRole("button", { name: "Open Meldiq" }).click();
-  await expect(first.locator(":is(.conn.online, .user-panel[data-connection=online]):visible")).toBeVisible({ timeout: 15_000 });
+  await expect(first.locator(":is(.conn.online, .user-panel[data-connection=online]):visible").first()).toBeVisible({ timeout: 15_000 });
 
   await first.goto(`${WEB}/settings/account`);
   const card = first.getByLabel("Passkeys", { exact: true });

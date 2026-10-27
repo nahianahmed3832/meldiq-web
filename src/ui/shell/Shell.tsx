@@ -197,7 +197,8 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
   return (
     <div className="app">
       <Rail orgId={orgId} section={section} onDialog={ctx.open} />
-      <div className="workspace">
+      {/* Desktop: with the sidebar its user panel replaces the top bar; Settings has no sidebar, so it keeps the top bar. */}
+      <div className={`workspace${settings ? "" : " with-sidebar"}`}>
         <TopBar onMenu={() => setDrawer((d) => !d)} onSearch={() => setDialog({ kind: "search" })} section={section} />
         <div className={`body${route.conversationId ? " has-conversation" : ""}${phoneList ? " phone-list" : " phone-main"}${settings ? " settings-mode" : ""}`}>
           {!settings && <Sidebar orgId={orgId} section={section === "discover" ? "dms" : section} open={drawer} onDialog={ctx.open} />}

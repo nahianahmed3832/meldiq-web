@@ -64,7 +64,7 @@ test("with Meldiq closed, a wake-up shows who wrote, without the text, and opens
   const all = await shown(viewer);
   expect(JSON.stringify(all)).not.toContain("are you there");
   // A click (the service worker tells the open page where to go): the conversation opens, once the app is running.
-  await expect(viewer.locator(":is(.conn.online, .user-panel[data-connection=online]):visible")).toBeVisible({ timeout: 15_000 });
+  await expect(viewer.locator(":is(.conn.online, .user-panel[data-connection=online]):visible").first()).toBeVisible({ timeout: 15_000 });
   await viewer.waitForTimeout(500);
   await viewer.evaluate((href) => navigator.serviceWorker.dispatchEvent(new MessageEvent("message", { data: { type: "meldiq-open", href } })), `/dms/c/${dm}`);
   await expect(viewer).toHaveURL(new RegExp(`/dms/c/${dm}$`));
