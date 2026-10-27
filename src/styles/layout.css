@@ -595,20 +595,21 @@
  * No top bar: the rail, then the sidebar with the user panel at its foot, the conversation with its own header and search
  * box, and the member list. Phones and tablets keep the top bar (responsive.css). */
 @media (min-width: 961px) {
-  .workspace {
+  .workspace.with-sidebar {
     grid-template-rows: minmax(0, 1fr);
   }
-  .topbar {
+  .workspace.with-sidebar .topbar {
     display: none;
   }
-  .body {
+  .workspace.with-sidebar .body {
     margin: 0;
     border-radius: var(--r-lg) 0 0 0;
     box-shadow: 0 0 0 1px var(--panel-ring);
   }
 }
+/* Phones and tablets keep the top bar and tab bar instead (this must beat .user-panel's display below). */
 @media (max-width: 960px) {
-  .user-panel {
+  .sidebar .user-panel {
     display: none;
   }
 }

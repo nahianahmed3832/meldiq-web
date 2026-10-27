@@ -21,5 +21,5 @@ export async function link(page: Page, phone: Phone): Promise<void> {
   const shownFingerprint = await page.getByLabel("Device key").textContent();
   const phoneFingerprint = await approve(phone, (await code.textContent())!);
   expect(shownFingerprint).toBe(phoneFingerprint);
-  await expect(page.locator(":is(.conn.online, .user-panel[data-connection=online]):visible")).toBeVisible({ timeout: 15_000 });
+  await expect(page.locator(":is(.conn.online, .user-panel[data-connection=online]):visible").first()).toBeVisible({ timeout: 15_000 });
 }

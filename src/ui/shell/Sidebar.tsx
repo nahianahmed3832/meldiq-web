@@ -44,6 +44,8 @@ export function Sidebar({ orgId, section, open, onDialog }: SidebarProps) {
   const t = useT();
   // API 0.44.0: the community's own accent and banner, on its channel list only (never the DMs or other communities).
   const branded = communities && section !== "dms" && !!org;
+  // Home with no community yet (none joined, or the chosen one left) shows the messages hub rather than an empty list.
+  const messages = section === "dms" || (communities && !org);
   const bannerUrl = usePhoto("banner", org?.id ?? "", branded ? org?.bannerRev : null);
 
   return (
@@ -53,7 +55,7 @@ export function Sidebar({ orgId, section, open, onDialog }: SidebarProps) {
         className={`side-head${branded && bannerUrl ? " has-banner" : ""}`}
         style={branded && bannerUrl ? { backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0) 70%), url(${bannerUrl})` } : undefined}
       >
-        {section === "dms" ? (
+        {messages ? (
           // Direct messages aren't part of a community: their own heading, not the community's.
           <h2 className="side-title grow">{t("side_direct_messages")}</h2>
         ) : communities ? (
@@ -116,10 +118,10 @@ export function Sidebar({ orgId, section, open, onDialog }: SidebarProps) {
       <div className="side-scroll scroll">
         {!synced && empty ? (
           <SkeletonRows />
-        ) : section === "dms" ? (
+        ) : messages ? (
           <>
             <DmHub onDialog={(kind) => onDialog({ kind })} />
-            <PeopleList twoLine />
+            <PeopleList twoLine={section === "dms"} />
             <ArchivedList />
           </>
         ) : (
