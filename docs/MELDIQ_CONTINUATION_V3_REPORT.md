@@ -94,9 +94,31 @@ operating system's own notification settings can still mute or hide notification
 | API full suite | 1,116 passed, 11 skipped (the docs check passes after `npm run contracts`); new `profile_media` (7), `gifs` (3) |
 | Web `tsc -b`, `eslint .`, `prettier --check` | clean |
 | Web unit tests | 529 passed, 1 skipped; new `transfers` (6), `message-chime` (3), link tests |
-| Browser suite, Chromium + phone width, against API 0.45.0 | see Production below |
+| Browser suite, Chromium + phone width, against API 0.45.0 | **68 passed, 0 failed** (68 skipped: each project's other-device tests); new `continuation-v3.spec` (4) |
 
 ## 8. Native apps
 
 No file under `android/` changed in this round (`git diff --name-only 3b9d97d..HEAD -- android`: none); no app id,
 signing, version or Play Store change. API changes are additive (new fields and routes).
+
+## 9. Production
+
+**Live: API 0.45.0 (12:45 UTC) and Meldiq Web 0.5.0-beta-cc5b4c6.**
+
+| Step | Result |
+|---|---|
+| API | backup `pre-0.45.0-20261027T124431Z` (integrity ok, schema 57, 43 users); image 0.45.0 with ffmpeg; rehearsal on a copy (schema 58, 0 errors); switch healthy, 0 restarts; both hosts answer 0.45.0; features `profile-media`, `gif-search`, `community-branding`, `discord-import`; 0 errors |
+| Web | release `cc5b4c6` (checksum ok); nginx, CSP and `config.json` unchanged; `verify.sh` all passed (API 0.45.0 through the site, realtime 101) |
+| Smoke (signed out) | the new split intro and sign-in render; `/discover`, `/invite/…`, `/m/…` served; the six silhouette favicon links and files served; GIF status needs sign-in (401) |
+| Git | meldiq-web `ai-workforce-web` ← #24 (merge d7f35a8); meldiq `internal-beta` ← #4 |
+
+**Not checked in production:** anything signed in (no production test account). Rollback: web
+`bash /root/meldiq-web-0.5.0-beta-cc5b4c6/rollback.sh`; API image `0.44.0-rollback`.
+
+## 10. Remaining
+
+- **meldiq.app DNS** (owner): point the apex A record at 72.60.107.88 so old `meldiq.app` invitation links and the
+  Android app's links work; the nginx site is ready, then a certificate (§4).
+- **GIF provider key** (owner): `GIF_PROVIDER` and `GIF_API_KEY` in the API's `.env` (docs/GIFS.md).
+- Faster hashing would need WebAssembly and `'wasm-unsafe-eval'` in the CSP (owner's decision).
+- Android: profile media, GIFs and branding aren't in the app yet (fields are additive).
