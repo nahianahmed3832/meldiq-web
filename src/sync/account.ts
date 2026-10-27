@@ -61,6 +61,28 @@ export async function userProfile(engine: Engine, userId: string) {
   return (await engine.api.json("GET", `/v1/users/${encodeURIComponent(userId)}`, z.object({ user: zProfile }))).user;
 }
 
+/** Your animated avatar: a GIF or WebP, or a short video clip the server turns into a 3 s silent loop (API 0.45.0). */
+export async function setAvatarMedia(engine: Engine, file: Uint8Array): Promise<void> {
+  await engine.api.call("PUT", "/v1/users/me/avatar-media", { raw: file });
+}
+
+export async function removeAvatarMedia(engine: Engine): Promise<void> {
+  await engine.api.call("DELETE", "/v1/users/me/avatar-media");
+}
+
+/** Your profile banner: a JPEG, or an animated GIF or WebP (API 0.45.0). */
+export async function setProfileBanner(engine: Engine, file: Uint8Array): Promise<void> {
+  await engine.api.call("PUT", "/v1/users/me/profile-banner", { raw: file });
+}
+
+export async function removeProfileBanner(engine: Engine): Promise<void> {
+  await engine.api.call("DELETE", "/v1/users/me/profile-banner");
+}
+
+export async function setProfileStyle(engine: Engine, change: { decoration?: string | null; effect?: string | null; accent?: string | null }): Promise<void> {
+  await engine.api.call("PUT", "/v1/users/me/profile-style", { body: change });
+}
+
 export async function updateProfile(engine: Engine, change: { displayName?: string; statusText?: string | null }): Promise<void> {
   await engine.api.call("PATCH", "/v1/users/me", { body: change });
   await engine.refreshAll();

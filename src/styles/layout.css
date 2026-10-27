@@ -784,3 +784,76 @@
   text-transform: uppercase;
   color: var(--text-3);
 }
+
+/* Invite friends on Home and messages: always there, naming the community it invites to. */
+.invite-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 10px 2px 2px;
+  padding: 10px 12px;
+  border-radius: var(--r-lg);
+  border: 1px solid var(--border);
+  background: linear-gradient(120deg, rgba(34, 211, 238, 0.12), rgba(139, 92, 246, 0.14)), var(--surface-raised);
+}
+.invite-card-icon {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--accent-soft);
+  color: var(--accent-text);
+}
+.invite-card-text {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+  flex: 1;
+}
+.invite-card-text small {
+  color: var(--text-2);
+}
+.invite-card-select {
+  max-width: 100%;
+  padding: 2px 4px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-size: var(--fs-sm);
+}
+
+/* Scrolling strips (components/scrollStrip.ts): a fade at an edge while there's more to scroll that way. */
+.rail.can-scroll-start {
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 28px);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 28px);
+}
+.rail.can-scroll-end {
+  -webkit-mask-image: linear-gradient(to top, transparent 0, #000 28px);
+  mask-image: linear-gradient(to top, transparent 0, #000 28px);
+}
+.rail.can-scroll-start.can-scroll-end {
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 28px, #000 calc(100% - 28px), transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 28px, #000 calc(100% - 28px), transparent 100%);
+}
+.rail {
+  overscroll-behavior: contain;
+}
+.phone-rail.can-scroll-start {
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 24px);
+  mask-image: linear-gradient(to right, transparent 0, #000 24px);
+}
+.phone-rail.can-scroll-end {
+  -webkit-mask-image: linear-gradient(to left, transparent 0, #000 24px);
+  mask-image: linear-gradient(to left, transparent 0, #000 24px);
+}
+.phone-rail.can-scroll-start.can-scroll-end {
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 24px, #000 calc(100% - 24px), transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0, #000 24px, #000 calc(100% - 24px), transparent 100%);
+}
+.phone-rail {
+  overscroll-behavior-x: contain;
+}

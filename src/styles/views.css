@@ -693,10 +693,12 @@
 }
 
 /* ───────────────────────── link (sign-in) screen ───────────────────────── */
+/* Continuation brief v3 §5: a wide community-first hero and a comfortably sized form on desktop; a compact branded
+   header over the form on phones (responsive.css). */
 .link-screen {
   min-height: 100dvh;
   display: grid;
-  grid-template-columns: minmax(360px, 0.9fr) minmax(0, 1.1fr);
+  grid-template-columns: minmax(420px, 1.15fr) minmax(440px, 0.85fr);
   background: var(--bg);
 }
 /* The sign-in hero is the logo's own navy ground and glow, the same in every palette. */
@@ -705,15 +707,28 @@
     radial-gradient(900px 560px at 18% -12%, var(--brand-glow-1) 0%, transparent 62%), radial-gradient(760px 520px at 112% 112%, var(--brand-glow-2) 0%, transparent 60%),
     linear-gradient(180deg, var(--brand-ground-2) 0%, var(--brand-ground) 70%);
   color: var(--brand-on-ground);
-  padding: 48px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  padding: 44px clamp(32px, 5vw, 72px);
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+  align-content: start;
   gap: 32px;
 }
+.hero-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.hero-brand strong {
+  font-size: 18px;
+}
+.hero-copy {
+  display: grid;
+  gap: 16px;
+  max-width: 560px;
+}
 .link-hero h1 {
-  font-size: clamp(30px, 3.4vw, 44px);
-  line-height: 1.1;
+  font-size: clamp(32px, 3.6vw, 50px);
+  line-height: 1.06;
   letter-spacing: -0.03em;
   margin: 0;
   font-weight: 800;
@@ -727,19 +742,25 @@
 }
 .link-hero p {
   color: var(--brand-on-ground-2);
-  max-width: 440px;
-  margin: 14px 0 0;
-  font-size: 15px;
+  max-width: 500px;
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.55;
 }
 .hero-points {
   display: grid;
-  gap: 14px;
-  color: var(--brand-on-ground-2);
-  font-size: 13.5px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px 20px;
+  margin: 6px 0 0;
+  padding: 0;
+  list-style: none;
+  color: var(--brand-on-ground);
+  font-size: 14px;
+  font-weight: 600;
 }
-.hero-points div {
+.hero-points li {
   display: flex;
-  gap: 12px;
+  gap: 10px;
   align-items: flex-start;
 }
 .hero-points svg {
@@ -747,21 +768,88 @@
   flex-shrink: 0;
   margin-top: 1px;
 }
+.hero-foot {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px !important;
+}
+/* The illustration: a rail of community icons and a channel list with a banner, in Meldiq's own shapes. */
+.hero-preview {
+  align-self: center;
+  display: flex;
+  gap: 10px;
+  width: min(440px, 100%);
+  margin: 0;
+  padding: 12px;
+  border-radius: 20px;
+  background: rgba(8, 12, 28, 0.55);
+  border: 1px solid rgba(160, 190, 255, 0.16);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+}
+.hero-preview-rail {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+}
+.hero-preview-rail img,
+.hero-preview-rail i {
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  display: block;
+}
+.hero-preview-panel {
+  flex: 1;
+  display: grid;
+  gap: 6px;
+  align-content: start;
+  padding-bottom: 6px;
+  border-radius: 14px;
+  background: rgba(16, 23, 43, 0.9);
+  overflow: hidden;
+}
+.hero-preview-banner {
+  height: 62px;
+  background: linear-gradient(120deg, #22d3ee, #6366f1 55%, #ec4899);
+}
+.hero-preview-cat {
+  margin: 4px 12px 0;
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: rgba(200, 210, 240, 0.6);
+}
+.hero-preview-ch {
+  margin: 0 8px;
+  padding: 5px 8px;
+  border-radius: 8px;
+  font-size: 13px;
+  color: rgba(225, 232, 255, 0.78);
+}
+.hero-preview-ch.on {
+  background: rgba(122, 162, 255, 0.18);
+  color: #fff;
+  font-weight: 700;
+}
 .link-main {
   position: relative;
   display: grid;
   place-items: center;
-  padding: 40px 24px;
+  padding: 40px clamp(20px, 4vw, 56px);
 }
 /* Room for the language picker above the card. */
 .link-main:has(.auth-lang) {
-  padding-top: 64px;
+  padding-top: 72px;
 }
 .link-card {
-  width: min(520px, 100%);
-  padding: 32px;
+  width: min(460px, 100%);
+  padding: 36px;
   display: grid;
   gap: 22px;
+  border-radius: 20px;
+  box-shadow: var(--shadow-lg);
 }
 .link-card h2 {
   margin: 0;
@@ -2224,4 +2312,82 @@ select.input {
 .invite-landing.c-accent .invite-landing-go {
   background: var(--c-accent);
   color: var(--c-on-accent);
+}
+/* Wide screens: the introduction uses the width, Meldling and the page's picture on the brand's ground at the left. */
+.intro-visual {
+  display: none;
+}
+.intro-main {
+  display: contents;
+}
+@media (min-width: 961px) {
+  .intro {
+    display: grid;
+    grid-template-columns: minmax(380px, 1fr) minmax(460px, 1fr);
+    align-items: stretch;
+    padding: 0;
+  }
+  .intro-visual {
+    display: grid;
+    place-items: center;
+    align-content: center;
+    gap: 28px;
+    background:
+      radial-gradient(700px 480px at 20% 0%, var(--brand-glow-1) 0%, transparent 62%), radial-gradient(640px 460px at 100% 100%, var(--brand-glow-2) 0%, transparent 60%),
+      linear-gradient(180deg, var(--brand-ground-2) 0%, var(--brand-ground) 70%);
+  }
+  .intro-visual img {
+    border-radius: 36px;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+  }
+  .intro-visual-art {
+    display: grid;
+    place-items: center;
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    background: rgba(122, 162, 255, 0.16);
+    color: var(--brand-highlight);
+  }
+  .intro-main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 24px clamp(24px, 5vw, 64px);
+  }
+  .intro-page .intro-art {
+    display: none;
+  }
+  .intro-page h1 {
+    font-size: 32px;
+  }
+  .intro-page p {
+    font-size: 16px;
+  }
+}
+.profile-pop-banner {
+  position: relative;
+  background-size: cover;
+  background-position: center;
+}
+.profile-pop-banner .profile-pop-btn {
+  position: relative;
+  z-index: 1;
+}
+.profile-pop-avatar > .styled-avatar .avatar,
+.profile-pop-avatar > .styled-avatar .avatar-media {
+  box-shadow: 0 0 0 6px var(--surface-raised);
+}
+.profile-pop-banner {
+  position: relative;
+  background-size: cover;
+  background-position: center;
+}
+.profile-pop-banner .profile-pop-btn {
+  position: relative;
+  z-index: 1;
+}
+.profile-pop-avatar > .styled-avatar .avatar,
+.profile-pop-avatar > .styled-avatar .avatar-media {
+  box-shadow: 0 0 0 6px var(--surface-raised);
 }

@@ -1,4 +1,4 @@
-import { AtSign, BellOff, Bookmark, CircleDot, LogOut, Monitor, Moon, Settings, Smartphone, Smile, Sun, UserRound } from "lucide-react";
+import { BellOff, Bookmark, CircleDot, LogOut, Monitor, Moon, Settings, Smartphone, Smile, Sun, UserRound } from "lucide-react";
 import { useState } from "react";
 import { useOrbit } from "../../application/orbit";
 import { setPrefs, usePrefs } from "../../application/prefs";
@@ -73,7 +73,7 @@ export function useProfileMenu(): { open: (anchor: HTMLElement) => void; expande
                   "separator" as const,
                 ]
               : []),
-            { label: t("top_activity"), icon: <AtSign size={16} />, onSelect: () => navigate({ section: "activity" }) },
+            // Activity has its own button (the user panel on desktop, the top bar on phones); Saved for later lives here.
             { label: t("top_saved"), icon: <Bookmark size={16} />, onSelect: () => navigate({ section: "later" }) },
             "separator",
             { label: "Profile", icon: <UserRound size={16} />, onSelect: () => navigate({ section: "settings", settingsPage: "profile" }) },

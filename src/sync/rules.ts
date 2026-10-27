@@ -1,3 +1,4 @@
+import { gifAllowed } from "./gifs";
 import { callLine } from "./callHistory";
 import { cleanTags, cleanTitle } from "./forumRules";
 import { cleanRef, cleanRefs } from "./expressions";
@@ -35,6 +36,8 @@ function richOf(p: Payload): RichContent | null {
   if (poll) r.poll = poll;
   const sticker = cleanSticker(p.sticker);
   if (sticker) r.sticker = sticker;
+  // A GIF is kept only when its address is on its provider's media hosts (sync/gifs.ts).
+  if (p.gif && gifAllowed(p.gif)) r.gif = p.gif;
   const title = cleanTitle(p.title);
   if (title) r.title = title;
   const tags = cleanTags(p.tags);

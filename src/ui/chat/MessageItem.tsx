@@ -38,9 +38,10 @@ import { nameTone } from "../components/Avatar";
 import { UserAvatar } from "../components/OrgAvatar";
 import { callLine } from "../../sync/callHistory";
 import { ForwardDialog } from "../dialogs/ForwardDialog";
-import { Dialog, Menu, type MenuEntry, useMenu } from "../components/Overlay";
+import { Dialog, keepsNativeMenu, Menu, type MenuEntry, useMenu } from "../components/Overlay";
 import { ReactionList, ReactionsDialog } from "./Reactions";
 import { useLongPress } from "./longPress";
+import { GifView } from "./GifView";
 import { mergeHandlers, useMessageGestures } from "./gestures";
 import { clock, dayLabel, fullTime } from "../format";
 import { openInApp } from "./inAppLinks";
@@ -150,7 +151,7 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
     if (m.deleted) return <span className="msg-deleted">{t("msg_deleted")}</span>;
     if (editing) return <EditBox m={m} onDone={() => setEditing(false)} />;
     // A poll, contact, location, sticker or animated emoji is the message itself: no card under it (android MessageBubble).
-    const structured = !!(m.rich?.poll || m.rich?.contact || m.rich?.location || m.rich?.sticker || m.rich?.animoji || m.rich?.customSticker);
+    const structured = !!(m.rich?.poll || m.rich?.contact || m.rich?.location || m.rich?.sticker || m.rich?.animoji || m.rich?.customSticker || m.rich?.gif);
     const mediaLink = mediaCards && !structured ? findMediaLink(m.text) : null;
     return (
       <>
@@ -164,6 +165,11 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
         {m.rich?.poll ? (
           <div>
             <PollView m={m} myUserId={p.myUserId} canPost={p.canPost} />
+            {mine && <Status m={m} onRetry={() => void engine.retry(m.id)} onReview={p.onReview} />}
+          </div>
+        ) : m.rich?.gif ? (
+          <div>
+            <GifView gif={m.rich.gif} />
             {mine && <Status m={m} onRetry={() => void engine.retry(m.id)} onReview={p.onReview} />}
           </div>
         ) : m.rich?.sticker ? (
@@ -298,6 +304,21 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
   return (
     <div
       {...mergeHandlers(press, gestures.handlers)}
+      // A right-click or two-finger click: the message's menu at the pointer (the quick reactions on top, as a long
+      // press shows them); the Menu key or Shift+F10 opens it from the keyboard. Links, media and selected text keep the
+      // browser's own menu.
+      onContextMenu={(e) => {
+        if (editing || m.kind === "call" || keepsNativeMenu(e.target)) return;
+        e.preventDefault();
+        setPressed(true);
+        more.openAt(e.currentTarget, e);
+      }}
+      onKeyDown={(e) => {
+        if (editing || !(e.key === "ContextMenu" || (e.key === "F10" && e.shiftKey)) || keepsNativeMenu(e.target)) return;
+        e.preventDefault();
+        setPressed(true);
+        more.openAt(e.currentTarget, null);
+      }}
       style={gestures.offset ? { transform: `translateX(${gestures.offset}px)` } : undefined}
       className={`msg${gestures.offset ? " swiping" : ""}${mine ? " mine" : ""}${p.first ? " first" : ""}${mentioned ? " mentioned" : ""}${p.highlighted ? " highlight" : ""}${more.anchor || picker.anchor ? " menu-open" : ""}`}
       id={`msg-${m.id}`}
@@ -399,6 +420,7 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
       {more.anchor && (
         <Menu
           anchor={more.anchor}
+          point={more.point}
           align="end"
           label="Message"
           onClose={() => {

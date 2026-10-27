@@ -48,3 +48,37 @@ function safeDecode(s: string): string {
     return "";
   }
 }
+
+/**
+ * A message link opened in a fresh tab (/m/<conversation>/<message>): kept for this tab like an invitation, then opened
+ * at that message once someone is signed in (the conversation must be theirs; ids only, never content).
+ */
+const MESSAGE_KEY = "meldiq.pendingMessage";
+const MESSAGE_PATH = /^\/m\/([A-Za-z0-9_-]{1,128})\/([A-Za-z0-9_-]{1,128})\/?$/;
+
+export function capturePendingMessage(): void {
+  const m = MESSAGE_PATH.exec(location.pathname);
+  if (!m) return;
+  const path = `/m/${m[1]}/${m[2]}`;
+  try {
+    sessionStorage.setItem(MESSAGE_KEY, path);
+  } catch {
+    pendingMessage = path;
+  }
+  history.replaceState(history.state, "", "/home");
+}
+
+let pendingMessage: string | null = null;
+
+/** The kept message link's path (/m/C/M), once (null if none). */
+export function takePendingMessage(): string | null {
+  let path = pendingMessage;
+  pendingMessage = null;
+  try {
+    path = sessionStorage.getItem(MESSAGE_KEY) ?? path;
+    sessionStorage.removeItem(MESSAGE_KEY);
+  } catch {
+    /* in memory only */
+  }
+  return path && MESSAGE_PATH.test(path) ? path : null;
+}

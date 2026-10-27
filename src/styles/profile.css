@@ -1,0 +1,183 @@
+/* Profile customisation (people/ProfileStyle.tsx, API 0.45.0): Meldiq's own avatar frames and banner effects, drawn in
+   CSS, light enough for a profile card. Reduced motion stops every animation here. */
+.styled-avatar {
+  position: relative;
+  display: inline-block;
+  flex-shrink: 0;
+  line-height: 0;
+}
+.avatar-media {
+  display: block;
+  overflow: hidden;
+  border-radius: 50%;
+  background: var(--surface-sunken);
+}
+.avatar-media img,
+.avatar-media video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Frames: a ring just outside the avatar, never over the face (pointer-events off, decorative). */
+.deco {
+  position: absolute;
+  inset: -7%;
+  border-radius: 50%;
+  pointer-events: none;
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 6px), #000 calc(100% - 5px));
+  mask: radial-gradient(farthest-side, transparent calc(100% - 6px), #000 calc(100% - 5px));
+}
+.deco-aurora {
+  background: conic-gradient(from 0deg, #22d3ee, #6366f1, #a855f7, #ec4899, #22d3ee);
+  animation: deco-spin 6s linear infinite;
+}
+.deco-ember {
+  background: conic-gradient(from 90deg, #f97316, #ef4444, #facc15, #f97316, #ef4444, #f97316);
+  filter: drop-shadow(0 0 6px rgba(249, 115, 22, 0.7));
+  animation: deco-flicker 1.8s ease-in-out infinite;
+}
+.deco-frost {
+  background:
+    radial-gradient(circle at 18% 22%, #fff 0 2px, transparent 3px), radial-gradient(circle at 82% 30%, #fff 0 2px, transparent 3px), radial-gradient(circle at 70% 85%, #fff 0 2px, transparent 3px),
+    linear-gradient(135deg, #bae6fd, #60a5fa, #e0f2fe);
+}
+.deco-neon {
+  background: conic-gradient(#f0abfc, #22d3ee, #f0abfc);
+  filter: drop-shadow(0 0 8px #e879f9) drop-shadow(0 0 4px #22d3ee);
+  animation: deco-pulse 2.4s ease-in-out infinite;
+}
+.deco-sakura {
+  background:
+    radial-gradient(circle at 15% 50%, #fbcfe8 0 4px, transparent 5px), radial-gradient(circle at 50% 8%, #f9a8d4 0 4px, transparent 5px),
+    radial-gradient(circle at 85% 50%, #fbcfe8 0 4px, transparent 5px), radial-gradient(circle at 50% 92%, #f9a8d4 0 4px, transparent 5px), linear-gradient(135deg, #fda4af, #f9a8d4, #fbcfe8);
+}
+.deco-pixel {
+  border-radius: 22%;
+  background: repeating-conic-gradient(#facc15 0 25%, #22c55e 0 50%) 0 0 / 8px 8px;
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box exclude,
+    linear-gradient(#000 0 0);
+  mask:
+    linear-gradient(#000 0 0) content-box exclude,
+    linear-gradient(#000 0 0);
+  padding: 5px;
+}
+@keyframes deco-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes deco-flicker {
+  50% {
+    filter: drop-shadow(0 0 10px rgba(239, 68, 68, 0.85));
+  }
+}
+@keyframes deco-pulse {
+  50% {
+    filter: drop-shadow(0 0 14px #e879f9) drop-shadow(0 0 7px #22d3ee);
+  }
+}
+
+/* Effects: a layer over the banner only. */
+.fx {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.fx-sparkles {
+  background:
+    radial-gradient(circle at 12% 30%, #fff 0 1.5px, transparent 2.5px), radial-gradient(circle at 34% 70%, #fff 0 1.5px, transparent 2.5px),
+    radial-gradient(circle at 58% 25%, #fff 0 2px, transparent 3px), radial-gradient(circle at 80% 60%, #fff 0 1.5px, transparent 2.5px),
+    radial-gradient(circle at 92% 20%, #fff 0 1px, transparent 2px);
+  animation: fx-twinkle 2.2s ease-in-out infinite;
+}
+.fx-glow {
+  background: radial-gradient(60% 120% at 30% 50%, rgba(255, 255, 255, 0.28), transparent 70%);
+  animation: fx-sweep 5s ease-in-out infinite alternate;
+}
+.fx-stars {
+  background:
+    radial-gradient(circle, #fff 0 1px, transparent 1.5px) 0 0 / 34px 34px,
+    radial-gradient(circle, rgba(255, 255, 255, 0.7) 0 1px, transparent 1.5px) 17px 17px / 34px 34px;
+  animation: fx-drift 14s linear infinite;
+}
+.fx-bubbles {
+  background:
+    radial-gradient(circle at 20% 110%, rgba(255, 255, 255, 0.35) 0 8px, transparent 9px), radial-gradient(circle at 55% 120%, rgba(255, 255, 255, 0.3) 0 6px, transparent 7px),
+    radial-gradient(circle at 80% 115%, rgba(255, 255, 255, 0.35) 0 10px, transparent 11px);
+  background-size: 100% 200%;
+  animation: fx-rise 6s linear infinite;
+}
+@keyframes fx-twinkle {
+  50% {
+    opacity: 0.35;
+  }
+}
+@keyframes fx-sweep {
+  to {
+    transform: translateX(40%);
+  }
+}
+@keyframes fx-drift {
+  to {
+    background-position:
+      0 -340px,
+      17px -323px;
+  }
+}
+@keyframes fx-rise {
+  to {
+    background-position: 0 -200%;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .deco,
+  .fx {
+    animation: none !important;
+  }
+}
+
+/* Settings › Profile › Profile style. */
+.style-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.style-choice {
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  min-width: 76px;
+  padding: 10px 8px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-2);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  cursor: pointer;
+}
+.style-choice[aria-pressed="true"] {
+  border-color: var(--accent);
+  color: var(--text);
+  box-shadow: 0 0 0 2px var(--accent-soft);
+}
+.style-choice .styled-avatar .avatar,
+.style-choice .swatch-fx {
+  border-radius: 50%;
+}
+.swatch-fx {
+  position: relative;
+  display: block;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #1e3a8a, #6d28d9);
+  overflow: hidden;
+}
+.style-preview {
+  max-width: 340px;
+}

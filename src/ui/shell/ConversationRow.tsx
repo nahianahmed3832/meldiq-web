@@ -112,7 +112,10 @@ export const ConversationRow = memo(function ConversationRow({ id, twoLine, hide
   const openMenu = (e: MouseEvent<HTMLElement>) => {
     e.preventDefault();
     e.stopPropagation();
-    menu.open(e.currentTarget.closest(".side-row") as HTMLElement);
+    const row = e.currentTarget.closest(".side-row") as HTMLElement;
+    // A right-click opens the menu at the pointer; the ⋯ button, below itself.
+    if (e.type === "contextmenu") menu.openAt(row, e);
+    else menu.open(row);
   };
   const more = (
     <button className="row-more" aria-label={`More for ${title}`} aria-haspopup="menu" onClick={openMenu}>
@@ -168,12 +171,28 @@ export const ConversationRow = memo(function ConversationRow({ id, twoLine, hide
     <div className="side-row">
       {body}
       {more}
-      {menu.anchor && <RowMenu id={id} title={title} inPlace={!!inPlace} unread={unread > 0} anchor={menu.anchor} onClose={menu.close} />}
+      {menu.anchor && <RowMenu id={id} title={title} inPlace={!!inPlace} unread={unread > 0} anchor={menu.anchor} point={menu.point} onClose={menu.close} />}
     </div>
   );
 });
 
-function RowMenu({ id, title, inPlace, unread, anchor, onClose }: { id: string; title: string; inPlace: boolean; unread: boolean; anchor: HTMLElement; onClose: () => void }) {
+function RowMenu({
+  id,
+  title,
+  inPlace,
+  unread,
+  anchor,
+  point,
+  onClose,
+}: {
+  id: string;
+  title: string;
+  inPlace: boolean;
+  unread: boolean;
+  anchor: HTMLElement;
+  point: { x: number; y: number } | null;
+  onClose: () => void;
+}) {
   const engine = useEngine();
   const c = useOrbit((s) => s.conversations[id]);
   const ws = workspaceOf(c?.orgId ?? null);
@@ -225,7 +244,7 @@ function RowMenu({ id, title, inPlace, unread, anchor, onClose }: { id: string; 
   ];
   return (
     <>
-      {!naming && <Menu anchor={anchor} entries={entries} onClose={onClose} align="end" label={`Arrange ${title}`} />}
+      {!naming && <Menu anchor={anchor} point={point} entries={entries} onClose={onClose} align="end" label={`Arrange ${title}`} />}
       {naming && (
         <SectionNameDialog
           title="New section"

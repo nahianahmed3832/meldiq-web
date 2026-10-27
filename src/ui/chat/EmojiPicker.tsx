@@ -83,7 +83,7 @@ export function EmojiPicker({ onPick, community }: { onPick: (emoji: string) => 
     setCurrent(sections.filter((s) => s.offsetTop <= top).pop()?.dataset.section ?? null);
   };
   const customEmoji = community?.list.expressions.filter((e) => e.kind === "emoji") ?? [];
-  const customStickers = community && !community.reactions ? community.list.expressions.filter((e) => e.kind === "sticker") : [];
+  const customStickers = community && !community.reactions && community.onSticker ? community.list.expressions.filter((e) => e.kind === "sticker") : [];
   const available = new Set([...(customEmoji.length || customStickers.length ? [COMMUNITY] : []), ...(recent.length ? [RECENT] : []), ...(groups ?? []).map((g) => g.id)]);
 
   return (

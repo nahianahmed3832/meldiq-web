@@ -7,7 +7,7 @@ describe("invite codes", () => {
     expect(inviteFromScan("griip://invite/ABCD-EFGH-JK23")).toBe("ABCD-EFGH-JK23");
     expect(inviteFromScan("GRIIP://INVITE/abcdefghjk23")).toBe("ABCD-EFGH-JK23");
     expect(inviteFromScan("  abcd-efgh-jk23\n")).toBe("ABCD-EFGH-JK23");
-    expect(inviteLink("ABCD-EFGH-JK23")).toBe("https://meldiq.app/invite/ABCD-EFGH-JK23");
+    expect(inviteLink("ABCD-EFGH-JK23")).toBe("https://web.meldiq.app/invite/ABCD-EFGH-JK23");
     expect(inviteFromScan("https://www.meldiq.app/invite/abcdefghjk23")).toBe("ABCD-EFGH-JK23");
     expect(inviteFromScan("meldiq://invite/ABCD-EFGH-JK23")).toBe("ABCD-EFGH-JK23");
     expect(inviteFromScan(inviteLink("ABCD-EFGH-JK23"))).toBe("ABCD-EFGH-JK23");
@@ -36,5 +36,16 @@ describe("invite codes", () => {
     const wrong = checkInvite("XFG6-3KAJ-EQ30");
     expect(wrong.kind === "invalid" && wrong.reason).toContain("0");
     expect(checkInvite("XFG6-3KAJ-EQ3JX").kind).toBe("invalid");
+  });
+});
+
+describe("invitation links on every Meldiq address (2026-10-27: meldiq.app had no web server)", () => {
+  it("are made on the web app's address and read back from any Meldiq host", () => {
+    expect(inviteLink("ABCD-EFGH-JK23")).toMatch(/^https:\/\/web\.meldiq\.app\/invite\//);
+    for (const host of ["meldiq.app", "www.meldiq.app", "web.meldiq.app", "web.griipbuddy.cloud"]) {
+      expect(inviteFromScan(`https://${host}/invite/ABCD-EFGH-JK23`)).toBe("ABCD-EFGH-JK23");
+    }
+    expect(inviteFromScan("https://evil.example/invite/ABCD-EFGH-JK23")).toBeNull();
+    expect(inviteFromScan("http://meldiq.app/invite/ABCD-EFGH-JK23")).toBeNull();
   });
 });

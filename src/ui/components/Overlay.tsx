@@ -1,5 +1,5 @@
 import { X } from "lucide-react";
-import { type ReactNode, type RefObject, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { type KeyboardEvent as ReactKeyboardEvent, type MouseEvent as ReactMouseEvent, type ReactNode, type RefObject, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
 const FOCUSABLE = 'button:not([disabled]), [href], input:not([disabled]), textarea:not([disabled]), select, [tabindex]:not([tabindex="-1"])';
@@ -130,23 +130,42 @@ interface MenuProps {
   onClose: () => void;
   align?: "start" | "end";
   label: string;
+  /** Opened at the pointer (a right-click): the menu's corner there, kept inside the window. */
+  point?: { x: number; y: number } | null;
 }
 
 /** A popup menu: arrow keys move, Escape closes, focus returns to the button that opened it. */
-export function Menu({ anchor, entries, onClose, align = "start", label }: MenuProps) {
+export function Menu({ anchor, entries, onClose, align = "start", label, point = null }: MenuProps) {
   const ref = useRef<HTMLDivElement>(null);
   const [pos, setPos] = useState<{ top: number; left: number } | null>(null);
   useLayoutEffect(() => {
-    const r = anchor.getBoundingClientRect();
     const el = ref.current;
     const w = el?.offsetWidth ?? 240;
     const h = el?.offsetHeight ?? 200;
+    if (point) {
+      // At the pointer, flipped to the left or upwards where it would leave the window.
+      const left = point.x + w > window.innerWidth - 8 ? Math.max(8, point.x - w) : point.x;
+      const top = point.y + h > window.innerHeight - 8 ? Math.max(8, point.y - h) : point.y;
+      setPos({ top, left });
+      return;
+    }
+    const r = anchor.getBoundingClientRect();
     let left = align === "end" ? r.right - w : r.left;
     left = Math.max(8, Math.min(left, window.innerWidth - w - 8));
     let top = r.bottom + 6;
     if (top + h > window.innerHeight - 8) top = Math.max(8, r.top - h - 6);
     setPos({ top, left });
-  }, [anchor, align]);
+  }, [anchor, align, point]);
+  // A menu belongs to where it was opened: leaving the page or resizing the window closes it.
+  useEffect(() => {
+    const close = () => onClose();
+    window.addEventListener("resize", close);
+    window.addEventListener("popstate", close);
+    return () => {
+      window.removeEventListener("resize", close);
+      window.removeEventListener("popstate", close);
+    };
+  }, [onClose]);
   useEffect(() => {
     const items = () => [...(ref.current?.querySelectorAll<HTMLElement>('[role^="menuitem"]:not([disabled])') ?? [])];
     items()[0]?.focus();
@@ -208,8 +227,64 @@ export function Menu({ anchor, entries, onClose, align = "start", label }: MenuP
   );
 }
 
-/** A button that opens a [Menu] below itself. */
-export function useMenu(): { anchor: HTMLElement | null; open: (el: HTMLElement) => void; close: () => void } {
+/**
+ * A button that opens a [Menu] below itself; [openAt] opens it at the pointer instead (a right-click), and [point]
+ * goes to the Menu.
+ */
+export function useMenu(): {
+  anchor: HTMLElement | null;
+  point: { x: number; y: number } | null;
+  open: (el: HTMLElement) => void;
+  openAt: (el: HTMLElement, e: { clientX: number; clientY: number } | null) => void;
+  close: () => void;
+} {
   const [anchor, setAnchor] = useState<HTMLElement | null>(null);
-  return { anchor, open: setAnchor, close: () => setAnchor(null) };
+  const [point, setPoint] = useState<{ x: number; y: number } | null>(null);
+  return {
+    anchor,
+    point,
+    open: (el) => {
+      setPoint(null);
+      setAnchor(el);
+    },
+    openAt: (el, e) => {
+      // A keyboard-opened menu (no pointer, or the 0,0 that some browsers report) sits by the element instead.
+      setPoint(e && (e.clientX || e.clientY) ? { x: e.clientX, y: e.clientY } : null);
+      setAnchor(el);
+    },
+    close: () => setAnchor(null),
+  };
+}
+
+/**
+ * The browser's own menu stays where it's the expected one: text fields, links, media, and over selected text (copy).
+ * Everywhere else on Meldiq's content a right-click opens Meldiq's menu. (Developer tools stay reachable: nothing here
+ * tries to block them.)
+ */
+export function keepsNativeMenu(target: EventTarget | null): boolean {
+  const el = target as HTMLElement | null;
+  if (el?.closest?.('a[href], input, textarea, select, [contenteditable="true"], img, video, audio, canvas')) return true;
+  const selected = typeof window !== "undefined" ? window.getSelection()?.toString() : "";
+  return !!selected && !!el && !!window.getSelection()?.containsNode(el, true);
+}
+
+/**
+ * Props that open [menu] on right-click (or a two-finger click) at the pointer, and on the keyboard's Menu key or
+ * Shift+F10 by the element, unless the browser's menu is the right one there ([keepsNativeMenu]).
+ */
+export function contextMenuProps(open: (el: HTMLElement, e: { clientX: number; clientY: number } | null) => void) {
+  return {
+    onContextMenu: (e: ReactMouseEvent<HTMLElement>) => {
+      if (keepsNativeMenu(e.target)) return;
+      e.preventDefault();
+      e.stopPropagation();
+      open(e.currentTarget, e);
+    },
+    onKeyDown: (e: ReactKeyboardEvent<HTMLElement>) => {
+      if ((e.key === "ContextMenu" || (e.key === "F10" && e.shiftKey)) && !keepsNativeMenu(e.target)) {
+        e.preventDefault();
+        open(e.currentTarget, null);
+      }
+    },
+  };
 }

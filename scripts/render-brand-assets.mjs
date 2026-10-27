@@ -85,3 +85,38 @@ await sharp({ create: { width: 1200, height: 630, channels: 3, background: TEAL 
   .png({ compressionLevel: 9 })
   .toFile(out("meldiq-og.png"));
 console.log("meldiq-og.png");
+
+/**
+ * Browser-tab favicons (continuation brief v3 §6): Meldling's silhouette alone on a transparent ground, no teal
+ * square. Each pixel's opacity is how far it is from the teal towards the off-white (so the antialiased edge stays
+ * smooth and the teal eyes and mouth become see-through); the colour is one solid tone per variant: deep teal for
+ * light browser chrome, white for dark. Cropped close so the shape reads at 16 px.
+ */
+const SILHOUETTE_PADDING = 0.04;
+const sSide = Math.min(info.width, Math.round(Math.max(x1 - x0, y1 - y0) * (1 + 2 * SILHOUETTE_PADDING)));
+const sClamp = (v) => Math.max(0, Math.min(info.width - sSide, Math.round(v)));
+const sCrop = { left: sClamp((x0 + x1) / 2 - sSide / 2), top: sClamp((y0 + y1) / 2 - sSide / 2), width: sSide, height: sSide };
+const hex = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
+const [tr, tg, tb] = hex(TEAL);
+const [cr, cg, cb] = hex(CREAM);
+const span = Math.hypot(cr - tr, cg - tg, cb - tb);
+const cropped = await sharp(source).extract(sCrop).removeAlpha().raw().toBuffer({ resolveWithObject: true });
+for (const [variant, colour] of [
+  ["light", "#04473e"],
+  ["dark", "#ffffff"],
+]) {
+  const [r, g, b] = hex(colour);
+  const px = Buffer.alloc(cropped.info.width * cropped.info.height * 4);
+  for (let i = 0; i < cropped.info.width * cropped.info.height; i++) {
+    const [pr, pg, pb] = [cropped.data[i * 3], cropped.data[i * 3 + 1], cropped.data[i * 3 + 2]];
+    const t = Math.max(0, Math.min(1, Math.hypot(pr - tr, pg - tg, pb - tb) / span));
+    px.set([r, g, b, Math.round(255 * t)], i * 4);
+  }
+  const shape = sharp(px, { raw: { width: cropped.info.width, height: cropped.info.height, channels: 4 } }).png();
+  const master = await shape.toBuffer();
+  for (const size of [16, 32, 48, 192]) {
+    const file = `favicon-${variant}-${size}.png`;
+    await sharp(master).resize(size, size, { kernel: "lanczos3" }).png({ compressionLevel: 9 }).toFile(out(file));
+    console.log(file);
+  }
+}

@@ -280,7 +280,10 @@ function CategorySection(props: {
   const m = useMenu();
   const open = (e: MouseEvent<HTMLElement>) => {
     e.preventDefault();
-    m.open(e.currentTarget.closest(".side-section-row") as HTMLElement);
+    const row = e.currentTarget.closest(".side-section-row") as HTMLElement;
+    // A right-click opens the menu at the pointer; the ⋯ button, below itself.
+    if (e.type === "contextmenu") m.openAt(row, e);
+    else m.open(row);
   };
   return (
     <section className="side-section" aria-label={title}>
@@ -301,7 +304,7 @@ function CategorySection(props: {
           <MoreHorizontal size={15} />
         </button>
       </div>
-      {m.anchor && <Menu anchor={m.anchor} align="end" label={title} onClose={m.close} entries={entriesOf(menu, CATEGORY_ITEM, onPick, ["newChannel", "delete"])} />}
+      {m.anchor && <Menu anchor={m.anchor} point={m.point} align="end" label={title} onClose={m.close} entries={entriesOf(menu, CATEGORY_ITEM, onPick, ["newChannel", "delete"])} />}
       <div className="side-channels">{children}</div>
     </section>
   );
@@ -340,7 +343,9 @@ const ChannelItem = memo(function ChannelItem({
   const open = (e: MouseEvent<HTMLElement>) => {
     e.preventDefault();
     e.stopPropagation();
-    m.open(e.currentTarget.closest(".side-row") as HTMLElement);
+    const row = e.currentTarget.closest(".side-row") as HTMLElement;
+    if (e.type === "contextmenu") m.openAt(row, e);
+    else m.open(row);
   };
   const go = async (e: MouseEvent<HTMLAnchorElement>) => {
     if (ch.joined) return;
@@ -379,7 +384,9 @@ const ChannelItem = memo(function ChannelItem({
       <button className="row-more" aria-label={`More for ${ch.name}`} aria-haspopup="menu" onClick={open}>
         <MoreHorizontal size={16} />
       </button>
-      {m.anchor && <Menu anchor={m.anchor} align="end" label={ch.name} onClose={m.close} entries={entriesOf(menu, CHANNEL_ITEM, onPick, ["edit", "moveTo", "archive", "restore", "delete"])} />}
+      {m.anchor && (
+        <Menu anchor={m.anchor} point={m.point} align="end" label={ch.name} onClose={m.close} entries={entriesOf(menu, CHANNEL_ITEM, onPick, ["edit", "moveTo", "archive", "restore", "delete"])} />
+      )}
       {people.length > 0 && (
         <div className="voice-channel-people" aria-label={`${people.length} in ${ch.name}`}>
           {people.slice(0, 8).map((u) => (

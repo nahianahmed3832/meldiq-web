@@ -13,7 +13,7 @@ import { NewMessageDialog } from "../dialogs/NewMessageDialog";
 import { CreateWorkspaceDialog, JoinWorkspaceDialog } from "../dialogs/WorkspaceDialogs";
 import { SearchDialog } from "../dialogs/SearchDialog";
 import { CreateCommunityDialog } from "../community/CreateCommunityDialog";
-import { JOIN_INVITE_EVENT } from "../chat/inAppLinks";
+import { JOIN_INVITE_EVENT, openInApp } from "../chat/inAppLinks";
 import { noteGuideVisit } from "../../sync/guide";
 import { GUIDE_EVENT } from "../community/GuideOnboarding";
 import { OPEN_PROFILE_EVENT, ProfileDialog, type ProfileRequest } from "../people/ProfileDialog";
@@ -30,7 +30,7 @@ import { TabBar } from "./TabBar";
 import { TopBar } from "./TopBar";
 import { TabIndicators } from "./TabIndicators";
 import { AddMembersDialog } from "../workspace/AddMembersDialog";
-import { takePendingInvite } from "../../application/pendingInvite";
+import { takePendingInvite, takePendingMessage } from "../../application/pendingInvite";
 import { type DiscordReturn, takeDiscordReturn } from "../../application/discordReturn";
 import { accountSelection, rememberSelection } from "../../sync/workspaceSelection";
 
@@ -47,7 +47,7 @@ export type ShellDialog =
   | { kind: "joinWorkspace"; code?: string }
   | { kind: "connections" }
   | { kind: "requests" }
-  | { kind: "addMembers" }
+  | { kind: "addMembers"; orgId?: string }
   | null;
 
 /**
@@ -67,6 +67,7 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
 
   const orgId = prefs.orgId && orgIds.includes(prefs.orgId) ? prefs.orgId : (orgIds[0] ?? null);
   const orgName = useOrbit((s) => s.orgs.find((o) => o.id === orgId)?.name ?? "");
+  const orgs = useOrbit((s) => s.orgs, shallowEqual);
   useEffect(() => {
     if (orgId !== prefs.orgId && synced) setPrefs({ orgId });
   }, [orgId, prefs.orgId, synced]);
@@ -129,10 +130,13 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
     if (!synced) return;
     const code = takePendingInvite();
     if (code) return setDialog({ kind: "joinWorkspace", code });
+    // A message link opened in this tab (/m/<conversation>/<message>): that conversation, at that message.
+    const message = takePendingMessage();
+    if (message) openInApp(engine, `${location.origin}${message}`);
     // Back from Discord after adding Meldiq's bot (or cancelling): the import picks up where it left off.
     const discord = takeDiscordReturn();
     if (discord) setDialog({ kind: "createWorkspace", discord });
-  }, [synced]);
+  }, [synced, engine]);
 
   // An invite link clicked inside a chat opens Join with its code (batch B4b).
   useEffect(() => {
@@ -222,7 +226,9 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
         (communities ? <CreateCommunityDialog discord={dialog.discord ?? null} onClose={() => setDialog(null)} /> : <CreateWorkspaceDialog onClose={() => setDialog(null)} />)}
       {dialog?.kind === "connections" && <ConnectionsDialog onClose={() => setDialog(null)} />}
       {dialog?.kind === "requests" && <MessageRequestsDialog onClose={() => setDialog(null)} />}
-      {dialog?.kind === "addMembers" && orgId && <AddMembersDialog orgId={orgId} orgName={orgName} onClose={() => setDialog(null)} onAdded={() => undefined} />}
+      {dialog?.kind === "addMembers" && (dialog.orgId ?? orgId) && (
+        <AddMembersDialog orgId={(dialog.orgId ?? orgId)!} orgName={orgs.find((o) => o.id === (dialog.orgId ?? orgId))?.name ?? orgName} onClose={() => setDialog(null)} onAdded={() => undefined} />
+      )}
       {profile && (
         <ProfileDialog
           key={profile.userId}

@@ -113,10 +113,11 @@ function InAppSoundSettings() {
   const prefs = usePrefs();
   const t = useT();
   const [state, setState] = useState<ChimeState>(chimeState());
+  const [result, setResult] = useState<"played" | "blocked" | null>(null);
   const test = async () => {
     const now = await unlockChime();
     setState(now);
-    if (now === "ready") playChime(Math.max(prefs.soundVolume, 1));
+    setResult(now === "ready" && (await playChime(Math.max(prefs.soundVolume, 1))) ? "played" : "blocked");
   };
   return (
     <>
@@ -147,6 +148,13 @@ function InAppSoundSettings() {
               {t("nt_test_sound")}
             </button>
           </div>
+          {result && (
+            <small className={result === "played" ? "faint" : "field-error"} role="status" style={{ flexBasis: "100%" }}>
+              {result === "played"
+                ? "Played. If you heard nothing, check this site isn't muted in the browser tab and the computer's volume."
+                : "The browser blocked sound. Allow sound for this site in the browser's site settings, then try again."}
+            </small>
+          )}
         </div>
       )}
     </>
