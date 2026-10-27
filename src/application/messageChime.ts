@@ -1,7 +1,8 @@
 /**
  * The in-app sound for a new message (community-first brief §D): a short two-note chime made with Web Audio (no sound
  * file), for messages the notification pipeline lets through (engine.notifyIncoming: not yours, not the conversation
- * you're reading, not muted or paused).
+ * you're reading, not muted or paused). Since 2026-10-27 it plays with system notifications too (they're then shown
+ * silent): browsers on macOS and Windows often show web notifications without any sound, which is what people heard.
  *
  * - Browsers allow sound only after the person has interacted with the page: the audio context is created on their first
  *   click or key press here, never at load. Until then [state] is "locked" and Settings › Notifications says so.
@@ -54,9 +55,22 @@ export async function unlockChime(): Promise<ChimeState> {
   return chimeState();
 }
 
-/** Plays the chime at [volume] (0–100) unless another chime played within the gap, in this tab or another. */
-export function playChime(volume: number): void {
-  if (!ctx || ctx.state !== "running" || volume <= 0) return;
+/**
+ * Plays the chime at [volume] (0–100) unless another chime played within the gap, in this tab or another. Answers
+ * whether it could: false while sound is locked (no click in this tab yet) or the browser keeps it blocked. A context
+ * the browser suspended (after sleep, or a long time in the background) is resumed first; that's allowed once the
+ * page has been interacted with.
+ */
+export async function playChime(volume: number): Promise<boolean> {
+  if (!ctx || volume <= 0) return false;
+  if (ctx.state !== "running") {
+    try {
+      await ctx.resume();
+    } catch {
+      /* still suspended */
+    }
+    if ((ctx.state as AudioContextState) !== "running") return false;
+  }
   const locks = typeof navigator !== "undefined" ? navigator.locks : undefined;
   if (locks) {
     void locks
@@ -66,10 +80,10 @@ export function playChime(volume: number): void {
         await new Promise((r) => setTimeout(r, CHIME_GAP_MS));
       })
       .catch(() => undefined);
-    return;
+    return true;
   }
-  if (!claimGap(Date.now())) return;
-  sound(volume);
+  if (claimGap(Date.now())) sound(volume);
+  return true;
 }
 
 /** Without Web Locks: the gap through localStorage (best effort; private windows just play). */

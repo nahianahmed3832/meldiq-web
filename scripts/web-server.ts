@@ -15,6 +15,7 @@ import fs from "node:fs";
 import http from "node:http";
 import net from "node:net";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 const root = path.resolve(process.argv[2] ?? "dist");
 const port = Number(process.argv[3] ?? 5181);
@@ -87,6 +88,11 @@ function resolve(urlPath: string): { file: string; cache: string } | null {
 const server = http.createServer((req, res) => {
   const url = new URL(req.url ?? "/", `http://${origin}`);
   if (/^\/v[12]\//.test(url.pathname)) return proxy(req, res, api);
+  // Invitation links get the small invitation page, as nginx answers them, in development too.
+  if (app && url.pathname.startsWith("/invite/")) {
+    res.writeHead(200, { ...Object.fromEntries(SECURITY), "content-type": "text/html; charset=utf-8", "cache-control": "no-cache" });
+    return void fs.createReadStream(path.join(path.dirname(fileURLToPath(import.meta.url)), "..", "public", "invite.html")).pipe(res);
+  }
   if (app) return proxy(req, res, app);
   const found = resolve(url.pathname);
   if (!found) {

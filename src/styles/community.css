@@ -467,19 +467,36 @@ img.custom-sticker {
     0 0 0 2px var(--rail),
     0 0 0 4px var(--c-accent);
 }
-/* The banner behind the community's name at the top of its channel list (Discord's server banner). */
-.side-head.has-banner {
-  min-height: 112px;
-  align-items: flex-start;
+/* Under the community's name (the reference layout): its banner, then Invite people in the community's accent. */
+.community-top {
+  display: grid;
+  gap: 10px;
+  padding: 0 0 10px;
+  border-bottom: 1px solid var(--hairline);
+}
+.community-banner {
+  height: 112px;
   background-size: cover;
   background-position: center;
 }
-.side-head.has-banner .community-switch {
-  color: #fff;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+.community-top:not(:has(.community-banner)) {
+  padding-top: 10px;
 }
-.side-head.has-banner .community-switch svg {
-  color: #fff;
+.community-invite {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  margin: 0 10px;
+  border-radius: var(--r-md);
+  background: var(--c-accent-soft, var(--accent-soft));
+  color: var(--c-accent-text, var(--accent-text));
+  font-size: var(--fs-lg);
+  font-weight: 700;
+}
+.community-invite:hover {
+  filter: brightness(1.12);
 }
 
 /* Community settings › Appearance: the preview, swatches and banner controls. */

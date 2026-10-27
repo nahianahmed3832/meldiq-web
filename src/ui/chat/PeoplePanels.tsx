@@ -1,15 +1,16 @@
-import { CircleUserRound, UsersRound, X } from "lucide-react";
+import { CircleUserRound, Copy, MessageSquare, UserRound, UsersRound, X } from "lucide-react";
 import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import type { Conversation, Member } from "../../api/schemas";
 import { useEngine, useOrbit } from "../../application/orbit";
 import { setPrefs, usePrefs } from "../../application/prefs";
 import { navigate, type Route } from "../../application/router";
 import type { Engine } from "../../sync/engine";
-import { userProfile } from "../../sync/account";
+import { startDirect, userProfile } from "../../sync/account";
 import { presenceWords } from "../../sync/social";
 import { directory } from "../../sync/workspaces";
 import { nameTone, toneOf } from "../components/Avatar";
 import { UserAvatar } from "../components/OrgAvatar";
+import { contextMenuProps, Menu, type MenuEntry, useMenu } from "../components/Overlay";
 import { dmPeer, relative } from "../format";
 import { openProfile } from "../people/ProfileDialog";
 import { useMembers } from "./ConversationDetails";
@@ -117,22 +118,54 @@ export function MemberListPanel({ c, onClose }: { c: Conversation; onClose: () =
   );
 }
 
+/** One person in the member list: their profile on click; a right-click (or the Menu key) opens their menu. */
 function MemberRow({ m, away, color, orgId }: { m: Member; away: boolean; color: string | null; orgId: string | null }) {
+  const engine = useEngine();
+  const me = useOrbit((s) => s.me?.userId);
+  const menu = useMenu();
   const status = [m.statusEmoji, m.statusText].filter(Boolean).join(" ");
+  const entries: MenuEntry[] = [
+    { label: "View profile", icon: <UserRound size={16} />, onSelect: () => openProfile(m.id, m.displayName, { orgId, anchor: menu.anchor }) },
+    ...(m.id !== me
+      ? [
+          {
+            label: `Message ${m.displayName}`,
+            icon: <MessageSquare size={16} />,
+            onSelect: () =>
+              void startDirect(engine, m.id)
+                .then((id) => navigate({ section: "dms", conversationId: id }))
+                .catch(() => engine.notice("error", "Couldn't open the conversation.")),
+          },
+        ]
+      : []),
+    {
+      label: "Copy username",
+      icon: <Copy size={16} />,
+      onSelect: () => {
+        void navigator.clipboard?.writeText(`@${m.username}`).catch(() => undefined);
+        engine.notice("info", "Username copied.");
+      },
+    },
+  ];
   return (
-    <button
-      className={`member-row${away ? " away" : ""}`}
-      onClick={(e) => openProfile(m.id, m.displayName, { orgId, anchor: e.currentTarget })}
-      aria-label={`${m.displayName}${away ? ", offline" : ""}: profile`}
-    >
-      <UserAvatar userId={m.id} name={m.displayName} colorIndex={m.avatarColor} photoRev={m.photoRev} size={40} online={away ? null : true} presence={away ? null : m.presence} decorative />
-      <span className="lines">
-        <span className={`member-name ellipsis${color ? "" : ` ${nameTone(m.avatarColor)}`}`} style={color ? { color } : undefined}>
-          {m.displayName}
+    <>
+      <button
+        className={`member-row${away ? " away" : ""}`}
+        onClick={(e) => openProfile(m.id, m.displayName, { orgId, anchor: e.currentTarget })}
+        aria-label={`${m.displayName}${away ? ", offline" : ""}: profile`}
+        aria-haspopup="menu"
+        {...contextMenuProps(menu.openAt)}
+      >
+        <UserAvatar userId={m.id} name={m.displayName} colorIndex={m.avatarColor} photoRev={m.photoRev} size={40} online={away ? null : true} presence={away ? null : m.presence} decorative />
+        <span className="lines">
+          <span className={`member-name ellipsis${color ? "" : ` ${nameTone(m.avatarColor)}`}`} style={color ? { color } : undefined}>
+            {m.displayName}
+          </span>
+          {status && <small className="ellipsis">{status}</small>}
         </span>
-        {status && <small className="ellipsis">{status}</small>}
-      </span>
-    </button>
+      </button>
+      {menu.anchor && <Menu anchor={menu.anchor} point={menu.point} label={m.displayName} onClose={menu.close} entries={entries} />}
+    </>
   );
 }
 

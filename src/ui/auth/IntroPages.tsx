@@ -64,38 +64,45 @@ export function IntroPages({ onDone }: { onDone: () => void }) {
   };
   return createPortal(
     <div className="intro" role="dialog" aria-modal="true" aria-label={t("intro_label")}>
-      <header className="intro-head">
-        <BrandMark size={32} />
-        <span className="grow" />
-        {/* The language can be chosen before anything else (2026-10-23). */}
-        <LanguagePicker />
-        <button className="btn btn-ghost btn-sm" onClick={done}>
-          {t("intro_skip")}
-        </button>
-      </header>
-      <section className="intro-page" aria-live="polite" aria-label={t("intro_page", { n: at + 1, total: PAGES.length })}>
-        <span className="intro-art" aria-hidden="true">
-          {page.icon}
-        </span>
-        {page.soon && <span className="tag">Coming soon</span>}
-        <h1>{t(page.title)}</h1>
-        <p>{t(page.body)}</p>
-      </section>
-      <div className="intro-dots" aria-hidden="true">
-        {PAGES.map((p, i) => (
-          <span key={p.title} className={i === at ? "on" : ""} />
-        ))}
-      </div>
-      <footer className="intro-foot">
-        {at > 0 && (
-          <button className="btn btn-secondary btn-lg" onClick={() => setAt(at - 1)}>
-            {t("common_back")}
+      {/* Wide screens: Meldling and this page's picture on the brand's ground, the words and buttons beside it. */}
+      <aside className="intro-visual" aria-hidden="true">
+        <img src="/meldling-256.png" alt="" width={148} height={148} />
+        <span className="intro-visual-art">{page.icon}</span>
+      </aside>
+      <div className="intro-main">
+        <header className="intro-head">
+          <BrandMark size={32} />
+          <span className="grow" />
+          {/* The language can be chosen before anything else (2026-10-23). */}
+          <LanguagePicker />
+          <button className="btn btn-ghost btn-sm" onClick={done}>
+            {t("intro_skip")}
           </button>
-        )}
-        <button className="btn btn-primary btn-lg grow" onClick={() => (last ? done() : setAt(at + 1))} autoFocus>
-          {last ? t("intro_start") : t("intro_next")}
-        </button>
-      </footer>
+        </header>
+        <section className="intro-page" aria-live="polite" aria-label={t("intro_page", { n: at + 1, total: PAGES.length })}>
+          <span className="intro-art" aria-hidden="true">
+            {page.icon}
+          </span>
+          {page.soon && <span className="tag">Coming soon</span>}
+          <h1>{t(page.title)}</h1>
+          <p>{t(page.body)}</p>
+        </section>
+        <div className="intro-dots" aria-hidden="true">
+          {PAGES.map((p, i) => (
+            <span key={p.title} className={i === at ? "on" : ""} />
+          ))}
+        </div>
+        <footer className="intro-foot">
+          {at > 0 && (
+            <button className="btn btn-secondary btn-lg" onClick={() => setAt(at - 1)}>
+              {t("common_back")}
+            </button>
+          )}
+          <button className="btn btn-primary btn-lg grow" onClick={() => (last ? done() : setAt(at + 1))} autoFocus>
+            {last ? t("intro_start") : t("intro_next")}
+          </button>
+        </footer>
+      </div>
     </div>,
     document.body,
   );

@@ -1,5 +1,5 @@
 {
-  "version": "0.44.0",
+  "version": "0.45.0",
   "routes": [
     {
       "method": "GET",
@@ -20,6 +20,22 @@
     {
       "method": "POST",
       "path": "/v1/queue/ack"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/gifs/status"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/gifs/search"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/gifs/trending"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/gifs/media"
     },
     {
       "method": "GET",
@@ -348,6 +364,38 @@
     {
       "method": "GET",
       "path": "/v1/users/{id}/photo"
+    },
+    {
+      "method": "PUT",
+      "path": "/v1/users/me/avatar-media"
+    },
+    {
+      "method": "DELETE",
+      "path": "/v1/users/me/avatar-media"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/users/{id}/avatar-media"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/users/{id}/avatar-poster"
+    },
+    {
+      "method": "PUT",
+      "path": "/v1/users/me/profile-banner"
+    },
+    {
+      "method": "DELETE",
+      "path": "/v1/users/me/profile-banner"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/users/{id}/profile-banner"
+    },
+    {
+      "method": "PUT",
+      "path": "/v1/users/me/profile-style"
     },
     {
       "method": "GET",
@@ -1311,6 +1359,12 @@
     ],
     "discord_not_configured": [
       409
+    ],
+    "gifs_not_configured": [
+      503
+    ],
+    "gif_provider_unavailable": [
+      502
     ],
     "discord_unreachable": [
       502

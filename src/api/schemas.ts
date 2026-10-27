@@ -221,7 +221,35 @@ export const zActivity = z.object({
 });
 export type Activity = z.infer<typeof zActivity>;
 
+/** Profile style ids the web draws (API 0.45.0, server PROFILE_DECORATIONS / PROFILE_EFFECTS); unknown ones are dropped. */
+export const PROFILE_DECORATIONS = ["aurora", "ember", "frost", "neon", "sakura", "pixel"] as const;
+export const PROFILE_EFFECTS = ["sparkles", "glow", "stars", "bubbles"] as const;
+export const zAvatarMedia = z
+  .object({ kind: z.enum(["gif", "webp", "video"]), rev: z.number().int() })
+  .nullish()
+  .catch(null)
+  .transform((v) => v ?? null);
+export const zProfileBanner = z
+  .object({ kind: z.enum(["jpeg", "gif", "webp"]), rev: z.number().int() })
+  .nullish()
+  .catch(null)
+  .transform((v) => v ?? null);
+export const zProfileStyle = z
+  .object({
+    decoration: z.enum(PROFILE_DECORATIONS).nullable().catch(null),
+    effect: z.enum(PROFILE_EFFECTS).nullable().catch(null),
+    accent: zAccent,
+  })
+  .nullish()
+  .catch(null)
+  .transform((v) => v ?? null);
+export type ProfileStyle = NonNullable<z.infer<typeof zProfileStyle>>;
+
 export const zProfile = z.object({
+  /** API 0.45.0: an animated avatar, a banner and a style (absent on older servers or when not shown to you). */
+  avatarMedia: zAvatarMedia,
+  profileBanner: zProfileBanner,
+  profileStyle: zProfileStyle,
   id: z.string(),
   username: z.string(),
   displayName: z.string(),

@@ -7,7 +7,8 @@ import { startDirect, userProfile } from "../../sync/account";
 import { block, blockedIds, unblock } from "../../sync/profile";
 import { acceptConnection, connect, connections, connectionState, invitableCommunities, inviteFromProfile, presenceWords, removeConnection } from "../../sync/social";
 import { ReportDialog } from "../chat/ReportDialog";
-import { UserAvatar } from "../components/OrgAvatar";
+import { usePhoto } from "../components/photos";
+import { ProfileEffect, StyledAvatar } from "./ProfileStyle";
 import { Dialog, Menu, type MenuEntry, useMenu } from "../components/Overlay";
 import { toneOf } from "../components/Avatar";
 import { directory } from "../../sync/workspaces";
@@ -118,6 +119,9 @@ export function ProfileDialog({ userId, fallbackName, orgId = null, near = null,
     }
   };
   const name = profile?.displayName ?? fallbackName;
+  // API 0.45.0: their banner (a still or animated image), else their accent or avatar colour.
+  const bannerKind = profile?.profileBanner?.kind;
+  const bannerUrl = usePhoto("profileBanner", userId, profile?.profileBanner?.rev, bannerKind === "gif" ? "image/gif" : bannerKind === "webp" ? "image/webp" : "image/jpeg");
 
   if (view === "report") {
     const communities = orgs.map((o) => ({ id: o.id, name: o.name }));
@@ -181,7 +185,8 @@ export function ProfileDialog({ userId, fallbackName, orgId = null, near = null,
       near={near}
       header={
         <>
-          <div className="profile-pop-banner" style={{ background: toneOf(profile?.avatarColor ?? 0) }}>
+          <div className="profile-pop-banner" style={bannerUrl ? { backgroundImage: `url(${bannerUrl})` } : { background: profile?.profileStyle?.accent ?? toneOf(profile?.avatarColor ?? 0) }}>
+            <ProfileEffect effect={profile?.profileStyle?.effect} />
             {!self && more.length > 0 && (
               <button className="icon-btn profile-pop-btn" onClick={(e) => moreMenu.open(e.currentTarget)} aria-label={`More for ${name}`} aria-haspopup="menu" aria-expanded={!!moreMenu.anchor}>
                 <MoreHorizontal size={18} />
@@ -193,15 +198,16 @@ export function ProfileDialog({ userId, fallbackName, orgId = null, near = null,
           </div>
           {profile && (
             <div className="profile-pop-avatar">
-              <UserAvatar
+              <StyledAvatar
                 userId={profile.id}
                 name={profile.displayName}
                 colorIndex={profile.avatarColor}
                 photoRev={profile.photoRev}
+                media={profile.avatarMedia}
+                decoration={profile.profileStyle?.decoration ?? null}
                 size={92}
                 online={profile.online}
                 presence={profile.presence}
-                decorative
               />
               {hasConnections && !self && state === "none" && !blocked && (
                 <button

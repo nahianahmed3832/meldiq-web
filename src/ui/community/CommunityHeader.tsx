@@ -5,11 +5,11 @@ import {
   Check,
   CheckCheck,
   ChevronDown,
-  Compass,
   Copy,
   EyeOff,
   Inbox,
   FolderPlus,
+  Hash,
   LogIn,
   LogOut,
   PenSquare,
@@ -25,7 +25,6 @@ import { shallowEqual, useEngine, useOrbit } from "../../application/orbit";
 import { setPrefs, usePrefs } from "../../application/prefs";
 import { navigate } from "../../application/router";
 import { leaveWorkspace } from "../../sync/workspaces";
-import { OrgAvatar } from "../components/OrgAvatar";
 import { Dialog, Menu, type MenuEntry, useMenu } from "../components/Overlay";
 import { members } from "../format";
 import { markAllReadTargets } from "../selectors";
@@ -58,22 +57,15 @@ export function CommunityHeader({ orgId, perms, onDialog }: { orgId: string | nu
   const [dialog, setDialog] = useState<HeaderDialog>(null);
   const hideMuted = orgId ? prefs.collapsed.includes(hideMutedKey(orgId)) : false;
 
-  const entries: MenuEntry[] = [
-    { heading: "Your communities" },
-    ...orgs.map((o) => ({
-      label: o.name,
-      icon: <OrgAvatar orgId={o.id} name={o.name} photoRev={o.photoRev} size={22} />,
-      checked: o.id === orgId,
-      onSelect: () => setPrefs({ orgId: o.id }),
-    })),
-    ...(orgs.length === 0 ? [{ custom: <div className="side-quiet">You're not in a community yet.</div> }] : []),
-    "separator",
-  ];
+  // The reference's server menu: invite first, then this community's settings and your view of it, leave and copy its
+  // id last. Switching, creating and discovering communities live in the rail only (no second copy here).
+  const entries: MenuEntry[] = [];
   if (org && orgId) {
     if (perms.canInvite) {
       // Community-first brief §F: add people you know, or make a link (the server decides who can be added directly).
       entries.push({ label: "Invite people", icon: <UserPlus size={16} />, onSelect: () => onDialog({ kind: "addMembers" }) });
       entries.push({ label: "Manage invitations", icon: <Ticket size={16} />, onSelect: () => navigate({ section: "workspace", workspacePage: "invitations" }) });
+      entries.push("separator");
     }
     if (features.includes("community-preferences")) entries.push({ label: "Notification settings…", icon: <Bell size={16} />, onSelect: () => setDialog("notifications") });
     entries.push({ label: "Community settings", icon: <Settings2 size={16} />, onSelect: () => navigate({ section: "workspace", workspacePage: "overview" }) });
@@ -97,21 +89,31 @@ export function CommunityHeader({ orgId, perms, onDialog }: { orgId: string | nu
       checked: hideMuted,
       onSelect: () => setPrefs({ collapsed: hideMuted ? prefs.collapsed.filter((k) => k !== hideMutedKey(orgId)) : [...prefs.collapsed, hideMutedKey(orgId)] }),
     });
+    if (orgs.length > 1 && features.includes("community-preferences")) entries.push({ label: "Arrange communities…", icon: <ArrowUpDown size={16} />, onSelect: () => setDialog("arrange") });
+    entries.push({ label: "Join another with a code", icon: <LogIn size={16} />, onSelect: () => onDialog({ kind: "joinWorkspace" }) });
+    entries.push("separator");
+    if (org.myRole !== "OWNER") entries.push({ label: "Leave community…", icon: <LogOut size={16} />, danger: true, onSelect: () => setDialog("leave") });
     entries.push({
-      label: "Copy name",
+      label: "Copy community name",
       icon: <Copy size={16} />,
       onSelect: () => {
         void navigator.clipboard?.writeText(org.name).catch(() => undefined);
         engine.notice("info", "Community name copied.");
       },
     });
+    entries.push({
+      label: "Copy community ID",
+      icon: <Hash size={16} />,
+      onSelect: () => {
+        void navigator.clipboard?.writeText(org.id).catch(() => undefined);
+        engine.notice("info", "Community ID copied.");
+      },
+    });
+  } else {
+    entries.push({ custom: <div className="side-quiet">You're not in a community yet.</div> });
+    entries.push({ label: "Start a community", icon: <Plus size={16} />, onSelect: () => onDialog({ kind: "createWorkspace" }) });
+    entries.push({ label: "Join with a code", icon: <LogIn size={16} />, onSelect: () => onDialog({ kind: "joinWorkspace" }) });
   }
-  if (orgs.length > 1 && features.includes("community-preferences")) entries.push({ label: "Arrange communities…", icon: <ArrowUpDown size={16} />, onSelect: () => setDialog("arrange") });
-  entries.push("separator");
-  if (features.includes("community-discovery")) entries.push({ label: "Discover communities", icon: <Compass size={16} />, onSelect: () => navigate({ section: "discover" }) });
-  entries.push({ label: "Start a community", icon: <Plus size={16} />, onSelect: () => onDialog({ kind: "createWorkspace" }) });
-  entries.push({ label: "Join with a code", icon: <LogIn size={16} />, onSelect: () => onDialog({ kind: "joinWorkspace" }) });
-  if (org && org.myRole !== "OWNER") entries.push("separator", { label: "Leave community…", icon: <LogOut size={16} />, danger: true, onSelect: () => setDialog("leave") });
 
   return (
     <>
@@ -136,7 +138,7 @@ export function CommunityHeader({ orgId, perms, onDialog }: { orgId: string | nu
   );
 }
 
-function LeaveDialog({ orgId, name, onClose }: { orgId: string; name: string; onClose: () => void }) {
+export function LeaveDialog({ orgId, name, onClose }: { orgId: string; name: string; onClose: () => void }) {
   const engine = useEngine();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);

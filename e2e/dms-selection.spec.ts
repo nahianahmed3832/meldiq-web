@@ -35,7 +35,9 @@ test("in DMs no community is selected, and a community in the rail opens its cha
   await expect(page).toHaveURL(/\/dms$/);
   await expect(selected).toHaveCount(0);
   await expect(sidebar.getByRole("heading", { name: "Direct messages", level: 2 })).toBeVisible();
-  await expect(sidebar).not.toContainText("Rail Lab");
+  // No community's header or channels here (the Invite friends card may name the community it invites to).
+  await expect(sidebar.getByRole("button", { name: /^Community: Rail Lab/ })).toHaveCount(0);
+  await expect(sidebar.getByRole("region", { name: "Invite friends" })).toContainText("Rail Lab");
   await expect(sidebar).toContainText("Bob Chen");
 
   await community.click();

@@ -11,7 +11,7 @@ import { cachedMedia, keepMedia } from "../../store/mediaCache";
 const MAX_KEPT = 300;
 const cache = new Map<string, Promise<string | null>>();
 
-function load(engine: Engine, path: string, key: string): Promise<string | null> {
+function load(engine: Engine, path: string, key: string, mime = "image/jpeg"): Promise<string | null> {
   const hit = cache.get(key);
   if (hit) return hit;
   // Kept in this browser between visits, one entry per photo revision (a new photo has a new revision).
@@ -22,7 +22,7 @@ function load(engine: Engine, path: string, key: string): Promise<string | null>
       void keepMedia(`photo:${key}`, b);
       return b;
     })
-    .then((b) => URL.createObjectURL(new Blob([new Uint8Array(b)], { type: "image/jpeg" })))
+    .then((b) => URL.createObjectURL(new Blob([new Uint8Array(b)], { type: mime })))
     .catch(() => null);
   cache.set(key, p);
   if (cache.size > MAX_KEPT) {
@@ -41,19 +41,23 @@ const PHOTO_PATH = {
   banner: (id: string) => `/v1/orgs/${encodeURIComponent(id)}/banner`,
   /** The banner of the community an invitation code leads to. */
   inviteBanner: (code: string) => `/v1/invites/${encodeURIComponent(code)}/banner`,
+  /** API 0.45.0: a person's animated avatar, its still frame (video avatars), and their profile banner. */
+  avatarMedia: (id: string) => `/v1/users/${encodeURIComponent(id)}/avatar-media`,
+  avatarPoster: (id: string) => `/v1/users/${encodeURIComponent(id)}/avatar-poster`,
+  profileBanner: (id: string) => `/v1/users/${encodeURIComponent(id)}/profile-banner`,
 };
 
 /** The photo (or banner) of a user, group or community at revision [rev], or null (none, not allowed, or still loading). */
-export function usePhoto(kind: keyof typeof PHOTO_PATH, id: string, rev: number | null | undefined): string | null {
+export function usePhoto(kind: keyof typeof PHOTO_PATH, id: string, rev: number | null | undefined, mime?: string): string | null {
   const engine = useEngine();
   const [url, setUrl] = useState<string | null>(null);
   useEffect(() => {
     if (!rev) return setUrl(null);
     let live = true;
-    void load(engine, PHOTO_PATH[kind](id), `${kind}:${id}:${rev}`).then((u) => live && setUrl(u));
+    void load(engine, PHOTO_PATH[kind](id), `${kind}:${id}:${rev}`, mime).then((u) => live && setUrl(u));
     return () => {
       live = false;
     };
-  }, [engine, kind, id, rev]);
+  }, [engine, kind, id, rev, mime]);
   return url;
 }

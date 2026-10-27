@@ -123,6 +123,13 @@ export class LocalStore {
     await this.db.delete("kv", key);
   }
 
+  /** Every kept value whose key starts with [prefix] (e.g. "transfer:"), with its key. */
+  async valuesWithPrefix<T>(prefix: string): Promise<{ key: string; value: T }[]> {
+    const range = IDBKeyRange.bound(prefix, `${prefix}\uffff`);
+    const [keys, values] = await Promise.all([this.db.getAllKeys("kv", range), this.db.getAll("kv", range)]);
+    return keys.map((key, i) => ({ key: String(key), value: values[i] as T }));
+  }
+
   // ───── messages ─────
   async message(id: string): Promise<StoredMessage | null> {
     return (await this.db.get("messages", id)) ?? null;

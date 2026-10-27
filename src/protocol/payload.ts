@@ -55,6 +55,19 @@ const zPoll = z.object({
 /** A sticker reference into the shared catalogue (docs/STICKERS.md); the text carries the readable fallback. */
 const zSticker = z.object({ pack: z.string().max(64), id: z.string().max(64) });
 /**
+ * A GIF from the server's GIF search (API 0.45.0, docs/GIFS.md): the provider's media address (shown through the
+ * server's /v1/gifs/media, never fetched directly), its size and a title. The message's text is that address too, so
+ * apps that don't show GIFs show the link.
+ */
+const zGif = z.object({
+  provider: z.enum(["tenor", "giphy"]),
+  id: z.string().max(64),
+  url: z.string().max(2048),
+  width: z.number().int().min(1).max(4096),
+  height: z.number().int().min(1).max(4096),
+  title: opt(z.string().max(200)),
+});
+/**
  * Batch B9: a community's emoji or sticker as a message names it (android CustomEmojiRef): which one ([id] in community
  * [orgId]), its name, and the image's SHA-256, so the image is shown only if the downloaded one is the one meant.
  */
@@ -90,6 +103,7 @@ export const zPayload = z.object({
   link: opt(zLink),
   poll: opt(zPoll),
   sticker: opt(zSticker),
+  gif: opt(zGif),
   /** A "vote" control: the chosen option ids of the poll in [target] (empty takes the vote back). */
   choices: opt(z.array(z.string().max(32)).max(20)),
   /** A forum post's title (communities); [text] then starts with the title and a blank line. Omitted elsewhere. */
@@ -105,6 +119,7 @@ export type Payload = z.infer<typeof zPayload>;
 export type ForwardOrigin = z.infer<typeof zOrigin>;
 export type Poll = z.infer<typeof zPoll>;
 export type StickerRef = z.infer<typeof zSticker>;
+export type GifRef = z.infer<typeof zGif>;
 
 export type ContactCard = z.infer<typeof zContact>;
 export type SharedLocation = z.infer<typeof zLocation>;

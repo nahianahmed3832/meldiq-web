@@ -50,6 +50,31 @@ export async function keepMedia(key: string, bytes: Uint8Array): Promise<void> {
   }
 }
 
+/** A kept entry as a Blob (large ciphertexts: read in slices later, never whole into memory). */
+export async function cachedMediaBlob(key: string): Promise<Blob | null> {
+  const store = storage();
+  if (!store) return null;
+  try {
+    const hit = await (await store.open(CACHE_NAME)).match(requestFor(key));
+    return hit ? await hit.blob() : null;
+  } catch {
+    return null;
+  }
+}
+
+/** Keeps a Blob (streamed into the cache, not copied into memory); skipped past a quarter of the budget. */
+export async function keepMediaBlob(key: string, blob: Blob): Promise<void> {
+  const store = storage();
+  if (!store || blob.size > MEDIA_BUDGET_BYTES / 4) return;
+  try {
+    const cache = await store.open(CACHE_NAME);
+    await cache.put(requestFor(key), new Response(blob, { headers: { [SIZE]: String(blob.size), [AT]: String(Date.now()) } }));
+    if (++added % TRIM_EVERY === 0) await trim(cache);
+  } catch {
+    /* full or unavailable: fetched again next time */
+  }
+}
+
 export async function forgetMediaEntry(key: string): Promise<void> {
   try {
     await (await storage()?.open(CACHE_NAME))?.delete(requestFor(key));

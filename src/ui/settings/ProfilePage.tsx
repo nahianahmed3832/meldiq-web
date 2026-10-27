@@ -7,6 +7,7 @@ import { birthdayProblem, myProfile, phoneProblem, removeMyPhoto, setMyPhoto, up
 import { UserAvatar } from "../components/OrgAvatar";
 import { squareJpeg } from "../workspace/photo";
 import { useAction, useLoad } from "../workspace/useLoad";
+import { ProfileStyleCard } from "./ProfileStyleCard";
 
 /**
  * The person's profile (docs/PROFILE_AND_PRIVACY.md): photo, names, username, bio, birthday and phone. Who sees each is
@@ -23,6 +24,7 @@ export function ProfilePage() {
   const address = useLoad(() => networkAddress(engine), [engine]);
   const [form, setForm] = useState({ displayName: "", firstName: "", lastName: "", username: "", statusText: "", birthday: "", phone: "", pronouns: "" });
   const pronounsOffered = useOrbit((s) => s.server?.features.includes("pronouns") ?? false);
+  const profileMedia = useOrbit((s) => s.server?.features.includes("profile-media") ?? false);
   const [saved, setSaved] = useState(false);
   const save = useAction();
   const photo = useAction();
@@ -160,6 +162,7 @@ export function ProfilePage() {
           </div>
         </form>
       </div>
+      {profileMedia && <ProfileStyleCard />}
     </>
   );
 }

@@ -15,6 +15,18 @@ export const STRINGS = {
 
   // ── the signed-out frame ──
   hero_about: ["About Meldiq Web", "关于 Meldiq 网页版", "Meldiq ওয়েব সম্পর্কে"],
+  hero_c_title_1: ["Your communities,", "你的社区，", "আপনার কমিউনিটি,"],
+  hero_c_title_2: ["all in one place.", "尽在一处。", "সব এক জায়গায়।"],
+  hero_c_body: [
+    "Chat with friends, join communities you love, and build your own, with every message end-to-end encrypted.",
+    "与好友聊天，加入你喜爱的社区，创建属于你的社区，每条消息都端到端加密。",
+    "বন্ধুদের সঙ্গে চ্যাট করুন, পছন্দের কমিউনিটিতে যোগ দিন, নিজের কমিউনিটি গড়ুন; প্রতিটি মেসেজ এন্ড-টু-এন্ড এনক্রিপ্টেড।",
+  ],
+  hero_c_join: ["Join your friends with one invite link", "一个邀请链接即可加入好友", "একটি আমন্ত্রণ লিংকে বন্ধুদের সঙ্গে যোগ দিন"],
+  hero_c_discover: ["Discover public communities", "发现公开社区", "পাবলিক কমিউনিটি খুঁজুন"],
+  hero_c_talk: ["Text, voice, video and screen sharing", "文字、语音、视频和屏幕共享", "টেক্সট, ভয়েস, ভিডিও ও স্ক্রিন শেয়ার"],
+  hero_c_create: ["Create a community and make it yours", "创建社区，打造你的专属空间", "কমিউনিটি তৈরি করে নিজের মতো সাজান"],
+  hero_c_preview: ["A Meldiq community", "一个 Meldiq 社区", "একটি Meldiq কমিউনিটি"],
   hero_title_1: ["Your people,", "你的人，", "আপনার মানুষেরা,"],
   hero_title_2: ["on every screen.", "在每块屏幕上。", "প্রতিটি স্ক্রিনে।"],
   hero_body: [

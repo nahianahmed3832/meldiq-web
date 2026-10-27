@@ -43,27 +43,40 @@ export function badgeText(signal: TabSignal): string | null {
 }
 
 const ICON_SIZE = 64;
-const ICON_SRC = "/meldling-192.png";
-let original: string | null = null;
-let base: Promise<HTMLImageElement> | null = null;
+const images = new Map<string, Promise<HTMLImageElement>>();
 
-/** Redraws the favicon with [text]'s badge (null: the plain icon). Best effort: any failure leaves the icon as it was. */
+function image(src: string): Promise<HTMLImageElement> {
+  let p = images.get(src);
+  if (!p) {
+    p = new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => resolve(img);
+      img.onerror = reject;
+      img.src = src;
+    });
+    images.set(src, p);
+  }
+  return p;
+}
+
+/**
+ * Redraws the tab icons (every rel="icon": the light and dark silhouettes at each size) with [text]'s badge (null:
+ * the plain icons). Best effort: any failure leaves an icon as it was.
+ */
 export async function paintFavicon(text: string | null): Promise<void> {
-  const link = document.querySelector<HTMLLinkElement>('link[rel="icon"][sizes="32x32"]') ?? document.querySelector<HTMLLinkElement>('link[rel="icon"]');
-  if (!link) return;
-  original ??= link.href;
+  const links = [...document.querySelectorAll<HTMLLinkElement>('link[rel="icon"]')];
+  await Promise.all(links.map((link) => paintOne(link, text)));
+}
+
+async function paintOne(link: HTMLLinkElement, text: string | null): Promise<void> {
+  link.dataset.plain ??= link.href;
+  const original = link.dataset.plain;
   if (text === null) {
     link.href = original;
     return;
   }
   try {
-    base ??= new Promise((resolve, reject) => {
-      const img = new Image();
-      img.onload = () => resolve(img);
-      img.onerror = reject;
-      img.src = ICON_SRC;
-    });
-    const img = await base;
+    const img = await image(original);
     const canvas = document.createElement("canvas");
     canvas.width = canvas.height = ICON_SIZE;
     const g = canvas.getContext("2d");

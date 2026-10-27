@@ -63,6 +63,7 @@ export class Compose {
       link: opts.rich?.link,
       poll: opts.rich?.poll,
       sticker: opts.rich?.sticker,
+      gif: opts.rich?.gif,
       title: opts.rich?.title,
       tags: opts.rich?.tags?.length ? opts.rich.tags : undefined,
       customEmoji: opts.rich?.customEmoji?.length ? opts.rich.customEmoji : undefined,
@@ -212,7 +213,7 @@ export class Compose {
 
 /** A card, place, poll, sticker or animated emoji replaces the text (no mentions); a forum title or emoji doesn't. */
 function structured(r: RichContent | null | undefined): boolean {
-  return !!(r && (r.contact || r.location || r.animoji || r.poll || r.sticker || r.customSticker));
+  return !!(r && (r.contact || r.location || r.animoji || r.poll || r.sticker || r.customSticker || r.gif));
 }
 
 /** A forward's origin as it's sent: fields without a value are left out (android ForwardOrigin's nulls). */

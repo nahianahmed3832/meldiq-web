@@ -1,4 +1,4 @@
-import { AtSign, BarChart3, Bot, FileUp, Lock, MapPin, Mic, Paperclip, Plus, SendHorizontal, Smile, UserRound, X } from "lucide-react";
+import { AtSign, BarChart3, Bot, FileUp, Lock, MapPin, Mic, Paperclip, Plus, SendHorizontal, UserRound, X } from "lucide-react";
 import { useExpressions } from "../community/CustomEmoji";
 import { forSending, refOf } from "../../sync/expressions";
 import type { CustomEmojiRef } from "../../protocol/payload";
@@ -11,17 +11,16 @@ import type { RichContent } from "../../model/types";
 import { fileLimit, MAX_FILES_PER_MESSAGE, sendFiles } from "../../sync/attachments";
 import { type PhotoQuality, preparePhoto, QUALITY_LABEL, reencodable } from "../../sync/photoQuality";
 import { UploadCancelled } from "../../sync/largeUpload";
+import { transfersOf } from "../../sync/transfers";
+import { TransferList } from "./TransferList";
 import { fallbackText } from "../../sync/rich";
 import { type Recording, voiceFileName, voiceMime } from "../../sync/voice";
 import { activeMentionQuery } from "../../sync/mentions";
 import { UserAvatar } from "../components/OrgAvatar";
 import { Menu, useMenu } from "../components/Overlay";
 import { bytes } from "../format";
-import { EmojiPicker } from "./EmojiPicker";
-import { ANIMOJI } from "../../sync/animoji";
-import { STICKER_PACKS } from "../../sync/stickers";
 import { PollDialog } from "./PollDialog";
-import { StickerArt } from "./StickerView";
+import { ExpressionPicker, PICKER_BUTTONS, type PickerTab } from "./ExpressionPicker";
 import { LocationDialog } from "./RichDialogs";
 import { ProfileShareDialog } from "./ProfileCards";
 import { VoiceBar } from "./VoiceBar";
@@ -69,8 +68,19 @@ export function Composer(props: ComposerProps) {
   const input = useRef<HTMLTextAreaElement>(null);
   const fileInput = useRef<HTMLInputElement>(null);
   const emoji = useMenu();
+  const [pickerTab, setPickerTab] = useState<PickerTab>("emoji");
+  /** Puts [piece] where the caret was (replacing a selection), then puts the caret after it. */
+  const insertAtCaret = (piece: string) => {
+    const el = input.current;
+    const start = el?.selectionStart ?? text.length;
+    const end = el?.selectionEnd ?? text.length;
+    onChange(text.slice(0, start) + piece + text.slice(end));
+    requestAnimationFrame(() => {
+      el?.focus();
+      el?.setSelectionRange(start + piece.length, start + piece.length);
+    });
+  };
   const attach = useMenu();
-  const upload = useRef<AbortController | null>(null);
   const [voice, setVoice] = useState(false);
   const [rich, setRich] = useState<"contact" | "location" | "poll" | null>(null);
   const canRecord = !props.threadRoot && voiceMime() !== null;
@@ -186,21 +196,18 @@ export function Composer(props: ComposerProps) {
     if (!props.threadRoot) void engine.saveDraft(c.id, "");
     try {
       if (files.length) {
-        setBusy(hasPhotos && quality !== "original" ? "Preparing photos…" : `Encrypting and uploading ${files.length === 1 ? "1 file" : `${files.length} files`}…`);
+        setBusy(hasPhotos && quality !== "original" ? "Preparing photos…" : null);
         // One at a time: decoding several large photos at once can run a phone's browser out of memory.
         const prepared: File[] = [];
         for (const f of files) prepared.push(await preparePhoto(f, quality));
-        await sendFiles(
-          engine,
+        setBusy(null);
+        // The transfer belongs to the app (sync/transfers.ts): it keeps going, with its progress shown above this box,
+        // if this conversation is left; the same send while it runs joins it rather than starting another.
+        await transfersOf(engine).start(
           c.id,
-          prepared.map((f) => ({ name: f.name, type: f.type, size: f.size, bytes: async () => new Uint8Array(await f.arrayBuffer()), source: f })),
+          prepared.map((f) => ({ name: f.name, type: f.type, size: f.size, lastModified: f.lastModified, source: f })),
           body,
           opts,
-          (done, total) => setBusy(`Uploading ${done} of ${total}…`),
-          {
-            signal: (upload.current = new AbortController()).signal,
-            onProgress: (name, p) => setBusy(`${p.phase === "hashing" ? "Encrypting" : "Uploading"} ${name}… ${Math.floor((100 * p.done) / Math.max(1, p.total))}%`),
-          },
         );
       } else {
         // Batch B9: the community emoji the text still names go with it (id, community and image hash).
@@ -216,7 +223,6 @@ export function Composer(props: ComposerProps) {
       setText((now) => now || body);
       if (!(e instanceof UploadCancelled)) engine.notice("error", e instanceof Error ? e.message : "Couldn't send.");
     } finally {
-      upload.current = null;
       setBusy(null);
       input.current?.focus();
     }
@@ -270,6 +276,7 @@ export function Composer(props: ComposerProps) {
 
   return (
     <div className="composer-wrap">
+      <TransferList conversationId={c.id} />
       {suggest && (
         <div className="suggest card" role="listbox" aria-label={suggest.command ? "Agent commands" : "People and agents to mention"}>
           {suggest.items.map((m, i) => (
@@ -398,9 +405,23 @@ export function Composer(props: ComposerProps) {
                 aria-describedby={busy ? `composer-status-${c.id}` : undefined}
                 disabled={!!busy}
               />
-              <button className="icon-btn" onClick={(e) => emoji.open(e.currentTarget)} aria-label="Insert emoji" aria-haspopup="menu">
-                <Smile size={18} />
-              </button>
+              {/* Emoji → GIFs → Stickers (continuation brief v3 §11), each opening the same picker on its tab. */}
+              {PICKER_BUTTONS.filter((b) => b.tab === "emoji" || c.canPost).map((b) => (
+                <button
+                  key={b.tab}
+                  className={`icon-btn${b.tab === "emoji" ? "" : " hide-xs"}`}
+                  onClick={(e) => {
+                    setPickerTab(b.tab);
+                    emoji.open(e.currentTarget);
+                  }}
+                  aria-label={b.tab === "emoji" ? "Insert emoji" : b.label}
+                  title={b.label}
+                  aria-haspopup="dialog"
+                  aria-expanded={!!emoji.anchor && pickerTab === b.tab}
+                >
+                  {b.icon}
+                </button>
+              ))}
               {c.type !== "DM" && (
                 <button
                   className="icon-btn hide-sm"
@@ -438,11 +459,6 @@ export function Composer(props: ComposerProps) {
             {busy && (
               <div className="composer-status" id={`composer-status-${c.id}`} aria-live="polite">
                 <span className="grow">{busy}</span>
-                {upload.current && (
-                  <button className="btn btn-ghost btn-sm" onClick={() => upload.current?.abort()}>
-                    Cancel
-                  </button>
-                )}
               </div>
             )}
           </>
@@ -465,93 +481,55 @@ export function Composer(props: ComposerProps) {
       {rich === "location" && <LocationDialog onClose={() => setRich(null)} onSend={(location) => void sendRich({ location })} />}
       {rich === "poll" && <PollDialog onClose={() => setRich(null)} onSend={(poll) => void sendRich({ poll })} />}
       {emoji.anchor && (
-        <Menu
+        <ExpressionPicker
           anchor={emoji.anchor}
-          label="Emoji"
+          tab={pickerTab}
+          onTab={setPickerTab}
           onClose={emoji.close}
-          entries={[
-            {
-              custom: (
-                <EmojiPicker
-                  community={
-                    communityEmoji
-                      ? {
-                          list: communityEmoji,
-                          onEmoji: (e) => {
-                            emoji.close();
-                            picked.current.set(e.name, refOf(e));
-                            onChange(`${text}${text && !text.endsWith(" ") ? " " : ""}:${e.name}: `);
-                            input.current?.focus();
-                          },
-                          onSticker: (e) => {
-                            emoji.close();
-                            void engine
-                              .sendText(c.id, `:${e.name}:`, { rich: { customSticker: refOf(e) }, replyTo: props.replyTo?.id, threadRoot: props.threadRoot })
-                              .then(() => {
-                                props.onCancelReply();
-                                if (slowed && !props.threadRoot) setLastSent(Date.now());
-                              })
-                              .catch((err: unknown) => engine.notice("error", err instanceof Error ? err.message : "Couldn't send the sticker."));
-                          },
-                        }
-                      : undefined
-                  }
-                  onPick={(em) => {
+          canSend={props.conversation.canPost}
+          onEmoji={(em) => {
+            emoji.close();
+            insertAtCaret(em);
+          }}
+          community={
+            communityEmoji
+              ? {
+                  list: communityEmoji,
+                  onEmoji: (e) => {
                     emoji.close();
-                    onChange(text + em);
-                    input.current?.focus();
-                  }}
-                />
-              ),
-            },
-            ...(props.conversation.canPost
-              ? [
-                  { heading: "Stickers" },
-                  {
-                    custom: (
-                      <div className="sticker-picker">
-                        {STICKER_PACKS.flatMap((pack) =>
-                          pack.stickers.map((s) => (
-                            <button
-                              key={`${pack.id}/${s.id}`}
-                              role="menuitem"
-                              aria-label={`Send sticker: ${s.caption}`}
-                              title={s.caption}
-                              onClick={() => {
-                                emoji.close();
-                                void sendRich({ sticker: { pack: pack.id, id: s.id } });
-                              }}
-                            >
-                              <StickerArt spec={s} size={60} still />
-                            </button>
-                          )),
-                        )}
-                      </div>
-                    ),
+                    picked.current.set(e.name, refOf(e));
+                    insertAtCaret(`:${e.name}: `);
                   },
-                  { heading: "Send animated" },
-                  {
-                    custom: (
-                      <div className="emoji-grid">
-                        {ANIMOJI.map(([em]) => (
-                          <button
-                            key={em}
-                            role="menuitem"
-                            aria-label={`Send animated ${em}`}
-                            onClick={() => {
-                              emoji.close();
-                              void sendRich({ animoji: em });
-                            }}
-                          >
-                            {em}
-                          </button>
-                        ))}
-                      </div>
-                    ),
+                  onSticker: (e) => {
+                    emoji.close();
+                    void engine
+                      .sendText(c.id, `:${e.name}:`, { rich: { customSticker: refOf(e) }, replyTo: props.replyTo?.id, threadRoot: props.threadRoot })
+                      .then(() => {
+                        props.onCancelReply();
+                        if (slowed && !props.threadRoot) setLastSent(Date.now());
+                      })
+                      .catch((err: unknown) => engine.notice("error", err instanceof Error ? err.message : "Couldn't send the sticker."));
                   },
-                ]
-              : []),
-          ]}
+                }
+              : undefined
+          }
+          onSticker={(pack, id) => {
+            emoji.close();
+            void sendRich({ sticker: { pack, id } });
+          }}
+          onAnimoji={(em) => {
+            emoji.close();
+            void sendRich({ animoji: em });
+          }}
+          onGif={(g, provider) => {
+            emoji.close();
+            const gif = { provider, id: g.id, url: g.gif.url, width: Math.max(1, Math.round(g.gif.width)), height: Math.max(1, Math.round(g.gif.height)), title: g.title || undefined };
+            // The text is the GIF's address, so apps that don't show GIFs show the link.
+            void engine
+              .sendText(c.id, gif.url, { rich: { gif }, replyTo: props.replyTo?.id, threadRoot: props.threadRoot })
+              .then(() => props.onCancelReply())
+              .catch((err: unknown) => engine.notice("error", err instanceof Error ? err.message : "Couldn't send the GIF."));
+          }}
         />
       )}
     </div>

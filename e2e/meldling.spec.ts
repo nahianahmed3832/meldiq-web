@@ -18,7 +18,7 @@ test("Meldling is the brand mark, and typing shows Meldling once with the real n
   await alice.connect();
   await bob.connect();
   await link(page, alice);
-  await expect(page.locator('link[rel="icon"][sizes="192x192"]')).toHaveAttribute("href", "/meldling-192.png");
+  await expect(page.locator('link[rel="icon"][sizes="192x192"]').first()).toHaveAttribute("href", /\/favicon-(light|dark)-192\.png$/);
   await expect(page.locator(".rail-mascot")).toHaveAttribute("src", "/meldling-96.webp");
 
   await page.goto(`/dms/c/${dm}`);

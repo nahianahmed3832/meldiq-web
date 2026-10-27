@@ -1,4 +1,5 @@
-import { CheckCheck, ChevronDown, Compass, LogIn, PenSquare, Plus, Settings2, Ticket, UsersRound } from "lucide-react";
+import { CheckCheck, ChevronDown, Compass, Link2, LogIn, PenSquare, Plus, Settings2, Ticket, UsersRound } from "lucide-react";
+import { useLayoutEffect, useRef } from "react";
 import { shallowEqual, useEngine, useOrbit } from "../../application/orbit";
 import { markAllReadTargets } from "../selectors";
 import { setPrefs, usePrefs } from "../../application/prefs";
@@ -47,14 +48,17 @@ export function Sidebar({ orgId, section, open, onDialog }: SidebarProps) {
   // Home with no community yet (none joined, or the chosen one left) shows the messages hub rather than an empty list.
   const messages = section === "dms" || (communities && !org);
   const bannerUrl = usePhoto("banner", org?.id ?? "", branded ? org?.bannerRev : null);
+  // Each community's channel list (and the messages list) keeps its scroll position when you come back to it.
+  const list = useRef<HTMLDivElement>(null);
+  const listKey = messages ? "dms" : (orgId ?? "none");
+  useLayoutEffect(() => {
+    if (list.current) list.current.scrollTop = scrollMemory.get(listKey) ?? 0;
+  }, [listKey]);
 
   return (
     <aside className={`sidebar${open ? " open" : ""}${branded && org?.accent ? ` ${ACCENT_CLASS}` : ""}`} style={branded ? accentStyle(org?.accent) : undefined} aria-label="Conversations">
       {section !== "dms" && <PhoneRail orgId={orgId} onDialog={onDialog} />}
-      <div
-        className={`side-head${branded && bannerUrl ? " has-banner" : ""}`}
-        style={branded && bannerUrl ? { backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0) 70%), url(${bannerUrl})` } : undefined}
-      >
+      <div className="side-head">
         {messages ? (
           // Direct messages aren't part of a community: their own heading, not the community's.
           <h2 className="side-title grow">{t("side_direct_messages")}</h2>
@@ -84,6 +88,16 @@ export function Sidebar({ orgId, section, open, onDialog }: SidebarProps) {
           </button>
         )}
       </div>
+      {branded && !messages && (bannerUrl || perms.canInvite) && (
+        <div className="community-top">
+          {bannerUrl && <div className="community-banner" style={{ backgroundImage: `url(${bannerUrl})` }} role="img" aria-label={`${org?.name ?? "Community"} banner`} />}
+          {perms.canInvite && (
+            <button className="community-invite" onClick={() => onDialog({ kind: "addMembers" })}>
+              <Link2 size={17} aria-hidden="true" /> Invite people
+            </button>
+          )}
+        </div>
+      )}
       {!communities && section !== "dms" && switcher.anchor && (
         <Menu
           anchor={switcher.anchor}
@@ -115,12 +129,12 @@ export function Sidebar({ orgId, section, open, onDialog }: SidebarProps) {
         />
       )}
 
-      <div className="side-scroll scroll">
+      <div className="side-scroll scroll" ref={list} onScroll={(e) => scrollMemory.set(listKey, e.currentTarget.scrollTop)}>
         {!synced && empty ? (
           <SkeletonRows />
         ) : messages ? (
           <>
-            <DmHub onDialog={(kind) => onDialog({ kind })} />
+            <DmHub onDialog={(kind) => onDialog({ kind })} onInvite={(id) => onDialog({ kind: "addMembers", orgId: id })} onCreate={() => onDialog({ kind: "createWorkspace" })} />
             <PeopleList twoLine={section === "dms"} />
             <ArchivedList />
           </>
@@ -161,6 +175,9 @@ export function Sidebar({ orgId, section, open, onDialog }: SidebarProps) {
     </aside>
   );
 }
+
+/** Scroll positions of the channel lists, per community, for this page's life. */
+const scrollMemory = new Map<string, number>();
 
 function roleLabel(role: string | null): string {
   return role ? role.charAt(0) + role.slice(1).toLowerCase() : "Member";
