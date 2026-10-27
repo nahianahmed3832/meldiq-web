@@ -25,8 +25,10 @@ test("the mascot, the top bar, Create and Discover replace the old rail entries"
   await expect(page).toHaveURL(/\/dms$/);
   await expect(page.getByRole("complementary", { name: "Conversations" }).getByRole("heading", { name: "Direct messages", level: 2 })).toBeVisible();
 
-  // Activity sits in the user panel at the foot of the sidebar; Saved for later in the profile menu (the reference layout).
-  await page.getByRole("button", { name: /^Activity/ }).click();
+  // Activity and Saved for later are in the profile menu (2026-10-28: the user panel keeps microphone, headphones and
+  // Settings, as in the reference).
+  await page.getByRole("button", { name: /Your profile and settings/ }).click();
+  await page.getByRole("menuitem", { name: /^Activity/ }).click();
   await expect(page).toHaveURL(/\/activity$/);
   await page.getByRole("button", { name: /Your profile and settings/ }).click();
   await page.getByRole("menuitem", { name: /^Saved for later/ }).click();

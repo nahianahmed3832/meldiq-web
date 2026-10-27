@@ -60,7 +60,7 @@ test("community photos in the rail, a member list in channels and a profile in D
   await expect(list.locator("section").nth(0)).toContainText("Bob Chen");
   await expect(list.locator("section").nth(1)).toContainText("Alice Rahman");
   await expect(list.locator("section").nth(2)).toContainText("Carol Diaz");
-  await expect(list.locator(".member-row").filter({ hasText: "Bob Chen" }).locator(".member-name")).toHaveCSS("color", "rgb(230, 126, 34)");
+  await expect(list.locator(".member-row").filter({ hasText: "Bob Chen" }).locator(".member-name .sname")).toHaveCSS("color", "rgb(230, 126, 34)");
   await shot(page, "channel-members");
 
   // Hidden from the header, and it stays hidden (every channel) until shown again.
