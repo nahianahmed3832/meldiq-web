@@ -1,3 +1,4 @@
+import { NameStyleCard } from "./NameStyleCard";
 import { AtSign, Camera, Check, Copy } from "lucide-react";
 import { type FormEvent, useEffect, useRef, useState } from "react";
 import { useEngine, useOrbit } from "../../application/orbit";
@@ -25,6 +26,7 @@ export function ProfilePage() {
   const [form, setForm] = useState({ displayName: "", firstName: "", lastName: "", username: "", statusText: "", birthday: "", phone: "", pronouns: "" });
   const pronounsOffered = useOrbit((s) => s.server?.features.includes("pronouns") ?? false);
   const profileMedia = useOrbit((s) => s.server?.features.includes("profile-media") ?? false);
+  const nameStyles = useOrbit((s) => s.server?.features.includes("name-styles") ?? false);
   const [saved, setSaved] = useState(false);
   const save = useAction();
   const photo = useAction();
@@ -163,6 +165,7 @@ export function ProfilePage() {
         </form>
       </div>
       {profileMedia && <ProfileStyleCard />}
+      {nameStyles && <NameStyleCard />}
     </>
   );
 }

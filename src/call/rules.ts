@@ -210,7 +210,14 @@ export function deafenChange(deafened: boolean, micOn: boolean, micBeforeDeafen:
 }
 
 /** Microphone processing for a call (batch B10 Noise reduction): echo cancellation always; noise and level when on. */
-export const audioProcessing = (noiseReduction: boolean): MediaTrackConstraints => ({ echoCancellation: true, noiseSuppression: noiseReduction, autoGainControl: noiseReduction });
+export const audioProcessing = (noiseReduction: boolean, opts: { echoCancellation?: boolean; autoGain?: boolean; microphoneId?: string | null } = {}): MediaTrackConstraints => ({
+  echoCancellation: opts.echoCancellation !== false,
+  noiseSuppression: noiseReduction,
+  // Automatic gain follows noise reduction unless chosen on its own (Settings › Voice & Audio).
+  autoGainControl: opts.autoGain ?? noiseReduction,
+  // "ideal": an unplugged microphone falls back to the default instead of failing the call.
+  ...(opts.microphoneId ? { deviceId: { ideal: opts.microphoneId } } : {}),
+});
 
 /**
  * A level meter's value (0–1) from an analyser's float time-domain samples (-1…1), as android MicMeter.level: the

@@ -117,7 +117,19 @@ export function createEngine(device: DeviceRecord, store: LocalStore): Engine {
     ringtone: new Ringtone(() => getPrefs().callRingtone),
     callPrefs: () => {
       const p = getPrefs();
-      return { noiseReduction: p.noiseReduction, shareQuality: p.shareQuality, shareAudio: p.shareAudio };
+      return {
+        noiseReduction: p.noiseReduction,
+        shareQuality: p.shareQuality,
+        shareAudio: p.shareAudio,
+        echoCancellation: p.echoCancellation,
+        autoGain: p.autoGain,
+        microphoneId: p.microphoneId,
+        speakerId: p.speakerId,
+        outputVolume: p.outputVolume,
+        joinMuted: p.joinMuted,
+        joinDeafened: p.joinDeafened,
+        pushToTalk: p.pushToTalk && !!p.pttKey,
+      };
     },
     ringAlert,
     prefs: () => {

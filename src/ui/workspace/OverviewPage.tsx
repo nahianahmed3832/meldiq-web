@@ -1,3 +1,4 @@
+import { TagCard } from "./TagCard";
 import { TransferOwnership } from "./TransferOwnership";
 import { AppearanceCard } from "./AppearanceCard";
 import { Camera, LogOut, Trash2 } from "lucide-react";
@@ -35,6 +36,7 @@ export function OverviewPage({ detail, onChanged }: { detail: OrgAdminDetail; on
       </header>
       {can.canManageOrg ? <Identity detail={detail} onChanged={onChanged} /> : <ReadOnlyAbout description={org.description} />}
       {features.includes("community-branding") && <AppearanceCard detail={detail} onChanged={onChanged} />}
+      {features.includes("community-tags") && <TagCard detail={detail} onChanged={onChanged} />}
       {features.includes("community-channels") && <AccessCard detail={detail} />}
       {features.includes("community-channels") && can.canManageOrg && features.includes("join-applications") && <JoinQuestionsCard detail={detail} />}
       {can.canManageOrg && features.includes("guest-expiry") && <GuestPolicyCard detail={detail} onChanged={onChanged} />}

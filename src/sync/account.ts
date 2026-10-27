@@ -79,7 +79,18 @@ export async function removeProfileBanner(engine: Engine): Promise<void> {
   await engine.api.call("DELETE", "/v1/users/me/profile-banner");
 }
 
-export async function setProfileStyle(engine: Engine, change: { decoration?: string | null; effect?: string | null; accent?: string | null }): Promise<void> {
+export interface ProfileStyleChange {
+  decoration?: string | null;
+  effect?: string | null;
+  accent?: string | null;
+  /** API 0.46.0: name styles and the community tag worn by your name. */
+  nameFont?: string | null;
+  nameColors?: string[] | null;
+  nameEffect?: string | null;
+  tagOrgId?: string | null;
+}
+
+export async function setProfileStyle(engine: Engine, change: ProfileStyleChange): Promise<void> {
   await engine.api.call("PUT", "/v1/users/me/profile-style", { body: change });
 }
 

@@ -1,5 +1,5 @@
 {
-  "version": "0.45.0",
+  "version": "0.46.0",
   "routes": [
     {
       "method": "GET",
@@ -596,6 +596,10 @@
     {
       "method": "GET",
       "path": "/v1/invites/{code}/banner"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/invites/{code}/photo"
     },
     {
       "method": "POST",

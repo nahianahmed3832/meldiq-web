@@ -1,4 +1,4 @@
-import { CircleUserRound, Copy, MessageSquare, UserRound, UsersRound, X } from "lucide-react";
+import { CircleUserRound, Copy, IdCard, MessageSquare, UserRound, UsersRound, X } from "lucide-react";
 import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import type { Conversation, Member } from "../../api/schemas";
 import { useEngine, useOrbit } from "../../application/orbit";
@@ -11,6 +11,8 @@ import { directory } from "../../sync/workspaces";
 import { nameTone, toneOf } from "../components/Avatar";
 import { UserAvatar } from "../components/OrgAvatar";
 import { contextMenuProps, Menu, type MenuEntry, useMenu } from "../components/Overlay";
+import { StyledName } from "../people/NameStyle";
+import { StyledAvatar } from "../people/ProfileStyle";
 import { dmPeer, relative } from "../format";
 import { openProfile } from "../people/ProfileDialog";
 import { useMembers } from "./ConversationDetails";
@@ -122,6 +124,7 @@ export function MemberListPanel({ c, onClose }: { c: Conversation; onClose: () =
 function MemberRow({ m, away, color, orgId }: { m: Member; away: boolean; color: string | null; orgId: string | null }) {
   const engine = useEngine();
   const me = useOrbit((s) => s.me?.userId);
+  const builder = usePrefs().builderMode;
   const menu = useMenu();
   const status = [m.statusEmoji, m.statusText].filter(Boolean).join(" ");
   const entries: MenuEntry[] = [
@@ -146,6 +149,18 @@ function MemberRow({ m, away, color, orgId }: { m: Member; away: boolean; color:
         engine.notice("info", "Username copied.");
       },
     },
+    ...(builder
+      ? [
+          {
+            label: "Copy user ID",
+            icon: <IdCard size={16} />,
+            onSelect: () => {
+              void navigator.clipboard?.writeText(m.id).catch(() => undefined);
+              engine.notice("info", "User ID copied.");
+            },
+          },
+        ]
+      : []),
   ];
   return (
     <>
@@ -156,10 +171,20 @@ function MemberRow({ m, away, color, orgId }: { m: Member; away: boolean; color:
         aria-haspopup="menu"
         {...contextMenuProps(menu.openAt)}
       >
-        <UserAvatar userId={m.id} name={m.displayName} colorIndex={m.avatarColor} photoRev={m.photoRev} size={40} online={away ? null : true} presence={away ? null : m.presence} decorative />
+        <StyledAvatar
+          userId={m.id}
+          name={m.displayName}
+          colorIndex={m.avatarColor}
+          photoRev={m.photoRev}
+          media={m.avatarMedia}
+          decoration={m.profileStyle?.decoration ?? null}
+          size={40}
+          online={away ? null : true}
+          presence={away ? null : m.presence}
+        />
         <span className="lines">
-          <span className={`member-name ellipsis${color ? "" : ` ${nameTone(m.avatarColor)}`}`} style={color ? { color } : undefined}>
-            {m.displayName}
+          <span className="member-name">
+            <StyledName name={m.displayName} style={m.profileStyle} tag={m.tag} roleColor={color} toneClass={nameTone(m.avatarColor)} className="ellipsis" />
           </span>
           {status && <small className="ellipsis">{status}</small>}
         </span>

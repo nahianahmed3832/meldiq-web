@@ -1,4 +1,4 @@
-import { X } from "lucide-react";
+import { Check, ChevronRight, X } from "lucide-react";
 import { type KeyboardEvent as ReactKeyboardEvent, type MouseEvent as ReactMouseEvent, type ReactNode, type RefObject, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
@@ -116,10 +116,17 @@ export function Dialog({ title, onClose, children, footer, wide, width, header, 
 export interface MenuItem {
   label: string;
   icon?: ReactNode;
-  onSelect: () => void;
+  /** Chosen: a leaf closes the whole menu first. Not called for an item with a [submenu]. */
+  onSelect?: () => void;
   danger?: boolean;
+  /** A choice among several (radio), or with [toggle] an on/off box that stays open after a click. */
   checked?: boolean;
+  toggle?: boolean;
   disabled?: boolean;
+  /** A second, quieter line under the label (the current setting, as Discord shows "All Messages"). */
+  hint?: string;
+  /** Opens beside the item on hover, click, Enter or the right arrow. */
+  submenu?: MenuEntry[];
 }
 
 export type MenuEntry = MenuItem | "separator" | { heading: string } | { custom: ReactNode };
@@ -136,43 +143,65 @@ interface MenuProps {
 
 /** A popup menu: arrow keys move, Escape closes, focus returns to the button that opened it. */
 export function Menu({ anchor, entries, onClose, align = "start", label, point = null }: MenuProps) {
+  return <MenuLevel anchor={anchor} entries={entries} onClose={onClose} onDone={onClose} align={align} label={label} point={point} beside={false} />;
+}
+
+/** Where a menu goes: at the pointer, beside its item (a submenu), or below its button, kept inside the window. */
+function menuPosition(anchor: HTMLElement, el: HTMLElement | null, align: "start" | "end", point: { x: number; y: number } | null, beside: boolean) {
+  const w = el?.offsetWidth ?? 240;
+  const h = el?.offsetHeight ?? 200;
+  const fit = (top: number) => Math.max(8, Math.min(top, window.innerHeight - h - 8));
+  if (point) {
+    const left = point.x + w > window.innerWidth - 8 ? Math.max(8, point.x - w) : point.x;
+    const top = point.y + h > window.innerHeight - 8 ? Math.max(8, point.y - h) : point.y;
+    return { top, left };
+  }
+  const r = anchor.getBoundingClientRect();
+  if (beside) {
+    // Beside the item, flipped to the left where the window ends; level with the item, moved up to fit.
+    const left = r.right + 4 + w > window.innerWidth - 8 ? Math.max(8, r.left - w - 4) : r.right + 4;
+    return { top: fit(r.top - 6), left };
+  }
+  let left = align === "end" ? r.right - w : r.left;
+  left = Math.max(8, Math.min(left, window.innerWidth - w - 8));
+  let top = r.bottom + 6;
+  if (top + h > window.innerHeight - 8) top = Math.max(8, r.top - h - 6);
+  return { top, left };
+}
+
+interface MenuLevelProps extends Required<Omit<MenuProps, "point">> {
+  point: { x: number; y: number } | null;
+  /** Closes every level (a leaf was chosen, or a click landed outside them all). */
+  onDone: () => void;
+  beside: boolean;
+}
+
+function MenuLevel({ anchor, entries, onClose, onDone, align, label, point, beside }: MenuLevelProps) {
   const ref = useRef<HTMLDivElement>(null);
   const [pos, setPos] = useState<{ top: number; left: number } | null>(null);
-  useLayoutEffect(() => {
-    const el = ref.current;
-    const w = el?.offsetWidth ?? 240;
-    const h = el?.offsetHeight ?? 200;
-    if (point) {
-      // At the pointer, flipped to the left or upwards where it would leave the window.
-      const left = point.x + w > window.innerWidth - 8 ? Math.max(8, point.x - w) : point.x;
-      const top = point.y + h > window.innerHeight - 8 ? Math.max(8, point.y - h) : point.y;
-      setPos({ top, left });
-      return;
-    }
-    const r = anchor.getBoundingClientRect();
-    let left = align === "end" ? r.right - w : r.left;
-    left = Math.max(8, Math.min(left, window.innerWidth - w - 8));
-    let top = r.bottom + 6;
-    if (top + h > window.innerHeight - 8) top = Math.max(8, r.top - h - 6);
-    setPos({ top, left });
-  }, [anchor, align, point]);
+  const [open, setOpen] = useState<{ index: number; el: HTMLElement } | null>(null);
+  const hoverTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useLayoutEffect(() => setPos(menuPosition(anchor, ref.current, align, point, beside)), [anchor, align, point, beside]);
   // A menu belongs to where it was opened: leaving the page or resizing the window closes it.
   useEffect(() => {
-    const close = () => onClose();
+    if (beside) return;
+    const close = () => onDone();
     window.addEventListener("resize", close);
     window.addEventListener("popstate", close);
     return () => {
       window.removeEventListener("resize", close);
       window.removeEventListener("popstate", close);
     };
-  }, [onClose]);
+  }, [onDone, beside]);
+  useEffect(() => () => void (hoverTimer.current && clearTimeout(hoverTimer.current)), []);
   useEffect(() => {
-    const items = () => [...(ref.current?.querySelectorAll<HTMLElement>('[role^="menuitem"]:not([disabled])') ?? [])];
-    items()[0]?.focus();
+    const items = () => [...(ref.current?.querySelectorAll<HTMLElement>(':scope > [role^="menuitem"]:not([disabled])') ?? [])];
     const onKey = (e: KeyboardEvent) => {
+      // Only the level that has the focus answers (a submenu's keys aren't its parent's).
+      if (!ref.current?.contains(document.activeElement)) return;
       const list = items();
       const i = list.indexOf(document.activeElement as HTMLElement);
-      if (e.key === "Escape") {
+      if (e.key === "Escape" || (beside && e.key === "ArrowLeft")) {
         e.preventDefault();
         onClose();
         anchor.focus();
@@ -182,10 +211,13 @@ export function Menu({ anchor, entries, onClose, align = "start", label, point =
       } else if (e.key === "ArrowUp") {
         e.preventDefault();
         list[(i - 1 + list.length) % list.length]?.focus();
-      } else if (e.key === "Tab") onClose();
+      } else if (e.key === "Tab") onDone();
     };
     const onDown = (e: MouseEvent) => {
-      if (!ref.current?.contains(e.target as Node) && !anchor.contains(e.target as Node)) onClose();
+      const t = e.target as HTMLElement;
+      // Clicks in this menu or one of its submenus (or on the button that opened it) keep it open.
+      if (beside || t.closest?.(".menu") || anchor.contains(t)) return;
+      onDone();
     };
     document.addEventListener("keydown", onKey);
     document.addEventListener("mousedown", onDown);
@@ -193,7 +225,16 @@ export function Menu({ anchor, entries, onClose, align = "start", label, point =
       document.removeEventListener("keydown", onKey);
       document.removeEventListener("mousedown", onDown);
     };
-  }, [anchor, onClose]);
+  }, [anchor, onClose, onDone, beside]);
+  // The first item takes the focus once the menu is placed (a hidden element can't take it), so the keyboard and
+  // Escape work at once however it was opened.
+  const placed = pos !== null;
+  useEffect(() => {
+    if (!placed || ref.current?.contains(document.activeElement)) return;
+    ref.current?.querySelector<HTMLElement>(':scope > [role^="menuitem"]:not([disabled])')?.focus();
+  }, [placed]);
+  const openSub = (index: number, el: HTMLElement) => setOpen((o) => (o?.index === index ? o : { index, el }));
+  const sub = open ? entries[open.index] : null;
   return createPortal(
     <div ref={ref} className="menu" role="menu" aria-label={label} style={pos ? { top: pos.top, left: pos.left } : { visibility: "hidden", top: 0, left: 0 }}>
       {entries.map((e, i) => {
@@ -205,23 +246,51 @@ export function Menu({ anchor, entries, onClose, align = "start", label, point =
             </div>
           );
         if ("custom" in e) return <div key={i}>{e.custom}</div>;
+        const hasSub = !!e.submenu?.length;
+        const role = e.toggle ? "menuitemcheckbox" : e.checked === undefined ? "menuitem" : "menuitemradio";
         return (
           <button
             key={i}
-            role={e.checked === undefined ? "menuitem" : "menuitemradio"}
+            role={role}
             aria-checked={e.checked}
-            className={e.danger ? "danger" : undefined}
+            aria-haspopup={hasSub ? "menu" : undefined}
+            aria-expanded={hasSub ? open?.index === i : undefined}
+            className={`${e.danger ? "danger" : ""}${hasSub && open?.index === i ? " open" : ""}`.trim() || undefined}
             disabled={e.disabled}
-            onClick={() => {
-              onClose();
-              e.onSelect();
+            onMouseEnter={(ev) => {
+              const el = ev.currentTarget;
+              if (hoverTimer.current) clearTimeout(hoverTimer.current);
+              // A short pause, so moving the pointer down the list doesn't flash every submenu.
+              hoverTimer.current = setTimeout(() => (hasSub ? openSub(i, el) : setOpen(null)), hasSub ? 120 : 200);
+            }}
+            onKeyDown={(ev) => {
+              if (hasSub && (ev.key === "ArrowRight" || ev.key === "Enter" || ev.key === " ")) {
+                ev.preventDefault();
+                ev.stopPropagation();
+                openSub(i, ev.currentTarget);
+              }
+            }}
+            onClick={(ev) => {
+              if (hasSub) return openSub(i, ev.currentTarget);
+              if (e.toggle) return e.onSelect?.();
+              onDone();
+              e.onSelect?.();
             }}
           >
             {e.icon}
-            <span className="grow">{e.label}</span>
+            <span className="grow menu-text">
+              <span>{e.label}</span>
+              {e.hint && <small className="menu-hint">{e.hint}</small>}
+            </span>
+            {e.toggle && <span className="menu-box" aria-hidden="true" />}
+            {!e.toggle && e.checked && <Check size={15} className="menu-check" aria-hidden="true" />}
+            {hasSub && <ChevronRight size={15} className="menu-chevron" aria-hidden="true" />}
           </button>
         );
       })}
+      {open && sub && sub !== "separator" && "submenu" in sub && sub.submenu && (
+        <MenuLevel anchor={open.el} entries={sub.submenu} onClose={() => setOpen(null)} onDone={onDone} align="start" label={sub.label} point={null} beside />
+      )}
     </div>,
     document.body,
   );
@@ -257,15 +326,28 @@ export function useMenu(): {
 }
 
 /**
- * The browser's own menu stays where it's the expected one: text fields, links, media, and over selected text (copy).
- * Everywhere else on Meldiq's content a right-click opens Meldiq's menu. (Developer tools stay reachable: nothing here
- * tries to block them.)
+ * The browser's own menu stays where it's the expected one: text fields, selected text (copy), links to other sites, and
+ * the links and media inside a message or a viewer (open in a new tab, save image). Everywhere else in Meldiq a
+ * right-click opens Meldiq's menu, or none on empty space. (Developer tools stay reachable: nothing here blocks them.)
  */
 export function keepsNativeMenu(target: EventTarget | null): boolean {
   const el = target as HTMLElement | null;
-  if (el?.closest?.('a[href], input, textarea, select, [contenteditable="true"], img, video, audio, canvas')) return true;
-  const selected = typeof window !== "undefined" ? window.getSelection()?.toString() : "";
-  return !!selected && !!el && !!window.getSelection()?.containsNode(el, true);
+  if (!el?.closest) return false;
+  if (el.closest('input, textarea, select, [contenteditable="true"]')) return true;
+  const selection = typeof window !== "undefined" ? window.getSelection() : null;
+  if (selection?.toString() && selection.containsNode(el, true)) return true;
+  const link = el.closest<HTMLAnchorElement>("a[href]");
+  if (link && link.origin !== window.location.origin) return true;
+  const inContent = !!el.closest("[data-native-menu]") || (!!el.closest(".msg-main") && !el.closest(".msg-head"));
+  return inContent && !!el.closest("a[href], img, video, audio, canvas");
+}
+
+/**
+ * For the app's frame (the root element): a right-click that nothing in Meldiq answered shows no menu, as in a
+ * desktop app, except where [keepsNativeMenu] keeps the browser's.
+ */
+export function quietContextMenu(e: ReactMouseEvent<HTMLElement>): void {
+  if (!keepsNativeMenu(e.target)) e.preventDefault();
 }
 
 /**

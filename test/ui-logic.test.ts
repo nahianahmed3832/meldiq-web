@@ -126,6 +126,9 @@ describe("formatting", () => {
           online: null,
           presence: null,
           pronouns: null,
+          avatarMedia: null,
+          profileStyle: null,
+          tag: null,
         },
         {
           id: "u2",
@@ -142,6 +145,9 @@ describe("formatting", () => {
           online: true,
           presence: null,
           pronouns: null,
+          avatarMedia: null,
+          profileStyle: null,
+          tag: null,
         },
       ],
     });

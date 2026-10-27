@@ -17,6 +17,9 @@ const req = (id: string, at: number) => ({
     online: null,
     presence: null,
     pronouns: null,
+    avatarMedia: null,
+    profileStyle: null,
+    tag: null,
   },
   at,
 });

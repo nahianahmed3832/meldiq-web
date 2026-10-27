@@ -1,3 +1,5 @@
+import { usePushToTalk } from "../call/usePushToTalk";
+import { quietContextMenu } from "../components/Overlay";
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { shallowEqual, useEngine, useOrbit } from "../../application/orbit";
 import { getPrefs, setPrefs, usePrefs } from "../../application/prefs";
@@ -64,6 +66,7 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
   const synced = useOrbit((s) => s.synced);
   const [drawer, setDrawer] = useState(false);
   const [dialog, setDialog] = useState<ShellDialog>(null);
+  usePushToTalk();
 
   const orgId = prefs.orgId && orgIds.includes(prefs.orgId) ? prefs.orgId : (orgIds[0] ?? null);
   const orgName = useOrbit((s) => s.orgs.find((o) => o.id === orgId)?.name ?? "");
@@ -199,7 +202,7 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
   else main = <HomeView orgId={orgId} section={section} onDialog={ctx.open} />;
 
   return (
-    <div className="app">
+    <div className="app" onContextMenu={quietContextMenu}>
       <Rail orgId={orgId} section={section} onDialog={ctx.open} />
       {/* Desktop: with the sidebar its user panel replaces the top bar; Settings has no sidebar, so it keeps the top bar. */}
       <div className={`workspace${settings ? "" : " with-sidebar"}`}>

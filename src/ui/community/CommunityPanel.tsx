@@ -1,3 +1,4 @@
+import { usePrefs } from "../../application/prefs";
 import { isHighlighted, unreadLabel, unreadMarker } from "../unread";
 import { UnreadBadge } from "../components/UnreadBadge";
 import { BellOff, ChevronDown, Eye, MonitorUp, MoreHorizontal, Plus } from "lucide-react";
@@ -114,6 +115,7 @@ export function CommunityPanel({ orgId, unreadOnly, hideMuted, perms }: { orgId:
     }
   };
   const timed = features.includes("channel-preferences");
+  const builder = usePrefs().builderMode;
 
   const onChannel = (ch: PanelChannel, item: ChannelMenuItem, sectionIds: string[]) => {
     const conv = convOf(ch.id);
@@ -133,6 +135,9 @@ export function CommunityPanel({ orgId, unreadOnly, hideMuted, perms }: { orgId:
       case "copyName":
         void navigator.clipboard?.writeText(ch.name).catch(() => undefined);
         return engine.notice("info", "Channel name copied.");
+      case "copyId":
+        void navigator.clipboard?.writeText(ch.id).catch(() => undefined);
+        return engine.notice("info", "Channel ID copied.");
       case "edit":
         return conv && setDialog({ k: "edit", channel: conv });
       case "permissions":
@@ -235,6 +240,7 @@ export function CommunityPanel({ orgId, unreadOnly, hideMuted, perms }: { orgId:
                     canDelete: features.includes("channel-delete"),
                     canHide: timed,
                     hidden: hiddenList.includes(ch.id),
+                    builder,
                   })}
                   onPick={(item) => onChannel(ch, item, sectionIds)}
                 />

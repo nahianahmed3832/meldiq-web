@@ -1,5 +1,8 @@
 import { z } from "zod";
 import { openEnum } from "./enums";
+import { zAccent, zAvatarMedia, zProfileBanner, zProfileStyle, zWornTag } from "./profileSchemas";
+
+export * from "./profileSchemas";
 
 /**
  * The parts of the server's responses this client uses (server/src/routes). Validated at the boundary; unknown fields are
@@ -42,6 +45,10 @@ export const zMember = z.object({
     .transform((v) => v ?? null),
   /** Batch B12: pronouns, under the same privacy setting as the bio. */
   pronouns: nullableString,
+  /** API 0.46.0: lists carry the animated avatar, the profile and name style, and the worn community tag. */
+  avatarMedia: zAvatarMedia,
+  profileStyle: zProfileStyle,
+  tag: zWornTag,
 });
 export type Member = z.infer<typeof zMember>;
 
@@ -126,12 +133,6 @@ export const zConversation = z.object({
 });
 export type Conversation = z.infer<typeof zConversation>;
 
-/** A community's accent colour (API 0.44.0): only "#rrggbb" is kept; anything else is dropped (Meldiq's theme). */
-export const zAccent = z
-  .unknown()
-  .optional()
-  .transform((v) => (typeof v === "string" && /^#[0-9a-f]{6}$/i.test(v) ? v.toLowerCase() : null));
-
 export const zOrg = z.object({
   id: z.string(),
   name: z.string(),
@@ -150,6 +151,13 @@ export const zOrg = z.object({
   bannerRev: z
     .number()
     .nullish()
+    .transform((v) => v ?? null),
+  /** API 0.46.0: the tag members may wear by their names (2–4 capitals or digits); null without one or on older servers. */
+  tag: z
+    .string()
+    .regex(/^[A-Z0-9]{2,4}$/)
+    .nullish()
+    .catch(null)
     .transform((v) => v ?? null),
   /** Round 7 guest policy (docs/WORKSPACE_C5.md); older servers allow guests without a limit. */
   guestsAllowed: z.boolean().default(true),
@@ -221,35 +229,13 @@ export const zActivity = z.object({
 });
 export type Activity = z.infer<typeof zActivity>;
 
-/** Profile style ids the web draws (API 0.45.0, server PROFILE_DECORATIONS / PROFILE_EFFECTS); unknown ones are dropped. */
-export const PROFILE_DECORATIONS = ["aurora", "ember", "frost", "neon", "sakura", "pixel"] as const;
-export const PROFILE_EFFECTS = ["sparkles", "glow", "stars", "bubbles"] as const;
-export const zAvatarMedia = z
-  .object({ kind: z.enum(["gif", "webp", "video"]), rev: z.number().int() })
-  .nullish()
-  .catch(null)
-  .transform((v) => v ?? null);
-export const zProfileBanner = z
-  .object({ kind: z.enum(["jpeg", "gif", "webp"]), rev: z.number().int() })
-  .nullish()
-  .catch(null)
-  .transform((v) => v ?? null);
-export const zProfileStyle = z
-  .object({
-    decoration: z.enum(PROFILE_DECORATIONS).nullable().catch(null),
-    effect: z.enum(PROFILE_EFFECTS).nullable().catch(null),
-    accent: zAccent,
-  })
-  .nullish()
-  .catch(null)
-  .transform((v) => v ?? null);
-export type ProfileStyle = NonNullable<z.infer<typeof zProfileStyle>>;
-
 export const zProfile = z.object({
   /** API 0.45.0: an animated avatar, a banner and a style (absent on older servers or when not shown to you). */
   avatarMedia: zAvatarMedia,
   profileBanner: zProfileBanner,
   profileStyle: zProfileStyle,
+  /** API 0.46.0: the community tag they wear by their name. */
+  tag: zWornTag,
   id: z.string(),
   username: z.string(),
   displayName: z.string(),

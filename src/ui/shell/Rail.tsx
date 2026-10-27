@@ -1,16 +1,17 @@
-import { CheckCheck, Compass, Hash, LogIn, LogOut, Plus, Settings2, UserPlus } from "lucide-react";
+import { CheckCheck, Compass, LogIn, MessageSquarePlus, Plus, Settings2, UsersRound } from "lucide-react";
 import { useRef, useState } from "react";
 import { useScrollStrip } from "../components/scrollStrip";
 import { shallowEqual, useEngine, useOrbit } from "../../application/orbit";
 import { contextMenuProps, Menu, type MenuEntry, useMenu } from "../components/Overlay";
-import { LeaveDialog } from "../community/CommunityHeader";
+import { useCommunityMenu } from "../community/communityMenu";
+import { useCommunityDetail } from "../community/useCommunityPermissions";
 import { setPrefs } from "../../application/prefs";
 import { navigate, type Section } from "../../application/router";
 import { ACCENT_CLASS, accentStyle } from "../community/accent";
 import { OrgAvatar } from "../components/OrgAvatar";
 import { UnreadBadge } from "../components/UnreadBadge";
 import { useIncomingRequestCount } from "../people/connectionRequests";
-import { markAllReadTargets, orgActivity, unreadPeopleCount } from "../selectors";
+import { isPeople, orgActivity, unreadOf, unreadPeopleCount } from "../selectors";
 import { capCount, isHighlighted, unreadMarker } from "../unread";
 import { useT } from "../../i18n";
 import type { ShellDialog } from "./Shell";
@@ -30,9 +31,37 @@ export function Rail({ orgId, section, onDialog }: { orgId: string | null; secti
   const homeLabel = `${t("rail_home")}${dms ? `, ${t("nav_unread", { n: dms })}` : ""}`;
   const strip = useRef<HTMLElement>(null);
   useScrollStrip(strip, "vertical", `${section}:${orgId}`);
+  const engine = useEngine();
+  const dmTargets = useOrbit(
+    (s) =>
+      Object.values(s.conversations)
+        .filter((c) => isPeople(c) && unreadOf(s, c.id) > 0)
+        .map((c) => c.id),
+    shallowEqual,
+  );
+  const menu = useMenu();
+  const [which, setWhich] = useState<"home" | "create" | null>(null);
+  const opener = (kind: "home" | "create") =>
+    contextMenuProps((el, e) => {
+      setWhich(kind);
+      menu.openAt(el, e);
+    });
+  const createEntries: MenuEntry[] = [
+    { label: "Start a community", icon: <Plus size={16} />, onSelect: () => onDialog({ kind: "createWorkspace" }) },
+    { label: "Join with a code", icon: <LogIn size={16} />, onSelect: () => onDialog({ kind: "joinWorkspace" }) },
+    { label: "Discover communities", icon: <Compass size={16} />, onSelect: () => navigate({ section: "discover" }) },
+  ];
+  const homeEntries: MenuEntry[] = [
+    { label: "Mark all messages as read", icon: <CheckCheck size={16} />, disabled: dmTargets.length === 0, onSelect: () => void Promise.all(dmTargets.map((c) => engine.markRead(c))) },
+    "separator",
+    { label: "Start a conversation", icon: <MessageSquarePlus size={16} />, onSelect: () => onDialog({ kind: "new" }) },
+    { label: "Create a group", icon: <UsersRound size={16} />, onSelect: () => onDialog({ kind: "newGroup" }) },
+    "separator",
+    { label: "Settings", icon: <Settings2 size={16} />, onSelect: () => navigate({ section: "settings", settingsPage: "profile" }) },
+  ];
   return (
     <nav className="rail" aria-label={t("rail_label")} ref={strip}>
-      <a className="rail-home" href="/dms" aria-current={home ? "page" : undefined} aria-label={homeLabel} title={t("rail_home")}>
+      <a className="rail-home" href="/dms" aria-current={home ? "page" : undefined} aria-label={homeLabel} title={t("rail_home")} {...opener("home")}>
         <img className="rail-mascot" src="/meldling-96.webp" srcSet="/meldling-96.webp 96w, /meldling-192.webp 192w" sizes="46px" width={46} height={46} alt="" draggable={false} />
         {dms > 0 && (
           <span className="count accent" aria-hidden="true">
@@ -50,13 +79,16 @@ export function Rail({ orgId, section, onDialog }: { orgId: string | null; secti
           })}
         </div>
       )}
-      <button className="rail-round" onClick={() => onDialog({ kind: "createWorkspace" })} aria-label={t("rail_create")} title={t("rail_create")}>
+      <button className="rail-round" onClick={() => onDialog({ kind: "createWorkspace" })} aria-label={t("rail_create")} title={t("rail_create")} {...opener("create")}>
         <Plus size={22} aria-hidden="true" />
       </button>
-      <a className="rail-round" href="/discover" aria-current={discovering ? "page" : undefined} aria-label={t("rail_discover")} title={t("rail_discover")}>
+      <a className="rail-round" href="/discover" aria-current={discovering ? "page" : undefined} aria-label={t("rail_discover")} title={t("rail_discover")} {...opener("create")}>
         <Compass size={22} aria-hidden="true" />
       </a>
       <div className="rail-spacer" />
+      {menu.anchor && which && (
+        <Menu anchor={menu.anchor} point={menu.point} label={which === "home" ? t("rail_home") : t("rail_create")} onClose={menu.close} entries={which === "home" ? homeEntries : createEntries} />
+      )}
     </nav>
   );
 }
@@ -77,47 +109,16 @@ function useRailOrgs(): RailOrg[] {
  */
 function CommunityButton({ org: o, selected, size, onDialog }: { org: RailOrg; selected: boolean; size: number; onDialog: (d: ShellDialog) => void }) {
   const t = useT();
-  const engine = useEngine();
   const menu = useMenu();
-  const [leaving, setLeaving] = useState(false);
-  const readTargets = useOrbit((s) => (menu.anchor ? markAllReadTargets(s, o.id) : []), shallowEqual);
+  // The permissions behind the menu's items load only once it opens (one request per right-click, not per icon).
+  const { perms } = useCommunityDetail(menu.anchor ? o.id : null);
+  const community = useCommunityMenu(o.id, perms, onDialog);
   const marker = unreadMarker(o.unread, o.mentions, false);
   const label = `${o.name}${o.mentions ? `, ${t("rail_mentions", { n: o.mentions })}` : ""}${o.unread ? `, ${t("nav_unread", { n: o.unread })}` : ""}`;
   const openIt = () => {
     setPrefs({ orgId: o.id });
     navigate({ section: "home" });
   };
-  const entries: MenuEntry[] = [
-    { label: "Open", icon: <LogIn size={16} />, onSelect: openIt },
-    ...(o.myRole && o.myRole !== "GUEST"
-      ? [
-          {
-            label: "Invite people",
-            icon: <UserPlus size={16} />,
-            onSelect: () => onDialog({ kind: "addMembers", orgId: o.id }),
-          },
-        ]
-      : []),
-    ...(readTargets.length > 0 ? [{ label: "Mark all as read", icon: <CheckCheck size={16} />, onSelect: () => void Promise.all(readTargets.map((c) => engine.markRead(c))) }] : []),
-    {
-      label: "Community settings",
-      icon: <Settings2 size={16} />,
-      onSelect: () => {
-        setPrefs({ orgId: o.id });
-        navigate({ section: "workspace", workspacePage: "overview" });
-      },
-    },
-    "separator",
-    {
-      label: "Copy community ID",
-      icon: <Hash size={16} />,
-      onSelect: () => {
-        void navigator.clipboard?.writeText(o.id).catch(() => undefined);
-        engine.notice("info", "Community ID copied.");
-      },
-    },
-    ...(o.myRole !== "OWNER" ? ["separator" as const, { label: "Leave community…", icon: <LogOut size={16} />, danger: true, onSelect: () => setLeaving(true) }] : []),
-  ];
   return (
     <>
       <button
@@ -133,8 +134,8 @@ function CommunityButton({ org: o, selected, size, onDialog }: { org: RailOrg; s
         <OrgAvatar orgId={o.id} name={o.name} photoRev={o.photoRev} size={size} />
         {!selected && <UnreadBadge marker={marker} />}
       </button>
-      {menu.anchor && <Menu anchor={menu.anchor} point={menu.point} label={o.name} onClose={menu.close} entries={entries} />}
-      {leaving && <LeaveDialog orgId={o.id} name={o.name} onClose={() => setLeaving(false)} />}
+      {menu.anchor && <Menu anchor={menu.anchor} point={menu.point} label={o.name} onClose={menu.close} entries={community.entries} />}
+      {community.dialogs}
     </>
   );
 }

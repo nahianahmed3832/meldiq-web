@@ -1,18 +1,19 @@
 import { CheckCheck, ChevronDown, Compass, Link2, LogIn, PenSquare, Plus, Settings2, Ticket, UsersRound } from "lucide-react";
-import { useLayoutEffect, useRef } from "react";
+import { type MouseEvent, useLayoutEffect, useRef } from "react";
 import { shallowEqual, useEngine, useOrbit } from "../../application/orbit";
 import { markAllReadTargets } from "../selectors";
 import { setPrefs, usePrefs } from "../../application/prefs";
 import { navigate, type Section } from "../../application/router";
 import { Avatar } from "../components/Avatar";
 import { OrgAvatar } from "../components/OrgAvatar";
-import { Menu, useMenu } from "../components/Overlay";
+import { keepsNativeMenu, Menu, type MenuEntry, useMenu } from "../components/Overlay";
 import { members } from "../format";
 import type { ShellDialog } from "./Shell";
 import { ArchivedList, ChannelSections, Collapsible, DmHub, PeopleExtras, PeopleList, PersonalSections, SkeletonRows } from "./SidebarSections";
 import { VoiceRoomsSection } from "./VoiceRooms";
 import { PhoneRail } from "./Rail";
 import { CommunityHeader, hideMutedKey } from "../community/CommunityHeader";
+import { useCommunityMenu } from "../community/communityMenu";
 import { CommunityPanel } from "../community/CommunityPanel";
 import { ACCENT_CLASS, accentStyle } from "../community/accent";
 import { usePhoto } from "../components/photos";
@@ -51,6 +52,22 @@ export function Sidebar({ orgId, section, open, onDialog }: SidebarProps) {
   // Each community's channel list (and the messages list) keeps its scroll position when you come back to it.
   const list = useRef<HTMLDivElement>(null);
   const listKey = messages ? "dms" : (orgId ?? "none");
+  // A right-click on the list's empty space: the community's menu beside its channels, or starting a conversation
+  // beside the messages (rows, headings and buttons have their own).
+  const blankMenu = useMenu();
+  const community = useCommunityMenu(communities && !messages ? orgId : null, perms, onDialog);
+  const blankEntries: MenuEntry[] =
+    communities && !messages && org
+      ? community.entries
+      : [
+          { label: t("side_new_message"), icon: <Plus size={16} />, onSelect: () => onDialog({ kind: "new" }) },
+          { label: "New group", icon: <UsersRound size={16} />, onSelect: () => onDialog({ kind: "newGroup" }) },
+        ];
+  const onBlankMenu = (e: MouseEvent<HTMLDivElement>) => {
+    if (keepsNativeMenu(e.target) || (e.target as HTMLElement).closest("button, a, [role='button'], .side-row, .side-item, .side-section-row, summary")) return;
+    e.preventDefault();
+    blankMenu.openAt(e.currentTarget, e);
+  };
   useLayoutEffect(() => {
     if (list.current) list.current.scrollTop = scrollMemory.get(listKey) ?? 0;
   }, [listKey]);
@@ -129,7 +146,7 @@ export function Sidebar({ orgId, section, open, onDialog }: SidebarProps) {
         />
       )}
 
-      <div className="side-scroll scroll" ref={list} onScroll={(e) => scrollMemory.set(listKey, e.currentTarget.scrollTop)}>
+      <div className="side-scroll scroll" ref={list} onScroll={(e) => scrollMemory.set(listKey, e.currentTarget.scrollTop)} onContextMenu={onBlankMenu}>
         {!synced && empty ? (
           <SkeletonRows />
         ) : messages ? (
@@ -172,6 +189,8 @@ export function Sidebar({ orgId, section, open, onDialog }: SidebarProps) {
         )}
       </div>
       <UserPanel />
+      {blankMenu.anchor && <Menu anchor={blankMenu.anchor} point={blankMenu.point} label={org && !messages ? org.name : t("side_direct_messages")} onClose={blankMenu.close} entries={blankEntries} />}
+      {community.dialogs}
     </aside>
   );
 }

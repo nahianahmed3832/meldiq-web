@@ -98,6 +98,22 @@ export interface Prefs {
   quickReaction: string;
   /** YouTube videos play inside Meldiq (privacy-enhanced player) instead of opening YouTube (android, 2026-10-23). */
   youtubeInApp: boolean;
+  /** Builder mode (Settings › Advanced): Copy ID on communities, channels, messages and people, for building bots. */
+  builderMode: boolean;
+  /** Settings › Voice & Audio (2026-10-28): the microphone and speaker (null: the system's default) and call volume. */
+  microphoneId: string | null;
+  speakerId: string | null;
+  outputVolume: number;
+  echoCancellation: boolean;
+  autoGain: boolean;
+  /** The user panel's microphone and headphones outside a call: how the next call starts. */
+  joinMuted: boolean;
+  joinDeafened: boolean;
+  /** Push to talk: the microphone is on only while [pttKey] (a KeyboardEvent.code) is held. */
+  pushToTalk: boolean;
+  pttKey: string | null;
+  /** Settings › Advanced › Trusted sites: hosts whose links open without asking (never ones that look misleading). */
+  trustedSites: string[];
 }
 
 const KEY = "orbit.prefs.v1";
@@ -140,6 +156,17 @@ const defaults: Prefs = {
   doubleTapReact: true,
   quickReaction: "👍",
   youtubeInApp: true,
+  builderMode: false,
+  microphoneId: null,
+  speakerId: null,
+  outputVolume: 100,
+  echoCancellation: true,
+  autoGain: true,
+  joinMuted: false,
+  joinDeafened: false,
+  pushToTalk: false,
+  pttKey: null,
+  trustedSites: [],
 };
 
 function load(): Prefs {
@@ -173,6 +200,17 @@ function load(): Prefs {
       quickReaction: QUICK_REACTIONS.some((e) => e === stored.quickReaction) ? stored.quickReaction : defaults.quickReaction,
       youtubeInApp: typeof stored.youtubeInApp === "boolean" ? stored.youtubeInApp : defaults.youtubeInApp,
       inAppSound: typeof stored.inAppSound === "boolean" ? stored.inAppSound : defaults.inAppSound,
+      builderMode: stored.builderMode === true,
+      microphoneId: typeof stored.microphoneId === "string" ? stored.microphoneId : null,
+      speakerId: typeof stored.speakerId === "string" ? stored.speakerId : null,
+      outputVolume: typeof stored.outputVolume === "number" && stored.outputVolume >= 0 && stored.outputVolume <= 100 ? Math.round(stored.outputVolume) : defaults.outputVolume,
+      echoCancellation: stored.echoCancellation !== false,
+      autoGain: stored.autoGain !== false,
+      joinMuted: stored.joinMuted === true,
+      joinDeafened: stored.joinDeafened === true,
+      pushToTalk: stored.pushToTalk === true,
+      pttKey: typeof stored.pttKey === "string" && /^[A-Za-z0-9]{1,24}$/.test(stored.pttKey) ? stored.pttKey : null,
+      trustedSites: Array.isArray(stored.trustedSites) ? stored.trustedSites.filter((h): h is string => typeof h === "string" && /^[a-z0-9.-]{1,253}$/.test(h)).slice(0, 200) : [],
       soundVolume: volumeOf(stored.soundVolume),
       ...notificationChoice(stored),
     };

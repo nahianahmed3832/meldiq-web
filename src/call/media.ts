@@ -1,6 +1,6 @@
 import type { ShareQuality } from "./shareQuality";
 import type { CallShareView } from "./shares";
-import type { CallParticipantView, DeviceIssues, DeviceKind, MediaDeviceChoice, MediaFactory, MediaGrant, MediaSession, PrepareOptions, ShareOptions } from "./types";
+import type { CallParticipantView, DeviceIssues, DeviceKind, MediaDeviceChoice, MediaFactory, MediaGrant, MediaSession, OutputOptions, PrepareOptions, ShareOptions } from "./types";
 
 /**
  * The browser's call media, loaded on first use: LiveKit and its encryption worker stay out of the main bundle until
@@ -52,6 +52,10 @@ class DeferredSession implements MediaSession {
 
   setDeafened(on: boolean): void {
     void this.inner.then((s) => s.setDeafened(on));
+  }
+
+  setOutput(opts: OutputOptions): void {
+    void this.inner.then((s) => s.setOutput?.(opts));
   }
 
   async setShareQuality(quality: ShareQuality): Promise<void> {

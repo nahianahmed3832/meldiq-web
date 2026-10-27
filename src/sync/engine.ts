@@ -15,7 +15,7 @@ import { fingerprint } from "../crypto/identity";
 import type { ConversationLocal, DeviceRecord, OutboxItem, PinnedIdentity, RichContent, StoredMessage } from "../model/types";
 import { encodePayload, type Payload } from "../protocol/payload";
 import { RealtimeClient } from "../realtime/socket";
-import type { ShareQuality } from "../call/shareQuality";
+import type { CallPrefs } from "../call/manager";
 import { type AppState, initialState, Store, type UserLite, upsertLoaded, withMessages } from "../state/store";
 import type { LocalStore } from "../store/db";
 import type { EngineContext } from "./context";
@@ -64,7 +64,7 @@ export interface EngineOptions {
   /** Call timing for tests. */
   callTiming?: { keyWaitMs?: number; peerWindowMs?: number; rejoinWindowMs?: number };
   /** Settings › Calls (batches B10, B11): noise reduction, and how this browser shares its screen. */
-  callPrefs?: () => { noiseReduction: boolean; shareQuality: ShareQuality; shareAudio: boolean };
+  callPrefs?: () => CallPrefs;
 }
 
 const PAGE = 60;
@@ -441,7 +441,19 @@ export class Engine implements EngineContext {
       this.set((s) => {
         const users = { ...s.users };
         for (const c of convs.conversations) for (const m of c.members ?? []) users[m.id] = toUser(m, users[m.id]);
-        users[u.id] = { id: u.id, username: u.username, displayName: u.displayName, avatarColor: u.avatarColor, statusText: u.statusText, online: true, photoRev: u.photoRev, pronouns: u.pronouns };
+        users[u.id] = {
+          id: u.id,
+          username: u.username,
+          displayName: u.displayName,
+          avatarColor: u.avatarColor,
+          statusText: u.statusText,
+          online: true,
+          photoRev: u.photoRev,
+          pronouns: u.pronouns,
+          avatarMedia: u.avatarMedia,
+          profileStyle: u.profileStyle,
+          tag: u.tag,
+        };
         const calls: Record<string, Call> = {};
         for (const c of convs.conversations)
           if (c.activeCall)
@@ -474,6 +486,7 @@ export class Engine implements EngineContext {
             presenceMode: u.presenceMode,
             presenceUntil: u.presenceUntil,
             pronouns: u.pronouns,
+            profileBanner: u.profileBanner,
           },
           orgs: orgs.orgs,
           conversations: Object.fromEntries(convs.conversations.map((c) => [c.id, c])),
@@ -1042,5 +1055,9 @@ function toUser(m: Member, prev?: UserLite): UserLite {
     photoRev: m.photoRev ?? null,
     presence: m.presence ?? prev?.presence ?? null,
     pronouns: m.pronouns ?? prev?.pronouns ?? null,
+    // API 0.46.0: lists carry them; a list without them (an older server) keeps what a profile already said.
+    avatarMedia: m.avatarMedia ?? prev?.avatarMedia ?? null,
+    profileStyle: m.profileStyle ?? prev?.profileStyle ?? null,
+    tag: m.tag ?? prev?.tag ?? null,
   };
 }

@@ -8,6 +8,7 @@ import { block, blockedIds, unblock } from "../../sync/profile";
 import { acceptConnection, connect, connections, connectionState, invitableCommunities, inviteFromProfile, presenceWords, removeConnection } from "../../sync/social";
 import { ReportDialog } from "../chat/ReportDialog";
 import { usePhoto } from "../components/photos";
+import { StyledName } from "./NameStyle";
 import { ProfileEffect, StyledAvatar } from "./ProfileStyle";
 import { Dialog, Menu, type MenuEntry, useMenu } from "../components/Overlay";
 import { toneOf } from "../components/Avatar";
@@ -236,7 +237,9 @@ export function ProfileDialog({ userId, fallbackName, orgId = null, near = null,
           )
         ) : (
           <>
-            <h2 className="profile-pop-name ellipsis">{profile.displayName}</h2>
+            <h2 className="profile-pop-name">
+              <StyledName name={profile.displayName} style={profile.profileStyle} tag={profile.tag} className="ellipsis" />
+            </h2>
             <p className="profile-pop-handle">
               @{profile.username}
               {profile.pronouns && <span className="tag">{profile.pronouns}</span>}

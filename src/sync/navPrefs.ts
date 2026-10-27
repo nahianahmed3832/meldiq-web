@@ -40,7 +40,14 @@ export const zNavPrefs = z.object({
   // workspace document, never touch it).
   saved: z.array(zSavedItem).optional(),
   /** Batch B2, community documents: the level its channels follow unless they have their own, and Ignore @everyone. */
-  community: z.object({ level: z.enum(NOTIFY_LEVELS).default("all"), suppressEveryone: z.boolean().default(false) }).optional(),
+  community: z
+    .object({
+      level: z.enum(NOTIFY_LEVELS).default("all"),
+      suppressEveryone: z.boolean().default(false),
+      /** API 0.46.0: the whole community muted until then (epoch ms), its channels' own levels included. */
+      mutedUntil: z.number().nullable().optional(),
+    })
+    .optional(),
   /** Batch B2, personal document: the person's communities in rail order. */
   railOrder: z.array(z.string()).optional(),
   /** Batch B3: mutes that end by themselves (conversation id → epoch ms). */
@@ -74,7 +81,7 @@ export type NavOp =
   | { op: "remind"; messageId: string; remindAt: number | null }
   // Batch B2 and B3, as android NavPrefsRules: [categoryId] lets "all" stay stored while that category is quieter.
   | { op: "notify"; conversationId: string; level: NotifyLevel; categoryId?: string | null }
-  | { op: "community"; level?: NotifyLevel; suppressEveryone?: boolean }
+  | { op: "community"; level?: NotifyLevel; suppressEveryone?: boolean; mutedUntil?: number | null }
   | { op: "notifyReset"; conversationId: string }
   | { op: "railOrder"; orgIds: string[] }
   | { op: "muteUntil"; conversationId: string; until: number | null }
@@ -94,7 +101,8 @@ export function placeOf(p: NavPrefs, conversationId: string): NavPlace {
  * level; else its category's ([categoryId]); else its community's; else "all".
  */
 export function levelOf(p: NavPrefs | undefined, conversationId: string, categoryId: string | null = null, now: number = Date.now()): NotifyLevel {
-  if (mutedUntil(p, conversationId, now) !== null) return "none";
+  // A muted community mutes every channel in it, even those with a level of their own (as Discord's Mute Server).
+  if (mutedUntil(p, conversationId, now) !== null || communityMutedUntil(p, now) !== null) return "none";
   return p?.notify[conversationId] ?? parentLevel(p, categoryId);
 }
 
@@ -103,7 +111,16 @@ export function parentLevel(p: NavPrefs | undefined, categoryId: string | null):
   return (categoryId ? p?.categoryNotify?.[categoryId] : undefined) ?? communityLevel(p);
 }
 
-export const communityLevel = (p: NavPrefs | undefined): NotifyLevel => p?.community?.level ?? "all";
+/** "Until I turn it back on": a mute that never ends by itself (the latest time a Date can hold). */
+export const MUTE_FOREVER = 8.64e15;
+
+/** When the whole community's mute (API 0.46.0, the rail's Mute community) ends, if one is running at [now]. */
+export function communityMutedUntil(p: NavPrefs | undefined, now: number = Date.now()): number | null {
+  const t = p?.community?.mutedUntil;
+  return typeof t === "number" && t > now ? t : null;
+}
+
+export const communityLevel = (p: NavPrefs | undefined, now: number = Date.now()): NotifyLevel => (communityMutedUntil(p, now) !== null ? "none" : (p?.community?.level ?? "all"));
 
 /** Whether @everyone counts as a mention in this community (Ignore @everyone off). */
 export const countsEveryone = (p: NavPrefs | undefined): boolean => p?.community?.suppressEveryone !== true;
@@ -193,7 +210,8 @@ export function applyOp(p: NavPrefs, o: NavOp): NavPrefs {
       return { ...p, notify: omit(p.notify, o.conversationId) };
     case "community": {
       const current = p.community ?? { level: "all" as NotifyLevel, suppressEveryone: false };
-      const next = { level: o.level ?? current.level, suppressEveryone: o.suppressEveryone ?? current.suppressEveryone };
+      const until = o.mutedUntil !== undefined ? o.mutedUntil : (p.community?.mutedUntil ?? null);
+      const next = { level: o.level ?? current.level, suppressEveryone: o.suppressEveryone ?? current.suppressEveryone, ...(until !== null ? { mutedUntil: until } : {}) };
       // Back to "all": an "all" override says nothing any more, unless category levels make it mean something.
       const dropAll = next.level === "all" && !Object.keys(p.categoryNotify ?? {}).length;
       return { ...p, community: next, notify: dropAll ? Object.fromEntries(Object.entries(p.notify).filter(([, l]) => l !== "all")) : p.notify };
