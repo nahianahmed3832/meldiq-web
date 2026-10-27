@@ -360,11 +360,11 @@ export class Engine implements EngineContext {
    * Signs in again after the account session ended: the password, plus proof that this browser still holds its device
    * key, so the new session is bound to this device. A removed device is told so by the server, and then erased.
    */
-  async signInAgain(password: string, email?: string): Promise<void> {
+  async signInAgain(password: string, email?: string, totpCode?: string): Promise<void> {
     if (!(this.session instanceof AccountSession)) throw new Error("This browser isn't signed in with a Meldiq account.");
     const account = this.record.account;
     try {
-      await this.session.adopt(await signInWithDevice(this.opts.base, this.record, password, email));
+      await this.session.adopt(await signInWithDevice(this.opts.base, this.record, password, email, totpCode));
     } catch (e) {
       if (e instanceof ApiError && (e.code === "device_revoked" || e.code === "account_disabled")) return this.revoked(e.code);
       throw e;
@@ -380,6 +380,14 @@ export class Engine implements EngineContext {
     this.realtime.start();
     void this.refreshAll();
     this.outbox.kick();
+  }
+
+  /** The account's email changed here (Settings › My Account, API 0.46.0): sign-ins from now on use the new address. */
+  async accountEmailChanged(email: string): Promise<void> {
+    const account = this.record.account;
+    if (!account || account.email === email) return;
+    this.record = { ...this.record, account: { ...account, email } };
+    await this.store.saveDevice(this.record);
   }
 
   private revoked(reason: RevokedReason): void {

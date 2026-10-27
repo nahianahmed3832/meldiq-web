@@ -70,3 +70,17 @@ export const zWornTag = z
   .catch(null)
   .transform((v) => v ?? null);
 export type WornTag = NonNullable<z.infer<typeof zWornTag>>;
+
+/** API 0.46.0: About me, links (https only) and badges earned, on profiles. */
+export const zAboutMe = nullableString;
+export const zProfileLinks = z
+  .array(z.object({ label: z.string().max(40), url: z.string().regex(/^https:\/\//) }))
+  .max(5)
+  .nullish()
+  .catch(null)
+  .transform((v) => v ?? []);
+export const zBadges = z
+  .array(z.string())
+  .nullish()
+  .catch(null)
+  .transform((v) => (v ?? []).filter((b): b is "bug-hunter" => b === "bug-hunter"));

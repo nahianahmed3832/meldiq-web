@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { openEnum } from "./enums";
-import { zAccent, zAvatarMedia, zProfileBanner, zProfileStyle, zWornTag } from "./profileSchemas";
+import { zAboutMe, zAccent, zAvatarMedia, zBadges, zProfileBanner, zProfileLinks, zProfileStyle, zWornTag } from "./profileSchemas";
 
 export * from "./profileSchemas";
 
@@ -234,8 +234,11 @@ export const zProfile = z.object({
   avatarMedia: zAvatarMedia,
   profileBanner: zProfileBanner,
   profileStyle: zProfileStyle,
-  /** API 0.46.0: the community tag they wear by their name. */
+  /** API 0.46.0: the community tag they wear by their name, About me, links and badges. */
   tag: zWornTag,
+  aboutMe: zAboutMe,
+  links: zProfileLinks,
+  badges: zBadges,
   id: z.string(),
   username: z.string(),
   displayName: z.string(),

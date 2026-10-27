@@ -1,3 +1,4 @@
+import { applyVibe, HEX } from "./vibes";
 import { useSyncExternalStore } from "react";
 import { type ShareQuality, shareQualityOf } from "../call/shareQuality";
 import { TRANSLATE_TARGETS, type TranslateTarget } from "../sync/translate";
@@ -114,6 +115,16 @@ export interface Prefs {
   pttKey: string | null;
   /** Settings › Advanced › Trusted sites: hosts whose links open without asking (never ones that look misleading). */
   trustedSites: string[];
+  /** Settings › Appearance › Colour themes (application/vibes.ts): a preset id, "custom", or null; and how strong. */
+  vibe: string | null;
+  vibeCustom: string[] | null;
+  vibeStrength: number;
+  /** Settings › Appearance: a community's own colours while you're in it (off: always Meldiq's). */
+  communityColors: boolean;
+  /** Settings › Appearance: people who just messaged you show as bubbles under Home on the rail. */
+  railDmBubbles: boolean;
+  /** Settings › Shortcuts (application/shortcuts.ts): changed combinations by action id ("" turns one off). */
+  keybinds: Record<string, string>;
 }
 
 const KEY = "orbit.prefs.v1";
@@ -167,6 +178,12 @@ const defaults: Prefs = {
   pushToTalk: false,
   pttKey: null,
   trustedSites: [],
+  vibe: null,
+  vibeCustom: null,
+  vibeStrength: 60,
+  communityColors: true,
+  railDmBubbles: true,
+  keybinds: {},
 };
 
 function load(): Prefs {
@@ -210,6 +227,15 @@ function load(): Prefs {
       joinDeafened: stored.joinDeafened === true,
       pushToTalk: stored.pushToTalk === true,
       pttKey: typeof stored.pttKey === "string" && /^[A-Za-z0-9]{1,24}$/.test(stored.pttKey) ? stored.pttKey : null,
+      vibe: typeof stored.vibe === "string" && /^[a-z-]{1,24}$/.test(stored.vibe) ? stored.vibe : null,
+      vibeCustom: Array.isArray(stored.vibeCustom) && stored.vibeCustom.every((c) => typeof c === "string" && HEX.test(c)) ? stored.vibeCustom.slice(0, 3) : null,
+      vibeStrength: typeof stored.vibeStrength === "number" && stored.vibeStrength >= 0 && stored.vibeStrength <= 100 ? Math.round(stored.vibeStrength) : defaults.vibeStrength,
+      communityColors: stored.communityColors !== false,
+      railDmBubbles: stored.railDmBubbles !== false,
+      keybinds:
+        stored.keybinds && typeof stored.keybinds === "object"
+          ? Object.fromEntries(Object.entries(stored.keybinds).filter(([k, v]) => /^[a-zA-Z]{1,32}$/.test(k) && typeof v === "string" && v.length <= 40))
+          : {},
       trustedSites: Array.isArray(stored.trustedSites) ? stored.trustedSites.filter((h): h is string => typeof h === "string" && /^[a-z0-9.-]{1,253}$/.test(h)).slice(0, 200) : [],
       soundVolume: volumeOf(stored.soundVolume),
       ...notificationChoice(stored),
@@ -283,7 +309,16 @@ export function usePrefs(): Prefs {
 }
 
 /** Light, dark or the system's, and the colour plate; the browser's own chrome takes the frame colour. */
-export function applyTheme({ theme, palette, textSize, messageLayout, language }: Pick<Prefs, "theme" | "palette" | "textSize" | "messageLayout"> & Partial<Pick<Prefs, "language">>): void {
+export function applyTheme({
+  theme,
+  palette,
+  textSize,
+  messageLayout,
+  language,
+  vibe = null,
+  vibeCustom = null,
+  vibeStrength = 60,
+}: Pick<Prefs, "theme" | "palette" | "textSize" | "messageLayout"> & Partial<Pick<Prefs, "language" | "vibe" | "vibeCustom" | "vibeStrength">>): void {
   const root = document.documentElement;
   // The page's language follows the interface's (screen readers, fonts, spelling).
   root.setAttribute("lang", resolveLanguage(language ?? "system"));
@@ -292,6 +327,7 @@ export function applyTheme({ theme, palette, textSize, messageLayout, language }
   if (theme === "system") root.removeAttribute("data-theme");
   else root.setAttribute("data-theme", theme);
   root.setAttribute("data-palette", palette);
+  applyVibe(root, vibe, vibeCustom, vibeStrength);
   const frame = getComputedStyle(root).getPropertyValue("--theme-color").trim();
   if (frame) document.querySelector('meta[name="theme-color"]')?.setAttribute("content", frame);
 }

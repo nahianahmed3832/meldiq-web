@@ -66,6 +66,9 @@ export function SignInForm(props: {
   const [help, setHelp] = useState(false);
   const { busy, error, setError, run } = useSubmit();
   const [withPasskey, setWithPasskey] = useState(false);
+  // API 0.46.0: two-step sign-in asks for the authenticator app's code (or a backup code) after the password.
+  const [needsCode, setNeedsCode] = useState(false);
+  const [code, setCode] = useState("");
   const t = useT();
 
   const passkey = (rpId: string) => {
@@ -82,11 +85,16 @@ export function SignInForm(props: {
   const submit = () => {
     const problem = emailProblem(email) ?? (password ? null : t("signin_enter_password"));
     if (problem) return setError(problem);
+    if (needsCode && code.replace(/[\s-]/g, "").length < 6) return setError("Enter the 6-digit code from your authenticator app, or a backup code.");
     void run(async () => {
       try {
-        props.onSignedIn(await props.ctx.accounts.login(normalizeEmail(email), password, props.ctx.deviceName), password);
+        props.onSignedIn(await props.ctx.accounts.login(normalizeEmail(email), password, props.ctx.deviceName, undefined, needsCode ? code.trim() : undefined), password);
       } catch (e) {
         if (e instanceof ApiError && e.code === "email_unverified") return props.onUnverified(normalizeEmail(email), password);
+        if (e instanceof ApiError && e.code === "totp_required") {
+          setNeedsCode(true);
+          return;
+        }
         throw e;
       }
     });
@@ -115,6 +123,21 @@ export function SignInForm(props: {
       <Field id="si-password" label={t("common_password")}>
         <input id="si-password" className="input" type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} />
       </Field>
+      {needsCode && (
+        <Field id="si-code" label="Code from your authenticator app">
+          <input
+            id="si-code"
+            className="input mono"
+            inputMode="numeric"
+            autoComplete="one-time-code"
+            placeholder="123456 or a backup code"
+            value={code}
+            maxLength={20}
+            onChange={(e) => setCode(e.target.value)}
+            autoFocus
+          />
+        </Field>
+      )}
       <button className="btn btn-primary btn-lg" disabled={busy}>
         {busy && !withPasskey ? t("signin_busy") : t("signin_button")}
       </button>

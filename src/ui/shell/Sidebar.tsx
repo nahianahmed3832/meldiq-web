@@ -45,7 +45,7 @@ export function Sidebar({ orgId, section, open, onDialog }: SidebarProps) {
   const hasConnections = useOrbit((s) => s.server?.features.includes("connections") ?? false);
   const t = useT();
   // API 0.44.0: the community's own accent and banner, on its channel list only (never the DMs or other communities).
-  const branded = communities && section !== "dms" && !!org;
+  const branded = communities && section !== "dms" && !!org && prefs.communityColors;
   // Home with no community yet (none joined, or the chosen one left) shows the messages hub rather than an empty list.
   const messages = section === "dms" || (communities && !org);
   const bannerUrl = usePhoto("banner", org?.id ?? "", branded ? org?.bannerRev : null);

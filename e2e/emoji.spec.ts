@@ -33,7 +33,10 @@ test("search, skin tone and categories, into the composer and as a reaction", as
   const bob = await newPhone("bob", "Bob Chen");
   const dm = (await bob.req("POST", "/v1/conversations/dm", { userId: me })).conversation.id as string;
   await bob.send(dm, { type: "text", text: "Pick an emoji" });
-  await page.getByRole("link", { name: /Bob Chen/ }).click();
+  await page
+    .getByRole("complementary", { name: "Conversations" })
+    .getByRole("link", { name: /Bob Chen/ })
+    .click();
   await expect(page.getByText("Pick an emoji")).toBeVisible();
 
   // Into the composer: search, with a skin tone chosen once.

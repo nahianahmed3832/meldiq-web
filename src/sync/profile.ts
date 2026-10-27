@@ -38,6 +38,14 @@ export interface ProfileChange {
   username?: string;
   /** Batch B12: shown after the username, under the same privacy setting as the bio. */
   pronouns?: string | null;
+  /** API 0.46.0: About me (up to 300 characters) and up to 5 https links, under the bio's setting. */
+  aboutMe?: string | null;
+  links?: ProfileLink[] | null;
+}
+
+export interface ProfileLink {
+  label: string;
+  url: string;
 }
 
 export async function updateMyProfile(engine: Engine, change: ProfileChange): Promise<MyProfile> {

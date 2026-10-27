@@ -5,13 +5,16 @@ import { shallowEqual, useEngine, useOrbit } from "../../application/orbit";
 import { contextMenuProps, Menu, type MenuEntry, useMenu } from "../components/Overlay";
 import { useCommunityMenu } from "../community/communityMenu";
 import { useCommunityDetail } from "../community/useCommunityPermissions";
-import { setPrefs } from "../../application/prefs";
+import { setPrefs, usePrefs } from "../../application/prefs";
 import { navigate, type Section } from "../../application/router";
 import { ACCENT_CLASS, accentStyle } from "../community/accent";
 import { OrgAvatar } from "../components/OrgAvatar";
 import { UnreadBadge } from "../components/UnreadBadge";
 import { useIncomingRequestCount } from "../people/connectionRequests";
-import { isPeople, orgActivity, unreadOf, unreadPeopleCount } from "../selectors";
+import { isMuted, isPeople, orgActivity, people, unreadOf, unreadPeopleCount } from "../selectors";
+import { conversationTitle, dmPeer } from "../format";
+import { GroupAvatar } from "../components/OrgAvatar";
+import { LookAvatar } from "../people/NameStyle";
 import { capCount, isHighlighted, unreadMarker } from "../unread";
 import { useT } from "../../i18n";
 import type { ShellDialog } from "./Shell";
@@ -69,6 +72,7 @@ export function Rail({ orgId, section, onDialog }: { orgId: string | null; secti
           </span>
         )}
       </a>
+      <RailDmBubbles />
       <div className="rail-sep" />
       {orgs.length > 0 && (
         <div role="group" aria-label={t("rail_communities")} className="rail-orgs">
@@ -114,6 +118,8 @@ function CommunityButton({ org: o, selected, size, onDialog }: { org: RailOrg; s
   const { perms } = useCommunityDetail(menu.anchor ? o.id : null);
   const community = useCommunityMenu(o.id, perms, onDialog);
   const marker = unreadMarker(o.unread, o.mentions, false);
+  const ownColors = usePrefs().communityColors;
+  const accent = ownColors ? o.accent : null;
   const label = `${o.name}${o.mentions ? `, ${t("rail_mentions", { n: o.mentions })}` : ""}${o.unread ? `, ${t("nav_unread", { n: o.unread })}` : ""}`;
   const openIt = () => {
     setPrefs({ orgId: o.id });
@@ -122,8 +128,8 @@ function CommunityButton({ org: o, selected, size, onDialog }: { org: RailOrg; s
   return (
     <>
       <button
-        className={`rail-org${isHighlighted(marker) ? " unread" : ""}${o.accent ? ` ${ACCENT_CLASS}` : ""}`}
-        style={accentStyle(o.accent)}
+        className={`rail-org${isHighlighted(marker) ? " unread" : ""}${accent ? ` ${ACCENT_CLASS}` : ""}`}
+        style={accentStyle(accent)}
         aria-current={selected}
         title={o.name}
         aria-label={label}
@@ -161,5 +167,57 @@ export function PhoneRail({ orgId, onDialog }: { orgId: string | null; onDialog:
         <Compass size={22} aria-hidden="true" />
       </a>
     </nav>
+  );
+}
+
+/** At most this many people who just messaged you, as bubbles under Home (Settings › Appearance). */
+const DM_BUBBLES = 5;
+
+/**
+ * People with unread direct messages or groups, as round bubbles under Home (the reference's rail): one click opens
+ * the conversation. Muted ones and message requests don't show. Off in Settings › Appearance.
+ */
+function RailDmBubbles() {
+  const on = usePrefs().railDmBubbles;
+  const me = useOrbit((s) => s.me?.userId ?? "");
+  const items = useOrbit(
+    (s) =>
+      on
+        ? people(s)
+            .filter((c) => unreadOf(s, c.id) > 0 && !isMuted(s, c))
+            .slice(0, DM_BUBBLES)
+            .map((c) => {
+              const peer = c.type === "DM" ? dmPeer(c, me) : null;
+              const u = peer ? s.users[peer.id] : undefined;
+              return {
+                id: c.id,
+                type: c.type,
+                title: conversationTitle(c, me, s.users),
+                peerId: peer?.id ?? null,
+                color: u?.avatarColor ?? peer?.avatarColor ?? 0,
+                photoRev: u?.photoRev ?? null,
+                groupPhoto: c.photoRev ?? null,
+                unread: unreadOf(s, c.id),
+              };
+            })
+        : [],
+    (a, b) => a.length === b.length && a.every((x, i) => shallowEqual(x, b[i])),
+  );
+  if (!items.length) return null;
+  return (
+    <div className="rail-dms" role="group" aria-label="Unread messages">
+      {items.map((it) => (
+        <a key={it.id} className="rail-dm" href={`/dms/c/${encodeURIComponent(it.id)}`} title={it.title} aria-label={`${it.title}, ${it.unread} unread`}>
+          {it.type === "DM" && it.peerId ? (
+            <LookAvatar userId={it.peerId} name={it.title} colorIndex={it.color} photoRev={it.photoRev} size={44} />
+          ) : (
+            <GroupAvatar conversationId={it.id} name={it.title} photoRev={it.groupPhoto} size={44} />
+          )}
+          <span className="count accent" aria-hidden="true">
+            {capCount(it.unread)}
+          </span>
+        </a>
+      ))}
+    </div>
   );
 }

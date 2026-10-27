@@ -912,3 +912,27 @@
 .phone-rail {
   overscroll-behavior-x: contain;
 }
+
+/* People who just messaged you, as bubbles under Home (Settings › Appearance, 2026-10-28). */
+.rail-dms {
+  display: grid;
+  gap: 8px;
+  justify-items: center;
+  margin: 4px 0 2px;
+}
+.rail-dm {
+  position: relative;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  transition: transform var(--t-fast) var(--ease);
+  animation: rise var(--t-fast) var(--ease);
+}
+.rail-dm:hover {
+  transform: translateY(-1px);
+}
+.rail-dm .count {
+  position: absolute;
+  bottom: -4px;
+  right: -6px;
+}

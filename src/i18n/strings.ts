@@ -729,11 +729,14 @@ export const STRINGS = {
 
   // ── settings menu ──
   settings_title: ["Settings", "设置", "সেটিংস"],
-  settings_profile: ["Profile", "个人资料", "প্রোফাইল"],
-  settings_account: ["Account", "账户", "অ্যাকাউন্ট"],
+  settings_profile: ["My Profile", "我的资料", "আমার প্রোফাইল"],
+  settings_account: ["My Account", "我的账户", "আমার অ্যাকাউন্ট"],
+  settings_user_group: ["User settings", "用户设置", "ব্যবহারকারীর সেটিংস"],
+  settings_app_group: ["App settings", "应用设置", "অ্যাপ সেটিংস"],
+  settings_shortcuts: ["Shortcuts", "快捷键", "শর্টকাট"],
   settings_devices: ["Devices", "设备", "ডিভাইস"],
   settings_notifications: ["Notifications", "通知", "নোটিফিকেশন"],
-  settings_calls: ["Calls", "通话", "কল"],
+  settings_calls: ["Voice & Audio", "语音与音频", "ভয়েস ও অডিও"],
   settings_appearance: ["Appearance", "外观", "চেহারা"],
   settings_storage: ["Storage", "存储", "স্টোরেজ"],
   settings_security: ["Privacy & security", "隐私与安全", "গোপনীয়তা ও নিরাপত্তা"],

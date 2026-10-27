@@ -9,6 +9,7 @@ import { acceptConnection, connect, connections, connectionState, invitableCommu
 import { ReportDialog } from "../chat/ReportDialog";
 import { usePhoto } from "../components/photos";
 import { StyledName } from "./NameStyle";
+import { SafeLink } from "../chat/SafeLink";
 import { ProfileEffect, StyledAvatar } from "./ProfileStyle";
 import { Dialog, Menu, type MenuEntry, useMenu } from "../components/Overlay";
 import { toneOf } from "../components/Avatar";
@@ -245,6 +246,29 @@ export function ProfileDialog({ userId, fallbackName, orgId = null, near = null,
               {profile.pronouns && <span className="tag">{profile.pronouns}</span>}
             </p>
             {(profile.statusEmoji || profile.statusText) && <p className="profile-pop-status">{[profile.statusEmoji, profile.statusText].filter(Boolean).join(" ")}</p>}
+            {profile.badges.includes("bug-hunter") && (
+              <span className="badge-pill" title="Found a bug Meldiq confirmed">
+                🐞 Bug Hunter
+              </span>
+            )}
+            {profile.aboutMe && (
+              <section className="profile-box" aria-label="About me">
+                <h3>About me</h3>
+                <p className="profile-about">{profile.aboutMe}</p>
+              </section>
+            )}
+            {profile.links.length > 0 && (
+              <section className="profile-box" aria-label="Links">
+                <h3>Links</h3>
+                <ul className="profile-links">
+                  {profile.links.map((l) => (
+                    <li key={l.url}>
+                      <SafeLink href={l.url}>{l.label}</SafeLink>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )}
             {error && (
               <div className="banner danger" role="alert">
                 {error}

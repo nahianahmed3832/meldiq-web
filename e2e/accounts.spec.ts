@@ -62,16 +62,17 @@ test("sign up, set up encryption, come back after a reload, and add a second bro
   await page.getByRole("button", { name: "Open Meldiq" }).click();
   await expect(page.locator(":is(.conn.online, .user-panel[data-connection=online]):visible").first()).toBeVisible({ timeout: 15_000 });
 
-  // Settings › Account, grouped as on Android: account information (with the phone from the profile), how you sign
-  // in, account management.
+  // Settings › My Account (2026-10-28, the reference's page): your card with name, username and the email hidden until
+  // Reveal; then password and authentication, and the account itself.
   await page.goto("/settings/account");
-  await expect(page.getByRole("heading", { name: "Account information" })).toBeVisible();
-  const info = page.locator(".account-info");
-  await expect(info).toContainText(email);
+  await expect(page.getByRole("heading", { name: "My Account", level: 1 })).toBeVisible();
+  const info = page.locator(".account-card");
   await expect(info).toContainText("Nadia Rahman");
-  await expect(info).toContainText("PhoneNot added");
-  await expect(page.getByRole("heading", { name: "How you sign in" })).toBeVisible();
-  await expect(page.getByRole("heading", { name: "Account management" })).toBeVisible();
+  await expect(info).not.toContainText(email);
+  await info.getByRole("button", { name: "Reveal" }).click();
+  await expect(info).toContainText(email);
+  await expect(page.getByRole("heading", { name: "Password and authentication" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Account", exact: true })).toBeVisible();
 
   // The session survives a reload (stored sealed); no password asked.
   await page.reload();
@@ -84,7 +85,7 @@ test("sign up, set up encryption, come back after a reload, and add a second bro
   const bob = await newPhone("bob", "Bob Chen");
   const dm = (await bob.req("POST", "/v1/conversations/dm", { userId: me })).conversation.id as string;
   await bob.send(dm, { type: "text", text: "Welcome to Meldiq, Nadia" });
-  await expect(page.getByRole("link", { name: /Bob Chen/ })).toBeVisible();
+  await expect(page.getByRole("complementary", { name: "Conversations" }).getByRole("link", { name: /Bob Chen/ })).toBeVisible();
 
   // A second browser: sign in, set it up with the recovery key, and it reads the same conversation.
   const other = await browser.newContext({ extraHTTPHeaders: { "x-orbit-test-ip": testAddress() } });
@@ -113,7 +114,10 @@ test("sign up, set up encryption, come back after a reload, and add a second bro
   await expect(second.locator(":is(.conn.online, .user-panel[data-connection=online]):visible").first()).toBeVisible({ timeout: 15_000 });
   await bob.send(dm, { type: "text", text: "Both of your browsers get this" });
   for (const p of [page, second]) {
-    await p.getByRole("link", { name: /Bob Chen/ }).click();
+    await p
+      .getByRole("complementary", { name: "Conversations" })
+      .getByRole("link", { name: /Bob Chen/ })
+      .click();
     await expect(p.getByText("Both of your browsers get this")).toBeVisible();
   }
   await other.close();
