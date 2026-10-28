@@ -126,23 +126,25 @@ const CACHE_LIMIT = 64 * 1024 * 1024;
  * (their ciphertext is kept in the media cache). Object URLs are made by the caller and revoked by it.
  */
 export function openAttachment(engine: Engine, ref: AttachmentRef, onProgress?: (p: DownloadProgress) => void): Promise<Blob> {
+  // Keyed by the file and the hash it must have: a reference naming another hash is verified on its own.
+  const key = `${ref.id}:${ref.sha256}`;
   if (ref.chunk !== undefined) {
     // One open per file at a time: opening it again while it downloads joins that download (and its progress).
-    const running = cache.get(ref.id);
+    const running = cache.get(key);
     if (running) return running;
     const p = openChunked(engine, ref, onProgress);
-    cache.set(ref.id, p);
+    cache.set(key, p);
     p.then(
-      () => ref.size > CACHE_LIMIT && cache.delete(ref.id),
-      () => cache.delete(ref.id),
+      () => ref.size > CACHE_LIMIT && cache.delete(key),
+      () => cache.delete(key),
     );
     return p;
   }
-  let p = cache.get(ref.id);
+  let p = cache.get(key);
   if (!p) {
     p = openSingle(engine, ref);
-    p.catch(() => cache.delete(ref.id));
-    cache.set(ref.id, p);
+    p.catch(() => cache.delete(key));
+    cache.set(key, p);
   }
   return p;
 }

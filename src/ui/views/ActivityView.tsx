@@ -1,3 +1,4 @@
+import { MeldlingArt } from "../components/MeldlingArt";
 import { AtSign, Building2, Hash, LogIn, LogOut, MailPlus, MessagesSquare, Phone, PhoneMissed, UsersRound } from "lucide-react";
 import { useEffect, useState } from "react";
 import { ApiError } from "../../api/client";
@@ -63,9 +64,7 @@ export function ActivityView({ orgId }: { orgId: string | null }) {
               <h2>Unread mentions</h2>
               {mentions.length === 0 ? (
                 <div className="empty" style={{ padding: 28 }}>
-                  <span className="empty-orb">
-                    <AtSign size={24} />
-                  </span>
+                  <MeldlingArt pose="all-set" />
                   <p>Nobody has mentioned you since you last read. You're all caught up.</p>
                 </div>
               ) : (

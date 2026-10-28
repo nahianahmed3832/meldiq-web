@@ -293,6 +293,14 @@ export const zProfile = z.object({
     .number()
     .nullish()
     .transform((v) => v ?? null),
+  /** API 0.57.0: when they joined Meldiq (the profile's "Member since"). */
+  memberSince: z.number().nullish(),
+  /** API 0.57.0: communities you're both in, with when they joined each. */
+  mutualCommunities: z
+    .array(z.object({ id: z.string(), name: z.string(), photoRev: z.number().nullable(), joinedAt: z.number() }))
+    .max(200)
+    .nullish()
+    .transform((v) => v ?? []),
 });
 export type Profile = z.infer<typeof zProfile>;
 
@@ -335,10 +343,31 @@ export const zPairingPoll = z.discriminatedUnion("status", [
   z.object({ status: z.literal("approved"), username: z.string(), identityKey: z.string(), certificate: z.string(), sealedIdentity: z.string(), sealedEnc: z.string() }),
 ]);
 
+/**
+ * A message or a change to one as the server stores and serves it (API 0.57.0, server docs/SERVER_MESSAGES.md): in
+ * history pages, search results, and the delivery queue's "message" items. Readable: nothing to decrypt.
+ */
+export const zStoredEvent = z.object({
+  id: z.string(),
+  conversationId: z.string(),
+  senderUserId: z.string(),
+  senderDeviceId: z.string().nullable(),
+  cls: z.enum(["message", "control"]),
+  payload: z.record(z.string(), z.unknown()),
+  sentAt: z.number(),
+  serverTs: z.number(),
+  mentionAll: z.boolean(),
+  importedBy: z.string().nullable().default(null),
+});
+export type StoredEvent = z.infer<typeof zStoredEvent>;
+
+export const zServerHistoryPage = z.object({ messages: z.array(zStoredEvent), changes: z.array(zStoredEvent), more: z.boolean() });
+export type ServerHistoryPage = z.infer<typeof zServerHistoryPage>;
+
 /** One delivery-queue item (server hub.ts queueItemToWire). */
 export const zQueueItem = z.object({
   id: z.number().int(),
-  kind: z.enum(["envelope", "receipt"]),
+  kind: z.enum(["envelope", "receipt", "message"]),
   conversationId: z.string(),
   messageId: z.string(),
   senderUserId: z.string(),
@@ -357,6 +386,8 @@ export const zQueueItem = z.object({
     mentionAll: z.boolean().optional(),
     status: z.string().optional(),
     at: z.number().optional(),
+    /** A "message" item: the stored message or change itself. */
+    event: zStoredEvent.optional(),
   }),
 });
 export type QueueItem = z.infer<typeof zQueueItem>;

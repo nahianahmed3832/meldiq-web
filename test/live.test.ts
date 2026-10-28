@@ -23,6 +23,9 @@ beforeAll(async () => {
   server = await startServer();
   phone = await server.client("alice", "Alice");
   bob = await server.client("bob", "Bob");
+  // The phones send as apps do since API 0.57.0: to the server, which stores it (docs/SERVER_MESSAGES.md).
+  bob.serverMessages = true;
+  phone.serverMessages = true;
   dm = (await phone.req("POST", "/v1/conversations/dm", { userId: bob.userId })).conversation.id;
   // History the phone uploaded before the browser existed (docs/MESSAGE_HISTORY.md).
   const t = Date.now() - 60_000;
@@ -71,13 +74,15 @@ describe("linking a browser as a device of the same account", () => {
     expect(web.state.get().conversations[dm]?.type).toBe("DM");
   });
 
-  it("restores the account's encrypted history, without counting it as unread", async () => {
-    await until(() => web.state.get().history.status === "done", 6000, "history restore");
-    expect(await textOf(web, restoredFromBob)).toBe("an old message from Bob");
-    const mine = await messageIn(web, restoredMine);
-    expect(mine).toMatchObject({ outgoing: true, text: "my old reply", status: "READ" });
+  it("moves the account's encrypted history to the server once, without counting it as unread", async () => {
+    // The update's one-time upload (legacyImport.ts): what this browser can read of the account's history goes to the server.
+    await until(async () => ((await phone.req("GET", `/v2/conversations/${dm}/messages`)).messages as { id: string }[]).some((m) => m.id === restoredFromBob), 8000, "history moved to the server");
+    await web.openConversation(dm);
+    expect(await until(() => textOf(web, restoredFromBob), 5000, "restored message")).toBe("an old message from Bob");
+    expect(await messageIn(web, restoredMine)).toMatchObject({ outgoing: true, text: "my old reply" });
     expect((await messageIn(web, restoredFromBob))?.reactions).toEqual({ "👍": [bob.userId] });
-    expect(web.state.get().local[dm]).toMatchObject({ lastPreview: "my old reply", unread: 0 });
+    expect(web.state.get().local[dm]?.unread ?? 0).toBe(0);
+    await web.openConversation(null);
   });
 });
 
@@ -125,7 +130,8 @@ describe("messaging across devices through the one server", () => {
     await until(() => messageIn(web, id));
     await bob.send(dm, { type: "edit", target: id, text: "edited by Bob" }, "control");
     await bob.send(dm, { type: "reaction", target: id, emoji: "🎉", add: true }, "control");
-    await phone.send(dm, { type: "edit", target: id, text: "Alice can't edit Bob's message" }, "control");
+    // The server refuses an edit from anyone but the sender (API 0.57.0, sendRules.ts).
+    await expect(phone.send(dm, { type: "edit", target: id, text: "Alice can't edit Bob's message" }, "control")).rejects.toThrow(/not_yours/);
     await until(async () => (await messageIn(web, id))?.reactions["🎉"]?.includes(bob.userId), 5000, "reaction");
     await web.idle();
     expect(await messageIn(web, id)).toMatchObject({ text: "edited by Bob" });
@@ -160,7 +166,7 @@ describe("messaging across devices through the one server", () => {
     const r = await bob.send(dm, { type: "text", text: "read me in the browser" }, "message", "m-bob-read-in-web1");
     await until(() => messageIn(web, "m-bob-read-in-web1"));
     await web.openConversation(dm);
-    const receipt = await bob.waitFor(() => bob.received.find((m) => m.payload?.type === "read" && m.senderDeviceId === web.device.deviceId));
+    const receipt = await bob.waitFor(() => bob.received.find((m) => m.payload?.type === "read" && m.senderDeviceId === web.device.deviceId && m.payload.upTo >= r.serverTs));
     expect(receipt.payload.upTo).toBe(r.serverTs);
     // The account's phone gets the same receipt, so it clears its own unread count (android MessageRepository "read" + mine).
     await phone.waitFor(() => phone.received.find((m) => m.payload?.type === "read" && m.senderDeviceId === web.device.deviceId));
@@ -313,9 +319,9 @@ describe("authorization is enforced by the server", () => {
   });
 });
 
-describe("trust on first use (docs/SECURITY.md §3)", () => {
-  it("a contact's changed identity key pauses sending and holds their messages until accepted", async () => {
-    // Bob reinstalls without his recovery key (or a server swaps his key): a new identity and device under his account.
+describe("a contact's new phone (API 0.57.0: messages are stored on the server, not encrypted to devices)", () => {
+  it("a contact's changed identity key doesn't hold sending: their new phone gets the message", async () => {
+    // Bob reinstalls without his recovery key: a new identity and device under his account.
     const { GriipClient } = (await import(/* @vite-ignore */ (await import("node:path")).join((await import("./support/serverDir")).serverDir(), "test/support/griipClient.ts"))) as any;
     const newBob = new GriipClient(server.baseUrl, bob.username, "Bob");
     const deviceId = `d_rebob_${nodeCrypto.randomBytes(6).toString("hex")}`;
@@ -330,21 +336,9 @@ describe("trust on first use (docs/SECURITY.md §3)", () => {
     await newBob.connect();
     web.directory.invalidateUser(bob.userId);
 
-    const paused = await web.sendText(dm, "should wait for my review");
-    await until(async () => (await messageIn(web, paused))?.status === "HELD", 5000, "held send");
-    expect(web.state.get().identityAlerts.map((a) => a.userId)).toContain(bob.userId);
-    expect(web.state.get().identityAlerts[0].changedTo).toBe(newBob.identityKeyB64);
-
-    await newBob.send(dm, { type: "text", text: "it's me, new phone" }, "message", "m-newbob-hello-001");
-    await new Promise((r) => setTimeout(r, 300));
-    await web.idle();
-    expect(await messageIn(web, "m-newbob-hello-001")).toBeNull(); // held, not shown
-    expect(newBob.received.find((m: any) => m.messageId === paused)).toBeUndefined(); // nothing was encrypted to the new key
-
-    await web.acceptIdentity(bob.userId);
-    await newBob.waitFor(() => newBob.received.find((m: any) => m.messageId === paused), 5000);
-    expect(await textOf(web, "m-newbob-hello-001")).toBe("it's me, new phone");
-    expect(web.state.get().identityAlerts).toHaveLength(0);
+    const sent = await web.sendText(dm, "reaches the new phone");
+    await newBob.waitFor(() => newBob.received.find((m: any) => m.messageId === sent), 5000);
+    expect((await messageIn(web, sent))?.status).not.toBe("HELD");
     await newBob.disconnect();
   });
 });

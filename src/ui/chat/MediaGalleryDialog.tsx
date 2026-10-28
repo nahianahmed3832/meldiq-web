@@ -57,7 +57,7 @@ export function MediaGalleryDialog({ gallery, nameOf, onClose }: { gallery: Gall
         </div>
         {items.length === 0 ? (
           <p className="faint" style={{ margin: 0 }}>
-            {tab === "media" ? "No photos or videos in this conversation on this browser yet." : "No files in this conversation on this browser yet."}
+            {tab === "media" ? "No photos or videos in this conversation yet." : "No files in this conversation yet."}
           </p>
         ) : tab === "media" ? (
           <div className="gallery-grid" role="tabpanel" aria-label="Photos and videos">
@@ -98,7 +98,7 @@ export function MediaGalleryDialog({ gallery, nameOf, onClose }: { gallery: Gall
           </button>
         )}
         <p className="faint" style={{ margin: 0, fontSize: 12 }}>
-          What this browser has received or restored. Older history appears as you scroll back in the conversation.
+          What's loaded so far. Older ones appear as you scroll back in the conversation.
         </p>
       </div>
     </Dialog>

@@ -1,7 +1,21 @@
 import { z } from "zod";
 import { ApiClient, ApiError } from "../api/client";
 import type { AccountSessionGrant } from "../api/accountSchemas";
-import { type Call, type Conversation, type Member, type Org, type ServerInfo, type SessionGrant, zConversation, zMember, zOrg, zProfile, zServerInfo } from "../api/schemas";
+import {
+  type Call,
+  type Conversation,
+  type Member,
+  type Org,
+  type ServerInfo,
+  type SessionGrant,
+  zConversation,
+  zMember,
+  zOrg,
+  zProfile,
+  zServerHistoryPage,
+  zServerInfo,
+  zStoredEvent,
+} from "../api/schemas";
 import { Signals, zExperiments } from "./signals";
 import { CommunitySync } from "./community";
 import { paused } from "./status";
@@ -21,6 +35,7 @@ import type { LocalStore } from "../store/db";
 import type { EngineContext } from "./context";
 import { Directory } from "./directory";
 import { restoreHistory } from "./historySync";
+import { importLegacyHistory } from "./legacyImport";
 import { MojoSync } from "./mojo";
 import { HistoryUploader } from "./historyUpload";
 import { canWriteHistory, deriveHistoryKeys } from "../crypto/history";
@@ -72,6 +87,12 @@ export interface EngineOptions {
 }
 
 const PAGE = 60;
+/** GET /v2/messages/search (API 0.57.0). */
+const zSearchRes = z.object({ messages: z.array(zStoredEvent) });
+/** GET /v2/messages/summary (API 0.57.0). */
+const zSummary = z.object({
+  conversations: z.array(z.object({ conversationId: z.string(), last: zStoredEvent.nullable(), readUpTo: z.number(), unread: z.number(), mentions: z.number() })),
+});
 const zConversations = z.object({ conversations: z.array(zConversation) });
 const zOrgs = z.object({ orgs: z.array(zOrg) });
 const zMembers = z.object({ members: z.array(zMember) });
@@ -115,6 +136,8 @@ export class Engine implements EngineContext {
   /** Backs this browser's chats up into the account's history, once the history is available and writable here. */
   private uploader: HistoryUploader | null = null;
   private readTimers = new Map<string, ReturnType<typeof setTimeout>>();
+  /** Per conversation: the oldest server time loaded from its history, and whether older messages remain. */
+  private readonly serverPages = new Map<string, { oldest: number | null; more: boolean }>();
   private lastReadSent = new Map<string, number>();
   private convFetches = new Map<string, Promise<Conversation | null>>();
   private userFetches = new Map<string, Promise<void>>();
@@ -277,7 +300,10 @@ export class Engine implements EngineContext {
     });
     if (typeof document !== "undefined") document.addEventListener("visibilitychange", this.flushSignalsWhenHidden);
     this.outbox.kick();
-    void this.runHistory();
+    // API 0.57.0: history lives on the server. A browser that kept history before uploads it once.
+    void importLegacyHistory(this)
+      .then((n) => (n > 0 ? this.syncSummaries() : undefined))
+      .catch(() => undefined);
   }
 
   private readonly flushSignalsWhenHidden = () => {
@@ -525,6 +551,7 @@ export class Engine implements EngineContext {
       await this.store.setValue(CACHE_KEY, { orgs: st.orgs, conversations: Object.values(st.conversations), users: Object.values(st.users), server: st.server });
       void this.nav.refresh([PERSONAL, ...orgs.orgs.map((o) => o.id)]);
       void this.reminders.refresh();
+      void this.syncSummaries();
     } catch (e) {
       if (!(e instanceof ApiError && e.isNetwork)) this.notice("error", e instanceof ApiError ? e.message : "Couldn't load your conversations.");
     }
@@ -864,14 +891,57 @@ export class Engine implements EngineContext {
 
   // ───────────────────────── reading ─────────────────────────
 
-  /** The conversation now on screen (null: none). Loads its newest messages and marks it read. */
+  /**
+   * Each conversation's newest message, read position and unread counts, from the server (API 0.57.0): the list after a
+   * page load or a reconnect, when this browser keeps nothing between visits.
+   */
+  async syncSummaries(): Promise<void> {
+    const res = await this.api.json("GET", "/v2/messages/summary", zSummary).catch(() => null);
+    if (!res) return;
+    for (const c of res.conversations) {
+      if (c.last) await this.receiver.ingest(c.last, 0, { history: true });
+      await this.locals.update(c.conversationId, (l) => ({
+        ...l,
+        readUpTo: Math.max(l.readUpTo, c.readUpTo),
+        unread: this.viewingId === c.conversationId ? 0 : c.unread,
+        mentions: this.viewingId === c.conversationId ? 0 : c.mentions,
+      }));
+      await this.refreshPreview(c.conversationId);
+    }
+  }
+
+  /**
+   * One page of a conversation's history from the server, older than [before] (null: the newest): its messages oldest
+   * first, then the changes to them, applied as live ones are. Remembers whether older ones remain.
+   */
+  private async fetchHistory(id: string, before: number | null, around?: string): Promise<void> {
+    const q = new URLSearchParams({ limit: String(PAGE) });
+    if (before) q.set("before", String(before));
+    if (around) q.set("around", around);
+    const page = await this.api.json("GET", `/v2/conversations/${encodeURIComponent(id)}/messages?${q}`, zServerHistoryPage);
+    for (const e of [...page.messages].reverse()) await this.receiver.ingest(e, 0, { history: true });
+    for (const e of page.changes) await this.receiver.ingest(e, 0, { history: true });
+    const oldest = page.messages.at(-1)?.serverTs ?? null;
+    const prev = this.serverPages.get(id);
+    this.serverPages.set(id, { oldest: prev?.oldest != null && oldest != null ? Math.min(prev.oldest, oldest) : (oldest ?? prev?.oldest ?? null), more: around ? (prev?.more ?? true) : page.more });
+  }
+
+  /** The conversation now on screen (null: none). Loads its newest messages from the server and marks it read. */
   async openConversation(id: string | null): Promise<void> {
     this.viewingId = id;
     if (!id) return;
+    if (!this.serverPages.has(id)) await this.fetchHistory(id, null).catch(() => undefined);
     const items = await this.store.latestMessages(id, PAGE);
-    this.set((s) => withMessages(s, id, items, items.length === PAGE));
+    this.set((s) => withMessages(s, id, items, this.serverPages.get(id)?.more ?? items.length === PAGE));
     await this.markRead(id);
     void this.syncCalls(id);
+  }
+
+  /** Loads the messages around [messageId] from the server (a link or a search result in history not loaded yet). */
+  async loadAround(id: string, messageId: string): Promise<void> {
+    await this.fetchHistory(id, null, messageId);
+    const items = await this.store.latestMessages(id, Number.MAX_SAFE_INTEGER);
+    this.set((s) => withMessages(s, id, items, this.serverPages.get(id)?.more ?? false));
   }
 
   /** The conversation's calls from the server's record (catches up calls that ended while this browser was away). */
@@ -887,8 +957,12 @@ export class Engine implements EngineContext {
   async loadOlder(id: string): Promise<void> {
     const loaded = this.state.get().messages[id];
     if (!loaded?.hasMore || loaded.items.length === 0) return;
-    const older = await this.store.latestMessages(id, PAGE, loaded.items[0].sortTs);
-    this.set((s) => withMessages(s, id, [...older, ...(s.messages[id]?.items ?? [])], older.length === PAGE));
+    const first = loaded.items[0];
+    // Older messages come from the server, one page at a time.
+    const page = this.serverPages.get(id);
+    if (page?.more) await this.fetchHistory(id, Math.min(page.oldest ?? Number.MAX_SAFE_INTEGER, first.serverTs ?? first.sortTs)).catch(() => undefined);
+    const older = await this.store.latestMessages(id, PAGE, first.sortTs);
+    this.set((s) => withMessages(s, id, [...older, ...(s.messages[id]?.items ?? [])], older.length > 0 && ((this.serverPages.get(id)?.more ?? false) || older.length === PAGE)));
   }
 
   /** Clears unread on this device and, where the phone would, tells the others with an encrypted read receipt. */
@@ -1076,8 +1150,15 @@ export class Engine implements EngineContext {
   }
 
   /** Messages on this browser matching [query]: words and filters (from:, has:, before:, after:; src/sync/searchQuery.ts). */
-  searchMessages(query: string, conversationId?: string): Promise<StoredMessage[]> {
+  async searchMessages(query: string, conversationId?: string): Promise<StoredMessage[]> {
     const q = parseSearchQuery(query);
+    // The server searches every message (API 0.57.0); its hits join what's loaded, then the filters apply as before.
+    if (q.text.trim()) {
+      const params = new URLSearchParams({ q: q.text.trim().slice(0, 200), limit: "100" });
+      if (conversationId) params.set("conversationId", conversationId);
+      const res = await this.api.json("GET", `/v2/messages/search?${params}`, zSearchRes).catch(() => null);
+      for (const e of res?.messages ?? []) await this.receiver.ingest(e, 0, { history: true });
+    }
     const sender = (m: StoredMessage) => {
       const mine = m.outgoing || m.senderUserId === this.device.userId;
       const u = this.state.get().users[m.senderUserId];

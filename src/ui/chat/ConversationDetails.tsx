@@ -176,7 +176,7 @@ export function AboutCards({ c }: { c: Conversation }) {
           <div>
             <dt>Encryption</dt>
             <dd className="row" style={{ gap: 6 }}>
-              <ShieldCheck size={14} /> End-to-end encrypted on your devices
+              <ShieldCheck size={14} /> Kept on Meldiq's servers, on all your devices
             </dd>
           </div>
         </dl>

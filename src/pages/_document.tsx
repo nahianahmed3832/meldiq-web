@@ -3,7 +3,7 @@ import { Head, Html, Main, NextScript } from "next/document";
 /**
  * The page every route is served from (a static export, docs/MELDIQ_WEB_NEXTJS.md). Rendered once, at build time, with
  * no data: the launch screen (docs/MELDIQ_WEB_LAUNCH.md) is plain markup so it shows before any script runs, and goes
- * as soon as the app shows something (src/application/splash.ts): Meldling on its own teal. Never hydrated, so the app can remove it.
+ * as soon as the app shows something (src/application/splash.ts): Meldling on the art's deep navy. Never hydrated, so the app can remove it.
  */
 const SPLASH = '<img src="/launch/meldling-launch.png" alt="" width="480" height="480" decoding="async">';
 
@@ -16,11 +16,11 @@ export default function Document() {
         <meta name="referrer" content="no-referrer" />
         <meta name="application-name" content="Meldiq" />
         <meta name="apple-mobile-web-app-title" content="Meldiq" />
-        <meta name="description" content="Meldiq Web: end-to-end encrypted team messaging, linked to your Meldiq account." />
+        <meta name="description" content="Meldiq Web: communities, messages, voice and video. Connect. Play. Belong." />
         <meta property="og:type" content="website" />
         <meta property="og:site_name" content="Meldiq" />
         <meta property="og:title" content="Meldiq" />
-        <meta property="og:description" content="End-to-end encrypted team messaging. Your workspace, on every screen." />
+        <meta property="og:description" content="Communities, messages, voice and video. Connect. Play. Belong." />
         <meta property="og:image" content="/meldiq-og.png" />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
@@ -37,7 +37,7 @@ export default function Document() {
         <link rel="manifest" href="/manifest.webmanifest" />
       </Head>
       <body>
-        <noscript>Meldiq needs JavaScript: it encrypts and decrypts your messages in this browser.</noscript>
+        <noscript>Meldiq needs JavaScript to run in this browser.</noscript>
         <div id="splash" aria-hidden="true" dangerouslySetInnerHTML={{ __html: SPLASH }} />
         <Main />
         <NextScript />

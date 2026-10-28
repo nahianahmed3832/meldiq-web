@@ -1,4 +1,4 @@
-import { Gift, HeartHandshake, Loader2, Sparkles } from "lucide-react";
+import { Gem, Gift, HeartHandshake, Loader2, Sparkles } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { PlanPerks } from "../../api/mojoSchemas";
 import { useEngine, useOrbit } from "../../application/orbit";
@@ -6,7 +6,7 @@ import { relative } from "../format";
 import { GiftDialog, GiftsReceived } from "./MojoGifts";
 import { money, planPrice, screenLabel, size } from "./mojoFormat";
 import { CompareTable, type PlanAction, PlanCards, PlusPerks } from "./MojoPlans";
-import { SparkSection } from "./SparkSection";
+import { navigate } from "../../application/router";
 import { MojoBadgeMark } from "./MojoBadge";
 
 /** Where a payment page sends the person back (?checkout= or ?gift=), read once. */
@@ -177,13 +177,27 @@ export function MojoPage() {
         Prices are in US dollars; your bank may add conversion fees.
       </p>
 
+      <img className="mojo-poster" src="/meldling/plus.webp" alt="Meldiq Plus" width={1200} height={800} loading="lazy" />
       <h2 className="mojo-h2">What Mojo Plus adds</h2>
       <PlusPerks catalog={catalog} />
 
       <h2 className="mojo-h2">Compare plans</h2>
       <CompareTable catalog={catalog} me={me} />
 
-      <SparkSection onBuy={(q) => void open("sparks", () => engine.mojo.buySparks(q))} busy={busy === "sparks"} offline={offline} />
+      <section className="spark-hero spark-link" aria-labelledby="mojo-spark-link">
+        <h2 className="mojo-h2" id="mojo-spark-link">
+          <Gem size={20} aria-hidden="true" /> Meldiq Spark
+        </h2>
+        <p>
+          Boost the servers you love: every Spark helps a community unlock more emoji slots, bigger uploads, and better voice and screen sharing for everyone there. Mojo Go includes one Spark, Mojo
+          Plus two.
+        </p>
+        <div>
+          <button className="btn btn-mojo" onClick={() => navigate({ section: "settings", settingsPage: "spark" })}>
+            <Gem size={15} aria-hidden="true" /> Open Meldiq Spark
+          </button>
+        </div>
+      </section>
 
       {me.badge.kind && (
         <section className="card setting-card" aria-label="Your badge">

@@ -136,7 +136,7 @@ export function ReportDialog({ target, onBlock, onClose }: { target: ReportTarge
               <strong style={{ fontSize: 13 }}>What's shared</strong>
               <span className="muted" style={{ fontSize: 13 }}>
                 {target.kind === "message"
-                  ? `This message and up to ${REPORT_CONTEXT} messages before it, as you see them. Messages are end-to-end encrypted, so nothing is shared unless you send this report.`
+                  ? `This message and up to ${REPORT_CONTEXT} messages before it, as you see them. Meldiq's moderators see them only when you send this report.`
                   : "Who you're reporting, the reason and your note."}
               </span>
               {target.kind === "message" && target.message.text && <blockquote className="report-message">{target.message.text}</blockquote>}

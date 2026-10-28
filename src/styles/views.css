@@ -783,6 +783,18 @@
   gap: 8px;
   font-size: 13px !important;
 }
+/* The brand banner in place of the drawn community. */
+.hero-banner {
+  width: min(600px, 100%) !important;
+  padding: 0 !important;
+  overflow: hidden;
+  display: block !important;
+}
+.hero-banner img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
 /* The illustration: a rail of community icons and a channel list with a banner, in Meldiq's own shapes. */
 .hero-preview {
   align-self: center;
@@ -1300,11 +1312,9 @@ select.input {
 .intro-art {
   display: grid;
   place-items: center;
-  width: 132px;
-  height: 132px;
-  border-radius: 50%;
-  background: var(--accent-soft);
-  color: var(--accent-text);
+}
+.intro-art .meldling-art {
+  max-width: min(200px, 56vw);
 }
 .intro-dots {
   display: flex;
@@ -2079,8 +2089,11 @@ select.input {
   background: transparent;
   backdrop-filter: none;
 }
+/* The profile card (the owner's reference, 2026-10-28): a near-black body, a tall banner, the avatar overlapping it, and
+   each section on its own rounded charcoal card. */
 .dialog.profile-pop {
-  width: min(360px, 100%);
+  width: min(380px, 100%);
+  background: var(--surface-sunken);
 }
 .dialog-near {
   box-shadow:
@@ -2092,9 +2105,11 @@ select.input {
   justify-content: flex-end;
   align-items: flex-start;
   gap: 6px;
-  height: 104px;
-  padding: 10px;
+  height: 120px;
+  padding: 12px;
   flex-shrink: 0;
+  background-size: cover;
+  background-position: center;
 }
 .profile-pop-btn {
   background: rgb(0 0 0 / 0.38);
@@ -2108,18 +2123,18 @@ select.input {
 .profile-pop-body {
   display: grid;
   gap: 10px;
-  padding: 0 16px 16px;
+  padding: 0 16px 18px;
 }
 .profile-pop-avatar {
   padding: 0 16px 10px;
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  margin-top: -48px;
+  margin-top: -56px;
 }
 .profile-pop-avatar > .avatar {
   border-radius: 50%;
-  box-shadow: 0 0 0 6px var(--surface-raised);
+  box-shadow: 0 0 0 6px var(--surface-sunken);
 }
 .profile-pop-connect {
   margin-bottom: 4px;
@@ -2151,10 +2166,10 @@ select.input {
 }
 .profile-box {
   display: grid;
-  gap: 6px;
-  padding: 10px 12px;
-  border-radius: var(--r-md);
-  background: var(--surface-sunken);
+  gap: 8px;
+  padding: 12px 14px;
+  border-radius: var(--r-lg);
+  background: var(--surface-raised);
   border: 1px solid var(--border);
 }
 .profile-box h3 {
@@ -2355,14 +2370,8 @@ select.input {
     border-radius: 36px;
     box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
   }
-  .intro-visual-art {
-    display: grid;
-    place-items: center;
-    width: 96px;
-    height: 96px;
-    border-radius: 50%;
-    background: color-mix(in srgb, var(--brand-highlight) 16%, transparent);
-    color: var(--brand-highlight);
+  .intro-visual .meldling-art {
+    max-width: min(360px, 80%);
   }
   .intro-main {
     display: flex;
@@ -2898,27 +2907,71 @@ body:has(> .lightbox) > .menu {
   }
 }
 
-/* Settings and community settings on desktop (the floating redesign, 2026-10-28): the page list and the page float as
-   two panels of their own, like the sidebar and the conversation. */
-@media (min-width: 961px) {
-  .body > .main.main-split {
-    background: transparent;
-    box-shadow: none;
-    border-radius: 0;
+/* Settings and community settings as a floating window over the app (shell/SettingsWindow.tsx; the owner's reference,
+   2026-10-28): the page list on a darker column, the page beside it, a round close button. Phones show them full
+   screen instead. Below the dialogs (50) that open from inside it. */
+.settings-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 48;
+  display: grid;
+  place-items: center;
+  padding: 28px;
+  background: var(--scrim);
+  animation: fade var(--t-std) var(--ease);
+}
+.settings-window {
+  position: relative;
+  display: flex;
+  width: min(1240px, 100%);
+  height: min(900px, 100%);
+  border-radius: var(--r-xl);
+  overflow: hidden;
+  background: var(--surface);
+  box-shadow:
+    0 0 0 1px var(--panel-ring),
+    var(--shadow-lg);
+  animation: rise var(--t-std) var(--ease-enter);
+}
+.settings-window > .main {
+  flex: 1;
+  min-width: 0;
+}
+.settings-window .settings {
+  grid-template-columns: 280px minmax(0, 1fr);
+}
+.settings-window .settings-nav {
+  padding: 32px 14px 24px;
+  border-right: 1px solid var(--hairline);
+  background: var(--surface-sunken);
+}
+.settings-window .settings-page {
+  padding: 40px 56px 56px 48px;
+}
+.settings-window-close {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  z-index: 2;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--surface-raised);
+  box-shadow: inset 0 0 0 1px var(--border);
+}
+@media (max-width: 960px) {
+  .settings-scrim {
+    padding: 12px;
   }
-  .main-split .settings {
-    gap: var(--frame-gap);
-    grid-template-columns: 260px minmax(0, 1fr);
+  .settings-window .settings {
+    grid-template-columns: minmax(0, 1fr);
   }
-  .main-split .settings-nav {
+  .settings-window .settings-nav {
     border-right: 0;
-    border-radius: var(--r-panel);
-    padding: 20px 12px;
-    box-shadow: 0 0 0 1px var(--panel-ring);
+    border-bottom: 1px solid var(--hairline);
+    padding: 12px 60px 12px 12px;
   }
-  .main-split .settings-page {
-    border-radius: var(--r-panel);
-    background: var(--surface);
-    box-shadow: 0 0 0 1px var(--panel-ring);
+  .settings-window .settings-page {
+    padding: 24px 24px 40px;
   }
 }

@@ -42,8 +42,9 @@ export function SparkDialog({ orgId, name, onClose }: { orgId: string; name: str
 
   const mine = here?.mine.filter((m) => !m.paused) ?? [];
   const free = me?.sparks.free ?? 0;
-  // Taking one back lowers the level when the server has no more than three active Sparks.
-  const lowers = !!here && here.active <= 3 && here.level > 0;
+  // Taking one back lowers the level when the server would fall below its level's threshold (2, 5 or 8 Sparks).
+  const threshold = catalog?.spark.levels.find((l) => l.level === here?.level)?.sparks ?? 0;
+  const lowers = !!here && here.level > 0 && here.active - 1 < threshold;
   const photoRev = useOrbit((s) => s.orgs.find((o) => o.id === orgId)?.photoRev ?? null);
   const levels = catalog?.spark.levels.filter((l) => l.level > 0) ?? [];
   const header = (
@@ -97,7 +98,7 @@ export function SparkDialog({ orgId, name, onClose }: { orgId: string; name: str
             )}
             {confirmTake && (
               <div className="banner warn" role="alert">
-                Taking this Spark back {lowers ? `drops ${name} to Level ${Math.max(0, here.level - 1)} for everyone` : "doesn't change the level"}.{" "}
+                Taking this Spark back {lowers ? `drops ${name} to Level ${here.level - 1} for everyone` : "doesn't change the level"}.{" "}
                 <button className="btn btn-danger btn-sm" disabled={busy} onClick={() => void act(() => engine.mojo.removeSpark(confirmTake))}>
                   Take it back
                 </button>{" "}

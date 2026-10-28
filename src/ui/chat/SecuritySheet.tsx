@@ -21,34 +21,39 @@ function useFacts(conversationId: string): SecurityFacts | null {
   );
 }
 
+/**
+ * Since API 0.57.0 (the owner's decision, 2026-10-28) Meldiq's servers store messages and files so every device gets
+ * them; this sheet says so plainly, and what still protects them.
+ */
 const TEXT: Record<SecurityPoint, { icon: ReactNode; tone: "ok" | "warn" | "plain"; title: string; body: () => string }> = {
-  keys_changed: { icon: <ShieldAlert size={18} />, tone: "warn", title: "A security key changed", body: () => "Messages with that person are paused until you review the change." },
+  keys_changed: { icon: <ShieldAlert size={18} />, tone: "warn", title: "A device key changed", body: () => "Someone in this conversation signed in on a new device." },
   messages: {
     icon: <MessageSquare size={18} />,
-    tone: "ok",
-    title: "Messages are end-to-end encrypted",
-    body: () => "Messages, reactions, polls and edits are encrypted in this browser for each member's devices. Meldiq's server only relays and stores encrypted copies.",
+    tone: "plain",
+    title: "Messages are stored on Meldiq's servers",
+    body: () =>
+      "Messages, reactions, polls and edits are kept on Meldiq's servers so every device you sign in to shows them. They travel over encrypted connections. They aren't end-to-end encrypted.",
   },
   files: {
     icon: <Paperclip size={18} />,
-    tone: "ok",
-    title: "Files are encrypted before upload",
-    body: () => "Photos, videos, voice messages and files are encrypted in this browser; the server can't open them or scan them.",
+    tone: "plain",
+    title: "Files are stored on Meldiq's servers",
+    body: () => "Photos, videos, voice messages and files are kept in Meldiq's storage and sent to members over encrypted connections.",
   },
   calls_e2ee: {
     icon: <Phone size={18} />,
     tone: "ok",
-    title: "Calls are end-to-end encrypted",
-    body: () => "Call audio and video use a key only the participants have. The call screen confirms it once media is decrypting; without the key, this browser doesn't join.",
+    title: "Calls are encrypted in transit",
+    body: () => "Call audio and video travel encrypted between each device and Meldiq's call server. Calls aren't recorded.",
   },
-  other_servers: { icon: <Server size={18} />, tone: "plain", title: "Members on another server", body: () => "Both servers relay encrypted copies only, kept for at most 7 days until delivered." },
+  other_servers: { icon: <Server size={18} />, tone: "plain", title: "Members on another server", body: () => "Their server receives the messages too, to deliver them." },
   app_updates: {
     icon: <Blocks size={18} />,
-    tone: "warn",
-    title: "App updates aren't end-to-end encrypted",
+    tone: "plain",
+    title: "App updates",
     body: () => "What connected apps post in this channel goes through Meldiq's server and is labelled as an app update.",
   },
-  metadata: { icon: <Info size={18} />, tone: "plain", title: "What the server can see", body: () => "Who is in this conversation, when messages are sent and how large they are. Not their content." },
+  metadata: { icon: <Info size={18} />, tone: "plain", title: "Who can read them", body: () => "Members of this conversation, and Meldiq's staff when a report or the law requires it." },
 };
 
 /** What protects this conversation, and what doesn't (android ConversationSecuritySheet). */

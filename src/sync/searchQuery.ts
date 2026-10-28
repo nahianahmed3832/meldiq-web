@@ -2,7 +2,7 @@ import type { StoredMessage } from "../model/types";
 
 /**
  * Search filters typed in the search box (android SearchQuery, 2026-10-23; Discord's from:, has:, before:, after:).
- * Searching happens in this browser: the server only holds encrypted copies.
+ * The server finds the words (API 0.57.0, it stores messages); the filters then apply here.
  *
  *   from:bob  from:"Bob Chen"  from:me     a sender (name or @username, any part of it)
  *   has:image  has:video  has:file  has:link

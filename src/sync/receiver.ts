@@ -1,6 +1,6 @@
 import { ApiError } from "../api/client";
 import { countsEveryone } from "./navPrefs";
-import { type Call, type Conversation, type QueueItem, zCallRes, zQueueItem, zQueueItemIdentity } from "../api/schemas";
+import { type Call, type Conversation, type QueueItem, type StoredEvent, zCallRes, zQueueItem, zQueueItemIdentity } from "../api/schemas";
 import { EnvelopeError, openEnvelope } from "../crypto/envelope";
 import type { StoredMessage } from "../model/types";
 import { parsePayload, type Payload } from "../protocol/payload";
@@ -69,9 +69,37 @@ export class Receiver {
     }
   }
 
+  /**
+   * A stored message or change (API 0.57.0): from the delivery queue, or from a history page the engine loaded. Applied
+   * as a decrypted envelope was: nothing to open, the server already checked who may send and change what.
+   */
+  async ingest(e: StoredEvent, queueId = 0, opts: { history?: boolean } = {}): Promise<void> {
+    const item: QueueItem = {
+      id: queueId,
+      kind: "message",
+      conversationId: e.conversationId,
+      messageId: e.id,
+      senderUserId: e.senderUserId,
+      senderDeviceId: e.senderDeviceId ?? "",
+      createdAt: e.serverTs,
+      expiresAt: e.serverTs,
+      payload: { cls: e.cls, sentAt: e.sentAt, serverTs: e.serverTs, ...(e.mentionAll ? { mentionAll: true } : {}) },
+    };
+    const existing = await this.ctx.store.message(e.id);
+    if (existing && e.cls === "message" && existing.kind !== "undecryptable") return; // already here
+    const payload = parsePayload(JSON.stringify(e.payload));
+    if (!payload) return this.recordUnsupported(item, "unreadable payload");
+    const conversation = await this.ctx.ensureConversation(e.conversationId);
+    await this.apply(payload, item, conversation, e.senderUserId === this.ctx.device.userId, e.serverTs, existing?.kind === "undecryptable", opts.history === true);
+  }
+
   private async handle(item: QueueItem): Promise<void> {
     const { store, directory, device } = this.ctx;
     if (item.kind === "receipt") return this.receipt(item);
+    if (item.kind === "message") {
+      if (!item.payload.event) return this.recordUnsupported(item, "malformed message");
+      return this.ingest(item.payload.event, item.id);
+    }
     const p = item.payload;
     const cls = p.cls ?? "message";
     const existing = await store.message(item.messageId);
@@ -112,7 +140,8 @@ export class Receiver {
     await this.apply(payload, item, conversation, item.senderUserId === device.userId, p.serverTs ?? item.createdAt, placeholder);
   }
 
-  private async apply(pl: Payload, item: QueueItem, conv: Conversation | null, mine: boolean, serverTs: number, replacesPlaceholder: boolean): Promise<void> {
+  /** [history]: loaded from the server's history, not just arrived: shown, never unread, notified or marked read. */
+  private async apply(pl: Payload, item: QueueItem, conv: Conversation | null, mine: boolean, serverTs: number, replacesPlaceholder: boolean, history = false): Promise<void> {
     const { store, device } = this.ctx;
     switch (pl.type) {
       case "text": {
@@ -123,6 +152,7 @@ export class Receiver {
         if (!mine) await this.ctx.ensureUser(item.senderUserId);
         this.ctx.show(m);
         await this.replayPending(item.conversationId, item.messageId);
+        if (history) return;
         const viewing = this.ctx.viewing() === item.conversationId;
         // Batch B2: a community whose settings ignore @everyone treats it as an ordinary message (no mention, no badge).
         const all = mentions.all && (!conv?.orgId || countsEveryone(this.ctx.state.get().nav[conv.orgId]));
@@ -151,7 +181,7 @@ export class Receiver {
         return this.change(pl, item, serverTs, (t) => (t.rich?.poll && t.senderUserId === item.senderUserId ? { ...t, rich: applyClose(t.rich, t.senderUserId, item.senderUserId) } : null));
       case "read": {
         if (pl.upTo === undefined) return;
-        if (mine) return this.ctx.readElsewhere(item.conversationId, pl.upTo);
+        if (mine) return history ? undefined : this.ctx.readElsewhere(item.conversationId, pl.upTo);
         for (const m of await store.outgoingUpTo(item.conversationId, pl.upTo)) {
           const r = applyRead(m, item.senderUserId);
           await store.putMessage(r);
@@ -160,6 +190,8 @@ export class Receiver {
         return;
       }
       case "call_invite":
+        // An old call's invitation is history: the call log shows it; it doesn't ring.
+        if (history) return;
         return this.callInvite(pl, item, mine, serverTs);
       case "call_key_request":
         // Only a call's creator answers, in the call's own conversation, while it's live (T5.3; call/manager.ts).

@@ -59,25 +59,11 @@ export function AuthFrame({ children }: { children: ReactNode }) {
   );
 }
 
-/** An illustration of a community (shapes and channel names only), so the page shows what Meldiq looks like. */
+/** The brand banner (the owner's art, 2026-10-29): Meldling with the name and "Connect. Play. Belong.". */
 function HeroPreview({ label }: { label: string }) {
   return (
-    <figure className="hero-preview" aria-label={label}>
-      <div className="hero-preview-rail" aria-hidden="true">
-        <img src="/meldling-96.webp" alt="" width={34} height={34} />
-        <i style={{ background: "linear-gradient(135deg, #22d3ee, #6366f1)" }} />
-        <i style={{ background: "linear-gradient(135deg, #f97316, #ec4899)" }} />
-        <i style={{ background: "linear-gradient(135deg, #22c55e, #14b8a6)" }} />
-      </div>
-      <div className="hero-preview-panel" aria-hidden="true">
-        <div className="hero-preview-banner" />
-        <span className="hero-preview-cat">Text channels</span>
-        <span className="hero-preview-ch on"># welcome</span>
-        <span className="hero-preview-ch"># general</span>
-        <span className="hero-preview-ch"># clips</span>
-        <span className="hero-preview-cat">Voice</span>
-        <span className="hero-preview-ch">🔊 Lounge</span>
-      </div>
+    <figure className="hero-preview hero-banner">
+      <img src="/meldling/banner.webp" alt={label} width={1600} height={900} />
     </figure>
   );
 }

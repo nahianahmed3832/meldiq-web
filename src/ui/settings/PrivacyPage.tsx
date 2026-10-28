@@ -8,7 +8,7 @@ import { userProfile } from "../../sync/account";
 import { useAction, useLoad } from "../workspace/useLoad";
 
 const FIELDS: { field: PrivacyField; label: string; help: string }[] = [
-  { field: "photo", label: "Profile photo", help: "Not end-to-end encrypted: the server stores it." },
+  { field: "photo", label: "Profile photo", help: "Stored on Meldiq's servers, like your messages." },
   { field: "bio", label: "Bio", help: "" },
   { field: "name", label: "First and last name", help: "" },
   { field: "birthday", label: "Birthday", help: "" },

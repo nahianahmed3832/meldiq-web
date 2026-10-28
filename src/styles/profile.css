@@ -401,3 +401,36 @@
 .tag-choice .wtag {
   margin-left: 0;
 }
+
+/* Member since and mutual communities (the owner's reference, 2026-10-28). */
+.profile-since {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  font-size: 14px;
+  color: var(--text);
+}
+.profile-since span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.profile-since img,
+.profile-since .avatar {
+  border-radius: 6px;
+}
+.profile-mutuals {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+.profile-mutual-icons {
+  display: inline-flex;
+}
+.profile-mutual-icons .avatar + .avatar {
+  margin-left: -8px;
+  box-shadow: 0 0 0 2px var(--surface-raised);
+}

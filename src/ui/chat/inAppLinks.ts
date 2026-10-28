@@ -24,7 +24,7 @@ export function openInApp(engine: Engine, href: string): boolean {
     // The list mounts after navigation; then the message is found (older pages load if needed) and highlighted.
     setTimeout(() => {
       void jumpTo(engine, c.id, target.messageId).then((found) => {
-        if (!found) engine.notice("info", "That message isn't on this browser, so the conversation opened without it.");
+        if (!found) engine.notice("info", "That message is gone, so the conversation opened without it.");
       });
     }, 150);
     return true;

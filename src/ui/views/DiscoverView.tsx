@@ -1,3 +1,4 @@
+import { MeldlingArt } from "../components/MeldlingArt";
 import { Compass, Search, Users } from "lucide-react";
 import { useEffect, useState } from "react";
 import { ApiError } from "../../api/client";
@@ -99,9 +100,7 @@ export function DiscoverView() {
           )}
           {list && list.length === 0 && (
             <div className="empty" style={{ padding: 24 }}>
-              <span className="empty-orb">
-                <Compass size={22} />
-              </span>
+              <MeldlingArt pose="confused" />
               <p className="muted">{query ? t("discover_none_match") : t("discover_none")}</p>
             </div>
           )}

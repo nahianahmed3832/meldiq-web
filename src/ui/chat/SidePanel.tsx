@@ -98,7 +98,7 @@ function ThreadPanel({ conversationId, root, onClose }: { conversationId: string
         </>
       ) : (
         <div className="empty">
-          <p>This thread's first message isn't on this browser yet.</p>
+          <p>This thread's first message is still loading.</p>
         </div>
       )}
     </aside>

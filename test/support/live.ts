@@ -22,6 +22,8 @@ export interface Phone {
   username: string;
   identity: { seed: Buffer; pub: Buffer };
   identityKeyB64: string;
+  /** Sends through the server's message store (POST /v2/messages) as apps do since API 0.57.0, not as encrypted envelopes. */
+  serverMessages: boolean;
   received: { messageId: string; conversationId: string; senderUserId: string; senderDeviceId: string; payload: any }[];
   receipts: any[];
   events: any[];

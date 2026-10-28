@@ -79,7 +79,7 @@ test("right-click on a message opens Meldiq's menu at the pointer; the message b
   await expect(page.getByRole("menu", { name: "Message" })).toBeVisible();
 });
 
-test("an invitation link from Invite friends opens in a fresh browser, and a message link opens its conversation", async ({ page, browser }) => {
+test("a community's invitation link opens in a fresh browser, and a message link opens its conversation", async ({ page, browser }) => {
   const alice = await newPhone("ilalice", "Alice Rahman");
   const bob = await newPhone("ilbob", "Bob Chen");
   await alice.req("POST", "/v1/orgs", { name: "Link Lab" });
@@ -87,8 +87,13 @@ test("an invitation link from Invite friends opens in a fresh browser, and a mes
   await alice.connect();
   await link(page, alice);
   await page.goto("/dms");
-  // The Invite friends card on Home and messages names the community it invites to.
-  await page.getByRole("button", { name: "Invite friends to Link Lab" }).click();
+  // Messages invite to Meldiq itself; a community's invitations are in that community (the owner, 2026-10-28).
+  await expect(page.getByRole("region", { name: "Invite friends to Meldiq" })).toBeVisible();
+  await page
+    .getByRole("navigation", { name: "Home, communities, create and discover" })
+    .getByRole("button", { name: /^Link Lab/ })
+    .click();
+  await page.getByRole("button", { name: "Invite people" }).click();
   const dialog = page.getByRole("dialog", { name: "Invite friends to Link Lab" });
   await dialog.getByRole("button", { name: "Create link" }).click();
   const field = dialog.getByLabel("Invitation link", { exact: true });

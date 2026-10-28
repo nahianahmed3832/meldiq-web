@@ -629,7 +629,7 @@ button.call-pill:hover {
    channels usable; the call's panel sits at the foot of the channel list instead of the floating bar. */
 @media (min-width: 961px) {
   .app:has(.workspace.with-sidebar) .call-stage {
-    top: calc(env(safe-area-inset-top, 0px) + var(--frame-gap) + var(--topbar-h));
+    top: calc(env(safe-area-inset-top, 0px) + var(--brandbar-h));
     left: calc(env(safe-area-inset-left, 0px) + var(--frame-gap) * 3 + var(--rail-w) + var(--sidebar-w));
     right: calc(env(safe-area-inset-right, 0px) + var(--frame-gap));
     bottom: var(--frame-gap);
@@ -764,5 +764,77 @@ button.call-pill:hover {
 @media (max-width: 960px) {
   .sidebar .call-panel {
     display: none;
+  }
+}
+
+/* ───────── The floating redesign's calls (2026-10-28, after the owner's reference) ─────────
+   A big stage for what's shared, a row of rounded tiles with a lime ring on whoever speaks, and a dock of round
+   controls on its own panel, the hang-up in red. 1:1 calls and community rooms share it. */
+.call-stage {
+  gap: 12px;
+  padding: 14px;
+}
+.call-screen {
+  border-radius: var(--r-xl);
+  box-shadow: 0 0 0 1px var(--panel-ring);
+}
+.call-tiles {
+  gap: 12px;
+}
+.call-tile {
+  border-radius: var(--r-xl);
+  box-shadow: 0 0 0 1px var(--panel-ring);
+  transition: box-shadow var(--t-fast);
+}
+.call-tile.speaking,
+.call-stage .call-tile.speaking {
+  box-shadow:
+    inset 0 0 0 3px var(--call-speaking),
+    0 0 26px -8px var(--call-speaking);
+}
+.call-tile .who {
+  left: 14px;
+  bottom: 14px;
+  padding: 5px 12px;
+  font-size: 13px;
+}
+.call-controls-wrap {
+  padding: 14px 18px calc(14px + env(safe-area-inset-bottom));
+  border-radius: var(--r-xl);
+  background: var(--call-tile);
+  box-shadow: 0 0 0 1px var(--panel-ring);
+}
+.call-controls {
+  gap: 16px;
+  padding-bottom: 0;
+  flex-wrap: wrap;
+}
+.call-btn {
+  width: 58px;
+  height: 58px;
+}
+/* Off (microphone or camera): a soft red, so it reads at a glance without looking like the hang-up. */
+.call-btn[aria-pressed="false"] {
+  background: color-mix(in srgb, var(--call-end) 24%, var(--call-control));
+  color: var(--call-bad-text);
+}
+/* On (sharing your screen): the accent. */
+.call-btn.on {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+.call-btn.end {
+  width: 66px;
+}
+@media (max-width: 640px) {
+  .call-controls {
+    gap: 10px;
+  }
+  .call-btn {
+    width: 50px;
+    height: 50px;
+  }
+  .call-btn.end {
+    width: 58px;
   }
 }

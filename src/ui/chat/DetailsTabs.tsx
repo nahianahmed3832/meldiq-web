@@ -81,7 +81,7 @@ function SaveSeveral({ gallery, nameOf }: { gallery: Gallery; nameOf: (i: Galler
 export function MediaTab({ conversationId, gallery, nameOf }: ItemsTabProps) {
   const [shown, setShown] = useState(PAGE);
   const [missing, setMissing] = useState(false);
-  if (gallery.media.length === 0) return <Empty text="No photos or videos in this conversation on this browser yet." />;
+  if (gallery.media.length === 0) return <Empty text="No photos or videos in this conversation yet." />;
   return (
     <>
       {missing && <Missing />}
@@ -111,7 +111,7 @@ export function MediaTab({ conversationId, gallery, nameOf }: ItemsTabProps) {
 export function FilesTab({ conversationId, gallery, nameOf }: ItemsTabProps) {
   const [q, setQ] = useState("");
   const [missing, setMissing] = useState(false);
-  if (gallery.files.length === 0) return <Empty text="No files in this conversation on this browser yet." />;
+  if (gallery.files.length === 0) return <Empty text="No files in this conversation yet." />;
   const items = filterFiles(gallery.files, q);
   return (
     <div role="tabpanel" aria-label="Files" style={{ display: "grid", gap: 8 }}>
@@ -171,7 +171,7 @@ export function PinsTab({ conversationId }: { conversationId: string }) {
 
 export function LinksTab({ conversationId, links, nameOf }: { conversationId: string; links: LinkItem[]; nameOf: (l: LinkItem) => string }) {
   const [missing, setMissing] = useState(false);
-  if (links.length === 0) return <Empty text="No links in this conversation on this browser yet." />;
+  if (links.length === 0) return <Empty text="No links in this conversation yet." />;
   return (
     <>
       {missing && <Missing />}

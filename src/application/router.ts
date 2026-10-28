@@ -14,7 +14,7 @@ import { useSyncExternalStore } from "react";
 export type Section = "home" | "dms" | "friends" | "activity" | "later" | "discover" | "settings" | "workspace";
 /** "you": the phone's You tab, a list of the pages under your account card (desktop shows the profile page there). */
 export type SettingsPage =
-  "you" | "profile" | "account" | "devices" | "notifications" | "calls" | "appearance" | "storage" | "security" | "about" | "advanced" | "shortcuts" | "health" | "usage" | "mojo";
+  "you" | "profile" | "account" | "devices" | "notifications" | "calls" | "appearance" | "storage" | "security" | "about" | "advanced" | "shortcuts" | "health" | "usage" | "mojo" | "spark";
 export type WorkspacePage =
   | "overview"
   | "people"
@@ -46,7 +46,24 @@ export interface Route {
 export const isFullPage = (s: Section): boolean => s === "settings" || s === "workspace";
 
 const SECTIONS: Section[] = ["home", "dms", "friends", "activity", "later", "discover", "settings", "workspace"];
-const PAGES: SettingsPage[] = ["you", "profile", "account", "devices", "notifications", "calls", "appearance", "storage", "security", "about", "advanced", "shortcuts", "health", "usage", "mojo"];
+const PAGES: SettingsPage[] = [
+  "you",
+  "profile",
+  "account",
+  "devices",
+  "notifications",
+  "calls",
+  "appearance",
+  "storage",
+  "security",
+  "about",
+  "advanced",
+  "shortcuts",
+  "health",
+  "usage",
+  "mojo",
+  "spark",
+];
 const WORKSPACE_PAGES: WorkspacePage[] = [
   "overview",
   "people",

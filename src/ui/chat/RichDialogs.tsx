@@ -46,7 +46,7 @@ export function LocationDialog({ onSend, onClose }: { onSend: (l: SharedLocation
           <input className="input" value={label} maxLength={120} onChange={(e) => setLabel(e.target.value)} placeholder="e.g. Office, 3rd floor" />
         </label>
         <p className="faint" style={{ margin: 0, fontSize: 12.5 }}>
-          Sent once, end-to-end encrypted. People open it in their own map app.
+          Sent once. People open it in their own map app.
         </p>
         <div className="row" style={{ justifyContent: "flex-end", gap: 8 }}>
           <button className="btn btn-secondary" onClick={onClose}>

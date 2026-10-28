@@ -349,7 +349,6 @@ export function AppearancePage() {
 export function AboutPage() {
   const server = useOrbit((s) => s.server);
   const me = useOrbit((s) => s.me);
-  const history = useOrbit((s) => s.history);
   const [intro, setIntro] = useState(false);
   return (
     <>
@@ -382,22 +381,6 @@ export function AboutPage() {
           <div className="lines">
             <strong>This browser</strong>
             <small>{me?.deviceName}</small>
-          </div>
-        </div>
-        <div className="setting">
-          <div className="lines">
-            <strong>Encrypted history</strong>
-            <small>
-              {history.status === "unsupported"
-                ? "This server doesn't keep encrypted history; this browser shows what it received since it was linked."
-                : history.status === "done"
-                  ? `Restored from your server. ${history.unreadable ? `${history.unreadable} items couldn't be read.` : ""}`
-                  : history.status === "running"
-                    ? "Restoring…"
-                    : history.status === "error"
-                      ? `Not restored: ${history.error}`
-                      : "Waiting"}
-            </small>
           </div>
         </div>
         <div className="setting">

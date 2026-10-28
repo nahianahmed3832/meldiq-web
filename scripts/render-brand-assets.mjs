@@ -1,122 +1,125 @@
 /**
- * Every Meldiq icon, mascot button, launch image and share image comes from the one canonical asset, brand/meldling.png:
- * Meldling, the off-white bear cub on its solid deep-teal square (1254 × 1254, the owner's file, unchanged). Nothing is
- * redrawn: the script crops (keeping Meldling centred with even padding), scales, and for the notification badge only
- * turns the off-white shape into the alpha mask Android badges require. Run after replacing the asset:
+ * Every Meldiq icon, mascot image, launch image, share image and illustration comes from the owner's Meldling set
+ * (2026-10-29, brand/meldling/: the white bear cub on deep blue and violet). Nothing is redrawn: the script finds each
+ * picture's content, crops, masks the app icon's rounded square so its corners are see-through, and scales. For the
+ * notification badge and the browser-tab favicons only, the bear's white shape becomes an alpha mask. Run after
+ * replacing any of the files:
  *   node scripts/render-brand-assets.mjs
  */
 import { createRequire } from "node:module";
+import fs from "node:fs";
 import path from "node:path";
 
 const root = path.resolve(import.meta.dirname, "..");
 const sharp = createRequire(path.join(root, "package.json"))("sharp");
-const source = path.join(root, "brand/meldling.png");
-const out = (f) => path.join(root, "public", f);
+const brand = (f) => path.join(root, "brand/meldling", f);
+const out = (f) => {
+  const p = path.join(root, "public", f);
+  fs.mkdirSync(path.dirname(p), { recursive: true });
+  return p;
+};
 
-/** The two colours of the asset (measured: 73% of the pixels are the teal, 27% the off-white). */
-export const TEAL = "#045349";
-export const CREAM = "#fdfcf9";
-/** Padding around Meldling in the tight crops, as a share of its width on each side. */
-const TIGHT_PADDING = 0.12;
+/** The ground the illustrations are drawn on (the art's own deep navy), for the share image and the launch screen. */
+export const GROUND = "#070a24";
 
-const { data, info } = await sharp(source).removeAlpha().raw().toBuffer({ resolveWithObject: true });
+// ── The app icon: the rounded square found by its content (the corners outside it are black), corners made clear. ──
+const iconSource = brand("icon.webp");
+const { data, info } = await sharp(iconSource).removeAlpha().raw().toBuffer({ resolveWithObject: true });
 let [x0, y0, x1, y1] = [info.width, info.height, 0, 0];
 for (let y = 0; y < info.height; y++)
-  for (let x = 0; x < info.width; x++)
-    if (data[(y * info.width + x) * 3] > 200) {
+  for (let x = 0; x < info.width; x++) {
+    const i = (y * info.width + x) * 3;
+    if (data[i] + data[i + 1] + data[i + 2] > 60) {
       x0 = Math.min(x0, x);
       x1 = Math.max(x1, x);
       y0 = Math.min(y0, y);
       y1 = Math.max(y1, y);
     }
-const side = Math.min(info.width, Math.round(Math.max(x1 - x0, y1 - y0) * (1 + 2 * TIGHT_PADDING)));
-const clamp = (v) => Math.max(0, Math.min(info.width - side, Math.round(v)));
-const tight = { left: clamp((x0 + x1) / 2 - side / 2), top: clamp((y0 + y1) / 2 - side / 2), width: side, height: side };
-console.log("Meldling bbox", [x0, y0, x1, y1], "tight crop", tight);
+  }
+const side = Math.min(x1 - x0, y1 - y0) + 1;
+const square = { left: x0, top: y0, width: side, height: side };
+const radius = Math.round(side * 0.22);
+const mask = Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" width="${side}" height="${side}"><rect width="${side}" height="${side}" rx="${radius}" ry="${radius}" fill="#fff"/></svg>`);
+const icon = await sharp(iconSource)
+  .extract(square)
+  .ensureAlpha()
+  .composite([{ input: mask, blend: "dest-in" }])
+  .png()
+  .toBuffer();
+console.log("icon square", square, "radius", radius);
 
-/** "tight": Meldling large in its square (small UI, favicons, app icons); "full": the whole asset (maskable, launch). */
-const ASSETS = [
-  { file: "favicon-32.png", size: 32, crop: "tight" },
-  { file: "meldling-96.webp", size: 96, crop: "tight" },
-  { file: "meldling-192.webp", size: 192, crop: "tight" },
-  { file: "meldling-128.png", size: 128, crop: "tight" },
-  { file: "meldling-256.png", size: 256, crop: "tight" },
-  { file: "meldling-180.png", size: 180, crop: "tight" },
-  { file: "meldling-192.png", size: 192, crop: "tight" },
-  { file: "meldling-512.png", size: 512, crop: "tight" },
-  // Maskable icons need the shape inside the central 80% circle: the full asset already has it there.
-  { file: "meldling-maskable-512.png", size: 512, crop: "full" },
-  { file: "launch/meldling-launch.png", size: 480, crop: "full" },
+const ICONS = [
+  { file: "favicon-32.png", size: 32 },
+  { file: "meldling-96.webp", size: 96 },
+  { file: "meldling-192.webp", size: 192 },
+  { file: "meldling-128.png", size: 128 },
+  { file: "meldling-256.png", size: 256 },
+  { file: "meldling-180.png", size: 180 },
+  { file: "meldling-192.png", size: 192 },
+  { file: "meldling-512.png", size: 512 },
+  { file: "launch/meldling-launch.png", size: 480 },
 ];
-
-for (const a of ASSETS) {
-  let img = sharp(source);
-  if (a.crop === "tight") img = img.extract(tight);
-  img = img.resize(a.size, a.size, { kernel: "lanczos3" });
+for (const a of ICONS) {
+  let img = sharp(icon).resize(a.size, a.size, { kernel: "lanczos3" });
   img = a.file.endsWith(".webp") ? img.webp({ quality: 92 }) : img.png({ compressionLevel: 9 });
   await img.toFile(out(a.file));
   console.log(a.file);
 }
 
-// The notification badge: Android draws only its alpha, so the off-white shape becomes opaque white, the teal clear.
-const badge = await sharp(source).extract(tight).resize(96, 96, { kernel: "lanczos3" }).removeAlpha().greyscale().raw().toBuffer({ resolveWithObject: true });
-const rgba = Buffer.alloc(96 * 96 * 4);
-for (let i = 0; i < 96 * 96; i++) {
-  // Teal is ~60 in grey, the cream ~252: map that range onto 0–255 alpha, keeping the antialiased edge.
-  const alpha = Math.max(0, Math.min(255, Math.round(((badge.data[i] - 60) / (252 - 60)) * 255)));
-  rgba.set([255, 255, 255, alpha], i * 4);
-}
-await sharp(rgba, { raw: { width: 96, height: 96, channels: 4 } })
+// Maskable icons are cut to any shape by the system: the art's own square, without the rounded corners, fills it.
+const inner = Math.round(side * 0.06);
+await sharp(iconSource)
+  .extract({ left: x0 + inner, top: y0 + inner, width: side - 2 * inner, height: side - 2 * inner })
+  .resize(512, 512, { kernel: "lanczos3" })
   .png({ compressionLevel: 9 })
-  .toFile(out("meldling-badge-96.png"));
-console.log("meldling-badge-96.png");
+  .toFile(out("meldling-maskable-512.png"));
+console.log("meldling-maskable-512.png");
 
-// The share image: Meldling on its own teal, with the product name (the product is Meldiq; the mascot is Meldling).
-const mascot = await sharp(source).extract(tight).resize(400, 400, { kernel: "lanczos3" }).png().toBuffer();
-const text = Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" width="660" height="300">
-  <text x="0" y="150" font-family="Helvetica, Arial, sans-serif" font-size="112" font-weight="800" fill="${CREAM}" letter-spacing="-3">Meldiq</text>
-  <text x="4" y="216" font-family="Helvetica, Arial, sans-serif" font-size="34" fill="${CREAM}" fill-opacity="0.82">End-to-end encrypted community chat</text>
-</svg>`);
-await sharp({ create: { width: 1200, height: 630, channels: 3, background: TEAL } })
-  .composite([
-    { input: mascot, left: 70, top: 115 },
-    { input: text, left: 500, top: 150 },
-  ])
-  .png({ compressionLevel: 9 })
-  .toFile(out("meldiq-og.png"));
+// ── The bear's silhouette: its white body against the dark ground, as opacity (badges and favicons). ──
+const shapeOf = async (size, colour) => {
+  const raw = await sharp(icon).flatten({ background: "#000" }).resize(size, size, { kernel: "lanczos3" }).removeAlpha().raw().toBuffer();
+  const px = Buffer.alloc(size * size * 4);
+  for (let i = 0; i < size * size; i++) {
+    // The cub is near white (its shadows lavender, ~170+); the ground is deep blue (~60 at most): that range is opacity.
+    const lum = 0.2126 * raw[i * 3] + 0.7152 * raw[i * 3 + 1] + 0.0722 * raw[i * 3 + 2];
+    const alpha = Math.max(0, Math.min(255, Math.round(((lum - 90) / (215 - 90)) * 255)));
+    px.set([...colour, alpha], i * 4);
+  }
+  return sharp(px, { raw: { width: size, height: size, channels: 4 } }).png({ compressionLevel: 9 });
+};
+await (await shapeOf(96, [255, 255, 255])).toFile(out("meldling-badge-96.png"));
+console.log("meldling-badge-96.png");
+for (const [variant, colour] of [
+  ["light", [42, 28, 120]],
+  ["dark", [255, 255, 255]],
+]) {
+  for (const size of [16, 32, 48, 192]) {
+    await (await shapeOf(size, colour)).toFile(out(`favicon-${variant}-${size}.png`));
+    console.log(`favicon-${variant}-${size}.png`);
+  }
+}
+
+// ── The share image: the brand banner (Meldling, the name and "Connect. Play. Belong."), cut to 1200 × 630. ──
+await sharp(brand("banner.webp")).resize(1200, 630, { fit: "cover", position: "centre" }).png({ compressionLevel: 9 }).toFile(out("meldiq-og.png"));
 console.log("meldiq-og.png");
 
-/**
- * Browser-tab favicons (continuation brief v3 §6): Meldling's silhouette alone on a transparent ground, no teal
- * square. Each pixel's opacity is how far it is from the teal towards the off-white (so the antialiased edge stays
- * smooth and the teal eyes and mouth become see-through); the colour is one solid tone per variant: deep teal for
- * light browser chrome, white for dark. Cropped close so the shape reads at 16 px.
- */
-const SILHOUETTE_PADDING = 0.04;
-const sSide = Math.min(info.width, Math.round(Math.max(x1 - x0, y1 - y0) * (1 + 2 * SILHOUETTE_PADDING)));
-const sClamp = (v) => Math.max(0, Math.min(info.width - sSide, Math.round(v)));
-const sCrop = { left: sClamp((x0 + x1) / 2 - sSide / 2), top: sClamp((y0 + y1) / 2 - sSide / 2), width: sSide, height: sSide };
-const hex = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
-const [tr, tg, tb] = hex(TEAL);
-const [cr, cg, cb] = hex(CREAM);
-const span = Math.hypot(cr - tr, cg - tg, cb - tb);
-const cropped = await sharp(source).extract(sCrop).removeAlpha().raw().toBuffer({ resolveWithObject: true });
-for (const [variant, colour] of [
-  ["light", "#04473e"],
-  ["dark", "#ffffff"],
-]) {
-  const [r, g, b] = hex(colour);
-  const px = Buffer.alloc(cropped.info.width * cropped.info.height * 4);
-  for (let i = 0; i < cropped.info.width * cropped.info.height; i++) {
-    const [pr, pg, pb] = [cropped.data[i * 3], cropped.data[i * 3 + 1], cropped.data[i * 3 + 2]];
-    const t = Math.max(0, Math.min(1, Math.hypot(pr - tr, pg - tg, pb - tb) / span));
-    px.set([r, g, b, Math.round(255 * t)], i * 4);
-  }
-  const shape = sharp(px, { raw: { width: cropped.info.width, height: cropped.info.height, channels: 4 } }).png();
-  const master = await shape.toBuffer();
-  for (const size of [16, 32, 48, 192]) {
-    const file = `favicon-${variant}-${size}.png`;
-    await sharp(master).resize(size, size, { kernel: "lanczos3" }).png({ compressionLevel: 9 }).toFile(out(file));
-    console.log(file);
-  }
+// ── Illustrations: each poster's bear alone (the posters' own words and buttons stay out: the app writes its own). ──
+const ILLUSTRATIONS = [
+  // [file, source, crop as shares of the source's width and height (left, top, width, height), output width]
+  ["meldling/banner.webp", "banner.webp", [0, 0, 1, 1], 1600],
+  ["meldling/plus.webp", "plus.webp", [0, 0, 1, 1], 1200],
+  ["meldling/spark.webp", "spark.webp", [0, 0, 1, 1], 1200],
+  ["meldling/hello.webp", "onboarding-features.webp", [0.05, 0.06, 0.9, 0.46], 640],
+  ["meldling/gaming.webp", "onboarding.webp", [0.05, 0.08, 0.9, 0.5], 640],
+  ["meldling/all-set.webp", "all-set.webp", [0.08, 0.06, 0.84, 0.55], 640],
+  ["meldling/loading.webp", "loading.webp", [0.08, 0.24, 0.84, 0.34], 640],
+  ["meldling/waving.webp", "splash.webp", [0.08, 0.15, 0.84, 0.48], 640],
+  ["meldling/confused.webp", "confused.webp", [0, 0, 1, 1], 512],
+  ["meldling/love.webp", "love.webp", [0, 0, 1, 1], 512],
+];
+for (const [file, src, [l, t, w, h], width] of ILLUSTRATIONS) {
+  const meta = await sharp(brand(src)).metadata();
+  const crop = { left: Math.round(l * meta.width), top: Math.round(t * meta.height), width: Math.round(w * meta.width), height: Math.round(h * meta.height) };
+  await sharp(brand(src)).extract(crop).resize({ width, kernel: "lanczos3" }).webp({ quality: 86 }).toFile(out(file));
+  console.log(file);
 }

@@ -49,7 +49,7 @@ test("a community's menu opens its Sparks: its level and what a Spark would do",
     .click();
   const dialog = page.getByRole("dialog", { name: "Sparks for Spark Lab" });
   await expect(dialog.getByText("No Spark level yet")).toBeVisible();
-  await expect(dialog.getByText("1 more for Level 1", { exact: false })).toBeVisible();
+  await expect(dialog.getByText("2 more for Level 1", { exact: false })).toBeVisible();
   await expect(dialog.getByText("50 emoji slots")).toBeVisible();
   // No Sparks to give: it points to where they come from.
   await expect(dialog.getByRole("button", { name: /Get Sparks/ })).toBeVisible();

@@ -25,7 +25,7 @@ export function InstallSetting() {
             ? "You're using Meldiq as an installed app."
             : state === "ios"
               ? "In Safari, tap Share, then Add to Home Screen. Meldiq then opens on its own, without the browser's bars."
-              : "Its own window and icon, opened like any app. Messages stay end-to-end encrypted the same way."}
+              : "Its own window and icon, opened like any app."}
         </small>
       </div>
       <InstallButton />

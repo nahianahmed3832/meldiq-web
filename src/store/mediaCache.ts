@@ -15,7 +15,14 @@ const TRIM_EVERY = 10;
 
 let added = 0;
 
+/**
+ * Off since API 0.57.0 (the owner's rule, 2026-10-28: the browser keeps no data; files are served by the server each
+ * time). The functions stay so callers needn't change; forgetAllMedia still deletes what earlier versions kept.
+ */
+const KEEPS_MEDIA = false;
+
 function storage(): CacheStorage | null {
+  if (!KEEPS_MEDIA) return null;
   try {
     return typeof caches !== "undefined" ? caches : null;
   } catch {
@@ -86,7 +93,7 @@ export async function forgetMediaEntry(key: string): Promise<void> {
 /** Erases every kept file (sign-out, account deletion). */
 export async function forgetAllMedia(): Promise<void> {
   try {
-    await storage()?.delete(CACHE_NAME);
+    if (typeof caches !== "undefined") await caches.delete(CACHE_NAME);
   } catch {
     /* nothing kept */
   }

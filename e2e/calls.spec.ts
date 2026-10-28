@@ -50,12 +50,12 @@ const stage = (page: Page) => page.locator("section.call-stage").and(page.getByR
 const badge = (s: Locator) => s.locator(".e2ee-badge");
 
 /**
- * Waits for "End-to-end encrypted". If it doesn't come, the per-track evidence is attached right away, while the call is
+ * Waits for "Encrypted call". If it doesn't come, the per-track evidence is attached right away, while the call is
  * still up (after the test the call has usually ended and the evidence is gone).
  */
 async function expectEncrypted(page: Page, s: Locator): Promise<void> {
   try {
-    await expect(badge(s)).toHaveText("End-to-end encrypted", { timeout: 30_000 });
+    await expect(badge(s)).toHaveText("Encrypted call", { timeout: 30_000 });
   } catch (e) {
     const tracks = await page.evaluate(() => (globalThis as { __orbitCallTracks?: () => unknown }).__orbitCallTracks?.()).catch(() => null);
     await test.info().attach("call-tracks-at-failure.json", { body: JSON.stringify(tracks, null, 1), contentType: "application/json" });
@@ -217,7 +217,7 @@ test("media under the wrong key is reported as a problem and never shown as encr
       seen.add((await badge(s).textContent()) ?? "");
       await page.waitForTimeout(300);
     }
-    expect(seen.has("End-to-end encrypted")).toBe(false);
+    expect(seen.has("Encrypted call")).toBe(false);
     await expect(s.getByRole("figure", { name: /encryption problem/ })).toBeVisible();
     // Nothing that didn't decrypt reaches the screen or the speaker, and the native side can't decrypt the browser either.
     await expect(s.locator("figure.call-tile:not(.local) video")).toHaveCount(0);

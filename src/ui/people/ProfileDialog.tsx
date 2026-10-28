@@ -13,6 +13,7 @@ import { SafeLink } from "../chat/SafeLink";
 import { ProfileEffect, StyledAvatar } from "./ProfileStyle";
 import { Dialog, Menu, type MenuEntry, useMenu } from "../components/Overlay";
 import { toneOf } from "../components/Avatar";
+import { OrgAvatar } from "../components/OrgAvatar";
 import { directory } from "../../sync/workspaces";
 import { relative } from "../format";
 
@@ -285,6 +286,7 @@ export function ProfileDialog({ userId, fallbackName, orgId = null, near = null,
                 <span className="faint">{profile.lastSeenAt ? `Last seen ${relative(profile.lastSeenAt)}` : "Not shown"}</span>
               )}
             </section>
+            <MemberSince profile={profile} orgId={orgId} />
             {roles && roles.length > 0 && (
               <section className="profile-box" aria-label="Roles">
                 <h3>Roles</h3>
@@ -296,6 +298,18 @@ export function ProfileDialog({ userId, fallbackName, orgId = null, near = null,
                     </span>
                   ))}
                 </div>
+              </section>
+            )}
+            {profile.mutualCommunities.length > 0 && (
+              <section className="profile-box profile-mutuals" aria-label="Mutual communities">
+                <span className="profile-mutual-icons" aria-hidden="true">
+                  {profile.mutualCommunities.slice(0, 3).map((o) => (
+                    <OrgAvatar key={o.id} orgId={o.id} name={o.name} photoRev={o.photoRev} size={26} />
+                  ))}
+                </span>
+                <span className="grow" title={profile.mutualCommunities.map((o) => o.name).join(", ")}>
+                  {profile.mutualCommunities.length} mutual {profile.mutualCommunities.length === 1 ? "community" : "communities"}
+                </span>
               </section>
             )}
             {hasConnections && !self && state && state !== "none" && !blocked && (
@@ -364,5 +378,34 @@ export function ProfileDialog({ userId, fallbackName, orgId = null, near = null,
       </div>
       {moreMenu.anchor && <Menu anchor={moreMenu.anchor} label={`More for ${name}`} onClose={moreMenu.close} entries={more} align="end" />}
     </Dialog>
+  );
+}
+
+/**
+ * Member since (the owner's reference, 2026-10-28): when they joined Meldiq, and, opened from a community you share,
+ * when they joined it. Absent on servers before API 0.57.0.
+ */
+function MemberSince({ profile, orgId }: { profile: Profile; orgId: string | null }) {
+  const here = orgId ? profile.mutualCommunities.find((o) => o.id === orgId) : undefined;
+  if (!profile.memberSince && !here) return null;
+  const day = (t: number) => new Date(t).toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" });
+  return (
+    <section className="profile-box" aria-label="Member since">
+      <h3>Member since</h3>
+      <div className="profile-since">
+        {profile.memberSince && (
+          <span title="Joined Meldiq">
+            <img src="/meldling-96.webp" width={20} height={20} alt="Meldiq" draggable={false} />
+            {day(profile.memberSince)}
+          </span>
+        )}
+        {here && (
+          <span title={`Joined ${here.name}`}>
+            <OrgAvatar orgId={here.id} name={here.name} photoRev={here.photoRev} size={20} />
+            {day(here.joinedAt)}
+          </span>
+        )}
+      </div>
+    </section>
   );
 }

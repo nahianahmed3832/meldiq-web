@@ -15,6 +15,7 @@ import {
   Shield,
   SlidersHorizontal,
   Smartphone,
+  Gem,
   Sparkles,
   UserRound,
 } from "lucide-react";
@@ -36,6 +37,7 @@ import { type StringKey, useT } from "../../i18n";
 import { YouCard } from "./YouCard";
 import { InstallButton } from "./InstallButton";
 import { MojoPage } from "../mojo/MojoPage";
+import { SparkPage } from "../mojo/SparkPage";
 
 type PageEntry = { key: SettingsPage; label: StringKey; icon: React.ReactNode };
 
@@ -47,6 +49,8 @@ const USER_PAGES: PageEntry[] = [
   { key: "devices", label: "settings_devices", icon: <Smartphone size={17} /> },
   // Meldiq Mojo (server docs/MOJO.md): with the account, not pushed anywhere else.
   { key: "mojo", label: "settings_mojo", icon: <Sparkles size={17} /> },
+  // Meldiq Spark: its own page (2026-10-28), boosting the communities you love.
+  { key: "spark", label: "settings_spark", icon: <Gem size={17} /> },
 ];
 const APP_PAGES: PageEntry[] = [
   { key: "appearance", label: "settings_appearance", icon: <Palette size={17} /> },
@@ -116,7 +120,7 @@ export function SettingsView({ page, onSignedOut }: { page: SettingsPage; onSign
           </button>
         </nav>
         <div className="settings-page scroll">
-          <div className={`inner${page === "mojo" ? " wide" : ""}`}>
+          <div className={`inner${page === "mojo" || page === "spark" ? " wide" : ""}`}>
             <button className="settings-back" onClick={() => navigate({ section: "settings", settingsPage: "you" })}>
               <ChevronLeft size={18} aria-hidden="true" /> {t("nav_you")}
             </button>
@@ -134,6 +138,7 @@ export function SettingsView({ page, onSignedOut }: { page: SettingsPage; onSign
             {page === "health" && <ServiceHealthPage />}
             {page === "usage" && <AdminUsagePage />}
             {page === "mojo" && <MojoPage />}
+            {page === "spark" && <SparkPage />}
           </div>
         </div>
       </div>

@@ -5,7 +5,7 @@ import { AccountApi } from "../../auth/accountApi";
 import { useEngine, useOrbit } from "../../application/orbit";
 import { useRoute } from "../../application/router";
 import { AccountSafetyApi, BUG_STATUS_LABEL } from "../../sync/accountSafety";
-import { backUpBeforeSignOut, BackupUnsent, signOut } from "../../sync/account";
+import { signOut } from "../../sync/account";
 import { buildDataExport } from "../../sync/dataExport";
 import { relative } from "../format";
 import { Dialog } from "../components/Overlay";
@@ -143,10 +143,7 @@ export function DataExportCard() {
       <div className="setting-card-head">
         <span className="lines grow">
           <strong>Download your data</strong>
-          <small>
-            Your account, profile, communities, conversations and the messages this browser has, as one JSON file. Messages are end-to-end encrypted, so the file is made here, from this browser's
-            copy.
-          </small>
+          <small>Your account, profile, communities, conversations and the messages loaded on this page, as one JSON file.</small>
         </span>
         <button className="btn btn-primary btn-sm" disabled={busy} onClick={download}>
           <Download size={14} /> {busy ? "Preparing…" : "Download"}
@@ -167,26 +164,19 @@ export function LogOutEverywhereCard({ onSignedOut }: { onSignedOut: () => void 
   const [asking, setAsking] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  /** Chats couldn't be backed up and the person was told: the next try goes on without them. */
-  const [skipBackup, setSkipBackup] = useState(false);
   const go = () => {
     setBusy(true);
     setError(null);
     const accounts = new AccountApi(engine.api);
-    // This browser's chats go into the history first, while its session still works.
-    (skipBackup ? Promise.resolve() : backUpBeforeSignOut(engine))
-      .then(() => accounts.sessions())
+    // Nothing to back up first: the server keeps every message (API 0.57.0).
+    accounts
+      .sessions()
       .then(async (list) => {
         for (const s of list.filter((x) => !x.current)) await accounts.endSession(s.id);
         await signOut(engine, true, true);
         onSignedOut();
       })
-      .catch((e: unknown) => {
-        if (e instanceof BackupUnsent) {
-          setSkipBackup(true);
-          setError(`${e.message} Chats that only this browser has won't come back here if you log out now.`);
-        } else setError(e instanceof ApiError ? e.message : "Couldn't sign out everywhere. Try again.");
-      })
+      .catch((e: unknown) => setError(e instanceof ApiError ? e.message : "Couldn't sign out everywhere. Try again."))
       .finally(() => setBusy(false));
   };
   return (
@@ -210,15 +200,14 @@ export function LogOutEverywhereCard({ onSignedOut }: { onSignedOut: () => void 
                 Cancel
               </button>
               <button className="btn btn-danger" disabled={busy} onClick={go}>
-                {busy ? "Signing out…" : skipBackup ? "Log out anyway" : "Log out everywhere"}
+                {busy ? "Signing out…" : "Log out everywhere"}
               </button>
             </>
           }
         >
           <div className="dialog-body">
             <p style={{ margin: 0 }}>
-              Every phone and browser signed in to your account is signed out, then this one too. This browser backs its chats up first. When you sign in again on a device and unlock your keys (key
-              backup, recovery key or another device), your chats come back.
+              Every phone and browser signed in to your account is signed out, then this one too. Your chats stay on Meldiq's servers and are all there when you sign in again.
             </p>
             {error && (
               <div className="banner danger" role="alert">

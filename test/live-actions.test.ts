@@ -17,6 +17,8 @@ beforeAll(async () => {
   server = await startServer();
   alice = await server.client("alice", "Alice");
   bob = await server.client("bob", "Bob");
+  // Bob's phone sends as apps do since API 0.57.0: to the server, which stores it (docs/SERVER_MESSAGES.md).
+  bob.serverMessages = true;
   carol = await server.client("carol", "Carol");
   dm = (await alice.req("POST", "/v1/conversations/dm", { userId: bob.userId })).conversation.id;
   org = (await alice.req("POST", "/v1/orgs", { name: "Acme" })).org.id;

@@ -66,6 +66,36 @@ describe("what a background wake-up shows (service worker, no Meldiq tab open)",
     ]);
   });
 
+  it("shows what a server-stored message says (API 0.57.0), and still counts several", () => {
+    const stored = (conversationId: string, text: string, cls: "message" | "control" = "message"): QueueItem => {
+      const base = item(conversationId);
+      return {
+        ...base,
+        kind: "message",
+        payload: {
+          event: {
+            id: base.messageId,
+            conversationId,
+            senderUserId: "u_bob",
+            senderDeviceId: "d_bob",
+            cls,
+            payload: { type: cls === "message" ? "text" : "reaction", text },
+            sentAt: NOW,
+            serverTs: NOW,
+            mentionAll: false,
+            importedBy: null,
+          },
+        },
+      };
+    };
+    expect(wakeNotices(input({ items: [stored("c_dm", "  see you at   6 ")] }))).toEqual([{ tag: "c_dm", title: "Bob Chen", body: "see you at 6", url: "/dms/c/c_dm", call: false }]);
+    expect(wakeNotices(input({ items: [stored("c_dm", "one"), stored("c_dm", "two")] }))[0]?.body).toBe("2 new messages: two");
+    // A change (a reaction) wakes nobody; with message text off, nothing of it shows.
+    expect(wakeNotices(input({ items: [stored("c_dm", "x", "control")] }))).toEqual([]);
+    const quiet = wakeNotices(input({ items: [stored("c_dm", "secret")], prefs: { notifications: true, groupNotifications: true, notificationText: false } }));
+    expect(quiet[0]?.body).toBe("New message");
+  });
+
   it("never wakes anyone for reactions, edits, receipts or their own messages", () => {
     expect(wakeNotices(input({ items: [item("c_dm", { cls: "control" }), { ...item("c_dm"), kind: "receipt" }, item("c_dm", { senderUserId: ME })] }))).toEqual([]);
   });

@@ -1,4 +1,5 @@
-import { BookOpen, HelpCircle, Smile, Ban, Building2, CalendarDays, Flag, Gauge, Hash, Laptop, LayoutGrid, ScrollText, Shield, ShieldCheck, Ticket, UserCheck, UsersRound } from "lucide-react";
+import { MeldlingArt } from "../components/MeldlingArt";
+import { BookOpen, HelpCircle, Smile, Ban, CalendarDays, Flag, Gauge, Hash, Laptop, LayoutGrid, ScrollText, Shield, ShieldCheck, Ticket, UserCheck, UsersRound } from "lucide-react";
 import { ApplicationsPage, BansPage, SecurityPage } from "./ModerationPages";
 import { ReportsPage } from "./ReportsPage";
 import { GuidePage, OnboardingPage } from "./GuidePages";
@@ -84,9 +85,7 @@ export function WorkspaceView({ orgId, page, onDialog }: { orgId: string | null;
     return (
       <section className="main" aria-label="Workspace">
         <div className="empty" style={{ margin: "auto" }}>
-          <span className="empty-orb">
-            <Building2 size={26} />
-          </span>
+          <MeldlingArt pose="hello" />
           <h2>No community yet</h2>
           <p className="muted">Create one for your organisation, start a community, or join one with an invitation code.</p>
           <div className="row" style={{ gap: 8, justifyContent: "center" }}>

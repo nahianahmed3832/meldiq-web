@@ -2,8 +2,7 @@ import { KeyRound, Laptop, LogOut, Smartphone, Trash2 } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import type { Device } from "../../api/schemas";
 import { useEngine, useOrbit } from "../../application/orbit";
-import { BackupUnsent, listDevices, revokeDevice, signOut, SignOutUnconfirmed } from "../../sync/account";
-import { HistoryBackupCard, UnlockBackupDialog } from "./HistoryBackup";
+import { listDevices, revokeDevice, signOut, SignOutUnconfirmed } from "../../sync/account";
 import { BlockedPeople, MessagingSettings, PrivacySettings } from "./PrivacyPage";
 import { Dialog } from "../components/Overlay";
 import { relative } from "../format";
@@ -28,7 +27,7 @@ export function DevicesPage() {
       <div>
         <h1>Devices</h1>
         <p className="muted" style={{ margin: "6px 0 0" }}>
-          Every device of your account gets its own keys and its own copy of each message. To add a browser, sign in there and set it up with your recovery key or by approving it on your phone.
+          Every phone and browser signed in to your account. Each shows the same chats: they're kept on Meldiq's servers. Remove one to sign it out at once.
         </p>
       </div>
       {error && <div className="banner danger">{error}</div>}
@@ -80,10 +79,7 @@ export function DevicesPage() {
           }
         >
           <div className="dialog-body">
-            <p style={{ margin: 0 }}>It's signed out at once and stops receiving new messages. Messages already on it aren't erased remotely.</p>
-            <p className="faint" style={{ margin: 0 }}>
-              If it's your only phone and you don't have your recovery key, you can't get your account back on a new phone. Keep at least one phone linked.
-            </p>
+            <p style={{ margin: 0 }}>It's signed out at once and can't open your chats any more. Sign in there again to use it.</p>
           </div>
         </Dialog>
       )}
@@ -94,22 +90,20 @@ export function DevicesPage() {
 export function SecurityPage({ onSignedOut }: { onSignedOut: () => void }) {
   const engine = useEngine();
   const me = useOrbit((s) => s.me);
-  const [confirm, setConfirm] = useState<"ask" | "unconfirmed" | "unsent" | "unlock" | null>(null);
+  const [confirm, setConfirm] = useState<"ask" | "unconfirmed" | null>(null);
   const [busy, setBusy] = useState(false);
   const [reason, setReason] = useState("");
-  const [needsKeys, setNeedsKeys] = useState(false);
   if (!me) return null;
-  /** [force]: even if the server can't confirm; [skipBackup]: even if chats couldn't be backed up (both asked first). */
-  const doSignOut = (force: boolean, skipBackup: boolean) => {
+  /**
+   * [force]: even if the server can't confirm (asked first). Nothing needs backing up first: the server keeps every
+   * message (API 0.57.0).
+   */
+  const doSignOut = (force: boolean) => {
     setBusy(true);
-    signOut(engine, force, skipBackup)
+    signOut(engine, force, true)
       .then(onSignedOut)
       .catch((e: unknown) => {
-        if (e instanceof BackupUnsent) {
-          setReason(e.message);
-          setNeedsKeys(e.needsKeys);
-          setConfirm("unsent");
-        } else if (e instanceof SignOutUnconfirmed) {
+        if (e instanceof SignOutUnconfirmed) {
           setReason(e.message);
           setConfirm("unconfirmed");
         } else engine.notice("error", e instanceof Error ? e.message : "Couldn't sign out");
@@ -135,28 +129,22 @@ export function SecurityPage({ onSignedOut }: { onSignedOut: () => void }) {
       <PrivacySettings />
       <BlockedPeople />
       <div className="card" style={{ padding: "16px 18px", display: "grid", gap: 10 }}>
-        <strong>How this browser protects your messages</strong>
+        <strong>Where your data lives</strong>
         <ul className="muted" style={{ margin: 0, paddingLeft: 18, display: "grid", gap: 6, fontSize: 13.5 }}>
-          <li>Messages and files are encrypted and decrypted here, with keys this page can use but can't read or export.</li>
-          <li>The server relays ciphertext. It sees who talks to whom and when, not what is said.</li>
-          <li>This browser doesn't keep your recovery key: it's shown once when it's made, or typed in to set the browser up, and dropped right after. This browser can't approve other devices.</li>
-          <li>
-            Messages this browser received are kept in its storage on this computer so they're there next time, and backed up end-to-end encrypted on your server. That storage isn't as strongly
-            protected as your phone's encrypted database: sign out on shared computers.
-          </li>
+          <li>Your messages, files and settings are stored on Meldiq's servers, so every device you sign in to shows the same chats. They travel over encrypted connections.</li>
+          <li>This browser keeps only what signs it in. Nothing to back up, and nothing lost if this computer is.</li>
           <li>
             {engine.device.account
-              ? "Your account session is kept encrypted under a key this page can use but not read; if it ends, Meldiq asks for your password again. Your password itself is never stored."
+              ? "Your session is kept encrypted under a key this page can use but not read; if it ends, Meldiq asks for your password again. Your password itself is never stored."
               : "The session token is held in memory only; each visit signs in again with the device key."}
           </li>
         </ul>
       </div>
-      <HistoryBackupCard />
       <div className="card" style={{ padding: "16px 18px", display: "grid", gap: 12 }}>
         <div>
           <strong>Sign out of this browser</strong>
           <p className="muted" style={{ margin: "4px 0 0", fontSize: 13.5 }}>
-            Your chats are backed up first, so they come back when you sign in again. Then this browser leaves your account and its keys and its copy of your chats are removed from this computer.
+            This browser leaves your account and forgets its sign-in. Your chats stay on Meldiq's servers and are all there when you sign in again.
           </p>
         </div>
         <div>
@@ -174,47 +162,17 @@ export function SecurityPage({ onSignedOut }: { onSignedOut: () => void }) {
               <button className="btn btn-secondary" onClick={() => setConfirm(null)}>
                 Cancel
               </button>
-              <button className="btn btn-primary" disabled={busy} onClick={() => doSignOut(false, false)}>
+              <button className="btn btn-primary" disabled={busy} onClick={() => doSignOut(false)}>
                 {busy ? "Signing out…" : "Sign out"}
               </button>
             </>
           }
         >
           <div className="dialog-body">
-            <p style={{ margin: 0 }}>Your chats stay backed up, end-to-end encrypted, and come back when you sign in again.</p>
+            <p style={{ margin: 0 }}>Your chats stay on Meldiq's servers and are all there when you sign in again.</p>
           </div>
         </Dialog>
       )}
-      {confirm === "unsent" && (
-        <Dialog
-          title="Some chats aren't backed up yet"
-          onClose={() => setConfirm(null)}
-          footer={
-            <>
-              <button className="btn btn-secondary" disabled={busy} onClick={() => doSignOut(true, true)}>
-                Sign out anyway
-              </button>
-              {needsKeys ? (
-                <button className="btn btn-primary" onClick={() => setConfirm("unlock")}>
-                  Back up first
-                </button>
-              ) : (
-                <button className="btn btn-primary" disabled={busy} onClick={() => doSignOut(false, false)}>
-                  {busy ? "Trying…" : "Try again"}
-                </button>
-              )}
-            </>
-          }
-        >
-          <div className="dialog-body">
-            <p style={{ margin: 0 }}>{reason}</p>
-            <p className="muted" style={{ margin: 0 }}>
-              If you sign out now, chats that only this browser has won't come back here. Chats your phone or another device has are kept.
-            </p>
-          </div>
-        </Dialog>
-      )}
-      {confirm === "unlock" && <UnlockBackupDialog onClose={() => setConfirm(null)} onDone={() => doSignOut(false, false)} />}
       {confirm === "unconfirmed" && (
         <Dialog
           title="The server couldn't confirm"
@@ -224,7 +182,7 @@ export function SecurityPage({ onSignedOut }: { onSignedOut: () => void }) {
               <button className="btn btn-secondary" onClick={() => setConfirm(null)}>
                 Stay signed in
               </button>
-              <button className="btn btn-danger" disabled={busy} onClick={() => doSignOut(true, true)}>
+              <button className="btn btn-danger" disabled={busy} onClick={() => doSignOut(true)}>
                 Sign out anyway
               </button>
             </>
@@ -233,8 +191,7 @@ export function SecurityPage({ onSignedOut }: { onSignedOut: () => void }) {
           <div className="dialog-body">
             <p style={{ margin: 0 }}>{reason}.</p>
             <p className="muted" style={{ margin: 0 }}>
-              If you sign out now, the server still lists this browser as a device until you remove it in Settings › Devices on your phone, and new messages keep being encrypted to it (nobody can read
-              them without its keys, which are removed).
+              If you sign out now, the server still lists this browser as a device until you remove it in Settings › Devices on another of your devices.
             </p>
           </div>
         </Dialog>

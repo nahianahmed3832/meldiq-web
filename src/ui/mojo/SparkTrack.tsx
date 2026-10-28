@@ -50,9 +50,7 @@ export function SparkLevelCards({ catalog, levels, level }: SparkLevelCardsProps
               <Gem size={18} aria-hidden="true" />
               <span className="lines">
                 <span>Level {l.level}</span>
-                <small>
-                  {level === null ? (l.sparks >= 3 ? "3 or more Sparks" : `${l.sparks} Spark${l.sparks === 1 ? "" : "s"}`) : unlocked ? "Unlocked" : `${l.sparks} Spark${l.sparks === 1 ? "" : "s"}`}
-                </small>
+                <small>{level !== null && unlocked ? "Unlocked" : l.level === levels.length ? `${l.sparks} or more Sparks` : `${l.sparks} Spark${l.sparks === 1 ? "" : "s"}`}</small>
               </span>
             </h3>
             <ul>

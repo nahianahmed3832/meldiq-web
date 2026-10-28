@@ -30,9 +30,9 @@ const LABEL: Record<Section, string> = {
   workspaces: "Communities",
   groups: "Groups",
   people: "People",
-  messages: "Messages on this browser",
-  files: "Files on this browser",
-  pinned: "Pinned on this browser",
+  messages: "Messages",
+  files: "Files loaded here",
+  pinned: "Pinned loaded here",
 };
 const FILTER_LABEL: Record<Filter, string> = {
   all: "All",
@@ -362,8 +362,7 @@ export function SearchDialog({ orgId: _orgId, onClose }: { orgId: string | null;
           ))}
           {term && universal && filter === "all" && (
             <p className="faint search-note">
-              <UsersRound size={12} /> People, channels and communities come from the server, which only shows what you may see. Messages and files are searched on this browser: they're end-to-end
-              encrypted.
+              <UsersRound size={12} /> Everything comes from the server, which only shows what you may see.
             </p>
           )}
         </div>

@@ -36,7 +36,7 @@ export function AuditPage({ detail }: { detail: OrgAdminDetail }) {
   const filters = community ? AUDIT_FILTERS : LEGACY_FILTERS;
   return (
     <div className="ws-page">
-      <Card title="Audit log" sub={`Administrative changes in this ${community ? "community" : "workspace"}. Message content is never here: it's end-to-end encrypted.`}>
+      <Card title="Audit log" sub={`Administrative changes in this ${community ? "community" : "workspace"}. Message content is never here.`}>
         <div className="row" style={{ gap: 8, flexWrap: "wrap" }}>
           <div className="chips" role="group" aria-label="Kind of change">
             {filters.map((f) => (

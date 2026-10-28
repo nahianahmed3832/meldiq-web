@@ -1,3 +1,4 @@
+import { InviteToMeldiqCard, MojoPromoCard } from "./DmPromos";
 import { navigate, useRoute } from "../../application/router";
 import { Archive, ChevronDown, Compass, Contact, MailQuestion, MoreHorizontal, Pencil, Plus, Search, Trash2, UserRoundPlus } from "lucide-react";
 import { type ReactNode, useState } from "react";
@@ -7,7 +8,6 @@ import { Menu, useMenu } from "../components/Overlay";
 import { archivedPeople, channelGroups, homeLayout, type HomeSection, messageRequests, people } from "../selectors";
 import { ConversationRow, SectionNameDialog } from "./ConversationRow";
 import { useIncomingRequestCount } from "../people/connectionRequests";
-import { invitableCommunities } from "../../sync/social";
 import { useT } from "../../i18n";
 
 /**
@@ -268,7 +268,7 @@ export function PeopleExtras({ onRequests, onConnections, onlyWhenAsked }: { onR
  * The top of Home and messages (the reference's DM hub): Friends (your connections, with requests waiting), message
  * requests, Find people and Create group; then the "Direct messages" heading with + for a new message.
  */
-export function DmHub({ onDialog, onInvite, onCreate }: { onDialog: (kind: "requests" | "connections" | "new" | "newGroup") => void; onInvite: (orgId: string) => void; onCreate: () => void }) {
+export function DmHub({ onDialog }: { onDialog: (kind: "requests" | "connections" | "new" | "newGroup") => void }) {
   const hasConnections = useOrbit((s) => s.server?.features.includes("connections") ?? false);
   const waiting = useOrbit((s) => messageRequests(s).length);
   const asked = useIncomingRequestCount();
@@ -276,7 +276,8 @@ export function DmHub({ onDialog, onInvite, onCreate }: { onDialog: (kind: "requ
   const section = useRoute().section;
   return (
     <>
-      <InviteCard onInvite={onInvite} onCreate={onCreate} />
+      <InviteToMeldiqCard />
+      <MojoPromoCard />
       <nav className="dm-hub" aria-label="People">
         {hasConnections && (
           <button
@@ -312,51 +313,5 @@ export function DmHub({ onDialog, onInvite, onCreate }: { onDialog: (kind: "requ
         </button>
       </div>
     </>
-  );
-}
-
-/**
- * Invite friends, always on Home and messages (continuation brief v3 §3): which community the invitation is for is
- * named (picked when there are several), and the button opens the same Invite friends dialog as the community menu.
- * Without a community yet, it says to start one first.
- */
-function InviteCard({ onInvite, onCreate }: { onInvite: (orgId: string) => void; onCreate: () => void }) {
-  const orgs = useOrbit((s) => invitableCommunities(s.orgs), shallowEqual);
-  const current = usePrefs().orgId;
-  const [picked, setPicked] = useState<string | null>(null);
-  const chosen = orgs.find((o) => o.id === picked) ?? orgs.find((o) => o.id === current) ?? orgs[0] ?? null;
-  return (
-    <section className="invite-card" aria-labelledby="invite-card-title">
-      <span className="invite-card-icon" aria-hidden="true">
-        <UserRoundPlus size={18} />
-      </span>
-      <div className="invite-card-text">
-        <strong id="invite-card-title">Invite friends</strong>
-        {chosen ? (
-          orgs.length > 1 ? (
-            <select className="invite-card-select" value={chosen.id} onChange={(e) => setPicked(e.target.value)} aria-label="Community to invite to">
-              {orgs.map((o) => (
-                <option key={o.id} value={o.id}>
-                  {o.name}
-                </option>
-              ))}
-            </select>
-          ) : (
-            <small className="ellipsis">to {chosen.name}</small>
-          )
-        ) : (
-          <small>Start a community, then share its link.</small>
-        )}
-      </div>
-      {chosen ? (
-        <button className="btn btn-primary btn-sm" onClick={() => onInvite(chosen.id)} aria-label={`Invite friends to ${chosen.name}`}>
-          Invite
-        </button>
-      ) : (
-        <button className="btn btn-primary btn-sm" onClick={onCreate}>
-          Create
-        </button>
-      )}
-    </section>
   );
 }

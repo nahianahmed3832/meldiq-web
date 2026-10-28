@@ -91,8 +91,7 @@ export function SearchPanel({ conversationId, onClose }: { conversationId: strin
         )}
         {results === null ? (
           <p className="faint" style={{ padding: "8px 4px" }}>
-            Searches the messages kept in this browser. Meldiq's server can't search them: it only holds encrypted copies. Narrow it with from:name, has:image, has:video, has:file, has:link,
-            before:2026-10-01 or after:2026-10-01.
+            Searches every message in your conversations. Narrow it with from:name, has:image, has:video, has:file, has:link, before:2026-10-01 or after:2026-10-01.
           </p>
         ) : results.length === 0 ? (
           <p className="faint" style={{ padding: "8px 4px" }}>

@@ -1,4 +1,5 @@
-import { AtSign, Compass, Hash, Inbox, MessagesSquare, PenSquare, RotateCw, ShieldCheck, UsersRound } from "lucide-react";
+import { MeldlingArt } from "../components/MeldlingArt";
+import { AtSign, Compass, Hash, Inbox, PenSquare, RotateCw, ShieldCheck, UsersRound } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { OrgDetail } from "../../api/schemas";
 import { shallowEqual, useEngine, useOrbit } from "../../application/orbit";
@@ -147,9 +148,7 @@ export function HomeView({ orgId, section, onDialog }: { orgId: string | null; s
               </div>
             ) : recent.length === 0 ? (
               <div className="empty">
-                <span className="empty-orb">
-                  <MessagesSquare size={24} />
-                </span>
+                <MeldlingArt pose="waving" />
                 <h2>{t("home_empty")}</h2>
                 <p>Start a direct message, or join a channel in your {communities ? "community" : "workspace"}.</p>
                 <div className="row">
@@ -212,7 +211,7 @@ function RecentRow({ id, section }: { id: string; section: Section }) {
         <span className="ellipsis" style={{ fontWeight: row.unread ? 700 : 600 }}>
           {row.type === "CHANNEL" ? `#${row.title}` : row.title}
         </span>
-        <small className="ellipsis">{row.preview ? `${row.sender && row.type !== "DM" ? `${row.sender}: ` : ""}${row.preview}` : "No messages on this browser yet"}</small>
+        <small className="ellipsis">{row.preview ? `${row.sender && row.type !== "DM" ? `${row.sender}: ` : ""}${row.preview}` : "No messages yet"}</small>
       </span>
       <span className="faint" style={{ fontSize: 12 }}>
         {shortWhen(row.at)}

@@ -542,7 +542,7 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
         >
           <div className="dialog-body">
             <p className="muted" style={{ margin: 0 }}>
-              It's removed from this browser and your other devices, and everyone in the conversation is asked to remove it. Deletion is cooperative: an app that ignores it could keep a copy.
+              It's removed for everyone in the conversation, on every device.
             </p>
           </div>
         </Dialog>

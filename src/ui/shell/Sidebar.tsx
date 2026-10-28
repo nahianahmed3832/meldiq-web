@@ -12,6 +12,7 @@ import type { ShellDialog } from "./Shell";
 import { ArchivedList, ChannelSections, Collapsible, DmHub, PeopleExtras, PeopleList, PersonalSections, SkeletonRows } from "./SidebarSections";
 import { VoiceRoomsSection } from "./VoiceRooms";
 import { CommunityHeader, hideMutedKey } from "../community/CommunityHeader";
+import { SparkGoal } from "../mojo/SparkGoal";
 import { useCommunityMenu } from "../community/communityMenu";
 import { CommunityPanel } from "../community/CommunityPanel";
 import { ACCENT_CLASS, accentStyle } from "../community/accent";
@@ -119,6 +120,7 @@ export function Sidebar({ orgId, section, open, onDialog }: SidebarProps) {
           )}
         </span>
       </div>
+      {branded && !messages && org && <SparkGoal orgId={org.id} name={org.name} />}
       {branded && !messages && perms.canInvite && (
         <div className="community-top">
           {perms.canInvite && (
@@ -164,7 +166,7 @@ export function Sidebar({ orgId, section, open, onDialog }: SidebarProps) {
           <SkeletonRows />
         ) : messages ? (
           <>
-            <DmHub onDialog={(kind) => onDialog({ kind })} onInvite={(id) => onDialog({ kind: "addMembers", orgId: id })} onCreate={() => onDialog({ kind: "createWorkspace" })} />
+            <DmHub onDialog={(kind) => onDialog({ kind })} />
             <PeopleList twoLine={section === "dms"} />
             <ArchivedList />
           </>

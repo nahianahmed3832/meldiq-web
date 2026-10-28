@@ -82,3 +82,38 @@ export function takePendingMessage(): string | null {
   }
   return path && MESSAGE_PATH.test(path) ? path : null;
 }
+
+/**
+ * Someone's invite link to Meldiq itself (?ref=<code>, server docs/BILLING.md › invite links): kept for this tab until
+ * the new account is signed in, then claimed once (the server counts it for an account at most a week old).
+ */
+const REF_KEY = "meldiq.pendingReferral";
+const REF = /^[A-Za-z0-9-]{4,40}$/;
+
+export function captureReferral(): void {
+  const code = new URLSearchParams(location.search).get("ref");
+  if (!code || !REF.test(code)) return;
+  try {
+    sessionStorage.setItem(REF_KEY, code);
+  } catch {
+    pendingRef = code;
+  }
+  const url = new URL(location.href);
+  url.searchParams.delete("ref");
+  history.replaceState(history.state, "", `${url.pathname}${url.search}`);
+}
+
+let pendingRef: string | null = null;
+
+/** The kept invite code, once (null if none). */
+export function takeReferral(): string | null {
+  let code = pendingRef;
+  pendingRef = null;
+  try {
+    code = sessionStorage.getItem(REF_KEY) ?? code;
+    sessionStorage.removeItem(REF_KEY);
+  } catch {
+    /* in memory only */
+  }
+  return code && REF.test(code) ? code : null;
+}

@@ -28,15 +28,15 @@ test("no account moving at sign-in, and no safety numbers in a conversation", as
   await page.goto(`/dms/c/${encodeURIComponent(dm)}`);
   await expect(page.getByRole("log", { name: "Messages" }).getByText("hello there")).toBeVisible();
 
-  // The details the name opens: no safety number card, still end-to-end encryption.
+  // The details the name opens: no safety number card; messages are kept on the server (API 0.57.0).
   await page.getByRole("button", { name: /Bob Chen: details/ }).click();
-  await expect(page.getByText("End-to-end encrypted on your devices")).toBeVisible();
+  await expect(page.getByText("Kept on Meldiq's servers, on all your devices")).toBeVisible();
   await expect(page.getByText(/Safety number/i)).toHaveCount(0);
   await expect(page.getByRole("button", { name: /Mark as verified/ })).toHaveCount(0);
 
-  // The conversation menu's Encryption sheet: what protects it, nothing to compare.
+  // The conversation menu's Encryption sheet: where messages are kept, nothing to compare.
   await page.locator(".conv-head").getByRole("button", { name: /^More/ }).click();
   await page.getByRole("menuitem", { name: /^Encryption/ }).click();
-  await expect(page.getByRole("dialog", { name: "Security" })).toContainText("Messages are end-to-end encrypted");
+  await expect(page.getByRole("dialog", { name: "Security" })).toContainText("Messages are stored on Meldiq's servers");
   await expect(page.getByRole("dialog", { name: "Security" })).not.toContainText(/safety number/i);
 });

@@ -1,5 +1,5 @@
 {
-  "version": "0.54.0",
+  "version": "0.57.0",
   "routes": [
     {
       "method": "GET",
@@ -20,6 +20,26 @@
     {
       "method": "POST",
       "path": "/v1/queue/ack"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/messages"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/conversations/{id}/messages"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/messages/import"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/messages/summary"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/messages/search"
     },
     {
       "method": "GET",
@@ -464,6 +484,14 @@
     {
       "method": "GET",
       "path": "/v1/presence"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/me/activity"
+    },
+    {
+      "method": "PUT",
+      "path": "/v2/me/activity"
     },
     {
       "method": "PUT",
@@ -1088,6 +1116,14 @@
     {
       "method": "GET",
       "path": "/v1/orgs/{orgId}/sparks"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/mojo/play/intent"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/mojo/play/verify"
     }
   ],
   "errors": {
@@ -1128,6 +1164,9 @@
     "billing_unavailable": [
       409
     ],
+    "billed_elsewhere": [
+      409
+    ],
     "no_sparks": [
       409
     ],
@@ -1136,6 +1175,12 @@
     ],
     "message_too_long": [
       413
+    ],
+    "not_yours": [
+      403
+    ],
+    "update_required": [
+      426
     ],
     "upload_limit": [
       413

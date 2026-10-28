@@ -96,12 +96,12 @@ export function LinkScreen({ onLinked, onBack }: { onLinked: (device: DeviceReco
           <h1>
             Your people, <em>on every screen.</em>
           </h1>
-          <p>Meldiq Web is another device of your Meldiq account. Messages stay end-to-end encrypted, and your phone and this computer stay in sync through your Meldiq server.</p>
+          <p>Meldiq Web is another device of your Meldiq account. Your messages are kept on Meldiq's servers, so your phone and this computer always show the same chats.</p>
         </div>
         <div className="hero-points">
           <div>
             <Lock size={18} />
-            <span>Messages are encrypted on your devices. The server only relays ciphertext.</span>
+            <span>Your chats are stored safely on Meldiq's servers and sent over encrypted connections.</span>
           </div>
           <div>
             <KeyRound size={18} />

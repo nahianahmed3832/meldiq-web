@@ -208,7 +208,7 @@ export function AddMembersDialog({ c, memberIds, onAdded, onClose }: { c: Conver
           </div>
         )}
         <p className="faint" style={{ margin: 0, fontSize: 12 }}>
-          New members see messages sent from now on. Earlier messages were encrypted for the people here at the time.
+          New members see the conversation's earlier messages too.
         </p>
       </div>
     </Dialog>

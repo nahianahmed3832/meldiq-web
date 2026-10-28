@@ -34,6 +34,7 @@ export function SparkSection({ onBuy, busy, offline }: { onBuy: (quantity: numbe
   return (
     <section className="mojo-sparks" aria-labelledby="mojo-sparks-title">
       <div className="spark-hero">
+        <img className="mojo-poster" src="/meldling/spark.webp" alt="Meldiq Spark" width={1200} height={675} loading="lazy" />
         <h2 className="mojo-h2" id="mojo-sparks-title">
           <Sparkles size={20} aria-hidden="true" /> Meldiq Spark
         </h2>
@@ -44,7 +45,10 @@ export function SparkSection({ onBuy, busy, offline }: { onBuy: (quantity: numbe
         <SparkTrack levels={levels} level={null} active={null} />
       </div>
       <SparkLevelCards catalog={catalog} levels={levels} level={null} />
-      <p className="muted spark-note">A server's benefits never lower anyone's own plan, and a server stays at Level 3 from three Sparks on: extra Sparks are better given to another server.</p>
+      <p className="muted spark-note">
+        A server&apos;s benefits never lower anyone&apos;s own plan. Level 1 takes {levels[0]?.sparks ?? 2} Sparks, Level 2 {levels[1]?.sparks ?? 5} and Level 3 {levels[2]?.sparks ?? 8}; past that,
+        extra Sparks are better given to another server.
+      </p>
 
       <div className="card setting-card spark-mine">
         <div className="setting-card-head">

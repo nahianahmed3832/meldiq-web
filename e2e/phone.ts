@@ -38,6 +38,8 @@ export async function newPhone(name: string, displayName: string): Promise<Phone
   const { GriipClient } = await lib();
   const c = new GriipClient(process.env.ORBIT_E2E_API, `${name}${crypto.randomBytes(3).toString("hex")}`, displayName);
   c.extraHeaders = { "x-forwarded-for": testAddress() };
+  // API 0.57.0: messages are stored by the server, as the apps send them now (docs/SERVER_MESSAGES.md).
+  c.serverMessages = true;
   await c.register();
   return c as Phone;
 }

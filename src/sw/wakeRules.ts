@@ -52,26 +52,36 @@ const titleOf = (c: Conversation, me: string): string => {
  * group notifications and message requests. A mention by name can't be seen here, so "mentions only" lets @everyone through
  * and waits for the app for the rest.
  */
+/** A notification shows at most this much of a message. */
+const MAX_BODY = 140;
+
+/** An item's class: an older app's envelope says it directly, a stored message inside its event. */
+const clsOf = (it: WakeInput["items"][number]) => it.payload.event?.cls ?? it.payload.cls ?? "message";
+
 export function wakeNotices(i: WakeInput): WakeNotice[] {
   if (!i.prefs.notifications) return [];
   const calls = incomingCalls(i);
   const ringing = new Set(calls.map((n) => n.tag.slice("call-".length)));
   const counts = new Map<string, number>();
+  /** The newest readable text per conversation (server-stored messages, API 0.57.0), for the notification's body. */
+  const latest = new Map<string, string>();
   if (!paused(i.pausedUntil, i.now))
     for (const it of i.items) {
-      if (it.kind !== "envelope" || it.senderUserId === i.me || (it.payload.cls ?? "message") !== "message") continue;
+      if (it.kind === "receipt" || it.senderUserId === i.me || clsOf(it) !== "message") continue;
       const c = i.conversations[it.conversationId];
       if (!c || c.request?.incoming || ringing.has(c.id)) continue;
       const prefs = i.nav[workspaceOf(c.orgId)];
-      const mention = it.payload.mentionAll && (!c.orgId || countsEveryone(prefs)) ? "all" : null;
+      const mention = (it.payload.mentionAll || it.payload.event?.mentionAll) && (!c.orgId || countsEveryone(prefs)) ? "all" : null;
       if (!shouldNotify(levelOf(prefs, c.id, c.categoryId, i.now), mention)) continue;
       if (c.type !== "DM" && !mention && !i.prefs.groupNotifications) continue;
       counts.set(c.id, (counts.get(c.id) ?? 0) + 1);
+      const text = it.payload.event?.payload.text;
+      if (typeof text === "string" && text.trim()) latest.set(c.id, text.trim().replace(/\s+/g, " ").slice(0, MAX_BODY));
     }
   const messages = [...counts].map(([id, n]): WakeNotice => {
     const c = i.conversations[id];
     return i.prefs.notificationText
-      ? { tag: id, title: titleOf(c, i.me), body: n === 1 ? "New message" : `${n} new messages`, url: urlOf(c), call: false }
+      ? { tag: id, title: titleOf(c, i.me), body: n === 1 ? (latest.get(id) ?? "New message") : `${n} new messages${latest.has(id) ? `: ${latest.get(id)}` : ""}`, url: urlOf(c), call: false }
       : { tag: id, title: "Meldiq", body: "New message", url: urlOf(c), call: false };
   });
   return [...calls, ...messages];
@@ -84,7 +94,7 @@ function incomingCalls(i: WakeInput): WakeNotice[] {
     const call = c.activeCall;
     if (!call || c.voice || call.state !== "RINGING" || call.startedAt < i.now - RING_WINDOW_MS) continue;
     const invited = i.items.some(
-      (it) => it.kind === "envelope" && it.conversationId === c.id && it.senderUserId !== i.me && it.payload.cls === "control" && it.createdAt >= call.startedAt - INVITE_SLACK_MS,
+      (it) => it.kind !== "receipt" && it.conversationId === c.id && it.senderUserId !== i.me && clsOf(it) === "control" && it.createdAt >= call.startedAt - INVITE_SLACK_MS,
     );
     if (!invited) continue;
     out.push({ tag: `call-${c.id}`, title: i.prefs.notificationText ? titleOf(c, i.me) : "Meldiq", body: call.video ? "Incoming video call" : "Incoming voice call", url: urlOf(c), call: true });

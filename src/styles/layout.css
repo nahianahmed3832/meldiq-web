@@ -632,6 +632,45 @@
   color: var(--text-3);
 }
 
+/* The brand strip (desktop, 2026-10-28, after the owner's reference): Meldling and the name, centred, across the top. The
+   panels below carry everything else: search in the conversation header, you, your devices and Settings in the user
+   panel, Activity and Saved in its menu. Tablets and phones keep their own top bar instead. */
+.brandbar {
+  display: none;
+}
+@media (min-width: 961px) {
+  .app {
+    grid-template-rows: var(--brandbar-h) minmax(0, 1fr);
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+  .brandbar {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: var(--rail-text);
+    font-size: var(--fs-sm);
+    font-weight: 650;
+    letter-spacing: 0.01em;
+    user-select: none;
+  }
+  .brandbar img {
+    border-radius: 5px;
+  }
+  .app > .rail,
+  .app > .workspace {
+    grid-row: 2;
+  }
+  .workspace {
+    grid-template-rows: minmax(0, 1fr);
+  }
+  .workspace > .topbar {
+    display: none;
+  }
+}
+
 /* ───────────────────────── the floating layout (desktop) ─────────────────────────
  * The rail, the top bar (where you are, search and your shortcuts), then the sidebar with the user panel at its foot, the
  * conversation with its own header, and the member list. Phones keep their own headers (responsive.css). */

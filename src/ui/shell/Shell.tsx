@@ -6,7 +6,7 @@ import { quietContextMenu } from "../components/Overlay";
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { shallowEqual, useEngine, useOrbit } from "../../application/orbit";
 import { getPrefs, setPrefs, usePrefs } from "../../application/prefs";
-import { isFullPage, navigate, useRoute } from "../../application/router";
+import { isFullPage, navigate, type Route, useRoute } from "../../application/router";
 import { ConversationView } from "../chat/ConversationView";
 import { SidePanel } from "../chat/SidePanel";
 import { DockedPeoplePanel } from "../chat/PeoplePanels";
@@ -30,7 +30,9 @@ import { DiscoverView } from "../views/DiscoverView";
 import { FriendsView } from "../views/FriendsView";
 import { LaterView } from "../later/LaterView";
 import { HomeView } from "../views/HomeView";
+import { BRAND } from "../../application/brand";
 import { Notices } from "./Notices";
+import { SettingsWindow } from "./SettingsWindow";
 import { Rail } from "./Rail";
 import { Sidebar } from "./Sidebar";
 import { TabBar } from "./TabBar";
@@ -38,12 +40,28 @@ import { TopBar } from "./TopBar";
 import { ConnectionBanner } from "./ConnectionBanner";
 import { TabIndicators } from "./TabIndicators";
 import { AddMembersDialog } from "../workspace/AddMembersDialog";
-import { takePendingInvite, takePendingMessage } from "../../application/pendingInvite";
+import { takePendingInvite, takePendingMessage, takeReferral } from "../../application/pendingInvite";
 import { type DiscordReturn, takeDiscordReturn } from "../../application/discordReturn";
 import { accountSelection, rememberSelection } from "../../sync/workspaceSelection";
 
 const SettingsView = lazy(() => import("../settings/SettingsView").then((m) => ({ default: m.SettingsView })));
 const WorkspaceView = lazy(() => import("../workspace/WorkspaceView").then((m) => ({ default: m.WorkspaceView })));
+
+/** What shows behind settings opened straight from a link: Home. */
+const HOME_ROUTE: Route = { section: "home", conversationId: null, panel: null, threadRoot: null, settingsPage: "profile", workspacePage: "overview" };
+const PHONE = "(max-width: 640px)";
+
+/** Whether the phone layout applies (one screen at a time), following the window as it's resized. */
+function usePhoneLayout(): boolean {
+  const [phone, setPhone] = useState(() => typeof window !== "undefined" && window.matchMedia(PHONE).matches);
+  useEffect(() => {
+    const q = window.matchMedia(PHONE);
+    const on = () => setPhone(q.matches);
+    q.addEventListener("change", on);
+    return () => q.removeEventListener("change", on);
+  }, []);
+  return phone;
+}
 
 export type ShellDialog =
   | { kind: "search" }
@@ -70,6 +88,15 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
   const orgIds = useOrbit((s) => s.orgs.map((o) => o.id), shallowEqual);
   const communities = useOrbit((s) => s.server?.features.includes("community-channels") ?? false);
   const known = useOrbit((s) => (route.conversationId ? !!s.conversations[route.conversationId] : true));
+  const phone = usePhoneLayout();
+  const windowed = isFullPage(route.section) && !phone;
+  // The last ordinary view, kept behind the settings window.
+  const [behind, setBehind] = useState<Route | null>(null);
+  useEffect(() => {
+    if (!isFullPage(route.section)) setBehind(route);
+  }, [route]);
+  const backdrop = windowed ? (behind ?? HOME_ROUTE) : route;
+  const knownView = useOrbit((s) => (backdrop.conversationId ? !!s.conversations[backdrop.conversationId] : true));
   const synced = useOrbit((s) => s.synced);
   const [drawer, setDrawer] = useState(false);
   const [dialog, setDialog] = useState<ShellDialog>(null);
@@ -138,6 +165,9 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
   // An invitation link opened in this tab (/join/<code>, kept through signing in): Join with its preview, once.
   useEffect(() => {
     if (!synced) return;
+    // Joined through someone's invite link to Meldiq: claimed once (the server decides whether it still counts).
+    const referral = engine.device.account ? takeReferral() : null;
+    if (referral) void engine.api.call("POST", "/v2/billing/referral/claim", { body: { code: referral } }).catch(() => undefined);
     const code = takePendingInvite();
     if (code) return setDialog({ kind: "joinWorkspace", code });
     // A message link opened in this tab (/m/<conversation>/<message>): that conversation, at that message.
@@ -221,20 +251,26 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
     return () => window.removeEventListener("keydown", onKey);
   }, [order, unread, readTargets, inCall, route, drawer, engine]);
 
-  const section = route.section;
+  // Settings and community settings float over the app on desktop and tablets (SettingsWindow); behind them stays the
+  // last ordinary view. Phones show them full screen, as before.
+  const view = backdrop;
+  const section = view.section;
   const settings = isFullPage(section);
-  const phoneList = !route.conversationId && (section === "home" || section === "dms");
+  const phoneList = !view.conversationId && (section === "home" || section === "dms");
   // Phones (brief v4 §18, after the Android app): Home is the community rail beside the channels; the lists and a
   // conversation have their own headers, so the top bar steps aside there.
-  const phoneFrame = `${phoneList && section === "home" ? " phone-home" : ""}${phoneList || section === "settings" || (route.conversationId && !settings) ? " phone-bare" : ""}`;
+  const phoneFrame = `${phoneList && section === "home" ? " phone-home" : ""}${phoneList || section === "settings" || (view.conversationId && !settings) ? " phone-bare" : ""}`;
   const ctx = useMemo(() => ({ open: (d: ShellDialog) => setDialog(d) }), []);
 
-  let main;
-  if (section === "settings") main = <SettingsView page={route.settingsPage} onSignedOut={onSignedOut} />;
-  else if (section === "workspace") main = <WorkspaceView orgId={orgId} page={route.workspacePage} onDialog={ctx.open} />;
+  let full = null;
+  if (route.section === "settings") full = <SettingsView page={route.settingsPage} onSignedOut={onSignedOut} />;
+  else if (route.section === "workspace") full = <WorkspaceView orgId={orgId} page={route.workspacePage} onDialog={ctx.open} />;
   // Settings and administration load on first use, keeping the first page load small.
-  if (settings) main = <Suspense fallback={<section className="main" aria-busy="true" />}>{main}</Suspense>;
-  else if (route.conversationId && known) main = <ConversationView key={route.conversationId} id={route.conversationId} route={route} onDialog={ctx.open} />;
+  if (full) full = <Suspense fallback={<section className="main" aria-busy="true" />}>{full}</Suspense>;
+
+  let main;
+  if (settings) main = full;
+  else if (view.conversationId && knownView) main = <ConversationView key={view.conversationId} id={view.conversationId} route={view} onDialog={ctx.open} />;
   else if (section === "activity") main = <ActivityView orgId={orgId} />;
   else if (section === "later") main = <LaterView />;
   else if (section === "discover") main = <DiscoverView />;
@@ -244,20 +280,29 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
 
   return (
     <div className={`app${phoneFrame}`} data-connection={connection} onContextMenu={quietContextMenu}>
+      {/* Desktop: a slim brand bar across the window (the reference's title strip); everything else lives in the panels. */}
+      <div className="brandbar" aria-hidden="true">
+        <img src="/meldling-96.webp" width={18} height={18} alt="" draggable={false} />
+        <span>{BRAND.name}</span>
+      </div>
       <Rail orgId={orgId} section={section} onDialog={ctx.open} />
-      {/* The floating frame: the top bar for where you are and search, then the panels floating below it. */}
       <div className={`workspace${settings ? "" : " with-sidebar"}`}>
         <TopBar onMenu={() => setDrawer((d) => !d)} onSearch={() => setDialog({ kind: "search" })} section={section} orgId={orgId} />
         <ConnectionBanner />
-        <div className={`body${route.conversationId ? " has-conversation" : ""}${phoneList ? " phone-list" : " phone-main"}${settings ? " settings-mode" : ""}`}>
+        <div className={`body${view.conversationId ? " has-conversation" : ""}${phoneList ? " phone-list" : " phone-main"}${settings ? " settings-mode" : ""}`}>
           {!settings && <Sidebar orgId={orgId} section={section === "discover" || section === "friends" ? "dms" : section} open={drawer} onDialog={ctx.open} />}
           {drawer && !settings && <div className="sidebar-scrim" onClick={() => setDrawer(false)} aria-hidden="true" />}
           {main}
-          {!settings && route.conversationId && known && route.panel && <SidePanel route={route} />}
-          {!settings && route.conversationId && known && !route.panel && <DockedPeoplePanel conversationId={route.conversationId} route={route} />}
+          {!settings && view.conversationId && knownView && view.panel && <SidePanel route={view} />}
+          {!settings && view.conversationId && knownView && !view.panel && <DockedPeoplePanel conversationId={view.conversationId} route={view} />}
         </div>
       </div>
-      <TabBar section={section} hidden={!!route.conversationId && !settings} />
+      {windowed && (
+        <SettingsWindow label={route.section === "workspace" ? `${orgName} settings` : "Settings"} onClose={() => navigate(behind ?? HOME_ROUTE)}>
+          {full}
+        </SettingsWindow>
+      )}
+      <TabBar section={route.section} hidden={!!route.conversationId && !isFullPage(route.section)} />
       <Notices />
       <TabIndicators />
       <ConnectionRequestWatcher />

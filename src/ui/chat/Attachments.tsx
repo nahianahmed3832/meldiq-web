@@ -164,7 +164,7 @@ export function MediaAttachment({ r }: { r: AttachmentRef }) {
           <span className="ellipsis" style={{ display: "block", fontWeight: 600 }}>
             {r.name}
           </span>
-          <small>{open ? "Decrypting…" : `${bytes(r.size)} · end-to-end encrypted · play here`}</small>
+          <small>{open ? "Loading…" : `${bytes(r.size)} · play here`}</small>
         </span>
       </button>
     );
@@ -191,7 +191,7 @@ export function ImageAttachment({ r }: { r: AttachmentRef }) {
           <span className="ellipsis" style={{ display: "block", fontWeight: 600 }}>
             Photo
           </span>
-          <small>{bytes(r.size)} · end-to-end encrypted · click to load</small>
+          <small>{bytes(r.size)} · click to load</small>
         </span>
       </button>
     );
@@ -269,7 +269,7 @@ export function FileAttachment({ r, error: initialError }: { r: AttachmentRef; e
           {r.voice ? "Voice message" : r.name}
         </span>
         <small className={error ? "" : undefined} style={error ? { color: "var(--danger)" } : undefined}>
-          {error ?? (busy ? "Decrypting…" : `${bytes(r.size)} · end-to-end encrypted`)}
+          {error ?? (busy ? "Loading…" : bytes(r.size))}
         </small>
       </span>
       {!error && <Download size={16} className="faint" />}

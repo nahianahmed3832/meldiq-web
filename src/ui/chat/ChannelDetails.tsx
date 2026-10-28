@@ -132,7 +132,7 @@ export function ChannelDetails({ c, onClose }: { c: Conversation; onClose: () =>
           </span>
           <span className="lines grow">
             <span>Encryption and security</span>
-            <small>Messages here are end-to-end encrypted on your devices</small>
+            <small>Messages here are kept on Meldiq's servers</small>
           </span>
           <ChevronRight size={16} className="faint" aria-hidden />
         </button>

@@ -418,8 +418,8 @@ img.custom-sticker {
   font-size: 10.5px;
   font-weight: 800;
   letter-spacing: 0.03em;
-  color: #fff;
-  background: #ed4245;
+  color: var(--on-accent);
+  background: var(--accent);
   flex-shrink: 0;
 }
 @media (prefers-reduced-motion: no-preference) {

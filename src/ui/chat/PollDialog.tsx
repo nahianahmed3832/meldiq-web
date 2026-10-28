@@ -54,7 +54,7 @@ export function PollDialog({ onSend, onClose }: { onSend: (poll: Poll) => void; 
           <span className="grow">Allow several answers</span>
           <Toggle label="Allow several answers" checked={multi} onChange={setMulti} />
         </div>
-        <span className="hint">The question, the options and who voted for what are end-to-end encrypted. Only you can close the poll.</span>
+        <span className="hint">Members see the question, the options and who voted for what. Only you can close the poll.</span>
       </div>
     </Dialog>
   );

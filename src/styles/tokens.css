@@ -63,6 +63,8 @@
   /* Layout */
   --rail-w: 76px;
   --topbar-h: 64px;
+  /* Desktop: the slim brand strip across the top of the window. */
+  --brandbar-h: 34px;
   --sidebar-w: 300px;
   /* The black frame between floating panels. */
   --frame-gap: 10px;

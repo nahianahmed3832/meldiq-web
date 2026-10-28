@@ -9,6 +9,8 @@ export const JUMP_EVENT = "meldiq:jump-to-message";
 
 /** Loads older pages until [messageId] is among the shown messages; false if it isn't in this browser's history. */
 export async function reveal(engine: Engine, conversationId: string, messageId: string): Promise<boolean> {
+  // Not loaded yet: the server sends the messages around it (API 0.57.0), instead of paging back to it.
+  if (!engine.state.get().messages[conversationId]?.items.some((m) => m.id === messageId)) await engine.loadAround(conversationId, messageId).catch(() => undefined);
   for (let i = 0; i <= MAX_PAGES; i++) {
     const loaded = engine.state.get().messages[conversationId];
     if (loaded?.items.some((m) => m.id === messageId)) return true;
