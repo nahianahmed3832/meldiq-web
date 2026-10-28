@@ -4,6 +4,9 @@
 #   ${API_UPSTREAM}  the API container on this machine, e.g. 127.0.0.1:18080
 #   ${WEB_ROOT}      /opt/meldiq-web/current
 # Defines its own upgrade map (a unique name, so it can't clash with other sites' maps).
+# Behind Cloudflare (since 2026-10-28): both server blocks include /etc/nginx/snippets/meldiq-cloudflare-realip.conf
+# (meldiq_android deploy/nginx), so $remote_addr and X-Forwarded-For carry the visitor. nginx -t fails without the file,
+# which stops a release rather than letting the API rate-limit everyone as Cloudflare.
 
 map $http_upgrade $meldiq_web_connection_upgrade {
   default upgrade;
@@ -14,6 +17,7 @@ server {
   listen 80;
   listen [::]:80;
   server_name ${WEB_HOST};
+  include /etc/nginx/snippets/meldiq-cloudflare-realip.conf;  # visitor address behind Cloudflare
   location /.well-known/acme-challenge/ { root /var/www/html; }
   location / { return 301 https://$host$request_uri; }
 }
@@ -23,6 +27,7 @@ server {
   listen 443 ssl http2;
   listen [::]:443 ssl http2;
   server_name ${WEB_HOST};
+  include /etc/nginx/snippets/meldiq-cloudflare-realip.conf;  # visitor address behind Cloudflare
 
   ssl_certificate /etc/letsencrypt/live/${WEB_HOST}/fullchain.pem;
   ssl_certificate_key /etc/letsencrypt/live/${WEB_HOST}/privkey.pem;
@@ -64,6 +69,18 @@ server {
 
   # Files kept in S3, fetched for browsers the bucket doesn't allow yet (snippets/meldiq-web-media.conf).
   include /etc/nginx/snippets/meldiq-web-media.conf;
+
+  # Android App Links and passkeys (the app verifies web.meldiq.app/invite/ and /m/): the API's Digital Asset Links,
+  # never the app page. Android doesn't follow redirects here, so it's answered directly.
+  location = /.well-known/assetlinks.json {
+    limit_except GET { deny all; }
+    proxy_pass http://${API_UPSTREAM};
+    proxy_http_version 1.1;
+    proxy_set_header Connection "";
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+  }
 
   # Runtime configuration: never cached, so a domain or API change applies at the next page load.
   location = /config.json {
