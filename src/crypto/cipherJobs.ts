@@ -85,6 +85,8 @@ export async function decryptBlob(ct: Blob, k: ChunkKey, meta: { chunk: number; 
     const plain = aesGcmDecrypt(k.key, chunkNonce(k.nonce, i), piece, chunkAad(i, i === count - 1)).catch(() => {
       throw new EnvelopeError("attachment decryption failed");
     });
+    // Observed now, awaited in order below: a later chunk failing while an earlier one is awaited isn't "unhandled".
+    plain.catch(() => undefined);
     return { piece, plain };
   };
   const queue: Promise<{ piece: Uint8Array; plain: Promise<Uint8Array> }>[] = [];
