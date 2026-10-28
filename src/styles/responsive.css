@@ -11,13 +11,12 @@
     right: 0;
     bottom: 0;
     z-index: 30;
-    box-shadow: var(--shadow-lg);
+    box-shadow:
+      0 0 0 1px var(--panel-ring),
+      var(--shadow-lg);
   }
 }
 @media (max-width: 960px) {
-  .body {
-    grid-template-columns: minmax(0, 1fr);
-  }
   .sidebar {
     position: absolute;
     top: 0;
@@ -28,6 +27,9 @@
     box-shadow: var(--shadow-lg);
     transform: translateX(-104%);
     transition: transform var(--t-std) var(--ease);
+  }
+  .topbar-title {
+    font-size: 20px;
   }
   .sidebar.open {
     transform: none;
@@ -86,24 +88,47 @@
   }
 }
 @media (max-width: 640px) {
+  /* Phones: one screen at a time, edge to edge; the panels lose their float but keep the frame's colours. */
   .app {
     grid-template-columns: minmax(0, 1fr);
     grid-template-rows: minmax(0, 1fr) auto;
+    padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) 0 env(safe-area-inset-left, 0px);
+    column-gap: 0;
   }
   .rail {
     display: none;
-  }
-  .workspace {
-    grid-template-rows: 52px minmax(0, 1fr);
-  }
-  .body {
-    margin: 0;
     border-radius: 0;
     box-shadow: none;
+    background: transparent;
+  }
+  .workspace {
+    grid-template-rows: 56px minmax(0, 1fr);
+  }
+  .body {
+    gap: 0;
+    border-radius: 0;
+  }
+  .body > .main,
+  .sidebar,
+  .panel {
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .body.phone-list .sidebar {
+    flex: 1 1 auto;
+    width: auto;
   }
   .topbar {
     padding: 0 8px 0 12px;
     gap: 6px;
+  }
+  .topbar-title {
+    font-size: 18px;
+    max-width: none;
+  }
+  .topbar-right .icon-btn {
+    width: 38px;
+    height: 38px;
   }
   .topbar::before {
     content: "";
@@ -119,7 +144,9 @@
   }
   .searchbox {
     flex: 0 0 auto;
-    width: 36px;
+    min-width: 0;
+    width: 40px;
+    height: 40px;
     padding: 0;
     justify-content: center;
     margin: 0 0 0 auto;
@@ -186,8 +213,8 @@
   .tabbar {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    border-top: 1px solid var(--border);
-    background: var(--surface);
+    border-top: 1px solid var(--hairline);
+    background: var(--rail-panel, var(--surface));
     padding-bottom: env(safe-area-inset-bottom);
   }
   .tabbar button {
@@ -205,6 +232,30 @@
   }
   .tabbar button[aria-current="page"] svg {
     color: var(--accent-text);
+  }
+  /* The tab you're on sits on a soft pill, as the rail's selection does on desktop. */
+  .tabbar button::before {
+    content: "";
+    position: absolute;
+    top: 4px;
+    left: 50%;
+    width: 52px;
+    height: 30px;
+    border-radius: var(--r-pill);
+    transform: translateX(-50%) scaleX(0.6);
+    opacity: 0;
+    background: var(--accent-soft);
+    transition:
+      transform var(--t-std) var(--ease),
+      opacity var(--t-std);
+    z-index: -1;
+  }
+  .tabbar button[aria-current="page"]::before {
+    transform: translateX(-50%);
+    opacity: 1;
+  }
+  .tabbar button {
+    isolation: isolate;
   }
   .tabbar .count {
     position: absolute;
@@ -255,7 +306,10 @@
     display: none;
   }
   .app.phone-home .body {
-    border-radius: 16px 0 0 0;
+    border-radius: 20px 0 0 0;
+  }
+  .app.phone-home .body .sidebar {
+    border-radius: 20px 0 0 0;
   }
   /* Unread markers sit inside the row on phones, not on the screen's edge. */
   .side-item.unread:not([aria-current="page"])::before {

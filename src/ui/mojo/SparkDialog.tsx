@@ -1,9 +1,11 @@
-import { Sparkles } from "lucide-react";
+import { Sparkles, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useEngine, useOrbit } from "../../application/orbit";
 import { navigate } from "../../application/router";
 import { Dialog } from "../components/Overlay";
+import { OrgAvatar } from "../components/OrgAvatar";
 import { money, screenLabel, size } from "./mojoFormat";
+import { SparkLevelCards, SparkTrack } from "./SparkTrack";
 
 /**
  * "Meldiq Sparks" from a community's menu (server docs/MOJO.md › Meldiq Spark): the community's level and what it gives
@@ -42,23 +44,37 @@ export function SparkDialog({ orgId, name, onClose }: { orgId: string; name: str
   const free = me?.sparks.free ?? 0;
   // Taking one back lowers the level when the server has no more than three active Sparks.
   const lowers = !!here && here.active <= 3 && here.level > 0;
+  const photoRev = useOrbit((s) => s.orgs.find((o) => o.id === orgId)?.photoRev ?? null);
+  const levels = catalog?.spark.levels.filter((l) => l.level > 0) ?? [];
+  const header = (
+    <div className="spark-dialog-hero">
+      <button className="icon-btn spark-dialog-close" onClick={onClose} aria-label="Close">
+        <X size={18} />
+      </button>
+      <OrgAvatar orgId={orgId} name={name} photoRev={photoRev} size={72} />
+      <h2>Sparks for {name}</h2>
+      {here && (
+        <>
+          <p className="spark-now">
+            <strong>{here.level === 0 ? "No Spark level yet" : `Level ${here.level} unlocked for everyone here`}</strong>
+            <small>
+              {here.active} active Spark{here.active === 1 ? "" : "s"}
+              {here.next ? `: ${here.next.needs} more for Level ${here.next.level}` : ": the highest level"}
+            </small>
+          </p>
+          <SparkTrack levels={levels} level={here.level} active={here.active} />
+        </>
+      )}
+    </div>
+  );
   return (
-    <Dialog title={`Sparks for ${name}`} onClose={onClose}>
+    <Dialog title={`Sparks for ${name}`} onClose={onClose} header={header} className="spark-dialog-shell" width="min(760px, 100%)">
       <div className="dialog-body spark-dialog">
         {!here || !catalog ? (
           <p className="muted">Loading…</p>
         ) : (
           <>
-            <div className="spark-now">
-              <Sparkles size={22} aria-hidden="true" />
-              <div className="lines grow">
-                <strong>{here.level === 0 ? "No Spark level yet" : `Level ${here.level}`}</strong>
-                <small>
-                  {here.active} active Spark{here.active === 1 ? "" : "s"}
-                  {here.next ? `: ${here.next.needs} more for Level ${here.next.level}` : ": the highest level"}
-                </small>
-              </div>
-            </div>
+            <p className="spark-unlocks-title">What everyone here has now</p>
             <ul className="spark-unlocks">
               <li>{here.perks.emojiSlots} emoji slots</li>
               <li>{here.perks.uploadBytes ? `${size(here.perks.uploadBytes)} uploads for everyone` : "Everyone's own upload limit"}</li>
@@ -90,14 +106,14 @@ export function SparkDialog({ orgId, name, onClose }: { orgId: string; name: str
                 </button>
               </div>
             )}
-            <div className="row" style={{ gap: 8, flexWrap: "wrap" }}>
+            <div className="row spark-actions">
               {free > 0 ? (
-                <button className="btn btn-mojo" disabled={busy || !online} onClick={() => void act(() => engine.mojo.giveSpark(orgId))}>
+                <button className="btn btn-lg btn-mojo" disabled={busy || !online} onClick={() => void act(() => engine.mojo.giveSpark(orgId))}>
                   <Sparkles size={15} /> {here.level >= 3 ? "Give a Spark (already Level 3)" : "Give a Spark"}
                 </button>
               ) : (
                 <button
-                  className="btn btn-mojo"
+                  className="btn btn-lg btn-mojo"
                   onClick={() => {
                     onClose();
                     navigate({ section: "settings", settingsPage: "mojo" });
@@ -113,6 +129,7 @@ export function SparkDialog({ orgId, name, onClose }: { orgId: string; name: str
               )}
             </div>
             {here.level >= 3 && free > 0 && <small className="muted">This community is at the highest level: a Spark may do more for another one.</small>}
+            <SparkLevelCards catalog={catalog} levels={levels} level={here.level} />
           </>
         )}
       </div>

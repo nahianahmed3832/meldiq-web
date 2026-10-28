@@ -629,9 +629,12 @@ button.call-pill:hover {
    channels usable; the call's panel sits at the foot of the channel list instead of the floating bar. */
 @media (min-width: 961px) {
   .app:has(.workspace.with-sidebar) .call-stage {
-    left: calc(var(--rail-w) + var(--sidebar-w));
-    border-radius: var(--r-lg) 0 0 0;
-    background: #06070b;
+    top: calc(env(safe-area-inset-top, 0px) + var(--frame-gap) + var(--topbar-h));
+    left: calc(env(safe-area-inset-left, 0px) + var(--frame-gap) * 3 + var(--rail-w) + var(--sidebar-w));
+    right: calc(env(safe-area-inset-right, 0px) + var(--frame-gap));
+    bottom: var(--frame-gap);
+    border-radius: var(--r-panel);
+    background: var(--call-bg);
     box-shadow: 0 0 0 1px var(--panel-ring);
   }
   .app:has(.workspace.with-sidebar) .call-mini {

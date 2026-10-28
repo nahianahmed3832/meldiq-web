@@ -111,10 +111,10 @@ a.icon-btn {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  height: 36px;
-  padding: 0 14px;
-  border-radius: var(--r-md);
-  font-weight: 600;
+  height: 38px;
+  padding: 0 16px;
+  border-radius: var(--r-pill);
+  font-weight: 650;
   font-size: 13.5px;
   white-space: nowrap;
   transition:
@@ -125,6 +125,7 @@ a.icon-btn {
 .btn:active:not(:disabled) {
   transform: scale(0.98);
 }
+/* The primary action: the palette's call to action (solid lime on Meldiq), one per view where it matters most. */
 .btn-primary {
   background: var(--cta, var(--action));
   color: var(--on-cta, var(--on-action));
@@ -166,13 +167,13 @@ a.icon-btn {
   opacity: 0.45;
 }
 .btn-lg {
-  height: 44px;
-  padding: 0 20px;
+  height: 46px;
+  padding: 0 22px;
   font-size: 14.5px;
 }
 .btn-sm {
-  height: 30px;
-  padding: 0 10px;
+  height: 32px;
+  padding: 0 12px;
   font-size: 12.5px;
 }
 .icon-btn {
@@ -180,7 +181,7 @@ a.icon-btn {
   place-items: center;
   width: 34px;
   height: 34px;
-  border-radius: var(--r-sm);
+  border-radius: var(--r-md);
   color: var(--text-2);
   transition: background var(--t-fast) var(--ease);
   position: relative;

@@ -4,11 +4,27 @@ import { navigate, type Section } from "../../application/router";
 import { UserAvatar } from "../components/OrgAvatar";
 import { laterDue, mentionCount } from "../selectors";
 import { capCount } from "../unread";
-import { useT } from "../../i18n";
+import { type Translate, useT } from "../../i18n";
 import { useProfileMenu } from "./ProfileMenu";
 
-export function TopBar({ onMenu, onSearch, section }: { onMenu: () => void; onSearch: () => void; section: Section }) {
+interface TopBarProps {
+  onMenu: () => void;
+  onSearch: () => void;
+  section: Section;
+  /** The community on screen, for the page title and the search box's scope. */
+  orgId: string | null;
+}
+
+/**
+ * The compact top bar (the floating redesign, 2026-10-28): where you are on the left, search in the middle, and
+ * Activity, Saved, Settings and you on the right. On phones it steps aside where the lists carry their own headers.
+ */
+export function TopBar({ onMenu, onSearch, section, orgId }: TopBarProps) {
   const t = useT();
+  const orgName = useOrbit((s) => (orgId ? (s.orgs.find((o) => o.id === orgId)?.name ?? null) : null));
+  const inCommunity = (section === "home" || section === "workspace") && !!orgName;
+  const title = inCommunity ? orgName : pageTitle(section, t);
+  const searchLabel = inCommunity ? t("conv_search_in", { name: orgName }) : t("search_placeholder");
   const me = useOrbit((s) => s.me);
   const myPhoto = useOrbit((s) => (s.me ? s.users[s.me.userId]?.photoRev : null));
   const connection = useOrbit((s) => s.connection);
@@ -23,10 +39,13 @@ export function TopBar({ onMenu, onSearch, section }: { onMenu: () => void; onSe
         <button className="icon-btn menu-toggle" onClick={onMenu} aria-label="Show conversations">
           <MenuIcon size={19} />
         </button>
+        <span className="topbar-title ellipsis" title={title}>
+          {title}
+        </span>
       </div>
       <button className="searchbox" onClick={onSearch} aria-label="Search Meldiq" aria-keyshortcuts={mac ? "Meta+K" : "Control+K"}>
         <Search size={16} />
-        <span>{t("search_placeholder")}</span>
+        <span className="ellipsis">{searchLabel}</span>
         <kbd className="kbd">{mac ? "⌘K" : "Ctrl K"}</kbd>
       </button>
       <div className="topbar-right">
@@ -71,4 +90,23 @@ export function TopBar({ onMenu, onSearch, section }: { onMenu: () => void; onSe
       </div>
     </header>
   );
+}
+
+/** The top bar's title outside a community: the section's own name. */
+function pageTitle(section: Section, t: Translate): string {
+  switch (section) {
+    case "dms":
+    case "friends":
+      return t("nav_messages");
+    case "activity":
+      return t("nav_activity");
+    case "later":
+      return t("top_saved");
+    case "discover":
+      return t("discover_title");
+    case "settings":
+      return t("settings_title");
+    default:
+      return t("nav_home");
+  }
 }

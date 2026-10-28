@@ -11,7 +11,7 @@ import { LANGUAGES, type LanguageChoice, resolveLanguage } from "../i18n/languag
 /** "black": dark with true-black surfaces (2026-10-28). */
 export const THEMES = ["system", "light", "dark", "black"] as const;
 /** The brand colour plates (src/styles/tokens.css › Palettes). */
-export const PALETTES = ["meldiq", "charcoal", "indigo", "plum", "amber"] as const;
+export const PALETTES = ["meldiq", "midnight", "charcoal", "indigo", "plum", "amber"] as const;
 export type Palette = (typeof PALETTES)[number];
 /** Message text size (android Settings › Chats): conversation text only, the rest of the interface stays as it is. */
 export const TEXT_SIZES = ["small", "default", "large"] as const;
@@ -265,7 +265,7 @@ const FORMER_DEFAULTS: readonly Palette[] = ["indigo", "charcoal"];
 
 /**
  * The stored colour plate. A former default counts as a choice only once the person picked a plate themselves
- * (Appearance › Colour); otherwise the current default, Meldiq's navy, applies.
+ * (Appearance › Colour); otherwise the current default, Meldiq (black, charcoal and lime), applies.
  */
 export function paletteOf(stored: { palette?: unknown; paletteChosen?: unknown }): Palette {
   const palette = PALETTES.find((p) => p === stored.palette);

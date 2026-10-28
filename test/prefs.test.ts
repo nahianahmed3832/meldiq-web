@@ -34,6 +34,11 @@ describe("preferences", () => {
     expect((await loadWith({ palette: "plum" })).getPrefs().palette).toBe("plum");
   });
 
+  it("keeps Midnight, the navy look before the floating redesign, for whoever picks it", async () => {
+    expect((await loadWith({ palette: "midnight", paletteChosen: true })).getPrefs().palette).toBe("midnight");
+    expect((await loadWith({ palette: "midnight" })).getPrefs().palette).toBe("midnight");
+  });
+
   it("keeps hidden side panels hidden", async () => {
     const { getPrefs } = await loadWith({ memberList: false, dmProfile: false });
     expect(getPrefs()).toMatchObject({ memberList: false, dmProfile: false });

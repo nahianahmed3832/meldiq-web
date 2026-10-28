@@ -12,18 +12,44 @@ shared with the phone (`src/ui/components/Avatar.tsx`).
   Meldling is the mascot's name.
 - **Derivatives:** `node scripts/render-brand-assets.mjs` crops and scales it (sharp). Nothing is drawn by hand.
 
-  | Crop        | What it is                                          | Files                                                                                                                                 |
-  | ----------- | --------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+  | Crop        | What it is                                          | Files                                                                                                                                                               |
+  | ----------- | --------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
   | Tight       | Meldling framed with 12% padding                    | `favicon-32.png`, `meldling-96/192.webp` (rail, tab bar, typing), `meldling-128/256.png` (BrandMark), `meldling-180.png` (Apple), `meldling-192/512.png` (manifest) |
-  | Full        | The whole square: Meldling inside the maskable zone | `meldling-maskable-512.png`, `launch/meldling-launch.png`                                                                             |
-  | Badge       | The off-white shape as an alpha mask (Android)      | `meldling-badge-96.png`                                                                                                               |
-  | Share image | Meldling on its teal, with the name                 | `meldiq-og.png` (1200×630)                                                                                                            |
+  | Full        | The whole square: Meldling inside the maskable zone | `meldling-maskable-512.png`, `launch/meldling-launch.png`                                                                                                           |
+  | Badge       | The off-white shape as an alpha mask (Android)      | `meldling-badge-96.png`                                                                                                                                             |
+  | Share image | Meldling on its teal, with the name                 | `meldiq-og.png` (1200×630)                                                                                                                                          |
 
 - **In the app:** `BrandMark` (sign-in, linking and status screens), the rail's Home and messages button, the phone tab
   bar's Messages tab, the typing indicator ("Meldling…"), the launch screen, the favicon (the unread badge is painted on
   it), notifications and the public invitation page.
 - **Replacing it:** replace `brand/meldling.png`, then run `node scripts/render-brand-assets.mjs`.
 - The earlier ribbon "M" logo is kept only as a reference: `brand/reference/meldiq-logo-ribbon.webp`.
+
+## The floating redesign (2026-10-28)
+
+The default look since 2026-10-28, after the owner's references: a near-black frame, charcoal panels floating on it,
+generous spacing and one restrained lime.
+
+- **Frame:** `--rail` (`#040404` on Meldiq) fills the window and shows between the panels (`--frame-gap`, 10px).
+- **Floating panels:** the rail (`--rail-panel`), the sidebar, the main column and the side panel are separate rounded
+  panels (`--r-panel`, 24px) with a hairline ring (`--panel-ring`). Settings and community settings split into a page list
+  panel and a page panel (`.main-split`). Phones go edge to edge: one screen at a time, no float.
+- **Top bar (desktop and tablet):** where you are on the left (the community's name, or the section's), search in a
+  pill (scoped to the community's name when in one; the same search as ⌘K, which replaced the conversation header's own
+  search box), then Activity, Saved, Settings and you on round buttons. Phones keep their own list and conversation
+  headers.
+- **Brand mark:** Meldling at the top of the rail (Home and messages), ringed in lime when selected.
+- **Rail:** communities are circles that square off when hovered or selected; the selected one gets a lime ring and the
+  lime side marker.
+- **Controls:** buttons are pills; the primary action (`--cta`) is solid lime with near-black text. Icon buttons are
+  12px-rounded squares, round in the top bar.
+- **Meldiq Mojo:** `--mojo-a`/`--mojo-b` follow each plate's brand ends (`--accent-start`/`--accent-end`) with
+  `--on-mojo` (`--on-brand`) for text on them, so the plans page, Sparks and badges work on every plate and theme. The page:
+  plan header with your plan, the Plus call to action (when it's on sale), Gift Mojo, the three plans, what Plus adds,
+  the comparison (the Plus column tinted), Meldiq Spark with its level track and level cards, your Sparks, your badge,
+  and why subscriptions exist. Every number comes from the server's catalog (`GET /v2/mojo/catalog`).
+- **Sparks for a community** (its menu): a starry hero with the community's avatar, its level and the track filled to its
+  active Sparks, what everyone there has now, the action (give or get Sparks), then the three levels marked unlocked.
 
 ## Colour
 
@@ -43,11 +69,13 @@ Theme and Colour). Stored values are checked against the allowed lists before us
 
 ### Plates
 
-| Plate                               | Frame                 | Sidebar                 | Accent                                                                                                                | Badges on the frame |
-| ----------------------------------- | --------------------- | ----------------------- | --------------------------------------------------------------------------------------------------------------------- | ------------------- |
-| **Indigo** (default, from the logo) | deep indigo `#231d62` | lavender mist `#f4f3fd` | indigo `#4b4fc9` (dark `#8b93ff`), Meldiq's one brand indigo, the same as Android and the account emails (2026-10-21) | logo cyan `#5ee0f5` |
-| Plum                                | plum `#4a1340`        | blush `#fcf2f7`         | magenta-plum `#b0236e`                                                                                                | pink `#ff9ccc`      |
-| Amber                               | brown `#3d2610`       | cream `#fcf6ec`         | amber `#a85a06`                                                                                                       | gold `#fcc65a`      |
+| Plate                                 | Frame                                  | Sidebar                                | Accent                                                                                                                | Badges on the frame |
+| ------------------------------------- | -------------------------------------- | -------------------------------------- | --------------------------------------------------------------------------------------------------------------------- | ------------------- |
+| **Meldiq** (default since 2026-10-28) | near-black `#040404` (light `#e6e6e3`) | charcoal panel `#141414` (light white) | lime `#f4ffac` with near-black text (light: fill `#d4ee4e`, text `#4d5c00`)                                           | lime `#f4ffac`      |
+| Midnight (default 2026-10-26 to 28)   | navy `#070b18`                         | navy `#0e152a`                         | blue `#7aa2ff`                                                                                                        | cyan `#5ee0f5`      |
+| **Indigo** (default, from the logo)   | deep indigo `#231d62`                  | lavender mist `#f4f3fd`                | indigo `#4b4fc9` (dark `#8b93ff`), Meldiq's one brand indigo, the same as Android and the account emails (2026-10-21) | logo cyan `#5ee0f5` |
+| Plum                                  | plum `#4a1340`                         | blush `#fcf2f7`                        | magenta-plum `#b0236e`                                                                                                | pink `#ff9ccc`      |
+| Amber                                 | brown `#3d2610`                        | cream `#fcf6ec`                        | amber `#a85a06`                                                                                                       | gold `#fcc65a`      |
 
 The dark-mode values are in the token file. Contrast was computed for every text-on-colour pair below, and all meet
 WCAG AA (4.5:1):
@@ -61,8 +89,8 @@ WCAG AA (4.5:1):
 
 ### Hierarchy rules
 
-- **Frame:** the rail and top bar carry the brand colour. The sidebar and main column sit on a rounded panel inside the
-  frame.
+- **Frame:** the frame carries the plate's deepest colour; the rail, sidebar, main column and side panel float on it as
+  rounded panels of their own.
 - **Sidebar:** a soft tint of the plate.
 - **Conversation:** stays neutral white (or near-black in dark mode).
 - **Accent:** only for selection, focus, primary actions, unread counts, mentions, links and the composer's send button.
@@ -75,16 +103,16 @@ WCAG AA (4.5:1):
 
 ## Scale
 
-|           | Tokens                                                                                                                           |
-| --------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| Type      | `--fs-xs` 12 · `sm` 13 · `md` 14 (body) · `lg` 15 · `xl` 17 · `2xl` 20 · `3xl` 26; Plus Jakarta Sans                             |
-| Radii     | `--r-xs` 6 · `sm` 8 (controls) · `md` 10 (rows, inputs, buttons) · `lg` 14 (cards, composer, panel) · `xl` 18 (dialogs) · `pill` |
-| Spacing   | `--s-1` 4 · `s-2` 8 · `s-3` 12 · `s-4` 16 · `s-5` 20 · `s-6` 24 · `s-8` 32                                                       |
-| Icons     | `--icon-sm` 16 · `md` 18 · `lg` 20                                                                                               |
-| Layout    | `--rail-w` 68 · `--topbar-h` 52 · `--sidebar-w` 280 · `--frame-gap` 8                                                            |
-| Elevation | `--shadow-sm` (controls) · `md` (floating toolbars, the panel) · `lg` (menus, dialogs, toasts)                                   |
-| Focus     | `--focus` (a 2px ring in the accent, offset from the surface) and `--focus-on-frame` on the rail and top bar                     |
-| Motion    | `--t-fast` 120ms · `--t-std` 200ms · `--ease`. Everything respects `prefers-reduced-motion`                                      |
+|           | Tokens                                                                                                                                                                               |
+| --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Type      | `--fs-xs` 12 · `sm` 13 · `md` 14 (body) · `lg` 15 · `xl` 17 · `2xl` 20 · `3xl` 26; Plus Jakarta Sans                                                                                 |
+| Radii     | `--r-xs` 6 · `sm` 10 (controls) · `md` 12 (rows, inputs, icon buttons) · `lg` 18 (cards, composer) · `xl` 24 (dialogs, hero cards) · `panel` 24 (floating panels) · `pill` (buttons) |
+| Spacing   | `--s-1` 4 · `s-2` 8 · `s-3` 12 · `s-4` 16 · `s-5` 20 · `s-6` 24 · `s-8` 32                                                                                                           |
+| Icons     | `--icon-sm` 16 · `md` 18 · `lg` 20                                                                                                                                                   |
+| Layout    | `--rail-w` 76 · `--topbar-h` 64 · `--sidebar-w` 300 · `--frame-gap` 10                                                                                                               |
+| Elevation | `--shadow-sm` (controls) · `md` (floating toolbars, the panel) · `lg` (menus, dialogs, toasts)                                                                                       |
+| Focus     | `--focus` (a 2px ring in the accent, offset from the surface) and `--focus-on-frame` on the rail and top bar                                                                         |
+| Motion    | `--t-fast` 120ms · `--t-std` 200ms · `--ease`. Everything respects `prefers-reduced-motion`                                                                                          |
 
 ## Messaging
 

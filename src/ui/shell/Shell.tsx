@@ -245,9 +245,9 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
   return (
     <div className={`app${phoneFrame}`} data-connection={connection} onContextMenu={quietContextMenu}>
       <Rail orgId={orgId} section={section} onDialog={ctx.open} />
-      {/* Desktop: with the sidebar its user panel replaces the top bar; Settings has no sidebar, so it keeps the top bar. */}
+      {/* The floating frame: the top bar for where you are and search, then the panels floating below it. */}
       <div className={`workspace${settings ? "" : " with-sidebar"}`}>
-        <TopBar onMenu={() => setDrawer((d) => !d)} onSearch={() => setDialog({ kind: "search" })} section={section} />
+        <TopBar onMenu={() => setDrawer((d) => !d)} onSearch={() => setDialog({ kind: "search" })} section={section} orgId={orgId} />
         <ConnectionBanner />
         <div className={`body${route.conversationId ? " has-conversation" : ""}${phoneList ? " phone-list" : " phone-main"}${settings ? " settings-mode" : ""}`}>
           {!settings && <Sidebar orgId={orgId} section={section === "discover" || section === "friends" ? "dms" : section} open={drawer} onDialog={ctx.open} />}

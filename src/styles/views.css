@@ -205,6 +205,15 @@
 .palette-swatch[data-swatch="meldiq"] .swatch i:nth-child(3) {
   background: var(--swatch-meldiq-3);
 }
+.palette-swatch[data-swatch="midnight"] .swatch i:nth-child(1) {
+  background: var(--swatch-midnight-1);
+}
+.palette-swatch[data-swatch="midnight"] .swatch i:nth-child(2) {
+  background: var(--swatch-midnight-2);
+}
+.palette-swatch[data-swatch="midnight"] .swatch i:nth-child(3) {
+  background: var(--swatch-midnight-3);
+}
 .palette-swatch[data-swatch="charcoal"] .swatch i:nth-child(1) {
   background: var(--swatch-charcoal-1);
 }
@@ -829,7 +838,7 @@
   color: rgba(225, 232, 255, 0.78);
 }
 .hero-preview-ch.on {
-  background: rgba(122, 162, 255, 0.18);
+  background: color-mix(in srgb, var(--brand-highlight) 18%, transparent);
   color: #fff;
   font-weight: 700;
 }
@@ -2352,7 +2361,7 @@ select.input {
     width: 96px;
     height: 96px;
     border-radius: 50%;
-    background: rgba(122, 162, 255, 0.16);
+    background: color-mix(in srgb, var(--brand-highlight) 16%, transparent);
     color: var(--brand-highlight);
   }
   .intro-main {
@@ -2667,7 +2676,7 @@ body:has(> .lightbox) > .menu {
   width: min(360px, 100%);
   aspect-ratio: 16 / 10;
   border-radius: var(--r-lg);
-  background: radial-gradient(circle at 30% 20%, rgba(124, 58, 237, 0.35), transparent 60%), linear-gradient(135deg, #111827, #0b1020);
+  background: radial-gradient(circle at 30% 20%, var(--brand-glow-1), transparent 60%), linear-gradient(135deg, var(--brand-ground-2), var(--brand-ground));
   box-shadow: 0 0 0 1px var(--border);
   color: #fff;
   overflow: hidden;
@@ -2742,8 +2751,8 @@ body:has(> .lightbox) > .menu {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 6px 12px;
-  border-radius: var(--r-md);
+  padding: 7px 14px;
+  border-radius: var(--r-pill);
   color: var(--text-2);
   font-weight: 600;
   white-space: nowrap;
@@ -2757,12 +2766,12 @@ body:has(> .lightbox) > .menu {
   color: var(--text);
 }
 .friends-tab.add {
-  background: #23a55a;
-  color: #fff;
+  background: var(--cta, var(--action));
+  color: var(--on-cta, var(--on-action));
 }
 .friends-tab.add[aria-selected="true"] {
-  background: transparent;
-  color: #23a55a;
+  background: var(--accent-soft);
+  color: var(--accent-text);
 }
 .friends-body {
   flex: 1;
@@ -2886,5 +2895,30 @@ body:has(> .lightbox) > .menu {
   }
   .add-friend-box {
     flex-wrap: wrap;
+  }
+}
+
+/* Settings and community settings on desktop (the floating redesign, 2026-10-28): the page list and the page float as
+   two panels of their own, like the sidebar and the conversation. */
+@media (min-width: 961px) {
+  .body > .main.main-split {
+    background: transparent;
+    box-shadow: none;
+    border-radius: 0;
+  }
+  .main-split .settings {
+    gap: var(--frame-gap);
+    grid-template-columns: 260px minmax(0, 1fr);
+  }
+  .main-split .settings-nav {
+    border-right: 0;
+    border-radius: var(--r-panel);
+    padding: 20px 12px;
+    box-shadow: 0 0 0 1px var(--panel-ring);
+  }
+  .main-split .settings-page {
+    border-radius: var(--r-panel);
+    background: var(--surface);
+    box-shadow: 0 0 0 1px var(--panel-ring);
   }
 }

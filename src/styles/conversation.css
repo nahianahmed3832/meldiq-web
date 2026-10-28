@@ -723,8 +723,11 @@
 /* ───────────────────────── side panel (details, thread) ───────────────────────── */
 .panel {
   width: 340px;
-  border-left: 1px solid var(--hairline);
+  flex: 0 0 auto;
+  border-radius: var(--r-panel);
+  overflow: hidden;
   background: var(--surface);
+  box-shadow: 0 0 0 1px var(--panel-ring);
   display: flex;
   flex-direction: column;
   min-height: 0;

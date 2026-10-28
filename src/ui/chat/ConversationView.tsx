@@ -8,7 +8,7 @@ import { RequestBar, RequestSentBanner } from "../people/RequestBar";
 import { ConnectionRequestBanner } from "../people/ConnectionRequestViews";
 import { useConnectionLists } from "../people/connectionRequests";
 import { VoiceRoomView } from "./VoiceRoomView";
-import { Archive, ArrowLeft, BellOff, MonitorUp, Phone, Pin, Search, ShieldAlert, Video } from "lucide-react";
+import { Archive, ArrowLeft, BellOff, MonitorUp, Phone, Pin, ShieldAlert, Video } from "lucide-react";
 import { useCallback, useMemo, useState } from "react";
 import { shallowEqual, useEngine, useOrbit } from "../../application/orbit";
 import { navigate, type Route } from "../../application/router";
@@ -142,7 +142,6 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
         )}
         <PeopleToggle c={c} route={route} />
         {c.type !== "CHANNEL" && <ConversationMenu conversationId={id} route={route} />}
-        <HeaderSearch orgId={c.orgId ?? null} onSearch={() => onDialog({ kind: "search" })} />
       </header>
 
       {(askedToConnect || alerts.length > 0 || (call && !c.voice) || c.archived || history === "running" || peer?.paused || (c.request && !c.request.incoming)) && (
@@ -298,22 +297,5 @@ function CallButtons({ conversationId, canPost, archived, serverCalling, busy, r
         <Video size={19} />
       </button>
     </span>
-  );
-}
-
-/**
- * The header's search box (the reference's "Search MINECRAFT"): Meldiq's search for this community (conversations,
- * people, and messages found on this device: the server can't read them). The same as ⌘K.
- */
-function HeaderSearch({ orgId, onSearch }: { orgId: string | null; onSearch: () => void }) {
-  const t = useT();
-  const orgName = useOrbit((s) => (orgId ? (s.orgs.find((o) => o.id === orgId)?.name ?? null) : null));
-  const label = orgName ? t("conv_search_in", { name: orgName }) : t("search_short");
-  const mac = typeof navigator !== "undefined" && /Mac|iPhone|iPad/.test(navigator.platform);
-  return (
-    <button className="header-search hide-sm" onClick={onSearch} aria-label={label} aria-keyshortcuts={mac ? "Meta+K" : "Control+K"}>
-      <span className="ellipsis">{label}</span>
-      <Search size={15} aria-hidden="true" />
-    </button>
   );
 }

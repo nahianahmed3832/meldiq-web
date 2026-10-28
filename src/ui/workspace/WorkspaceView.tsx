@@ -105,7 +105,7 @@ export function WorkspaceView({ orgId, page, onDialog }: { orgId: string | null;
   const d = detail.data;
   const community = features.includes("community-channels");
   return (
-    <section className="main" aria-label={`${org.name} settings`} style={{ display: "flex", flexDirection: "column" }}>
+    <section className="main main-split" aria-label={`${org.name} settings`} style={{ display: "flex", flexDirection: "column" }}>
       <div className="settings">
         <nav className="settings-nav" aria-label={community ? "Community settings" : "Community pages"}>
           <h2 className="ellipsis">{org.name}</h2>

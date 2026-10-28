@@ -1,7 +1,8 @@
 import { Minus, Plus, Sparkles } from "lucide-react";
 import { useState } from "react";
 import { useEngine, useOrbit } from "../../application/orbit";
-import { money, screenLabel, size } from "./mojoFormat";
+import { money } from "./mojoFormat";
+import { SparkLevelCards, SparkTrack } from "./SparkTrack";
 
 /**
  * Meldiq Spark on the Mojo page (server docs/MOJO.md › Meldiq Spark): what the three levels unlock, the person's Sparks
@@ -32,34 +33,24 @@ export function SparkSection({ onBuy, busy, offline }: { onBuy: (quantity: numbe
   const levels = catalog.spark.levels.filter((l) => l.level > 0);
   return (
     <section className="mojo-sparks" aria-labelledby="mojo-sparks-title">
-      <h2 className="mojo-h2" id="mojo-sparks-title">
-        <Sparkles size={20} aria-hidden="true" /> Meldiq Spark
-      </h2>
-      <p className="muted">
-        Give a Spark to a server you love. Every Spark helps unlock more emoji slots, bigger uploads, and better voice and screen sharing for everyone in it. Mojo Go includes one Spark, Mojo Plus two,
-        and anyone can add more for {money(catalog.spark.listPriceMinor, "USD")} per Spark per month.
-      </p>
-      <div className="spark-levels">
-        {levels.map((l) => (
-          <article key={l.level} className="spark-level">
-            <h3>
-              Level {l.level} <small>{l.sparks === 3 ? "3 or more Sparks" : `${l.sparks} Spark${l.sparks === 1 ? "" : "s"}`}</small>
-            </h3>
-            <ul>
-              <li>{l.emojiSlots} emoji slots</li>
-              <li>{l.uploadBytes ? `${size(l.uploadBytes)} uploads for everyone` : "Everyone's own uploads"}</li>
-              <li>{l.voiceKbps} kbps voice</li>
-              <li>{screenLabel(catalog, l.screen)} screen sharing for everyone</li>
-            </ul>
-          </article>
-        ))}
+      <div className="spark-hero">
+        <h2 className="mojo-h2" id="mojo-sparks-title">
+          <Sparkles size={20} aria-hidden="true" /> Meldiq Spark
+        </h2>
+        <p>
+          Give a Spark to a server you love. Every Spark helps unlock more emoji slots, bigger uploads, and better voice and screen sharing for everyone in it. Mojo Go includes one Spark, Mojo Plus
+          two, and anyone can add more for {money(catalog.spark.listPriceMinor, "USD")} per Spark per month.
+        </p>
+        <SparkTrack levels={levels} level={null} active={null} />
       </div>
-      <p className="muted" style={{ fontSize: 13 }}>
-        A server's benefits never lower anyone's own plan, and a server stays at Level 3 from three Sparks on: extra Sparks are better given to another server.
-      </p>
+      <SparkLevelCards catalog={catalog} levels={levels} level={null} />
+      <p className="muted spark-note">A server's benefits never lower anyone's own plan, and a server stays at Level 3 from three Sparks on: extra Sparks are better given to another server.</p>
 
-      <div className="card setting-card">
+      <div className="card setting-card spark-mine">
         <div className="setting-card-head">
+          <span className="spark-count" aria-hidden="true">
+            {sparks.total}
+          </span>
           <span className="lines grow">
             <strong>Your Sparks</strong>
             <small>

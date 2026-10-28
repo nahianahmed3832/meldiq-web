@@ -80,7 +80,7 @@ export function SettingsView({ page, onSignedOut }: { page: SettingsPage; onSign
       : []),
   ];
   return (
-    <section className="main" aria-label="Settings" style={{ display: "flex", flexDirection: "column" }}>
+    <section className="main main-split" aria-label="Settings" style={{ display: "flex", flexDirection: "column" }}>
       <div className={`settings${page === "you" ? " at-you" : ""}`}>
         <nav className="settings-nav" aria-label="Settings pages">
           <h2>{t("settings_title")}</h2>
@@ -116,7 +116,7 @@ export function SettingsView({ page, onSignedOut }: { page: SettingsPage; onSign
           </button>
         </nav>
         <div className="settings-page scroll">
-          <div className="inner">
+          <div className={`inner${page === "mojo" ? " wide" : ""}`}>
             <button className="settings-back" onClick={() => navigate({ section: "settings", settingsPage: "you" })}>
               <ChevronLeft size={18} aria-hidden="true" /> {t("nav_you")}
             </button>

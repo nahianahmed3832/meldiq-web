@@ -26,11 +26,13 @@ test("the mascot, the top bar, Create and Discover replace the old rail entries"
   await expect(page.getByRole("complementary", { name: "Conversations" }).getByRole("heading", { name: "Direct messages", level: 2 })).toBeVisible();
 
   // Activity and Saved for later are in the profile menu (2026-10-28: the user panel keeps microphone, headphones and
-  // Settings, as in the reference).
-  await page.getByRole("button", { name: /Your profile and settings/ }).click();
+  // Settings, as in the reference). The floating redesign opens the same menu from the user panel and the top bar's avatar.
+  const profileButton = page.getByRole("complementary", { name: "Conversations" }).getByRole("button", { name: /Your profile and settings/ });
+  await expect(page.getByRole("banner").getByRole("button", { name: "Your profile and settings" })).toBeVisible();
+  await profileButton.click();
   await page.getByRole("menuitem", { name: /^Activity/ }).click();
   await expect(page).toHaveURL(/\/activity$/);
-  await page.getByRole("button", { name: /Your profile and settings/ }).click();
+  await profileButton.click();
   await page.getByRole("menuitem", { name: /^Saved for later/ }).click();
   await expect(page).toHaveURL(/\/later$/);
 

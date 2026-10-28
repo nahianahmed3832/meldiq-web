@@ -585,6 +585,7 @@ export const STRINGS = {
   ap_dark: ["Dark", "深色", "ডার্ক"],
   ap_black: ["Black", "纯黑", "কালো"],
   ap_meldiq: ["Meldiq", "Meldiq", "Meldiq"],
+  ap_midnight: ["Midnight", "午夜蓝", "মিডনাইট"],
   ap_charcoal: ["Charcoal", "炭灰", "চারকোল"],
   ap_indigo: ["Indigo", "靛蓝", "ইন্ডিগো"],
   ap_plum: ["Plum", "梅紫", "প্লাম"],

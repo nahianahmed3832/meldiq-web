@@ -1,22 +1,13 @@
-import { BadgeCheck, Check, Gift, Loader2, Sparkles, Zap } from "lucide-react";
+import { Gift, HeartHandshake, Loader2, Sparkles } from "lucide-react";
 import { useEffect, useState } from "react";
-import type { MojoCatalog, PlanKey, PlanPerks } from "../../api/mojoSchemas";
+import type { PlanPerks } from "../../api/mojoSchemas";
 import { useEngine, useOrbit } from "../../application/orbit";
 import { relative } from "../format";
 import { GiftDialog, GiftsReceived } from "./MojoGifts";
 import { money, planPrice, screenLabel, size } from "./mojoFormat";
+import { CompareTable, type PlanAction, PlanCards, PlusPerks } from "./MojoPlans";
 import { SparkSection } from "./SparkSection";
 import { MojoBadgeMark } from "./MojoBadge";
-
-/** Comparison rows: the table is the full overview; cards only pick out what matters most (no bots: Meldiq has none yet). */
-const ROWS: { label: string; value: (p: PlanPerks, c: MojoCatalog) => string }[] = [
-  { label: "Characters in a message", value: (p) => p.messageChars.toLocaleString() },
-  { label: "Largest file you share", value: (p) => size(p.uploadBytes) },
-  { label: "Screen sharing", value: (p, c) => screenLabel(c, p.screen) },
-  { label: "Meldiq Sparks included", value: (p) => String(p.sparks) },
-  { label: "Custom emoji and stickers you add", value: (p) => String(p.customItems) },
-  { label: "Name badge", value: (p) => (p.badge === "plus" ? "Plus, with Meldiq Check" : p.badge === "go" ? "Go" : "None") },
-];
 
 /** Where a payment page sends the person back (?checkout= or ?gift=), read once. */
 function returnedFrom(): "checkout" | "gift" | "canceled" | null {
@@ -74,7 +65,7 @@ export function MojoPage() {
         <h1>Meldiq Mojo</h1>
         {mojo.error ? (
           <div className="banner danger" role="alert">
-            {mojo.error}{" "}
+            <span className="grow">{mojo.error}</span>
             <button className="btn btn-secondary btn-sm" onClick={() => void engine.mojo.refresh()}>
               Try again
             </button>
@@ -89,8 +80,27 @@ export function MojoPage() {
   }
 
   const paid = billing?.subscription ?? null;
-  const onPlan = (k: PlanKey) => me.plan === k;
   const offline = !online;
+  const plus = catalog.plans.find((p) => p.key === "plus");
+  const free = catalog.plans.find((p) => p.key === "free");
+  const plusPrice = planPrice(catalog, "plus");
+
+  /** The one button under a plan: buy it, manage it, or say why not. */
+  const actionFor = (p: PlanPerks): PlanAction => {
+    const price = planPrice(catalog, p.key);
+    const current = me.plan === p.key;
+    if (p.key === "free") return { label: current ? "Your plan" : "Always free", kind: "secondary", disabled: true };
+    if (current && paid)
+      return { label: busy === "portal" ? "Opening…" : "Manage subscription", kind: "secondary", disabled: busy !== null || offline, onClick: () => void open("portal", () => engine.mojo.portal()) };
+    if (current) return { label: "Your plan (a free period)", kind: "secondary", disabled: true };
+    return {
+      label: busy === p.key ? "Opening…" : !price.onSale ? "Not on sale yet" : paid ? "Switch from the billing page" : `Get ${p.name} for ${price.label}/month`,
+      kind: p.key === "plus" ? "mojo" : "primary",
+      disabled: !price.onSale || busy !== null || offline || (!!paid && me.plan !== "free"),
+      onClick: () => void open(p.key, () => engine.mojo.checkout(p.key as "go" | "plus")),
+    };
+  };
+  const heroAction = plus && me.plan !== "plus" && plusPrice.onSale ? actionFor(plus) : null;
 
   return (
     <div className="mojo">
@@ -123,78 +133,36 @@ export function MojoPage() {
             <Sparkles size={15} aria-hidden="true" /> Meldiq Mojo
           </span>
           <h2 id="mojo-hero-title">
-            More room. More reach. <span className="mojo-glow">More Meldiq.</span>
+            Free to talk. <span className="mojo-glow">Mojo to go further.</span>
           </h2>
           <p>Talking, calling, sharing and communities are free and stay free. Mojo adds bigger files, sharper screen shares, Sparks for the servers you love, and a badge.</p>
         </div>
         <div className="mojo-hero-plan" aria-label="Your plan">
           <span className="faint">You're on</span>
-          <strong>{me.perks.name}</strong>
-          {paid && <small>{paid.cancelAtPeriodEnd ? `Ends ${relative(paid.currentPeriodEnd ?? Date.now())}` : `Renews ${relative(paid.currentPeriodEnd ?? Date.now())}`}</small>}
+          <strong>
+            {me.perks.name} {me.badge.kind && <MojoBadgeMark badge={me.badge.kind} check={me.badge.check} />}
+          </strong>
+          <small>
+            {paid
+              ? paid.cancelAtPeriodEnd
+                ? `Ends ${relative(paid.currentPeriodEnd ?? Date.now())}`
+                : `Renews ${relative(paid.currentPeriodEnd ?? Date.now())}`
+              : me.plan === "free"
+                ? "Free for as long as you like"
+                : "A free period: nothing renews"}
+          </small>
         </div>
       </section>
 
-      <div className="mojo-plans">
-        {catalog.plans.map((p) => {
-          const price = planPrice(catalog, p.key);
-          const current = onPlan(p.key);
-          return (
-            <section key={p.key} className={`mojo-plan plan-${p.key}${current ? " current" : ""}`} aria-label={p.name}>
-              <header>
-                <h3>
-                  {p.name} {p.badge && <MojoBadgeMark badge={p.badge} check={false} />}
-                </h3>
-                <div className="mojo-price">
-                  <strong>{price.label}</strong>
-                  {p.key !== "free" && <span>/month</span>}
-                </div>
-              </header>
-              <ul>
-                <li>
-                  <Check size={14} aria-hidden="true" /> {p.messageChars.toLocaleString()} characters a message
-                </li>
-                <li>
-                  <Check size={14} aria-hidden="true" /> Files up to {size(p.uploadBytes)}
-                </li>
-                <li>
-                  <Check size={14} aria-hidden="true" /> Screen sharing at {screenLabel(catalog, p.screen)}
-                </li>
-                <li>
-                  <Check size={14} aria-hidden="true" /> {p.sparks === 0 ? "Sparks: buy them separately" : `${p.sparks} Meldiq Spark${p.sparks === 1 ? "" : "s"} included`}
-                </li>
-              </ul>
-              {p.key === "free" ? (
-                <button className="btn btn-secondary" disabled>
-                  {current ? "Your plan" : "Always free"}
-                </button>
-              ) : current && paid ? (
-                <button className="btn btn-secondary" disabled={busy !== null || offline} onClick={() => void open("portal", () => engine.mojo.portal())}>
-                  {busy === "portal" ? "Opening…" : "Manage subscription"}
-                </button>
-              ) : current ? (
-                <button className="btn btn-secondary" disabled>
-                  Your plan (a free period)
-                </button>
-              ) : (
-                <button
-                  className={`btn ${p.key === "plus" ? "btn-mojo" : "btn-primary"}`}
-                  disabled={!price.onSale || busy !== null || offline || (!!paid && me.plan !== "free")}
-                  onClick={() => void open(p.key, () => engine.mojo.checkout(p.key as "go" | "plus"))}
-                >
-                  {busy === p.key ? "Opening…" : !price.onSale ? "Not on sale yet" : paid ? `Switch from the billing page` : `Get ${p.name} for ${price.label}/month`}
-                </button>
-              )}
-            </section>
-          );
-        })}
-      </div>
-      <p className="mojo-terms muted">
-        Mojo renews every month at the price shown until you cancel. Cancel any time from Manage subscription: you keep Mojo until the end of the month you paid for, and nothing you made is deleted.
-        Prices are in US dollars; your bank may add conversion fees.
-      </p>
-
+      {heroAction && (
+        <button className="btn btn-lg btn-mojo mojo-cta" disabled={heroAction.disabled} onClick={heroAction.onClick}>
+          {heroAction.label}
+        </button>
+      )}
       <button className="mojo-gift-entry" disabled={!catalog.onSale.gifts || offline} onClick={() => setGifting(true)}>
-        <Gift size={18} aria-hidden="true" />
+        <span className="mojo-gift-icon" aria-hidden="true">
+          <Gift size={18} />
+        </span>
         <span className="lines grow">
           <strong>Gift Mojo to a friend</strong>
           <small>{catalog.onSale.gifts ? "One payment for 1, 3 or 12 months, straight to their account, with a note from you." : "Gifts open when Mojo goes on sale."}</small>
@@ -202,75 +170,18 @@ export function MojoPage() {
       </button>
       <GiftsReceived me={me} />
 
+      <h2 className="mojo-h2">Choose your plan</h2>
+      <PlanCards catalog={catalog} me={me} actionFor={actionFor} />
+      <p className="mojo-terms muted">
+        Mojo renews every month at the price shown until you cancel. Cancel any time from Manage subscription: you keep Mojo until the end of the month you paid for, and nothing you made is deleted.
+        Prices are in US dollars; your bank may add conversion fees.
+      </p>
+
       <h2 className="mojo-h2">What Mojo Plus adds</h2>
-      <div className="mojo-perks">
-        <article>
-          <Zap size={20} aria-hidden="true" />
-          <h3>{PLUS(catalog).messageChars.toLocaleString()} character messages</h3>
-          <p>Long stories, patch notes, a whole recipe, one message. Edits get the same room.</p>
-        </article>
-        <article>
-          <Zap size={20} aria-hidden="true" />
-          <h3>{size(PLUS(catalog).uploadBytes)} uploads</h3>
-          <p>Full clips, big GIFs, whole albums.</p>
-        </article>
-        <article>
-          <Zap size={20} aria-hidden="true" />
-          <h3>{screenLabel(catalog, PLUS(catalog).screen)} screen sharing</h3>
-          <p>Crisp and smooth for everyone watching.</p>
-        </article>
-        <article>
-          <Sparkles size={20} aria-hidden="true" />
-          <h3>{PLUS(catalog).sparks} Meldiq Sparks</h3>
-          <p>Give a Spark to a server you love. Every Spark helps unlock more emoji slots, bigger uploads, and better voice and screen sharing for everyone there.</p>
-        </article>
-        <article>
-          <BadgeCheck size={20} aria-hidden="true" />
-          <h3>Plus badge and Meldiq Check</h3>
-          <p>A small Plus next to your name so people know you keep the lights on. Hide it any time. Meldiq Check is a Plus perk, not identity verification.</p>
-        </article>
-        <article>
-          <Zap size={20} aria-hidden="true" />
-          <h3>{PLUS(catalog).customItems} custom emoji and stickers</h3>
-          <p>Add more across your communities. If a plan ends, the oldest stay usable and the rest are kept, locked until you upgrade again: nothing is deleted.</p>
-        </article>
-      </div>
+      <PlusPerks catalog={catalog} />
 
       <h2 className="mojo-h2">Compare plans</h2>
-      <div className="mojo-table-wrap">
-        <table className="mojo-table">
-          <thead>
-            <tr>
-              <th scope="col">What you get</th>
-              {catalog.plans.map((p) => (
-                <th key={p.key} scope="col" className={onPlan(p.key) ? "current" : undefined}>
-                  {p.name}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {ROWS.map((r) => (
-              <tr key={r.label}>
-                <th scope="row">{r.label}</th>
-                {catalog.plans.map((p) => (
-                  <td key={p.key} className={onPlan(p.key) ? "current" : undefined}>
-                    {r.value(p, catalog)}
-                  </td>
-                ))}
-              </tr>
-            ))}
-            <tr>
-              <th scope="row">Price</th>
-              {catalog.plans.map((p) => (
-                <td key={p.key} className={onPlan(p.key) ? "current" : undefined}>
-                  {p.key === "free" ? "Free" : `${planPrice(catalog, p.key).label} a month`}
-                </td>
-              ))}
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      <CompareTable catalog={catalog} me={me} />
 
       <SparkSection onBuy={(q) => void open("sparks", () => engine.mojo.buySparks(q))} busy={busy === "sparks"} offline={offline} />
 
@@ -290,21 +201,30 @@ export function MojoPage() {
         </section>
       )}
 
-      <section className="card mojo-why" aria-labelledby="mojo-why">
-        <h2 id="mojo-why">Why subscriptions?</h2>
-        <p>
-          Meldiq has no external investors. We pay for the infrastructure and tools that keep the service running, including servers, storage, voice and video bandwidth, and moderation and development
-          tooling. Subscriptions help cover these real operating costs. Anything left after operating costs helps us keep improving Meldiq and is our thank-you for supporting it. Talking, calling and
-          communities stay useful on the Free plan.
-        </p>
+      <section className="mojo-why" aria-labelledby="mojo-why">
+        <span className="mojo-perk-icon" aria-hidden="true">
+          <HeartHandshake size={20} />
+        </span>
+        <div className="lines">
+          <h2 id="mojo-why">Why subscriptions?</h2>
+          <p>
+            Meldiq has no external investors. We pay for the infrastructure and tools that keep the service running, including servers, storage, voice and video bandwidth, and moderation and
+            development tooling. Subscriptions help cover these real operating costs. Anything left after operating costs helps us keep improving Meldiq and is our thank-you for supporting it.
+            Talking, calling and communities stay useful on the Free plan.
+          </p>
+        </div>
       </section>
+      {free && (
+        <p className="mojo-free-note muted">
+          Still free for everyone: messages up to {free.messageChars.toLocaleString()} characters, files up to {size(free.uploadBytes)}, voice and video calls, screen sharing at{" "}
+          {screenLabel(catalog, free.screen)}, {free.customItems} custom emoji and stickers, and communities of your own.
+        </p>
+      )}
       {gifting && <GiftDialog catalog={catalog} onClose={() => setGifting(false)} onPay={(input) => open("gift", () => engine.mojo.gift(input))} busy={busy === "gift"} />}
-      <p className="muted" style={{ fontSize: 12 }}>
-        Mojo prices: Go {money(catalog.plans.find((p) => p.key === "go")?.listPriceMinor ?? 0, "USD")}, Plus {money(catalog.plans.find((p) => p.key === "plus")?.listPriceMinor ?? 0, "USD")}, each
-        Spark {money(catalog.spark.listPriceMinor, "USD")}, monthly.
+      <p className="muted mojo-footnote">
+        Mojo prices: Go {money(catalog.plans.find((p) => p.key === "go")?.listPriceMinor ?? 0, "USD")}, Plus {money(plus?.listPriceMinor ?? 0, "USD")}, each Spark{" "}
+        {money(catalog.spark.listPriceMinor, "USD")}, monthly.
       </p>
     </div>
   );
 }
-
-const PLUS = (c: MojoCatalog) => c.plans.find((p) => p.key === "plus")!;

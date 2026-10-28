@@ -1,11 +1,17 @@
-/* Meldiq Mojo (ui/mojo, server docs/MOJO.md): Meldiq's own indigo-to-violet, with the brand's sky highlight. Every
-   colour comes from the theme's tokens or these three, so light, dark and black themes all work. */
+/* Meldiq Mojo (ui/mojo, server docs/MOJO.md), floating redesign 2026-10-28. Mojo's colour follows the palette's brand
+   ends (lime on Meldiq, cyan into violet on Midnight), with the text colour made for them, so every palette and the
+   light, dark and black themes all work. */
 :root {
-  --mojo-a: #4b4fc9;
-  --mojo-b: #8b5cf6;
-  --mojo-glow: #7dd3fc;
+  --mojo-a: var(--accent-start);
+  --mojo-b: var(--accent-end);
+  --on-mojo: var(--on-brand);
+  --mojo-soft: color-mix(in srgb, var(--mojo-a) 12%, transparent);
+  --mojo-line: color-mix(in srgb, var(--mojo-a) 34%, var(--border));
 }
 
+.settings-page .inner.wide {
+  max-width: 1040px;
+}
 .mojo {
   display: grid;
   gap: 18px;
@@ -19,41 +25,65 @@
   gap: 8px;
   color: var(--text-2);
 }
-
-.mojo-hero {
+.mojo-h2 {
   display: flex;
-  gap: 18px;
+  align-items: center;
+  gap: 8px;
+  margin: 18px 0 0;
+  font-size: 20px;
+  letter-spacing: -0.01em;
+}
+
+/* ── The plan header: what Mojo is, and the plan you're on ── */
+.mojo-hero {
+  position: relative;
+  display: flex;
+  gap: 24px;
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  padding: 24px;
-  border-radius: var(--r-lg);
-  color: #f3f2ff;
-  background: radial-gradient(circle at 85% 20%, rgba(125, 211, 252, 0.25), transparent 45%), linear-gradient(135deg, #0b1440, #1d1a5c 55%, #3b1d70);
-  border: 1px solid rgba(139, 92, 246, 0.35);
+  padding: 30px 32px;
+  border-radius: var(--r-xl);
+  overflow: hidden;
+  isolation: isolate;
+  background:
+    radial-gradient(120% 140% at 100% 0%, color-mix(in srgb, var(--mojo-a) 22%, transparent) 0%, transparent 55%),
+    radial-gradient(90% 120% at 0% 100%, color-mix(in srgb, var(--mojo-b) 16%, transparent) 0%, transparent 60%), var(--surface-raised);
+  box-shadow:
+    inset 0 0 0 1px var(--mojo-line),
+    var(--shadow-md);
+}
+.mojo-hero-text {
+  flex: 1 1 380px;
+  display: grid;
+  gap: 10px;
 }
 .mojo-hero h2 {
-  margin: 6px 0 8px;
-  font-size: clamp(22px, 3.2vw, 30px);
-  line-height: 1.15;
+  margin: 0;
+  font-size: clamp(26px, 3.2vw, 36px);
+  line-height: 1.1;
+  letter-spacing: -0.03em;
 }
 .mojo-hero p {
   margin: 0;
-  max-width: 52ch;
-  color: #c9c8f0;
+  max-width: 520px;
+  color: var(--text-2);
+  font-size: 15px;
+  line-height: 1.55;
 }
 .mojo-eyebrow {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: var(--fs-xs);
+  font-size: 12px;
   font-weight: 800;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--mojo-glow);
+  color: var(--accent-text);
 }
+/* The headline's highlight: the accent's text colours, readable on light and dark alike. */
 .mojo-glow {
-  background: linear-gradient(90deg, var(--mojo-glow), #c4b5fd);
+  background: linear-gradient(90deg, var(--accent-text), var(--accent-2));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -61,105 +91,64 @@
 .mojo-hero-plan {
   display: grid;
   gap: 2px;
-  min-width: 160px;
-  padding: 14px 18px;
-  border-radius: var(--r-md);
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  min-width: 200px;
+  padding: 18px 22px;
+  border-radius: var(--r-lg);
+  background: color-mix(in srgb, var(--surface-sunken) 80%, transparent);
+  box-shadow: inset 0 0 0 1px var(--border);
 }
 .mojo-hero-plan .faint {
-  color: #b9bce6;
-  font-size: 13px;
+  font-size: 12.5px;
 }
 .mojo-hero-plan strong {
-  font-size: 22px;
-}
-.mojo-hero-plan small {
-  color: #b9bce6;
-}
-
-.mojo-plans {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-  gap: 12px;
-}
-.mojo-plan {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding: 18px;
-  border-radius: var(--r-lg);
-  border: 1px solid var(--border);
-  background: var(--surface-raised);
-}
-.mojo-plan.plan-plus {
-  border-color: color-mix(in srgb, var(--mojo-b) 55%, var(--border));
-  box-shadow: 0 0 0 1px color-mix(in srgb, var(--mojo-b) 25%, transparent);
-}
-.mojo-plan.current {
-  outline: 2px solid var(--accent);
-  outline-offset: -2px;
-}
-.mojo-plan h3 {
   display: flex;
   align-items: center;
   gap: 8px;
-  margin: 0;
-  font-size: 16px;
-}
-.mojo-price strong {
   font-size: 26px;
+  letter-spacing: -0.02em;
 }
-.mojo-price span {
+.mojo-hero-plan small {
   color: var(--text-2);
-  margin-left: 2px;
 }
-.mojo-plan ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  gap: 6px;
-  flex: 1;
-  font-size: 14px;
-}
-.mojo-plan li {
-  display: flex;
-  gap: 8px;
-  align-items: flex-start;
-}
-.mojo-plan li svg {
-  flex-shrink: 0;
-  margin-top: 3px;
-  color: var(--accent);
-}
+
+/* The calls to action: the brand's ends, with the text made for them. */
 .btn-mojo {
-  color: #fff;
+  color: var(--on-mojo);
   background: linear-gradient(90deg, var(--mojo-a), var(--mojo-b));
   border: 0;
+  box-shadow: 0 6px 24px -10px color-mix(in srgb, var(--mojo-a) 70%, transparent);
 }
 .btn-mojo:hover:not(:disabled) {
-  filter: brightness(1.08);
+  filter: brightness(1.06);
 }
 .btn-mojo:disabled {
   opacity: 0.55;
+  box-shadow: none;
 }
-.mojo-terms {
-  margin: 0;
-  font-size: 13px;
+.mojo-cta {
+  width: 100%;
+  height: 54px;
+  font-size: 16px;
 }
 
+/* Gift Mojo: a dashed, inviting row, as wide as the page. */
 .mojo-gift-entry {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
   width: 100%;
-  padding: 14px 16px;
+  padding: 14px 18px;
   border-radius: var(--r-lg);
-  border: 1px dashed color-mix(in srgb, var(--mojo-b) 50%, var(--border));
-  background: color-mix(in srgb, var(--mojo-b) 6%, var(--surface-raised));
+  border: 1.5px dashed var(--mojo-line);
+  background: var(--mojo-soft);
   text-align: left;
   cursor: pointer;
+  transition:
+    background var(--t-fast),
+    border-color var(--t-fast);
+}
+.mojo-gift-entry:hover:not(:disabled) {
+  border-color: var(--mojo-a);
 }
 .mojo-gift-entry:disabled {
   cursor: default;
@@ -171,10 +160,24 @@
 .mojo-gift-entry small {
   color: var(--text-2);
 }
+.mojo-gift-icon,
+.mojo-perk-icon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  color: var(--on-mojo);
+  background: linear-gradient(135deg, var(--mojo-a), var(--mojo-b));
+}
 .mojo-gifts {
   display: grid;
   gap: 10px;
   padding: 14px 16px;
+}
+.mojo-gift-row {
+  gap: 12px;
 }
 .mojo-gift-row .lines {
   display: grid;
@@ -187,102 +190,342 @@
   color: var(--text-2);
 }
 
-.mojo-h2 {
+/* ── The plans ── */
+.mojo-plans {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 14px;
+  align-items: stretch;
+}
+.mojo-plan {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 24px 22px 22px;
+  border-radius: var(--r-xl);
+  background: var(--surface-raised);
+  box-shadow: inset 0 0 0 1px var(--border);
+}
+.mojo-plan.plan-plus {
+  background: radial-gradient(120% 80% at 100% 0%, color-mix(in srgb, var(--mojo-a) 14%, transparent) 0%, transparent 60%), var(--surface-raised);
+  box-shadow:
+    inset 0 0 0 1.5px var(--mojo-line),
+    0 18px 40px -24px color-mix(in srgb, var(--mojo-a) 60%, transparent);
+}
+.mojo-plan.current {
+  box-shadow: inset 0 0 0 2px var(--accent);
+}
+.mojo-plan-flag {
+  position: absolute;
+  top: -11px;
+  left: 20px;
+  padding: 3px 10px;
+  border-radius: var(--r-pill);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--on-mojo);
+  background: linear-gradient(90deg, var(--mojo-a), var(--mojo-b));
+}
+.mojo-plan header {
+  display: grid;
+  gap: 6px;
+}
+.mojo-plan h3 {
   display: flex;
   align-items: center;
   gap: 8px;
-  margin: 8px 0 0;
-  font-size: 18px;
+  margin: 0;
+  font-size: 17px;
 }
+.mojo-plan header p {
+  margin: 0;
+  color: var(--text-2);
+  font-size: 13.5px;
+  line-height: 1.45;
+}
+.mojo-price {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+.mojo-price strong {
+  font-size: 34px;
+  letter-spacing: -0.03em;
+}
+.mojo-price span {
+  color: var(--text-3);
+  font-size: 14px;
+}
+.mojo-plan ul {
+  flex: 1;
+  list-style: none;
+  margin: 0;
+  padding: 16px 0 0;
+  border-top: 1px solid var(--hairline);
+  display: grid;
+  align-content: start;
+  gap: 10px;
+}
+.mojo-plan li {
+  display: flex;
+  gap: 10px;
+  font-size: 14px;
+  line-height: 1.4;
+}
+.mojo-plan li svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: var(--accent-text);
+}
+.mojo-plan > .btn {
+  width: 100%;
+}
+.mojo-terms {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* ── What Plus adds: benefit cards ── */
 .mojo-perks {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 12px;
 }
 .mojo-perks article {
-  padding: 16px;
+  display: flex;
+  gap: 16px;
+  padding: 20px;
   border-radius: var(--r-lg);
-  border: 1px solid var(--border);
   background: var(--surface-raised);
+  box-shadow: inset 0 0 0 1px var(--border);
+  transition: box-shadow var(--t-fast);
 }
-.mojo-perks article svg {
-  color: var(--mojo-b);
+.mojo-perks article:hover {
+  box-shadow: inset 0 0 0 1px var(--mojo-line);
+}
+.mojo-perks .lines {
+  display: grid;
+  gap: 4px;
 }
 .mojo-perks h3 {
-  margin: 8px 0 4px;
-  font-size: 15px;
+  margin: 0;
+  font-size: 16px;
 }
 .mojo-perks p {
   margin: 0;
-  font-size: 13.5px;
   color: var(--text-2);
+  font-size: 13.5px;
+  line-height: 1.5;
 }
 
-/* The comparison table scrolls sideways on narrow screens instead of squeezing its text. */
+/* ── Compare plans ── */
 .mojo-table-wrap {
   overflow-x: auto;
   border-radius: var(--r-lg);
-  border: 1px solid var(--border);
+  box-shadow: inset 0 0 0 1px var(--border);
+  background: var(--surface-raised);
 }
 .mojo-table {
   width: 100%;
-  min-width: 520px;
   border-collapse: collapse;
   font-size: 14px;
 }
 .mojo-table th,
 .mojo-table td {
-  padding: 10px 14px;
+  padding: 13px 18px;
   text-align: left;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--hairline);
+}
+.mojo-table tbody th {
+  font-weight: 650;
+}
+.mojo-table td {
+  color: var(--text-2);
 }
 .mojo-table thead th {
-  font-size: var(--fs-xs);
+  font-size: 11.5px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--text-2);
-  background: var(--surface-sunken);
+  color: var(--text-3);
 }
 .mojo-table tbody tr:last-child > * {
   border-bottom: 0;
 }
-.mojo-table .current {
-  background: color-mix(in srgb, var(--accent) 9%, transparent);
-  font-weight: 650;
+.mojo-table .plus {
+  background: var(--mojo-soft);
+  color: var(--accent-text);
+  font-weight: 700;
+}
+.mojo-table thead .plus {
+  color: var(--accent-text);
+}
+.mojo-table .current:not(.plus) {
+  color: var(--text);
+  font-weight: 700;
 }
 
+/* ── Meldiq Spark ── */
 .mojo-sparks {
   display: grid;
-  gap: 12px;
+  gap: 14px;
 }
-.mojo-sparks p {
+.spark-hero {
+  display: grid;
+  gap: 12px;
+  padding: 26px 28px 30px;
+  border-radius: var(--r-xl);
+  background: radial-gradient(90% 120% at 50% 0%, color-mix(in srgb, var(--mojo-a) 16%, transparent) 0%, transparent 65%), var(--surface-raised);
+  box-shadow: inset 0 0 0 1px var(--mojo-line);
+}
+.spark-hero .mojo-h2 {
   margin: 0;
 }
+.spark-hero p {
+  margin: 0;
+  max-width: 720px;
+  color: var(--text-2);
+  line-height: 1.55;
+}
+.spark-note {
+  margin: 0;
+  font-size: 13px;
+}
+
+/* The level track: a line filled up to the community's Sparks, with a gem at each level. */
+.spark-track {
+  position: relative;
+  height: 70px;
+  margin: 8px 28px 0 6px;
+}
+.spark-track-line {
+  position: absolute;
+  top: 16px;
+  left: 0;
+  right: 0;
+  height: 6px;
+  border-radius: var(--r-pill);
+  background: color-mix(in srgb, var(--text) 12%, transparent);
+  overflow: hidden;
+}
+.spark-track-line span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--mojo-b), var(--mojo-a));
+  transition: width var(--t-page) var(--ease);
+}
+.spark-track-stops {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.spark-track-stops li {
+  position: absolute;
+  top: 0;
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  transform: translateX(-50%);
+  color: var(--text-3);
+  font-size: 12.5px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.spark-track-stops li svg {
+  padding: 5px;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--surface-sunken);
+  box-shadow: inset 0 0 0 1px var(--border-strong);
+}
+.spark-track-stops li.reached {
+  color: var(--text);
+}
+.spark-track-stops li.reached svg {
+  color: var(--on-mojo);
+  background: linear-gradient(135deg, var(--mojo-a), var(--mojo-b));
+  box-shadow: 0 0 18px -2px color-mix(in srgb, var(--mojo-a) 70%, transparent);
+}
+
 .spark-levels {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 12px;
 }
 .spark-level {
-  padding: 14px 16px;
+  display: grid;
+  gap: 12px;
+  align-content: start;
+  padding: 18px;
   border-radius: var(--r-lg);
-  border: 1px solid color-mix(in srgb, var(--mojo-b) 35%, var(--border));
-  background: color-mix(in srgb, var(--mojo-b) 7%, var(--surface-raised));
+  background: var(--surface-raised);
+  box-shadow: inset 0 0 0 1px var(--border);
+}
+.spark-level.unlocked {
+  background: var(--mojo-soft);
+  box-shadow: inset 0 0 0 1.5px var(--mojo-line);
 }
 .spark-level h3 {
-  margin: 0 0 6px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
   font-size: 15px;
 }
+.spark-level h3 svg {
+  color: var(--accent-text);
+}
+.spark-level h3 .lines {
+  display: grid;
+}
 .spark-level h3 small {
-  font-weight: 500;
-  color: var(--text-2);
+  color: var(--text-3);
+  font-weight: 600;
+  font-size: 12px;
+}
+.spark-level.unlocked h3 small {
+  color: var(--accent-text);
 }
 .spark-level ul {
+  list-style: none;
   margin: 0;
-  padding-left: 18px;
-  font-size: 13.5px;
+  padding: 0;
   display: grid;
-  gap: 2px;
+  gap: 8px;
+  font-size: 13.5px;
+}
+.spark-level li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  color: var(--text-2);
+}
+.spark-level li svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: var(--text-3);
+}
+
+.spark-mine .setting-card-head {
+  gap: 14px;
+}
+.spark-count {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--on-mojo);
+  background: linear-gradient(135deg, var(--mojo-a), var(--mojo-b));
 }
 .spark-list {
   list-style: none;
@@ -296,9 +539,12 @@
   align-items: center;
   gap: 10px;
   flex-wrap: wrap;
+  padding: 8px 10px;
+  border-radius: var(--r-md);
+  background: var(--surface-sunken);
 }
 .spark-list li svg {
-  color: var(--mojo-b);
+  color: var(--accent-text);
 }
 .spark-list .tag {
   margin-left: 8px;
@@ -315,7 +561,7 @@
   align-items: center;
   gap: 8px;
   padding: 2px 6px;
-  border-radius: var(--r-md);
+  border-radius: var(--r-pill);
   border: 1px solid var(--border);
 }
 .stepper span {
@@ -329,17 +575,38 @@
   box-shadow: var(--shadow-sm);
 }
 
-.mojo-why h2 {
-  margin: 0 0 6px;
-  font-size: 16px;
-}
+/* ── Why subscriptions: the honest part, given room ── */
 .mojo-why {
-  padding: 16px 18px;
+  display: flex;
+  gap: 18px;
+  margin-top: 8px;
+  padding: 24px;
+  border-radius: var(--r-xl);
+  background: var(--surface-raised);
+  box-shadow: inset 0 0 0 1px var(--border);
+}
+.mojo-why .lines {
+  display: grid;
+  gap: 6px;
+}
+.mojo-why h2 {
+  margin: 0;
+  font-size: 19px;
 }
 .mojo-why p {
   margin: 0;
   color: var(--text-2);
-  font-size: 14px;
+  font-size: 14.5px;
+  line-height: 1.6;
+}
+.mojo-free-note {
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.55;
+}
+.mojo-footnote {
+  margin: 0;
+  font-size: 12px;
 }
 
 /* GO / PLUS next to a name. */
@@ -347,12 +614,12 @@
   display: inline-flex;
   align-items: center;
   gap: 2px;
-  padding: 0 5px;
-  height: 16px;
-  border-radius: 5px;
+  padding: 0 6px;
+  height: 17px;
+  border-radius: var(--r-pill);
   font-size: 10px;
   font-weight: 800;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.05em;
   line-height: 1;
   vertical-align: middle;
   flex-shrink: 0;
@@ -360,9 +627,10 @@
 .mojo-badge-go {
   color: var(--accent-text);
   background: color-mix(in srgb, var(--accent) 16%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 35%, transparent);
 }
 .mojo-badge-plus {
-  color: #fff;
+  color: var(--on-mojo);
   background: linear-gradient(90deg, var(--mojo-a), var(--mojo-b));
 }
 
@@ -371,22 +639,12 @@
   display: inline-flex;
   align-items: center;
   gap: 3px;
-  padding: 1px 6px;
-  border-radius: 999px;
+  padding: 1px 7px;
+  border-radius: var(--r-pill);
   font-size: 11px;
   font-weight: 800;
-  color: #fff;
+  color: var(--on-mojo);
   background: linear-gradient(90deg, var(--mojo-a), var(--mojo-b));
-}
-
-@media (max-width: 640px) {
-  .mojo-hero {
-    padding: 18px;
-  }
-  .spark-buy .btn,
-  .spark-give .btn {
-    width: 100%;
-  }
 }
 
 /* The message length note (ui/mojo/CharLimit.tsx). */
@@ -411,30 +669,119 @@
   cursor: pointer;
 }
 
-/* "Sparks for …" (ui/mojo/SparkDialog.tsx). */
-.spark-dialog {
+/* ── "Sparks for …" (ui/mojo/SparkDialog.tsx): a starry hero with the track, then what's unlocked ── */
+.spark-dialog-shell {
+  padding: 0;
+  overflow: hidden;
+}
+.spark-dialog-hero {
+  position: relative;
   display: grid;
-  gap: 12px;
+  justify-items: center;
+  gap: 10px;
+  padding: 30px 32px 22px;
+  text-align: center;
+  background:
+    radial-gradient(1.5px 1.5px at 12% 24%, color-mix(in srgb, var(--text) 40%, transparent) 50%, transparent 51%),
+    radial-gradient(1.5px 1.5px at 78% 18%, color-mix(in srgb, var(--text) 35%, transparent) 50%, transparent 51%),
+    radial-gradient(1.5px 1.5px at 30% 70%, color-mix(in srgb, var(--text) 30%, transparent) 50%, transparent 51%),
+    radial-gradient(1.5px 1.5px at 88% 64%, color-mix(in srgb, var(--text) 30%, transparent) 50%, transparent 51%),
+    radial-gradient(120% 100% at 50% 0%, color-mix(in srgb, var(--mojo-a) 22%, transparent) 0%, transparent 70%), var(--surface-sunken);
+  border-bottom: 1px solid var(--hairline);
+}
+.spark-dialog-hero h2 {
+  margin: 0;
+  font-size: 22px;
+  letter-spacing: -0.02em;
+}
+.spark-dialog-hero .avatar {
+  box-shadow:
+    0 0 0 3px var(--surface-sunken),
+    0 0 0 5px var(--mojo-a);
+}
+.spark-dialog-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+}
+.spark-dialog-hero .spark-track {
+  width: min(520px, 100%);
+  margin: 6px auto 0;
 }
 .spark-now {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 14px;
-  border-radius: var(--r-md);
-  background: color-mix(in srgb, var(--mojo-b) 10%, var(--surface-raised));
-  border: 1px solid color-mix(in srgb, var(--mojo-b) 35%, var(--border));
-}
-.spark-now svg {
-  color: var(--mojo-b);
-}
-.spark-now .lines {
   display: grid;
+  gap: 2px;
+  margin: 0;
+}
+.spark-now small {
+  color: var(--text-2);
+}
+.spark-dialog {
+  display: grid;
+  gap: 14px;
+}
+.spark-unlocks-title {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-3);
 }
 .spark-unlocks {
   margin: 0;
-  padding-left: 18px;
-  display: grid;
-  gap: 2px;
-  font-size: 14px;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 13.5px;
+}
+.spark-unlocks li {
+  padding: 6px 12px;
+  border-radius: var(--r-pill);
+  background: var(--surface-sunken);
+  box-shadow: inset 0 0 0 1px var(--border);
+}
+.spark-actions {
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.spark-actions .btn-mojo {
+  flex: 1 1 260px;
+}
+
+@media (max-width: 640px) {
+  .mojo-hero {
+    padding: 22px 20px;
+  }
+  .mojo-hero-plan {
+    width: 100%;
+  }
+  .mojo-perks {
+    grid-template-columns: 1fr;
+  }
+  .mojo-table {
+    min-width: 560px;
+  }
+  .mojo-why {
+    flex-direction: column;
+    padding: 20px;
+  }
+  .spark-hero {
+    padding: 20px 18px 24px;
+  }
+  .spark-track {
+    margin: 8px 22px 0 4px;
+  }
+  .spark-track-stops li span {
+    font-size: 11px;
+  }
+  .spark-buy .btn,
+  .spark-give .btn {
+    width: 100%;
+  }
+  .spark-dialog-hero {
+    padding: 26px 18px 18px;
+  }
 }
