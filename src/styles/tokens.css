@@ -37,12 +37,13 @@
   --fs-2xl: 20px;
   --fs-3xl: 26px;
 
-  /* Radii: controls 8, rows and inputs 10, cards 14, panels 18 */
+  /* Radii (the floating redesign, 2026-10-28): controls 10, rows and inputs 12, cards 18, dialogs 24, floating panels 24 */
   --r-xs: 6px;
-  --r-sm: 8px;
-  --r-md: 10px;
-  --r-lg: 14px;
-  --r-xl: 18px;
+  --r-sm: 10px;
+  --r-md: 12px;
+  --r-lg: 18px;
+  --r-xl: 24px;
+  --r-panel: 24px;
   --r-pill: 999px;
 
   /* Spacing (4-point) */
@@ -60,13 +61,16 @@
   --icon-lg: 20px;
 
   /* Layout */
-  --rail-w: 68px;
-  --topbar-h: 52px;
-  --sidebar-w: 280px;
-  --frame-gap: 8px;
+  --rail-w: 76px;
+  --topbar-h: 64px;
+  /* Desktop: the slim brand strip across the top of the window. */
+  --brandbar-h: 34px;
+  --sidebar-w: 300px;
+  /* The black frame between floating panels. */
+  --frame-gap: 10px;
 
   /* Message text (Appearance › Text size): conversation text only. */
-  --msg-text-size: 14.5px;
+  --msg-text-size: 15.5px;
 
   /*
    * Motion (Meldiq 2.0, shared with Android's Motion tokens in meaning, not code): instant 90ms for what leaves first,
@@ -83,10 +87,10 @@
 }
 
 :root[data-text-size="small"] {
-  --msg-text-size: 13.5px;
+  --msg-text-size: 14px;
 }
 :root[data-text-size="large"] {
-  --msg-text-size: 16.5px;
+  --msg-text-size: 17px;
 }
 
 /* Static light values for browsers without light-dark() (they see the unsupported screen, readably). */
@@ -145,6 +149,17 @@
     --on-action: var(--on-accent);
     --link: var(--accent-text);
 
+    /* People's names in messages and member lists: each person's own colour (their avatar tone, made vivid), unless a
+     * community role gives them one. Light mode deepens them to stay readable on white. */
+    --name-0: light-dark(#0f766e, #2dd4bf);
+    --name-1: light-dark(#4338ca, #a5b4fc);
+    --name-2: light-dark(#c2410c, #fb923c);
+    --name-3: light-dark(#15803d, #4ade80);
+    --name-4: light-dark(#1d4ed8, #60a5fa);
+    --name-5: light-dark(#be185d, #f472b6);
+    --name-6: light-dark(#7e22ce, #c084fc);
+    --name-7: light-dark(#a16207, #facc15);
+
     --success: light-dark(#1d7a4c, #5fd49a);
     --success-soft: light-dark(#e3f4ea, #15301f);
     --warning: light-dark(#8a5a00, #f3c461);
@@ -154,6 +169,15 @@
     --on-danger: light-dark(#ffffff, #2b0d0f);
     --info: light-dark(#2563c7, #8ab8ff);
     --info-soft: light-dark(#e6effc, #182640);
+
+    /* Unread and mentions (community-first brief §C): light marks on dark, dark on light, never the error red. */
+    --unread-text: var(--text);
+    --unread-mark: light-dark(#16172b, #ffffff);
+    --unread-badge: light-dark(#16172b, #f4f6ff);
+    --on-unread-badge: light-dark(#ffffff, #0b1024);
+    --mention-badge: var(--badge);
+    --on-mention-badge: var(--on-badge);
+    --on-brand: #ffffff;
 
     /* Presence and connection */
     --presence-on: light-dark(#1fa463, #4ad991);
@@ -225,6 +249,12 @@
     --sticker-confetti: conic-gradient(from 0deg, #f59e0b 0 20%, #10b981 0 40%, #3b82f6 0 60%, #ec4899 0 80%, currentColor 0);
 
     /* Palette previews (Appearance › Colour): each plate's frame, sidebar and accent, whatever plate is active. */
+    --swatch-meldiq-1: #040404;
+    --swatch-meldiq-2: #262626;
+    --swatch-meldiq-3: #f4ffac;
+    --swatch-midnight-1: #0f1630;
+    --swatch-midnight-2: #dde4f7;
+    --swatch-midnight-3: #3a5bd9;
     --swatch-charcoal-1: #1e1f22;
     --swatch-charcoal-2: #dfe1e5;
     --swatch-charcoal-3: #4e5058;
@@ -258,6 +288,9 @@
     --rail-line: rgba(255, 255, 255, 0.12);
     --rail-input: rgba(255, 255, 255, 0.1);
     --rail-input-hover: rgba(255, 255, 255, 0.16);
+    --rail-glow: var(--rail-text-active);
+    --rail-round: rgba(255, 255, 255, 0.06);
+    --rail-round-icon: var(--rail-text);
 
     --sidebar: light-dark(#f4f3fd, #15142a);
     --sidebar-hover: light-dark(#eae8fb, #1f1e3a);
@@ -284,11 +317,10 @@
   }
 
   /*
-   * Charcoal (the default since 2026-10-23): neutral greys like Discord's, with no brand hue. The frame is charcoal in
+   * Charcoal (the default from 2026-10-23 until the community-first design): neutral greys like Discord's, with no brand hue. The frame is charcoal in
    * both themes; the accent is graphite (light) or near white (dark); unread counts are red so they still stand out.
-   * It also replaces the blue-tinted neutrals. Before a page's preferences apply there's no data-palette: charcoal too.
+   * It also replaces the blue-tinted neutrals.
    */
-  :root:not([data-palette]),
   :root[data-palette="charcoal"] {
     --bg: light-dark(#f2f3f5, #1e1f22);
     --surface: light-dark(#ffffff, #313338);
@@ -331,6 +363,157 @@
     --accent-start: #949ba4;
     --accent-end: #4e5058;
     --theme-color: #1e1f22;
+  }
+
+  /*
+   * Meldiq (the default, floating redesign 2026-10-28): a near-black frame, charcoal panels floating on it with soft
+   * borders, and one restrained lime for selection, focus, primary actions and unread. Mentions of you keep a warm pink so
+   * they read apart from unread. Light mode keeps the shape (white panels on a pale frame) with a deeper lime for text.
+   * Before a page's preferences apply there's no data-palette: Meldiq too.
+   */
+  :root:not([data-palette]),
+  :root[data-palette="meldiq"] {
+    --bg: light-dark(#ececec, #040404);
+    --surface: light-dark(#ffffff, #141414);
+    --surface-raised: light-dark(#ffffff, #1d1d1d);
+    --surface-sunken: light-dark(#f3f3f3, #0c0c0c);
+    --surface-hover: light-dark(#f2f2f0, #222222);
+    --surface-selected: light-dark(#ecece6, #2a2a2a);
+    --border: light-dark(#e4e4e0, #242424);
+    --border-strong: light-dark(#d0d0ca, #333333);
+    --hairline: light-dark(rgba(10, 10, 10, 0.07), rgba(255, 255, 255, 0.06));
+    --text: light-dark(#0b0b0b, #f6f6f3);
+    --text-2: light-dark(#3f403b, #bdbdb7);
+    --text-3: light-dark(#63645d, #8f8f89);
+    --outline: light-dark(#8a8b84, #6b6b66);
+
+    --rail: light-dark(#e6e6e3, #040404);
+    --rail-2: light-dark(#e6e6e3, #040404);
+    --rail-panel: light-dark(#ffffff, #121212);
+    --rail-hover: light-dark(rgba(10, 10, 10, 0.06), rgba(255, 255, 255, 0.07));
+    --rail-active: light-dark(rgba(10, 10, 10, 0.1), rgba(255, 255, 255, 0.12));
+    --rail-text: light-dark(#4b4c46, #a6a6a0);
+    --rail-text-active: light-dark(#0b0b0b, #ffffff);
+    --rail-line: light-dark(rgba(10, 10, 10, 0.1), rgba(255, 255, 255, 0.08));
+    --rail-input: light-dark(#ffffff, #141414);
+    --rail-input-hover: light-dark(#f7f7f5, #1c1c1c);
+    --rail-glow: light-dark(#8fae00, #f4ffac);
+    --rail-round: light-dark(#f1f1ee, #1f1f1f);
+    --rail-round-icon: light-dark(#4d5c00, #f4ffac);
+    --rail-tile: light-dark(#ededea, #262626);
+
+    --sidebar: light-dark(#ffffff, #141414);
+    --sidebar-hover: light-dark(#f3f3f0, #1f1f1f);
+    --sidebar-selected: light-dark(#eef5cf, #262626);
+    --sidebar-text: light-dark(#45463f, #b9b9b3);
+
+    --accent: light-dark(#d4ee4e, #f4ffac);
+    --accent-hover: light-dark(#c4e132, #faffd1);
+    --accent-soft: light-dark(#f2f9d2, #262918);
+    --accent-text: light-dark(#4d5c00, #ecf99c);
+    --on-accent: #0b0b0b;
+    --accent-2: light-dark(#4d7c0f, #c8f069);
+
+    --info: light-dark(#3f403b, #d9d9d3);
+    --info-soft: light-dark(#f1f1ee, #1c1c1c);
+    --mention-bg: light-dark(#fde7ef, #3a1a28);
+    --mention-text: light-dark(#a3134f, #ffc3d9);
+    --bubble-out: light-dark(#f2f6dc, #222419);
+    --badge: light-dark(#0b0b0b, #f4ffac);
+    --on-badge: light-dark(#f4ffac, #0b0b0b);
+    --mention-badge: light-dark(#d61f62, #ff5c93);
+    --on-mention-badge: #ffffff;
+    --unread-mark: light-dark(#0b0b0b, #f4ffac);
+    --rail-badge: #f4ffac;
+    --on-rail-badge: #0b0b0b;
+    --accent-start: #f4ffac;
+    --accent-end: #b8e85a;
+    --on-brand: #0b0b0b;
+    --brand-gradient: linear-gradient(120deg, #f4ffac 0%, #dcfb7c 55%, #b8e85a 100%);
+    /* Calls to action (Join, Invite, Copy, Send, Get Mojo): solid lime with near-black text (16:1 on the lime). */
+    --cta: light-dark(#d4ee4e, #f4ffac);
+    --cta-hover: light-dark(#c4e132, #fbffd6);
+    --on-cta: #0b0b0b;
+    --focus: 0 0 0 2px var(--surface), 0 0 0 4px light-dark(#7a9a00, #f4ffac);
+
+    /* The sign-in hero and other brand moments: the frame's black with a lime glow. */
+    --brand-ground: #050505;
+    --brand-ground-2: #121212;
+    --brand-on-ground: #f6f6f3;
+    --brand-on-ground-2: #b4b4ad;
+    --brand-highlight: #f4ffac;
+    --brand-glow-1: rgba(244, 255, 172, 0.16);
+    --brand-glow-2: rgba(184, 232, 90, 0.1);
+    --call-bg: #050505;
+    --call-tile: #171717;
+    --call-control: #242424;
+    --call-control-hover: #303030;
+    --call-speaking: #f4ffac;
+    --panel-ring: light-dark(rgba(0, 0, 0, 0.05), rgba(255, 255, 255, 0.05));
+    --theme-color: #040404;
+  }
+
+  /*
+   * Midnight (the default from the community-first design 2026-10-26 until the floating redesign 2026-10-28): deep navy
+   * surfaces, the logo's cyan → blue → violet for selection, focus and actions, pink only for mentions of you, and white
+   * marks for unread.
+   */
+  :root[data-palette="midnight"] {
+    --bg: light-dark(#f4f6fb, #0b1020);
+    --surface: light-dark(#ffffff, #10172b);
+    --surface-raised: light-dark(#ffffff, #151d34);
+    --surface-sunken: light-dark(#eef1f8, #0c1326);
+    --surface-hover: light-dark(#f1f4fa, #18213b);
+    --surface-selected: light-dark(#e6eaf6, #1f2a4a);
+    --border: light-dark(#e1e6f0, #1f2944);
+    --border-strong: light-dark(#cdd4e4, #2c3858);
+    --hairline: light-dark(rgba(18, 25, 51, 0.07), rgba(200, 215, 255, 0.07));
+    --text: light-dark(#121933, #eef2ff);
+    --text-2: light-dark(#434c6b, #b4bddb);
+    --text-3: light-dark(#5f6887, #8a94b6);
+    --outline: light-dark(#8890ab, #6b7598);
+
+    --rail: light-dark(#0f1630, #070b18);
+    --rail-2: light-dark(#0b1126, #050812);
+    --rail-hover: rgba(255, 255, 255, 0.08);
+    --rail-active: rgba(255, 255, 255, 0.14);
+    --rail-text: light-dark(#b9c3e6, #9aa6cf);
+    --rail-text-active: #ffffff;
+    --rail-line: rgba(160, 190, 255, 0.14);
+    --rail-input: rgba(255, 255, 255, 0.08);
+    --rail-input-hover: rgba(255, 255, 255, 0.14);
+    --rail-glow: #5ee0f5;
+    --rail-round: rgba(94, 224, 245, 0.08);
+    --rail-round-icon: #5ee0f5;
+
+    --sidebar: light-dark(#f2f5fc, #0e152a);
+    --sidebar-hover: light-dark(#e7ecf8, #162039);
+    --sidebar-selected: light-dark(#dde4f7, #1d2a4d);
+    --sidebar-text: light-dark(#44507a, #aeb8da);
+
+    --accent: light-dark(#3a5bd9, #7aa2ff);
+    --accent-hover: light-dark(#2c48b8, #9ab8ff);
+    --accent-soft: light-dark(#e6ecfd, #1b2850);
+    --accent-text: light-dark(#2c48b8, #a9c2ff);
+    --on-accent: light-dark(#ffffff, #0a1230);
+    --accent-2: light-dark(#0e7fa0, #4fd9f2);
+
+    --mention-bg: light-dark(#fde7f3, #36183a);
+    --mention-text: light-dark(#a3135f, #ffc2e2);
+    --bubble-out: light-dark(#eaf0fe, #172245);
+    --badge: light-dark(#3a5bd9, #7aa2ff);
+    --on-badge: light-dark(#ffffff, #0a1230);
+    --mention-badge: light-dark(#c81e66, #ff5fa8);
+    --on-mention-badge: light-dark(#ffffff, #2a0517);
+    --rail-badge: #5ee0f5;
+    --on-rail-badge: #071a2e;
+    --accent-start: #22d3ee;
+    --accent-end: #8b5cf6;
+    /* Calls to action (Join, Invite, Copy, Send): blue into violet, white text (5:1 or more on both ends). */
+    --cta: linear-gradient(135deg, #2563eb, #7c3aed);
+    --cta-hover: linear-gradient(135deg, #3b6ff0, #8b4cf0);
+    --on-cta: #ffffff;
+    --theme-color: #0b1126;
   }
 
   /* Plum: magenta and plum. */
@@ -385,5 +568,28 @@
     --accent-start: #fbbf24;
     --accent-end: #b45309;
     --theme-color: #3d2610;
+  }
+}
+
+/* Black (2026-10-28): dark with true-black surfaces, for any palette; the palette keeps its accent and badges. */
+@supports (color: light-dark(#000, #fff)) {
+  :root:root[data-theme="black"] {
+    color-scheme: dark;
+    --bg: #000000;
+    --surface: #050506;
+    --surface-raised: #0e0e11;
+    --surface-sunken: #000000;
+    --surface-hover: #121216;
+    --surface-selected: #1a1a20;
+    --border: #1c1c22;
+    --border-strong: #2a2a32;
+    --hairline: rgba(255, 255, 255, 0.07);
+    --rail: #000000;
+    --rail-2: #000000;
+    --sidebar: #08080a;
+    --sidebar-hover: #131317;
+    --sidebar-selected: #1c1c22;
+    --panel-ring: rgba(255, 255, 255, 0.06);
+    --theme-color: #000000;
   }
 }

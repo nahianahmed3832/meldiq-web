@@ -69,6 +69,7 @@ export function fallbackText(r: RichContent): string {
     const spec = findSticker(r.sticker);
     return spec ? stickerFallback(spec) : "Sticker";
   }
+  if (r.gif) return r.gif.url;
   return r.animoji ?? "";
 }
 

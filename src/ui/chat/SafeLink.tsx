@@ -1,6 +1,6 @@
 import { Copy, ExternalLink, TriangleAlert } from "lucide-react";
 import { type ReactNode, useState } from "react";
-import { getPrefs } from "../../application/prefs";
+import { getPrefs, setPrefs } from "../../application/prefs";
 import { linkWarning, readableDomain } from "../../sync/linkRules";
 import { Dialog } from "../components/Overlay";
 import { useEngine } from "../../application/orbit";
@@ -30,7 +30,8 @@ export function SafeLink({ href, className, children }: { href: string; classNam
         onClick={(e) => {
           if (openInApp(engine, href)) return e.preventDefault();
           const warning = linkWarning(href);
-          if (!warning && !getPrefs().askBeforeLinks) return;
+          // A trusted site (Settings › Advanced) opens without asking, unless the link looks misleading.
+          if (!warning && (!getPrefs().askBeforeLinks || getPrefs().trustedSites.includes(hostOf(href)))) return;
           e.preventDefault();
           setAsking(warning ?? "");
         }}
@@ -51,6 +52,18 @@ export function SafeLink({ href, className, children }: { href: string; classNam
               >
                 <Copy size={15} /> {copied ? "Copied" : "Copy link"}
               </button>
+              {!asking && hostOf(href) && (
+                <button
+                  className="btn btn-ghost"
+                  onClick={() => {
+                    setPrefs({ trustedSites: [...getPrefs().trustedSites.filter((h) => h !== hostOf(href)), hostOf(href)] });
+                    window.open(href, "_blank", "noopener,noreferrer");
+                    close();
+                  }}
+                >
+                  Always trust {hostOf(href)}
+                </button>
+              )}
               <button
                 className="btn btn-primary"
                 onClick={() => {
@@ -80,4 +93,13 @@ export function SafeLink({ href, className, children }: { href: string; classNam
       )}
     </>
   );
+}
+
+/** The host a link goes to, in lower case ("" when it isn't a web address). */
+function hostOf(href: string): string {
+  try {
+    return new URL(href).hostname.toLowerCase();
+  } catch {
+    return "";
+  }
 }

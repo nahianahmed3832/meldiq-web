@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { cachedMedia, forgetAllMedia, forgetMediaEntry, keepMedia, toEvict } from "../src/store/mediaCache";
+import { cachedMedia, forgetAllMedia, keepMedia, toEvict } from "../src/store/mediaCache";
 
 /** A Cache Storage in memory, enough for the media cache. */
 function fakeCaches() {
@@ -33,17 +33,14 @@ describe("media cache", () => {
     expect(toEvict(entries, 1000)).toEqual([]);
   });
 
-  it("keeps bytes between visits, forgets one entry, and erases everything", async () => {
+  it("keeps nothing between visits (the server serves files each time), and erases what earlier versions kept", async () => {
     const fake = fakeCaches();
     vi.stubGlobal("caches", fake.api);
     vi.stubGlobal("location", { origin: "https://web.meldiq.app" });
-    expect(await cachedMedia("attachment:a1")).toBeNull();
+    // What an earlier version left behind.
+    await (await fake.api.open("meldiq-media-v1")).put("https://web.meldiq.app/__meldiq-media/old", new Response(new Uint8Array([7])));
     await keepMedia("attachment:a1", new Uint8Array([1, 2, 3]));
-    await keepMedia("photo:user:u1:5", new Uint8Array([9]));
-    expect([...((await cachedMedia("attachment:a1")) ?? [])]).toEqual([1, 2, 3]);
-    await forgetMediaEntry("attachment:a1");
     expect(await cachedMedia("attachment:a1")).toBeNull();
-    expect(await cachedMedia("photo:user:u1:5")).not.toBeNull();
     await forgetAllMedia();
     expect(fake.stores.size).toBe(0);
   });

@@ -1,4 +1,5 @@
-import { MoreHorizontal, Search } from "lucide-react";
+import { MoreHorizontal, Search, UserPlus } from "lucide-react";
+import { AddMembersDialog } from "./AddMembersDialog";
 import { useState } from "react";
 import type { DirectoryMember, OrgAdminDetail, OrgRole } from "../../api/workspaceSchemas";
 import { useEngine, useOrbit } from "../../application/orbit";
@@ -24,14 +25,25 @@ export function PeoplePage({ detail }: { detail: OrgAdminDetail }) {
   const people = useLoad(() => (detail.permissions.canViewDirectory ? directory(engine, orgId, term) : Promise.resolve([])), [engine, orgId, term, version, detail]);
   const myRole = (detail.org.myRole ?? "MEMBER") as OrgRole;
   const owners = (people.data ?? []).filter((m) => m.orgRole === "OWNER").length;
+  const [adding, setAdding] = useState(false);
 
   if (!detail.permissions.canViewDirectory) {
-    return <Card title="People" sub="Guests can't browse the workspace directory. People you share channels with appear in those channels' details." />;
+    return <Card title="People" sub="Guests can't browse the community directory. People you share channels with appear in those channels' details." />;
   }
 
   return (
     <div className="ws-page">
-      <Card title="People" sub={`${detail.stats.members} ${detail.stats.members === 1 ? "member" : "members"}. Owners and admins manage roles; everyone may set their own title.`}>
+      <Card
+        title="People"
+        sub={`${detail.stats.members} ${detail.stats.members === 1 ? "member" : "members"}. Owners and admins manage roles; everyone may set their own title.`}
+        actions={
+          detail.permissions.canInvite && (
+            <button className="btn btn-primary btn-sm" onClick={() => setAdding(true)}>
+              <UserPlus size={16} /> Add members
+            </button>
+          )
+        }
+      >
         <form
           className="row input"
           style={{ padding: "0 12px" }}
@@ -67,6 +79,7 @@ export function PeoplePage({ detail }: { detail: OrgAdminDetail }) {
         ))}
         {people.data?.length === 0 && <p className="faint">No one matches.</p>}
       </Card>
+      {adding && <AddMembersDialog orgId={orgId} orgName={detail.org.name} onClose={() => setAdding(false)} onAdded={() => setVersion((v) => v + 1)} />}
     </div>
   );
 }
@@ -113,7 +126,7 @@ function MemberRow(props: { member: DirectoryMember; detail: OrgAdminDetail; myR
         ]
       : []),
     ...(canRemove
-      ? ["separator" as const, { label: features.includes("community-channels") ? "Remove from community…" : "Remove from workspace…", danger: true, onSelect: () => setEditing("remove") }]
+      ? ["separator" as const, { label: features.includes("community-channels") ? "Remove from community…" : "Remove from community…", danger: true, onSelect: () => setEditing("remove") }]
       : []),
     ...(canBan ? [{ label: "Ban…", danger: true, onSelect: () => setEditing("ban") }] : []),
   ];
@@ -160,7 +173,7 @@ function MemberRow(props: { member: DirectoryMember; detail: OrgAdminDetail; myR
       {editing === "remove" && (
         <Dialog title={`Remove ${m.displayName}?`} onClose={() => setEditing(null)}>
           <div className="dialog-body">
-            <p style={{ margin: 0 }}>They'll lose access to this workspace's channels, branches and teams. Direct messages with them stay.</p>
+            <p style={{ margin: 0 }}>They'll lose access to this community's channels and voice rooms. Direct messages with them stay.</p>
             <ErrorLine text={act.error} />
             <div className="row" style={{ justifyContent: "flex-end", gap: 8 }}>
               <button className="btn btn-secondary" onClick={() => setEditing(null)}>
@@ -234,7 +247,7 @@ function ExpiryDialog({ member, orgId, onClose, onSaved }: { member: DirectoryMe
     <Dialog title={`${member.displayName}'s end date`} onClose={onClose}>
       <div className="dialog-body">
         <p className="faint" style={{ margin: 0 }}>
-          On this day they leave the workspace, exactly as if removed: channels, teams, groups and meeting invitations.
+          On this day they leave the community, exactly as if removed: channels, teams, groups and meeting invitations.
         </p>
         <label className="field">
           <span>Last day</span>

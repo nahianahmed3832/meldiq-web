@@ -3,7 +3,10 @@
  * and encoding each asks for, what the browser actually delivers, and a step-down ladder driven by the sender's WebRTC
  * stats. Pure, so it's unit-tested directly (test/share-quality.test.ts); livekitSession.ts applies it.
  */
-export type ShareQuality = "standard" | "high";
+export type ShareQuality = "standard" | "smooth" | "sharp" | "high" | "max";
+
+/** Lowest to highest (a list of choices shows them in this order). */
+export const SHARE_QUALITY_ORDER: readonly ShareQuality[] = ["standard", "smooth", "sharp", "high", "max"];
 
 export interface ShareQualitySpec {
   width: number;
@@ -27,6 +30,25 @@ export const SHARE_QUALITIES: Record<ShareQuality, ShareQualitySpec> = {
     label: "Standard",
     hint: "1280×720 at 30 frames a second. Works on most connections.",
   },
+  // Meldiq Mojo (server docs/MOJO.md): Mojo Go shares at 720p 60 or 1080p 30; Plus at 1080p 60 or 2K 30.
+  smooth: {
+    width: 1280,
+    height: 720,
+    frameRate: 60,
+    maxBitrate: 3_500_000,
+    contentHint: "motion",
+    label: "Smooth",
+    hint: "1280×720 at 60 frames a second, for motion.",
+  },
+  sharp: {
+    width: 1920,
+    height: 1080,
+    frameRate: 30,
+    maxBitrate: 4_000_000,
+    contentHint: "detail",
+    label: "Sharp",
+    hint: "1920×1080 at 30 frames a second, for text and detail.",
+  },
   high: {
     width: 1920,
     height: 1080,
@@ -36,10 +58,47 @@ export const SHARE_QUALITIES: Record<ShareQuality, ShareQualitySpec> = {
     label: "High",
     hint: "1920×1080 at 60 frames a second, for games and video. Needs a fast connection and computer.",
   },
+  max: {
+    width: 2560,
+    height: 1440,
+    frameRate: 30,
+    maxBitrate: 8_000_000,
+    contentHint: "detail",
+    label: "2K",
+    hint: "2560×1440 at 30 frames a second. Needs a fast connection and computer.",
+  },
 };
 
+/** A screen-share ceiling as the server sends it in a call's media grant (Meldiq Mojo). */
+export interface SharePresetLimit {
+  width: number;
+  height: number;
+  fps: number;
+}
+
+/**
+ * The qualities [limits] allow, lowest first: one is allowed when some ceiling covers its size and frame rate (the
+ * server's rule, docs/MOJO.md). Without limits (a server before Mojo, or limits not enforced) Standard and High, as
+ * before.
+ */
+export function allowedShareQualities(limits: readonly SharePresetLimit[] | null | undefined): ShareQuality[] {
+  if (!limits) return ["standard", "high"];
+  const allowed = SHARE_QUALITY_ORDER.filter((q) => {
+    const spec = SHARE_QUALITIES[q];
+    return limits.some((l) => spec.width <= Math.max(l.width, l.height) && spec.height <= Math.min(l.width, l.height) && spec.frameRate <= l.fps);
+  });
+  return allowed.length ? allowed : ["standard"];
+}
+
+/** [wanted] if allowed, else the best allowed quality below it (Standard at least). */
+export function clampShareQuality(wanted: ShareQuality, allowed: readonly ShareQuality[]): ShareQuality {
+  if (allowed.includes(wanted)) return wanted;
+  const rank = SHARE_QUALITY_ORDER.indexOf(wanted);
+  return [...allowed].reverse().find((q) => SHARE_QUALITY_ORDER.indexOf(q) <= rank) ?? allowed[0] ?? "standard";
+}
+
 /** The saved choice, or Standard for anything else (including the older text/motion modes). */
-export const shareQualityOf = (saved: unknown): ShareQuality => (saved === "high" ? "high" : "standard");
+export const shareQualityOf = (saved: unknown): ShareQuality => ((SHARE_QUALITY_ORDER as readonly unknown[]).includes(saved) ? (saved as ShareQuality) : "standard");
 
 /**
  * getDisplayMedia's video constraints for [quality]. `ideal` asks for the size and rate, `max` keeps a larger screen from
@@ -63,6 +122,22 @@ export interface ShareLevel {
 
 /** Top rung first. Each step down gives up frame rate before resolution, so text stays readable longest. */
 export const SHARE_LADDERS: Record<ShareQuality, readonly ShareLevel[]> = {
+  max: [
+    { height: 1440, frameRate: 30, maxBitrate: 8_000_000 },
+    { height: 1080, frameRate: 30, maxBitrate: 4_000_000 },
+    { height: 720, frameRate: 30, maxBitrate: 2_500_000 },
+    { height: 720, frameRate: 15, maxBitrate: 1_200_000 },
+  ],
+  sharp: [
+    { height: 1080, frameRate: 30, maxBitrate: 4_000_000 },
+    { height: 720, frameRate: 30, maxBitrate: 2_500_000 },
+    { height: 720, frameRate: 15, maxBitrate: 1_200_000 },
+  ],
+  smooth: [
+    { height: 720, frameRate: 60, maxBitrate: 3_500_000 },
+    { height: 720, frameRate: 30, maxBitrate: 2_500_000 },
+    { height: 720, frameRate: 15, maxBitrate: 1_200_000 },
+  ],
   high: [
     { height: 1080, frameRate: 60, maxBitrate: 6_000_000 },
     { height: 1080, frameRate: 30, maxBitrate: 4_000_000 },

@@ -1,6 +1,6 @@
 /* ───────────────────────── app frame ─────────────────────────
- * The frame (rail and top bar) carries the palette's deep colour; the sidebar and the main column sit inside it on a
- * rounded panel, so the brand colour frames the work without covering it. */
+ * The floating frame (2026-10-28): the palette's frame colour (near-black on Meldiq) shows between rounded panels: the
+ * rail, then the top bar above the sidebar, the main column and the side panel, each a panel of its own. */
 .app {
   display: grid;
   grid-template-columns: var(--rail-w) minmax(0, 1fr);
@@ -11,7 +11,8 @@
   inset: var(--app-top, 0px) 0 auto 0;
   height: var(--app-height, 100dvh);
   /* Opened from the Home Screen (standalone), the page runs under the status bar and, in landscape, the notch. */
-  padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) 0 env(safe-area-inset-left, 0px);
+  padding: calc(env(safe-area-inset-top, 0px) + var(--frame-gap)) calc(env(safe-area-inset-right, 0px) + var(--frame-gap)) var(--frame-gap) calc(env(safe-area-inset-left, 0px) + var(--frame-gap));
+  column-gap: var(--frame-gap);
   overflow: hidden;
   background: linear-gradient(180deg, var(--rail) 0%, var(--rail-2) 100%);
 }
@@ -20,113 +21,158 @@
   flex-direction: column;
   align-items: center;
   gap: var(--s-1);
-  padding: 10px 0 12px;
+  padding: 14px 0;
   overflow-y: auto;
   scrollbar-width: none;
+  border-radius: var(--r-panel);
+  background: var(--rail-panel, transparent);
+  box-shadow: 0 0 0 1px var(--panel-ring);
 }
 .rail :focus-visible {
   box-shadow: var(--focus-on-frame);
 }
-.rail-logo {
+/* The mascot: Home and messages (the DM list). Selected like a community, with the same side bar. */
+.rail-home {
+  position: relative;
   display: grid;
   place-items: center;
-  margin-bottom: var(--s-2);
-  border-radius: 10px;
-  transition: transform var(--t-fast) var(--ease);
+  width: 48px;
+  height: 48px;
+  margin-bottom: var(--s-1);
+  border-radius: 16px;
+  transition:
+    transform var(--t-fast) var(--ease),
+    border-radius var(--t-fast) var(--ease);
 }
-.rail-logo:hover {
-  transform: scale(1.04);
+.rail-mascot {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px var(--rail-line);
+  transition: border-radius var(--t-fast) var(--ease);
+}
+.rail-home:hover {
+  transform: translateY(-1px);
+}
+.rail-home:hover .rail-mascot,
+.rail-home[aria-current="page"] .rail-mascot {
+  border-radius: 16px;
+  box-shadow:
+    0 0 0 2px var(--rail-panel, var(--rail)),
+    0 0 0 4px var(--rail-glow);
+}
+.rail-home .count {
+  position: absolute;
+  bottom: -4px;
+  right: -6px;
 }
 .rail-sep {
   width: 28px;
-  height: 1px;
+  height: 2px;
+  border-radius: 2px;
   background: var(--rail-line);
-  margin: var(--s-2) 0;
+  margin: var(--s-1) 0 var(--s-2);
+  flex-shrink: 0;
+}
+.rail-orgs {
+  display: grid;
+  gap: 10px;
+  justify-items: center;
 }
 .rail-org {
   position: relative;
-  width: 44px;
-  height: 44px;
-  border-radius: 14px;
+  width: 48px;
+  height: 48px;
+  border-radius: 16px;
   display: grid;
   place-items: center;
-  transition: transform var(--t-fast) var(--ease);
+}
+.rail-org .avatar {
+  border-radius: 50%;
+  transition:
+    border-radius var(--t-fast) var(--ease),
+    filter var(--t-fast),
+    box-shadow var(--t-fast);
 }
 .rail-org:hover .avatar {
-  filter: brightness(1.08);
+  filter: brightness(1.1);
+  border-radius: 16px;
 }
-.rail-org[aria-current="true"]::before {
+/* The side marker (Discord's pill): a short one for unread, a tall one for the community on screen, a medium one on
+   hover. White on the frame, so it reads on every palette; shape, not only colour, tells the states apart. */
+.rail-home::before,
+.rail-org::before {
   content: "";
   position: absolute;
   left: -12px;
-  top: 10px;
-  bottom: 10px;
+  top: 50%;
   width: 4px;
+  height: 0;
   border-radius: 0 4px 4px 0;
-  background: var(--rail-text-active);
+  background: var(--rail-glow);
+  transform: translateY(-50%);
+  transition: height var(--t-fast) var(--ease);
+}
+.rail-org.unread::before {
+  height: 8px;
+}
+.rail-home:hover::before,
+.rail-org:hover::before {
+  height: 20px;
+}
+.rail-home[aria-current="page"]::before,
+.rail-org[aria-current="true"]::before {
+  height: 36px;
 }
 .rail-org[aria-current="true"] .avatar {
+  border-radius: 16px;
   box-shadow:
-    0 0 0 2px var(--rail),
-    0 0 0 4px var(--rail-text-active);
+    0 0 0 2px var(--rail-panel, var(--rail)),
+    0 0 0 4px var(--rail-glow);
 }
 .rail-org .count {
   position: absolute;
-  top: -5px;
-  right: -7px;
+  bottom: -4px;
+  right: -6px;
+  box-shadow: 0 0 0 3px var(--rail-panel, var(--rail));
 }
-.rail-nav {
-  width: 56px;
-  display: grid;
-  justify-items: center;
-  gap: 3px;
-  padding: 6px 0 5px;
-  border-radius: var(--r-md);
-  color: var(--rail-text);
-  font-size: 10.5px;
-  font-weight: 600;
-  letter-spacing: 0.01em;
-  position: relative;
-}
-.rail-nav svg {
-  width: var(--icon-lg);
-  height: var(--icon-lg);
-}
-.rail-nav .rail-icon {
-  width: 38px;
-  height: 32px;
-  border-radius: var(--r-md);
+/* Create and Discover: round, outlined in the frame, filling with the brand colour on hover. */
+.rail-round {
+  width: 48px;
+  height: 48px;
+  margin-top: 10px;
+  border-radius: 50%;
   display: grid;
   place-items: center;
+  flex-shrink: 0;
+  color: var(--rail-round-icon);
+  background: var(--rail-round);
+  border: 1px solid var(--rail-line);
   transition:
     background var(--t-fast),
-    color var(--t-fast);
+    color var(--t-fast),
+    border-radius var(--t-fast) var(--ease),
+    transform var(--t-fast) var(--ease);
 }
-.rail-nav:hover {
-  color: var(--rail-text-active);
+.rail-round + .rail-round {
+  margin-top: 8px;
 }
-.rail-nav:hover .rail-icon {
-  background: var(--rail-hover);
+/* Discover open: filled and squarer, like a selected community (shape, not only colour). */
+.rail-round[aria-current="page"],
+.rail-round:hover {
+  color: var(--on-brand);
+  background: var(--brand-gradient);
+  border-color: transparent;
+  border-radius: 16px;
 }
-.rail-nav[aria-current="page"] {
-  color: var(--rail-text-active);
-}
-.rail-nav[aria-current="page"] .rail-icon {
-  background: var(--rail-active);
-}
-.rail-nav .count {
-  position: absolute;
-  top: 1px;
-  right: 4px;
-  min-width: 18px;
-  height: 18px;
-  font-size: 10.5px;
+.rail-round:active {
+  transform: scale(0.96);
 }
 /* Counts on the frame: the palette's bright badge, ringed in the frame colour. */
 .rail .count.accent {
   background: var(--rail-badge);
   color: var(--on-rail-badge);
-  box-shadow: 0 0 0 2px var(--rail);
+  box-shadow: 0 0 0 3px var(--rail-panel, var(--rail));
 }
 .rail-spacer {
   flex: 1;
@@ -140,9 +186,18 @@
 .topbar {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 0 var(--s-3) 0 var(--s-1);
+  gap: 12px;
+  padding: 0 2px 10px 10px;
   min-width: 0;
+  color: var(--rail-text-active);
+}
+/* Where you are: the community's name or the section's, large, as the reference's page title. */
+.topbar-title {
+  min-width: 0;
+  max-width: 34vw;
+  font-size: 26px;
+  font-weight: 750;
+  letter-spacing: -0.025em;
   color: var(--rail-text-active);
 }
 .topbar :focus-visible {
@@ -151,8 +206,9 @@
 .topbar-left {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
   min-width: 0;
+  flex: 1 1 auto;
 }
 .topbar .menu-toggle {
   display: none;
@@ -168,24 +224,43 @@
   background: var(--rail-badge);
   box-shadow: 0 0 0 2px var(--rail);
 }
+.topbar .top-count {
+  position: relative;
+}
+.topbar .top-count[aria-current="page"] {
+  background: var(--rail-active);
+  color: var(--rail-text-active);
+}
+.topbar .top-count .count {
+  position: absolute;
+  top: -2px;
+  right: -3px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  font-size: 10.5px;
+  box-shadow: 0 0 0 2px var(--rail);
+}
 .topbar .avatar .presence {
   box-shadow: 0 0 0 2px var(--rail);
 }
 .searchbox {
-  flex: 1;
-  max-width: 600px;
-  margin: 0 auto;
-  height: 34px;
+  flex: 0 1 440px;
+  min-width: 180px;
+  height: 44px;
   display: flex;
   align-items: center;
-  gap: var(--s-2);
-  padding: 0 var(--s-3);
-  border-radius: var(--r-md);
+  gap: 10px;
+  padding: 0 8px 0 16px;
+  border-radius: var(--r-pill);
   background: var(--rail-input);
+  box-shadow: inset 0 0 0 1px var(--rail-line);
   color: var(--rail-text);
   text-align: left;
-  font-size: var(--fs-sm);
-  transition: background var(--t-fast);
+  font-size: var(--fs-md);
+  transition:
+    background var(--t-fast),
+    box-shadow var(--t-fast);
 }
 .searchbox:hover {
   background: var(--rail-input-hover);
@@ -202,37 +277,56 @@
 .topbar-right {
   display: flex;
   align-items: center;
-  gap: 2px;
+  gap: 8px;
 }
-.conn {
-  display: inline-flex;
+/* The reference's round action buttons, each on its own disc. */
+.topbar-right .icon-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--rail-input);
+  box-shadow: inset 0 0 0 1px var(--rail-line);
+}
+/* The connection, only while it's down (shell/ConnectionBanner.tsx): a slim notice floating over the top edge. */
+.workspace {
+  position: relative;
+}
+.conn-banner {
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  z-index: 45;
+  transform: translateX(-50%);
+  display: flex;
   align-items: center;
-  gap: 6px;
-  height: 28px;
-  padding: 0 10px;
+  gap: 8px;
+  max-width: min(520px, calc(100% - 24px));
+  padding: 6px 6px 6px 12px;
   border-radius: var(--r-pill);
   font-size: var(--fs-xs);
   font-weight: 600;
-  color: var(--rail-text);
-  background: var(--rail-input);
-  margin-right: 6px;
+  color: var(--text);
+  background: var(--surface-raised, var(--surface));
+  box-shadow:
+    0 0 0 1px var(--border),
+    var(--shadow-lg);
+  animation: rise var(--t-fast) var(--ease);
 }
-.conn i {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--presence-off);
+.conn-banner svg {
+  flex-shrink: 0;
+  color: var(--warning);
 }
-.conn.online i {
-  background: var(--presence-on);
+.conn-banner.offline svg {
+  color: var(--danger);
 }
-.conn.reconnecting i,
-.conn.connecting i {
-  background: var(--warning);
-  animation: pulse 1.2s ease-in-out infinite;
-}
-.conn.offline i {
-  background: var(--danger);
+.conn-retry {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: var(--r-pill);
+  background: var(--surface-sunken);
+  font-weight: 600;
 }
 @keyframes pulse {
   50% {
@@ -241,35 +335,39 @@
 }
 .me-btn {
   border-radius: 50%;
-  margin-left: 6px;
+  margin-left: 2px;
 }
 
-/* The work panel: sidebar, main column and side panel on one rounded surface inside the frame. */
+/* The work area: the sidebar, the main column and the side panel float side by side, each its own rounded panel, with
+   the frame showing between them. Flex rather than grid, so the gap appears only between the panels that are there. */
 .body {
-  display: grid;
-  grid-template-columns: var(--sidebar-w) minmax(0, 1fr) auto;
+  display: flex;
+  gap: var(--frame-gap);
   min-height: 0;
+  min-width: 0;
   position: relative;
-  margin: 0 var(--frame-gap) var(--frame-gap) 0;
-  border-radius: var(--r-lg);
+  border-radius: var(--r-panel);
   overflow: hidden;
-  background: var(--surface);
-  box-shadow:
-    0 0 0 1px var(--panel-ring),
-    var(--shadow-md);
 }
-.body.settings-mode {
-  grid-template-columns: minmax(0, 1fr);
+.body > .main {
+  flex: 1 1 0;
+  border-radius: var(--r-panel);
+  overflow: hidden;
+  box-shadow: 0 0 0 1px var(--panel-ring);
 }
 
 /* ───────────────────────── sidebar ───────────────────────── */
 .sidebar {
   display: flex;
   flex-direction: column;
+  flex: 0 0 var(--sidebar-w);
+  width: var(--sidebar-w);
   min-height: 0;
-  border-right: 1px solid var(--hairline);
+  border-radius: var(--r-panel);
+  overflow: hidden;
   background: var(--sidebar);
   color: var(--sidebar-text);
+  box-shadow: 0 0 0 1px var(--panel-ring);
 }
 .side-head {
   display: flex;
@@ -378,9 +476,28 @@
   border-radius: 0 3px 3px 0;
   background: var(--accent);
 }
+/* Unread (community-first brief §C): bright text and a short white marker at the edge; selected keeps its tinted
+   row and tall accent bar, so the two read apart, together too. */
 .side-item.unread {
-  color: var(--text);
+  color: var(--unread-text);
   font-weight: 700;
+}
+.side-item.unread:not([aria-current="page"])::before {
+  content: "";
+  position: absolute;
+  left: -8px;
+  top: 50%;
+  width: 4px;
+  height: 8px;
+  border-radius: 0 4px 4px 0;
+  background: var(--unread-mark);
+  transform: translateY(-50%);
+  animation: unread-in var(--t-std) var(--ease-enter);
+}
+@keyframes unread-in {
+  from {
+    height: 0;
+  }
 }
 .side-item .glyph {
   width: 22px;
@@ -390,7 +507,7 @@
   flex-shrink: 0;
 }
 .side-item.unread .glyph {
-  color: var(--text);
+  color: var(--unread-text);
 }
 .side-item .draft {
   color: var(--accent-text);
@@ -513,4 +630,504 @@
 .voice-room-empty {
   font-size: 11.5px;
   color: var(--text-3);
+}
+
+/* The brand strip (desktop, 2026-10-28, after the owner's reference): Meldling and the name, centred, across the top. The
+   panels below carry everything else: search in the conversation header, you, your devices and Settings in the user
+   panel, Activity and Saved in its menu. Tablets and phones keep their own top bar instead. */
+.brandbar {
+  display: none;
+}
+@media (min-width: 961px) {
+  .app {
+    grid-template-rows: var(--brandbar-h) minmax(0, 1fr);
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+  .brandbar {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: var(--rail-text);
+    font-size: var(--fs-sm);
+    font-weight: 650;
+    letter-spacing: 0.01em;
+    user-select: none;
+  }
+  .brandbar img {
+    border-radius: 5px;
+  }
+  .app > .rail,
+  .app > .workspace {
+    grid-row: 2;
+  }
+  .workspace {
+    grid-template-rows: minmax(0, 1fr);
+  }
+  .workspace > .topbar {
+    display: none;
+  }
+}
+
+/* ───────────────────────── the floating layout (desktop) ─────────────────────────
+ * The rail, the top bar (where you are, search and your shortcuts), then the sidebar with the user panel at its foot, the
+ * conversation with its own header, and the member list. Phones keep their own headers (responsive.css). */
+/* Phones and tablets keep the top bar and tab bar instead (this must beat .user-panel's display below). */
+@media (max-width: 960px) {
+  .sidebar .user-panel {
+    display: none;
+  }
+}
+
+/* The user panel (the reference's, 2026-10-28): a raised card at the foot of the sidebar, on your banner when you have
+   one (darkened for the text), with you, then microphone and headphones (each with a device menu) and Settings. */
+.user-panel {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin: 6px 8px 8px;
+  padding: 6px;
+  border-radius: var(--r-lg);
+  background: var(--surface-sunken);
+  box-shadow:
+    0 0 0 1px var(--hairline),
+    0 6px 18px rgba(0, 0, 0, 0.18);
+  overflow: hidden;
+  isolation: isolate;
+}
+.user-panel-banner {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: center / cover no-repeat;
+}
+.user-panel-banner::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(8, 10, 22, 0.78) 0%, rgba(8, 10, 22, 0.52) 55%, rgba(8, 10, 22, 0.38) 100%);
+}
+.user-panel.has-banner,
+.user-panel.has-banner .user-panel-me small,
+.user-panel.has-banner .icon-btn {
+  color: #f4f6ff;
+}
+.user-panel.has-banner .user-panel-me small {
+  opacity: 0.82;
+}
+.user-panel-me {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+  padding: 3px 6px 3px 3px;
+  border-radius: var(--r-md);
+  text-align: start;
+}
+.user-panel-me:hover {
+  background: color-mix(in srgb, var(--sidebar-hover) 80%, transparent);
+}
+.user-panel-me .lines {
+  display: grid;
+  min-width: 0;
+  line-height: 1.25;
+}
+.user-panel-name {
+  display: flex;
+  min-width: 0;
+  font-size: var(--fs-sm);
+  color: var(--text);
+}
+.user-panel.has-banner .user-panel-name {
+  color: #fff;
+}
+.user-panel-me small {
+  font-size: var(--fs-xs);
+  color: var(--text-3);
+}
+.user-panel-me small.conn-warn {
+  color: var(--warning);
+  font-weight: 600;
+}
+.user-panel-btn {
+  position: relative;
+  flex-shrink: 0;
+}
+/* Microphone or headphones with their device caret, one rounded pair; red while off, as in a call. */
+.user-panel-pair {
+  display: flex;
+  align-items: center;
+  border-radius: var(--r-md);
+  flex-shrink: 0;
+}
+.user-panel-pair:hover {
+  background: color-mix(in srgb, var(--sidebar-hover) 85%, transparent);
+}
+.user-panel-pair .user-panel-btn {
+  width: 32px;
+}
+.user-panel-caret {
+  width: 16px;
+  min-width: 16px;
+  padding: 0;
+  opacity: 0.75;
+}
+.user-panel-pair.off {
+  background: color-mix(in srgb, var(--danger) 18%, transparent);
+}
+.user-panel-pair.off .icon-btn {
+  color: var(--danger);
+}
+.user-panel.has-banner .user-panel-pair.off .icon-btn {
+  color: #ff8a8f;
+}
+
+/* The community's header: its name, uppercase, and the menu's chevron, as tall as the conversation header. */
+.side-head {
+  min-height: 58px;
+  border-bottom: 1px solid var(--hairline);
+  padding: 0 8px;
+}
+.community-switch {
+  gap: 8px;
+  padding: 10px 10px;
+}
+.community-switch strong {
+  font-size: var(--fs-md);
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+
+/* The conversation header's search box (the reference's "Search MINECRAFT"). */
+.header-search {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: clamp(150px, 18vw, 240px);
+  height: 34px;
+  margin-left: 6px;
+  padding: 0 10px 0 12px;
+  border-radius: var(--r-md);
+  background: var(--surface-sunken);
+  border: 1px solid var(--border);
+  color: var(--text-3);
+  font-size: var(--fs-sm);
+  flex-shrink: 0;
+}
+.header-search:hover {
+  color: var(--text-2);
+  border-color: var(--border-strong);
+}
+@media (max-width: 960px) {
+  .header-search {
+    width: 36px;
+    padding: 0;
+    justify-content: center;
+  }
+  .header-search span {
+    display: none;
+  }
+}
+
+/* A channel's header: its name, then its topic after a divider, on one line (the reference). */
+.conv-topic {
+  min-width: 0;
+  margin-left: 6px;
+  padding-left: 12px;
+  border-left: 1px solid var(--border);
+  color: var(--text-3);
+  font-size: var(--fs-sm);
+  font-weight: 500;
+}
+
+/* Channel and people rows a little roomier and larger, as in the reference. */
+@media (min-width: 961px) {
+  .sidebar .side-item {
+    min-height: 36px;
+    font-size: var(--fs-md);
+  }
+  .sidebar .side-item .glyph svg {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+/* Home and messages (the reference's DM hub): big nav rows, then "Direct messages" with + for a new one. */
+.dm-hub {
+  display: grid;
+  gap: 2px;
+  padding: 8px 0 6px;
+}
+.dm-hub-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 44px;
+  padding: 0 12px;
+  border-radius: var(--r-md);
+  color: var(--text-2);
+  font-size: var(--fs-lg);
+  font-weight: 600;
+  text-align: start;
+}
+.dm-hub-item:hover {
+  background: var(--surface-hover);
+  color: var(--text);
+}
+.dm-hub-item.unread {
+  color: var(--text);
+}
+.dm-hub-label {
+  display: flex;
+  align-items: center;
+  padding: 10px 4px 4px 12px;
+}
+.dm-hub-label h3 {
+  flex: 1;
+  margin: 0;
+  font-size: var(--fs-xs);
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+/* Invite friends on Home and messages: always there, naming the community it invites to. */
+.invite-card {
+  /* A grid, so the community picker can never run under the Invite button (reported 2026-10-28). */
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  margin: 10px 2px 2px;
+  padding: 10px 12px;
+  border-radius: var(--r-lg);
+  border: 1px solid var(--border);
+  background: linear-gradient(120deg, color-mix(in srgb, var(--accent-start) 12%, transparent), color-mix(in srgb, var(--accent-end) 10%, transparent)), var(--surface-raised);
+}
+.invite-card-icon {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--accent-soft);
+  color: var(--accent-text);
+}
+.invite-card-text {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 4px;
+  min-width: 0;
+}
+.invite-card > .btn {
+  flex-shrink: 0;
+}
+.invite-card-text small {
+  color: var(--text-2);
+}
+.invite-card-select {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  text-overflow: ellipsis;
+  padding: 2px 4px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-size: var(--fs-sm);
+}
+
+/* The rail's edge cues (components/scrollStrip.ts) while there's more to scroll that way: overlays that stick to the
+   rail's top and bottom edges. Never a mask on the scrolling element itself (Safari then loses its fast scrolling). */
+.rail {
+  overscroll-behavior: contain;
+}
+.rail::before,
+.rail::after {
+  content: "";
+  position: sticky;
+  z-index: 2;
+  flex-shrink: 0;
+  align-self: stretch;
+  height: 26px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--t-fast) var(--ease);
+}
+.rail::before {
+  top: -10px;
+  margin: -10px 0 -26px;
+  background: linear-gradient(to bottom, var(--rail), transparent);
+}
+.rail::after {
+  bottom: -12px;
+  margin: -26px 0 -12px;
+  background: linear-gradient(to top, var(--rail-2, var(--rail)), transparent);
+}
+.rail.can-scroll-start::before,
+.rail.can-scroll-end::after {
+  opacity: 1;
+}
+
+/* People who just messaged you, as bubbles under Home (Settings › Appearance, 2026-10-28). */
+.rail-dms {
+  display: grid;
+  gap: 8px;
+  justify-items: center;
+  margin: 4px 0 2px;
+}
+.rail-dm {
+  position: relative;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  transition: transform var(--t-fast) var(--ease);
+  animation: rise var(--t-fast) var(--ease);
+}
+.rail-dm:hover {
+  transform: translateY(-1px);
+}
+.rail-dm .count {
+  position: absolute;
+  bottom: -4px;
+  right: -6px;
+}
+
+/* Rail folders (shell/RailFolder.tsx): closed, a tile of up to four communities; open, a tinted column of them. */
+.rail-folder {
+  --folder: #5865f2;
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  border-radius: 18px;
+}
+.rail-folder.open {
+  padding: 6px 0 8px;
+  background: color-mix(in srgb, var(--folder) 22%, transparent);
+}
+.rail-folder-tile {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 16px;
+  color: color-mix(in srgb, var(--folder) 70%, #fff);
+  background: color-mix(in srgb, var(--folder) 26%, var(--rail-2, var(--rail)));
+  transition: border-radius var(--t-fast) var(--ease);
+}
+.rail-folder.open .rail-folder-tile {
+  background: transparent;
+  height: 32px;
+}
+.rail-folder-tile:hover {
+  border-radius: 13px;
+}
+.rail-folder-tile.holds-selected {
+  box-shadow:
+    0 0 0 2px var(--rail),
+    0 0 0 4px var(--rail-glow);
+}
+.rail-folder-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 18px);
+  gap: 3px;
+}
+.rail-folder-grid .avatar {
+  border-radius: 6px !important;
+}
+.rail-folder-count {
+  position: absolute;
+  right: -6px;
+  bottom: -4px;
+  box-shadow: 0 0 0 3px var(--rail);
+}
+.rail-folder-members {
+  display: grid;
+  gap: 8px;
+  justify-items: center;
+}
+.folder-colors {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.folder-color {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px var(--border);
+}
+.folder-color.none {
+  width: auto;
+  padding: 0 12px;
+  border-radius: var(--r-pill);
+  font-size: 12px;
+}
+.folder-color[aria-checked="true"] {
+  box-shadow:
+    0 0 0 2px var(--surface),
+    0 0 0 4px var(--accent);
+}
+
+/* Dragging to rearrange (components/dragSort.ts): a line where it will land, a ring when dropped onto something. */
+[data-drag] {
+  position: relative;
+}
+.drag-active,
+.drag-active * {
+  cursor: grabbing !important;
+  user-select: none;
+}
+.drag-source {
+  opacity: 0.35;
+}
+.drag-before::before,
+.drag-after::after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  right: 4px;
+  height: 3px;
+  border-radius: 3px;
+  background: var(--accent);
+  box-shadow: 0 0 8px var(--accent);
+  pointer-events: none;
+  z-index: 3;
+}
+.drag-before::before {
+  top: -6px;
+}
+.drag-after::after {
+  bottom: -6px;
+}
+.rail .drag-before::before,
+.rail .drag-after::after {
+  left: -6px;
+  right: -6px;
+}
+.drag-into {
+  box-shadow: 0 0 0 3px var(--accent) !important;
+  border-radius: 16px;
+}
+.drag-ghost {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  pointer-events: none;
+  opacity: 0.9;
+  filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.45));
+  list-style: none;
 }

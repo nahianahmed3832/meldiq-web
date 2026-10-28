@@ -39,7 +39,7 @@ async function signIn(page: Page, email: string): Promise<void> {
   await page.getByRole("button", { name: "Sign in", exact: true }).click();
 }
 
-test("sign up, set up encryption, come back after a reload, and add a second browser with the recovery key", async ({ page, browser }) => {
+test("sign up, set up encryption, come back after a reload, and add a second browser with the recovery key", async ({ page, browser, isMobile }) => {
   const email = `e2e.${crypto.randomBytes(4).toString("hex")}@example.test`;
   await page.goto("/");
   await expectSignedOut(page);
@@ -60,29 +60,34 @@ test("sign up, set up encryption, come back after a reload, and add a second bro
   await expect(page.getByRole("button", { name: "Open Meldiq" })).toBeDisabled();
   await page.getByLabel("I've stored my recovery key somewhere safe.").check();
   await page.getByRole("button", { name: "Open Meldiq" }).click();
-  await expect(page.locator(".conn.online")).toBeVisible({ timeout: 15_000 });
+  await expect(page.locator(":is(.app[data-connection=online])").first()).toBeVisible({ timeout: 15_000 });
 
-  // Settings › Account, grouped as on Android: account information (with the phone from the profile), how you sign
-  // in, account management.
+  // Settings › My Account (2026-10-28, the reference's page): your card with name, username and the email hidden until
+  // Reveal; then password and authentication, and the account itself.
   await page.goto("/settings/account");
-  await expect(page.getByRole("heading", { name: "Account information" })).toBeVisible();
-  const info = page.locator(".account-info");
-  await expect(info).toContainText(email);
+  await expect(page.getByRole("heading", { name: "My Account", level: 1 })).toBeVisible();
+  const info = page.locator(".account-card");
   await expect(info).toContainText("Nadia Rahman");
-  await expect(info).toContainText("PhoneNot added");
-  await expect(page.getByRole("heading", { name: "How you sign in" })).toBeVisible();
-  await expect(page.getByRole("heading", { name: "Account management" })).toBeVisible();
+  await expect(info).not.toContainText(email);
+  await info.getByRole("button", { name: "Reveal" }).click();
+  await expect(info).toContainText(email);
+  await expect(page.getByRole("heading", { name: "Password and authentication" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Account", exact: true })).toBeVisible();
 
   // The session survives a reload (stored sealed); no password asked.
   await page.reload();
-  await expect(page.locator(".conn.online")).toBeVisible({ timeout: 15_000 });
+  await expect(page.locator(":is(.app[data-connection=online])").first()).toBeVisible({ timeout: 15_000 });
+  // Back to the conversations, where a new direct message shows.
+  // Desktop: the settings list's way back; phones: the Messages tab.
+  if (isMobile) await page.getByRole("navigation", { name: "Sections" }).getByRole("button", { name: "Messages" }).click();
+  else await page.getByRole("button", { name: "Back to conversations" }).click();
 
   // Someone writes to the new account from their phone.
   const me = await page.evaluate(() => (window as unknown as { __orbit: { device: { userId: string } } }).__orbit.device.userId);
   const bob = await newPhone("bob", "Bob Chen");
   const dm = (await bob.req("POST", "/v1/conversations/dm", { userId: me })).conversation.id as string;
   await bob.send(dm, { type: "text", text: "Welcome to Meldiq, Nadia" });
-  await expect(page.getByRole("link", { name: /Bob Chen/ })).toBeVisible();
+  await expect(page.getByRole("complementary", { name: "Conversations" }).getByRole("link", { name: /Bob Chen/ })).toBeVisible();
 
   // A second browser: sign in, set it up with the recovery key, and it reads the same conversation.
   const other = await browser.newContext({ extraHTTPHeaders: { "x-orbit-test-ip": testAddress() } });
@@ -108,11 +113,14 @@ test("sign up, set up encryption, come back after a reload, and add a second bro
   await second.getByRole("tab", { name: "Use my recovery key" }).click();
   await second.getByLabel("Recovery key", { exact: true }).fill(recovery.toLowerCase());
   await second.getByRole("button", { name: "Set up this browser" }).click();
-  await expect(second.locator(".conn.online")).toBeVisible({ timeout: 15_000 });
+  await expect(second.locator(":is(.app[data-connection=online])").first()).toBeVisible({ timeout: 15_000 });
   await bob.send(dm, { type: "text", text: "Both of your browsers get this" });
   for (const p of [page, second]) {
-    await p.getByRole("link", { name: /Bob Chen/ }).click();
-    await expect(p.getByText("Both of your browsers get this")).toBeVisible();
+    await p
+      .getByRole("complementary", { name: "Conversations" })
+      .getByRole("link", { name: /Bob Chen/ })
+      .click();
+    await expect(p.getByRole("log", { name: "Messages" }).getByText("Both of your browsers get this")).toBeVisible();
   }
   await other.close();
 
@@ -131,7 +139,7 @@ test("sign up, set up encryption, come back after a reload, and add a second bro
   await expect(t.getByRole("button", { name: "Send a new code" })).toBeVisible();
   await t.getByLabel("Verification code").fill(await emailedCode(email, "verify"));
   await t.getByRole("button", { name: "Unlock" }).click();
-  await expect(t.locator(".conn.online")).toBeVisible({ timeout: 15_000 });
+  await expect(t.locator(":is(.app[data-connection=online])").first()).toBeVisible({ timeout: 15_000 });
   await third.close();
 });
 

@@ -1,3 +1,4 @@
+import { applyVibe, HEX } from "./vibes";
 import { useSyncExternalStore } from "react";
 import { type ShareQuality, shareQualityOf } from "../call/shareQuality";
 import { TRANSLATE_TARGETS, type TranslateTarget } from "../sync/translate";
@@ -7,9 +8,10 @@ import { LANGUAGES, type LanguageChoice, resolveLanguage } from "../i18n/languag
  * Per-browser preferences. They hold no account data, so they live in localStorage, and every read and write tolerates
  * storage being unavailable (private windows, blocked site data): the defaults apply then.
  */
-export const THEMES = ["system", "light", "dark"] as const;
+/** "black": dark with true-black surfaces (2026-10-28). */
+export const THEMES = ["system", "light", "dark", "black"] as const;
 /** The brand colour plates (src/styles/tokens.css › Palettes). */
-export const PALETTES = ["charcoal", "indigo", "plum", "amber"] as const;
+export const PALETTES = ["meldiq", "midnight", "charcoal", "indigo", "plum", "amber"] as const;
 export type Palette = (typeof PALETTES)[number];
 /** Message text size (android Settings › Chats): conversation text only, the rest of the interface stays as it is. */
 export const TEXT_SIZES = ["small", "default", "large"] as const;
@@ -33,6 +35,8 @@ export type MessageLayout = (typeof MESSAGE_LAYOUTS)[number];
 
 export interface Prefs {
   theme: (typeof THEMES)[number];
+  /** Whether the person picked the theme themselves; until then it follows the default (dark since 2026-10-28). */
+  themeChosen: boolean;
   /** The interface language (src/i18n): the browser's, or one picked on the sign-in screens or in Settings › Appearance. */
   language: LanguageChoice;
   palette: Palette;
@@ -58,6 +62,10 @@ export interface Prefs {
   messageSound: boolean;
   /** Incoming calls ring in this tab (off: the call card and notification only). */
   callRingtone: boolean;
+  /** A chime in this tab for new messages that would notify, with or without system notifications (messageChime.ts). */
+  inAppSound: boolean;
+  /** The chime's volume, 0–100. */
+  soundVolume: number;
   /** Show the sender and message text in system notifications (off: "New message"). */
   notificationText: boolean;
   readReceipts: boolean;
@@ -82,7 +90,7 @@ export interface Prefs {
   memberList: boolean;
   /** Direct messages show the other person's profile beside the messages, on screens wide enough for it. */
   dmProfile: boolean;
-  /** The person picked a colour plate themselves; until then the default applies (it moved from indigo to charcoal). */
+  /** The person picked a colour plate themselves; until then the default applies (indigo, then charcoal, now meldiq). */
   paletteChosen: boolean;
   timeFormat: TimeFormat;
   listPreview: ListPreview;
@@ -94,13 +102,42 @@ export interface Prefs {
   quickReaction: string;
   /** YouTube videos play inside Meldiq (privacy-enhanced player) instead of opening YouTube (android, 2026-10-23). */
   youtubeInApp: boolean;
+  /** Builder mode (Settings › Advanced): Copy ID on communities, channels, messages and people, for building bots. */
+  builderMode: boolean;
+  /** Settings › Voice & Audio (2026-10-28): the microphone and speaker (null: the system's default) and call volume. */
+  microphoneId: string | null;
+  speakerId: string | null;
+  outputVolume: number;
+  echoCancellation: boolean;
+  autoGain: boolean;
+  /** The user panel's microphone and headphones outside a call: how the next call starts. */
+  joinMuted: boolean;
+  joinDeafened: boolean;
+  /** Push to talk: the microphone is on only while [pttKey] (a KeyboardEvent.code) is held. */
+  pushToTalk: boolean;
+  pttKey: string | null;
+  /** Settings › Advanced › Trusted sites: hosts whose links open without asking (never ones that look misleading). */
+  trustedSites: string[];
+  /** Settings › Appearance › Colour themes (application/vibes.ts): a preset id, "custom", or null; and how strong. */
+  vibe: string | null;
+  vibeCustom: string[] | null;
+  vibeStrength: number;
+  /** Settings › Appearance: a community's own colours while you're in it (off: always Meldiq's). */
+  communityColors: boolean;
+  /** Settings › Appearance: people who just messaged you show as bubbles under Home on the rail. */
+  railDmBubbles: boolean;
+  /** Rail folders open on this browser (2026-10-28; the folders themselves sync, this is only how they're shown). */
+  railFoldersOpen: string[];
+  /** Settings › Shortcuts (application/shortcuts.ts): changed combinations by action id ("" turns one off). */
+  keybinds: Record<string, string>;
 }
 
 const KEY = "orbit.prefs.v1";
 const defaults: Prefs = {
-  theme: "system",
+  theme: "dark",
+  themeChosen: false,
   language: "system",
-  palette: "charcoal",
+  palette: "meldiq",
   textSize: "default",
   messageLayout: "stream",
   animatedEmoji: true,
@@ -112,6 +149,8 @@ const defaults: Prefs = {
   groupNotifications: true,
   messageSound: true,
   callRingtone: true,
+  inAppSound: true,
+  soundVolume: 60,
   notificationText: true,
   readReceipts: true,
   typing: true,
@@ -134,6 +173,24 @@ const defaults: Prefs = {
   doubleTapReact: true,
   quickReaction: "👍",
   youtubeInApp: true,
+  builderMode: false,
+  microphoneId: null,
+  speakerId: null,
+  outputVolume: 100,
+  echoCancellation: true,
+  autoGain: true,
+  joinMuted: false,
+  joinDeafened: false,
+  pushToTalk: false,
+  pttKey: null,
+  trustedSites: [],
+  vibe: null,
+  vibeCustom: null,
+  vibeStrength: 60,
+  communityColors: true,
+  railDmBubbles: true,
+  railFoldersOpen: [],
+  keybinds: {},
 };
 
 function load(): Prefs {
@@ -144,7 +201,9 @@ function load(): Prefs {
     // Anything unknown (an older or tampered value) falls back to the default rather than reaching the page's attributes.
     return {
       ...stored,
-      theme: THEMES.includes(stored.theme) ? stored.theme : defaults.theme,
+      // Dark is the default since 2026-10-28: "system" stored as the old default (never picked) becomes dark; a theme the
+      // person picked (light, dark, or system chosen on purpose since) stays.
+      theme: !THEMES.includes(stored.theme) || (stored.theme === "system" && !stored.themeChosen) ? defaults.theme : stored.theme,
       language: stored.language === "system" || LANGUAGES.some((l) => l === stored.language) ? stored.language : defaults.language,
       palette: paletteOf(stored),
       textSize: TEXT_SIZES.includes(stored.textSize) ? stored.textSize : defaults.textSize,
@@ -166,6 +225,29 @@ function load(): Prefs {
       doubleTapReact: typeof stored.doubleTapReact === "boolean" ? stored.doubleTapReact : defaults.doubleTapReact,
       quickReaction: QUICK_REACTIONS.some((e) => e === stored.quickReaction) ? stored.quickReaction : defaults.quickReaction,
       youtubeInApp: typeof stored.youtubeInApp === "boolean" ? stored.youtubeInApp : defaults.youtubeInApp,
+      inAppSound: typeof stored.inAppSound === "boolean" ? stored.inAppSound : defaults.inAppSound,
+      builderMode: stored.builderMode === true,
+      microphoneId: typeof stored.microphoneId === "string" ? stored.microphoneId : null,
+      speakerId: typeof stored.speakerId === "string" ? stored.speakerId : null,
+      outputVolume: typeof stored.outputVolume === "number" && stored.outputVolume >= 0 && stored.outputVolume <= 100 ? Math.round(stored.outputVolume) : defaults.outputVolume,
+      echoCancellation: stored.echoCancellation !== false,
+      autoGain: stored.autoGain !== false,
+      joinMuted: stored.joinMuted === true,
+      joinDeafened: stored.joinDeafened === true,
+      pushToTalk: stored.pushToTalk === true,
+      pttKey: typeof stored.pttKey === "string" && /^[A-Za-z0-9]{1,24}$/.test(stored.pttKey) ? stored.pttKey : null,
+      vibe: typeof stored.vibe === "string" && /^[a-z-]{1,24}$/.test(stored.vibe) ? stored.vibe : null,
+      vibeCustom: Array.isArray(stored.vibeCustom) && stored.vibeCustom.every((c) => typeof c === "string" && HEX.test(c)) ? stored.vibeCustom.slice(0, 3) : null,
+      vibeStrength: typeof stored.vibeStrength === "number" && stored.vibeStrength >= 0 && stored.vibeStrength <= 100 ? Math.round(stored.vibeStrength) : defaults.vibeStrength,
+      communityColors: stored.communityColors !== false,
+      railDmBubbles: stored.railDmBubbles !== false,
+      railFoldersOpen: Array.isArray(stored.railFoldersOpen) ? stored.railFoldersOpen.filter((x) => typeof x === "string" && /^f_[A-Za-z0-9_-]{4,40}$/.test(x)).slice(0, 50) : [],
+      keybinds:
+        stored.keybinds && typeof stored.keybinds === "object"
+          ? Object.fromEntries(Object.entries(stored.keybinds).filter(([k, v]) => /^[a-zA-Z]{1,32}$/.test(k) && typeof v === "string" && v.length <= 40))
+          : {},
+      trustedSites: Array.isArray(stored.trustedSites) ? stored.trustedSites.filter((h): h is string => typeof h === "string" && /^[a-z0-9.-]{1,253}$/.test(h)).slice(0, 200) : [],
+      soundVolume: volumeOf(stored.soundVolume),
       ...notificationChoice(stored),
     };
   } catch {
@@ -173,14 +255,22 @@ function load(): Prefs {
   }
 }
 
+/** A stored volume as a whole number from 0 to 100; anything else is the default. */
+export function volumeOf(v: unknown): number {
+  return typeof v === "number" && Number.isFinite(v) ? Math.round(Math.min(100, Math.max(0, v))) : defaults.soundVolume;
+}
+
+/** Earlier defaults (indigo, then charcoal until the community-first design): saved by every browser that saved anything. */
+const FORMER_DEFAULTS: readonly Palette[] = ["indigo", "charcoal"];
+
 /**
- * The stored colour plate. Indigo was the default before charcoal, and every browser that saved any preference saved it
- * too, so a stored indigo counts as a choice only once the person picked a plate themselves (Appearance › Colour).
+ * The stored colour plate. A former default counts as a choice only once the person picked a plate themselves
+ * (Appearance › Colour); otherwise the current default, Meldiq (black, charcoal and lime), applies.
  */
 export function paletteOf(stored: { palette?: unknown; paletteChosen?: unknown }): Palette {
   const palette = PALETTES.find((p) => p === stored.palette);
   if (!palette) return defaults.palette;
-  return palette === "indigo" && stored.paletteChosen !== true ? defaults.palette : palette;
+  return FORMER_DEFAULTS.includes(palette) && stored.paletteChosen !== true ? defaults.palette : palette;
 }
 
 const permitted = (): boolean => typeof Notification !== "undefined" && Notification.permission === "granted";
@@ -229,7 +319,16 @@ export function usePrefs(): Prefs {
 }
 
 /** Light, dark or the system's, and the colour plate; the browser's own chrome takes the frame colour. */
-export function applyTheme({ theme, palette, textSize, messageLayout, language }: Pick<Prefs, "theme" | "palette" | "textSize" | "messageLayout"> & Partial<Pick<Prefs, "language">>): void {
+export function applyTheme({
+  theme,
+  palette,
+  textSize,
+  messageLayout,
+  language,
+  vibe = null,
+  vibeCustom = null,
+  vibeStrength = 60,
+}: Pick<Prefs, "theme" | "palette" | "textSize" | "messageLayout"> & Partial<Pick<Prefs, "language" | "vibe" | "vibeCustom" | "vibeStrength">>): void {
   const root = document.documentElement;
   // The page's language follows the interface's (screen readers, fonts, spelling).
   root.setAttribute("lang", resolveLanguage(language ?? "system"));
@@ -238,6 +337,7 @@ export function applyTheme({ theme, palette, textSize, messageLayout, language }
   if (theme === "system") root.removeAttribute("data-theme");
   else root.setAttribute("data-theme", theme);
   root.setAttribute("data-palette", palette);
+  applyVibe(root, vibe, vibeCustom, vibeStrength);
   const frame = getComputedStyle(root).getPropertyValue("--theme-color").trim();
   if (frame) document.querySelector('meta[name="theme-color"]')?.setAttribute("content", frame);
 }

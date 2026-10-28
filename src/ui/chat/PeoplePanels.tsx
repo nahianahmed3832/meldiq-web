@@ -1,15 +1,18 @@
-import { CircleUserRound, UsersRound, X } from "lucide-react";
+import { CircleUserRound, Copy, IdCard, MessageSquare, UserRound, UsersRound, X } from "lucide-react";
 import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import type { Conversation, Member } from "../../api/schemas";
 import { useEngine, useOrbit } from "../../application/orbit";
 import { setPrefs, usePrefs } from "../../application/prefs";
 import { navigate, type Route } from "../../application/router";
 import type { Engine } from "../../sync/engine";
-import { userProfile } from "../../sync/account";
+import { startDirect, userProfile } from "../../sync/account";
 import { presenceWords } from "../../sync/social";
 import { directory } from "../../sync/workspaces";
-import { toneOf } from "../components/Avatar";
+import { nameTone, toneOf } from "../components/Avatar";
 import { UserAvatar } from "../components/OrgAvatar";
+import { contextMenuProps, Menu, type MenuEntry, useMenu } from "../components/Overlay";
+import { StyledName } from "../people/NameStyle";
+import { StyledAvatar } from "../people/ProfileStyle";
 import { dmPeer, relative } from "../format";
 import { openProfile } from "../people/ProfileDialog";
 import { useMembers } from "./ConversationDetails";
@@ -106,7 +109,7 @@ export function MemberListPanel({ c, onClose }: { c: Conversation; onClose: () =
               {g.key === "online" ? t("people_online") : g.key === "offline" ? t("people_offline") : g.label} — {g.members.length}
             </h3>
             {g.members.map((m) => (
-              <MemberRow key={m.id} m={m} away={!isHere(m)} color={nameColor(roles.get(m.id))} />
+              <MemberRow key={m.id} m={m} away={!isHere(m)} color={nameColor(roles.get(m.id))} orgId={c.type === "CHANNEL" ? c.orgId : null} />
             ))}
           </section>
         ))}
@@ -115,18 +118,80 @@ export function MemberListPanel({ c, onClose }: { c: Conversation; onClose: () =
   );
 }
 
-function MemberRow({ m, away, color }: { m: Member; away: boolean; color: string | null }) {
+/** One person in the member list: their profile on click; a right-click (or the Menu key) opens their menu. */
+function MemberRow({ m, away, color, orgId }: { m: Member; away: boolean; color: string | null; orgId: string | null }) {
+  const engine = useEngine();
+  const me = useOrbit((s) => s.me?.userId);
+  const builder = usePrefs().builderMode;
+  const menu = useMenu();
   const status = [m.statusEmoji, m.statusText].filter(Boolean).join(" ");
+  const entries: MenuEntry[] = [
+    { label: "View profile", icon: <UserRound size={16} />, onSelect: () => openProfile(m.id, m.displayName, { orgId, anchor: menu.anchor }) },
+    ...(m.id !== me
+      ? [
+          {
+            label: `Message ${m.displayName}`,
+            icon: <MessageSquare size={16} />,
+            onSelect: () =>
+              void startDirect(engine, m.id)
+                .then((id) => navigate({ section: "dms", conversationId: id }))
+                .catch(() => engine.notice("error", "Couldn't open the conversation.")),
+          },
+        ]
+      : []),
+    {
+      label: "Copy username",
+      icon: <Copy size={16} />,
+      onSelect: () => {
+        void navigator.clipboard?.writeText(`@${m.username}`).catch(() => undefined);
+        engine.notice("info", "Username copied.");
+      },
+    },
+    ...(builder
+      ? [
+          {
+            label: "Copy user ID",
+            icon: <IdCard size={16} />,
+            onSelect: () => {
+              void navigator.clipboard?.writeText(m.id).catch(() => undefined);
+              engine.notice("info", "User ID copied.");
+            },
+          },
+        ]
+      : []),
+  ];
+  // A nameplate (2026-10-28, the reference's lively member list): the person's own name colours, faint, behind the row.
+  const plate = m.profileStyle?.nameColors?.length ? m.profileStyle.nameColors : m.profileStyle?.accent ? [m.profileStyle.accent] : null;
   return (
-    <button className={`member-row${away ? " away" : ""}`} onClick={() => openProfile(m.id, m.displayName)} aria-label={`${m.displayName}${away ? ", offline" : ""}: profile`}>
-      <UserAvatar userId={m.id} name={m.displayName} colorIndex={m.avatarColor} photoRev={m.photoRev} size={34} online={away ? null : true} presence={away ? null : m.presence} decorative />
-      <span className="lines">
-        <span className="member-name ellipsis" style={color ? { color } : undefined}>
-          {m.displayName}
+    <>
+      <button
+        className={`member-row${away ? " away" : ""}${plate ? " has-plate" : ""}`}
+        style={plate ? ({ "--plate-a": plate[0], "--plate-b": plate[plate.length - 1] } as React.CSSProperties) : undefined}
+        onClick={(e) => openProfile(m.id, m.displayName, { orgId, anchor: e.currentTarget })}
+        aria-label={`${m.displayName}${away ? ", offline" : ""}: profile`}
+        aria-haspopup="menu"
+        {...contextMenuProps(menu.openAt)}
+      >
+        <StyledAvatar
+          userId={m.id}
+          name={m.displayName}
+          colorIndex={m.avatarColor}
+          photoRev={m.photoRev}
+          media={m.avatarMedia}
+          decoration={m.profileStyle?.decoration ?? null}
+          size={40}
+          online={away ? null : true}
+          presence={away ? null : m.presence}
+        />
+        <span className="lines">
+          <span className="member-name">
+            <StyledName name={m.displayName} style={m.profileStyle} tag={m.tag} mojo={m.mojo} roleColor={color} toneClass={nameTone(m.avatarColor)} className="ellipsis" />
+          </span>
+          {status && <small className="ellipsis">{status}</small>}
         </span>
-        {status && <small className="ellipsis">{status}</small>}
-      </span>
-    </button>
+      </button>
+      {menu.anchor && <Menu anchor={menu.anchor} point={menu.point} label={m.displayName} onClose={menu.close} entries={entries} />}
+    </>
   );
 }
 
@@ -240,7 +305,7 @@ export function PeopleToggle({ c, route }: { c: Conversation; route: Route }) {
     } else navigate({ ...at, panel: shown ? null : "members" });
   };
   return (
-    <button className="icon-btn" aria-pressed={shown} onClick={toggle} aria-label={label} title={label}>
+    <button className="icon-btn hide-sm" aria-pressed={shown} onClick={toggle} aria-label={label} title={label}>
       {dm ? <CircleUserRound size={19} /> : <UsersRound size={19} />}
     </button>
   );

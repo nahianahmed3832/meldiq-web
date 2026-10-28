@@ -1,9 +1,11 @@
-import { Archive, AtSign, Bookmark, ChevronDown, Compass, Contact, MailQuestion, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
+import { InviteToMeldiqCard, MojoPromoCard } from "./DmPromos";
+import { navigate, useRoute } from "../../application/router";
+import { Archive, ChevronDown, Compass, Contact, MailQuestion, MoreHorizontal, Pencil, Plus, Search, Trash2, UserRoundPlus } from "lucide-react";
 import { type ReactNode, useState } from "react";
 import { shallowEqual, useEngine, useOrbit } from "../../application/orbit";
 import { setPrefs, usePrefs } from "../../application/prefs";
 import { Menu, useMenu } from "../components/Overlay";
-import { archivedPeople, channelGroups, homeLayout, type HomeSection, laterDue, mentionConversations, messageRequests, people } from "../selectors";
+import { archivedPeople, channelGroups, homeLayout, type HomeSection, messageRequests, people } from "../selectors";
 import { ConversationRow, SectionNameDialog } from "./ConversationRow";
 import { useIncomingRequestCount } from "../people/connectionRequests";
 import { useT } from "../../i18n";
@@ -133,7 +135,7 @@ export function ChannelSections({ orgId, unreadOnly, onBrowse }: { orgId: string
   if (groups.length === 0)
     return (
       <Collapsible id="channels" title="Channels">
-        <div className="side-quiet">You haven't joined any channels in this workspace.</div>
+        <div className="side-quiet">You haven't joined any channels in this community.</div>
         {onBrowse && <BrowseRow onBrowse={onBrowse} />}
       </Collapsible>
     );
@@ -214,39 +216,6 @@ export function ArchivedList() {
   );
 }
 
-export function MentionsLink({ orgId, active }: { orgId: string | null; active: boolean }) {
-  const n = useOrbit((s) => mentionConversations(s, orgId).reduce((a, c) => a + (s.local[c.id]?.mentions ?? 0), 0));
-  const t = useT();
-  return (
-    <a className="side-item" href="/activity" aria-current={active ? "page" : undefined}>
-      <span className="glyph">
-        <AtSign size={16} />
-      </span>
-      <span className="grow">{t("side_mentions")}</span>
-      {n > 0 && <span className="count accent">{n}</span>}
-    </a>
-  );
-}
-
-/** Later: saved messages and reminders (android Home › Later); the count is what's due. */
-export function LaterLink({ active }: { active: boolean }) {
-  const due = useOrbit(laterDue);
-  const t = useT();
-  return (
-    <a className="side-item" href="/later" aria-current={active ? "page" : undefined}>
-      <span className="glyph">
-        <Bookmark size={16} />
-      </span>
-      <span className="grow">{t("nav_later")}</span>
-      {due > 0 && (
-        <span className="count accent" aria-label={`${due} due`}>
-          {due}
-        </span>
-      )}
-    </a>
-  );
-}
-
 export function SkeletonRows() {
   return (
     <div aria-busy="true" aria-label="Loading conversations" style={{ display: "grid", gap: 10, padding: "14px 8px" }}>
@@ -291,6 +260,58 @@ export function PeopleExtras({ onRequests, onConnections, onlyWhenAsked }: { onR
           {asked > 0 && <span className="count accent">{asked}</span>}
         </button>
       )}
+    </>
+  );
+}
+
+/**
+ * The top of Home and messages (the reference's DM hub): Friends (your connections, with requests waiting), message
+ * requests, Find people and Create group; then the "Direct messages" heading with + for a new message.
+ */
+export function DmHub({ onDialog }: { onDialog: (kind: "requests" | "connections" | "new" | "newGroup") => void }) {
+  const hasConnections = useOrbit((s) => s.server?.features.includes("connections") ?? false);
+  const waiting = useOrbit((s) => messageRequests(s).length);
+  const asked = useIncomingRequestCount();
+  const t = useT();
+  const section = useRoute().section;
+  return (
+    <>
+      <InviteToMeldiqCard />
+      <MojoPromoCard />
+      <nav className="dm-hub" aria-label="People">
+        {hasConnections && (
+          <button
+            className={`dm-hub-item${asked > 0 ? " unread" : ""}`}
+            aria-current={section === "friends" ? "page" : undefined}
+            onClick={() => navigate({ section: "friends" })}
+            aria-label={asked > 0 ? `Connection requests, ${asked} waiting` : "Friends"}
+          >
+            <Contact size={20} aria-hidden="true" />
+            <span className="grow">Friends</span>
+            {asked > 0 && <span className="count accent">{asked}</span>}
+          </button>
+        )}
+        {waiting > 0 && (
+          <button className="dm-hub-item unread" onClick={() => onDialog("requests")}>
+            <MailQuestion size={20} aria-hidden="true" />
+            <span className="grow">{t("side_message_requests", { n: waiting })}</span>
+          </button>
+        )}
+        <button className="dm-hub-item" onClick={() => onDialog("new")}>
+          <Search size={20} aria-hidden="true" />
+          <span className="grow">Find people</span>
+        </button>
+        <button className="dm-hub-item" onClick={() => onDialog("newGroup")}>
+          <UserRoundPlus size={20} aria-hidden="true" />
+          <span className="grow">Create group</span>
+        </button>
+      </nav>
+      <div className="dm-hub-label">
+        <h3>{t("side_direct_messages")}</h3>
+        <button className="icon-btn" onClick={() => onDialog("new")} aria-label={t("side_new_message")} title={t("side_new_message")}>
+          <Plus size={16} />
+        </button>
+      </div>
     </>
   );
 }

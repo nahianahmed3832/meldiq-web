@@ -1,12 +1,13 @@
-import { Bell, Compass, Headphones, MessagesSquare, ShieldCheck } from "lucide-react";
-import { type ReactNode, useState } from "react";
+import { useState } from "react";
 import { createPortal } from "react-dom";
 import { BrandMark } from "../components/BrandMark";
+import { MeldlingArt, type MeldlingPose } from "../components/MeldlingArt";
 import { type StringKey, useT } from "../../i18n";
 import { LanguagePicker } from "../components/LanguagePicker";
 
 interface Page {
-  icon: ReactNode;
+  /** Meldling's picture for the page (the owner's mascot set, 2026-10-29). */
+  pose: MeldlingPose;
   title: StringKey;
   body: StringKey;
   /** Planned, not in the app yet: the page says so. */
@@ -15,19 +16,11 @@ interface Page {
 
 /** The phone's introduction pages (android IntroScreen), in the browser's words. Communities replaced the connector and HR pages on Android (2026-10-21). */
 const PAGES: Page[] = [
-  {
-    icon: <MessagesSquare size={52} />,
-    title: "intro_1_title",
-    body: "intro_1_body",
-  },
-  { icon: <Bell size={52} />, title: "intro_2_title", body: "intro_2_body" },
-  { icon: <Headphones size={52} />, title: "intro_3_title", body: "intro_3_body" },
-  {
-    icon: <Compass size={52} />,
-    title: "intro_4_title",
-    body: "intro_4_body",
-  },
-  { icon: <ShieldCheck size={52} />, title: "intro_5_title", body: "intro_5_body" },
+  { pose: "waving", title: "intro_1_title", body: "intro_1_body" },
+  { pose: "love", title: "intro_2_title", body: "intro_2_body" },
+  { pose: "gaming", title: "intro_3_title", body: "intro_3_body" },
+  { pose: "hello", title: "intro_4_title", body: "intro_4_body" },
+  { pose: "all-set", title: "intro_5_title", body: "intro_5_body" },
 ];
 
 const SEEN_KEY = "meldiq.introSeen";
@@ -64,38 +57,44 @@ export function IntroPages({ onDone }: { onDone: () => void }) {
   };
   return createPortal(
     <div className="intro" role="dialog" aria-modal="true" aria-label={t("intro_label")}>
-      <header className="intro-head">
-        <BrandMark size={32} />
-        <span className="grow" />
-        {/* The language can be chosen before anything else (2026-10-23). */}
-        <LanguagePicker />
-        <button className="btn btn-ghost btn-sm" onClick={done}>
-          {t("intro_skip")}
-        </button>
-      </header>
-      <section className="intro-page" aria-live="polite" aria-label={t("intro_page", { n: at + 1, total: PAGES.length })}>
-        <span className="intro-art" aria-hidden="true">
-          {page.icon}
-        </span>
-        {page.soon && <span className="tag">Coming soon</span>}
-        <h1>{t(page.title)}</h1>
-        <p>{t(page.body)}</p>
-      </section>
-      <div className="intro-dots" aria-hidden="true">
-        {PAGES.map((p, i) => (
-          <span key={p.title} className={i === at ? "on" : ""} />
-        ))}
-      </div>
-      <footer className="intro-foot">
-        {at > 0 && (
-          <button className="btn btn-secondary btn-lg" onClick={() => setAt(at - 1)}>
-            {t("common_back")}
+      {/* Wide screens: Meldling and this page's picture on the brand's ground, the words and buttons beside it. */}
+      <aside className="intro-visual" aria-hidden="true">
+        <MeldlingArt pose={page.pose} size={360} />
+      </aside>
+      <div className="intro-main">
+        <header className="intro-head">
+          <BrandMark size={32} />
+          <span className="grow" />
+          {/* The language can be chosen before anything else (2026-10-23). */}
+          <LanguagePicker />
+          <button className="btn btn-ghost btn-sm" onClick={done}>
+            {t("intro_skip")}
           </button>
-        )}
-        <button className="btn btn-primary btn-lg grow" onClick={() => (last ? done() : setAt(at + 1))} autoFocus>
-          {last ? t("intro_start") : t("intro_next")}
-        </button>
-      </footer>
+        </header>
+        <section className="intro-page" aria-live="polite" aria-label={t("intro_page", { n: at + 1, total: PAGES.length })}>
+          <span className="intro-art" aria-hidden="true">
+            <MeldlingArt pose={page.pose} size={200} />
+          </span>
+          {page.soon && <span className="tag">Coming soon</span>}
+          <h1>{t(page.title)}</h1>
+          <p>{t(page.body)}</p>
+        </section>
+        <div className="intro-dots" aria-hidden="true">
+          {PAGES.map((p, i) => (
+            <span key={p.title} className={i === at ? "on" : ""} />
+          ))}
+        </div>
+        <footer className="intro-foot">
+          {at > 0 && (
+            <button className="btn btn-secondary btn-lg" onClick={() => setAt(at - 1)}>
+              {t("common_back")}
+            </button>
+          )}
+          <button className="btn btn-primary btn-lg grow" onClick={() => (last ? done() : setAt(at + 1))} autoFocus>
+            {last ? t("intro_start") : t("intro_next")}
+          </button>
+        </footer>
+      </div>
     </div>,
     document.body,
   );

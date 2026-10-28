@@ -8,7 +8,7 @@ import { SecuritySheet } from "./SecuritySheet";
 
 /**
  * B14 (android's minimal DM header): what used to crowd a DM's or group's header lives here: pinned messages with their
- * count, encryption and safety numbers, and the conversation's details. A changed security key marks the button, and
+ * count, encryption, and the conversation's details. A changed security key marks the button, and
  * the banner under the header still says so.
  */
 export function ConversationMenu({ conversationId, route }: { conversationId: string; route: Route }) {
@@ -22,7 +22,7 @@ export function ConversationMenu({ conversationId, route }: { conversationId: st
   const panel = (p: Route["panel"]) => navigate({ section: route.section, conversationId, panel: route.panel === p ? null : p });
   const entries: MenuEntry[] = [
     { label: pinned ? `Pinned messages (${pinned})` : "Pinned messages", icon: <Pin size={16} />, onSelect: () => panel("pinned") },
-    { label: attention ? "Encryption: a security key changed" : "Encryption and safety numbers", icon: attention ? <ShieldAlert size={16} /> : <Lock size={16} />, onSelect: () => setSecurity(true) },
+    { label: attention ? "Encryption: a security key changed" : "Encryption", icon: attention ? <ShieldAlert size={16} /> : <Lock size={16} />, onSelect: () => setSecurity(true) },
     { label: "Details, media and files", icon: <Info size={16} />, onSelect: () => panel("details") },
   ];
   return (

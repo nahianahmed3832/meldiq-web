@@ -55,8 +55,8 @@ export async function openSealedSeed(transfer: CryptoKeyPair, sealedEnc: string,
 }
 
 /**
- * "12345 67890 …": SHA-256 of a public key in six 5-byte groups, each mod 100000 (docs/SECURITY.md §5). The phone shows this
- * for an identity key (safety numbers) and for a new device's signing key when approving a link.
+ * "12345 67890 …": SHA-256 of a public key in six 5-byte groups, each mod 100000 (docs/SECURITY.md §5): a new device's
+ * signing key, shown when another device approves it. (Safety numbers, built from these, were retired in brief v4 §13.)
  */
 export async function fingerprint(publicKeyB64: string): Promise<string> {
   const h = await sha256(fromB64(publicKeyB64));
@@ -67,10 +67,4 @@ export async function fingerprint(publicKeyB64: string): Promise<string> {
     groups.push(String(n % 100000).padStart(5, "0"));
   }
   return groups.join(" ");
-}
-
-/** The safety number two people compare: both fingerprints, sorted, one per line. */
-export async function safetyNumber(identityKeyA: string, identityKeyB: string): Promise<string> {
-  const pair = [await fingerprint(identityKeyA), await fingerprint(identityKeyB)].sort();
-  return pair.join("\n");
 }

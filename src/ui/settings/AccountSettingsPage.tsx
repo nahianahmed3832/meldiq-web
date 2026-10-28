@@ -1,8 +1,6 @@
 import { KeyRound, Laptop, LogOut, Trash2 } from "lucide-react";
 import { type FormEvent, useState } from "react";
 import { useEngine, useOrbit } from "../../application/orbit";
-import { navigate } from "../../application/router";
-import { myProfile } from "../../sync/profile";
 import { AccountApi } from "../../auth/accountApi";
 import { canDeleteAccount, type DeletionProblem, deletionProblem, deletionProblemText } from "../../auth/deleteAccount";
 import { PASSWORD_MIN_LENGTH, passwordProblem } from "../../auth/rules";
@@ -12,6 +10,9 @@ import { useAction, useLoad } from "../workspace/useLoad";
 import { KeyBackupCard } from "./KeyBackupCard";
 import { PasskeysCard } from "./PasskeysCard";
 import { RecoveryCodesCard } from "./RecoveryCodesCard";
+import { AccountOverview } from "./AccountOverview";
+import { StandingCard, TwoStepCard } from "./AccountSafetyCards";
+import { BugReportsCard, DataExportCard, LogOutEverywhereCard } from "./AccountExtrasCards";
 
 /**
  * The Orbit 2.0 account (docs/ORBIT_2_ARCHITECTURE §2): its email, the password, and where it's signed in. A browser
@@ -33,54 +34,43 @@ export function AccountSettingsPage({ onSignedOut }: { onSignedOut: () => void }
       </>
     );
   }
-  // Grouped as on Android (2026-10-23): account information, how you sign in, account management.
+  return <MyAccount email={account.email} onSignedOut={onSignedOut} />;
+}
+
+/**
+ * Settings › My Account (the reference's page, 2026-10-28): your card with name, username and email; password, two-step
+ * sign-in, passkeys and keys; account standing; bug hunting; your data; then signing out everywhere and deleting the
+ * account.
+ */
+function MyAccount({ email: initialEmail, onSignedOut }: { email: string; onSignedOut: () => void }) {
+  const engine = useEngine();
+  const [email, setEmail] = useState(initialEmail);
+  const twoStep = useOrbit((s) => s.server?.features.includes("two-step") ?? false);
   return (
     <>
-      <h1>Account</h1>
-      <h2 className="settings-group">Account information</h2>
-      <AccountInformation email={account.email} />
-      <h2 className="settings-group">How you sign in</h2>
-      <ChangePassword email={account.email} />
+      <h1>My Account</h1>
+      <AccountOverview
+        email={email}
+        onEmailChanged={(next) => {
+          setEmail(next);
+          void engine.accountEmailChanged(next);
+        }}
+      />
+      <h2 className="settings-group">Password and authentication</h2>
+      <ChangePassword email={email} />
+      {twoStep && <TwoStepCard />}
       <PasskeysCard />
       <KeyBackupCard />
       <RecoveryCodesCard />
+      <StandingCard />
+      <BugReportsCard />
+      <h2 className="settings-group">Your data</h2>
+      <DataExportCard />
+      <h2 className="settings-group">Account</h2>
       <Sessions accounts={new AccountApi(engine.api)} />
-      <h2 className="settings-group">Account management</h2>
-      <DeleteAccount email={account.email} onDeleted={onSignedOut} />
+      <LogOutEverywhereCard onSignedOut={onSignedOut} />
+      <DeleteAccount email={email} onDeleted={onSignedOut} />
     </>
-  );
-}
-
-/** Who the account is (android Account information): username, display name, email and the phone from the profile. */
-function AccountInformation({ email }: { email: string }) {
-  const engine = useEngine();
-  const me = useOrbit((s) => s.me);
-  const profilesRev = useOrbit((s) => s.profilesRev);
-  const profile = useLoad(() => myProfile(engine), [engine, profilesRev]);
-  const rows: [string, string | null][] = [
-    ["Username", me ? `@${me.username}` : null],
-    ["Display name", me?.displayName ?? null],
-    ["Email", email],
-    ["Phone", profile.data ? (profile.data.phone ?? "Not added") : null],
-  ];
-  return (
-    <div className="card account-info">
-      <dl>
-        {rows.map(([label, value]) => (
-          <div key={label}>
-            <dt>{label}</dt>
-            <dd>{value ?? <span className="skeleton" style={{ width: 120, height: 14, display: "inline-block" }} />}</dd>
-          </div>
-        ))}
-      </dl>
-      <p className="faint" style={{ margin: 0, fontSize: 12.5 }}>
-        Change your name, username and phone in{" "}
-        <button className="text-link" onClick={() => navigate({ section: "settings", settingsPage: "profile" })}>
-          Profile
-        </button>
-        .
-      </p>
-    </div>
   );
 }
 
@@ -109,7 +99,7 @@ function DeleteAccount({ email, onDeleted }: { email: string; onDeleted: () => v
         <Trash2 size={16} style={{ verticalAlign: "-3px" }} /> Delete account
       </h3>
       <p className="muted" style={{ margin: 0, fontSize: 13 }}>
-        Deletes the Meldiq account {email} for good. You leave every workspace, group and channel, every device is signed out and your profile is erased. It can't be undone.
+        Deletes the Meldiq account {email} for good. You leave every community, group and channel, every device is signed out and your profile is erased. It can't be undone.
       </p>
       <p className="faint" style={{ margin: 0, fontSize: 12.5 }}>
         People you messaged keep the conversation, shown as "Deleted account". Messages already delivered stay on their devices. Once the server confirms, this browser erases its copy too.

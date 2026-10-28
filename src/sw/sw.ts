@@ -40,8 +40,8 @@ interface ServiceWorkerScopeLike {
 }
 const sw = self as unknown as ServiceWorkerScopeLike;
 
-const ICON = "/meldiq-192.png";
-const BADGE = "/meldiq-mark-128.png";
+const ICON = "/meldling-192.png";
+const BADGE = "/meldling-badge-96.png";
 /** Shown when the server can't be asked (offline, signed out elsewhere): something is waiting, open the app. */
 const GENERIC: WakeNotice = { tag: "meldiq-wake", title: "Meldiq", body: "Something new is waiting for you.", url: "/", call: false };
 

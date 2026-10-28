@@ -1,5 +1,8 @@
 import { z } from "zod";
 import { openEnum } from "./enums";
+import { zAboutMe, zAccent, zAvatarMedia, zBadges, zMojoMark, zProfileBanner, zProfileLinks, zProfileStyle, zWornTag } from "./profileSchemas";
+
+export * from "./profileSchemas";
 
 /**
  * The parts of the server's responses this client uses (server/src/routes). Validated at the boundary; unknown fields are
@@ -42,6 +45,12 @@ export const zMember = z.object({
     .transform((v) => v ?? null),
   /** Batch B12: pronouns, under the same privacy setting as the bio. */
   pronouns: nullableString,
+  /** API 0.46.0: lists carry the animated avatar, the profile and name style, and the worn community tag. */
+  avatarMedia: zAvatarMedia,
+  profileStyle: zProfileStyle,
+  tag: zWornTag,
+  /** API 0.54.0: the Mojo badge they show (server docs/MOJO.md). */
+  mojo: zMojoMark.optional(),
 });
 export type Member = z.infer<typeof zMember>;
 
@@ -87,6 +96,12 @@ export const zConversation = z.object({
   /** The channel's category (null: none) and its place in it. */
   categoryId: nullableString,
   categoryName: nullableString,
+  /** The category's place among the community's categories (API 0.48.0): the order before the category list loads. */
+  categoryPosition: z
+    .number()
+    .int()
+    .nullish()
+    .transform((v) => v ?? null),
   position: z.number().int().default(0),
   /** "text", or "forum": posts with a title, each with its replies in a thread. */
   format: openEnum(["text", "forum"]).default("text"),
@@ -138,6 +153,19 @@ export const zOrg = z.object({
   photoRev: z
     .number()
     .nullish()
+    .transform((v) => v ?? null),
+  /** API 0.44.0: the community's accent ("#rrggbb") and banner revision; anything else (or older servers) means Meldiq's theme. */
+  accent: zAccent,
+  bannerRev: z
+    .number()
+    .nullish()
+    .transform((v) => v ?? null),
+  /** API 0.46.0: the tag members may wear by their names (2–4 capitals or digits); null without one or on older servers. */
+  tag: z
+    .string()
+    .regex(/^[A-Z0-9]{2,4}$/)
+    .nullish()
+    .catch(null)
     .transform((v) => v ?? null),
   /** Round 7 guest policy (docs/WORKSPACE_C5.md); older servers allow guests without a limit. */
   guestsAllowed: z.boolean().default(true),
@@ -210,6 +238,16 @@ export const zActivity = z.object({
 export type Activity = z.infer<typeof zActivity>;
 
 export const zProfile = z.object({
+  /** API 0.45.0: an animated avatar, a banner and a style (absent on older servers or when not shown to you). */
+  avatarMedia: zAvatarMedia,
+  profileBanner: zProfileBanner,
+  profileStyle: zProfileStyle,
+  /** API 0.46.0: the community tag they wear by their name, About me, links and badges. */
+  tag: zWornTag,
+  mojo: zMojoMark.optional(),
+  aboutMe: zAboutMe,
+  links: zProfileLinks,
+  badges: zBadges,
   id: z.string(),
   username: z.string(),
   displayName: z.string(),
@@ -255,6 +293,14 @@ export const zProfile = z.object({
     .number()
     .nullish()
     .transform((v) => v ?? null),
+  /** API 0.57.0: when they joined Meldiq (the profile's "Member since"). */
+  memberSince: z.number().nullish(),
+  /** API 0.57.0: communities you're both in, with when they joined each. */
+  mutualCommunities: z
+    .array(z.object({ id: z.string(), name: z.string(), photoRev: z.number().nullable(), joinedAt: z.number() }))
+    .max(200)
+    .nullish()
+    .transform((v) => v ?? []),
 });
 export type Profile = z.infer<typeof zProfile>;
 
@@ -297,10 +343,31 @@ export const zPairingPoll = z.discriminatedUnion("status", [
   z.object({ status: z.literal("approved"), username: z.string(), identityKey: z.string(), certificate: z.string(), sealedIdentity: z.string(), sealedEnc: z.string() }),
 ]);
 
+/**
+ * A message or a change to one as the server stores and serves it (API 0.57.0, server docs/SERVER_MESSAGES.md): in
+ * history pages, search results, and the delivery queue's "message" items. Readable: nothing to decrypt.
+ */
+export const zStoredEvent = z.object({
+  id: z.string(),
+  conversationId: z.string(),
+  senderUserId: z.string(),
+  senderDeviceId: z.string().nullable(),
+  cls: z.enum(["message", "control"]),
+  payload: z.record(z.string(), z.unknown()),
+  sentAt: z.number(),
+  serverTs: z.number(),
+  mentionAll: z.boolean(),
+  importedBy: z.string().nullable().default(null),
+});
+export type StoredEvent = z.infer<typeof zStoredEvent>;
+
+export const zServerHistoryPage = z.object({ messages: z.array(zStoredEvent), changes: z.array(zStoredEvent), more: z.boolean() });
+export type ServerHistoryPage = z.infer<typeof zServerHistoryPage>;
+
 /** One delivery-queue item (server hub.ts queueItemToWire). */
 export const zQueueItem = z.object({
   id: z.number().int(),
-  kind: z.enum(["envelope", "receipt"]),
+  kind: z.enum(["envelope", "receipt", "message"]),
   conversationId: z.string(),
   messageId: z.string(),
   senderUserId: z.string(),
@@ -319,6 +386,8 @@ export const zQueueItem = z.object({
     mentionAll: z.boolean().optional(),
     status: z.string().optional(),
     at: z.number().optional(),
+    /** A "message" item: the stored message or change itself. */
+    event: zStoredEvent.optional(),
   }),
 });
 export type QueueItem = z.infer<typeof zQueueItem>;
@@ -375,13 +444,21 @@ export const zCall = z.object({
   voiceRoom: z.boolean().default(false),
   /** Voice rooms: who raised a hand, in order. */
   hands: z.array(z.string()).max(500).default([]),
+  /** Live calls: people sharing their screen now, from the media server (servers from 2026-10-26 send it). */
+  sharing: z.array(z.string()).max(500).default([]),
 });
 export type Call = z.infer<typeof zCall>;
 
 /** What `POST /v1/calls` and `POST /v1/calls/:id/join` return: the call and a room-scoped media pass. */
 export const zCallGrant = z.object({
   call: zCall,
-  media: z.object({ url: z.string().max(2048), token: z.string().max(8192), room: z.string().max(128) }),
+  media: z.object({
+    url: z.string().max(2048),
+    token: z.string().max(8192),
+    room: z.string().max(128),
+    /** API 0.54.0 (Meldiq Mojo): screen-share ceilings and the voice bitrate ceiling for this person here. */
+    limits: z.object({ screen: z.array(z.object({ id: z.string(), width: z.number(), height: z.number(), fps: z.number() })).max(10), voiceKbps: z.number().int().min(8).max(510) }).nullish(),
+  }),
   joinedExisting: z.boolean().optional(),
 });
 export const zCallList = z.object({ calls: z.array(zCall).max(500) });

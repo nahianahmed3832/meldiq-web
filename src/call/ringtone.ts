@@ -1,6 +1,9 @@
+import { loadSound, playBuffer, RINGTONE_SOUND } from "../application/soundFiles";
+
 /**
- * A soft two-tone ring made with Web Audio (no sound file). Browsers may block sound until the page has been clicked;
- * then the ring is silent and the incoming-call card and system notification carry the call.
+ * The incoming-call ring: Meldiq's classic phone ring (application/soundFiles.ts, 2026-10-28), looped until answered or
+ * gone; a soft two-tone ring made with Web Audio while the file loads or if it can't. Browsers may block sound until the
+ * page has been clicked; then the ring is silent and the incoming-call card and system notification carry the call.
  */
 const PATTERN_MS = 3_000;
 const TONES = [
@@ -11,10 +14,13 @@ const TONES = [
 ];
 const TONE_S = 0.35;
 const VOLUME = 0.08;
+/** The ring file's level (it's mastered loud). */
+const FILE_VOLUME = 0.45;
 
 export class Ringtone {
   private ctx: AudioContext | null = null;
   private timer: ReturnType<typeof setInterval> | undefined;
+  private loop: AudioBufferSourceNode | null = null;
 
   /** [enabled]: the person's Call ringtone setting (android Settings › Notifications); off, calls only show. */
   constructor(private readonly enabled: () => boolean = () => true) {}
@@ -22,10 +28,18 @@ export class Ringtone {
   start(): void {
     if (this.ctx || typeof AudioContext === "undefined" || !this.enabled()) return;
     try {
-      this.ctx = new AudioContext();
-      void this.ctx.resume().catch(() => undefined);
-      this.ring();
-      this.timer = setInterval(() => this.ring(), PATTERN_MS);
+      const ctx = new AudioContext();
+      this.ctx = ctx;
+      void ctx.resume().catch(() => undefined);
+      void loadSound(ctx, RINGTONE_SOUND).then((buffer) => {
+        if (this.ctx !== ctx) return; // stopped meanwhile
+        if (buffer) {
+          this.loop = playBuffer(ctx, buffer, FILE_VOLUME, true);
+          return;
+        }
+        this.ring();
+        this.timer = setInterval(() => this.ring(), PATTERN_MS);
+      });
     } catch {
       this.stop();
     }
@@ -34,6 +48,12 @@ export class Ringtone {
   stop(): void {
     clearInterval(this.timer);
     this.timer = undefined;
+    try {
+      this.loop?.stop();
+    } catch {
+      /* already stopped */
+    }
+    this.loop = null;
     const ctx = this.ctx;
     this.ctx = null;
     void ctx?.close().catch(() => undefined);

@@ -1,5 +1,5 @@
 {
-  "version": "0.30.0",
+  "version": "0.57.0",
   "routes": [
     {
       "method": "GET",
@@ -20,6 +20,50 @@
     {
       "method": "POST",
       "path": "/v1/queue/ack"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/messages"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/conversations/{id}/messages"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/messages/import"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/messages/summary"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/messages/search"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/gifs/status"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/gifs/search"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/gifs/trending"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/gifs/media"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/bug-reports"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/bug-reports"
     },
     {
       "method": "GET",
@@ -187,6 +231,34 @@
     },
     {
       "method": "GET",
+      "path": "/v2/account/totp"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/account/totp/setup"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/account/totp/enable"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/account/totp/disable"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/account/email"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/account/email/confirm"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/account/standing"
+    },
+    {
+      "method": "GET",
       "path": "/.well-known/assetlinks.json"
     },
     {
@@ -350,6 +422,38 @@
       "path": "/v1/users/{id}/photo"
     },
     {
+      "method": "PUT",
+      "path": "/v1/users/me/avatar-media"
+    },
+    {
+      "method": "DELETE",
+      "path": "/v1/users/me/avatar-media"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/users/{id}/avatar-media"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/users/{id}/avatar-poster"
+    },
+    {
+      "method": "PUT",
+      "path": "/v1/users/me/profile-banner"
+    },
+    {
+      "method": "DELETE",
+      "path": "/v1/users/me/profile-banner"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/users/{id}/profile-banner"
+    },
+    {
+      "method": "PUT",
+      "path": "/v1/users/me/profile-style"
+    },
+    {
       "method": "GET",
       "path": "/v1/users/by-phone"
     },
@@ -380,6 +484,14 @@
     {
       "method": "GET",
       "path": "/v1/presence"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/me/activity"
+    },
+    {
+      "method": "PUT",
+      "path": "/v2/me/activity"
     },
     {
       "method": "PUT",
@@ -495,10 +607,26 @@
     },
     {
       "method": "GET",
+      "path": "/v1/orgs/{orgId}/banner"
+    },
+    {
+      "method": "PUT",
+      "path": "/v1/orgs/{orgId}/banner"
+    },
+    {
+      "method": "DELETE",
+      "path": "/v1/orgs/{orgId}/banner"
+    },
+    {
+      "method": "GET",
       "path": "/v1/orgs/{orgId}/archived"
     },
     {
       "method": "GET",
+      "path": "/v1/orgs/{orgId}/members"
+    },
+    {
+      "method": "POST",
       "path": "/v1/orgs/{orgId}/members"
     },
     {
@@ -528,6 +656,14 @@
     {
       "method": "GET",
       "path": "/v1/invites/{code}/public"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/invites/{code}/banner"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/invites/{code}/photo"
     },
     {
       "method": "POST",
@@ -592,6 +728,38 @@
     {
       "method": "GET",
       "path": "/v1/orgs/{orgId}/audit"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/discord/status"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/discord/connect"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/discord/callback"
+    },
+    {
+      "method": "DELETE",
+      "path": "/v1/discord/connections/{id}"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/discord/connections/{id}/preview"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/discord/imports"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/discord/imports/{id}"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/discord/imports/{id}/retry"
     },
     {
       "method": "GET",
@@ -872,6 +1040,90 @@
     {
       "method": "GET",
       "path": "/v1/federation/resolve"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/billing/plans"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/billing/entitlements"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/billing/account"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/billing/orgs/{orgId}"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/billing/checkout"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/billing/portal"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/billing/sync"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/billing/referral"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/billing/referral/claim"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/mojo/catalog"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/mojo/me"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/mojo/sparks"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/mojo/sparks/{id}/move"
+    },
+    {
+      "method": "DELETE",
+      "path": "/v2/mojo/sparks/{id}"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/mojo/sparks/checkout"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/mojo/gifts"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/mojo/gifts/{id}/redeem"
+    },
+    {
+      "method": "PUT",
+      "path": "/v2/mojo/badge"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/orgs/{orgId}/sparks"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/mojo/play/intent"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/mojo/play/verify"
     }
   ],
   "errors": {
@@ -881,6 +1133,9 @@
     "account_disabled": [
       401,
       403
+    ],
+    "media_engine_unavailable": [
+      503
     ],
     "allow_and_deny": [
       400
@@ -900,8 +1155,38 @@
     "bad_clock": [
       400
     ],
+    "account_limited": [
+      403
+    ],
     "bad_request": [
       400
+    ],
+    "billing_unavailable": [
+      409
+    ],
+    "billed_elsewhere": [
+      409
+    ],
+    "no_sparks": [
+      409
+    ],
+    "no_free_sparks": [
+      409
+    ],
+    "message_too_long": [
+      413
+    ],
+    "not_yours": [
+      403
+    ],
+    "update_required": [
+      426
+    ],
+    "upload_limit": [
+      413
+    ],
+    "custom_items_limit": [
+      409
     ],
     "bad_signature": [
       400,
@@ -962,6 +1247,24 @@
     "direct_upload_unavailable": [
       409
     ],
+    "discord_bot_missing": [
+      409
+    ],
+    "discord_not_allowed": [
+      403
+    ],
+    "discord_not_configured": [
+      409
+    ],
+    "gifs_not_configured": [
+      503
+    ],
+    "gif_provider_unavailable": [
+      502
+    ],
+    "discord_unreachable": [
+      502
+    ],
     "dm_not_allowed": [
       403
     ],
@@ -981,6 +1284,9 @@
       503
     ],
     "email_unverified": [
+      403
+    ],
+    "enrolment_required": [
       403
     ],
     "federated_calls_unavailable": [
@@ -1034,6 +1340,9 @@
     "invalid_invite": [
       403
     ],
+    "invalid_policy": [
+      400
+    ],
     "invalid_proof": [
       401
     ],
@@ -1063,6 +1372,15 @@
     ],
     "invites_paused": [
       403
+    ],
+    "loadtest_disabled": [
+      403
+    ],
+    "loadtest_network": [
+      403
+    ],
+    "loadtest_quota": [
+      429
     ],
     "leave_community": [
       403
@@ -1096,6 +1414,9 @@
     ],
     "migration_closed": [
       410
+    ],
+    "mode_not_supported": [
+      400
     ],
     "no_key_backup": [
       404
@@ -1136,6 +1457,9 @@
     "owner_only": [
       400
     ],
+    "subscription_active": [
+      409
+    ],
     "owns_workspaces": [
       409
     ],
@@ -1169,8 +1493,17 @@
     "rate_limited": [
       429
     ],
+    "reauth_required": [
+      403
+    ],
     "recovery_throttled": [
       429
+    ],
+    "secrets_unavailable": [
+      503
+    ],
+    "synthetic_scope": [
+      403
     ],
     "registration_limited": [
       429
@@ -1243,6 +1576,22 @@
     ],
     "too_large": [
       413
+    ],
+    "totp_already_on": [
+      409
+    ],
+    "totp_invalid": [
+      400,
+      401
+    ],
+    "totp_locked": [
+      429
+    ],
+    "totp_not_pending": [
+      409
+    ],
+    "totp_required": [
+      401
     ],
     "too_many_attempts": [
       429

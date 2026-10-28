@@ -40,7 +40,7 @@ export function UsagePage({ detail }: { detail: OrgAdminDetail }) {
               </div>
             </Card>
           )}
-          <Card title="Files" sub="Encrypted files the server still holds for this workspace's channels. It never sees what's in them.">
+          <Card title="Files" sub="Encrypted files the server still holds for this community's channels. It never sees what's in them.">
             <p className="usage-figure">
               {bytes(u.files.bytes)} <small>· {count(u.files.count, "file")}</small>
             </p>
@@ -57,10 +57,10 @@ export function UsagePage({ detail }: { detail: OrgAdminDetail }) {
           </Card>
           {u.metered && <MeteredCard metered={u.metered} />}
           {plan.data && (
-            <Card title="Limits" sub="No plan, price or upgrade exists yet; any limit here was set for this server or this workspace.">
+            <Card title="Limits" sub="No plan, price or upgrade exists yet; any limit here was set for this server or this community.">
               {limited.length === 0 ? (
                 <p className="faint" style={{ margin: 0 }}>
-                  No plan or limits apply to this workspace.
+                  No plan or limits apply to this community.
                 </p>
               ) : (
                 <ul className="ws-list">
@@ -68,7 +68,7 @@ export function UsagePage({ detail }: { detail: OrgAdminDetail }) {
                     <li key={c.key} className={`ws-row${c.available ? "" : " warn-text"}`}>
                       <span className="grow">{c.label}</span>
                       <span>
-                        {amount(c.key, c.used)} of {amount(c.key, c.limit ?? 0)} <small className="faint">({c.source === "workspace" ? "this workspace's limit" : "this server's limit"})</small>
+                        {amount(c.key, c.used)} of {amount(c.key, c.limit ?? 0)} <small className="faint">({c.source === "workspace" ? "this community's limit" : "this server's limit"})</small>
                       </span>
                     </li>
                   ))}

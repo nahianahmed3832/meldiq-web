@@ -20,32 +20,30 @@ test("in DMs no community is selected, and a community in the rail opens its cha
   await alice.connect();
   await link(page, alice);
 
-  const community = page.getByRole("button", { name: /^Rail Lab/ });
-  const selected = page.locator('.rail-org[aria-current="true"]');
+  const rail = page.getByRole("navigation", { name: "Home, communities, create and discover" });
+  const community = rail.getByRole("button", { name: /^Rail Lab/ });
+  const selected = rail.locator('.rail-org[aria-current="true"]');
   const sidebar = page.getByRole("complementary", { name: "Conversations" });
 
   await page.goto("/home");
   await expect(selected).toHaveCount(1);
   await expect(sidebar).toContainText("Rail Lab");
 
-  // As on Discord: no Home button beside a community, and the logo opens the direct messages.
-  const rail = page.getByRole("navigation", { name: "Workspaces and sections" });
-  await expect(rail.getByRole("link", { name: /^Home/ })).toHaveCount(0);
-  await rail.getByRole("link", { name: "Direct messages" }).click();
+  // As on Discord: the mascot at the top of the rail opens the direct messages; there's no separate DMs button.
+  await expect(rail.getByRole("link", { name: /^DMs/ })).toHaveCount(0);
+  await rail.getByRole("link", { name: /^Home and messages/ }).click();
   await expect(page).toHaveURL(/\/dms$/);
   await expect(selected).toHaveCount(0);
-  await page.goto("/home");
-
-  await page.getByRole("link", { name: /^DMs/ }).click();
-  await expect(page).toHaveURL(/\/dms$/);
-  await expect(selected).toHaveCount(0);
-  await expect(sidebar.getByRole("heading", { name: "Direct messages" })).toBeVisible();
-  await expect(sidebar).not.toContainText("Rail Lab");
+  await expect(sidebar.getByRole("heading", { name: "Direct messages", level: 2 })).toBeVisible();
+  // No community's header or channels here; the invite card invites to Meldiq itself (a community's invitations are in
+  // that community).
+  await expect(sidebar.getByRole("button", { name: /^Community: Rail Lab/ })).toHaveCount(0);
+  await expect(sidebar.getByRole("region", { name: "Invite friends to Meldiq" })).not.toContainText("Rail Lab");
   await expect(sidebar).toContainText("Bob Chen");
 
   await community.click();
   await expect(page).toHaveURL(/\/home$/);
   await expect(selected).toHaveCount(1);
   await expect(sidebar).toContainText("Rail Lab");
-  await expect(sidebar.getByRole("heading", { name: "Direct messages" })).toHaveCount(0);
+  await expect(sidebar.getByRole("heading", { name: "Direct messages", level: 2 })).toHaveCount(0);
 });

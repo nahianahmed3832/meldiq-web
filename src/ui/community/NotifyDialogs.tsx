@@ -31,7 +31,8 @@ export function CommunityNotificationsDialog({ orgId, name, onClose }: { orgId: 
         .filter((o) => o.name !== null),
     (a, b) => JSON.stringify(a) === JSON.stringify(b),
   );
-  const level = communityLevel(prefs);
+  // The level chosen, not a timed mute's "Nothing" (the menu's Mute community shows that).
+  const level = prefs?.community?.level ?? "all";
   const change = (op: Parameters<typeof engine.nav.change>[1]) => void engine.nav.change(orgId, op);
   return (
     <Dialog title={`Notifications · ${name}`} onClose={onClose}>

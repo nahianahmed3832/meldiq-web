@@ -1,5 +1,11 @@
-import { BellOff, ChevronDown, Eye, MoreHorizontal, Plus } from "lucide-react";
-import { memo, type MouseEvent, useEffect, useMemo, useState } from "react";
+import { usePrefs } from "../../application/prefs";
+import { isHighlighted, unreadLabel, unreadMarker } from "../unread";
+import { UnreadBadge } from "../components/UnreadBadge";
+import { BellOff, ChevronDown, Eye, MonitorUp, MoreHorizontal, Plus } from "lucide-react";
+import { LiveCallBadge } from "../components/LiveCallBadge";
+import { useT } from "../../i18n";
+import { memo, type MouseEvent, useEffect, useMemo, useRef, useState } from "react";
+import { useDragSort } from "../components/dragSort";
 import type { Category } from "../../api/communitySchemas";
 import type { Conversation } from "../../api/schemas";
 import { shallowEqual, useEngine, useOrbit } from "../../application/orbit";
@@ -13,6 +19,7 @@ import {
   type ChannelMenuItem,
   hasNews,
   layoutPositions,
+  moveToCategory,
   markReadTargets,
   moved,
   muteTargets,
@@ -23,7 +30,7 @@ import {
 import { placeOf } from "../../sync/navPrefs";
 import { UserAvatar } from "../components/OrgAvatar";
 import { Menu, type MenuEntry, useMenu } from "../components/Overlay";
-import { homeLayout, roomPeople } from "../selectors";
+import { homeLayout, liveCallOf, roomPeople } from "../selectors";
 import { useTickAt } from "./useTickAt";
 import { CategoryNameDialog, DeleteCategoryDialog, MuteForDialog } from "./CategoryDialogs";
 import { ChannelGlyph, CreateChannelDialog, DeleteChannelDialog, EditChannelDialog, MoveChannelDialog } from "./ChannelDialogs";
@@ -110,6 +117,7 @@ export function CommunityPanel({ orgId, unreadOnly, hideMuted, perms }: { orgId:
     }
   };
   const timed = features.includes("channel-preferences");
+  const builder = usePrefs().builderMode;
 
   const onChannel = (ch: PanelChannel, item: ChannelMenuItem, sectionIds: string[]) => {
     const conv = convOf(ch.id);
@@ -129,6 +137,9 @@ export function CommunityPanel({ orgId, unreadOnly, hideMuted, perms }: { orgId:
       case "copyName":
         void navigator.clipboard?.writeText(ch.name).catch(() => undefined);
         return engine.notice("info", "Channel name copied.");
+      case "copyId":
+        void navigator.clipboard?.writeText(ch.id).catch(() => undefined);
+        return engine.notice("info", "Channel ID copied.");
       case "edit":
         return conv && setDialog({ k: "edit", channel: conv });
       case "permissions":
@@ -183,9 +194,38 @@ export function CommunityPanel({ orgId, unreadOnly, hideMuted, perms }: { orgId:
     }
   };
 
+  // Drag channels and categories to rearrange them (2026-10-28), for the people who may: a channel before or after
+  // another (in that one's category), or onto a category; a category before or after another.
+  const dragBox = useRef<HTMLDivElement>(null);
+  useDragSort(
+    dragBox,
+    (drag, target, at) => {
+      const fail = (e: unknown) => engine.notice("error", e instanceof Error ? e.message : "Couldn't move it.");
+      if (drag.kind === "category") {
+        if (target.kind !== "category" || at === "into") return;
+        const rest = keepAllCategories.filter((id) => id !== drag.id);
+        const i = rest.indexOf(target.id);
+        if (i < 0) return;
+        rest.splice(at === "after" ? i + 1 : i, 0, drag.id);
+        return void saveLayout(engine, orgId, { categories: rest }).catch(fail);
+      }
+      if (target.kind === "category") {
+        if (at !== "into") return;
+        return void saveLayout(engine, orgId, { channels: moveToCategory(drag.id, target.id, siblingsOf(target.id)) }).catch(fail);
+      }
+      const category = target.group || null;
+      const ids = siblingsOf(category).filter((id) => id !== drag.id);
+      const i = ids.indexOf(target.id);
+      if (i < 0) return;
+      ids.splice(at === "after" ? i + 1 : i, 0, drag.id);
+      void saveLayout(engine, orgId, { channels: layoutPositions(category, ids) }).catch(fail);
+    },
+    perms.canManageChannels,
+  );
+
   if (!engine.community.available) return null;
   return (
-    <>
+    <div ref={dragBox} className="channel-panel">
       {sections.length === 0 && <div className="side-quiet">No channels here yet.</div>}
       {sections.map((s) => {
         const category = categories.find((c) => c.id === s.categoryId);
@@ -206,6 +246,7 @@ export function CommunityPanel({ orgId, unreadOnly, hideMuted, perms }: { orgId:
         return (
           <CategorySection
             key={s.key}
+            draggable={perms.canManageChannels}
             section={s}
             title={s.title ?? "Channels"}
             menu={items}
@@ -221,6 +262,7 @@ export function CommunityPanel({ orgId, unreadOnly, hideMuted, perms }: { orgId:
                 <ChannelItem
                   key={ch.id}
                   orgId={orgId}
+                  draggable={perms.canManageChannels}
                   ch={ch}
                   current={route.conversationId === ch.id}
                   menu={channelMenu(ch, {
@@ -231,6 +273,7 @@ export function CommunityPanel({ orgId, unreadOnly, hideMuted, perms }: { orgId:
                     canDelete: features.includes("channel-delete"),
                     canHide: timed,
                     hidden: hiddenList.includes(ch.id),
+                    builder,
                   })}
                   onPick={(item) => onChannel(ch, item, sectionIds)}
                 />
@@ -258,11 +301,12 @@ export function CommunityPanel({ orgId, unreadOnly, hideMuted, perms }: { orgId:
       {dialog?.k === "categoryLevel" && <CategoryLevelDialog orgId={orgId} categoryId={dialog.category.id} name={dialog.category.name} onClose={() => setDialog(null)} />}
       {dialog?.k === "permissions" && <PermissionsDialog orgId={orgId} target={{ type: dialog.type, id: dialog.id }} title={dialog.title} onClose={() => setDialog(null)} />}
       {dialog?.k === "hidden" && <HiddenChannelsDialog orgId={orgId} sections={allSections.map((s) => ({ title: s.title ?? "Channels", channels: s.channels }))} onClose={() => setDialog(null)} />}
-    </>
+    </div>
   );
 }
 
 function CategorySection(props: {
+  draggable: boolean;
   section: PanelSection;
   title: string;
   menu: CategoryMenuItem[];
@@ -272,15 +316,20 @@ function CategorySection(props: {
   onPick: (item: CategoryMenuItem) => void;
   children: React.ReactNode;
 }) {
-  const { section: s, title, menu, canAdd, onToggle, onAdd, onPick, children } = props;
+  const { section: s, title, menu, canAdd, onToggle, onAdd, onPick, children, draggable } = props;
+  // A category can be dragged among categories, and channels dropped onto it (the top "no category" part can't move).
+  const dragProps = draggable && s.categoryId ? { "data-drag": s.categoryId, "data-drag-kind": "category", "data-drag-into": "channel" } : {};
   const m = useMenu();
   const open = (e: MouseEvent<HTMLElement>) => {
     e.preventDefault();
-    m.open(e.currentTarget.closest(".side-section-row") as HTMLElement);
+    const row = e.currentTarget.closest(".side-section-row") as HTMLElement;
+    // A right-click opens the menu at the pointer; the ⋯ button, below itself.
+    if (e.type === "contextmenu") m.openAt(row, e);
+    else m.open(row);
   };
   return (
     <section className="side-section" aria-label={title}>
-      <div className="side-section-row" onContextMenu={open}>
+      <div className="side-section-row" onContextMenu={open} {...dragProps}>
         <button className="side-section-head" aria-expanded={!s.collapsed} onClick={onToggle}>
           <ChevronDown size={14} className="chev" />
           <span className="grow ellipsis" style={{ textAlign: "left" }}>
@@ -297,7 +346,7 @@ function CategorySection(props: {
           <MoreHorizontal size={15} />
         </button>
       </div>
-      {m.anchor && <Menu anchor={m.anchor} align="end" label={title} onClose={m.close} entries={entriesOf(menu, CATEGORY_ITEM, onPick, ["newChannel", "delete"])} />}
+      {m.anchor && <Menu anchor={m.anchor} point={m.point} align="end" label={title} onClose={m.close} entries={entriesOf(menu, CATEGORY_ITEM, onPick, ["newChannel", "delete"])} />}
       <div className="side-channels">{children}</div>
     </section>
   );
@@ -319,8 +368,10 @@ const ChannelItem = memo(function ChannelItem({
   current,
   menu,
   onPick,
+  draggable,
 }: {
   orgId: string;
+  draggable: boolean;
   ch: PanelChannel;
   current: boolean;
   menu: ChannelMenuItem[];
@@ -329,12 +380,16 @@ const ChannelItem = memo(function ChannelItem({
   const engine = useEngine();
   const m = useMenu();
   const people = useOrbit((s) => (ch.voice ? roomPeople(s, ch.id) : []), shallowEqual);
+  const sharing = useOrbit((s) => liveCallOf(s, ch.id)?.sharing ?? [], shallowEqual);
+  const t = useT();
   const users = useOrbit((s) => s.users);
   const [joining, setJoining] = useState(false);
   const open = (e: MouseEvent<HTMLElement>) => {
     e.preventDefault();
     e.stopPropagation();
-    m.open(e.currentTarget.closest(".side-row") as HTMLElement);
+    const row = e.currentTarget.closest(".side-row") as HTMLElement;
+    if (e.type === "contextmenu") m.openAt(row, e);
+    else m.open(row);
   };
   const go = async (e: MouseEvent<HTMLAnchorElement>) => {
     if (ch.joined) return;
@@ -349,11 +404,12 @@ const ChannelItem = memo(function ChannelItem({
       setJoining(false);
     }
   };
-  const label = `${ch.voice ? "Voice channel" : "Channel"} ${ch.name}${ch.joined ? "" : ", not joined yet"}${ch.unread ? `, ${ch.unread} unread` : ""}${ch.mentions ? `, ${ch.mentions} mentions` : ""}${ch.muted ? ", muted" : ""}`;
+  const marker = unreadMarker(ch.unread, ch.mentions, ch.muted);
+  const label = `${ch.voice ? "Voice channel" : "Channel"} ${ch.name}${ch.joined ? "" : ", not joined yet"}${unreadLabel(ch.unread, ch.mentions, ch.muted, { unread: (n) => `${n} unread`, mentions: (n) => `${n} mentions`, muted: "muted" })}`;
   return (
-    <div className="side-row">
+    <div className="side-row" {...(draggable ? { "data-drag": ch.id, "data-drag-kind": "channel", "data-drag-group": ch.categoryId ?? "" } : {})}>
       <a
-        className={`side-item channel-item${ch.unread && !ch.muted ? " unread" : ""}${ch.muted ? " muted" : ""}${ch.joined ? "" : " unjoined"}`}
+        className={`side-item channel-item${isHighlighted(marker) ? " unread" : ""}${ch.muted ? " muted" : ""}${ch.joined ? "" : " unjoined"}`}
         href={`/home/c/${encodeURIComponent(ch.id)}`}
         aria-current={current ? "page" : undefined}
         aria-label={label}
@@ -365,19 +421,27 @@ const ChannelItem = memo(function ChannelItem({
           <ChannelGlyph kind={ch.kind} voice={ch.voice} format={ch.format} />
         </span>
         <span className="grow ellipsis">{ch.name}</span>
+        {ch.liveCall && <LiveCallBadge conversationId={ch.id} />}
         {ch.muted && <BellOff size={12} className="faint" aria-hidden="true" />}
-        {ch.unread > 0 && <span className={`count${!ch.muted && ch.mentions > 0 ? " accent" : ""}`}>{ch.mentions > 0 ? `@${ch.mentions}` : ch.unread}</span>}
+        <UnreadBadge marker={marker} />
       </a>
       <button className="row-more" aria-label={`More for ${ch.name}`} aria-haspopup="menu" onClick={open}>
         <MoreHorizontal size={16} />
       </button>
-      {m.anchor && <Menu anchor={m.anchor} align="end" label={ch.name} onClose={m.close} entries={entriesOf(menu, CHANNEL_ITEM, onPick, ["edit", "moveTo", "archive", "restore", "delete"])} />}
+      {m.anchor && (
+        <Menu anchor={m.anchor} point={m.point} align="end" label={ch.name} onClose={m.close} entries={entriesOf(menu, CHANNEL_ITEM, onPick, ["edit", "moveTo", "archive", "restore", "delete"])} />
+      )}
       {people.length > 0 && (
         <div className="voice-channel-people" aria-label={`${people.length} in ${ch.name}`}>
           {people.slice(0, 8).map((u) => (
             <span key={u} className="voice-person">
               <UserAvatar userId={u} name={users[u]?.displayName ?? "Someone"} colorIndex={users[u]?.avatarColor ?? 0} photoRev={users[u]?.photoRev} size={18} decorative />
               <span className="ellipsis">{users[u]?.displayName ?? "Someone"}</span>
+              {sharing.includes(u) && (
+                <span className="voice-sharing">
+                  <MonitorUp size={11} aria-hidden="true" /> {t("live_sharing_short")}
+                </span>
+              )}
             </span>
           ))}
         </div>

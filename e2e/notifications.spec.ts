@@ -50,7 +50,7 @@ async function setUp(page: Page): Promise<{ alice: Phone; bob: Phone; dm: string
   return { alice, bob, dm };
 }
 
-test("with Meldiq closed, a wake-up shows who wrote, without the text, and opens that conversation", async ({ page, context }) => {
+test("with Meldiq closed, a wake-up shows who wrote and their newest message, and opens that conversation", async ({ page, context }) => {
   const { bob, dm } = await setUp(page);
   // Notifications were allowed for this site in the browser (never chosen in Meldiq): they're on.
   await page.goto("about:blank"); // no Meldiq page open any more: the browser's connection is closed
@@ -60,11 +60,9 @@ test("with Meldiq closed, a wake-up shows who wrote, without the text, and opens
   await deliverPush(context, page);
   const viewer = await context.newPage();
   await viewer.goto(origin() + "/#/settings/notifications");
-  await expect.poll(() => shown(viewer), { timeout: 15_000 }).toContainEqual({ title: "Bob Chen", body: "2 new messages", tag: dm, url: `/dms/c/${dm}` });
-  const all = await shown(viewer);
-  expect(JSON.stringify(all)).not.toContain("are you there");
+  await expect.poll(() => shown(viewer), { timeout: 15_000 }).toContainEqual({ title: "Bob Chen", body: "2 new messages: call me", tag: dm, url: `/dms/c/${dm}` });
   // A click (the service worker tells the open page where to go): the conversation opens, once the app is running.
-  await expect(viewer.locator(".conn.online")).toBeVisible({ timeout: 15_000 });
+  await expect(viewer.locator(":is(.app[data-connection=online])").first()).toBeVisible({ timeout: 15_000 });
   await viewer.waitForTimeout(500);
   await viewer.evaluate((href) => navigator.serviceWorker.dispatchEvent(new MessageEvent("message", { data: { type: "meldiq-open", href } })), `/dms/c/${dm}`);
   await expect(viewer).toHaveURL(new RegExp(`/dms/c/${dm}$`));

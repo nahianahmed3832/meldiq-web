@@ -3,20 +3,7 @@ import { canonical } from "../crypto/canonical";
 import { sign } from "../crypto/ed25519";
 import type { KeyBackup } from "../crypto/keyBackup";
 import type { DeviceRecord } from "../model/types";
-import {
-  type AccountSessionGrant,
-  zAccepted,
-  zAccountMe,
-  zAccountSession,
-  zAccountView,
-  zEnrollResult,
-  zLegacyTicket,
-  zOk,
-  zSelected,
-  zSessionList,
-  zVerified,
-  zWorkspacesV2,
-} from "../api/accountSchemas";
+import { type AccountSessionGrant, zAccepted, zAccountMe, zAccountSession, zAccountView, zEnrollResult, zOk, zSelected, zSessionList, zVerified, zWorkspacesV2 } from "../api/accountSchemas";
 import { z } from "zod";
 
 /** Proof that this browser holds an existing device key: a fresh challenge signed with it (griip-auth-v1 "login"). */
@@ -76,8 +63,12 @@ export class AccountApi {
     return this.api.json("POST", "/v2/auth/email/resend", zAccepted, { auth: false, body: { email } });
   }
 
-  login(email: string, password: string, deviceName: string, device?: DeviceProof): Promise<AccountSessionGrant> {
-    return this.api.json("POST", "/v2/auth/login", zAccountSession, { auth: false, body: { email, password, deviceName, ...(device ? { device } : {}) } });
+  /** [totpCode]: the authenticator app's code or a backup code, when two-step sign-in is on (API 0.46.0). */
+  login(email: string, password: string, deviceName: string, device?: DeviceProof, totpCode?: string): Promise<AccountSessionGrant> {
+    return this.api.json("POST", "/v2/auth/login", zAccountSession, {
+      auth: false,
+      body: { email, password, deviceName, ...(device ? { device } : {}), ...(totpCode ? { totpCode } : {}) },
+    });
   }
 
   refresh(refreshToken: string): Promise<AccountSessionGrant> {
@@ -113,14 +104,6 @@ export class AccountApi {
   /** Step 2: the browser's signed answer; the same session a password sign-in gives. */
   passkeyLogin(challengeId: string, response: Record<string, unknown>, deviceName: string): Promise<AccountSessionGrant> {
     return this.api.json("POST", "/v2/auth/passkey/login", zAccountSession, { auth: false, body: { challengeId, response, deviceName } });
-  }
-
-  legacyVerify(username: string, nonce: string, signature: string) {
-    return this.api.json("POST", "/v2/migration/legacy/verify", zLegacyTicket, { auth: false, body: { username, nonce, signature } });
-  }
-
-  legacyComplete(ticket: string, name: string, email: string, password: string): Promise<unknown> {
-    return this.api.json("POST", "/v2/migration/legacy/complete", zAccepted, { auth: false, body: { ticket, name, email, password } });
   }
 
   // ───────────── signed in ─────────────
@@ -233,10 +216,10 @@ export class AccountApi {
  * (a fresh challenge signed with it), so the new session is bound to this device. A removed device is refused
  * (device_revoked).
  */
-export async function signInWithDevice(base: string, device: DeviceRecord, password: string, email?: string): Promise<AccountSessionGrant> {
+export async function signInWithDevice(base: string, device: DeviceRecord, password: string, email?: string, totpCode?: string): Promise<AccountSessionGrant> {
   if (!device.account) throw new Error("This browser isn't signed in with a Meldiq account.");
   const accounts = AccountApi.anonymous(base);
   const nonce = await accounts.challenge();
   const signature = await sign(device.keys.signing.privateKey, canonical.authProof("login", nonce, device.keys.signingPublic));
-  return accounts.login(email ?? device.account.email, password, device.deviceName, { deviceId: device.deviceId, nonce, signature });
+  return accounts.login(email ?? device.account.email, password, device.deviceName, { deviceId: device.deviceId, nonce, signature }, totpCode);
 }

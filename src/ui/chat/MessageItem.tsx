@@ -1,3 +1,5 @@
+import { CharLimitNote, overCharLimit } from "../mojo/CharLimit";
+import { useMojoLimits } from "../mojo/useMojoLimits";
 import {
   AlarmClock,
   Bookmark,
@@ -26,23 +28,29 @@ import {
   Trash2,
   UserRound,
   Video,
+  IdCard,
 } from "lucide-react";
-import { memo, useState } from "react";
-import { CustomEmojiImage, ReactionEmoji, useExpressions } from "../community/CustomEmoji";
+import { memo, useRef, useState } from "react";
+import { CustomEmojiImage, useExpressions } from "../community/CustomEmoji";
 import { reactionName } from "../../sync/expressions";
 import { useEngine, useOrbit } from "../../application/orbit";
 import { PERSONAL } from "../../sync/navPrefs";
 import { RemindMeDialog } from "../later/RemindMeDialog";
 import type { RichContent, StoredMessage } from "../../model/types";
+import { nameTone } from "../components/Avatar";
 import { UserAvatar } from "../components/OrgAvatar";
 import { callLine } from "../../sync/callHistory";
 import { ForwardDialog } from "../dialogs/ForwardDialog";
-import { Dialog, Menu, type MenuEntry, useMenu } from "../components/Overlay";
+import { Dialog, keepsNativeMenu, Menu, type MenuEntry, useMenu } from "../components/Overlay";
+import { ReactionList, ReactionsDialog } from "./Reactions";
 import { useLongPress } from "./longPress";
+import { type ContextTarget, contextEntries, contextTarget } from "./contextTarget";
+import { GifView } from "./GifView";
 import { mergeHandlers, useMessageGestures } from "./gestures";
 import { clock, dayLabel, fullTime } from "../format";
 import { openInApp } from "./inAppLinks";
 import { useT } from "../../i18n";
+import { LookAvatar, StyledName, useUserLook } from "../people/NameStyle";
 import { isWebUrl } from "../../protocol/payload";
 import { Attachments } from "./Attachments";
 import { isEmojiOnly, RichText } from "./RichText";
@@ -98,6 +106,7 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
   const [translation, setTranslation] = useState<string | null>(null);
   const [reminding, setReminding] = useState(false);
   const [reporting, setReporting] = useState(false);
+  const [showReactions, setShowReactions] = useState(false);
   const reportable = useOrbit((st) => st.server?.features.includes("reports") ?? false);
   const inCommunity = useOrbit((st) => {
     const c = st.conversations[m.conversationId];
@@ -110,7 +119,7 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
   const orgName = useOrbit((st) => (conv?.orgId ? (st.orgs.find((o) => o.id === conv.orgId)?.name ?? null) : null));
   // Saved for later (android Home › Later): synced in the personal document when the server keeps saved items.
   const savable = useOrbit((st) => st.server?.features.includes("saved-items") ?? false);
-  const { mediaCards, swipeToReply, doubleTapReact, quickReaction } = usePrefs();
+  const { mediaCards, swipeToReply, doubleTapReact, quickReaction, builderMode: builder } = usePrefs();
   const saved = useOrbit((st) => st.nav[PERSONAL]?.saved?.find((x) => x.messageId === m.id));
   const more = useMenu();
   const picker = useMenu();
@@ -147,7 +156,7 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
     if (m.deleted) return <span className="msg-deleted">{t("msg_deleted")}</span>;
     if (editing) return <EditBox m={m} onDone={() => setEditing(false)} />;
     // A poll, contact, location, sticker or animated emoji is the message itself: no card under it (android MessageBubble).
-    const structured = !!(m.rich?.poll || m.rich?.contact || m.rich?.location || m.rich?.sticker || m.rich?.animoji || m.rich?.customSticker);
+    const structured = !!(m.rich?.poll || m.rich?.contact || m.rich?.location || m.rich?.sticker || m.rich?.animoji || m.rich?.customSticker || m.rich?.gif);
     const mediaLink = mediaCards && !structured ? findMediaLink(m.text) : null;
     return (
       <>
@@ -161,6 +170,11 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
         {m.rich?.poll ? (
           <div>
             <PollView m={m} myUserId={p.myUserId} canPost={p.canPost} />
+            {mine && <Status m={m} onRetry={() => void engine.retry(m.id)} onReview={p.onReview} />}
+          </div>
+        ) : m.rich?.gif ? (
+          <div>
+            <GifView gif={m.rich.gif} />
             {mine && <Status m={m} onRetry={() => void engine.retry(m.id)} onReview={p.onReview} />}
           </div>
         ) : m.rich?.sticker ? (
@@ -244,9 +258,13 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
   };
 
   const reactions = Object.entries(m.reactions);
+  // What the menu was opened on (a photo, a link, selected text): its own items come first (chat/contextTarget.tsx).
+  const [target, setTarget] = useState<ContextTarget | null>(null);
+  const pressedOn = useRef<EventTarget | null>(null);
   const press = useLongPress(
     (el) => {
       setPressed(true);
+      setTarget(contextTarget(pressedOn.current));
       more.open(el);
     },
     !editing && m.kind !== "call",
@@ -295,6 +313,24 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
   return (
     <div
       {...mergeHandlers(press, gestures.handlers)}
+      onPointerDownCapture={(e) => (pressedOn.current = e.target)}
+      // A right-click or two-finger click: the message's menu at the pointer (the quick reactions on top, as a long
+      // press shows them), with what was clicked first (a photo: open, download, copy; a link; selected text); the Menu
+      // key or Shift+F10 opens it from the keyboard. Only the edit box keeps the browser's menu.
+      onContextMenu={(e) => {
+        if (editing || keepsNativeMenu(e.target)) return;
+        e.preventDefault();
+        if (m.kind === "call") return;
+        setPressed(true);
+        setTarget(contextTarget(e.target));
+        more.openAt(e.currentTarget, e);
+      }}
+      onKeyDown={(e) => {
+        if (editing || !(e.key === "ContextMenu" || (e.key === "F10" && e.shiftKey)) || keepsNativeMenu(e.target)) return;
+        e.preventDefault();
+        setPressed(true);
+        more.openAt(e.currentTarget, null);
+      }}
       style={gestures.offset ? { transform: `translateX(${gestures.offset}px)` } : undefined}
       className={`msg${gestures.offset ? " swiping" : ""}${mine ? " mine" : ""}${p.first ? " first" : ""}${mentioned ? " mentioned" : ""}${p.highlighted ? " highlight" : ""}${more.anchor || picker.anchor ? " menu-open" : ""}`}
       id={`msg-${m.id}`}
@@ -305,7 +341,7 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
       <div className="msg-gutter">
         {p.first ? (
           <button className="msg-avatar-btn" onClick={() => openProfile(m.senderUserId, p.senderName)} aria-label={`${p.senderName}'s profile`} tabIndex={-1}>
-            <UserAvatar userId={m.senderUserId} name={p.senderName} colorIndex={p.senderColor} photoRev={p.senderPhotoRev} size={38} decorative />
+            <LookAvatar userId={m.senderUserId} name={p.senderName} colorIndex={p.senderColor} photoRev={p.senderPhotoRev} size={38} />
           </button>
         ) : (
           <time dateTime={new Date(m.sortTs).toISOString()}>{clock(m.sortTs)}</time>
@@ -314,8 +350,8 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
       <div className="msg-main">
         {p.first && (
           <div className="msg-head">
-            <button className="msg-name ellipsis" onClick={() => openProfile(m.senderUserId, p.senderName)}>
-              {p.senderName}
+            <button className="msg-name" onClick={() => openProfile(m.senderUserId, p.senderName)}>
+              <SenderName userId={m.senderUserId} name={p.senderName} toneClass={nameTone(p.senderColor)} />
             </button>
             <time dateTime={new Date(m.sortTs).toISOString()} title={fullTime(m.sortTs)}>
               {clock(m.sortTs)}
@@ -328,23 +364,7 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
           </div>
         )}
         {body()}
-        {reactions.length > 0 && (
-          <div className="reactions">
-            {reactions.map(([emoji, users]) => (
-              <button
-                key={emoji}
-                className="reaction"
-                aria-pressed={users.includes(p.myUserId)}
-                disabled={!p.canPost}
-                onClick={() => void engine.react(m, emoji)}
-                aria-label={`${emoji} ${users.length}, ${users.includes(p.myUserId) ? "remove your reaction" : "react"}`}
-              >
-                <span className="reaction-emoji">{reactionName(emoji) ? <ReactionEmoji name={reactionName(emoji)!} list={communityEmoji} /> : emoji}</span>
-                {users.length}
-              </button>
-            ))}
-          </div>
-        )}
+        <ReactionList message={m} myUserId={p.myUserId} canPost={p.canPost} communityEmoji={communityEmoji} />
         {p.threadCount > 0 && p.onThread && (
           <button className="thread-link" onClick={() => p.onThread?.(m)}>
             <MessagesSquare size={15} /> {p.threadCount} {p.threadCount === 1 ? "reply" : "replies"}
@@ -412,14 +432,18 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
       {more.anchor && (
         <Menu
           anchor={more.anchor}
+          point={more.point}
           align="end"
           label="Message"
           onClose={() => {
             more.close();
             setPressed(false);
+            setTarget(null);
           }}
           entries={[
+            ...contextEntries(target, (text) => engine.notice("info", text)),
             ...quickRow,
+            ...(reactions.length > 0 ? [{ label: t("react_dialog_title"), icon: <SmilePlus size={16} />, onSelect: () => setShowReactions(true) }] : []),
             ...(mine && p.canPost ? [{ label: t("msg_edit"), icon: <Pencil size={16} />, onSelect: () => setEditing(true) }] : []),
             ...(p.canPost ? [{ label: m.pinned ? t("msg_unpin") : t("msg_pin"), icon: m.pinned ? <PinOff size={16} /> : <Pin size={16} />, onSelect: () => void engine.setPinned(m, !m.pinned) }] : []),
             ...(live && savable
@@ -451,11 +475,24 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
                 ]
               : []),
             ...(mine ? [{ label: t("msg_info"), icon: <Info size={16} />, onSelect: () => setInfo(true) }] : []),
+            ...(builder
+              ? [
+                  {
+                    label: "Copy message ID",
+                    icon: <IdCard size={16} />,
+                    onSelect: () => {
+                      void navigator.clipboard?.writeText(m.id).catch(() => undefined);
+                      engine.notice("info", "Message ID copied.");
+                    },
+                  },
+                ]
+              : []),
             ...(!mine && live && reportable && conv ? ["separator" as const, { label: t("msg_report"), icon: <Flag size={16} />, danger: true, onSelect: () => setReporting(true) }] : []),
             ...(mine && p.canPost ? ["separator" as const, { label: t("msg_delete_all"), icon: <Trash2 size={16} />, danger: true, onSelect: () => setConfirmDelete(true) }] : []),
           ]}
         />
       )}
+      {showReactions && <ReactionsDialog message={m} initial={null} myUserId={p.myUserId} communityEmoji={communityEmoji} onClose={() => setShowReactions(false)} />}
       {forwarding && <ForwardDialog message={m} onClose={() => setForwarding(false)} />}
       {reporting && conv && <ReportDialog target={{ kind: "message", message: m, conversationId: m.conversationId, conversationType: conv.type, orgName }} onClose={() => setReporting(false)} />}
       {info && <MessageInfoDialog m={m} onClose={() => setInfo(false)} />}
@@ -505,7 +542,7 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
         >
           <div className="dialog-body">
             <p className="muted" style={{ margin: 0 }}>
-              It's removed from this browser and your other devices, and everyone in the conversation is asked to remove it. Deletion is cooperative: an app that ignores it could keep a copy.
+              It's removed for everyone in the conversation, on every device.
             </p>
           </div>
         </Dialog>
@@ -566,7 +603,11 @@ function Status({ m, onRetry, onReview }: { m: StoredMessage; onRetry: () => voi
 function EditBox({ m, onDone }: { m: StoredMessage; onDone: () => void }) {
   const engine = useEngine();
   const [text, setText] = useState(m.text);
+  // Edits get the same room as new messages (server docs/MOJO.md).
+  const limit = useMojoLimits()?.messageChars ?? null;
+  const tooLong = overCharLimit(text, limit);
   const save = () => {
+    if (tooLong) return;
     if (text.trim() && text.trim() !== m.text) void engine.edit(m, text);
     onDone();
   };
@@ -586,6 +627,7 @@ function EditBox({ m, onDone }: { m: StoredMessage; onDone: () => void }) {
           } else if (e.key === "Escape") onDone();
         }}
       />
+      <CharLimitNote text={text} limit={limit} />
       <div className="row">
         <span className="faint" style={{ fontSize: 12 }}>
           Enter to save · Esc to cancel
@@ -594,7 +636,7 @@ function EditBox({ m, onDone }: { m: StoredMessage; onDone: () => void }) {
         <button className="btn btn-secondary btn-sm" onClick={onDone}>
           Cancel
         </button>
-        <button className="btn btn-primary btn-sm" onClick={save} disabled={!text.trim()}>
+        <button className="btn btn-primary btn-sm" onClick={save} disabled={!text.trim() || tooLong}>
           Save
         </button>
       </div>
@@ -629,4 +671,10 @@ function ForwardedLine({ origin }: { origin: RichContent["origin"] }) {
       )}
     </div>
   );
+}
+
+/** The author's name with their name style and tag (API 0.46.0), as this browser knows them. */
+function SenderName({ userId, name, toneClass }: { userId: string; name: string; toneClass: string }) {
+  const look = useUserLook(userId);
+  return <StyledName name={name} style={look.profileStyle} tag={look.tag} mojo={look.mojo} toneClass={toneClass} className="ellipsis" />;
 }

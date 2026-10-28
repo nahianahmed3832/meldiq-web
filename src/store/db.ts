@@ -6,8 +6,14 @@ import type { ConversationLocal, DeviceRecord, OutboxItem, PinnedIdentity, Store
 import { forgetAllMedia } from "./mediaCache";
 
 /**
- * Everything this browser keeps, in IndexedDB on this computer (one database per origin, so per Orbit server). Key
- * material is stored as non-extractable CryptoKeys (structured clone), never as bytes. "Sign out" deletes the database.
+ * What this browser keeps. Since API 0.57.0 (the owner's decision, 2026-10-28) the server stores every message and
+ * serves it to each device (docs/SERVER_MESSAGES.md): the browser keeps only its sign-in on disk (the device record
+ * and the account session's sealed tokens, in IndexedDB). Messages, conversations, the send queue and everything
+ * else live in memory for this page and are loaded from the server again on the next one. "Sign out" deletes the disk
+ * part.
+ *
+ * The database still has the object stores of earlier versions, which kept history on this computer: the update reads
+ * them once to upload that history to the server (legacyImport.ts), then empties them.
  */
 
 interface PendingControl {
@@ -38,14 +44,31 @@ interface OrbitDB extends DBSchema {
   pendingControls: { key: string; value: PendingControl; indexes: { byTarget: [string, string] } };
 }
 
-export type { HeldItem, PendingControl };
+export type { HeldItem, OrbitDB, PendingControl };
 
 export const DB_NAME = "orbit-web";
-/** 2: messages indexed by thread root (Activity › Thread replies). */
-const VERSION = 2;
+/** 2: messages indexed by thread root. 3: server-stored messages, the old stores kept only to be uploaded once. */
+const VERSION = 3;
 
-/** The repository the sync engine reads and writes; one implementation over IndexedDB. */
+/** The only values written to disk: this browser's device (its sign-in keys) and the account session's sealed tokens. */
+const ON_DISK = new Set(["device", "accountTokenKey", "accountTokens", "legacy.imported"]);
+
+/** The repository the sync engine reads and writes. */
+export type MessageWriteListener = (ids: string[]) => void;
+
+const newestFirst = (a: StoredMessage, b: StoredMessage) => b.sortTs - a.sortTs;
+const oldestFirst = (a: StoredMessage, b: StoredMessage) => a.sortTs - b.sortTs;
+
 export class LocalStore {
+  private readonly writeListeners = new Set<MessageWriteListener>();
+  private readonly memory = new Map<string, unknown>();
+  private readonly messages = new Map<string, StoredMessage>();
+  private readonly convs = new Map<string, ConversationLocal>();
+  private readonly outboxItems = new Map<string, OutboxItem>();
+  private readonly pins = new Map<string, PinnedIdentity>();
+  private readonly held = new Map<number, HeldItem>();
+  private readonly pendingControls = new Map<string, PendingControl>();
+
   private constructor(
     private readonly db: IDBPDatabase<OrbitDB>,
     readonly name: string,
@@ -68,11 +91,15 @@ export class LocalStore {
           d.createObjectStore("held", { keyPath: "queueId" }).createIndex("bySender", "senderUserId");
           d.createObjectStore("pendingControls", { keyPath: "id" }).createIndex("byTarget", ["conversationId", "target"]);
         }
-        // Only replies have a thread root (null isn't a key), so this index holds thread replies alone.
         if (oldVersion < 2) tx.objectStore("messages").createIndex("byThread", "threadRootId");
       },
     });
     return new LocalStore(db, name);
+  }
+
+  /** The database itself, for the one-time upload of what earlier versions kept on this computer (legacyImport.ts). */
+  get legacy(): IDBPDatabase<OrbitDB> {
+    return this.db;
   }
 
   close(): void {
@@ -111,201 +138,189 @@ export class LocalStore {
     await this.db.put("kv", stored, "device");
   }
 
+  // ───── values: the sign-in on disk, everything else for this page only ─────
   async getValue<T>(key: string): Promise<T | undefined> {
-    return (await this.db.get("kv", key)) as T | undefined;
+    if (ON_DISK.has(key)) return (await this.db.get("kv", key)) as T | undefined;
+    return this.memory.get(key) as T | undefined;
   }
 
   async setValue(key: string, value: unknown): Promise<void> {
-    await this.db.put("kv", value, key);
+    if (ON_DISK.has(key)) await this.db.put("kv", value, key);
+    else this.memory.set(key, value);
   }
 
   async deleteValue(key: string): Promise<void> {
-    await this.db.delete("kv", key);
+    if (ON_DISK.has(key)) await this.db.delete("kv", key);
+    else this.memory.delete(key);
   }
 
-  // ───── messages ─────
+  /** Every value whose key starts with [prefix] (e.g. "transfer:"), with its key. */
+  async valuesWithPrefix<T>(prefix: string): Promise<{ key: string; value: T }[]> {
+    return [...this.memory].filter(([k]) => k.startsWith(prefix)).map(([key, value]) => ({ key, value: value as T }));
+  }
+
+  // ───── messages (this page's copy of what the server serves) ─────
   async message(id: string): Promise<StoredMessage | null> {
-    return (await this.db.get("messages", id)) ?? null;
+    return this.messages.get(id) ?? null;
+  }
+
+  /** Hears the ids of messages written here (the send queue and views listen). */
+  onMessagesWritten(listener: MessageWriteListener): () => void {
+    this.writeListeners.add(listener);
+    return () => this.writeListeners.delete(listener);
+  }
+
+  private written(ids: string[]): void {
+    if (ids.length) for (const l of this.writeListeners) l(ids);
   }
 
   async putMessage(m: StoredMessage): Promise<void> {
-    await this.db.put("messages", m);
+    this.messages.set(m.id, m);
+    this.written([m.id]);
   }
 
-  async putMessages(list: StoredMessage[]): Promise<void> {
-    const tx = this.db.transaction("messages", "readwrite");
-    await Promise.all([...list.map((m) => tx.store.put(m)), tx.done]);
+  async putMessages(list: StoredMessage[], opts: { fromHistory?: boolean } = {}): Promise<void> {
+    for (const m of list) this.messages.set(m.id, m);
+    if (!opts.fromHistory) this.written(list.map((m) => m.id));
   }
 
   /** Adds [m] unless a message with its id exists. True when it was added. */
   async insertMessageIfAbsent(m: StoredMessage): Promise<boolean> {
-    const tx = this.db.transaction("messages", "readwrite");
-    const exists = await tx.store.get(m.id);
-    if (!exists) await tx.store.put(m);
-    await tx.done;
-    return !exists;
+    if (this.messages.has(m.id)) return false;
+    this.messages.set(m.id, m);
+    this.written([m.id]);
+    return true;
+  }
+
+  async messageIds(): Promise<string[]> {
+    return [...this.messages.keys()];
+  }
+
+  private inConversation(conversationId: string): StoredMessage[] {
+    return [...this.messages.values()].filter((m) => m.conversationId === conversationId);
   }
 
   /** The newest [limit] messages of a conversation before [beforeSortTs], oldest first. */
   async latestMessages(conversationId: string, limit: number, beforeSortTs = Number.MAX_SAFE_INTEGER): Promise<StoredMessage[]> {
-    const range = IDBKeyRange.bound([conversationId, -Infinity], [conversationId, beforeSortTs], false, true);
-    const out: StoredMessage[] = [];
-    let cursor = await this.db.transaction("messages").store.index("byConversation").openCursor(range, "prev");
-    while (cursor && out.length < limit) {
-      out.push(cursor.value);
-      cursor = await cursor.continue();
-    }
-    return out.reverse();
+    return this.inConversation(conversationId)
+      .filter((m) => m.sortTs < beforeSortTs)
+      .sort(newestFirst)
+      .slice(0, limit)
+      .reverse();
+  }
+
+  /** Every thread reply loaded on this page, oldest first. */
+  async threadReplies(): Promise<StoredMessage[]> {
+    return [...this.messages.values()].filter((m) => m.threadRootId).sort(oldestFirst);
   }
 
   /** Newest messages first, for previews: the first one [accept] takes. */
-  /** Every thread reply this browser has, oldest first within each thread. */
-  async threadReplies(): Promise<StoredMessage[]> {
-    return (await this.db.getAllFromIndex("messages", "byThread")).sort((a, b) => a.sortTs - b.sortTs);
-  }
-
   async newestMessage(conversationId: string, accept: (m: StoredMessage) => boolean): Promise<StoredMessage | null> {
-    const range = IDBKeyRange.bound([conversationId, -Infinity], [conversationId, Infinity]);
-    let cursor = await this.db.transaction("messages").store.index("byConversation").openCursor(range, "prev");
-    while (cursor) {
-      if (accept(cursor.value)) return cursor.value;
-      cursor = await cursor.continue();
-    }
-    return null;
+    return this.inConversation(conversationId).sort(newestFirst).find(accept) ?? null;
   }
 
   async outgoingUpTo(conversationId: string, upTo: number): Promise<StoredMessage[]> {
-    const range = IDBKeyRange.bound([conversationId, -Infinity], [conversationId, upTo]);
-    const all = await this.db.getAllFromIndex("messages", "byConversation", range);
-    return all.filter((m) => m.outgoing && (m.serverTs ?? m.sortTs) <= upTo && m.status !== "READ");
+    return this.inConversation(conversationId).filter((m) => m.sortTs <= upTo && m.outgoing && (m.serverTs ?? m.sortTs) <= upTo && m.status !== "READ");
   }
 
-  /** Message text on this browser containing [query]; in one conversation when [conversationId] is given. */
+  /** Loaded message text containing [query]; in one conversation when [conversationId] is given (the server searches the rest). */
   async searchMessages(query: string, limit = 50, conversationId?: string): Promise<StoredMessage[]> {
     const q = query.toLowerCase();
     return this.findMessages((m) => !m.deleted && m.kind === "text" && m.text.toLowerCase().includes(q), limit, conversationId);
   }
 
-  /** Messages on this browser that [match] accepts, newest first; in one conversation when [conversationId] is given. */
+  /** Loaded messages that [match] accepts, newest first; in one conversation when [conversationId] is given. */
   async findMessages(match: (m: StoredMessage) => boolean, limit = 50, conversationId?: string): Promise<StoredMessage[]> {
-    const out: StoredMessage[] = [];
-    const store = this.db.transaction("messages").store;
-    let cursor = conversationId ? await store.index("byConversation").openCursor(IDBKeyRange.bound([conversationId, -Infinity], [conversationId, Infinity])) : await store.openCursor();
-    while (cursor) {
-      if (match(cursor.value)) out.push(cursor.value);
-      cursor = await cursor.continue();
-    }
-    return out.sort((a, b) => b.sortTs - a.sortTs).slice(0, limit);
+    const list = conversationId ? this.inConversation(conversationId) : [...this.messages.values()];
+    return list.filter(match).sort(newestFirst).slice(0, limit);
   }
 
-  /** Files in this browser's history whose name contains [query], newest first (android round 7 search › Files). */
+  /** Loaded files whose name contains [query], newest first. */
   async searchFiles(query: string, limit: number): Promise<{ message: StoredMessage; ref: StoredMessage["attachments"][number] }[]> {
     const q = query.toLowerCase();
     const out: { message: StoredMessage; ref: StoredMessage["attachments"][number] }[] = [];
-    let cursor = await this.db.transaction("messages").store.openCursor();
-    while (cursor) {
-      const m = cursor.value;
-      if (!m.deleted) for (const ref of m.attachments) if (!ref.voice && ref.name.toLowerCase().includes(q)) out.push({ message: m, ref });
-      cursor = await cursor.continue();
-    }
+    for (const m of this.messages.values()) if (!m.deleted) for (const ref of m.attachments) if (!ref.voice && ref.name.toLowerCase().includes(q)) out.push({ message: m, ref });
     return out.sort((a, b) => b.message.sortTs - a.message.sortTs).slice(0, limit);
   }
 
-  /** Pinned messages in any conversation whose text contains [query], newest first (search › Pinned). */
+  /** Loaded pinned messages whose text contains [query], newest first. */
   async searchPinned(query: string, limit: number): Promise<StoredMessage[]> {
     const q = query.toLowerCase();
-    const out: StoredMessage[] = [];
-    let cursor = await this.db.transaction("messages").store.openCursor();
-    while (cursor) {
-      const m = cursor.value;
-      if (m.pinned && !m.deleted && m.text.toLowerCase().includes(q)) out.push(m);
-      cursor = await cursor.continue();
-    }
-    return out.sort((a, b) => b.sortTs - a.sortTs).slice(0, limit);
+    return this.findMessages((m) => m.pinned && !m.deleted && m.text.toLowerCase().includes(q), limit);
   }
 
-  /** A conversation's pinned messages kept on this browser, newest first (android round 7 pinned sheet). */
+  /** A conversation's loaded pinned messages, newest first. */
   async pinnedMessages(conversationId: string): Promise<StoredMessage[]> {
-    const range = IDBKeyRange.bound([conversationId, -Infinity], [conversationId, Infinity]);
-    const all = await this.db.getAllFromIndex("messages", "byConversation", range);
-    return all.filter((m) => m.pinned && !m.deleted).sort((a, b) => b.sortTs - a.sortTs);
+    return this.inConversation(conversationId)
+      .filter((m) => m.pinned && !m.deleted)
+      .sort(newestFirst);
   }
 
-  /** Your latest sent messages across conversations, thread replies aside (android Home › Drafts & sent). */
+  /** Your latest sent messages loaded on this page, thread replies aside (Home › Drafts & sent). */
   async recentSent(limit: number): Promise<StoredMessage[]> {
-    const out: StoredMessage[] = [];
-    let cursor = await this.db.transaction("messages").store.openCursor();
-    while (cursor) {
-      const m = cursor.value;
-      if (m.outgoing && !m.deleted && m.kind === "text" && !m.threadRootId && m.text) out.push(m);
-      cursor = await cursor.continue();
-    }
-    return out.sort((a, b) => b.sortTs - a.sortTs).slice(0, limit);
+    return this.findMessages((m) => m.outgoing && !m.deleted && m.kind === "text" && !m.threadRootId && !!m.text, limit);
   }
 
   // ───── conversation state ─────
   async conversation(id: string): Promise<ConversationLocal | null> {
-    return (await this.db.get("conversations", id)) ?? null;
+    return this.convs.get(id) ?? null;
   }
 
   async conversations(): Promise<ConversationLocal[]> {
-    return this.db.getAll("conversations");
+    return [...this.convs.values()];
   }
 
   async putConversation(c: ConversationLocal): Promise<void> {
-    await this.db.put("conversations", c);
+    this.convs.set(c.id, c);
   }
 
-  // ───── outbox ─────
+  // ───── send queue (this page) ─────
   async outbox(): Promise<OutboxItem[]> {
-    return this.db.getAll("outbox");
+    return [...this.outboxItems.values()];
   }
 
   async putOutbox(o: OutboxItem): Promise<void> {
-    await this.db.put("outbox", o);
+    this.outboxItems.set(o.messageId, o);
   }
 
   async removeOutbox(messageId: string): Promise<void> {
-    await this.db.delete("outbox", messageId);
+    this.outboxItems.delete(messageId);
   }
 
-  // ───── identity pins ─────
+  // ───── identity pins (kept for older apps' encrypted messages during the transition) ─────
   async pin(userId: string): Promise<PinnedIdentity | null> {
-    return (await this.db.get("pins", userId)) ?? null;
+    return this.pins.get(userId) ?? null;
   }
 
   async putPin(p: PinnedIdentity): Promise<void> {
-    await this.db.put("pins", p);
+    this.pins.set(p.userId, p);
   }
 
   async changedPins(): Promise<PinnedIdentity[]> {
-    return (await this.db.getAll("pins")).filter((p) => p.changedTo !== null);
+    return [...this.pins.values()].filter((p) => p.changedTo !== null);
   }
 
-  // ───── envelopes held while a sender's identity is untrusted ─────
   async hold(item: QueueItem): Promise<void> {
-    await this.db.put("held", { queueId: item.id, senderUserId: item.senderUserId, item, heldAt: Date.now() });
+    this.held.set(item.id, { queueId: item.id, senderUserId: item.senderUserId, item, heldAt: Date.now() });
   }
 
   async heldFrom(userId: string): Promise<HeldItem[]> {
-    return this.db.getAllFromIndex("held", "bySender", userId);
+    return [...this.held.values()].filter((h) => h.senderUserId === userId);
   }
 
   async releaseHeld(queueId: number): Promise<void> {
-    await this.db.delete("held", queueId);
+    this.held.delete(queueId);
   }
 
   // ───── controls that arrived before the message they refer to ─────
   async holdControl(c: PendingControl): Promise<void> {
-    await this.db.put("pendingControls", c);
+    this.pendingControls.set(c.id, c);
   }
 
   /** Takes (and removes) the controls waiting for [target], oldest first. */
   async takeControls(conversationId: string, target: string): Promise<PendingControl[]> {
-    const tx = this.db.transaction("pendingControls", "readwrite");
-    const list = await tx.store.index("byTarget").getAll([conversationId, target]);
-    await Promise.all(list.map((c) => tx.store.delete(c.id)));
-    await tx.done;
+    const list = [...this.pendingControls.values()].filter((c) => c.conversationId === conversationId && c.target === target);
+    for (const c of list) this.pendingControls.delete(c.id);
     return list.sort((a, b) => a.serverTs - b.serverTs);
   }
 }

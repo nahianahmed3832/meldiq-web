@@ -63,19 +63,23 @@ export async function backUpKeysIfMissing(accounts: AccountApi, accountId: strin
   }
 }
 
+/** The emailed [code] gets the sealed keys back and [password] opens them. The caller wipes the seed it gets. */
+export async function openKeyBackupWithCode(accounts: AccountApi, accountId: string, code: string, password: string): Promise<Uint8Array> {
+  const backup = await accounts.keyUnlock(code.replace(/\D/g, ""));
+  try {
+    return await openKeyBackup(password, accountId, backup);
+  } catch (e) {
+    if (e instanceof WrongBackupPassword) throw new SetupError("That password doesn't open your key backup. Use your recovery key or your phone instead.");
+    throw e;
+  }
+}
+
 /**
  * The emailed [code] gets the sealed keys back and [password] opens them; this browser is then added like with the
  * recovery key. The seed is wiped before this returns.
  */
 export async function enrollWithEmailCode(accounts: AccountApi, account: AccountView, code: string, password: string, deviceName: string): Promise<Enrolled> {
-  const backup = await accounts.keyUnlock(code.replace(/\D/g, ""));
-  let seed: Uint8Array;
-  try {
-    seed = await openKeyBackup(password, account.id, backup);
-  } catch (e) {
-    if (e instanceof WrongBackupPassword) throw new SetupError("That password doesn't open your key backup. Use your recovery key or your phone instead.");
-    throw e;
-  }
+  const seed = await openKeyBackupWithCode(accounts, account.id, code, password);
   try {
     return await enrollWithSeed(accounts, account, seed, deviceName);
   } finally {

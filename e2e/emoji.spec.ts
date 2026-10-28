@@ -27,13 +27,16 @@ test("search, skin tone and categories, into the composer and as a reaction", as
   await page.getByRole("button", { name: "Set up encryption" }).click();
   await page.getByLabel("I've stored my recovery key somewhere safe.").check();
   await page.getByRole("button", { name: "Open Meldiq" }).click();
-  await expect(page.locator(".conn.online")).toBeVisible({ timeout: 15_000 });
+  await expect(page.locator(":is(.app[data-connection=online])").first()).toBeVisible({ timeout: 15_000 });
 
   const me = await page.evaluate(() => (window as unknown as { __orbit: { device: { userId: string } } }).__orbit.device.userId);
   const bob = await newPhone("bob", "Bob Chen");
   const dm = (await bob.req("POST", "/v1/conversations/dm", { userId: me })).conversation.id as string;
   await bob.send(dm, { type: "text", text: "Pick an emoji" });
-  await page.getByRole("link", { name: /Bob Chen/ }).click();
+  await page
+    .getByRole("complementary", { name: "Conversations" })
+    .getByRole("link", { name: /Bob Chen/ })
+    .click();
   await expect(page.getByText("Pick an emoji")).toBeVisible();
 
   // Into the composer: search, with a skin tone chosen once.

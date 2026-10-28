@@ -31,7 +31,7 @@ test("a linked browser and the phone stay in sync through the server, and signin
 
   // Someone else writes: it appears without a reload, decrypted in the browser.
   await bob.send(dm, { type: "text", text: "Hello from Bob's phone" });
-  const row = page.getByRole("link", { name: /Bob Chen/ });
+  const row = page.getByRole("complementary", { name: "Conversations" }).getByRole("link", { name: /Bob Chen/ });
   await expect(row).toBeVisible();
   await expect(row).toHaveAccessibleName(/1 unread/);
   await row.click();
@@ -58,13 +58,13 @@ test("a linked browser and the phone stay in sync through the server, and signin
 
   // Kept on this computer and signed in again with the device key after a reload.
   await page.reload();
-  await expect(page.locator(".conn.online")).toBeVisible({ timeout: 15_000 });
+  await expect(page.locator(":is(.app[data-connection=online])").first()).toBeVisible({ timeout: 15_000 });
   await expect(page.getByText("Reply typed in the browser ✓")).toBeVisible();
 
   // Sign out: the server lists the browser as removed, and the browser is back at the link screen.
-  await page.goto("/#/settings/security");
-  await page.getByRole("button", { name: "Sign out and erase this browser" }).click();
-  await page.getByRole("dialog").getByRole("button", { name: "Sign out" }).click();
+  await page.goto("/settings/security");
+  await page.getByRole("button", { name: "Sign out", exact: true }).click();
+  await page.getByRole("dialog", { name: "Sign out of this browser?" }).getByRole("button", { name: "Sign out" }).click();
   await expectSignedOut(page);
   const devices = (await alice.req("GET", "/v1/devices")).devices as { name: string; revokedAt: number | null }[];
   expect(devices.filter((d) => /^(Meldiq|Orbit) Web/.test(d.name)).every((d) => d.revokedAt !== null)).toBe(true);
@@ -93,7 +93,7 @@ test("a second tab doesn't take the connection unless asked", async ({ page, con
   await expect(second.getByRole("heading", { name: "Meldiq is open in another tab" })).toBeVisible();
   await second.getByRole("button", { name: "Use Meldiq here" }).click();
   await expect(
-    second.locator(".conn.online"),
+    second.locator(":is(.app[data-connection=online])").first(),
     await second
       .locator("body")
       .innerText()

@@ -1,3 +1,4 @@
+import { VibesCard } from "./AppearanceExtras";
 import { fileLimit, MAX_FILES_PER_MESSAGE } from "../../sync/attachments";
 import { APP_VERSION } from "../../application/env";
 import { serverHost } from "../../application/config";
@@ -17,16 +18,19 @@ import {
   TIME_FORMATS,
   UPLOAD_QUALITIES,
   usePrefs,
+  volumeOf,
 } from "../../application/prefs";
 import { bytes } from "../format";
 import { Toggle } from "../components/Toggle";
 import { IntroPages } from "../auth/IntroPages";
 import { BackgroundNotifications } from "./BackgroundNotifications";
+import { type ChimeState, chimeState, playChime, unlockChime } from "../../application/messageChime";
 import { type StringKey, useT } from "../../i18n";
+import { InstallSetting } from "./InstallButton";
 import { LanguagePicker } from "../components/LanguagePicker";
 
-const THEME_KEY = { system: "ap_system", light: "ap_light", dark: "ap_dark" } as const satisfies Record<Prefs["theme"], StringKey>;
-const PALETTE_KEY = { charcoal: "ap_charcoal", indigo: "ap_indigo", plum: "ap_plum", amber: "ap_amber" } as const satisfies Record<Palette, StringKey>;
+const THEME_KEY = { system: "ap_system", light: "ap_light", dark: "ap_dark", black: "ap_black" } as const satisfies Record<Prefs["theme"], StringKey>;
+const PALETTE_KEY = { meldiq: "ap_meldiq", midnight: "ap_midnight", charcoal: "ap_charcoal", indigo: "ap_indigo", plum: "ap_plum", amber: "ap_amber" } as const satisfies Record<Palette, StringKey>;
 const SIZE_KEY = { small: "ap_small", default: "ap_default", large: "ap_large" } as const satisfies Record<TextSize, StringKey>;
 const QUALITY_KEY = { standard: "ap_standard", hd: "ap_hd", original: "ap_original" } as const satisfies Record<"standard" | "hd" | "original", StringKey>;
 
@@ -76,6 +80,7 @@ export function NotificationsPage() {
           </div>
           <Toggle label={t("nt_sound")} checked={prefs.messageSound} onChange={(v) => setPrefs({ messageSound: v })} />
         </div>
+        <InAppSoundSettings />
         <div className="setting">
           <div className="lines">
             <strong>{t("nt_ring")}</strong>
@@ -105,6 +110,59 @@ export function NotificationsPage() {
   );
 }
 
+/** The chime in this tab (application/messageChime.ts): on or off, its volume, and a test that also unlocks sound. */
+function InAppSoundSettings() {
+  const prefs = usePrefs();
+  const t = useT();
+  const [state, setState] = useState<ChimeState>(chimeState());
+  const [result, setResult] = useState<"played" | "blocked" | null>(null);
+  const test = async () => {
+    const now = await unlockChime();
+    setState(now);
+    setResult(now === "ready" && (await playChime(Math.max(prefs.soundVolume, 1))) ? "played" : "blocked");
+  };
+  return (
+    <>
+      <div className="setting">
+        <div className="lines">
+          <strong>{t("nt_in_app")}</strong>
+          <small>{state === "unsupported" ? t("nt_in_app_unsupported") : state === "locked" && prefs.inAppSound ? t("nt_in_app_locked") : t("nt_in_app_sub")}</small>
+        </div>
+        <Toggle label={t("nt_in_app")} checked={prefs.inAppSound} disabled={state === "unsupported"} onChange={(v) => setPrefs({ inAppSound: v })} />
+      </div>
+      {prefs.inAppSound && state !== "unsupported" && (
+        <div className="setting">
+          <div className="lines">
+            <strong id="nt-volume-label">{t("nt_volume")}</strong>
+            <small>{t("nt_volume_value", { n: prefs.soundVolume })}</small>
+          </div>
+          <div className="row" style={{ gap: 10 }}>
+            <input
+              type="range"
+              min={0}
+              max={100}
+              step={5}
+              value={prefs.soundVolume}
+              aria-labelledby="nt-volume-label"
+              onChange={(e) => setPrefs({ soundVolume: volumeOf(Number(e.currentTarget.value)) })}
+            />
+            <button className="btn btn-secondary btn-sm" onClick={() => void test()}>
+              {t("nt_test_sound")}
+            </button>
+          </div>
+          {result && (
+            <small className={result === "played" ? "faint" : "field-error"} role="status" style={{ flexBasis: "100%" }}>
+              {result === "played"
+                ? "Played. If you heard nothing, check this site isn't muted in the browser tab and the computer's volume."
+                : "The browser blocked sound. Allow sound for this site in the browser's site settings, then try again."}
+            </small>
+          )}
+        </div>
+      )}
+    </>
+  );
+}
+
 export function AppearancePage() {
   const prefs = usePrefs();
   const t = useT();
@@ -126,7 +184,7 @@ export function AppearancePage() {
           </div>
           <div className="segmented" role="group" aria-label={t("ap_theme")}>
             {THEMES.map((th) => (
-              <button key={th} aria-pressed={prefs.theme === th} onClick={() => setPrefs({ theme: th })}>
+              <button key={th} aria-pressed={prefs.theme === th} onClick={() => setPrefs({ theme: th, themeChosen: true })}>
                 {t(THEME_KEY[th])}
               </button>
             ))}
@@ -283,6 +341,7 @@ export function AppearancePage() {
           <Toggle label={t("ap_enter")} checked={prefs.enterToSend} onChange={(v) => setPrefs({ enterToSend: v })} />
         </div>
       </div>
+      <VibesCard />
     </>
   );
 }
@@ -290,7 +349,6 @@ export function AppearancePage() {
 export function AboutPage() {
   const server = useOrbit((s) => s.server);
   const me = useOrbit((s) => s.me);
-  const history = useOrbit((s) => s.history);
   const [intro, setIntro] = useState(false);
   return (
     <>
@@ -309,6 +367,7 @@ export function AboutPage() {
             Show
           </button>
         </div>
+        <InstallSetting />
         <div className="setting">
           <div className="lines">
             <strong>Server</strong>
@@ -322,22 +381,6 @@ export function AboutPage() {
           <div className="lines">
             <strong>This browser</strong>
             <small>{me?.deviceName}</small>
-          </div>
-        </div>
-        <div className="setting">
-          <div className="lines">
-            <strong>Encrypted history</strong>
-            <small>
-              {history.status === "unsupported"
-                ? "This server doesn't keep encrypted history; this browser shows what it received since it was linked."
-                : history.status === "done"
-                  ? `Restored from your server. ${history.unreadable ? `${history.unreadable} items couldn't be read.` : ""}`
-                  : history.status === "running"
-                    ? "Restoring…"
-                    : history.status === "error"
-                      ? `Not restored: ${history.error}`
-                      : "Waiting"}
-            </small>
           </div>
         </div>
         <div className="setting">

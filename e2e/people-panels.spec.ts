@@ -7,7 +7,7 @@ import { newPhone, testAddress } from "./phone";
 /**
  * Discord-like side panels and look (2026-10-23): the community's photo in the rail; a channel's member list beside the
  * messages (people by role while here, then offline) and a DM's profile, both open by default and hidden from the
- * header; the charcoal theme; and Discord-sized message toolbar and reactions. ORBIT_E2E_SHOTS=<folder> keeps screenshots.
+ * header; the Meldiq navy theme; and Discord-sized message toolbar and reactions. ORBIT_E2E_SHOTS=<folder> keeps screenshots.
  */
 // Desktop Chromium only: one engine is enough for these panels, and touch screens have no hover toolbar (a long press opens the menu).
 test.skip(({ browserName, isMobile }) => browserName !== "chromium" || isMobile, "desktop Chromium only");
@@ -27,7 +27,7 @@ test("community photos in the rail, a member list in channels and a profile in D
   const alice = await newPhone("alice", "Alice Rahman");
   const bob = await newPhone("bob", "Bob Chen");
   const carol = await newPhone("carol", "Carol Diaz");
-  const jpeg = fs.readFileSync(path.join(import.meta.dirname, "../public/launch/meldiq-launch.jpg"));
+  const jpeg = fs.readFileSync(path.join(import.meta.dirname, "fixtures/photo.jpg"));
 
   const { org } = await alice.req("POST", "/v1/orgs", { name: "Panel Lab" });
   await alice.req("PUT", `/v1/orgs/${org.id}/photo`, undefined, jpeg);
@@ -48,9 +48,11 @@ test("community photos in the rail, a member list in channels and a profile in D
   await link(page, alice);
   await expect.poll(() => page.locator(".rail-org .avatar-photo").evaluateAll(loaded), { message: "the community's photo in the rail" }).toBe(true);
 
-  // The charcoal theme by default: a neutral grey frame, not the logo's indigo.
-  expect(await page.evaluate(() => document.documentElement.dataset.palette)).toBe("charcoal");
-  expect(await page.locator(".app").evaluate((el) => getComputedStyle(el).backgroundImage)).toContain("rgb(43, 45, 49)");
+  // The Meldiq palette by default (the floating redesign: a near-black frame; Midnight, the earlier navy, and the other
+  // plates stay available in Appearance), in the dark theme, the default since 2026-10-28.
+  expect(await page.evaluate(() => document.documentElement.dataset.palette)).toBe("meldiq");
+  expect(await page.evaluate(() => document.documentElement.dataset.theme)).toBe("dark");
+  expect(await page.locator(".app").evaluate((el) => getComputedStyle(el).backgroundImage)).toContain("rgb(4, 4, 4)");
 
   // A channel: the member list beside the messages, Staff first, then Online, then Offline.
   await page.goto(`/home/c/${channel.id}`);
@@ -60,7 +62,7 @@ test("community photos in the rail, a member list in channels and a profile in D
   await expect(list.locator("section").nth(0)).toContainText("Bob Chen");
   await expect(list.locator("section").nth(1)).toContainText("Alice Rahman");
   await expect(list.locator("section").nth(2)).toContainText("Carol Diaz");
-  await expect(list.locator(".member-row").filter({ hasText: "Bob Chen" }).locator(".member-name")).toHaveCSS("color", "rgb(230, 126, 34)");
+  await expect(list.locator(".member-row").filter({ hasText: "Bob Chen" }).locator(".member-name .sname")).toHaveCSS("color", "rgb(230, 126, 34)");
   await shot(page, "channel-members");
 
   // Hidden from the header, and it stays hidden (every channel) until shown again.

@@ -3,15 +3,18 @@ import { useSyncExternalStore } from "react";
 
 /**
  * The app's routes, as paths (Next.js serves the one client-side page for every path; docs/MELDIQ_WEB_NEXTJS.md):
- *   /home  /dms  /activity  /later              the sections (Later: saved messages and reminders)
+ *   /home  /dms  /activity  /later  /discover    the sections (Later: saved messages and reminders; Discover: public communities)
  *   /<section>/c/<id>[/details|/search|/pinned|/members|/thread/<root>]   a conversation (and its side panel)
  *   /settings/<page>
  *   /workspace/<page>                          the current workspace's settings and administration
  * Links from before (hash routes, "/#/dms/c/<id>": old notifications, bookmarks, links in messages) still work: the
  * page moves them to their path on load. Moving around is the History API, so Back and Forward work and nothing reloads.
  */
-export type Section = "home" | "dms" | "activity" | "later" | "settings" | "workspace";
-export type SettingsPage = "profile" | "account" | "devices" | "notifications" | "calls" | "appearance" | "storage" | "security" | "about" | "health" | "usage";
+/** "friends" (2026-10-28): the Friends page, the Messages home on its own route (phones open it from the list). */
+export type Section = "home" | "dms" | "friends" | "activity" | "later" | "discover" | "settings" | "workspace";
+/** "you": the phone's You tab, a list of the pages under your account card (desktop shows the profile page there). */
+export type SettingsPage =
+  "you" | "profile" | "account" | "devices" | "notifications" | "calls" | "appearance" | "storage" | "security" | "about" | "advanced" | "shortcuts" | "health" | "usage" | "mojo" | "spark";
 export type WorkspacePage =
   | "overview"
   | "people"
@@ -42,8 +45,25 @@ export interface Route {
 /** Sections that take the whole page (no conversation list). */
 export const isFullPage = (s: Section): boolean => s === "settings" || s === "workspace";
 
-const SECTIONS: Section[] = ["home", "dms", "activity", "later", "settings", "workspace"];
-const PAGES: SettingsPage[] = ["profile", "account", "devices", "notifications", "calls", "appearance", "storage", "security", "about", "health", "usage"];
+const SECTIONS: Section[] = ["home", "dms", "friends", "activity", "later", "discover", "settings", "workspace"];
+const PAGES: SettingsPage[] = [
+  "you",
+  "profile",
+  "account",
+  "devices",
+  "notifications",
+  "calls",
+  "appearance",
+  "storage",
+  "security",
+  "about",
+  "advanced",
+  "shortcuts",
+  "health",
+  "usage",
+  "mojo",
+  "spark",
+];
 const WORKSPACE_PAGES: WorkspacePage[] = [
   "overview",
   "people",

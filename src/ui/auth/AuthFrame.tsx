@@ -1,42 +1,54 @@
-import { KeyRound, Lock, ShieldCheck } from "lucide-react";
+import { Compass, Headphones, Link2, Lock, Sparkles } from "lucide-react";
 import type { ReactNode } from "react";
 import { BrandMark } from "../components/BrandMark";
 import { LanguagePicker } from "../components/LanguagePicker";
 import { useT } from "../../i18n";
 
-/** The signed-out layout: Orbit's story on the left, the current step on the right (stacked on phones). */
+/**
+ * The signed-out layout (continuation brief v3 §5): on wide screens a community-first hero, Meldling, what Meldiq is
+ * for and an illustration of a community, beside a comfortably sized form; on phones a compact branded header above
+ * the form. Nothing in it is invented: no member counts, activity or testimonials.
+ */
 export function AuthFrame({ children }: { children: ReactNode }) {
   const t = useT();
   return (
     <div className="link-screen">
       <section className="link-hero" aria-label={t("hero_about")}>
-        <div className="row" style={{ gap: 12 }}>
-          <BrandMark size={52} />
+        <div className="hero-brand">
+          <BrandMark size={44} />
           <div>
-            <strong style={{ fontSize: 17 }}>Meldiq</strong>
+            <strong>Meldiq</strong>
             <div className="brand-byline">by GriipBuddy</div>
           </div>
         </div>
-        <div>
+        <div className="hero-copy">
           <h1>
-            {t("hero_title_1")} <em>{t("hero_title_2")}</em>
+            {t("hero_c_title_1")} <em>{t("hero_c_title_2")}</em>
           </h1>
-          <p>{t("hero_body")}</p>
+          <p>{t("hero_c_body")}</p>
+          <ul className="hero-points">
+            <li>
+              <Link2 size={18} aria-hidden="true" />
+              <span>{t("hero_c_join")}</span>
+            </li>
+            <li>
+              <Compass size={18} aria-hidden="true" />
+              <span>{t("hero_c_discover")}</span>
+            </li>
+            <li>
+              <Headphones size={18} aria-hidden="true" />
+              <span>{t("hero_c_talk")}</span>
+            </li>
+            <li>
+              <Sparkles size={18} aria-hidden="true" />
+              <span>{t("hero_c_create")}</span>
+            </li>
+          </ul>
         </div>
-        <div className="hero-points">
-          <div>
-            <Lock size={18} />
-            <span>{t("hero_point_encrypted")}</span>
-          </div>
-          <div>
-            <KeyRound size={18} />
-            <span>{t("hero_point_keys")}</span>
-          </div>
-          <div>
-            <ShieldCheck size={18} />
-            <span>{t("hero_point_remove")}</span>
-          </div>
-        </div>
+        <HeroPreview label={t("hero_c_preview")} />
+        <p className="hero-foot">
+          <Lock size={14} aria-hidden="true" /> {t("hero_point_encrypted")}
+        </p>
       </section>
       <main className="link-main">
         {/* Picked before signing in or up, so every step is in the person's language (2026-10-23). */}
@@ -44,6 +56,15 @@ export function AuthFrame({ children }: { children: ReactNode }) {
         <div className="link-card card">{children}</div>
       </main>
     </div>
+  );
+}
+
+/** The brand banner (the owner's art, 2026-10-29): Meldling with the name and "Connect. Play. Belong.". */
+function HeroPreview({ label }: { label: string }) {
+  return (
+    <figure className="hero-preview hero-banner">
+      <img src="/meldling/banner.webp" alt={label} width={1600} height={900} />
+    </figure>
   );
 }
 

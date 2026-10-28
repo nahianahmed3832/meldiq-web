@@ -1,3 +1,4 @@
+import { MeldlingArt } from "../components/MeldlingArt";
 import { AlarmClock, Check, MessageSquare, RotateCcw, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useEngine, useOrbit } from "../../application/orbit";
@@ -24,9 +25,7 @@ export function SavedList() {
   if (open.length === 0 && done.length === 0)
     return (
       <div className="empty">
-        <span className="empty-orb">
-          <AlarmClock size={24} />
-        </span>
+        <MeldlingArt pose="love" />
         <h2>Nothing saved</h2>
         <p>Save a message for later from its menu (⋯ › Save for later). It shows up here on all your devices, with a reminder if you want one.</p>
       </div>
@@ -80,7 +79,7 @@ function SavedRow({ item }: { item: SavedItem }) {
             {conversation?.type === "CHANNEL" ? `#${where}` : where}
             {sender ? ` · ${sender}` : ""}
           </small>
-          <span className="later-text">{message === undefined ? "…" : message ? preview(message) || "Message" : "This message isn't on this browser (it may be older than its history here)."}</span>
+          <span className="later-text">{message === undefined ? "…" : message ? preview(message) || "Message" : "Open the conversation to see this message."}</span>
         </span>
       </button>
       <div className="row" style={{ gap: 6, flexWrap: "wrap" }}>

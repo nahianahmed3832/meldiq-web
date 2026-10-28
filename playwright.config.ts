@@ -1,3 +1,4 @@
+import crypto from "node:crypto";
 import { defineConfig, devices } from "@playwright/test";
 import { spawnSync } from "node:child_process";
 import fs from "node:fs";
@@ -65,6 +66,9 @@ export default defineConfig({
         PORT: String(API_PORT),
         HOST: "127.0.0.1",
         DATA_DIR: process.env.ORBIT_E2E_DATA,
+        // Presence changes at once here, as in the server's own tests; its settle and grace delays have their own suite.
+        PRESENCE_SETTLE_MS: "0",
+        PRESENCE_GRACE_MS: "0",
         LOG_LEVEL: "warn",
         RATE_LIMIT_PER_MINUTE: "100000",
         REGISTRATION_PER_ADDRESS_PER_HOUR: "0",
@@ -76,6 +80,8 @@ export default defineConfig({
         // Passkeys (e2e/passkeys.spec.ts): the pages at localhost are a relying party of their own, as web.meldiq.app is.
         PASSKEY_RP_ID: "msg.example.test",
         PASSKEY_WEB_ORIGINS: `http://localhost:${WEB_PORT}`,
+        // AI agents reading channels (e2e/agents.spec.ts) hold their keys under the platform's key: a throwaway one here.
+        PLATFORM_SECRETS_KEY: crypto.randomBytes(32).toString("hex"),
         ...livekitEnv,
       },
     },
@@ -109,7 +115,8 @@ export default defineConfig({
             url: `http://127.0.0.1:${WEB_PORT}`,
             reuseExistingServer: false,
             timeout: 300_000,
-            env: { ORBIT_API_URL: `http://127.0.0.1:${API_PORT}`, ORBIT_E2E_FORWARD: "1" },
+            // The test phones link through the pre-email device sign-in, which release builds leave out (auth/testLinking.ts).
+            env: { ORBIT_API_URL: `http://127.0.0.1:${API_PORT}`, ORBIT_E2E_FORWARD: "1", NEXT_PUBLIC_MELDIQ_TEST_LINKING: "1" },
           },
         ]
       : [

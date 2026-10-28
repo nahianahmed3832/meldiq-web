@@ -8,6 +8,8 @@ import type { SessionGrant } from "../api/schemas";
 import type { DeviceRecord } from "../model/types";
 import { getPrefs } from "./prefs";
 import { refreshPush, startServiceWorker, systemNotify } from "./webPush";
+import { armChimeOnInteraction, chimeState, playChime } from "./messageChime";
+import { transfersOf } from "../sync/transfers";
 
 /**
  * What this browser needs: a secure context, WebCrypto with Ed25519 and X25519 (natively, or the fallback that main.tsx
@@ -38,11 +40,34 @@ const allowed = (): boolean => getPrefs().notifications && typeof Notification !
 const lookedAt = (): boolean => document.visibilityState === "visible" && document.hasFocus();
 const room = (id: string | null): string | null => (id ? `/home/c/${encodeURIComponent(id)}` : null);
 
-/** System notifications for messages that arrive while this tab isn't looked at (src/application/webPush.ts shows them). */
+/**
+ * A message the notification pipeline let through (engine.notifyIncoming): a system notification while this tab isn't
+ * looked at (src/application/webPush.ts shows it), and otherwise the in-app chime. Never both: a system notification
+ * with sound already makes one.
+ */
 function notify(title: string, body: string, conversationId: string): void {
-  if (!allowed() || lookedAt()) return;
   const p = getPrefs();
-  systemNotify({ title: p.notificationText ? title : "Meldiq", body: p.notificationText ? body : "New message", tag: conversationId, href: room(conversationId), silent: !p.messageSound });
+  const system = allowed() && !lookedAt();
+  // Meldiq's own chime when it can play (the browser's notification is then silent, so there's one sound, and one
+  // that doesn't depend on the system's notification sound settings); the system's sound otherwise.
+  const chime = p.inAppSound && p.soundVolume > 0 && chimeState() === "ready";
+  if (system)
+    systemNotify({ title: p.notificationText ? title : "Meldiq", body: p.notificationText ? body : "New message", tag: conversationId, href: room(conversationId), silent: chime || !p.messageSound });
+  if (!p.inAppSound) return;
+  void playChime(p.soundVolume).then((played) => {
+    if (!played && !soundHinted && lookedAt()) {
+      soundHinted = true;
+      onSoundBlocked?.();
+    }
+  });
+}
+
+/** Once per page: sound couldn't play (no click in this tab yet), said once rather than at every message. */
+let soundHinted = false;
+let onSoundBlocked: (() => void) | null = null;
+/** The app shows its notice with this (set at start). */
+export function onChimeBlocked(fn: () => void): void {
+  onSoundBlocked = fn;
 }
 
 /** A reminder that went off (Later): a system notification (when allowed) that opens Later or the saved message. */
@@ -80,6 +105,8 @@ function ringAlert(title: string, video: boolean, conversationId: string): void 
 }
 
 export function createEngine(device: DeviceRecord, store: LocalStore): Engine {
+  // Sound is prepared on the person's first click or key press here, as browsers require; never at load.
+  armChimeOnInteraction();
   const engine = new Engine(device, store, {
     base: apiBase(),
     wsUrl: wsUrl(),
@@ -90,7 +117,19 @@ export function createEngine(device: DeviceRecord, store: LocalStore): Engine {
     ringtone: new Ringtone(() => getPrefs().callRingtone),
     callPrefs: () => {
       const p = getPrefs();
-      return { noiseReduction: p.noiseReduction, shareQuality: p.shareQuality, shareAudio: p.shareAudio };
+      return {
+        noiseReduction: p.noiseReduction,
+        shareQuality: p.shareQuality,
+        shareAudio: p.shareAudio,
+        echoCancellation: p.echoCancellation,
+        autoGain: p.autoGain,
+        microphoneId: p.microphoneId,
+        speakerId: p.speakerId,
+        outputVolume: p.outputVolume,
+        joinMuted: p.joinMuted,
+        joinDeafened: p.joinDeafened,
+        pushToTalk: p.pushToTalk && !!p.pttKey,
+      };
     },
     ringAlert,
     prefs: () => {
@@ -113,6 +152,9 @@ export async function startEngine(device: DeviceRecord, store: LocalStore, grant
 /** After the engine started: notifications through the service worker, and the background-notification token kept current. */
 export function startNotifications(engine: Engine): void {
   void startServiceWorker(engine).then(() => refreshPush(engine));
+  onChimeBlocked(() => engine.notice("info", "Message sounds start after you click anywhere in Meldiq (a browser rule). Settings › Notifications has a test."));
+  // Files whose sending a reload interrupted come back in their conversations, ready to resume.
+  void transfersOf(engine).load();
 }
 
 const LOCK = "orbit-web-device";

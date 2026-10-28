@@ -1,4 +1,5 @@
-import { MessageSquare, PenSquare, Search, ScrollText } from "lucide-react";
+import { MeldlingArt } from "../components/MeldlingArt";
+import { PenSquare, Search, ScrollText } from "lucide-react";
 import { type FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import type { Conversation } from "../../api/schemas";
 import { useEngine, useOrbit } from "../../application/orbit";
@@ -132,10 +133,8 @@ export function ForumView({ c, section }: { c: Conversation; section: Section })
         <span className="skeleton" style={{ height: 120 }} />
       ) : list.length === 0 ? (
         <div className="empty" style={{ padding: 32 }}>
-          <span className="empty-orb">
-            <MessageSquare size={22} />
-          </span>
-          <p className="muted">{q || selected.size ? "No posts match." : "No posts on this browser yet. Start one with New post."}</p>
+          <MeldlingArt pose="hello" />
+          <p className="muted">{q || selected.size ? "No posts match." : "No posts yet. Start one with New post."}</p>
         </div>
       ) : (
         <ul className="forum-posts" aria-label="Posts">

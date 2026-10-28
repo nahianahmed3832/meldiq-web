@@ -6,7 +6,10 @@ import { decryptStream } from "../crypto/fileStream";
 import { type UploadProgress, uploadLarge } from "./largeUpload";
 import type { AttachmentRef } from "../protocol/payload";
 import type { Engine } from "./engine";
-import { cachedMedia, forgetMediaEntry, keepMedia } from "../store/mediaCache";
+import { cachedMedia, cachedMediaBlob, forgetMediaEntry, keepMedia, keepMediaBlob } from "../store/mediaCache";
+import { decryptFileBlob } from "../crypto/cipherClient";
+import { cipherSize, importChunkKey } from "../crypto/fileStream";
+import { fromB64 } from "../crypto/bytes";
 import { holdUpdates } from "../application/updates";
 
 /**
@@ -42,6 +45,11 @@ export interface PickedFile {
   source?: Blob;
 }
 
+/** Stores a single-message file's ciphertext; answers its attachment id. */
+export async function uploadSingle(engine: Engine, conversationId: string, ciphertext: Uint8Array): Promise<string> {
+  return (await engine.api.json("POST", `/v1/attachments?conversationId=${encodeURIComponent(conversationId)}`, zUploadRes, { raw: ciphertext })).id;
+}
+
 const sizeText = (n: number): string => (n >= 1024 * 1024 * 1024 ? `${(n / (1024 * 1024 * 1024)).toFixed(n % (1024 * 1024 * 1024) ? 1 : 0)} GB` : `${Math.floor(n / (1024 * 1024))} MB`);
 
 export async function uploadFiles(
@@ -65,16 +73,11 @@ export async function uploadFiles(
       if (f.size > SINGLE_FORMAT_BYTES) {
         if (!f.source) throw new AttachmentError(`"${f.name}" is too large to send this way.`);
         refs.push(
-          await uploadLarge(
-            engine,
-            conversationId,
-            { name: f.name, type: f.type, size: f.size, slice: (a, b) => f.source!.slice(a, b) },
-            {
-              onProgress: (p) => large?.onProgress?.(f.name, p),
-              signal: large?.signal,
-              voiceDurationMs: f.voiceDurationMs,
-            },
-          ),
+          await uploadLarge(engine, conversationId, Object.assign({ name: f.name, type: f.type, size: f.size, slice: (a: number, b: number) => f.source!.slice(a, b) }, { source: f.source }), {
+            onProgress: (p) => large?.onProgress?.(f.name, p),
+            signal: large?.signal,
+            voiceDurationMs: f.voiceDurationMs,
+          }),
         );
         onProgress?.(i + 1, files.length);
         continue;
@@ -122,22 +125,119 @@ const CACHE_LIMIT = 64 * 1024 * 1024;
  * Downloads, verifies and decrypts a file: once per page load when small, and single-message files once per browser
  * (their ciphertext is kept in the media cache). Object URLs are made by the caller and revoked by it.
  */
-export function openAttachment(engine: Engine, ref: AttachmentRef): Promise<Blob> {
+export function openAttachment(engine: Engine, ref: AttachmentRef, onProgress?: (p: DownloadProgress) => void): Promise<Blob> {
+  // Keyed by the file and the hash it must have: a reference naming another hash is verified on its own.
+  const key = `${ref.id}:${ref.sha256}`;
   if (ref.chunk !== undefined) {
-    const parts: Blob[] = [];
-    const p = streamAttachment(engine, ref, (plain) => void parts.push(new Blob([new Uint8Array(plain)]))).then(() => new Blob(parts, { type: safeMime(ref.mime) }));
-    if (ref.size > CACHE_LIMIT) return p;
-    cache.set(ref.id, p);
-    p.catch(() => cache.delete(ref.id));
+    // One open per file at a time: opening it again while it downloads joins that download (and its progress).
+    const running = cache.get(key);
+    if (running) return running;
+    const p = openChunked(engine, ref, onProgress);
+    cache.set(key, p);
+    p.then(
+      () => ref.size > CACHE_LIMIT && cache.delete(key),
+      () => cache.delete(key),
+    );
     return p;
   }
-  let p = cache.get(ref.id);
+  let p = cache.get(key);
   if (!p) {
     p = openSingle(engine, ref);
-    p.catch(() => cache.delete(ref.id));
-    cache.set(ref.id, p);
+    p.catch(() => cache.delete(key));
+    cache.set(key, p);
   }
   return p;
+}
+
+export interface DownloadProgress {
+  phase: "downloading" | "decrypting";
+  done: number;
+  total: number;
+}
+
+/** Tries for a download whose connection drops; each continues from the bytes already received (a Range request). */
+const DOWNLOAD_TRIES = 4;
+
+/**
+ * A chunked file (continuation brief v3 §2): its ciphertext from this browser's media cache when an earlier visit kept
+ * it, else downloaded (continuing after a dropped connection rather than from zero), then decrypted and verified in the
+ * cipher worker. A kept copy that fails verification is dropped and downloaded once more; a verified download is kept.
+ */
+async function openChunked(engine: Engine, ref: AttachmentRef, onProgress?: (p: DownloadProgress) => void): Promise<Blob> {
+  const key = `attachment:${ref.id}`;
+  const k = await importChunkKey(fromB64(ref.key), fromB64(ref.nonce), "decrypt");
+  const meta = { chunk: ref.chunk ?? 0, size: ref.size, sha256: ref.sha256, mime: safeMime(ref.mime) };
+  const total = cipherSize(ref.size, meta.chunk);
+  const decrypt = (ct: Blob) => decryptFileBlob(ct, k, meta, { onProgress: (done) => onProgress?.({ phase: "decrypting", done, total }) });
+  const kept = await cachedMediaBlob(key);
+  if (kept) {
+    try {
+      return await decrypt(kept);
+    } catch {
+      await forgetMediaEntry(key);
+    }
+  }
+  const ct = await downloadCiphertext(engine, ref.id, total, (done) => onProgress?.({ phase: "downloading", done, total }));
+  let plain: Blob;
+  try {
+    plain = await decrypt(ct);
+  } catch (e) {
+    if (e instanceof EnvelopeError) throw new AttachmentError("This file didn't pass its integrity check and wasn't opened.");
+    throw e;
+  }
+  void keepMediaBlob(key, ct);
+  return plain;
+}
+
+/** The whole ciphertext as a Blob, resuming with a Range request when the connection drops part-way. */
+async function downloadCiphertext(engine: Engine, id: string, total: number, onProgress: (done: number) => void): Promise<Blob> {
+  const parts: Blob[] = [];
+  let got = 0;
+  for (let attempt = 1; ; attempt++) {
+    let res: Response;
+    try {
+      res = got > 0 ? await attachmentResponse(engine, id, undefined, `bytes=${got}-`) : await attachmentResponse(engine, id);
+    } catch (e) {
+      if (e instanceof ApiError && e.status === 404) throw new AttachmentError("This file has expired on the server (files are kept 7 days unless saved with history).");
+      if (!(e instanceof ApiError && e.code === "network") || attempt >= DOWNLOAD_TRIES) throw e;
+      await new Promise((r) => setTimeout(r, 1000 * 2 ** (attempt - 1)));
+      continue;
+    }
+    // A server that ignored the range sends everything again: start over rather than append twice.
+    if (got > 0 && res.status !== 206) {
+      parts.length = 0;
+      got = 0;
+    }
+    if (!res.body) throw new ApiError(res.status, "decode", "The server's answer had no body");
+    const reader = res.body.getReader();
+    let pending: Uint8Array[] = [];
+    let pendingBytes = 0;
+    const flush = () => {
+      if (pending.length) parts.push(new Blob(pending as BlobPart[]));
+      pending = [];
+      pendingBytes = 0;
+    };
+    try {
+      for (;;) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        pending.push(value);
+        pendingBytes += value.length;
+        got += value.length;
+        if (pendingBytes >= 4 * 1024 * 1024) flush();
+        onProgress(got);
+      }
+      flush();
+      if (got >= total) return new Blob(parts, { type: "application/octet-stream" });
+      throw new ApiError(0, "network", "The download stopped early.");
+    } catch (e) {
+      flush();
+      if (attempt >= DOWNLOAD_TRIES) throw e instanceof ApiError ? e : new ApiError(0, "network", "The download was interrupted. Try again.");
+      await new Promise((r) => setTimeout(r, 1000 * 2 ** (attempt - 1)));
+    } finally {
+      reader.releaseLock();
+    }
+  }
 }
 
 /**
@@ -174,16 +274,17 @@ async function openSingle(engine: Engine, ref: AttachmentRef): Promise<Blob> {
  */
 let throughWebServer = false;
 
-export async function attachmentResponse(engine: Engine, id: string, signal?: AbortSignal): Promise<Response> {
+export async function attachmentResponse(engine: Engine, id: string, signal?: AbortSignal, range?: string): Promise<Response> {
   const direct = `/v1/attachments/${encodeURIComponent(id)}`;
-  if (throughWebServer) return (await viaWebServer(engine, id, signal)) ?? engine.api.response(direct, { signal });
+  const headers = range ? { range } : undefined;
+  if (throughWebServer) return (await viaWebServer(engine, id, signal, range)) ?? engine.api.response(direct, { signal, headers });
   try {
-    return await engine.api.response(direct, { signal });
+    return await engine.api.response(direct, { signal, headers });
   } catch (e) {
     if (!(e instanceof ApiError && e.code === "network") || signal?.aborted) throw e;
     let res: Response | null;
     try {
-      res = await viaWebServer(engine, id, signal);
+      res = await viaWebServer(engine, id, signal, range);
     } catch (again) {
       // The server's own answer (expired, not a member) is the one to show; still unreachable: the first error.
       throw again instanceof ApiError && again.code !== "network" ? again : e;
@@ -195,8 +296,8 @@ export async function attachmentResponse(engine: Engine, id: string, signal?: Ab
 }
 
 /** Null where this site has no such route: a development server or an older install answers with the app's page. */
-async function viaWebServer(engine: Engine, id: string, signal?: AbortSignal): Promise<Response | null> {
-  const res = await engine.api.response(`/media/attachments/${encodeURIComponent(id)}`, { signal });
+async function viaWebServer(engine: Engine, id: string, signal?: AbortSignal, range?: string): Promise<Response | null> {
+  const res = await engine.api.response(`/media/attachments/${encodeURIComponent(id)}`, { signal, headers: range ? { range } : undefined });
   if ((res.headers.get("content-type") ?? "").includes("text/html")) {
     await res.body?.cancel().catch(() => undefined);
     return null;

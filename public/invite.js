@@ -11,8 +11,14 @@
     invite_used_up: "This invitation has been used up. Ask for a new one.",
   };
 
-  function el(id) { return document.getElementById(id); }
-  function show(id, text) { var e = el(id); if (text !== undefined) e.textContent = text; e.hidden = false; }
+  function el(id) {
+    return document.getElementById(id);
+  }
+  function show(id, text) {
+    var e = el(id);
+    if (text !== undefined) e.textContent = text;
+    e.hidden = false;
+  }
 
   function codeFromPath(path) {
     var raw = decodeURIComponent(path.replace(/^\/invite\/?/, "").split("/")[0] || "");
@@ -22,23 +28,45 @@
   }
 
   function problem(text) {
+    // Nothing was invited to: no "You've been invited to join" above the reason.
+    el("lead").hidden = true;
     el("name").textContent = "Invitation";
     show("problem", text);
   }
 
   var code = codeFromPath(window.location.pathname);
-  if (!code) { problem(PROBLEMS.invite_not_found); return; }
+  if (!code) {
+    problem(PROBLEMS.invite_not_found);
+    return;
+  }
 
   el("code").textContent = code;
   // On Android this opens the app when it's installed; App Links usually open it before this page loads at all.
   el("open-app").href = "meldiq://invite/" + encodeURIComponent(code);
+  // Meldiq Web keeps the code through signing in and opens the community's preview with Join (src/application/pendingInvite.ts).
+  el("open-web").href = "/join/" + encodeURIComponent(code);
+  // On Android the app comes first (App Links usually open it before this page loads); elsewhere "Open in the app"
+  // can't work, so only the Play Store link is offered beside Meldiq Web.
+  if (/Android/i.test(navigator.userAgent)) {
+    el("open-app").hidden = false;
+    el("open-app").className = "button primary";
+    el("open-web").className = "button";
+    el("open-app").parentNode.insertBefore(el("open-app"), el("open-web"));
+  }
   el("copy").addEventListener("click", function () {
-    var done = function () { el("copy").textContent = "Copied"; };
+    var done = function () {
+      el("copy").textContent = "Copied";
+      el("copy").setAttribute("aria-live", "polite");
+    };
     if (navigator.clipboard) navigator.clipboard.writeText(code).then(done, function () {});
   });
 
   fetch("/v1/invites/" + encodeURIComponent(code) + "/public", { credentials: "omit" })
-    .then(function (r) { return r.json().then(function (body) { return { ok: r.ok, body: body }; }); })
+    .then(function (r) {
+      return r.json().then(function (body) {
+        return { ok: r.ok, body: body };
+      });
+    })
     .then(function (res) {
       if (!res.ok) {
         var c = res.body && res.body.error && res.body.error.code;
@@ -47,11 +75,54 @@
       }
       var community = res.body.community || {};
       el("name").textContent = community.name || "A Meldiq community";
+      var initialsIcon = function () {
+        // The community's initials on Meldiq's gradient when it has no icon (or it can't load).
+        var words = community.name.trim().split(/\s+/);
+        el("icon").className = "icon";
+        el("icon").textContent = (words.length > 1 ? words[0].charAt(0) + words[words.length - 1].charAt(0) : community.name.slice(0, 2)).toUpperCase();
+      };
+      if (community.photo) {
+        // API 0.46.0: the community's own icon.
+        var img = new Image(88, 88);
+        img.alt = "";
+        img.onload = function () {
+          el("icon").className = "icon photo";
+          el("icon").replaceChildren(img);
+        };
+        img.onerror = function () {
+          if (community.name) initialsIcon();
+        };
+        img.src = "/v1/invites/" + encodeURIComponent(code) + "/photo";
+      } else if (community.name) initialsIcon();
       document.title = (community.name || "Meldiq") + " · Meldiq invitation";
       if (community.description) show("about", community.description);
+      // API 0.44.0: the community's banner and accent colour (only "#rrggbb"; anything else keeps Meldiq's colours).
+      var accent = /^#[0-9a-f]{6}$/i.test(community.accent || "") ? community.accent : null;
+      if (community.banner) {
+        el("banner").style.backgroundImage = "url(/v1/invites/" + encodeURIComponent(code) + "/banner)";
+        el("banner").hidden = false;
+      } else if (accent) {
+        el("banner").style.background = accent;
+        el("banner").hidden = false;
+      }
+      if (accent) {
+        var n = parseInt(accent.slice(1), 16);
+        var lum = [(n >> 16) & 255, (n >> 8) & 255, n & 255].map(function (c) {
+          c /= 255;
+          return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+        });
+        var l = 0.2126 * lum[0] + 0.7152 * lum[1] + 0.0722 * lum[2];
+        // White or near-black text, whichever reads better on the accent.
+        var onAccent = 1.05 / (l + 0.05) >= (l + 0.05) / 0.05 ? "#ffffff" : "#0b1020";
+        el("open-web").style.background = accent;
+        el("open-web").style.borderColor = accent;
+        el("open-web").style.color = onAccent;
+      }
       if (typeof community.memberCount === "number") show("members", community.memberCount === 1 ? "1 member" : community.memberCount + " members");
       if (res.body.invitesPaused) show("problem", "This community has paused new members for now. Try again later.");
       show("join");
     })
-    .catch(function () { problem("This invitation can't be opened right now. Check your connection and try again."); });
+    .catch(function () {
+      problem("This invitation can't be opened right now. Check your connection and try again.");
+    });
 })();

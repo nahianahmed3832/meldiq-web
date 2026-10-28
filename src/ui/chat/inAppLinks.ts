@@ -2,6 +2,7 @@ import { navigate } from "../../application/router";
 import type { Engine } from "../../sync/engine";
 import { inviteFromScan } from "../../sync/inviteCodes";
 import { parseMessageLink } from "../../sync/messageLinks";
+import { meldiqPath } from "../../sync/webOrigin";
 import { jumpTo } from "./jump";
 
 /** Asks the shell to open Join with this invitation code (an invite link clicked inside a chat, batch B4b). */
@@ -23,12 +24,12 @@ export function openInApp(engine: Engine, href: string): boolean {
     // The list mounts after navigation; then the message is found (older pages load if needed) and highlighted.
     setTimeout(() => {
       void jumpTo(engine, c.id, target.messageId).then((found) => {
-        if (!found) engine.notice("info", "That message isn't on this browser, so the conversation opened without it.");
+        if (!found) engine.notice("info", "That message is gone, so the conversation opened without it.");
       });
     }, 150);
     return true;
   }
-  if (/^https:\/\/(www\.)?meldiq\.app\/invite\//i.test(href.trim()) || /^(meldiq|griip):\/\/invite\//i.test(href.trim())) {
+  if ((meldiqPath(href) ?? "").startsWith("/invite/") || /^(meldiq|griip):\/\/invite\//i.test(href.trim())) {
     const code = inviteFromScan(href);
     if (code) {
       window.dispatchEvent(new CustomEvent(JOIN_INVITE_EVENT, { detail: code }));

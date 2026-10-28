@@ -292,7 +292,7 @@ describe("keeping a call going", () => {
     await until(() => phase() === "incoming" && web.calls.hasKey(c.id), 8000, "ring and key");
     await web.calls.accept();
     rig.last!.events.disconnected("PARTICIPANT_REMOVED");
-    expect(web.state.get().call).toMatchObject({ phase: "ended", endReason: "disconnected" });
+    expect(web.state.get().call).toMatchObject({ phase: "ended", endReason: "removed" });
   });
 
   it("waits for the other person after their connection drops, then ends the call as lost", async () => {

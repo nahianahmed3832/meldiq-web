@@ -1,3 +1,5 @@
+import { captureDiscordReturn } from "../application/discordReturn";
+import { capturePendingInvite, capturePendingMessage, captureReferral } from "../application/pendingInvite";
 import { StrictMode, useEffect, useState } from "react";
 import { loadConfig } from "../application/config";
 import { applyTheme, getPrefs } from "../application/prefs";
@@ -23,6 +25,11 @@ export default function Root() {
     applyTheme(getPrefs());
     followVisualViewport();
     startSplash();
+    // Before routing reads the address: an invitation link's code is kept for after signing in (pendingInvite.ts).
+    capturePendingInvite();
+    captureReferral();
+    capturePendingMessage();
+    captureDiscordReturn();
     const stopRouting = startRouting();
     let alive = true;
     void (async () => {

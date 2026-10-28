@@ -88,6 +88,12 @@
   display: grid;
   align-content: start;
   gap: 2px;
+  /* A community's settings list is taller than a laptop window: it scrolls on its own, like the page beside it. */
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
 }
 .settings-nav h2 {
   margin: 0 10px 12px;
@@ -189,6 +195,24 @@
 }
 .palette-swatch .swatch i {
   flex: 1;
+}
+.palette-swatch[data-swatch="meldiq"] .swatch i:nth-child(1) {
+  background: var(--swatch-meldiq-1);
+}
+.palette-swatch[data-swatch="meldiq"] .swatch i:nth-child(2) {
+  background: var(--swatch-meldiq-2);
+}
+.palette-swatch[data-swatch="meldiq"] .swatch i:nth-child(3) {
+  background: var(--swatch-meldiq-3);
+}
+.palette-swatch[data-swatch="midnight"] .swatch i:nth-child(1) {
+  background: var(--swatch-midnight-1);
+}
+.palette-swatch[data-swatch="midnight"] .swatch i:nth-child(2) {
+  background: var(--swatch-midnight-2);
+}
+.palette-swatch[data-swatch="midnight"] .swatch i:nth-child(3) {
+  background: var(--swatch-midnight-3);
 }
 .palette-swatch[data-swatch="charcoal"] .swatch i:nth-child(1) {
   background: var(--swatch-charcoal-1);
@@ -678,10 +702,12 @@
 }
 
 /* ───────────────────────── link (sign-in) screen ───────────────────────── */
+/* Continuation brief v3 §5: a wide community-first hero and a comfortably sized form on desktop; a compact branded
+   header over the form on phones (responsive.css). */
 .link-screen {
   min-height: 100dvh;
   display: grid;
-  grid-template-columns: minmax(360px, 0.9fr) minmax(0, 1.1fr);
+  grid-template-columns: minmax(420px, 1.15fr) minmax(440px, 0.85fr);
   background: var(--bg);
 }
 /* The sign-in hero is the logo's own navy ground and glow, the same in every palette. */
@@ -690,15 +716,28 @@
     radial-gradient(900px 560px at 18% -12%, var(--brand-glow-1) 0%, transparent 62%), radial-gradient(760px 520px at 112% 112%, var(--brand-glow-2) 0%, transparent 60%),
     linear-gradient(180deg, var(--brand-ground-2) 0%, var(--brand-ground) 70%);
   color: var(--brand-on-ground);
-  padding: 48px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  padding: 44px clamp(32px, 5vw, 72px);
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+  align-content: start;
   gap: 32px;
 }
+.hero-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.hero-brand strong {
+  font-size: 18px;
+}
+.hero-copy {
+  display: grid;
+  gap: 16px;
+  max-width: 560px;
+}
 .link-hero h1 {
-  font-size: clamp(30px, 3.4vw, 44px);
-  line-height: 1.1;
+  font-size: clamp(32px, 3.6vw, 50px);
+  line-height: 1.06;
   letter-spacing: -0.03em;
   margin: 0;
   font-weight: 800;
@@ -712,19 +751,25 @@
 }
 .link-hero p {
   color: var(--brand-on-ground-2);
-  max-width: 440px;
-  margin: 14px 0 0;
-  font-size: 15px;
+  max-width: 500px;
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.55;
 }
 .hero-points {
   display: grid;
-  gap: 14px;
-  color: var(--brand-on-ground-2);
-  font-size: 13.5px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px 20px;
+  margin: 6px 0 0;
+  padding: 0;
+  list-style: none;
+  color: var(--brand-on-ground);
+  font-size: 14px;
+  font-weight: 600;
 }
-.hero-points div {
+.hero-points li {
   display: flex;
-  gap: 12px;
+  gap: 10px;
   align-items: flex-start;
 }
 .hero-points svg {
@@ -732,21 +777,100 @@
   flex-shrink: 0;
   margin-top: 1px;
 }
+.hero-foot {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px !important;
+}
+/* The brand banner in place of the drawn community. */
+.hero-banner {
+  width: min(600px, 100%) !important;
+  padding: 0 !important;
+  overflow: hidden;
+  display: block !important;
+}
+.hero-banner img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+/* The illustration: a rail of community icons and a channel list with a banner, in Meldiq's own shapes. */
+.hero-preview {
+  align-self: center;
+  display: flex;
+  gap: 10px;
+  width: min(440px, 100%);
+  margin: 0;
+  padding: 12px;
+  border-radius: 20px;
+  background: rgba(8, 12, 28, 0.55);
+  border: 1px solid rgba(160, 190, 255, 0.16);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+}
+.hero-preview-rail {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+}
+.hero-preview-rail img,
+.hero-preview-rail i {
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  display: block;
+}
+.hero-preview-panel {
+  flex: 1;
+  display: grid;
+  gap: 6px;
+  align-content: start;
+  padding-bottom: 6px;
+  border-radius: 14px;
+  background: rgba(16, 23, 43, 0.9);
+  overflow: hidden;
+}
+.hero-preview-banner {
+  height: 62px;
+  background: linear-gradient(120deg, #22d3ee, #6366f1 55%, #ec4899);
+}
+.hero-preview-cat {
+  margin: 4px 12px 0;
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: rgba(200, 210, 240, 0.6);
+}
+.hero-preview-ch {
+  margin: 0 8px;
+  padding: 5px 8px;
+  border-radius: 8px;
+  font-size: 13px;
+  color: rgba(225, 232, 255, 0.78);
+}
+.hero-preview-ch.on {
+  background: color-mix(in srgb, var(--brand-highlight) 18%, transparent);
+  color: #fff;
+  font-weight: 700;
+}
 .link-main {
   position: relative;
   display: grid;
   place-items: center;
-  padding: 40px 24px;
+  padding: 40px clamp(20px, 4vw, 56px);
 }
 /* Room for the language picker above the card. */
 .link-main:has(.auth-lang) {
-  padding-top: 64px;
+  padding-top: 72px;
 }
 .link-card {
-  width: min(520px, 100%);
-  padding: 32px;
+  width: min(460px, 100%);
+  padding: 36px;
   display: grid;
   gap: 22px;
+  border-radius: 20px;
+  box-shadow: var(--shadow-lg);
 }
 .link-card h2 {
   margin: 0;
@@ -1188,11 +1312,9 @@ select.input {
 .intro-art {
   display: grid;
   place-items: center;
-  width: 132px;
-  height: 132px;
-  border-radius: 50%;
-  background: var(--accent-soft);
-  color: var(--accent-text);
+}
+.intro-art .meldling-art {
+  max-width: min(200px, 56vw);
 }
 .intro-dots {
   display: flex;
@@ -1520,4 +1642,1336 @@ select.input {
   margin: 0;
   font-weight: 600;
   overflow-wrap: anywhere;
+}
+
+/* Add members: each person found is one row-sized button; chosen ones are checked and tinted. */
+.add-person {
+  width: 100%;
+  gap: 10px;
+  padding: 6px 8px;
+  min-height: 44px;
+  border-radius: var(--r-md);
+  color: var(--text);
+}
+.add-person:hover:not(:disabled) {
+  background: var(--surface-hover);
+}
+.add-person[aria-pressed="true"] {
+  background: var(--accent-soft);
+  color: var(--accent-text);
+}
+.invite-preview {
+  justify-items: start;
+}
+.invite-share {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+.invite-share .input {
+  flex: 1 1 100%;
+}
+
+/* Invite people: the invitation-link part of the dialog (community-first brief §F). */
+.invite-or {
+  display: grid;
+  gap: 8px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+  list-style: none;
+}
+.invite-or .muted {
+  margin: 0;
+}
+.invite-or-title {
+  margin: 0;
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+.quick-invite {
+  display: grid;
+  gap: 8px;
+}
+.quick-invite .field {
+  display: grid;
+  gap: 4px;
+  font-size: var(--fs-xs);
+  color: var(--text-2);
+}
+
+/* Discover (community-first brief §3B): a search and a grid of public communities, from the server only. */
+.discover-head h1 {
+  margin: 0;
+  font-size: var(--fs-lg);
+}
+.discover {
+  width: 100%;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: var(--s-6) var(--s-5) var(--s-8);
+  display: grid;
+  gap: var(--s-5);
+}
+.discover-hero {
+  display: grid;
+  justify-items: center;
+  gap: var(--s-2);
+  text-align: center;
+}
+.discover-hero h2 {
+  margin: 0;
+  font-size: 30px;
+  font-weight: 800;
+}
+.discover-hero .view-sub {
+  margin: 0;
+}
+.discover-search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: min(560px, 100%);
+  margin-top: var(--s-2);
+  padding: 0 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--surface-sunken);
+  color: var(--text-3);
+}
+.discover-search:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--focus);
+}
+.discover-search input {
+  flex: 1;
+  min-width: 0;
+  padding: 12px 0;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+}
+.discover-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+  gap: var(--s-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.discover-card-skeleton {
+  height: 280px;
+  border-radius: var(--r-lg);
+}
+.discover-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--surface-raised);
+  overflow: hidden;
+  transition:
+    border-color var(--t-fast) var(--ease),
+    transform var(--t-fast) var(--ease);
+}
+.discover-card:hover {
+  border-color: var(--border-strong);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .discover-card:hover {
+    transform: translateY(-1px);
+  }
+}
+.discover-card-body {
+  position: relative;
+  display: grid;
+  justify-items: start;
+  align-content: start;
+  gap: 6px;
+  flex: 1;
+  padding: 0 var(--s-4) var(--s-2);
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+.discover-card-body:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: -2px;
+}
+/* The banner: the community's own once it sets one, otherwise a vivid band in Meldiq's palette. */
+.discover-card-band {
+  display: block;
+  width: calc(100% + 2 * var(--s-4));
+  height: 112px;
+  margin: 0 calc(-1 * var(--s-4));
+  background-size: cover;
+  background-position: center;
+}
+.discover-card-icon {
+  margin-top: -34px;
+  border-radius: 18px;
+  box-shadow: 0 0 0 5px var(--surface-raised);
+  line-height: 0;
+}
+.discover-card-icon .avatar {
+  border-radius: 16px;
+}
+.discover-card-body strong {
+  max-width: 100%;
+  margin-top: 4px;
+  font-size: var(--fs-xl);
+  font-weight: 800;
+}
+.discover-desc {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  color: var(--text-2);
+  font-size: var(--fs-md);
+}
+.discover-section {
+  margin: 0;
+  font-size: var(--fs-xs);
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+.discover-card-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: var(--s-3) var(--s-4) var(--s-4);
+}
+.discover-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-width: 0;
+  font-size: var(--fs-sm);
+}
+.discover-card-foot .btn {
+  min-width: 72px;
+  font-weight: 700;
+}
+.discover-error {
+  margin: 0;
+  padding: 0 var(--s-4) var(--s-3);
+  color: var(--danger);
+  font-size: var(--fs-xs);
+}
+.discover-more {
+  justify-self: center;
+}
+@media (max-width: 600px) {
+  .discover {
+    padding: var(--s-4) var(--s-4) var(--s-6);
+  }
+  .discover-hero h2 {
+    font-size: var(--fs-xl);
+  }
+}
+
+/* Import from Discord (community-first brief §3D). */
+.create-tabs {
+  justify-self: start;
+}
+.dialog-titles {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+.dialog-sub {
+  margin: 0;
+  color: var(--text-2);
+  font-size: var(--fs-md);
+}
+.create-dialog .dialog-head h2 {
+  font-size: var(--fs-2xl);
+  font-weight: 800;
+}
+.discord-import {
+  display: grid;
+  gap: var(--s-3);
+}
+.discord-lists {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+  gap: var(--s-3);
+}
+.discord-bullets,
+.discord-steps {
+  display: grid;
+  gap: 6px;
+  margin: 6px 0 0;
+  font-size: var(--fs-sm);
+}
+.discord-bullets {
+  padding: 0;
+  list-style: none;
+}
+.discord-bullets li {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+}
+.discord-bullets svg {
+  flex-shrink: 0;
+  margin-top: 3px;
+  color: var(--success);
+}
+.discord-steps {
+  counter-reset: step;
+  padding: 0;
+  list-style: none;
+  gap: 12px;
+  color: var(--text-2);
+  font-size: var(--fs-md);
+}
+.discord-steps > li {
+  counter-increment: step;
+  position: relative;
+  display: grid;
+  gap: 10px;
+  padding-left: 38px;
+}
+.discord-steps > li::before {
+  content: counter(step);
+  position: absolute;
+  left: 0;
+  top: -2px;
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--accent-soft);
+  color: var(--accent-text);
+  font-size: var(--fs-sm);
+  font-weight: 800;
+}
+.discord-steps strong {
+  color: var(--text);
+}
+.discord-step-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.discord-footnote {
+  margin: 0;
+  font-size: var(--fs-sm);
+}
+.discord-connect {
+  justify-self: start;
+}
+.discord-connections {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.discord-options {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.discord-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--fs-sm);
+}
+.discord-toggle.disabled {
+  color: var(--text-3);
+}
+.discord-preview {
+  display: grid;
+  gap: 8px;
+}
+.discord-items {
+  display: grid;
+  gap: var(--s-3);
+  max-height: min(40vh, 360px);
+  overflow: auto;
+  padding: var(--s-3);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--surface-sunken);
+}
+.discord-items ul {
+  display: grid;
+  gap: 4px;
+  margin: 4px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.discord-kind {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  font-size: var(--fs-xs);
+  color: var(--text-2);
+}
+.discord-item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 8px;
+  font-size: var(--fs-sm);
+}
+.discord-state {
+  font-size: var(--fs-xs);
+  color: var(--text-3);
+}
+.discord-item.done .discord-state,
+.discord-item.create .discord-state {
+  color: var(--success);
+}
+.discord-item.failed .discord-state {
+  color: var(--danger);
+  font-weight: 600;
+}
+.discord-item.skip,
+.discord-item.skipped {
+  color: var(--text-3);
+}
+.discord-note {
+  flex-basis: 100%;
+  color: var(--text-3);
+  font-size: var(--fs-xs);
+}
+.discord-excluded {
+  display: flex;
+  gap: 6px;
+  margin: 0;
+  font-size: var(--fs-xs);
+}
+.discord-excluded svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.discord-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.discord-leave {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--fs-xs);
+  color: var(--text-2);
+}
+.discord-progress {
+  width: 100%;
+  height: 8px;
+  accent-color: var(--accent);
+}
+
+/* Someone's profile as a card (the reference's popover): a banner in their colour, a large avatar over its edge, the
+ * name and handle, boxed sections, and a message box at the foot. Beside the member list on wide screens. */
+.scrim-clear {
+  background: transparent;
+  backdrop-filter: none;
+}
+/* The profile card (the owner's reference, 2026-10-28): a near-black body, a tall banner, the avatar overlapping it, and
+   each section on its own rounded charcoal card. */
+.dialog.profile-pop {
+  width: min(380px, 100%);
+  background: var(--surface-sunken);
+}
+.dialog-near {
+  box-shadow:
+    var(--shadow-lg),
+    0 0 0 1px var(--border);
+}
+.profile-pop-banner {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+  gap: 6px;
+  height: 120px;
+  padding: 12px;
+  flex-shrink: 0;
+  background-size: cover;
+  background-position: center;
+}
+.profile-pop-btn {
+  background: rgb(0 0 0 / 0.38);
+  color: #fff;
+  border-radius: var(--r-pill);
+}
+.profile-pop-btn:hover:not(:disabled) {
+  background: rgb(0 0 0 / 0.55);
+  color: #fff;
+}
+.profile-pop-body {
+  display: grid;
+  gap: 10px;
+  padding: 0 16px 18px;
+}
+.profile-pop-avatar {
+  padding: 0 16px 10px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-top: -56px;
+}
+.profile-pop-avatar > .avatar {
+  border-radius: 50%;
+  box-shadow: 0 0 0 6px var(--surface-sunken);
+}
+.profile-pop-connect {
+  margin-bottom: 4px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+}
+.profile-pop-name {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  margin: 2px 0 0;
+  font-size: var(--fs-2xl);
+  font-weight: 800;
+}
+.profile-pop-name > .sname {
+  min-width: 0;
+}
+.profile-pop-handle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: -8px 0 0;
+  color: var(--text-2);
+  font-size: var(--fs-sm);
+}
+.profile-pop-status {
+  margin: 0;
+  color: var(--text-2);
+}
+.profile-box {
+  display: grid;
+  gap: 8px;
+  padding: 12px 14px;
+  border-radius: var(--r-lg);
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+}
+.profile-box h3 {
+  margin: 0;
+  font-size: var(--fs-xs);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-2);
+}
+.profile-roles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.profile-role {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 9px;
+  border-radius: var(--r-sm);
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+}
+.profile-role i {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+.profile-pop-message {
+  display: flex;
+  gap: 8px;
+  margin-top: 2px;
+}
+.profile-pop-message .input {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Invite friends (the reference's dialog): a search, people each with Invite, then the link with Copy beside it. */
+.dialog.invite-dialog {
+  width: min(500px, 100%);
+}
+.invite-dialog .dialog-head h2 {
+  font-size: var(--fs-2xl);
+  font-weight: 800;
+}
+.invite-search {
+  min-height: 46px;
+  border: 1.5px solid var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+.invite-people {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 2px;
+  max-height: 260px;
+  overflow-y: auto;
+}
+.invite-person {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 8px;
+  border-radius: var(--r-md);
+}
+.invite-person:hover {
+  background: var(--surface-hover);
+}
+.invite-person .lines {
+  display: grid;
+  min-width: 0;
+}
+.invite-person small,
+.invite-outcome {
+  color: var(--text-3);
+  font-size: var(--fs-sm);
+}
+.invite-empty {
+  padding: 6px;
+}
+.invite-link-row {
+  display: flex;
+  gap: 8px;
+}
+.invite-link-row .input {
+  flex: 1;
+  min-width: 0;
+  min-height: 44px;
+  background: var(--surface-sunken);
+}
+.invite-link-row .btn {
+  min-height: 44px;
+  padding-inline: 18px;
+}
+
+/* An invitation, opened (the reference's invite card): the community's icon, name and member count, one big action. */
+.dialog.invite-landing-dialog {
+  width: min(440px, 100%);
+}
+.invite-landing {
+  display: grid;
+  justify-items: center;
+  text-align: center;
+  gap: 6px;
+  padding: 4px 4px 2px;
+}
+.invite-landing-lead {
+  margin: 10px 0 0;
+  color: var(--text-2);
+}
+.invite-landing-name {
+  margin: 0;
+  font-size: var(--fs-3xl);
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+}
+.invite-landing-members {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  color: var(--text-2);
+  font-weight: 600;
+}
+.invite-landing-members i {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--success);
+}
+.invite-landing-about,
+.invite-landing-role {
+  margin: 2px 0 0;
+  font-size: var(--fs-sm);
+}
+.invite-landing .banner {
+  width: 100%;
+}
+.invite-landing-go {
+  width: 100%;
+  margin-top: 14px;
+  min-height: 50px;
+  font-size: var(--fs-lg);
+  font-weight: 700;
+}
+/* The invited community's banner across the top of the card, its icon over the edge, and Join in its accent. */
+.invite-landing-banner {
+  width: calc(100% + 40px);
+  height: 120px;
+  margin: -4px -20px 0;
+  background-size: cover;
+  background-position: center;
+}
+.invite-landing-banner + .invite-landing-icon {
+  margin-top: -48px;
+  border-radius: 24px;
+  box-shadow: 0 0 0 5px var(--surface-raised);
+  line-height: 0;
+}
+.invite-landing-icon {
+  line-height: 0;
+}
+.invite-landing.c-accent .invite-landing-go {
+  background: var(--c-accent);
+  color: var(--c-on-accent);
+}
+/* Wide screens: the introduction uses the width, Meldling and the page's picture on the brand's ground at the left. */
+.intro-visual {
+  display: none;
+}
+.intro-main {
+  display: contents;
+}
+@media (min-width: 961px) {
+  .intro {
+    display: grid;
+    grid-template-columns: minmax(380px, 1fr) minmax(460px, 1fr);
+    align-items: stretch;
+    padding: 0;
+  }
+  .intro-visual {
+    display: grid;
+    place-items: center;
+    align-content: center;
+    gap: 28px;
+    background:
+      radial-gradient(700px 480px at 20% 0%, var(--brand-glow-1) 0%, transparent 62%), radial-gradient(640px 460px at 100% 100%, var(--brand-glow-2) 0%, transparent 60%),
+      linear-gradient(180deg, var(--brand-ground-2) 0%, var(--brand-ground) 70%);
+  }
+  .intro-visual img {
+    border-radius: 36px;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+  }
+  .intro-visual .meldling-art {
+    max-width: min(360px, 80%);
+  }
+  .intro-main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 24px clamp(24px, 5vw, 64px);
+  }
+  .intro-page .intro-art {
+    display: none;
+  }
+  .intro-page h1 {
+    font-size: 32px;
+  }
+  .intro-page p {
+    font-size: 16px;
+  }
+}
+.profile-pop-banner {
+  position: relative;
+  background-size: cover;
+  background-position: center;
+}
+.profile-pop-banner .profile-pop-btn {
+  position: relative;
+  z-index: 1;
+}
+.profile-pop-avatar > .styled-avatar .avatar,
+.profile-pop-avatar > .styled-avatar .avatar-media {
+  box-shadow: 0 0 0 6px var(--surface-raised);
+}
+.profile-pop-banner {
+  position: relative;
+  background-size: cover;
+  background-position: center;
+}
+.profile-pop-banner .profile-pop-btn {
+  position: relative;
+  z-index: 1;
+}
+.profile-pop-avatar > .styled-avatar .avatar,
+.profile-pop-avatar > .styled-avatar .avatar-media {
+  box-shadow: 0 0 0 6px var(--surface-raised);
+}
+.menu [role="menuitemcheckbox"] {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: var(--r-sm);
+  text-align: left;
+  font-size: 13.5px;
+}
+.menu [role="menuitemcheckbox"]:hover,
+.menu [role="menuitemcheckbox"]:focus-visible,
+.menu [role^="menuitem"].open {
+  background: var(--surface-hover);
+  box-shadow: none;
+}
+.menu-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.menu-hint {
+  font-size: 11.5px;
+  color: var(--text-3);
+}
+.menu-check,
+.menu-chevron {
+  flex: none;
+  color: var(--text-2);
+}
+.menu-check {
+  color: var(--action);
+}
+.menu-box {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 5px;
+  border: 1.5px solid var(--text-3);
+}
+.menu [aria-checked="true"] > .menu-box {
+  background: var(--action)
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12l5 5L20 7'/%3E%3C/svg%3E")
+    center / 13px no-repeat;
+  border-color: var(--action);
+}
+.trusted-list {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.trusted-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: var(--r-sm);
+  background: var(--surface-sunken);
+}
+
+/* The viewer's menu above it (menus sit at z-index 60, the viewer at 80). */
+body:has(> .lightbox) > .menu {
+  z-index: 90;
+}
+
+/* The media viewer (chat/MediaViewer.tsx, after the owner's reference): who and when top left, actions top right, the
+   photo or video in the middle with arrows at the sides, the text, reactions and a strip of the message's media under it. */
+.lightbox.media-viewer {
+  grid-template-rows: 64px minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr);
+  place-items: stretch;
+  padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px));
+  background: rgba(4, 5, 10, 0.94);
+}
+.viewer-who {
+  position: absolute;
+  top: 16px;
+  left: 20px;
+  display: grid;
+  gap: 2px;
+  color: var(--on-media);
+  max-width: 45vw;
+}
+.viewer-who strong {
+  font-size: 16px;
+  color: #6ee7f9;
+}
+.viewer-who small {
+  color: rgba(255, 255, 255, 0.7);
+}
+.viewer-actions {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  display: flex;
+  gap: 10px;
+  z-index: 2;
+}
+.viewer-group {
+  display: flex;
+  gap: 2px;
+  padding: 4px;
+  border-radius: var(--r-lg);
+  background: rgba(20, 22, 30, 0.85);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+.media-viewer .viewer-group .icon-btn {
+  background: transparent;
+}
+.media-viewer .icon-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--r-md);
+}
+.media-viewer .viewer-close {
+  background: rgba(20, 22, 30, 0.85);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08);
+  height: 48px;
+  width: 48px;
+}
+.viewer-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  width: 48px !important;
+  height: 48px !important;
+  background: rgba(20, 22, 30, 0.85) !important;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+.viewer-arrow.left {
+  left: 20px;
+}
+.viewer-arrow.right {
+  right: 20px;
+}
+.viewer-stage {
+  grid-row: 2;
+  display: grid;
+  place-items: center;
+  min-height: 0;
+  padding: 0 72px;
+}
+.viewer-stage > img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: var(--r-md);
+}
+.viewer-error {
+  color: var(--on-media);
+}
+.viewer-foot {
+  grid-row: 3;
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  padding-top: 10px;
+}
+.media-viewer .lightbox-caption {
+  position: static;
+  transform: none;
+}
+.viewer-strip {
+  display: flex;
+  gap: 6px;
+  max-width: 100%;
+  overflow-x: auto;
+  padding: 4px;
+}
+.viewer-thumb {
+  flex-shrink: 0;
+  width: 56px;
+  height: 56px;
+  border-radius: var(--r-md);
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  color: var(--on-media);
+  background: rgba(255, 255, 255, 0.08);
+  opacity: 0.6;
+  transition: opacity var(--t-fast);
+}
+.viewer-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.viewer-thumb[aria-current="true"] {
+  opacity: 1;
+  box-shadow: 0 0 0 2px var(--accent);
+}
+/* A video with Meldiq's controls. */
+.video-player {
+  position: relative;
+  display: grid;
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: var(--r-md);
+  overflow: hidden;
+  background: #000;
+}
+.video-player video {
+  display: block;
+  max-width: 100%;
+  max-height: calc(100vh - 220px);
+  cursor: pointer;
+}
+.video-player:fullscreen video {
+  max-height: 100vh;
+  width: 100%;
+}
+.video-controls {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.85), transparent);
+  color: #fff;
+}
+.video-controls .icon-btn {
+  color: #fff;
+  background: transparent !important;
+  width: 34px !important;
+  height: 34px !important;
+}
+.video-time {
+  font-variant-numeric: tabular-nums;
+  font-size: 13px;
+  white-space: nowrap;
+}
+.video-seek,
+.video-volume {
+  accent-color: var(--accent);
+}
+.video-seek {
+  flex: 1;
+  min-width: 60px;
+}
+.video-volume {
+  width: 80px;
+}
+@media (max-width: 640px) {
+  .viewer-stage {
+    padding: 0;
+  }
+  .viewer-arrow {
+    top: auto;
+    bottom: 92px;
+    transform: none;
+  }
+  .video-volume {
+    display: none;
+  }
+}
+/* A video in a message: a tile with a play button (MediaAttachment). */
+.att-video-tile {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: min(360px, 100%);
+  aspect-ratio: 16 / 10;
+  border-radius: var(--r-lg);
+  background: radial-gradient(circle at 30% 20%, var(--brand-glow-1), transparent 60%), linear-gradient(135deg, var(--brand-ground-2), var(--brand-ground));
+  box-shadow: 0 0 0 1px var(--border);
+  color: #fff;
+  overflow: hidden;
+}
+.att-video-play {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.55);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.85);
+  transition: transform var(--t-fast) var(--ease);
+}
+.att-video-tile:hover .att-video-play {
+  transform: scale(1.08);
+}
+.att-video-name {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  min-width: 0;
+}
+.att-video-name small {
+  margin-left: auto;
+  opacity: 0.75;
+  font-weight: 500;
+}
+
+/* Friends (views/FriendsView.tsx, after the owner's reference). */
+.main.friends {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+.friends-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 56px;
+  padding: 8px 20px;
+  border-bottom: 1px solid var(--hairline);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.friends-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 16px;
+  white-space: nowrap;
+}
+.friends-sep {
+  width: 1px;
+  height: 24px;
+  background: var(--border);
+  flex-shrink: 0;
+}
+.friends-tabs {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.friends-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: var(--r-pill);
+  color: var(--text-2);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.friends-tab:hover {
+  background: var(--surface-hover);
+  color: var(--text);
+}
+.friends-tab[aria-selected="true"] {
+  background: var(--surface-selected);
+  color: var(--text);
+}
+.friends-tab.add {
+  background: var(--cta, var(--action));
+  color: var(--on-cta, var(--on-action));
+}
+.friends-tab.add[aria-selected="true"] {
+  background: var(--accent-soft);
+  color: var(--accent-text);
+}
+.friends-body {
+  flex: 1;
+  min-height: 0;
+  padding: 16px 20px 32px;
+  display: grid;
+  align-content: start;
+  gap: 14px;
+}
+.friends-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+  height: 42px;
+}
+.friends-search input {
+  flex: 1;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+}
+.friends-group h3 {
+  margin: 4px 0 8px;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+.friends-empty {
+  margin: 24px 0;
+  text-align: center;
+  color: var(--text-3);
+}
+.friend-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 10px;
+  border-top: 1px solid var(--hairline);
+  border-radius: var(--r-md);
+}
+.friend-row:hover {
+  background: var(--surface-hover);
+  border-top-color: transparent;
+}
+.friend-row .lines {
+  display: grid;
+  min-width: 0;
+}
+.friend-row small {
+  color: var(--text-3);
+}
+.friend-handle {
+  font-weight: 500;
+  opacity: 0;
+  transition: opacity var(--t-fast);
+}
+.friend-row:hover .friend-handle {
+  opacity: 1;
+}
+.friend-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.friend-actions .icon-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--surface-sunken);
+}
+.friend-accept:hover {
+  color: #23a55a !important;
+}
+.friend-decline:hover {
+  color: var(--danger) !important;
+}
+.add-friend {
+  display: grid;
+  gap: 8px;
+  max-width: 720px;
+}
+.add-friend h2 {
+  margin: 0;
+  font-size: 18px;
+}
+.add-friend p {
+  margin: 0 0 6px;
+}
+.add-friend-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 6px 6px 14px;
+  border-radius: var(--r-lg);
+  background: var(--surface-sunken);
+  box-shadow: 0 0 0 1px var(--border);
+}
+.add-friend-box:focus-within {
+  box-shadow: 0 0 0 2px var(--accent);
+}
+.add-friend-box input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  height: 40px;
+}
+@media (max-width: 640px) {
+  .friends-head {
+    padding: 8px 12px;
+  }
+  .friends-body {
+    padding: 12px 12px 24px;
+  }
+  .add-friend-box {
+    flex-wrap: wrap;
+  }
+}
+
+/* Settings and community settings as a floating window over the app (shell/SettingsWindow.tsx; the owner's reference,
+   2026-10-28): the page list on a darker column, the page beside it, a round close button. Phones show them full
+   screen instead. Below the dialogs (50) that open from inside it. */
+.settings-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 48;
+  display: grid;
+  place-items: center;
+  padding: 28px;
+  background: var(--scrim);
+  animation: fade var(--t-std) var(--ease);
+}
+.settings-window {
+  position: relative;
+  display: flex;
+  width: min(1240px, 100%);
+  height: min(900px, 100%);
+  border-radius: var(--r-xl);
+  overflow: hidden;
+  background: var(--surface);
+  box-shadow:
+    0 0 0 1px var(--panel-ring),
+    var(--shadow-lg);
+  animation: rise var(--t-std) var(--ease-enter);
+}
+.settings-window > .main {
+  flex: 1;
+  min-width: 0;
+}
+.settings-window .settings {
+  grid-template-columns: 280px minmax(0, 1fr);
+}
+.settings-window .settings-nav {
+  padding: 32px 14px 24px;
+  border-right: 1px solid var(--hairline);
+  background: var(--surface-sunken);
+}
+.settings-window .settings-page {
+  padding: 40px 56px 56px 48px;
+}
+.settings-window-close {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  z-index: 2;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--surface-raised);
+  box-shadow: inset 0 0 0 1px var(--border);
+}
+@media (max-width: 960px) {
+  .settings-scrim {
+    padding: 12px;
+  }
+  .settings-window .settings {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .settings-window .settings-nav {
+    border-right: 0;
+    border-bottom: 1px solid var(--hairline);
+    padding: 12px 60px 12px 12px;
+  }
+  .settings-window .settings-page {
+    padding: 24px 24px 40px;
+  }
 }

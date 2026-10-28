@@ -1,3 +1,6 @@
+import { LiveCallBadge } from "../components/LiveCallBadge";
+import { isHighlighted, unreadLabel, unreadMarker } from "../unread";
+import { UnreadBadge } from "../components/UnreadBadge";
 import {
   Archive,
   ArchiveRestore,
@@ -25,7 +28,8 @@ import { useEngine, useOrbit } from "../../application/orbit";
 import { navigate, useRoute } from "../../application/router";
 import type { ConversationLocal } from "../../model/types";
 import { levelOf, newSectionId, type NotifyLevel, placeOf, workspaceOf } from "../../sync/navPrefs";
-import { GroupAvatar, UserAvatar } from "../components/OrgAvatar";
+import { GroupAvatar } from "../components/OrgAvatar";
+import { LookAvatar } from "../people/NameStyle";
 import { Dialog, Menu, type MenuEntry, useMenu } from "../components/Overlay";
 import { conversationTitle, dmPeer, members, shortWhen } from "../format";
 import { isMuted, isPeople } from "../selectors";
@@ -61,6 +65,11 @@ export const ConversationRow = memo(function ConversationRow({ id, twoLine, hide
         peerColor: peer?.avatarColor ?? 0,
         peerPhoto: peer ? (s.users[peer.id]?.photoRev ?? null) : null,
         typing: Object.values(s.typing[id] ?? {}).some((t) => t > Date.now()),
+        // Who (the first of them), for "Bob is meldling…" in the row.
+        typer: (() => {
+          const u = Object.entries(s.typing[id] ?? {}).find(([who, until]) => until > Date.now() && who !== s.me?.userId)?.[0];
+          return u ? (s.users[u]?.displayName ?? null) : null;
+        })(),
         muted: isMuted(s, c),
       };
     },
@@ -73,6 +82,7 @@ export const ConversationRow = memo(function ConversationRow({ id, twoLine, hide
       a.online === b.online &&
       a.presence === b.presence &&
       a.typing === b.typing &&
+      a.typer === b.typer &&
       a.muted === b.muted &&
       a.peerPhoto === b.peerPhoto,
   );
@@ -80,13 +90,13 @@ export const ConversationRow = memo(function ConversationRow({ id, twoLine, hide
   const { listPreview } = usePrefs();
   const t = useT();
   if (!data) return null;
-  const { c, local, title, online, presence, peerId, peerColor, peerPhoto, typing, muted } = data;
+  const { c, local, title, online, presence, peerId, peerColor, peerPhoto, typing, typer, muted } = data;
   const unread = local?.unread ?? 0;
   const showPreview = listPreview === "all" || (listPreview === "unread" && unread > 0);
   const mentions = local?.mentions ?? 0;
   const current = route.conversationId === id;
   if (hideRead && unread === 0 && !current) return null;
-  const section = route.section === "dms" ? "dms" : route.section === "activity" ? "activity" : "home";
+  const section = route.section === "dms" || route.section === "discover" ? "dms" : route.section === "activity" ? "activity" : "home";
   const glyph =
     c.type === "CHANNEL" ? (
       c.kind === "PRIVATE" ? (
@@ -99,15 +109,20 @@ export const ConversationRow = memo(function ConversationRow({ id, twoLine, hide
     ) : c.type === "GROUP" ? (
       <GroupAvatar conversationId={c.id} name={title} photoRev={c.photoRev} size={twoLine ? 36 : 22} />
     ) : (
-      <UserAvatar userId={peerId ?? ""} name={title} colorIndex={peerColor} photoRev={peerPhoto} size={twoLine ? 36 : 22} online={online} presence={presence} decorative />
+      <LookAvatar userId={peerId ?? ""} name={title} colorIndex={peerColor} photoRev={peerPhoto} size={twoLine ? 36 : 22} online={online} presence={presence} />
     );
-  const label = `${c.type === "CHANNEL" ? "Channel " : ""}${title}${unread ? `, ${unread} unread` : ""}${mentions ? `, ${mentions} mentions` : ""}${muted ? ", muted" : ""}`;
-  const count = unread > 0 && <span className={`count${!muted && (mentions > 0 || c.type !== "CHANNEL") ? " accent" : ""}`}>{mentions > 0 ? `@${mentions}` : unread}</span>;
+  const marker = unreadMarker(unread, mentions, muted, c.type !== "CHANNEL");
+  const label = `${c.type === "CHANNEL" ? "Channel " : ""}${title}${unreadLabel(unread, mentions, muted, { unread: (n) => `${n} unread`, mentions: (n) => `${n} mentions`, muted: "muted" })}`;
+  const count = <UnreadBadge marker={marker} />;
+  const highlight = isHighlighted(marker) ? " unread" : "";
   const href = `/${section}/c/${encodeURIComponent(id)}`;
   const openMenu = (e: MouseEvent<HTMLElement>) => {
     e.preventDefault();
     e.stopPropagation();
-    menu.open(e.currentTarget.closest(".side-row") as HTMLElement);
+    const row = e.currentTarget.closest(".side-row") as HTMLElement;
+    // A right-click opens the menu at the pointer; the ⋯ button, below itself.
+    if (e.type === "contextmenu") menu.openAt(row, e);
+    else menu.open(row);
   };
   const more = (
     <button className="row-more" aria-label={`More for ${title}`} aria-haspopup="menu" onClick={openMenu}>
@@ -115,7 +130,7 @@ export const ConversationRow = memo(function ConversationRow({ id, twoLine, hide
     </button>
   );
   const body = twoLine ? (
-    <a className={`side-item two-line${unread ? " unread" : ""}${muted ? " muted" : ""}`} href={href} aria-current={current ? "page" : undefined} aria-label={label} onContextMenu={openMenu}>
+    <a className={`side-item two-line${highlight}${muted ? " muted" : ""}`} href={href} aria-current={current ? "page" : undefined} aria-label={label} onContextMenu={openMenu}>
       <span className="glyph" style={{ width: 36 }}>
         {glyph}
       </span>
@@ -126,27 +141,34 @@ export const ConversationRow = memo(function ConversationRow({ id, twoLine, hide
         </span>
         <span className="row">
           <small className="grow ellipsis">
-            {typing
-              ? t("row_typing")
-              : !showPreview
-                ? ""
-                : local?.lastPreview
-                  ? `${local.lastSenderName && c.type !== "DM" ? `${local.lastSenderName}: ` : local.lastSenderName === "You" ? "You: " : ""}${local.lastPreview}`
-                  : c.type === "GROUP"
-                    ? members(c.memberCount)
-                    : t("row_no_messages")}
+            {typing ? (
+              <span className="row-typing" title={t("row_typing")}>
+                <span aria-hidden="true">{typer ? `${typer} ${t("meldling_one")}…` : `${t("typing_meldling")}…`}</span>
+                <span className="sr-only">{t("row_typing")}</span>
+              </span>
+            ) : !showPreview ? (
+              ""
+            ) : local?.lastPreview ? (
+              `${local.lastSenderName && c.type !== "DM" ? `${local.lastSenderName}: ` : local.lastSenderName === "You" ? "You: " : ""}${local.lastPreview}`
+            ) : c.type === "GROUP" ? (
+              members(c.memberCount)
+            ) : (
+              t("row_no_messages")
+            )}
           </small>
+          <LiveCallBadge conversationId={id} />
           {muted && <BellOff size={12} className="faint" aria-hidden="true" />}
           {count}
         </span>
       </span>
     </a>
   ) : (
-    <a className={`side-item${unread ? " unread" : ""}${muted ? " muted" : ""}`} href={href} aria-current={current ? "page" : undefined} aria-label={label} onContextMenu={openMenu}>
+    <a className={`side-item${highlight}${muted ? " muted" : ""}`} href={href} aria-current={current ? "page" : undefined} aria-label={label} onContextMenu={openMenu}>
       <span className="glyph">{glyph}</span>
       <span className="grow ellipsis">{title}</span>
       {local?.draft && !current ? <span className="draft">{t("row_draft")}</span> : null}
       {c.type === "GROUP" && <UsersRound size={13} className="faint" aria-hidden="true" />}
+      <LiveCallBadge conversationId={id} />
       {muted && <BellOff size={12} className="faint" aria-hidden="true" />}
       {count}
     </a>
@@ -155,12 +177,28 @@ export const ConversationRow = memo(function ConversationRow({ id, twoLine, hide
     <div className="side-row">
       {body}
       {more}
-      {menu.anchor && <RowMenu id={id} title={title} inPlace={!!inPlace} unread={unread > 0} anchor={menu.anchor} onClose={menu.close} />}
+      {menu.anchor && <RowMenu id={id} title={title} inPlace={!!inPlace} unread={unread > 0} anchor={menu.anchor} point={menu.point} onClose={menu.close} />}
     </div>
   );
 });
 
-function RowMenu({ id, title, inPlace, unread, anchor, onClose }: { id: string; title: string; inPlace: boolean; unread: boolean; anchor: HTMLElement; onClose: () => void }) {
+function RowMenu({
+  id,
+  title,
+  inPlace,
+  unread,
+  anchor,
+  point,
+  onClose,
+}: {
+  id: string;
+  title: string;
+  inPlace: boolean;
+  unread: boolean;
+  anchor: HTMLElement;
+  point: { x: number; y: number } | null;
+  onClose: () => void;
+}) {
   const engine = useEngine();
   const c = useOrbit((s) => s.conversations[id]);
   const ws = workspaceOf(c?.orgId ?? null);
@@ -212,7 +250,7 @@ function RowMenu({ id, title, inPlace, unread, anchor, onClose }: { id: string; 
   ];
   return (
     <>
-      {!naming && <Menu anchor={anchor} entries={entries} onClose={onClose} align="end" label={`Arrange ${title}`} />}
+      {!naming && <Menu anchor={anchor} point={point} entries={entries} onClose={onClose} align="end" label={`Arrange ${title}`} />}
       {naming && (
         <SectionNameDialog
           title="New section"

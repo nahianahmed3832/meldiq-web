@@ -88,6 +88,8 @@ export interface CallUiState {
   deafened: boolean;
   /** The quality this browser shares its screen at (2026-10-24: Standard 720p30 or High 1080p60), and whether with sound. */
   shareQuality: ShareQuality | null;
+  /** The qualities this person may share at in this call (Meldiq Mojo: their plan and the community's Sparks), lowest first. */
+  shareQualities: ShareQuality[];
   shareAudio: boolean;
   /** What this browser's share actually captures and sends (null when not sharing). */
   shareStats: ShareStats | null;
@@ -137,6 +139,7 @@ export const idleCall: CallUiState = {
   notice: null,
   deafened: false,
   shareQuality: null,
+  shareQualities: ["standard", "high"],
   shareAudio: false,
   shareStats: null,
   shares: [],
@@ -151,6 +154,8 @@ export interface MediaGrant {
   url: string;
   token: string;
   room: string;
+  /** Meldiq Mojo (API 0.54.0): what this person may publish here; absent from older servers. */
+  limits?: { screen: { id: string; width: number; height: number; fps: number }[]; voiceKbps: number } | null;
 }
 
 export interface DeviceIssues {
@@ -180,7 +185,18 @@ export class DeviceError extends Error {
 /** How the microphone opens (batch B10): noise reduction, and none at all in a listen-only voice channel. */
 export interface PrepareOptions {
   noiseReduction?: boolean;
+  /** Settings › Voice & Audio (2026-10-28): echo cancellation and automatic gain, each on unless turned off. */
+  echoCancellation?: boolean;
+  autoGain?: boolean;
+  /** The microphone chosen there (null: the system's default). */
+  microphoneId?: string | null;
   microphone?: boolean;
+}
+
+/** Where calls play and how loud (Settings › Voice & Audio): the speaker (null: default) and 0–100. */
+export interface OutputOptions {
+  speakerId: string | null;
+  volume: number;
 }
 
 /** How a screen is shared: Standard or High, and the shared tab's or system's sound where the browser allows. */
@@ -233,6 +249,8 @@ export interface MediaSession {
   setScreenShare(on: boolean, opts?: ShareOptions): Promise<void>;
   /** Batch B10 deafen: nobody's sound plays (people who join later too) until turned off. */
   setDeafened(on: boolean): void;
+  /** The speaker and volume for everyone's sound (people who join later too). Optional: older fakes leave it out. */
+  setOutput?(opts: OutputOptions): void;
   /** Changes the quality of this browser's share while it runs. */
   setShareQuality(quality: ShareQuality): Promise<void>;
   /** Every screen shared in the call now, this browser's included. */

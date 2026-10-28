@@ -35,6 +35,7 @@ import {
   type MediaGrant,
   type MediaSecurity,
   type MediaSession,
+  type OutputOptions,
   type PrepareOptions,
   type ShareOptions,
 } from "./types";
@@ -87,7 +88,7 @@ export class LiveKitSession implements MediaSession {
 
   async prepare(video: boolean, opts: PrepareOptions = {}): Promise<DeviceIssues> {
     // Batch B10: noise reduction and automatic level unless turned off; a listen-only voice channel opens no microphone.
-    const audio = opts.microphone === false ? false : audioProcessing(opts.noiseReduction !== false);
+    const audio = opts.microphone === false ? false : audioProcessing(opts.noiseReduction !== false, opts);
     this.audioOptions = audio || undefined;
     if (!audio && !video) return { microphone: null, camera: null };
     const both = await open({ audio, video: video ? CAMERA : false });
@@ -118,7 +119,13 @@ export class LiveKitSession implements MediaSession {
       dynacast: true,
       e2ee: { keyProvider, worker },
       // Microphones go first when the connection is short (screen and camera video give way before speech does).
-      publishDefaults: { simulcast: true, videoCodec: "vp8", dtx: true, audioPreset: { ...AudioPresets.music, priority: "high" } },
+      // The voice bitrate ceiling comes from the community's Spark level (Meldiq Mojo); LiveKit's music preset otherwise.
+      publishDefaults: {
+        simulcast: true,
+        videoCodec: "vp8",
+        dtx: true,
+        audioPreset: { ...AudioPresets.music, ...(grant.limits ? { maxBitrate: grant.limits.voiceKbps * 1000 } : {}), priority: "high" },
+      },
       videoCaptureDefaults: CAMERA,
     });
     this.room = room;
@@ -232,6 +239,19 @@ export class LiveKitSession implements MediaSession {
   setDeafened(on: boolean): void {
     this.deafened = on;
     for (const el of this.audioBox.querySelectorAll("audio")) el.muted = on;
+  }
+
+  /** Settings › Voice & Audio: where everyone's sound plays and how loud, now and for people who join later. */
+  private output: OutputOptions = { speakerId: null, volume: 100 };
+  setOutput(opts: OutputOptions): void {
+    this.output = opts;
+    for (const el of this.audioBox.querySelectorAll("audio")) this.applyOutput(el);
+  }
+  private applyOutput(el: HTMLAudioElement): void {
+    el.volume = Math.max(0, Math.min(1, this.output.volume / 100));
+    // Speaker choice where the browser supports it (Chrome, Edge, Firefox; Safari plays on the default).
+    const sink = (el as HTMLAudioElement & { setSinkId?: (id: string) => Promise<void> }).setSinkId;
+    if (sink) void sink.call(el, this.output.speakerId ?? "").catch(() => undefined);
   }
 
   async listDevices(kind: DeviceKind): Promise<MediaDeviceChoice[]> {
@@ -409,6 +429,7 @@ export class LiveKitSession implements MediaSession {
       this.pendingAudio.delete(k);
       const el = track.attach();
       el.muted = this.deafened;
+      if (el instanceof HTMLAudioElement) this.applyOutput(el);
       this.audioBox.appendChild(el);
     }
   }

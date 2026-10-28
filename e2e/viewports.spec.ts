@@ -95,9 +95,14 @@ test("every screen fits from 320 px phones to desktop, with the composer on scre
       ["details", `/#/dms/c/${dm}/details`],
       ["channel-details", `/#/home/c/${channel.id}/details`],
       ["settings", "/#/settings/notifications"],
+      ["discover", "/#/discover"],
     ];
     for (const [name, hash] of screens) {
-      await page.goto(hash);
+      // Moving inside the app, as people do: a reload signs in again, and the server allows 30 sign-ins a minute.
+      await page.evaluate((to) => {
+        history.pushState(null, "", to.replace(/^\/#/, ""));
+        dispatchEvent(new PopStateEvent("popstate"));
+      }, hash);
       await page.waitForTimeout(600);
       if (SHOTS) await page.screenshot({ path: `${SHOTS}/${width}x${height}-${name}.png` });
       await noSidewaysScroll(page, `${width}x${height} ${name}`);

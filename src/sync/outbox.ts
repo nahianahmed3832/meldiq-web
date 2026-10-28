@@ -1,6 +1,5 @@
 import { z } from "zod";
 import { ApiError } from "../api/client";
-import { sealEnvelope } from "../crypto/envelope";
 import type { OutboxItem } from "../model/types";
 import { parsePayload } from "../protocol/payload";
 import type { EngineContext } from "./context";
@@ -30,46 +29,25 @@ export interface Outgoing {
 }
 
 /**
- * Seals [o] to every current device of the conversation's members and posts it; returns the server's timestamp. Used by
- * the outbox, and directly for what must never be written to storage (a call's media key). A changed device list is
- * refreshed and tried once more; a changed identity key throws [IdentityChangedError].
+ * Posts [o] to the server, which stores it and delivers it to every member's devices (API 0.57.0, docs/SERVER_MESSAGES.md);
+ * returns the server's timestamp. Used by the outbox, and directly for what isn't queued (a call's media key). Retries
+ * with the same message id are answered as duplicates, so posting twice never sends twice.
  */
-export async function sealAndPost(ctx: EngineContext, o: Outgoing, refresh = false): Promise<number> {
-  const { api, directory, device } = ctx;
-  for (const pass of [0, 1]) {
-    const r = await directory.recipients(o.conversationId, refresh || pass > 0);
-    if (r.changed.length) throw new IdentityChangedError();
-    const sealed = await sealEnvelope(
-      { messageId: o.messageId, conversationId: o.conversationId, senderUserId: device.userId, senderDeviceId: device.deviceId, sentAt: o.sentAt, cls: o.cls },
-      o.payloadJson,
-      r.devices,
-      device.keys.signing.privateKey,
-    );
-    const mentionAll = o.cls === "message" && parsePayload(o.payloadJson)?.mentionAll === true;
-    try {
-      const res = await api.json("POST", "/v1/messages", zSendRes, {
-        body: {
-          conversationId: o.conversationId,
-          messageId: o.messageId,
-          cls: o.cls,
-          sentAt: o.sentAt,
-          nonce: sealed.nonce,
-          ciphertext: sealed.ciphertext,
-          signature: sealed.signature,
-          recipients: sealed.recipients,
-          ...(mentionAll ? { mentionAll: true } : {}),
-        },
-      });
-      return res.serverTs;
-    } catch (e) {
-      if (e instanceof ApiError && e.status === 409 && e.code === "device_mismatch" && pass === 0) {
-        directory.invalidateConversation(o.conversationId); // someone's devices changed: refresh keys and try once more
-        continue;
-      }
-      throw e;
-    }
-  }
-  throw new ApiError(409, "device_mismatch", "The conversation's devices keep changing. Try again.");
+export async function sealAndPost(ctx: EngineContext, o: Outgoing, _refresh = false, audience?: "self"): Promise<number> {
+  const payload = JSON.parse(o.payloadJson) as Record<string, unknown>;
+  const mentionAll = o.cls === "message" && parsePayload(o.payloadJson)?.mentionAll === true;
+  const res = await ctx.api.json("POST", "/v2/messages", zSendRes, {
+    body: {
+      conversationId: o.conversationId,
+      messageId: o.messageId,
+      cls: o.cls,
+      sentAt: o.sentAt,
+      payload,
+      ...(mentionAll ? { mentionAll: true } : {}),
+      ...(audience ? { audience } : {}),
+    },
+  });
+  return res.serverTs;
 }
 
 /**
@@ -177,7 +155,7 @@ export class Outbox {
       return "done";
     }
     await store.removeOutbox(o.messageId);
-    if (o.visible) await this.onFailed(o.messageId, "FAILED", e instanceof ApiError ? e.message : "Couldn't encrypt this message");
+    if (o.visible) await this.onFailed(o.messageId, "FAILED", e instanceof ApiError ? e.message : "Couldn't send this message");
     return "done";
   }
 }

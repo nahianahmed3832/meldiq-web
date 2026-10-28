@@ -133,6 +133,9 @@ describe("mentions", () => {
       online: null,
       presence: null,
       pronouns: null,
+      avatarMedia: null,
+      profileStyle: null,
+      tag: null,
     },
     {
       id: "u-me",
@@ -149,6 +152,9 @@ describe("mentions", () => {
       online: null,
       presence: null,
       pronouns: null,
+      avatarMedia: null,
+      profileStyle: null,
+      tag: null,
     },
   ];
 

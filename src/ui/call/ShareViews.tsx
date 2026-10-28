@@ -3,14 +3,13 @@ import { useEffect, useRef, useState } from "react";
 import { setPrefs, usePrefs } from "../../application/prefs";
 import { useEngine, useOrbit } from "../../application/orbit";
 import { frameShape } from "../../call/rules";
-import { SHARE_QUALITIES, type ShareQuality } from "../../call/shareQuality";
+import { clampShareQuality, SHARE_QUALITIES, SHARE_QUALITY_ORDER, type ShareQuality } from "../../call/shareQuality";
+import { navigate } from "../../application/router";
 import type { CallShareView } from "../../call/shares";
 import type { CallUiState } from "../../call/types";
 import { Avatar } from "../components/Avatar";
 import { Dialog, Menu, useMenu } from "../components/Overlay";
 import { Toggle } from "../components/Toggle";
-
-const QUALITIES: readonly ShareQuality[] = ["standard", "high"];
 
 interface ScreenViewProps {
   share: CallShareView;
@@ -51,6 +50,9 @@ export function ScreenView({ share, stats, onShape }: ScreenViewProps) {
     <figure ref={figure} className="call-screen" aria-label={`${share.name}'s screen`} style={{ margin: 0 }} data-share-key={share.key}>
       <video ref={video} autoPlay playsInline muted aria-hidden="true" />
       {!share.ready && <p className="call-screen-wait">Waiting for {share.name}'s screen…</p>}
+      <span className="live-badge" aria-hidden="true">
+        LIVE
+      </span>
       <figcaption className="who">
         <MonitorUp size={13} aria-hidden="true" /> {share.name} is sharing their screen
         {stats && (
@@ -138,7 +140,7 @@ export function SharePill({ call }: { call: CallUiState }) {
           onClose={menu.close}
           entries={[
             { heading: "Quality" },
-            ...QUALITIES.map((k) => ({
+            ...call.shareQualities.map((k) => ({
               label: `${SHARE_QUALITIES[k].label} · ${SHARE_QUALITIES[k].height}p${SHARE_QUALITIES[k].frameRate}`,
               checked: k === call.shareQuality,
               onSelect: () => choose(k),
@@ -157,7 +159,10 @@ export function SharePill({ call }: { call: CallUiState }) {
 export function ShareDialog({ onClose }: { onClose: () => void }) {
   const engine = useEngine();
   const prefs = usePrefs();
-  const [quality, setQuality] = useState<ShareQuality>(prefs.shareQuality);
+  // Only the qualities this person may share at here (Meldiq Mojo: their plan and the community's Sparks).
+  const allowed = useOrbit((s) => s.call.shareQualities);
+  const [quality, setQuality] = useState<ShareQuality>(() => clampShareQuality(prefs.shareQuality, allowed));
+  const more = allowed.length < SHARE_QUALITY_ORDER.length && allowed[allowed.length - 1] !== "max";
   const [audio, setAudio] = useState(prefs.shareAudio);
   const share = () => {
     setPrefs({ shareQuality: quality, shareAudio: audio });
@@ -169,7 +174,7 @@ export function ShareDialog({ onClose }: { onClose: () => void }) {
       <div className="dialog-body">
         <div className="banner warn">Everyone in the call sees what you share, including notifications that appear on it.</div>
         <div role="radiogroup" aria-label="Quality" style={{ display: "grid", gap: 2 }}>
-          {QUALITIES.map((k) => (
+          {allowed.map((k) => (
             <button key={k} role="radio" aria-checked={quality === k} className="list-row" onClick={() => setQuality(k)}>
               <span className="lines">
                 <span style={{ fontWeight: 600 }}>{SHARE_QUALITIES[k].label}</span>
@@ -178,6 +183,20 @@ export function ShareDialog({ onClose }: { onClose: () => void }) {
             </button>
           ))}
         </div>
+        {more && (
+          <p className="muted" style={{ margin: 0, fontSize: 13 }}>
+            Higher quality comes with Meldiq Mojo, or when this community has Sparks.{" "}
+            <button
+              className="char-limit-link"
+              onClick={() => {
+                onClose();
+                navigate({ section: "settings", settingsPage: "mojo" });
+              }}
+            >
+              See Mojo
+            </button>
+          </p>
+        )}
         <div className="setting">
           <span className="lines">
             <strong>Include sound</strong>

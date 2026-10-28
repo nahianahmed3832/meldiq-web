@@ -18,8 +18,9 @@ export function activityAt(s: AppState, c: Conversation): number {
   return Math.max(s.local[c.id]?.lastActivityAt ?? 0, c.createdAt);
 }
 
+/** Newest activity first; equal times by id, so the list never swaps two rows between renders (brief v4 §15). */
 export function byActivity(s: AppState): (a: Conversation, b: Conversation) => number {
-  return (a, b) => activityAt(s, b) - activityAt(s, a);
+  return (a, b) => activityAt(s, b) - activityAt(s, a) || (a.id < b.id ? -1 : a.id > b.id ? 1 : 0);
 }
 
 export interface ChannelGroup {
@@ -180,6 +181,21 @@ export function unreadGroups(s: AppState): UnreadGroup[] {
   ];
 }
 
+/**
+ * A community's rolled-up activity for its rail icon: unread events and mentions of you across the channels this account
+ * can see (the conversation list holds only those), muted channels left out except for mentions.
+ */
+export function orgActivity(s: AppState, orgId: string): { unread: number; mentions: number } {
+  let unread = 0;
+  let mentions = 0;
+  for (const c of Object.values(s.conversations)) {
+    if (c.type !== "CHANNEL" || c.orgId !== orgId) continue;
+    mentions += s.local[c.id]?.mentions ?? 0;
+    if (!isMuted(s, c)) unread += unreadOf(s, c.id);
+  }
+  return { unread, mentions };
+}
+
 export function orgUnread(s: AppState, orgId: string): number {
   return Object.values(s.conversations).filter((c) => c.type === "CHANNEL" && c.orgId === orgId && unreadOf(s, c.id) > 0 && !isMuted(s, c)).length;
 }
@@ -198,6 +214,49 @@ export function roomPeople(s: AppState, conversationId: string): string[] {
   if (!call) return [];
   if (call.participants) return [...new Set(call.participants.map((p) => p.userId))];
   return s.conversations[conversationId]?.activeCall?.participantIds ?? [];
+}
+
+export interface LiveCallSummary {
+  video: boolean;
+  /** Who is in the call (each once). */
+  people: string[];
+  /** Who is sharing their screen, among them. */
+  sharing: string[];
+  /** When the call started, when known. */
+  since: number | null;
+}
+
+/**
+ * A conversation's live call for its row (community-first brief §E): voice or video, who is in it and who is sharing,
+ * from the call's own events, or the server's conversation list before any arrive. Null when nothing is live. Rows only
+ * exist for conversations this account may see, and call events reach only their members.
+ */
+export function liveCallOf(s: AppState, conversationId: string): LiveCallSummary | null {
+  const call = s.calls[conversationId];
+  const listed = s.conversations[conversationId]?.activeCall ?? s.communities[s.conversations[conversationId]?.orgId ?? ""]?.channels.find((c) => c.id === conversationId)?.activeCall ?? null;
+  if (!call && !listed) return null;
+  const people = roomPeople(s, conversationId);
+  const fromList = people.length ? people : (listed?.participantIds ?? []);
+  return {
+    video: call?.video ?? listed?.video ?? false,
+    people: fromList,
+    sharing: (call?.sharing ?? []).filter((u) => fromList.includes(u)),
+    since: call?.createdAt ?? listed?.startedAt ?? null,
+  };
+}
+
+/** A community's calls on now, for its rail icon: whether any, and whether anyone is sharing a screen in one. */
+export function orgLive(s: AppState, orgId: string): { live: boolean; sharing: boolean } {
+  let live = false;
+  let sharing = false;
+  for (const c of Object.values(s.conversations)) {
+    if (c.orgId !== orgId || c.type !== "CHANNEL") continue;
+    const l = liveCallOf(s, c.id);
+    if (!l || l.people.length === 0) continue;
+    live = true;
+    if (l.sharing.length) sharing = true;
+  }
+  return { live, sharing };
 }
 
 /** The workspace's voice rooms this person is in, alphabetical (android WorkspaceHomeScreen voiceRooms). */

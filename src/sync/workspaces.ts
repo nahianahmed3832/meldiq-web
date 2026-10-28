@@ -86,6 +86,29 @@ export async function removeWorkspacePhoto(engine: Engine, orgId: string): Promi
   await engine.refreshAll();
 }
 
+/** A community's accent ("#rrggbb"), or null for Meldiq's theme (API 0.44.0; owners and admins). */
+/** API 0.46.0: the community's tag (2–4 letters or digits, kept in capitals), or null for none. */
+export async function setCommunityTag(engine: Engine, orgId: string, tag: string | null): Promise<void> {
+  await engine.api.call("PATCH", `/v1/orgs/${enc(orgId)}`, { body: { tag } });
+  await engine.refreshAll();
+}
+
+export async function setCommunityAccent(engine: Engine, orgId: string, accent: string | null): Promise<void> {
+  await engine.api.call("PATCH", `/v1/orgs/${enc(orgId)}`, { body: { accent } });
+  await engine.refreshAll();
+}
+
+/** A community banner: a JPEG of at most 1 MB (the settings page sends about 1200 × 480). */
+export async function setCommunityBanner(engine: Engine, orgId: string, jpeg: Uint8Array): Promise<void> {
+  await engine.api.call("PUT", `/v1/orgs/${enc(orgId)}/banner`, { raw: jpeg });
+  await engine.refreshAll();
+}
+
+export async function removeCommunityBanner(engine: Engine, orgId: string): Promise<void> {
+  await engine.api.call("DELETE", `/v1/orgs/${enc(orgId)}/banner`);
+  await engine.refreshAll();
+}
+
 export async function leaveWorkspace(engine: Engine, orgId: string): Promise<void> {
   await engine.api.call("DELETE", `/v1/orgs/${enc(orgId)}/members/${enc(engine.device.userId)}`);
   await engine.refreshAll();

@@ -17,6 +17,8 @@ beforeAll(async () => {
   server = await startServer();
   alice = await server.client("alice", "Alice");
   bob = await server.client("bob", "Bob");
+  // Bob's phone sends as apps do since API 0.57.0: to the server, which stores it (docs/SERVER_MESSAGES.md).
+  bob.serverMessages = true;
   carol = await server.client("carol", "Carol");
   dm = (await alice.req("POST", "/v1/conversations/dm", { userId: bob.userId })).conversation.id;
   org = (await alice.req("POST", "/v1/orgs", { name: "Acme" })).org.id;
@@ -151,12 +153,11 @@ describe("what the browser shows", () => {
     await web.openConversation(null);
   });
 
-  it("finds messages by their text on this browser, keeps drafts, and remembers verified people", async () => {
+  it("finds messages by their text on this browser, keeps drafts, and pins the people it talks to", async () => {
     expect((await web.searchMessages("bulk 42")).map((m) => m.text)).toContain("bulk 42");
     await web.saveDraft(dm, "unsent words");
     expect(web.state.get().local[dm]?.draft).toBe("unsent words");
-    await web.markVerified(bob.userId, true);
-    expect((await web.pinnedIdentity(bob.userId))?.verified).toBe(true);
+    expect((await web.pinnedIdentity(bob.userId))?.identityKey).toBeTruthy();
   });
 
   it("shows typing and presence from the people it shares conversations with", async () => {

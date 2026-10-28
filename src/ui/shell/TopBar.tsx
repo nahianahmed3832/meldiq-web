@@ -1,36 +1,37 @@
-import { Bell, BellOff, CircleDot, LogOut, Menu as MenuIcon, Monitor, Moon, Search, Settings, Smartphone, Smile, Sun, UserRound } from "lucide-react";
-import { useState } from "react";
-import { useEngine, useOrbit } from "../../application/orbit";
-import { setPrefs, usePrefs } from "../../application/prefs";
-import { navigate } from "../../application/router";
+import { Bell, Bookmark, Menu as MenuIcon, Search, Settings } from "lucide-react";
+import { useOrbit } from "../../application/orbit";
+import { navigate, type Section } from "../../application/router";
 import { UserAvatar } from "../components/OrgAvatar";
-import { Menu, useMenu } from "../components/Overlay";
-import { mentionCount } from "../selectors";
-import { clock } from "../format";
-import { paused, statusLine } from "../../sync/status";
-import { PauseDialog, PresenceDialog, StatusDialog } from "../dialogs/StatusDialogs";
-import { currentPresence, PRESENCE_LABEL } from "../../sync/social";
-import { useT } from "../../i18n";
+import { laterDue, mentionCount } from "../selectors";
+import { capCount } from "../unread";
+import { type Translate, useT } from "../../i18n";
+import { useProfileMenu } from "./ProfileMenu";
 
-const CONN_LABEL = { online: "Online", connecting: "Connecting…", reconnecting: "Reconnecting…", offline: "Offline" } as const;
+interface TopBarProps {
+  onMenu: () => void;
+  onSearch: () => void;
+  section: Section;
+  /** The community on screen, for the page title and the search box's scope. */
+  orgId: string | null;
+}
 
-export function TopBar({ onMenu, onSearch }: { onMenu: () => void; onSearch: () => void }) {
-  const engine = useEngine();
+/**
+ * The compact top bar (the floating redesign, 2026-10-28): where you are on the left, search in the middle, and
+ * Activity, Saved, Settings and you on the right. On phones it steps aside where the lists carry their own headers.
+ */
+export function TopBar({ onMenu, onSearch, section, orgId }: TopBarProps) {
   const t = useT();
+  const orgName = useOrbit((s) => (orgId ? (s.orgs.find((o) => o.id === orgId)?.name ?? null) : null));
+  const inCommunity = (section === "home" || section === "workspace") && !!orgName;
+  const title = inCommunity ? orgName : pageTitle(section, t);
+  const searchLabel = inCommunity ? t("conv_search_in", { name: orgName }) : t("search_placeholder");
   const me = useOrbit((s) => s.me);
   const myPhoto = useOrbit((s) => (s.me ? s.users[s.me.userId]?.photoRev : null));
   const connection = useOrbit((s) => s.connection);
   const mentions = useOrbit(mentionCount);
-  const prefs = usePrefs();
-  const profile = useMenu();
+  const due = useOrbit(laterDue);
+  const profile = useProfileMenu();
   const mac = typeof navigator !== "undefined" && /Mac|iPhone|iPad/.test(navigator.platform);
-  // Round 3 (the reference's profile popover): status and pausing notifications, on servers that keep them.
-  const statusOffered = useOrbit((s) => s.server?.features.includes("status-expiry") ?? false);
-  const [dialog, setDialog] = useState<"status" | "pause" | "presence" | null>(null);
-  const presenceOffered = useOrbit((s) => s.server?.features.includes("presence-modes") ?? false);
-  const now = Date.now();
-  const myStatus = statusLine(me, now);
-  const pausedUntil = paused(me?.notificationsPausedUntil, now) ? (me?.notificationsPausedUntil ?? null) : null;
 
   return (
     <header className="topbar">
@@ -38,91 +39,74 @@ export function TopBar({ onMenu, onSearch }: { onMenu: () => void; onSearch: () 
         <button className="icon-btn menu-toggle" onClick={onMenu} aria-label="Show conversations">
           <MenuIcon size={19} />
         </button>
+        <span className="topbar-title ellipsis" title={title}>
+          {title}
+        </span>
       </div>
       <button className="searchbox" onClick={onSearch} aria-label="Search Meldiq" aria-keyshortcuts={mac ? "Meta+K" : "Control+K"}>
         <Search size={16} />
-        <span>{t("search_placeholder")}</span>
+        <span className="ellipsis">{searchLabel}</span>
         <kbd className="kbd">{mac ? "⌘K" : "Ctrl K"}</kbd>
       </button>
       <div className="topbar-right">
+        {/* Activity (mentions, unreads, threads, calls) and Later moved here from the rail (community-first brief §G); phones
+            have Activity as a tab and Saved under You instead (brief v4 §8: one place each). The connection shows only
+            when it's down (ConnectionBanner), and as your avatar's dot. */}
         <button
-          className={`conn ${connection}`}
-          onClick={() => connection !== "online" && engine.reconnect()}
-          title={connection === "online" ? "Connected to your Meldiq server" : "Not connected. Click to reconnect now; messages you send wait and go out when the connection is back."}
-          aria-live="polite"
+          className="icon-btn top-count hide-sm"
+          onClick={() => navigate({ section: "activity" })}
+          aria-current={section === "activity" ? "page" : undefined}
+          aria-label={mentions ? t("top_activity_count", { n: mentions }) : t("top_activity")}
+          title={t("top_activity")}
         >
-          <i aria-hidden="true" />
-          <span>{CONN_LABEL[connection]}</span>
-        </button>
-        <button className="icon-btn" onClick={() => navigate({ section: "activity" })} aria-label={mentions ? `Notifications, ${mentions} unread mentions` : "Notifications"}>
           <Bell size={19} />
-          {mentions > 0 && <span className="dot" />}
+          {mentions > 0 && (
+            <span className="count mention-count" aria-hidden="true">
+              {capCount(mentions)}
+            </span>
+          )}
+        </button>
+        <button
+          className="icon-btn top-count hide-sm"
+          onClick={() => navigate({ section: "later" })}
+          aria-current={section === "later" ? "page" : undefined}
+          aria-label={due ? t("top_saved_count", { n: due }) : t("top_saved")}
+          title={t("top_saved")}
+        >
+          <Bookmark size={19} />
+          {due > 0 && (
+            <span className="count accent" aria-hidden="true">
+              {capCount(due)}
+            </span>
+          )}
         </button>
         <button className="icon-btn hide-sm" onClick={() => navigate({ section: "settings", settingsPage: "notifications" })} aria-label="Settings">
           <Settings size={19} />
         </button>
-        <button className="me-btn" onClick={(e) => profile.open(e.currentTarget)} aria-label="Your profile and settings" aria-haspopup="menu" aria-expanded={!!profile.anchor}>
+        <button className="me-btn" onClick={(e) => profile.open(e.currentTarget)} aria-label="Your profile and settings" aria-haspopup="menu" aria-expanded={profile.expanded}>
           <UserAvatar userId={me?.userId ?? ""} name={me?.displayName ?? "Me"} colorIndex={me?.avatarColor ?? 0} photoRev={myPhoto} size={32} online={connection === "online"} decorative />
         </button>
-        {profile.anchor && me && (
-          <Menu
-            anchor={profile.anchor}
-            align="end"
-            label="Profile"
-            onClose={profile.close}
-            entries={[
-              {
-                custom: (
-                  <div className="row" style={{ padding: "8px 10px 10px", gap: 12 }}>
-                    <UserAvatar userId={me.userId} name={me.displayName} colorIndex={me.avatarColor} photoRev={myPhoto} size={40} decorative />
-                    <div className="grow">
-                      <div className="ellipsis" style={{ fontWeight: 700 }}>
-                        {me.displayName}
-                      </div>
-                      <div className="faint ellipsis">@{me.username}</div>
-                      {(statusOffered ? myStatus : me.statusText) && <div className="muted ellipsis">{statusOffered ? myStatus : me.statusText}</div>}
-                    </div>
-                  </div>
-                ),
-              },
-              "separator",
-              ...(presenceOffered
-                ? [
-                    {
-                      label: `Presence: ${PRESENCE_LABEL[currentPresence(me.presenceMode, me.presenceUntil, now)].label}…`,
-                      icon: <CircleDot size={16} />,
-                      onSelect: () => setDialog("presence"),
-                    },
-                  ]
-                : []),
-              ...(statusOffered
-                ? [
-                    { label: myStatus ? "Change status…" : "Set a status…", icon: <Smile size={16} />, onSelect: () => setDialog("status") },
-                    {
-                      label: pausedUntil ? `Notifications paused until ${clock(pausedUntil)}…` : "Pause notifications…",
-                      icon: <BellOff size={16} />,
-                      onSelect: () => setDialog("pause"),
-                    },
-                    "separator" as const,
-                  ]
-                : []),
-              { label: "Profile", icon: <UserRound size={16} />, onSelect: () => navigate({ section: "settings", settingsPage: "profile" }) },
-              { label: "Devices", icon: <Smartphone size={16} />, onSelect: () => navigate({ section: "settings", settingsPage: "devices" }) },
-              { label: "Settings", icon: <Settings size={16} />, onSelect: () => navigate({ section: "settings", settingsPage: "notifications" }) },
-              "separator",
-              { heading: "Theme" },
-              { label: "System", icon: <Monitor size={16} />, checked: prefs.theme === "system", onSelect: () => setPrefs({ theme: "system" }) },
-              { label: "Light", icon: <Sun size={16} />, checked: prefs.theme === "light", onSelect: () => setPrefs({ theme: "light" }) },
-              { label: "Dark", icon: <Moon size={16} />, checked: prefs.theme === "dark", onSelect: () => setPrefs({ theme: "dark" }) },
-              "separator",
-              { label: "Sign out of this browser…", icon: <LogOut size={16} />, danger: true, onSelect: () => navigate({ section: "settings", settingsPage: "security" }) },
-            ]}
-          />
-        )}
+        {profile.ui}
       </div>
-      {dialog === "status" && <StatusDialog onClose={() => setDialog(null)} />}
-      {dialog === "pause" && <PauseDialog onClose={() => setDialog(null)} />}
-      {dialog === "presence" && <PresenceDialog onClose={() => setDialog(null)} />}
     </header>
   );
+}
+
+/** The top bar's title outside a community: the section's own name. */
+function pageTitle(section: Section, t: Translate): string {
+  switch (section) {
+    case "dms":
+    case "friends":
+      return t("nav_messages");
+    case "activity":
+      return t("nav_activity");
+    case "later":
+      return t("top_saved");
+    case "discover":
+      return t("discover_title");
+    case "settings":
+      return t("settings_title");
+    default:
+      return t("nav_home");
+  }
 }

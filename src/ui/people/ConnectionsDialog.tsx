@@ -1,4 +1,5 @@
-import { Check, MailQuestion, UserPlus, X } from "lucide-react";
+import { MeldlingArt } from "../components/MeldlingArt";
+import { Check, UserPlus, X } from "lucide-react";
 import { type FormEvent, useState } from "react";
 import { ApiError } from "../../api/client";
 import type { Member } from "../../api/schemas";
@@ -159,9 +160,7 @@ export function MessageRequestsDialog({ onClose }: { onClose: () => void }) {
         </p>
         {rows.length === 0 && (
           <div className="empty" style={{ padding: 20 }}>
-            <span className="empty-orb">
-              <MailQuestion size={22} />
-            </span>
+            <MeldlingArt pose="love" />
             <p className="muted">No message requests.</p>
           </div>
         )}

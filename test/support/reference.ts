@@ -34,7 +34,16 @@ export function nodeHistory(seed: Uint8Array, userId: string) {
     c.setAAD(Buffer.from(`orbit-history-v1|${userId}|${t}`));
     return Buffer.concat([Buffer.from([1]), nonce, c.update(plaintext, "utf8"), c.final(), c.getAuthTag()]);
   };
-  return { tag, seal };
+  /** android `HistoryKeys.open`: what a phone reads from an item a browser wrote. */
+  const open = (t: string, sealed: Uint8Array) => {
+    const b = Buffer.from(sealed);
+    if (b[0] !== 1) throw new Error("not a history item");
+    const d = nodeCrypto.createDecipheriv("aes-256-gcm", enc, b.subarray(1, 13));
+    d.setAAD(Buffer.from(`orbit-history-v1|${userId}|${t}`));
+    d.setAuthTag(b.subarray(b.length - 16));
+    return Buffer.concat([d.update(b.subarray(13, b.length - 16)), d.final()]).toString("utf8");
+  };
+  return { tag, seal, open };
 }
 
 /** android `ChunkedAttachmentCrypto.encryptFile`, with Node's AES-GCM. */

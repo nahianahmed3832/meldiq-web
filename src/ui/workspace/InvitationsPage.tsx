@@ -1,4 +1,4 @@
-import { Check, Copy, Ticket } from "lucide-react";
+import { Ticket } from "lucide-react";
 import { type FormEvent, useState } from "react";
 import type { Invite, NewInvite, OrgAdminDetail, OrgRole } from "../../api/workspaceSchemas";
 import { useEngine, useOrbit } from "../../application/orbit";
@@ -9,18 +9,8 @@ import { useAction, useLoad } from "./useLoad";
 import { Card, ErrorLine } from "./WorkspaceView";
 import { QrCode } from "../components/QrCode";
 import { inviteLink } from "../../sync/inviteCodes";
+import { EXPIRY, InviteShare, USES } from "./InviteLink";
 import { rolesOverview } from "../../sync/roles";
-
-/** Batch B4 (android InviteChoices): 1 hour to 30 days, and 1 to 500 uses. */
-const EXPIRY: { hours: number; label: string }[] = [
-  { hours: 1, label: "1 hour" },
-  { hours: 24, label: "1 day" },
-  { hours: 72, label: "3 days" },
-  { hours: 24 * 7, label: "7 days" },
-  { hours: 24 * 30, label: "30 days" },
-];
-
-const USES = [1, 10, 50, 100, 500];
 
 const STATUS: Record<Invite["status"], string> = { active: "Active", revoked: "Revoked", expired: "Expired", used_up: "Used up" };
 
@@ -95,7 +85,7 @@ function NewInvitation({ detail, onCreated }: { detail: OrgAdminDetail; onCreate
   const grantable = (customRoles.data?.roles ?? []).filter((r) => !r.archived && r.canAssign);
   const [roleId, setRoleId] = useState("");
   const scopes = [
-    ...(isAdmin || community ? [{ value: "", label: community ? "The whole community" : "The whole workspace" }] : []),
+    ...(isAdmin || community ? [{ value: "", label: community ? "The whole community" : "The whole community" }] : []),
     ...detail.branches.filter((b) => isAdmin || b.canManage).map((b) => ({ value: `b:${b.id}`, label: `Branch: ${b.name}` })),
     ...detail.teams.filter((t) => isAdmin || t.canManage).map((t) => ({ value: `t:${t.id}`, label: `Team: ${t.name}` })),
   ];
@@ -108,7 +98,6 @@ function NewInvitation({ detail, onCreated }: { detail: OrgAdminDetail; onCreate
   const org = useOrbit((st) => st.orgs.find((o) => o.id === detail.org.id) ?? null);
   const guestsOff = guestExpiry && org?.guestsAllowed === false;
   const [made, setMade] = useState<NewInvite | null>(null);
-  const [copied, setCopied] = useState(false);
   const act = useAction();
 
   const submit = (e: FormEvent) => {
@@ -192,7 +181,7 @@ function NewInvitation({ detail, onCreated }: { detail: OrgAdminDetail; onCreate
         )}
         {role === "GUEST" && guestsOff && (
           <p className="warn-text ws-wide" style={{ margin: 0, fontSize: 13 }}>
-            Guests are turned off for this workspace, so the server will refuse a guest invitation.
+            Guests are turned off for this community, so the server will refuse a guest invitation.
           </p>
         )}
         <label className="field">
@@ -223,19 +212,14 @@ function NewInvitation({ detail, onCreated }: { detail: OrgAdminDetail; onCreate
               {roleName(made.role)} · {made.maxUses} {made.maxUses === 1 ? "use" : "uses"} · expires {untilWhen(made.expiresAt)}. Shown once. Scan the code with Meldiq on a phone, or share the code.
             </small>
           </span>
-          <button
-            className="btn btn-secondary btn-sm"
-            onClick={() =>
-              void navigator.clipboard?.writeText(made.code).then(() => {
-                setCopied(true);
-                setTimeout(() => setCopied(false), 1500);
-              })
-            }
-          >
-            {copied ? <Check size={14} /> : <Copy size={14} />} {copied ? "Copied" : "Copy"}
-          </button>
+          <InviteShare code={made.code} />
         </div>
       )}
     </Card>
   );
 }
+
+/**
+ * Copy the link, copy the code, or the device's own share sheet where there is one (community-first brief §F). Feedback
+ * stays on the button for a moment; where the clipboard is unavailable (some mobile browsers), the link is shown to select.
+ */

@@ -57,7 +57,10 @@ async function callWithShare(page: Page, width: number, height: number) {
   await alice.connect();
   await bob.connect();
   await link(page, alice);
-  await page.getByRole("link", { name: /Bob Chen/ }).click();
+  await page
+    .getByRole("complementary", { name: "Conversations" })
+    .getByRole("link", { name: /Bob Chen/ })
+    .click();
   await page.getByRole("button", { name: "Start a voice call" }).click();
   const call = await answerCall(bob, false);
   await call.media.shareScreen(width, height);

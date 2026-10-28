@@ -1,7 +1,21 @@
 import { z } from "zod";
 import { ApiClient, ApiError } from "../api/client";
 import type { AccountSessionGrant } from "../api/accountSchemas";
-import { type Call, type Conversation, type Member, type Org, type SessionGrant, zConversation, zMember, zOrg, zProfile, zServerInfo } from "../api/schemas";
+import {
+  type Call,
+  type Conversation,
+  type Member,
+  type Org,
+  type ServerInfo,
+  type SessionGrant,
+  zConversation,
+  zMember,
+  zOrg,
+  zProfile,
+  zServerHistoryPage,
+  zServerInfo,
+  zStoredEvent,
+} from "../api/schemas";
 import { Signals, zExperiments } from "./signals";
 import { CommunitySync } from "./community";
 import { paused } from "./status";
@@ -15,12 +29,17 @@ import { fingerprint } from "../crypto/identity";
 import type { ConversationLocal, DeviceRecord, OutboxItem, PinnedIdentity, RichContent, StoredMessage } from "../model/types";
 import { encodePayload, type Payload } from "../protocol/payload";
 import { RealtimeClient } from "../realtime/socket";
-import type { ShareQuality } from "../call/shareQuality";
+import type { CallPrefs } from "../call/manager";
 import { type AppState, initialState, Store, type UserLite, upsertLoaded, withMessages } from "../state/store";
 import type { LocalStore } from "../store/db";
 import type { EngineContext } from "./context";
 import { Directory } from "./directory";
 import { restoreHistory } from "./historySync";
+import { importLegacyHistory } from "./legacyImport";
+import { MojoSync } from "./mojo";
+import { HistoryUploader } from "./historyUpload";
+import { canWriteHistory, deriveHistoryKeys } from "../crypto/history";
+import type { HistoryBackupState } from "../state/store";
 import { Outbox, sealAndPost } from "./outbox";
 import { levelOf, type NavOp, NavSync, PERSONAL, shouldNotify, workspaceOf } from "./navPrefs";
 import { firstShowing, ReminderSync } from "./reminders";
@@ -64,10 +83,16 @@ export interface EngineOptions {
   /** Call timing for tests. */
   callTiming?: { keyWaitMs?: number; peerWindowMs?: number; rejoinWindowMs?: number };
   /** Settings › Calls (batches B10, B11): noise reduction, and how this browser shares its screen. */
-  callPrefs?: () => { noiseReduction: boolean; shareQuality: ShareQuality; shareAudio: boolean };
+  callPrefs?: () => CallPrefs;
 }
 
 const PAGE = 60;
+/** GET /v2/messages/search (API 0.57.0). */
+const zSearchRes = z.object({ messages: z.array(zStoredEvent) });
+/** GET /v2/messages/summary (API 0.57.0). */
+const zSummary = z.object({
+  conversations: z.array(z.object({ conversationId: z.string(), last: zStoredEvent.nullable(), readUpTo: z.number(), unread: z.number(), mentions: z.number() })),
+});
 const zConversations = z.object({ conversations: z.array(zConversation) });
 const zOrgs = z.object({ orgs: z.array(zOrg) });
 const zMembers = z.object({ members: z.array(zMember) });
@@ -92,6 +117,8 @@ export class Engine implements EngineContext {
   readonly nav: NavSync;
   /** Server reminders (Later › Reminders), sealed with this browser's reminder key. */
   readonly reminders: ReminderSync;
+  /** Meldiq Mojo: plans, Sparks, gifts and badges (server docs/MOJO.md). */
+  readonly mojo: MojoSync;
   /** Experiments and content-free analytics counts, silent unless the server turns them on (src/sync/signals.ts). */
   readonly signals: Signals;
   /** Call history lines and the recent-call log. */
@@ -106,7 +133,11 @@ export class Engine implements EngineContext {
   private viewingId: string | null = null;
   private focused = true;
   private stopped = false;
+  /** Backs this browser's chats up into the account's history, once the history is available and writable here. */
+  private uploader: HistoryUploader | null = null;
   private readTimers = new Map<string, ReturnType<typeof setTimeout>>();
+  /** Per conversation: the oldest server time loaded from its history, and whether older messages remain. */
+  private readonly serverPages = new Map<string, { oldest: number | null; more: boolean }>();
   private lastReadSent = new Map<string, number>();
   private convFetches = new Map<string, Promise<Conversation | null>>();
   private userFetches = new Map<string, Promise<void>>();
@@ -201,6 +232,11 @@ export class Engine implements EngineContext {
       publish: (reminders) => this.set((s) => ({ ...s, reminders })),
       show: (r) => this.showReminder(r),
     });
+    this.mojo = new MojoSync({
+      json: (method, path, schema, init) => this.api.json(method, path, schema, init),
+      publish: (update) => this.set((s) => ({ ...s, mojo: update(s.mojo) })),
+      get: () => this.state.get().mojo,
+    });
     this.community = new CommunitySync({
       json: (method, path, schema, init) => this.api.json(method, path, schema, init),
       features: () => this.state.get().server?.features ?? [],
@@ -258,12 +294,16 @@ export class Engine implements EngineContext {
     }
     this.realtime.start();
     void this.refreshAll().then(async () => {
+      void this.mojo.refresh();
       await this.signals.refresh();
       this.signals.track("app.opened");
     });
     if (typeof document !== "undefined") document.addEventListener("visibilitychange", this.flushSignalsWhenHidden);
     this.outbox.kick();
-    void this.runHistory();
+    // API 0.57.0: history lives on the server. A browser that kept history before uploads it once.
+    void importLegacyHistory(this)
+      .then((n) => (n > 0 ? this.syncSummaries() : undefined))
+      .catch(() => undefined);
   }
 
   private readonly flushSignalsWhenHidden = () => {
@@ -272,6 +312,7 @@ export class Engine implements EngineContext {
 
   stop(): void {
     this.stopped = true;
+    this.uploader?.stop();
     if (typeof document !== "undefined") document.removeEventListener("visibilitychange", this.flushSignalsWhenHidden);
     this.calls.stop();
     this.realtime.stop();
@@ -360,11 +401,11 @@ export class Engine implements EngineContext {
    * Signs in again after the account session ended: the password, plus proof that this browser still holds its device
    * key, so the new session is bound to this device. A removed device is told so by the server, and then erased.
    */
-  async signInAgain(password: string, email?: string): Promise<void> {
+  async signInAgain(password: string, email?: string, totpCode?: string): Promise<void> {
     if (!(this.session instanceof AccountSession)) throw new Error("This browser isn't signed in with a Meldiq account.");
     const account = this.record.account;
     try {
-      await this.session.adopt(await signInWithDevice(this.opts.base, this.record, password, email));
+      await this.session.adopt(await signInWithDevice(this.opts.base, this.record, password, email, totpCode));
     } catch (e) {
       if (e instanceof ApiError && (e.code === "device_revoked" || e.code === "account_disabled")) return this.revoked(e.code);
       throw e;
@@ -382,6 +423,14 @@ export class Engine implements EngineContext {
     this.outbox.kick();
   }
 
+  /** The account's email changed here (Settings › My Account, API 0.46.0): sign-ins from now on use the new address. */
+  async accountEmailChanged(email: string): Promise<void> {
+    const account = this.record.account;
+    if (!account || account.email === email) return;
+    this.record = { ...this.record, account: { ...account, email } };
+    await this.store.saveDevice(this.record);
+  }
+
   private revoked(reason: RevokedReason): void {
     if (this.signingOut) return;
     this.stop();
@@ -391,7 +440,9 @@ export class Engine implements EngineContext {
 
   private async loadLocal(): Promise<void> {
     const locals = await this.store.conversations();
-    const cache = await this.store.getValue<{ orgs: Org[]; conversations: Conversation[]; users: UserLite[] }>(CACHE_KEY);
+    // The server's last known features come back with the rest (brief v4 §15): the first paint lays communities out as
+    // the server does (categories, saved order), not in the older workspace layout until server-info answers.
+    const cache = await this.store.getValue<{ orgs: Org[]; conversations: Conversation[]; users: UserLite[]; server?: ServerInfo | null }>(CACHE_KEY);
     const pins = await this.store.changedPins();
     const callLog = await this.callLog.load();
     this.set((s) => ({
@@ -399,6 +450,7 @@ export class Engine implements EngineContext {
       callLog,
       local: Object.fromEntries(locals.map((l) => [l.id, l])),
       orgs: cache?.orgs ?? s.orgs,
+      server: s.server ?? cache?.server ?? null,
       conversations: cache ? Object.fromEntries(cache.conversations.map((c) => [c.id, c])) : s.conversations,
       users: cache ? Object.fromEntries(cache.users.map((u) => [u.id, u])) : s.users,
       identityAlerts: pins,
@@ -441,7 +493,20 @@ export class Engine implements EngineContext {
       this.set((s) => {
         const users = { ...s.users };
         for (const c of convs.conversations) for (const m of c.members ?? []) users[m.id] = toUser(m, users[m.id]);
-        users[u.id] = { id: u.id, username: u.username, displayName: u.displayName, avatarColor: u.avatarColor, statusText: u.statusText, online: true, photoRev: u.photoRev, pronouns: u.pronouns };
+        users[u.id] = {
+          id: u.id,
+          username: u.username,
+          displayName: u.displayName,
+          avatarColor: u.avatarColor,
+          statusText: u.statusText,
+          online: true,
+          photoRev: u.photoRev,
+          pronouns: u.pronouns,
+          avatarMedia: u.avatarMedia,
+          profileStyle: u.profileStyle,
+          tag: u.tag,
+          mojo: u.mojo ?? null,
+        };
         const calls: Record<string, Call> = {};
         for (const c of convs.conversations)
           if (c.activeCall)
@@ -456,6 +521,7 @@ export class Engine implements EngineContext {
               endReason: null,
               voiceRoom: c.voice,
               hands: [],
+              sharing: [],
             };
         return {
           ...s,
@@ -473,6 +539,7 @@ export class Engine implements EngineContext {
             presenceMode: u.presenceMode,
             presenceUntil: u.presenceUntil,
             pronouns: u.pronouns,
+            profileBanner: u.profileBanner,
           },
           orgs: orgs.orgs,
           conversations: Object.fromEntries(convs.conversations.map((c) => [c.id, c])),
@@ -481,24 +548,69 @@ export class Engine implements EngineContext {
         };
       });
       const st = this.state.get();
-      await this.store.setValue(CACHE_KEY, { orgs: st.orgs, conversations: Object.values(st.conversations), users: Object.values(st.users) });
+      await this.store.setValue(CACHE_KEY, { orgs: st.orgs, conversations: Object.values(st.conversations), users: Object.values(st.users), server: st.server });
       void this.nav.refresh([PERSONAL, ...orgs.orgs.map((o) => o.id)]);
       void this.reminders.refresh();
+      void this.syncSummaries();
     } catch (e) {
       if (!(e instanceof ApiError && e.isNetwork)) this.notice("error", e instanceof ApiError ? e.message : "Couldn't load your conversations.");
     }
   }
 
-  private async runHistory(): Promise<void> {
+  /** Restores what the history has and this browser doesn't ([fromStart]: reads it all again), then backs up what it holds. */
+  async runHistory(fromStart = false): Promise<void> {
     if (!this.device.history) return;
     this.set((s) => ({ ...s, history: { ...s.history, status: "running", error: null } }));
     try {
-      const r = await restoreHistory(this, (p) => this.set((s) => ({ ...s, history: { ...s.history, ...p } })));
-      this.set((s) => ({ ...s, history: { status: "done", ...r, error: null } }));
+      const r = await restoreHistory(this, (p) => this.set((s) => ({ ...s, history: { ...s.history, ...p } })), fromStart);
+      this.set((s) => ({ ...s, history: { ...s.history, status: "done", ...r, error: null } }));
+      await this.startBackup();
     } catch (e) {
       const unsupported = e instanceof ApiError && (e.code === "history_off" || e.status === 404);
       this.set((s) => ({ ...s, history: { ...s.history, status: unsupported ? "unsupported" : "error", error: unsupported ? null : e instanceof ApiError ? e.message : "Couldn't restore history" } }));
+      // A failed download (offline) doesn't stop this browser backing up what it holds.
+      if (!unsupported) await this.startBackup();
     }
+  }
+
+  /** Backs this browser's chats up into the history (historyUpload.ts), or says it needs its keys opened once. */
+  private async startBackup(): Promise<void> {
+    const keys = this.device.history;
+    if (!keys || this.uploader || this.stopped) return;
+    if (!canWriteHistory(keys)) {
+      this.setBackup({ mode: "needs-keys" });
+      return;
+    }
+    this.uploader = new HistoryUploader({
+      api: this.api,
+      store: this.store,
+      keys,
+      keepsFiles: () => this.state.get().server?.features.includes("attachment-keep") ?? false,
+      onState: (b) => this.setBackup(b),
+    });
+    await this.uploader.start();
+  }
+
+  private setBackup(change: Partial<HistoryBackupState>): void {
+    this.set((s) => ({ ...s, history: { ...s.history, backup: { ...s.history.backup, ...change } } }));
+  }
+
+  /** Sends this browser's unsent backup now (before signing out); throws if it couldn't. */
+  async flushBackup(): Promise<void> {
+    await this.uploader?.flush();
+  }
+
+  /**
+   * Browsers set up before 2026-10-28 can read the history but not write it: the identity seed (the recovery key, or the
+   * key backup opened with the password) gives them keys that can, once. The seed must be this account's; it isn't kept.
+   */
+  async unlockHistoryBackup(seed: Uint8Array): Promise<void> {
+    if ((await publicKeyFromSeed(seed)) !== this.record.identityKey) throw new Error("That key belongs to a different Meldiq account.");
+    const history = await deriveHistoryKeys(seed, this.record.userId);
+    this.record = { ...this.record, history, reminders: this.record.reminders ?? (await deriveReminderKey(seed, this.record.userId)) };
+    await this.store.saveDevice(this.record);
+    this.setBackup({ mode: "on", error: null });
+    await this.startBackup();
   }
 
   // ───────────────────────── realtime frames ─────────────────────────
@@ -554,6 +666,10 @@ export class Engine implements EngineContext {
       case "reminders.changed":
       case "reminder.due":
         await this.reminders.refresh();
+        return;
+      case "entitlements.changed":
+        // A plan, a Spark or a gift changed (here or on another device): read Mojo again.
+        await this.mojo.refresh();
         return;
       case "prefs.updated":
         await this.nav.refresh([f.workspaceId]);
@@ -775,14 +891,57 @@ export class Engine implements EngineContext {
 
   // ───────────────────────── reading ─────────────────────────
 
-  /** The conversation now on screen (null: none). Loads its newest messages and marks it read. */
+  /**
+   * Each conversation's newest message, read position and unread counts, from the server (API 0.57.0): the list after a
+   * page load or a reconnect, when this browser keeps nothing between visits.
+   */
+  async syncSummaries(): Promise<void> {
+    const res = await this.api.json("GET", "/v2/messages/summary", zSummary).catch(() => null);
+    if (!res) return;
+    for (const c of res.conversations) {
+      if (c.last) await this.receiver.ingest(c.last, 0, { history: true });
+      await this.locals.update(c.conversationId, (l) => ({
+        ...l,
+        readUpTo: Math.max(l.readUpTo, c.readUpTo),
+        unread: this.viewingId === c.conversationId ? 0 : c.unread,
+        mentions: this.viewingId === c.conversationId ? 0 : c.mentions,
+      }));
+      await this.refreshPreview(c.conversationId);
+    }
+  }
+
+  /**
+   * One page of a conversation's history from the server, older than [before] (null: the newest): its messages oldest
+   * first, then the changes to them, applied as live ones are. Remembers whether older ones remain.
+   */
+  private async fetchHistory(id: string, before: number | null, around?: string): Promise<void> {
+    const q = new URLSearchParams({ limit: String(PAGE) });
+    if (before) q.set("before", String(before));
+    if (around) q.set("around", around);
+    const page = await this.api.json("GET", `/v2/conversations/${encodeURIComponent(id)}/messages?${q}`, zServerHistoryPage);
+    for (const e of [...page.messages].reverse()) await this.receiver.ingest(e, 0, { history: true });
+    for (const e of page.changes) await this.receiver.ingest(e, 0, { history: true });
+    const oldest = page.messages.at(-1)?.serverTs ?? null;
+    const prev = this.serverPages.get(id);
+    this.serverPages.set(id, { oldest: prev?.oldest != null && oldest != null ? Math.min(prev.oldest, oldest) : (oldest ?? prev?.oldest ?? null), more: around ? (prev?.more ?? true) : page.more });
+  }
+
+  /** The conversation now on screen (null: none). Loads its newest messages from the server and marks it read. */
   async openConversation(id: string | null): Promise<void> {
     this.viewingId = id;
     if (!id) return;
+    if (!this.serverPages.has(id)) await this.fetchHistory(id, null).catch(() => undefined);
     const items = await this.store.latestMessages(id, PAGE);
-    this.set((s) => withMessages(s, id, items, items.length === PAGE));
+    this.set((s) => withMessages(s, id, items, this.serverPages.get(id)?.more ?? items.length === PAGE));
     await this.markRead(id);
     void this.syncCalls(id);
+  }
+
+  /** Loads the messages around [messageId] from the server (a link or a search result in history not loaded yet). */
+  async loadAround(id: string, messageId: string): Promise<void> {
+    await this.fetchHistory(id, null, messageId);
+    const items = await this.store.latestMessages(id, Number.MAX_SAFE_INTEGER);
+    this.set((s) => withMessages(s, id, items, this.serverPages.get(id)?.more ?? false));
   }
 
   /** The conversation's calls from the server's record (catches up calls that ended while this browser was away). */
@@ -798,8 +957,12 @@ export class Engine implements EngineContext {
   async loadOlder(id: string): Promise<void> {
     const loaded = this.state.get().messages[id];
     if (!loaded?.hasMore || loaded.items.length === 0) return;
-    const older = await this.store.latestMessages(id, PAGE, loaded.items[0].sortTs);
-    this.set((s) => withMessages(s, id, [...older, ...(s.messages[id]?.items ?? [])], older.length === PAGE));
+    const first = loaded.items[0];
+    // Older messages come from the server, one page at a time.
+    const page = this.serverPages.get(id);
+    if (page?.more) await this.fetchHistory(id, Math.min(page.oldest ?? Number.MAX_SAFE_INTEGER, first.serverTs ?? first.sortTs)).catch(() => undefined);
+    const older = await this.store.latestMessages(id, PAGE, first.sortTs);
+    this.set((s) => withMessages(s, id, [...older, ...(s.messages[id]?.items ?? [])], older.length > 0 && ((this.serverPages.get(id)?.more ?? false) || older.length === PAGE)));
   }
 
   /** Clears unread on this device and, where the phone would, tells the others with an encrypted read receipt. */
@@ -810,7 +973,11 @@ export class Engine implements EngineContext {
       return cur.unread || cur.mentions ? { ...cur, unread: 0, mentions: 0 } : null;
     });
     const conv = this.state.get().conversations[id];
-    if (!conv || !sendsReadReceipts(conv.type, conv.memberCount, conv.canPost) || this.opts.prefs?.().readReceipts === false) return;
+    if (!conv) return;
+    const receipts = sendsReadReceipts(conv.type, conv.memberCount, conv.canPost) && this.opts.prefs?.().readReceipts !== false;
+    // Channels and large groups send no read receipts; there, only this person's own devices hear about it (below).
+    const selfOnly = !sendsReadReceipts(conv.type, conv.memberCount, conv.canPost) && (this.state.get().server?.features.includes("self-controls") ?? false);
+    if (!receipts && !selfOnly) return;
     const latest = await this.store.newestMessage(id, (m) => !m.outgoing && m.kind === "text");
     if (!latest) return;
     const upTo = latest.serverTs ?? latest.sortTs;
@@ -818,7 +985,22 @@ export class Engine implements EngineContext {
     if (Math.max(this.lastReadSent.get(id) ?? 0, l.readUpTo) >= upTo) return;
     this.lastReadSent.set(id, upTo);
     await this.locals.update(id, (cur) => ({ ...cur, readUpTo: Math.max(cur.readUpTo, upTo) }));
-    await this.enqueueControl(id, { type: "read", upTo });
+    if (receipts) return this.enqueueControl(id, { type: "read", upTo });
+    await this.syncReadToOwnDevices(id, upTo);
+  }
+
+  /**
+   * "Read up to here" for this person's other devices only (API 0.43.0, audience "self"), encrypted like everything
+   * else, so reading a channel here clears it in their other browsers and nobody else learns what was read. Best
+   * effort: not written to the outbox; the next read says it again.
+   */
+  private async syncReadToOwnDevices(conversationId: string, upTo: number): Promise<void> {
+    const o = { messageId: crypto.randomUUID(), conversationId, cls: "control" as const, payloadJson: encodePayload({ type: "read", upTo }), sentAt: Date.now() };
+    try {
+      await sealAndPost(this, o, false, "self");
+    } catch {
+      this.lastReadSent.delete(conversationId);
+    }
   }
 
   /** Marks a conversation read or unread on this browser only: no read receipt is sent either way (as on the phone). */
@@ -968,8 +1150,15 @@ export class Engine implements EngineContext {
   }
 
   /** Messages on this browser matching [query]: words and filters (from:, has:, before:, after:; src/sync/searchQuery.ts). */
-  searchMessages(query: string, conversationId?: string): Promise<StoredMessage[]> {
+  async searchMessages(query: string, conversationId?: string): Promise<StoredMessage[]> {
     const q = parseSearchQuery(query);
+    // The server searches every message (API 0.57.0); its hits join what's loaded, then the filters apply as before.
+    if (q.text.trim()) {
+      const params = new URLSearchParams({ q: q.text.trim().slice(0, 200), limit: "100" });
+      if (conversationId) params.set("conversationId", conversationId);
+      const res = await this.api.json("GET", `/v2/messages/search?${params}`, zSearchRes).catch(() => null);
+      for (const e of res?.messages ?? []) await this.receiver.ingest(e, 0, { history: true });
+    }
     const sender = (m: StoredMessage) => {
       const mine = m.outgoing || m.senderUserId === this.device.userId;
       const u = this.state.get().users[m.senderUserId];
@@ -983,14 +1172,9 @@ export class Engine implements EngineContext {
     return this.store.latestMessages(conversationId, limit);
   }
 
-  /** The identity key pinned for someone (what safety numbers are computed from), if any. */
+  /** The identity key pinned for someone, if any (a different key from the server pauses messages until reviewed). */
   async pinnedIdentity(userId: string): Promise<PinnedIdentity | null> {
     return this.store.pin(userId);
-  }
-
-  async markVerified(userId: string, verified: boolean): Promise<void> {
-    const pin = await this.store.pin(userId);
-    if (pin) await this.store.putPin({ ...pin, verified });
   }
 }
 
@@ -1012,5 +1196,11 @@ function toUser(m: Member, prev?: UserLite): UserLite {
     photoRev: m.photoRev ?? null,
     presence: m.presence ?? prev?.presence ?? null,
     pronouns: m.pronouns ?? prev?.pronouns ?? null,
+    // API 0.46.0: lists carry them; a list without them (an older server) keeps what a profile already said.
+    avatarMedia: m.avatarMedia ?? prev?.avatarMedia ?? null,
+    profileStyle: m.profileStyle ?? prev?.profileStyle ?? null,
+    tag: m.tag ?? prev?.tag ?? null,
+    // API 0.54.0: no badge in the list means none (hidden or no plan): never kept from before.
+    mojo: m.mojo ?? null,
   };
 }

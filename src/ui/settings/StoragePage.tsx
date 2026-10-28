@@ -1,4 +1,4 @@
-import { HardDrive, ShieldCheck } from "lucide-react";
+import { HardDrive } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { bytes } from "../format";
 
@@ -9,14 +9,11 @@ interface StorageState {
 }
 
 /**
- * What this browser keeps (android StorageScreen): this device's keys, its messages and session, all in the site's own
- * storage. Browsers may clear "best-effort" storage when the disk fills up, which would remove this device and need it set
- * up again; asking for persistent storage prevents that where the browser allows it. Nothing here is sent anywhere.
+ * What this browser keeps (android StorageScreen). Since API 0.57.0 only its sign-in: messages, files and settings are
+ * on Meldiq's servers (docs/SERVER_MESSAGES.md), so there's nothing to keep safe here or to back up.
  */
 export function StoragePage() {
   const [state, setState] = useState<StorageState>({ usage: null, quota: null, persisted: null });
-  const [asking, setAsking] = useState(false);
-  const [refused, setRefused] = useState(false);
   const supported = typeof navigator !== "undefined" && !!navigator.storage;
 
   const load = useCallback(async () => {
@@ -28,17 +25,6 @@ export function StoragePage() {
   useEffect(() => {
     void load();
   }, [load]);
-
-  const persist = async () => {
-    setAsking(true);
-    try {
-      const granted = (await navigator.storage.persist?.()) ?? false;
-      setRefused(!granted);
-      await load();
-    } finally {
-      setAsking(false);
-    }
-  };
 
   return (
     <>
@@ -57,26 +43,9 @@ export function StoragePage() {
             </small>
           </div>
         </div>
-        <div className="setting">
-          <ShieldCheck size={18} className="faint" />
-          <div className="lines">
-            <strong>Keep this browser's data</strong>
-            <small>
-              {state.persisted
-                ? "Kept: the browser won't clear this device's keys and messages to free space."
-                : "Not kept yet: if the disk fills up, the browser may clear this site's data, and this browser would need setting up again (sign in, then your recovery key or your phone's approval)."}
-            </small>
-            {refused && !state.persisted && <small style={{ color: "var(--warning)" }}>The browser said no. Some browsers only allow it for sites you visit often or have installed as an app.</small>}
-          </div>
-          {supported && !state.persisted && (
-            <button className="btn btn-secondary btn-sm" disabled={asking} onClick={() => void persist()}>
-              {asking ? "Asking…" : "Keep data"}
-            </button>
-          )}
-        </div>
       </div>
       <p className="faint" style={{ margin: 0, fontSize: 12.5 }}>
-        Files you open are decrypted in memory and not kept. Signing this browser out (Privacy &amp; security) erases everything here.
+        Your messages, files and settings are kept on Meldiq's servers, not on this computer: this browser keeps only what signs it in. Files you open are fetched each time and not kept.
       </p>
     </>
   );

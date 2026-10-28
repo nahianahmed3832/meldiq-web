@@ -1,4 +1,5 @@
-import { MessagesSquare, Search, X } from "lucide-react";
+import { MeldlingArt } from "../components/MeldlingArt";
+import { Search, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useEngine, useOrbit } from "../../application/orbit";
 import { navigate, type Section } from "../../application/router";
@@ -54,9 +55,7 @@ export function ThreadList({ conversationId, section }: { conversationId: string
       {!shown && <span className="skeleton" style={{ height: 80 }} />}
       {shown?.length === 0 && (
         <div className="empty" style={{ padding: 16 }}>
-          <span className="empty-orb">
-            <MessagesSquare size={20} />
-          </span>
+          <MeldlingArt pose="loading" />
           <p className="muted">{q ? "No thread matches." : "No threads here yet. To start one, open a message's menu and choose Reply in thread."}</p>
         </div>
       )}

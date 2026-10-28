@@ -1,3 +1,4 @@
+import { MeldlingArt } from "../components/MeldlingArt";
 import { AtSign, Building2, Hash, LogIn, LogOut, MailPlus, MessagesSquare, Phone, PhoneMissed, UsersRound } from "lucide-react";
 import { useEffect, useState } from "react";
 import { ApiError } from "../../api/client";
@@ -39,7 +40,7 @@ export function ActivityView({ orgId }: { orgId: string | null }) {
     if (!orgId) return;
     orgActivity(engine, orgId)
       .then(setLog)
-      .catch((e: unknown) => setLogError(e instanceof ApiError && e.status === 403 ? "Guests can't see the workspace's activity." : e instanceof Error ? e.message : "Couldn't load activity."));
+      .catch((e: unknown) => setLogError(e instanceof ApiError && e.status === 403 ? "Guests can't see the community's activity." : e instanceof Error ? e.message : "Couldn't load activity."));
   }, [engine, orgId]);
 
   return (
@@ -48,7 +49,7 @@ export function ActivityView({ orgId }: { orgId: string | null }) {
         <div className="view-inner">
           <div>
             <h1>Activity</h1>
-            <p className="view-sub">Mentions of you, and what changed in {org?.name ?? "your workspace"}.</p>
+            <p className="view-sub">Mentions of you, and what changed in {org?.name ?? "your community"}.</p>
           </div>
           <div className="search-filters" role="tablist" aria-label="Show">
             {(["all", "mentions", "unreads", "threads", "calls"] as const).map((f) => (
@@ -63,9 +64,7 @@ export function ActivityView({ orgId }: { orgId: string | null }) {
               <h2>Unread mentions</h2>
               {mentions.length === 0 ? (
                 <div className="empty" style={{ padding: 28 }}>
-                  <span className="empty-orb">
-                    <AtSign size={24} />
-                  </span>
+                  <MeldlingArt pose="all-set" />
                   <p>Nobody has mentioned you since you last read. You're all caught up.</p>
                 </div>
               ) : (
@@ -97,7 +96,7 @@ export function ActivityView({ orgId }: { orgId: string | null }) {
           {activityShows(filter, "threads") && <ThreadReplies />}
           {filter === "all" && orgId && (
             <div className="card list-card">
-              <h2>Workspace activity</h2>
+              <h2>Community activity</h2>
               {logError ? (
                 <div className="side-quiet" style={{ padding: 14 }}>
                   {logError}
@@ -229,8 +228,8 @@ function ThreadReplies() {
 }
 
 const ACTIONS: Record<string, { text: string; icon: React.ReactNode }> = {
-  "org.create": { text: "created the workspace", icon: <Building2 size={16} /> },
-  "org.update": { text: "updated the workspace", icon: <Building2 size={16} /> },
+  "org.create": { text: "created the community", icon: <Building2 size={16} /> },
+  "org.update": { text: "updated the community", icon: <Building2 size={16} /> },
   "branch.create": { text: "created a branch", icon: <Building2 size={16} /> },
   "branch.update": { text: "updated a branch", icon: <Building2 size={16} /> },
   "department.create": { text: "created a department", icon: <Building2 size={16} /> },
@@ -245,11 +244,11 @@ const ACTIONS: Record<string, { text: string; icon: React.ReactNode }> = {
   "call.start": { text: "started a call", icon: <Phone size={16} /> },
   "invite.create": { text: "created an invitation", icon: <MailPlus size={16} /> },
   "invite.revoke": { text: "revoked an invitation", icon: <MailPlus size={16} /> },
-  "invite.accept": { text: "joined the workspace", icon: <LogIn size={16} /> },
+  "invite.accept": { text: "joined the community", icon: <LogIn size={16} /> },
   "member.role": { text: "changed someone's role", icon: <UsersRound size={16} /> },
-  "member.leave": { text: "left the workspace", icon: <LogOut size={16} /> },
-  "member.remove": { text: "removed someone from the workspace", icon: <LogOut size={16} /> },
-  "org.photo": { text: "changed the workspace photo", icon: <Building2 size={16} /> },
+  "member.leave": { text: "left the community", icon: <LogOut size={16} /> },
+  "member.remove": { text: "removed someone from the community", icon: <LogOut size={16} /> },
+  "org.photo": { text: "changed the community photo", icon: <Building2 size={16} /> },
   "branch.archive": { text: "archived a branch", icon: <Building2 size={16} /> },
   "branch.restore": { text: "restored a branch", icon: <Building2 size={16} /> },
   "team.archive": { text: "archived a team", icon: <UsersRound size={16} /> },

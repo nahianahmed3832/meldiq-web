@@ -92,7 +92,7 @@ function EditConversationDialog({ c, onClose }: { c: Conversation; onClose: () =
           <label className="field">
             <span>Topic</span>
             <textarea className="textarea" rows={3} value={topic} maxLength={TOPIC_MAX} onChange={(e) => setTopic(e.target.value)} />
-            <span className="hint">Shown under the channel's name. Everyone in the workspace who can see the channel sees it.</span>
+            <span className="hint">Shown under the channel's name. Everyone in the community who can see the channel sees it.</span>
           </label>
         )}
       </form>
@@ -170,7 +170,7 @@ export function AddMembersDialog({ c, memberIds, onAdded, onClose }: { c: Conver
       <div className="dialog-body">
         <input
           className="input"
-          placeholder={c.type === "CHANNEL" ? "Search this workspace's members" : "Search by name or @username"}
+          placeholder={c.type === "CHANNEL" ? "Search this community's members" : "Search by name or @username"}
           value={q}
           onChange={(e) => setQ(e.target.value)}
           aria-label="Search people"
@@ -208,7 +208,7 @@ export function AddMembersDialog({ c, memberIds, onAdded, onClose }: { c: Conver
           </div>
         )}
         <p className="faint" style={{ margin: 0, fontSize: 12 }}>
-          New members see messages sent from now on. Earlier messages were encrypted for the people here at the time.
+          New members see the conversation's earlier messages too.
         </p>
       </div>
     </Dialog>

@@ -15,7 +15,14 @@ const TRIM_EVERY = 10;
 
 let added = 0;
 
+/**
+ * Off since API 0.57.0 (the owner's rule, 2026-10-28: the browser keeps no data; files are served by the server each
+ * time). The functions stay so callers needn't change; forgetAllMedia still deletes what earlier versions kept.
+ */
+const KEEPS_MEDIA = false;
+
 function storage(): CacheStorage | null {
+  if (!KEEPS_MEDIA) return null;
   try {
     return typeof caches !== "undefined" ? caches : null;
   } catch {
@@ -50,6 +57,31 @@ export async function keepMedia(key: string, bytes: Uint8Array): Promise<void> {
   }
 }
 
+/** A kept entry as a Blob (large ciphertexts: read in slices later, never whole into memory). */
+export async function cachedMediaBlob(key: string): Promise<Blob | null> {
+  const store = storage();
+  if (!store) return null;
+  try {
+    const hit = await (await store.open(CACHE_NAME)).match(requestFor(key));
+    return hit ? await hit.blob() : null;
+  } catch {
+    return null;
+  }
+}
+
+/** Keeps a Blob (streamed into the cache, not copied into memory); skipped past a quarter of the budget. */
+export async function keepMediaBlob(key: string, blob: Blob): Promise<void> {
+  const store = storage();
+  if (!store || blob.size > MEDIA_BUDGET_BYTES / 4) return;
+  try {
+    const cache = await store.open(CACHE_NAME);
+    await cache.put(requestFor(key), new Response(blob, { headers: { [SIZE]: String(blob.size), [AT]: String(Date.now()) } }));
+    if (++added % TRIM_EVERY === 0) await trim(cache);
+  } catch {
+    /* full or unavailable: fetched again next time */
+  }
+}
+
 export async function forgetMediaEntry(key: string): Promise<void> {
   try {
     await (await storage()?.open(CACHE_NAME))?.delete(requestFor(key));
@@ -61,7 +93,7 @@ export async function forgetMediaEntry(key: string): Promise<void> {
 /** Erases every kept file (sign-out, account deletion). */
 export async function forgetAllMedia(): Promise<void> {
   try {
-    await storage()?.delete(CACHE_NAME);
+    if (typeof caches !== "undefined") await caches.delete(CACHE_NAME);
   } catch {
     /* nothing kept */
   }

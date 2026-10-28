@@ -20,16 +20,18 @@ export function useEngine(): Engine {
  */
 export function useOrbit<T>(select: (s: AppState) => T, equal: (a: T, b: T) => boolean = Object.is): T {
   const engine = useEngine();
-  const last = useRef<{ state: AppState; value: T } | null>(null);
+  // Cached per state and selector: a selector that reads props (a section, an id) is re-run when they change even if
+  // the state hasn't, or a view would keep showing what it selected for the previous props.
+  const last = useRef<{ state: AppState; select: (s: AppState) => T; value: T } | null>(null);
   return useSyncExternalStore(engine.state.subscribe, () => {
     const s = engine.state.get();
-    if (last.current && last.current.state === s) return last.current.value;
+    if (last.current && last.current.state === s && last.current.select === select) return last.current.value;
     const value = select(s);
     if (last.current && equal(last.current.value, value)) {
-      last.current = { state: s, value: last.current.value };
+      last.current = { state: s, select, value: last.current.value };
       return last.current.value;
     }
-    last.current = { state: s, value };
+    last.current = { state: s, select, value };
     return value;
   });
 }

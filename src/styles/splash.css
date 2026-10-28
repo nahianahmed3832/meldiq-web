@@ -1,23 +1,40 @@
-/* The launch screen (docs/MELDIQ_WEB_LAUNCH.md): shown from the first paint by the page itself, before any script runs. */
+/*
+ * The launch screen (docs/MELDIQ_WEB_LAUNCH.md): Meldling's app icon on the art's own deep navy (the owner's set,
+ * 2026-10-29; scripts/render-brand-assets.mjs GROUND) from the first paint, before any script runs. A slow breath only
+ * where motion is welcome.
+ */
 #splash {
   position: fixed;
   inset: 0;
   z-index: 1000;
   display: grid;
   place-items: center;
-  background: #0a132d;
+  background: #070a24;
   transition: opacity 220ms ease;
 }
 #splash.done {
   opacity: 0;
   pointer-events: none;
 }
-#splash > * {
-  grid-area: 1 / 1;
+#splash > img {
   width: min(62vmin, 320px);
   height: auto;
   aspect-ratio: 1;
   object-fit: contain;
+}
+@media (prefers-reduced-motion: no-preference) {
+  #splash > img {
+    animation: splash-breathe 2.4s ease-in-out infinite;
+  }
+}
+@keyframes splash-breathe {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.04);
+  }
 }
 @media (prefers-reduced-motion: reduce) {
   #splash {

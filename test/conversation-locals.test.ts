@@ -66,6 +66,22 @@ describe("conversation counters in this browser", () => {
     expect(after.unread).toBe(1);
   });
 
+  it("stay unread when another device read only up to an earlier message", async () => {
+    const { store, locals: l } = await locals("locals-read-partly");
+    for (const [id, ts] of [
+      ["m0", 1000],
+      ["m1", 2000],
+    ] as const) {
+      await store.putMessage(message(id, ts));
+      await l.bump(message(id, ts), { unread: true, mention: false });
+    }
+    await l.readElsewhere("c-1", 1000);
+    expect((await l.get("c-1")).unread).toBe(2);
+    expect((await l.get("c-1")).readUpTo).toBe(1000);
+    await l.readElsewhere("c-1", 2000);
+    expect((await l.get("c-1")).unread).toBe(0);
+  });
+
   it("publish the final state last", async () => {
     const { locals: l, published } = await locals("locals-publish-order");
     await Promise.all([l.bump(message("a", 1), { unread: true, mention: false }), l.bump(message("b", 2), { unread: true, mention: false })]);

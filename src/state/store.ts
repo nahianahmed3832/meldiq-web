@@ -1,4 +1,6 @@
 import { NO_REMINDERS, type RemindersState } from "../sync/reminders";
+import { initialMojo, type MojoState } from "../sync/mojo";
+import type { MojoMark } from "../api/profileSchemas";
 import type { Call, Conversation, Org, ServerInfo } from "../api/schemas";
 import { type CallUiState, idleCall } from "../call/types";
 import type { CallLogItem, ConversationLocal, PinnedIdentity, StoredMessage } from "../model/types";
@@ -37,10 +39,15 @@ export interface Me {
   presenceMode?: "auto" | "idle" | "dnd" | "invisible" | "unknown" | null;
   presenceUntil?: number | null;
   pronouns?: string | null;
+  /** API 0.45.0: your profile banner (the user panel shows it behind you). */
+  profileBanner?: { kind: "jpeg" | "gif" | "webp"; rev: number } | null;
   /** This browser's device-key fingerprint, as the phone shows it. */
   deviceFingerprint: string;
   deviceName: string;
 }
+
+import type { z } from "zod";
+import type { ProfileStyle, WornTag, zAvatarMedia } from "../api/profileSchemas";
 
 export interface UserLite {
   id: string;
@@ -57,7 +64,14 @@ export interface UserLite {
   pronouns?: string | null;
   /** Profile photo revision (GET /v1/users/:id/photo), where their privacy setting lets this account see it. */
   photoRev?: number | null;
+  /** API 0.46.0: their animated avatar, profile and name style, and the community tag they wear (from lists). */
+  avatarMedia?: AvatarMedia | null;
+  profileStyle?: ProfileStyle | null;
+  tag?: WornTag | null;
+  /** API 0.54.0: the Mojo badge they show (server docs/MOJO.md). */
+  mojo?: MojoMark | null;
 }
+type AvatarMedia = NonNullable<z.infer<typeof zAvatarMedia>>;
 
 export interface ConversationMessages {
   items: StoredMessage[];
@@ -68,6 +82,17 @@ export interface HistoryState {
   status: "idle" | "running" | "done" | "error" | "unsupported";
   restored: number;
   unreadable: number;
+  error: string | null;
+  backup: HistoryBackupState;
+}
+
+/** This browser's own backup of its chats into the history (sync/historyUpload.ts). */
+export interface HistoryBackupState {
+  /** "on": it backs up; "needs-keys": set up before 2026-10-28, it needs the password once; "off": no history here. */
+  mode: "on" | "needs-keys" | "off";
+  /** Messages waiting to be backed up. */
+  pending: number;
+  lastUploadAt: number | null;
   error: string | null;
 }
 
@@ -98,6 +123,8 @@ export interface AppState {
   call: CallUiState;
   identityAlerts: PinnedIdentity[];
   history: HistoryState;
+  /** Meldiq Mojo: plans, perks, Sparks and gifts (sync/mojo.ts). */
+  mojo: MojoState;
   notices: Notice[];
   /** Personal navigation preferences by workspace ("personal" or an organisation id), with unsent changes applied. */
   nav: Record<string, NavPrefs>;
@@ -144,7 +171,8 @@ export const initialState: AppState = {
   moderationRev: 0,
   connectionsRev: 0,
   profilesRev: 0,
-  history: { status: "idle", restored: 0, unreadable: 0, error: null },
+  history: { status: "idle", restored: 0, unreadable: 0, error: null, backup: { mode: "off", pending: 0, lastUploadAt: null, error: null } },
+  mojo: initialMojo,
   notices: [],
 };
 

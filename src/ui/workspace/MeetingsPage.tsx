@@ -61,7 +61,7 @@ export function MeetingsPage({ detail }: { detail: OrgAdminDetail }) {
     <div className="ws-page">
       <Card
         title={community ? "Events" : "Meetings"}
-        sub={`${community ? "Events happen in the community's" : "Meetings happen in the workspace's"} voice rooms: joining one joins its room. Titles and times are readable by the server, like a channel's name.`}
+        sub={`${community ? "Events happen in the community's" : "Meetings happen in the community's"} voice rooms: joining one joins its room. Titles and times are readable by the server, like a channel's name.`}
         actions={
           !guest && (
             <button className="btn btn-primary btn-sm" onClick={() => setEditing("new")}>

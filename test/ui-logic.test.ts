@@ -30,6 +30,7 @@ const conv = (over: Partial<Conversation>): Conversation => ({
   voice: false,
   categoryId: null,
   categoryName: null,
+  categoryPosition: null,
   position: 0,
   format: "text",
   forumTags: [],
@@ -126,6 +127,9 @@ describe("formatting", () => {
           online: null,
           presence: null,
           pronouns: null,
+          avatarMedia: null,
+          profileStyle: null,
+          tag: null,
         },
         {
           id: "u2",
@@ -142,6 +146,9 @@ describe("formatting", () => {
           online: true,
           presence: null,
           pronouns: null,
+          avatarMedia: null,
+          profileStyle: null,
+          tag: null,
         },
       ],
     });

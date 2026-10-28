@@ -17,6 +17,9 @@ const m = (id: string) => ({
   online: null,
   presence: null,
   pronouns: null,
+  avatarMedia: null,
+  profileStyle: null,
+  tag: null,
 });
 
 describe("connections and requests", () => {

@@ -15,7 +15,8 @@ import type { LocalStore } from "../store/db";
 export type SenderKey = { kind: "trusted"; signingKey: string } | { kind: "changed" } | { kind: "unknown" };
 
 export interface Recipients {
-  devices: RecipientDevice[];
+  /** Each with the account it belongs to (a self-only control goes to the sender's own devices alone). */
+  devices: (RecipientDevice & { userId: string })[];
   /** Members whose identity key changed: nothing may be encrypted until each is accepted. */
   changed: string[];
 }
@@ -56,7 +57,7 @@ export class Directory {
       for (const u of users) this.users.set(u.userId, { keys: u, at });
       this.conversations.set(conversationId, { userIds: users.map((u) => u.userId), at });
     }
-    const devices: RecipientDevice[] = [];
+    const devices: Recipients["devices"] = [];
     const changed: string[] = [];
     for (const u of users) {
       const key = await this.trustedKey(u);
@@ -64,7 +65,7 @@ export class Directory {
         changed.push(u.userId);
         continue;
       }
-      for (const d of await this.certified(u.devices, key)) if (d.id !== this.me.deviceId) devices.push({ deviceId: d.id, encryptionKey: d.encryptionKey });
+      for (const d of await this.certified(u.devices, key)) if (d.id !== this.me.deviceId) devices.push({ deviceId: d.id, encryptionKey: d.encryptionKey, userId: u.userId });
     }
     return { devices, changed };
   }
@@ -88,7 +89,7 @@ export class Directory {
     return { kind: "unknown" };
   }
 
-  /** The person compared safety numbers and accepts [identityKey], the exact key they were shown. */
+  /** The person reviewed the change and accepts [identityKey], the exact key they were shown. */
   async acceptIdentity(userId: string, identityKey: string): Promise<void> {
     const pin = await this.store.pin(userId);
     await this.store.putPin({ userId, identityKey, changedTo: null, verified: pin?.verified ?? false });
