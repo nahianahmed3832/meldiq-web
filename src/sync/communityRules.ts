@@ -42,6 +42,8 @@ export interface ChannelRef {
   name: string;
   categoryId: string | null;
   categoryName?: string | null;
+  /** API 0.48.0: the category's own place, known from the channel before the community's category list loads. */
+  categoryPosition?: number | null;
   position: number;
 }
 
@@ -56,12 +58,21 @@ const lower = (s: string | null | undefined) => (s ?? "").toLowerCase();
 const byText = (a: string, b: string) => (a < b ? -1 : a > b ? 1 : 0);
 
 /**
- * [items] grouped by category: uncategorised channels first, then the categories in their order (a category the list
- * doesn't know, from a stale copy, goes last by its name), channels by position then name. [keepEmpty]: also list
- * known categories without channels (for the people arranging them).
+ * [items] grouped by category: uncategorised channels first, then the categories in their order, channels by position
+ * then name; one order from the first paint to the last (brief v4 §15). Before the community's category list has loaded
+ * (or for a category it doesn't know yet) a category's place is the one its channels carry (categoryPosition, API
+ * 0.48.0); only a category with neither goes last, by its name. [keepEmpty]: also list known categories without
+ * channels (for the people arranging them).
  */
 export function channelSections<T extends ChannelRef>(items: readonly T[], categories: readonly Category[], keepEmpty = false): ChannelSection<T>[] {
-  const ordered = [...categories].sort((a, b) => a.position - b.position || byText(lower(a.name), lower(b.name)) || byText(a.id, b.id));
+  const fromChannels = new Map<string, Pick<Category, "id" | "name" | "position">>();
+  for (const it of items) {
+    if (it.categoryId && typeof it.categoryPosition === "number" && !fromChannels.has(it.categoryId))
+      fromChannels.set(it.categoryId, { id: it.categoryId, name: it.categoryName ?? "", position: it.categoryPosition });
+  }
+  const listed = new Set(categories.map((c) => c.id));
+  const all: Pick<Category, "id" | "name" | "position">[] = [...categories, ...[...fromChannels.values()].filter((c) => !listed.has(c.id))];
+  const ordered = all.sort((a, b) => a.position - b.position || byText(lower(a.name), lower(b.name)) || byText(a.id, b.id));
   const rank = new Map(ordered.map((c, i) => [c.id, i]));
   const known = new Map(categories.map((c) => [c.id, c]));
   const byCategory = new Map<string | null, T[]>();

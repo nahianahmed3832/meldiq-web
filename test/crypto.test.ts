@@ -7,7 +7,7 @@ import { canonical, type EnvelopeHeader } from "../src/crypto/canonical";
 import { seedMatchesPublicKey, sign, signingKeyFromSeed, verify } from "../src/crypto/ed25519";
 import { EnvelopeError, openEnvelope, sealEnvelope } from "../src/crypto/envelope";
 import { deriveHistoryKeys, historyTag, openHistoryItem } from "../src/crypto/history";
-import { fingerprint, generateDeviceKeys, generateTransferKeys, openSealedSeed, safetyNumber } from "../src/crypto/identity";
+import { fingerprint, generateDeviceKeys, generateTransferKeys, openSealedSeed } from "../src/crypto/identity";
 import { b64, nodeAesGcmDecrypt, nodeChunkedEncrypt, nodeHistory, nodeSealSeed, readVectors, unb64, x25519PairFromRaw } from "./support/reference";
 
 const v = readVectors("griip-envelope-v1-vectors.json");
@@ -217,12 +217,6 @@ describe("linking", () => {
     const h = nodeCrypto.createHash("sha256").update(unb64(device.signingPublic)).digest();
     const expected = Array.from({ length: 6 }, (_, i) => String(Number(h.readUIntBE(i * 5, 5) % 100000)).padStart(5, "0")).join(" ");
     expect(await fingerprint(device.signingPublic)).toBe(expected);
-  });
-
-  it("computes symmetric safety numbers", async () => {
-    const a = (await generateDeviceKeys()).signingPublic;
-    const b = (await generateDeviceKeys()).signingPublic;
-    expect(await safetyNumber(a, b)).toBe(await safetyNumber(b, a));
   });
 });
 

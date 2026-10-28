@@ -58,7 +58,7 @@ test("a linked browser and the phone stay in sync through the server, and signin
 
   // Kept on this computer and signed in again with the device key after a reload.
   await page.reload();
-  await expect(page.locator(":is(.conn.online, .user-panel[data-connection=online]):visible").first()).toBeVisible({ timeout: 15_000 });
+  await expect(page.locator(":is(.app[data-connection=online])").first()).toBeVisible({ timeout: 15_000 });
   await expect(page.getByText("Reply typed in the browser ✓")).toBeVisible();
 
   // Sign out: the server lists the browser as removed, and the browser is back at the link screen.
@@ -93,7 +93,7 @@ test("a second tab doesn't take the connection unless asked", async ({ page, con
   await expect(second.getByRole("heading", { name: "Meldiq is open in another tab" })).toBeVisible();
   await second.getByRole("button", { name: "Use Meldiq here" }).click();
   await expect(
-    second.locator(":is(.conn.online, .user-panel[data-connection=online]):visible").first(),
+    second.locator(":is(.app[data-connection=online])").first(),
     await second
       .locator("body")
       .innerText()

@@ -1,10 +1,9 @@
-import { Bell, BellOff, Fingerprint, Hash, Lock, MessageSquare, Search, Shield, ShieldCheck, User, UserPlus, UsersRound } from "lucide-react";
+import { Bell, BellOff, Hash, Lock, MessageSquare, Search, Shield, ShieldCheck, User, UserPlus, UsersRound } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { Conversation, Member } from "../../api/schemas";
 import { useEngine, useOrbit } from "../../application/orbit";
 import { navigate, useRoute } from "../../application/router";
-import { safetyNumber } from "../../crypto/identity";
-import { conversationMembers, startDirect, userProfile } from "../../sync/account";
+import { conversationMembers, startDirect } from "../../sync/account";
 import { levelOf, muteToggle, workspaceOf } from "../../sync/navPrefs";
 import { presenceWords } from "../../sync/social";
 import { GroupAvatar, UserAvatar } from "../components/OrgAvatar";
@@ -144,28 +143,10 @@ function ChatDetails({ c, me, onClose }: { c: Conversation; me: string; onClose:
   );
 }
 
-/** The conversation's facts, and in a DM the safety number and blocking; a group's photo. */
+/** The conversation's facts, and in a DM blocking; a group's photo. (The safety number card was retired, brief v4 §13.) */
 export function AboutCards({ c }: { c: Conversation }) {
-  const engine = useEngine();
   const me = useOrbit((s) => s.me);
   const peer = me && c.type === "DM" ? dmPeer(c, me.userId) : null;
-  const [safety, setSafety] = useState<string | null>(null);
-  const [verified, setVerified] = useState<boolean | null>(null);
-
-  useEffect(() => {
-    if (!peer || !me) return;
-    let alive = true;
-    void (async () => {
-      const pin = await engine.pinnedIdentity(peer.id);
-      const key = pin?.identityKey ?? (await userProfile(engine, peer.id)).identityKey;
-      if (!alive) return;
-      setSafety(await safetyNumber(me.identityKey, key));
-      setVerified(pin?.verified ?? false);
-    })().catch(() => undefined);
-    return () => {
-      alive = false;
-    };
-  }, [engine, peer, me]);
 
   return (
     <>
@@ -205,28 +186,6 @@ export function AboutCards({ c }: { c: Conversation }) {
           </div>
         )}
       </div>
-
-      {peer && safety && (
-        <div className="panel-card">
-          <div style={{ display: "grid", gap: 8 }}>
-            <div className="panel-section-title">
-              <span className="row" style={{ gap: 6 }}>
-                <Fingerprint size={14} /> Safety number
-              </span>
-              {verified ? <span className="tag ok">Verified</span> : <span className="tag">Not verified</span>}
-            </div>
-            <span className="fingerprint" style={{ fontSize: 13, whiteSpace: "pre-line" }}>
-              {safety}
-            </span>
-            <span className="faint" style={{ fontSize: 12 }}>
-              Compare it with {peer.displayName} in person or on a call. If it matches on both screens, nobody is in between.
-            </span>
-            <button className="btn btn-secondary btn-sm" onClick={() => void engine.markVerified(peer.id, !verified).then(() => setVerified(!verified))}>
-              {verified ? "Clear verified" : "Mark as verified"}
-            </button>
-          </div>
-        </div>
-      )}
 
       {peer && (
         <div className="panel-card">

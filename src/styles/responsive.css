@@ -114,8 +114,7 @@
     background: url("/meldling-96.webp") center / cover;
   }
   .searchbox span,
-  .searchbox .kbd,
-  .conn span {
+  .searchbox .kbd {
     display: none;
   }
   .searchbox {
@@ -125,11 +124,9 @@
     justify-content: center;
     margin: 0 0 0 auto;
   }
-  .conn {
-    padding: 0 9px;
-  }
   .topbar-right .hide-sm,
   .composer-row .hide-sm,
+  .conv-head .hide-sm,
   .conv-title .hide-sm {
     display: none;
   }
@@ -232,47 +229,33 @@
   }
 }
 
-/* Phones: the rail's communities, Create and Discover as a strip above the conversation list (Rail.tsx PhoneRail). */
-.phone-rail {
-  display: none;
-}
+/* Phones, after the Android app (brief v4 §18): Home is the community rail beside the channel panel; the lists and a
+   conversation carry their own headers, so the top bar steps aside there. */
 @media (max-width: 640px) {
-  .phone-rail {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 14px 6px;
-    overflow-x: auto;
-    scrollbar-width: none;
-    scroll-snap-type: x proximity;
+  .app.phone-bare .workspace {
+    grid-template-rows: minmax(0, 1fr);
   }
-  .phone-rail > * {
-    scroll-snap-align: start;
-    flex-shrink: 0;
-  }
-  .phone-rail .rail-round {
-    margin-top: 0;
-    width: 44px;
-    height: 44px;
-    color: var(--accent-2);
-    background: var(--surface-sunken);
-    border-color: var(--border);
-  }
-  .phone-rail .rail-org::before {
+  .app.phone-bare .topbar,
+  .topbar .me-btn {
     display: none;
   }
-  .phone-rail .rail-org[aria-current="true"] .avatar {
-    box-shadow:
-      0 0 0 2px var(--sidebar),
-      0 0 0 4px var(--accent-2);
+  .app.phone-home {
+    grid-template-columns: 72px minmax(0, 1fr);
   }
-  .phone-rail .rail-org.unread:not([aria-current="true"]) .avatar {
-    box-shadow:
-      0 0 0 2px var(--sidebar),
-      0 0 0 4px var(--unread-mark);
+  .app.phone-home .rail {
+    display: flex;
+    padding-top: 10px;
   }
-  .phone-rail .rail-org .count {
-    box-shadow: 0 0 0 2px var(--sidebar);
+  .app.phone-home .tabbar {
+    grid-column: 1 / -1;
+  }
+  .app.phone-home .rail-home,
+  .app.phone-home .rail-dms,
+  .app.phone-home .rail > .rail-sep {
+    display: none;
+  }
+  .app.phone-home .body {
+    border-radius: 16px 0 0 0;
   }
   /* Unread markers sit inside the row on phones, not on the screen's edge. */
   .side-item.unread:not([aria-current="page"])::before {
@@ -283,4 +266,16 @@
   width: 24px;
   height: 24px;
   border-radius: 7px;
+}
+
+/* The list header's own search and new-message buttons: phones only (Sidebar.tsx). */
+.side-head-phone {
+  display: none;
+}
+@media (max-width: 640px) {
+  .side-head-phone {
+    display: inline-flex;
+    flex-shrink: 0;
+    gap: 2px;
+  }
 }

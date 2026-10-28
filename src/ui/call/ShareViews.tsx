@@ -51,6 +51,9 @@ export function ScreenView({ share, stats, onShape }: ScreenViewProps) {
     <figure ref={figure} className="call-screen" aria-label={`${share.name}'s screen`} style={{ margin: 0 }} data-share-key={share.key}>
       <video ref={video} autoPlay playsInline muted aria-hidden="true" />
       {!share.ready && <p className="call-screen-wait">Waiting for {share.name}'s screen…</p>}
+      <span className="live-badge" aria-hidden="true">
+        LIVE
+      </span>
       <figcaption className="who">
         <MonitorUp size={13} aria-hidden="true" /> {share.name} is sharing their screen
         {stats && (

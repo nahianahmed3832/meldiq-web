@@ -31,7 +31,7 @@ export function CreateWorkspaceDialog({ onClose }: { onClose: () => void }) {
 
   const submit = async (e: FormEvent) => {
     e.preventDefault();
-    if (!name.trim()) return setError(community ? "Give the community a name." : "Give the workspace a name.");
+    if (!name.trim()) return setError(community ? "Give the community a name." : "Give the community a name.");
     setBusy(true);
     setError(null);
     try {
@@ -40,14 +40,14 @@ export function CreateWorkspaceDialog({ onClose }: { onClose: () => void }) {
       onClose();
       navigate({ section: "workspace", workspacePage: "invitations" });
     } catch (err) {
-      setError(errorText(err, community ? "Couldn't create the community." : "Couldn't create the workspace."));
+      setError(errorText(err, community ? "Couldn't create the community." : "Couldn't create the community."));
     } finally {
       setBusy(false);
     }
   };
 
   return (
-    <Dialog title={community ? "Start a community" : "Create a workspace"} onClose={onClose}>
+    <Dialog title={community ? "Start a community" : "Create a community"} onClose={onClose}>
       <form className="dialog-body" onSubmit={(e) => void submit(e)} noValidate>
         {communities && (
           <div className="kind-choice" role="radiogroup" aria-label="What is it for?">
@@ -70,7 +70,7 @@ export function CreateWorkspaceDialog({ onClose }: { onClose: () => void }) {
         <p className="muted" style={{ margin: 0 }}>
           {community
             ? "It starts with #welcome, #announcements, #general, #introductions and a lounge to talk in. You'll run it and can invite people next."
-            : "A workspace holds your organisation's channels, branches and teams. You'll be its owner and can invite people next."}
+            : "A community holds your organisation's channels, branches and teams. You'll be its owner and can invite people next."}
         </p>
         {error && (
           <div className="banner danger" role="alert">
@@ -90,7 +90,7 @@ export function CreateWorkspaceDialog({ onClose }: { onClose: () => void }) {
             Cancel
           </button>
           <button className="btn btn-primary" disabled={busy}>
-            {community ? <Users size={16} /> : <Building2 size={16} />} {busy ? "Creating…" : community ? "Create community" : "Create workspace"}
+            {community ? <Users size={16} /> : <Building2 size={16} />} {busy ? "Creating…" : community ? "Create community" : "Create community"}
           </button>
         </div>
       </form>

@@ -32,7 +32,7 @@ export function ChannelsPage({ detail }: { detail: OrgAdminDetail }) {
   return (
     <div className="ws-page">
       {detail.permissions.canCreateChannels && <NewChannel detail={detail} onCreated={reload} />}
-      <Card title="Channels" sub="Channels you can see in this workspace.">
+      <Card title="Channels" sub="Channels you can see in this community.">
         <ErrorLine text={list.error} />
         <ul className="ws-list" aria-label="Channels" aria-busy={list.loading}>
           {live.map((c) => (
@@ -87,7 +87,7 @@ function ChannelRow({ c, onChanged }: { c: Conversation; onChanged: () => void }
           <span className="ellipsis">{c.name}</span>
         )}
         <small className="ellipsis">
-          {c.scopeName ?? "Whole workspace"} · {c.memberCount} {c.memberCount === 1 ? "member" : "members"}
+          {c.scopeName ?? "Whole community"} · {c.memberCount} {c.memberCount === 1 ? "member" : "members"}
           {c.topic ? ` · ${c.topic}` : ""}
         </small>
       </span>
@@ -136,7 +136,7 @@ function NewChannel({ detail, onCreated }: { detail: OrgAdminDetail; onCreated: 
   const engine = useEngine();
   const isAdmin = detail.permissions.canManageOrg;
   const scopes = [
-    ...(isAdmin ? [{ value: "ORG:", label: "The whole workspace" }] : []),
+    ...(isAdmin ? [{ value: "ORG:", label: "The whole community" }] : []),
     ...detail.branches.filter((b) => b.canManage).map((b) => ({ value: `BRANCH:${b.id}`, label: `Branch: ${b.name}` })),
     ...detail.teams.filter((t) => t.canManage).map((t) => ({ value: `TEAM:${t.id}`, label: `Team: ${t.name}` })),
   ];

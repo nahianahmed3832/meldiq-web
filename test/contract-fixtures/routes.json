@@ -1,5 +1,5 @@
 {
-  "version": "0.47.0",
+  "version": "0.50.0",
   "routes": [
     {
       "method": "GET",
@@ -1048,6 +1048,9 @@
     ],
     "bad_request": [
       400
+    ],
+    "billing_unavailable": [
+      409
     ],
     "bad_signature": [
       400,

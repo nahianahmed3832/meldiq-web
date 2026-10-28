@@ -1,3 +1,4 @@
+import { navigate, useRoute } from "../../application/router";
 import { Archive, ChevronDown, Compass, Contact, MailQuestion, MoreHorizontal, Pencil, Plus, Search, Trash2, UserRoundPlus } from "lucide-react";
 import { type ReactNode, useState } from "react";
 import { shallowEqual, useEngine, useOrbit } from "../../application/orbit";
@@ -134,7 +135,7 @@ export function ChannelSections({ orgId, unreadOnly, onBrowse }: { orgId: string
   if (groups.length === 0)
     return (
       <Collapsible id="channels" title="Channels">
-        <div className="side-quiet">You haven't joined any channels in this workspace.</div>
+        <div className="side-quiet">You haven't joined any channels in this community.</div>
         {onBrowse && <BrowseRow onBrowse={onBrowse} />}
       </Collapsible>
     );
@@ -272,12 +273,18 @@ export function DmHub({ onDialog, onInvite, onCreate }: { onDialog: (kind: "requ
   const waiting = useOrbit((s) => messageRequests(s).length);
   const asked = useIncomingRequestCount();
   const t = useT();
+  const section = useRoute().section;
   return (
     <>
       <InviteCard onInvite={onInvite} onCreate={onCreate} />
       <nav className="dm-hub" aria-label="People">
         {hasConnections && (
-          <button className={`dm-hub-item${asked > 0 ? " unread" : ""}`} onClick={() => onDialog("connections")} aria-label={asked > 0 ? `Connection requests, ${asked} waiting` : "Friends"}>
+          <button
+            className={`dm-hub-item${asked > 0 ? " unread" : ""}`}
+            aria-current={section === "friends" ? "page" : undefined}
+            onClick={() => navigate({ section: "friends" })}
+            aria-label={asked > 0 ? `Connection requests, ${asked} waiting` : "Friends"}
+          >
             <Contact size={20} aria-hidden="true" />
             <span className="grow">Friends</span>
             {asked > 0 && <span className="count accent">{asked}</span>}

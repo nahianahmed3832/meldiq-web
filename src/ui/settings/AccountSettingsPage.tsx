@@ -99,7 +99,7 @@ function DeleteAccount({ email, onDeleted }: { email: string; onDeleted: () => v
         <Trash2 size={16} style={{ verticalAlign: "-3px" }} /> Delete account
       </h3>
       <p className="muted" style={{ margin: 0, fontSize: 13 }}>
-        Deletes the Meldiq account {email} for good. You leave every workspace, group and channel, every device is signed out and your profile is erased. It can't be undone.
+        Deletes the Meldiq account {email} for good. You leave every community, group and channel, every device is signed out and your profile is erased. It can't be undone.
       </p>
       <p className="faint" style={{ margin: 0, fontSize: 12.5 }}>
         People you messaged keep the conversation, shown as "Deleted account". Messages already delivered stay on their devices. Once the server confirms, this browser erases its copy too.

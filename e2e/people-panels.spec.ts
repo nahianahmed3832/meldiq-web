@@ -48,9 +48,11 @@ test("community photos in the rail, a member list in channels and a profile in D
   await link(page, alice);
   await expect.poll(() => page.locator(".rail-org .avatar-photo").evaluateAll(loaded), { message: "the community's photo in the rail" }).toBe(true);
 
-  // The Meldiq navy theme by default (community-first design; charcoal and indigo stay available in Appearance).
+  // The Meldiq navy palette by default (community-first design; charcoal and indigo stay available in Appearance), in
+  // the dark theme, the default since 2026-10-28.
   expect(await page.evaluate(() => document.documentElement.dataset.palette)).toBe("meldiq");
-  expect(await page.locator(".app").evaluate((el) => getComputedStyle(el).backgroundImage)).toContain("rgb(15, 22, 48)");
+  expect(await page.evaluate(() => document.documentElement.dataset.theme)).toBe("dark");
+  expect(await page.locator(".app").evaluate((el) => getComputedStyle(el).backgroundImage)).toContain("rgb(7, 11, 24)");
 
   // A channel: the member list beside the messages, Staff first, then Online, then Offline.
   await page.goto(`/home/c/${channel.id}`);

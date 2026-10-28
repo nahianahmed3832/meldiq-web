@@ -7,7 +7,7 @@ import { ErrorLine } from "./WorkspaceView";
 import { useAction } from "./useLoad";
 
 const CATEGORY_LABEL: Record<string, string> = {
-  workspace: "Workspace",
+  workspace: "Community",
   members: "Members",
   roles: "Roles",
   teams: "Branches and teams",

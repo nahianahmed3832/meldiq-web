@@ -27,7 +27,7 @@ test("Meldling is the brand mark, and typing shows Meldling once with the real n
   typing(bob, dm, true);
   const indicator = page.locator(".typing-meldling");
   await expect(indicator).toBeVisible();
-  await expect(indicator).toContainText("Meldling");
+  await expect(indicator).toContainText("Bob Chen is meldling");
   await expect(indicator.locator(".sr-only")).toHaveText("Bob Chen is typing");
   typing(bob, dm, false);
   await expect(indicator).toHaveCount(0, { timeout: 10_000 });

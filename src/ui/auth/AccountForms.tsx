@@ -1,9 +1,8 @@
-import { ArrowLeft, ArrowLeftRight, ChevronRight, KeyRound, LockKeyhole, MailX, Smartphone } from "lucide-react";
+import { ArrowLeft, ChevronRight, KeyRound, LockKeyhole, MailX, Smartphone } from "lucide-react";
 import { type FormEvent, type ReactNode, useState } from "react";
-import type { AccountSessionGrant, LegacyTicket } from "../../api/accountSchemas";
+import type { AccountSessionGrant } from "../../api/accountSchemas";
 import { ApiError } from "../../api/client";
 import type { AccountApi } from "../../auth/accountApi";
-import { verifyLegacyAccount } from "../../auth/legacyMove";
 import { PasskeyCancelled, signInWithPasskey } from "../../auth/passkeys";
 import { cleanVerifyCode, emailProblem, nameProblem, normalizeEmail, PASSWORD_MIN_LENGTH, passwordProblem } from "../../auth/rules";
 import { AuthHeading, FormError, FormNotice, LinkButton } from "./AuthFrame";
@@ -47,7 +46,7 @@ export function SignInForm(props: {
   notice?: string | null;
   initialEmail?: string;
   canSignUp: boolean;
-  canMove: boolean;
+  /** The pre-email device sign-in, kept only in development and test builds (testLinking.ts). */
   canLinkWithPhone: boolean;
   /** This page's relying party when the server offers passkeys here (auth/passkeys.ts passkeyRpId), else null. */
   passkeyRpId: string | null;
@@ -58,7 +57,6 @@ export function SignInForm(props: {
   onForgot: (email: string) => void;
   /** Offered when the server has account recovery codes (feature `recovery-codes`). */
   onRecover?: (email: string) => void;
-  onMove: () => void;
   onLinkWithPhone: () => void;
 }) {
   const [email, setEmail] = useState(props.initialEmail ?? "");
@@ -105,7 +103,6 @@ export function SignInForm(props: {
       <SignInHelp
         onForgot={() => props.onForgot(normalizeEmail(email))}
         onRecover={props.onRecover && (() => props.onRecover?.(normalizeEmail(email)))}
-        onMove={props.canMove ? props.onMove : undefined}
         onLinkWithPhone={props.canLinkWithPhone ? props.onLinkWithPhone : undefined}
         onBack={() => setHelp(false)}
       />
@@ -158,7 +155,7 @@ export function SignInForm(props: {
  * The ways back in, shown only after "Having trouble signing in?" (Meldiq Android does the same; meldiq
  * docs/product/MELDIQ_AUTH_FLOW_AUDIT.md). A way is offered only when this server and this browser allow it.
  */
-function SignInHelp(props: { onForgot: () => void; onRecover?: () => void; onMove?: () => void; onLinkWithPhone?: () => void; onBack: () => void }) {
+function SignInHelp(props: { onForgot: () => void; onRecover?: () => void; onLinkWithPhone?: () => void; onBack: () => void }) {
   const t = useT();
   return (
     <div className="auth-form">
@@ -166,7 +163,6 @@ function SignInHelp(props: { onForgot: () => void; onRecover?: () => void; onMov
       <div className="auth-choices">
         <ChoiceButton icon={<LockKeyhole size={18} />} title={t("help_forgot")} sub={t("help_forgot_sub")} onClick={props.onForgot} />
         {props.onRecover && <ChoiceButton icon={<MailX size={18} />} title={t("help_no_email")} sub={t("help_no_email_sub")} onClick={props.onRecover} />}
-        {props.onMove && <ChoiceButton icon={<ArrowLeftRight size={18} />} title={t("help_move")} sub={t("help_move_sub")} onClick={props.onMove} />}
         {props.onLinkWithPhone && <ChoiceButton icon={<Smartphone size={18} />} title={t("help_phone")} sub={t("help_phone_sub")} onClick={props.onLinkWithPhone} />}
       </div>
       <Back onClick={props.onBack} label={t("help_back")} />
@@ -333,72 +329,6 @@ export function ResetPasswordForm(props: { ctx: FormContext; email: string; onDo
       </Field>
       <button className="btn btn-primary btn-lg" disabled={busy}>
         {busy ? t("common_saving") : t("reset_button")}
-      </button>
-    </form>
-  );
-}
-
-// ───────────────────────── moving an older account ─────────────────────────
-
-export function LegacyVerifyForm(props: { ctx: FormContext; onVerified: (ticket: LegacyTicket, seed: Uint8Array) => void; onBack: () => void }) {
-  const [username, setUsername] = useState("");
-  const [recovery, setRecovery] = useState("");
-  const { busy, error, setError, run } = useSubmit();
-  const submit = () => {
-    if (!username.trim()) return setError("Enter your Meldiq username.");
-    if (!recovery.trim()) return setError("Enter your recovery key.");
-    void run(async () => {
-      const { ticket, seed } = await verifyLegacyAccount(props.ctx.accounts, username, recovery);
-      props.onVerified(ticket, seed);
-    });
-  };
-  return (
-    <form className="auth-form" onSubmit={submitHandler(submit)} noValidate>
-      <Back onClick={props.onBack} />
-      <AuthHeading title="Move your Orbit account to Meldiq" sub="Your conversations, workspaces and contacts stay as they are. Your recovery key is checked here in the browser and never sent." />
-      <FormError text={error} />
-      <Field id="lg-username" label="Username">
-        <input id="lg-username" className="input" autoComplete="username" value={username} onChange={(e) => setUsername(e.target.value)} autoFocus />
-      </Field>
-      <Field id="lg-recovery" label="Recovery key" hint="On your phone: Settings › Privacy & Security › Recovery key.">
-        <textarea id="lg-recovery" className="textarea mono" rows={3} autoComplete="off" spellCheck={false} value={recovery} onChange={(e) => setRecovery(e.target.value)} />
-      </Field>
-      <button className="btn btn-primary btn-lg" disabled={busy}>
-        {busy ? "Checking…" : "Continue"}
-      </button>
-    </form>
-  );
-}
-
-export function LegacyDetailsForm(props: { ctx: FormContext; ticket: LegacyTicket; onSent: (email: string, password: string) => void; onBack: () => void }) {
-  const [name, setName] = useState(props.ticket.legacyUser.displayName);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const { busy, error, setError, run } = useSubmit();
-  const submit = () => {
-    const problem = nameProblem(name) ?? emailProblem(email) ?? passwordProblem(password, email);
-    if (problem) return setError(problem);
-    void run(async () => {
-      await props.ctx.accounts.legacyComplete(props.ticket.ticket, name.trim(), normalizeEmail(email), password);
-      props.onSent(normalizeEmail(email), password);
-    });
-  };
-  return (
-    <form className="auth-form" onSubmit={submitHandler(submit)} noValidate>
-      <Back onClick={props.onBack} />
-      <AuthHeading title={`Welcome back, @${props.ticket.legacyUser.username}`} sub="Choose the email and password you'll sign in with from now on." />
-      <FormError text={error} />
-      <Field id="ld-name" label="Your name">
-        <input id="ld-name" className="input" autoComplete="name" value={name} maxLength={80} onChange={(e) => setName(e.target.value)} />
-      </Field>
-      <Field id="ld-email" label="Email">
-        <input id="ld-email" className="input" type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} autoFocus />
-      </Field>
-      <Field id="ld-password" label="Password" hint={`At least ${PASSWORD_MIN_LENGTH} characters.`}>
-        <input id="ld-password" className="input" type="password" autoComplete="new-password" value={password} onChange={(e) => setPassword(e.target.value)} />
-      </Field>
-      <button className="btn btn-primary btn-lg" disabled={busy}>
-        {busy ? "Saving…" : "Continue"}
       </button>
     </form>
   );

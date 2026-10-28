@@ -261,35 +261,46 @@
   align-items: center;
   gap: 2px;
 }
-.conn {
-  display: inline-flex;
+/* The connection, only while it's down (shell/ConnectionBanner.tsx): a slim notice floating over the top edge. */
+.workspace {
+  position: relative;
+}
+.conn-banner {
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  z-index: 45;
+  transform: translateX(-50%);
+  display: flex;
   align-items: center;
-  gap: 6px;
-  height: 28px;
-  padding: 0 10px;
+  gap: 8px;
+  max-width: min(520px, calc(100% - 24px));
+  padding: 6px 6px 6px 12px;
   border-radius: var(--r-pill);
   font-size: var(--fs-xs);
   font-weight: 600;
-  color: var(--rail-text);
-  background: var(--rail-input);
-  margin-right: 6px;
+  color: var(--text);
+  background: var(--surface-raised, var(--surface));
+  box-shadow:
+    0 0 0 1px var(--border),
+    var(--shadow-lg);
+  animation: rise var(--t-fast) var(--ease);
 }
-.conn i {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--presence-off);
+.conn-banner svg {
+  flex-shrink: 0;
+  color: var(--warning);
 }
-.conn.online i {
-  background: var(--presence-on);
+.conn-banner.offline svg {
+  color: var(--danger);
 }
-.conn.reconnecting i,
-.conn.connecting i {
-  background: var(--warning);
-  animation: pulse 1.2s ease-in-out infinite;
-}
-.conn.offline i {
-  background: var(--danger);
+.conn-retry {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: var(--r-pill);
+  background: var(--surface-sunken);
+  font-weight: 600;
 }
 @keyframes pulse {
   50% {
@@ -881,36 +892,36 @@
   font-size: var(--fs-sm);
 }
 
-/* Scrolling strips (components/scrollStrip.ts): a fade at an edge while there's more to scroll that way. */
-.rail.can-scroll-start {
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 28px);
-  mask-image: linear-gradient(to bottom, transparent 0, #000 28px);
-}
-.rail.can-scroll-end {
-  -webkit-mask-image: linear-gradient(to top, transparent 0, #000 28px);
-  mask-image: linear-gradient(to top, transparent 0, #000 28px);
-}
-.rail.can-scroll-start.can-scroll-end {
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 28px, #000 calc(100% - 28px), transparent 100%);
-  mask-image: linear-gradient(to bottom, transparent 0, #000 28px, #000 calc(100% - 28px), transparent 100%);
-}
+/* The rail's edge cues (components/scrollStrip.ts) while there's more to scroll that way: overlays that stick to the
+   rail's top and bottom edges. Never a mask on the scrolling element itself (Safari then loses its fast scrolling). */
 .rail {
   overscroll-behavior: contain;
 }
-.phone-rail.can-scroll-start {
-  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 24px);
-  mask-image: linear-gradient(to right, transparent 0, #000 24px);
+.rail::before,
+.rail::after {
+  content: "";
+  position: sticky;
+  z-index: 2;
+  flex-shrink: 0;
+  align-self: stretch;
+  height: 26px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--t-fast) var(--ease);
 }
-.phone-rail.can-scroll-end {
-  -webkit-mask-image: linear-gradient(to left, transparent 0, #000 24px);
-  mask-image: linear-gradient(to left, transparent 0, #000 24px);
+.rail::before {
+  top: -10px;
+  margin: -10px 0 -26px;
+  background: linear-gradient(to bottom, var(--rail), transparent);
 }
-.phone-rail.can-scroll-start.can-scroll-end {
-  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 24px, #000 calc(100% - 24px), transparent 100%);
-  mask-image: linear-gradient(to right, transparent 0, #000 24px, #000 calc(100% - 24px), transparent 100%);
+.rail::after {
+  bottom: -12px;
+  margin: -26px 0 -12px;
+  background: linear-gradient(to top, var(--rail-2, var(--rail)), transparent);
 }
-.phone-rail {
-  overscroll-behavior-x: contain;
+.rail.can-scroll-start::before,
+.rail.can-scroll-end::after {
+  opacity: 1;
 }
 
 /* People who just messaged you, as bubbles under Home (Settings › Appearance, 2026-10-28). */
@@ -935,4 +946,132 @@
   position: absolute;
   bottom: -4px;
   right: -6px;
+}
+
+/* Rail folders (shell/RailFolder.tsx): closed, a tile of up to four communities; open, a tinted column of them. */
+.rail-folder {
+  --folder: #5865f2;
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  border-radius: 18px;
+}
+.rail-folder.open {
+  padding: 6px 0 8px;
+  background: color-mix(in srgb, var(--folder) 22%, transparent);
+}
+.rail-folder-tile {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 16px;
+  color: color-mix(in srgb, var(--folder) 70%, #fff);
+  background: color-mix(in srgb, var(--folder) 26%, var(--rail-2, var(--rail)));
+  transition: border-radius var(--t-fast) var(--ease);
+}
+.rail-folder.open .rail-folder-tile {
+  background: transparent;
+  height: 32px;
+}
+.rail-folder-tile:hover {
+  border-radius: 13px;
+}
+.rail-folder-tile.holds-selected {
+  box-shadow:
+    0 0 0 2px var(--rail),
+    0 0 0 4px var(--rail-glow);
+}
+.rail-folder-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 18px);
+  gap: 3px;
+}
+.rail-folder-grid .avatar {
+  border-radius: 6px !important;
+}
+.rail-folder-count {
+  position: absolute;
+  right: -6px;
+  bottom: -4px;
+  box-shadow: 0 0 0 3px var(--rail);
+}
+.rail-folder-members {
+  display: grid;
+  gap: 8px;
+  justify-items: center;
+}
+.folder-colors {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.folder-color {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px var(--border);
+}
+.folder-color.none {
+  width: auto;
+  padding: 0 12px;
+  border-radius: var(--r-pill);
+  font-size: 12px;
+}
+.folder-color[aria-checked="true"] {
+  box-shadow:
+    0 0 0 2px var(--surface),
+    0 0 0 4px var(--accent);
+}
+
+/* Dragging to rearrange (components/dragSort.ts): a line where it will land, a ring when dropped onto something. */
+[data-drag] {
+  position: relative;
+}
+.drag-active,
+.drag-active * {
+  cursor: grabbing !important;
+  user-select: none;
+}
+.drag-source {
+  opacity: 0.35;
+}
+.drag-before::before,
+.drag-after::after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  right: 4px;
+  height: 3px;
+  border-radius: 3px;
+  background: var(--accent);
+  box-shadow: 0 0 8px var(--accent);
+  pointer-events: none;
+  z-index: 3;
+}
+.drag-before::before {
+  top: -6px;
+}
+.drag-after::after {
+  bottom: -6px;
+}
+.rail .drag-before::before,
+.rail .drag-after::after {
+  left: -6px;
+  right: -6px;
+}
+.drag-into {
+  box-shadow: 0 0 0 3px var(--accent) !important;
+  border-radius: 16px;
+}
+.drag-ghost {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  pointer-events: none;
+  opacity: 0.9;
+  filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.45));
+  list-style: none;
 }

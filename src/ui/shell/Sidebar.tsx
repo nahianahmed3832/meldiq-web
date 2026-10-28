@@ -1,4 +1,4 @@
-import { CheckCheck, ChevronDown, Compass, Link2, LogIn, PenSquare, Plus, Settings2, Ticket, UsersRound } from "lucide-react";
+import { CheckCheck, ChevronDown, Compass, Link2, LogIn, PenSquare, Plus, Search, Settings2, Ticket, UsersRound } from "lucide-react";
 import { type MouseEvent, useLayoutEffect, useRef } from "react";
 import { shallowEqual, useEngine, useOrbit } from "../../application/orbit";
 import { markAllReadTargets } from "../selectors";
@@ -11,7 +11,6 @@ import { members } from "../format";
 import type { ShellDialog } from "./Shell";
 import { ArchivedList, ChannelSections, Collapsible, DmHub, PeopleExtras, PeopleList, PersonalSections, SkeletonRows } from "./SidebarSections";
 import { VoiceRoomsSection } from "./VoiceRooms";
-import { PhoneRail } from "./Rail";
 import { CommunityHeader, hideMutedKey } from "../community/CommunityHeader";
 import { useCommunityMenu } from "../community/communityMenu";
 import { CommunityPanel } from "../community/CommunityPanel";
@@ -20,6 +19,7 @@ import { usePhoto } from "../components/photos";
 import { useCommunityDetail } from "../community/useCommunityPermissions";
 import { useT } from "../../i18n";
 import { UserPanel } from "./UserPanel";
+import { ConnectedCallPanel } from "../call/ConnectedCallPanel";
 
 interface SidebarProps {
   orgId: string | null;
@@ -33,6 +33,9 @@ export function Sidebar({ orgId, section, open, onDialog }: SidebarProps) {
   const orgs = useOrbit((s) => s.orgs);
   const synced = useOrbit((s) => s.synced);
   const empty = useOrbit((s) => Object.keys(s.conversations).length === 0);
+  // Until the server's features are known (cached from the last visit, else server-info), the layout isn't: a skeleton
+  // rather than the older workspace layout, which would list categories alphabetically for a moment (brief v4 §15).
+  const layoutKnown = useOrbit((s) => s.server !== null);
   const engine = useEngine();
   const readTargets = useOrbit((s) => markAllReadTargets(s, orgId), shallowEqual);
   const switcher = useMenu();
@@ -74,8 +77,8 @@ export function Sidebar({ orgId, section, open, onDialog }: SidebarProps) {
 
   return (
     <aside className={`sidebar${open ? " open" : ""}${branded && org?.accent ? ` ${ACCENT_CLASS}` : ""}`} style={branded ? accentStyle(org?.accent) : undefined} aria-label="Conversations">
-      {section !== "dms" && <PhoneRail orgId={orgId} onDialog={onDialog} />}
-      <div className="side-head">
+      {/* With a banner, the community's name sits on it (2026-10-28, after the owner's reference). */}
+      <div className={`side-head${branded && !messages && bannerUrl ? " on-banner" : ""}`} style={branded && !messages && bannerUrl ? { backgroundImage: `url(${bannerUrl})` } : undefined}>
         {messages ? (
           // Direct messages aren't part of a community: their own heading, not the community's.
           <h2 className="side-title grow">{t("side_direct_messages")}</h2>
@@ -87,14 +90,14 @@ export function Sidebar({ orgId, section, open, onDialog }: SidebarProps) {
             onClick={(e) => switcher.open(e.currentTarget)}
             aria-haspopup="menu"
             aria-expanded={!!switcher.anchor}
-            aria-label={`Workspace: ${org?.name ?? "none"}. Switch workspace`}
+            aria-label={`Community: ${org?.name ?? "none"}. Switch community`}
           >
             {org ? <OrgAvatar orgId={org.id} name={org.name} photoRev={org.photoRev} size={34} /> : <Avatar name="Meldiq" colorIndex={7} size={34} square decorative />}
             <span className="grow">
               <strong className="ellipsis" style={{ display: "block" }}>
                 {org?.name ?? "Meldiq"}
               </strong>
-              <small>{org ? `${members(org.memberCount)} · ${roleLabel(org.myRole)}` : "No workspace yet"}</small>
+              <small>{org ? `${members(org.memberCount)} · ${roleLabel(org.myRole)}` : "No community yet"}</small>
             </span>
             <ChevronDown size={16} className="faint" />
           </button>
@@ -104,10 +107,20 @@ export function Sidebar({ orgId, section, open, onDialog }: SidebarProps) {
             <PenSquare size={18} />
           </button>
         )}
+        {/* Phones have no top bar on the lists (brief v4 §18): search, and in Messages a new message, sit here. */}
+        <span className="side-head-phone">
+          <button className="icon-btn" onClick={() => onDialog({ kind: "search" })} aria-label="Search Meldiq" title="Search">
+            <Search size={18} />
+          </button>
+          {messages && (
+            <button className="icon-btn" onClick={() => onDialog({ kind: "new" })} aria-label={t("side_new_message")} title={t("side_new_message")}>
+              <PenSquare size={18} />
+            </button>
+          )}
+        </span>
       </div>
-      {branded && !messages && (bannerUrl || perms.canInvite) && (
+      {branded && !messages && perms.canInvite && (
         <div className="community-top">
-          {bannerUrl && <div className="community-banner" style={{ backgroundImage: `url(${bannerUrl})` }} role="img" aria-label={`${org?.name ?? "Community"} banner`} />}
           {perms.canInvite && (
             <button className="community-invite" onClick={() => onDialog({ kind: "addMembers" })}>
               <Link2 size={17} aria-hidden="true" /> Invite people
@@ -121,18 +134,18 @@ export function Sidebar({ orgId, section, open, onDialog }: SidebarProps) {
           label="Workspaces"
           onClose={switcher.close}
           entries={[
-            { heading: "Your workspaces" },
+            { heading: "Your communities" },
             ...orgs.map((o) => ({
               label: o.name,
               icon: <OrgAvatar orgId={o.id} name={o.name} photoRev={o.photoRev} size={22} />,
               checked: o.id === orgId,
               onSelect: () => setPrefs({ orgId: o.id }),
             })),
-            ...(orgs.length === 0 ? [{ custom: <div className="side-quiet">You're not in a workspace yet.</div> }] : []),
+            ...(orgs.length === 0 ? [{ custom: <div className="side-quiet">You're not in a community yet.</div> }] : []),
             "separator" as const,
             ...(org
               ? [
-                  { label: "Workspace settings", icon: <Settings2 size={16} />, onSelect: () => navigate({ section: "workspace", workspacePage: "overview" }) },
+                  { label: "Community settings", icon: <Settings2 size={16} />, onSelect: () => navigate({ section: "workspace", workspacePage: "overview" }) },
                   { label: "Invite people", icon: <Ticket size={16} />, onSelect: () => navigate({ section: "workspace", workspacePage: "invitations" }) },
                   { label: "Browse channels", icon: <Compass size={16} />, onSelect: () => onDialog({ kind: "channels" }) },
                   // Round 3 (the reference's server menu "Mark As Read"): this workspace's unread channels.
@@ -140,14 +153,14 @@ export function Sidebar({ orgId, section, open, onDialog }: SidebarProps) {
                   "separator" as const,
                 ]
               : []),
-            { label: "Create a workspace", icon: <Plus size={16} />, onSelect: () => onDialog({ kind: "createWorkspace" }) },
+            { label: "Create a community", icon: <Plus size={16} />, onSelect: () => onDialog({ kind: "createWorkspace" }) },
             { label: "Join with a code", icon: <LogIn size={16} />, onSelect: () => onDialog({ kind: "joinWorkspace" }) },
           ]}
         />
       )}
 
       <div className="side-scroll scroll" ref={list} onScroll={(e) => scrollMemory.set(listKey, e.currentTarget.scrollTop)} onContextMenu={onBlankMenu}>
-        {!synced && empty ? (
+        {(!synced && empty) || (!layoutKnown && !messages) ? (
           <SkeletonRows />
         ) : messages ? (
           <>
@@ -188,6 +201,7 @@ export function Sidebar({ orgId, section, open, onDialog }: SidebarProps) {
           </>
         )}
       </div>
+      <ConnectedCallPanel />
       <UserPanel />
       {blankMenu.anchor && <Menu anchor={blankMenu.anchor} point={blankMenu.point} label={org && !messages ? org.name : t("side_direct_messages")} onClose={blankMenu.close} entries={blankEntries} />}
       {community.dialogs}

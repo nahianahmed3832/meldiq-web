@@ -1,4 +1,4 @@
-import { markAllReadTargets, unreadOf } from "../selectors";
+import { byActivity, markAllReadTargets, unreadOf } from "../selectors";
 import { actionFor, comboOf } from "../../application/shortcuts";
 import { ShortcutsDialog } from "../dialogs/ShortcutsDialog";
 import { usePushToTalk } from "../call/usePushToTalk";
@@ -11,6 +11,7 @@ import { ConversationView } from "../chat/ConversationView";
 import { SidePanel } from "../chat/SidePanel";
 import { DockedPeoplePanel } from "../chat/PeoplePanels";
 import { CallLayer } from "../call/CallLayer";
+import { INVITE_EVENT } from "../call/callShared";
 import { ChannelBrowser } from "../dialogs/ChannelBrowser";
 import { IdentityReview } from "../dialogs/IdentityReview";
 import { NewGroupDialog } from "../dialogs/NewGroupDialog";
@@ -26,6 +27,7 @@ import { ConnectionRequestWatcher } from "../people/ConnectionRequestViews";
 import { ConnectionsDialog, MessageRequestsDialog } from "../people/ConnectionsDialog";
 import { ActivityView } from "../views/ActivityView";
 import { DiscoverView } from "../views/DiscoverView";
+import { FriendsView } from "../views/FriendsView";
 import { LaterView } from "../later/LaterView";
 import { HomeView } from "../views/HomeView";
 import { Notices } from "./Notices";
@@ -33,6 +35,7 @@ import { Rail } from "./Rail";
 import { Sidebar } from "./Sidebar";
 import { TabBar } from "./TabBar";
 import { TopBar } from "./TopBar";
+import { ConnectionBanner } from "./ConnectionBanner";
 import { TabIndicators } from "./TabIndicators";
 import { AddMembersDialog } from "../workspace/AddMembersDialog";
 import { takePendingInvite, takePendingMessage } from "../../application/pendingInvite";
@@ -145,6 +148,13 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
     if (discord) setDialog({ kind: "createWorkspace", discord });
   }, [synced, engine]);
 
+  // Invite people from a call (ConnectedCallPanel, CallStage): the community's Invite dialog.
+  useEffect(() => {
+    const onInvite = (e: Event) => setDialog({ kind: "addMembers", orgId: String((e as CustomEvent).detail ?? "") || undefined });
+    window.addEventListener(INVITE_EVENT, onInvite);
+    return () => window.removeEventListener(INVITE_EVENT, onInvite);
+  }, []);
+
   // An invite link clicked inside a chat opens Join with its code (batch B4b).
   useEffect(() => {
     const onInvite = (e: Event) => setDialog({ kind: "joinWorkspace", code: String((e as CustomEvent).detail ?? "") });
@@ -168,7 +178,7 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
   const order = useOrbit((s) => {
     const ids = Object.values(s.conversations)
       .filter((c) => c.orgId === null || c.orgId === orgId)
-      .sort((a, b) => (s.local[b.id]?.lastActivityAt ?? b.createdAt) - (s.local[a.id]?.lastActivityAt ?? a.createdAt))
+      .sort(byActivity(s))
       .map((c) => c.id);
     return ids;
   }, shallowEqual);
@@ -176,6 +186,7 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
   const unread = useOrbit((s) => order.filter((id) => unreadOf(s, id) > 0), shallowEqual);
   const readTargets = useOrbit((s) => markAllReadTargets(s, orgId), shallowEqual);
   const inCall = useOrbit((s) => s.call.phase !== "idle");
+  const connection = useOrbit((s) => s.connection);
 
   // Settings › Shortcuts (application/shortcuts.ts): the person's combinations, else the defaults.
   useEffect(() => {
@@ -213,6 +224,9 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
   const section = route.section;
   const settings = isFullPage(section);
   const phoneList = !route.conversationId && (section === "home" || section === "dms");
+  // Phones (brief v4 §18, after the Android app): Home is the community rail beside the channels; the lists and a
+  // conversation have their own headers, so the top bar steps aside there.
+  const phoneFrame = `${phoneList && section === "home" ? " phone-home" : ""}${phoneList || section === "settings" || (route.conversationId && !settings) ? " phone-bare" : ""}`;
   const ctx = useMemo(() => ({ open: (d: ShellDialog) => setDialog(d) }), []);
 
   let main;
@@ -224,16 +238,19 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
   else if (section === "activity") main = <ActivityView orgId={orgId} />;
   else if (section === "later") main = <LaterView />;
   else if (section === "discover") main = <DiscoverView />;
+  // The Messages home is Friends (2026-10-28, after the owner's reference), as is /friends.
+  else if (section === "friends" || section === "dms") main = <FriendsView />;
   else main = <HomeView orgId={orgId} section={section} onDialog={ctx.open} />;
 
   return (
-    <div className="app" onContextMenu={quietContextMenu}>
+    <div className={`app${phoneFrame}`} data-connection={connection} onContextMenu={quietContextMenu}>
       <Rail orgId={orgId} section={section} onDialog={ctx.open} />
       {/* Desktop: with the sidebar its user panel replaces the top bar; Settings has no sidebar, so it keeps the top bar. */}
       <div className={`workspace${settings ? "" : " with-sidebar"}`}>
         <TopBar onMenu={() => setDrawer((d) => !d)} onSearch={() => setDialog({ kind: "search" })} section={section} />
+        <ConnectionBanner />
         <div className={`body${route.conversationId ? " has-conversation" : ""}${phoneList ? " phone-list" : " phone-main"}${settings ? " settings-mode" : ""}`}>
-          {!settings && <Sidebar orgId={orgId} section={section === "discover" ? "dms" : section} open={drawer} onDialog={ctx.open} />}
+          {!settings && <Sidebar orgId={orgId} section={section === "discover" || section === "friends" ? "dms" : section} open={drawer} onDialog={ctx.open} />}
           {drawer && !settings && <div className="sidebar-scrim" onClick={() => setDrawer(false)} aria-hidden="true" />}
           {main}
           {!settings && route.conversationId && known && route.panel && <SidePanel route={route} />}

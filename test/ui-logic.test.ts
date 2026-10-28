@@ -30,6 +30,7 @@ const conv = (over: Partial<Conversation>): Conversation => ({
   voice: false,
   categoryId: null,
   categoryName: null,
+  categoryPosition: null,
   position: 0,
   format: "text",
   forumTags: [],

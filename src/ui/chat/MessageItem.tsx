@@ -28,7 +28,7 @@ import {
   Video,
   IdCard,
 } from "lucide-react";
-import { memo, useState } from "react";
+import { memo, useRef, useState } from "react";
 import { CustomEmojiImage, useExpressions } from "../community/CustomEmoji";
 import { reactionName } from "../../sync/expressions";
 import { useEngine, useOrbit } from "../../application/orbit";
@@ -42,6 +42,7 @@ import { ForwardDialog } from "../dialogs/ForwardDialog";
 import { Dialog, keepsNativeMenu, Menu, type MenuEntry, useMenu } from "../components/Overlay";
 import { ReactionList, ReactionsDialog } from "./Reactions";
 import { useLongPress } from "./longPress";
+import { type ContextTarget, contextEntries, contextTarget } from "./contextTarget";
 import { GifView } from "./GifView";
 import { mergeHandlers, useMessageGestures } from "./gestures";
 import { clock, dayLabel, fullTime } from "../format";
@@ -255,9 +256,13 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
   };
 
   const reactions = Object.entries(m.reactions);
+  // What the menu was opened on (a photo, a link, selected text): its own items come first (chat/contextTarget.tsx).
+  const [target, setTarget] = useState<ContextTarget | null>(null);
+  const pressedOn = useRef<EventTarget | null>(null);
   const press = useLongPress(
     (el) => {
       setPressed(true);
+      setTarget(contextTarget(pressedOn.current));
       more.open(el);
     },
     !editing && m.kind !== "call",
@@ -306,13 +311,16 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
   return (
     <div
       {...mergeHandlers(press, gestures.handlers)}
+      onPointerDownCapture={(e) => (pressedOn.current = e.target)}
       // A right-click or two-finger click: the message's menu at the pointer (the quick reactions on top, as a long
-      // press shows them); the Menu key or Shift+F10 opens it from the keyboard. Links, media and selected text keep the
-      // browser's own menu.
+      // press shows them), with what was clicked first (a photo: open, download, copy; a link; selected text); the Menu
+      // key or Shift+F10 opens it from the keyboard. Only the edit box keeps the browser's menu.
       onContextMenu={(e) => {
-        if (editing || m.kind === "call" || keepsNativeMenu(e.target)) return;
+        if (editing || keepsNativeMenu(e.target)) return;
         e.preventDefault();
+        if (m.kind === "call") return;
         setPressed(true);
+        setTarget(contextTarget(e.target));
         more.openAt(e.currentTarget, e);
       }}
       onKeyDown={(e) => {
@@ -428,8 +436,10 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
           onClose={() => {
             more.close();
             setPressed(false);
+            setTarget(null);
           }}
           entries={[
+            ...contextEntries(target, (text) => engine.notice("info", text)),
             ...quickRow,
             ...(reactions.length > 0 ? [{ label: t("react_dialog_title"), icon: <SmilePlus size={16} />, onSelect: () => setShowReactions(true) }] : []),
             ...(mine && p.canPost ? [{ label: t("msg_edit"), icon: <Pencil size={16} />, onSelect: () => setEditing(true) }] : []),

@@ -160,10 +160,13 @@ function MemberRow({ m, away, color, orgId }: { m: Member; away: boolean; color:
         ]
       : []),
   ];
+  // A nameplate (2026-10-28, the reference's lively member list): the person's own name colours, faint, behind the row.
+  const plate = m.profileStyle?.nameColors?.length ? m.profileStyle.nameColors : m.profileStyle?.accent ? [m.profileStyle.accent] : null;
   return (
     <>
       <button
-        className={`member-row${away ? " away" : ""}`}
+        className={`member-row${away ? " away" : ""}${plate ? " has-plate" : ""}`}
+        style={plate ? ({ "--plate-a": plate[0], "--plate-b": plate[plate.length - 1] } as React.CSSProperties) : undefined}
         onClick={(e) => openProfile(m.id, m.displayName, { orgId, anchor: e.currentTarget })}
         aria-label={`${m.displayName}${away ? ", offline" : ""}: profile`}
         aria-haspopup="menu"
@@ -302,7 +305,7 @@ export function PeopleToggle({ c, route }: { c: Conversation; route: Route }) {
     } else navigate({ ...at, panel: shown ? null : "members" });
   };
   return (
-    <button className="icon-btn" aria-pressed={shown} onClick={toggle} aria-label={label} title={label}>
+    <button className="icon-btn hide-sm" aria-pressed={shown} onClick={toggle} aria-label={label} title={label}>
       {dm ? <CircleUserRound size={19} /> : <UsersRound size={19} />}
     </button>
   );

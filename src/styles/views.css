@@ -2459,3 +2459,432 @@ select.input {
   border-radius: var(--r-sm);
   background: var(--surface-sunken);
 }
+
+/* The viewer's menu above it (menus sit at z-index 60, the viewer at 80). */
+body:has(> .lightbox) > .menu {
+  z-index: 90;
+}
+
+/* The media viewer (chat/MediaViewer.tsx, after the owner's reference): who and when top left, actions top right, the
+   photo or video in the middle with arrows at the sides, the text, reactions and a strip of the message's media under it. */
+.lightbox.media-viewer {
+  grid-template-rows: 64px minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr);
+  place-items: stretch;
+  padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px));
+  background: rgba(4, 5, 10, 0.94);
+}
+.viewer-who {
+  position: absolute;
+  top: 16px;
+  left: 20px;
+  display: grid;
+  gap: 2px;
+  color: var(--on-media);
+  max-width: 45vw;
+}
+.viewer-who strong {
+  font-size: 16px;
+  color: #6ee7f9;
+}
+.viewer-who small {
+  color: rgba(255, 255, 255, 0.7);
+}
+.viewer-actions {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  display: flex;
+  gap: 10px;
+  z-index: 2;
+}
+.viewer-group {
+  display: flex;
+  gap: 2px;
+  padding: 4px;
+  border-radius: var(--r-lg);
+  background: rgba(20, 22, 30, 0.85);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+.media-viewer .viewer-group .icon-btn {
+  background: transparent;
+}
+.media-viewer .icon-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--r-md);
+}
+.media-viewer .viewer-close {
+  background: rgba(20, 22, 30, 0.85);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08);
+  height: 48px;
+  width: 48px;
+}
+.viewer-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  width: 48px !important;
+  height: 48px !important;
+  background: rgba(20, 22, 30, 0.85) !important;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+.viewer-arrow.left {
+  left: 20px;
+}
+.viewer-arrow.right {
+  right: 20px;
+}
+.viewer-stage {
+  grid-row: 2;
+  display: grid;
+  place-items: center;
+  min-height: 0;
+  padding: 0 72px;
+}
+.viewer-stage > img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: var(--r-md);
+}
+.viewer-error {
+  color: var(--on-media);
+}
+.viewer-foot {
+  grid-row: 3;
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  padding-top: 10px;
+}
+.media-viewer .lightbox-caption {
+  position: static;
+  transform: none;
+}
+.viewer-strip {
+  display: flex;
+  gap: 6px;
+  max-width: 100%;
+  overflow-x: auto;
+  padding: 4px;
+}
+.viewer-thumb {
+  flex-shrink: 0;
+  width: 56px;
+  height: 56px;
+  border-radius: var(--r-md);
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  color: var(--on-media);
+  background: rgba(255, 255, 255, 0.08);
+  opacity: 0.6;
+  transition: opacity var(--t-fast);
+}
+.viewer-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.viewer-thumb[aria-current="true"] {
+  opacity: 1;
+  box-shadow: 0 0 0 2px var(--accent);
+}
+/* A video with Meldiq's controls. */
+.video-player {
+  position: relative;
+  display: grid;
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: var(--r-md);
+  overflow: hidden;
+  background: #000;
+}
+.video-player video {
+  display: block;
+  max-width: 100%;
+  max-height: calc(100vh - 220px);
+  cursor: pointer;
+}
+.video-player:fullscreen video {
+  max-height: 100vh;
+  width: 100%;
+}
+.video-controls {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.85), transparent);
+  color: #fff;
+}
+.video-controls .icon-btn {
+  color: #fff;
+  background: transparent !important;
+  width: 34px !important;
+  height: 34px !important;
+}
+.video-time {
+  font-variant-numeric: tabular-nums;
+  font-size: 13px;
+  white-space: nowrap;
+}
+.video-seek,
+.video-volume {
+  accent-color: var(--accent);
+}
+.video-seek {
+  flex: 1;
+  min-width: 60px;
+}
+.video-volume {
+  width: 80px;
+}
+@media (max-width: 640px) {
+  .viewer-stage {
+    padding: 0;
+  }
+  .viewer-arrow {
+    top: auto;
+    bottom: 92px;
+    transform: none;
+  }
+  .video-volume {
+    display: none;
+  }
+}
+/* A video in a message: a tile with a play button (MediaAttachment). */
+.att-video-tile {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: min(360px, 100%);
+  aspect-ratio: 16 / 10;
+  border-radius: var(--r-lg);
+  background: radial-gradient(circle at 30% 20%, rgba(124, 58, 237, 0.35), transparent 60%), linear-gradient(135deg, #111827, #0b1020);
+  box-shadow: 0 0 0 1px var(--border);
+  color: #fff;
+  overflow: hidden;
+}
+.att-video-play {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.55);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.85);
+  transition: transform var(--t-fast) var(--ease);
+}
+.att-video-tile:hover .att-video-play {
+  transform: scale(1.08);
+}
+.att-video-name {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  min-width: 0;
+}
+.att-video-name small {
+  margin-left: auto;
+  opacity: 0.75;
+  font-weight: 500;
+}
+
+/* Friends (views/FriendsView.tsx, after the owner's reference). */
+.main.friends {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+.friends-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 56px;
+  padding: 8px 20px;
+  border-bottom: 1px solid var(--hairline);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.friends-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 16px;
+  white-space: nowrap;
+}
+.friends-sep {
+  width: 1px;
+  height: 24px;
+  background: var(--border);
+  flex-shrink: 0;
+}
+.friends-tabs {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.friends-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: var(--r-md);
+  color: var(--text-2);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.friends-tab:hover {
+  background: var(--surface-hover);
+  color: var(--text);
+}
+.friends-tab[aria-selected="true"] {
+  background: var(--surface-selected);
+  color: var(--text);
+}
+.friends-tab.add {
+  background: #23a55a;
+  color: #fff;
+}
+.friends-tab.add[aria-selected="true"] {
+  background: transparent;
+  color: #23a55a;
+}
+.friends-body {
+  flex: 1;
+  min-height: 0;
+  padding: 16px 20px 32px;
+  display: grid;
+  align-content: start;
+  gap: 14px;
+}
+.friends-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+  height: 42px;
+}
+.friends-search input {
+  flex: 1;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+}
+.friends-group h3 {
+  margin: 4px 0 8px;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+.friends-empty {
+  margin: 24px 0;
+  text-align: center;
+  color: var(--text-3);
+}
+.friend-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 10px;
+  border-top: 1px solid var(--hairline);
+  border-radius: var(--r-md);
+}
+.friend-row:hover {
+  background: var(--surface-hover);
+  border-top-color: transparent;
+}
+.friend-row .lines {
+  display: grid;
+  min-width: 0;
+}
+.friend-row small {
+  color: var(--text-3);
+}
+.friend-handle {
+  font-weight: 500;
+  opacity: 0;
+  transition: opacity var(--t-fast);
+}
+.friend-row:hover .friend-handle {
+  opacity: 1;
+}
+.friend-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.friend-actions .icon-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--surface-sunken);
+}
+.friend-accept:hover {
+  color: #23a55a !important;
+}
+.friend-decline:hover {
+  color: var(--danger) !important;
+}
+.add-friend {
+  display: grid;
+  gap: 8px;
+  max-width: 720px;
+}
+.add-friend h2 {
+  margin: 0;
+  font-size: 18px;
+}
+.add-friend p {
+  margin: 0 0 6px;
+}
+.add-friend-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 6px 6px 14px;
+  border-radius: var(--r-lg);
+  background: var(--surface-sunken);
+  box-shadow: 0 0 0 1px var(--border);
+}
+.add-friend-box:focus-within {
+  box-shadow: 0 0 0 2px var(--accent);
+}
+.add-friend-box input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  height: 40px;
+}
+@media (max-width: 640px) {
+  .friends-head {
+    padding: 8px 12px;
+  }
+  .friends-body {
+    padding: 12px 12px 24px;
+  }
+  .add-friend-box {
+    flex-wrap: wrap;
+  }
+}

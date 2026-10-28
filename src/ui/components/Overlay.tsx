@@ -326,20 +326,14 @@ export function useMenu(): {
 }
 
 /**
- * The browser's own menu stays where it's the expected one: text fields, selected text (copy), links to other sites, and
- * the links and media inside a message or a viewer (open in a new tab, save image). Everywhere else in Meldiq a
- * right-click opens Meldiq's menu, or none on empty space. (Developer tools stay reachable: nothing here blocks them.)
+ * The browser's own menu stays only in text fields, where paste, spelling suggestions and the like live (2026-10-28: the
+ * owner wants no browser menu anywhere else in the app). Elsewhere a right-click opens Meldiq's menu, which offers what
+ * the browser's did where it matters (a message's photo, link or selected text: chat/contextTarget.tsx), or none on
+ * empty space. Developer tools stay reachable from the browser's own menus and shortcuts: nothing here blocks them.
  */
 export function keepsNativeMenu(target: EventTarget | null): boolean {
   const el = target as HTMLElement | null;
-  if (!el?.closest) return false;
-  if (el.closest('input, textarea, select, [contenteditable="true"]')) return true;
-  const selection = typeof window !== "undefined" ? window.getSelection() : null;
-  if (selection?.toString() && selection.containsNode(el, true)) return true;
-  const link = el.closest<HTMLAnchorElement>("a[href]");
-  if (link && link.origin !== window.location.origin) return true;
-  const inContent = !!el.closest("[data-native-menu]") || (!!el.closest(".msg-main") && !el.closest(".msg-head"));
-  return inContent && !!el.closest("a[href], img, video, audio, canvas");
+  return !!el?.closest?.('input, textarea, select, [contenteditable="true"]');
 }
 
 /**

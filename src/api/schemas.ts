@@ -94,6 +94,12 @@ export const zConversation = z.object({
   /** The channel's category (null: none) and its place in it. */
   categoryId: nullableString,
   categoryName: nullableString,
+  /** The category's place among the community's categories (API 0.48.0): the order before the category list loads. */
+  categoryPosition: z
+    .number()
+    .int()
+    .nullish()
+    .transform((v) => v ?? null),
   position: z.number().int().default(0),
   /** "text", or "forum": posts with a title, each with its replies in a thread. */
   format: openEnum(["text", "forum"]).default("text"),

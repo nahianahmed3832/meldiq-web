@@ -28,7 +28,7 @@ export function PeoplePage({ detail }: { detail: OrgAdminDetail }) {
   const [adding, setAdding] = useState(false);
 
   if (!detail.permissions.canViewDirectory) {
-    return <Card title="People" sub="Guests can't browse the workspace directory. People you share channels with appear in those channels' details." />;
+    return <Card title="People" sub="Guests can't browse the community directory. People you share channels with appear in those channels' details." />;
   }
 
   return (
@@ -126,7 +126,7 @@ function MemberRow(props: { member: DirectoryMember; detail: OrgAdminDetail; myR
         ]
       : []),
     ...(canRemove
-      ? ["separator" as const, { label: features.includes("community-channels") ? "Remove from community…" : "Remove from workspace…", danger: true, onSelect: () => setEditing("remove") }]
+      ? ["separator" as const, { label: features.includes("community-channels") ? "Remove from community…" : "Remove from community…", danger: true, onSelect: () => setEditing("remove") }]
       : []),
     ...(canBan ? [{ label: "Ban…", danger: true, onSelect: () => setEditing("ban") }] : []),
   ];
@@ -173,7 +173,7 @@ function MemberRow(props: { member: DirectoryMember; detail: OrgAdminDetail; myR
       {editing === "remove" && (
         <Dialog title={`Remove ${m.displayName}?`} onClose={() => setEditing(null)}>
           <div className="dialog-body">
-            <p style={{ margin: 0 }}>They'll lose access to this workspace's channels, branches and teams. Direct messages with them stay.</p>
+            <p style={{ margin: 0 }}>They'll lose access to this community's channels and voice rooms. Direct messages with them stay.</p>
             <ErrorLine text={act.error} />
             <div className="row" style={{ justifyContent: "flex-end", gap: 8 }}>
               <button className="btn btn-secondary" onClick={() => setEditing(null)}>
@@ -247,7 +247,7 @@ function ExpiryDialog({ member, orgId, onClose, onSaved }: { member: DirectoryMe
     <Dialog title={`${member.displayName}'s end date`} onClose={onClose}>
       <div className="dialog-body">
         <p className="faint" style={{ margin: 0 }}>
-          On this day they leave the workspace, exactly as if removed: channels, teams, groups and meeting invitations.
+          On this day they leave the community, exactly as if removed: channels, teams, groups and meeting invitations.
         </p>
         <label className="field">
           <span>Last day</span>

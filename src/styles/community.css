@@ -416,9 +416,10 @@ img.custom-sticker {
   padding: 0 5px;
   border-radius: var(--r-pill);
   font-size: 10.5px;
-  font-weight: 700;
-  color: var(--accent-2);
-  background: color-mix(in srgb, var(--accent-2) 18%, transparent);
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  color: #fff;
+  background: #ed4245;
   flex-shrink: 0;
 }
 @media (prefers-reduced-motion: no-preference) {
@@ -632,4 +633,67 @@ img.custom-sticker {
 }
 .msg-name > .sname {
   min-width: 0;
+}
+
+/* How long a voice channel's call has been on (LiveCallBadge). */
+.live-call-time {
+  font-variant-numeric: tabular-nums;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-3);
+}
+/* A community with a call on, on the rail: a small speaker at its corner (Rail.tsx). */
+.rail-live {
+  position: absolute;
+  right: -3px;
+  bottom: -3px;
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #23a55a;
+  color: #fff;
+  box-shadow: 0 0 0 3px var(--rail);
+}
+.rail-live.sharing {
+  background: #ed4245;
+}
+
+/* The community's name on its banner (Sidebar.tsx, after the owner's reference): a tall header with the picture
+   behind it, darkened at the top so the name and its menu stay readable. */
+.side-head.on-banner {
+  align-items: flex-start;
+  min-height: 132px;
+  padding-top: 12px;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  isolation: isolate;
+}
+.side-head.on-banner::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.05) 60%, transparent);
+}
+.side-head.on-banner .community-switch,
+.side-head.on-banner .community-switch strong,
+.side-head.on-banner .icon-btn {
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+}
+.side-head.on-banner .community-switch:hover {
+  background: rgba(0, 0, 0, 0.25);
+}
+/* Nameplates in the member list (PeoplePanels.tsx): the person's colours, faint, fading out to the right. */
+.member-row.has-plate {
+  background: linear-gradient(90deg, color-mix(in srgb, var(--plate-a) 24%, transparent), color-mix(in srgb, var(--plate-b) 10%, transparent) 70%, transparent);
+}
+.member-row.has-plate:hover {
+  background: linear-gradient(90deg, color-mix(in srgb, var(--plate-a) 34%, transparent), color-mix(in srgb, var(--plate-b) 16%, transparent) 75%, transparent);
+}
+.member-row.has-plate.away {
+  background: none;
 }

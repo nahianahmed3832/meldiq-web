@@ -1,6 +1,6 @@
 /**
- * The in-app sound for a new message (community-first brief §D): a short two-note chime made with Web Audio (no sound
- * file), for messages the notification pipeline lets through (engine.notifyIncoming: not yours, not the conversation
+ * The in-app sound for a new message (community-first brief §D): Meldiq's notification bell (application/soundFiles.ts,
+ * 2026-10-28; the two-note chime made with Web Audio stays as the fallback while the file loads or if it can't), for messages the notification pipeline lets through (engine.notifyIncoming: not yours, not the conversation
  * you're reading, not muted or paused). Since 2026-10-27 it plays with system notifications too (they're then shown
  * silent): browsers on macOS and Windows often show web notifications without any sound, which is what people heard.
  *
@@ -9,6 +9,8 @@
  * - A burst of messages plays one chime: at most one per CHIME_GAP_MS, across every open tab of this browser (one tab
  *   takes a Web Lock for the gap; without Web Locks, a timestamp in localStorage does the same).
  */
+import { loadSound, NOTIFICATION_SOUND, playBuffer } from "./soundFiles";
+
 export const CHIME_GAP_MS = 1_500;
 const LOCK = "meldiq-message-chime";
 const LAST_KEY = "meldiq.chime.last";
@@ -17,8 +19,10 @@ const NOTES = [
   { at: 0.11, hz: 1318.5 },
 ];
 const NOTE_S = 0.16;
-/** The loudest the chime gets, at volume 100: quieter than the ringtone. */
+/** The loudest the fallback chime gets, at volume 100: quieter than the ringtone. */
 const PEAK = 0.12;
+/** The bell file at volume 100 (it's mastered loud). */
+const FILE_PEAK = 0.55;
 
 export type ChimeState = "locked" | "ready" | "unsupported";
 
@@ -49,6 +53,7 @@ export async function unlockChime(): Promise<ChimeState> {
   try {
     ctx ??= new AudioContext();
     if (ctx.state === "suspended") await ctx.resume();
+    void loadSound(ctx, NOTIFICATION_SOUND); // decoded ahead, so the first message rings at once
   } catch {
     /* blocked: stays locked */
   }
@@ -101,6 +106,10 @@ function claimGap(now: number): boolean {
 function sound(volume: number): void {
   const c = ctx;
   if (!c) return;
+  void loadSound(c, NOTIFICATION_SOUND).then((buffer) => (buffer ? playBuffer(c, buffer, (FILE_PEAK * Math.min(100, volume)) / 100) : synthesized(c, volume)));
+}
+
+function synthesized(c: AudioContext, volume: number): void {
   const peak = (PEAK * Math.min(100, volume)) / 100;
   const t0 = c.currentTime + 0.02;
   for (const n of NOTES) {

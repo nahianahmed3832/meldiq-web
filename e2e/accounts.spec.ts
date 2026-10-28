@@ -39,7 +39,7 @@ async function signIn(page: Page, email: string): Promise<void> {
   await page.getByRole("button", { name: "Sign in", exact: true }).click();
 }
 
-test("sign up, set up encryption, come back after a reload, and add a second browser with the recovery key", async ({ page, browser }) => {
+test("sign up, set up encryption, come back after a reload, and add a second browser with the recovery key", async ({ page, browser, isMobile }) => {
   const email = `e2e.${crypto.randomBytes(4).toString("hex")}@example.test`;
   await page.goto("/");
   await expectSignedOut(page);
@@ -60,7 +60,7 @@ test("sign up, set up encryption, come back after a reload, and add a second bro
   await expect(page.getByRole("button", { name: "Open Meldiq" })).toBeDisabled();
   await page.getByLabel("I've stored my recovery key somewhere safe.").check();
   await page.getByRole("button", { name: "Open Meldiq" }).click();
-  await expect(page.locator(":is(.conn.online, .user-panel[data-connection=online]):visible").first()).toBeVisible({ timeout: 15_000 });
+  await expect(page.locator(":is(.app[data-connection=online])").first()).toBeVisible({ timeout: 15_000 });
 
   // Settings › My Account (2026-10-28, the reference's page): your card with name, username and the email hidden until
   // Reveal; then password and authentication, and the account itself.
@@ -76,9 +76,11 @@ test("sign up, set up encryption, come back after a reload, and add a second bro
 
   // The session survives a reload (stored sealed); no password asked.
   await page.reload();
-  await expect(page.locator(":is(.conn.online, .user-panel[data-connection=online]):visible").first()).toBeVisible({ timeout: 15_000 });
+  await expect(page.locator(":is(.app[data-connection=online])").first()).toBeVisible({ timeout: 15_000 });
   // Back to the conversations, where a new direct message shows.
-  await page.getByRole("button", { name: "Back to conversations" }).click();
+  // Desktop: the settings list's way back; phones: the Messages tab.
+  if (isMobile) await page.getByRole("navigation", { name: "Sections" }).getByRole("button", { name: "Messages" }).click();
+  else await page.getByRole("button", { name: "Back to conversations" }).click();
 
   // Someone writes to the new account from their phone.
   const me = await page.evaluate(() => (window as unknown as { __orbit: { device: { userId: string } } }).__orbit.device.userId);
@@ -111,14 +113,14 @@ test("sign up, set up encryption, come back after a reload, and add a second bro
   await second.getByRole("tab", { name: "Use my recovery key" }).click();
   await second.getByLabel("Recovery key", { exact: true }).fill(recovery.toLowerCase());
   await second.getByRole("button", { name: "Set up this browser" }).click();
-  await expect(second.locator(":is(.conn.online, .user-panel[data-connection=online]):visible").first()).toBeVisible({ timeout: 15_000 });
+  await expect(second.locator(":is(.app[data-connection=online])").first()).toBeVisible({ timeout: 15_000 });
   await bob.send(dm, { type: "text", text: "Both of your browsers get this" });
   for (const p of [page, second]) {
     await p
       .getByRole("complementary", { name: "Conversations" })
       .getByRole("link", { name: /Bob Chen/ })
       .click();
-    await expect(p.getByText("Both of your browsers get this")).toBeVisible();
+    await expect(p.getByRole("log", { name: "Messages" }).getByText("Both of your browsers get this")).toBeVisible();
   }
   await other.close();
 
@@ -137,7 +139,7 @@ test("sign up, set up encryption, come back after a reload, and add a second bro
   await expect(t.getByRole("button", { name: "Send a new code" })).toBeVisible();
   await t.getByLabel("Verification code").fill(await emailedCode(email, "verify"));
   await t.getByRole("button", { name: "Unlock" }).click();
-  await expect(t.locator(":is(.conn.online, .user-panel[data-connection=online]):visible").first()).toBeVisible({ timeout: 15_000 });
+  await expect(t.locator(":is(.app[data-connection=online])").first()).toBeVisible({ timeout: 15_000 });
   await third.close();
 });
 

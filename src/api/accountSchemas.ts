@@ -47,9 +47,6 @@ export const zWorkspaceV2 = z.object({
 });
 export const zWorkspacesV2 = z.object({ workspaces: z.array(zWorkspaceV2), selectedWorkspaceId: z.string().nullable() });
 
-export const zLegacyTicket = z.object({ ticket: z.string(), expiresAt: z.number(), legacyUser: z.object({ username: z.string(), displayName: z.string() }) });
-export type LegacyTicket = z.infer<typeof zLegacyTicket>;
-
 export const zAccepted = z.object({}).passthrough();
 export const zOk = z.object({ ok: z.literal(true) });
 export const zVerified = z.object({ verified: z.literal(true) });

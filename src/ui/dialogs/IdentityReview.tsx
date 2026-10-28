@@ -1,24 +1,18 @@
 import { ShieldAlert } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useEngine, useOrbit } from "../../application/orbit";
-import { safetyNumber } from "../../crypto/identity";
 import { Dialog } from "../components/Overlay";
 
 /**
- * A contact's identity key changed (docs/SECURITY.md §3). Shows the safety number for the new key; accepting pins exactly
- * that key, sends what was paused and opens what was held.
+ * A contact's identity key changed (docs/SECURITY.md §3): messages with them stay paused until this is reviewed.
+ * Continuing pins exactly the new key, sends what was paused and opens what was held; a later change asks again. (It
+ * used to show a safety number to compare; safety numbers were retired in brief v4 §13, the pause was not.)
  */
 export function IdentityReview({ userId, onClose }: { userId: string; onClose: () => void }) {
   const engine = useEngine();
-  const me = useOrbit((s) => s.me);
   const name = useOrbit((s) => s.users[userId]?.displayName ?? "This person");
   const alert = useOrbit((s) => s.identityAlerts.find((a) => a.userId === userId));
-  const [number, setNumber] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
-
-  useEffect(() => {
-    if (me && alert?.changedTo) void safetyNumber(me.identityKey, alert.changedTo).then(setNumber);
-  }, [me, alert]);
 
   if (!alert) return null;
   return (
@@ -32,7 +26,7 @@ export function IdentityReview({ userId, onClose }: { userId: string; onClose: (
           </button>
           <button
             className="btn btn-primary"
-            disabled={busy || !number}
+            disabled={busy || !alert.changedTo}
             onClick={() => {
               setBusy(true);
               void engine
@@ -42,7 +36,7 @@ export function IdentityReview({ userId, onClose }: { userId: string; onClose: (
                 .finally(() => setBusy(false));
             }}
           >
-            I compared it: accept the new key
+            Continue with the new key
           </button>
         </>
       }
@@ -52,12 +46,9 @@ export function IdentityReview({ userId, onClose }: { userId: string; onClose: (
           <ShieldAlert size={16} />
           <span className="grow">Messages to and from {name} are paused. This happens when someone reinstalls Meldiq without their recovery key, and it's also what an attacker would cause.</span>
         </div>
-        <p style={{ margin: 0 }}>Ask {name} to open your conversation on their phone and compare this safety number with theirs, in person or on a call you trust:</p>
-        <span className="fingerprint" style={{ whiteSpace: "pre-line", fontSize: 16 }}>
-          {number ?? "…"}
-        </span>
+        <p style={{ margin: 0 }}>If you weren't expecting this, ask {name} in person or on a call you trust whether they set Meldiq up again before you continue.</p>
         <p className="faint" style={{ margin: 0, fontSize: 12.5 }}>
-          Accepting trusts exactly this key. If the server presents yet another key later, you'll be asked again.
+          Continuing trusts exactly this key. If the server presents yet another key later, you'll be asked again.
         </p>
       </div>
     </Dialog>

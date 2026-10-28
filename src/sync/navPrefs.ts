@@ -50,6 +50,8 @@ export const zNavPrefs = z.object({
     .optional(),
   /** Batch B2, personal document: the person's communities in rail order. */
   railOrder: z.array(z.string()).optional(),
+  /** API 0.50.0, personal document: folders of communities on the rail (sync/railFolders.ts). */
+  railFolders: z.array(z.object({ id: z.string(), name: z.string().default(""), color: z.string().nullable().default(null), orgIds: z.array(z.string()) })).optional(),
   /** Batch B3: mutes that end by themselves (conversation id → epoch ms). */
   mutedUntil: z.record(z.string(), z.number()).optional(),
   /** Batch B3, community documents: a category's own level, which its channels follow unless they have one. */
@@ -84,6 +86,7 @@ export type NavOp =
   | { op: "community"; level?: NotifyLevel; suppressEveryone?: boolean; mutedUntil?: number | null }
   | { op: "notifyReset"; conversationId: string }
   | { op: "railOrder"; orgIds: string[] }
+  | { op: "railLayout"; orgIds: string[]; folders: { id: string; name: string; color: string | null; orgIds: string[] }[] }
   | { op: "muteUntil"; conversationId: string; until: number | null }
   | { op: "categoryNotify"; categoryId: string; level: NotifyLevel | null }
   | { op: "hide"; conversationId: string; hidden: boolean };
@@ -218,6 +221,8 @@ export function applyOp(p: NavPrefs, o: NavOp): NavPrefs {
     }
     case "railOrder":
       return { ...p, railOrder: [...new Set(o.orgIds)] };
+    case "railLayout":
+      return { ...p, railOrder: [...new Set(o.orgIds)], railFolders: o.folders };
     case "muteUntil":
       return { ...p, mutedUntil: o.until === null ? omit(p.mutedUntil ?? {}, o.conversationId) : { ...(p.mutedUntil ?? {}), [o.conversationId]: o.until } };
     case "categoryNotify":

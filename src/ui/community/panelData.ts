@@ -26,6 +26,7 @@ function toPanel(c: Conversation, joined: boolean, unread: number, mentions: num
     name: c.name ?? "channel",
     categoryId: c.categoryId,
     categoryName: c.categoryName,
+    categoryPosition: c.categoryPosition,
     position: c.position,
     kind: c.kind,
     voice: c.voice,

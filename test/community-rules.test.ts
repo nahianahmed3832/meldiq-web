@@ -63,6 +63,24 @@ describe("channel tree", () => {
     expect(channelSections([ref("general", "talk", 0)], cats, true).map((x) => x.key)).toEqual(["category:start", "category:talk", "category:empty"]);
   });
 
+  it("orders categories the same before and after the category list loads (no alphabetical first paint)", () => {
+    // Created in this order, so alphabetical would be Archive, Projects, Welcome.
+    const placed = [
+      { ...ref("w1", "c-welcome", 0), categoryName: "Welcome", categoryPosition: 0 },
+      { ...ref("p1", "c-projects", 0), categoryName: "Projects", categoryPosition: 1 },
+      { ...ref("a1", "c-archive", 0), categoryName: "Archive", categoryPosition: 2 },
+    ];
+    const before = channelSections(placed, []).map((x) => x.title);
+    const loaded = [
+      { id: "c-welcome", name: "Welcome", position: 0 },
+      { id: "c-projects", name: "Projects", position: 1 },
+      { id: "c-archive", name: "Archive", position: 2 },
+    ] as unknown as Parameters<typeof channelSections>[1];
+    const after = channelSections(placed, loaded).map((x) => x.title);
+    expect(before).toEqual(["Welcome", "Projects", "Archive"]);
+    expect(after).toEqual(before);
+  });
+
   it("keeps a category the list doesn't know yet, titled from the channel", () => {
     const s = channelSections([{ ...ref("x", "new", 0), categoryName: "Fresh" }], []);
     expect(s.map((x) => x.key)).toEqual(["category:new"]);

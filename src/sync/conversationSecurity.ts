@@ -3,12 +3,11 @@
  * shows a small padlock, and the panel lists only the facts that apply to this conversation, each true of how the app
  * works today. The browser always encrypts call media end to end (it has no unencrypted fallback).
  */
-export type SecurityPoint = "messages" | "files" | "calls_e2ee" | "verified" | "not_verified" | "verify_members" | "keys_changed" | "other_servers" | "app_updates" | "metadata";
+/** Safety numbers and their verified / not verified points were retired (brief v4 §13); a changed key still pauses messages. */
+export type SecurityPoint = "messages" | "files" | "calls_e2ee" | "keys_changed" | "other_servers" | "app_updates" | "metadata";
 
 export interface SecurityFacts {
   type: "DM" | "GROUP" | "CHANNEL";
-  /** A DM: whether the other person is verified; null for groups and channels. */
-  peerVerified: boolean | null;
   /** Members whose security key changed and isn't reviewed yet. */
   changedMembers: number;
   /** Members on another server (federated usernames, `name:server`). */
@@ -19,8 +18,6 @@ export function securityPoints(f: SecurityFacts): SecurityPoint[] {
   const points: SecurityPoint[] = [];
   if (f.changedMembers > 0) points.push("keys_changed");
   points.push("messages", "files", "calls_e2ee");
-  if (f.type !== "DM") points.push("verify_members");
-  else points.push(f.peerVerified ? "verified" : "not_verified");
   if (f.otherServers > 0) points.push("other_servers");
   if (f.type === "CHANNEL") points.push("app_updates");
   points.push("metadata");

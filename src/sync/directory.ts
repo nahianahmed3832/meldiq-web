@@ -89,7 +89,7 @@ export class Directory {
     return { kind: "unknown" };
   }
 
-  /** The person compared safety numbers and accepts [identityKey], the exact key they were shown. */
+  /** The person reviewed the change and accepts [identityKey], the exact key they were shown. */
   async acceptIdentity(userId: string, identityKey: string): Promise<void> {
     const pin = await this.store.pin(userId);
     await this.store.putPin({ userId, identityKey, changedTo: null, verified: pin?.verified ?? false });
