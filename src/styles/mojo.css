@@ -1,0 +1,440 @@
+/* Meldiq Mojo (ui/mojo, server docs/MOJO.md): Meldiq's own indigo-to-violet, with the brand's sky highlight. Every
+   colour comes from the theme's tokens or these three, so light, dark and black themes all work. */
+:root {
+  --mojo-a: #4b4fc9;
+  --mojo-b: #8b5cf6;
+  --mojo-glow: #7dd3fc;
+}
+
+.mojo {
+  display: grid;
+  gap: 18px;
+}
+.mojo h1 {
+  margin-bottom: 0;
+}
+.mojo-loading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-2);
+}
+
+.mojo-hero {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  padding: 24px;
+  border-radius: var(--r-lg);
+  color: #f3f2ff;
+  background: radial-gradient(circle at 85% 20%, rgba(125, 211, 252, 0.25), transparent 45%), linear-gradient(135deg, #0b1440, #1d1a5c 55%, #3b1d70);
+  border: 1px solid rgba(139, 92, 246, 0.35);
+}
+.mojo-hero h2 {
+  margin: 6px 0 8px;
+  font-size: clamp(22px, 3.2vw, 30px);
+  line-height: 1.15;
+}
+.mojo-hero p {
+  margin: 0;
+  max-width: 52ch;
+  color: #c9c8f0;
+}
+.mojo-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--fs-xs);
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--mojo-glow);
+}
+.mojo-glow {
+  background: linear-gradient(90deg, var(--mojo-glow), #c4b5fd);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.mojo-hero-plan {
+  display: grid;
+  gap: 2px;
+  min-width: 160px;
+  padding: 14px 18px;
+  border-radius: var(--r-md);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+}
+.mojo-hero-plan .faint {
+  color: #b9bce6;
+  font-size: 13px;
+}
+.mojo-hero-plan strong {
+  font-size: 22px;
+}
+.mojo-hero-plan small {
+  color: #b9bce6;
+}
+
+.mojo-plans {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 12px;
+}
+.mojo-plan {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 18px;
+  border-radius: var(--r-lg);
+  border: 1px solid var(--border);
+  background: var(--surface-raised);
+}
+.mojo-plan.plan-plus {
+  border-color: color-mix(in srgb, var(--mojo-b) 55%, var(--border));
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--mojo-b) 25%, transparent);
+}
+.mojo-plan.current {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+.mojo-plan h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: 16px;
+}
+.mojo-price strong {
+  font-size: 26px;
+}
+.mojo-price span {
+  color: var(--text-2);
+  margin-left: 2px;
+}
+.mojo-plan ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 6px;
+  flex: 1;
+  font-size: 14px;
+}
+.mojo-plan li {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+.mojo-plan li svg {
+  flex-shrink: 0;
+  margin-top: 3px;
+  color: var(--accent);
+}
+.btn-mojo {
+  color: #fff;
+  background: linear-gradient(90deg, var(--mojo-a), var(--mojo-b));
+  border: 0;
+}
+.btn-mojo:hover:not(:disabled) {
+  filter: brightness(1.08);
+}
+.btn-mojo:disabled {
+  opacity: 0.55;
+}
+.mojo-terms {
+  margin: 0;
+  font-size: 13px;
+}
+
+.mojo-gift-entry {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: var(--r-lg);
+  border: 1px dashed color-mix(in srgb, var(--mojo-b) 50%, var(--border));
+  background: color-mix(in srgb, var(--mojo-b) 6%, var(--surface-raised));
+  text-align: left;
+  cursor: pointer;
+}
+.mojo-gift-entry:disabled {
+  cursor: default;
+  opacity: 0.7;
+}
+.mojo-gift-entry .lines {
+  display: grid;
+}
+.mojo-gift-entry small {
+  color: var(--text-2);
+}
+.mojo-gifts {
+  display: grid;
+  gap: 10px;
+  padding: 14px 16px;
+}
+.mojo-gift-row .lines {
+  display: grid;
+  gap: 2px;
+}
+.mojo-sent {
+  margin: 8px 0 0;
+  padding-left: 18px;
+  font-size: 13px;
+  color: var(--text-2);
+}
+
+.mojo-h2 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 0 0;
+  font-size: 18px;
+}
+.mojo-perks {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 12px;
+}
+.mojo-perks article {
+  padding: 16px;
+  border-radius: var(--r-lg);
+  border: 1px solid var(--border);
+  background: var(--surface-raised);
+}
+.mojo-perks article svg {
+  color: var(--mojo-b);
+}
+.mojo-perks h3 {
+  margin: 8px 0 4px;
+  font-size: 15px;
+}
+.mojo-perks p {
+  margin: 0;
+  font-size: 13.5px;
+  color: var(--text-2);
+}
+
+/* The comparison table scrolls sideways on narrow screens instead of squeezing its text. */
+.mojo-table-wrap {
+  overflow-x: auto;
+  border-radius: var(--r-lg);
+  border: 1px solid var(--border);
+}
+.mojo-table {
+  width: 100%;
+  min-width: 520px;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+.mojo-table th,
+.mojo-table td {
+  padding: 10px 14px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+.mojo-table thead th {
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-2);
+  background: var(--surface-sunken);
+}
+.mojo-table tbody tr:last-child > * {
+  border-bottom: 0;
+}
+.mojo-table .current {
+  background: color-mix(in srgb, var(--accent) 9%, transparent);
+  font-weight: 650;
+}
+
+.mojo-sparks {
+  display: grid;
+  gap: 12px;
+}
+.mojo-sparks p {
+  margin: 0;
+}
+.spark-levels {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 10px;
+}
+.spark-level {
+  padding: 14px 16px;
+  border-radius: var(--r-lg);
+  border: 1px solid color-mix(in srgb, var(--mojo-b) 35%, var(--border));
+  background: color-mix(in srgb, var(--mojo-b) 7%, var(--surface-raised));
+}
+.spark-level h3 {
+  margin: 0 0 6px;
+  font-size: 15px;
+}
+.spark-level h3 small {
+  font-weight: 500;
+  color: var(--text-2);
+}
+.spark-level ul {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 13.5px;
+  display: grid;
+  gap: 2px;
+}
+.spark-list {
+  list-style: none;
+  margin: 0;
+  padding: 0 16px 8px;
+  display: grid;
+  gap: 8px;
+}
+.spark-list li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.spark-list li svg {
+  color: var(--mojo-b);
+}
+.spark-list .tag {
+  margin-left: 8px;
+}
+.spark-give,
+.spark-buy {
+  gap: 10px;
+  padding: 0 16px 16px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.stepper {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 2px 6px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--border);
+}
+.stepper span {
+  min-width: 2ch;
+  text-align: center;
+  font-weight: 700;
+}
+.segmented button[aria-checked="true"] {
+  background: var(--surface-raised);
+  color: var(--accent-text);
+  box-shadow: var(--shadow-sm);
+}
+
+.mojo-why h2 {
+  margin: 0 0 6px;
+  font-size: 16px;
+}
+.mojo-why {
+  padding: 16px 18px;
+}
+.mojo-why p {
+  margin: 0;
+  color: var(--text-2);
+  font-size: 14px;
+}
+
+/* GO / PLUS next to a name. */
+.mojo-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 0 5px;
+  height: 16px;
+  border-radius: 5px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+.mojo-badge-go {
+  color: var(--accent-text);
+  background: color-mix(in srgb, var(--accent) 16%, transparent);
+}
+.mojo-badge-plus {
+  color: #fff;
+  background: linear-gradient(90deg, var(--mojo-a), var(--mojo-b));
+}
+
+/* A community's Spark level in its header. */
+.spark-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 1px 6px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+  color: #fff;
+  background: linear-gradient(90deg, var(--mojo-a), var(--mojo-b));
+}
+
+@media (max-width: 640px) {
+  .mojo-hero {
+    padding: 18px;
+  }
+  .spark-buy .btn,
+  .spark-give .btn {
+    width: 100%;
+  }
+}
+
+/* The message length note (ui/mojo/CharLimit.tsx). */
+.char-limit {
+  padding: 2px 12px 6px;
+  font-size: 12px;
+  color: var(--text-2);
+  text-align: right;
+}
+.char-limit.over {
+  color: var(--danger);
+  text-align: left;
+}
+.char-limit-link {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--accent-text);
+  font: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* "Sparks for …" (ui/mojo/SparkDialog.tsx). */
+.spark-dialog {
+  display: grid;
+  gap: 12px;
+}
+.spark-now {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: var(--r-md);
+  background: color-mix(in srgb, var(--mojo-b) 10%, var(--surface-raised));
+  border: 1px solid color-mix(in srgb, var(--mojo-b) 35%, var(--border));
+}
+.spark-now svg {
+  color: var(--mojo-b);
+}
+.spark-now .lines {
+  display: grid;
+}
+.spark-unlocks {
+  margin: 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 2px;
+  font-size: 14px;
+}

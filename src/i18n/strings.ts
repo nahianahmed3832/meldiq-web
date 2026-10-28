@@ -740,6 +740,7 @@ export const STRINGS = {
   settings_appearance: ["Appearance", "外观", "চেহারা"],
   settings_storage: ["Storage", "存储", "স্টোরেজ"],
   settings_security: ["Privacy & security", "隐私与安全", "গোপনীয়তা ও নিরাপত্তা"],
+  settings_mojo: ["Meldiq Mojo", "Meldiq Mojo", "Meldiq Mojo"],
   settings_about: ["About", "关于", "সম্পর্কে"],
   settings_advanced: ["Advanced", "高级", "উন্নত"],
 } as const satisfies Record<string, readonly [string, string, string]>;

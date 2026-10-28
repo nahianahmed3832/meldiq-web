@@ -5,7 +5,7 @@ import type { AppState, Store } from "../state/store";
 import { IdentityChangedError } from "../sync/outbox";
 import { CallKeyRing, inRoomCall, judgeKey, type KeyVerdict, KeyRequestPacer, newCallKey, verificationCode } from "./callKeys";
 import { backoff, CallFailure, deafenChange, KEY_POLL_MS, KEY_WAIT_MS, PEER_WINDOW_MS, REJOIN_WINDOW_MS, retryable, shouldRing } from "./rules";
-import type { ShareQuality } from "./shareQuality";
+import { allowedShareQualities, clampShareQuality, SHARE_QUALITIES, type ShareQuality } from "./shareQuality";
 import { type CallShareView, MAX_SCREEN_SHARES, mayShare, nextWatched } from "./shares";
 import { type CallUiState, DeviceError, type DeviceKind, idleCall, type MediaDeviceChoice, type MediaEvents, type MediaFactory, type MediaGrant, type MediaSession } from "./types";
 
@@ -257,7 +257,8 @@ export class CallManager {
   }
 
   private async connect(gen: number, session: MediaSession, callId: string, grant: MediaGrant, key: string): Promise<void> {
-    this.patch({ verification: await verificationCode(key, callId), security: "verifying" });
+    // What the server allows this person to share at here (Meldiq Mojo); older servers send nothing: as before.
+    this.patch({ verification: await verificationCode(key, callId), security: "verifying", shareQualities: allowedShareQualities(grant.limits?.screen) });
     this.check(gen);
     try {
       await session.connect(grant, key);
@@ -580,8 +581,12 @@ export class CallManager {
     const session = this.session;
     if (!session) return;
     const prefs = this.opts.callPrefs?.();
-    const share = opts ?? { quality: prefs?.shareQuality ?? "standard", audio: prefs?.shareAudio ?? false };
+    const wanted = opts ?? { quality: prefs?.shareQuality ?? "standard", audio: prefs?.shareAudio ?? false };
+    const share = { ...wanted, quality: clampShareQuality(wanted.quality, this.state.shareQualities) };
     const on = !this.state.screenSharing;
+    if (on && share.quality !== wanted.quality) {
+      this.patch({ notice: `Sharing at ${SHARE_QUALITIES[share.quality].label}: higher quality comes with Meldiq Mojo or this community's Sparks.` });
+    }
     const max = Math.max(2, this.opts.maxScreenShares ?? MAX_SCREEN_SHARES);
     if (on && !mayShare(session.shares(), max)) {
       this.patch({ notice: `Up to ${max} screens can be shared at once. Ask someone to stop sharing first.` });
@@ -598,8 +603,9 @@ export class CallManager {
   }
 
   /** Changes the quality of this browser's share while it runs (also remembered for next time by the caller). */
-  async setShareQuality(quality: ShareQuality): Promise<void> {
+  async setShareQuality(wanted: ShareQuality): Promise<void> {
     const session = this.session;
+    const quality = clampShareQuality(wanted, this.state.shareQualities);
     if (!session || !this.state.screenSharing || this.state.shareQuality === quality) return;
     await session.setShareQuality(quality).catch(() => this.patch({ notice: "The share's quality couldn't be changed." }));
     this.patch({ shareQuality: quality });

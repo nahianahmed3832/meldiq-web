@@ -1,4 +1,4 @@
-import { AtSign, BellOff, Bookmark, CircleDot, LogOut, Monitor, Moon, Settings, Smartphone, Smile, Sun, UserRound } from "lucide-react";
+import { AtSign, BellOff, Bookmark, CircleDot, LogOut, Monitor, Moon, Settings, Smartphone, Smile, Sun, UserRound, Sparkles } from "lucide-react";
 import { useState } from "react";
 import { useOrbit } from "../../application/orbit";
 import { setPrefs, usePrefs } from "../../application/prefs";
@@ -19,6 +19,7 @@ import { mentionCount } from "../selectors";
  */
 export function useProfileMenu(): { open: (anchor: HTMLElement) => void; expanded: boolean; ui: React.ReactNode } {
   const t = useT();
+  const mojoOffered = useOrbit((s) => s.server?.features.includes("mojo") ?? false);
   const me = useOrbit((s) => s.me);
   const myPhoto = useOrbit((s) => (s.me ? s.users[s.me.userId]?.photoRev : null));
   const prefs = usePrefs();
@@ -81,6 +82,8 @@ export function useProfileMenu(): { open: (anchor: HTMLElement) => void; expande
             "separator",
             { label: "Profile", icon: <UserRound size={16} />, onSelect: () => navigate({ section: "settings", settingsPage: "profile" }) },
             { label: "Devices", icon: <Smartphone size={16} />, onSelect: () => navigate({ section: "settings", settingsPage: "devices" }) },
+            // Meldiq Mojo (server docs/MOJO.md): findable here, never pushed at people.
+            ...(mojoOffered ? [{ label: "Meldiq Mojo", icon: <Sparkles size={16} />, onSelect: () => navigate({ section: "settings", settingsPage: "mojo" }) }] : []),
             { label: "Settings", icon: <Settings size={16} />, onSelect: () => navigate({ section: "settings", settingsPage: "notifications" }) },
             "separator",
             { heading: "Theme" },

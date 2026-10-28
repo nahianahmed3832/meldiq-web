@@ -1,4 +1,5 @@
-import { ArrowUpDown, Bell, BellOff, CalendarPlus, CheckCheck, Copy, FolderPlus, IdCard, LogIn, LogOut, PenSquare, Settings2, ShieldCheck, UserPlus } from "lucide-react";
+import { ArrowUpDown, Bell, BellOff, CalendarPlus, CheckCheck, Copy, FolderPlus, IdCard, LogIn, LogOut, PenSquare, Settings2, ShieldCheck, Sparkles, UserPlus } from "lucide-react";
+import { SparkDialog } from "../mojo/SparkDialog";
 import { type ReactNode, useState } from "react";
 import { shallowEqual, useEngine, useOrbit } from "../../application/orbit";
 import { setPrefs, usePrefs } from "../../application/prefs";
@@ -16,7 +17,7 @@ import { ArrangeRailDialog, CommunityNotificationsDialog, LEVEL_NAME } from "./N
 import { categoriesOf, orderedOrgs } from "./panelData";
 import type { CommunityPermissions } from "./useCommunityPermissions";
 
-type MenuDialog = "notifications" | "channel" | "category" | "arrange" | "leave" | null;
+type MenuDialog = "notifications" | "channel" | "category" | "arrange" | "leave" | "sparks" | null;
 
 /** The per-browser "Hide muted channels" switch for a community (android CommunityViewPrefs: this device only). */
 export const hideMutedKey = (orgId: string) => `::hide-muted:${orgId}`;
@@ -55,6 +56,7 @@ export function useCommunityMenu(orgId: string | null, perms: CommunityPermissio
   const categories = useOrbit((s) => categoriesOf(s, orgId));
   const readTargets = useOrbit((s) => markAllReadTargets(s, orgId), shallowEqual);
   const nav = useOrbit((s) => (orgId ? s.nav[orgId] : undefined));
+  const sparkLevel = useOrbit((s) => (orgId ? (s.mojo.orgs[orgId]?.level ?? 0) : 0));
   const prefs = usePrefs();
   const [dialog, setDialog] = useState<MenuDialog>(null);
   if (!org || !orgId) return { entries: [], dialogs: null };
@@ -78,6 +80,8 @@ export function useCommunityMenu(orgId: string | null, perms: CommunityPermissio
     { label: "Mark as read", icon: <CheckCheck size={16} />, disabled: readTargets.length === 0, onSelect: () => void Promise.all(readTargets.map((c) => engine.markRead(c))) },
   ];
   if (perms.canInvite) entries.push("separator", { label: "Invite people", icon: <UserPlus size={16} />, onSelect: () => onDialog({ kind: "addMembers", orgId }) });
+  // Meldiq Spark (server docs/MOJO.md): any member may give one; no permission needed.
+  if (features.includes("mojo")) entries.push({ label: "Meldiq Sparks", icon: <Sparkles size={16} />, hint: sparkLevel ? `Level ${sparkLevel}` : undefined, onSelect: () => setDialog("sparks") });
   entries.push("separator");
   if (preferences) {
     entries.push(
@@ -131,6 +135,7 @@ export function useCommunityMenu(orgId: string | null, perms: CommunityPermissio
       {dialog === "category" && <CategoryNameDialog orgId={org.id} category={null} onClose={close} />}
       {dialog === "arrange" && <ArrangeRailDialog onClose={close} />}
       {dialog === "leave" && <LeaveDialog orgId={org.id} name={org.name} onClose={close} />}
+      {dialog === "sparks" && <SparkDialog orgId={org.id} name={org.name} onClose={close} />}
     </>
   );
   return { entries, dialogs };

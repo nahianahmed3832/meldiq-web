@@ -1,4 +1,6 @@
 import type { CSSProperties } from "react";
+import type { MojoMark } from "../../api/profileSchemas";
+import { MojoBadgeMark } from "../mojo/MojoBadge";
 import type { NameEffect, NameFont, ProfileStyle, WornTag } from "../../api/schemas";
 import { useOrbit } from "../../application/orbit";
 import type { UserLite } from "../../state/store";
@@ -40,6 +42,8 @@ interface StyledNameProps {
   name: string;
   style: ProfileStyle | null | undefined;
   tag?: WornTag | null;
+  /** API 0.54.0: their Mojo badge (GO / PLUS with Meldiq Check), after the tag. */
+  mojo?: MojoMark | null;
   /** A role's colour, used when the person picked no colour of their own. */
   roleColor?: string | null;
   /** The tone class names fall back to (the avatar colour's). */
@@ -48,7 +52,7 @@ interface StyledNameProps {
 }
 
 /** A display name with its style, then the worn tag. Screen readers hear the name, then "tag MC". */
-export function StyledName({ name, style, tag, roleColor, toneClass, className }: StyledNameProps) {
+export function StyledName({ name, style, tag, mojo, roleColor, toneClass, className }: StyledNameProps) {
   const colors = style?.nameColors ?? null;
   const paint = namePaint(colors) ?? (roleColor ? { color: roleColor } : undefined);
   const classes = [
@@ -67,6 +71,7 @@ export function StyledName({ name, style, tag, roleColor, toneClass, className }
         {name}
       </span>
       {tag && <WornTagChip tag={tag} />}
+      {mojo && <MojoBadgeMark badge={mojo.badge} check={mojo.check} />}
     </>
   );
 }
@@ -81,13 +86,13 @@ export function WornTagChip({ tag }: { tag: WornTag }) {
 }
 
 /** What this browser knows of a person's look (from member lists and profiles). */
-export function useUserLook(userId: string): Pick<UserLite, "avatarMedia" | "profileStyle" | "tag"> {
+export function useUserLook(userId: string): Pick<UserLite, "avatarMedia" | "profileStyle" | "tag" | "mojo"> {
   return useOrbit(
     (s) => {
       const u = s.users[userId];
-      return { avatarMedia: u?.avatarMedia ?? null, profileStyle: u?.profileStyle ?? null, tag: u?.tag ?? null };
+      return { avatarMedia: u?.avatarMedia ?? null, profileStyle: u?.profileStyle ?? null, tag: u?.tag ?? null, mojo: u?.mojo ?? null };
     },
-    (a, b) => a.avatarMedia === b.avatarMedia && a.profileStyle === b.profileStyle && a.tag === b.tag,
+    (a, b) => a.avatarMedia === b.avatarMedia && a.profileStyle === b.profileStyle && a.tag === b.tag && a.mojo === b.mojo,
   );
 }
 

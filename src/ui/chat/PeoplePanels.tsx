@@ -185,7 +185,7 @@ function MemberRow({ m, away, color, orgId }: { m: Member; away: boolean; color:
         />
         <span className="lines">
           <span className="member-name">
-            <StyledName name={m.displayName} style={m.profileStyle} tag={m.tag} roleColor={color} toneClass={nameTone(m.avatarColor)} className="ellipsis" />
+            <StyledName name={m.displayName} style={m.profileStyle} tag={m.tag} mojo={m.mojo} roleColor={color} toneClass={nameTone(m.avatarColor)} className="ellipsis" />
           </span>
           {status && <small className="ellipsis">{status}</small>}
         </span>

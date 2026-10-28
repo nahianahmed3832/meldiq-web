@@ -1,5 +1,6 @@
-import { ChevronDown, LogIn, Plus } from "lucide-react";
-import { useOrbit } from "../../application/orbit";
+import { ChevronDown, LogIn, Plus, Sparkles } from "lucide-react";
+import { useEffect } from "react";
+import { useEngine, useOrbit } from "../../application/orbit";
 import { Menu, type MenuEntry, useMenu } from "../components/Overlay";
 import { members } from "../format";
 import type { ShellDialog } from "../shell/Shell";
@@ -15,6 +16,13 @@ export { LeaveDialog } from "./LeaveDialog";
  */
 export function CommunityHeader({ orgId, perms, onDialog }: { orgId: string | null; perms: CommunityPermissions; onDialog: (d: ShellDialog) => void }) {
   const org = useOrbit((s) => s.orgs.find((o) => o.id === orgId) ?? null);
+  const engine = useEngine();
+  const mojo = useOrbit((s) => s.server?.features.includes("mojo") ?? false);
+  const level = useOrbit((s) => (orgId ? (s.mojo.orgs[orgId]?.level ?? null) : null));
+  // The community's Spark level shows by its name (Meldiq Spark, server docs/MOJO.md): read once it's on screen.
+  useEffect(() => {
+    if (mojo && orgId && level === null) void engine.mojo.loadOrg(orgId);
+  }, [engine, mojo, orgId, level]);
   const menu = useMenu();
   const community = useCommunityMenu(orgId, perms, onDialog);
   const entries: MenuEntry[] = org
@@ -39,6 +47,12 @@ export function CommunityHeader({ orgId, perms, onDialog }: { orgId: string | nu
         title={org ? `${org.name} · ${members(org.memberCount)}${org.visibility === "public" ? " · Public" : ""}` : undefined}
       >
         <strong className="ellipsis grow">{org?.name ?? "Meldiq"}</strong>
+        {!!level && (
+          <span className="spark-chip" title={`Spark Level ${level}`} aria-label={`Spark Level ${level}`}>
+            <Sparkles size={11} aria-hidden="true" />
+            {level}
+          </span>
+        )}
         <ChevronDown size={18} className="faint" aria-hidden="true" />
       </button>
       {menu.anchor && <Menu anchor={menu.anchor} point={menu.point} label={org?.name ?? "Community"} onClose={menu.close} entries={entries} />}

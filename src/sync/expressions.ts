@@ -92,6 +92,11 @@ export const zExpression = z.object({
   size: z.number().int().default(0),
   createdBy: z.string().nullish(),
   createdAt: z.number(),
+  /**
+   * API 0.54.0 (Meldiq Mojo): over a limit, kept but not offered for new messages: "slots" beyond the community's Spark
+   * level, "plan" beyond its adder's plan. Sent messages still show it.
+   */
+  locked: z.enum(["slots", "plan"]).nullish(),
 });
 export type Expression = z.infer<typeof zExpression>;
 const zList = z.object({ expressions: z.array(zExpression), limits: z.object({ emoji: z.number(), sticker: z.number() }).default({ emoji: 50, sticker: 20 }) });

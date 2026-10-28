@@ -56,6 +56,8 @@ export type ServerFrame =
   | { t: "meeting.updated" }
   | { t: "meeting.soon"; meetingId: string | null }
   | { t: "reminders.changed" | "reminder.due" }
+  /** API 0.52.0: a plan, a Spark or a gift changed (Meldiq Mojo, server docs/MOJO.md). */
+  | { t: "entitlements.changed" }
   | { t: "prefs.updated"; workspaceId: string }
   | { t: "org.deleted"; orgId: string }
   | { t: "devices.changed"; userId: string }
@@ -80,6 +82,7 @@ export const HANDLED_FRAMES: ReadonlySet<string> = new Set<ServerFrame["t"]>([
   "meeting.soon",
   "reminders.changed",
   "reminder.due",
+  "entitlements.changed",
   "prefs.updated",
   "org.deleted",
   "devices.changed",
@@ -107,6 +110,7 @@ export function parseFrame(f: Frame): ServerFrame | null {
     case "reminders.changed":
     case "reminder.due":
     case "queue.drained":
+    case "entitlements.changed":
       return { t };
     case "queue":
       return { t, items: Array.isArray(f.items) ? (f.items as unknown[]) : [], backlog: f.backlog === true };

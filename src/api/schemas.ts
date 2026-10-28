@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { openEnum } from "./enums";
-import { zAboutMe, zAccent, zAvatarMedia, zBadges, zProfileBanner, zProfileLinks, zProfileStyle, zWornTag } from "./profileSchemas";
+import { zAboutMe, zAccent, zAvatarMedia, zBadges, zMojoMark, zProfileBanner, zProfileLinks, zProfileStyle, zWornTag } from "./profileSchemas";
 
 export * from "./profileSchemas";
 
@@ -49,6 +49,8 @@ export const zMember = z.object({
   avatarMedia: zAvatarMedia,
   profileStyle: zProfileStyle,
   tag: zWornTag,
+  /** API 0.54.0: the Mojo badge they show (server docs/MOJO.md). */
+  mojo: zMojoMark.optional(),
 });
 export type Member = z.infer<typeof zMember>;
 
@@ -242,6 +244,7 @@ export const zProfile = z.object({
   profileStyle: zProfileStyle,
   /** API 0.46.0: the community tag they wear by their name, About me, links and badges. */
   tag: zWornTag,
+  mojo: zMojoMark.optional(),
   aboutMe: zAboutMe,
   links: zProfileLinks,
   badges: zBadges,
@@ -418,7 +421,13 @@ export type Call = z.infer<typeof zCall>;
 /** What `POST /v1/calls` and `POST /v1/calls/:id/join` return: the call and a room-scoped media pass. */
 export const zCallGrant = z.object({
   call: zCall,
-  media: z.object({ url: z.string().max(2048), token: z.string().max(8192), room: z.string().max(128) }),
+  media: z.object({
+    url: z.string().max(2048),
+    token: z.string().max(8192),
+    room: z.string().max(128),
+    /** API 0.54.0 (Meldiq Mojo): screen-share ceilings and the voice bitrate ceiling for this person here. */
+    limits: z.object({ screen: z.array(z.object({ id: z.string(), width: z.number(), height: z.number(), fps: z.number() })).max(10), voiceKbps: z.number().int().min(8).max(510) }).nullish(),
+  }),
   joinedExisting: z.boolean().optional(),
 });
 export const zCallList = z.object({ calls: z.array(zCall).max(500) });

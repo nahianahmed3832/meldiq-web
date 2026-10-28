@@ -84,3 +84,11 @@ export const zBadges = z
   .nullish()
   .catch(null)
   .transform((v) => (v ?? []).filter((b): b is "bug-hunter" => b === "bug-hunter"));
+
+/** API 0.54.0: the Mojo badge someone shows (server docs/MOJO.md); "check" is Meldiq Check, a Plus perk, not verification. */
+export const zMojoMark = z
+  .object({ badge: z.enum(["go", "plus"]), check: z.boolean() })
+  .nullish()
+  .catch(null)
+  .transform((v) => v ?? null);
+export type MojoMark = NonNullable<z.infer<typeof zMojoMark>>;

@@ -20,6 +20,7 @@ const req = (id: string, at: number) => ({
     avatarMedia: null,
     profileStyle: null,
     tag: null,
+    mojo: null,
   },
   at,
 });

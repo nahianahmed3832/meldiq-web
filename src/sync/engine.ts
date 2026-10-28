@@ -21,6 +21,7 @@ import type { LocalStore } from "../store/db";
 import type { EngineContext } from "./context";
 import { Directory } from "./directory";
 import { restoreHistory } from "./historySync";
+import { MojoSync } from "./mojo";
 import { HistoryUploader } from "./historyUpload";
 import { canWriteHistory, deriveHistoryKeys } from "../crypto/history";
 import type { HistoryBackupState } from "../state/store";
@@ -95,6 +96,8 @@ export class Engine implements EngineContext {
   readonly nav: NavSync;
   /** Server reminders (Later › Reminders), sealed with this browser's reminder key. */
   readonly reminders: ReminderSync;
+  /** Meldiq Mojo: plans, Sparks, gifts and badges (server docs/MOJO.md). */
+  readonly mojo: MojoSync;
   /** Experiments and content-free analytics counts, silent unless the server turns them on (src/sync/signals.ts). */
   readonly signals: Signals;
   /** Call history lines and the recent-call log. */
@@ -206,6 +209,11 @@ export class Engine implements EngineContext {
       publish: (reminders) => this.set((s) => ({ ...s, reminders })),
       show: (r) => this.showReminder(r),
     });
+    this.mojo = new MojoSync({
+      json: (method, path, schema, init) => this.api.json(method, path, schema, init),
+      publish: (update) => this.set((s) => ({ ...s, mojo: update(s.mojo) })),
+      get: () => this.state.get().mojo,
+    });
     this.community = new CommunitySync({
       json: (method, path, schema, init) => this.api.json(method, path, schema, init),
       features: () => this.state.get().server?.features ?? [],
@@ -263,6 +271,7 @@ export class Engine implements EngineContext {
     }
     this.realtime.start();
     void this.refreshAll().then(async () => {
+      void this.mojo.refresh();
       await this.signals.refresh();
       this.signals.track("app.opened");
     });
@@ -470,6 +479,7 @@ export class Engine implements EngineContext {
           avatarMedia: u.avatarMedia,
           profileStyle: u.profileStyle,
           tag: u.tag,
+          mojo: u.mojo ?? null,
         };
         const calls: Record<string, Call> = {};
         for (const c of convs.conversations)
@@ -629,6 +639,10 @@ export class Engine implements EngineContext {
       case "reminders.changed":
       case "reminder.due":
         await this.reminders.refresh();
+        return;
+      case "entitlements.changed":
+        // A plan, a Spark or a gift changed (here or on another device): read Mojo again.
+        await this.mojo.refresh();
         return;
       case "prefs.updated":
         await this.nav.refresh([f.workspaceId]);
@@ -1105,5 +1119,7 @@ function toUser(m: Member, prev?: UserLite): UserLite {
     avatarMedia: m.avatarMedia ?? prev?.avatarMedia ?? null,
     profileStyle: m.profileStyle ?? prev?.profileStyle ?? null,
     tag: m.tag ?? prev?.tag ?? null,
+    // API 0.54.0: no badge in the list means none (hidden or no plan): never kept from before.
+    mojo: m.mojo ?? null,
   };
 }

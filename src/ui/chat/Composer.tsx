@@ -1,3 +1,6 @@
+import { CharLimitNote, overCharLimit } from "../mojo/CharLimit";
+import { useMojoLimits, useUploadLimit } from "../mojo/useMojoLimits";
+import { size } from "../mojo/mojoFormat";
 import { AtSign, BarChart3, FileUp, Lock, MapPin, Mic, Paperclip, Plus, SendHorizontal, UserRound, X } from "lucide-react";
 import { useExpressions } from "../community/CustomEmoji";
 import { forSending, refOf } from "../../sync/expressions";
@@ -44,6 +47,8 @@ interface ComposerProps {
 export function Composer(props: ComposerProps) {
   const { conversation: c } = props;
   const engine = useEngine();
+  const planUploadLimit = useUploadLimit(c.type === "CHANNEL" ? c.orgId : null);
+  const charLimit = useMojoLimits()?.messageChars ?? null;
   const prefs = usePrefs();
   const t = useT();
   const [text, setText] = useState("");
@@ -75,7 +80,7 @@ export function Composer(props: ComposerProps) {
   const canRecord = !props.threadRoot && voiceMime() !== null;
   const draftTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
   // Batch B9: a community's own emoji and stickers in its channels; the ones picked for this message by name.
-  const communityEmoji = useExpressions(c.type === "CHANNEL" ? c.orgId : null);
+  const communityEmoji = useExpressions(c.type === "CHANNEL" ? c.orgId : null, true);
   const picked = useRef(new Map<string, CustomEmojiRef>());
   // Batch B3 slowmode: when this person may post next (the server's answer, or one interval after their last message).
   const slowed = c.type === "CHANNEL" && c.slowmodeSec > 0 && !c.slowmodeExempt;
@@ -121,12 +126,21 @@ export function Composer(props: ComposerProps) {
 
   const addFiles = useCallback(
     (list: File[]) => {
-      const limit = fileLimit(engine.state.get().server);
+      const serverLimit = fileLimit(engine.state.get().server);
+      // Meldiq Mojo (server docs/MOJO.md): the person's plan, or the community's Sparks, may set a lower limit.
+      const limit = planUploadLimit === null ? serverLimit : Math.min(serverLimit, planUploadLimit);
       const tooBig = list.find((f) => f.size > limit);
-      if (tooBig) engine.notice("error", `"${tooBig.name}" is larger than this server accepts (${Math.floor(limit / (1024 * 1024))} MB per file).`);
+      if (tooBig) {
+        engine.notice(
+          "error",
+          planUploadLimit !== null && limit === planUploadLimit
+            ? `"${tooBig.name}" is larger than ${size(limit)}, the limit on your plan here. Mojo raises it, and so do a community's Sparks.`
+            : `"${tooBig.name}" is larger than this server accepts (${Math.floor(limit / (1024 * 1024))} MB per file).`,
+        );
+      }
       setFiles((cur) => [...cur, ...list.filter((f) => f.size <= limit && f.size > 0)].slice(0, MAX_FILES_PER_MESSAGE));
     },
-    [engine],
+    [engine, planUploadLimit],
   );
 
   const onChange = (value: string) => {
@@ -164,6 +178,8 @@ export function Composer(props: ComposerProps) {
   const send = async () => {
     const body = text.trim();
     if ((!body && !files.length) || busy) return;
+    // Over the plan's characters (server docs/MOJO.md): the note under the box says so; nothing is cut off.
+    if (overCharLimit(body, charLimit)) return;
     clearTimeout(draftTimer.current); // before anything async: a pending draft save must not bring the text back
     const opts = { replyTo: props.replyTo?.id, threadRoot: props.threadRoot };
     // The box empties at once (the message shows as Sending), so whatever is typed while it encrypts and goes out
@@ -426,6 +442,7 @@ export function Composer(props: ComposerProps) {
                 </button>
               )}
             </div>
+            <CharLimitNote text={text} limit={charLimit} />
             {busy && (
               <div className="composer-status" id={`composer-status-${c.id}`} aria-live="polite">
                 <span className="grow">{busy}</span>

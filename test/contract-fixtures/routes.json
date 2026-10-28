@@ -1,5 +1,5 @@
 {
-  "version": "0.51.1",
+  "version": "0.54.0",
   "routes": [
     {
       "method": "GET",
@@ -1012,6 +1012,82 @@
     {
       "method": "GET",
       "path": "/v1/federation/resolve"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/billing/plans"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/billing/entitlements"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/billing/account"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/billing/orgs/{orgId}"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/billing/checkout"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/billing/portal"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/billing/sync"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/billing/referral"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/billing/referral/claim"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/mojo/catalog"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/mojo/me"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/mojo/sparks"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/mojo/sparks/{id}/move"
+    },
+    {
+      "method": "DELETE",
+      "path": "/v2/mojo/sparks/{id}"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/mojo/sparks/checkout"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/mojo/gifts"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/mojo/gifts/{id}/redeem"
+    },
+    {
+      "method": "PUT",
+      "path": "/v2/mojo/badge"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/orgs/{orgId}/sparks"
     }
   ],
   "errors": {
@@ -1050,6 +1126,21 @@
       400
     ],
     "billing_unavailable": [
+      409
+    ],
+    "no_sparks": [
+      409
+    ],
+    "no_free_sparks": [
+      409
+    ],
+    "message_too_long": [
+      413
+    ],
+    "upload_limit": [
+      413
+    ],
+    "custom_items_limit": [
       409
     ],
     "bad_signature": [
@@ -1320,6 +1411,9 @@
     ],
     "owner_only": [
       400
+    ],
+    "subscription_active": [
+      409
     ],
     "owns_workspaces": [
       409

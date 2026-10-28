@@ -1,4 +1,6 @@
 import { NO_REMINDERS, type RemindersState } from "../sync/reminders";
+import { initialMojo, type MojoState } from "../sync/mojo";
+import type { MojoMark } from "../api/profileSchemas";
 import type { Call, Conversation, Org, ServerInfo } from "../api/schemas";
 import { type CallUiState, idleCall } from "../call/types";
 import type { CallLogItem, ConversationLocal, PinnedIdentity, StoredMessage } from "../model/types";
@@ -66,6 +68,8 @@ export interface UserLite {
   avatarMedia?: AvatarMedia | null;
   profileStyle?: ProfileStyle | null;
   tag?: WornTag | null;
+  /** API 0.54.0: the Mojo badge they show (server docs/MOJO.md). */
+  mojo?: MojoMark | null;
 }
 type AvatarMedia = NonNullable<z.infer<typeof zAvatarMedia>>;
 
@@ -119,6 +123,8 @@ export interface AppState {
   call: CallUiState;
   identityAlerts: PinnedIdentity[];
   history: HistoryState;
+  /** Meldiq Mojo: plans, perks, Sparks and gifts (sync/mojo.ts). */
+  mojo: MojoState;
   notices: Notice[];
   /** Personal navigation preferences by workspace ("personal" or an organisation id), with unsent changes applied. */
   nav: Record<string, NavPrefs>;
@@ -166,6 +172,7 @@ export const initialState: AppState = {
   connectionsRev: 0,
   profilesRev: 0,
   history: { status: "idle", restored: 0, unreadable: 0, error: null, backup: { mode: "off", pending: 0, lastUploadAt: null, error: null } },
+  mojo: initialMojo,
   notices: [],
 };
 

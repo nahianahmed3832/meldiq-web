@@ -272,7 +272,7 @@ function FriendRow(p: {
       <LookAvatar userId={p.p.id} name={p.p.displayName} colorIndex={p.p.avatarColor} photoRev={photo} size={36} online={p.online} />
       <span className="lines grow">
         <strong className="ellipsis">
-          <StyledName name={p.p.displayName} style={look.profileStyle} tag={look.tag} className="ellipsis" />
+          <StyledName name={p.p.displayName} style={look.profileStyle} tag={look.tag} mojo={look.mojo} className="ellipsis" />
           {p.p.username && <small className="friend-handle"> @{p.p.username}</small>}
         </strong>
         <small className="ellipsis">{p.sub ?? (p.p.statusText || (p.online ? "Online" : "Offline"))}</small>

@@ -1,3 +1,5 @@
+import { CharLimitNote, overCharLimit } from "../mojo/CharLimit";
+import { useMojoLimits } from "../mojo/useMojoLimits";
 import {
   AlarmClock,
   Bookmark,
@@ -601,7 +603,11 @@ function Status({ m, onRetry, onReview }: { m: StoredMessage; onRetry: () => voi
 function EditBox({ m, onDone }: { m: StoredMessage; onDone: () => void }) {
   const engine = useEngine();
   const [text, setText] = useState(m.text);
+  // Edits get the same room as new messages (server docs/MOJO.md).
+  const limit = useMojoLimits()?.messageChars ?? null;
+  const tooLong = overCharLimit(text, limit);
   const save = () => {
+    if (tooLong) return;
     if (text.trim() && text.trim() !== m.text) void engine.edit(m, text);
     onDone();
   };
@@ -621,6 +627,7 @@ function EditBox({ m, onDone }: { m: StoredMessage; onDone: () => void }) {
           } else if (e.key === "Escape") onDone();
         }}
       />
+      <CharLimitNote text={text} limit={limit} />
       <div className="row">
         <span className="faint" style={{ fontSize: 12 }}>
           Enter to save · Esc to cancel
@@ -629,7 +636,7 @@ function EditBox({ m, onDone }: { m: StoredMessage; onDone: () => void }) {
         <button className="btn btn-secondary btn-sm" onClick={onDone}>
           Cancel
         </button>
-        <button className="btn btn-primary btn-sm" onClick={save} disabled={!text.trim()}>
+        <button className="btn btn-primary btn-sm" onClick={save} disabled={!text.trim() || tooLong}>
           Save
         </button>
       </div>
@@ -669,5 +676,5 @@ function ForwardedLine({ origin }: { origin: RichContent["origin"] }) {
 /** The author's name with their name style and tag (API 0.46.0), as this browser knows them. */
 function SenderName({ userId, name, toneClass }: { userId: string; name: string; toneClass: string }) {
   const look = useUserLook(userId);
-  return <StyledName name={name} style={look.profileStyle} tag={look.tag} toneClass={toneClass} className="ellipsis" />;
+  return <StyledName name={name} style={look.profileStyle} tag={look.tag} mojo={look.mojo} toneClass={toneClass} className="ellipsis" />;
 }

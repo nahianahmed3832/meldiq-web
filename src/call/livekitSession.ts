@@ -119,7 +119,13 @@ export class LiveKitSession implements MediaSession {
       dynacast: true,
       e2ee: { keyProvider, worker },
       // Microphones go first when the connection is short (screen and camera video give way before speech does).
-      publishDefaults: { simulcast: true, videoCodec: "vp8", dtx: true, audioPreset: { ...AudioPresets.music, priority: "high" } },
+      // The voice bitrate ceiling comes from the community's Spark level (Meldiq Mojo); LiveKit's music preset otherwise.
+      publishDefaults: {
+        simulcast: true,
+        videoCodec: "vp8",
+        dtx: true,
+        audioPreset: { ...AudioPresets.music, ...(grant.limits ? { maxBitrate: grant.limits.voiceKbps * 1000 } : {}), priority: "high" },
+      },
       videoCaptureDefaults: CAMERA,
     });
     this.room = room;

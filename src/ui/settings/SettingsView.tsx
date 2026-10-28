@@ -15,6 +15,7 @@ import {
   Shield,
   SlidersHorizontal,
   Smartphone,
+  Sparkles,
   UserRound,
 } from "lucide-react";
 import { ShortcutsPage } from "./ShortcutsPage";
@@ -34,6 +35,7 @@ import { StoragePage } from "./StoragePage";
 import { type StringKey, useT } from "../../i18n";
 import { YouCard } from "./YouCard";
 import { InstallButton } from "./InstallButton";
+import { MojoPage } from "../mojo/MojoPage";
 
 type PageEntry = { key: SettingsPage; label: StringKey; icon: React.ReactNode };
 
@@ -43,6 +45,8 @@ const USER_PAGES: PageEntry[] = [
   { key: "profile", label: "settings_profile", icon: <UserRound size={17} /> },
   { key: "security", label: "settings_security", icon: <Shield size={17} /> },
   { key: "devices", label: "settings_devices", icon: <Smartphone size={17} /> },
+  // Meldiq Mojo (server docs/MOJO.md): with the account, not pushed anywhere else.
+  { key: "mojo", label: "settings_mojo", icon: <Sparkles size={17} /> },
 ];
 const APP_PAGES: PageEntry[] = [
   { key: "appearance", label: "settings_appearance", icon: <Palette size={17} /> },
@@ -129,6 +133,7 @@ export function SettingsView({ page, onSignedOut }: { page: SettingsPage; onSign
             {page === "shortcuts" && <ShortcutsPage />}
             {page === "health" && <ServiceHealthPage />}
             {page === "usage" && <AdminUsagePage />}
+            {page === "mojo" && <MojoPage />}
           </div>
         </div>
       </div>

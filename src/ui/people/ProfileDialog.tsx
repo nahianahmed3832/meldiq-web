@@ -239,7 +239,7 @@ export function ProfileDialog({ userId, fallbackName, orgId = null, near = null,
         ) : (
           <>
             <h2 className="profile-pop-name">
-              <StyledName name={profile.displayName} style={profile.profileStyle} tag={profile.tag} className="ellipsis" />
+              <StyledName name={profile.displayName} style={profile.profileStyle} tag={profile.tag} mojo={profile.mojo} className="ellipsis" />
             </h2>
             <p className="profile-pop-handle">
               @{profile.username}
