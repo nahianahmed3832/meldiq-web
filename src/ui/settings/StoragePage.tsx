@@ -76,7 +76,8 @@ export function StoragePage() {
         </div>
       </div>
       <p className="faint" style={{ margin: 0, fontSize: 12.5 }}>
-        Files you open are decrypted in memory and not kept. Signing this browser out (Privacy &amp; security) erases everything here.
+        Files you open are decrypted in memory and not kept. Signing this browser out (Privacy &amp; security) removes everything here; your chats stay backed up on your server and come back when you
+        sign in.
       </p>
     </>
   );

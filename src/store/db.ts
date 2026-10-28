@@ -45,7 +45,11 @@ export const DB_NAME = "orbit-web";
 const VERSION = 2;
 
 /** The repository the sync engine reads and writes; one implementation over IndexedDB. */
+export type MessageWriteListener = (ids: string[]) => void;
+
 export class LocalStore {
+  private readonly writeListeners = new Set<MessageWriteListener>();
+
   private constructor(
     private readonly db: IDBPDatabase<OrbitDB>,
     readonly name: string,
@@ -135,13 +139,28 @@ export class LocalStore {
     return (await this.db.get("messages", id)) ?? null;
   }
 
-  async putMessage(m: StoredMessage): Promise<void> {
-    await this.db.put("messages", m);
+  /**
+   * Hears the ids of messages written here, so the history uploader can back them up (historyUpload.ts). Writes of
+   * messages restored from the history ([fromHistory]) aren't reported: the server already has them.
+   */
+  onMessagesWritten(listener: MessageWriteListener): () => void {
+    this.writeListeners.add(listener);
+    return () => this.writeListeners.delete(listener);
   }
 
-  async putMessages(list: StoredMessage[]): Promise<void> {
+  private written(ids: string[]): void {
+    if (ids.length) for (const l of this.writeListeners) l(ids);
+  }
+
+  async putMessage(m: StoredMessage): Promise<void> {
+    await this.db.put("messages", m);
+    this.written([m.id]);
+  }
+
+  async putMessages(list: StoredMessage[], opts: { fromHistory?: boolean } = {}): Promise<void> {
     const tx = this.db.transaction("messages", "readwrite");
     await Promise.all([...list.map((m) => tx.store.put(m)), tx.done]);
+    if (!opts.fromHistory) this.written(list.map((m) => m.id));
   }
 
   /** Adds [m] unless a message with its id exists. True when it was added. */
@@ -150,7 +169,13 @@ export class LocalStore {
     const exists = await tx.store.get(m.id);
     if (!exists) await tx.store.put(m);
     await tx.done;
+    if (!exists) this.written([m.id]);
     return !exists;
+  }
+
+  /** Every message id this browser keeps (the history uploader's first full backup). */
+  async messageIds(): Promise<string[]> {
+    return (await this.db.getAllKeys("messages")).map(String);
   }
 
   /** The newest [limit] messages of a conversation before [beforeSortTs], oldest first. */

@@ -79,6 +79,17 @@ export interface HistoryState {
   restored: number;
   unreadable: number;
   error: string | null;
+  backup: HistoryBackupState;
+}
+
+/** This browser's own backup of its chats into the history (sync/historyUpload.ts). */
+export interface HistoryBackupState {
+  /** "on": it backs up; "needs-keys": set up before 2026-10-28, it needs the password once; "off": no history here. */
+  mode: "on" | "needs-keys" | "off";
+  /** Messages waiting to be backed up. */
+  pending: number;
+  lastUploadAt: number | null;
+  error: string | null;
 }
 
 export interface Notice {
@@ -154,7 +165,7 @@ export const initialState: AppState = {
   moderationRev: 0,
   connectionsRev: 0,
   profilesRev: 0,
-  history: { status: "idle", restored: 0, unreadable: 0, error: null },
+  history: { status: "idle", restored: 0, unreadable: 0, error: null, backup: { mode: "off", pending: 0, lastUploadAt: null, error: null } },
   notices: [],
 };
 

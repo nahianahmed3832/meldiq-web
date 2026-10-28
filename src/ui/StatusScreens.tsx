@@ -61,9 +61,11 @@ export function ElsewhereScreen({ onUseHere }: { onUseHere: () => void }) {
 }
 
 const REASONS: Record<string, string> = {
-  device_revoked: "This browser was removed from your account, from another of your devices. Its keys and the messages it kept have been erased.",
+  device_revoked:
+    "This browser was removed from your account, from another of your devices, so its keys and its copy of your chats were removed from this computer. Sign in again and your backed-up chats come back.",
   account_disabled: "Your account is disabled on this server. This browser's keys and messages have been erased.",
-  unknown_device: "The server no longer knows this browser (it may have been reset). Its keys and the messages it kept have been erased.",
+  unknown_device:
+    "The server no longer knows this browser (it may have been reset), so its keys and its copy of your chats were removed from this computer. Sign in again and your backed-up chats come back.",
 };
 
 export function RevokedScreen({ reason, message, onLinkAgain }: { reason: string | null; message?: string; onLinkAgain: () => void }) {

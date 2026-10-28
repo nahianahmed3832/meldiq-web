@@ -25,6 +25,11 @@ export function useReducedMotion(): boolean {
   return reduced;
 }
 
+/** How thick a frame is around an avatar of [size]: thin on list rows, up to 6 px on a profile. It sits wholly outside the face. */
+export function decorationWidth(size: number): number {
+  return Math.min(6, Math.max(2, Math.round(size * 0.08)));
+}
+
 interface StyledAvatarProps {
   userId: string;
   name: string;
@@ -51,6 +56,8 @@ export function StyledAvatar(p: StyledAvatarProps) {
   const animate = !!url && !reduced;
   return (
     <span className="styled-avatar" style={{ width: p.size, height: p.size }}>
+      {/* First, so the avatar and its presence dot are drawn over the frame (2026-10-28: the frame cut through the dot). */}
+      {p.decoration && <span className={`deco deco-${p.decoration}`} style={{ "--deco-w": `${decorationWidth(p.size)}px` } as React.CSSProperties} aria-hidden="true" />}
       {animate ? (
         <span className="avatar-media" style={{ width: p.size, height: p.size }}>
           {video ? <video src={url} poster={poster ?? undefined} muted loop autoPlay playsInline disablePictureInPicture aria-hidden="true" /> : <img src={url} alt="" draggable={false} />}
@@ -62,7 +69,6 @@ export function StyledAvatar(p: StyledAvatarProps) {
       ) : (
         <UserAvatar userId={p.userId} name={p.name} colorIndex={p.colorIndex} photoRev={p.photoRev} size={p.size} online={p.online} presence={p.presence} decorative />
       )}
-      {p.decoration && <span className={`deco deco-${p.decoration}`} aria-hidden="true" />}
     </span>
   );
 }

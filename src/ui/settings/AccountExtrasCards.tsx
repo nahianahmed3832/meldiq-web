@@ -5,7 +5,7 @@ import { AccountApi } from "../../auth/accountApi";
 import { useEngine, useOrbit } from "../../application/orbit";
 import { useRoute } from "../../application/router";
 import { AccountSafetyApi, BUG_STATUS_LABEL } from "../../sync/accountSafety";
-import { signOut } from "../../sync/account";
+import { backUpBeforeSignOut, BackupUnsent, signOut } from "../../sync/account";
 import { buildDataExport } from "../../sync/dataExport";
 import { relative } from "../format";
 import { Dialog } from "../components/Overlay";
@@ -167,18 +167,26 @@ export function LogOutEverywhereCard({ onSignedOut }: { onSignedOut: () => void 
   const [asking, setAsking] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  /** Chats couldn't be backed up and the person was told: the next try goes on without them. */
+  const [skipBackup, setSkipBackup] = useState(false);
   const go = () => {
     setBusy(true);
     setError(null);
     const accounts = new AccountApi(engine.api);
-    accounts
-      .sessions()
+    // This browser's chats go into the history first, while its session still works.
+    (skipBackup ? Promise.resolve() : backUpBeforeSignOut(engine))
+      .then(() => accounts.sessions())
       .then(async (list) => {
         for (const s of list.filter((x) => !x.current)) await accounts.endSession(s.id);
-        await signOut(engine, true);
+        await signOut(engine, true, true);
         onSignedOut();
       })
-      .catch((e: unknown) => setError(e instanceof ApiError ? e.message : "Couldn't sign out everywhere. Try again."))
+      .catch((e: unknown) => {
+        if (e instanceof BackupUnsent) {
+          setSkipBackup(true);
+          setError(`${e.message} Chats that only this browser has won't come back here if you log out now.`);
+        } else setError(e instanceof ApiError ? e.message : "Couldn't sign out everywhere. Try again.");
+      })
       .finally(() => setBusy(false));
   };
   return (
@@ -202,15 +210,15 @@ export function LogOutEverywhereCard({ onSignedOut }: { onSignedOut: () => void 
                 Cancel
               </button>
               <button className="btn btn-danger" disabled={busy} onClick={go}>
-                {busy ? "Signing out…" : "Log out everywhere"}
+                {busy ? "Signing out…" : skipBackup ? "Log out anyway" : "Log out everywhere"}
               </button>
             </>
           }
         >
           <div className="dialog-body">
             <p style={{ margin: 0 }}>
-              Every phone and browser signed in to your account is signed out, then this one too, and this browser erases its copy. To read your messages again on a device, you sign in there and
-              unlock your history (key backup, recovery key or another device).
+              Every phone and browser signed in to your account is signed out, then this one too. This browser backs its chats up first. When you sign in again on a device and unlock your keys (key
+              backup, recovery key or another device), your chats come back.
             </p>
             {error && (
               <div className="banner danger" role="alert">

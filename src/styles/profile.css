@@ -20,14 +20,17 @@
   display: block;
 }
 
-/* Frames: a ring just outside the avatar, never over the face (pointer-events off, decorative). */
+/* Frames: a ring just outside the avatar, never over the face (pointer-events off, decorative). --deco-w is the ring's
+   thickness (set for the avatar's size, ProfileStyle.tsx); the box grows by exactly that much, so the ring is all outside.
+   Drawn before the avatar, so the presence dot sits over it. */
 .deco {
+  --deco-w: 4px;
   position: absolute;
-  inset: -7%;
+  inset: calc(-1 * var(--deco-w));
   border-radius: 50%;
   pointer-events: none;
-  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 6px), #000 calc(100% - 5px));
-  mask: radial-gradient(farthest-side, transparent calc(100% - 6px), #000 calc(100% - 5px));
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - var(--deco-w)), #000 calc(100% - var(--deco-w) + 0.5px));
+  mask: radial-gradient(farthest-side, transparent calc(100% - var(--deco-w)), #000 calc(100% - var(--deco-w) + 0.5px));
 }
 .deco-aurora {
   background: conic-gradient(from 0deg, #22d3ee, #6366f1, #a855f7, #ec4899, #22d3ee);
@@ -62,7 +65,7 @@
   mask:
     linear-gradient(#000 0 0) content-box exclude,
     linear-gradient(#000 0 0);
-  padding: 5px;
+  padding: var(--deco-w);
 }
 @keyframes deco-spin {
   to {

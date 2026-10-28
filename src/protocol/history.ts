@@ -137,3 +137,43 @@ export function mergeHistory(local: StoredMessage | null, remote: StoredMessage)
   if ((remote.editedAt ?? 0) > (local.editedAt ?? 0) && !local.deleted) return { ...local, text: remote.text, editedAt: remote.editedAt, rich: remote.rich };
   return null;
 }
+
+/** Kept in the history once settled (android HistoryCodec.uploadable): not while sending, failed or held, never undecryptable. */
+export function historyUploadable(m: StoredMessage): boolean {
+  return m.kind !== "undecryptable" && m.status !== "SENDING" && m.status !== "FAILED" && m.status !== "HELD";
+}
+
+/**
+ * The history item for [m], as the phone writes its own row (android `HistoryRecord(message = …)`): lists and maps as JSON
+ * strings, nulls left out (kotlinx `explicitNulls = false`), no local error text. Phones and browsers read each other's.
+ */
+export function encodeHistoryRecord(m: StoredMessage): string {
+  const mentions = m.mentionAll ? [...m.mentions, EVERYONE_MARK] : m.mentions;
+  const message = {
+    id: m.id,
+    conversationId: m.conversationId,
+    senderUserId: m.senderUserId,
+    senderDeviceId: m.senderDeviceId,
+    outgoing: m.outgoing,
+    kind: m.kind,
+    text: m.text,
+    ...(m.replyToId ? { replyToId: m.replyToId } : {}),
+    ...(m.threadRootId ? { threadRootId: m.threadRootId } : {}),
+    mentionsJson: JSON.stringify(mentions),
+    attachmentsJson: JSON.stringify(m.attachments),
+    sentAt: m.sentAt,
+    ...(m.serverTs !== null ? { serverTs: m.serverTs } : {}),
+    sortTs: m.sortTs,
+    status: m.status,
+    ...(m.editedAt !== null ? { editedAt: m.editedAt } : {}),
+    deleted: m.deleted,
+    pinned: m.pinned,
+    reactionsJson: JSON.stringify(m.reactions),
+    readByJson: JSON.stringify(m.readBy),
+    deliveredToJson: JSON.stringify(m.deliveredTo),
+    ...(m.call ? { callJson: JSON.stringify(m.call) } : {}),
+    ...(m.rich ? { richJson: JSON.stringify(m.rich) } : {}),
+    forwarded: m.forwarded,
+  };
+  return JSON.stringify({ v: 1, message });
+}

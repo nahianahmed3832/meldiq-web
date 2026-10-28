@@ -21,6 +21,9 @@ import type { LocalStore } from "../store/db";
 import type { EngineContext } from "./context";
 import { Directory } from "./directory";
 import { restoreHistory } from "./historySync";
+import { HistoryUploader } from "./historyUpload";
+import { canWriteHistory, deriveHistoryKeys } from "../crypto/history";
+import type { HistoryBackupState } from "../state/store";
 import { Outbox, sealAndPost } from "./outbox";
 import { levelOf, type NavOp, NavSync, PERSONAL, shouldNotify, workspaceOf } from "./navPrefs";
 import { firstShowing, ReminderSync } from "./reminders";
@@ -106,6 +109,8 @@ export class Engine implements EngineContext {
   private viewingId: string | null = null;
   private focused = true;
   private stopped = false;
+  /** Backs this browser's chats up into the account's history, once the history is available and writable here. */
+  private uploader: HistoryUploader | null = null;
   private readTimers = new Map<string, ReturnType<typeof setTimeout>>();
   private lastReadSent = new Map<string, number>();
   private convFetches = new Map<string, Promise<Conversation | null>>();
@@ -272,6 +277,7 @@ export class Engine implements EngineContext {
 
   stop(): void {
     this.stopped = true;
+    this.uploader?.stop();
     if (typeof document !== "undefined") document.removeEventListener("visibilitychange", this.flushSignalsWhenHidden);
     this.calls.stop();
     this.realtime.stop();
@@ -514,16 +520,60 @@ export class Engine implements EngineContext {
     }
   }
 
-  private async runHistory(): Promise<void> {
+  /** Restores what the history has and this browser doesn't ([fromStart]: reads it all again), then backs up what it holds. */
+  async runHistory(fromStart = false): Promise<void> {
     if (!this.device.history) return;
     this.set((s) => ({ ...s, history: { ...s.history, status: "running", error: null } }));
     try {
-      const r = await restoreHistory(this, (p) => this.set((s) => ({ ...s, history: { ...s.history, ...p } })));
-      this.set((s) => ({ ...s, history: { status: "done", ...r, error: null } }));
+      const r = await restoreHistory(this, (p) => this.set((s) => ({ ...s, history: { ...s.history, ...p } })), fromStart);
+      this.set((s) => ({ ...s, history: { ...s.history, status: "done", ...r, error: null } }));
+      await this.startBackup();
     } catch (e) {
       const unsupported = e instanceof ApiError && (e.code === "history_off" || e.status === 404);
       this.set((s) => ({ ...s, history: { ...s.history, status: unsupported ? "unsupported" : "error", error: unsupported ? null : e instanceof ApiError ? e.message : "Couldn't restore history" } }));
+      // A failed download (offline) doesn't stop this browser backing up what it holds.
+      if (!unsupported) await this.startBackup();
     }
+  }
+
+  /** Backs this browser's chats up into the history (historyUpload.ts), or says it needs its keys opened once. */
+  private async startBackup(): Promise<void> {
+    const keys = this.device.history;
+    if (!keys || this.uploader || this.stopped) return;
+    if (!canWriteHistory(keys)) {
+      this.setBackup({ mode: "needs-keys" });
+      return;
+    }
+    this.uploader = new HistoryUploader({
+      api: this.api,
+      store: this.store,
+      keys,
+      keepsFiles: () => this.state.get().server?.features.includes("attachment-keep") ?? false,
+      onState: (b) => this.setBackup(b),
+    });
+    await this.uploader.start();
+  }
+
+  private setBackup(change: Partial<HistoryBackupState>): void {
+    this.set((s) => ({ ...s, history: { ...s.history, backup: { ...s.history.backup, ...change } } }));
+  }
+
+  /** Sends this browser's unsent backup now (before signing out); throws if it couldn't. */
+  async flushBackup(): Promise<void> {
+    await this.uploader?.flush();
+  }
+
+  /**
+   * Browsers set up before 2026-10-28 can read the history but not write it: the identity seed (the recovery key, or the
+   * key backup opened with the password) gives them keys that can, once. The seed must be this account's; it isn't kept.
+   */
+  async unlockHistoryBackup(seed: Uint8Array): Promise<void> {
+    if ((await publicKeyFromSeed(seed)) !== this.record.identityKey) throw new Error("That key belongs to a different Meldiq account.");
+    const history = await deriveHistoryKeys(seed, this.record.userId);
+    this.record = { ...this.record, history, reminders: this.record.reminders ?? (await deriveReminderKey(seed, this.record.userId)) };
+    await this.store.saveDevice(this.record);
+    this.setBackup({ mode: "on", error: null });
+    await this.startBackup();
   }
 
   // ───────────────────────── realtime frames ─────────────────────────

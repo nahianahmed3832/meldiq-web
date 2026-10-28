@@ -89,7 +89,7 @@ export function useProfileMenu(): { open: (anchor: HTMLElement) => void; expande
             { label: "Dark", icon: <Moon size={16} />, checked: prefs.theme === "dark", onSelect: () => setPrefs({ theme: "dark", themeChosen: true }) },
             { label: "Black", icon: <Moon size={16} fill="currentColor" />, checked: prefs.theme === "black", onSelect: () => setPrefs({ theme: "black", themeChosen: true }) },
             "separator",
-            { label: "Sign out of this browser…", icon: <LogOut size={16} />, danger: true, onSelect: () => navigate({ section: "settings", settingsPage: "security" }) },
+            { label: "Sign out…", icon: <LogOut size={16} />, danger: true, onSelect: () => navigate({ section: "settings", settingsPage: "security" }) },
           ]}
         />
       )}

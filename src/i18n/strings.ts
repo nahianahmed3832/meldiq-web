@@ -241,7 +241,7 @@ export const STRINGS = {
   ],
   reauth_other_email: ["Your account uses a different email now?", "你的账户现在使用其他邮箱？", "আপনার অ্যাকাউন্টে এখন অন্য ইমেইল?"],
   reauth_email_now: ["Your account's email now", "你账户现在的邮箱", "আপনার অ্যাকাউন্টের বর্তমান ইমেইল"],
-  reauth_sign_out: ["Sign out and erase this browser", "退出并清除此浏览器", "সাইন আউট করে এই ব্রাউজার মুছুন"],
+  reauth_sign_out: ["Sign out", "退出登录", "সাইন আউট"],
 
   // ── first-run introduction ──
   intro_label: ["Introduction to Meldiq", "Meldiq 简介", "Meldiq পরিচিতি"],

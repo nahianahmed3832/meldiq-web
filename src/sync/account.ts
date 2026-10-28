@@ -109,11 +109,42 @@ export async function revokeDevice(engine: Engine, deviceId: string): Promise<vo
 
 export class SignOutUnconfirmed extends Error {}
 
+/** Some of this browser's chats aren't in the account's history yet; signing out now would lose them here. */
+export class BackupUnsent extends Error {
+  constructor(
+    /** This browser was set up before it could back up (2026-10-28) and needs its keys opened once. */
+    readonly needsKeys: boolean,
+    message: string,
+  ) {
+    super(message);
+  }
+}
+
 /**
- * Removes this browser from the account first (so contacts stop encrypting to it and its queue is deleted), then erases
- * its keys and data (android "Sign out & erase", T1.9). If the server can't confirm, nothing is erased unless [force].
+ * Backs this browser's unsent chats up into the account's encrypted history (2026-10-28, the owner: chats vanished after
+ * signing out; they must come back at every sign-in), so they come back when the account signs in again, here or
+ * anywhere. Throws [BackupUnsent] when it couldn't: signing out then asks first.
  */
-export async function signOut(engine: Engine, force = false): Promise<void> {
+export async function backUpBeforeSignOut(engine: Engine): Promise<void> {
+  const backup = engine.state.get().history.backup;
+  if (backup.mode === "needs-keys") throw new BackupUnsent(true, "This browser was set up before it could back up its chats.");
+  try {
+    await engine.flushBackup();
+  } catch (e) {
+    throw new BackupUnsent(
+      false,
+      e instanceof ApiError && e.isNetwork ? "You're offline, so this browser's newest chats couldn't be backed up." : "This browser's newest chats couldn't be backed up.",
+    );
+  }
+}
+
+/**
+ * Signs this browser out: backs its chats up into the account's history (unless [skipBackup]), removes it from the
+ * account (so contacts stop encrypting to it and its queue is deleted), then removes its keys and its local copy from this
+ * computer (android "Sign out", T1.9). If the server can't confirm the removal, nothing is removed unless [force].
+ */
+export async function signOut(engine: Engine, force = false, skipBackup = false): Promise<void> {
+  if (!skipBackup) await backUpBeforeSignOut(engine);
   engine.setSigningOut(true);
   try {
     await revokeDevice(engine, engine.device.deviceId);

@@ -125,10 +125,11 @@ export function App() {
     setBoot({ s: "signedOut", store: await LocalStore.open() });
   }, []);
 
-  /** From "Sign in again": erases this browser without a session (it can't remove itself from the account first). */
+  /** From "Sign in again": signs this browser out without a session (it can't remove itself from the account first). */
   const eraseAndSignOut = useCallback(
     async (engine: Engine) => {
-      await signOut(engine, true).catch(() => LocalStore.erase(engine.store));
+      // No session, so nothing can be backed up or removed first: the history keeps what other devices sent it.
+      await signOut(engine, true, true).catch(() => LocalStore.erase(engine.store));
       await signedOut();
     },
     [signedOut],
