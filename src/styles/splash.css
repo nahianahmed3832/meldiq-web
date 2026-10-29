@@ -1,7 +1,7 @@
 /*
- * The launch screen (docs/MELDIQ_WEB_LAUNCH.md): Meldling's app icon on the art's own deep navy (the owner's set,
- * 2026-10-29; scripts/render-brand-assets.mjs GROUND) from the first paint, before any script runs. A slow breath only
- * where motion is welcome.
+ * The launch screen (docs/MELDIQ_WEB_LAUNCH.md): the Meldling logo on its own deep teal (brand/meldling.png;
+ * scripts/render-brand-assets.mjs TEAL) from the first paint, before any script runs. A slow breath only where motion is
+ * welcome.
  */
 #splash {
   position: fixed;
@@ -9,7 +9,7 @@
   z-index: 1000;
   display: grid;
   place-items: center;
-  background: #070a24;
+  background: #045349;
   transition: opacity 220ms ease;
 }
 #splash.done {

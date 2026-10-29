@@ -1,13 +1,13 @@
 {
   "name": "Meldiq",
   "short_name": "Meldiq",
-  "description": "End-to-end encrypted community chat.",
+  "description": "Communities, messages, voice and video. Connect. Play. Belong.",
   "id": "/",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
-  "background_color": "#070a24",
-  "theme_color": "#231d62",
+  "background_color": "#045349",
+  "theme_color": "#045349",
   "icons": [
     {
       "src": "/meldling-192.png",

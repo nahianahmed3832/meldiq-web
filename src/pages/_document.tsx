@@ -3,7 +3,7 @@ import { Head, Html, Main, NextScript } from "next/document";
 /**
  * The page every route is served from (a static export, docs/MELDIQ_WEB_NEXTJS.md). Rendered once, at build time, with
  * no data: the launch screen (docs/MELDIQ_WEB_LAUNCH.md) is plain markup so it shows before any script runs, and goes
- * as soon as the app shows something (src/application/splash.ts): Meldling on the art's deep navy. Never hydrated, so the app can remove it.
+ * as soon as the app shows something (src/application/splash.ts): the Meldling logo on its own teal. Never hydrated, so the app can remove it.
  */
 const SPLASH = '<img src="/launch/meldling-launch.png" alt="" width="480" height="480" decoding="async">';
 
