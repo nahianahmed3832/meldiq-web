@@ -199,7 +199,7 @@ export function ImageAttachment({ r }: { r: AttachmentRef }) {
   return (
     <>
       <button className="att-image" onClick={viewer.open} aria-label={`Open image ${r.name}`}>
-        <img src={url} alt={r.name} loading="lazy" />
+        <img src={url} alt={r.name} loading="lazy" data-native-menu />
       </button>
       {viewer.own}
     </>
@@ -232,7 +232,7 @@ function AlbumTile({ r, more, onOpen }: { r: AttachmentRef; more: number; onOpen
   return (
     <button ref={spot} className="album-tile" onClick={onOpen} aria-label={more ? `Open photos, ${more} more` : `Open image ${r.name}`}>
       {url ? (
-        <img src={url} alt="" loading="lazy" />
+        <img src={url} alt="" loading="lazy" data-native-menu />
       ) : error ? (
         <TriangleAlert size={18} />
       ) : autoLoadPhotos ? (
