@@ -75,7 +75,15 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
   // API 0.65.0: the community's rules channel (a book icon, the rules on top, everyone reacts there).
   const rules = useRulesSummary(c?.type === "CHANNEL" ? c.orgId : null);
 
-  const onThread = useCallback((m: StoredMessage) => navigate({ section: route.section, conversationId: id, panel: "thread", threadRoot: m.id }), [id, route.section]);
+  // A thread of a message drawn from the snapshot opens once the server's page has it (engine.whenLive).
+  const onThread = useCallback(
+    (m: StoredMessage) => {
+      const open = () => navigate({ section: route.section, conversationId: id, panel: "thread", threadRoot: m.id });
+      if (!engine.waitsForServer(m)) open();
+      else void engine.whenLive(m).then((x) => x && open());
+    },
+    [engine, id, route.section],
+  );
   const onReview = useCallback(() => {
     const first = engine.state.get().identityAlerts[0];
     if (first) onDialog({ kind: "identity", userId: first.userId });

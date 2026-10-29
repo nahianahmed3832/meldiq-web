@@ -82,6 +82,8 @@ export interface EngineOptions {
   ringtone?: { start(): void; stop(): void };
   /** A system notification for a ringing call while the tab isn't looked at. */
   ringAlert?: (title: string, video: boolean, conversationId: string) => void;
+  /** How long an action on a snapshot message waits for the server's page (LIVE_WAIT_MS; shorter in tests). */
+  liveWaitMs?: number;
   /** Call timing for tests. */
   callTiming?: { keyWaitMs?: number; peerWindowMs?: number; rejoinWindowMs?: number };
   /** Settings › Calls (batches B10, B11): noise reduction, and how this browser shares its screen. */
@@ -89,6 +91,12 @@ export interface EngineOptions {
 }
 
 const PAGE = 60;
+/** How long an action on a snapshot message waits for its conversation's first server page (live()). */
+export const LIVE_WAIT_MS = 5000;
+/** Waits shorter than this show nothing; longer ones mark the message as waiting. */
+export const PENDING_AFTER_MS = 300;
+export const MESSAGE_CHANGED = "That message changed, try again.";
+export const UNREACHABLE = "Couldn't reach Meldiq. Try again in a moment.";
 /** GET /v2/messages/search (API 0.57.0). */
 const zSearchRes = z.object({ messages: z.array(zStoredEvent) });
 /** GET /v2/messages/summary (API 0.57.0). */
@@ -344,7 +352,9 @@ export class Engine implements EngineContext {
       const d = await this.snapshots.restore();
       if (!d) return;
       for (const l of d.local) if (!(await this.store.conversation(l.id))) await this.store.putConversation(l);
+      const drawn = Object.keys(d.messages).filter((id) => !this.state.get().messages[id]);
       this.set((s) => withSnapshot(s, d));
+      for (const id of drawn) this.fromSnapshot.add(id);
     } catch {
       /* nothing kept, or unreadable: the server's answers draw everything, as on a first visit */
     }
@@ -352,6 +362,79 @@ export class Engine implements EngineContext {
 
   /** Whether this session counted today's visit for points (API 0.65.0). */
   private checkedIn = false;
+
+  /** Conversations whose messages on screen are still the snapshot's: their first server page hasn't replaced them. */
+  private readonly fromSnapshot = new Set<string>();
+  /** Each conversation's first server page while it loads (one load, however many ask). */
+  private readonly firstPages = new Map<string, Promise<boolean>>();
+
+  /**
+   * The conversation's newest page from the server; true once it's in. A conversation drawn from the snapshot then shows
+   * the server's messages instead, and actions on its messages run against them (live()).
+   */
+  private firstPage(id: string): Promise<boolean> {
+    let p = this.firstPages.get(id);
+    if (!p) {
+      p = this.fetchHistory(id, null)
+        .then(async () => {
+          if (this.fromSnapshot.has(id)) {
+            const items = await this.store.latestMessages(id, PAGE);
+            this.set((s) => withMessages(s, id, items, this.serverPages.get(id)?.more ?? items.length === PAGE));
+            this.fromSnapshot.delete(id);
+          }
+          return true;
+        })
+        .catch(() => false)
+        .finally(() => this.firstPages.delete(id));
+      this.firstPages.set(id, p);
+    }
+    return p;
+  }
+
+  /** Whether [m] is one of the snapshot's, waiting for its conversation's first server page (sync check, for the UI). */
+  waitsForServer(m: Pick<StoredMessage, "conversationId">): boolean {
+    return this.fromSnapshot.has(m.conversationId);
+  }
+
+  /**
+   * The message an action runs against (2026-10-30, the owner: actions on snapshot messages must never fail without a
+   * word): at once for one the server has sent; for one drawn from the snapshot, once its conversation's first page is
+   * in (at most LIVE_WAIT_MS), as the server has it. After PENDING_AFTER_MS the message shows as waiting. Throws, with
+   * what to tell the person, when it can't run: the message is gone from the server's page, or the server can't be reached.
+   */
+  async live(m: StoredMessage): Promise<StoredMessage> {
+    if (!this.fromSnapshot.has(m.conversationId)) return m;
+    const pending = setTimeout(() => this.set((s) => ({ ...s, waiting: { ...s.waiting, [m.id]: true } })), PENDING_AFTER_MS);
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    try {
+      const timeout = new Promise<false>((r) => (timer = setTimeout(() => r(false), this.opts.liveWaitMs ?? LIVE_WAIT_MS)));
+      const arrived = await Promise.race([this.firstPage(m.conversationId), timeout]);
+      if (!arrived) throw new Error(UNREACHABLE);
+      const fresh = await this.store.message(m.id);
+      if (!fresh) throw new Error(MESSAGE_CHANGED);
+      return fresh;
+    } finally {
+      clearTimeout(pending);
+      clearTimeout(timer);
+      if (this.state.get().waiting[m.id]) this.set((s) => ({ ...s, waiting: Object.fromEntries(Object.entries(s.waiting).filter(([k]) => k !== m.id)) }));
+    }
+  }
+
+  /** live(), saying why when it can't (a notice), for actions the UI runs itself: null then. */
+  async whenLive(m: StoredMessage): Promise<StoredMessage | null> {
+    try {
+      return await this.live(m);
+    } catch (e) {
+      this.notice("error", e instanceof Error ? e.message : UNREACHABLE);
+      return null;
+    }
+  }
+
+  /** Runs [action] on the message as the server has it (whenLive). */
+  private async onLive(m: StoredMessage, action: (live: StoredMessage) => Promise<void>): Promise<void> {
+    const live = await this.whenLive(m);
+    if (live) await action(live);
+  }
 
   private readonly flushSignalsWhenHidden = () => {
     if (document.visibilityState === "hidden") void this.signals.flush();
@@ -1000,12 +1083,7 @@ export class Engine implements EngineContext {
       const stored = await this.store.latestMessages(id, PAGE);
       if (stored.length && !this.state.get().messages[id]) this.set((s) => withMessages(s, id, stored, true));
     }
-    const fetched =
-      this.serverPages.has(id) ||
-      (await this.fetchHistory(id, null).then(
-        () => true,
-        () => false,
-      ));
+    const fetched = this.serverPages.has(id) || (await this.firstPage(id));
     const items = await this.store.latestMessages(id, PAGE);
     // Offline with nothing new: what's shown (the snapshot's) stays rather than an empty conversation.
     if (fetched || items.length || !this.state.get().messages[id]) this.set((s) => withMessages(s, id, items, this.serverPages.get(id)?.more ?? items.length === PAGE));
@@ -1102,7 +1180,14 @@ export class Engine implements EngineContext {
     text: string,
     opts: { replyTo?: string; threadRoot?: string; attachments?: Payload["attachments"]; presetId?: string; rich?: RichContent | null; forwarded?: boolean } = {},
   ): Promise<string> {
-    const sent = this.compose.sendText(conversationId, text, opts);
+    // A reply to a message drawn from the snapshot goes once the server's page has it (a new message never waits).
+    const target = opts.replyTo && this.fromSnapshot.has(conversationId) ? this.store.message(opts.replyTo) : null;
+    const sent = target
+      ? target.then(async (known) => {
+          if (!known) await this.live({ id: opts.replyTo!, conversationId } as StoredMessage);
+          return this.compose.sendText(conversationId, text, opts);
+        })
+      : this.compose.sendText(conversationId, text, opts);
     void sent.then(
       () => this.signals.track("message.sent", { surface: opts.threadRoot ? "thread" : "channel" }),
       () => undefined,
@@ -1115,27 +1200,27 @@ export class Engine implements EngineContext {
   }
 
   react(m: StoredMessage, emoji: string): Promise<void> {
-    return this.compose.react(m, emoji);
+    return this.onLive(m, (x) => this.compose.react(x, emoji));
   }
 
   edit(m: StoredMessage, text: string): Promise<void> {
-    return this.compose.edit(m, text);
+    return this.onLive(m, (x) => this.compose.edit(x, text));
   }
 
   deleteForEveryone(m: StoredMessage): Promise<void> {
-    return this.compose.deleteForEveryone(m);
+    return this.onLive(m, (x) => this.compose.deleteForEveryone(x));
   }
 
   vote(m: StoredMessage, choices: string[]): Promise<void> {
-    return this.compose.vote(m, choices);
+    return this.onLive(m, (x) => this.compose.vote(x, choices));
   }
 
   closePoll(m: StoredMessage): Promise<void> {
-    return this.compose.closePoll(m);
+    return this.onLive(m, (x) => this.compose.closePoll(x));
   }
 
   setPinned(m: StoredMessage, pinned: boolean): Promise<void> {
-    return this.compose.setPinned(m, pinned);
+    return this.onLive(m, (x) => this.compose.setPinned(x, pinned));
   }
 
   setTyping(conversationId: string, on: boolean): void {

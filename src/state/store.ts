@@ -149,6 +149,8 @@ export interface AppState {
   profilesRev: number;
   /** API 0.65.0 batch B: bots' answers only you see, by conversation, until dismissed or the page reloads. */
   botReplies: Record<string, BotReply[]>;
+  /** Messages an action waits on (a snapshot's, until its conversation's first server page is in: engine.live()). */
+  waiting: Record<string, true>;
 }
 
 export const initialState: AppState = {
@@ -177,6 +179,7 @@ export const initialState: AppState = {
   connectionsRev: 0,
   profilesRev: 0,
   botReplies: {},
+  waiting: {},
   history: { status: "idle", restored: 0, unreadable: 0, error: null, backup: { mode: "off", pending: 0, lastUploadAt: null, error: null } },
   mojo: initialMojo,
   notices: [],

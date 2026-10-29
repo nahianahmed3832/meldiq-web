@@ -111,6 +111,8 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
   const [reporting, setReporting] = useState(false);
   const [showReactions, setShowReactions] = useState(false);
   const reportable = useOrbit((st) => st.server?.features.includes("reports") ?? false);
+  // An action on it waits for the server's copy (a snapshot's message, engine.live()): shown after a moment.
+  const waiting = useOrbit((st) => st.waiting[m.id] === true);
   const inCommunity = useOrbit((st) => {
     const c = st.conversations[m.conversationId];
     return c?.type === "CHANNEL" && c.orgId ? c.orgId : null;
@@ -335,7 +337,7 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
         more.openAt(e.currentTarget, null);
       }}
       style={gestures.offset ? { transform: `translateX(${gestures.offset}px)` } : undefined}
-      className={`msg${gestures.offset ? " swiping" : ""}${mine ? " mine" : ""}${p.first ? " first" : ""}${mentioned ? " mentioned" : ""}${p.highlighted ? " highlight" : ""}${more.anchor || picker.anchor ? " menu-open" : ""}`}
+      className={`msg${waiting ? " waiting" : ""}${gestures.offset ? " swiping" : ""}${mine ? " mine" : ""}${p.first ? " first" : ""}${mentioned ? " mentioned" : ""}${p.highlighted ? " highlight" : ""}${more.anchor || picker.anchor ? " menu-open" : ""}`}
       id={`msg-${m.id}`}
       role="article"
       aria-label={`${p.senderName}, ${fullTime(m.sortTs)}`}
@@ -471,8 +473,14 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
                     label: t("msg_copy_link"),
                     icon: <Link2 size={16} />,
                     onSelect: () => {
-                      void navigator.clipboard?.writeText(messageLink(m.conversationId, m.id)).catch(() => undefined);
-                      engine.notice("info", t("msg_link_copied"));
+                      const copy = () =>
+                        void navigator.clipboard?.writeText(messageLink(m.conversationId, m.id)).then(
+                          () => engine.notice("info", t("msg_link_copied")),
+                          () => engine.notice("error", "Couldn't copy the link."),
+                        );
+                      // A message drawn from the snapshot: copied once the server's page shows it's still there.
+                      if (!engine.waitsForServer(m)) copy();
+                      else void engine.whenLive(m).then((x) => x && copy());
                     },
                   },
                 ]

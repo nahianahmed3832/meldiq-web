@@ -91,6 +91,15 @@
     transform var(--t-std) var(--ease);
 }
 /* Swipe to reply: the message follows the finger, then slides back. */
+/* An action on this message waits for the server's copy (a reload's snapshot, engine.live()): after 300 ms, a quiet pulse. */
+.msg.waiting {
+  animation: msg-waiting 1.2s ease-in-out infinite;
+}
+@keyframes msg-waiting {
+  50% {
+    opacity: 0.55;
+  }
+}
 .msg.swiping {
   transition: background var(--t-fast);
 }
