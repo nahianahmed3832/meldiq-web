@@ -1,9 +1,10 @@
 import { MeldlingArt } from "../components/MeldlingArt";
-import { BookOpen, HelpCircle, Smile, Ban, CalendarDays, Flag, Gauge, Hash, Laptop, LayoutGrid, ScrollText, Shield, ShieldCheck, Ticket, UserCheck, UsersRound } from "lucide-react";
+import { BookOpen, HelpCircle, Pin, Smile, Ban, CalendarDays, Flag, Gauge, Hash, Laptop, LayoutGrid, ScrollText, Shield, ShieldCheck, Ticket, UserCheck, UsersRound } from "lucide-react";
 import { ApplicationsPage, BansPage, SecurityPage } from "./ModerationPages";
 import { ReportsPage } from "./ReportsPage";
 import { GuidePage, OnboardingPage } from "./GuidePages";
 import { ExpressionsPage } from "./ExpressionsPage";
+import { PinsPage } from "./PinsPage";
 import type { ReactNode } from "react";
 import { useEngine, useOrbit } from "../../application/orbit";
 import { navigate, type WorkspacePage } from "../../application/router";
@@ -49,6 +50,7 @@ const COMMUNITY_PAGES: { key: WorkspacePage; label: string; icon: ReactNode; gro
   { key: "expressions", label: "Emoji & stickers", icon: <Smile size={17} />, group: "community", feature: "community-expressions", shown: (p) => can(p, "expressions.manage") },
   { key: "people", label: "Members", icon: <UsersRound size={17} />, group: "people", shown: (p) => p.canViewDirectory },
   { key: "roles", label: "Roles", icon: <ShieldCheck size={17} />, group: "people", shown: (p) => p.canViewRoles },
+  { key: "pins", label: "Pins", icon: <Pin size={17} />, group: "people", feature: "profile-pins" },
   { key: "invitations", label: "Invitations", icon: <Ticket size={17} />, group: "people", shown: (p) => p.canInvite },
   { key: "channels", label: "Channels & categories", icon: <Hash size={17} />, group: "channels" },
   { key: "applications", label: "Applications", icon: <UserCheck size={17} />, group: "moderation", feature: "join-applications", shown: (p) => can(p, "members.approve") },
@@ -176,6 +178,8 @@ export function WorkspaceView({ orgId, page, onDialog }: { orgId: string | null;
               <UsagePage detail={d} />
             ) : page === "meetings" ? (
               <MeetingsPage detail={d} />
+            ) : page === "pins" ? (
+              <PinsPage detail={d} />
             ) : page === "expressions" ? (
               <ExpressionsPage detail={d} />
             ) : page === "guide" ? (

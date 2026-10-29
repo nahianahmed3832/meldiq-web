@@ -290,7 +290,7 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
         <TopBar onMenu={() => setDrawer((d) => !d)} onSearch={() => setDialog({ kind: "search" })} section={section} orgId={orgId} />
         <ConnectionBanner />
         <div className={`body${view.conversationId ? " has-conversation" : ""}${phoneList ? " phone-list" : " phone-main"}${settings ? " settings-mode" : ""}`}>
-          {!settings && <Sidebar orgId={orgId} section={section === "discover" || section === "friends" ? "dms" : section} open={drawer} onDialog={ctx.open} />}
+          {!settings && <Sidebar orgId={orgId} section={section === "friends" ? "dms" : section} open={drawer} onDialog={ctx.open} />}
           {drawer && !settings && <div className="sidebar-scrim" onClick={() => setDrawer(false)} aria-hidden="true" />}
           {main}
           {!settings && view.conversationId && knownView && view.panel && <SidePanel route={view} />}

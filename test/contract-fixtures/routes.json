@@ -1,5 +1,5 @@
 {
-  "version": "0.63.0",
+  "version": "0.64.0",
   "routes": [
     {
       "method": "GET",
@@ -528,6 +528,38 @@
     {
       "method": "GET",
       "path": "/v2/users/{id}/decorations"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/pins"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/pins/{id}/image"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/orgs/{orgId}/pins"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/orgs/{orgId}/pins"
+    },
+    {
+      "method": "DELETE",
+      "path": "/v2/orgs/{orgId}/pins/{pinId}"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/orgs/{orgId}/pins/{pinId}/holders"
+    },
+    {
+      "method": "PUT",
+      "path": "/v2/orgs/{orgId}/pins/{pinId}/holders/{userId}"
+    },
+    {
+      "method": "DELETE",
+      "path": "/v2/orgs/{orgId}/pins/{pinId}/holders/{userId}"
     },
     {
       "method": "PUT",

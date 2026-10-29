@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { openEnum } from "./enums";
-import { zAboutMe, zAccent, zAvatarMedia, zBadges, zMojoMark, zProfileBanner, zProfileLinks, zProfileStyle, zWornTag } from "./profileSchemas";
+import { zAboutMe, zAccent, zAvatarMedia, zBadges, zMojoMark, zProfileBanner, zProfileLinks, zProfilePins, zProfileStyle, zWornTag } from "./profileSchemas";
 
 export * from "./profileSchemas";
 
@@ -306,6 +306,8 @@ export const zProfile = z.object({
     .boolean()
     .nullish()
     .transform((v) => v === true),
+  /** API 0.64.0: their pins (server docs/PROFILE_PINS.md). */
+  pins: zProfilePins,
 });
 export type Profile = z.infer<typeof zProfile>;
 

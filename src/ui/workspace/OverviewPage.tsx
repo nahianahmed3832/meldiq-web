@@ -12,7 +12,7 @@ import type { OrgKind } from "../../api/schemas";
 import { roleName } from "../../sync/workspaceRules";
 import { OrgAvatar } from "../components/OrgAvatar";
 import { Dialog } from "../components/Overlay";
-import { squareJpeg } from "./photo";
+import { animatedUpload, squareJpeg } from "./photo";
 import { useAction } from "./useLoad";
 import { Card, ErrorLine } from "./WorkspaceView";
 import { GuestPolicyCard } from "./WorkspaceSetupCards";
@@ -92,6 +92,7 @@ function Identity({ detail, onChanged }: { detail: OrgAdminDetail; onChanged: ()
   const save = useAction();
   const photo = useAction();
   const file = useRef<HTMLInputElement>(null);
+  const animatedImages = useOrbit((s) => s.server?.features.includes("animated-community-images") ?? false);
   useEffect(() => {
     setName(org.name);
     setDescription(org.description ?? "");
@@ -107,7 +108,8 @@ function Identity({ detail, onChanged }: { detail: OrgAdminDetail; onChanged: ()
   const pick = (f: File | undefined) => {
     if (!f) return;
     void photo.act(async () => {
-      await setWorkspacePhoto(engine, org.id, await squareJpeg(f));
+      // API 0.64.0: an animated GIF or WebP goes up as it is; anything else is cropped to a 512 px JPEG.
+      await setWorkspacePhoto(engine, org.id, (await animatedUpload(f, "icon", animatedImages)) ?? (await squareJpeg(f)));
       onChanged();
     });
   };
@@ -120,6 +122,7 @@ function Identity({ detail, onChanged }: { detail: OrgAdminDetail; onChanged: ()
         <button className="btn btn-secondary btn-sm" disabled={photo.busy} onClick={() => file.current?.click()}>
           <Camera size={14} /> {org.photoRev ? "Change photo" : "Add photo"}
         </button>
+        {animatedImages && <small className="faint">A GIF or WebP stays animated (up to 4 MB).</small>}
         {org.photoRev && (
           <button className="btn btn-ghost btn-sm" disabled={photo.busy} onClick={() => void photo.act(() => removeWorkspacePhoto(engine, org.id).then(onChanged))}>
             Remove

@@ -18,6 +18,7 @@ import { openProfile } from "../people/ProfileDialog";
 import { useMembers } from "./ConversationDetails";
 import { isHere, type ListedRole, memberListGroups, nameColor } from "./memberListRules";
 import { useT } from "../../i18n";
+import { ProfilePins } from "../people/ProfilePins";
 
 /** Wide enough to keep a member list or profile beside the messages; narrower screens open them over the messages. */
 const WIDE = "(min-width: 1241px)";
@@ -245,6 +246,8 @@ export function ProfilePanel({ c, onClose }: { c: Conversation; onClose: () => v
             {pronouns ? ` · ${pronouns}` : ""}
           </p>
           {status && <p className="profile-status">{status}</p>}
+          {/* API 0.64.0: their pins (server docs/PROFILE_PINS.md). */}
+          {profile && <ProfilePins pins={profile.pins} />}
           <div className="panel-card">
             <div>
               <dt>{words ? t("people_now") : t("people_last_seen")}</dt>

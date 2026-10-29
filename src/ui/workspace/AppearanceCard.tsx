@@ -2,16 +2,16 @@ import { Check, ImagePlus, Trash2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { ApiError } from "../../api/client";
 import type { OrgAdminDetail } from "../../api/workspaceSchemas";
-import { useEngine } from "../../application/orbit";
+import { useEngine, useOrbit } from "../../application/orbit";
 import { removeCommunityBanner, setCommunityAccent, setCommunityBanner } from "../../sync/workspaces";
 import { ACCENT_CLASS, ACCENT_PRESETS, accentBand, accentStyle, isAccent } from "../community/accent";
 import { OrgAvatar } from "../components/OrgAvatar";
 import { usePhoto } from "../components/photos";
-import { bannerJpeg } from "./photo";
+import { animatedUpload, bannerJpeg } from "./photo";
 import { Card, ErrorLine } from "./WorkspaceView";
 
-/** What the banner will be after Save: unchanged, a new picture (its JPEG and a preview URL), or none. */
-type BannerDraft = { kind: "keep" } | { kind: "new"; jpeg: Uint8Array; url: string } | { kind: "remove" };
+/** What the banner will be after Save: unchanged, a new picture (its bytes, a JPEG or an animated GIF/WebP, and a preview URL), or none. */
+type BannerDraft = { kind: "keep" } | { kind: "new"; bytes: Uint8Array; url: string } | { kind: "remove" };
 
 /**
  * Community appearance (API 0.44.0, meldiq docs/COMMUNITY_BRANDING.md): an accent colour, from Meldiq's presets or any
@@ -30,6 +30,7 @@ export function AppearanceCard({ detail, onChanged }: { detail: OrgAdminDetail; 
   const [saved, setSaved] = useState(false);
   const file = useRef<HTMLInputElement>(null);
   const currentBanner = usePhoto("banner", org.id, org.bannerRev);
+  const animatedImages = useOrbit((s) => s.server?.features.includes("animated-community-images") ?? false);
 
   useEffect(() => {
     setAccent(org.accent);
@@ -58,8 +59,10 @@ export function AppearanceCard({ detail, onChanged }: { detail: OrgAdminDetail; 
     if (!f) return;
     setError(null);
     try {
-      const jpeg = await bannerJpeg(f);
-      setBanner({ kind: "new", jpeg, url: URL.createObjectURL(new Blob([new Uint8Array(jpeg)], { type: "image/jpeg" })) });
+      // API 0.64.0: an animated GIF or WebP goes up as it is; anything else is cropped to a 1200 × 480 JPEG.
+      const animated = await animatedUpload(f, "banner", animatedImages);
+      const bytes = animated ?? (await bannerJpeg(f));
+      setBanner({ kind: "new", bytes, url: URL.createObjectURL(new Blob([new Uint8Array(bytes)], { type: animated ? f.type : "image/jpeg" })) });
       setSaved(false);
     } catch (e) {
       setError(e instanceof Error ? e.message : "That image couldn't be used.");
@@ -77,7 +80,7 @@ export function AppearanceCard({ detail, onChanged }: { detail: OrgAdminDetail; 
     setError(null);
     try {
       if (accent !== org.accent) await setCommunityAccent(engine, org.id, accent);
-      if (banner.kind === "new") await setCommunityBanner(engine, org.id, banner.jpeg);
+      if (banner.kind === "new") await setCommunityBanner(engine, org.id, banner.bytes);
       if (banner.kind === "remove") await removeCommunityBanner(engine, org.id);
       setBanner({ kind: "keep" });
       setSaved(true);
@@ -150,7 +153,9 @@ export function AppearanceCard({ detail, onChanged }: { detail: OrgAdminDetail; 
                 <Trash2 size={14} /> Remove banner
               </button>
             )}
-            <small className="faint">Cropped to 5:2 (1200 × 480). Members see it, and so does anyone on Discover if the community is listed.</small>
+            <small className="faint">
+              Cropped to 5:2 (1200 × 480){animatedImages ? "; a GIF or WebP stays animated (up to 6 MB)" : ""}. Members see it, and so does anyone on Discover if the community is listed.
+            </small>
           </div>
           <ErrorLine text={error} />
           <div className="row" style={{ gap: 8, alignItems: "center" }}>

@@ -17,6 +17,7 @@ import {
   zOrgOut,
 } from "../api/workspaceSchemas";
 import type { Engine } from "./engine";
+import { imageMime } from "../model/imageMime";
 
 /**
  * Workspace actions (server/src/routes/orgs.ts, docs/WORKSPACE_ADMINISTRATION.md). Every one is authorised by the
@@ -70,7 +71,8 @@ export async function updateWorkspace(engine: Engine, orgId: string, change: { n
 export async function workspacePhoto(engine: Engine, orgId: string): Promise<string | null> {
   try {
     const bytes = await engine.api.bytes(`/v1/orgs/${enc(orgId)}/photo`);
-    return URL.createObjectURL(new Blob([new Uint8Array(bytes)], { type: "image/jpeg" }));
+    const b = new Uint8Array(bytes);
+    return URL.createObjectURL(new Blob([b], { type: imageMime(b) }));
   } catch {
     return null;
   }

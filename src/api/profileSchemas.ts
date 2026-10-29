@@ -91,6 +91,35 @@ export const zBadges = z
   .catch(null)
   .transform((v) => (v ?? []).filter((b): b is "bug-hunter" => b === "bug-hunter"));
 
+/** API 0.64.0: pins on a profile (server docs/PROFILE_PINS.md), Meldiq's for milestones, then communities' own. */
+export const zProfilePins = z
+  .array(
+    z.object({
+      id: z.string().regex(/^(?:[a-z0-9-]{2,32}|p_[a-z0-9]{16})$/),
+      kind: z.enum(["meldiq", "community"]).catch("community"),
+      name: z.string().max(64),
+      description: z
+        .string()
+        .max(200)
+        .nullish()
+        .transform((v) => v ?? null),
+      animated: z.boolean().catch(false),
+      community: z
+        .object({ id: z.string(), name: z.string() })
+        .nullish()
+        .transform((v) => v ?? null),
+      since: z
+        .number()
+        .nullish()
+        .transform((v) => v ?? null),
+    }),
+  )
+  .max(100)
+  .nullish()
+  .catch(null)
+  .transform((v) => v ?? []);
+export type ProfilePin = z.infer<typeof zProfilePins>[number];
+
 /** API 0.54.0: the Mojo badge someone shows (server docs/MOJO.md); "check" is Meldiq Check, a Plus perk, not verification. */
 export const zMojoMark = z
   .object({ badge: z.enum(["go", "plus"]), check: z.boolean() })

@@ -9,10 +9,11 @@ import path from "node:path";
  * Browser tests: the real app in real engines (Chromium, Firefox, WebKit, and a phone-sized Chromium) against a throwaway
  * server started from this checkout, with the server's reference client playing the phone. Not a physical-device test.
  */
-const API_PORT = 8091;
-const WEB_PORT = 5181;
+/** Ports can be moved (ORBIT_E2E_API_PORT, ORBIT_E2E_WEB_PORT) when another checkout is running its own servers. */
+const API_PORT = Number(process.env.ORBIT_E2E_API_PORT ?? 8091);
+const WEB_PORT = Number(process.env.ORBIT_E2E_WEB_PORT ?? 5181);
 /** `next dev` behind the web server in development mode (scripts/web-server.ts proxies to it). */
-const NEXT_DEV_PORT = 5182;
+const NEXT_DEV_PORT = WEB_PORT + 1;
 process.env.ORBIT_E2E_API ??= `http://127.0.0.1:${API_PORT}`;
 process.env.ORBIT_E2E_DATA ??= fs.mkdtempSync(path.join(os.tmpdir(), "orbit-e2e-"));
 

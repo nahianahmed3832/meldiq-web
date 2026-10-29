@@ -445,3 +445,101 @@
   margin-left: -8px;
   box-shadow: 0 0 0 2px var(--surface-raised);
 }
+
+/* Profile pins (API 0.64.0, ui/people/ProfilePins.tsx): a row of small badges under the name. */
+.profile-pins-wrap {
+  display: grid;
+  gap: 8px;
+}
+.profile-pins {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  margin: 0;
+  padding: 4px 6px;
+  list-style: none;
+  width: fit-content;
+  max-width: 100%;
+  border-radius: var(--r-md);
+  background: color-mix(in srgb, var(--text) 6%, transparent);
+}
+.profile-pin {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--r-sm);
+  color: var(--text-2);
+  font-size: 12px;
+  font-weight: 700;
+}
+.profile-pin img {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+}
+.profile-pin:hover,
+.profile-pin[aria-pressed="true"] {
+  background: color-mix(in srgb, var(--text) 10%, transparent);
+}
+.profile-pin.more {
+  width: auto;
+  padding: 0 6px;
+}
+.profile-pin-card {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 8px 10px;
+  border-radius: var(--r-md);
+  background: color-mix(in srgb, var(--text) 6%, transparent);
+}
+.profile-pin-card span {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+.profile-pin-card small {
+  font-size: 12px;
+  color: var(--text-2);
+}
+
+/* Community settings › Pins (ui/workspace/PinsPage.tsx). */
+.pin-list,
+.pin-people {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.pin-item,
+.pin-people li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+.pin-item {
+  padding: 8px 10px;
+  border-radius: var(--r-md);
+  background: color-mix(in srgb, var(--text) 5%, transparent);
+}
+.pin-item > span {
+  display: grid;
+  min-width: 0;
+}
+.pin-item img,
+.pin-drop img {
+  object-fit: contain;
+}
+.pin-drop {
+  display: grid;
+  place-items: center;
+  flex: 0 0 64px;
+  width: 64px;
+  height: 64px;
+  border-radius: var(--r-md);
+  color: var(--text-3);
+  background: color-mix(in srgb, var(--text) 6%, transparent);
+}
