@@ -45,6 +45,8 @@ const PHOTO_PATH = {
   avatarMedia: (id: string) => `/v1/users/${encodeURIComponent(id)}/avatar-media`,
   avatarPoster: (id: string) => `/v1/users/${encodeURIComponent(id)}/avatar-poster`,
   profileBanner: (id: string) => `/v1/users/${encodeURIComponent(id)}/profile-banner`,
+  /** API 0.60.0: one of your own decoration submissions, while it isn't public. */
+  ownDecoration: (id: string) => `/v2/decorations/mine/${encodeURIComponent(id)}/image`,
 };
 
 /** The photo (or banner) of a user, group or community at revision [rev], or null (none, not allowed, or still loading). */

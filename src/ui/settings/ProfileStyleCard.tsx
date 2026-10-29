@@ -1,14 +1,15 @@
 import { Clapperboard, ImagePlus, Trash2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { ApiError } from "../../api/client";
-import { PROFILE_DECORATIONS, PROFILE_EFFECTS } from "../../api/schemas";
+import { PROFILE_EFFECTS } from "../../api/schemas";
 import { useEngine, useOrbit } from "../../application/orbit";
 import { removeAvatarMedia, removeProfileBanner, setAvatarMedia, setProfileBanner, setProfileStyle, userProfile } from "../../sync/account";
 import { ACCENT_PRESETS } from "../community/accent";
 import { usePhoto } from "../components/photos";
-import { DECORATION_LABEL, EFFECT_LABEL, ProfileEffect, StyledAvatar } from "../people/ProfileStyle";
+import { EFFECT_LABEL, ProfileEffect, StyledAvatar } from "../people/ProfileStyle";
 import { bannerJpeg } from "../workspace/photo";
 import { useLoad } from "../workspace/useLoad";
+import { DecorationPicker } from "./DecorationPicker";
 
 /** What the server accepts (server PROFILE_MEDIA_LIMITS): said before upload, and checked again there. */
 const LIMITS = { avatarImageMb: 4, clipMb: 12, clipSeconds: 6, bannerAnimatedMb: 6 };
@@ -75,7 +76,7 @@ export function ProfileStyleCard() {
       <div>
         <h2 style={{ margin: 0, fontSize: 17 }}>Profile style</h2>
         <p className="muted" style={{ margin: "4px 0 0" }}>
-          An animated avatar, a banner, a frame and an effect for your profile card. The avatar and banner are shown to whoever may see your photo (Privacy).
+          An animated avatar, a banner, a decoration and an effect for your profile card. The avatar and banner are shown to whoever may see your photo (Privacy).
         </p>
       </div>
 
@@ -146,16 +147,9 @@ export function ProfileStyleCard() {
 
       <section className="setting-group" aria-labelledby="ps-deco">
         <h3 id="ps-deco" className="invite-or-title">
-          Avatar frame
+          Avatar decoration
         </h3>
-        <div className="style-grid" role="group" aria-labelledby="ps-deco">
-          {[null, ...PROFILE_DECORATIONS].map((d) => (
-            <button key={d ?? "none"} type="button" className="style-choice" aria-pressed={style.decoration === d} disabled={!!busy} onClick={() => setStyle({ decoration: d })}>
-              <StyledAvatar userId={me.userId} name={me.displayName} colorIndex={me.avatarColor} photoRev={photoRev} media={null} decoration={d} size={40} />
-              {d ? DECORATION_LABEL[d] : "None"}
-            </button>
-          ))}
-        </div>
+        <DecorationPicker me={me} photoRev={photoRev} current={style.decoration} busy={!!busy} onPick={(d) => setStyle({ decoration: d })} />
       </section>
 
       <section className="setting-group" aria-labelledby="ps-fx">

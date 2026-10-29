@@ -19,6 +19,12 @@ export const zAccent = z
 /** Profile style ids the web draws (API 0.45.0, server PROFILE_DECORATIONS / PROFILE_EFFECTS); unknown ones are dropped. */
 export const PROFILE_DECORATIONS = ["aurora", "ember", "frost", "neon", "sakura", "pixel"] as const;
 export const PROFILE_EFFECTS = ["sparkles", "glow", "stars", "bubbles"] as const;
+/**
+ * A worn decoration (API 0.60.0, server docs/PROFILE_DECORATIONS.md): one of the classic frames above, which the web
+ * draws, or an image by id (Meldiq's own, or an approved community one: "c_" and 16 letters or digits).
+ */
+export const DECORATION_ID = /^(?:[a-z0-9-]{2,32}|c_[a-z0-9]{16})$/;
+export const isClassicDecoration = (id: string): boolean => (PROFILE_DECORATIONS as readonly string[]).includes(id);
 export const zAvatarMedia = z
   .object({ kind: z.enum(["gif", "webp", "video"]), rev: z.number().int() })
   .nullish()
@@ -43,7 +49,7 @@ const zHexList = z
   .transform((v) => v ?? null);
 export const zProfileStyle = z
   .object({
-    decoration: z.enum(PROFILE_DECORATIONS).nullable().catch(null),
+    decoration: z.string().regex(DECORATION_ID).nullable().catch(null),
     effect: z.enum(PROFILE_EFFECTS).nullable().catch(null),
     accent: zAccent,
     nameFont: z

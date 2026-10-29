@@ -1,5 +1,5 @@
 {
-  "version": "0.57.1",
+  "version": "0.60.0",
   "routes": [
     {
       "method": "GET",
@@ -492,6 +492,38 @@
     {
       "method": "PUT",
       "path": "/v2/me/activity"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/decorations"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/decorations"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/decorations/{id}/image"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/decorations/template"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/decorations/mine"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/decorations/mine/{id}/image"
+    },
+    {
+      "method": "DELETE",
+      "path": "/v2/decorations/mine/{id}"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/users/{id}/decorations"
     },
     {
       "method": "PUT",
@@ -1271,6 +1303,9 @@
     "dms_paused": [
       403
     ],
+    "email_domain_blocked": [
+      403
+    ],
     "email_failed": [
       503
     ],
@@ -1291,6 +1326,9 @@
     ],
     "federated_calls_unavailable": [
       409
+    ],
+    "feature_disabled": [
+      503
     ],
     "federation_backlog": [
       503
@@ -1400,6 +1438,9 @@
     "login_throttled": [
       429
     ],
+    "maintenance": [
+      503
+    ],
     "media_unavailable": [
       503
     ],
@@ -1507,6 +1548,9 @@
     ],
     "registration_limited": [
       429
+    ],
+    "registration_closed": [
+      403
     ],
     "registration_paused": [
       429

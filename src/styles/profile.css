@@ -6,6 +6,17 @@
   flex-shrink: 0;
   line-height: 0;
 }
+/* Image decorations (API 0.60.0): over the avatar, under its presence dot, never in the way of a click. */
+.deco-img {
+  position: absolute;
+  z-index: 1;
+  max-width: none;
+  pointer-events: none;
+  user-select: none;
+}
+.styled-avatar .presence {
+  z-index: 2;
+}
 .avatar-media {
   display: block;
   overflow: hidden;

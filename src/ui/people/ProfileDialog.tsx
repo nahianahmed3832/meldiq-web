@@ -11,6 +11,7 @@ import { usePhoto } from "../components/photos";
 import { StyledName } from "./NameStyle";
 import { SafeLink } from "../chat/SafeLink";
 import { ProfileEffect, StyledAvatar } from "./ProfileStyle";
+import { ArtistDecorations } from "./ArtistDecorations";
 import { Dialog, Menu, type MenuEntry, useMenu } from "../components/Overlay";
 import { toneOf } from "../components/Avatar";
 import { OrgAvatar } from "../components/OrgAvatar";
@@ -252,6 +253,11 @@ export function ProfileDialog({ userId, fallbackName, orgId = null, near = null,
                 🐞 Bug Hunter
               </span>
             )}
+            {profile.decorationArtist && (
+              <span className="badge-pill" title="Made a profile decoration Meldiq approved">
+                🎨 Artist
+              </span>
+            )}
             {profile.aboutMe && (
               <section className="profile-box" aria-label="About me">
                 <h3>About me</h3>
@@ -287,6 +293,7 @@ export function ProfileDialog({ userId, fallbackName, orgId = null, near = null,
               )}
             </section>
             <MemberSince profile={profile} orgId={orgId} />
+            {profile.decorationArtist && <ArtistDecorations userId={profile.id} name={profile.displayName} />}
             {roles && roles.length > 0 && (
               <section className="profile-box" aria-label="Roles">
                 <h3>Roles</h3>

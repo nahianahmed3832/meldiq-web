@@ -301,6 +301,11 @@ export const zProfile = z.object({
     .max(200)
     .nullish()
     .transform((v) => v ?? []),
+  /** API 0.60.0: they have a profile decoration approved (the Artist badge). */
+  decorationArtist: z
+    .boolean()
+    .nullish()
+    .transform((v) => v === true),
 });
 export type Profile = z.infer<typeof zProfile>;
 
