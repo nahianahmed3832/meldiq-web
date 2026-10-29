@@ -31,6 +31,7 @@ import { encodePayload, type Payload } from "../protocol/payload";
 import { RealtimeClient } from "../realtime/socket";
 import type { CallPrefs } from "../call/manager";
 import { type AppState, initialState, Store, type UserLite, upsertLoaded, withMessages } from "../state/store";
+import { SnapshotKeeper, SnapshotVault, withSnapshot } from "./snapshot";
 import type { LocalStore } from "../store/db";
 import type { EngineContext } from "./context";
 import { Directory } from "./directory";
@@ -164,6 +165,7 @@ export class Engine implements EngineContext {
       ? new AccountSession(opts.base, new TokenVault(store), (why) => this.accountSessionEnded(why))
       : new SessionManager(opts.base, device, (reason) => this.revoked(reason));
     this.api = new ApiClient(opts.base, this.session);
+    this.snapshots = new SnapshotKeeper(new SnapshotVault(store, device.userId), this.state);
     this.directory = new Directory(this.api, store, device, (pin) => this.identityChanged(pin));
     this.receiver = new Receiver(this);
     this.outbox = new Outbox(
@@ -271,6 +273,8 @@ export class Engine implements EngineContext {
 
   /** Set by open(), taken by start(). */
   private opened: Promise<void> | null = null;
+  /** The app as it was last time, kept sealed on this computer (sync/snapshot.ts). */
+  readonly snapshots: SnapshotKeeper;
 
   /**
    * This browser's device and what this page already holds, before any network: the app's frame is drawn on it at once
@@ -299,6 +303,7 @@ export class Engine implements EngineContext {
       if (phase === "revoked" || phase === "reauth") return;
     }
     this.realtime.start();
+    this.snapshots.start();
     void this.refreshAll().then(async () => {
       void this.mojo.refresh();
       await this.signals.refresh();
@@ -325,7 +330,24 @@ export class Engine implements EngineContext {
       deviceName: this.device.deviceName,
     };
     await this.loadLocal();
+    await this.drawSnapshot();
     this.set((s) => ({ ...s, phase: "ready", me: { ...me, ...(s.me ?? {}) } }));
+  }
+
+  /**
+   * The app as it was last time (sync/snapshot.ts), drawn before any network; the server's answers replace it as they
+   * come. Only while this browser's session can carry on by itself: one that needs the password draws nothing.
+   */
+  private async drawSnapshot(): Promise<void> {
+    try {
+      if (this.session instanceof AccountSession && !(await this.session.restorable())) return;
+      const d = await this.snapshots.restore();
+      if (!d) return;
+      for (const l of d.local) if (!(await this.store.conversation(l.id))) await this.store.putConversation(l);
+      this.set((s) => withSnapshot(s, d));
+    } catch {
+      /* nothing kept, or unreadable: the server's answers draw everything, as on a first visit */
+    }
   }
 
   /** Whether this session counted today's visit for points (API 0.65.0). */
@@ -337,6 +359,7 @@ export class Engine implements EngineContext {
 
   stop(): void {
     this.stopped = true;
+    this.snapshots.stop();
     this.uploader?.stop();
     if (typeof document !== "undefined") document.removeEventListener("visibilitychange", this.flushSignalsWhenHidden);
     this.calls.stop();
@@ -969,6 +992,7 @@ export class Engine implements EngineContext {
   async openConversation(id: string | null): Promise<void> {
     this.viewingId = id;
     if (!id) return;
+    this.snapshots.opened(id);
     // What this page already holds for it (messages that arrived live before it was opened) shows at once; the server's
     // newest page follows and replaces it. Messages aren't kept between page loads, so after a reload the skeleton
     // shows until the server answers.
@@ -976,9 +1000,15 @@ export class Engine implements EngineContext {
       const stored = await this.store.latestMessages(id, PAGE);
       if (stored.length && !this.state.get().messages[id]) this.set((s) => withMessages(s, id, stored, true));
     }
-    if (!this.serverPages.has(id)) await this.fetchHistory(id, null).catch(() => undefined);
+    const fetched =
+      this.serverPages.has(id) ||
+      (await this.fetchHistory(id, null).then(
+        () => true,
+        () => false,
+      ));
     const items = await this.store.latestMessages(id, PAGE);
-    this.set((s) => withMessages(s, id, items, this.serverPages.get(id)?.more ?? items.length === PAGE));
+    // Offline with nothing new: what's shown (the snapshot's) stays rather than an empty conversation.
+    if (fetched || items.length || !this.state.get().messages[id]) this.set((s) => withMessages(s, id, items, this.serverPages.get(id)?.more ?? items.length === PAGE));
     await this.markRead(id);
     void this.syncCalls(id);
   }

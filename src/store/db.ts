@@ -7,10 +7,14 @@ import { forgetAllMedia } from "./mediaCache";
 
 /**
  * What this browser keeps. Since API 0.57.0 (the owner's decision, 2026-10-28) the server stores every message and
- * serves it to each device (docs/SERVER_MESSAGES.md): the browser keeps only its sign-in on disk (the device record
- * and the account session's sealed tokens, in IndexedDB). Messages, conversations, the send queue and everything
- * else live in memory for this page and are loaded from the server again on the next one. "Sign out" deletes the disk
- * part.
+ * serves it to each device (docs/SERVER_MESSAGES.md). On disk, in IndexedDB, the browser keeps its sign-in (the device
+ * record and the account session's sealed tokens) and, since 2026-10-30 (the owner: reloads should open like an app,
+ * "Yes, keep snapshot"), one sealed snapshot of the app for the account signed in here (sync/snapshot.ts): its lists,
+ * the people shown, unread counts and the newest messages of the conversations opened last, encrypted with a key this
+ * browser made for it, so a reload draws the last view at once before the server answers. The working copy of
+ * messages, conversations, the send queue and everything else lives in memory for this page and is loaded from the
+ * server again on the next one. "Sign out", a removed browser and a deleted account delete the disk part, snapshot and
+ * all.
  *
  * The database still has the object stores of earlier versions, which kept history on this computer: the update reads
  * them once to upload that history to the server (legacyImport.ts), then empties them.
@@ -50,8 +54,11 @@ export const DB_NAME = "orbit-web";
 /** 2: messages indexed by thread root. 3: server-stored messages, the old stores kept only to be uploaded once. */
 const VERSION = 3;
 
-/** The only values written to disk: this browser's device (its sign-in keys) and the account session's sealed tokens. */
-const ON_DISK = new Set(["device", "accountTokenKey", "accountTokens", "legacy.imported"]);
+/**
+ * The only values written to disk: this browser's device (its sign-in keys), the account session's sealed tokens, and
+ * the sealed snapshot with its key (sync/snapshot.ts SNAPSHOT_KEY, SNAPSHOT_CRYPTO_KEY).
+ */
+const ON_DISK = new Set(["device", "accountTokenKey", "accountTokens", "legacy.imported", "snapshot", "snapshotKey"]);
 
 /** The repository the sync engine reads and writes. */
 export type MessageWriteListener = (ids: string[]) => void;
@@ -138,7 +145,7 @@ export class LocalStore {
     await this.db.put("kv", stored, "device");
   }
 
-  // ───── values: the sign-in on disk, everything else for this page only ─────
+  // ───── values: the sign-in and the snapshot on disk, everything else for this page only ─────
   async getValue<T>(key: string): Promise<T | undefined> {
     if (ON_DISK.has(key)) return (await this.db.get("kv", key)) as T | undefined;
     return this.memory.get(key) as T | undefined;

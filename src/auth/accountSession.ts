@@ -57,6 +57,15 @@ export class AccountSession implements Credentials {
     await this.vault.clear();
   }
 
+  /**
+   * Whether this browser still holds a session it could renew without the person (tokens whose refresh token hasn't run
+   * out): until then nothing kept on this computer is drawn (sync/snapshot.ts), as a locked app shows nothing.
+   */
+  async restorable(): Promise<boolean> {
+    const tokens = this.tokens ?? (await this.vault.load());
+    return !!tokens && tokens.refreshTokenExpiresAt > Date.now();
+  }
+
   reauthenticate(): Promise<boolean> {
     this.inflight ??= this.refresh().finally(() => (this.inflight = null));
     return this.inflight;
