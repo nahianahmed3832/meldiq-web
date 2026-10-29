@@ -162,7 +162,7 @@ export function ShareDialog({ onClose }: { onClose: () => void }) {
   // Only the qualities this person may share at here (Meldiq Mojo: their plan and the community's Sparks).
   const allowed = useOrbit((s) => s.call.shareQualities);
   const [quality, setQuality] = useState<ShareQuality>(() => clampShareQuality(prefs.shareQuality, allowed));
-  const more = allowed.length < SHARE_QUALITY_ORDER.length && allowed[allowed.length - 1] !== "max";
+  const more = allowed.length < SHARE_QUALITY_ORDER.length && allowed[allowed.length - 1] !== "max60";
   const [audio, setAudio] = useState(prefs.shareAudio);
   const share = () => {
     setPrefs({ shareQuality: quality, shareAudio: audio });

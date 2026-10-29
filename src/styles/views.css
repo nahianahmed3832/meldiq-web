@@ -783,65 +783,6 @@
   gap: 8px;
   font-size: 13px !important;
 }
-/* The illustration: a rail of community icons and a channel list with a banner, in Meldiq's own shapes. */
-.hero-preview {
-  align-self: center;
-  display: flex;
-  gap: 10px;
-  width: min(440px, 100%);
-  margin: 0;
-  padding: 12px;
-  border-radius: 20px;
-  background: rgba(8, 12, 28, 0.55);
-  border: 1px solid rgba(160, 190, 255, 0.16);
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
-}
-.hero-preview-rail {
-  display: grid;
-  align-content: start;
-  gap: 10px;
-}
-.hero-preview-rail img,
-.hero-preview-rail i {
-  width: 38px;
-  height: 38px;
-  border-radius: 12px;
-  display: block;
-}
-.hero-preview-panel {
-  flex: 1;
-  display: grid;
-  gap: 6px;
-  align-content: start;
-  padding-bottom: 6px;
-  border-radius: 14px;
-  background: rgba(16, 23, 43, 0.9);
-  overflow: hidden;
-}
-.hero-preview-banner {
-  height: 62px;
-  background: linear-gradient(120deg, #22d3ee, #6366f1 55%, #ec4899);
-}
-.hero-preview-cat {
-  margin: 4px 12px 0;
-  font-size: 10.5px;
-  font-weight: 800;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: rgba(200, 210, 240, 0.6);
-}
-.hero-preview-ch {
-  margin: 0 8px;
-  padding: 5px 8px;
-  border-radius: 8px;
-  font-size: 13px;
-  color: rgba(225, 232, 255, 0.78);
-}
-.hero-preview-ch.on {
-  background: color-mix(in srgb, var(--brand-highlight) 18%, transparent);
-  color: #fff;
-  font-weight: 700;
-}
 .link-main {
   position: relative;
   display: grid;

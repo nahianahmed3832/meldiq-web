@@ -4,13 +4,14 @@ import type { MojoCatalog, MojoMe, PlanKey, PlanPerks } from "../../api/mojoSche
 import { MojoBadgeMark } from "./MojoBadge";
 import { planPrice, screenLabel, size } from "./mojoFormat";
 
-/** Comparison rows: the table is the full overview; cards only pick out what matters most (no bots: Meldiq has none yet). */
+/** Comparison rows: the table is the full overview; cards only pick out what matters most. */
 const ROWS: { label: string; value: (p: PlanPerks, c: MojoCatalog) => string }[] = [
   { label: "Characters in a message", value: (p) => p.messageChars.toLocaleString() },
   { label: "Largest file you share", value: (p) => size(p.uploadBytes) },
   { label: "Screen sharing", value: (p, c) => screenLabel(c, p.screen) },
   { label: "Meldiq Sparks included", value: (p) => String(p.sparks) },
   { label: "Custom emoji and stickers you add", value: (p) => String(p.customItems) },
+  { label: "Bots you can make", value: (p) => String(p.bots) },
   { label: "Name badge", value: (p) => (p.badge === "plus" ? "Plus, with Meldiq Check" : p.badge === "go" ? "Go" : "None") },
 ];
 
@@ -59,7 +60,7 @@ export function PlanCards({ catalog, me, actionFor }: PlanCardsProps) {
             <ul>
               <PlanLine>{p.messageChars.toLocaleString()} characters a message</PlanLine>
               <PlanLine>Files up to {size(p.uploadBytes)}</PlanLine>
-              <PlanLine>Screen sharing at {screenLabel(catalog, p.screen)}</PlanLine>
+              <PlanLine>Screen sharing: {screenLabel(catalog, p.screen)}</PlanLine>
               <PlanLine>{p.sparks === 0 ? "Sparks: buy them separately" : `${p.sparks} Meldiq Spark${p.sparks === 1 ? "" : "s"} included`}</PlanLine>
               <PlanLine>{p.customItems} custom emoji and stickers</PlanLine>
             </ul>

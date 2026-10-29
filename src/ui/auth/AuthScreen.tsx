@@ -178,5 +178,12 @@ export function AuthScreen(props: {
       break;
   }
 
-  return <AuthFrame>{body}</AuthFrame>;
+  const canJoin = accounts?.registration ?? false;
+  // Join on the landing page: creating an account where this server takes new ones, else signing in.
+  const onJoin = () => (canJoin ? setStep({ k: "signUp" }) : step.k !== "signIn" && toSignIn());
+  return (
+    <AuthFrame onJoin={step.k === "signIn" || step.k === "signUp" ? onJoin : undefined} canJoin={canJoin}>
+      {body}
+    </AuthFrame>
+  );
 }

@@ -1471,6 +1471,9 @@
     "custom_items_limit": [
       409
     ],
+    "bot_locked": [
+      403
+    ],
     "bot_not_here": [
       404
     ],
