@@ -56,7 +56,11 @@ export type WorkspacePage =
   // API 0.65.0 batch B: bots added to the community.
   | "bots"
   // API 0.65.0: the rules channel and the community's rules.
-  | "rules";
+  | "rules"
+  // Community parity batch A (docs/MELDIQ_COMMUNITY_PARITY.md): the settings window's Theme, Sparks and Promote.
+  | "theme"
+  | "sparks"
+  | "promote";
 
 export interface Route {
   section: Section;
@@ -113,6 +117,9 @@ const WORKSPACE_PAGES: WorkspacePage[] = [
   "expressions",
   "bots",
   "rules",
+  "theme",
+  "sparks",
+  "promote",
 ];
 const ID = /^[A-Za-z0-9_-]{1,128}$/;
 

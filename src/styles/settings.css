@@ -524,3 +524,29 @@
     display: none;
   }
 }
+
+/* Community settings on phones (workspace/WorkspaceView.tsx): full screen, the rail a row of pages above the page that
+   scrolls sideways; the group titles step aside. */
+@media (max-width: 640px) {
+  .settings.community-settings:not(.at-you) .settings-nav {
+    display: flex;
+    gap: 4px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--hairline);
+  }
+  .settings.community-settings .settings-nav-group {
+    display: flex;
+    gap: 4px;
+    margin: 0;
+  }
+  .settings.community-settings .settings-nav-title {
+    display: none;
+  }
+  .settings.community-settings .settings-nav .side-item {
+    flex: none;
+    width: auto;
+    white-space: nowrap;
+  }
+}

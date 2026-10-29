@@ -2,12 +2,12 @@ import { TagCard } from "./TagCard";
 import { TransferOwnership } from "./TransferOwnership";
 import { AppearanceCard } from "./AppearanceCard";
 import { Camera, LogOut, Trash2 } from "lucide-react";
-import { type FormEvent, useEffect, useMemo, useRef, useState } from "react";
+import { type FormEvent, useEffect, useRef, useState } from "react";
 import type { OrgAdminDetail } from "../../api/workspaceSchemas";
 import { useCommunityServer, useEngine, useOrbit } from "../../application/orbit";
 import { setPrefs } from "../../application/prefs";
 import { navigate } from "../../application/router";
-import { deleteWorkspace, leaveWorkspace, removeWorkspacePhoto, requestId, setWorkspaceKind, setWorkspacePhoto, updateWorkspace } from "../../sync/workspaces";
+import { leaveWorkspace, removeWorkspacePhoto, setWorkspaceKind, setWorkspacePhoto, updateWorkspace } from "../../sync/workspaces";
 import type { OrgKind } from "../../api/schemas";
 import { roleName } from "../../sync/workspaceRules";
 import { OrgAvatar } from "../components/OrgAvatar";
@@ -17,16 +17,30 @@ import { useAction } from "./useLoad";
 import { Card, ErrorLine } from "./WorkspaceView";
 import { GuestPolicyCard } from "./WorkspaceSetupCards";
 import { AccessCard, JoinQuestionsCard } from "./ModerationPages";
+import { ProfileSafety } from "./ProfileSafety";
+import { DeleteCommunityDialog } from "../community/DeleteCommunityDialog";
 
-export function OverviewPage({ detail, onChanged }: { detail: OrgAdminDetail; onChanged: () => void }) {
+interface OverviewPageProps {
+  detail: OrgAdminDetail;
+  onChanged: () => void;
+  /** Opened from an old Security actions link: show the safety section. */
+  focusSafety?: boolean;
+}
+
+/**
+ * Community settings › Profile (the reference's server profile): details, tag, who can find and join, safety, then
+ * ownership and membership. A community's accent and banner live on Theme; older team servers keep them here.
+ */
+export function OverviewPage({ detail, onChanged, focusSafety = false }: OverviewPageProps) {
   const { org, permissions: can, stats } = detail;
   const features = useOrbit((s) => s.server?.features ?? []);
+  const community = features.includes("community-channels");
   return (
     <div className="ws-page">
       <header className="ws-hero">
         <OrgAvatar orgId={org.id} name={org.name} photoRev={org.photoRev} size={64} />
         <div className="grow">
-          <h1>{org.name}</h1>
+          <h2>{org.name}</h2>
           <p className="muted">
             {org.kind === "community"
               ? `Community · ${roleName(org.myRole)} · ${stats.members} ${stats.members === 1 ? "member" : "members"} · ${stats.channels} channels`
@@ -35,10 +49,11 @@ export function OverviewPage({ detail, onChanged }: { detail: OrgAdminDetail; on
         </div>
       </header>
       {can.canManageOrg ? <Identity detail={detail} onChanged={onChanged} /> : <ReadOnlyAbout description={org.description} />}
-      {features.includes("community-branding") && <AppearanceCard detail={detail} onChanged={onChanged} />}
+      {!community && features.includes("community-branding") && <AppearanceCard detail={detail} onChanged={onChanged} />}
       {features.includes("community-tags") && <TagCard detail={detail} onChanged={onChanged} />}
-      {features.includes("community-channels") && <AccessCard detail={detail} />}
-      {features.includes("community-channels") && can.canManageOrg && features.includes("join-applications") && <JoinQuestionsCard detail={detail} />}
+      {community && <AccessCard detail={detail} />}
+      {community && can.canManageOrg && features.includes("join-applications") && <JoinQuestionsCard detail={detail} />}
+      {community && <ProfileSafety detail={detail} focused={focusSafety} />}
       {can.canManageOrg && features.includes("guest-expiry") && <GuestPolicyCard detail={detail} onChanged={onChanged} />}
       {/* Every workspace is a community since API 0.12: the team/community switch is only for older servers. */}
       {features.includes("communities") && !features.includes("community-channels") && <KindCard detail={detail} onChanged={onChanged} />}
@@ -199,44 +214,7 @@ function Membership({ detail }: { detail: OrgAdminDetail }) {
           </div>
         </Dialog>
       )}
-      {confirm === "delete" && <DeleteDialog orgId={org.id} name={org.name} onClose={() => setConfirm(null)} />}
+      {confirm === "delete" && <DeleteCommunityDialog orgId={org.id} name={org.name} onClose={() => setConfirm(null)} />}
     </Card>
-  );
-}
-
-/** Owners only, after typing the exact name. Removes channels, branches, teams and invitations for everyone. */
-function DeleteDialog({ orgId, name, onClose }: { orgId: string; name: string; onClose: () => void }) {
-  const engine = useEngine();
-  const reqId = useMemo(requestId, []);
-  const [typed, setTyped] = useState("");
-  const del = useAction();
-  return (
-    <Dialog title={`Delete ${name}?`} onClose={onClose}>
-      <div className="dialog-body">
-        <div className="banner danger">This deletes the community's channels and their messages and files, its roles and invitations, for every member. It can't be undone.</div>
-        <p style={{ margin: 0 }}>People's accounts, direct messages and groups stay. Type the community's name to confirm.</p>
-        <input className="input" data-autofocus value={typed} onChange={(e) => setTyped(e.target.value)} aria-label="Community name" placeholder={name} />
-        <ErrorLine text={del.error} />
-        <div className="row" style={{ justifyContent: "flex-end", gap: 8 }}>
-          <button className="btn btn-secondary" onClick={onClose}>
-            Cancel
-          </button>
-          <button
-            className="btn btn-danger"
-            disabled={typed !== name || del.busy}
-            onClick={() =>
-              void del.act(async () => {
-                await deleteWorkspace(engine, orgId, typed, reqId);
-                onClose();
-                setPrefs({ orgId: null });
-                navigate({ section: "home" });
-              })
-            }
-          >
-            {del.busy ? "Deleting…" : "Delete community"}
-          </button>
-        </div>
-      </div>
-    </Dialog>
   );
 }

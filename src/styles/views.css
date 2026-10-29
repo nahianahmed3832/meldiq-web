@@ -947,7 +947,8 @@
   align-items: center;
   gap: 16px;
 }
-.ws-hero h1 {
+.ws-hero h1,
+.ws-hero h2 {
   margin: 0;
   font-size: 24px;
   letter-spacing: -0.02em;
