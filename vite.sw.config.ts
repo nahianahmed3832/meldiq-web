@@ -10,7 +10,8 @@ export default defineConfig(({ mode }) => ({
   define: { "process.env.NODE_ENV": JSON.stringify(mode === "development" ? "development" : "production") },
   build: {
     target: ["es2022", "safari16.4"],
-    sourcemap: true,
+    // Development keeps its map; releases ship no readable source (the owner, 2026-10-29).
+    sourcemap: mode === "development",
     emptyOutDir: false,
     copyPublicDir: false,
     lib: { entry: "src/sw/sw.ts", formats: ["iife"], name: "meldiqServiceWorker", fileName: () => "sw.js" },
