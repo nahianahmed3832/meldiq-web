@@ -6,6 +6,7 @@ import { applyTheme, getPrefs } from "../application/prefs";
 import { startRouting } from "../application/router";
 import { hideSplash, startSplash } from "../application/splash";
 import { followVisualViewport } from "../application/viewport";
+import { guardInspectorKeys } from "../application/inspectGuard";
 import { installLegacyCurves } from "../crypto/legacyCurves";
 import { App } from "../ui/App";
 import { ConfigError } from "../ui/StatusScreens";
@@ -24,6 +25,7 @@ export default function Root() {
   useEffect(() => {
     applyTheme(getPrefs());
     followVisualViewport();
+    guardInspectorKeys();
     startSplash();
     // Before routing reads the address: an invitation link's code is kept for after signing in (pendingInvite.ts).
     capturePendingInvite();
