@@ -6,6 +6,7 @@ import { quietContextMenu } from "../components/Overlay";
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { shallowEqual, useEngine, useOrbit } from "../../application/orbit";
 import { getPrefs, setPrefs, usePrefs } from "../../application/prefs";
+import { ConsentPage } from "../oauth/ConsentPage";
 import { isFullPage, navigate, type Route, useRoute } from "../../application/router";
 import { ConversationView } from "../chat/ConversationView";
 import { SidePanel } from "../chat/SidePanel";
@@ -261,6 +262,9 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
   // conversation have their own headers, so the top bar steps aside there.
   const phoneFrame = `${phoneList && section === "home" ? " phone-home" : ""}${phoneList || section === "settings" || (view.conversationId && !settings) ? " phone-bare" : ""}`;
   const ctx = useMemo(() => ({ open: (d: ShellDialog) => setDialog(d) }), []);
+
+  // "Log in with Meldiq" (API 0.65.0 batch B): the consent page stands alone, without the app around it.
+  if (route.section === "oauth") return <ConsentPage />;
 
   let full = null;
   if (route.section === "settings") full = <SettingsView page={route.settingsPage} onSignedOut={onSignedOut} />;

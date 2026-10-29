@@ -7,14 +7,33 @@ import { useSyncExternalStore } from "react";
  *   /<section>/c/<id>[/details|/search|/pinned|/members|/thread/<root>]   a conversation (and its side panel)
  *   /settings/<page>
  *   /workspace/<page>                          the current workspace's settings and administration
+ *   /oauth/authorize?client_id=…               "Log in with Meldiq": an app asks to know who you are (API 0.65.0 batch B)
  * Links from before (hash routes, "/#/dms/c/<id>": old notifications, bookmarks, links in messages) still work: the
  * page moves them to their path on load. Moving around is the History API, so Back and Forward work and nothing reloads.
  */
 /** "friends" (2026-10-28): the Friends page, the Messages home on its own route (phones open it from the list). */
-export type Section = "home" | "dms" | "friends" | "activity" | "later" | "discover" | "settings" | "workspace";
+export type Section = "home" | "dms" | "friends" | "activity" | "later" | "discover" | "settings" | "workspace" | "oauth";
 /** "you": the phone's You tab, a list of the pages under your account card (desktop shows the profile page there). */
 export type SettingsPage =
-  "you" | "profile" | "account" | "devices" | "notifications" | "calls" | "appearance" | "storage" | "security" | "about" | "advanced" | "shortcuts" | "health" | "usage" | "mojo" | "spark" | "points";
+  | "you"
+  | "profile"
+  | "account"
+  | "devices"
+  | "notifications"
+  | "calls"
+  | "appearance"
+  | "storage"
+  | "security"
+  | "about"
+  | "advanced"
+  | "shortcuts"
+  | "health"
+  | "usage"
+  | "mojo"
+  | "spark"
+  | "points"
+  | "creators"
+  | "developer";
 export type WorkspacePage =
   | "overview"
   | "people"
@@ -33,7 +52,9 @@ export type WorkspacePage =
   | "bans"
   | "guide"
   | "onboarding"
-  | "expressions";
+  | "expressions"
+  // API 0.65.0 batch B: bots added to the community.
+  | "bots";
 
 export interface Route {
   section: Section;
@@ -47,7 +68,7 @@ export interface Route {
 /** Sections that take the whole page (no conversation list). */
 export const isFullPage = (s: Section): boolean => s === "settings" || s === "workspace";
 
-const SECTIONS: Section[] = ["home", "dms", "friends", "activity", "later", "discover", "settings", "workspace"];
+const SECTIONS: Section[] = ["home", "dms", "friends", "activity", "later", "discover", "settings", "workspace", "oauth"];
 const PAGES: SettingsPage[] = [
   "you",
   "profile",
@@ -67,6 +88,9 @@ const PAGES: SettingsPage[] = [
   "spark",
   // API 0.65.0: points, quests and levels.
   "points",
+  // API 0.65.0 batch B: the creator programme; bots and "Log in with Meldiq" apps.
+  "creators",
+  "developer",
 ];
 const WORKSPACE_PAGES: WorkspacePage[] = [
   "pins",
@@ -85,6 +109,7 @@ const WORKSPACE_PAGES: WorkspacePage[] = [
   "guide",
   "onboarding",
   "expressions",
+  "bots",
 ];
 const ID = /^[A-Za-z0-9_-]{1,128}$/;
 
@@ -119,6 +144,7 @@ export function parseRoute(where: string): Route {
 export function routeHref(r: Partial<Route> & { section: Section }): string {
   if (r.section === "settings") return `/settings/${r.settingsPage ?? "profile"}`;
   if (r.section === "workspace") return `/workspace/${r.workspacePage ?? "overview"}`;
+  if (r.section === "oauth") return "/oauth/authorize";
   let h = `/${r.section}`;
   if (r.conversationId) {
     h += `/c/${encodeURIComponent(r.conversationId)}`;
@@ -161,6 +187,8 @@ export function appHref(raw: string, origin = location.origin): string | null {
   const where = legacy ? u.hash.slice(1) : u.pathname;
   if (!/^\/[A-Za-z0-9/_%-]{0,300}$/.test(where)) return null;
   const section = where.split("/")[1];
+  // The consent page carries its request in the query, which an in-page move would drop: the browser loads it.
+  if (section === "oauth") return null;
   return SECTIONS.includes(section as Section) ? routeHref(parseRoute(where)) : null;
 }
 

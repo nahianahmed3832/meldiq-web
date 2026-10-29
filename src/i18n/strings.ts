@@ -746,6 +746,8 @@ export const STRINGS = {
   settings_mojo: ["Meldiq Mojo", "Meldiq Mojo", "Meldiq Mojo"],
   settings_spark: ["Meldiq Spark", "Meldiq Spark", "Meldiq Spark"],
   settings_points: ["Points", "积分", "পয়েন্ট"],
+  settings_creators: ["Creators", "创作者", "ক্রিয়েটর"],
+  settings_developer: ["Developer", "开发者", "ডেভেলপার"],
   settings_about: ["About", "关于", "সম্পর্কে"],
   settings_advanced: ["Advanced", "高级", "উন্নত"],
 } as const satisfies Record<string, readonly [string, string, string]>;

@@ -6,6 +6,8 @@ import {
   ChevronLeft,
   ChevronRight,
   Coins,
+  Clapperboard,
+  Code2,
   HardDrive,
   Headphones,
   Info,
@@ -40,8 +42,12 @@ import { InstallButton } from "./InstallButton";
 import { MojoPage } from "../mojo/MojoPage";
 import { SparkPage } from "../mojo/SparkPage";
 import { PointsPage } from "../points/PointsPage";
+import { CreatorsPage } from "../creators/CreatorsPage";
+import { DeveloperPage } from "../developer/DeveloperPage";
 
-type PageEntry = { key: SettingsPage; label: StringKey; icon: React.ReactNode };
+/** [features]: the page shows when the server has any of them. */
+type PageEntry = { key: SettingsPage; label: StringKey; icon: React.ReactNode; features?: string[] };
+const NO_FEATURES: string[] = [];
 
 /** The reference's two groups (2026-10-28): you and your account, then how the app looks and behaves here. */
 const USER_PAGES: PageEntry[] = [
@@ -60,8 +66,12 @@ const APP_PAGES: PageEntry[] = [
   { key: "notifications", label: "settings_notifications", icon: <Bell size={17} /> },
   { key: "shortcuts", label: "settings_shortcuts", icon: <Keyboard size={17} /> },
   // API 0.65.0: points, quests and account levels (Gem is Spark's).
-  { key: "points", label: "settings_points", icon: <Coins size={17} /> },
+  { key: "points", label: "settings_points", icon: <Coins size={17} />, features: ["points"] },
   { key: "advanced", label: "settings_advanced", icon: <SlidersHorizontal size={17} /> },
+  // API 0.65.0 batch B: bots and "Log in with Meldiq" apps.
+  { key: "developer", label: "settings_developer", icon: <Code2 size={17} />, features: ["bots", "oauth-apps"] },
+  // API 0.65.0 batch B: the creator programme.
+  { key: "creators", label: "settings_creators", icon: <Clapperboard size={17} />, features: ["creator-program"] },
   { key: "storage", label: "settings_storage", icon: <HardDrive size={17} /> },
   { key: "about", label: "settings_about", icon: <Info size={17} /> },
 ];
@@ -71,8 +81,8 @@ export function SettingsView({ page, onSignedOut }: { page: SettingsPage; onSign
   // Service health and workspace usage are for platform administrators only (android round 7 C1, C7); the server checks again.
   const admin = useLoad(() => isPlatformAdmin(engine).catch(() => false), [engine]).data === true;
   const t = useT();
-  const pointsOn = useOrbit((s) => s.server?.features.includes("points") ?? false);
-  const named = (list: PageEntry[]) => list.filter((p) => p.key !== "points" || pointsOn).map((p) => ({ ...p, label: t(p.label) }));
+  const features = useOrbit((s) => s.server?.features ?? NO_FEATURES);
+  const named = (list: PageEntry[]) => list.filter((p) => !p.features || p.features.some((f) => features.includes(f))).map((p) => ({ ...p, label: t(p.label) }));
   const groups: { title: string; pages: { key: SettingsPage; label: string; icon: React.ReactNode }[] }[] = [
     { title: t("settings_user_group"), pages: named(USER_PAGES) },
     { title: t("settings_app_group"), pages: named(APP_PAGES) },
@@ -145,6 +155,8 @@ export function SettingsView({ page, onSignedOut }: { page: SettingsPage; onSign
             {page === "mojo" && <MojoPage />}
             {page === "spark" && <SparkPage />}
             {page === "points" && <PointsPage />}
+            {page === "creators" && <CreatorsPage />}
+            {page === "developer" && <DeveloperPage />}
           </div>
         </div>
       </div>

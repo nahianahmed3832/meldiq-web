@@ -13,6 +13,7 @@ import { RecoveryCodesCard } from "./RecoveryCodesCard";
 import { AccountOverview } from "./AccountOverview";
 import { StandingCard, TwoStepCard } from "./AccountSafetyCards";
 import { BugReportsCard, DataExportCard, LogOutEverywhereCard } from "./AccountExtrasCards";
+import { CreatorVerificationCard } from "./CreatorVerificationCard";
 
 /**
  * The Orbit 2.0 account (docs/ORBIT_2_ARCHITECTURE §2): its email, the password, and where it's signed in. A browser
@@ -64,6 +65,7 @@ function MyAccount({ email: initialEmail, onSignedOut }: { email: string; onSign
       <RecoveryCodesCard />
       <StandingCard />
       <BugReportsCard />
+      <CreatorVerificationCard />
       <h2 className="settings-group">Your data</h2>
       <DataExportCard />
       <h2 className="settings-group">Account</h2>
