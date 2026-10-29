@@ -5,7 +5,7 @@ import { useEngine } from "../../application/orbit";
 import type { AttachmentRef } from "../../protocol/payload";
 import { isInlineImage, safeMime } from "../../sync/attachments";
 import { dayLabel, clock as timeOfDay } from "../format";
-import { keepsNativeMenu, Menu, useMenu } from "../components/Overlay";
+import { Menu, useMenu } from "../components/Overlay";
 import { useBlobUrl } from "./blobUrl";
 import { copyImage, downloadUrl } from "./contextTarget";
 
@@ -93,7 +93,6 @@ export function MediaViewer({ items, at, onMove, onClose }: { items: AttachmentR
       onDoubleClick={stop}
       onContextMenu={(e) => {
         stop(e);
-        if (keepsNativeMenu(e.target)) return;
         e.preventDefault();
         if (url) menu.openAt(e.currentTarget, e);
       }}
@@ -140,7 +139,7 @@ export function MediaViewer({ items, at, onMove, onClose }: { items: AttachmentR
         ) : video ? (
           <VideoPlayer key={url} url={url} name={r.name} />
         ) : (
-          <img src={url} alt={r.name} data-native-menu />
+          <img src={url} alt={r.name} />
         )}
       </div>
       <div className="viewer-foot">

@@ -336,8 +336,7 @@ export function useMenu(): {
  */
 export function keepsNativeMenu(target: EventTarget | null): boolean {
   const el = target as HTMLElement | null;
-  // Photos keep it too (the owner, 2026-10-29): the browser's own Copy image and Save image work everywhere.
-  return !!el?.closest?.('input, textarea, select, [contenteditable="true"], [data-native-menu]');
+  return !!el?.closest?.('input, textarea, select, [contenteditable="true"]');
 }
 
 /**
