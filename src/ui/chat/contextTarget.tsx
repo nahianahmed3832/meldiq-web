@@ -40,20 +40,30 @@ export function downloadUrl(url: string, name: string): void {
   a.remove();
 }
 
+/**
+ * [url] drawn into a PNG. Through an image, not fetch(): the site's CSP allows blob: pictures in img-src but not in
+ * connect-src, so fetching a decrypted photo's blob: URL is refused in production (the owner, 2026-10-29).
+ */
+function pngOf(url: string): Promise<Blob> {
+  return new Promise<Blob>((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      canvas.width = img.naturalWidth;
+      canvas.height = img.naturalHeight;
+      canvas.getContext("2d")?.drawImage(img, 0, 0);
+      canvas.toBlob((b) => (b ? resolve(b) : reject(new Error("no image"))), "image/png");
+    };
+    img.onerror = () => reject(new Error("image didn't load"));
+    img.src = url;
+  });
+}
+
 /** Copies a picture to the clipboard as PNG (what clipboards accept everywhere); false where the browser can't. */
 export async function copyImage(url: string): Promise<boolean> {
   if (typeof ClipboardItem === "undefined" || !navigator.clipboard?.write) return false;
   try {
-    const png = async () => {
-      const blob = await (await fetch(url)).blob();
-      if (blob.type === "image/png") return blob;
-      const bitmap = await createImageBitmap(blob);
-      const canvas = document.createElement("canvas");
-      canvas.width = bitmap.width;
-      canvas.height = bitmap.height;
-      canvas.getContext("2d")?.drawImage(bitmap, 0, 0);
-      return await new Promise<Blob>((resolve, reject) => canvas.toBlob((b) => (b ? resolve(b) : reject(new Error("no image"))), "image/png"));
-    };
+    const png = () => pngOf(url);
     // Safari wants the promise handed over straight away, inside the click.
     await navigator.clipboard.write([new ClipboardItem({ "image/png": png() })]);
     return true;
