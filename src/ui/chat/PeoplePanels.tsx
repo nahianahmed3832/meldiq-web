@@ -4,10 +4,10 @@ import type { Conversation, Member } from "../../api/schemas";
 import { useEngine, useOrbit } from "../../application/orbit";
 import { setPrefs, usePrefs } from "../../application/prefs";
 import { navigate, type Route } from "../../application/router";
-import type { Engine } from "../../sync/engine";
 import { startDirect, userProfile } from "../../sync/account";
 import { presenceWords } from "../../sync/social";
-import { directory } from "../../sync/workspaces";
+import { shownName } from "../../sync/communityParity";
+import { useCommunityMembers } from "../community/useCommunityMembers";
 import { nameTone, toneOf } from "../components/Avatar";
 import { contextMenuProps, Menu, type MenuEntry, useMenu } from "../components/Overlay";
 import { LookAvatar, LookName, StyledName } from "../people/NameStyle";
@@ -16,15 +16,12 @@ import { themeBackground, themeColorsOf } from "../people/profileTheme";
 import { dmPeer, relative } from "../format";
 import { openProfile } from "../people/ProfileDialog";
 import { useMembers } from "./ConversationDetails";
-import { isHere, type ListedRole, memberListGroups, nameColor } from "./memberListRules";
+import { isHere, memberListGroups, roleNameColors } from "./memberListRules";
 import { useT } from "../../i18n";
 import { ProfilePins } from "../people/ProfilePins";
 
 /** Wide enough to keep a member list or profile beside the messages; narrower screens open them over the messages. */
 const WIDE = "(min-width: 1241px)";
-/** How long a community's roles are reused while moving between its channels. */
-const ROLES_TTL_MS = 60_000;
-
 export function useWideLayout(): boolean {
   return useSyncExternalStore(
     (l) => {
@@ -49,47 +46,27 @@ export function usePeopleShown(c: Pick<Conversation, "type" | "voice">, route: R
   return !route.panel && wide && (c.type === "DM" ? prefs.dmProfile : prefs.memberList);
 }
 
-const rolesCache = new Map<string, { at: number; roles: Map<string, ListedRole[]> }>();
-
-/** The community's custom roles per person, where this account may see the member directory; empty otherwise. */
-function useCommunityRoles(engine: Engine, orgId: string | null): Map<string, ListedRole[]> {
-  const cached = orgId ? rolesCache.get(orgId) : undefined;
-  const [roles, setRoles] = useState(cached?.roles ?? new Map<string, ListedRole[]>());
-  useEffect(() => {
-    if (!orgId) return;
-    const hit = rolesCache.get(orgId);
-    if (hit && Date.now() - hit.at < ROLES_TTL_MS) return setRoles(hit.roles);
-    let alive = true;
-    directory(engine, orgId)
-      .then((people) => {
-        const next = new Map(people.map((p) => [p.id, p.customRoles]));
-        rolesCache.set(orgId, { at: Date.now(), roles: next });
-        if (alive) setRoles(next);
-      })
-      // Guests and roles without the member directory see the list without role groups.
-      .catch(() => undefined);
-    return () => {
-      alive = false;
-    };
-  }, [engine, orgId]);
-  return roles;
-}
-
 /** A channel's or group's members beside the messages, as Discord lists them: by role while here, then offline. */
 export function MemberListPanel({ c, onClose }: { c: Conversation; onClose: () => void }) {
-  const engine = useEngine();
   const t = useT();
   const users = useOrbit((s) => s.users);
   const { members, error } = useMembers(c.id, c.memberCount);
-  const roles = useCommunityRoles(engine, c.type === "CHANNEL" ? c.orgId : null);
+  // Guests and roles without the member directory see the list without role groups and nicknames.
+  const { roles, nicknames } = useCommunityMembers(c.type === "CHANNEL" ? c.orgId : null);
   // The store has the latest presence, names and photos (live updates); the member list has everyone.
   const people = useMemo(
     () =>
       (members ?? []).map((m) => {
         const u = users[m.id];
-        return { ...m, displayName: u?.displayName ?? m.displayName, presence: u?.presence ?? m.presence, online: u?.online ?? m.online, photoRev: u?.photoRev ?? m.photoRev };
+        return {
+          ...m,
+          displayName: shownName(u?.displayName ?? m.displayName, nicknames.get(m.id)),
+          presence: u?.presence ?? m.presence,
+          online: u?.online ?? m.online,
+          photoRev: u?.photoRev ?? m.photoRev,
+        };
       }),
-    [members, users],
+    [members, users, nicknames],
   );
   const groups = useMemo(() => memberListGroups(people, (id) => roles.get(id)), [people, roles]);
 
@@ -110,7 +87,7 @@ export function MemberListPanel({ c, onClose }: { c: Conversation; onClose: () =
               {g.key === "online" ? t("people_online") : g.key === "offline" ? t("people_offline") : g.label} — {g.members.length}
             </h3>
             {g.members.map((m) => (
-              <MemberRow key={m.id} m={m} away={!isHere(m)} color={nameColor(roles.get(m.id))} orgId={c.type === "CHANNEL" ? c.orgId : null} />
+              <MemberRow key={m.id} m={m} away={!isHere(m)} colors={roleNameColors(roles.get(m.id))} orgId={c.type === "CHANNEL" ? c.orgId : null} />
             ))}
           </section>
         ))}
@@ -120,7 +97,7 @@ export function MemberListPanel({ c, onClose }: { c: Conversation; onClose: () =
 }
 
 /** One person in the member list: their profile on click; a right-click (or the Menu key) opens their menu. */
-function MemberRow({ m, away, color, orgId }: { m: Member; away: boolean; color: string | null; orgId: string | null }) {
+function MemberRow({ m, away, colors, orgId }: { m: Member; away: boolean; colors: string[] | null; orgId: string | null }) {
   const engine = useEngine();
   const me = useOrbit((s) => s.me?.userId);
   const builder = usePrefs().builderMode;
@@ -186,7 +163,17 @@ function MemberRow({ m, away, color, orgId }: { m: Member; away: boolean; color:
         />
         <span className="lines">
           <span className="member-name">
-            <StyledName name={m.displayName} style={m.profileStyle} tag={m.tag} mojo={m.mojo} bot={m.bot} roleColor={color} toneClass={nameTone(m.avatarColor)} className="ellipsis" />
+            <StyledName
+              name={m.displayName}
+              style={m.profileStyle}
+              tag={m.tag}
+              mojo={m.mojo}
+              bot={m.bot}
+              roleColor={colors?.[0] ?? null}
+              roleColor2={colors?.[1] ?? null}
+              toneClass={nameTone(m.avatarColor)}
+              className="ellipsis"
+            />
           </span>
           {status && <small className="ellipsis">{status}</small>}
         </span>

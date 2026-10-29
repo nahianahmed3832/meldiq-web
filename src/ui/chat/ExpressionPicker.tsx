@@ -32,6 +32,8 @@ interface ExpressionPickerProps {
   onEmoji: (emoji: string) => void;
   /** Sending is allowed here (stickers and GIFs are messages of their own). */
   canSend: boolean;
+  /** Community parity A1: the tabs this channel allows (text only and no-GIF channels); all when left out. */
+  allowedTabs?: readonly PickerTab[];
   community?: { list: ExpressionList; onEmoji: (e: Expression) => void; onSticker: (e: Expression) => void };
   onSticker: (pack: string, id: string) => void;
   onAnimoji: (emoji: string) => void;
@@ -66,7 +68,7 @@ export function ExpressionPicker(p: ExpressionPickerProps) {
       window.removeEventListener("resize", p.onClose);
     };
   }, [p]);
-  const tabs = TABS.filter((t) => t.id === "emoji" || p.canSend);
+  const tabs = TABS.filter((t) => t.id === "emoji" || (p.canSend && (!p.allowedTabs || p.allowedTabs.includes(t.id))));
   return createPortal(
     <div ref={ref} className="expression-picker" role="dialog" aria-label="Emoji, GIFs and stickers" style={pos ? { left: pos.left, bottom: pos.bottom } : { visibility: "hidden" }}>
       <div className="xp-tabs" role="tablist" aria-label="Pick from">

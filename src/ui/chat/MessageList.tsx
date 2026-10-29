@@ -8,6 +8,8 @@ import { MessageItem } from "./MessageItem";
 import { TypingIndicator } from "./TypingIndicator";
 import { JUMP_EVENT } from "./jump";
 import { useT } from "../../i18n";
+import { shownName } from "../../sync/communityParity";
+import { useCommunityMembers } from "../community/useCommunityMembers";
 
 const GROUP_MS = 5 * 60_000;
 const NEAR_BOTTOM = 120;
@@ -22,6 +24,9 @@ interface MessageListProps {
   canPost: boolean;
   /** Reactions and votes (the rules channel lets everyone react); defaults to canPost. */
   canReact?: boolean;
+  /** Community parity A1: adding new reactions, and moderating (pin, delete anyone's message). */
+  newReactions?: boolean;
+  moderate?: boolean;
   onReply: (m: StoredMessage) => void;
   onThread: ((m: StoredMessage) => void) | null;
   onReview: (userId: string) => void;
@@ -48,6 +53,12 @@ export function MessageList(props: MessageListProps) {
   const me = useOrbit((s) => s.me);
   const users = useOrbit((s) => s.users);
   const typing = useOrbit((s) => s.typing[props.conversationId]);
+  // Community parity A1: people go by their nickname in a community's channels.
+  const communityId = useOrbit((s) => {
+    const c = s.conversations[props.conversationId];
+    return c?.type === "CHANNEL" ? c.orgId : null;
+  });
+  const { nicknames } = useCommunityMembers(communityId);
   const scroller = useRef<HTMLDivElement>(null);
   const prev = useRef<{ first: string | null; last: string | null; height: number; atBottom: boolean }>({ first: null, last: null, height: 0, atBottom: true });
   const [unseen, setUnseen] = useState(0);
@@ -141,7 +152,7 @@ export function MessageList(props: MessageListProps) {
   }, [jump]);
 
   if (!me) return null;
-  const nameOf = (id: string) => (id === me.userId ? me.displayName : (users[id]?.displayName ?? "Unknown"));
+  const nameOf = (id: string) => shownName(id === me.userId ? me.displayName : (users[id]?.displayName ?? "Unknown"), nicknames.get(id));
   const typers = Object.entries(typing ?? {})
     .filter(([u, until]) => until > Date.now() && u !== me.userId)
     .map(([u]) => users[u]?.displayName ?? "Someone");
@@ -203,7 +214,7 @@ export function MessageList(props: MessageListProps) {
               <MessageItem
                 m={m}
                 first={first}
-                senderName={m.outgoing ? me.displayName : nameOf(m.senderUserId)}
+                senderName={nameOf(m.outgoing ? me.userId : m.senderUserId)}
                 senderColor={m.outgoing ? me.avatarColor : (users[m.senderUserId]?.avatarColor ?? 0)}
                 senderPhotoRev={users[m.outgoing ? me.userId : m.senderUserId]?.photoRev}
                 myUserId={me.userId}
@@ -213,6 +224,8 @@ export function MessageList(props: MessageListProps) {
                 threadCount={threadRoot ? 0 : (threadCounts.get(m.id) ?? 0)}
                 canPost={props.canPost}
                 canReact={props.canReact ?? props.canPost}
+                newReactions={props.newReactions}
+                moderate={props.moderate}
                 highlighted={highlight === m.id}
                 onReply={props.onReply}
                 onThread={threadRoot ? null : props.onThread}

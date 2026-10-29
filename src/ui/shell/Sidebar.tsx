@@ -15,7 +15,8 @@ import { CommunityHeader, hideMutedKey } from "../community/CommunityHeader";
 import { SparkGoal } from "../mojo/SparkGoal";
 import { useCommunityMenu } from "../community/communityMenu";
 import { CommunityPanel } from "../community/CommunityPanel";
-import { ACCENT_CLASS, accentStyle } from "../community/accent";
+import { ACCENT_CLASS, accentStyle, tintStyle } from "../community/accent";
+import { useCommunityThemes } from "../community/useCommunityThemes";
 import { usePhoto } from "../components/photos";
 import { useCommunityDetail } from "../community/useCommunityPermissions";
 import { useT } from "../../i18n";
@@ -53,7 +54,8 @@ export function Sidebar({ orgId, section, open, onDialog }: SidebarProps) {
   // Discover has its own short list (the owner, 2026-10-29: no friends list while finding communities).
   const discover = section === "discover";
   // API 0.44.0: the community's own accent and banner, on its channel list only (never the DMs or other communities).
-  const branded = communities && section !== "dms" && !discover && !!org && prefs.communityColors;
+  const themes = useCommunityThemes();
+  const branded = communities && section !== "dms" && !discover && !!org && themes.on;
   const messages = !discover && (section === "dms" || (communities && !org));
   const bannerUrl = usePhoto("banner", org?.id ?? "", branded ? org?.bannerRev : null);
   // Each community's channel list (and the messages list) keeps its scroll position when you come back to it.
@@ -80,7 +82,11 @@ export function Sidebar({ orgId, section, open, onDialog }: SidebarProps) {
   }, [listKey]);
 
   return (
-    <aside className={`sidebar${open ? " open" : ""}${branded && org?.accent ? ` ${ACCENT_CLASS}` : ""}`} style={branded ? accentStyle(org?.accent) : undefined} aria-label="Conversations">
+    <aside
+      className={`sidebar${open ? " open" : ""}${branded && org?.accent ? ` ${ACCENT_CLASS}` : ""}`}
+      style={branded ? { ...accentStyle(org?.accent), ...tintStyle(org?.background) } : undefined}
+      aria-label="Conversations"
+    >
       {/* With a banner, the community's name sits on it (2026-10-28, after the owner's reference). */}
       <div className={`side-head${branded && !messages && bannerUrl ? " on-banner" : ""}`} style={branded && !messages && bannerUrl ? { backgroundImage: `url(${bannerUrl})` } : undefined}>
         {discover ? (

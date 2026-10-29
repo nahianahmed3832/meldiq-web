@@ -62,6 +62,18 @@ export type Member = z.infer<typeof zMember>;
 export const zConversationType = z.enum(["DM", "GROUP", "CHANNEL"]);
 export type ConversationType = z.infer<typeof zConversationType>;
 
+/** Community parity A1: a channel's options (absent on older servers and while the feature is off). */
+export const zChannelOptions = z.object({
+  textOnly: z.boolean().default(false),
+  noGifs: z.boolean().default(false),
+  stage: z.boolean().default(false),
+  readOnly: z.boolean().default(false),
+  posterRoleIds: z.array(z.string()).max(50).default([]),
+  /** Stages, for their moderators: who may speak. */
+  speakerIds: z.array(z.string()).max(500).optional(),
+});
+export type ChannelOptions = z.infer<typeof zChannelOptions>;
+
 export const zConversation = z.object({
   id: z.string(),
   type: zConversationType,
@@ -138,6 +150,8 @@ export const zConversation = z.object({
   /** Voice channels: whether this person may join the call, and speak in it (listen-only otherwise). */
   canConnect: z.boolean().optional(),
   canSpeak: z.boolean().optional(),
+  /** Community parity A1 (feature community-permissions): text only, no GIFs, stage, read-only and who may post. */
+  options: zChannelOptions.nullish().catch(undefined),
   /** Batch B6: a message request (DMs): waiting for you ([incoming]), or yours waiting for them with how many you sent. */
   request: z
     .object({ state: z.string(), incoming: z.boolean(), sent: z.number().int().optional(), limit: z.number().int().default(3) })
@@ -145,6 +159,44 @@ export const zConversation = z.object({
     .transform((v) => v ?? null),
 });
 export type Conversation = z.infer<typeof zConversation>;
+
+const nullableTime = z
+  .number()
+  .nullish()
+  .transform((v) => v ?? null);
+
+/** Community parity A2 (feature community-safety): a community's safety settings, for people who can edit it or ban. */
+export const zSafetySettings = z.object({
+  verificationLevel: openEnum(["none", "low", "medium", "high"]).default("none"),
+  newAccountGate: openEnum(["off", "10m", "1h", "1d", "7d"]).default("off"),
+  raidProtection: z.boolean().default(true),
+  lockedUntil: nullableTime,
+  lockReason: nullableString,
+});
+export type SafetySettings = z.infer<typeof zSafetySettings>;
+
+/** Community parity A3: one of a community's links. */
+export const zCommunityLink = z.object({ label: z.string(), url: z.string() });
+export type CommunityLink = z.infer<typeof zCommunityLink>;
+
+/** The fields community parity A2 and A3 add to a community; older servers (and the features off) leave them out. */
+const communityParityOrgFields = {
+  /** A2: until when it's locked (nobody new joins, only moderators post), null when not. */
+  lockedUntil: z.number().nullish().catch(undefined),
+  safety: zSafetySettings.nullish().catch(undefined),
+  /** A3: the background tint ("#rrggbb"), links, custom invite link and the onboarding gate (members). */
+  background: z
+    .string()
+    .regex(/^#[0-9a-fA-F]{6}$/)
+    .nullish()
+    .catch(undefined),
+  links: z.array(zCommunityLink).max(10).optional().catch(undefined),
+  inviteSlug: z.string().nullish().catch(undefined),
+  onboardingRequired: z.boolean().optional().catch(undefined),
+  onboardingDone: z.boolean().optional().catch(undefined),
+  startChannelId: z.string().nullish().catch(undefined),
+  mustFinishOnboarding: z.boolean().optional().catch(undefined),
+};
 
 export const zOrg = z.object({
   id: z.string(),
@@ -257,6 +309,7 @@ export const zOrg = z.object({
     .nullish()
     .catch(null)
     .transform((v) => v ?? null),
+  ...communityParityOrgFields,
 });
 export type Org = z.infer<typeof zOrg>;
 export type OrgKind = Org["kind"];

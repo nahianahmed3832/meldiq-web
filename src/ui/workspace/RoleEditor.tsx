@@ -1,27 +1,60 @@
-import { useMemo, useState } from "react";
-import { Toggle } from "../components/Toggle";
+import { IdCard } from "lucide-react";
+import { useState } from "react";
 import { useEngine, useOrbit } from "../../application/orbit";
-import { createRole, grantable, type PermissionDef, type Role, type RolesOverview, updateRole } from "../../sync/roles";
+import { PARITY_FEATURES } from "../../sync/communityParity";
+import { autoRoleProblem } from "../../sync/permissionGroups";
+import { type AutoAssign, createRole, grantable, type Role, type RoleExtrasChange, type RolesOverview, setRoleExtras, updateRole } from "../../sync/roles";
 import { Dialog } from "../components/Overlay";
-import { ErrorLine } from "./WorkspaceView";
+import { RoleDisplayTab, type RoleDraft, ROLE_COLORS } from "./RoleDisplayTab";
+import { RoleMembersList } from "./RoleMembers";
+import { PermissionChecklist } from "./RolePermissionsTab";
 import { useAction } from "./useLoad";
+import { ErrorLine } from "./WorkspaceView";
 
-const CATEGORY_LABEL: Record<string, string> = {
-  workspace: "Community",
-  members: "Members",
-  roles: "Roles",
-  teams: "Branches and teams",
-  channels: "Channels",
-  messaging: "Messaging",
-  integrations: "Apps",
-  security: "Security",
+type Tab = "display" | "permissions" | "members";
+
+const dayInput = (ms: number | null | undefined) => (ms ? new Date(ms).toISOString().slice(0, 10) : "");
+const dayMs = (day: string) => (day ? Date.parse(`${day}T00:00:00Z`) : null);
+
+function startDraft(overview: RolesOverview, role: Role | null, template?: string): RoleDraft {
+  const t = role ? null : (overview.templates.find((x) => x.key === template) ?? null);
+  const from = role ?? t;
+  return {
+    name: role?.name ?? t?.name ?? "",
+    description: from?.description ?? "",
+    color: from ? (from.color ?? null) : ROLE_COLORS[0],
+    color2: role?.extras?.color2 ?? null,
+    hoist: role?.hoist ?? false,
+    mentionable: role?.extras?.mentionable ?? false,
+    autoMode: role?.extras?.autoAssign.mode ?? "none",
+    autoBefore: dayInput(role?.extras?.autoAssign.before),
+    grants: new Set(from?.permissions ?? []),
+    denies: new Set(from?.denies ?? []),
+  };
+}
+
+/** What changed in the extras, or null when nothing did (only sent to servers with community-permissions). */
+function extrasChange(draft: RoleDraft, role: Role | null): RoleExtrasChange | null {
+  const auto: AutoAssign = { mode: draft.autoMode, before: draft.autoMode === "joined_before" ? dayMs(draft.autoBefore) : null };
+  const was = role?.extras ?? { color2: null, mentionable: false, autoAssign: { mode: "none", before: null } };
+  const change: RoleExtrasChange = {};
+  if ((draft.color ? draft.color2 : null) !== was.color2) change.color2 = draft.color ? draft.color2 : null;
+  if (draft.mentionable !== was.mentionable) change.mentionable = draft.mentionable;
+  if (auto.mode !== was.autoAssign.mode || auto.before !== was.autoAssign.before) change.autoAssign = auto;
+  return Object.keys(change).length ? change : null;
+}
+
+const toggled = (set: ReadonlySet<string>, key: string, on: boolean): Set<string> => {
+  const next = new Set(set);
+  if (on) next.add(key);
+  else next.delete(key);
+  return next;
 };
-const COLORS = ["#E39B7B", "#7C9CE3", "#6FBF8E", "#C58BE0", "#E3C26F", "#6FC6C9", "#E37B9B", "#8C8FA3"];
 
 /**
- * Making or changing a custom role (android ui/screens/workspace/roles, server docs/WORKSPACE_ROLES.md): its name, colour
- * and description, what it grants and what it restricts. Only powers this person may hand out are offered (owner-only
- * never, administrative ones only with delegation); the server checks everything again and its reason is shown.
+ * Making or changing a custom role (the reference's role editor; server docs/WORKSPACE_ROLES.md and
+ * COMMUNITY_PERMISSIONS.md): Display, Permissions and Manage Members tabs, "Edit role - NAME", Copy role ID. Only powers
+ * this person may hand out are offered; the server checks everything again and its reason is shown.
  */
 export function RoleEditor({
   orgId,
@@ -39,50 +72,52 @@ export function RoleEditor({
   onClose: () => void;
 }) {
   const engine = useEngine();
-  const start = role ?? overview.templates.find((t) => t.key === template) ?? null;
-  const [name, setName] = useState(role?.name ?? (start && "name" in start ? start.name : ""));
-  const [description, setDescription] = useState(start?.description ?? "");
-  const [color, setColor] = useState(start?.color ?? COLORS[0]);
-  const [grants, setGrants] = useState<Set<string>>(new Set(start?.permissions ?? []));
-  const [denies, setDenies] = useState<Set<string>>(new Set(start?.denies ?? []));
-  const hoistable = useOrbit((s) => s.server?.features.includes("role-hoist") ?? false);
-  const [hoist, setHoist] = useState(role?.hoist ?? false);
+  const features = useOrbit((s) => s.server?.features ?? []);
+  const extras = features.includes(PARITY_FEATURES.permissions);
+  const [draft, setDraft] = useState<RoleDraft>(() => startDraft(overview, role, template));
+  const [tab, setTab] = useState<Tab>("display");
   const act = useAction();
-  const byCategory = useMemo(() => {
-    const m = new Map<string, PermissionDef[]>();
-    for (const p of overview.catalog) m.set(p.category, [...(m.get(p.category) ?? []), p]);
-    return [...m.entries()];
-  }, [overview.catalog]);
   const readOnly = role !== null && !role.canEdit;
+  const patch = (change: Partial<RoleDraft>) => setDraft((d) => ({ ...d, ...change }));
+  const problem = extras ? autoRoleProblem(draft.autoMode, draft.grants.size, draft.denies.size) : null;
+  const holds = (key: string) => overview.me.base === "OWNER" || overview.me.permissions.includes(key);
 
-  const toggle = (set: Set<string>, key: string, on: boolean) => {
-    const next = new Set(set);
-    if (on) next.add(key);
-    else next.delete(key);
-    return next;
-  };
   const save = () =>
     void act.act(async () => {
-      const fields = { name: name.trim(), description: description.trim() || null, color, permissions: [...grants], denies: [...denies], ...(hoistable ? { hoist } : {}) };
-      if (role) await updateRole(engine, role, fields);
-      else await createRole(engine, orgId, { ...fields, ...(template ? { template } : {}) });
+      const fields = {
+        name: draft.name.trim(),
+        description: draft.description.trim() || null,
+        color: draft.color,
+        permissions: [...draft.grants],
+        denies: [...draft.denies],
+        ...(features.includes("role-hoist") ? { hoist: draft.hoist } : {}),
+      };
+      const saved = role ? await updateRole(engine, role, fields) : await createRole(engine, orgId, { ...fields, ...(template ? { template } : {}) });
+      const change = extras ? extrasChange(draft, role) : null;
+      if (change) await setRoleExtras(engine, saved.id, change);
       onSaved();
       onClose();
     });
+  const copyId = () => {
+    if (!role) return;
+    void navigator.clipboard?.writeText(role.id).catch(() => undefined);
+    engine.notice("info", "Role ID copied.");
+  };
 
   return (
     <Dialog
-      title={role ? (readOnly ? role.name : `Edit ${role.name}`) : "New role"}
+      title={role ? (readOnly ? role.name : `Edit role - ${role.name}`) : "New role"}
       onClose={onClose}
       wide
       footer={
         <>
+          {!readOnly && <span className="faint grow">Changes are saved when you press Save.</span>}
           <button className="btn btn-secondary" onClick={onClose}>
             {readOnly ? "Close" : "Cancel"}
           </button>
           {!readOnly && (
-            <button className="btn btn-primary" disabled={!name.trim() || act.busy} onClick={save}>
-              {act.busy ? "Saving…" : "Save role"}
+            <button className="btn btn-primary" disabled={!draft.name.trim() || act.busy || !!problem} onClick={save}>
+              {act.busy ? "Saving…" : "Save"}
             </button>
           )}
         </>
@@ -91,84 +126,47 @@ export function RoleEditor({
       <div className="dialog-body">
         <ErrorLine text={act.error} />
         {readOnly && <div className="banner info">This role carries powers beyond yours, so you can see it but not change it.</div>}
-        <div className="row" style={{ gap: 12, flexWrap: "wrap", alignItems: "flex-end" }}>
-          <label className="field" style={{ flex: "1 1 220px" }}>
-            <span>Name</span>
-            <input className="input" value={name} maxLength={overview.limits.nameMax ?? 40} disabled={readOnly} onChange={(e) => setName(e.target.value)} autoFocus />
-          </label>
-          <div className="field">
-            <span>Colour</span>
-            <div className="row" style={{ gap: 4 }} role="radiogroup" aria-label="Colour">
-              {COLORS.map((c) => (
-                <button key={c} role="radio" aria-checked={color === c} aria-label={c} disabled={readOnly} className="role-swatch" style={{ background: c }} onClick={() => setColor(c)} />
-              ))}
-            </div>
+        <div className="row" style={{ gap: 8, alignItems: "center" }}>
+          <div className="role-tabs grow" role="tablist" aria-label="Role">
+            {(["display", "permissions", ...(role ? (["members"] as const) : [])] as Tab[]).map((t) => (
+              <button key={t} role="tab" aria-selected={tab === t} onClick={() => setTab(t)}>
+                {t === "display" ? "Display" : t === "permissions" ? "Permissions" : "Manage Members"}
+              </button>
+            ))}
           </div>
+          {role && (
+            <button className="btn btn-ghost btn-sm" onClick={copyId}>
+              <IdCard size={14} /> Copy role ID
+            </button>
+          )}
         </div>
-        {hoistable && (
-          <div className="setting">
-            <span className="lines">
-              <strong>Show members separately</strong>
-              <small>People with this role are listed under its name in the member list, in role order.</small>
-            </span>
-            <Toggle checked={hoist} onChange={setHoist} label="Show members separately" />
-          </div>
-        )}
-        <label className="field">
-          <span>Description</span>
-          <input
-            className="input"
-            value={description}
-            maxLength={overview.limits.descriptionMax ?? 200}
-            disabled={readOnly}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="What this role is for"
+        {tab === "display" && (
+          <RoleDisplayTab
+            draft={draft}
+            patch={patch}
+            readOnly={readOnly}
+            nameMax={overview.limits.nameMax ?? 40}
+            descriptionMax={overview.limits.descriptionMax ?? 200}
+            extras={extras}
+            hoistable={features.includes("role-hoist")}
           />
-        </label>
-        {byCategory.map(([category, perms]) => (
-          <fieldset key={category} className="perm-group">
-            <legend>{CATEGORY_LABEL[category] ?? category}</legend>
-            {perms.map((p) => {
-              const can = !readOnly && grantable(p, overview.me);
-              return (
-                <div key={p.key} className="perm-row">
-                  <div className="lines grow">
-                    <span>
-                      {p.label}
-                      {p.admin && (
-                        <span className="tag" style={{ marginLeft: 6 }}>
-                          Admin
-                        </span>
-                      )}
-                      {p.ownerOnly && (
-                        <span className="tag" style={{ marginLeft: 6 }}>
-                          Owners only
-                        </span>
-                      )}
-                    </span>
-                    <small>{p.description}</small>
-                  </div>
-                  <label className="perm-choice">
-                    <input type="checkbox" checked={grants.has(p.key)} disabled={!can} onChange={(e) => setGrants(toggle(grants, p.key, e.target.checked))} />
-                    Grant
-                  </label>
-                  {p.restrictable && (
-                    <label className="perm-choice">
-                      <input
-                        type="checkbox"
-                        checked={denies.has(p.key)}
-                        disabled={readOnly || !(overview.me.base === "OWNER" || overview.me.permissions.includes(p.key))}
-                        onChange={(e) => setDenies(toggle(denies, p.key, e.target.checked))}
-                      />
-                      Restrict
-                    </label>
-                  )}
-                </div>
-              );
-            })}
-          </fieldset>
-        ))}
-        <span className="hint">A role grants only what's ticked; restrictions win over grants. Owners always keep every power.</span>
+        )}
+        {tab === "permissions" && (
+          <>
+            <PermissionChecklist
+              catalog={overview.catalog}
+              grants={draft.grants}
+              denies={draft.denies}
+              canChange={(p) => !readOnly && grantable(p, overview.me)}
+              canDeny={(p) => !readOnly && holds(p.key)}
+              onGrant={(key, on) => patch({ grants: toggled(draft.grants, key, on) })}
+              onDeny={(key, on) => patch({ denies: toggled(draft.denies, key, on) })}
+              onClear={readOnly ? undefined : () => patch({ grants: new Set(), denies: new Set() })}
+            />
+            <span className="hint">A role grants only what's ticked; restrictions win over grants. Owners always keep every power.</span>
+          </>
+        )}
+        {tab === "members" && role && <RoleMembersList orgId={orgId} role={role} canAssign={overview.me.canAssign && role.canAssign} onChanged={onSaved} />}
       </div>
     </Dialog>
   );

@@ -33,6 +33,13 @@ import { useNow } from "../call/useNow";
 import { useT } from "../../i18n";
 import { SlashCommandList, useSlashCommands } from "./SlashCommands";
 import { RulesAgreeBar, useRulesSummary } from "../community/RulesViews";
+import { ComposerHoldBar, ComposerNoteLine, useComposerGates } from "./ComposerGates";
+import { hasHeading, refusalText } from "../../sync/channelGates";
+import { clearComposerNote, setComposerNote } from "../../sync/composerNotes";
+import { type MentionRole, mentionableRoles, roleToken, rolesStillMentioned } from "../../sync/roleMentions";
+
+/** A role in the mention list is shown among people with this id prefix. */
+const ROLE_PREFIX = "role:";
 
 interface ComposerProps {
   conversation: Conversation;
@@ -55,6 +62,10 @@ export function Composer(props: ComposerProps) {
   const t = useT();
   // API 0.65.0: the community's rules channel, and whether this account must agree to its rules first.
   const rules = useRulesSummary(c.type === "CHANNEL" ? c.orgId : null);
+  // Community parity A: what this person may send here, why posting is held back, and roles to mention.
+  const gates = useComposerGates(c);
+  const can = gates.abilities;
+  const pickedRoles = useRef<MentionRole[]>([]);
   const [text, setText] = useState("");
   const [files, setFiles] = useState<File[]>([]);
   // Starts at the default chosen in Settings › Appearance › Photo upload quality (android upload quality).
@@ -81,7 +92,7 @@ export function Composer(props: ComposerProps) {
   const attach = useMenu();
   const [voice, setVoice] = useState(false);
   const [rich, setRich] = useState<"contact" | "location" | "poll" | null>(null);
-  const canRecord = !props.threadRoot && voiceMime() !== null;
+  const canRecord = !props.threadRoot && voiceMime() !== null && can.voice;
   const draftTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
   // Batch B9: a community's own emoji and stickers in its channels; the ones picked for this message by name.
   const communityEmoji = useExpressions(c.type === "CHANNEL" ? c.orgId : null, true);
@@ -160,8 +171,10 @@ export function Composer(props: ComposerProps) {
     const q = c.type === "DM" ? null : activeMentionQuery(value, caret);
     if (!q) return setSuggest(null);
     const pool = [...members.filter((m) => m.id !== engine.device.userId)];
+    const roleItems = mentionableRoles(gates.roles, true, q.query).map((r) => ({ id: `${ROLE_PREFIX}${r.id}`, username: r.name, displayName: `@${r.name}`, avatarColor: 7 }) as Member);
     const items = [
       ...(c.canMentionAll && "everyone".startsWith(q.query) ? [{ id: "everyone", username: "everyone", displayName: "Everyone in this conversation", avatarColor: 7 } as Member] : []),
+      ...roleItems.slice(0, 3),
       ...pool.filter((m) => m.username.toLowerCase().startsWith(q.query) || m.displayName.toLowerCase().includes(q.query)),
     ].slice(0, 8);
     setSuggest(items.length ? { start: q.start, items, index: 0 } : null);
@@ -170,7 +183,9 @@ export function Composer(props: ComposerProps) {
   const pick = (m: Member) => {
     if (!suggest) return;
     const caret = input.current?.selectionStart ?? text.length;
-    const token = `@${m.username}`;
+    const role = m.id.startsWith(ROLE_PREFIX) ? gates.roles.find((r) => `${ROLE_PREFIX}${r.id}` === m.id) : undefined;
+    if (role) pickedRoles.current = [...pickedRoles.current.filter((r) => r.id !== role.id), role];
+    const token = role ? roleToken(role.name) : `@${m.username}`;
     const next = `${text.slice(0, suggest.start)}${token} ${text.slice(caret)}`;
     setText(next);
     setSuggest(null);
@@ -186,6 +201,9 @@ export function Composer(props: ComposerProps) {
     if ((!body && !files.length) || busy) return;
     // Over the plan's characters (server docs/MOJO.md): the note under the box says so; nothing is cut off.
     if (overCharLimit(body, charLimit)) return;
+    // Community parity A1: headings need Use Big Text; said here instead of after the server refuses.
+    if (!can.headings && hasHeading(body)) return setComposerNote(c.id, refusalText("headings_not_allowed") ?? "Headings aren't allowed here.");
+    clearComposerNote(c.id);
     if (!files.length && !props.threadRoot && body.startsWith("/")) {
       const ran = await slash.run(body);
       if (ran === "kept") return;
@@ -221,7 +239,9 @@ export function Composer(props: ComposerProps) {
       } else {
         // Batch B9: the community emoji the text still names go with it (id, community and image hash).
         const customEmoji = forSending(body, picked.current.values());
-        await engine.sendText(c.id, body, customEmoji.length ? { ...opts, rich: { customEmoji } } : opts);
+        const roleMentions = rolesStillMentioned(body, pickedRoles.current);
+        pickedRoles.current = [];
+        await engine.sendText(c.id, body, { ...opts, ...(customEmoji.length ? { rich: { customEmoji } } : {}), ...(roleMentions.length ? { roleMentions } : {}) });
       }
       if (slowed && !props.threadRoot) setLastSent(Date.now());
       setFiles([]);
@@ -267,6 +287,7 @@ export function Composer(props: ComposerProps) {
   };
 
   if (rules?.mustAgree && c.orgId && !c.archived) return <RulesAgreeBar orgId={c.orgId} />;
+  if (gates.hold && c.orgId && !c.archived) return <ComposerHoldBar hold={gates.hold} org={{ id: c.orgId }} />;
 
   if (!c.canPost) {
     return (
@@ -295,13 +316,18 @@ export function Composer(props: ComposerProps) {
         <div className="suggest card" role="listbox" aria-label="People to mention">
           {suggest.items.map((m, i) => (
             <button key={m.id} role="option" aria-selected={i === suggest.index} onMouseDown={(e) => e.preventDefault()} onClick={() => pick(m)}>
-              {m.id === "everyone" ? <AtSign size={18} /> : <UserAvatar userId={m.id} name={m.displayName} colorIndex={m.avatarColor} photoRev={m.photoRev} size={24} decorative />}
+              {m.id === "everyone" || m.id.startsWith(ROLE_PREFIX) ? (
+                <AtSign size={18} />
+              ) : (
+                <UserAvatar userId={m.id} name={m.displayName} colorIndex={m.avatarColor} photoRev={m.photoRev} size={24} decorative />
+              )}
               <span className="grow ellipsis">{m.displayName}</span>
-              <span className="faint">@{m.username}</span>
+              <span className="faint">{m.id.startsWith(ROLE_PREFIX) ? "Role" : `@${m.username}`}</span>
             </button>
           ))}
         </div>
       )}
+      {gates.note && <ComposerNoteLine conversationId={c.id} note={gates.note} />}
       {slowed && (
         <div className="composer-slowmode" role="status" aria-live="polite">
           {nextAt > now ? `Slowmode · you can send again in ${waitText(nextAt, now)}. Messages you send now go out then.` : `Slowmode is on: one message every ${slowmodeLabel(c.slowmodeSec)}.`}
@@ -415,7 +441,7 @@ export function Composer(props: ComposerProps) {
                 disabled={!!busy}
               />
               {/* Emoji → GIFs → Stickers (continuation brief v3 §11), each opening the same picker on its tab. */}
-              {PICKER_BUTTONS.filter((b) => b.tab === "emoji" || c.canPost).map((b) => (
+              {PICKER_BUTTONS.filter((b) => b.tab === "emoji" || (c.canPost && (b.tab === "gifs" ? can.gifs : can.stickers))).map((b) => (
                 <button
                   key={b.tab}
                   className={`icon-btn${b.tab === "emoji" ? "" : " hide-xs"}`}
@@ -480,8 +506,8 @@ export function Composer(props: ComposerProps) {
           label="Attach"
           onClose={attach.close}
           entries={[
-            { label: `Files (up to ${MAX_FILES_PER_MESSAGE})`, icon: <FileUp size={16} />, onSelect: () => fileInput.current?.click() },
-            { label: "Poll…", icon: <BarChart3 size={16} />, onSelect: () => setRich("poll") },
+            ...(can.attach ? [{ label: `Files (up to ${MAX_FILES_PER_MESSAGE})`, icon: <FileUp size={16} />, onSelect: () => fileInput.current?.click() }] : []),
+            ...(can.polls ? [{ label: "Poll…", icon: <BarChart3 size={16} />, onSelect: () => setRich("poll") }] : []),
             { label: "Share a profile…", icon: <UserRound size={16} />, onSelect: () => setRich("contact") },
             { label: "Location…", icon: <MapPin size={16} />, onSelect: () => setRich("location") },
           ]}
@@ -497,6 +523,7 @@ export function Composer(props: ComposerProps) {
           onTab={setPickerTab}
           onClose={emoji.close}
           canSend={props.conversation.canPost}
+          allowedTabs={["emoji", ...(can.gifs ? (["gifs"] as const) : []), ...(can.stickers ? (["stickers"] as const) : [])]}
           onEmoji={(em) => {
             emoji.close();
             insertAtCaret(em);

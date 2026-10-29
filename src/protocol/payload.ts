@@ -86,6 +86,8 @@ export const zPayload = z.object({
   threadRoot: opt(id),
   mentions: opt(z.array(id).max(500)),
   mentionAll: opt(z.boolean()),
+  /** Community parity A1: the community roles this message @mentions (the server checks who may mention them). */
+  roleMentions: opt(z.array(id).max(20)),
   attachments: opt(z.array(zAttachmentRef).max(100)),
   target: opt(id),
   emoji: opt(z.string().min(1).max(64)),

@@ -124,6 +124,17 @@ export interface NewChannel {
   voice: boolean;
   format: "text" | "forum";
   categoryId: string | null;
+  /** Community parity A1 (community-permissions): channel options and slowmode, set at creation. */
+  options?: ChannelOptionFields & { slowmodeSec?: number };
+}
+
+/** Community parity A1: a channel's options as the server takes them (absent fields stay as they are). */
+export interface ChannelOptionFields {
+  textOnly?: boolean;
+  noGifs?: boolean;
+  stage?: boolean;
+  readOnly?: boolean;
+  posterRoleIds?: string[];
 }
 
 export async function createCommunityChannel(engine: Engine, orgId: string, c: NewChannel): Promise<Conversation> {
@@ -137,6 +148,7 @@ export async function createCommunityChannel(engine: Engine, orgId: string, c: N
       format: c.format,
       categoryId: c.categoryId,
       ...(c.kind === "PUBLIC" ? { autoJoin: true } : {}),
+      ...(c.options ?? {}),
     },
   });
   await engine.community.refresh(orgId);
@@ -144,7 +156,7 @@ export async function createCommunityChannel(engine: Engine, orgId: string, c: N
   return channel;
 }
 
-export interface ChannelChange {
+export interface ChannelChange extends ChannelOptionFields {
   name?: string;
   topic?: string | null;
   archived?: boolean;

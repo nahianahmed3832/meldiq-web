@@ -3,9 +3,10 @@ import { shallowEqual, useOrbit } from "../../application/orbit";
 import { contextMenuProps, Menu, useMenu } from "../components/Overlay";
 import { useCommunityMenu } from "../community/communityMenu";
 import { useCommunityDetail } from "../community/useCommunityPermissions";
-import { setPrefs, usePrefs } from "../../application/prefs";
+import { setPrefs } from "../../application/prefs";
 import { navigate } from "../../application/router";
 import { ACCENT_CLASS, accentStyle } from "../community/accent";
+import { useCommunityThemes } from "../community/useCommunityThemes";
 import { OrgAvatar } from "../components/OrgAvatar";
 import { UnreadBadge } from "../components/UnreadBadge";
 import { orgActivity, orgLive } from "../selectors";
@@ -49,7 +50,7 @@ export function CommunityButton({
   const marker = unreadMarker(o.unread, o.mentions, false);
   // A call on in one of its channels (2026-10-28): a speaker at the icon's corner, red while someone shares a screen.
   const live = useOrbit((s) => orgLive(s, o.id), shallowEqual);
-  const ownColors = usePrefs().communityColors;
+  const ownColors = useCommunityThemes().on;
   const accent = ownColors ? o.accent : null;
   const label = `${o.name}${live.live ? (live.sharing ? ", someone is live" : ", a call is on") : ""}${o.mentions ? `, ${t("rail_mentions", { n: o.mentions })}` : ""}${o.unread ? `, ${t("nav_unread", { n: o.unread })}` : ""}`;
   const openIt = () => {

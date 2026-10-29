@@ -1178,7 +1178,7 @@ export class Engine implements EngineContext {
   sendText(
     conversationId: string,
     text: string,
-    opts: { replyTo?: string; threadRoot?: string; attachments?: Payload["attachments"]; presetId?: string; rich?: RichContent | null; forwarded?: boolean } = {},
+    opts: { replyTo?: string; threadRoot?: string; attachments?: Payload["attachments"]; presetId?: string; rich?: RichContent | null; forwarded?: boolean; roleMentions?: string[] } = {},
   ): Promise<string> {
     // A reply to a message drawn from the snapshot goes once the server's page has it (a new message never waits).
     const target = opts.replyTo && this.fromSnapshot.has(conversationId) ? this.store.message(opts.replyTo) : null;
@@ -1207,8 +1207,9 @@ export class Engine implements EngineContext {
     return this.onLive(m, (x) => this.compose.edit(x, text));
   }
 
-  deleteForEveryone(m: StoredMessage): Promise<void> {
-    return this.onLive(m, (x) => this.compose.deleteForEveryone(x));
+  /** [asModerator]: someone else's message, by a moderator of a community channel (community parity A1). */
+  deleteForEveryone(m: StoredMessage, asModerator = false): Promise<void> {
+    return this.onLive(m, (x) => this.compose.deleteForEveryone(x, asModerator));
   }
 
   vote(m: StoredMessage, choices: string[]): Promise<void> {
@@ -1219,8 +1220,8 @@ export class Engine implements EngineContext {
     return this.onLive(m, (x) => this.compose.closePoll(x));
   }
 
-  setPinned(m: StoredMessage, pinned: boolean): Promise<void> {
-    return this.onLive(m, (x) => this.compose.setPinned(x, pinned));
+  setPinned(m: StoredMessage, pinned: boolean, asModerator = false): Promise<void> {
+    return this.onLive(m, (x) => this.compose.setPinned(x, pinned, asModerator));
   }
 
   setTyping(conversationId: string, on: boolean): void {

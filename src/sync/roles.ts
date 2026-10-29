@@ -28,6 +28,37 @@ const zTemplate = z.object({
 });
 export type RoleTemplate = z.infer<typeof zTemplate>;
 
+export const zAutoAssign = z.object({
+  mode: z.enum(["none", "everyone", "joined_before"]).catch("none"),
+  before: z
+    .number()
+    .nullish()
+    .transform((v) => v ?? null),
+});
+export type AutoAssign = z.infer<typeof zAutoAssign>;
+export const zRoleExtras = z.object({
+  color2: z
+    .string()
+    .nullish()
+    .transform((v) => v ?? null),
+  mentionable: z.boolean().default(false),
+  autoAssign: zAutoAssign.default({ mode: "none", before: null }),
+});
+export type RoleExtras = z.infer<typeof zRoleExtras>;
+
+/** Community parity A1: what plain members hold by default ("@everyone"). */
+export const zEveryone = z.object({
+  permissions: z.array(z.string()),
+  standard: z.array(z.string()).default([]),
+  allowed: z.array(z.string()).default([]),
+  customized: z.boolean().default(false),
+  updatedAt: z
+    .number()
+    .nullish()
+    .transform((v) => v ?? null),
+});
+export type EveryoneDefaults = z.infer<typeof zEveryone>;
+
 export const zRole = z.object({
   id: z.string(),
   name: z.string(),
@@ -42,6 +73,9 @@ export const zRole = z.object({
   canEdit: z.boolean().default(false),
   canAssign: z.boolean().default(false),
   hoist: z.boolean().default(false),
+  position: z.number().optional(),
+  /** Community parity A1 (feature community-permissions): a second colour, mentions and automatic assignment. */
+  extras: zRoleExtras.nullish().catch(undefined),
 });
 export type Role = z.infer<typeof zRole>;
 
@@ -52,6 +86,7 @@ const zRoles = z.object({
   roles: z.array(zRole),
   limits: z.object({ activeRoles: z.number(), rolesPerMember: z.number(), nameMax: z.number(), descriptionMax: z.number() }).partial().default({}),
   me: z.object({ base: z.string(), permissions: z.array(z.string()), canManage: z.boolean(), canAssign: z.boolean(), canDelegate: z.boolean() }),
+  everyone: zEveryone.nullish().catch(undefined),
 });
 export type RolesOverview = z.infer<typeof zRoles>;
 
@@ -121,6 +156,29 @@ export async function auditLog(engine: Engine, orgId: string, before?: number | 
   if (action) q.set("action", action);
   if (actorId) q.set("actorId", actorId);
   return engine.api.json("GET", `/v1/orgs/${enc(orgId)}/audit?${q}`, zAudit);
+}
+
+// ───────────── Community parity A1 (feature community-permissions) ─────────────
+
+/** Replaces what plain members hold by default (needs roles.manage; only keys the caller holds change). */
+export async function setEveryone(engine: Engine, orgId: string, permissions: string[]): Promise<EveryoneDefaults> {
+  return (await engine.api.json("PUT", `/v1/orgs/${enc(orgId)}/roles/everyone`, z.object({ everyone: zEveryone }), { body: { permissions } })).everyone;
+}
+
+export interface RoleExtrasChange {
+  color2?: string | null;
+  mentionable?: boolean;
+  autoAssign?: { mode: AutoAssign["mode"]; before?: number | null };
+}
+
+/** A role's second colour, whether anyone may mention it, and who gets it automatically (auto roles carry no powers). */
+export async function setRoleExtras(engine: Engine, roleId: string, change: RoleExtrasChange): Promise<RoleExtras> {
+  return (await engine.api.json("PUT", `/v1/roles/${enc(roleId)}/extras`, z.object({ roleId: z.string(), extras: zRoleExtras }), { body: change })).extras;
+}
+
+/** The custom roles in order, highest first; the listed roles swap the positions they hold. */
+export async function reorderRoles(engine: Engine, orgId: string, roleIds: string[]): Promise<void> {
+  await engine.api.call("PUT", `/v1/orgs/${enc(orgId)}/roles/order`, { body: { roleIds } });
 }
 
 /** Which permissions are offered in the editor: what the person holds, never owner-only ones, admin ones only with delegate. */

@@ -8,6 +8,8 @@ import { Toggle } from "../components/Toggle";
 import { shortWhen, untilWhen } from "../format";
 import { useAction, useLoad } from "./useLoad";
 import { Card, ErrorLine } from "./WorkspaceView";
+import { VoiceBansCard } from "./VoiceBansCard";
+import { PARITY_FEATURES } from "../../sync/communityParity";
 
 const MAX_QUESTIONS = 5;
 
@@ -180,9 +182,10 @@ export function BansPage({ detail }: { detail: OrgAdminDetail }) {
   const [rev, setRev] = useState(0);
   const list = useLoad(() => bans(engine, detail.org.id), [engine, detail.org.id, rev]);
   const act = useAction();
+  const voice = useOrbit((s) => s.server?.features.includes(PARITY_FEATURES.safety) ?? false);
   return (
     <div className="ws-page">
-      <Card title="Bans" sub="Banned people can't come back by invitation or from Discover until you lift the ban. Ban someone from their row in Members.">
+      <Card title={list.data ? `Bans - ${list.data.length}` : "Bans"} sub="Banned people can't come back by invitation or from Discover until you lift the ban. Ban someone from their row in Members.">
         <ErrorLine text={list.error ?? act.error} />
         <ul className="ws-list" aria-busy={list.loading}>
           {(list.data ?? []).map((b) => (
@@ -203,9 +206,10 @@ export function BansPage({ detail }: { detail: OrgAdminDetail }) {
               </button>
             </li>
           ))}
-          {list.data?.length === 0 && <li className="faint">Nobody is banned.</li>}
+          {list.data?.length === 0 && <li className="faint">Nobody is banned. Peaceful.</li>}
         </ul>
       </Card>
+      {voice && <VoiceBansCard orgId={detail.org.id} />}
     </div>
   );
 }

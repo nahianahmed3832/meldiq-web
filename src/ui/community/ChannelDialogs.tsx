@@ -1,26 +1,22 @@
 import { BookText, Hash, Lock, Megaphone, MessagesSquare, Plus, Trash2, Volume2, X } from "lucide-react";
-import { type FormEvent, type ReactNode, useState } from "react";
+import { type FormEvent, useState } from "react";
 import { ApiError } from "../../api/client";
 import type { Category } from "../../api/communitySchemas";
 import type { Conversation } from "../../api/schemas";
 import { useEngine, useOrbit } from "../../application/orbit";
 import { navigate } from "../../application/router";
-import { createCommunityChannel, deleteChannel, saveLayout, updateChannel } from "../../sync/community";
-import { type ChannelType, channelRequest, channelTypeOf, deleteConfirmed, moveToCategory, SLOWMODE_CHOICES } from "../../sync/communityRules";
+import { deleteChannel, saveLayout, updateChannel } from "../../sync/community";
+import { PARITY_FEATURES } from "../../sync/communityParity";
+import { channelTypeOf, deleteConfirmed, moveToCategory, SLOWMODE_CHOICES } from "../../sync/communityRules";
 import { Dialog } from "../components/Overlay";
 import { Toggle } from "../components/Toggle";
 import { type ChannelDialogTab, ChannelDialogTabs } from "./webhooks/ChannelDialogTabs";
 import { useWebhooksAllowed } from "./webhooks/useWebhooksAllowed";
 import { WebhooksTab } from "./webhooks/WebhooksTab";
+import { ChannelOptionsFields, type ChannelOptionsDraft, NO_OPTIONS, useRoleChoices } from "./ChannelOptionsFields";
+import { PermissionsBody } from "./PermissionsDialog";
 
 const errorText = (e: unknown, fallback: string) => (e instanceof ApiError ? e.message : fallback);
-
-const TYPES: { type: ChannelType; label: string; hint: string; icon: ReactNode }[] = [
-  { type: "text", label: "Text", hint: "Messages, pictures, files and threads", icon: <Hash size={18} aria-hidden /> },
-  { type: "announcement", label: "Announcement", hint: "Only people who may announce can post", icon: <Megaphone size={18} aria-hidden /> },
-  { type: "forum", label: "Forum", hint: "Posts with a title, each with its own replies", icon: <MessagesSquare size={18} aria-hidden /> },
-  { type: "voice", label: "Voice", hint: "Drop in to talk, without ringing anyone", icon: <Volume2 size={18} aria-hidden /> },
-];
 
 /** A channel's icon; [rules]: the community's rules channel, a book (API 0.65.0). */
 export function ChannelGlyph({ kind, voice, format, rules = false, size = 16 }: { kind: string | null; voice: boolean; format: string; rules?: boolean; size?: number }) {
@@ -32,101 +28,16 @@ export function ChannelGlyph({ kind, voice, format, rules = false, size = 16 }: 
   return kind === "PRIVATE" ? <Lock size={size - 1} /> : <Hash size={size} />;
 }
 
-/** Create channel (android ChannelEditSheets): its type, name, topic, private or not, and the category it goes into. */
-export function CreateChannelDialog(props: { orgId: string; categories: Category[]; categoryId: string | null; canCreateTop: boolean; onClose: () => void }) {
-  const { orgId, categories, categoryId, canCreateTop, onClose } = props;
-  const engine = useEngine();
-  const places = categories.filter((c) => c.canCreateChannels);
-  const [type, setType] = useState<ChannelType>("text");
-  const [name, setName] = useState("");
-  const [topic, setTopic] = useState("");
-  const [isPrivate, setPrivate] = useState(false);
-  const [category, setCategory] = useState<string | null>(categoryId ?? (canCreateTop ? null : (places[0]?.id ?? null)));
-  const [busy, setBusy] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const submit = async (e: FormEvent) => {
-    e.preventDefault();
-    const clean = name.trim().replace(/^#/, "");
-    if (!clean) return setError("Give the channel a name.");
-    setBusy(true);
-    setError(null);
-    try {
-      const req = channelRequest(type, isPrivate);
-      const ch = await createCommunityChannel(engine, orgId, { name: clean, topic: topic || null, categoryId: category, ...req });
-      onClose();
-      navigate({ section: "home", conversationId: ch.id });
-    } catch (err) {
-      setError(errorText(err, "Couldn't create the channel."));
-    } finally {
-      setBusy(false);
-    }
-  };
-
-  return (
-    <Dialog title="Create channel" onClose={onClose} wide>
-      <form className="dialog-body" onSubmit={(e) => void submit(e)} noValidate>
-        {error && (
-          <div className="banner danger" role="alert">
-            {error}
-          </div>
-        )}
-        <div className="kind-choice channel-types" role="radiogroup" aria-label="Channel type">
-          {TYPES.map((t) => (
-            <button key={t.type} type="button" role="radio" aria-checked={type === t.type} className="kind-option" onClick={() => setType(t.type)}>
-              {t.icon}
-              <span>
-                <strong>{t.label}</strong>
-                <small>{t.hint}</small>
-              </span>
-            </button>
-          ))}
-        </div>
-        <div className="field">
-          <label htmlFor="cc-name">Name</label>
-          <input id="cc-name" className="input" data-autofocus value={name} maxLength={60} onChange={(e) => setName(e.target.value)} placeholder={type === "voice" ? "Lounge" : "new-channel"} />
-        </div>
-        <div className="field">
-          <label htmlFor="cc-topic">Topic (optional)</label>
-          <input id="cc-topic" className="input" value={topic} maxLength={500} onChange={(e) => setTopic(e.target.value)} />
-        </div>
-        <div className="field">
-          <label htmlFor="cc-category">Category</label>
-          <select id="cc-category" className="input" value={category ?? ""} onChange={(e) => setCategory(e.target.value || null)}>
-            {canCreateTop && <option value="">No category</option>}
-            {places.map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.name}
-              </option>
-            ))}
-          </select>
-        </div>
-        {type !== "announcement" && (
-          <div className="setting">
-            <span className="lines">
-              <strong>Private channel</strong>
-              <small>Only the people you add can see it. Category permissions never add anyone to a private channel.</small>
-            </span>
-            <Toggle checked={isPrivate} onChange={setPrivate} label="Private channel" />
-          </div>
-        )}
-        <div className="row" style={{ justifyContent: "flex-end", gap: 8 }}>
-          <button type="button" className="btn btn-secondary" onClick={onClose}>
-            Cancel
-          </button>
-          <button className="btn btn-primary" disabled={busy}>
-            {busy ? "Creating…" : "Create channel"}
-          </button>
-        </div>
-      </form>
-    </Dialog>
-  );
-}
+export { CreateChannelDialog } from "./CreateChannelDialog";
 
 /** Edit channel: name, topic, slowmode (text), forum on or off with its tags and post guidelines (B8). */
 export function EditChannelDialog({ channel, onClose }: { channel: Conversation; onClose: () => void }) {
   const engine = useEngine();
   const features = useOrbit((s) => s.server?.features ?? []);
+  // Community parity A1: the reference's Overview options and a Permissions tab beside it.
+  const parity = features.includes(PARITY_FEATURES.permissions) && !!channel.orgId;
+  const roles = useRoleChoices(channel.orgId ?? "", parity);
+  const [options, setOptions] = useState<ChannelOptionsDraft>(() => ({ ...NO_OPTIONS, ...(channel.options ?? {}), posterRoleIds: channel.options?.posterRoleIds ?? [] }));
   const [name, setName] = useState(channel.name ?? "");
   const [topic, setTopic] = useState(channel.topic ?? "");
   const [slowmode, setSlowmode] = useState(channel.slowmodeSec);
@@ -154,6 +65,11 @@ export function EditChannelDialog({ channel, onClose }: { channel: Conversation;
         ...(textChannel && features.includes("community-channels") ? { format: forum ? "forum" : "text" } : {}),
         ...(forum && features.includes("forum-tags") ? { forumTags: tags } : {}),
         ...(forum && features.includes("forum-guidelines") ? { guidelines: guidelines.trim() || null } : {}),
+        ...(parity
+          ? channel.voice
+            ? { stage: options.stage }
+            : { textOnly: options.textOnly, noGifs: options.noGifs, readOnly: options.readOnly, posterRoleIds: options.readOnly ? options.posterRoleIds : [] }
+          : {}),
       });
       onClose();
     } catch (err) {
@@ -169,9 +85,16 @@ export function EditChannelDialog({ channel, onClose }: { channel: Conversation;
     setNewTag("");
   };
 
+  // The reference's Overview | Permissions | Webhooks, each where it applies (community parity A1 and C).
+  const tabList: ChannelDialogTab[] = ["overview", ...(parity ? (["permissions"] as const) : []), ...(webhooks ? (["webhooks"] as const) : [])];
   return (
     <Dialog title={`Edit #${channel.name ?? "channel"}`} onClose={onClose} wide>
-      {webhooks && <ChannelDialogTabs tabs={["overview", "webhooks"]} tab={tab} onTab={setTab} />}
+      {tabList.length > 1 && <ChannelDialogTabs tabs={tabList} tab={tab} onTab={setTab} />}
+      {tab === "permissions" && channel.orgId && (
+        <div className="dialog-body">
+          <PermissionsBody orgId={channel.orgId} target={{ type: "channel", id: channel.id }} />
+        </div>
+      )}
       {webhooks && tab === "webhooks" && channel.orgId && <WebhooksTab channel={channel} orgId={channel.orgId} />}
       <form className="dialog-body" hidden={tab !== "overview"} onSubmit={(e) => void submit(e)} noValidate>
         {error && (
@@ -199,6 +122,9 @@ export function EditChannelDialog({ channel, onClose }: { channel: Conversation;
             </select>
             <span className="hint">How long each member waits between messages. People who manage the channel aren't slowed down.</span>
           </div>
+        )}
+        {parity && (textChannel ? !forum && channel.kind !== "ANNOUNCEMENT" : true) && (
+          <ChannelOptionsFields value={options} onChange={setOptions} voice={channel.voice} roles={roles} full slowmode={false} />
         )}
         {textChannel && features.includes("community-channels") && (
           <div className="setting">
