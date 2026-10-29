@@ -64,6 +64,11 @@ let current: RuntimeConfig = zConfig.parse({});
 
 /** Loads /config.json once at start. A missing file keeps the defaults; a malformed one stops with a clear error. */
 export async function loadConfig(fetcher: typeof fetch = fetch): Promise<RuntimeConfig> {
+  current = await readConfig(fetcher);
+  return current;
+}
+
+async function readConfig(fetcher: typeof fetch): Promise<RuntimeConfig> {
   let raw: unknown = {};
   try {
     const res = await fetcher("/config.json", { cache: "no-store", credentials: "omit" });
@@ -73,7 +78,46 @@ export async function loadConfig(fetcher: typeof fetch = fetch): Promise<Runtime
   }
   const parsed = zConfig.safeParse(raw);
   if (!parsed.success) throw new Error(`config.json is invalid: ${parsed.error.issues[0]?.message ?? "unreadable"}`);
-  current = parsed.data;
+  return parsed.data;
+}
+
+/** The configuration as last read, kept on this browser for the next start (checked again when read back). */
+const KEPT_KEY = "meldiq.config.v1";
+
+function keptConfig(): RuntimeConfig | null {
+  try {
+    const raw = localStorage.getItem(KEPT_KEY);
+    const parsed = raw ? zConfig.safeParse(JSON.parse(raw)) : null;
+    return parsed?.success ? parsed.data : null;
+  } catch {
+    return null;
+  }
+}
+
+function keepConfig(c: RuntimeConfig | null): void {
+  try {
+    if (c) localStorage.setItem(KEPT_KEY, JSON.stringify(c));
+    else localStorage.removeItem(KEPT_KEY);
+  } catch {
+    /* storage unavailable: the next start reads the file first, as before */
+  }
+}
+
+/**
+ * At start (src/client/Root.tsx), so a reload doesn't wait on the network before drawing anything: the configuration
+ * this browser read last time, at once, while /config.json is read again behind it for the next start (a domain or API
+ * change applies from the load after it's read). The first start, or one after a malformed file, waits for the file and
+ * stops with its error, as loadConfig.
+ */
+export async function startConfig(fetcher: typeof fetch = fetch): Promise<RuntimeConfig> {
+  const kept = keptConfig();
+  if (!kept) {
+    const c = await loadConfig(fetcher);
+    keepConfig(c);
+    return c;
+  }
+  current = kept;
+  void readConfig(fetcher).then(keepConfig, () => keepConfig(null));
   return current;
 }
 

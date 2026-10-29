@@ -269,6 +269,19 @@ export class Engine implements EngineContext {
 
   // ───────────────────────── lifecycle ─────────────────────────
 
+  /** Set by open(), taken by start(). */
+  private opened: Promise<void> | null = null;
+
+  /**
+   * This browser's device and what this page already holds, before any network: the app's frame is drawn on it at once
+   * (skeletons where the server's data goes), so a reload or a return opens like an app rather than a website loading.
+   * Nothing else is shown until start() signs in and the server answers.
+   */
+  open(): Promise<void> {
+    this.opened ??= this.openLocal();
+    return this.opened;
+  }
+
   /**
    * Starts with a session just granted (linking, signing in), or else signs in again by itself: the stored account session,
    * or the device key. Works offline from local data.
@@ -277,19 +290,10 @@ export class Engine implements EngineContext {
     this.stopped = false;
     this.checkedIn = false;
     if (grant) await this.adopt(grant);
-    const me = {
-      userId: this.device.userId,
-      deviceId: this.device.deviceId,
-      username: this.device.username,
-      displayName: this.device.username,
-      identityKey: this.device.identityKey,
-      avatarColor: 0,
-      statusText: null,
-      deviceFingerprint: await fingerprint(this.device.keys.signingPublic),
-      deviceName: this.device.deviceName,
-    };
-    await this.loadLocal();
-    this.set((s) => ({ ...s, phase: "ready", me: { ...me, ...(s.me ?? {}) } }));
+    // Opened already (App draws the frame on local data first): not read twice.
+    const opened = this.opened;
+    this.opened = null;
+    await (opened ?? this.openLocal());
     if (!grant && !(await this.session.reauthenticate())) {
       const phase = this.state.get().phase;
       if (phase === "revoked" || phase === "reauth") return;
@@ -306,6 +310,22 @@ export class Engine implements EngineContext {
     void importLegacyHistory(this)
       .then((n) => (n > 0 ? this.syncSummaries() : undefined))
       .catch(() => undefined);
+  }
+
+  private async openLocal(): Promise<void> {
+    const me = {
+      userId: this.device.userId,
+      deviceId: this.device.deviceId,
+      username: this.device.username,
+      displayName: this.device.username,
+      identityKey: this.device.identityKey,
+      avatarColor: 0,
+      statusText: null,
+      deviceFingerprint: await fingerprint(this.device.keys.signingPublic),
+      deviceName: this.device.deviceName,
+    };
+    await this.loadLocal();
+    this.set((s) => ({ ...s, phase: "ready", me: { ...me, ...(s.me ?? {}) } }));
   }
 
   /** Whether this session counted today's visit for points (API 0.65.0). */
@@ -949,6 +969,13 @@ export class Engine implements EngineContext {
   async openConversation(id: string | null): Promise<void> {
     this.viewingId = id;
     if (!id) return;
+    // What this page already holds for it (messages that arrived live before it was opened) shows at once; the server's
+    // newest page follows and replaces it. Messages aren't kept between page loads, so after a reload the skeleton
+    // shows until the server answers.
+    if (!this.serverPages.has(id) && !this.state.get().messages[id]) {
+      const stored = await this.store.latestMessages(id, PAGE);
+      if (stored.length && !this.state.get().messages[id]) this.set((s) => withMessages(s, id, stored, true));
+    }
     if (!this.serverPages.has(id)) await this.fetchHistory(id, null).catch(() => undefined);
     const items = await this.store.latestMessages(id, PAGE);
     this.set((s) => withMessages(s, id, items, this.serverPages.get(id)?.more ?? items.length === PAGE));

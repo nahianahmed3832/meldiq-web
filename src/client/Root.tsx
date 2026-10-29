@@ -1,7 +1,7 @@
 import { captureDiscordReturn } from "../application/discordReturn";
 import { capturePendingInvite, capturePendingMessage, captureReferral } from "../application/pendingInvite";
 import { StrictMode, useEffect, useState } from "react";
-import { loadConfig } from "../application/config";
+import { startConfig } from "../application/config";
 import { applyTheme, getPrefs } from "../application/prefs";
 import { startRouting } from "../application/router";
 import { hideSplash, startSplash } from "../application/splash";
@@ -17,7 +17,8 @@ type Start = { s: "starting" } | { s: "ready" } | { s: "failed"; message: string
  * The app's start in the browser (formerly src/main.tsx): theme, viewport, launch screen and routing (old hash links
  * become paths; links within the app don't reload the page) at once; then, before anything
  * signs, the Ed25519/X25519 fallback where WebCrypto lacks them (Safari before 17, every iPhone 8), and the deployment's
- * config.json. Only then does the app itself render.
+ * config.json (the copy read last time, at once, after the first visit: application/config.ts startConfig). Only then
+ * does the app itself render.
  */
 export default function Root() {
   const [start, setStart] = useState<Start>({ s: "starting" });
@@ -36,7 +37,7 @@ export default function Root() {
     let alive = true;
     void (async () => {
       await installLegacyCurves().catch(() => []);
-      await loadConfig();
+      await startConfig();
     })().then(
       () => alive && setStart({ s: "ready" }),
       (e: unknown) => {

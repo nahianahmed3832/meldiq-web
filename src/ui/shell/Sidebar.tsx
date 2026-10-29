@@ -244,8 +244,27 @@ function DiscoverSide({ onDialog }: { onDialog: (d: ShellDialog) => void }) {
   );
 }
 
-/** Scroll positions of the channel lists, per community, for this page's life. */
-const scrollMemory = new Map<string, number>();
+/** Scroll positions of the channel lists, per community: kept for this tab, so a reload opens each list where it was. */
+const SCROLL_KEY = "meldiq.sideScroll";
+const scrollMemory = new Map<string, number>(keptScroll());
+
+function keptScroll(): [string, number][] {
+  try {
+    const kept: unknown = JSON.parse(sessionStorage.getItem(SCROLL_KEY) ?? "[]");
+    return Array.isArray(kept) ? kept.filter((e): e is [string, number] => Array.isArray(e) && typeof e[0] === "string" && typeof e[1] === "number") : [];
+  } catch {
+    return [];
+  }
+}
+
+if (typeof window !== "undefined")
+  window.addEventListener("pagehide", () => {
+    try {
+      sessionStorage.setItem(SCROLL_KEY, JSON.stringify([...scrollMemory]));
+    } catch {
+      /* storage unavailable: lists open at the top after a reload, as before */
+    }
+  });
 
 function roleLabel(role: string | null): string {
   return role ? role.charAt(0) + role.slice(1).toLowerCase() : "Member";

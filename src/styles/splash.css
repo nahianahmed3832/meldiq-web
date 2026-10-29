@@ -41,3 +41,53 @@
     transition: none;
   }
 }
+
+/*
+ * A browser signed in here last time (public/boot.js sets data-boot="app" before the first paint): the app's own frame
+ * with skeletons instead of Meldling, from the first paint until the real frame is drawn on what this browser holds.
+ */
+#splash > .boot-frame {
+  display: none;
+}
+:root[data-boot="app"] #splash {
+  display: block;
+  background: var(--rail);
+}
+:root[data-boot="app"] #splash > img {
+  display: none;
+}
+:root[data-boot="app"] #splash > .boot-frame {
+  display: grid;
+}
+.boot-frame .side-scroll {
+  display: grid;
+  align-content: start;
+  gap: 14px;
+  padding-top: 18px;
+}
+.boot-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 6px;
+}
+.boot-messages {
+  display: grid;
+  align-content: end;
+  gap: 18px;
+  height: 100%;
+  padding: 18px;
+}
+.boot-line {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.boot-line > div {
+  display: grid;
+  flex: 1;
+  gap: 6px;
+}
+.boot-frame .skeleton {
+  display: block;
+}

@@ -82,7 +82,8 @@ server {
     proxy_set_header X-Forwarded-Proto $scheme;
   }
 
-  # Runtime configuration: never cached, so a domain or API change applies at the next page load.
+  # Runtime configuration: never cached. The page starts on the copy it read last time and reads this again behind it
+  # (src/application/config.ts startConfig), so a domain or API change applies from the load after the next.
   location = /config.json {
     add_header Cache-Control "no-store" always;
     include /etc/nginx/snippets/meldiq-web-headers.conf;
@@ -105,6 +106,14 @@ server {
   # The service worker (background notifications): always checked for a new version, never the app page instead.
   location = /sw.js {
     add_header Cache-Control "no-cache" always;
+    include /etc/nginx/snippets/meldiq-web-headers.conf;
+    try_files $uri =404;
+  }
+
+  # Runs before the page's first paint (src/pages/_document.tsx): kept for a while so a reload never waits on it (the
+  # service worker serves it from its cache too). It only sets the look and the frame, so an hour-old copy is harmless.
+  location = /boot.js {
+    add_header Cache-Control "public, max-age=3600, stale-while-revalidate=604800" always;
     include /etc/nginx/snippets/meldiq-web-headers.conf;
     try_files $uri =404;
   }

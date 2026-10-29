@@ -1,4 +1,5 @@
 import { useSyncExternalStore } from "react";
+import { SHELL_CACHE, SHELL_KEY } from "../sw/shell";
 
 /**
  * New releases reach open tabs (reported 2026-10-23: a deploy showed only after a manual refresh, like a website, not an
@@ -80,6 +81,22 @@ function reloadForStaleChunk(): void {
   applyUpdate();
 }
 
+/**
+ * The service worker opens the page it keeps (src/sw/shell.ts): a release found here goes into that cache first, so the
+ * Reload that follows opens the new release rather than the one this tab started with.
+ */
+async function keepRelease(html: string, headers: Headers): Promise<void> {
+  if (typeof caches === "undefined") return;
+  try {
+    // The page's own headers (its Content-Security-Policy among them), less those describing the body as it travelled.
+    const kept = new Headers([...headers].filter(([name]) => !/^(content-encoding|content-length|transfer-encoding)$/i.test(name)));
+    const cache = await caches.open(SHELL_CACHE);
+    await cache.put(SHELL_KEY, new Response(html, { headers: kept }));
+  } catch {
+    /* no cache (private window): the Reload loads from the network anyway */
+  }
+}
+
 /** Starts watching for new releases; returns the stop. */
 export function watchForUpdates(): () => void {
   const running = runningBuild();
@@ -95,8 +112,10 @@ export function watchForUpdates(): () => void {
     try {
       const res = await fetch("/", { cache: "no-store", credentials: "same-origin" });
       if (!res.ok) return;
-      const latest = buildIdOf(await res.text());
+      const html = await res.text();
+      const latest = buildIdOf(html);
       if (latest && latest !== running && !stopped) {
+        await keepRelease(html, res.headers);
         ready = true;
         listeners.forEach((l) => l());
         maybeApply();

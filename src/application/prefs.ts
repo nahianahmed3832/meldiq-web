@@ -318,6 +318,9 @@ export function usePrefs(): Prefs {
   );
 }
 
+/** Read by public/boot.js before the first paint. */
+const LOOK_KEY = "meldiq.look";
+
 /** Light, dark or the system's, and the colour plate; the browser's own chrome takes the frame colour. */
 export function applyTheme({
   theme,
@@ -340,6 +343,12 @@ export function applyTheme({
   applyVibe(root, vibe, vibeCustom, vibeStrength);
   const frame = getComputedStyle(root).getPropertyValue("--theme-color").trim();
   if (frame) document.querySelector('meta[name="theme-color"]')?.setAttribute("content", frame);
+  // For the next load's first paint (public/boot.js): the same look before any of the app's scripts run.
+  try {
+    localStorage.setItem(LOOK_KEY, JSON.stringify({ theme, palette }));
+  } catch {
+    /* storage unavailable: the next load starts in the default look until this runs */
+  }
 }
 
 export function resetPrefs(): void {

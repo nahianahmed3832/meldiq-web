@@ -1,6 +1,8 @@
 import { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { createEngine, holdDeviceLock, missingCapabilities, startNotifications } from "../application/boot";
-import { hideSplash } from "../application/splash";
+import { hideSplash, rememberReturning } from "../application/splash";
+import { forgetPlace, placeToRestore } from "../application/lastPlace";
+import { go } from "../application/router";
 import { EngineProvider } from "../application/orbit";
 import { resetPrefs } from "../application/prefs";
 import { forgetRecentSearches } from "./dialogs/SearchDialog";
@@ -44,6 +46,15 @@ const LinkScreen = lazy(() => import("./LinkScreen").then((m) => ({ default: m.L
 // The browser may offer installing as soon as the page loads: listen before anything renders (brief v4 §17).
 watchInstall();
 
+/**
+ * Opened at the bare address (a return, the installed app's start): the conversation or section left last. One that's
+ * gone since closes after the first sync, as any link to it would (Shell).
+ */
+function reopenLastPlace(engine: Engine): void {
+  const href = placeToRestore(engine.device.userId, location);
+  if (href) go(href, true);
+}
+
 export function App() {
   const [boot, setBoot] = useState<Boot>({ s: "loading" });
   // The launch screen goes as soon as there's something to show: sign-in, the app, or what went wrong.
@@ -64,9 +75,15 @@ export function App() {
       if (!held) return setBoot({ s: "elsewhere" });
       const store = await LocalStore.open();
       const device = await store.device();
-      if (!device) return setBoot({ s: "signedOut", store });
+      if (!device) {
+        rememberReturning(false);
+        return setBoot({ s: "signedOut", store });
+      }
       const engine = createEngine(device, store);
       engineRef = engine;
+      // The frame opens on what this browser holds (no network yet), where the person left off; then it syncs.
+      await engine.open();
+      reopenLastPlace(engine);
       setBoot({ s: "ready", engine, reauth: false });
       await engine.start();
       startNotifications(engine);
@@ -97,6 +114,8 @@ export function App() {
       if (st.phase === "revoked" || st.phase === "reauth") voicePlayback.reset();
       if (st.phase === "revoked") {
         engine.stop();
+        forgetPlace();
+        rememberReturning(false);
         void LocalStore.erase(engine.store).finally(() => setBoot({ s: "revoked", reason: st.phaseReason }));
         return;
       }
@@ -120,6 +139,8 @@ export function App() {
 
   const signedOut = useCallback(async () => {
     voicePlayback.reset();
+    forgetPlace();
+    rememberReturning(false);
     resetPrefs();
     forgetRecentSearches();
     setBoot({ s: "signedOut", store: await LocalStore.open() });

@@ -7,8 +7,10 @@ import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { shallowEqual, useEngine, useOrbit } from "../../application/orbit";
 import { getPrefs, setPrefs, usePrefs } from "../../application/prefs";
 import { ConsentPage } from "../oauth/ConsentPage";
-import { isFullPage, navigate, type Route, useRoute } from "../../application/router";
-import { ConversationView } from "../chat/ConversationView";
+import { isFullPage, navigate, type Route, routeHref, useRoute } from "../../application/router";
+import { rememberPlace } from "../../application/lastPlace";
+import { rememberReturning } from "../../application/splash";
+import { ConversationView, MessagesSkeleton } from "../chat/ConversationView";
 import { SidePanel } from "../chat/SidePanel";
 import { DockedPeoplePanel } from "../chat/PeoplePanels";
 import { CallLayer } from "../call/CallLayer";
@@ -144,6 +146,13 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
     if (c?.orgId && guide) void noteGuideVisit(engine.store, c.orgId, guide, c.id).then((changed) => changed && window.dispatchEvent(new Event(GUIDE_EVENT)));
   }, [engine, route.conversationId, route.section]);
 
+  // Where the person is, for the next time Meldiq opens (application/lastPlace.ts); settings windows aren't places.
+  useEffect(() => {
+    if (!isFullPage(route.section) && route.section !== "oauth") rememberPlace(engine.device.userId, routeHref(route));
+  }, [engine, route]);
+  // From now on this browser opens straight into the app's frame, not the launch screen (application/splash.ts).
+  useEffect(() => rememberReturning(true), []);
+
   // A conversation this account can no longer see (removed, or another workspace's link) closes.
   useEffect(() => {
     if (synced && route.conversationId && !known) {
@@ -275,6 +284,13 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
   let main;
   if (settings) main = full;
   else if (view.conversationId && knownView) main = <ConversationView key={view.conversationId} id={view.conversationId} route={view} onDialog={ctx.open} />;
+  // Opening (a reload, a return) on a conversation the first sync hasn't brought yet: its skeleton, not Home for a moment.
+  else if (view.conversationId && !synced)
+    main = (
+      <section className="main conversation" aria-busy="true">
+        <MessagesSkeleton />
+      </section>
+    );
   else if (section === "activity") main = <ActivityView orgId={orgId} />;
   else if (section === "later") main = <LaterView />;
   else if (section === "discover") main = <DiscoverView />;

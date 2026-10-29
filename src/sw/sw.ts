@@ -8,6 +8,7 @@ import { SessionManager } from "../sync/session";
 import { notificationPath, SW_OPEN, SW_WAKE } from "./messages";
 import { loadWakePrefs } from "./swPrefs";
 import { type WakeNotice, wakeNotices, type WakePrefs } from "./wakeRules";
+import { shellHandler, type FetchEventLike } from "./shell";
 
 /**
  * Meldiq's service worker (docs/MELDIQ_WEB_PUSH.md): background notifications. The server's Firebase wake-up carries
@@ -18,6 +19,9 @@ import { type WakeNotice, wakeNotices, type WakePrefs } from "./wakeRules";
  *     following the same settings as the app. Message text is never shown here: it's end-to-end encrypted, and only the
  *     app decrypts it. Pages in the background are told to fetch too; their notifications replace these (same tag).
  * A click focuses Meldiq (or opens it) at that conversation.
+ *
+ * In release builds it also serves the app shell (src/sw/shell.ts): the page and its build files from this browser at
+ * once, refreshed behind them, so a reload opens like an app.
  */
 
 interface ExtendableEventLike extends Event {
@@ -36,7 +40,7 @@ interface ServiceWorkerScopeLike {
   clients: { matchAll(o: { type: "window"; includeUncontrolled: boolean }): Promise<WindowClientLike[]>; openWindow(url: string): Promise<unknown>; claim(): Promise<void> };
   location: { origin: string };
   skipWaiting(): Promise<void>;
-  addEventListener(type: "install" | "activate" | "push" | "notificationclick", listener: (e: ExtendableEventLike & NotificationEventLike) => void): void;
+  addEventListener(type: "install" | "activate" | "push" | "notificationclick" | "fetch", listener: (e: ExtendableEventLike & NotificationEventLike & FetchEventLike) => void): void;
 }
 const sw = self as unknown as ServiceWorkerScopeLike;
 
@@ -48,6 +52,11 @@ const GENERIC: WakeNotice = { tag: "meldiq-wake", title: "Meldiq", body: "Someth
 sw.addEventListener("install", () => void sw.skipWaiting());
 sw.addEventListener("activate", (e) => e.waitUntil(sw.clients.claim()));
 sw.addEventListener("push", (e) => e.waitUntil(onWake()));
+// Release builds only: `npm run dev` serves files that change under it, which must never come from a cache.
+if (process.env.NODE_ENV === "production") {
+  const onFetch = shellHandler({ caches, fetch: (input, init) => fetch(input, init), origin: sw.location.origin });
+  sw.addEventListener("fetch", (e) => onFetch(e));
+}
 sw.addEventListener("notificationclick", (e) => {
   e.notification.close();
   e.waitUntil(openApp((e.notification.data as { url?: unknown } | null)?.url));

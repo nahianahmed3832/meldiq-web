@@ -11,7 +11,8 @@ import { ConnectionRequestBanner } from "../people/ConnectionRequestViews";
 import { useConnectionLists } from "../people/connectionRequests";
 import { VoiceRoomView } from "./VoiceRoomView";
 import { Archive, ArrowLeft, BellOff, MonitorUp, Phone, Pin, Search, ShieldAlert, Video } from "lucide-react";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { markStartup } from "../../application/splash";
 import { shallowEqual, useEngine, useOrbit } from "../../application/orbit";
 import { navigate, type Route } from "../../application/router";
 import type { StoredMessage } from "../../model/types";
@@ -54,6 +55,9 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
       : null;
   }, shallowEqual);
   const loaded = useOrbit((s) => s.messages[id]);
+  useEffect(() => {
+    if (loaded) markStartup("view");
+  }, [loaded]);
   const call = useOrbit((s) => s.calls[id]);
   const myCall = useOrbit((s) => (s.call.phase === "idle" || s.call.phase === "ended" ? null : s.call.conversationId));
   const calling = useOrbit((s) => s.server?.calling === true);
@@ -239,17 +243,7 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
           }
         />
       ) : (
-        <div className="messages" aria-busy="true" style={{ padding: 18, display: "grid", gap: 18, alignContent: "end" }}>
-          {[0, 1, 2].map((i) => (
-            <div key={i} className="row" style={{ alignItems: "flex-start", gap: 12 }}>
-              <span className="skeleton" style={{ width: 38, height: 38, borderRadius: "50%" }} />
-              <div style={{ display: "grid", gap: 6, flex: 1 }}>
-                <span className="skeleton" style={{ width: 140, height: 12 }} />
-                <span className="skeleton" style={{ width: `${40 + i * 15}%`, height: 12 }} />
-              </div>
-            </div>
-          ))}
-        </div>
+        <MessagesSkeleton />
       )}
 
       {/* A voice channel is for talking: no messages (batch B14; the server refuses them too). Its room page has Join. */}
@@ -331,5 +325,22 @@ function HeaderSearch({ orgId, onSearch }: { orgId: string | null; onSearch: () 
       <span className="ellipsis">{label}</span>
       <Search size={15} aria-hidden="true" />
     </button>
+  );
+}
+
+/** Messages on their way: a few placeholder lines where they go (also the whole view while the app opens: Shell). */
+export function MessagesSkeleton() {
+  return (
+    <div className="messages" aria-busy="true" style={{ padding: 18, display: "grid", gap: 18, alignContent: "end" }}>
+      {[0, 1, 2].map((i) => (
+        <div key={i} className="row" style={{ alignItems: "flex-start", gap: 12 }}>
+          <span className="skeleton" style={{ width: 38, height: 38, borderRadius: "50%" }} />
+          <div style={{ display: "grid", gap: 6, flex: 1 }}>
+            <span className="skeleton" style={{ width: 140, height: 12 }} />
+            <span className="skeleton" style={{ width: `${40 + i * 15}%`, height: 12 }} />
+          </div>
+        </div>
+      ))}
+    </div>
   );
 }

@@ -3,9 +3,28 @@ import { Head, Html, Main, NextScript } from "next/document";
 /**
  * The page every route is served from (a static export, docs/MELDIQ_WEB_NEXTJS.md). Rendered once, at build time, with
  * no data: the launch screen (docs/MELDIQ_WEB_LAUNCH.md) is plain markup so it shows before any script runs, and goes
- * as soon as the app shows something (src/application/splash.ts): the Meldling logo on its own teal. Never hydrated, so the app can remove it.
+ * as soon as the app shows something (src/application/splash.ts): the Meldling logo on its own teal, or for a browser
+ * signed in here last time, the app's frame with skeletons. Never hydrated, so the app can remove it.
  */
-const SPLASH = '<img src="/launch/meldling-launch.png" alt="" width="480" height="480" decoding="async">';
+const LAUNCH = '<img src="/launch/meldling-launch.png" alt="" width="480" height="480" decoding="async">';
+
+/**
+ * The app's frame as it opens again (2026-10-29): what a browser signed in here last time shows instead of Meldling
+ * (public/boot.js decides before the first paint), in the app's own layout classes, so the first paint is the app with
+ * skeletons where its lists and messages go, and the real frame replaces it without a jump. No data: nothing is known yet.
+ */
+const bar = (w: number) => `<span class="skeleton" style="height:12px;width:${w}%"></span>`;
+const row = (w: number) => `<div class="boot-row"><span class="skeleton" style="width:22px;height:22px;border-radius:6px"></span>${bar(w)}</div>`;
+const line = (w: number) => `<div class="boot-line"><span class="skeleton" style="width:38px;height:38px;border-radius:50%"></span><div>${bar(30)}${bar(w)}</div></div>`;
+const FRAME =
+  '<div class="app boot-frame">' +
+  '<div class="brandbar"><img src="/meldling-96.webp" width="18" height="18" alt=""><span>Meldiq</span></div>' +
+  '<nav class="rail"><img class="rail-mascot" src="/meldling-96.webp" width="46" height="46" alt=""></nav>' +
+  '<div class="workspace with-sidebar"><header class="topbar"></header><div class="body phone-list">' +
+  `<aside class="sidebar"><div class="side-scroll">${[62, 48, 70, 55, 66, 44, 58].map(row).join("")}</div></aside>` +
+  `<section class="main"><div class="boot-messages">${[45, 70, 55].map(line).join("")}</div></section>` +
+  "</div></div></div>";
+const SPLASH = LAUNCH + FRAME;
 
 export default function Document() {
   return (
@@ -35,6 +54,9 @@ export default function Document() {
         <link rel="icon" type="image/png" sizes="192x192" href="/favicon-dark-192.png" media="(prefers-color-scheme: dark)" />
         <link rel="apple-touch-icon" href="/meldling-180.png" />
         <link rel="manifest" href="/manifest.webmanifest" />
+        {/* Before the first paint: the last look, and the app's frame rather than the launch screen for a returning
+            browser (public/boot.js; a file, as the Content-Security-Policy allows no inline script). */}
+        <script src="/boot.js" />
       </Head>
       <body>
         <noscript>Meldiq needs JavaScript to run in this browser.</noscript>

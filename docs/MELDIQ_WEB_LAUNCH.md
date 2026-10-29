@@ -20,6 +20,10 @@ is kept only as a reference, `brand/reference/meldiq-logo-ribbon.webp`.
 4. It never stays over sign-in, errors or recovery, and it goes after 10 s at the latest.
 5. It shows only on a full page load. Moving around the app never shows it again; loading inside the app uses the
    existing skeletons.
+6. A browser that was signed in here last time (2026-10-29: reloads and returns open like an app) shows the app's own
+   frame instead: rail, sidebar and messages as skeletons, in the last theme and palette. `public/boot.js` picks it
+   before the first paint from `meldiq.returning` and `meldiq.look` in localStorage (no messages, no keys); the
+   frame's markup is in `src/pages/_document.tsx`. Signing out, or a removed browser, brings Meldling back.
 
 ## Checked
 
