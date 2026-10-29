@@ -1224,6 +1224,174 @@
     {
       "method": "POST",
       "path": "/v2/mojo/play/verify"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/creators/verification"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/creators/verification"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/creators/program"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/creators/program/apply"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/creators/posts"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/creators/posts"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/connections"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/connections/{provider}/start"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/connections/{provider}/callback"
+    },
+    {
+      "method": "PUT",
+      "path": "/v2/connections/{provider}"
+    },
+    {
+      "method": "DELETE",
+      "path": "/v2/connections/{provider}"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/developer/apps"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/developer/apps"
+    },
+    {
+      "method": "PATCH",
+      "path": "/v2/developer/apps/{id}"
+    },
+    {
+      "method": "DELETE",
+      "path": "/v2/developer/apps/{id}"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/developer/apps/{id}/secret"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/oauth/authorize/info"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/oauth/authorize"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/oauth/token"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/oauth/userinfo"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/oauth/userinfo/avatar"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/oauth/grants"
+    },
+    {
+      "method": "DELETE",
+      "path": "/v2/oauth/grants/{clientId}"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/developer/bots"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/developer/bots"
+    },
+    {
+      "method": "PATCH",
+      "path": "/v2/developer/bots/{id}"
+    },
+    {
+      "method": "DELETE",
+      "path": "/v2/developer/bots/{id}"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/developer/bots/{id}/token"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/bots/{botId}"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/orgs/{orgId}/bots"
+    },
+    {
+      "method": "DELETE",
+      "path": "/v1/orgs/{orgId}/bots/{botId}"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/orgs/{orgId}/commands"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/interactions"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/bot/me"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/bot/communities"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/bot/channels/{channelId}/messages"
+    },
+    {
+      "method": "PATCH",
+      "path": "/v2/bot/messages/{messageId}"
+    },
+    {
+      "method": "DELETE",
+      "path": "/v2/bot/messages/{messageId}"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/bot/commands"
+    },
+    {
+      "method": "PUT",
+      "path": "/v2/bot/commands"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/bot/interactions"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/bot/interactions/{id}/reply"
     }
   ],
   "errors": {
@@ -1248,6 +1416,9 @@
     ],
     "application_required": [
       403
+    ],
+    "application_open": [
+      409
     ],
     "archived": [
       409
@@ -1287,6 +1458,12 @@
     ],
     "custom_items_limit": [
       409
+    ],
+    "bot_not_here": [
+      404
+    ],
+    "bot_private": [
+      403
     ],
     "bad_signature": [
       400,
@@ -1328,6 +1505,12 @@
     ],
     "conflict": [
       409
+    ],
+    "connection_unavailable": [
+      409
+    ],
+    "creator_name_mismatch": [
+      400
     ],
     "delegation_required": [
       403
@@ -1458,6 +1641,15 @@
     "invalid_recovery": [
       400
     ],
+    "interaction_answered": [
+      409
+    ],
+    "interaction_expired": [
+      410
+    ],
+    "invalid_token": [
+      401
+    ],
     "invalid_ticket": [
       401
     ],
@@ -1533,6 +1725,12 @@
     "not_enough_points": [
       409
     ],
+    "not_verified_creator": [
+      403
+    ],
+    "not_in_creator_program": [
+      403
+    ],
     "no_key_backup": [
       404
     ],
@@ -1568,6 +1766,18 @@
     ],
     "own_report": [
       403
+    ],
+    "oauth_invalid_client": [
+      400
+    ],
+    "oauth_invalid_redirect": [
+      400
+    ],
+    "oauth_invalid_request": [
+      400
+    ],
+    "oauth_invalid_scope": [
+      400
     ],
     "owner_only": [
       400
