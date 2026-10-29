@@ -35,6 +35,12 @@ export default function Document() {
         <meta name="referrer" content="no-referrer" />
         <meta name="application-name" content="Meldiq" />
         <meta name="apple-mobile-web-app-title" content="Meldiq" />
+        {/* Added to the Home Screen (Safari › Share), Meldiq opens as an app: no Safari toolbar, and the page runs under
+            a transparent status bar, kept clear by the safe-area padding of the app's frame and the landing page.
+            iOS 16.4+ also reads display: standalone from the manifest; the meta covers older iOS. */}
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="description" content="Meldiq Web: communities, messages, voice and video. Connect. Play. Belong." />
         <meta property="og:type" content="website" />
         <meta property="og:site_name" content="Meldiq" />
@@ -52,7 +58,8 @@ export default function Document() {
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-dark-16.png" media="(prefers-color-scheme: dark)" />
         <link rel="icon" type="image/png" sizes="192x192" href="/favicon-light-192.png" media="(prefers-color-scheme: light)" />
         <link rel="icon" type="image/png" sizes="192x192" href="/favicon-dark-192.png" media="(prefers-color-scheme: dark)" />
-        <link rel="apple-touch-icon" href="/meldling-180.png" />
+        {/* Full-bleed and opaque: iOS rounds the corners itself and would fill transparent ones with black. */}
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
         <link rel="manifest" href="/manifest.webmanifest" />
         {/* Before the first paint: the last look, and the app's frame rather than the launch screen for a returning
             browser (public/boot.js; a file, as the Content-Security-Policy allows no inline script). */}

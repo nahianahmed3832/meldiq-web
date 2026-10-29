@@ -1,4 +1,5 @@
-import { Gem, Gift, HeartHandshake, Loader2, Sparkles } from "lucide-react";
+import { Crown, Gem, Gift, HeartHandshake, Loader2, Sparkles } from "lucide-react";
+import { MojoBanner } from "./MojoBanner";
 import { useEffect, useState } from "react";
 import type { PlanPerks } from "../../api/mojoSchemas";
 import { useEngine, useOrbit } from "../../application/orbit";
@@ -177,7 +178,7 @@ export function MojoPage() {
         Prices are in US dollars; your bank may add conversion fees.
       </p>
 
-      <img className="mojo-poster" src="/meldling/plus.webp" alt="Meldiq Plus" width={1200} height={800} loading="lazy" />
+      <MojoBanner icon={<Crown size={26} />} title="Mojo Plus" line="The biggest files, the sharpest streams, two Sparks and the Plus badge." />
       <h2 className="mojo-h2">What Mojo Plus adds</h2>
       <PlusPerks catalog={catalog} />
 

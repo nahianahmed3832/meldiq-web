@@ -7,7 +7,7 @@ import { z } from "zod";
  */
 export const zPlanKey = z.enum(["free", "go", "plus"]);
 export type PlanKey = z.infer<typeof zPlanKey>;
-export const zPresetId = z.enum(["720p30", "720p60", "1080p30", "1080p60", "1440p30"]);
+export const zPresetId = z.enum(["720p30", "720p60", "1080p30", "1080p60", "1440p30", "1440p60"]);
 export type ScreenPresetId = z.infer<typeof zPresetId>;
 
 export const zPlanPerks = z.object({

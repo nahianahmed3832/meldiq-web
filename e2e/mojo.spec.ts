@@ -25,10 +25,10 @@ test("Settings › Meldiq Mojo shows the plans and their limits, and says it isn
   await expect(page.getByRole("button", { name: "Not on sale yet" }).first()).toBeDisabled();
 
   const table = page.getByRole("table");
-  await expect(table.getByRole("row", { name: /Characters in a message 1,000 2,000 5,000/ })).toBeVisible();
-  await expect(table.getByRole("row", { name: /Largest file you share 50 MB 200 MB 2 GB/ })).toBeVisible();
-  // Bots aren't a benefit Meldiq can give yet: not listed.
-  await expect(table.getByText(/bot/i)).toHaveCount(0);
+  // The plans of 2026-10-30 (server docs/PLANS.md).
+  await expect(table.getByRole("row", { name: /Characters in a message 2,000 4,000 8,000/ })).toBeVisible();
+  await expect(table.getByRole("row", { name: /Largest file you share 50 MB 500 MB 2 GB/ })).toBeVisible();
+  await expect(table.getByRole("row", { name: /Bots you can make 2 4 10/ })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Why subscriptions?" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Meldiq Spark", exact: true })).toBeVisible();
 });

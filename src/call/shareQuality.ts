@@ -3,10 +3,10 @@
  * and encoding each asks for, what the browser actually delivers, and a step-down ladder driven by the sender's WebRTC
  * stats. Pure, so it's unit-tested directly (test/share-quality.test.ts); livekitSession.ts applies it.
  */
-export type ShareQuality = "standard" | "smooth" | "sharp" | "high" | "max";
+export type ShareQuality = "standard" | "smooth" | "sharp" | "high" | "max" | "max60";
 
 /** Lowest to highest (a list of choices shows them in this order). */
-export const SHARE_QUALITY_ORDER: readonly ShareQuality[] = ["standard", "smooth", "sharp", "high", "max"];
+export const SHARE_QUALITY_ORDER: readonly ShareQuality[] = ["standard", "smooth", "sharp", "high", "max", "max60"];
 
 export interface ShareQualitySpec {
   width: number;
@@ -30,7 +30,7 @@ export const SHARE_QUALITIES: Record<ShareQuality, ShareQualitySpec> = {
     label: "Standard",
     hint: "1280×720 at 30 frames a second. Works on most connections.",
   },
-  // Meldiq Mojo (server docs/MOJO.md): Mojo Go shares at 720p 60 or 1080p 30; Plus at 1080p 60 or 2K 30.
+  // Plans (server docs/PLANS.md, 2026-10-30): Free shares up to 720p 60, Mojo Go up to 1080p 60, Plus up to 2K 60.
   smooth: {
     width: 1280,
     height: 720,
@@ -66,6 +66,15 @@ export const SHARE_QUALITIES: Record<ShareQuality, ShareQualitySpec> = {
     contentHint: "detail",
     label: "2K",
     hint: "2560×1440 at 30 frames a second. Needs a fast connection and computer.",
+  },
+  max60: {
+    width: 2560,
+    height: 1440,
+    frameRate: 60,
+    maxBitrate: 12_000_000,
+    contentHint: "motion",
+    label: "2K 60",
+    hint: "2560×1440 at 60 frames a second, for fast games. Needs a very fast connection and computer.",
   },
 };
 
@@ -122,6 +131,13 @@ export interface ShareLevel {
 
 /** Top rung first. Each step down gives up frame rate before resolution, so text stays readable longest. */
 export const SHARE_LADDERS: Record<ShareQuality, readonly ShareLevel[]> = {
+  max60: [
+    { height: 1440, frameRate: 60, maxBitrate: 12_000_000 },
+    { height: 1440, frameRate: 30, maxBitrate: 8_000_000 },
+    { height: 1080, frameRate: 30, maxBitrate: 4_000_000 },
+    { height: 720, frameRate: 30, maxBitrate: 2_500_000 },
+    { height: 720, frameRate: 15, maxBitrate: 1_200_000 },
+  ],
   max: [
     { height: 1440, frameRate: 30, maxBitrate: 8_000_000 },
     { height: 1080, frameRate: 30, maxBitrate: 4_000_000 },

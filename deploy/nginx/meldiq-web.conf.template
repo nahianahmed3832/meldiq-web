@@ -118,6 +118,16 @@ server {
     try_files $uri =404;
   }
 
+  # The web app manifest (Add to Home Screen, docs/MELDIQ_IOS_PWA.md): served as application/manifest+json, a type
+  # nginx's mime.types doesn't know (it answered application/octet-stream).
+  location = /manifest.webmanifest {
+    types { }
+    default_type application/manifest+json;
+    add_header Cache-Control "no-cache" always;
+    include /etc/nginx/snippets/meldiq-web-headers.conf;
+    try_files $uri =404;
+  }
+
   # Batch B4b: invitation links (meldiq.app/invite/CODE) land on a small static page, not the web app.
   location ^~ /invite/ {
     add_header Cache-Control "no-cache" always;

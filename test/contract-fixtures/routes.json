@@ -1207,6 +1207,82 @@
     },
     {
       "method": "GET",
+      "path": "/v1/official-bots"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/orgs/{orgId}/official-bots"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/orgs/{orgId}/official-bots/{key}"
+    },
+    {
+      "method": "PUT",
+      "path": "/v1/orgs/{orgId}/official-bots/{key}"
+    },
+    {
+      "method": "PUT",
+      "path": "/v1/orgs/{orgId}/official-bots/{key}/avatar"
+    },
+    {
+      "method": "DELETE",
+      "path": "/v1/orgs/{orgId}/official-bots/{key}/avatar"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/orgs/{orgId}/official-bots/welcomer/test"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/discover"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/discover/{orgId}/click"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/orgs/{orgId}/discovery"
+    },
+    {
+      "method": "PUT",
+      "path": "/v1/orgs/{orgId}/discovery"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/orgs/{orgId}/promote"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/orgs/{orgId}/promote/boost"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/orgs/{orgId}/promote/promoted"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/orgs/{orgId}/templates"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/orgs/{orgId}/templates"
+    },
+    {
+      "method": "DELETE",
+      "path": "/v1/orgs/{orgId}/templates"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/orgs/{orgId}/templates/sync"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/templates/{code}"
+    },
+    {
+      "method": "GET",
       "path": "/v1/conversations"
     },
     {
@@ -1588,6 +1664,18 @@
     {
       "method": "POST",
       "path": "/v2/bot/interactions/{id}/reply"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/bot-directory"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/developer/bots/{id}/listing"
+    },
+    {
+      "method": "PUT",
+      "path": "/v2/developer/bots/{id}/listing"
     }
   ],
   "errors": {
@@ -1638,7 +1726,8 @@
       400
     ],
     "billing_unavailable": [
-      409
+      409,
+      503
     ],
     "billed_elsewhere": [
       409
@@ -1677,7 +1766,8 @@
       404
     ],
     "bot_private": [
-      403
+      403,
+      409
     ],
     "bad_signature": [
       400,
@@ -2038,6 +2128,9 @@
     "passkey_unknown": [
       401
     ],
+    "promoted_full": [
+      409
+    ],
     "push_endpoint_invalid": [
       400
     ],
@@ -2145,6 +2238,12 @@
     ],
     "storage_unavailable": [
       503
+    ],
+    "template_exists": [
+      409
+    ],
+    "template_not_found": [
+      404
     ],
     "text_channel_no_calls": [
       409
@@ -2287,6 +2386,21 @@
     ],
     "voice_messages_not_allowed": [
       403
+    ],
+    "bots_plus_required": [
+      403
+    ],
+    "bot_role_not_givable": [
+      403
+    ],
+    "official_bot_channel_invalid": [
+      400
+    ],
+    "official_bot_off": [
+      409
+    ],
+    "official_bot_unavailable": [
+      409
     ],
     "bad_address": [
       400

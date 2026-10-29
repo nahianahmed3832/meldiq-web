@@ -1,87 +1,91 @@
-import { Compass, Headphones, Link2, Lock, Sparkles } from "lucide-react";
 import type { ReactNode } from "react";
 import { BrandMark } from "../components/BrandMark";
 import { LanguagePicker } from "../components/LanguagePicker";
 import { useT } from "../../i18n";
 
 /**
- * The signed-out layout (continuation brief v3 §5): on wide screens a community-first hero, Meldling, what Meldiq is
- * for and an illustration of a community, beside a comfortably sized form; on phones a compact branded header above
- * the form. Nothing in it is invented: no member counts, activity or testimonials.
+ * The signed-out page, which is also Meldiq Web's homepage, in the app's own design (tokens, frame and panels; the
+ * person's palette, light or dark like the app). Only three things, as the owner asked (2026-10-30: "logo, photo of
+ * inside app that already have and login system that's all"): the Meldiq logo, a picture of the app's own layout, and
+ * the sign-in card (which also leads to creating an account). The headline stays for screen readers and search engines
+ * only. On wide screens the picture sits beside the card; on phones and tablets the card comes first.
  */
 export function AuthFrame({ children }: { children: ReactNode }) {
   const t = useT();
   return (
-    <div className="link-screen">
-      <section className="link-hero" aria-label={t("hero_about")}>
-        <div className="hero-brand">
-          <BrandMark size={44} />
-          <div>
-            <strong>Meldiq</strong>
-            <div className="brand-byline">by GriipBuddy</div>
-          </div>
+    <div className="landing">
+      <header className="landing-nav">
+        <div className="landing-brand">
+          <BrandMark size={34} />
+          <strong>Meldiq</strong>
         </div>
-        <div className="hero-copy">
-          <h1>
-            {t("hero_c_title_1")} <em>{t("hero_c_title_2")}</em>
-          </h1>
-          <p>{t("hero_c_body")}</p>
-          <ul className="hero-points">
-            <li>
-              <Link2 size={18} aria-hidden="true" />
-              <span>{t("hero_c_join")}</span>
-            </li>
-            <li>
-              <Compass size={18} aria-hidden="true" />
-              <span>{t("hero_c_discover")}</span>
-            </li>
-            <li>
-              <Headphones size={18} aria-hidden="true" />
-              <span>{t("hero_c_talk")}</span>
-            </li>
-            <li>
-              <Sparkles size={18} aria-hidden="true" />
-              <span>{t("hero_c_create")}</span>
-            </li>
-          </ul>
-        </div>
-        <HeroPreview label={t("hero_c_preview")} />
-        <p className="hero-foot">
-          <Lock size={14} aria-hidden="true" /> {t("hero_point_encrypted")}
-        </p>
+        <LanguagePicker className="landing-lang" />
+      </header>
+
+      <section className="landing-hero" aria-labelledby="landing-title">
+        <h1 id="landing-title" className="sr-only">
+          Meldiq: {t("hero_c_title_1")} {t("hero_c_title_2")}
+        </h1>
+        <AppPreview />
       </section>
-      <main className="link-main">
-        {/* Picked before signing in or up, so every step is in the person's language (2026-10-23). */}
-        <LanguagePicker className="auth-lang" />
-        <div className="link-card card">{children}</div>
+
+      <main className="landing-auth">
+        <div className="link-card card landing-card">{children}</div>
       </main>
+
+      <footer className="landing-foot">
+        <span>Meldiq by GriipBuddy</span>
+        <a href="https://meldiq.app/legal/terms">{t("landing_terms")}</a>
+        <a href="https://meldiq.app/legal/privacy">{t("landing_privacy")}</a>
+      </footer>
     </div>
   );
 }
 
 /**
- * An illustration of a community (shapes and channel names only), so the page shows what Meldiq looks like. The owner
- * asked for it back in place of the brand banner (2026-10-29).
+ * A small picture of the app as it looks signed in: the rail with Meldling and community circles, a channel list and a
+ * conversation with the composer, in the app's own panels and colours. Shapes and channel names only (no invented
+ * people or messages); decorative, so screen readers skip it.
  */
-function HeroPreview({ label }: { label: string }) {
+function AppPreview() {
   return (
-    <figure className="hero-preview" aria-label={label}>
-      <div className="hero-preview-rail" aria-hidden="true">
+    <div className="landing-preview" aria-hidden="true">
+      <div className="lp-rail">
         <img src="/meldling-96.webp" alt="" width={34} height={34} />
-        <i style={{ background: "linear-gradient(135deg, #22d3ee, #6366f1)" }} />
-        <i style={{ background: "linear-gradient(135deg, #f97316, #ec4899)" }} />
-        <i style={{ background: "linear-gradient(135deg, #22c55e, #14b8a6)" }} />
+        <span className="lp-sep" />
+        <i />
+        <i />
+        <i />
+        <span className="lp-add">+</span>
       </div>
-      <div className="hero-preview-panel" aria-hidden="true">
-        <div className="hero-preview-banner" />
-        <span className="hero-preview-cat">Text channels</span>
-        <span className="hero-preview-ch on"># welcome</span>
-        <span className="hero-preview-ch"># general</span>
-        <span className="hero-preview-ch"># clips</span>
-        <span className="hero-preview-cat">Voice</span>
-        <span className="hero-preview-ch">🔊 Lounge</span>
+      <div className="lp-side">
+        <span className="lp-title" />
+        <span className="lp-cat">Text channels</span>
+        <span className="lp-ch on"># welcome</span>
+        <span className="lp-ch"># general</span>
+        <span className="lp-ch"># clips</span>
+        <span className="lp-cat">Voice</span>
+        <span className="lp-ch">🔊 Lounge</span>
       </div>
-    </figure>
+      <div className="lp-main">
+        <div className="lp-head">
+          <span className="lp-hash"># welcome</span>
+        </div>
+        {[62, 44, 70, 52, 38].map((w, i) => (
+          <div className="lp-msg" key={i}>
+            <i />
+            <div>
+              <span style={{ width: "28%" }} />
+              <span style={{ width: `${w}%` }} />
+            </div>
+          </div>
+        ))}
+        <div className="lp-composer">
+          <span />
+          <b />
+        </div>
+      </div>
+    </div>
   );
 }
 

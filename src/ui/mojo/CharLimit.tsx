@@ -10,7 +10,7 @@ export function overCharLimit(text: string, limit: number | null): boolean {
 }
 
 /**
- * The message length note under the composer and the edit box (server docs/MOJO.md): plans allow 1,000, 2,000 or 5,000
+ * The message length note under the composer and the edit box (server docs/MOJO.md): plans allow 2,000, 4,000 or 8,000
  * characters, counted as grapheme clusters (an emoji with its skin tone is one), the same way for new messages and edits.
  */
 export function CharLimitNote({ text, limit }: { text: string; limit: number | null }) {
