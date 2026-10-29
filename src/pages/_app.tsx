@@ -14,6 +14,7 @@ import "../styles/mojo.css";
 import "../styles/settings-profile.css";
 import "../styles/settings-parity.css";
 import "../styles/settings-parity-b.css";
+import "../styles/community-parity-a.css";
 import "../styles/motion.css";
 import "../styles/splash.css";
 import "../styles/responsive.css"; // last: its media queries override the rest

@@ -125,6 +125,17 @@ export function accentStyle(accent: string | null | undefined): CSSProperties {
   } as CSSProperties;
 }
 
+/**
+ * A community's background tint (community parity A3) as a style: a light wash of the colour over the element's own
+ * background, so text stays readable in both themes. Empty without a tint.
+ */
+export function tintStyle(background: string | null | undefined): CSSProperties {
+  if (!isAccent(background)) return {};
+  const [r, g, b] = rgb(background.toLowerCase());
+  const wash = `rgba(${r}, ${g}, ${b}, 0.12)`;
+  return { backgroundImage: `linear-gradient(${wash}, ${wash})` };
+}
+
 /** A banner stand-in from the accent (a soft two-stop gradient), for communities without a banner image. */
 export function accentBand(accent: string): string {
   return `linear-gradient(120deg, ${accent}, ${mix(accent, "#8b5cf6", 0.55)})`;

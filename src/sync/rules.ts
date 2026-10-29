@@ -8,6 +8,7 @@ import { type AttachmentRef, type ForwardOrigin, MAX_RECEIVED_ATTACHMENTS, type 
 import { cleanPoll } from "./polls";
 import { cleanSticker } from "./stickers";
 import { cleanContact } from "./rich";
+import { deleteAllowed } from "./channelGates";
 
 /**
  * What a received payload does to this device's copy of a conversation. Pure functions, so they're unit-tested on their own;
@@ -107,9 +108,12 @@ export function applyEdit(t: StoredMessage, senderUserId: string, p: Payload, se
   return { ...t, text: p.text ?? "", editedAt: serverTs, mentions: ids };
 }
 
-/** Deletion for everyone: only the author's. */
-export function applyDelete(t: StoredMessage, senderUserId: string): StoredMessage | null {
-  if (t.senderUserId !== senderUserId) return null;
+/**
+ * Deletion for everyone: the author's, or in a community channel a moderator's (community parity A1: there the server
+ * relays others' deletions only from messages.manage holders and channel managers).
+ */
+export function applyDelete(t: StoredMessage, senderUserId: string, communityChannel = false): StoredMessage | null {
+  if (!deleteAllowed(t.senderUserId, senderUserId, communityChannel)) return null;
   return { ...t, deleted: true, text: "", attachments: [], rich: null };
 }
 

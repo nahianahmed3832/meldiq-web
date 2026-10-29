@@ -27,6 +27,10 @@ import { ChannelBell } from "./ChannelBell";
 import { useT } from "../../i18n";
 import { RulesChannelStart, useRulesSummary } from "../community/RulesViews";
 import { postingState } from "../../sync/rulesChannel";
+import { channelAbilities } from "../../sync/channelGates";
+import { PARITY_FEATURES } from "../../sync/communityParity";
+import { useCommunityAccess, useFeature } from "../community/useCommunityAccess";
+import { LockedBanner } from "../community/LockedBanner";
 
 export function ConversationView({ id, route, onDialog }: { id: string; route: Route; onDialog: (d: ShellDialog) => void }) {
   const engine = useEngine();
@@ -74,6 +78,10 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
   const askedToConnect = !!useConnectionLists()?.incoming.some((e) => e.user.id === peer?.id);
   // API 0.65.0: the community's rules channel (a book icon, the rules on top, everyone reacts there).
   const rules = useRulesSummary(c?.type === "CHANNEL" ? c.orgId : null);
+  // Community parity A: moderators pin and delete anyone's message; new reactions may be off; a lock shows on top.
+  const access = useCommunityAccess(c?.type === "CHANNEL" ? c.orgId : null);
+  const permissionsOn = useFeature(PARITY_FEATURES.permissions);
+  const lockedUntil = useOrbit((s) => (c?.type === "CHANNEL" && c.orgId ? (s.orgs.find((o) => o.id === c.orgId)?.lockedUntil ?? null) : null));
 
   // A thread of a message drawn from the snapshot opens once the server's page has it (engine.whenLive).
   const onThread = useCallback(
@@ -92,6 +100,8 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
   if (!c || !me) return null;
   const isRules = c.type === "CHANNEL" && !!rules?.channelId && rules.channelId === c.id;
   const posting = postingState(c, rules ? { rulesChannel: rules } : null);
+  const abilities = channelAbilities(c, access, permissionsOn);
+  const locked = !!lockedUntil && lockedUntil > Date.now();
   const glyph = c.type !== "CHANNEL" ? null : <ChannelGlyph kind={c.kind} voice={c.voice} format={c.format} rules={isRules} size={18} />;
   const subtitle =
     c.type === "DM"
@@ -165,8 +175,9 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
         <HeaderSearch orgId={c.orgId ?? null} onSearch={() => onDialog({ kind: "search" })} />
       </header>
 
-      {(askedToConnect || alerts.length > 0 || (call && !c.voice) || c.archived || history === "running" || peer?.paused || (c.request && !c.request.incoming)) && (
+      {(askedToConnect || alerts.length > 0 || (call && !c.voice) || c.archived || history === "running" || peer?.paused || locked || (c.request && !c.request.incoming)) && (
         <div className="conv-banners">
+          {locked && <LockedBanner until={lockedUntil!} />}
           {c.request && !c.request.incoming && <RequestSentBanner conversation={c} />}
           {askedToConnect && peer && <ConnectionRequestBanner userId={peer.id} name={peer.name} />}
           {peer?.paused && (
@@ -225,6 +236,8 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
           onLoadOlder={() => engine.loadOlder(id)}
           canPost={posting.post}
           canReact={posting.react}
+          newReactions={abilities.newReactions}
+          moderate={abilities.moderate}
           onReply={setReplyTo}
           onThread={onThread}
           onReview={onReview}

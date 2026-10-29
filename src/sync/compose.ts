@@ -53,7 +53,7 @@ export class Compose {
   async sendText(
     conversationId: string,
     text: string,
-    opts: { replyTo?: string; threadRoot?: string; attachments?: Payload["attachments"]; presetId?: string; rich?: RichContent | null; forwarded?: boolean } = {},
+    opts: { replyTo?: string; threadRoot?: string; attachments?: Payload["attachments"]; presetId?: string; rich?: RichContent | null; forwarded?: boolean; roleMentions?: string[] } = {},
   ): Promise<string> {
     const conv = this.host.state().conversations[conversationId];
     if (!conv?.canPost) throw new ApiError(403, "forbidden", conv?.archived ? "This channel is archived" : "You can't post in this conversation");
@@ -70,6 +70,7 @@ export class Compose {
       threadRoot: opts.threadRoot,
       mentions: mentions.ids.length ? mentions.ids : undefined,
       mentionAll: mentions.all ? true : undefined,
+      roleMentions: conv.type === "CHANNEL" && opts.roleMentions?.length ? opts.roleMentions : undefined,
       attachments: opts.attachments?.length ? opts.attachments : undefined,
       contact: opts.rich?.contact ? contactWire(opts.rich.contact) : undefined,
       location: opts.rich?.location,
@@ -192,8 +193,9 @@ export class Compose {
     await this.enqueueControl(m.conversationId, { type: "edit", target: m.id, text: body, mentions: ids });
   }
 
-  async deleteForEveryone(m: StoredMessage): Promise<void> {
-    if (!m.outgoing || !this.canPost(m.conversationId)) return;
+  async deleteForEveryone(m: StoredMessage, asModerator = false): Promise<void> {
+    if (!m.outgoing && !asModerator) return;
+    if (m.outgoing && !this.canPost(m.conversationId)) return;
     const next = { ...m, deleted: true, text: "", attachments: [], rich: null };
     await this.host.store.putMessage(next);
     this.host.show(next);
@@ -201,8 +203,8 @@ export class Compose {
     await this.enqueueControl(m.conversationId, { type: "delete", target: m.id });
   }
 
-  async setPinned(m: StoredMessage, pinned: boolean): Promise<void> {
-    if (!this.canPost(m.conversationId)) return;
+  async setPinned(m: StoredMessage, pinned: boolean, asModerator = false): Promise<void> {
+    if (!asModerator && !this.canPost(m.conversationId)) return;
     const next = applyPin(m, pinned);
     await this.host.store.putMessage(next);
     this.host.show(next);

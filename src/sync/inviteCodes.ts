@@ -29,8 +29,13 @@ export function inviteFromScan(scanned: string): string | null {
   const raw = LINK.exec(text)?.[1] ?? own ?? (BARE.test(text) ? text : null);
   if (!raw) return null;
   const code = raw.toUpperCase().replace(/[^A-Z0-9]/g, "");
-  return code.length >= 12 && code.length <= 20 ? group(code) : null;
+  if (code.length >= 12 && code.length <= 20) return group(code);
+  // Community parity A3: a community's custom invite link (lowercase letters, digits and hyphens), only as a link.
+  return raw !== text && CUSTOM_SLUG.test(raw) ? raw : null;
 }
+
+/** A custom invite link's slug as links carry it (server: 3–32, lowercase, no hyphen at either end). */
+const CUSTOM_SLUG = /^(?=.*[a-z])[a-z0-9](?:[a-z0-9-]{1,30})[a-z0-9]$/;
 
 /** The code in pasted or typed text: the link, a whole code, or exactly one dashed code inside a longer message. */
 export function extractInvite(text: string): string | null {

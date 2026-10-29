@@ -8,6 +8,8 @@ import { UserAvatar } from "../components/OrgAvatar";
 import { Dialog } from "../components/Overlay";
 import { dmPeer } from "../format";
 import { QuickInvite } from "./InviteLink";
+import { StandardInvite } from "./StandardInvite";
+import { PARITY_FEATURES } from "../../sync/communityParity";
 
 interface AddMembersDialogProps {
   orgId: string;
@@ -37,6 +39,8 @@ const MIN_QUERY = 2;
 export function AddMembersDialog({ orgId, orgName, onClose, onAdded }: AddMembersDialogProps) {
   const engine = useEngine();
   const me = useOrbit((s) => s.me?.userId ?? "");
+  // Community parity A3: a never-expiring link of your own, instead of making one on the spot.
+  const standard = useOrbit((s) => s.server?.features.includes(PARITY_FEATURES.settings) ?? false);
   const conversations = useOrbit((s) => s.conversations, shallowEqual);
   const users = useOrbit((s) => s.users);
   const [q, setQ] = useState("");
@@ -112,7 +116,7 @@ export function AddMembersDialog({ orgId, orgName, onClose, onAdded }: AddMember
           <h3 id="invite-or-title" className="invite-or-title">
             Or, send a community invite link to a friend
           </h3>
-          <QuickInvite orgId={orgId} />
+          {standard ? <StandardInvite orgId={orgId} /> : <QuickInvite orgId={orgId} />}
         </div>
       </div>
     </Dialog>

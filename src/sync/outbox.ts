@@ -4,6 +4,8 @@ import type { OutboxItem } from "../model/types";
 import { parsePayload } from "../protocol/payload";
 import type { EngineContext } from "./context";
 import { rulesRefusalOrg, withMustAgree } from "./rulesChannel";
+import { orgAfterRefusal, refusalNote } from "./channelGates";
+import { setComposerNote } from "./composerNotes";
 
 const zSendRes = z.object({ messageId: z.string(), serverTs: z.number(), duplicate: z.boolean().optional() });
 
@@ -159,8 +161,15 @@ export class Outbox {
     // list may not know yet), and the message fails with the server's reason.
     const rulesOrg = rulesRefusalOrg(e);
     if (rulesOrg) this.ctx.state.update((s) => ({ ...s, orgs: withMustAgree(s.orgs, rulesOrg) }));
+    // Community parity A: content rules, the lock, verification and onboarding say why above the composer.
+    const note = refusalNote(e);
+    if (note) {
+      setComposerNote(o.conversationId, note);
+      const orgId = this.ctx.state.get().conversations[o.conversationId]?.orgId;
+      if (orgId) this.ctx.state.update((s) => ({ ...s, orgs: s.orgs.map((x) => (x.id === orgId ? orgAfterRefusal(x, e) : x)) }));
+    }
     await store.removeOutbox(o.messageId);
-    if (o.visible) await this.onFailed(o.messageId, "FAILED", e instanceof ApiError ? e.message : "Couldn't send this message");
+    if (o.visible) await this.onFailed(o.messageId, "FAILED", note ?? (e instanceof ApiError ? e.message : "Couldn't send this message"));
     return "done";
   }
 }

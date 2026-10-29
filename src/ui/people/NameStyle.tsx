@@ -49,6 +49,8 @@ interface StyledNameProps {
   everyBadge?: boolean;
   /** A role's colour, used when the person picked no colour of their own. */
   roleColor?: string | null;
+  /** Community parity A1: the role colour's second colour, which it fades into. */
+  roleColor2?: string | null;
   /** The tone class names fall back to (the avatar colour's). */
   toneClass?: string;
   className?: string;
@@ -57,9 +59,10 @@ interface StyledNameProps {
 }
 
 /** A display name with its style, then the worn tag. Screen readers hear the name, then "tag MC". */
-export function StyledName({ name, style, tag, mojo, everyBadge, roleColor, toneClass, className, bot }: StyledNameProps) {
-  const colors = style?.nameColors ?? null;
-  const paint = namePaint(colors) ?? (roleColor ? { color: roleColor } : undefined);
+export function StyledName({ name, style, tag, mojo, everyBadge, roleColor, roleColor2, toneClass, className, bot }: StyledNameProps) {
+  const own = style?.nameColors?.length ? style.nameColors : null;
+  const colors = own ?? (roleColor ? (roleColor2 ? [roleColor, roleColor2] : [roleColor]) : null);
+  const paint = namePaint(colors);
   const classes = [
     "sname",
     style?.nameFont ? `nf-${style.nameFont}` : "",

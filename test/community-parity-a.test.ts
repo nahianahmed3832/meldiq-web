@@ -117,7 +117,7 @@ describe("lock", () => {
 
   it("locks for the chosen time", () => {
     const chosen: number[] = [];
-    const entry = lockEntry({ lockedUntil: null, realLock: false, onLock: (ms) => chosen.push(ms), onUnlock: () => undefined, now }) as MenuItem;
+    const entry = lockEntry({ lockedUntil: null, realLock: false, onLock: (c) => chosen.push(c.ms), onUnlock: () => undefined, now }) as MenuItem;
     entry.submenu
       ?.filter(isItem)
       .find((i) => i.label === "8 hours")

@@ -12,6 +12,7 @@ import {
   LogOut,
   Megaphone,
   PenSquare,
+  RotateCcw,
   Settings2,
   ShieldCheck,
   Sparkles,
@@ -36,13 +37,14 @@ import { LeaveDialog } from "./LeaveDialog";
 import { DeleteCommunityDialog } from "./DeleteCommunityDialog";
 import { NicknameDialog } from "./NicknameDialog";
 import { lockEntry } from "./lockMenu";
-import { lockCommunity, PARITY_FEATURES, unlockCommunity } from "../../sync/communityParity";
+import { type LockChoice, lockCommunity, PARITY_FEATURES } from "../../sync/communityParity";
+import { OnboardingFlow } from "./OnboardingFinish";
 import type { Engine } from "../../sync/engine";
 import { ArrangeRailDialog, CommunityNotificationsDialog, LEVEL_NAME } from "./NotifyDialogs";
 import { categoriesOf, orderedOrgs } from "./panelData";
 import type { CommunityPermissions } from "./useCommunityPermissions";
 
-type MenuDialog = "notifications" | "channel" | "category" | "arrange" | "leave" | "delete" | "nickname" | "sparks" | null;
+type MenuDialog = "notifications" | "channel" | "category" | "arrange" | "leave" | "delete" | "nickname" | "sparks" | "onboarding" | null;
 type NavChange = (op: Parameters<Engine["nav"]["change"]>[1]) => void;
 
 /** The per-browser "Hide muted channels" switch for a community (android CommunityViewPrefs: this device only). */
@@ -87,15 +89,19 @@ export function useCommunityMenu(orgId: string | null, perms: CommunityPermissio
   const preferences = features.includes("community-preferences");
   const muted = communityMutedUntil(nav);
   const level: NotifyLevel = nav?.community?.level ?? "all";
-  // Lock falls back to Security actions' join pause, so it shows to the same people.
-  const canLock = features.includes("security-actions") && (perms.canManageOrg || perms.canBan);
+  // Community parity A2: a real lock (no joins, only moderators chat); older servers fall back to Security actions'
+  // join pause. Both go to the same people (Edit community or Ban).
+  const realLock = features.includes(PARITY_FEATURES.safety);
+  const canLock = (realLock || features.includes("security-actions")) && (perms.canManageOrg || perms.canBan);
+  const lockedUntil = realLock ? (org.lockedUntil ?? null) : org.invitesPausedUntil;
+  const settingsOn = features.includes(PARITY_FEATURES.settings);
   const openSettings = (page: WorkspacePage) => {
     setPrefs({ orgId });
     navigate({ section: "workspace", workspacePage: page });
   };
 
-  const lock = (ms: number) => void lockCommunity(engine, orgId, Date.now() + ms).catch(() => engine.notice("error", "Couldn't lock the community. Try again."));
-  const unlock = () => void unlockCommunity(engine, orgId).catch(() => engine.notice("error", "Couldn't unlock the community. Try again."));
+  const lock = (choice: LockChoice) => void lockCommunity(engine, orgId, choice, realLock).catch(() => engine.notice("error", "Couldn't lock the community. Try again."));
+  const unlock = () => void lockCommunity(engine, orgId, null, realLock).catch(() => engine.notice("error", "Couldn't unlock the community. Try again."));
 
   const entries: MenuEntry[] = [
     { label: "Mark as read", icon: <CheckCheck size={16} />, disabled: readTargets.length === 0, onSelect: () => void Promise.all(readTargets.map((c) => engine.markRead(c))) },
@@ -111,8 +117,10 @@ export function useCommunityMenu(orgId: string | null, perms: CommunityPermissio
   if (features.includes("bots") && perms.canManageOrg) entries.push({ label: "Bots", icon: <Bot size={16} />, onSelect: () => openSettings("bots") });
   if (perms.canCreateChannels) entries.push({ label: "Create channel", icon: <PenSquare size={16} />, onSelect: () => setDialog("channel") });
   if (perms.canCreateTop) entries.push({ label: "Create category", icon: <FolderPlus size={16} />, onSelect: () => setDialog("category") });
-  if (canLock) entries.push(lockEntry({ lockedUntil: org.invitesPausedUntil, realLock: features.includes(PARITY_FEATURES.lock), onLock: lock, onUnlock: unlock }));
-  if (features.includes(PARITY_FEATURES.nicknames)) entries.push({ label: "Change nickname", icon: <UserPen size={16} />, onSelect: () => setDialog("nickname") });
+  if (canLock) entries.push(lockEntry({ lockedUntil, realLock, onLock: lock, onUnlock: unlock }));
+  if (features.includes(PARITY_FEATURES.permissions)) entries.push({ label: "Change nickname", icon: <UserPen size={16} />, onSelect: () => setDialog("nickname") });
+  // Community parity A3: everyone can go through onboarding again from the menu.
+  if (settingsOn && org.onboarding && org.myRole !== "GUEST") entries.push({ label: "Redo onboarding", icon: <RotateCcw size={16} />, onSelect: () => setDialog("onboarding") });
   if (preferences)
     entries.push(
       muteEntry(muted, change),
@@ -146,8 +154,8 @@ export function useCommunityMenu(orgId: string | null, perms: CommunityPermissio
       {dialog === "leave" && <LeaveDialog orgId={org.id} name={org.name} onClose={close} />}
       {dialog === "sparks" && <SparkDialog orgId={org.id} name={org.name} onClose={close} />}
       {dialog === "delete" && <DeleteCommunityDialog orgId={org.id} name={org.name} onClose={close} />}
-      {/* TODO(community-parity A): the current nickname from the member's own row once the server sends it. */}
-      {dialog === "nickname" && <NicknameDialog orgId={org.id} current={null} onClose={close} />}
+      {dialog === "nickname" && <NicknameDialog orgId={org.id} userId={engine.device.userId} onClose={close} />}
+      {dialog === "onboarding" && <OnboardingFlow orgId={org.id} onClose={close} />}
     </>
   );
   return { entries, dialogs };

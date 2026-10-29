@@ -18,6 +18,9 @@ import { Card, ErrorLine } from "./WorkspaceView";
 import { GuestPolicyCard } from "./WorkspaceSetupCards";
 import { AccessCard, JoinQuestionsCard } from "./ModerationPages";
 import { ProfileSafety } from "./ProfileSafety";
+import { ProfileExtrasCards } from "./ProfileExtrasCards";
+import { PARITY_FEATURES } from "../../sync/communityParity";
+import { SETTINGS_LIMITS } from "../../sync/communitySettings";
 import { DeleteCommunityDialog } from "../community/DeleteCommunityDialog";
 
 interface OverviewPageProps {
@@ -51,6 +54,7 @@ export function OverviewPage({ detail, onChanged, focusSafety = false }: Overvie
       {can.canManageOrg ? <Identity detail={detail} onChanged={onChanged} /> : <ReadOnlyAbout description={org.description} />}
       {!community && features.includes("community-branding") && <AppearanceCard detail={detail} onChanged={onChanged} />}
       {features.includes("community-tags") && <TagCard detail={detail} onChanged={onChanged} />}
+      {community && can.canManageOrg && features.includes(PARITY_FEATURES.settings) && <ProfileExtrasCards detail={detail} onChanged={onChanged} />}
       {community && <AccessCard detail={detail} />}
       {community && can.canManageOrg && features.includes("join-applications") && <JoinQuestionsCard detail={detail} />}
       {community && <ProfileSafety detail={detail} focused={focusSafety} />}
@@ -108,6 +112,8 @@ function Identity({ detail, onChanged }: { detail: OrgAdminDetail; onChanged: ()
   const photo = useAction();
   const file = useRef<HTMLInputElement>(null);
   const animatedImages = useOrbit((s) => s.server?.features.includes("animated-community-images") ?? false);
+  // Community parity A3: names up to 100 characters (80 before).
+  const nameMax = useOrbit((s) => (s.server?.features.includes(PARITY_FEATURES.settings) ? SETTINGS_LIMITS.name : 80));
   useEffect(() => {
     setName(org.name);
     setDescription(org.description ?? "");
@@ -148,7 +154,7 @@ function Identity({ detail, onChanged }: { detail: OrgAdminDetail; onChanged: ()
       <form onSubmit={submit} style={{ display: "grid", gap: 12 }}>
         <div className="field">
           <label htmlFor="ws-name">Name</label>
-          <input id="ws-name" className="input" value={name} maxLength={80} onChange={(e) => setName(e.target.value)} />
+          <input id="ws-name" className="input" value={name} maxLength={nameMax} onChange={(e) => setName(e.target.value)} />
         </div>
         <div className="field">
           <label htmlFor="ws-desc">Description</label>

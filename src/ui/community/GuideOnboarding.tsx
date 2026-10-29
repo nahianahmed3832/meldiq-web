@@ -5,6 +5,7 @@ import { useEngine, useOrbit } from "../../application/orbit";
 import { navigate } from "../../application/router";
 import { answerOnboarding, guideDone, guideHidden, guideProgress, guideSignature, hideGuide, missingAnswer, onboarding, type Onboarding, toggleAnswer } from "../../sync/guide";
 import { Dialog } from "../components/Overlay";
+import { OnboardingFlow } from "./OnboardingFinish";
 
 /** Fired when a guide task may have been done (a channel was opened): the card reloads. */
 export const GUIDE_EVENT = "meldiq:guide-changed";
@@ -87,6 +88,9 @@ export function OnboardingBanner({ orgId }: { orgId: string }) {
   const org = useOrbit((s) => s.orgs.find((o) => o.id === orgId) ?? null);
   const [data, setData] = useState<Onboarding | null>(null);
   const [open, setOpen] = useState(false);
+  // Community parity A3: finishing is recorded by the server (and may be required before chatting).
+  const finishing = useOrbit((s) => s.server?.features.includes("community-settings") ?? false);
+  const mustFinish = org?.mustFinishOnboarding === true;
   useEffect(() => {
     if (!org?.onboarding || org.myRole === "GUEST") return setData(null);
     let alive = true;
@@ -97,17 +101,18 @@ export function OnboardingBanner({ orgId }: { orgId: string }) {
       alive = false;
     };
   }, [engine, orgId, org?.onboarding, org?.myRole]);
-  if (!data?.enabled || data.prompts.length === 0 || data.answered) return null;
+  if (!mustFinish && (!data?.enabled || data.prompts.length === 0 || data.answered)) return null;
   return (
     <>
-      <div className="banner info" role="status">
+      <div className={`banner ${mustFinish ? "warn" : "info"}`} role="status">
         <HelpCircle size={16} aria-hidden />
-        <span className="grow">This community asks a few questions to set things up for you.</span>
+        <span className="grow">{mustFinish ? "Finish this community's onboarding to start chatting." : "This community asks a few questions to set things up for you."}</span>
         <button className="btn btn-primary btn-sm" onClick={() => setOpen(true)}>
-          Answer
+          {mustFinish ? "Finish onboarding" : "Answer"}
         </button>
       </div>
-      {open && <OnboardingDialog orgId={orgId} data={data} onClose={() => setOpen(false)} onDone={(d) => setData(d)} />}
+      {open && finishing && <OnboardingFlow orgId={orgId} onClose={() => setOpen(false)} />}
+      {open && !finishing && data && <OnboardingDialog orgId={orgId} data={data} onClose={() => setOpen(false)} onDone={(d) => setData(d)} />}
     </>
   );
 }

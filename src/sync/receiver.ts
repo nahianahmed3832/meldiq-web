@@ -165,7 +165,7 @@ export class Receiver {
       case "edit":
         return this.change(pl, item, serverTs, (t) => applyEdit(t, item.senderUserId, pl, serverTs));
       case "delete":
-        return this.change(pl, item, serverTs, (t) => applyDelete(t, item.senderUserId));
+        return this.change(pl, item, serverTs, (t) => applyDelete(t, item.senderUserId, this.communityChannel(conv, item.conversationId)));
       case "reaction":
         // One emoji, not text: anything else from a modified client is dropped (meldiq docs/EMOJI.md). In a community's
         // channels a community emoji's :name: is a reaction too (batch B12).
@@ -202,6 +202,12 @@ export class Receiver {
         if ((item.payload.cls ?? "message") === "message") return this.recordUnsupported(item, `payload type ${pl.type.slice(0, 40)}`);
         return;
     }
+  }
+
+  /** Whether a conversation is a community channel (a replayed control has none at hand: the store's copy then). */
+  private communityChannel(conv: Pick<Conversation, "type" | "orgId"> | null, conversationId: string): boolean {
+    const c = conv ?? this.ctx.state.get().conversations[conversationId];
+    return c?.type === "CHANNEL" && !!c.orgId;
   }
 
   /** Edits, deletions, reactions and pins: only for a message in the control's own conversation (T3.4). */

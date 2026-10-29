@@ -3,6 +3,7 @@ import { useEngine } from "../../application/orbit";
 import type { ModerationAction } from "../../call/manager";
 import type { CallParticipantView, CallUiState } from "../../call/types";
 import { Menu, type MenuEntry, useMenu } from "../components/Overlay";
+import { useVoiceModeration, type VoiceModeration } from "./voiceModeration";
 
 /**
  * Voice rooms on the call screen (docs/VOICE_ROOMS.md; android CallOverlay): Raise hand, and the People list with raised
@@ -48,36 +49,46 @@ export function roomRows(call: CallUiState): CallParticipantView[] {
 
 export function RoomPeople({ call }: { call: CallUiState }) {
   const rows = roomRows(call);
+  const mod = useVoiceModeration(call);
   return (
     <section className="room-people" aria-label="People in the room">
       <h3>
         People · {rows.length}
         {call.hands.length > 0 && <span className="hands"> · {call.hands.length === 1 ? "1 hand raised" : `${call.hands.length} hands raised`}</span>}
       </h3>
+      {mod.stage && <p className="stage-label">{mod.stageModerator ? "Stage · bring people up to speak" : "Stage · raise your hand to ask to speak"}</p>}
       <ul>
         {rows.map((p) => (
-          <PersonRow key={p.userId} p={p} raised={call.hands.includes(p.userId)} canModerate={call.canModerate} />
+          <PersonRow key={p.userId} p={p} raised={call.hands.includes(p.userId)} canModerate={call.canModerate} mod={mod} />
         ))}
       </ul>
     </section>
   );
 }
 
-function PersonRow({ p, raised, canModerate }: { p: CallParticipantView; raised: boolean; canModerate: boolean }) {
+function PersonRow({ p, raised, canModerate, mod }: { p: CallParticipantView; raised: boolean; canModerate: boolean; mod: VoiceModeration }) {
   const engine = useEngine();
   const menu = useMenu();
   const act = (action: ModerationAction) => () => void engine.calls.moderate(p.userId, action);
+  const extra = mod.entriesFor(p);
   const entries: MenuEntry[] = [
-    { label: "Mute microphone", onSelect: act("mute") },
-    ...(raised ? [{ label: "Lower hand", onSelect: act("lower_hand") }] : []),
-    { label: "Remove from call", onSelect: act("remove"), danger: true },
+    ...(canModerate
+      ? [
+          { label: "Mute microphone", onSelect: act("mute") },
+          ...(raised ? [{ label: "Lower hand", onSelect: act("lower_hand") }] : []),
+          { label: "Remove from call", onSelect: act("remove"), danger: true },
+        ]
+      : []),
+    ...(canModerate && extra.length ? ["separator" as const] : []),
+    ...extra,
   ];
   return (
     <li>
       {raised && <Hand size={15} className="hand" aria-label="Hand raised" />}
       <span className="grow ellipsis">{p.isLocal ? "You" : p.name}</span>
+      {mod.stage && mod.speakerIds.includes(p.userId) && <span className="tag">Speaker</span>}
       {!p.micOn && <MicOff size={14} aria-label="Microphone off" />}
-      {canModerate && !p.isLocal && (
+      {entries.length > 0 && !p.isLocal && (
         <>
           <button className="icon-btn" aria-label={`Moderate ${p.name}`} aria-haspopup="menu" onClick={(e) => menu.open(e.currentTarget)}>
             <MoreHorizontal size={16} />

@@ -2,6 +2,7 @@ import { Plus, X } from "lucide-react";
 import { setPrefs, usePrefs } from "../../application/prefs";
 import { VIBES, vibeColors } from "../../application/vibes";
 import { Toggle } from "../components/Toggle";
+import { useCommunityThemes } from "../community/useCommunityThemes";
 
 const DEFAULT_CUSTOM = ["#ff6b4a", "#a855f7"];
 
@@ -12,6 +13,7 @@ const DEFAULT_CUSTOM = ["#ff6b4a", "#a855f7"];
  */
 export function VibesCard() {
   const prefs = usePrefs();
+  const themes = useCommunityThemes();
   const custom = prefs.vibeCustom ?? DEFAULT_CUSTOM;
   const active = vibeColors(prefs.vibe, prefs.vibeCustom);
   const setCustom = (colors: string[]) => setPrefs({ vibe: "custom", vibeCustom: colors });
@@ -66,10 +68,10 @@ export function VibesCard() {
       <div className="card">
         <div className="setting">
           <div className="lines">
-            <strong>Use a community's own colours</strong>
-            <small>Show a community's accent and banner while you're in it. Turn off to always keep yours.</small>
+            <strong>Show community themes</strong>
+            <small>Show a community's accent, background tint and banner while you're in it. Turn off to always keep yours.</small>
           </div>
-          <Toggle label="Use a community's own colours" checked={prefs.communityColors} onChange={(v) => setPrefs({ communityColors: v })} />
+          <Toggle label="Show community themes" checked={themes.on} onChange={themes.set} />
         </div>
         <div className="setting">
           <div className="lines">

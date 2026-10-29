@@ -5,6 +5,8 @@ export interface ListedRole {
   color: string | null;
   hoist: boolean;
   position: number;
+  /** Community parity A1: the colour it fades into (a gradient role colour), or null. */
+  color2?: string | null;
 }
 
 export interface ListedMember {
@@ -34,6 +36,13 @@ const byPosition = (a: ListedRole, b: ListedRole) => a.position - b.position || 
 /** The colour a person's name takes in the member list: their highest role that has one. */
 export function nameColor(roles: readonly ListedRole[] | undefined): string | null {
   return [...(roles ?? [])].sort(byPosition).find((r) => r.color)?.color ?? null;
+}
+
+/** Their highest coloured role's colours: one, or two for a gradient (community parity A1); null without any. */
+export function roleNameColors(roles: readonly ListedRole[] | undefined): string[] | null {
+  const top = [...(roles ?? [])].sort(byPosition).find((r) => r.color);
+  if (!top?.color) return null;
+  return top.color2 ? [top.color, top.color2] : [top.color];
 }
 
 /**

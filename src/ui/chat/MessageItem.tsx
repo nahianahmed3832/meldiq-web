@@ -89,6 +89,10 @@ export interface MessageItemProps {
   canPost: boolean;
   /** Reactions and votes; differs from posting in a community's rules channel (API 0.65.0). Defaults to canPost. */
   canReact?: boolean;
+  /** Community parity A1: reacting with an emoji not yet on a message (joining one stays open). Defaults to true. */
+  newReactions?: boolean;
+  /** Community parity A1: pinning and deleting anyone's message (messages.manage). Defaults to canPost for pins only. */
+  moderate?: boolean;
   highlighted: boolean;
   onReply: (m: StoredMessage) => void;
   onThread: ((m: StoredMessage) => void) | null;
@@ -99,6 +103,8 @@ export interface MessageItemProps {
 export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
   const engine = useEngine();
   const canReact = p.canReact ?? p.canPost;
+  const canAddReaction = canReact && (p.newReactions ?? true);
+  const canPin = p.moderate ?? p.canPost;
   const t = useT();
   const { m } = p;
   const [editing, setEditing] = useState(false);
@@ -240,7 +246,7 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
             reacted: Object.entries(m.reactions)
               .filter(([, who]) => who.includes(p.myUserId))
               .map(([e]) => e),
-            onReact: live && canReact ? (e) => void engine.react(m, e) : null,
+            onReact: live && canAddReaction ? (e) => void engine.react(m, e) : null,
           }}
         />
         {mediaLink ? (
@@ -276,9 +282,9 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
   );
   // Swipe left to reply (touch), double-tap or double-click to react (Settings › Appearance › Gestures).
   const canAct = live && p.canPost && !editing;
-  const gestures = useMessageGestures(canAct && swipeToReply ? () => p.onReply(m) : null, live && canReact && !editing && doubleTapReact ? () => void engine.react(m, quickReaction) : null);
+  const gestures = useMessageGestures(canAct && swipeToReply ? () => p.onReply(m) : null, live && canAddReaction && !editing && doubleTapReact ? () => void engine.react(m, quickReaction) : null);
   const quickRow: MenuEntry[] =
-    pressed && live && canReact
+    pressed && live && canAddReaction
       ? [
           {
             custom: (
@@ -379,13 +385,13 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
 
       {live && !editing && (
         <div className="msg-actions" role="toolbar" aria-label={t("msg_actions")}>
-          {canReact &&
+          {canAddReaction &&
             QUICK_EMOJI.slice(0, 3).map((e) => (
               <button key={e} className="icon-btn quick-emoji" onClick={() => void engine.react(m, e)} aria-label={`React ${e}`}>
                 {e}
               </button>
             ))}
-          {canReact && (
+          {canAddReaction && (
             <button className="icon-btn" onClick={(e) => picker.open(e.currentTarget)} aria-label={t("msg_add_reaction")} title={t("msg_add_reaction")} aria-haspopup="menu">
               <SmilePlus size={TOOL_ICON} />
             </button>
@@ -450,7 +456,15 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
             ...quickRow,
             ...(reactions.length > 0 ? [{ label: t("react_dialog_title"), icon: <SmilePlus size={16} />, onSelect: () => setShowReactions(true) }] : []),
             ...(mine && p.canPost ? [{ label: t("msg_edit"), icon: <Pencil size={16} />, onSelect: () => setEditing(true) }] : []),
-            ...(p.canPost ? [{ label: m.pinned ? t("msg_unpin") : t("msg_pin"), icon: m.pinned ? <PinOff size={16} /> : <Pin size={16} />, onSelect: () => void engine.setPinned(m, !m.pinned) }] : []),
+            ...(canPin
+              ? [
+                  {
+                    label: m.pinned ? t("msg_unpin") : t("msg_pin"),
+                    icon: m.pinned ? <PinOff size={16} /> : <Pin size={16} />,
+                    onSelect: () => void engine.setPinned(m, !m.pinned, p.moderate === true),
+                  },
+                ]
+              : []),
             ...(live && savable
               ? [
                   saved
@@ -499,7 +513,9 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
                 ]
               : []),
             ...(!mine && live && reportable && conv ? ["separator" as const, { label: t("msg_report"), icon: <Flag size={16} />, danger: true, onSelect: () => setReporting(true) }] : []),
-            ...(mine && p.canPost ? ["separator" as const, { label: t("msg_delete_all"), icon: <Trash2 size={16} />, danger: true, onSelect: () => setConfirmDelete(true) }] : []),
+            ...((mine && p.canPost) || (!mine && live && p.moderate === true && !!inCommunity)
+              ? ["separator" as const, { label: t("msg_delete_all"), icon: <Trash2 size={16} />, danger: true, onSelect: () => setConfirmDelete(true) }]
+              : []),
           ]}
         />
       )}
@@ -543,7 +559,7 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
                 data-autofocus
                 onClick={() => {
                   setConfirmDelete(false);
-                  void engine.deleteForEveryone(m);
+                  void engine.deleteForEveryone(m, !mine);
                 }}
               >
                 Delete

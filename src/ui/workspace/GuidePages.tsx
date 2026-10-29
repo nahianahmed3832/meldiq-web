@@ -9,6 +9,8 @@ import { Toggle } from "../components/Toggle";
 import { OnboardingDialog } from "../community/GuideOnboarding";
 import { useAction, useLoad } from "./useLoad";
 import { Card, ErrorLine } from "./WorkspaceView";
+import { OnboardingGateCard } from "./OnboardingGateCard";
+import { PARITY_FEATURES } from "../../sync/communityParity";
 
 const MAX_ITEMS = 5;
 
@@ -122,6 +124,7 @@ export function OnboardingPage({ detail }: { detail: OrgAdminDetail }) {
   const [prompts, setPrompts] = useState<EditPrompt[]>([]);
   const [answering, setAnswering] = useState(false);
   const save = useAction();
+  const gate = useOrbit((s) => s.server?.features.includes(PARITY_FEATURES.settings) ?? false);
   useEffect(() => {
     if (!current.data) return;
     setEnabled(current.data.enabled);
@@ -266,6 +269,7 @@ export function OnboardingPage({ detail }: { detail: OrgAdminDetail }) {
           </div>
         </Card>
       )}
+      {canEdit && gate && <OnboardingGateCard orgId={orgId} channels={channels.data ?? []} />}
       {answering && current.data && <OnboardingDialog orgId={orgId} data={current.data} onClose={() => setAnswering(false)} onDone={() => current.reload()} />}
     </div>
   );
