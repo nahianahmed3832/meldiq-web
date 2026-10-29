@@ -29,7 +29,7 @@ import { navigate, useRoute } from "../../application/router";
 import type { ConversationLocal } from "../../model/types";
 import { levelOf, newSectionId, type NotifyLevel, placeOf, workspaceOf } from "../../sync/navPrefs";
 import { GroupAvatar } from "../components/OrgAvatar";
-import { LookAvatar } from "../people/NameStyle";
+import { LookAvatar, LookName } from "../people/NameStyle";
 import { Dialog, Menu, type MenuEntry, useMenu } from "../components/Overlay";
 import { conversationTitle, dmPeer, members, shortWhen } from "../format";
 import { isMuted, isPeople } from "../selectors";
@@ -136,7 +136,13 @@ export const ConversationRow = memo(function ConversationRow({ id, twoLine, hide
       </span>
       <span className="lines">
         <span className="row">
-          <span className="grow ellipsis">{title}</span>
+          {c.type === "DM" && peerId ? (
+            <span className="grow ellipsis">
+              <LookName userId={peerId} name={title} />
+            </span>
+          ) : (
+            <span className="grow ellipsis">{title}</span>
+          )}
           <span className="time">{shortWhen(local?.lastActivityAt ?? 0)}</span>
         </span>
         <span className="row">

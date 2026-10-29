@@ -9,11 +9,10 @@ import { startDirect, userProfile } from "../../sync/account";
 import { presenceWords } from "../../sync/social";
 import { directory } from "../../sync/workspaces";
 import { nameTone, toneOf } from "../components/Avatar";
-import { UserAvatar } from "../components/OrgAvatar";
 import { contextMenuProps, Menu, type MenuEntry, useMenu } from "../components/Overlay";
-import { StyledName } from "../people/NameStyle";
+import { LookAvatar, LookName, StyledName } from "../people/NameStyle";
 import { StyledAvatar } from "../people/ProfileStyle";
-import { themeColorsOf } from "../people/profileTheme";
+import { themeBackground, themeColorsOf } from "../people/profileTheme";
 import { dmPeer, relative } from "../format";
 import { openProfile } from "../people/ProfileDialog";
 import { useMembers } from "./ConversationDetails";
@@ -228,20 +227,23 @@ export function ProfilePanel({ c, onClose }: { c: Conversation; onClose: () => v
   const status = [known?.statusEmoji ?? profile?.statusEmoji, known?.statusText ?? profile?.statusText].filter(Boolean).join(" ");
   const pronouns = known?.pronouns ?? profile?.pronouns;
   const color = known?.avatarColor ?? peer.avatarColor;
+  const theme = themeColorsOf(known?.profileStyle ?? profile?.profileStyle ?? null);
 
   return (
     <aside className="panel profile-panel" aria-label={`${name}'s profile`}>
       <div className="profile-panel-scroll scroll">
-        <div className="profile-banner" style={{ background: toneOf(color) }}>
+        <div className="profile-banner" style={{ background: theme ? themeBackground(theme) : toneOf(color) }}>
           <button className="icon-btn" onClick={onClose} aria-label={t("people_hide_profile")}>
             <X size={16} />
           </button>
         </div>
         <div className="profile-panel-body">
           <div className="profile-panel-avatar">
-            <UserAvatar userId={peer.id} name={name} colorIndex={color} photoRev={known?.photoRev ?? profile?.photoRev} size={84} online={online} presence={presence} decorative />
+            <LookAvatar userId={peer.id} name={name} colorIndex={color} photoRev={known?.photoRev ?? profile?.photoRev} size={84} online={online} presence={presence} />
           </div>
-          <h2 className="ellipsis">{name}</h2>
+          <h2 className="ellipsis">
+            <LookName userId={peer.id} name={name} withMarks />
+          </h2>
           <p className="profile-handle">
             @{known?.username ?? peer.username}
             {pronouns ? ` · ${pronouns}` : ""}

@@ -113,6 +113,22 @@ export function useUserLook(userId: string): Pick<UserLite, "avatarMedia" | "pro
   );
 }
 
+interface LookNameProps {
+  userId: string;
+  name: string;
+  /** With their community tag and badge (messages, profiles); without, only the font and colours (lists, headers). */
+  withMarks?: boolean;
+  toneClass?: string;
+  className?: string;
+}
+
+/** A name as its owner styled it (API 0.46.0), wherever this browser shows it: messages, lists, headers and panels. */
+export function LookName({ userId, name, withMarks = false, toneClass, className = "ellipsis" }: LookNameProps) {
+  const look = useUserLook(userId);
+  if (!withMarks) return <StyledName name={name} style={look.profileStyle} toneClass={toneClass} className={className} />;
+  return <StyledName name={name} style={look.profileStyle} tag={look.tag} mojo={look.mojo} bot={look.bot} toneClass={toneClass} className={className} />;
+}
+
 interface LookAvatarProps {
   userId: string;
   name: string;

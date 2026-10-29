@@ -5,6 +5,7 @@ import { ChannelGlyph } from "../community/ChannelDialogs";
 import { ForumView } from "./ForumView";
 import { presenceWords } from "../../sync/social";
 import { GroupAvatar, UserAvatar } from "../components/OrgAvatar";
+import { LookAvatar, LookName } from "../people/NameStyle";
 import { RequestBar, RequestSentBanner } from "../people/RequestBar";
 import { ConnectionRequestBanner } from "../people/ConnectionRequestViews";
 import { useConnectionLists } from "../people/connectionRequests";
@@ -92,14 +93,14 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
           const titleBlock = (
             <>
               {c.type === "DM" ? (
-                <UserAvatar userId={peer?.id ?? ""} name={title} colorIndex={peer?.color ?? 0} photoRev={peer?.photoRev} size={34} online={peer?.online} presence={peer?.presence} decorative />
+                <LookAvatar userId={peer?.id ?? ""} name={title} colorIndex={peer?.color ?? 0} photoRev={peer?.photoRev} size={34} online={peer?.online} presence={peer?.presence} />
               ) : c.type === "GROUP" ? (
                 <GroupAvatar conversationId={c.id} name={title} photoRev={c.photoRev} size={34} />
               ) : null}
               <div className="conv-title">
                 <h1>
                   {glyph}
-                  <span className="ellipsis">{title}</span>
+                  {c.type === "DM" && peer ? <LookName userId={peer.id} name={title} /> : <span className="ellipsis">{title}</span>}
                   {c.type === "CHANNEL" && c.topic && <span className="conv-topic ellipsis hide-sm">{c.topic}</span>}
                   {c.archived && (
                     <span className="tag">

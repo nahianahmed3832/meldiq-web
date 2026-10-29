@@ -198,7 +198,7 @@ export function LinksTab({ conversationId, links, nameOf }: { conversationId: st
 }
 
 /** The top of the page: the photo, the name, then @username or the member count, and presence (android DetailsHeader). */
-export function DetailsHero({ avatar, title, sub, presence }: { avatar: ReactNode; title: string; sub: string | null; presence: string | null }) {
+export function DetailsHero({ avatar, title, sub, presence }: { avatar: ReactNode; title: ReactNode; sub: string | null; presence: string | null }) {
   return (
     <div className="details-hero">
       {avatar}

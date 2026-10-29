@@ -50,7 +50,7 @@ import { mergeHandlers, useMessageGestures } from "./gestures";
 import { clock, dayLabel, fullTime } from "../format";
 import { openInApp } from "./inAppLinks";
 import { useT } from "../../i18n";
-import { LookAvatar, StyledName, useUserLook } from "../people/NameStyle";
+import { LookAvatar, LookName } from "../people/NameStyle";
 import { isWebUrl } from "../../protocol/payload";
 import { Attachments } from "./Attachments";
 import { isEmojiOnly, RichText } from "./RichText";
@@ -675,6 +675,5 @@ function ForwardedLine({ origin }: { origin: RichContent["origin"] }) {
 
 /** The author's name with their name style and tag (API 0.46.0), as this browser knows them. */
 function SenderName({ userId, name, toneClass }: { userId: string; name: string; toneClass: string }) {
-  const look = useUserLook(userId);
-  return <StyledName name={name} style={look.profileStyle} tag={look.tag} mojo={look.mojo} bot={look.bot} toneClass={toneClass} className="ellipsis" />;
+  return <LookName userId={userId} name={name} withMarks toneClass={toneClass} />;
 }

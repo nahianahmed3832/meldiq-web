@@ -7,6 +7,7 @@ import { conversationMembers, startDirect } from "../../sync/account";
 import { levelOf, muteToggle, workspaceOf } from "../../sync/navPrefs";
 import { presenceWords } from "../../sync/social";
 import { GroupAvatar, UserAvatar } from "../components/OrgAvatar";
+import { LookAvatar, LookName } from "../people/NameStyle";
 import { NewGroupDialog } from "../dialogs/NewGroupDialog";
 import { conversationTitle, dayLabel, dmPeer, members as membersText } from "../format";
 import { GroupPhotoCard } from "../people/GroupPhotoCard";
@@ -98,7 +99,7 @@ function ChatDetails({ c, me, onClose }: { c: Conversation; me: string; onClose:
   ];
   const avatar =
     c.type === "DM" && peer ? (
-      <UserAvatar userId={peer.id} name={title} colorIndex={peer.avatarColor} photoRev={users[peer.id]?.photoRev} size={72} decorative />
+      <LookAvatar userId={peer.id} name={title} colorIndex={peer.avatarColor} photoRev={users[peer.id]?.photoRev} size={72} />
     ) : (
       <GroupAvatar conversationId={c.id} name={title} photoRev={c.photoRev} size={72} />
     );
@@ -111,7 +112,7 @@ function ChatDetails({ c, me, onClose }: { c: Conversation; me: string; onClose:
     <aside className="panel" aria-label="Details">
       <PanelHead title="Details" sub={title} onClose={onClose} />
       <div className="panel-body scroll">
-        <DetailsHero avatar={avatar} title={title} sub={sub} presence={presence} />
+        <DetailsHero avatar={avatar} title={c.type === "DM" && peer ? <LookName userId={peer.id} name={title} withMarks /> : title} sub={sub} presence={presence} />
         <DetailsActions actions={actions} />
         {peerMember && (
           <button className="panel-action-row" onClick={() => setSheet("newGroup")}>
