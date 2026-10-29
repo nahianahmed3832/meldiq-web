@@ -76,6 +76,11 @@ for (const a of ICONS) {
   console.log(a.file);
 }
 
+// iPhone's Home Screen icon (2026-10-30): the same crop as the icons above, full-bleed and opaque, because iOS rounds
+// the corners itself and fills transparent ones with black.
+await sharp(logo).extract(square).resize(180, 180, { kernel: "lanczos3" }).removeAlpha().png({ compressionLevel: 9 }).toFile(out("apple-touch-icon.png"));
+console.log("apple-touch-icon.png");
+
 // Maskable icons are cut to any shape by the system, and the launch screen sits on the same teal: the whole logo,
 // whose face is already inside the central 80% circle.
 for (const [file, size] of [

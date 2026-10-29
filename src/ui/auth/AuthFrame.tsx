@@ -18,10 +18,12 @@ interface AuthFrameProps {
 }
 
 /**
- * The signed-out page, which is also Meldiq Web's landing page (owner's brief, 2026-10-30): one dark, community and
- * gaming look in every palette, Meldling, the headline, one line, and Explore and Join; the sign-in card beside the
- * hero on wide screens and below it on phones and tablets; then what Meldiq has and its plans. Nothing in it is
- * invented: no member counts, activity or testimonials, and only features the product has.
+ * The signed-out page, which is also Meldiq Web's landing page (owner's brief, 2026-10-30; restyled the same day: "it
+ * should match the web app, its own brand design"). It is drawn with the app's own tokens, panels and buttons, so it
+ * follows the person's palette and light or dark like the app does: the Meldling mark, the headline, one line, Explore
+ * and Join, and a small picture of the app's floating layout; the sign-in card beside it on wide screens and below it on
+ * phones and tablets; then what Meldiq has and its plans. Nothing in it is invented: no member counts, activity or
+ * testimonials, and only features the product has.
  */
 export function AuthFrame({ children, onJoin, canJoin = false }: AuthFrameProps) {
   const t = useT();
@@ -36,7 +38,7 @@ export function AuthFrame({ children, onJoin, canJoin = false }: AuthFrameProps)
     <div className="landing">
       <header className="landing-nav">
         <div className="landing-brand">
-          <BrandMark size={36} />
+          <BrandMark size={34} />
           <strong>Meldiq</strong>
         </div>
         <LanguagePicker className="landing-lang" />
@@ -51,16 +53,16 @@ export function AuthFrame({ children, onJoin, canJoin = false }: AuthFrameProps)
         </div>
         <p className="landing-line">{t("landing_line")}</p>
         <div className="landing-actions">
-          <a className="btn landing-btn-explore" href={`#${EXPLORE_ID}`}>
-            <ArrowDown size={18} aria-hidden="true" />
-            {t("landing_explore")}
-          </a>
-          <button type="button" className="btn landing-btn-join" onClick={join}>
+          <button type="button" className="btn btn-primary landing-btn" onClick={join}>
             {canJoin ? <UserPlus size={18} aria-hidden="true" /> : <LogIn size={18} aria-hidden="true" />}
             {canJoin ? t("landing_join") : t("landing_signin")}
           </button>
+          <a className="btn btn-secondary landing-btn" href={`#${EXPLORE_ID}`}>
+            <ArrowDown size={18} aria-hidden="true" />
+            {t("landing_explore")}
+          </a>
         </div>
-        <HeroArt />
+        <AppPreview />
       </section>
 
       <main className="landing-auth" id={JOIN_ID}>
@@ -79,22 +81,48 @@ export function AuthFrame({ children, onJoin, canJoin = false }: AuthFrameProps)
 }
 
 /**
- * Meldling with a headset and a controller, sized for the screen: 280, 420 or 640 pixels wide, so phones download a
- * small file and wide screens a sharp one (never one image stretched across every size).
+ * A small picture of the app as it looks signed in: the rail with Meldling and community circles, a channel list and a
+ * conversation with the composer, in the app's own panels and colours. Shapes and channel names only (no invented
+ * people or messages); decorative, so screen readers skip it.
  */
-function HeroArt() {
+function AppPreview() {
   return (
-    <div className="landing-art" aria-hidden="true">
-      <img
-        src="/meldling/gaming-420.webp"
-        srcSet="/meldling/gaming-280.webp 280w, /meldling/gaming-420.webp 420w, /meldling/gaming.webp 640w"
-        sizes="(max-width: 599px) 140px, (max-width: 1023px) 220px, (max-width: 1679px) 240px, 340px"
-        width={640}
-        height={632}
-        alt=""
-        fetchPriority="high"
-        decoding="async"
-      />
+    <div className="landing-preview" aria-hidden="true">
+      <div className="lp-rail">
+        <img src="/meldling-96.webp" alt="" width={34} height={34} />
+        <span className="lp-sep" />
+        <i />
+        <i />
+        <i />
+        <span className="lp-add">+</span>
+      </div>
+      <div className="lp-side">
+        <span className="lp-title" />
+        <span className="lp-cat">Text channels</span>
+        <span className="lp-ch on"># welcome</span>
+        <span className="lp-ch"># general</span>
+        <span className="lp-ch"># clips</span>
+        <span className="lp-cat">Voice</span>
+        <span className="lp-ch">🔊 Lounge</span>
+      </div>
+      <div className="lp-main">
+        <div className="lp-head">
+          <span className="lp-hash"># welcome</span>
+        </div>
+        {[62, 44, 70].map((w, i) => (
+          <div className="lp-msg" key={i}>
+            <i />
+            <div>
+              <span style={{ width: "28%" }} />
+              <span style={{ width: `${w}%` }} />
+            </div>
+          </div>
+        ))}
+        <div className="lp-composer">
+          <span />
+          <b />
+        </div>
+      </div>
     </div>
   );
 }

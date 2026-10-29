@@ -37,13 +37,22 @@ test("a visitor sees the headline, explores the features and the server's plans,
   expect(overflow).toBeLessThanOrEqual(0);
 });
 
-test("the art is sized for the screen, not one image stretched", async ({ page }) => {
+test("the page is the app's own design, and installs as an iPhone app", async ({ page, request }) => {
   await page.goto("/");
-  const art = page.locator(".landing-art img");
-  await expect(art).toBeVisible({ timeout: 20_000 });
-  expect(await art.getAttribute("srcset")).toContain("gaming-280.webp 280w");
-  const width = await art.evaluate((img) => img.getBoundingClientRect().width);
-  const viewport = page.viewportSize()!.width;
-  expect(width).toBe(viewport < 600 ? 140 : viewport < 1024 ? 220 : width);
-  expect(width).toBeLessThanOrEqual(340);
+  await expect(page.locator(".landing-preview")).toBeVisible({ timeout: 20_000 });
+  // The official mark, not separate art; Join is the app's own call-to-action button.
+  await expect(page.locator(".landing-brand img.brand-mark")).toBeVisible();
+  await expect(page.locator(".landing-actions button")).toHaveClass(/btn-primary/);
+  // Home Screen: standalone, the iOS tags, and an opaque square icon.
+  const head = page.locator("head");
+  await expect(head.locator('meta[name="apple-mobile-web-app-capable"]')).toHaveAttribute("content", "yes");
+  await expect(head.locator('meta[name="apple-mobile-web-app-status-bar-style"]')).toHaveAttribute("content", "black-translucent");
+  await expect(head.locator('link[rel="apple-touch-icon"]')).toHaveAttribute("href", "/apple-touch-icon.png");
+  const manifest = await (await request.get("/manifest.webmanifest")).json();
+  expect(manifest).toMatchObject({ name: "Meldiq", short_name: "Meldiq", start_url: "/", scope: "/", display: "standalone" });
+  for (const icon of [...manifest.icons.map((i: { src: string }) => i.src), "/apple-touch-icon.png"]) {
+    const r = await request.get(icon);
+    expect(r.status(), icon).toBe(200);
+    expect(r.headers()["content-type"]).toContain("image/png");
+  }
 });
