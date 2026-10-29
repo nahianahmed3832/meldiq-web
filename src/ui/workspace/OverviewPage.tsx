@@ -19,6 +19,7 @@ import { GuestPolicyCard } from "./WorkspaceSetupCards";
 import { AccessCard, JoinQuestionsCard } from "./ModerationPages";
 import { ProfileSafety } from "./ProfileSafety";
 import { DeleteCommunityDialog } from "../community/DeleteCommunityDialog";
+import { TicketsSection } from "../community/tickets/TicketsCard";
 
 interface OverviewPageProps {
   detail: OrgAdminDetail;
@@ -54,6 +55,7 @@ export function OverviewPage({ detail, onChanged, focusSafety = false }: Overvie
       {community && <AccessCard detail={detail} />}
       {community && can.canManageOrg && features.includes("join-applications") && <JoinQuestionsCard detail={detail} />}
       {community && <ProfileSafety detail={detail} focused={focusSafety} />}
+      {community && <TicketsSection detail={detail} />}
       {can.canManageOrg && features.includes("guest-expiry") && <GuestPolicyCard detail={detail} onChanged={onChanged} />}
       {/* Every workspace is a community since API 0.12: the team/community switch is only for older servers. */}
       {features.includes("communities") && !features.includes("community-channels") && <KindCard detail={detail} onChanged={onChanged} />}

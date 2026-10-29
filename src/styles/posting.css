@@ -1,0 +1,349 @@
+/* Community parity C: posted boxes and buttons, webhooks, Make a post, reaction roles and tickets. */
+
+/* ───────────── A post's boxes (embeds) ───────────── */
+.embed {
+  display: flex;
+  gap: 12px;
+  max-width: min(520px, 100%);
+  margin: 4px 0;
+  padding: 10px 14px 12px;
+  border-inline-start: 4px solid var(--border-strong);
+  border-radius: var(--r-sm);
+  background: var(--surface-sunken);
+  color: var(--text);
+  overflow: hidden;
+}
+.embed-body {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+  flex: 1;
+}
+.embed-author {
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  color: var(--text-2);
+}
+.embed-title {
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+.embed-title a {
+  color: var(--link);
+}
+.embed-text {
+  font-size: 14px;
+  color: var(--text);
+  overflow-wrap: anywhere;
+}
+.embed-image {
+  display: block;
+  max-width: 100%;
+  max-height: 320px;
+  margin-top: 4px;
+  border-radius: var(--r-sm);
+  object-fit: contain;
+}
+.embed-thumb {
+  flex: none;
+  width: 80px;
+  height: 80px;
+  border-radius: var(--r-sm);
+  object-fit: cover;
+}
+.embed-footer {
+  font-size: var(--fs-xs);
+  color: var(--text-3);
+  overflow-wrap: anywhere;
+}
+.embed-picture-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--fs-xs);
+  color: var(--link);
+}
+.embed-thumb-link {
+  align-self: flex-start;
+}
+
+/* The little markdown a box's text uses. */
+.md {
+  display: grid;
+  gap: 4px;
+}
+.md p,
+.md blockquote {
+  margin: 0;
+  white-space: pre-wrap;
+}
+.md-h {
+  font-weight: 700;
+}
+.md-h1 {
+  font-size: 1.25em;
+}
+.md-h2 {
+  font-size: 1.12em;
+}
+.md-li::before {
+  content: "• ";
+  color: var(--text-3);
+}
+.md-quote {
+  padding-inline-start: 10px;
+  border-inline-start: 3px solid var(--border-strong);
+  color: var(--text-2);
+}
+.md-code,
+.md-pre {
+  font-family: var(--mono);
+  font-size: 0.9em;
+  background: var(--surface);
+  border-radius: var(--r-xs);
+}
+.md-code {
+  padding: 0 4px;
+}
+.md-pre {
+  margin: 0;
+  padding: 8px 10px;
+  overflow-x: auto;
+}
+
+.post-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 6px 0 2px;
+}
+.post-button {
+  text-decoration: none;
+}
+.webhook-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+/* ───────────── Edit channel › Webhooks ───────────── */
+.channel-dialog-tabs {
+  margin: 0 var(--s-5, 20px);
+}
+.webhook-list {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.webhook-row {
+  display: grid;
+  gap: 8px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--surface-raised);
+}
+.webhook-main {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.webhook-avatar {
+  position: relative;
+  padding: 0;
+  border: 0;
+  background: none;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.webhook-avatar-badge {
+  position: absolute;
+  right: -2px;
+  bottom: -2px;
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-2);
+}
+.webhook-lines {
+  display: grid;
+  gap: 2px;
+  min-width: 160px;
+}
+.webhook-url {
+  overflow-wrap: anywhere;
+  font-size: var(--fs-xs);
+}
+
+/* ───────────── Make a post ───────────── */
+.post-builder {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+.builder-form {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+}
+.builder-tools {
+  align-items: flex-end;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.builder-section {
+  display: grid;
+  gap: 8px;
+}
+.builder-label {
+  margin: 0;
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+.box-editor,
+.panel-editor {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-inline-start: 4px solid var(--border-strong);
+  border-radius: var(--r-md);
+  min-width: 0;
+}
+.panel-editor {
+  border-inline-start-width: 1px;
+}
+.box-editor-head {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+  padding: 0;
+}
+.box-editor-row,
+.button-editor {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.box-color input {
+  width: 36px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  background: none;
+  cursor: pointer;
+}
+.box-editor-more {
+  display: grid;
+  gap: 8px;
+}
+.button-editor .input {
+  min-width: 0;
+}
+.button-emoji {
+  width: 56px;
+  flex: none;
+  text-align: center;
+}
+.builder-preview {
+  position: sticky;
+  top: 0;
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+.preview-msg {
+  padding: 10px;
+  border-radius: var(--r-md);
+  background: var(--surface-raised);
+  pointer-events: auto;
+}
+.preview-title {
+  display: block;
+}
+.preview-text {
+  white-space: pre-wrap;
+}
+.builder-problems {
+  margin: 0;
+  padding-inline-start: 18px;
+  color: var(--danger);
+  font-size: var(--fs-sm);
+}
+
+/* ───────────── Reaction roles ───────────── */
+.rr-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.rr-emoji {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  flex: none;
+  font-size: 20px;
+  border-radius: var(--r-sm);
+  background: var(--surface-sunken);
+}
+.rr-add {
+  display: grid;
+  gap: 6px;
+}
+.rr-quick {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ───────────── Tickets ───────────── */
+.check-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  cursor: pointer;
+}
+.check-row input {
+  margin-top: 3px;
+}
+
+@media (max-width: 760px) {
+  .post-builder {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .builder-preview {
+    position: static;
+  }
+  .embed-thumb {
+    width: 56px;
+    height: 56px;
+  }
+}
+
+/* Edit channel keeps the Overview form (and what was typed in it) while another tab shows. */
+form.dialog-body[hidden] {
+  display: none;
+}
+
+/* A tall post (boxes, buttons) keeps its author's picture at the top, beside the name. */
+.msg-gutter .msg-avatar-btn {
+  align-self: flex-start;
+}

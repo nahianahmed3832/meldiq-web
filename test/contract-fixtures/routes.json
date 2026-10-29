@@ -1,5 +1,5 @@
 {
-  "version": "0.65.0",
+  "version": "0.66.1",
   "routes": [
     {
       "method": "GET",
@@ -830,6 +830,30 @@
       "path": "/v1/orgs/{orgId}/audit"
     },
     {
+      "method": "PUT",
+      "path": "/v1/orgs/{orgId}/roles/everyone"
+    },
+    {
+      "method": "PUT",
+      "path": "/v1/orgs/{orgId}/members/{userId}/nickname"
+    },
+    {
+      "method": "PUT",
+      "path": "/v1/roles/{roleId}/extras"
+    },
+    {
+      "method": "PUT",
+      "path": "/v1/orgs/{orgId}/roles/order"
+    },
+    {
+      "method": "PUT",
+      "path": "/v1/conversations/{id}/stage/speakers/{userId}"
+    },
+    {
+      "method": "DELETE",
+      "path": "/v1/conversations/{id}/stage/speakers/{userId}"
+    },
+    {
       "method": "GET",
       "path": "/v1/discord/status"
     },
@@ -1010,6 +1034,86 @@
       "path": "/v1/orgs/{orgId}/rules/agree"
     },
     {
+      "method": "GET",
+      "path": "/v1/orgs/{orgId}/settings"
+    },
+    {
+      "method": "PUT",
+      "path": "/v1/orgs/{orgId}/settings"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/orgs/{orgId}/invites/standard"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/orgs/{orgId}/onboarding/finish"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/orgs/{orgId}/safety"
+    },
+    {
+      "method": "PUT",
+      "path": "/v1/orgs/{orgId}/safety"
+    },
+    {
+      "method": "PUT",
+      "path": "/v1/orgs/{orgId}/lock"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/orgs/{orgId}/voice-bans"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/orgs/{orgId}/voice-bans"
+    },
+    {
+      "method": "DELETE",
+      "path": "/v1/orgs/{orgId}/voice-bans/{userId}"
+    },
+    {
+      "method": "PUT",
+      "path": "/v1/orgs/{orgId}/voice/members/{userId}/mute"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/orgs/{orgId}/voice/members/{userId}/disconnect"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/orgs/{orgId}/lobby"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/orgs/{orgId}/lobby/settings"
+    },
+    {
+      "method": "PUT",
+      "path": "/v1/orgs/{orgId}/lobby/settings"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/orgs/{orgId}/lobby/template"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/orgs/{orgId}/lobby/seen"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/orgs/{orgId}/lobby/feed"
+    },
+    {
+      "method": "DELETE",
+      "path": "/v1/orgs/{orgId}/lobby/feed"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/lobby-feed/{token}"
+    },
+    {
       "method": "POST",
       "path": "/v1/reports"
     },
@@ -1020,6 +1124,86 @@
     {
       "method": "PATCH",
       "path": "/v1/reports/{id}"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/orgs/{orgId}/channels/{channelId}/webhooks"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/orgs/{orgId}/channels/{channelId}/webhooks"
+    },
+    {
+      "method": "PATCH",
+      "path": "/v1/orgs/{orgId}/channels/{channelId}/webhooks/{webhookId}"
+    },
+    {
+      "method": "DELETE",
+      "path": "/v1/orgs/{orgId}/channels/{channelId}/webhooks/{webhookId}"
+    },
+    {
+      "method": "PUT",
+      "path": "/v1/orgs/{orgId}/channels/{channelId}/webhooks/{webhookId}/avatar"
+    },
+    {
+      "method": "DELETE",
+      "path": "/v1/orgs/{orgId}/channels/{channelId}/webhooks/{webhookId}/avatar"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/orgs/{orgId}/channels/{channelId}/webhooks/{webhookId}/token"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/orgs/{orgId}/channels/{channelId}/webhooks/{webhookId}/post"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/webhooks/{webhookId}/avatar"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/webhooks/{webhookId}/{token}"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/orgs/{orgId}/channels/{channelId}/messages/{messageId}/reaction-roles"
+    },
+    {
+      "method": "PUT",
+      "path": "/v1/orgs/{orgId}/channels/{channelId}/messages/{messageId}/reaction-roles"
+    },
+    {
+      "method": "DELETE",
+      "path": "/v1/orgs/{orgId}/channels/{channelId}/messages/{messageId}/reaction-roles"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/orgs/{orgId}/tickets/config"
+    },
+    {
+      "method": "PUT",
+      "path": "/v1/orgs/{orgId}/tickets/config"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/orgs/{orgId}/tickets/panels/{panelId}/post"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/orgs/{orgId}/tickets"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/orgs/{orgId}/tickets"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/orgs/{orgId}/tickets/{channelId}/join"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/orgs/{orgId}/tickets/{channelId}/close"
     },
     {
       "method": "GET",
@@ -1414,6 +1598,15 @@
       401,
       403
     ],
+    "invite_slug_invalid": [
+      400
+    ],
+    "invite_slug_needs_members": [
+      403
+    ],
+    "invite_slug_taken": [
+      409
+    ],
     "media_engine_unavailable": [
       503
     ],
@@ -1462,6 +1655,12 @@
     "not_yours": [
       403
     ],
+    "onboarding_not_finished": [
+      403
+    ],
+    "start_channel_invalid": [
+      400
+    ],
     "update_required": [
       426
     ],
@@ -1470,6 +1669,9 @@
     ],
     "custom_items_limit": [
       409
+    ],
+    "bot_locked": [
+      403
     ],
     "bot_not_here": [
       404
@@ -1686,6 +1888,21 @@
     "invites_paused": [
       403
     ],
+    "account_too_new": [
+      403
+    ],
+    "community_locked": [
+      403
+    ],
+    "community_locked_posting": [
+      403
+    ],
+    "verification_required": [
+      403
+    ],
+    "voice_banned": [
+      403
+    ],
     "loadtest_disabled": [
       403
     ],
@@ -1697,6 +1914,15 @@
     ],
     "leave_community": [
       403
+    ],
+    "lobby_channel_invalid": [
+      400
+    ],
+    "lobby_feed_invalid": [
+      400
+    ],
+    "lobby_stale": [
+      409
     ],
     "legacy_login_closed": [
       410
@@ -1824,6 +2050,9 @@
     "quota_exceeded": [
       429
     ],
+    "reaction_role_not_givable": [
+      403
+    ],
     "range_not_satisfiable": [
       416
     ],
@@ -1920,6 +2149,21 @@
     "text_channel_no_calls": [
       409
     ],
+    "ticket_channel_invalid": [
+      400
+    ],
+    "ticket_closed": [
+      409
+    ],
+    "ticket_confirm_required": [
+      400
+    ],
+    "ticket_limit": [
+      409
+    ],
+    "tickets_off": [
+      409
+    ],
     "timed_out": [
       403
     ],
@@ -1981,11 +2225,68 @@
     "voice_channel": [
       403
     ],
+    "webhook_channel": [
+      400
+    ],
+    "webhook_limit": [
+      409
+    ],
     "weak_password": [
       400
     ],
     "workspace_not_found": [
       404
+    ],
+    "auto_role_has_powers": [
+      400
+    ],
+    "external_emoji_not_allowed": [
+      403
+    ],
+    "gifs_not_allowed": [
+      403
+    ],
+    "headings_not_allowed": [
+      403
+    ],
+    "links_not_allowed": [
+      403
+    ],
+    "manage_messages_required": [
+      403
+    ],
+    "nickname_not_allowed": [
+      403
+    ],
+    "nicknames_not_allowed": [
+      403
+    ],
+    "not_member_safe": [
+      400
+    ],
+    "polls_not_allowed": [
+      403
+    ],
+    "reactions_not_allowed": [
+      403
+    ],
+    "read_only_channel": [
+      403
+    ],
+    "role_mention_not_allowed": [
+      403
+    ],
+    "text_only_channel": [
+      403
+    ],
+    "thread_replies_not_allowed": [
+      403
+    ],
+    "threads_not_allowed": [
+      403
+    ],
+    "voice_messages_not_allowed": [
+      403
     ],
     "bad_address": [
       400

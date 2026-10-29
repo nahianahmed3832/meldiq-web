@@ -235,6 +235,19 @@ export const zOrg = z.object({
     })
     .nullish()
     .transform((v) => v ?? null),
+  /**
+   * Community parity C (feature community-tickets): while tickets are on, the panels to open one from, how many each
+   * person may have open, and how many the viewer has; the menu shows "Open a Ticket" then. Null while off.
+   */
+  tickets: z
+    .object({
+      panels: z.array(z.object({ id: z.string(), name: z.string() })).max(10),
+      maxOpenPerPerson: z.number().int(),
+      openByMe: z.number().int().nonnegative(),
+    })
+    .nullish()
+    .catch(null)
+    .transform((v) => v ?? null),
 });
 export type Org = z.infer<typeof zOrg>;
 export type OrgKind = Org["kind"];
