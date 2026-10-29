@@ -1,4 +1,4 @@
-import { Minus, Plus, Sparkles } from "lucide-react";
+import { Gem, Minus, Plus, Sparkles } from "lucide-react";
 import { useState } from "react";
 import { useEngine, useOrbit } from "../../application/orbit";
 import { money } from "./mojoFormat";
@@ -34,9 +34,11 @@ export function SparkSection({ onBuy, busy, offline }: { onBuy: (quantity: numbe
   return (
     <section className="mojo-sparks" aria-labelledby="mojo-sparks-title">
       <div className="spark-hero">
-        <img className="mojo-poster" src="/meldling/spark.webp" alt="Meldiq Spark" width={1200} height={675} loading="lazy" />
+        <span className="mojo-banner-icon" aria-hidden="true">
+          <Gem size={26} />
+        </span>
         <h2 className="mojo-h2" id="mojo-sparks-title">
-          <Sparkles size={20} aria-hidden="true" /> Meldiq Spark
+          Meldiq Spark
         </h2>
         <p>
           Give a Spark to a server you love. Every Spark helps unlock more emoji slots, bigger uploads, and better voice and screen sharing for everyone in it. Mojo Go includes one Spark, Mojo Plus

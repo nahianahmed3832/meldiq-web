@@ -9,28 +9,18 @@ test.beforeEach(async ({ context }) => {
   await context.setExtraHTTPHeaders({ "x-orbit-test-ip": testAddress() });
 });
 
-test("a visitor sees the headline, explores the features and the server's plans, and joins", async ({ page }) => {
+test("the homepage is the logo, a picture of the app and signing in, nothing else", async ({ page }) => {
   await page.goto("/");
-  await expect(page.getByRole("heading", { level: 1, name: /Your communities, all in one place/ })).toBeVisible({ timeout: 20_000 });
-  // The sign-in card is on the page, not behind a click.
+  await expect(page.locator(".landing-brand img.brand-mark")).toBeVisible({ timeout: 20_000 });
+  await expect(page.locator(".landing-preview")).toBeVisible();
   await expect(page.getByRole("heading", { name: "Sign in to Meldiq" })).toBeVisible();
+  // The headline is for screen readers and search engines; no plans, prices or feature lists (owner, 2026-10-30).
+  await expect(page.getByRole("heading", { level: 1, name: /Your communities, all in one place/ })).toBeAttached();
+  await expect(page.getByText(/\/month|Mojo Plus|What's inside/)).toHaveCount(0);
 
-  await page.getByRole("link", { name: "Explore" }).click();
-  await expect(page).toHaveURL(/#explore$/);
-  const explore = page.getByRole("region", { name: "What's inside" });
-  for (const feature of ["Chat", "Voice & video", "Screen sharing", "Communities", "Custom emoji", "Bots & apps"]) {
-    await expect(explore.getByText(feature, { exact: true })).toBeVisible();
-  }
-  // The plans come from GET /v2/mojo/catalog: the numbers the server enforces.
-  await expect(explore.getByText("8,000 characters per message")).toBeVisible();
-  await expect(explore.getByText("Files up to 500 MB")).toBeVisible();
-  await expect(explore.getByText("Screen share up to 2K (1440p) 60 fps")).toBeVisible();
-  await expect(explore.getByText("$4.99")).toBeVisible();
-
-  // Join opens creating an account (registration is open here) with the cursor in the form.
-  await page.getByRole("button", { name: "Join Meldiq" }).click();
+  // Creating an account is in the sign-in card.
+  await page.getByRole("button", { name: "Create an account" }).click();
   await expect(page.getByRole("heading", { name: "Create your Meldiq account" })).toBeVisible();
-  await expect(page.getByLabel("Your name")).toBeFocused();
 
   // Nothing wider than the screen, phone to desktop.
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
@@ -40,9 +30,7 @@ test("a visitor sees the headline, explores the features and the server's plans,
 test("the page is the app's own design, and installs as an iPhone app", async ({ page, request }) => {
   await page.goto("/");
   await expect(page.locator(".landing-preview")).toBeVisible({ timeout: 20_000 });
-  // The official mark, not separate art; Join is the app's own call-to-action button.
   await expect(page.locator(".landing-brand img.brand-mark")).toBeVisible();
-  await expect(page.locator(".landing-actions button")).toHaveClass(/btn-primary/);
   // Home Screen: standalone, the iOS tags, and an opaque square icon.
   const head = page.locator("head");
   await expect(head.locator('meta[name="apple-mobile-web-app-capable"]')).toHaveAttribute("content", "yes");

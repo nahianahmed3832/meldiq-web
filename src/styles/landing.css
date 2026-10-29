@@ -9,7 +9,7 @@
   background: radial-gradient(900px 520px at 12% -10%, var(--brand-glow-1, transparent), transparent 62%), linear-gradient(180deg, var(--rail) 0%, var(--rail-2) 100%);
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  grid-template-areas: "nav" "hero" "auth" "explore" "foot";
+  grid-template-areas: "nav" "auth" "hero" "foot";
   padding: env(safe-area-inset-top, 0px) calc(16px + env(safe-area-inset-right, 0px)) env(safe-area-inset-bottom, 0px) calc(16px + env(safe-area-inset-left, 0px));
   overflow-x: clip;
 }
@@ -30,71 +30,21 @@
   letter-spacing: -0.01em;
 }
 
-/* ── hero ── */
+/* ── the picture of the app ── */
 .landing-hero {
   grid-area: hero;
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  grid-template-areas: "copy" "line" "actions" "preview";
-  gap: 14px;
-  padding: 8px 0 22px;
-}
-.landing-copy {
-  grid-area: copy;
-  display: grid;
-  gap: 12px;
+  align-content: center;
+  padding: 4px 0 28px;
   min-width: 0;
-}
-.landing-eyebrow {
-  justify-self: start;
-  padding: 5px 12px;
-  border-radius: var(--r-pill);
-  background: var(--accent-soft);
-  color: var(--accent-text);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.03em;
-}
-.landing-hero h1 {
-  margin: 0;
-  font-size: clamp(32px, 8.6vw, 60px);
-  line-height: 1.04;
-  letter-spacing: -0.035em;
-  font-weight: 800;
-}
-.landing-hero h1 em {
-  font-style: normal;
-  color: var(--accent-text);
-}
-.landing-line {
-  grid-area: line;
-  margin: 0;
-  max-width: 40ch;
-  color: var(--text-2);
-  font-size: clamp(15px, 2.2vw, 17px);
-  line-height: 1.55;
-}
-.landing-actions {
-  grid-area: actions;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
-}
-.landing-actions .landing-btn {
-  height: 46px;
-  padding: 0 20px;
-  font-size: 15px;
-  text-decoration: none;
 }
 
 /* A small picture of the app: the frame's floating panels, as in layout.css. */
 .landing-preview {
-  grid-area: preview;
   display: grid;
   grid-template-columns: 48px 0.9fr 1.4fr;
   gap: 8px;
   height: 230px;
-  margin-top: 8px;
   padding: 8px;
   border-radius: var(--r-panel);
   background: linear-gradient(180deg, var(--rail) 0%, var(--rail-2) 100%);
@@ -266,127 +216,6 @@
     var(--shadow-lg);
 }
 
-/* ── explore: features and plans ── */
-.landing-explore {
-  grid-area: explore;
-  display: grid;
-  gap: 18px;
-  padding: 28px 0 32px;
-  border-top: 1px solid var(--border);
-  scroll-margin-top: calc(8px + env(safe-area-inset-top, 0px));
-}
-.landing-explore h2 {
-  margin: 0;
-  font-size: clamp(22px, 4vw, 30px);
-  letter-spacing: -0.02em;
-}
-.landing-features {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-.landing-features li,
-.landing-plan {
-  border-radius: var(--r-lg);
-  background: var(--rail-panel, var(--surface));
-  border: 1px solid var(--border);
-}
-.landing-features li {
-  display: grid;
-  gap: 4px;
-  padding: 14px;
-  font-size: 13px;
-  color: var(--text-2);
-}
-.landing-features strong {
-  color: var(--text);
-  font-size: 15px;
-}
-.landing-feature-icon {
-  display: inline-grid;
-  place-items: center;
-  width: 38px;
-  height: 38px;
-  margin-bottom: 6px;
-  border-radius: 12px;
-  background: var(--accent-soft);
-  color: var(--accent-text);
-}
-.landing-plans {
-  display: grid;
-  gap: 14px;
-  margin-top: 10px;
-}
-.landing-plans > ul {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 12px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-.landing-plan {
-  display: grid;
-  gap: 10px;
-  align-content: start;
-  padding: 18px;
-}
-.landing-plan-plus {
-  border-color: var(--accent);
-  box-shadow:
-    0 0 0 1px var(--accent),
-    var(--shadow-md);
-}
-.landing-plan-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  font-size: 16px;
-}
-.landing-plan-soon {
-  padding: 3px 9px;
-  border-radius: var(--r-pill);
-  background: var(--accent-soft);
-  color: var(--accent-text);
-  font-size: 11.5px;
-  font-weight: 700;
-}
-.landing-plan-price {
-  font-size: 30px;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-}
-.landing-plan-price small {
-  margin-left: 4px;
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--text-3);
-}
-.landing-plan-perks {
-  display: grid;
-  gap: 6px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  font-size: 13.5px;
-  color: var(--text-2);
-}
-.landing-plan-perks li::before {
-  content: "✓";
-  margin-right: 8px;
-  color: var(--accent-text);
-  font-weight: 800;
-}
-.landing-plans-note {
-  margin: 0;
-  font-size: 12.5px;
-  color: var(--text-3);
-}
-
 .landing-foot {
   grid-area: foot;
   display: flex;
@@ -401,7 +230,7 @@
   color: var(--text-2);
 }
 
-/* Tablets: more room, a larger picture, features in three columns, plans side by side. */
+/* Tablets: more room and a larger picture. */
 @media (min-width: 600px) {
   .landing {
     padding-left: calc(32px + env(safe-area-inset-left, 0px));
@@ -410,29 +239,20 @@
   .landing-hero {
     padding: 24px 0 32px;
   }
-  .landing-actions {
-    display: flex;
-    flex-wrap: wrap;
-  }
   .landing-preview {
     height: 260px;
   }
   .landing .landing-card {
     padding: 30px;
   }
-  .landing-features {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-  .landing-plans > ul {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
 }
 
-/* Desktop: the hero (words, then the app picture) on the left, the sign-in card on the right; explore below both. */
+/* Desktop: the picture of the app on the left, the sign-in card on the right, filling the screen between the logo and the footer. */
 @media (min-width: 1024px) {
   .landing {
     grid-template-columns: minmax(0, 1.15fr) minmax(400px, 0.85fr);
-    grid-template-areas: "nav nav" "hero auth" "explore explore" "foot foot";
+    grid-template-areas: "nav nav" "hero auth" "foot foot";
+    grid-template-rows: auto 1fr auto;
     column-gap: clamp(32px, 5vw, 80px);
     padding-left: calc(clamp(32px, 5vw, 80px) + env(safe-area-inset-left, 0px));
     padding-right: calc(clamp(32px, 5vw, 80px) + env(safe-area-inset-right, 0px));
@@ -441,16 +261,13 @@
     padding: 22px 0;
   }
   .landing-hero {
-    align-content: center;
-    gap: 18px;
     padding: 24px 0 56px;
   }
-  .landing-hero h1 {
-    font-size: clamp(44px, 4.2vw, 64px);
-  }
   .landing-preview {
-    height: 280px;
-    max-width: 620px;
+    height: clamp(360px, 52vh, 520px);
+    grid-template-columns: 64px 0.8fr 1.6fr;
+    gap: 10px;
+    padding: 10px;
   }
   .landing-auth {
     align-content: center;
@@ -458,9 +275,6 @@
   }
   .landing .landing-card {
     padding: 36px;
-  }
-  .landing-explore {
-    padding: 48px 0 56px;
   }
 }
 
@@ -470,6 +284,13 @@
     grid-template-columns: 48px 1fr;
   }
   .lp-side {
+    display: none;
+  }
+}
+
+/* Below desktop the picture is shorter: three messages, so the composer stays in view. */
+@media (max-width: 1023px) {
+  .lp-msg:nth-child(n + 5) {
     display: none;
   }
 }

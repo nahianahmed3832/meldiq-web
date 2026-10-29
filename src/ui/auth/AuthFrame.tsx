@@ -1,39 +1,17 @@
-import { ArrowDown, LogIn, UserPlus } from "lucide-react";
 import type { ReactNode } from "react";
 import { BrandMark } from "../components/BrandMark";
 import { LanguagePicker } from "../components/LanguagePicker";
 import { useT } from "../../i18n";
-import { LandingExplore } from "./LandingExplore";
-
-/** The form card's anchor: Join scrolls to it (phones and tablets show it below the hero). */
-const JOIN_ID = "join";
-const EXPLORE_ID = "explore";
-
-interface AuthFrameProps {
-  children: ReactNode;
-  /** Join: opens creating an account when this server takes new ones, else signing in. */
-  onJoin?: () => void;
-  /** Whether Join creates an account (registration open) or only signs in. */
-  canJoin?: boolean;
-}
 
 /**
- * The signed-out page, which is also Meldiq Web's landing page (owner's brief, 2026-10-30; restyled the same day: "it
- * should match the web app, its own brand design"). It is drawn with the app's own tokens, panels and buttons, so it
- * follows the person's palette and light or dark like the app does: the Meldling mark, the headline, one line, Explore
- * and Join, and a small picture of the app's floating layout; the sign-in card beside it on wide screens and below it on
- * phones and tablets; then what Meldiq has and its plans. Nothing in it is invented: no member counts, activity or
- * testimonials, and only features the product has.
+ * The signed-out page, which is also Meldiq Web's homepage, in the app's own design (tokens, frame and panels; the
+ * person's palette, light or dark like the app). Only three things, as the owner asked (2026-10-30: "logo, photo of
+ * inside app that already have and login system that's all"): the Meldiq logo, a picture of the app's own layout, and
+ * the sign-in card (which also leads to creating an account). The headline stays for screen readers and search engines
+ * only. On wide screens the picture sits beside the card; on phones and tablets the card comes first.
  */
-export function AuthFrame({ children, onJoin, canJoin = false }: AuthFrameProps) {
+export function AuthFrame({ children }: { children: ReactNode }) {
   const t = useT();
-  const join = () => {
-    onJoin?.();
-    const card = document.getElementById(JOIN_ID);
-    card?.scrollIntoView({ behavior: "smooth", block: "start" });
-    // After the step changes, put the cursor in the form's first field.
-    requestAnimationFrame(() => card?.querySelector<HTMLInputElement>("input:not([type=hidden])")?.focus({ preventScroll: true }));
-  };
   return (
     <div className="landing">
       <header className="landing-nav">
@@ -45,31 +23,15 @@ export function AuthFrame({ children, onJoin, canJoin = false }: AuthFrameProps)
       </header>
 
       <section className="landing-hero" aria-labelledby="landing-title">
-        <div className="landing-copy">
-          <span className="landing-eyebrow">{t("landing_eyebrow")}</span>
-          <h1 id="landing-title">
-            {t("hero_c_title_1")} <em>{t("hero_c_title_2")}</em>
-          </h1>
-        </div>
-        <p className="landing-line">{t("landing_line")}</p>
-        <div className="landing-actions">
-          <button type="button" className="btn btn-primary landing-btn" onClick={join}>
-            {canJoin ? <UserPlus size={18} aria-hidden="true" /> : <LogIn size={18} aria-hidden="true" />}
-            {canJoin ? t("landing_join") : t("landing_signin")}
-          </button>
-          <a className="btn btn-secondary landing-btn" href={`#${EXPLORE_ID}`}>
-            <ArrowDown size={18} aria-hidden="true" />
-            {t("landing_explore")}
-          </a>
-        </div>
+        <h1 id="landing-title" className="sr-only">
+          Meldiq: {t("hero_c_title_1")} {t("hero_c_title_2")}
+        </h1>
         <AppPreview />
       </section>
 
-      <main className="landing-auth" id={JOIN_ID}>
+      <main className="landing-auth">
         <div className="link-card card landing-card">{children}</div>
       </main>
-
-      <LandingExplore id={EXPLORE_ID} />
 
       <footer className="landing-foot">
         <span>Meldiq by GriipBuddy</span>
@@ -109,7 +71,7 @@ function AppPreview() {
         <div className="lp-head">
           <span className="lp-hash"># welcome</span>
         </div>
-        {[62, 44, 70].map((w, i) => (
+        {[62, 44, 70, 52, 38].map((w, i) => (
           <div className="lp-msg" key={i}>
             <i />
             <div>
