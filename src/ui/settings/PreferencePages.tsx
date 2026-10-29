@@ -22,7 +22,6 @@ import {
 } from "../../application/prefs";
 import { bytes } from "../format";
 import { Toggle } from "../components/Toggle";
-import { IntroPages } from "../auth/IntroPages";
 import { BackgroundNotifications } from "./BackgroundNotifications";
 import { type ChimeState, chimeState, playChime, unlockChime } from "../../application/messageChime";
 import { type StringKey, useT } from "../../i18n";
@@ -349,24 +348,13 @@ export function AppearancePage() {
 export function AboutPage() {
   const server = useOrbit((s) => s.server);
   const me = useOrbit((s) => s.me);
-  const [intro, setIntro] = useState(false);
   return (
     <>
       <h1>About</h1>
-      {intro && <IntroPages onDone={() => setIntro(false)} />}
       <p className="faint" style={{ margin: "0 0 12px" }}>
         Meldiq Web by GriipBuddy · version {APP_VERSION}
       </p>
       <div className="card">
-        <div className="setting">
-          <div className="lines">
-            <strong>Introduction</strong>
-            <small>The short tour of what Meldiq does, shown before you first signed in.</small>
-          </div>
-          <button className="btn btn-secondary btn-sm" onClick={() => setIntro(true)}>
-            Show
-          </button>
-        </div>
         <InstallSetting />
         <div className="setting">
           <div className="lines">

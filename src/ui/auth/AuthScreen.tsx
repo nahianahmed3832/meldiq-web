@@ -14,7 +14,6 @@ import { ForgotPasswordForm, type FormContext, ResetPasswordForm, SignInForm, Si
 import { TEST_DEVICE_LINKING } from "../../auth/testLinking";
 import { AddDeviceView, CreateIdentityView, RecoveryKeyReveal } from "./DeviceSetupViews";
 import { authErrorText } from "./useSubmit";
-import { IntroPages, introSeen } from "./IntroPages";
 import { useT } from "../../i18n";
 
 type Step =
@@ -52,7 +51,6 @@ export function AuthScreen(props: {
 }) {
   const base = props.base ?? apiBase();
   const [step, setStep] = useState<Step>({ k: "signIn" });
-  const [intro, setIntro] = useState(() => !introSeen());
   const [server, setServer] = useState<ServerInfo | null>(null);
   const t = useT();
   const ctx: FormContext = useMemo(() => ({ accounts: AccountApi.anonymous(base), deviceName: browserDeviceName() }), [base]);
@@ -180,10 +178,5 @@ export function AuthScreen(props: {
       break;
   }
 
-  return (
-    <AuthFrame>
-      {intro && <IntroPages onDone={() => setIntro(false)} />}
-      {body}
-    </AuthFrame>
-  );
+  return <AuthFrame>{body}</AuthFrame>;
 }

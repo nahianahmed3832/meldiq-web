@@ -249,43 +249,6 @@ export const STRINGS = {
   reauth_email_now: ["Your account's email now", "你账户现在的邮箱", "আপনার অ্যাকাউন্টের বর্তমান ইমেইল"],
   reauth_sign_out: ["Sign out", "退出登录", "সাইন আউট"],
 
-  // ── first-run introduction ──
-  intro_label: ["Introduction to Meldiq", "Meldiq 简介", "Meldiq পরিচিতি"],
-  intro_skip: ["Skip", "跳过", "এড়িয়ে যান"],
-  intro_next: ["Next", "下一步", "পরবর্তী"],
-  intro_start: ["Get started", "开始使用", "শুরু করুন"],
-  intro_page: ["Page {n} of {total}", "第 {n} 页，共 {total} 页", "{total}টির মধ্যে {n} নম্বর পাতা"],
-  intro_1_title: ["Talk in one place", "在一个地方交流", "এক জায়গায় কথা বলুন"],
-  intro_1_body: [
-    "Channels, groups and direct messages with threads, polls and files, on every device you sign in to.",
-    "频道、群组和私信，支持话题串、投票和文件，在你登录的每台设备上都在。",
-    "থ্রেড, পোল ও ফাইলসহ চ্যানেল, গ্রুপ আর সরাসরি মেসেজ, আপনি যে ডিভাইসেই সাইন ইন করুন।",
-  ],
-  intro_2_title: ["Never lose track", "不再遗漏", "কিছুই হারাবে না"],
-  intro_2_body: [
-    "Save messages for later and set reminders. They reach every device you're signed in on, even after a restart.",
-    "保存消息稍后查看并设置提醒。它们会同步到你登录的每台设备，重启后也不会丢失。",
-    "মেসেজ পরে দেখার জন্য রাখুন আর রিমাইন্ডার দিন। আপনার সাইন ইন করা সব ডিভাইসে পৌঁছায়, রিস্টার্টের পরেও।",
-  ],
-  intro_3_title: ["Talk it through", "畅所欲言", "কথা বলে মিটিয়ে নিন"],
-  intro_3_body: [
-    "Voice and video calls with screen sharing, and voice channels anyone can drop into any time.",
-    "支持屏幕共享的语音和视频通话，以及任何人随时可以加入的语音频道。",
-    "স্ক্রিন শেয়ারসহ ভয়েস ও ভিডিও কল, আর যেকোনো সময় যে কেউ ঢুকতে পারে এমন ভয়েস চ্যানেল।",
-  ],
-  intro_4_title: ["Find your communities", "找到你的社区", "আপনার কমিউনিটি খুঁজুন"],
-  intro_4_body: [
-    "Join public communities or start your own, with channels in categories, forums for organised topics and announcements.",
-    "加入公开社区或创建自己的社区，频道按分类整理，还有用于整理话题的论坛和公告。",
-    "পাবলিক কমিউনিটিতে যোগ দিন বা নিজেরটা শুরু করুন: ক্যাটাগরিতে সাজানো চ্যানেল, গোছানো আলোচনার ফোরাম আর ঘোষণা।",
-  ],
-  intro_5_title: ["Roles you control", "由你掌控的角色", "আপনার নিয়ন্ত্রণে রোল"],
-  intro_5_body: [
-    "Give people roles, decide who sees and posts in each channel, and keep the community safe with bans.",
-    "为成员分配角色，决定谁能查看和发言于每个频道，并通过封禁维护社区安全。",
-    "মানুষকে রোল দিন, কোন চ্যানেলে কে দেখবে ও লিখবে ঠিক করুন, আর ব্যান দিয়ে কমিউনিটি নিরাপদ রাখুন।",
-  ],
-
   // ── times ──
   time_today: ["Today", "今天", "আজ"],
   time_yesterday: ["Yesterday", "昨天", "গতকাল"],
