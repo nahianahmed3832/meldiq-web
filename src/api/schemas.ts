@@ -235,6 +235,15 @@ export const zOrg = z.object({
     })
     .nullish()
     .transform((v) => v ?? null),
+  /**
+   * Community parity B (feature community-lobby): whether the lobby is shown to members and whether this account has
+   * opened it; the app opens it first while it's on and unseen. Null for non-members and on servers without the lobby.
+   */
+  lobby: z
+    .object({ enabled: z.boolean(), seen: z.boolean() })
+    .nullish()
+    .catch(null)
+    .transform((v) => v ?? null),
 });
 export type Org = z.infer<typeof zOrg>;
 export type OrgKind = Org["kind"];

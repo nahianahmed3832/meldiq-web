@@ -1,0 +1,727 @@
+/*
+ * The community lobby (community parity B, src/ui/lobby): the page, its looks, and the live editor beside it.
+ * The look is classes on .lobby (layout-*, bg-*, cards-*, font-*, banner-*, title-*) and the accent the community's
+ * scoped variables (community.css .c-accent), so the editor's draft restyles the page in place. Every layout folds into
+ * one column below 720px of the page's own width (a container query), which is also the editor's phone preview.
+ */
+
+/* ── Frame: the page, and the editor beside it ─────────────────────────────── */
+.main.lobby-main {
+  flex-direction: row;
+  overflow: hidden;
+}
+.lobby-canvas {
+  flex: 1;
+  min-width: 0;
+  overflow-y: auto;
+  background: var(--surface-sunken);
+}
+.lobby-canvas > .banner {
+  margin: 12px;
+}
+.lobby-canvas.phone-preview {
+  padding: 20px 12px 40px;
+}
+.lobby-canvas.phone-preview > .lobby {
+  max-width: 390px;
+  min-height: 760px;
+  margin: 0 auto;
+  border: 1px solid var(--border-strong);
+  border-radius: 28px;
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+}
+.lobby-skeleton {
+  display: grid;
+  gap: 16px;
+  padding: 20px;
+}
+
+/* ── The page and its look ──────────────────────────────────────────────────── */
+.lobby {
+  --lobby-accent: var(--c-accent, var(--accent));
+  --lobby-accent-text: var(--c-accent-text, var(--accent-text));
+  --lobby-accent-soft: var(--c-accent-soft, var(--accent-soft));
+  --lobby-on-accent: var(--c-on-accent, var(--on-accent));
+  --lobby-banner-h: 168px;
+  --lobby-gap: 16px;
+  --lobby-pad: 18px;
+  --lobby-font: var(--font);
+  --lobby-title-weight: 800;
+  --lobby-title-spacing: -0.01em;
+  container: lobby / inline-size;
+  position: relative;
+  isolation: isolate;
+  min-height: 100%;
+  padding: 0 0 48px;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--lobby-font);
+}
+.lobby.banner-tall {
+  --lobby-banner-h: 240px;
+}
+.lobby.banner-short {
+  --lobby-banner-h: 108px;
+}
+.lobby.font-rounded {
+  --lobby-font: ui-rounded, "SF Pro Rounded", "Nunito", "Varela Round", "Arial Rounded MT Bold", var(--font);
+}
+.lobby.font-serif {
+  --lobby-font: ui-serif, "Iowan Old Style", "Charter", Georgia, "Times New Roman", serif;
+  --lobby-title-weight: 700;
+}
+.lobby.font-mono {
+  --lobby-font: var(--mono);
+  --lobby-title-spacing: -0.03em;
+}
+.lobby.font-display {
+  --lobby-font: "Avenir Next", "Futura", "Century Gothic", "Trebuchet MS", var(--font);
+  --lobby-title-weight: 900;
+  --lobby-title-spacing: -0.03em;
+}
+.lobby button,
+.lobby input,
+.lobby textarea {
+  font-family: inherit;
+}
+
+/* Backgrounds behind the cards. */
+.lobby-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+}
+.lobby.bg-glow .lobby-backdrop {
+  background:
+    radial-gradient(60% 40% at 15% 0%, color-mix(in srgb, var(--lobby-accent) 26%, transparent), transparent 70%),
+    radial-gradient(50% 35% at 90% 10%, color-mix(in srgb, var(--lobby-accent) 14%, transparent), transparent 70%);
+}
+.lobby.bg-mesh .lobby-backdrop {
+  background:
+    radial-gradient(35% 30% at 10% 20%, color-mix(in srgb, var(--lobby-accent) 30%, transparent), transparent 70%),
+    radial-gradient(30% 30% at 85% 15%, color-mix(in srgb, #22d3ee 22%, transparent), transparent 70%),
+    radial-gradient(40% 35% at 70% 75%, color-mix(in srgb, #ec4899 16%, transparent), transparent 70%),
+    radial-gradient(35% 30% at 20% 85%, color-mix(in srgb, var(--lobby-accent) 18%, transparent), transparent 70%);
+}
+.lobby.bg-banner_blur .lobby-backdrop::before {
+  content: "";
+  position: absolute;
+  inset: -40px;
+  background: var(--lobby-banner, var(--lobby-accent-soft)) center / cover;
+  filter: blur(48px) saturate(1.3);
+  opacity: 0.4;
+}
+.lobby.bg-plain .lobby-backdrop {
+  background: none;
+}
+
+/* Header: banner, icon, name and counts. */
+.lobby-header {
+  position: relative;
+  margin-bottom: 8px;
+}
+.lobby-banner {
+  height: var(--lobby-banner-h);
+  background: linear-gradient(120deg, var(--lobby-accent), color-mix(in srgb, var(--lobby-accent) 55%, #22d3ee) 55%, color-mix(in srgb, var(--lobby-accent) 50%, #8b5cf6));
+  background-size: cover;
+  background-position: center;
+  transition: height var(--t-std) var(--ease);
+}
+.lobby-id {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+.lobby-icon {
+  flex: none;
+  margin-top: -40px;
+  padding: 4px;
+  border-radius: 22px;
+  background: var(--bg);
+}
+.lobby-icon .avatar {
+  border-radius: 18px;
+}
+.lobby-titles {
+  min-width: 0;
+  padding-top: 10px;
+}
+.lobby a.btn {
+  text-decoration: none;
+}
+.lobby-name {
+  margin: 0;
+  font-size: 28px;
+  line-height: 1.15;
+  font-weight: var(--lobby-title-weight);
+  letter-spacing: var(--lobby-title-spacing);
+  overflow-wrap: anywhere;
+}
+.lobby-counts {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 4px 0 0;
+  color: var(--text-2);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+}
+.lobby-online-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--presence-on);
+}
+.lobby.title-centered .lobby-id {
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.lobby.title-centered .lobby-titles {
+  padding-top: 0;
+}
+.lobby.title-centered .lobby-counts {
+  justify-content: center;
+}
+.lobby-customize {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: color-mix(in srgb, var(--surface) 88%, transparent);
+  backdrop-filter: blur(8px);
+}
+.lobby-hint {
+  max-width: 1080px;
+  margin: 8px auto;
+  padding: 0 24px;
+  color: var(--text-3);
+  font-size: var(--fs-sm);
+}
+
+/* Columns. */
+.lobby-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--lobby-gap);
+  max-width: 1080px;
+  margin: 12px auto 0;
+  padding: 0 24px;
+}
+.lobby-col {
+  display: grid;
+  align-content: start;
+  gap: var(--lobby-gap);
+  min-width: 0;
+}
+.lobby.layout-classic .lobby-body:has(.lobby-col-side) {
+  grid-template-columns: minmax(0, 1fr) minmax(240px, 320px);
+}
+.lobby.layout-spotlight .lobby-body,
+.lobby.layout-spotlight .lobby-id,
+.lobby.layout-spotlight .lobby-hint {
+  max-width: 720px;
+}
+.lobby.layout-magazine .lobby-col-main {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.lobby.layout-magazine .lobby-col-main > .lobby-card-top,
+.lobby.layout-magazine .lobby-col-main > .guide-card,
+.lobby.layout-magazine .lobby-col-main > .lobby-card-about,
+.lobby.layout-magazine .lobby-col-main > .lobby-card-feed {
+  grid-column: 1 / -1;
+}
+.lobby.layout-magazine .lobby-card-top {
+  padding: 28px;
+}
+.lobby.layout-magazine .lobby-tagline {
+  font-size: 26px;
+}
+.lobby.layout-magazine .lobby-card {
+  min-height: 140px;
+}
+.lobby.layout-compact {
+  --lobby-gap: 10px;
+  --lobby-pad: 12px;
+}
+.lobby.layout-compact .lobby-card-title {
+  font-size: var(--fs-xs);
+}
+.lobby.layout-compact .lobby-name {
+  font-size: 22px;
+}
+
+/* Cards: filled, glass or outline. */
+.lobby-card {
+  position: relative;
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+  padding: var(--lobby-pad);
+  border-radius: var(--r-lg);
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  box-shadow: var(--shadow-sm);
+}
+.lobby.cards-glass .lobby-card {
+  background: color-mix(in srgb, var(--surface) 62%, transparent);
+  backdrop-filter: blur(14px) saturate(1.2);
+  border-color: color-mix(in srgb, var(--text) 10%, transparent);
+}
+.lobby.cards-outline .lobby-card {
+  background: transparent;
+  border: 1.5px solid var(--border-strong);
+  box-shadow: none;
+}
+.lobby .guide-card {
+  margin: 0;
+}
+.lobby-card-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  color: var(--text-2);
+  font-size: var(--fs-sm);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.lobby-chip {
+  padding: 2px 8px;
+  border-radius: var(--r-pill);
+  background: var(--warning-soft);
+  color: var(--warning);
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+}
+.lobby-empty {
+  display: grid;
+  justify-items: start;
+  gap: 8px;
+}
+.lobby-empty p {
+  margin: 0;
+  color: var(--text-3);
+}
+.lobby-quiet {
+  margin: 0;
+}
+.lobby .lobby-primary,
+.lobby .btn-primary {
+  background: var(--lobby-accent);
+  color: var(--lobby-on-accent);
+}
+
+/* Top of the page. */
+.lobby-top {
+  display: grid;
+  gap: 14px;
+}
+.lobby-tagline {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: var(--lobby-title-spacing);
+}
+.lobby.title-centered .lobby-top {
+  justify-items: center;
+  text-align: center;
+}
+.lobby-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.lobby.title-centered .lobby-top .lobby-buttons {
+  justify-content: center;
+}
+
+/* About (Markdown). */
+.lobby-md {
+  display: grid;
+  gap: 8px;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+.lobby-md > * {
+  margin: 0;
+}
+.lobby-md h3 {
+  font-size: var(--fs-xl);
+}
+.lobby-md h4 {
+  font-size: var(--fs-lg);
+}
+.lobby-md ul,
+.lobby-md ol {
+  padding-left: 20px;
+}
+.lobby-md blockquote {
+  padding-left: 12px;
+  border-left: 3px solid var(--lobby-accent);
+  color: var(--text-2);
+}
+.lobby-md code,
+.lobby-code {
+  font-family: var(--mono);
+  font-size: 0.92em;
+  background: var(--surface-sunken);
+  border-radius: var(--r-xs);
+  padding: 1px 5px;
+}
+.lobby-md a {
+  color: var(--lobby-accent-text);
+  text-decoration: underline;
+}
+
+/* Rows: channels, rooms, people, links, posts. */
+.lobby-channels,
+.lobby-live,
+.lobby-people,
+.lobby-links,
+.lobby-feed,
+.lobby-giveaways,
+.lobby-faq {
+  display: grid;
+  gap: 4px;
+}
+.lobby.layout-classic .lobby-col-main .lobby-channels,
+.lobby.layout-spotlight .lobby-channels {
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 8px;
+}
+.lobby-channel,
+.lobby-person,
+.lobby-link,
+.lobby-giveaway,
+.lobby-live-room {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-width: 0;
+  padding: 8px 10px;
+  border-radius: var(--r-md);
+  text-align: left;
+  color: inherit;
+  text-decoration: none;
+}
+.lobby-channel {
+  background: var(--surface-sunken);
+}
+.lobby-channel:hover,
+.lobby-person:hover,
+.lobby-link:hover {
+  background: var(--surface-hover);
+}
+.lobby-channel-icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 34px;
+  height: 34px;
+  border-radius: var(--r-sm);
+  background: var(--lobby-accent-soft);
+  color: var(--lobby-accent-text);
+}
+.lobby-channel-name {
+  font-weight: 700;
+}
+.lobby .lines {
+  display: grid;
+  min-width: 0;
+}
+.lobby .lines small {
+  color: var(--text-3);
+  font-size: var(--fs-xs);
+}
+.lobby-live-room {
+  flex-wrap: wrap;
+  background: var(--lobby-accent-soft);
+}
+.lobby-live-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: var(--r-pill);
+  background: var(--danger);
+  color: var(--on-danger);
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+.lobby-faces {
+  display: flex;
+}
+.lobby-faces > * + * {
+  margin-left: -6px;
+}
+.lobby-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  flex: none;
+  padding: 2px 8px;
+  border-radius: var(--r-pill);
+  background: var(--surface-sunken);
+  color: var(--text-2);
+  font-size: 11px;
+  font-weight: 700;
+}
+.lobby-badge.badge-owner {
+  background: var(--warning-soft);
+  color: var(--warning);
+}
+.lobby-faq-item {
+  border-radius: var(--r-md);
+  background: var(--surface-sunken);
+}
+.lobby-faq-item summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  font-weight: 700;
+  cursor: pointer;
+  list-style: none;
+}
+.lobby-faq-item summary::-webkit-details-marker {
+  display: none;
+}
+.lobby-faq-item[open] .lobby-faq-chevron {
+  transform: rotate(180deg);
+}
+.lobby-faq-item p {
+  margin: 0;
+  padding: 0 12px 12px;
+  color: var(--text-2);
+  white-space: pre-wrap;
+}
+.lobby-post {
+  display: grid;
+  gap: 4px;
+  padding: 10px 12px;
+  border-radius: var(--r-md);
+  background: var(--surface-sunken);
+}
+.lobby-post p {
+  margin: 0;
+  color: var(--text-2);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.lobby-post-title {
+  font-weight: 700;
+  color: inherit;
+}
+.lobby-post-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  color: var(--text-3);
+  font-size: var(--fs-xs);
+}
+.lobby-post-meta a {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  color: var(--lobby-accent-text);
+}
+.lobby-rules {
+  display: grid;
+  justify-items: start;
+  gap: 10px;
+}
+.lobby-rules p {
+  margin: 0;
+}
+
+/* Leaderboard. */
+.lobby-tabs {
+  display: flex;
+  gap: 4px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.lobby-tabs button {
+  flex: none;
+  padding: 5px 10px;
+  border-radius: var(--r-pill);
+  color: var(--text-2);
+  font-size: var(--fs-sm);
+  font-weight: 700;
+}
+.lobby-tabs button[aria-selected="true"] {
+  background: var(--lobby-accent-soft, var(--accent-soft));
+  color: var(--lobby-accent-text, var(--accent-text));
+}
+.lobby-ranks {
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.lobby-rank {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--surface-sunken);
+  font-size: 11px;
+  font-weight: 800;
+}
+.lobby-rank.rank-1 {
+  background: #facc15;
+  color: #422006;
+}
+.lobby-rank.rank-2 {
+  background: #cbd5e1;
+  color: #1e293b;
+}
+.lobby-rank.rank-3 {
+  background: #fdba74;
+  color: #431407;
+}
+
+/* Pick your roles. */
+.lobby-pick {
+  display: grid;
+  gap: 12px;
+  justify-items: start;
+}
+.lobby-pick-q {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.lobby-pick-q legend {
+  margin-bottom: 6px;
+  font-weight: 700;
+}
+.lobby-pick-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.lobby-pick-option.on {
+  background: var(--lobby-accent-soft);
+  border-color: var(--lobby-accent);
+  color: var(--lobby-accent-text);
+}
+
+/* Nothing here yet. */
+.lobby-bare {
+  max-width: 1032px;
+  margin: 12px auto 0;
+  justify-items: center;
+  text-align: center;
+  padding: 28px;
+  border-style: dashed;
+}
+.lobby-bare h2 {
+  margin: 0;
+  font-size: var(--fs-2xl);
+}
+.lobby-bare p {
+  margin: 0;
+}
+.lobby-bare .lobby-buttons {
+  justify-content: center;
+}
+.lobby-bare-icon {
+  color: var(--lobby-accent-text);
+}
+.main.lobby-main .lobby > .lobby-bare {
+  width: calc(100% - 48px);
+}
+
+/* Editing: cards are handles; their insides don't take clicks. */
+.lobby.editing .lobby-card.editable {
+  cursor: pointer;
+  transition:
+    box-shadow var(--t-fast),
+    outline-color var(--t-fast);
+  outline: 2px dashed transparent;
+  outline-offset: 2px;
+}
+.lobby.editing .lobby-card.editable:hover {
+  outline-color: color-mix(in srgb, var(--lobby-accent) 55%, transparent);
+}
+.lobby.editing .lobby-card.selected {
+  outline: 2px solid var(--lobby-accent);
+}
+.lobby.editing .lobby-card-content {
+  pointer-events: none;
+}
+.lobby-grip {
+  color: var(--text-3);
+  cursor: grab;
+}
+.drag-ghost.lobby-card,
+.drag-ghost.lobby-section-row {
+  padding: 14px;
+  border-radius: var(--r-lg);
+  background: var(--surface-raised);
+  color: var(--text);
+}
+
+/* ── Narrow pages: one column, whatever the layout ──────────────────────────── */
+@container lobby (max-width: 720px) {
+  .lobby-body,
+  .lobby.layout-classic .lobby-body:has(.lobby-col-side),
+  .lobby.layout-magazine .lobby-col-main {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .lobby-body,
+  .lobby-id,
+  .lobby-hint {
+    padding: 0 14px;
+  }
+  .lobby-name {
+    font-size: 23px;
+  }
+  .lobby-icon {
+    margin-top: -32px;
+  }
+  /* The page is the container, so its banner (a child) is what shrinks. */
+  .lobby-banner {
+    height: calc(var(--lobby-banner-h) * 0.7);
+  }
+  .lobby.layout-magazine .lobby-tagline {
+    font-size: 21px;
+  }
+  .main.lobby-main .lobby > .lobby-bare {
+    width: calc(100% - 28px);
+  }
+}
+
+@media (max-width: 900px) {
+  .main.lobby-main.with-editor {
+    flex-direction: column;
+  }
+  .main.lobby-main.with-editor .lobby-canvas {
+    flex: 1 1 45%;
+  }
+  .main.lobby-main.with-editor .lobby-editor {
+    flex: 1 1 55%;
+    width: 100%;
+    border-left: 0;
+    border-top: 1px solid var(--border);
+  }
+  .lobby-editor .seg-label {
+    display: none;
+  }
+}

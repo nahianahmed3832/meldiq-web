@@ -21,6 +21,7 @@ import { useCommunityDetail } from "../community/useCommunityPermissions";
 import { useT } from "../../i18n";
 import { UserPanel } from "./UserPanel";
 import { ConnectedCallPanel } from "../call/ConnectedCallPanel";
+import { LobbyRow } from "../lobby/LobbyRow";
 
 interface SidebarProps {
   orgId: string | null;
@@ -125,6 +126,7 @@ export function Sidebar({ orgId, section, open, onDialog }: SidebarProps) {
         </span>
       </div>
       {branded && !messages && org && <SparkGoal orgId={org.id} name={org.name} />}
+      {communities && !messages && !discover && org && <LobbyRow orgId={org.id} canEdit={perms.canManageOrg} current={section === "lobby"} />}
       {branded && !messages && perms.canInvite && (
         <div className="community-top">
           {perms.canInvite && (

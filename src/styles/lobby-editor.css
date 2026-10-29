@@ -1,0 +1,421 @@
+/*
+ * The lobby's live editor (src/ui/lobby/LobbyEditorPanel.tsx and its tabs), Community settings › Lobby, and the
+ * channel list's Lobby row. The page itself is lobby.css.
+ */
+
+/* ── The live editor ─────────────────────────────────────────────────────────── */
+.lobby-editor {
+  display: flex;
+  flex-direction: column;
+  flex: none;
+  width: 380px;
+  min-height: 0;
+  border-left: 1px solid var(--border);
+  background: var(--surface);
+}
+.lobby-editor-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 12px 10px 16px;
+  border-bottom: 1px solid var(--hairline);
+}
+.lobby-editor-head h2 {
+  margin: 0;
+  font-size: var(--fs-lg);
+  white-space: nowrap;
+}
+.lobby-editor .seg-label {
+  display: none;
+}
+.lobby-seg button {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0 10px;
+}
+.lobby-editor-switch {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--hairline);
+}
+.lobby-editor-switch strong,
+.lobby-editor-switch small {
+  display: block;
+}
+.lobby-editor-switch small {
+  color: var(--text-3);
+  font-size: var(--fs-xs);
+}
+.lobby-editor-tabs {
+  padding: 10px 12px 0;
+}
+.lobby-editor-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 14px 16px 20px;
+}
+.lobby-editor-stack {
+  display: grid;
+  gap: 16px;
+}
+.lobby-editor-note {
+  margin: 0;
+  font-size: var(--fs-sm);
+}
+.lobby-editor-foot {
+  display: grid;
+  gap: 6px;
+  padding: 10px 16px 14px;
+  border-top: 1px solid var(--hairline);
+}
+.lobby-editor-foot p {
+  margin: 0;
+  font-size: var(--fs-sm);
+}
+.lobby-editor-actions {
+  gap: 8px;
+  font-size: var(--fs-sm);
+}
+.lobby-editor-leave,
+.lobby-confirm {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--fs-sm);
+}
+.lobby-confirm {
+  padding: 10px;
+  border-radius: var(--r-md);
+  background: var(--warning-soft);
+}
+.lobby-card-editor-title {
+  margin: 0;
+  font-size: var(--fs-lg);
+}
+.lobby-card-editor-controls {
+  display: grid;
+  gap: 10px;
+}
+.lobby-field {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+.lobby-field legend {
+  margin-bottom: 8px;
+  color: var(--text-2);
+  font-size: var(--fs-xs);
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* Templates. */
+.lobby-templates {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+.lobby-template,
+.lobby-layout {
+  display: grid;
+  gap: 4px;
+  padding: 10px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--border);
+  background: var(--surface-raised);
+  text-align: left;
+}
+.lobby-template:hover:not(:disabled),
+.lobby-layout:hover {
+  border-color: var(--border-strong);
+  background: var(--surface-hover);
+}
+.lobby-template small,
+.lobby-layout small {
+  color: var(--text-3);
+  font-size: var(--fs-xs);
+  line-height: 1.35;
+}
+.lobby-template[aria-busy="true"] {
+  opacity: 0.6;
+}
+.lobby-template-thumb {
+  display: grid;
+  grid-template-rows: 18px 8px 8px 8px;
+  gap: 3px;
+  height: 54px;
+  margin-bottom: 4px;
+}
+.lobby-template-thumb span {
+  border-radius: 3px;
+}
+.lobby-template-thumb span:nth-child(3) {
+  width: 70%;
+}
+.lobby-template-thumb span:nth-child(4) {
+  width: 45%;
+}
+
+/* Look. */
+.lobby-layouts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+.lobby-layout[aria-pressed="true"],
+.lobby-font[aria-pressed="true"] {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+.lobby-layout-thumb {
+  display: grid;
+  gap: 3px;
+  height: 42px;
+  margin-bottom: 4px;
+  padding: 4px;
+  border-radius: 6px;
+  background: var(--surface-sunken);
+}
+.lobby-layout-thumb span {
+  border-radius: 2px;
+  background: var(--border-strong);
+}
+.thumb-classic {
+  grid-template-columns: 2fr 1fr;
+  grid-template-rows: 1fr 1fr;
+}
+.thumb-classic span:first-child {
+  grid-row: span 2;
+}
+.thumb-spotlight {
+  grid-template-rows: repeat(3, 1fr);
+  padding: 4px 22%;
+}
+.thumb-magazine {
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1.4fr 1fr;
+}
+.thumb-magazine span:first-child {
+  grid-column: span 2;
+  background: var(--accent);
+}
+.thumb-compact {
+  grid-template-rows: repeat(3, 1fr);
+  gap: 2px;
+}
+.lobby-swatches {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+.lobby-swatches .chip[aria-pressed="true"] {
+  border-color: var(--accent);
+  color: var(--accent-text);
+}
+.lobby-swatch {
+  position: relative;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 2px solid var(--surface);
+  box-shadow: 0 0 0 1px var(--border-strong);
+  overflow: hidden;
+}
+.lobby-swatch[aria-pressed="true"] {
+  box-shadow: 0 0 0 2px var(--text);
+}
+.lobby-swatch-custom {
+  background: conic-gradient(#f43f5e, #facc15, #22c55e, #22d3ee, #6366f1, #ec4899, #f43f5e);
+  cursor: pointer;
+}
+.lobby-swatch-custom input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.lobby-fonts {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 6px;
+}
+.lobby-font {
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+  padding: 8px 4px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--border);
+}
+.lobby-font span {
+  font-size: 20px;
+  font-weight: 700;
+}
+.lobby-font small {
+  color: var(--text-3);
+  font-family: var(--font);
+  font-size: 11px;
+}
+.lobby-font.font-rounded span {
+  font-family: ui-rounded, "SF Pro Rounded", "Nunito", "Varela Round", var(--font);
+}
+.lobby-font.font-serif span {
+  font-family: ui-serif, "Iowan Old Style", Georgia, serif;
+}
+.lobby-font.font-mono span {
+  font-family: var(--mono);
+}
+.lobby-font.font-display span {
+  font-family: "Avenir Next", "Futura", "Century Gothic", var(--font);
+  font-weight: 900;
+}
+
+/* Sections. */
+.lobby-sections {
+  display: grid;
+  gap: 4px;
+}
+.lobby-section-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 42px;
+  padding: 4px 8px;
+  border-radius: var(--r-md);
+  background: var(--surface-sunken);
+}
+.lobby-section-row[data-drag] {
+  cursor: grab;
+}
+.lobby-section-row.off .lobby-section-name {
+  color: var(--text-3);
+}
+.lobby-section-name {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  text-align: left;
+  font-weight: 700;
+  font-size: var(--fs-sm);
+}
+.lobby-section-name small {
+  font-weight: 500;
+}
+.lobby-column-chip {
+  min-width: 48px;
+  justify-content: center;
+}
+
+/* Lists in the card editors and settings. */
+.lobby-list-edit {
+  display: grid;
+  gap: 8px;
+}
+.lobby-list-edit > p {
+  margin: 0;
+}
+.lobby-list-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 4px 4px 10px;
+  border-radius: var(--r-md);
+  background: var(--surface-sunken);
+}
+.lobby-order {
+  color: var(--text-3);
+  font-weight: 800;
+  font-size: var(--fs-xs);
+}
+.lobby-row-tools {
+  display: inline-flex;
+  flex: none;
+}
+.lobby-faq-edit {
+  display: grid;
+  gap: 6px;
+  padding: 8px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--border);
+}
+
+/* Feed URL. */
+.lobby-feed-url {
+  display: grid;
+  gap: 8px;
+}
+.lobby-feed-url .ws-subhead {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.lobby-feed-url p {
+  margin: 0;
+  font-size: var(--fs-sm);
+}
+.lobby-feed-help summary {
+  cursor: pointer;
+  font-size: var(--fs-sm);
+  font-weight: 700;
+}
+.lobby-feed-help[open] {
+  display: grid;
+  gap: 8px;
+}
+pre.lobby-code {
+  margin: 0;
+  padding: 10px;
+  overflow-x: auto;
+  white-space: pre;
+  font-size: 12px;
+}
+
+/* Community settings › Lobby. */
+.lobby-open-editor {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: var(--r-lg);
+  border: 1px solid var(--border);
+  background: var(--accent-soft);
+  color: var(--accent-text);
+  text-align: left;
+}
+.lobby-open-editor strong,
+.lobby-open-editor small {
+  display: block;
+}
+.lobby-open-editor small {
+  color: var(--text-2);
+  font-size: var(--fs-xs);
+}
+.lobby-open-editor:hover {
+  filter: brightness(1.05);
+}
+
+/* The channel list's first row. */
+.lobby-entry {
+  padding: 8px 10px 4px;
+}
+.lobby-row {
+  min-height: 40px;
+  font-weight: 700;
+}
+.lobby-row-note {
+  color: var(--text-3);
+  font-size: 11px;
+  font-weight: 600;
+}

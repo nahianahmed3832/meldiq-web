@@ -46,9 +46,12 @@ import { AddMembersDialog } from "../workspace/AddMembersDialog";
 import { takePendingInvite, takePendingMessage, takeReferral } from "../../application/pendingInvite";
 import { type DiscordReturn, takeDiscordReturn } from "../../application/discordReturn";
 import { accountSelection, rememberSelection } from "../../sync/workspaceSelection";
+import { LOBBY_FEATURE } from "../../sync/lobby";
+import { useLobbyLanding } from "../lobby/useLobbyLanding";
 
 const SettingsView = lazy(() => import("../settings/SettingsView").then((m) => ({ default: m.SettingsView })));
 const WorkspaceView = lazy(() => import("../workspace/WorkspaceView").then((m) => ({ default: m.WorkspaceView })));
+const LobbyPage = lazy(() => import("../lobby/LobbyPage").then((m) => ({ default: m.LobbyPage })));
 
 /** What shows behind settings opened straight from a link: Home. */
 const HOME_ROUTE: Route = { section: "home", conversationId: null, panel: null, threadRoot: null, settingsPage: "profile", workspacePage: "overview" };
@@ -101,6 +104,7 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
   const backdrop = windowed ? (behind ?? HOME_ROUTE) : route;
   const knownView = useOrbit((s) => (backdrop.conversationId ? !!s.conversations[backdrop.conversationId] : true));
   const synced = useOrbit((s) => s.synced);
+  const lobbies = useOrbit((s) => s.server?.features.includes(LOBBY_FEATURE) ?? false);
   const [drawer, setDrawer] = useState(false);
   const [dialog, setDialog] = useState<ShellDialog>(null);
   usePushToTalk();
@@ -111,6 +115,7 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
   useEffect(() => {
     if (orgId !== prefs.orgId && synced) setPrefs({ orgId });
   }, [orgId, prefs.orgId, synced]);
+  useLobbyLanding(orgId, route);
 
   // The account's selected workspace, shared with the phone (PUT /v2/account/preferences): adopted once when the app
   // opens, then every switch made here is saved for the other devices. Best effort: if either call fails, this browser
@@ -294,6 +299,12 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
   else if (section === "activity") main = <ActivityView orgId={orgId} />;
   else if (section === "later") main = <LaterView />;
   else if (section === "discover") main = <DiscoverView />;
+  else if (section === "lobby" && orgId && lobbies)
+    main = (
+      <Suspense fallback={<section className="main" aria-busy="true" />}>
+        <LobbyPage key={orgId} orgId={orgId} />
+      </Suspense>
+    );
   // The Messages home is Friends (2026-10-28, after the owner's reference), as is /friends.
   else if (section === "friends" || section === "dms") main = <FriendsView />;
   else main = <HomeView orgId={orgId} section={section} onDialog={ctx.open} />;

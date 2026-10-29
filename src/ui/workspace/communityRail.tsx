@@ -1,5 +1,6 @@
 import {
   Ban,
+  BookOpen,
   BookText,
   Bot,
   CalendarDays,
@@ -24,6 +25,7 @@ import type { ReactNode } from "react";
 import type { OrgPermissions } from "../../api/workspaceSchemas";
 import type { WorkspacePage } from "../../application/router";
 import { PARITY_FEATURES } from "../../sync/communityParity";
+import { LOBBY_FEATURE } from "../../sync/lobby";
 
 /**
  * Community settings' left rail (docs/MELDIQ_COMMUNITY_PARITY.md §1, "Server Settings window"): the reference's groups and
@@ -41,6 +43,8 @@ export interface CommunityRailPage {
   shown?: (p: OrgPermissions) => boolean;
   /** The server feature it needs. */
   feature?: string;
+  /** Hidden when the server has this feature (a page another one replaces). */
+  without?: string;
 }
 
 /** Group titles; the first group's title is the community's name. */
@@ -57,8 +61,11 @@ const can = (p: OrgPermissions, perm: string) => p.isOwner || p.effective.includ
 
 export const COMMUNITY_RAIL: readonly CommunityRailPage[] = [
   { key: "overview", label: "Profile", icon: <LayoutGrid size={17} />, group: "community" },
-  // The reference's lobby; Meldiq's community guide lives on Home.
-  { key: "guide", label: "Home", icon: <House size={17} />, group: "community", feature: "community-guide", shown: (p) => p.canManageOrg },
+  // Community parity B: the reference's lobby. Without it, Meldiq's community guide stands in as Home; with it the guide
+  // keeps its own page, and shows as a card in the lobby.
+  { key: "lobby", label: "Lobby", icon: <House size={17} />, group: "community", feature: LOBBY_FEATURE, shown: (p) => p.canManageOrg },
+  { key: "guide", label: "Home", icon: <House size={17} />, group: "community", feature: "community-guide", without: LOBBY_FEATURE, shown: (p) => p.canManageOrg },
+  { key: "guide", label: "Community guide", icon: <BookOpen size={17} />, group: "community", feature: "community-guide", shown: (p) => p.canManageOrg },
   { key: "theme", label: "Theme", icon: <Palette size={17} />, group: "community", feature: "community-branding" },
   { key: "channels", label: "Channels", icon: <Hash size={17} />, group: "community" },
   // API 0.65.0: the rules channel and the community's rules (Edit community).
@@ -83,7 +90,13 @@ export const COMMUNITY_RAIL: readonly CommunityRailPage[] = [
 
 /** The rail's pages this person sees on this server (permissions unknown yet: only the open pages). */
 export function visibleCommunityRail(features: readonly string[], permissions: OrgPermissions | null): CommunityRailPage[] {
-  return COMMUNITY_RAIL.filter((p) => (!p.feature || features.includes(p.feature)) && (!p.shown || (permissions !== null && p.shown(permissions))));
+  return railForFeatures(features).filter((p) => !p.shown || (permissions !== null && p.shown(permissions)));
+}
+
+/** The rail's pages this server has, one per key (the first that fits). */
+function railForFeatures(features: readonly string[]): CommunityRailPage[] {
+  const fits = COMMUNITY_RAIL.filter((p) => (!p.feature || features.includes(p.feature)) && (!p.without || !features.includes(p.without)));
+  return fits.filter((p, i) => fits.findIndex((q) => q.key === p.key) === i);
 }
 
 /**
@@ -94,7 +107,7 @@ export function communityRailKey(page: WorkspacePage): WorkspacePage {
 }
 
 /** The title at the top of a community settings page. */
-export function communityPageTitle(page: WorkspacePage): string {
+export function communityPageTitle(page: WorkspacePage, features: readonly string[] = []): string {
   const key = communityRailKey(page);
-  return COMMUNITY_RAIL.find((p) => p.key === key)?.label ?? "Profile";
+  return (railForFeatures(features).find((p) => p.key === key) ?? COMMUNITY_RAIL.find((p) => p.key === key))?.label ?? "Profile";
 }

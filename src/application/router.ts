@@ -4,6 +4,7 @@ import { useSyncExternalStore } from "react";
 /**
  * The app's routes, as paths (Next.js serves the one client-side page for every path; docs/MELDIQ_WEB_NEXTJS.md):
  *   /home  /dms  /activity  /later  /discover    the sections (Later: saved messages and reminders; Discover: public communities)
+ *   /lobby                                     the selected community's lobby (community parity B)
  *   /<section>/c/<id>[/details|/search|/pinned|/members|/thread/<root>]   a conversation (and its side panel)
  *   /settings/<page>
  *   /workspace/<page>                          the current workspace's settings and administration
@@ -12,7 +13,8 @@ import { useSyncExternalStore } from "react";
  * page moves them to their path on load. Moving around is the History API, so Back and Forward work and nothing reloads.
  */
 /** "friends" (2026-10-28): the Friends page, the Messages home on its own route (phones open it from the list). */
-export type Section = "home" | "dms" | "friends" | "activity" | "later" | "discover" | "settings" | "workspace" | "oauth";
+/** "lobby" (community parity B): the selected community's lobby, its front page. */
+export type Section = "home" | "dms" | "friends" | "activity" | "later" | "discover" | "settings" | "workspace" | "oauth" | "lobby";
 /** "you": the phone's You tab, a list of the pages under your account card (desktop shows the profile page there). */
 export type SettingsPage =
   | "you"
@@ -60,7 +62,9 @@ export type WorkspacePage =
   // Community parity batch A (docs/MELDIQ_COMMUNITY_PARITY.md): the settings window's Theme, Sparks and Promote.
   | "theme"
   | "sparks"
-  | "promote";
+  | "promote"
+  // Community parity batch B: the lobby's settings (community-lobby).
+  | "lobby";
 
 export interface Route {
   section: Section;
@@ -74,7 +78,7 @@ export interface Route {
 /** Sections that take the whole page (no conversation list). */
 export const isFullPage = (s: Section): boolean => s === "settings" || s === "workspace";
 
-const SECTIONS: Section[] = ["home", "dms", "friends", "activity", "later", "discover", "settings", "workspace", "oauth"];
+const SECTIONS: Section[] = ["home", "dms", "friends", "activity", "later", "discover", "settings", "workspace", "oauth", "lobby"];
 const PAGES: SettingsPage[] = [
   "you",
   "profile",
@@ -120,6 +124,7 @@ const WORKSPACE_PAGES: WorkspacePage[] = [
   "theme",
   "sparks",
   "promote",
+  "lobby",
 ];
 const ID = /^[A-Za-z0-9_-]{1,128}$/;
 

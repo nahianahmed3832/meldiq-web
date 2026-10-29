@@ -10,6 +10,7 @@ import { ExpressionsPage } from "./ExpressionsPage";
 import { PinsPage } from "./PinsPage";
 import { BotsPage } from "./BotsPage";
 import { RulesPage } from "./RulesPage";
+import { LobbySettingsPage } from "./LobbySettingsPage";
 import type { ReactNode } from "react";
 import { useEngine, useOrbit } from "../../application/orbit";
 import { navigate, type WorkspacePage } from "../../application/router";
@@ -112,7 +113,7 @@ export function WorkspaceView({ orgId, page, onDialog }: { orgId: string | null;
         </nav>
         <div className="settings-page scroll">
           <div className="inner">
-            {community && <h1>{communityPageTitle(page)}</h1>}
+            {community && <h1>{communityPageTitle(page, features)}</h1>}
             {detail.error && !d ? (
               <div className="banner danger" role="alert">
                 <span className="grow">{detail.error}</span>
@@ -144,6 +145,8 @@ export function WorkspaceView({ orgId, page, onDialog }: { orgId: string | null;
               <ExpressionsPage detail={d} />
             ) : page === "guide" ? (
               <GuidePage detail={d} />
+            ) : page === "lobby" ? (
+              <LobbySettingsPage detail={d} />
             ) : page === "rules" ? (
               <RulesPage detail={d} />
             ) : page === "onboarding" ? (
