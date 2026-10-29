@@ -308,6 +308,14 @@ export const zProfile = z.object({
     .transform((v) => v === true),
   /** API 0.64.0: their pins (server docs/PROFILE_PINS.md). */
   pins: zProfilePins,
+  /** API 0.65.0: the account level bought with points (1 until the first level-up); null on older servers. */
+  level: z
+    .number()
+    .int()
+    .min(1)
+    .nullish()
+    .catch(null)
+    .transform((v) => v ?? null),
 });
 export type Profile = z.infer<typeof zProfile>;
 

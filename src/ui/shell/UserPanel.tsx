@@ -47,7 +47,8 @@ export function UserPanel() {
   const inCall = call.phase !== "idle" && !call.listenOnly;
   const micOff = inCall ? !call.micOn : prefs.joinMuted || prefs.joinDeafened;
   const deafened = inCall ? call.deafened : prefs.joinDeafened;
-  const colors = look.profileStyle?.nameColors ?? (look.profileStyle?.accent ? [look.profileStyle.accent] : null);
+  // API 0.65.0: the profile theme first, then the name's colours (older servers: the accent).
+  const colors = look.profileStyle?.themeColors ?? look.profileStyle?.nameColors ?? (look.profileStyle?.accent ? [look.profileStyle.accent] : null);
   const backdrop = bannerUrl ? { backgroundImage: `url(${bannerUrl})` } : colors ? { background: colors.length > 1 ? `linear-gradient(120deg, ${colors.join(", ")})` : colors[0] } : undefined;
 
   const toggleMic = () => {

@@ -10,8 +10,9 @@ import { resolveLanguage, translate } from "../i18n";
 
 /**
  * People and DMs (batches B6, B6b, B12; server routes/connections.ts, users.ts; android ConnectionRules, RequestRules,
- * PresenceRules): connections, message requests, who may message you, presence choices, pronouns and group photos. No
- * suggestions or mutual lists: only what each person did. The server decides every answer.
+ * PresenceRules): connections, message requests, who may message you, presence choices, pronouns and group photos.
+ * Since API 0.65.0 also who may add you to group chats, and people the server suggests from shared communities (only
+ * those who turned "suggest me" on). The server decides every answer.
  */
 
 const enc = encodeURIComponent;
@@ -64,15 +65,36 @@ export type RequestPolicy = (typeof REQUEST_POLICIES)[number];
 export const DM_POLICY_LABEL: Record<DmPolicy, string> = { everyone: "Everyone", communities: "People in your communities", connections: "Only your connections" };
 export const REQUEST_POLICY_LABEL: Record<RequestPolicy, string> = { everyone: "Everyone", communities: "People in your communities", nobody: "Nobody" };
 
-const zMessaging = z.object({ dmPolicy: openEnum(DM_POLICIES), requestPolicy: openEnum(REQUEST_POLICIES) });
+/** API 0.65.0: who may add you to group chats ("friends" means accepted connections; the server's default). */
+export const GROUP_ADD_POLICIES = ["everyone", "friends", "nobody"] as const;
+export type GroupAddPolicy = (typeof GROUP_ADD_POLICIES)[number];
+export const GROUP_ADD_LABEL: Record<GroupAddPolicy, string> = { everyone: "Everyone", friends: "Friends", nobody: "Nobody" };
+
+const zMessaging = z.object({
+  dmPolicy: openEnum(DM_POLICIES),
+  requestPolicy: openEnum(REQUEST_POLICIES),
+  /** API 0.65.0; absent on older servers. */
+  groupAddPolicy: openEnum(GROUP_ADD_POLICIES).optional(),
+  suggestable: z.boolean().optional(),
+});
 export type MessagingSettings = z.infer<typeof zMessaging>;
+export type MessagingChange = Partial<{ dmPolicy: DmPolicy; requestPolicy: RequestPolicy; groupAddPolicy: GroupAddPolicy; suggestable: boolean }>;
 
 export function messagingSettings(engine: Engine): Promise<MessagingSettings> {
   return engine.api.json("GET", "/v1/users/me/messaging", zMessaging);
 }
 
-export function setMessagingSettings(engine: Engine, change: Partial<MessagingSettings>): Promise<MessagingSettings> {
+export function setMessagingSettings(engine: Engine, change: MessagingChange): Promise<MessagingSettings> {
   return engine.api.json("PUT", "/v1/users/me/messaging", zMessaging, { body: change });
+}
+
+/** API 0.65.0: someone who shares communities with you and let themselves be suggested. */
+const zSuggested = z.object({ user: zMember, sharedCommunities: z.number().int() });
+export type SuggestedPerson = z.infer<typeof zSuggested>;
+
+/** Up to 20, most shared communities first; never friends, pending requests or blocked people. */
+export async function suggestedPeople(engine: Engine): Promise<SuggestedPerson[]> {
+  return (await engine.api.json("GET", "/v2/people/suggested", z.object({ people: z.array(zSuggested) }))).people;
 }
 
 /** A message request waiting for this person (the DMs list leaves them out; android RequestRules.incoming). */

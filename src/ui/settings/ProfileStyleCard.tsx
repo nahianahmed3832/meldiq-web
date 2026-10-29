@@ -14,6 +14,10 @@ import { describeNameLook, NameStyleWindow } from "./NameStyleWindow";
 import { NO_STYLE } from "./noStyle";
 import { useProfileDraft } from "./profileDraft";
 import { useStyleSaver } from "./useStyleSaver";
+import { ProfileThemePicker } from "./ProfileThemePicker";
+import { ShownBadgePicker } from "./ShownBadgePicker";
+import type { NameBadgeKind } from "../people/NameBadge";
+import type { MojoMark } from "../../api/profileSchemas";
 
 type StyleWindow = "decoration" | "name" | null;
 
@@ -23,7 +27,8 @@ const LIMITS = { avatarImageMb: 4, clipMb: 12, clipSeconds: 6, bannerAnimatedMb:
 /**
  * Settings › Profile › Look (continuation brief v3 §10, API 0.45.0; laid out as the reference, 2026-10-29): an animated
  * avatar (GIF, WebP, or a short video clip the server turns into a 3 s silent loop), a banner (still or animated), the
- * community tag by your name, rows opening the decoration and name style windows, a banner effect and colour. The
+ * community tag by your name, the badge you show (API 0.65.0), rows opening the decoration and name style windows, a
+ * banner effect, and the profile theme (API 0.65.0; one banner colour on older servers). The
  * preview is My Profile's right column. Each change saves at once; uploads say what's happening and what went wrong.
  * Who sees the avatar and banner follows the photo's setting under Privacy.
  */
@@ -36,6 +41,9 @@ export function ProfileStyleCard({ nameStyles }: { nameStyles: boolean }) {
     (s) => s.orgs.filter((o) => !!o.tag).map((o) => ({ id: o.id, name: o.name, tag: o.tag as string, accent: o.accent })),
     (a, b) => a.length === b.length && a.every((x, i) => shallowEqual(x, b[i])),
   );
+  const themeOn = useOrbit((s) => s.server?.features.includes("profile-theme") ?? false);
+  const badgeOn = useOrbit((s) => s.server?.features.includes("shown-badge") ?? false);
+  const mojoBadge = useOrbit((s) => s.mojo.me?.badge ?? null);
   const [open, setOpen] = useState<StyleWindow>(null);
   const [version, setVersion] = useState(0);
   const profile = useLoad(() => (me ? userProfile(engine, me.userId) : Promise.resolve(null)), [engine, me?.userId, version, profilesRev]);
@@ -84,6 +92,9 @@ export function ProfileStyleCard({ nameStyles }: { nameStyles: boolean }) {
     void run("Uploading…", async () => setProfileBanner(engine, animated ? new Uint8Array(await f.arrayBuffer()) : await bannerJpeg(f)));
   };
   const setStyle = saver.save;
+  // The badges you hold now (API 0.65.0): from your own profile, and your Mojo plan's badge.
+  const mojoMark: MojoMark | null = p?.mojo ?? (mojoBadge?.kind ? { badge: mojoBadge.kind, check: mojoBadge.check } : null);
+  const held: NameBadgeKind[] = [...(mojoMark ? ["mojo" as const] : []), ...(p?.badges.includes("bug-hunter") ? ["bug-hunter" as const] : []), ...(p?.decorationArtist ? ["artist" as const] : [])];
 
   useEffect(() => {
     if (avatarInput.current) avatarInput.current.value = "";
@@ -174,6 +185,8 @@ export function ProfileStyleCard({ nameStyles }: { nameStyles: boolean }) {
         </section>
       )}
 
+      {badgeOn && p && <ShownBadgePicker style={style} held={held} mojo={mojoMark} onSave={setStyle} />}
+
       <div className="style-rows">
         <button type="button" className="style-row" onClick={() => setOpen("decoration")}>
           <StyledAvatar userId={me.userId} name={me.displayName} colorIndex={me.avatarColor} photoRev={photoRev} media={null} decoration={style.decoration} size={36} />
@@ -213,21 +226,25 @@ export function ProfileStyleCard({ nameStyles }: { nameStyles: boolean }) {
         </div>
       </section>
 
-      <section className="setting-group" aria-labelledby="ps-accent">
-        <h3 id="ps-accent" className="invite-or-title">
-          Banner colour
-        </h3>
-        <fieldset className="brand-swatches" aria-labelledby="ps-accent">
-          <button type="button" className="brand-swatch meldiq" aria-pressed={style.accent === null} onClick={() => setStyle({ accent: null })} title="Your avatar's colour">
-            <span className="sr-only">Your avatar's colour</span>
-          </button>
-          {ACCENT_PRESETS.map((a) => (
-            <button key={a.hex} type="button" className="brand-swatch" style={{ background: a.hex }} aria-pressed={style.accent === a.hex} onClick={() => setStyle({ accent: a.hex })} title={a.name}>
-              <span className="sr-only">{a.name}</span>
+      {themeOn && <ProfileThemePicker style={style} onSave={setStyle} />}
+
+      {!themeOn && (
+        <section className="setting-group" aria-labelledby="ps-accent">
+          <h3 id="ps-accent" className="invite-or-title">
+            Banner colour
+          </h3>
+          <fieldset className="brand-swatches" aria-labelledby="ps-accent">
+            <button type="button" className="brand-swatch meldiq" aria-pressed={style.accent === null} onClick={() => setStyle({ accent: null })} title="Your avatar's colour">
+              <span className="sr-only">Your avatar's colour</span>
             </button>
-          ))}
-        </fieldset>
-      </section>
+            {ACCENT_PRESETS.map((a) => (
+              <button key={a.hex} type="button" className="brand-swatch" style={{ background: a.hex }} aria-pressed={style.accent === a.hex} onClick={() => setStyle({ accent: a.hex })} title={a.name}>
+                <span className="sr-only">{a.name}</span>
+              </button>
+            ))}
+          </fieldset>
+        </section>
+      )}
 
       {open === "decoration" && (
         <DecorationWindow

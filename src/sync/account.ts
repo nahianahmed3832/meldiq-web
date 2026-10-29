@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { ApiError } from "../api/client";
 import { type Activity, type Conversation, type Device, type Member, type OrgDetail, zActivity, zConversation, zDevice, zMember, zOrgDetail, zProfile } from "../api/schemas";
+import type { ShownBadge } from "../api/profileSchemas";
 import { AccountApi } from "../auth/accountApi";
 import { normalizeEmail } from "../auth/rules";
 import { forgetPush } from "../application/webPush";
@@ -88,6 +89,9 @@ export interface ProfileStyleChange {
   nameColors?: string[] | null;
   nameEffect?: string | null;
   tagOrgId?: string | null;
+  /** API 0.65.0: one or two theme colours (the server sets accent to the first), and the badge shown by your name. */
+  themeColors?: string[] | null;
+  shownBadge?: ShownBadge | null;
 }
 
 export async function setProfileStyle(engine: Engine, change: ProfileStyleChange): Promise<void> {

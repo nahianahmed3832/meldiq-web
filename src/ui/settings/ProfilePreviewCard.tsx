@@ -3,6 +3,8 @@ import { userProfile } from "../../sync/account";
 import { usePhoto } from "../components/photos";
 import { StyledName } from "../people/NameStyle";
 import { ProfileEffect, StyledAvatar } from "../people/ProfileStyle";
+import { LevelRing } from "../people/LevelRing";
+import { themeBackground, themeColorsOf, themeVars } from "../people/profileTheme";
 import { useLoad } from "../workspace/useLoad";
 import { NO_STYLE } from "./noStyle";
 import { useProfileDraft } from "./profileDraft";
@@ -18,6 +20,7 @@ export function ProfilePreviewCard() {
   const profilesRev = useOrbit((s) => s.profilesRev);
   const profile = useLoad(() => (me ? userProfile(engine, me.userId) : Promise.resolve(null)), [engine, me?.userId, profilesRev]);
   const draft = useProfileDraft()?.draft;
+  const levelsOn = useOrbit((s) => s.server?.features.includes("points") ?? false);
   const p = profile.data;
   const bannerKind = p?.profileBanner?.kind;
   const bannerUrl = usePhoto("profileBanner", me?.userId ?? "", p?.profileBanner?.rev, bannerKind === "gif" ? "image/gif" : bannerKind === "webp" ? "image/webp" : "image/jpeg");
@@ -26,12 +29,14 @@ export function ProfilePreviewCard() {
   const name = draft?.displayName || me.displayName;
   const pronouns = draft?.pronouns ?? "";
   const about = draft?.aboutMe ?? "";
+  const theme = themeColorsOf(style);
+  const level = levelsOn ? (p?.level ?? null) : null;
 
   return (
     <aside className="profile-preview" aria-label="Preview">
       <div className="settings-label">Preview</div>
-      <div className="profile-pop style-preview card">
-        <div className="profile-pop-banner" style={bannerUrl ? { backgroundImage: `url(${bannerUrl})` } : { background: style.accent ?? "var(--brand-gradient)" }}>
+      <div className={`profile-pop style-preview card${theme ? " themed" : ""}`} style={themeVars(theme)}>
+        <div className="profile-pop-banner" style={bannerUrl ? { backgroundImage: `url(${bannerUrl})` } : { background: theme ? themeBackground(theme) : "var(--brand-gradient)" }}>
           <ProfileEffect effect={style.effect} />
         </div>
         <div className="profile-pop-avatar">
@@ -39,7 +44,8 @@ export function ProfilePreviewCard() {
         </div>
         <div className="profile-pop-body">
           <h3 className="profile-pop-name ellipsis" style={{ fontSize: 19 }}>
-            <StyledName name={name} style={style} className="ellipsis" />
+            <StyledName name={name} style={style} mojo={p?.mojo} everyBadge className="ellipsis" />
+            {level !== null && <LevelRing level={level} size={22} className="profile-level" />}
           </h3>
           <p className="profile-pop-handle">
             @{me.username}

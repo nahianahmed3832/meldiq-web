@@ -5,6 +5,7 @@ import {
   Bookmark,
   ChevronLeft,
   ChevronRight,
+  Coins,
   HardDrive,
   Headphones,
   Info,
@@ -22,7 +23,7 @@ import {
 import { ShortcutsPage } from "./ShortcutsPage";
 import { AdvancedPage } from "./AdvancedPage";
 import { CallsPage } from "./CallsPage";
-import { useEngine } from "../../application/orbit";
+import { useEngine, useOrbit } from "../../application/orbit";
 import { isPlatformAdmin } from "../../sync/ops";
 import { useLoad } from "../workspace/useLoad";
 import { ServiceHealthPage } from "./ServiceHealthPage";
@@ -38,6 +39,7 @@ import { YouCard } from "./YouCard";
 import { InstallButton } from "./InstallButton";
 import { MojoPage } from "../mojo/MojoPage";
 import { SparkPage } from "../mojo/SparkPage";
+import { PointsPage } from "../points/PointsPage";
 
 type PageEntry = { key: SettingsPage; label: StringKey; icon: React.ReactNode };
 
@@ -57,6 +59,8 @@ const APP_PAGES: PageEntry[] = [
   { key: "calls", label: "settings_calls", icon: <Headphones size={17} /> },
   { key: "notifications", label: "settings_notifications", icon: <Bell size={17} /> },
   { key: "shortcuts", label: "settings_shortcuts", icon: <Keyboard size={17} /> },
+  // API 0.65.0: points, quests and account levels (Gem is Spark's).
+  { key: "points", label: "settings_points", icon: <Coins size={17} /> },
   { key: "advanced", label: "settings_advanced", icon: <SlidersHorizontal size={17} /> },
   { key: "storage", label: "settings_storage", icon: <HardDrive size={17} /> },
   { key: "about", label: "settings_about", icon: <Info size={17} /> },
@@ -67,7 +71,8 @@ export function SettingsView({ page, onSignedOut }: { page: SettingsPage; onSign
   // Service health and workspace usage are for platform administrators only (android round 7 C1, C7); the server checks again.
   const admin = useLoad(() => isPlatformAdmin(engine).catch(() => false), [engine]).data === true;
   const t = useT();
-  const named = (list: PageEntry[]) => list.map((p) => ({ ...p, label: t(p.label) }));
+  const pointsOn = useOrbit((s) => s.server?.features.includes("points") ?? false);
+  const named = (list: PageEntry[]) => list.filter((p) => p.key !== "points" || pointsOn).map((p) => ({ ...p, label: t(p.label) }));
   const groups: { title: string; pages: { key: SettingsPage; label: string; icon: React.ReactNode }[] }[] = [
     { title: t("settings_user_group"), pages: named(USER_PAGES) },
     { title: t("settings_app_group"), pages: named(APP_PAGES) },
@@ -139,6 +144,7 @@ export function SettingsView({ page, onSignedOut }: { page: SettingsPage; onSign
             {page === "usage" && <AdminUsagePage />}
             {page === "mojo" && <MojoPage />}
             {page === "spark" && <SparkPage />}
+            {page === "points" && <PointsPage />}
           </div>
         </div>
       </div>

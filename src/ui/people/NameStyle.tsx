@@ -1,6 +1,7 @@
 import type { CSSProperties } from "react";
 import type { MojoMark } from "../../api/profileSchemas";
 import { MojoBadgeMark } from "../mojo/MojoBadge";
+import { NameBadgeMark, nameBadge } from "./NameBadge";
 import type { NameEffect, NameFont, ProfileStyle, WornTag } from "../../api/schemas";
 import { useOrbit } from "../../application/orbit";
 import type { UserLite } from "../../state/store";
@@ -44,6 +45,8 @@ interface StyledNameProps {
   tag?: WornTag | null;
   /** API 0.54.0: their Mojo badge (GO / PLUS with Meldiq Check), after the tag. */
   mojo?: MojoMark | null;
+  /** The profile card: the Mojo badge whatever badge they chose to show (the card lists the others itself). */
+  everyBadge?: boolean;
   /** A role's colour, used when the person picked no colour of their own. */
   roleColor?: string | null;
   /** The tone class names fall back to (the avatar colour's). */
@@ -52,7 +55,7 @@ interface StyledNameProps {
 }
 
 /** A display name with its style, then the worn tag. Screen readers hear the name, then "tag MC". */
-export function StyledName({ name, style, tag, mojo, roleColor, toneClass, className }: StyledNameProps) {
+export function StyledName({ name, style, tag, mojo, everyBadge, roleColor, toneClass, className }: StyledNameProps) {
   const colors = style?.nameColors ?? null;
   const paint = namePaint(colors) ?? (roleColor ? { color: roleColor } : undefined);
   const classes = [
@@ -65,13 +68,15 @@ export function StyledName({ name, style, tag, mojo, roleColor, toneClass, class
   ]
     .filter(Boolean)
     .join(" ");
+  const badge = everyBadge ? (mojo ? "mojo" : null) : nameBadge(style?.shownBadge, mojo);
   return (
     <>
       <span className={classes} style={paint}>
         {name}
       </span>
       {tag && <WornTagChip tag={tag} />}
-      {mojo && <MojoBadgeMark badge={mojo.badge} check={mojo.check} />}
+      {badge === "mojo" && mojo && <MojoBadgeMark badge={mojo.badge} check={mojo.check} />}
+      {(badge === "bug-hunter" || badge === "artist") && <NameBadgeMark badge={badge} />}
     </>
   );
 }

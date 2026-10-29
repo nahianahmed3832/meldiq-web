@@ -41,6 +41,8 @@ function ProfileEditor() {
   const pronounsOffered = useOrbit((s) => s.server?.features.includes("pronouns") ?? false);
   const profileMedia = useOrbit((s) => s.server?.features.includes("profile-media") ?? false);
   const nameStyles = useOrbit((s) => s.server?.features.includes("name-styles") ?? false);
+  // API 0.65.0: an old username stays yours for 7 days; a name someone else holds is refused (409, said below).
+  const usernameHolds = useOrbit((s) => s.server?.features.includes("username-holds") ?? false);
   const [saved, setSaved] = useState(false);
   const save = useAction();
   const photo = useAction();
@@ -219,7 +221,10 @@ function ProfileEditor() {
                 <input className="input" type="tel" autoComplete="tel" placeholder="+8801712345678" {...field("phone")} />
               </label>
               <p className="faint ws-wide" style={{ margin: 0, fontSize: 12.5 }}>
-                Changing your username frees the old one: links, mentions and addresses that used it stop working. You can change it once an hour. Who sees each field is set under Privacy & security.
+                {usernameHolds
+                  ? "When you change your username, the old one stays yours for 7 days, so you can take it back; then anyone can have it. You can change it once an hour."
+                  : "Changing your username frees the old one: links, mentions and addresses that used it stop working. You can change it once an hour."}{" "}
+                Who sees each field is set under Privacy & security.
               </p>
               {(save.error || (problem && form.displayName)) && (
                 <div className="banner danger ws-wide" role="alert">

@@ -47,6 +47,16 @@ const zHexList = z
   .nullish()
   .catch(null)
   .transform((v) => v ?? null);
+/** API 0.65.0 (server SHOWABLE_BADGES): the badges someone can choose to show by their name, and "none". */
+export const SHOWN_BADGES = ["mojo", "bug-hunter", "artist", "none"] as const;
+export type ShownBadge = (typeof SHOWN_BADGES)[number];
+const zThemeColors = z
+  .array(z.string().regex(/^#[0-9a-fA-F]{6}$/))
+  .min(1)
+  .max(2)
+  .nullish()
+  .catch(null)
+  .transform((v) => (v ? v.map((c) => c.toLowerCase()) : null));
 export const zProfileStyle = z
   .object({
     decoration: z.string().regex(DECORATION_ID).nullable().catch(null),
@@ -64,6 +74,14 @@ export const zProfileStyle = z
       .catch(null)
       .transform((v) => v ?? null),
     tagOrgId: nullableString,
+    /** API 0.65.0: the profile theme, one colour or two for a gradient (older servers: only [accent]). */
+    themeColors: zThemeColors,
+    /** API 0.65.0: the badge shown next to the name; "none" shows none, null is the apps' default (the Mojo badge). */
+    shownBadge: z
+      .enum(SHOWN_BADGES)
+      .nullish()
+      .catch(null)
+      .transform((v) => v ?? null),
   })
   .nullish()
   .catch(null)

@@ -86,3 +86,14 @@ export async function decorationFileProblem(file: File): Promise<string | null> 
     URL.revokeObjectURL(url);
   }
 }
+
+/** API 0.65.0: the decorations you starred, newest first (up to 200). */
+export async function decorationFavorites(engine: Engine): Promise<string[]> {
+  return (await engine.api.json("GET", "/v2/decorations/favorites", z.object({ favorites: z.array(z.string()), limit: z.number() }))).favorites;
+}
+
+/** Stars or unstars one; starring twice is harmless, and a 201st star is refused (409 limit_reached). */
+export async function setDecorationFavorite(engine: Engine, id: string, favorite: boolean): Promise<void> {
+  if (favorite) await engine.api.call("PUT", `/v2/decorations/favorites/${encodeURIComponent(id)}`);
+  else await engine.api.call("DELETE", `/v2/decorations/favorites/${encodeURIComponent(id)}`);
+}

@@ -13,6 +13,8 @@ import { SafeLink } from "../chat/SafeLink";
 import { ProfileEffect, StyledAvatar } from "./ProfileStyle";
 import { ArtistDecorations } from "./ArtistDecorations";
 import { ProfilePins } from "./ProfilePins";
+import { LevelRing } from "./LevelRing";
+import { themeBackground, themeColorsOf, themeVars } from "./profileTheme";
 import { Dialog, Menu, type MenuEntry, useMenu } from "../components/Overlay";
 import { toneOf } from "../components/Avatar";
 import { OrgAvatar } from "../components/OrgAvatar";
@@ -60,6 +62,7 @@ export function ProfileDialog({ userId, fallbackName, orgId = null, near = null,
   const me = useOrbit((s) => s.me?.userId);
   const features = useOrbit((s) => s.server?.features ?? [], shallowEqual);
   const pinsOn = features.includes("profile-pins");
+  const levelsOn = features.includes("points");
   const rev = useOrbit((s) => s.connectionsRev);
   // Their profile changed elsewhere (API 0.28 user.updated): loaded again.
   const profilesRev = useOrbit((s) => s.profilesRev);
@@ -183,15 +186,17 @@ export function ProfileDialog({ userId, fallbackName, orgId = null, near = null,
       : []),
     ...(profile ? [{ label: "Copy username", icon: <Copy size={16} />, onSelect: () => void navigator.clipboard?.writeText(`@${profile.username}`).catch(() => undefined) }] : []),
   ];
+  const theme = themeColorsOf(profile?.profileStyle);
   return (
     <Dialog
       title={name}
       onClose={onClose}
-      className="profile-pop"
+      className={`profile-pop${theme ? " themed" : ""}`}
+      vars={themeVars(theme)}
       near={near}
       header={
         <>
-          <div className="profile-pop-banner" style={bannerUrl ? { backgroundImage: `url(${bannerUrl})` } : { background: profile?.profileStyle?.accent ?? toneOf(profile?.avatarColor ?? 0) }}>
+          <div className="profile-pop-banner" style={bannerUrl ? { backgroundImage: `url(${bannerUrl})` } : { background: theme ? themeBackground(theme) : toneOf(profile?.avatarColor ?? 0) }}>
             <ProfileEffect effect={profile?.profileStyle?.effect} />
             {!self && more.length > 0 && (
               <button className="icon-btn profile-pop-btn" onClick={(e) => moreMenu.open(e.currentTarget)} aria-label={`More for ${name}`} aria-haspopup="menu" aria-expanded={!!moreMenu.anchor}>
@@ -243,7 +248,8 @@ export function ProfileDialog({ userId, fallbackName, orgId = null, near = null,
         ) : (
           <>
             <h2 className="profile-pop-name">
-              <StyledName name={profile.displayName} style={profile.profileStyle} tag={profile.tag} mojo={profile.mojo} className="ellipsis" />
+              <StyledName name={profile.displayName} style={profile.profileStyle} tag={profile.tag} mojo={profile.mojo} everyBadge className="ellipsis" />
+              {levelsOn && profile.level !== null && <LevelRing level={profile.level} size={24} className="profile-level" />}
             </h2>
             <p className="profile-pop-handle">
               @{profile.username}

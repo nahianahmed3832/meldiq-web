@@ -1,5 +1,5 @@
 {
-  "version": "0.64.0",
+  "version": "0.65.0",
   "routes": [
     {
       "method": "GET",
@@ -499,6 +499,18 @@
     },
     {
       "method": "GET",
+      "path": "/v2/decorations/favorites"
+    },
+    {
+      "method": "PUT",
+      "path": "/v2/decorations/favorites/{decorationId}"
+    },
+    {
+      "method": "DELETE",
+      "path": "/v2/decorations/favorites/{decorationId}"
+    },
+    {
+      "method": "GET",
       "path": "/v2/decorations"
     },
     {
@@ -602,6 +614,10 @@
       "path": "/v1/users/me/messaging"
     },
     {
+      "method": "GET",
+      "path": "/v2/people/suggested"
+    },
+    {
       "method": "POST",
       "path": "/v1/conversations/{id}/request"
     },
@@ -636,6 +652,18 @@
     {
       "method": "POST",
       "path": "/v1/reminders/{id}/ack"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/points"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/points/checkin"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/points/level-up"
     },
     {
       "method": "GET",
@@ -704,6 +732,10 @@
     {
       "method": "DELETE",
       "path": "/v1/orgs/{orgId}/members/{userId}"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/orgs/leave"
     },
     {
       "method": "GET",
@@ -1324,6 +1356,9 @@
     "discord_not_configured": [
       409
     ],
+    "group_add_not_allowed": [
+      403
+    ],
     "gifs_not_configured": [
       503
     ],
@@ -1494,6 +1529,9 @@
     ],
     "mode_not_supported": [
       400
+    ],
+    "not_enough_points": [
+      409
     ],
     "no_key_backup": [
       404

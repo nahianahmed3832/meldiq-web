@@ -13,6 +13,7 @@ import { UserAvatar } from "../components/OrgAvatar";
 import { contextMenuProps, Menu, type MenuEntry, useMenu } from "../components/Overlay";
 import { StyledName } from "../people/NameStyle";
 import { StyledAvatar } from "../people/ProfileStyle";
+import { themeColorsOf } from "../people/profileTheme";
 import { dmPeer, relative } from "../format";
 import { openProfile } from "../people/ProfileDialog";
 import { useMembers } from "./ConversationDetails";
@@ -162,7 +163,7 @@ function MemberRow({ m, away, color, orgId }: { m: Member; away: boolean; color:
       : []),
   ];
   // A nameplate (2026-10-28, the reference's lively member list): the person's own name colours, faint, behind the row.
-  const plate = m.profileStyle?.nameColors?.length ? m.profileStyle.nameColors : m.profileStyle?.accent ? [m.profileStyle.accent] : null;
+  const plate = m.profileStyle?.nameColors?.length ? m.profileStyle.nameColors : themeColorsOf(m.profileStyle);
   return (
     <>
       <button

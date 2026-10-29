@@ -44,6 +44,7 @@ import { Outbox, sealAndPost } from "./outbox";
 import { levelOf, type NavOp, NavSync, PERSONAL, shouldNotify, workspaceOf } from "./navPrefs";
 import { firstShowing, ReminderSync } from "./reminders";
 import { callFrame, orgDeletedFrame, presenceFrame, typingFrame } from "./frameReducers";
+import { pointsCheckin } from "./points";
 import { type Frame, parseFrame } from "../realtime/frames";
 import { meetingSoon } from "./workspaceC5";
 import type { Reminder } from "./reminderRules";
@@ -274,6 +275,7 @@ export class Engine implements EngineContext {
    */
   async start(grant?: SessionGrant | AccountSessionGrant): Promise<void> {
     this.stopped = false;
+    this.checkedIn = false;
     if (grant) await this.adopt(grant);
     const me = {
       userId: this.device.userId,
@@ -305,6 +307,9 @@ export class Engine implements EngineContext {
       .then((n) => (n > 0 ? this.syncSummaries() : undefined))
       .catch(() => undefined);
   }
+
+  /** Whether this session counted today's visit for points (API 0.65.0). */
+  private checkedIn = false;
 
   private readonly flushSignalsWhenHidden = () => {
     if (document.visibilityState === "hidden") void this.signals.flush();
@@ -552,6 +557,12 @@ export class Engine implements EngineContext {
       void this.nav.refresh([PERSONAL, ...orgs.orgs.map((o) => o.id)]);
       void this.reminders.refresh();
       void this.syncSummaries();
+      // API 0.65.0: today's visit counts for points once a session opens (after the first load that gets through, so a
+      // session that signs in again first still counts); a failure never stands in the way of anything.
+      if (!this.checkedIn && server.features.includes("points")) {
+        this.checkedIn = true;
+        void pointsCheckin(this).catch(() => undefined);
+      }
     } catch (e) {
       if (!(e instanceof ApiError && e.isNetwork)) this.notice("error", e instanceof ApiError ? e.message : "Couldn't load your conversations.");
     }

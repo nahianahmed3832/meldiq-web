@@ -6,6 +6,7 @@ import { DM_POLICIES, DM_POLICY_LABEL, type DmPolicy, messagingSettings, REQUEST
 import { type Audience, AUDIENCES, blockedIds, myProfile, type Privacy, type PrivacyField, setPrivacy, unblock } from "../../sync/profile";
 import { userProfile } from "../../sync/account";
 import { useAction, useLoad } from "../workspace/useLoad";
+import { GroupAndSuggestRows } from "./PrivacyExtras";
 
 const FIELDS: { field: PrivacyField; label: string; help: string }[] = [
   { field: "photo", label: "Profile photo", help: "Stored on Meldiq's servers, like your messages." },
@@ -110,11 +111,15 @@ export function BlockedPeople() {
 
 /**
  * Who can message you (batch B6, android MessagingPrivacy): directly, or as a message request you answer first. Blocked
- * and unknown people get the same answer, so a setting never reveals a block.
+ * and unknown people get the same answer, so a setting never reveals a block. API 0.65.0 adds who may add you to group
+ * chats and whether you're suggested to people you share communities with (PrivacyExtras), on the same settings.
  */
 export function MessagingSettings() {
   const engine = useEngine();
-  const offered = useOrbit((s) => s.server?.features.includes("message-requests") ?? false);
+  const requests = useOrbit((s) => s.server?.features.includes("message-requests") ?? false);
+  const groupAdd = useOrbit((s) => s.server?.features.includes("group-add-policy") ?? false);
+  const suggest = useOrbit((s) => s.server?.features.includes("suggested-people") ?? false);
+  const offered = requests || groupAdd || suggest;
   const loaded = useLoad(() => (offered ? messagingSettings(engine) : Promise.resolve(null)), [engine, offered]);
   const [local, setLocal] = useState<Awaited<ReturnType<typeof messagingSettings>> | null>(null);
   const act = useAction();
@@ -122,60 +127,71 @@ export function MessagingSettings() {
   if (!offered) return null;
   return (
     <div className="card" style={{ padding: 20, display: "grid", gap: 12 }}>
-      <h3 style={{ margin: 0 }}>Messages</h3>
+      <h3 style={{ margin: 0 }}>{requests ? "Messages" : "Groups and suggestions"}</h3>
       {(loaded.error || act.error) && (
         <div className="banner danger" role="alert">
           {loaded.error ?? act.error}
         </div>
       )}
-      <div className="ws-row">
-        <span className="lines grow">
-          <span>Who can message you directly</span>
-          <small>Others can send you a message request, which arrives without a notification.</small>
-        </span>
-        <select
-          className="input input-sm"
-          aria-label="Who can message you directly"
-          disabled={!s || act.busy}
-          value={s?.dmPolicy ?? "everyone"}
-          onChange={(e) => void act.act(async () => setLocal(await setMessagingSettings(engine, { dmPolicy: e.target.value as DmPolicy })))}
-        >
-          {s?.dmPolicy === UNKNOWN && (
-            <option value={UNKNOWN} disabled>
-              Set in a newer version of Meldiq
-            </option>
-          )}
-          {DM_POLICIES.map((p) => (
-            <option key={p} value={p}>
-              {DM_POLICY_LABEL[p]}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div className="ws-row">
-        <span className="lines grow">
-          <span>Who can send you requests</span>
-          <small>Message requests and connection requests. Anyone else is told you only accept messages from people you're connected with.</small>
-        </span>
-        <select
-          className="input input-sm"
-          aria-label="Who can send you requests"
-          disabled={!s || act.busy}
-          value={s?.requestPolicy ?? "everyone"}
-          onChange={(e) => void act.act(async () => setLocal(await setMessagingSettings(engine, { requestPolicy: e.target.value as RequestPolicy })))}
-        >
-          {s?.requestPolicy === UNKNOWN && (
-            <option value={UNKNOWN} disabled>
-              Set in a newer version of Meldiq
-            </option>
-          )}
-          {REQUEST_POLICIES.map((p) => (
-            <option key={p} value={p}>
-              {REQUEST_POLICY_LABEL[p]}
-            </option>
-          ))}
-        </select>
-      </div>
+      {requests && (
+        <>
+          <div className="ws-row">
+            <span className="lines grow">
+              <span>Who can message you directly</span>
+              <small>Others can send you a message request, which arrives without a notification.</small>
+            </span>
+            <select
+              className="input input-sm"
+              aria-label="Who can message you directly"
+              disabled={!s || act.busy}
+              value={s?.dmPolicy ?? "everyone"}
+              onChange={(e) => void act.act(async () => setLocal(await setMessagingSettings(engine, { dmPolicy: e.target.value as DmPolicy })))}
+            >
+              {s?.dmPolicy === UNKNOWN && (
+                <option value={UNKNOWN} disabled>
+                  Set in a newer version of Meldiq
+                </option>
+              )}
+              {DM_POLICIES.map((p) => (
+                <option key={p} value={p}>
+                  {DM_POLICY_LABEL[p]}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="ws-row">
+            <span className="lines grow">
+              <span>Who can send you requests</span>
+              <small>Message requests and connection requests. Anyone else is told you only accept messages from people you're connected with.</small>
+            </span>
+            <select
+              className="input input-sm"
+              aria-label="Who can send you requests"
+              disabled={!s || act.busy}
+              value={s?.requestPolicy ?? "everyone"}
+              onChange={(e) => void act.act(async () => setLocal(await setMessagingSettings(engine, { requestPolicy: e.target.value as RequestPolicy })))}
+            >
+              {s?.requestPolicy === UNKNOWN && (
+                <option value={UNKNOWN} disabled>
+                  Set in a newer version of Meldiq
+                </option>
+              )}
+              {REQUEST_POLICIES.map((p) => (
+                <option key={p} value={p}>
+                  {REQUEST_POLICY_LABEL[p]}
+                </option>
+              ))}
+            </select>
+          </div>
+        </>
+      )}
+      <GroupAndSuggestRows
+        settings={s ?? null}
+        groupAdd={groupAdd}
+        suggest={suggest}
+        busy={act.busy}
+        onChange={(change) => void act.act(async () => setLocal(await setMessagingSettings(engine, change)))}
+      />
     </div>
   );
 }

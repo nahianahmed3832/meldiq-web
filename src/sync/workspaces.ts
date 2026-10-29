@@ -116,6 +116,24 @@ export async function leaveWorkspace(engine: Engine, orgId: string): Promise<voi
   await engine.refreshAll();
 }
 
+/** The most communities one leave-many request takes (the server's limit). */
+export const LEAVE_MANY_MAX = 100;
+
+export interface LeaveManyResult {
+  left: string[];
+  /** Communities you own stay (even with another owner). */
+  skippedOwned: string[];
+  notMember: string[];
+}
+
+/** API 0.65.0: leaves up to 100 communities at once, each the same as leaving one; ones you own are skipped. */
+export async function leaveWorkspaces(engine: Engine, orgIds: string[]): Promise<LeaveManyResult> {
+  const body = { orgIds: [...new Set(orgIds)].slice(0, LEAVE_MANY_MAX) };
+  const result = await engine.api.json("POST", "/v2/orgs/leave", z.object({ left: z.array(z.string()), skippedOwned: z.array(z.string()), notMember: z.array(z.string()) }), { body });
+  await engine.refreshAll();
+  return result;
+}
+
 /** Owners only, after typing the workspace's exact name (server/src/routes/orgs.ts › Deleting an organization). */
 export async function deleteWorkspace(engine: Engine, orgId: string, confirmName: string, reqId: string): Promise<void> {
   await engine.api.call("DELETE", `/v1/orgs/${enc(orgId)}`, { body: { confirmName, requestId: reqId } });

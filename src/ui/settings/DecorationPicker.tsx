@@ -1,13 +1,14 @@
-import { Brush, Search, Trash2 } from "lucide-react";
+import { Brush, Search, Star, Trash2 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { ApiError } from "../../api/client";
 import { PROFILE_DECORATIONS } from "../../api/schemas";
-import { useEngine } from "../../application/orbit";
+import { useEngine, useOrbit } from "../../application/orbit";
 import { type Decoration, type DecorationSubmission, decorationCatalog, myDecorations, withdrawDecoration } from "../../sync/decorations";
 import { usePhoto } from "../components/photos";
 import { DECORATION_LABEL, StyledAvatar } from "../people/ProfileStyle";
 import { useLoad } from "../workspace/useLoad";
 import { SubmitDecorationDialog } from "./SubmitDecorationDialog";
+import { useDecorationFavorites } from "./useDecorationFavorites";
 
 interface Me {
   userId: string;
@@ -23,14 +24,21 @@ interface DecorationPickerProps {
 }
 
 type Tab = "meldiq" | "community" | "yours";
-/** Meldiq's own: the pictures (images) or the classic frames (drawn by the apps). */
-type OwnFilter = "all" | "pictures" | "classic";
+/** Meldiq's own: the pictures (images) or the classic frames (drawn by the apps); or only the ones you starred. */
+type OwnFilter = "all" | "favorites" | "pictures" | "classic";
 type Motion = "all" | "moving" | "still";
+type Show = "all" | "favorites";
 
+const FAVORITES_LABEL = "★ Favourites";
 const OWN_FILTERS: [OwnFilter, string][] = [
   ["all", "All"],
   ["pictures", "Pictures"],
   ["classic", "Classic"],
+];
+const OWN_FILTERS_WITH_FAVORITES: [OwnFilter, string][] = [["all", "All"], ["favorites", FAVORITES_LABEL], ...OWN_FILTERS.slice(1)];
+const SHOWS: [Show, string][] = [
+  ["all", "All"],
+  ["favorites", FAVORITES_LABEL],
 ];
 const MOTIONS: [Motion, string][] = [
   ["all", "All"],
@@ -60,7 +68,8 @@ const STATUS_WORDS: Record<DecorationSubmission["status"], string> = {
 /**
  * Settings › Profile style › Decoration (API 0.60.0, server docs/PROFILE_DECORATIONS.md): Meldiq's own (the classic
  * frames and the newer images), community ones with their maker's name, and your own submissions with how their review
- * went. Each tile shows the decoration on your own avatar; picking one saves it at once.
+ * went. Each tile shows the decoration on your own avatar. Since API 0.65.0 a star on each tile keeps it in your
+ * favourites, which both tabs can show on their own.
  */
 export function DecorationPicker({ me, photoRev, current, onPick }: DecorationPickerProps) {
   const engine = useEngine();
@@ -68,6 +77,10 @@ export function DecorationPicker({ me, photoRev, current, onPick }: DecorationPi
   const [query, setQuery] = useState("");
   const [ownFilter, setOwnFilter] = useState<OwnFilter>("all");
   const [motion, setMotion] = useState<Motion>("all");
+  const [communityShow, setCommunityShow] = useState<Show>("all");
+  const favoritesOn = useOrbit((s) => s.server?.features.includes("decoration-favorites") ?? false);
+  const favorites = useDecorationFavorites(engine, favoritesOn);
+  const fav = favorites.ids;
   const [version, setVersion] = useState(0);
   const [making, setMaking] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -75,20 +88,40 @@ export function DecorationPicker({ me, photoRev, current, onPick }: DecorationPi
   const mine = useLoad(() => myDecorations(engine), [engine, version]);
 
   const all = useMemo(() => catalog.data?.decorations ?? [], [catalog.data]);
+  const onlyFavorites = (ownFilter === "favorites" && tab === "meldiq") || (communityShow === "favorites" && tab === "community");
+  const starred = (id: string) => !onlyFavorites || !!fav?.has(id);
   const own = useMemo(() => all.filter((d) => d.kind === "meldiq"), [all]);
   const community = useMemo(() => {
     const q = query.trim().toLowerCase();
     return all.filter(
-      (d) => d.kind === "community" && (motion === "all" || d.animated === (motion === "moving")) && (!q || d.name.toLowerCase().includes(q) || (d.creator?.username ?? "").toLowerCase().includes(q)),
+      (d) =>
+        d.kind === "community" &&
+        (communityShow === "all" || !!fav?.has(d.id)) &&
+        (motion === "all" || d.animated === (motion === "moving")) &&
+        (!q || d.name.toLowerCase().includes(q) || (d.creator?.username ?? "").toLowerCase().includes(q)),
     );
-  }, [all, query, motion]);
+  }, [all, query, motion, communityShow, fav]);
 
   const tile = (id: string | null, label: string, by?: string | null) => (
-    <button key={id ?? "none"} type="button" className="style-choice deco-choice" aria-pressed={current === id} onClick={() => onPick(id)} title={label}>
-      <StyledAvatar userId={me.userId} name={me.displayName} colorIndex={me.avatarColor} photoRev={photoRev} media={null} decoration={id} size={48} />
-      <span className="ellipsis">{label}</span>
-      {by && <small className="faint ellipsis">by @{by}</small>}
-    </button>
+    <div key={id ?? "none"} className="deco-tile">
+      <button type="button" className="style-choice deco-choice" aria-pressed={current === id} onClick={() => onPick(id)} title={label}>
+        <StyledAvatar userId={me.userId} name={me.displayName} colorIndex={me.avatarColor} photoRev={photoRev} media={null} decoration={id} size={48} />
+        <span className="ellipsis">{label}</span>
+        {by && <small className="faint ellipsis">by @{by}</small>}
+      </button>
+      {id && fav && (
+        <button
+          type="button"
+          className="deco-star"
+          aria-pressed={fav.has(id)}
+          aria-label={fav.has(id) ? `Remove ${label} from favourites` : `Add ${label} to favourites`}
+          title={fav.has(id) ? "Remove from favourites" : "Add to favourites"}
+          onClick={() => favorites.toggle(id)}
+        >
+          <Star size={14} fill={fav.has(id) ? "currentColor" : "none"} aria-hidden="true" />
+        </button>
+      )}
+    </div>
   );
 
   const withdraw = async (s: DecorationSubmission) => {
@@ -127,21 +160,24 @@ export function DecorationPicker({ me, photoRev, current, onPick }: DecorationPi
           Decorations couldn't be loaded. {catalog.error}
         </div>
       )}
-      {error && (
+      {(error ?? favorites.error) && (
         <div className="banner danger" role="alert">
-          {error}
+          {error ?? favorites.error}
         </div>
       )}
 
       {tab === "meldiq" && (
         <>
-          <Chips label="Show" options={OWN_FILTERS} value={ownFilter} onChange={setOwnFilter} />
+          <Chips label="Show" options={fav ? OWN_FILTERS_WITH_FAVORITES : OWN_FILTERS} value={ownFilter} onChange={setOwnFilter} />
           <div className="style-grid deco-grid" role="group" aria-label="Meldiq's decorations">
-            {tile(null, "None")}
-            {ownFilter !== "pictures" && PROFILE_DECORATIONS.map((d) => tile(d, DECORATION_LABEL[d]))}
-            {ownFilter !== "classic" && own.map((d) => tile(d.id, d.name))}
+            {!onlyFavorites && tile(null, "None")}
+            {ownFilter !== "pictures" && PROFILE_DECORATIONS.filter(starred).map((d) => tile(d, DECORATION_LABEL[d]))}
+            {ownFilter !== "classic" && own.filter((d) => starred(d.id)).map((d) => tile(d.id, d.name))}
             {ownFilter !== "classic" && !catalog.data && !catalog.error && <div className="skeleton deco-skeleton" aria-busy="true" />}
           </div>
+          {onlyFavorites && fav && ![...PROFILE_DECORATIONS, ...own.map((d) => d.id)].some((id) => fav.has(id)) && (
+            <p className="faint">No favourites here yet. Tap the star on a decoration to keep it here.</p>
+          )}
         </>
       )}
 
@@ -153,11 +189,20 @@ export function DecorationPicker({ me, photoRev, current, onPick }: DecorationPi
               <input type="search" placeholder="Search by name or maker" value={query} onChange={(e) => setQuery(e.target.value)} aria-label="Search community decorations" />
             </label>
             <Chips label="Motion" options={MOTIONS} value={motion} onChange={setMotion} />
+            {fav && <Chips label="Show" options={SHOWS} value={communityShow} onChange={setCommunityShow} />}
           </div>
           <div className="style-grid deco-grid" role="group" aria-label="Community decorations">
             {community.map((d: Decoration) => tile(d.id, d.name, d.creator?.username ?? null))}
           </div>
-          {catalog.data && community.length === 0 && <p className="faint">{query || motion !== "all" ? "No decoration matches that." : "No community decorations yet. Make the first one!"}</p>}
+          {catalog.data && community.length === 0 && (
+            <p className="faint">
+              {communityShow === "favorites" && !query && motion === "all"
+                ? "No favourites here yet. Tap the star on a decoration to keep it here."
+                : query || motion !== "all" || communityShow !== "all"
+                  ? "No decoration matches that."
+                  : "No community decorations yet. Make the first one!"}
+            </p>
+          )}
         </>
       )}
 

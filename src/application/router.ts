@@ -14,7 +14,7 @@ import { useSyncExternalStore } from "react";
 export type Section = "home" | "dms" | "friends" | "activity" | "later" | "discover" | "settings" | "workspace";
 /** "you": the phone's You tab, a list of the pages under your account card (desktop shows the profile page there). */
 export type SettingsPage =
-  "you" | "profile" | "account" | "devices" | "notifications" | "calls" | "appearance" | "storage" | "security" | "about" | "advanced" | "shortcuts" | "health" | "usage" | "mojo" | "spark";
+  "you" | "profile" | "account" | "devices" | "notifications" | "calls" | "appearance" | "storage" | "security" | "about" | "advanced" | "shortcuts" | "health" | "usage" | "mojo" | "spark" | "points";
 export type WorkspacePage =
   | "overview"
   | "people"
@@ -65,6 +65,8 @@ const PAGES: SettingsPage[] = [
   "usage",
   "mojo",
   "spark",
+  // API 0.65.0: points, quests and levels.
+  "points",
 ];
 const WORKSPACE_PAGES: WorkspacePage[] = [
   "pins",

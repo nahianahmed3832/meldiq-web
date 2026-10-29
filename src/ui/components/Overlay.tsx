@@ -1,5 +1,5 @@
 import { Check, ChevronRight, X } from "lucide-react";
-import { type KeyboardEvent as ReactKeyboardEvent, type MouseEvent as ReactMouseEvent, type ReactNode, type RefObject, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { type CSSProperties, type KeyboardEvent as ReactKeyboardEvent, type MouseEvent as ReactMouseEvent, type ReactNode, type RefObject, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
 const FOCUSABLE = 'button:not([disabled]), [href], input:not([disabled]), textarea:not([disabled]), select, [tabindex]:not([tabindex="-1"])';
@@ -47,6 +47,8 @@ interface DialogProps {
   subtitle?: ReactNode;
   /** Extra class on the dialog (a card's own look). */
   className?: string;
+  /** CSS variables for that look (a profile card's theme colours). */
+  vars?: CSSProperties;
   /**
    * On wide screens, shown as a card beside this point (the left edge of what opened it) instead of centred, over a clear
    * backdrop: a profile from the member list (the reference's popover). Narrow screens keep the centred dialog.
@@ -58,7 +60,7 @@ interface DialogProps {
 const NEAR_MIN_WIDTH = 961;
 const NEAR_GAP = 12;
 
-export function Dialog({ title, onClose, children, footer, wide, width, header, subtitle, className, near }: DialogProps) {
+export function Dialog({ title, onClose, children, footer, wide, width, header, subtitle, className, vars, near }: DialogProps) {
   const ref = useRef<HTMLDivElement>(null);
   const [placed, setPlaced] = useState<{ top: number; left: number } | null>(null);
   const anchored = !!near && typeof window !== "undefined" && window.innerWidth >= NEAR_MIN_WIDTH;
@@ -84,6 +86,7 @@ export function Dialog({ title, onClose, children, footer, wide, width, header, 
         aria-modal="true"
         aria-label={title}
         style={{
+          ...vars,
           ...(width ? { width } : wide ? { width: "min(680px, 100%)" } : {}),
           ...(anchored ? (placed ? { position: "fixed", top: placed.top, left: placed.left } : { visibility: "hidden" }) : {}),
         }}
