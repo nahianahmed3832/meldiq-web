@@ -16,4 +16,7 @@ if (!fs.existsSync(path.join(out, "index.html"))) {
 }
 fs.rmSync(dist, { recursive: true, force: true });
 fs.renameSync(out, dist);
+// The export copies public/, which holds `npm run dev`'s service worker and its source map, and macOS's .DS_Store:
+// none of them ship (releases carry no readable source; the release service worker is built next).
+for (const leftover of ["sw.js", "sw.js.map", ".DS_Store"]) fs.rmSync(path.join(dist, leftover), { force: true });
 console.log("dist/ is ready");
