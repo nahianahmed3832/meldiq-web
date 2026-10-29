@@ -68,6 +68,9 @@ import { EmojiPicker } from "./EmojiPicker";
 import { ReportDialog } from "./ReportDialog";
 import { openProfile } from "../people/ProfileDialog";
 import { canLink, messageLink } from "../../sync/messageLinks";
+import { PostedContent } from "./PostedContent";
+import { WebhookAvatar, WebhookName } from "./WebhookSender";
+import { useReactionRolesItem } from "../community/reactionRoles/useReactionRolesItem";
 
 export const QUICK_EMOJI = ["👍", "❤️", "😂", "🎉", "🙏", "👀"];
 /** The hover toolbar's icon size, as large as Discord's so each action is easy to hit. */
@@ -133,6 +136,11 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
   const mine = m.outgoing;
   const mentioned = !mine && (m.mentions.includes(p.myUserId) || m.mentionAll);
   const live = m.kind === "text" && !m.deleted;
+  // Community parity C: a webhook's post shows the webhook, and text made from its boxes only where there are none.
+  const webhook = m.rich?.webhook ?? null;
+  const posted = !!(m.rich?.embeds?.length || m.rich?.buttons?.length);
+  const shownText = m.rich?.textFromEmbeds ? "" : m.text;
+  const reactionRoles = useReactionRolesItem(m, inCommunity, !!more.anchor);
 
   const body = () => {
     if (m.kind === "call") {
@@ -216,9 +224,9 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
           >
             <MapPin size={16} /> {m.rich.location.label ?? "Shared location"} · open map
           </a>
-        ) : m.text ? (
-          <div className={`msg-text${isEmojiOnly(m.text) ? " big-emoji" : ""}`}>
-            <RichText text={m.text} mentionNames={p.mentionNames} myUsername={p.myUsername} customEmoji={m.rich?.customEmoji} />
+        ) : shownText ? (
+          <div className={`msg-text${isEmojiOnly(shownText) ? " big-emoji" : ""}`}>
+            <RichText text={shownText} mentionNames={p.mentionNames} myUsername={p.myUsername} customEmoji={m.rich?.customEmoji} />
             {m.editedAt && <span className="msg-meta">(edited)</span>}
             {translation && <TranslationView text={translation} onHide={() => setTranslation(null)} />}
             {mine && <Status m={m} onRetry={() => void engine.retry(m.id)} onReview={p.onReview} />}
@@ -230,6 +238,7 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
             </div>
           )
         )}
+        {posted && m.rich && <PostedContent rich={m.rich} orgId={inCommunity} channelId={m.conversationId} />}
         <Attachments
           refs={m.attachments}
           viewer={{
@@ -340,11 +349,13 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
       className={`msg${waiting ? " waiting" : ""}${gestures.offset ? " swiping" : ""}${mine ? " mine" : ""}${p.first ? " first" : ""}${mentioned ? " mentioned" : ""}${p.highlighted ? " highlight" : ""}${more.anchor || picker.anchor ? " menu-open" : ""}`}
       id={`msg-${m.id}`}
       role="article"
-      aria-label={`${p.senderName}, ${fullTime(m.sortTs)}`}
+      aria-label={`${webhook?.name ?? p.senderName}, ${fullTime(m.sortTs)}`}
       tabIndex={-1}
     >
       <div className="msg-gutter">
-        {p.first ? (
+        {p.first && webhook ? (
+          <WebhookAvatar id={webhook.id} name={webhook.name} avatarRev={webhook.avatarRev} />
+        ) : p.first ? (
           <button className="msg-avatar-btn" onClick={() => openProfile(m.senderUserId, p.senderName)} aria-label={`${p.senderName}'s profile`} tabIndex={-1}>
             <LookAvatar userId={m.senderUserId} name={p.senderName} colorIndex={p.senderColor} photoRev={p.senderPhotoRev} size={38} />
           </button>
@@ -355,9 +366,13 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
       <div className="msg-main">
         {p.first && (
           <div className="msg-head">
-            <button className="msg-name" onClick={() => openProfile(m.senderUserId, p.senderName)}>
-              <SenderName userId={m.senderUserId} name={p.senderName} toneClass={nameTone(p.senderColor)} />
-            </button>
+            {webhook ? (
+              <WebhookName webhook={webhook} />
+            ) : (
+              <button className="msg-name" onClick={() => openProfile(m.senderUserId, p.senderName)}>
+                <SenderName userId={m.senderUserId} name={p.senderName} toneClass={nameTone(p.senderColor)} />
+              </button>
+            )}
             <time dateTime={new Date(m.sortTs).toISOString()} title={fullTime(m.sortTs)}>
               {clock(m.sortTs)}
             </time>
@@ -450,6 +465,7 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
             ...quickRow,
             ...(reactions.length > 0 ? [{ label: t("react_dialog_title"), icon: <SmilePlus size={16} />, onSelect: () => setShowReactions(true) }] : []),
             ...(mine && p.canPost ? [{ label: t("msg_edit"), icon: <Pencil size={16} />, onSelect: () => setEditing(true) }] : []),
+            ...reactionRoles.entries,
             ...(p.canPost ? [{ label: m.pinned ? t("msg_unpin") : t("msg_pin"), icon: m.pinned ? <PinOff size={16} /> : <Pin size={16} />, onSelect: () => void engine.setPinned(m, !m.pinned) }] : []),
             ...(live && savable
               ? [
@@ -503,6 +519,7 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
           ]}
         />
       )}
+      {reactionRoles.dialog}
       {showReactions && <ReactionsDialog message={m} initial={null} myUserId={p.myUserId} communityEmoji={communityEmoji} onClose={() => setShowReactions(false)} />}
       {forwarding && <ForwardDialog message={m} onClose={() => setForwarding(false)} />}
       {reporting && conv && <ReportDialog target={{ kind: "message", message: m, conversationId: m.conversationId, conversationType: conv.type, orgName }} onClose={() => setReporting(false)} />}

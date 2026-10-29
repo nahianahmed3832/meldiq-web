@@ -9,9 +9,9 @@ import { openInApp } from "./inAppLinks";
 /**
  * A web link from a message (android LinkOpener): opens in a new tab, never with this page as its opener or referrer.
  * A link that looks misleading (android LinkRules.warning) asks first, showing where it really goes; with Links › Ask
- * every time (android LinkOpening.ASK) every link does.
+ * every time (android LinkOpening.ASK) every link does. A [masked] link (its words aren't its address) always asks.
  */
-export function SafeLink({ href, className, children }: { href: string; className?: string; children: ReactNode }) {
+export function SafeLink({ href, className, children, masked = false }: { href: string; className?: string; children: ReactNode; masked?: boolean }) {
   /** null: not asking; "": asking because of the setting; otherwise the warning. */
   const [asking, setAsking] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
@@ -29,7 +29,8 @@ export function SafeLink({ href, className, children }: { href: string; classNam
         rel="noopener noreferrer nofollow"
         onClick={(e) => {
           if (openInApp(engine, href)) return e.preventDefault();
-          const warning = linkWarning(href);
+          // A link whose words aren't its address (a box's [text](link)) always shows where it goes first.
+          const warning = linkWarning(href) ?? (masked ? `The link's text doesn't show where it goes. It goes to ${readableDomain(href) ?? hostOf(href)}.` : null);
           // A trusted site (Settings › Advanced) opens without asking, unless the link looks misleading.
           if (!warning && (!getPrefs().askBeforeLinks || getPrefs().trustedSites.includes(hostOf(href)))) return;
           e.preventDefault();

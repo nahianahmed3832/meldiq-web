@@ -8,6 +8,7 @@ import { type AttachmentRef, type ForwardOrigin, MAX_RECEIVED_ATTACHMENTS, type 
 import { cleanPoll } from "./polls";
 import { cleanSticker } from "./stickers";
 import { cleanContact } from "./rich";
+import { cleanButtons, cleanEmbeds, cleanWebhook } from "./posting/embeds";
 
 /**
  * What a received payload does to this device's copy of a conversation. Pure functions, so they're unit-tested on their own;
@@ -48,7 +49,21 @@ function richOf(p: Payload): RichContent | null {
   if (customSticker) r.customSticker = customSticker;
   const origin = p.forwarded === true ? cleanOrigin(p.origin) : null;
   if (origin) r.origin = origin;
+  Object.assign(r, postedOf(p));
   return Object.keys(r).length ? r : null;
+}
+
+/** Community parity C: the boxes, buttons and webhook of a post from a webhook or the Tickets sender, cleaned. */
+export function postedOf(p: Payload): Pick<RichContent, "embeds" | "buttons" | "webhook" | "textFromEmbeds"> {
+  const out: Pick<RichContent, "embeds" | "buttons" | "webhook" | "textFromEmbeds"> = {};
+  const embeds = cleanEmbeds(p.embeds);
+  if (embeds.length) out.embeds = embeds;
+  const buttons = cleanButtons(p.buttons);
+  if (buttons.length) out.buttons = buttons;
+  const webhook = cleanWebhook(p.webhook);
+  if (webhook) out.webhook = webhook;
+  if (p.textFromEmbeds === true && embeds.length) out.textFromEmbeds = true;
+  return out;
 }
 
 const ORIGIN_ID = /^[A-Za-z0-9_-]{1,64}$/;

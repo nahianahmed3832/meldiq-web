@@ -183,6 +183,8 @@ export function MessageList(props: MessageListProps) {
             m.sortTs - before.sortTs > GROUP_MS ||
             before.kind !== "text" ||
             m.kind !== "text" ||
+            // A webhook post may carry its own name each time (community parity C).
+            before.rich?.webhook?.name !== m.rich?.webhook?.name ||
             (!!threadRoot && before.id === threadRoot);
           const reply = m.replyToId ? byId.get(m.replyToId) : undefined;
           const mentionNames = new Set(

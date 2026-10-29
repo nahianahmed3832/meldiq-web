@@ -48,6 +48,8 @@ const PHOTO_PATH = {
   profileBanner: (id: string) => `/v1/users/${encodeURIComponent(id)}/profile-banner`,
   /** API 0.60.0: one of your own decoration submissions, while it isn't public. */
   ownDecoration: (id: string) => `/v2/decorations/mine/${encodeURIComponent(id)}/image`,
+  /** Community parity C: a channel webhook's picture (members who can see its channel). */
+  webhook: (id: string) => `/v1/webhooks/${encodeURIComponent(id)}/avatar`,
 };
 
 /** The photo (or banner) of a user, group or community at revision [rev], or null (none, not allowed, or still loading). */

@@ -9,6 +9,9 @@ import { createCommunityChannel, deleteChannel, saveLayout, updateChannel } from
 import { type ChannelType, channelRequest, channelTypeOf, deleteConfirmed, moveToCategory, SLOWMODE_CHOICES } from "../../sync/communityRules";
 import { Dialog } from "../components/Overlay";
 import { Toggle } from "../components/Toggle";
+import { type ChannelDialogTab, ChannelDialogTabs } from "./webhooks/ChannelDialogTabs";
+import { useWebhooksAllowed } from "./webhooks/useWebhooksAllowed";
+import { WebhooksTab } from "./webhooks/WebhooksTab";
 
 const errorText = (e: unknown, fallback: string) => (e instanceof ApiError ? e.message : fallback);
 
@@ -134,6 +137,9 @@ export function EditChannelDialog({ channel, onClose }: { channel: Conversation;
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const textChannel = !channel.voice;
+  // Community parity C: Webhooks next to the channel's settings, for people who manage them.
+  const webhooks = useWebhooksAllowed(channel);
+  const [tab, setTab] = useState<ChannelDialogTab>("overview");
 
   const submit = async (e: FormEvent) => {
     e.preventDefault();
@@ -165,7 +171,9 @@ export function EditChannelDialog({ channel, onClose }: { channel: Conversation;
 
   return (
     <Dialog title={`Edit #${channel.name ?? "channel"}`} onClose={onClose} wide>
-      <form className="dialog-body" onSubmit={(e) => void submit(e)} noValidate>
+      {webhooks && <ChannelDialogTabs tabs={["overview", "webhooks"]} tab={tab} onTab={setTab} />}
+      {webhooks && tab === "webhooks" && channel.orgId && <WebhooksTab channel={channel} orgId={channel.orgId} />}
+      <form className="dialog-body" hidden={tab !== "overview"} onSubmit={(e) => void submit(e)} noValidate>
         {error && (
           <div className="banner danger" role="alert">
             {error}

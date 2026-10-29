@@ -27,6 +27,7 @@ import { ChannelBell } from "./ChannelBell";
 import { useT } from "../../i18n";
 import { RulesChannelStart, useRulesSummary } from "../community/RulesViews";
 import { postingState } from "../../sync/rulesChannel";
+import { TicketHeaderActions } from "../community/tickets/TicketHeaderActions";
 
 export function ConversationView({ id, route, onDialog }: { id: string; route: Route; onDialog: (d: ShellDialog) => void }) {
   const engine = useEngine();
@@ -147,6 +148,8 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
         {c.type !== "CHANNEL" && !c.request && <CallButtons conversationId={id} canPost={c.canPost} archived={c.archived} serverCalling={calling} busy={myCall !== null} running={!!call} />}
         {/* Android A7: a text channel's bell (mute for a while, the channel's level). */}
         {c.type === "CHANNEL" && !c.voice && <ChannelBell c={c} />}
+        {/* Community parity C: a ticket's Close (and a moderator's Join). */}
+        {c.type === "CHANNEL" && c.orgId && <TicketHeaderActions c={c} />}
         {/* The reference header: bell, pins, members, then a search box. Phones keep the name, calls and the menu (as the
             Android app); pins and members are in the details the name opens, and search is on the list's header. */}
         {!c.voice && (

@@ -15,6 +15,7 @@ import {
   Settings2,
   ShieldCheck,
   Sparkles,
+  Ticket,
   Trash2,
   UserPen,
   UserPlus,
@@ -35,6 +36,7 @@ import { CreateChannelDialog } from "./ChannelDialogs";
 import { LeaveDialog } from "./LeaveDialog";
 import { DeleteCommunityDialog } from "./DeleteCommunityDialog";
 import { NicknameDialog } from "./NicknameDialog";
+import { OpenTicketDialog } from "./tickets/TicketDialogs";
 import { lockEntry } from "./lockMenu";
 import { lockCommunity, PARITY_FEATURES, unlockCommunity } from "../../sync/communityParity";
 import type { Engine } from "../../sync/engine";
@@ -42,7 +44,7 @@ import { ArrangeRailDialog, CommunityNotificationsDialog, LEVEL_NAME } from "./N
 import { categoriesOf, orderedOrgs } from "./panelData";
 import type { CommunityPermissions } from "./useCommunityPermissions";
 
-type MenuDialog = "notifications" | "channel" | "category" | "arrange" | "leave" | "delete" | "nickname" | "sparks" | null;
+type MenuDialog = "notifications" | "channel" | "category" | "arrange" | "leave" | "delete" | "nickname" | "sparks" | "ticket" | null;
 type NavChange = (op: Parameters<Engine["nav"]["change"]>[1]) => void;
 
 /** The per-browser "Hide muted channels" switch for a community (android CommunityViewPrefs: this device only). */
@@ -113,6 +115,8 @@ export function useCommunityMenu(orgId: string | null, perms: CommunityPermissio
   if (perms.canCreateTop) entries.push({ label: "Create category", icon: <FolderPlus size={16} />, onSelect: () => setDialog("category") });
   if (canLock) entries.push(lockEntry({ lockedUntil: org.invitesPausedUntil, realLock: features.includes(PARITY_FEATURES.lock), onLock: lock, onUnlock: unlock }));
   if (features.includes(PARITY_FEATURES.nicknames)) entries.push({ label: "Change nickname", icon: <UserPen size={16} />, onSelect: () => setDialog("nickname") });
+  // Community parity C: while the community has tickets on (its view carries `tickets`).
+  if (org.tickets) entries.push({ label: "Open a Ticket", icon: <Ticket size={16} />, onSelect: () => setDialog("ticket") });
   if (preferences)
     entries.push(
       muteEntry(muted, change),
@@ -146,6 +150,7 @@ export function useCommunityMenu(orgId: string | null, perms: CommunityPermissio
       {dialog === "leave" && <LeaveDialog orgId={org.id} name={org.name} onClose={close} />}
       {dialog === "sparks" && <SparkDialog orgId={org.id} name={org.name} onClose={close} />}
       {dialog === "delete" && <DeleteCommunityDialog orgId={org.id} name={org.name} onClose={close} />}
+      {dialog === "ticket" && <OpenTicketDialog orgId={org.id} panelId={null} onClose={close} />}
       {/* TODO(community-parity A): the current nickname from the member's own row once the server sends it. */}
       {dialog === "nickname" && <NicknameDialog orgId={org.id} current={null} onClose={close} />}
     </>

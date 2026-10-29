@@ -3,7 +3,7 @@ import { countsEveryone } from "./navPrefs";
 import { type Call, type Conversation, type QueueItem, type StoredEvent, zCallRes, zQueueItem, zQueueItemIdentity } from "../api/schemas";
 import { EnvelopeError, openEnvelope } from "../crypto/envelope";
 import type { StoredMessage } from "../model/types";
-import { parsePayload, type Payload } from "../protocol/payload";
+import { parsePayload, type Payload, withoutServerFields } from "../protocol/payload";
 import type { EngineContext } from "./context";
 import { applyDelete, applyDelivered, applyEdit, applyPin, applyReaction, applyRead, callEntry, receivedMentions, textMessage, undecryptable, unsupported } from "./rules";
 import { applyClose, applyVote } from "./polls";
@@ -134,8 +134,10 @@ export class Receiver {
       if (e instanceof EnvelopeError) return this.recordUndecryptable(item, e.message);
       throw e;
     }
-    const payload = parsePayload(json);
-    if (!payload) return this.recordUnsupported(item, "unreadable payload");
+    const parsed = parsePayload(json);
+    if (!parsed) return this.recordUnsupported(item, "unreadable payload");
+    // Boxes, buttons and webhook names come only from the server's own senders, never from another person's device.
+    const payload = withoutServerFields(parsed);
     const conversation = await this.ctx.ensureConversation(item.conversationId);
     await this.apply(payload, item, conversation, item.senderUserId === device.userId, p.serverTs ?? item.createdAt, placeholder);
   }
