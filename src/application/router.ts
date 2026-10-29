@@ -24,6 +24,8 @@ export type WorkspacePage =
   | "audit"
   | "usage"
   | "meetings"
+  // API 0.64.0: the community's own profile pins.
+  | "pins"
   // Communities (batches B4–B9).
   | "applications"
   | "reports"
@@ -65,6 +67,7 @@ const PAGES: SettingsPage[] = [
   "spark",
 ];
 const WORKSPACE_PAGES: WorkspacePage[] = [
+  "pins",
   "overview",
   "people",
   "invitations",

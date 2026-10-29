@@ -19,7 +19,6 @@ interface DecorationPickerProps {
   me: Me;
   photoRev: number | null;
   current: string | null;
-  busy: boolean;
   onPick: (id: string | null) => void;
 }
 
@@ -37,7 +36,7 @@ const STATUS_WORDS: Record<DecorationSubmission["status"], string> = {
  * frames and the newer images), community ones with their maker's name, and your own submissions with how their review
  * went. Each tile shows the decoration on your own avatar; picking one saves it at once.
  */
-export function DecorationPicker({ me, photoRev, current, busy, onPick }: DecorationPickerProps) {
+export function DecorationPicker({ me, photoRev, current, onPick }: DecorationPickerProps) {
   const engine = useEngine();
   const [tab, setTab] = useState<Tab>("meldiq");
   const [query, setQuery] = useState("");
@@ -55,7 +54,7 @@ export function DecorationPicker({ me, photoRev, current, busy, onPick }: Decora
   }, [all, query]);
 
   const tile = (id: string | null, label: string, by?: string | null) => (
-    <button key={id ?? "none"} type="button" className="style-choice deco-choice" aria-pressed={current === id} disabled={busy} onClick={() => onPick(id)} title={label}>
+    <button key={id ?? "none"} type="button" className="style-choice deco-choice" aria-pressed={current === id} onClick={() => onPick(id)} title={label}>
       <StyledAvatar userId={me.userId} name={me.displayName} colorIndex={me.avatarColor} photoRev={photoRev} media={null} decoration={id} size={48} />
       <span className="ellipsis">{label}</span>
       {by && <small className="faint ellipsis">by @{by}</small>}
@@ -147,7 +146,7 @@ export function DecorationPicker({ me, photoRev, current, busy, onPick }: Decora
                 </div>
                 <div className="row" style={{ gap: 6 }}>
                   {s.status === "approved" && (
-                    <button type="button" className="btn btn-secondary btn-sm" disabled={busy || current === s.id} onClick={() => onPick(s.id)}>
+                    <button type="button" className="btn btn-secondary btn-sm" disabled={current === s.id} onClick={() => onPick(s.id)}>
                       {current === s.id ? "Wearing" : "Wear"}
                     </button>
                   )}

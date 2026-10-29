@@ -12,6 +12,7 @@ import { StyledName } from "./NameStyle";
 import { SafeLink } from "../chat/SafeLink";
 import { ProfileEffect, StyledAvatar } from "./ProfileStyle";
 import { ArtistDecorations } from "./ArtistDecorations";
+import { ProfilePins } from "./ProfilePins";
 import { Dialog, Menu, type MenuEntry, useMenu } from "../components/Overlay";
 import { toneOf } from "../components/Avatar";
 import { OrgAvatar } from "../components/OrgAvatar";
@@ -58,6 +59,7 @@ export function ProfileDialog({ userId, fallbackName, orgId = null, near = null,
   const engine = useEngine();
   const me = useOrbit((s) => s.me?.userId);
   const features = useOrbit((s) => s.server?.features ?? [], shallowEqual);
+  const pinsOn = features.includes("profile-pins");
   const rev = useOrbit((s) => s.connectionsRev);
   // Their profile changed elsewhere (API 0.28 user.updated): loaded again.
   const profilesRev = useOrbit((s) => s.profilesRev);
@@ -248,15 +250,22 @@ export function ProfileDialog({ userId, fallbackName, orgId = null, near = null,
               {profile.pronouns && <span className="tag">{profile.pronouns}</span>}
             </p>
             {(profile.statusEmoji || profile.statusText) && <p className="profile-pop-status">{[profile.statusEmoji, profile.statusText].filter(Boolean).join(" ")}</p>}
-            {profile.badges.includes("bug-hunter") && (
-              <span className="badge-pill" title="Found a bug Meldiq confirmed">
-                🐞 Bug Hunter
-              </span>
-            )}
-            {profile.decorationArtist && (
-              <span className="badge-pill" title="Made a profile decoration Meldiq approved">
-                🎨 Artist
-              </span>
+            {/* API 0.64.0: pins replace the Bug Hunter and Artist pills (both are Meldiq pins now). */}
+            {pinsOn ? (
+              <ProfilePins pins={profile.pins} />
+            ) : (
+              <>
+                {profile.badges.includes("bug-hunter") && (
+                  <span className="badge-pill" title="Found a bug Meldiq confirmed">
+                    🐞 Bug Hunter
+                  </span>
+                )}
+                {profile.decorationArtist && (
+                  <span className="badge-pill" title="Made a profile decoration Meldiq approved">
+                    🎨 Artist
+                  </span>
+                )}
+              </>
             )}
             {profile.aboutMe && (
               <section className="profile-box" aria-label="About me">

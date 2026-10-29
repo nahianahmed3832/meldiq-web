@@ -1,15 +1,17 @@
 import { Clapperboard, ImagePlus, Trash2 } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ApiError } from "../../api/client";
 import { PROFILE_EFFECTS } from "../../api/schemas";
 import { useEngine, useOrbit } from "../../application/orbit";
-import { removeAvatarMedia, removeProfileBanner, setAvatarMedia, setProfileBanner, setProfileStyle, userProfile } from "../../sync/account";
+import { removeAvatarMedia, removeProfileBanner, setAvatarMedia, setProfileBanner, userProfile } from "../../sync/account";
 import { ACCENT_PRESETS } from "../community/accent";
 import { usePhoto } from "../components/photos";
 import { EFFECT_LABEL, ProfileEffect, StyledAvatar } from "../people/ProfileStyle";
 import { bannerJpeg } from "../workspace/photo";
 import { useLoad } from "../workspace/useLoad";
 import { DecorationPicker } from "./DecorationPicker";
+import { NO_STYLE } from "./noStyle";
+import { useStyleSaver } from "./useStyleSaver";
 
 /** What the server accepts (server PROFILE_MEDIA_LIMITS): said before upload, and checked again there. */
 const LIMITS = { avatarImageMb: 4, clipMb: 12, clipSeconds: 6, bannerAnimatedMb: 6 };
@@ -32,7 +34,13 @@ export function ProfileStyleCard() {
   const avatarInput = useRef<HTMLInputElement>(null);
   const bannerInput = useRef<HTMLInputElement>(null);
   const p = profile.data;
-  const style = p?.profileStyle ?? { decoration: null, effect: null, accent: null, nameFont: null, nameColors: null, nameEffect: null, tagOrgId: null };
+  const reload = useCallback(() => setVersion((v) => v + 1), []);
+  const saver = useStyleSaver(
+    engine,
+    useMemo(() => p?.profileStyle ?? NO_STYLE, [p]),
+    reload,
+  );
+  const style = saver.style;
   const bannerKind = p?.profileBanner?.kind;
   const bannerUrl = usePhoto("profileBanner", me?.userId ?? "", p?.profileBanner?.rev, bannerKind === "gif" ? "image/gif" : bannerKind === "webp" ? "image/webp" : "image/jpeg");
 
@@ -63,7 +71,7 @@ export function ProfileStyleCard() {
     // A still picture is cropped to the banner's shape and re-encoded here (no camera metadata leaves the browser).
     void run("Uploading…", async () => setProfileBanner(engine, animated ? new Uint8Array(await f.arrayBuffer()) : await bannerJpeg(f)));
   };
-  const setStyle = (change: { decoration?: string | null; effect?: string | null; accent?: string | null }) => void run("Saving…", () => setProfileStyle(engine, change));
+  const setStyle = saver.save;
 
   useEffect(() => {
     if (avatarInput.current) avatarInput.current.value = "";
@@ -95,9 +103,9 @@ export function ProfileStyleCard() {
         </div>
       </div>
 
-      {error && (
+      {(error ?? saver.error) && (
         <div className="banner danger" role="alert">
-          {error}
+          {error ?? saver.error}
         </div>
       )}
       {busy && (
@@ -149,7 +157,7 @@ export function ProfileStyleCard() {
         <h3 id="ps-deco" className="invite-or-title">
           Avatar decoration
         </h3>
-        <DecorationPicker me={me} photoRev={photoRev} current={style.decoration} busy={!!busy} onPick={(d) => setStyle({ decoration: d })} />
+        <DecorationPicker me={me} photoRev={photoRev} current={style.decoration} onPick={(d) => setStyle({ decoration: d })} />
       </section>
 
       <section className="setting-group" aria-labelledby="ps-fx">
@@ -158,7 +166,7 @@ export function ProfileStyleCard() {
         </h3>
         <div className="style-grid" role="group" aria-labelledby="ps-fx">
           {[null, ...PROFILE_EFFECTS].map((f) => (
-            <button key={f ?? "none"} type="button" className="style-choice" aria-pressed={style.effect === f} disabled={!!busy} onClick={() => setStyle({ effect: f })}>
+            <button key={f ?? "none"} type="button" className="style-choice" aria-pressed={style.effect === f} onClick={() => setStyle({ effect: f })}>
               <span className="swatch-fx">
                 <ProfileEffect effect={f} />
               </span>

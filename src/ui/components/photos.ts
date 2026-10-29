@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useEngine } from "../../application/orbit";
 import type { Engine } from "../../sync/engine";
 import { cachedMedia, keepMedia } from "../../store/mediaCache";
+import { imageMime } from "../../model/imageMime";
 
 /**
  * Profile and workspace photos. They need the session (members only), so they're fetched with the API client and shown
@@ -11,7 +12,7 @@ import { cachedMedia, keepMedia } from "../../store/mediaCache";
 const MAX_KEPT = 300;
 const cache = new Map<string, Promise<string | null>>();
 
-function load(engine: Engine, path: string, key: string, mime = "image/jpeg"): Promise<string | null> {
+function load(engine: Engine, path: string, key: string, mime?: string): Promise<string | null> {
   const hit = cache.get(key);
   if (hit) return hit;
   // Kept in this browser between visits, one entry per photo revision (a new photo has a new revision).
@@ -22,7 +23,7 @@ function load(engine: Engine, path: string, key: string, mime = "image/jpeg"): P
       void keepMedia(`photo:${key}`, b);
       return b;
     })
-    .then((b) => URL.createObjectURL(new Blob([new Uint8Array(b)], { type: mime })))
+    .then((b) => URL.createObjectURL(new Blob([new Uint8Array(b)], { type: mime ?? imageMime(b) })))
     .catch(() => null);
   cache.set(key, p);
   if (cache.size > MAX_KEPT) {

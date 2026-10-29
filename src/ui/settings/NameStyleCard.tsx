@@ -1,10 +1,11 @@
-import { useState } from "react";
-import { ApiError } from "../../api/client";
+import { useCallback, useMemo, useState } from "react";
 import { NAME_EFFECTS, NAME_FONTS, type NameEffect, type NameFont, type ProfileStyle } from "../../api/schemas";
 import { shallowEqual, useEngine, useOrbit } from "../../application/orbit";
-import { setProfileStyle, type ProfileStyleChange, userProfile } from "../../sync/account";
+import { type ProfileStyleChange, userProfile } from "../../sync/account";
 import { COLOR_PRESETS, NAME_EFFECT_LABEL, NAME_FONT_LABEL, namePaint, StyledName, WornTagChip } from "../people/NameStyle";
 import { useLoad } from "../workspace/useLoad";
+import { NO_STYLE } from "./noStyle";
+import { useStyleSaver } from "./useStyleSaver";
 
 const sameColors = (a: string[] | null, b: string[] | null) => (a ?? []).join() === (b ?? []).join();
 
@@ -23,20 +24,21 @@ export function NameStyleCard() {
   );
   const [version, setVersion] = useState(0);
   const profile = useLoad(() => (me ? userProfile(engine, me.userId) : Promise.resolve(null)), [engine, me?.userId, version, profilesRev]);
-  const [error, setError] = useState<string | null>(null);
   const [custom, setCustom] = useState<string[] | null>(null);
+  const reload = useCallback(() => setVersion((v) => v + 1), []);
+  const saver = useStyleSaver(
+    engine,
+    useMemo(() => profile.data?.profileStyle ?? NO_STYLE, [profile.data]),
+    reload,
+  );
   if (!me) return null;
-  const style: ProfileStyle = profile.data?.profileStyle ?? { decoration: null, effect: null, accent: null, nameFont: null, nameColors: null, nameEffect: null, tagOrgId: null };
+  const style: ProfileStyle = saver.style;
+  const error = saver.error;
   const colors = custom ?? style.nameColors;
   const wornOrg = tagged.find((o) => o.id === style.tagOrgId) ?? null;
   const preview: ProfileStyle = { ...style, nameColors: colors };
 
-  const save = (change: ProfileStyleChange) => {
-    setError(null);
-    void setProfileStyle(engine, change)
-      .then(() => setVersion((v) => v + 1))
-      .catch((e: unknown) => setError(e instanceof ApiError ? e.message : "Couldn't save your name style. Try again."));
-  };
+  const save = (change: ProfileStyleChange) => saver.save(change);
   const pickColors = (next: string[] | null) => {
     setCustom(null);
     save({ nameColors: next });

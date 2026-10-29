@@ -48,10 +48,12 @@ export function Sidebar({ orgId, section, open, onDialog }: SidebarProps) {
   const hideMuted = !!orgId && prefs.collapsed.includes(hideMutedKey(orgId));
   const hasConnections = useOrbit((s) => s.server?.features.includes("connections") ?? false);
   const t = useT();
-  // API 0.44.0: the community's own accent and banner, on its channel list only (never the DMs or other communities).
-  const branded = communities && section !== "dms" && !!org && prefs.communityColors;
   // Home with no community yet (none joined, or the chosen one left) shows the messages hub rather than an empty list.
-  const messages = section === "dms" || (communities && !org);
+  // Discover has its own short list (the owner, 2026-10-29: no friends list while finding communities).
+  const discover = section === "discover";
+  // API 0.44.0: the community's own accent and banner, on its channel list only (never the DMs or other communities).
+  const branded = communities && section !== "dms" && !discover && !!org && prefs.communityColors;
+  const messages = !discover && (section === "dms" || (communities && !org));
   const bannerUrl = usePhoto("banner", org?.id ?? "", branded ? org?.bannerRev : null);
   // Each community's channel list (and the messages list) keeps its scroll position when you come back to it.
   const list = useRef<HTMLDivElement>(null);
@@ -80,7 +82,9 @@ export function Sidebar({ orgId, section, open, onDialog }: SidebarProps) {
     <aside className={`sidebar${open ? " open" : ""}${branded && org?.accent ? ` ${ACCENT_CLASS}` : ""}`} style={branded ? accentStyle(org?.accent) : undefined} aria-label="Conversations">
       {/* With a banner, the community's name sits on it (2026-10-28, after the owner's reference). */}
       <div className={`side-head${branded && !messages && bannerUrl ? " on-banner" : ""}`} style={branded && !messages && bannerUrl ? { backgroundImage: `url(${bannerUrl})` } : undefined}>
-        {messages ? (
+        {discover ? (
+          <h2 className="side-title grow">{t("discover_title")}</h2>
+        ) : messages ? (
           // Direct messages aren't part of a community: their own heading, not the community's.
           <h2 className="side-title grow">{t("side_direct_messages")}</h2>
         ) : communities ? (
@@ -103,7 +107,7 @@ export function Sidebar({ orgId, section, open, onDialog }: SidebarProps) {
             <ChevronDown size={16} className="faint" />
           </button>
         )}
-        {!communities && section !== "dms" && (
+        {!communities && section !== "dms" && !discover && (
           <button className="icon-btn" onClick={() => onDialog({ kind: "new" })} aria-label={t("side_new_message")} title={t("side_new_message")}>
             <PenSquare size={18} />
           </button>
@@ -162,7 +166,9 @@ export function Sidebar({ orgId, section, open, onDialog }: SidebarProps) {
       )}
 
       <div className="side-scroll scroll" ref={list} onScroll={(e) => scrollMemory.set(listKey, e.currentTarget.scrollTop)} onContextMenu={onBlankMenu}>
-        {(!synced && empty) || (!layoutKnown && !messages) ? (
+        {discover ? (
+          <DiscoverSide onDialog={onDialog} />
+        ) : (!synced && empty) || (!layoutKnown && !messages) ? (
           <SkeletonRows />
         ) : messages ? (
           <>
@@ -208,6 +214,33 @@ export function Sidebar({ orgId, section, open, onDialog }: SidebarProps) {
       {blankMenu.anchor && <Menu anchor={blankMenu.anchor} point={blankMenu.point} label={org && !messages ? org.name : t("side_direct_messages")} onClose={blankMenu.close} entries={blankEntries} />}
       {community.dialogs}
     </aside>
+  );
+}
+
+/** Discover's side list: where you are, and the other ways into a community. */
+function DiscoverSide({ onDialog }: { onDialog: (d: ShellDialog) => void }) {
+  const t = useT();
+  return (
+    <nav className="discover-side" aria-label={t("discover_title")}>
+      <button className="side-item" aria-current="page" onClick={() => navigate({ section: "discover" })}>
+        <span className="glyph">
+          <Compass size={16} />
+        </span>
+        <span className="grow">{t("discover_all")}</span>
+      </button>
+      <button className="side-item" onClick={() => onDialog({ kind: "joinWorkspace" })}>
+        <span className="glyph">
+          <LogIn size={16} />
+        </span>
+        <span className="grow">Join with a code</span>
+      </button>
+      <button className="side-item" onClick={() => onDialog({ kind: "createWorkspace" })}>
+        <span className="glyph">
+          <Plus size={16} />
+        </span>
+        <span className="grow">Start a community</span>
+      </button>
+    </nav>
   );
 }
 
