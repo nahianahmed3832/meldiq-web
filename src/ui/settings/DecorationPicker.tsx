@@ -19,11 +19,36 @@ interface DecorationPickerProps {
   me: Me;
   photoRev: number | null;
   current: string | null;
-  busy: boolean;
   onPick: (id: string | null) => void;
 }
 
 type Tab = "meldiq" | "community" | "yours";
+/** Meldiq's own: the pictures (images) or the classic frames (drawn by the apps). */
+type OwnFilter = "all" | "pictures" | "classic";
+type Motion = "all" | "moving" | "still";
+
+const OWN_FILTERS: [OwnFilter, string][] = [
+  ["all", "All"],
+  ["pictures", "Pictures"],
+  ["classic", "Classic"],
+];
+const MOTIONS: [Motion, string][] = [
+  ["all", "All"],
+  ["moving", "Moving"],
+  ["still", "Still"],
+];
+
+function Chips<T extends string>({ label, options, value, onChange }: { label: string; options: [T, string][]; value: T; onChange: (v: T) => void }) {
+  return (
+    <div className="segmented deco-chips" role="group" aria-label={label}>
+      {options.map(([key, text]) => (
+        <button key={key} type="button" aria-pressed={value === key} onClick={() => onChange(key)}>
+          {text}
+        </button>
+      ))}
+    </div>
+  );
+}
 
 const STATUS_WORDS: Record<DecorationSubmission["status"], string> = {
   pending: "Waiting for review",
@@ -37,10 +62,12 @@ const STATUS_WORDS: Record<DecorationSubmission["status"], string> = {
  * frames and the newer images), community ones with their maker's name, and your own submissions with how their review
  * went. Each tile shows the decoration on your own avatar; picking one saves it at once.
  */
-export function DecorationPicker({ me, photoRev, current, busy, onPick }: DecorationPickerProps) {
+export function DecorationPicker({ me, photoRev, current, onPick }: DecorationPickerProps) {
   const engine = useEngine();
   const [tab, setTab] = useState<Tab>("meldiq");
   const [query, setQuery] = useState("");
+  const [ownFilter, setOwnFilter] = useState<OwnFilter>("all");
+  const [motion, setMotion] = useState<Motion>("all");
   const [version, setVersion] = useState(0);
   const [making, setMaking] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -51,11 +78,13 @@ export function DecorationPicker({ me, photoRev, current, busy, onPick }: Decora
   const own = useMemo(() => all.filter((d) => d.kind === "meldiq"), [all]);
   const community = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return all.filter((d) => d.kind === "community" && (!q || d.name.toLowerCase().includes(q) || (d.creator?.username ?? "").toLowerCase().includes(q)));
-  }, [all, query]);
+    return all.filter(
+      (d) => d.kind === "community" && (motion === "all" || d.animated === (motion === "moving")) && (!q || d.name.toLowerCase().includes(q) || (d.creator?.username ?? "").toLowerCase().includes(q)),
+    );
+  }, [all, query, motion]);
 
   const tile = (id: string | null, label: string, by?: string | null) => (
-    <button key={id ?? "none"} type="button" className="style-choice deco-choice" aria-pressed={current === id} disabled={busy} onClick={() => onPick(id)} title={label}>
+    <button key={id ?? "none"} type="button" className="style-choice deco-choice" aria-pressed={current === id} onClick={() => onPick(id)} title={label}>
       <StyledAvatar userId={me.userId} name={me.displayName} colorIndex={me.avatarColor} photoRev={photoRev} media={null} decoration={id} size={48} />
       <span className="ellipsis">{label}</span>
       {by && <small className="faint ellipsis">by @{by}</small>}
@@ -105,24 +134,30 @@ export function DecorationPicker({ me, photoRev, current, busy, onPick }: Decora
       )}
 
       {tab === "meldiq" && (
-        <div className="style-grid deco-grid" role="group" aria-label="Meldiq's decorations">
-          {tile(null, "None")}
-          {PROFILE_DECORATIONS.map((d) => tile(d, DECORATION_LABEL[d]))}
-          {own.map((d) => tile(d.id, d.name))}
-          {!catalog.data && !catalog.error && <div className="skeleton deco-skeleton" aria-busy="true" />}
-        </div>
+        <>
+          <Chips label="Show" options={OWN_FILTERS} value={ownFilter} onChange={setOwnFilter} />
+          <div className="style-grid deco-grid" role="group" aria-label="Meldiq's decorations">
+            {tile(null, "None")}
+            {ownFilter !== "pictures" && PROFILE_DECORATIONS.map((d) => tile(d, DECORATION_LABEL[d]))}
+            {ownFilter !== "classic" && own.map((d) => tile(d.id, d.name))}
+            {ownFilter !== "classic" && !catalog.data && !catalog.error && <div className="skeleton deco-skeleton" aria-busy="true" />}
+          </div>
+        </>
       )}
 
       {tab === "community" && (
         <>
-          <label className="deco-search">
-            <Search size={14} aria-hidden="true" />
-            <input type="search" placeholder="Search by name or maker" value={query} onChange={(e) => setQuery(e.target.value)} aria-label="Search community decorations" />
-          </label>
+          <div className="row deco-community-bar">
+            <label className="deco-search grow">
+              <Search size={14} aria-hidden="true" />
+              <input type="search" placeholder="Search by name or maker" value={query} onChange={(e) => setQuery(e.target.value)} aria-label="Search community decorations" />
+            </label>
+            <Chips label="Motion" options={MOTIONS} value={motion} onChange={setMotion} />
+          </div>
           <div className="style-grid deco-grid" role="group" aria-label="Community decorations">
             {community.map((d: Decoration) => tile(d.id, d.name, d.creator?.username ?? null))}
           </div>
-          {catalog.data && community.length === 0 && <p className="faint">{query ? "No decoration matches that." : "No community decorations yet. Make the first one!"}</p>}
+          {catalog.data && community.length === 0 && <p className="faint">{query || motion !== "all" ? "No decoration matches that." : "No community decorations yet. Make the first one!"}</p>}
         </>
       )}
 
@@ -147,7 +182,7 @@ export function DecorationPicker({ me, photoRev, current, busy, onPick }: Decora
                 </div>
                 <div className="row" style={{ gap: 6 }}>
                   {s.status === "approved" && (
-                    <button type="button" className="btn btn-secondary btn-sm" disabled={busy || current === s.id} onClick={() => onPick(s.id)}>
+                    <button type="button" className="btn btn-secondary btn-sm" disabled={current === s.id} onClick={() => onPick(s.id)}>
                       {current === s.id ? "Wearing" : "Wear"}
                     </button>
                   )}

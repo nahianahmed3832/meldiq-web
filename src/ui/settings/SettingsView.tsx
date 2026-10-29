@@ -120,7 +120,7 @@ export function SettingsView({ page, onSignedOut }: { page: SettingsPage; onSign
           </button>
         </nav>
         <div className="settings-page scroll">
-          <div className={`inner${page === "mojo" || page === "spark" ? " wide" : ""}`}>
+          <div className={`inner${page === "mojo" || page === "spark" || page === "profile" ? " wide" : ""}`}>
             <button className="settings-back" onClick={() => navigate({ section: "settings", settingsPage: "you" })}>
               <ChevronLeft size={18} aria-hidden="true" /> {t("nav_you")}
             </button>
