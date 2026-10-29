@@ -3,6 +3,7 @@ import { ApiError } from "../api/client";
 import type { OutboxItem } from "../model/types";
 import { parsePayload } from "../protocol/payload";
 import type { EngineContext } from "./context";
+import { rulesRefusalOrg, withMustAgree } from "./rulesChannel";
 
 const zSendRes = z.object({ messageId: z.string(), serverTs: z.number(), duplicate: z.boolean().optional() });
 
@@ -154,6 +155,10 @@ export class Outbox {
       await store.putOutbox({ ...o, attempts: o.attempts + 1, nextAttemptAt: Date.now() + wait, lastError: e.message });
       return "done";
     }
+    // API 0.65.0: the community asks members to agree to its rules first. The agree prompt shows at once (the community
+    // list may not know yet), and the message fails with the server's reason.
+    const rulesOrg = rulesRefusalOrg(e);
+    if (rulesOrg) this.ctx.state.update((s) => ({ ...s, orgs: withMustAgree(s.orgs, rulesOrg) }));
     await store.removeOutbox(o.messageId);
     if (o.visible) await this.onFailed(o.messageId, "FAILED", e instanceof ApiError ? e.message : "Couldn't send this message");
     return "done";

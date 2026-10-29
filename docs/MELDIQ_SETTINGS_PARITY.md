@@ -154,3 +154,52 @@ Server work goes on meldiq branch `settings-parity` (from `admin-accounts`, API 
 5. **Android** follows once the API ships.
 
 New built-in decorations (about 40, original drawings of popular community themes) go on `settings-parity` too.
+
+## 4. Rules channel (2026-10-29)
+
+### What the reference does
+
+- **How it's made.** Not a channel type and not a template. A community setting, "Rules channel", is a dropdown of the
+  community's text channels with "No rules channel" at the top. Picking one marks it; the setting's hint says the
+  channel gets a book icon, only people who can manage the community post in it, and new members get a nudge to read it.
+  Changing it is written to the audit log. A new community ("Blank server") starts with a general and a voice channel,
+  so no rules channel; one only comes from a template someone shares.
+- **The rules themselves** are ordinary messages that staff post in that channel: a long numbered list ("7. Use the
+  right channel" with a line or two under it), often a closing line ("By staying here you agree to these rules"). Members
+  react to them.
+- **What members see.** The channel shows a book icon in the channel list (the header keeps the channel's own icon) and
+  usually sits first. Instead of a message box there is a note: only certain roles can post here, you can still read and
+  react. Members who haven't opened the channel yet get a dismissable "New here? Read the rules" button; opening the
+  channel or dismissing it hides it on that browser. People who can manage the community never see it. The community's
+  home page has a Rules card that opens the channel.
+- **Agreeing.** There is no separate "I agree" record. Onboarding (questions, then the rules) has a last step that shows
+  the first messages of the rules channel with an "I read the rules" button. When the community makes onboarding
+  required, the composer says "Finish onboarding to chat here" until that step is done; reading and reacting still work.
+  Onboarding only applies to people who join after it's turned on; everyone can redo it from the community menu.
+- **Who can edit.** People with the manage-community permission set the channel and post the rules. The whole feature
+  sits behind a staged rollout flag.
+
+### What Meldiq had
+
+Channel types (text, announcement, forum, voice; announcement posting needs `messages.announce` or a manager), a plain
+`rules` text on the community (shown in the preview before joining), the community guide (welcome line, tasks,
+resources) and onboarding questions (roles and channels, never blocking). No rules channel, no agreement, nothing that
+held the composer back.
+
+### What Meldiq does now (API 0.65.0, feature `rules-channel`)
+
+- **Server** (`meldiq_android` `settings-parity`): `GET`/`PUT /v1/orgs/:orgId/rules` and `POST /v1/orgs/:orgId/rules/agree`;
+  `rulesChannel` on community views; errors `rules_channel`, `rules_channel_invalid`, `rules_not_agreed`;
+  `COMMUNITY_RULES=off` turns it off. Details in that repo's `docs/SETTINGS_PARITY_API.md`.
+- **Rules as a numbered list**, not channel messages: each rule has a title and an optional description, up to 25.
+  Meldiq's channel messages can't be shown before someone joins or reliably as the "first ten", so a list kept as
+  community settings serves the channel, the dialog and the preview (it is also written to the plain `rules` text).
+- **The rules channel** is picked in Community settings › Rules (text or announcement channels everyone can see). It
+  shows `BookText` in the channel list, the sidebar and the header; its top shows the rules; only people who can edit
+  the community post there, everyone else reacts and votes. Templates are unchanged, as in the reference.
+- **"Members agree before they post or react"** is a switch on the same page. Unlike the reference it is its own record
+  per member (`agreedAt`), applies to current members too, and is enforced by the server. Until someone agrees, the
+  composer is replaced by a bar with "Read the rules", which opens the rules with "I agree". A refusal from the server
+  (the switch was just turned on) brings the bar up at once. Leaving the community forgets the agreement.
+- Not done: the "New here? Read the rules" nudge for communities that don't require agreeing, a Rules card on the
+  community home, asking everyone again after the rules change, and Android.

@@ -24,6 +24,8 @@ import { ConversationStart, MessageList } from "./MessageList";
 import { PeopleToggle } from "./PeoplePanels";
 import { ChannelBell } from "./ChannelBell";
 import { useT } from "../../i18n";
+import { RulesChannelStart, useRulesSummary } from "../community/RulesViews";
+import { postingState } from "../../sync/rulesChannel";
 
 export function ConversationView({ id, route, onDialog }: { id: string; route: Route; onDialog: (d: ShellDialog) => void }) {
   const engine = useEngine();
@@ -66,6 +68,8 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
   const drop = useFileDrop(!!c?.canPost);
   const users = useOrbit((s) => s.users);
   const askedToConnect = !!useConnectionLists()?.incoming.some((e) => e.user.id === peer?.id);
+  // API 0.65.0: the community's rules channel (a book icon, the rules on top, everyone reacts there).
+  const rules = useRulesSummary(c?.type === "CHANNEL" ? c.orgId : null);
 
   const onThread = useCallback((m: StoredMessage) => navigate({ section: route.section, conversationId: id, panel: "thread", threadRoot: m.id }), [id, route.section]);
   const onReview = useCallback(() => {
@@ -74,7 +78,9 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
   }, [engine, onDialog]);
 
   if (!c || !me) return null;
-  const glyph = c.type !== "CHANNEL" ? null : <ChannelGlyph kind={c.kind} voice={c.voice} format={c.format} size={18} />;
+  const isRules = c.type === "CHANNEL" && !!rules?.channelId && rules.channelId === c.id;
+  const posting = postingState(c, rules ? { rulesChannel: rules } : null);
+  const glyph = c.type !== "CHANNEL" ? null : <ChannelGlyph kind={c.kind} voice={c.voice} format={c.format} rules={isRules} size={18} />;
   const subtitle =
     c.type === "DM"
       ? [`@${peer?.username ?? ""}`, peer?.pronouns, presenceWords(peer?.presence, peer?.online)?.toLowerCase(), peer?.status].filter(Boolean).join(" · ")
@@ -205,26 +211,31 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
           items={loaded.items}
           hasMore={loaded.hasMore}
           onLoadOlder={() => engine.loadOlder(id)}
-          canPost={c.canPost}
+          canPost={posting.post}
+          canReact={posting.react}
           onReply={setReplyTo}
           onThread={onThread}
           onReview={onReview}
           start={
-            <ConversationStart
-              type={c.type}
-              kind={c.kind}
-              title={title}
-              topic={c.topic}
-              color={peer?.color ?? colorIndexOf(c.id)}
-              avatar={
-                c.type === "DM" && peer ? (
-                  <UserAvatar userId={peer.id} name={title} colorIndex={peer.color} photoRev={peer.photoRev} size={52} decorative />
-                ) : c.type === "GROUP" ? (
-                  <GroupAvatar conversationId={c.id} name={title} photoRev={c.photoRev} size={52} />
-                ) : undefined
-              }
-              onManage={c.type === "CHANNEL" && c.canManage ? () => navigate({ section: route.section, conversationId: id, panel: "details" }) : undefined}
-            />
+            isRules && c.orgId ? (
+              <RulesChannelStart orgId={c.orgId} />
+            ) : (
+              <ConversationStart
+                type={c.type}
+                kind={c.kind}
+                title={title}
+                topic={c.topic}
+                color={peer?.color ?? colorIndexOf(c.id)}
+                avatar={
+                  c.type === "DM" && peer ? (
+                    <UserAvatar userId={peer.id} name={title} colorIndex={peer.color} photoRev={peer.photoRev} size={52} decorative />
+                  ) : c.type === "GROUP" ? (
+                    <GroupAvatar conversationId={c.id} name={title} photoRev={c.photoRev} size={52} />
+                  ) : undefined
+                }
+                onManage={c.type === "CHANNEL" && c.canManage ? () => navigate({ section: route.section, conversationId: id, panel: "details" }) : undefined}
+              />
+            )
           }
         />
       ) : (

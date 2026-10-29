@@ -32,6 +32,7 @@ import { untilWhen } from "../format";
 import { useNow } from "../call/useNow";
 import { useT } from "../../i18n";
 import { SlashCommandList, useSlashCommands } from "./SlashCommands";
+import { RulesAgreeBar, useRulesSummary } from "../community/RulesViews";
 
 interface ComposerProps {
   conversation: Conversation;
@@ -52,6 +53,8 @@ export function Composer(props: ComposerProps) {
   const charLimit = useMojoLimits()?.messageChars ?? null;
   const prefs = usePrefs();
   const t = useT();
+  // API 0.65.0: the community's rules channel, and whether this account must agree to its rules first.
+  const rules = useRulesSummary(c.type === "CHANNEL" ? c.orgId : null);
   const [text, setText] = useState("");
   const [files, setFiles] = useState<File[]>([]);
   // Starts at the default chosen in Settings › Appearance › Photo upload quality (android upload quality).
@@ -263,6 +266,8 @@ export function Composer(props: ComposerProps) {
     }
   };
 
+  if (rules?.mustAgree && c.orgId && !c.archived) return <RulesAgreeBar orgId={c.orgId} />;
+
   if (!c.canPost) {
     return (
       <div className="composer-wrap">
@@ -272,9 +277,11 @@ export function Composer(props: ComposerProps) {
             ? "This channel is archived. You can read it, but nobody can post."
             : c.timedOutUntil && c.timedOutUntil > Date.now()
               ? `You're timed out in this community until ${untilWhen(c.timedOutUntil)}. You can read, but not post.`
-              : c.kind === "ANNOUNCEMENT"
-                ? "Only the people who manage this announcement channel can post here."
-                : "You can't post in this conversation."}
+              : rules?.channelId === c.id
+                ? t("rules_channel_locked")
+                : c.kind === "ANNOUNCEMENT"
+                  ? "Only the people who manage this announcement channel can post here."
+                  : "You can't post in this conversation."}
         </div>
       </div>
     );

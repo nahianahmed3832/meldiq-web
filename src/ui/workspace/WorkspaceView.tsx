@@ -1,11 +1,32 @@
 import { MeldlingArt } from "../components/MeldlingArt";
-import { Bot, BookOpen, HelpCircle, Pin, Smile, Ban, CalendarDays, Flag, Gauge, Hash, Laptop, LayoutGrid, ScrollText, Shield, ShieldCheck, Ticket, UserCheck, UsersRound } from "lucide-react";
+import {
+  Bot,
+  BookOpen,
+  BookText,
+  HelpCircle,
+  Pin,
+  Smile,
+  Ban,
+  CalendarDays,
+  Flag,
+  Gauge,
+  Hash,
+  Laptop,
+  LayoutGrid,
+  ScrollText,
+  Shield,
+  ShieldCheck,
+  Ticket,
+  UserCheck,
+  UsersRound,
+} from "lucide-react";
 import { ApplicationsPage, BansPage, SecurityPage } from "./ModerationPages";
 import { ReportsPage } from "./ReportsPage";
 import { GuidePage, OnboardingPage } from "./GuidePages";
 import { ExpressionsPage } from "./ExpressionsPage";
 import { PinsPage } from "./PinsPage";
 import { BotsPage } from "./BotsPage";
+import { RulesPage } from "./RulesPage";
 import type { ReactNode } from "react";
 import { useEngine, useOrbit } from "../../application/orbit";
 import { navigate, type WorkspacePage } from "../../application/router";
@@ -47,6 +68,8 @@ const can = (p: OrgPermissions, perm: string) => p.isOwner || p.effective.includ
 const COMMUNITY_PAGES: { key: WorkspacePage; label: string; icon: ReactNode; group: CommunityGroup; shown?: (p: OrgPermissions) => boolean; feature?: string }[] = [
   { key: "overview", label: "Overview", icon: <LayoutGrid size={17} />, group: "community" },
   { key: "guide", label: "Community guide", icon: <BookOpen size={17} />, group: "community", feature: "community-guide", shown: (p) => p.canManageOrg },
+  // API 0.65.0: the rules channel and the community's rules (Edit community).
+  { key: "rules", label: "Rules", icon: <BookText size={17} />, group: "community", feature: "rules-channel", shown: (p) => p.canManageOrg },
   { key: "onboarding", label: "Onboarding questions", icon: <HelpCircle size={17} />, group: "community", feature: "onboarding" },
   { key: "expressions", label: "Emoji & stickers", icon: <Smile size={17} />, group: "community", feature: "community-expressions", shown: (p) => can(p, "expressions.manage") },
   // API 0.65.0 batch B: adding bots needs Edit community.
@@ -189,6 +212,8 @@ export function WorkspaceView({ orgId, page, onDialog }: { orgId: string | null;
               <ExpressionsPage detail={d} />
             ) : page === "guide" ? (
               <GuidePage detail={d} />
+            ) : page === "rules" ? (
+              <RulesPage detail={d} />
             ) : page === "onboarding" ? (
               <OnboardingPage detail={d} />
             ) : page === "applications" ? (

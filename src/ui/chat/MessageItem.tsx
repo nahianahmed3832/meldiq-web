@@ -87,6 +87,8 @@ export interface MessageItemProps {
   replyTo: { name: string; text: string; id: string } | null;
   threadCount: number;
   canPost: boolean;
+  /** Reactions and votes; differs from posting in a community's rules channel (API 0.65.0). Defaults to canPost. */
+  canReact?: boolean;
   highlighted: boolean;
   onReply: (m: StoredMessage) => void;
   onThread: ((m: StoredMessage) => void) | null;
@@ -96,6 +98,7 @@ export interface MessageItemProps {
 
 export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
   const engine = useEngine();
+  const canReact = p.canReact ?? p.canPost;
   const t = useT();
   const { m } = p;
   const [editing, setEditing] = useState(false);
@@ -169,7 +172,7 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
         {m.forwarded && <ForwardedLine origin={m.rich?.origin} />}
         {m.rich?.poll ? (
           <div>
-            <PollView m={m} myUserId={p.myUserId} canPost={p.canPost} />
+            <PollView m={m} myUserId={p.myUserId} canPost={canReact} />
             {mine && <Status m={m} onRetry={() => void engine.retry(m.id)} onReview={p.onReview} />}
           </div>
         ) : m.rich?.gif ? (
@@ -235,7 +238,7 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
             reacted: Object.entries(m.reactions)
               .filter(([, who]) => who.includes(p.myUserId))
               .map(([e]) => e),
-            onReact: live && p.canPost ? (e) => void engine.react(m, e) : null,
+            onReact: live && canReact ? (e) => void engine.react(m, e) : null,
           }}
         />
         {mediaLink ? (
@@ -271,9 +274,9 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
   );
   // Swipe left to reply (touch), double-tap or double-click to react (Settings › Appearance › Gestures).
   const canAct = live && p.canPost && !editing;
-  const gestures = useMessageGestures(canAct && swipeToReply ? () => p.onReply(m) : null, canAct && doubleTapReact ? () => void engine.react(m, quickReaction) : null);
+  const gestures = useMessageGestures(canAct && swipeToReply ? () => p.onReply(m) : null, live && canReact && !editing && doubleTapReact ? () => void engine.react(m, quickReaction) : null);
   const quickRow: MenuEntry[] =
-    pressed && live && p.canPost
+    pressed && live && canReact
       ? [
           {
             custom: (
@@ -364,7 +367,7 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
           </div>
         )}
         {body()}
-        <ReactionList message={m} myUserId={p.myUserId} canPost={p.canPost} communityEmoji={communityEmoji} />
+        <ReactionList message={m} myUserId={p.myUserId} canPost={canReact} communityEmoji={communityEmoji} />
         {p.threadCount > 0 && p.onThread && (
           <button className="thread-link" onClick={() => p.onThread?.(m)}>
             <MessagesSquare size={15} /> {p.threadCount} {p.threadCount === 1 ? "reply" : "replies"}
@@ -374,13 +377,13 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
 
       {live && !editing && (
         <div className="msg-actions" role="toolbar" aria-label={t("msg_actions")}>
-          {p.canPost &&
+          {canReact &&
             QUICK_EMOJI.slice(0, 3).map((e) => (
               <button key={e} className="icon-btn quick-emoji" onClick={() => void engine.react(m, e)} aria-label={`React ${e}`}>
                 {e}
               </button>
             ))}
-          {p.canPost && (
+          {canReact && (
             <button className="icon-btn" onClick={(e) => picker.open(e.currentTarget)} aria-label={t("msg_add_reaction")} title={t("msg_add_reaction")} aria-haspopup="menu">
               <SmilePlus size={TOOL_ICON} />
             </button>

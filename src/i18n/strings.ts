@@ -713,6 +713,50 @@ export const STRINGS = {
   settings_developer: ["Developer", "开发者", "ডেভেলপার"],
   settings_about: ["About", "关于", "সম্পর্কে"],
   settings_advanced: ["Advanced", "高级", "উন্নত"],
+
+  // ── a community's rules channel (API 0.65.0) ──
+  rules_title: ["Rules", "规则", "নিয়ম"],
+  rules_channel_label: ["Rules channel", "规则频道", "নিয়মের চ্যানেল"],
+  rules_agree_prompt: [
+    "This community asks you to agree to its rules before you post or react.",
+    "此社区要求你在发言或回应之前同意其规则。",
+    "পোস্ট বা রিঅ্যাক্ট করার আগে এই কমিউনিটি আপনাকে এর নিয়মে সম্মত হতে বলে।",
+  ],
+  rules_read: ["Read the rules", "阅读规则", "নিয়ম পড়ুন"],
+  rules_agree: ["I agree", "我同意", "আমি সম্মত"],
+  rules_agreeing: ["Agreeing…", "正在提交…", "সম্মতি দেওয়া হচ্ছে…"],
+  rules_agreed: ["You agreed to these rules.", "你已同意这些规则。", "আপনি এই নিয়মগুলোতে সম্মত হয়েছেন।"],
+  rules_channel_locked: [
+    "Only people who can edit the community post in the rules channel. You can still read and react.",
+    "只有能编辑社区的人可以在规则频道发言。你仍然可以阅读和回应。",
+    "শুধু যাঁরা কমিউনিটি সম্পাদনা করতে পারেন তাঁরাই নিয়মের চ্যানেলে পোস্ট করেন। আপনি পড়তে ও রিঅ্যাক্ট করতে পারবেন।",
+  ],
+  rules_loading: ["Loading the rules…", "正在加载规则…", "নিয়ম লোড হচ্ছে…"],
+  rules_none: ["This community hasn't written its rules yet.", "此社区还没有写规则。", "এই কমিউনিটি এখনো নিয়ম লেখেনি।"],
+  rules_open_channel: ["Open the rules channel", "打开规则频道", "নিয়মের চ্যানেল খুলুন"],
+  rules_failed: ["Couldn't load the rules. Try again.", "无法加载规则，请重试。", "নিয়ম লোড করা যায়নি। আবার চেষ্টা করুন।"],
+  rules_settings_sub: ["Members read the rules in the rules channel and before they join.", "成员可以在规则频道里以及加入之前阅读规则。", "সদস্যরা নিয়মের চ্যানেলে এবং যোগ দেওয়ার আগে নিয়ম পড়েন।"],
+  rules_settings_no_channel: ["No rules channel", "不设规则频道", "কোনো নিয়মের চ্যানেল নেই"],
+  rules_settings_channel_hint: [
+    "Gets a book icon. Everyone reads it and reacts; only people who can edit the community post there.",
+    "会显示书本图标。所有人都能阅读和回应，只有能编辑社区的人可以在那里发言。",
+    "বইয়ের আইকন পায়। সবাই পড়তে ও রিঅ্যাক্ট করতে পারেন; শুধু যাঁরা কমিউনিটি সম্পাদনা করতে পারেন তাঁরাই সেখানে পোস্ট করেন।",
+  ],
+  rules_settings_rule: ["Rule {n}", "规则 {n}", "নিয়ম {n}"],
+  rules_settings_title_ph: ["Be kind", "友善待人", "সদয় থাকুন"],
+  rules_settings_desc_ph: ["What it means, in a sentence or two (optional)", "用一两句话说明（可选）", "এক-দুই বাক্যে এর মানে (ঐচ্ছিক)"],
+  rules_settings_add: ["Add a rule", "添加规则", "নিয়ম যোগ করুন"],
+  rules_settings_up: ["Move rule {n} up", "上移规则 {n}", "নিয়ম {n} উপরে নিন"],
+  rules_settings_down: ["Move rule {n} down", "下移规则 {n}", "নিয়ম {n} নিচে নিন"],
+  rules_settings_remove: ["Remove rule {n}", "删除规则 {n}", "নিয়ম {n} সরান"],
+  rules_settings_require: ["Members agree before they post or react", "成员需同意后才能发言或回应", "পোস্ট বা রিঅ্যাক্ট করার আগে সদস্যরা সম্মত হন"],
+  rules_settings_require_hint: [
+    "Everyone who hasn't agreed yet sees the rules with an I agree button, members from before included. People who can edit the community don't have to.",
+    "所有尚未同意的人都会看到规则和“我同意”按钮，包括现有成员。能编辑社区的人无需同意。",
+    'যাঁরা এখনো সম্মত হননি, আগের সদস্যসহ, সবাই নিয়ম ও "আমি সম্মত" বোতাম দেখবেন। যাঁরা কমিউনিটি সম্পাদনা করতে পারেন তাঁদের লাগবে না।',
+  ],
+  rules_settings_save: ["Save", "保存", "সংরক্ষণ করুন"],
+  rules_settings_saved: ["Rules saved.", "规则已保存。", "নিয়ম সংরক্ষিত হয়েছে।"],
 } as const satisfies Record<string, readonly [string, string, string]>;
 
 export type StringKey = keyof typeof STRINGS;

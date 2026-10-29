@@ -1,4 +1,4 @@
-import { Hash, Lock, Megaphone, MessagesSquare, Plus, Trash2, Volume2, X } from "lucide-react";
+import { BookText, Hash, Lock, Megaphone, MessagesSquare, Plus, Trash2, Volume2, X } from "lucide-react";
 import { type FormEvent, type ReactNode, useState } from "react";
 import { ApiError } from "../../api/client";
 import type { Category } from "../../api/communitySchemas";
@@ -19,7 +19,9 @@ const TYPES: { type: ChannelType; label: string; hint: string; icon: ReactNode }
   { type: "voice", label: "Voice", hint: "Drop in to talk, without ringing anyone", icon: <Volume2 size={18} aria-hidden /> },
 ];
 
-export function ChannelGlyph({ kind, voice, format, size = 16 }: { kind: string | null; voice: boolean; format: string; size?: number }) {
+/** A channel's icon; [rules]: the community's rules channel, a book (API 0.65.0). */
+export function ChannelGlyph({ kind, voice, format, rules = false, size = 16 }: { kind: string | null; voice: boolean; format: string; rules?: boolean; size?: number }) {
+  if (rules) return <BookText size={size} aria-label="Rules" />;
   const t = channelTypeOf(kind, voice, format);
   if (t === "voice") return <Volume2 size={size} />;
   if (t === "forum") return <MessagesSquare size={size} />;

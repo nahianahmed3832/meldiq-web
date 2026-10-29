@@ -20,6 +20,8 @@ interface MessageListProps {
   /** Thread view: shows replies; the main view hides them under their root. */
   threadRoot?: string;
   canPost: boolean;
+  /** Reactions and votes (the rules channel lets everyone react); defaults to canPost. */
+  canReact?: boolean;
   onReply: (m: StoredMessage) => void;
   onThread: ((m: StoredMessage) => void) | null;
   onReview: (userId: string) => void;
@@ -208,6 +210,7 @@ export function MessageList(props: MessageListProps) {
                 replyTo={reply ? { id: reply.id, name: reply.outgoing ? "You" : nameOf(reply.senderUserId), text: reply.deleted ? "Deleted message" : reply.text } : null}
                 threadCount={threadRoot ? 0 : (threadCounts.get(m.id) ?? 0)}
                 canPost={props.canPost}
+                canReact={props.canReact ?? props.canPost}
                 highlighted={highlight === m.id}
                 onReply={props.onReply}
                 onThread={threadRoot ? null : props.onThread}

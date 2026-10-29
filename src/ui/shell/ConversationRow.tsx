@@ -8,6 +8,7 @@ import {
   ArrowUp,
   Bell,
   BellDot,
+  BookText,
   BellOff,
   Eye,
   EyeOff,
@@ -87,6 +88,11 @@ export const ConversationRow = memo(function ConversationRow({ id, twoLine, hide
       a.peerPhoto === b.peerPhoto,
   );
   // Settings › Appearance › Message previews (android chat-list previews): all, unread ones only, or none.
+  // API 0.65.0: a community's rules channel shows a book.
+  const isRules = useOrbit((s) => {
+    const conv = s.conversations[id];
+    return conv?.type === "CHANNEL" && !!conv.orgId && s.orgs.find((o) => o.id === conv.orgId)?.rulesChannel?.channelId === id;
+  });
   const { listPreview } = usePrefs();
   const t = useT();
   if (!data) return null;
@@ -99,7 +105,9 @@ export const ConversationRow = memo(function ConversationRow({ id, twoLine, hide
   const section = route.section === "dms" || route.section === "discover" ? "dms" : route.section === "activity" ? "activity" : "home";
   const glyph =
     c.type === "CHANNEL" ? (
-      c.kind === "PRIVATE" ? (
+      isRules ? (
+        <BookText size={15} aria-label="Rules" />
+      ) : c.kind === "PRIVATE" ? (
         <Lock size={15} />
       ) : c.kind === "ANNOUNCEMENT" ? (
         <Megaphone size={15} />

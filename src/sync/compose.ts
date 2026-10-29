@@ -9,6 +9,7 @@ import { applyPin, applyReaction } from "./rules";
 import { applyClose, applyVote } from "./polls";
 import { reactionAllowed } from "./expressions";
 import { contactWire } from "./rich";
+import { type PostingState, postingState } from "./rulesChannel";
 
 /** What sending needs from the engine. */
 export interface ComposeHost {
@@ -29,8 +30,20 @@ export interface ComposeHost {
 export class Compose {
   constructor(private readonly host: ComposeHost) {}
 
+  /** Posting and reacting as the server allows them, with the community's rules applied (API 0.65.0). */
+  private posting(conversationId: string): PostingState | null {
+    const s = this.host.state();
+    const c = s.conversations[conversationId];
+    return c ? postingState(c, c.orgId ? s.orgs.find((o) => o.id === c.orgId) : null) : null;
+  }
+
   private canPost(conversationId: string): boolean {
-    return this.host.state().conversations[conversationId]?.canPost === true;
+    return this.posting(conversationId)?.post === true;
+  }
+
+  /** Reactions and votes: also in the rules channel, for everyone who reads it. */
+  private canReact(conversationId: string): boolean {
+    return this.posting(conversationId)?.react === true;
   }
 
   /**
@@ -44,6 +57,7 @@ export class Compose {
   ): Promise<string> {
     const conv = this.host.state().conversations[conversationId];
     if (!conv?.canPost) throw new ApiError(403, "forbidden", conv?.archived ? "This channel is archived" : "You can't post in this conversation");
+    if (this.posting(conversationId)?.mustAgree) throw new ApiError(403, "rules_not_agreed", "Agree to this community's rules before you post or react", { orgId: conv.orgId });
     const body = text.trim();
     const mentions =
       conv.type === "DM" || opts.forwarded || structured(opts.rich)
@@ -135,7 +149,7 @@ export class Compose {
 
   async react(m: StoredMessage, emoji: string): Promise<void> {
     const conv = this.host.state().conversations[m.conversationId];
-    if (!this.canPost(m.conversationId) || !reactionAllowed(emoji, conv?.type === "CHANNEL" && !!conv.orgId)) return;
+    if (!this.canReact(m.conversationId) || !reactionAllowed(emoji, conv?.type === "CHANNEL" && !!conv.orgId)) return;
     const fresh = (await this.host.store.message(m.id)) ?? m;
     const add = !(fresh.reactions[emoji] ?? []).includes(this.host.device.userId);
     const next = applyReaction(fresh, this.host.device.userId, emoji, add);
@@ -146,7 +160,7 @@ export class Compose {
 
   /** This person's vote on a poll (empty takes it back): shown at once, then sent as an encrypted "vote" control. */
   async vote(m: StoredMessage, choices: string[]): Promise<void> {
-    if (!this.canPost(m.conversationId)) return;
+    if (!this.canReact(m.conversationId)) return;
     const fresh = (await this.host.store.message(m.id)) ?? m;
     if (!fresh.rich?.poll || fresh.rich.pollClosed) return;
     const rich = applyVote(fresh.rich, this.host.device.userId, choices);

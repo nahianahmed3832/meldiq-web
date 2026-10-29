@@ -218,6 +218,23 @@ export const zOrg = z.object({
     .catch(null)
     .transform((v) => v ?? null),
   onboarding: z.boolean().default(false),
+  /**
+   * API 0.65.0 (feature rules-channel): the rules channel, how many rules there are, and whether this account still has
+   * to agree to them before posting or reacting. Absent (null) without a rules channel or rules, and on older servers.
+   */
+  rulesChannel: z
+    .object({
+      channelId: nullableString,
+      required: z.boolean().default(false),
+      count: z.number().int().nonnegative().default(0),
+      agreedAt: z
+        .number()
+        .nullish()
+        .transform((v) => v ?? null),
+      mustAgree: z.boolean().default(false),
+    })
+    .nullish()
+    .transform((v) => v ?? null),
 });
 export type Org = z.infer<typeof zOrg>;
 export type OrgKind = Org["kind"];

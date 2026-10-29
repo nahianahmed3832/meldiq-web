@@ -54,7 +54,9 @@ export type WorkspacePage =
   | "onboarding"
   | "expressions"
   // API 0.65.0 batch B: bots added to the community.
-  | "bots";
+  | "bots"
+  // API 0.65.0: the rules channel and the community's rules.
+  | "rules";
 
 export interface Route {
   section: Section;
@@ -110,6 +112,7 @@ const WORKSPACE_PAGES: WorkspacePage[] = [
   "onboarding",
   "expressions",
   "bots",
+  "rules",
 ];
 const ID = /^[A-Za-z0-9_-]{1,128}$/;
 

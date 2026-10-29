@@ -998,6 +998,18 @@
       "path": "/v1/orgs/{orgId}/guide"
     },
     {
+      "method": "GET",
+      "path": "/v1/orgs/{orgId}/rules"
+    },
+    {
+      "method": "PUT",
+      "path": "/v1/orgs/{orgId}/rules"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/orgs/{orgId}/rules/agree"
+    },
+    {
       "method": "POST",
       "path": "/v1/reports"
     },
@@ -1865,6 +1877,15 @@
     ],
     "role_not_givable": [
       400
+    ],
+    "rules_channel": [
+      403
+    ],
+    "rules_channel_invalid": [
+      400
+    ],
+    "rules_not_agreed": [
+      403
     ],
     "same_email": [
       400

@@ -383,6 +383,8 @@ const ChannelItem = memo(function ChannelItem({
   const sharing = useOrbit((s) => liveCallOf(s, ch.id)?.sharing ?? [], shallowEqual);
   const t = useT();
   const users = useOrbit((s) => s.users);
+  // API 0.65.0: the community's rules channel shows a book.
+  const isRules = useOrbit((s) => s.orgs.find((o) => o.id === orgId)?.rulesChannel?.channelId === ch.id);
   const [joining, setJoining] = useState(false);
   const open = (e: MouseEvent<HTMLElement>) => {
     e.preventDefault();
@@ -418,7 +420,7 @@ const ChannelItem = memo(function ChannelItem({
         onContextMenu={open}
       >
         <span className={`glyph${ch.liveCall ? " live" : ""}`}>
-          <ChannelGlyph kind={ch.kind} voice={ch.voice} format={ch.format} />
+          <ChannelGlyph kind={ch.kind} voice={ch.voice} format={ch.format} rules={isRules} />
         </span>
         <span className="grow ellipsis">{ch.name}</span>
         {ch.liveCall && <LiveCallBadge conversationId={ch.id} />}
