@@ -1,10 +1,11 @@
 import { MeldlingArt } from "../components/MeldlingArt";
-import { BookOpen, HelpCircle, Pin, Smile, Ban, CalendarDays, Flag, Gauge, Hash, Laptop, LayoutGrid, ScrollText, Shield, ShieldCheck, Ticket, UserCheck, UsersRound } from "lucide-react";
+import { Bot, BookOpen, HelpCircle, Pin, Smile, Ban, CalendarDays, Flag, Gauge, Hash, Laptop, LayoutGrid, ScrollText, Shield, ShieldCheck, Ticket, UserCheck, UsersRound } from "lucide-react";
 import { ApplicationsPage, BansPage, SecurityPage } from "./ModerationPages";
 import { ReportsPage } from "./ReportsPage";
 import { GuidePage, OnboardingPage } from "./GuidePages";
 import { ExpressionsPage } from "./ExpressionsPage";
 import { PinsPage } from "./PinsPage";
+import { BotsPage } from "./BotsPage";
 import type { ReactNode } from "react";
 import { useEngine, useOrbit } from "../../application/orbit";
 import { navigate, type WorkspacePage } from "../../application/router";
@@ -48,6 +49,8 @@ const COMMUNITY_PAGES: { key: WorkspacePage; label: string; icon: ReactNode; gro
   { key: "guide", label: "Community guide", icon: <BookOpen size={17} />, group: "community", feature: "community-guide", shown: (p) => p.canManageOrg },
   { key: "onboarding", label: "Onboarding questions", icon: <HelpCircle size={17} />, group: "community", feature: "onboarding" },
   { key: "expressions", label: "Emoji & stickers", icon: <Smile size={17} />, group: "community", feature: "community-expressions", shown: (p) => can(p, "expressions.manage") },
+  // API 0.65.0 batch B: adding bots needs Edit community.
+  { key: "bots", label: "Bots", icon: <Bot size={17} />, group: "community", feature: "bots", shown: (p) => p.canManageOrg },
   { key: "people", label: "Members", icon: <UsersRound size={17} />, group: "people", shown: (p) => p.canViewDirectory },
   { key: "roles", label: "Roles", icon: <ShieldCheck size={17} />, group: "people", shown: (p) => p.canViewRoles },
   { key: "pins", label: "Pins", icon: <Pin size={17} />, group: "people", feature: "profile-pins" },
@@ -180,6 +183,8 @@ export function WorkspaceView({ orgId, page, onDialog }: { orgId: string | null;
               <MeetingsPage detail={d} />
             ) : page === "pins" ? (
               <PinsPage detail={d} />
+            ) : page === "bots" ? (
+              <BotsPage detail={d} />
             ) : page === "expressions" ? (
               <ExpressionsPage detail={d} />
             ) : page === "guide" ? (

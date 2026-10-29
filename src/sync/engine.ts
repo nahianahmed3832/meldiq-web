@@ -43,7 +43,7 @@ import type { HistoryBackupState } from "../state/store";
 import { Outbox, sealAndPost } from "./outbox";
 import { levelOf, type NavOp, NavSync, PERSONAL, shouldNotify, workspaceOf } from "./navPrefs";
 import { firstShowing, ReminderSync } from "./reminders";
-import { callFrame, orgDeletedFrame, presenceFrame, typingFrame } from "./frameReducers";
+import { botReplyFrame, callFrame, dismissBotReply, orgDeletedFrame, presenceFrame, typingFrame } from "./frameReducers";
 import { pointsCheckin } from "./points";
 import { type Frame, parseFrame } from "../realtime/frames";
 import { meetingSoon } from "./workspaceC5";
@@ -706,7 +706,15 @@ export class Engine implements EngineContext {
         // The backlog, and with it any call key, has arrived: look for calls that rang while this browser was away.
         void this.calls.recoverRinging();
         return;
+      case "interaction.reply":
+        this.set((s) => botReplyFrame(s, f.reply));
+        return;
     }
+  }
+
+  /** Takes a bot's answer that only you saw off its conversation (API 0.65.0 batch B). */
+  dismissBotReply(conversationId: string, interactionId: string): void {
+    this.set((s) => dismissBotReply(s, conversationId, interactionId));
   }
 
   // ───────────────────────── EngineContext ─────────────────────────
@@ -1213,5 +1221,6 @@ function toUser(m: Member, prev?: UserLite): UserLite {
     tag: m.tag ?? prev?.tag ?? null,
     // API 0.54.0: no badge in the list means none (hidden or no plan): never kept from before.
     mojo: m.mojo ?? null,
+    bot: m.bot,
   };
 }

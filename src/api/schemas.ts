@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { openEnum } from "./enums";
-import { zAboutMe, zAccent, zAvatarMedia, zBadges, zMojoMark, zProfileBanner, zProfileLinks, zProfilePins, zProfileStyle, zWornTag } from "./profileSchemas";
+import { zAboutMe, zAccent, zAvatarMedia, zBadges, zMojoMark, zProfileBanner, zProfileConnections, zProfileLinks, zProfilePins, zProfileStyle, zWornTag } from "./profileSchemas";
 
 export * from "./profileSchemas";
 
@@ -51,6 +51,11 @@ export const zMember = z.object({
   tag: zWornTag,
   /** API 0.54.0: the Mojo badge they show (server docs/MOJO.md). */
   mojo: zMojoMark.optional(),
+  /** API 0.65.0 batch B: a bot's account (absent for people), shown with a BOT tag by its name. */
+  bot: z
+    .boolean()
+    .nullish()
+    .transform((v) => v === true || undefined),
 });
 export type Member = z.infer<typeof zMember>;
 
@@ -316,6 +321,13 @@ export const zProfile = z.object({
     .nullish()
     .catch(null)
     .transform((v) => v ?? null),
+  /** API 0.65.0 batch B: the Steam, AniList, Last.fm and Trakt accounts they show (none for someone they blocked). */
+  connections: zProfileConnections,
+  /** API 0.65.0 batch B: a bot's account (absent for people), shown with a BOT tag by its name. */
+  bot: z
+    .boolean()
+    .nullish()
+    .transform((v) => v === true || undefined),
 });
 export type Profile = z.infer<typeof zProfile>;
 

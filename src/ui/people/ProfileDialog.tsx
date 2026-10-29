@@ -20,6 +20,7 @@ import { toneOf } from "../components/Avatar";
 import { OrgAvatar } from "../components/OrgAvatar";
 import { directory } from "../../sync/workspaces";
 import { relative } from "../format";
+import { ProfileConnections } from "./ProfileConnections";
 
 type Profile = Awaited<ReturnType<typeof userProfile>>;
 
@@ -248,7 +249,7 @@ export function ProfileDialog({ userId, fallbackName, orgId = null, near = null,
         ) : (
           <>
             <h2 className="profile-pop-name">
-              <StyledName name={profile.displayName} style={profile.profileStyle} tag={profile.tag} mojo={profile.mojo} everyBadge className="ellipsis" />
+              <StyledName name={profile.displayName} style={profile.profileStyle} tag={profile.tag} mojo={profile.mojo} bot={profile.bot} everyBadge className="ellipsis" />
               {levelsOn && profile.level !== null && <LevelRing level={profile.level} size={24} className="profile-level" />}
             </h2>
             <p className="profile-pop-handle">
@@ -291,6 +292,7 @@ export function ProfileDialog({ userId, fallbackName, orgId = null, near = null,
                 </ul>
               </section>
             )}
+            {features.includes("connections-v2") && <ProfileConnections list={profile.connections} />}
             {error && (
               <div className="banner danger" role="alert">
                 {error}

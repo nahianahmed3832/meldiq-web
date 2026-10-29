@@ -7,6 +7,7 @@ import type { CallLogItem, ConversationLocal, PinnedIdentity, StoredMessage } fr
 import type { ConnectionState } from "../realtime/socket";
 import type { NavPrefs } from "../sync/navPrefs";
 import type { CommunityData } from "../sync/community";
+import type { BotReply } from "../sync/bots";
 
 export type Phase =
   /** Opening local data and signing in. */
@@ -70,6 +71,8 @@ export interface UserLite {
   tag?: WornTag | null;
   /** API 0.54.0: the Mojo badge they show (server docs/MOJO.md). */
   mojo?: MojoMark | null;
+  /** API 0.65.0 batch B: a bot's account. */
+  bot?: boolean;
 }
 type AvatarMedia = NonNullable<z.infer<typeof zAvatarMedia>>;
 
@@ -144,6 +147,8 @@ export interface AppState {
   connectionsRev: number;
   /** Bumped on `user.updated` (API 0.28): open profiles load again, so a change shows without a refresh. */
   profilesRev: number;
+  /** API 0.65.0 batch B: bots' answers only you see, by conversation, until dismissed or the page reloads. */
+  botReplies: Record<string, BotReply[]>;
 }
 
 export const initialState: AppState = {
@@ -171,6 +176,7 @@ export const initialState: AppState = {
   moderationRev: 0,
   connectionsRev: 0,
   profilesRev: 0,
+  botReplies: {},
   history: { status: "idle", restored: 0, unreadable: 0, error: null, backup: { mode: "off", pending: 0, lastUploadAt: null, error: null } },
   mojo: initialMojo,
   notices: [],

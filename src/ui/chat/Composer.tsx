@@ -31,6 +31,7 @@ import { slowmodeLabel, waitText } from "../../sync/communityRules";
 import { untilWhen } from "../format";
 import { useNow } from "../call/useNow";
 import { useT } from "../../i18n";
+import { SlashCommandList, useSlashCommands } from "./SlashCommands";
 
 interface ComposerProps {
   conversation: Conversation;
@@ -87,6 +88,8 @@ export function Composer(props: ComposerProps) {
   const [lastSent, setLastSent] = useState(0);
   const nextAt = slowed ? Math.max(c.nextPostAt ?? 0, lastSent + c.slowmodeSec * 1000) : 0;
   const now = useNow(slowed && nextAt > Date.now());
+  // API 0.65.0 batch B: "/" lists the commands of the bots in this channel; sending one runs it.
+  const slash = useSlashCommands(c, props.threadRoot ? "" : text, (t) => onChange(t), members);
 
   // Draft: restored when the conversation opens, saved as you type (main composer only).
   useEffect(() => {
@@ -180,6 +183,17 @@ export function Composer(props: ComposerProps) {
     if ((!body && !files.length) || busy) return;
     // Over the plan's characters (server docs/MOJO.md): the note under the box says so; nothing is cut off.
     if (overCharLimit(body, charLimit)) return;
+    if (!files.length && !props.threadRoot && body.startsWith("/")) {
+      const ran = await slash.run(body);
+      if (ran === "kept") return;
+      if (ran === "sent") {
+        clearTimeout(draftTimer.current);
+        setText("");
+        void engine.saveDraft(c.id, "");
+        engine.setTyping(c.id, false);
+        return;
+      }
+    }
     clearTimeout(draftTimer.current); // before anything async: a pending draft save must not bring the text back
     const opts = { replyTo: props.replyTo?.id, threadRoot: props.threadRoot };
     // The box empties at once (the message shows as Sending), so whatever is typed while it encrypts and goes out
@@ -269,6 +283,7 @@ export function Composer(props: ComposerProps) {
   return (
     <div className="composer-wrap">
       <TransferList conversationId={c.id} />
+      <SlashCommandList slash={slash} />
       {suggest && (
         <div className="suggest card" role="listbox" aria-label="People to mention">
           {suggest.items.map((m, i) => (
@@ -365,6 +380,7 @@ export function Composer(props: ComposerProps) {
                   }
                 }}
                 onKeyDown={(e) => {
+                  if (slash.onKey(e)) return;
                   if (suggest) {
                     if (e.key === "ArrowDown" || e.key === "ArrowUp") {
                       e.preventDefault();

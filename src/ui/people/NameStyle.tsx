@@ -52,10 +52,12 @@ interface StyledNameProps {
   /** The tone class names fall back to (the avatar colour's). */
   toneClass?: string;
   className?: string;
+  /** API 0.65.0 batch B: a bot's account, tagged BOT after the name. */
+  bot?: boolean;
 }
 
 /** A display name with its style, then the worn tag. Screen readers hear the name, then "tag MC". */
-export function StyledName({ name, style, tag, mojo, everyBadge, roleColor, toneClass, className }: StyledNameProps) {
+export function StyledName({ name, style, tag, mojo, everyBadge, roleColor, toneClass, className, bot }: StyledNameProps) {
   const colors = style?.nameColors ?? null;
   const paint = namePaint(colors) ?? (roleColor ? { color: roleColor } : undefined);
   const classes = [
@@ -74,10 +76,20 @@ export function StyledName({ name, style, tag, mojo, everyBadge, roleColor, tone
       <span className={classes} style={paint}>
         {name}
       </span>
+      {bot && <BotTag />}
       {tag && <WornTagChip tag={tag} />}
       {badge === "mojo" && mojo && <MojoBadgeMark badge={mojo.badge} check={mojo.check} />}
       {(badge === "bug-hunter" || badge === "artist") && <NameBadgeMark badge={badge} />}
     </>
+  );
+}
+
+/** The tag after a bot's name (API 0.65.0 batch B): bots are accounts of their own that people make in Developer settings. */
+export function BotTag() {
+  return (
+    <span className="bot-tag" title="A bot: an app someone made, not a person">
+      BOT
+    </span>
   );
 }
 
@@ -91,13 +103,13 @@ export function WornTagChip({ tag }: { tag: WornTag }) {
 }
 
 /** What this browser knows of a person's look (from member lists and profiles). */
-export function useUserLook(userId: string): Pick<UserLite, "avatarMedia" | "profileStyle" | "tag" | "mojo"> {
+export function useUserLook(userId: string): Pick<UserLite, "avatarMedia" | "profileStyle" | "tag" | "mojo" | "bot"> {
   return useOrbit(
     (s) => {
       const u = s.users[userId];
-      return { avatarMedia: u?.avatarMedia ?? null, profileStyle: u?.profileStyle ?? null, tag: u?.tag ?? null, mojo: u?.mojo ?? null };
+      return { avatarMedia: u?.avatarMedia ?? null, profileStyle: u?.profileStyle ?? null, tag: u?.tag ?? null, mojo: u?.mojo ?? null, bot: u?.bot === true };
     },
-    (a, b) => a.avatarMedia === b.avatarMedia && a.profileStyle === b.profileStyle && a.tag === b.tag && a.mojo === b.mojo,
+    (a, b) => a.avatarMedia === b.avatarMedia && a.profileStyle === b.profileStyle && a.tag === b.tag && a.mojo === b.mojo && a.bot === b.bot,
   );
 }
 

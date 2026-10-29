@@ -1,3 +1,4 @@
+import { BotReplies } from "./SlashCommands";
 import { ConversationMenu } from "./ConversationMenu";
 import { UNKNOWN } from "../../api/enums";
 import { ChannelGlyph } from "../community/ChannelDialogs";
@@ -247,15 +248,18 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
       ) : c.request?.incoming ? (
         <RequestBar conversation={c} name={title} />
       ) : (
-        <Composer
-          conversation={c}
-          title={title}
-          replyTo={replyTo}
-          replyName={replyTo ? (replyTo.outgoing ? "yourself" : (users[replyTo.senderUserId]?.displayName ?? "Unknown")) : null}
-          onCancelReply={() => setReplyTo(null)}
-          dropped={drop.dropped}
-          onDroppedTaken={drop.take}
-        />
+        <>
+          <BotReplies conversationId={c.id} />
+          <Composer
+            conversation={c}
+            title={title}
+            replyTo={replyTo}
+            replyName={replyTo ? (replyTo.outgoing ? "yourself" : (users[replyTo.senderUserId]?.displayName ?? "Unknown")) : null}
+            onCancelReply={() => setReplyTo(null)}
+            dropped={drop.dropped}
+            onDroppedTaken={drop.take}
+          />
+        </>
       )}
       {drop.over && <div className="drop-overlay">Drop files to send them to {title}</div>}
     </section>

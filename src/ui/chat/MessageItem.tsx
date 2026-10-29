@@ -676,5 +676,5 @@ function ForwardedLine({ origin }: { origin: RichContent["origin"] }) {
 /** The author's name with their name style and tag (API 0.46.0), as this browser knows them. */
 function SenderName({ userId, name, toneClass }: { userId: string; name: string; toneClass: string }) {
   const look = useUserLook(userId);
-  return <StyledName name={name} style={look.profileStyle} tag={look.tag} mojo={look.mojo} toneClass={toneClass} className="ellipsis" />;
+  return <StyledName name={name} style={look.profileStyle} tag={look.tag} mojo={look.mojo} bot={look.bot} toneClass={toneClass} className="ellipsis" />;
 }
