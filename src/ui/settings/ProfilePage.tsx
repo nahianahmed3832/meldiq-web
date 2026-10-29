@@ -11,6 +11,7 @@ import { UserAvatar } from "../components/OrgAvatar";
 import { squareJpeg } from "../workspace/photo";
 import { useAction, useLoad } from "../workspace/useLoad";
 import { ProfileStyleCard } from "./ProfileStyleCard";
+import { ConnectionsCard } from "./ConnectionsCard";
 
 /** My Profile: the editor, with your profile card previewed beside it (the reference's layout, 2026-10-29). */
 export function ProfilePage() {
@@ -240,6 +241,7 @@ function ProfileEditor() {
             </form>
           </div>
           {profileMedia && <ProfileStyleCard nameStyles={nameStyles} />}
+          <ConnectionsCard />
         </div>
         <ProfilePreviewCard />
       </div>

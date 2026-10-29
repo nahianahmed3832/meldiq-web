@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { openEnum } from "./enums";
 
 /**
  * A person's and a community's look as the server sends it (API 0.44.0–0.46.0): accent colours, animated avatars,
@@ -145,3 +146,28 @@ export const zMojoMark = z
   .catch(null)
   .transform((v) => v ?? null);
 export type MojoMark = NonNullable<z.infer<typeof zMojoMark>>;
+
+/** API 0.65.0 batch B (connections-v2): the linked accounts a profile shows (sync/linkedAccounts.ts). */
+export const PROVIDERS = ["steam", "anilist", "lastfm", "trakt"] as const;
+export type Provider = (typeof PROVIDERS)[number];
+
+const zItem = z.object({ title: z.string(), subtitle: z.string().nullable(), url: z.string().nullable() });
+
+/** A connection as profiles show it; unknown providers or kinds (a newer server) are kept out by [visibleConnections]. */
+export const zProfileConnection = z.object({
+  provider: openEnum(PROVIDERS),
+  name: z.string(),
+  url: z.string(),
+  itemsKind: z.string(),
+  items: z.array(zItem).max(10),
+  updatedAt: z.number(),
+});
+export type ProfileConnection = z.infer<typeof zProfileConnection>;
+
+/** On profiles: absent when there are none (and for someone who blocked you). */
+export const zProfileConnections = z
+  .array(zProfileConnection)
+  .max(20)
+  .nullish()
+  .catch(null)
+  .transform((v) => v ?? []);
