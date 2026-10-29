@@ -1,6 +1,7 @@
 import { Check, Copy, Download, KeyRound, RefreshCw, ShieldCheck, Smartphone } from "lucide-react";
 import { type FormEvent, useEffect, useRef, useState } from "react";
 import type { AccountView } from "../../api/accountSchemas";
+import type { UnlockDelivery } from "../../auth/accountApi";
 import { createIdentity, enrollWithEmailCode, enrollWithSeed } from "../../auth/deviceSetup";
 import type { SetupCredentials } from "../../auth/setupCredentials";
 import { fingerprint } from "../../crypto/identity";
@@ -232,21 +233,29 @@ function rememberSent(email: string): void {
 /**
  * The key backup (reported 2026-10-23: asking "Email me a code" first was a needless step): the code is emailed as soon
  * as this opens and the screen asks only for it (and the password, if this page lost it). Having trouble? sends a new
- * code or switches account; Account recovery opens the other ways (phone, recovery key).
+ * code or switches account; Account recovery opens the other ways (phone, recovery key). An account made in the admin
+ * console (API 0.63.0) may need the tester code it was given instead, or no code: then the password alone unlocks.
  */
 function EmailUnlock(props: AddDeviceProps & { onSignOut: () => void; onRecovery: () => void }) {
   const email = props.account.email;
   const [sentTo, setSentTo] = useState<string | null>(() => (recentlySentTo(email) ? email : null));
+  const [delivery, setDelivery] = useState<UnlockDelivery>("email");
   const [code, setCode] = useState("");
   const [password, setPassword] = useState("");
   const [trouble, setTrouble] = useState(false);
   const { busy, error, run } = useSubmit();
   const t = useT();
+  const enroll = async (c: string | null, pw: string) =>
+    props.onEnrolled((await enrollWithEmailCode(props.creds.accounts, props.account, c, pw, props.deviceName)).device);
   const send = () =>
     void run(async () => {
-      const to = (await props.creds.accounts.startKeyUnlock()).email;
-      rememberSent(email);
-      setSentTo(to);
+      const started = await props.creds.accounts.startKeyUnlock();
+      const how = started.delivery ?? "email";
+      setDelivery(how);
+      // Only an emailed code is worth not sending again; the other ways cost nothing to start.
+      if (how === "email") rememberSent(email);
+      setSentTo(started.email);
+      if (how === "none" && props.password) await enroll(null, props.password);
     });
   const sentOnce = useRef(false);
   useEffect(() => {
@@ -255,23 +264,34 @@ function EmailUnlock(props: AddDeviceProps & { onSignOut: () => void; onRecovery
     send();
     // eslint-disable-next-line react-hooks/exhaustive-deps -- sends once when the screen opens; Send a new code sends again
   }, []);
+  const needsCode = delivery !== "none";
   const submit = (e: FormEvent) => {
     e.preventDefault();
-    void run(async () => {
-      props.onEnrolled((await enrollWithEmailCode(props.creds.accounts, props.account, code, props.password ?? password, props.deviceName)).device);
-    });
+    void run(() => enroll(needsCode ? code : null, props.password ?? password));
   };
-  const ready = code.replace(/\D/g, "").length === 6 && (!!props.password || password.length > 0);
+  const ready = (!needsCode || code.replace(/\D/g, "").length === 6) && (!!props.password || password.length > 0);
+  const status =
+    delivery === "fixed_code"
+      ? t("setup_fixed_code")
+      : delivery === "none"
+        ? t("setup_no_code")
+        : sentTo
+          ? t("setup_code_sent", { email: sentTo })
+          : busy
+            ? t("setup_code_sending", { email })
+            : t("setup_code_will_send", { email });
   return (
     <form className="auth-form" onSubmit={submit} noValidate>
       <p className="muted" role="status" style={{ margin: 0 }}>
-        {sentTo ? t("setup_code_sent", { email: sentTo }) : busy ? t("setup_code_sending", { email }) : t("setup_code_will_send", { email })}
+        {status}
       </p>
       <FormError text={error} />
-      <div className="field">
-        <label htmlFor="ku-code">{t("setup_code_label")}</label>
-        <input id="ku-code" className="input mono" inputMode="numeric" autoComplete="one-time-code" maxLength={7} value={code} onChange={(e) => setCode(e.target.value)} autoFocus />
-      </div>
+      {needsCode && (
+        <div className="field">
+          <label htmlFor="ku-code">{t("setup_code_label")}</label>
+          <input id="ku-code" className="input mono" inputMode="numeric" autoComplete="one-time-code" maxLength={7} value={code} onChange={(e) => setCode(e.target.value)} autoFocus />
+        </div>
+      )}
       {!props.password && (
         <div className="field">
           <label htmlFor="ku-password">{t("common_password")}</label>
@@ -288,7 +308,7 @@ function EmailUnlock(props: AddDeviceProps & { onSignOut: () => void; onRecovery
       </div>
       {trouble && (
         <div className="auth-links">
-          <LinkButton onClick={send}>{t("common_send_new_code")}</LinkButton>
+          {delivery === "email" && <LinkButton onClick={send}>{t("common_send_new_code")}</LinkButton>}
           <LinkButton onClick={props.onSignOut}>{t("common_use_other_account")}</LinkButton>
         </div>
       )}

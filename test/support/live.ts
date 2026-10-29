@@ -44,7 +44,12 @@ export interface Phone {
 
 export interface Server {
   baseUrl: string;
-  ctx: { hub: { disconnectDevice(id: string, reason: string): void }; db: { prepare(sql: string): { run(...a: unknown[]): unknown; get(...a: unknown[]): any } } };
+  ctx: {
+    hub: { disconnectDevice(id: string, reason: string): void };
+    db: { prepare(sql: string): { run(...a: unknown[]): unknown; get(...a: unknown[]): any } };
+    /** The platform domain's rows (server 0.62+: operator_accounts, docs/ADMIN_ACCOUNTS.md). */
+    platform: { write(fn: (w: { insert(table: string, row: Record<string, unknown>): void }) => void): unknown };
+  };
   client(username: string, displayName?: string): Promise<Phone>;
   close(): Promise<void>;
 }

@@ -1,3 +1,4 @@
+import crypto from "node:crypto";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import type { AccountSessionGrant } from "../src/api/accountSchemas";
 import { AccountApi } from "../src/auth/accountApi";
@@ -80,5 +81,40 @@ describe("key backup in the browser", () => {
     const seed = (await decodeRecoveryCode(made.recoveryCode))!;
     await enrollWithSeed(c.accounts, grant.account, seed, "web", undefined, NEW_PASSWORD);
     expect((await c.accounts.keyBackupStatus()).exists).toBe(true);
+  });
+});
+
+/** Marks [accountId] as made in the admin console (server docs/ADMIN_ACCOUNTS.md), as the console's create does. */
+async function madeInConsole(accountId: string, verification: "verified" | "static_code", staticCode?: string) {
+  const t = Date.now();
+  const codeHash = staticCode ? crypto.createHash("sha256").update(`${accountId}:static_verify_email:${staticCode}`).digest("hex") : null;
+  await server.ctx.platform.write((w) =>
+    w.insert("operator_accounts", { account_id: accountId, verification, code_hash: codeHash, code_expires_at: null, tester: 1, note: null, created_by: "acc_op", created_at: t, updated_by: "acc_op", updated_at: t }),
+  );
+}
+
+describe("a second browser of an account made in the admin console (API 0.63.0)", () => {
+  it("no code: nothing is emailed and the password alone unlocks the keys", async () => {
+    const { address, made } = await firstBrowser("kbnocode");
+    const before = (mail.sent ?? []).length;
+    const grant = await anon().login(address, PASSWORD, "Meldiq Web · second");
+    await madeInConsole(grant.account.id, "verified");
+    const second = creds(grant);
+    expect((await second.accounts.startKeyUnlock()).delivery).toBe("none");
+    const { device } = await enrollWithEmailCode(second.accounts, grant.account, null, PASSWORD, "Meldiq Web · second");
+    expect(device.identityKey).toBe(made.device.identityKey);
+    expect((mail.sent ?? []).slice(before).filter((m) => m.to === address)).toEqual([]);
+  });
+
+  it("fixed tester code: nothing is emailed and the tester code unlocks the keys", async () => {
+    const { address, made } = await firstBrowser("kbfixed");
+    const grant = await anon().login(address, PASSWORD, "Meldiq Web · second");
+    await madeInConsole(grant.account.id, "static_code", "246810");
+    const second = creds(grant);
+    expect((await second.accounts.startKeyUnlock()).delivery).toBe("fixed_code");
+    await expect(enrollWithEmailCode(second.accounts, grant.account, "000000", PASSWORD, "web")).rejects.toMatchObject({ code: "invalid_code" });
+    const { device } = await enrollWithEmailCode(second.accounts, grant.account, "246 810", PASSWORD, "Meldiq Web · second");
+    expect(device.identityKey).toBe(made.device.identityKey);
+    expect(() => unlockCode(address)).toThrow();
   });
 });

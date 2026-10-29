@@ -181,6 +181,12 @@ export const STRINGS = {
   setup_code_sending: ["Sending a code to {email}…", "正在向 {email} 发送验证码…", "{email}-এ কোড পাঠানো হচ্ছে…"],
   setup_code_will_send: ["We'll send a code to {email}.", "我们会向 {email} 发送验证码。", "আমরা {email}-এ একটি কোড পাঠাব।"],
   setup_code_label: ["Verification code", "验证码", "যাচাইকরণ কোড"],
+  setup_fixed_code: [
+    "Enter the 6-digit tester code you were given. No email is sent for this account.",
+    "请输入你收到的 6 位测试验证码。此账户不会发送邮件。",
+    "আপনাকে দেওয়া ৬ সংখ্যার টেস্টার কোডটি দিন। এই অ্যাকাউন্টে কোনো ইমেইল পাঠানো হয় না।",
+  ],
+  setup_no_code: ["This account needs no code: your password unlocks your messages.", "此账户无需验证码：你的密码即可解锁消息。", "এই অ্যাকাউন্টে কোনো কোড লাগে না: আপনার পাসওয়ার্ডই মেসেজ আনলক করে।"],
   setup_password_hint: ["Your password opens the backup in this browser.", "你的密码会在此浏览器中打开备份。", "আপনার পাসওয়ার্ড এই ব্রাউজারে ব্যাকআপ খোলে।"],
   setup_unlock: ["Unlock", "解锁", "আনলক করুন"],
   setup_unlocking: ["Unlocking…", "正在解锁…", "আনলক হচ্ছে…"],
