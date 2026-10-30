@@ -6,6 +6,7 @@ import { DISCOVERY_FEATURES } from "../../sync/discovery/rules";
 import { CommunityBotsCard } from "./bots/CommunityBotsCard";
 import { type BotProfile, botProfile, installBot, removeBot } from "../../sync/bots";
 import { directory } from "../../sync/workspaces";
+import { AlsoBuiltIn, OfficialBotsSection, useOfficialBotsOffered } from "./bots/OfficialBotsSection";
 import { useAction, useLoad } from "./useLoad";
 import { Card, ErrorLine } from "./WorkspaceView";
 
@@ -14,9 +15,23 @@ const BOT_ID = /^[A-Za-z0-9_-]{1,64}$/;
 /**
  * Community settings › Bots (API 0.65.0 batch B): add a bot by its ID after seeing who it is and who made it, and remove
  * the ones here. A bot joins as an ordinary member, so roles and channel permissions decide what it can see and post.
- * Shown to people with Edit community permission; the server checks again.
+ * Shown to people with Edit community permission; the server checks again. Community parity D (feature community-bots):
+ * Meldiq's official bots, "Your own bot" and Bots+ come first, and "Also built in" closes the page.
  */
 export function BotsPage({ detail }: { detail: OrgAdminDetail }) {
+  const official = useOfficialBotsOffered();
+  const others = useOrbit((s) => s.server?.features.includes("bots") ?? false);
+  return (
+    <>
+      {official && <OfficialBotsSection detail={detail} />}
+      {others && <InstalledBots detail={detail} />}
+      {official && <AlsoBuiltIn />}
+    </>
+  );
+}
+
+/** Bots people made (API 0.65.0 batch B): add one by its ID, and the ones here. */
+function InstalledBots({ detail }: { detail: OrgAdminDetail }) {
   const engine = useEngine();
   const orgId = detail.org.id;
   const [rev, setRev] = useState(0);

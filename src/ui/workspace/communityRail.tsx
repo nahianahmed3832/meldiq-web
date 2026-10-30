@@ -26,6 +26,7 @@ import type { OrgPermissions } from "../../api/workspaceSchemas";
 import type { WorkspacePage } from "../../application/router";
 import { PARITY_FEATURES } from "../../sync/communityParity";
 import { LOBBY_FEATURE } from "../../sync/lobby";
+import { OFFICIAL_BOTS_FEATURE } from "../../sync/officialBots";
 
 /**
  * Community settings' left rail (docs/MELDIQ_COMMUNITY_PARITY.md §1, "Server Settings window"): the reference's groups and
@@ -75,6 +76,8 @@ export const COMMUNITY_RAIL: readonly CommunityRailPage[] = [
   { key: "expressions", label: "Emoji & stickers", icon: <Smile size={17} />, group: "expression", feature: "community-expressions", shown: (p) => can(p, "expressions.manage") },
   // API 0.65.0 batch B: adding bots needs Edit community.
   { key: "bots", label: "Bots", icon: <Bot size={17} />, group: "apps", feature: "bots", shown: (p) => p.canManageOrg },
+  // Community parity D: Meldiq's official bots (servers with community-bots but without people's bots).
+  { key: "bots", label: "Bots", icon: <Bot size={17} />, group: "apps", feature: OFFICIAL_BOTS_FEATURE, shown: (p) => p.canManageOrg },
   { key: "people", label: "Members", icon: <UsersRound size={17} />, group: "people", shown: (p) => p.canViewDirectory },
   { key: "roles", label: "Roles", icon: <ShieldCheck size={17} />, group: "people", shown: (p) => p.canViewRoles },
   { key: "onboarding", label: "Onboarding", icon: <HelpCircle size={17} />, group: "people", feature: "onboarding" },

@@ -22,6 +22,7 @@ import "../styles/lobby.css";
 import "../styles/lobby-editor.css";
 import "../styles/landing.css";
 import "../styles/discovery.css";
+import "../styles/official-bots.css";
 import "../styles/responsive.css"; // last: its media queries override the rest
 
 export default function MeldiqApp({ Component, pageProps }: AppProps) {

@@ -37,7 +37,8 @@
   font: 800 10px/1.45 var(--font);
   letter-spacing: 0.05em;
   vertical-align: 0.12em;
-  color: #fff;
+  /* The accent's own text colour, so the tag reads on a light accent (the floating redesign's lime) too. */
+  color: var(--on-accent);
   background: var(--accent);
   flex: none;
   white-space: nowrap;

@@ -905,6 +905,8 @@ export class Engine implements EngineContext {
                 photoRev: u.photoRev,
                 presence: u.presence,
                 pronouns: u.pronouns,
+                // A bot that isn't in any list this browser loaded (an official bot posting in a channel) keeps its BOT tag.
+                bot: u.bot,
               },
             },
           })),

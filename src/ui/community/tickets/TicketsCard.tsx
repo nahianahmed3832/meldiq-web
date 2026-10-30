@@ -37,7 +37,7 @@ export function TicketsSection({ detail }: { detail: OrgAdminDetail }) {
   );
 }
 
-function TicketsCard({ orgId }: { orgId: string }) {
+export function TicketsCard({ orgId }: { orgId: string }) {
   const engine = useEngine();
   const loaded = useLoad(() => ticketsConfig(engine, orgId), [engine, orgId]);
   const channels = useOrbit((s) => panelChannels(s, orgId)).filter((c) => !looksLikeTicket(c.name));

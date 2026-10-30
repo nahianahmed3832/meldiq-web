@@ -14,6 +14,8 @@ export interface ListedMember {
   displayName: string;
   presence: "online" | "idle" | "dnd" | "offline" | null;
   online: boolean | null;
+  /** A bot (people's bots and Meldiq's official ones): listed under Bots, whatever its presence. */
+  bot?: boolean;
 }
 
 export interface MemberListGroup<T> {
@@ -48,13 +50,16 @@ export function roleNameColors(roles: readonly ListedRole[] | undefined): string
 /**
  * A channel's or group's member list, as Discord shows it: people who are here, each under their highest role that's
  * shown separately (in role order) or else under Online; then everyone else under Offline. Names sort alphabetically
- * in each group; empty groups are left out.
+ * in each group; empty groups are left out. Bots (community parity D: official bots with the community's name for them)
+ * have a group of their own before Offline, since a bot is never "away".
  */
 export function memberListGroups<T extends ListedMember>(members: readonly T[], rolesOf: (userId: string) => readonly ListedRole[] | undefined): MemberListGroup<T>[] {
   const alpha = (a: T, b: T) => a.displayName.localeCompare(b.displayName, undefined, { sensitivity: "base" });
   const topHoisted = (m: T) => [...(rolesOf(m.id) ?? [])].filter((r) => r.hoist).sort(byPosition)[0] ?? null;
-  const here = members.filter(isHere);
-  const away = members.filter((m) => !isHere(m));
+  const people = members.filter((m) => !m.bot);
+  const bots = members.filter((m) => m.bot);
+  const here = people.filter(isHere);
+  const away = people.filter((m) => !isHere(m));
 
   const roles = new Map<string, ListedRole>();
   for (const m of here) {
@@ -70,6 +75,7 @@ export function memberListGroups<T extends ListedMember>(members: readonly T[], 
   const groups: MemberListGroup<T>[] = [
     ...roleGroups,
     { key: "online", label: "Online", color: null, members: here.filter((m) => topHoisted(m) === null).sort(alpha) },
+    { key: "bots", label: "Bots", color: null, members: [...bots].sort(alpha) },
     { key: "offline", label: "Offline", color: null, members: [...away].sort(alpha) },
   ];
   return groups.filter((g) => g.members.length > 0);

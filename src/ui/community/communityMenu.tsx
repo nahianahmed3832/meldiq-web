@@ -27,6 +27,7 @@ import { shallowEqual, useEngine, useOrbit } from "../../application/orbit";
 import { setPrefs, usePrefs } from "../../application/prefs";
 import { navigate, type WorkspacePage } from "../../application/router";
 import { MUTE_CHOICES } from "../../sync/communityRules";
+import { OFFICIAL_BOTS_FEATURE } from "../../sync/officialBots";
 import { communityMutedUntil, countsEveryone, MUTE_FOREVER, type NotifyLevel } from "../../sync/navPrefs";
 import type { MenuEntry } from "../components/Overlay";
 import { clock, dayLabel, sameDay } from "../format";
@@ -116,7 +117,7 @@ export function useCommunityMenu(orgId: string | null, perms: CommunityPermissio
   if (features.includes("mojo")) entries.push({ label: "Sparks", icon: <Sparkles size={16} />, hint: sparkLevel ? `Level ${sparkLevel}` : undefined, onSelect: () => setDialog("sparks") });
   entries.push({ label: "Community settings", icon: <Settings2 size={16} />, onSelect: () => openSettings("overview") });
   if (features.includes(PARITY_FEATURES.promote) && perms.canManageOrg) entries.push({ label: "Promote", icon: <Megaphone size={16} />, onSelect: () => openSettings("promote") });
-  if (features.includes("bots") && perms.canManageOrg) entries.push({ label: "Bots", icon: <Bot size={16} />, onSelect: () => openSettings("bots") });
+  if ((features.includes("bots") || features.includes(OFFICIAL_BOTS_FEATURE)) && perms.canManageOrg) entries.push({ label: "Bots", icon: <Bot size={16} />, onSelect: () => openSettings("bots") });
   if (perms.canCreateChannels) entries.push({ label: "Create channel", icon: <PenSquare size={16} />, onSelect: () => setDialog("channel") });
   if (perms.canCreateTop) entries.push({ label: "Create category", icon: <FolderPlus size={16} />, onSelect: () => setDialog("category") });
   if (canLock) entries.push(lockEntry({ lockedUntil, realLock, onLock: lock, onUnlock: unlock }));

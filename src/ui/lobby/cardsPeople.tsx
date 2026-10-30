@@ -1,6 +1,7 @@
 import { Crown, Shield, ShieldCheck } from "lucide-react";
 import { useState } from "react";
 import type { LobbyBoard, LobbyPerson, LobbyStaff } from "../../api/lobbySchemas";
+import { levelFromXp } from "../../sync/officialBotRules";
 import { UserAvatar } from "../components/OrgAvatar";
 import { OPEN_PROFILE_EVENT } from "../people/ProfileDialog";
 import { BOARD_LABELS } from "./lobbyInfo";
@@ -40,7 +41,13 @@ export function WhoRunsItCard() {
   );
 }
 
-const UNITS: Record<LobbyBoard, [string, string]> = { levels: ["level", "levels"], messages_week: ["message", "messages"], invites: ["invite", "invites"] };
+const UNITS: Record<LobbyBoard, [string, string]> = { levels: ["XP", "XP"], messages_week: ["message", "messages"], invites: ["invite", "invites"] };
+
+/** A board's number: the Levels board's `count` is XP (the Levels bot), shown with the level it makes. */
+function boardCount(board: LobbyBoard, count: number, unit: [string, string]): string {
+  const n = `${count.toLocaleString()} ${count === 1 ? unit[0] : unit[1]}`;
+  return board === "levels" ? `Level ${levelFromXp(count)} · ${n}` : n;
+}
 
 /** The top ten on each of the lobby's boards; several boards are tabs. */
 export function LeaderboardCard() {
@@ -71,9 +78,7 @@ export function LeaderboardCard() {
                 <span className={`lobby-rank rank-${e.rank}`}>{e.rank}</span>
                 <UserAvatar userId={e.user.id} name={e.user.displayName} colorIndex={e.user.avatarColor} photoRev={e.user.photoRev} size={26} decorative />
                 <span className="ellipsis grow">{e.user.displayName}</span>
-                <small className="muted">
-                  {e.count} {e.count === 1 ? unit[0] : unit[1]}
-                </small>
+                <small className="muted">{boardCount(current.board as LobbyBoard, e.count, unit)}</small>
               </button>
             </li>
           ))}
