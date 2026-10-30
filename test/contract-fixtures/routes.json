@@ -1,5 +1,5 @@
 {
-  "version": "0.66.1",
+  "version": "0.67.0",
   "routes": [
     {
       "method": "GET",
@@ -1235,6 +1235,30 @@
     },
     {
       "method": "GET",
+      "path": "/v1/orgs/{orgId}/official-bots/alerts/watches"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/orgs/{orgId}/official-bots/alerts/watches"
+    },
+    {
+      "method": "PATCH",
+      "path": "/v1/orgs/{orgId}/official-bots/alerts/watches/{watchId}"
+    },
+    {
+      "method": "DELETE",
+      "path": "/v1/orgs/{orgId}/official-bots/alerts/watches/{watchId}"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/orgs/{orgId}/official-bots/wordy/game"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/orgs/{orgId}/official-bots/wordy/game"
+    },
+    {
+      "method": "GET",
       "path": "/v1/discover"
     },
     {
@@ -2400,6 +2424,18 @@
       409
     ],
     "official_bot_unavailable": [
+      409
+    ],
+    "alerts_unconfigured": [
+      503
+    ],
+    "alerts_source_unknown": [
+      400
+    ],
+    "wordy_not_a_word": [
+      400
+    ],
+    "wordy_finished": [
       409
     ],
     "bad_address": [

@@ -18,7 +18,11 @@ export const BOT_LIMITS = {
   defaultStarThreshold: 5,
   xpBoosts: [1, 1.5, 2],
   emoji: 64,
-  alertFeeds: { free: 3, plus: 25 },
+  alertWatches: { free: 3, plus: 25 },
+  alertMessage: 300,
+  ticketWelcome: 500,
+  giveawayWinners: { free: 3, plus: 20 },
+  giveawayDays: { free: 7, plus: 30 },
 } as const;
 
 /** Bots+'s price as the reference shows it; billing for it isn't set up yet. */
@@ -39,11 +43,6 @@ export interface CustomCommand {
 export interface RoleReward {
   level: number;
   roleId: string;
-}
-export interface AlertFeed {
-  url: string;
-  channelId: string;
-  roleId: string | null;
 }
 
 export interface WelcomerSettings {
@@ -73,17 +72,11 @@ export interface StarboardSettings {
   selfStar: boolean;
   excludeChannelIds: string[];
 }
-/**
- * Part 2 bots (catalog `available: false` today). Their settings aren't published yet: these shapes follow the
- * reference's windows and are only sent once the server runs the bot.
- */
+/** Giveaways. Plus: only members holding the role may win. */
 export interface GiveawaysSettings {
   requiredRoleId: string | null;
 }
-export interface AlertsSettings {
-  feeds: AlertFeed[];
-  message: string | null;
-}
+/** Wordy is quiet until its channel is picked. (Tickets' settings are its tickets config; Alerts' are its watches.) */
 export interface WordySettings {
   channelId: string | null;
 }
@@ -95,7 +88,6 @@ export interface BotSettingsMap {
   logger: LoggerSettings;
   starboard: StarboardSettings;
   giveaways: GiveawaysSettings;
-  alerts: AlertsSettings;
   wordy: WordySettings;
 }
 export type SettingsKey = keyof BotSettingsMap;
@@ -108,7 +100,6 @@ export const SETTINGS_DEFAULTS: { readonly [K in SettingsKey]: BotSettingsMap[K]
   logger: { channelId: null, memberChannelId: null, excludeChannelIds: [] },
   starboard: { channelId: null, threshold: BOT_LIMITS.defaultStarThreshold, emoji: null, selfStar: false, excludeChannelIds: [] },
   giveaways: { requiredRoleId: null },
-  alerts: { feeds: [], message: null },
   wordy: { channelId: null },
 };
 
@@ -142,7 +133,6 @@ const PLUS_VALUE: { readonly [K in SettingsKey]: Partial<Record<keyof BotSetting
   logger: { memberChannelId: nonEmpty, excludeChannelIds: nonEmpty },
   starboard: { emoji: nonEmpty, selfStar: (v) => v === true, excludeChannelIds: nonEmpty },
   giveaways: { requiredRoleId: nonEmpty },
-  alerts: { feeds: (v) => Array.isArray(v) && v.length > BOT_LIMITS.alertFeeds.free },
   wordy: {},
 };
 
@@ -221,25 +211,6 @@ function starboardProblem(s: StarboardSettings): string | null {
   return excludedProblem(s.excludeChannelIds);
 }
 
-const YOUTUBE = /^https:\/\/(www\.|m\.)?(youtube\.com|youtu\.be)\/\S+$/i;
-
-/** Why a followed video channel can't be added, or null. */
-export function feedProblem(f: AlertFeed): string | null {
-  if (!YOUTUBE.test(f.url.trim())) return "Paste the YouTube channel's https link.";
-  if (!f.channelId) return "Pick the channel to post in.";
-  return null;
-}
-
-function alertsProblem(s: AlertsSettings, botsPlus: boolean): string | null {
-  const max = botsPlus ? BOT_LIMITS.alertFeeds.plus : BOT_LIMITS.alertFeeds.free;
-  if (s.feeds.length > max) return `Follow up to ${max} video channels${botsPlus ? "" : " (Bots+: 25)"}.`;
-  for (const f of s.feeds) {
-    const problem = feedProblem(f);
-    if (problem) return problem;
-  }
-  return tooLong(s.message, BOT_LIMITS.welcomeMessage) ? `Keep the message to ${BOT_LIMITS.welcomeMessage} characters.` : null;
-}
-
 /** Why these settings can't be saved, or null. */
 export function settingsProblem(key: string, draft: AnySettings, botsPlus: boolean): string | null {
   switch (key) {
@@ -253,8 +224,6 @@ export function settingsProblem(key: string, draft: AnySettings, botsPlus: boole
       return excludedProblem((draft as unknown as LoggerSettings).excludeChannelIds);
     case "starboard":
       return starboardProblem(draft as unknown as StarboardSettings);
-    case "alerts":
-      return alertsProblem(draft as unknown as AlertsSettings, botsPlus);
     default:
       return null;
   }
@@ -272,8 +241,6 @@ export function cleanSettings(key: string, s: AnySettings): AnySettings {
       return { ...s, levelUpMessage: text(s.levelUpMessage) };
     case "starboard":
       return { ...s, emoji: text(s.emoji) };
-    case "alerts":
-      return { ...s, message: text(s.message), feeds: (s.feeds as AlertFeed[]).map((f) => ({ ...f, url: f.url.trim() })) };
     default:
       return s;
   }
@@ -302,7 +269,45 @@ export function levelFromXp(xp: number): number {
 }
 
 /** The "Off · FREE · tap for details" line under a bot on the Bots page. */
-export function botStatusLine(bot: { enabled: boolean; available: boolean }, botsPlus: boolean): string {
-  const state = !bot.available ? "Coming soon" : bot.enabled ? "On" : "Off";
+export function botStatusLine(bot: { enabled: boolean; available: boolean; unavailableReason?: string | null }, botsPlus: boolean): string {
+  const state = !bot.available ? (bot.unavailableReason ? "Unavailable" : "Coming soon") : bot.enabled ? "On" : "Off";
   return `${state} · ${botsPlus ? "PLUS" : "FREE"} · tap for details`;
+}
+
+const YOUTUBE_LINK = /^(https?:\/\/)?(www\.|m\.)?youtube\.com\/(@[\w.-]+|channel\/UC[\w-]+|user\/[\w.-]+|c\/[\w.-]+)\/?$/i;
+const HANDLE = /^@[\w.-]{2,100}$/;
+
+/** Why a YouTube channel can't be followed as typed, or null: a channel link or an @handle. */
+export function alertSourceProblem(source: string): string | null {
+  const s = source.trim();
+  if (!s) return "Paste the YouTube channel's link or its @handle.";
+  return YOUTUBE_LINK.test(s) || HANDLE.test(s) ? null : "That isn't a YouTube channel: paste a link like youtube.com/@name, or an @handle.";
+}
+
+export const WORDY_LENGTH = 5;
+export type WordyMark = "right" | "close" | "absent";
+
+/** A row's marks (🟩 🟨 ⬛) as kinds, one per letter. */
+export function wordyMarks(marks: string): WordyMark[] {
+  return [...marks].filter((c) => c !== "️").map((c) => (c === "🟩" ? "right" : c === "🟨" ? "close" : "absent"));
+}
+
+const RANK: Record<WordyMark, number> = { absent: 0, close: 1, right: 2 };
+
+/** The keyboard's colours: each letter's best mark so far. */
+export function wordyKeys(rows: readonly { guess: string; marks: string }[]): Record<string, WordyMark> {
+  const out: Record<string, WordyMark> = {};
+  for (const r of rows) {
+    const marks = wordyMarks(r.marks);
+    [...r.guess.toLowerCase()].forEach((ch, i) => {
+      const m = marks[i] ?? "absent";
+      if (!out[ch] || RANK[m] > RANK[out[ch]]) out[ch] = m;
+    });
+  }
+  return out;
+}
+
+/** Why a guess can't be sent yet, or null (the server checks the word list). */
+export function wordyGuessProblem(guess: string): string | null {
+  return /^[a-z]{5}$/i.test(guess.trim()) ? null : "A guess is a five-letter word.";
 }

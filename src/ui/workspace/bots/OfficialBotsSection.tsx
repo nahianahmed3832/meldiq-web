@@ -81,7 +81,9 @@ export function OfficialBotsSection({ detail }: { detail: OrgAdminDetail }) {
                         {bot?.look.displayName ?? c.name} <span className="bot-tag">BOT</span>
                       </span>
                       <small className="ellipsis">{c.tagline}</small>
-                      <small className={`obot-status${bot?.enabled ? " on" : ""}`}>{botStatusLine({ enabled: bot?.enabled ?? false, available }, view.botsPlus)}</small>
+                      <small className={`obot-status${bot?.enabled ? " on" : ""}`}>
+                        {botStatusLine({ enabled: bot?.enabled ?? false, available, unavailableReason: bot?.unavailableReason ?? c.unavailableReason }, view.botsPlus)}
+                      </small>
                     </span>
                     <ChevronRight size={16} className="faint" aria-hidden="true" />
                   </button>

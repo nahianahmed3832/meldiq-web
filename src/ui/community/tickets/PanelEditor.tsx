@@ -1,13 +1,19 @@
 import { Send, X } from "lucide-react";
 import type { Category } from "../../../api/communitySchemas";
 import type { PanelChannel } from "../../../sync/communityRules";
-import { PANEL_NAME_MAX, type PanelDraft } from "../../../sync/posting/tickets";
+import { PANEL_NAME_MAX, PANEL_WELCOME_MAX, type PanelDraft } from "../../../sync/posting/tickets";
+import type { Role } from "../../../sync/roles";
+import { BotField } from "../../workspace/bots/BotParts";
 
 interface PanelEditorProps {
   panel: PanelDraft;
   index: number;
   channels: PanelChannel[];
   categories: Category[];
+  /** The Tickets bot's Bots+ extras exist here (support role, welcome line). */
+  extras: boolean;
+  botsPlus: boolean;
+  roles: Role[];
   /** Posting is offered for a saved panel while tickets are on. */
   canPost: boolean;
   posted: boolean;
@@ -18,7 +24,7 @@ interface PanelEditorProps {
 }
 
 /** One ticket panel: its name, where its "Open a ticket" message goes, the category tickets open in, the log channel. */
-export function PanelEditor({ panel, index, channels, categories, canPost, posted, busy, onChange, onRemove, onPost }: PanelEditorProps) {
+export function PanelEditor({ panel, index, channels, categories, extras, botsPlus, roles, canPost, posted, busy, onChange, onRemove, onPost }: PanelEditorProps) {
   const set = (c: Partial<PanelDraft>) => onChange({ ...panel, ...c });
   const text = channels.filter((c) => !c.voice && c.format !== "forum");
   // The panel's message goes in a channel everyone can read: public or announcement text channels.
@@ -71,6 +77,31 @@ export function PanelEditor({ panel, index, channels, categories, canPost, poste
         </select>
         <span className="hint">Opened and closed tickets are noted there. A private channel is best.</span>
       </div>
+      {extras && (
+        <>
+          <BotField label="Support role" hint="Sees this panel's tickets and is pinged when one opens." plus botsPlus={botsPlus}>
+            <select className="input" aria-label={`Panel ${index + 1} support role`} value={panel.supportRoleId ?? ""} onChange={(e) => set({ supportRoleId: e.target.value || null })}>
+              <option value="">No support role</option>
+              {roles.map((r) => (
+                <option key={r.id} value={r.id}>
+                  @{r.name}
+                </option>
+              ))}
+            </select>
+          </BotField>
+          <BotField label="Welcome line" hint="Said in each new ticket. {user} mentions the opener, {panel} is this panel's name." plus botsPlus={botsPlus}>
+            <textarea
+              className="input"
+              rows={2}
+              maxLength={PANEL_WELCOME_MAX}
+              aria-label={`Panel ${index + 1} welcome line`}
+              placeholder="Hi {user}, thanks for reaching {panel}. Someone will be with you soon."
+              value={panel.welcomeMessage ?? ""}
+              onChange={(e) => set({ welcomeMessage: e.target.value || null })}
+            />
+          </BotField>
+        </>
+      )}
       {canPost && (
         <div className="row" style={{ gap: 8 }}>
           <button type="button" className="btn btn-secondary btn-sm" disabled={busy} onClick={onPost}>

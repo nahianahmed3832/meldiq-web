@@ -32,6 +32,7 @@ import { untilWhen } from "../format";
 import { useNow } from "../call/useNow";
 import { useT } from "../../i18n";
 import { SlashCommandList, useSlashCommands } from "./SlashCommands";
+import { useWordyCommand } from "./wordyLaunch";
 import { RulesAgreeBar, useRulesSummary } from "../community/RulesViews";
 import { ComposerHoldBar, ComposerNoteLine, useComposerGates } from "./ComposerGates";
 import { hasHeading, refusalText } from "../../sync/channelGates";
@@ -104,6 +105,7 @@ export function Composer(props: ComposerProps) {
   const now = useNow(slowed && nextAt > Date.now());
   // API 0.65.0 batch B: "/" lists the commands of the bots in this channel; sending one runs it.
   const slash = useSlashCommands(c, props.threadRoot ? "" : text, (t) => onChange(t), members);
+  const wordy = useWordyCommand(c);
 
   // Draft: restored when the conversation opens, saved as you type (main composer only).
   useEffect(() => {
@@ -205,7 +207,8 @@ export function Composer(props: ComposerProps) {
     if (!can.headings && hasHeading(body)) return setComposerNote(c.id, refusalText("headings_not_allowed") ?? "Headings aren't allowed here.");
     clearComposerNote(c.id);
     if (!files.length && !props.threadRoot && body.startsWith("/")) {
-      const ran = await slash.run(body);
+      // Community parity D: `/wordy` opens the private game panel, so guesses never show in the channel.
+      const ran = wordy(body) ? "sent" : await slash.run(body);
       if (ran === "kept") return;
       if (ran === "sent") {
         clearTimeout(draftTimer.current);

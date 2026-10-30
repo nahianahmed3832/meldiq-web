@@ -341,3 +341,152 @@
   display: grid;
   gap: 2px;
 }
+
+/* ───────────── A giveaway card's countdown and winners ───────────── */
+.giveaway-status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+  max-width: min(520px, 100%);
+  margin: 2px 0 4px;
+  padding: 8px 12px;
+  border-radius: var(--r-sm);
+  background: color-mix(in srgb, #ec4899 12%, var(--surface-sunken));
+  color: var(--text);
+  font-size: var(--fs-sm);
+}
+.giveaway-status.ended {
+  background: var(--surface-sunken);
+}
+.giveaway-status small {
+  margin-inline-start: auto;
+}
+
+/* ───────────── Wordy, played privately ───────────── */
+.wordy {
+  display: grid;
+  justify-items: center;
+  gap: 14px;
+  padding: 4px 0 8px;
+}
+.wordy-grid {
+  display: grid;
+  gap: 6px;
+}
+.wordy-row {
+  display: grid;
+  grid-template-columns: repeat(5, 48px);
+  gap: 6px;
+}
+.wordy-tile {
+  display: grid;
+  place-items: center;
+  height: 48px;
+  border: 2px solid var(--border);
+  border-radius: var(--r-xs);
+  font: 800 24px/1 var(--font);
+  text-transform: uppercase;
+  color: var(--text);
+}
+.wordy-tile.filled {
+  border-color: var(--border-strong);
+}
+.wordy-tile.right,
+.wordy-key.right {
+  border-color: transparent;
+  background: #16a34a;
+  color: #fff;
+}
+.wordy-tile.close,
+.wordy-key.close {
+  border-color: transparent;
+  background: #ca8a04;
+  color: #fff;
+}
+.wordy-tile.absent,
+.wordy-key.absent {
+  border-color: transparent;
+  background: #4b5563;
+  color: #fff;
+}
+.wordy-keys {
+  display: grid;
+  gap: 6px;
+  width: min(100%, 480px);
+}
+.wordy-key-row {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+}
+.wordy-key {
+  flex: 1;
+  min-width: 0;
+  max-width: 42px;
+  height: 46px;
+  border: 0;
+  border-radius: var(--r-xs);
+  background: var(--surface-sunken);
+  color: var(--text);
+  font: 700 14px/1 var(--font);
+  cursor: pointer;
+}
+.wordy-key.wide {
+  flex: 1.6;
+  max-width: 66px;
+  font-size: 12px;
+}
+.wordy-key:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+.wordy-result {
+  margin: 0;
+  font-weight: 700;
+}
+.wordy-stats {
+  display: grid;
+  gap: 10px;
+  width: min(100%, 360px);
+}
+.wordy-numbers {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--fs-xs);
+  color: var(--text-2);
+}
+.wordy-numbers strong {
+  display: block;
+  font-size: var(--fs-xl);
+  color: var(--text);
+}
+.wordy-bars {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--fs-xs);
+}
+.wordy-bars li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.wordy-bar {
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: var(--accent);
+  color: var(--on-accent);
+  text-align: end;
+}
+@media (max-width: 420px) {
+  .wordy-row {
+    grid-template-columns: repeat(5, 44px);
+  }
+  .wordy-tile {
+    height: 44px;
+    font-size: 20px;
+  }
+}

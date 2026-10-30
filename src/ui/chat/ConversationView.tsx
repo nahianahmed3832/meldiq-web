@@ -28,6 +28,7 @@ import { useT } from "../../i18n";
 import { RulesChannelStart, useRulesSummary } from "../community/RulesViews";
 import { postingState } from "../../sync/rulesChannel";
 import { TicketHeaderActions } from "../community/tickets/TicketHeaderActions";
+import { WordyHeaderAction } from "./WordyHeaderAction";
 import { channelAbilities } from "../../sync/channelGates";
 import { PARITY_FEATURES } from "../../sync/communityParity";
 import { useCommunityAccess, useFeature } from "../community/useCommunityAccess";
@@ -160,6 +161,8 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
         {c.type === "CHANNEL" && !c.voice && <ChannelBell c={c} />}
         {/* Community parity C: a ticket's Close (and a moderator's Join). */}
         {c.type === "CHANNEL" && c.orgId && <TicketHeaderActions c={c} />}
+        {/* Community parity D: Wordy, played privately (and `/wordy` from the composer). */}
+        {c.type === "CHANNEL" && c.orgId && !c.voice && <WordyHeaderAction c={c} />}
         {/* The reference header: bell, pins, members, then a search box. Phones keep the name, calls and the menu (as the
             Android app); pins and members are in the details the name opens, and search is on the list's header. */}
         {!c.voice && (

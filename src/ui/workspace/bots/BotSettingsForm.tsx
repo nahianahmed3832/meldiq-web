@@ -2,7 +2,7 @@ import type { AnySettings, BotSettingsMap, SettingsKey } from "../../../sync/off
 import type { BotFormProps } from "./botForm";
 import { HelperForm, LevelsForm } from "./HelperLevelsForms";
 import { LoggerForm, StarboardForm } from "./LoggerStarboardForms";
-import { AlertsForm, GiveawaysForm, WordyForm } from "./PartTwoForms";
+import { GiveawaysForm, WordyForm } from "./PartTwoForms";
 import { WelcomerForm } from "./WelcomerForm";
 
 type Common = Omit<BotFormProps<SettingsKey>, "draft" | "set">;
@@ -29,8 +29,6 @@ export function BotSettingsForm({ botKey, draft, set, ...rest }: BotSettingsForm
       return <StarboardForm {...props<"starboard">()} />;
     case "giveaways":
       return <GiveawaysForm {...props<"giveaways">()} />;
-    case "alerts":
-      return <AlertsForm {...props<"alerts">()} />;
     case "wordy":
       return <WordyForm {...props<"wordy">()} />;
   }

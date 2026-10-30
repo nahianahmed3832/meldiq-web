@@ -10,7 +10,7 @@ import {
   cleanSettings,
   commandProblem,
   DEFAULT_WELCOME,
-  feedProblem,
+  alertSourceProblem,
   fillWelcome,
   isPlusValue,
   levelFromXp,
@@ -62,8 +62,9 @@ describe("Plus gating", () => {
     expect(isPlusValue("welcomer", "messages", { messages: ["a", "b"] })).toBe(true);
     expect(isPlusValue("levels", "boost", { boost: 1 })).toBe(false);
     expect(isPlusValue("levels", "boost", { boost: 1.5 })).toBe(true);
-    expect(isPlusValue("alerts", "feeds", { feeds: [1, 2, 3] })).toBe(false);
-    expect(isPlusValue("alerts", "feeds", { feeds: [1, 2, 3, 4] })).toBe(true);
+    expect(isPlusValue("giveaways", "requiredRoleId", { requiredRoleId: null })).toBe(false);
+    expect(isPlusValue("giveaways", "requiredRoleId", { requiredRoleId: "rl_1" })).toBe(true);
+    expect(plusFields("wordy")).toEqual([]);
   });
 
   it("needs Bots+ for a changed Plus value, never for a kept (paused) one", () => {
@@ -130,14 +131,11 @@ describe("settings checks", () => {
     expect(settingsProblem("logger", { ...settingsDraft("logger", null), excludeChannelIds: Array.from({ length: 26 }, (_, i) => `c${i}`) }, true)).toMatch(/25/);
   });
 
-  it("follows up to 3 video channels free and 25 with Bots+, with https YouTube links", () => {
-    expect(feedProblem({ url: "https://www.youtube.com/@meldiq", channelId: "c", roleId: null })).toBeNull();
-    expect(feedProblem({ url: "http://youtube.com/@x", channelId: "c", roleId: null })).toMatch(/https/);
-    expect(feedProblem({ url: "https://youtu.be/abc", channelId: "", roleId: null })).toMatch(/channel/);
-    const feed = { url: "https://youtube.com/@x", channelId: "c", roleId: null };
-    const four = { feeds: [feed, feed, feed, feed], message: null };
-    expect(settingsProblem("alerts", four, false)).toMatch(/3/);
-    expect(settingsProblem("alerts", four, true)).toBeNull();
+  it("takes a YouTube channel link or an @handle for Alerts", () => {
+    for (const ok of ["https://www.youtube.com/@meldiq", "youtube.com/channel/UCabc_-1", "https://youtube.com/user/chef", "@chefanna"]) expect(alertSourceProblem(ok)).toBeNull();
+    expect(alertSourceProblem("")).toMatch(/link/);
+    expect(alertSourceProblem("https://youtu.be/abc")).toMatch(/isn't a YouTube channel/);
+    expect(alertSourceProblem("https://example.com/@x")).toMatch(/isn't a YouTube channel/);
   });
 
   it("cleans what's sent: trimmed text, empty optional text as null, names without !", () => {
@@ -162,6 +160,7 @@ describe("words and previews", () => {
     expect(botStatusLine({ enabled: false, available: true }, false)).toBe("Off · FREE · tap for details");
     expect(botStatusLine({ enabled: true, available: true }, true)).toBe("On · PLUS · tap for details");
     expect(botStatusLine({ enabled: false, available: false }, false)).toBe("Coming soon · FREE · tap for details");
+    expect(botStatusLine({ enabled: false, available: false, unavailableReason: "Needs a YouTube API key" }, false)).toBe("Unavailable · FREE · tap for details");
   });
 
   it("turns Levels XP into levels", () => {

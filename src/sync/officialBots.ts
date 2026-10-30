@@ -40,6 +40,8 @@ const zCatalogBot = z.object({
   /** The Free vs Plus table. */
   limits: z.array(z.object({ what: z.string(), free: z.string(), plus: z.string() })).default([]),
   available: z.boolean(),
+  /** Why it can't be turned on here (e.g. Alerts without a YouTube key), null when it can. */
+  unavailableReason: nullableString,
 });
 export type CatalogBot = z.infer<typeof zCatalogBot>;
 
@@ -53,6 +55,7 @@ const zOfficialBot = z.object({
   key: z.string(),
   name: z.string(),
   available: z.boolean(),
+  unavailableReason: nullableString,
   enabled: z.boolean(),
   /** The bot's account in this community (null before it was first turned on or given a look). */
   userId: nullableString,
@@ -149,6 +152,16 @@ export function officialBotError(e: unknown): string {
       return "Turn the bot on first.";
     case "official_bot_unavailable":
       return e.message || "This bot isn't ready yet.";
+    case "alerts_unconfigured":
+      return "Alerts needs a YouTube API key on this server, so it can't follow channels yet.";
+    case "alerts_source_unknown":
+      return "YouTube doesn't know that channel. Paste its link (youtube.com/@name) or its @handle.";
+    case "conflict":
+      return "That YouTube channel already posts in that channel.";
+    case "wordy_not_a_word":
+      return "That isn't in the word list. It didn't use a try.";
+    case "wordy_finished":
+      return "You've played today's word. A new one comes at 00:00 UTC.";
     case "limit_reached":
       return "This community is full, so the bot can't join it.";
     case "banned":

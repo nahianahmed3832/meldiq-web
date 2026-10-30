@@ -34,6 +34,17 @@ export interface RichContent {
   webhook?: PostWebhook;
   /** The text was made from the boxes for older apps: shown only when there are no boxes to show. */
   textFromEmbeds?: boolean;
+  /** Community parity D: a Giveaways bot card's state (a live countdown, then the winners). */
+  giveaway?: GiveawayState;
+}
+
+export interface GiveawayState {
+  id: string;
+  endsAt: number;
+  winners: number;
+  ended: boolean;
+  /** Once ended: who won (empty when nobody entered). */
+  winnerIds: string[];
 }
 
 export interface CallEntry {

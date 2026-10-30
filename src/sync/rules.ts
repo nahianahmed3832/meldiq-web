@@ -9,6 +9,7 @@ import { cleanPoll } from "./polls";
 import { cleanSticker } from "./stickers";
 import { cleanContact } from "./rich";
 import { cleanButtons, cleanEmbeds, cleanWebhook } from "./posting/embeds";
+import { cleanGiveaway } from "./giveaways";
 import { deleteAllowed } from "./channelGates";
 
 /**
@@ -54,9 +55,11 @@ function richOf(p: Payload): RichContent | null {
   return Object.keys(r).length ? r : null;
 }
 
-/** Community parity C: the boxes, buttons and webhook of a post from a webhook or the Tickets sender, cleaned. */
-export function postedOf(p: Payload): Pick<RichContent, "embeds" | "buttons" | "webhook" | "textFromEmbeds"> {
-  const out: Pick<RichContent, "embeds" | "buttons" | "webhook" | "textFromEmbeds"> = {};
+type Posted = Pick<RichContent, "embeds" | "buttons" | "webhook" | "textFromEmbeds" | "giveaway">;
+
+/** Community parity C and D: the boxes, buttons and webhook of a server sender's post, and a giveaway card, cleaned. */
+export function postedOf(p: Payload): Posted {
+  const out: Posted = {};
   const embeds = cleanEmbeds(p.embeds);
   if (embeds.length) out.embeds = embeds;
   const buttons = cleanButtons(p.buttons);
@@ -64,7 +67,17 @@ export function postedOf(p: Payload): Pick<RichContent, "embeds" | "buttons" | "
   const webhook = cleanWebhook(p.webhook);
   if (webhook) out.webhook = webhook;
   if (p.textFromEmbeds === true && embeds.length) out.textFromEmbeds = true;
+  const giveaway = cleanGiveaway(p.giveaway);
+  if (giveaway) out.giveaway = giveaway;
   return out;
+}
+
+/** An edit from a server sender that carries boxes or a giveaway replaces them (a giveaway card when it ends). */
+function editedRich(rich: RichContent | null, p: Payload): RichContent | null {
+  if (p.embeds === undefined && p.giveaway === undefined) return rich;
+  const { embeds: _e, buttons: _b, textFromEmbeds: _t, giveaway: _g, ...rest } = rich ?? {};
+  const next = { ...rest, ...postedOf(p) };
+  return Object.keys(next).length ? next : null;
 }
 
 const ORIGIN_ID = /^[A-Za-z0-9_-]{1,64}$/;
@@ -120,7 +133,7 @@ export function textMessage(p: Payload, item: QueueItem, mine: boolean, serverTs
 export function applyEdit(t: StoredMessage, senderUserId: string, p: Payload, serverTs: number): StoredMessage | null {
   if (t.senderUserId !== senderUserId || t.deleted) return null;
   const ids = p.mentions ? [...new Set(p.mentions)] : t.mentions;
-  return { ...t, text: p.text ?? "", editedAt: serverTs, mentions: ids };
+  return { ...t, text: p.text ?? "", editedAt: serverTs, mentions: ids, rich: editedRich(t.rich, p) };
 }
 
 /**

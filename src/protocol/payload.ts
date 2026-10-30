@@ -125,13 +125,18 @@ export const zPayload = z.object({
   webhook: opt(z.unknown()),
   /** [text] was made from the boxes for older apps: not shown beside them. */
   textFromEmbeds: opt(z.boolean()),
+  /**
+   * Community parity D: the Giveaways bot's card, `{ id, endsAt, winners, ended, winnerIds? }` (cleaned by sync/rules.ts
+   * cleanGiveaway). A server sender's field like the boxes: never read from an end-to-end envelope.
+   */
+  giveaway: opt(z.unknown()),
 });
 export type CustomEmojiRef = z.infer<typeof zCustomEmoji>;
 export type Payload = z.infer<typeof zPayload>;
 
 /** Fields only the server's own senders may put in a payload: never read from an end-to-end envelope. */
 export function withoutServerFields(p: Payload): Payload {
-  const { embeds: _e, buttons: _b, webhook: _w, textFromEmbeds: _t, ...rest } = p;
+  const { embeds: _e, buttons: _b, webhook: _w, textFromEmbeds: _t, giveaway: _g, ...rest } = p;
   return rest;
 }
 export type ForwardOrigin = z.infer<typeof zOrigin>;

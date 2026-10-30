@@ -70,21 +70,53 @@ test("official bots: turn on, rename, set up, test, and see them work", async ({
   await shot(page, "d-levels-plus-locked");
   await levels.getByRole("button", { name: "Close" }).click();
 
-  // Helper on; Giveaways isn't running yet: read-only with the note.
+  // Helper and Giveaways on (Giveaways' role is a Plus extra).
   await official.getByRole("switch", { name: "Helper on" }).click();
   await expect(official.getByText("On · FREE · tap for details").first()).toBeVisible();
   await official.getByRole("button", { name: "Giveaways: details" }).click();
   const giveaways = page.getByRole("dialog", { name: "Giveaways" });
-  await expect(giveaways.getByText(/coming soon/i).first()).toBeVisible();
-  await expect(giveaways.getByRole("switch", { name: "Giveaways on" })).toBeDisabled();
-  await shot(page, "d-giveaways-unavailable");
+  await giveaways.getByRole("switch", { name: "Giveaways on" }).click();
+  await expect(giveaways.getByRole("combobox", { name: "Role needed to win" })).toBeDisabled();
+  await shot(page, "d-giveaways-window");
   await giveaways.getByRole("button", { name: "Close" }).click();
+
+  // Tickets: the bot's settings are the tickets config; support role and welcome line are Plus.
+  await official.getByRole("button", { name: "Tickets: details" }).click();
+  const tickets = page.getByRole("dialog", { name: "Tickets" });
+  await tickets.getByRole("switch", { name: "Tickets on" }).click();
+  await tickets.getByRole("button", { name: "Add a panel" }).click();
+  await expect(tickets.getByRole("combobox", { name: "Panel 1 support role" })).toBeDisabled();
+  await expect(tickets.getByText(/of 2 panels \(10 with Bots\+\)/)).toBeVisible();
+  await expect(tickets.getByRole("switch", { name: "Transcripts" })).toBeDisabled();
+  await tickets.getByRole("switch", { name: "Transcripts" }).scrollIntoViewIfNeeded();
+  await shot(page, "d-tickets-window");
+  await tickets.getByRole("button", { name: "Close" }).click();
+
+  // Alerts needs a YouTube key this server doesn't have: read-only with the server's reason.
+  await official.getByRole("button", { name: "Alerts: details" }).click();
+  const alerts = page.getByRole("dialog", { name: "Alerts" });
+  await expect(alerts.getByText(/isn't available here/)).toBeVisible();
+  await expect(alerts.getByRole("switch", { name: "Alerts on" })).toBeDisabled();
+  await shot(page, "d-alerts-unavailable");
+  await alerts.getByRole("button", { name: "Close" }).click();
+
+  // Wordy on, played in #general.
+  await official.getByRole("button", { name: "Wordy: details" }).click();
+  const wordy = page.getByRole("dialog", { name: "Wordy" });
+  await wordy.getByRole("switch", { name: "Wordy on" }).click();
+  await wordy.locator("#wordy-channel").selectOption(general.id);
+  await wordy.getByRole("button", { name: "Save" }).click();
+  await expect(wordy.getByRole("button", { name: "Saved" })).toBeVisible();
+  await wordy.getByRole("button", { name: "Close" }).click();
   await shot(page, "d-bots-page-on");
 
-  // In #general: the welcome test (as Doorbell) and Helper's answer, each with the BOT tag.
+  // In #general: the welcome test (as Doorbell) and Helper's answer, each with the BOT tag; a giveaway card counting down.
   await alice.send(general.id, { type: "text", text: "!roll 2d6" });
   await alice.send(general.id, { type: "text", text: "hello owls, first message for some XP" });
+  await alice.send(general.id, { type: "text", text: "!giveaway 1h 2w A game key" });
   await page.goto(`/home/c/${general.id}`);
+  await expect(page.locator(".giveaway-status")).toContainText(/Ends in \d+m \d+s · 2 winners/);
+  await shot(page, "d-giveaway-card");
   const welcome = page.locator(".msg").filter({ hasText: "makes" });
   await expect(welcome.locator(".bot-tag")).toBeVisible();
   await expect(welcome).toContainText("Doorbell");
@@ -95,6 +127,22 @@ test("official bots: turn on, rename, set up, test, and see them work", async ({
       .locator(".bot-tag"),
   ).toBeVisible();
   await shot(page, "d-channel-bots");
+
+  // Wordy, privately: "Play Wordy" in its channel's header, a guess from the on-screen keyboard; `/wordy` opens it too.
+  await page.getByRole("button", { name: "Play Wordy" }).click();
+  const game = page.getByRole("dialog", { name: "Wordy" });
+  for (const k of "CRANE") await game.getByRole("button", { name: k, exact: true }).click();
+  await game.getByRole("button", { name: "Enter" }).click();
+  await expect(game.getByRole("gridcell", { name: /^C, / })).toBeVisible();
+  await expect(game.getByText(/played/)).toBeVisible();
+  await shot(page, "d-wordy-game");
+  await game.getByRole("button", { name: "Close" }).click();
+  const box = page.getByRole("textbox", { name: /Message/ });
+  await box.fill("/wordy");
+  await box.press("Enter");
+  await expect(page.getByRole("dialog", { name: "Wordy" })).toBeVisible();
+  await page.getByRole("dialog", { name: "Wordy" }).getByRole("button", { name: "Close" }).click();
+  await expect(page.locator(".msg").filter({ hasText: "/wordy" })).toHaveCount(0);
 
   // Settings › Members: the bots on are members, with their name here and the BOT tag.
   await page.goto("/workspace/people");

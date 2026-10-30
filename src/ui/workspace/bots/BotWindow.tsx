@@ -11,6 +11,7 @@ import { Dialog } from "../../components/Overlay";
 import { Toggle } from "../../components/Toggle";
 import { useLoad } from "../useLoad";
 import { BotIcon, FreePlusTable, PlusUpsell, textChannels } from "./BotParts";
+import { AlertsWatches } from "./AlertsWatches";
 import { BotLook } from "./BotLook";
 import { BotSettingsForm } from "./BotSettingsForm";
 
@@ -29,6 +30,13 @@ export interface BotWindowProps {
 
 const ROLE_BOTS = new Set(["levels", "giveaways", "alerts"]);
 
+/** Why the bot can't be turned on here (the server's reason), or null when it can. */
+function unavailableNote(catalog: CatalogBot, bot: OfficialBot | null): string | null {
+  if (catalog.available && bot?.available !== false) return null;
+  const reason = bot?.unavailableReason ?? catalog.unavailableReason;
+  return reason ? `${catalog.name} isn't available here: ${reason}.` : `${catalog.name} is coming soon: it can't be turned on yet.`;
+}
+
 /**
  * One official bot's window (docs/MELDIQ_COMMUNITY_PARITY.md §1 Bots): coloured header with its picture, name and BOT
  * tag, tagline and On/Off switch; what it does, its chips and a sample message; its look here, its settings, the Free
@@ -46,7 +54,7 @@ export function BotWindow({ orgId, orgName, memberCount, catalog, bot, botsPlus,
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
-  const [unavailable, setUnavailable] = useState<string | null>(catalog.available && bot?.available !== false ? null : `${catalog.name} is coming soon: it can't be turned on yet.`);
+  const [unavailable, setUnavailable] = useState<string | null>(unavailableNote(catalog, bot));
   const enabled = bot?.enabled ?? false;
   const dirty = JSON.stringify(original) !== JSON.stringify(draft);
   const readOnly = !canEdit || unavailable !== null;
@@ -182,7 +190,8 @@ export function BotWindow({ orgId, orgName, memberCount, catalog, bot, botsPlus,
             </fieldset>
           </section>
         )}
-        {key === "tickets" && canEdit && ticketsOn && <TicketsCard orgId={orgId} />}
+        {key === "tickets" && canEdit && ticketsOn && unavailable === null && <TicketsCard key={String(enabled)} orgId={orgId} hideSwitch />}
+        {key === "alerts" && canEdit && unavailable === null && <AlertsWatches orgId={orgId} channels={channels} roles={givable} botsPlus={botsPlus} />}
         {!canEdit && <p className="faint">Only people who can edit this community turn bots on and change them.</p>}
         {!botsPlus && catalog.limits.length > 0 && <PlusUpsell perks={perks} />}
         <FreePlusTable limits={catalog.limits} />

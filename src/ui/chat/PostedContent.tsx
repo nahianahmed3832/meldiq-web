@@ -4,6 +4,7 @@ import type { RichContent } from "../../model/types";
 import { buttonText, colorHex, type Embed, type PostButton } from "../../sync/posting/embeds";
 import { readableDomain } from "../../sync/linkRules";
 import { CloseTicketDialog, OpenTicketDialog } from "../community/tickets/TicketDialogs";
+import { GiveawayStatus } from "./GiveawayStatus";
 import { Markdown, MarkdownLine } from "./Markdown";
 import { SafeLink } from "./SafeLink";
 
@@ -17,6 +18,7 @@ export function PostedContent({ rich, orgId, channelId }: { rich: RichContent; o
       {rich.embeds?.map((e, i) => (
         <EmbedBox key={i} embed={e} />
       ))}
+      {rich.giveaway && <GiveawayStatus giveaway={rich.giveaway} />}
       {rich.buttons?.length ? <PostButtons buttons={rich.buttons} orgId={orgId} channelId={channelId} /> : null}
     </>
   );
