@@ -1,0 +1,381 @@
+/*
+ * Community parity E (discovery): Discover's labels, tags and Promoted row; Profile's Discovery and template cards;
+ * a template link's preview; Promote; Bots › Community bots; Developer › List in the directory.
+ */
+
+/* ───────────── Discover ───────────── */
+.discover-card {
+  position: relative;
+}
+.discover-label {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: var(--r-pill);
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+.discover-card-body .discover-label {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  box-shadow: 0 1px 6px rgb(0 0 0 / 0.25);
+}
+.discover-label-plain {
+  background: var(--surface-raised);
+  color: var(--text);
+  border: 1px solid var(--border-strong);
+}
+.discover-label-gold {
+  background: linear-gradient(120deg, #f7d774, #e0a526);
+  color: #3b2a00;
+}
+.discover-label-promoted {
+  background: var(--cta, var(--action));
+  color: var(--on-cta, var(--on-action));
+}
+.discover-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.discover-official {
+  flex: none;
+  color: var(--accent);
+}
+.discover-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 0 var(--s-4);
+  list-style: none;
+}
+.discover-tag {
+  display: inline-flex;
+  padding: 2px 9px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  background: var(--surface-sunken);
+  color: var(--text-2);
+  font: inherit;
+  font-size: var(--fs-xs);
+  font-weight: 600;
+}
+button.discover-tag {
+  cursor: pointer;
+}
+button.discover-tag:hover,
+button.discover-tag:focus-visible {
+  border-color: var(--accent);
+  color: var(--accent-text);
+}
+.discover-online {
+  color: var(--success);
+}
+.discover-tag-active {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 4px 2px 12px;
+  border-radius: var(--r-pill);
+  background: var(--accent-soft);
+  color: var(--accent-text);
+  font-size: var(--fs-sm);
+  font-weight: 700;
+}
+.discover-section-promoted {
+  color: var(--accent-text);
+}
+.discover-promoted .discover-card {
+  border-color: color-mix(in srgb, var(--accent) 45%, var(--border));
+}
+
+/* ───────────── Profile › Discovery and Community template ───────────── */
+.discovery-listed {
+  color: var(--success);
+}
+.template-own {
+  display: grid;
+  gap: var(--s-2);
+}
+.template-link {
+  padding: 8px 10px;
+  border-radius: var(--r-sm);
+  background: var(--surface-sunken);
+  font-family: var(--mono);
+  font-size: var(--fs-sm);
+}
+
+/* ───────────── a template link's preview ───────────── */
+.template-preview {
+  display: grid;
+  gap: var(--s-4);
+}
+.template-name {
+  font-size: var(--fs-xl);
+}
+.template-icon {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: var(--accent-soft);
+  color: var(--accent-text);
+}
+.template-channels {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr));
+  gap: var(--s-3);
+  max-height: 280px;
+  overflow: auto;
+  padding: var(--s-3);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--surface-sunken);
+}
+.template-category h4 {
+  margin: 0 0 4px;
+  color: var(--text-3);
+  font-size: var(--fs-xs);
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.template-category ul {
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.template-category li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  color: var(--text-2);
+  font-size: var(--fs-md);
+}
+.template-preview .role-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+/* ───────────── Promote ───────────── */
+.promote-rank {
+  display: flex;
+  align-items: center;
+  gap: var(--s-4);
+  flex-wrap: wrap;
+}
+.promote-rank-number {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: var(--r-md);
+  background: var(--accent-soft);
+  color: var(--accent-text);
+}
+.promote-rank-number strong {
+  font-size: var(--fs-3xl);
+  font-weight: 800;
+}
+.promote-soon {
+  display: block;
+}
+.promote-tiers {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+  gap: var(--s-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.promote-tier {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  padding: var(--s-4);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--surface-sunken);
+}
+.promote-tier-mega {
+  border-color: #e0a526;
+  box-shadow: 0 0 0 1px color-mix(in srgb, #e0a526 40%, transparent);
+}
+.promote-popular {
+  position: absolute;
+  top: -10px;
+  right: 12px;
+  padding: 2px 10px;
+  border-radius: var(--r-pill);
+  background: linear-gradient(120deg, #f7d774, #e0a526);
+  color: #3b2a00;
+  font-size: 11px;
+  font-weight: 800;
+}
+.promote-tier-name {
+  font-size: var(--fs-xl);
+}
+.promote-price {
+  font-size: var(--fs-2xl);
+  font-weight: 800;
+}
+.promote-price small {
+  color: var(--text-3);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+}
+.promote-pitch,
+.promote-guarantee {
+  margin: 0;
+  color: var(--text-2);
+  font-size: var(--fs-sm);
+}
+.promote-guarantee {
+  color: var(--warning);
+  font-weight: 700;
+}
+.promote-status {
+  color: var(--success);
+  font-weight: 700;
+}
+.promote-tier .btn {
+  margin-top: auto;
+}
+.promote-note {
+  margin: 0;
+  font-size: var(--fs-sm);
+}
+.promoted-preview {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--s-2);
+}
+.promoted-slot {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 52px;
+  min-width: 0;
+  padding: 8px;
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--r-md);
+}
+.promoted-slot-own {
+  flex-wrap: wrap;
+  border: 1px solid var(--accent);
+  background: var(--accent-soft);
+  font-weight: 700;
+}
+.promoted-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2) var(--s-5);
+  color: var(--text-2);
+  font-size: var(--fs-sm);
+}
+.promoted-stats {
+  display: inline-flex;
+  gap: var(--s-3);
+  color: var(--text-2);
+  font-size: var(--fs-sm);
+}
+.promoted-stats > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.promoted-live {
+  color: var(--success);
+  font-weight: 700;
+}
+@media (max-width: 600px) {
+  .promoted-preview {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* ───────────── Bots › Community bots ───────────── */
+.bot-dir-tools {
+  display: flex;
+  gap: var(--s-2);
+  flex-wrap: wrap;
+}
+.bot-dir-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1 1 220px;
+  padding: 0 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--surface-sunken);
+  color: var(--text-3);
+}
+.bot-dir-search:focus-within {
+  border-color: var(--accent);
+}
+.bot-dir-search input {
+  flex: 1;
+  min-width: 0;
+  padding: 8px 0;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+}
+.bot-dir-sort {
+  flex: 0 0 auto;
+  width: auto;
+}
+.bot-dir-chips .chip {
+  cursor: pointer;
+  color: var(--text-2);
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+}
+.bot-dir-chips .chip[aria-checked="true"] {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent-text);
+}
+.bot-dir-cat {
+  margin-left: 6px;
+  padding: 0 8px;
+  font-size: 11px;
+}
+.bot-dir-desc {
+  color: var(--text-2);
+  font-size: var(--fs-sm);
+}
+
+/* ───────────── Developer › List in the directory ───────────── */
+.dev-listing summary {
+  cursor: pointer;
+  color: var(--accent-text);
+  font-size: var(--fs-sm);
+  font-weight: 700;
+}
+.dev-listing-body {
+  display: grid;
+  gap: var(--s-2);
+  padding-top: var(--s-2);
+}
+.promote-rank .lines {
+  display: grid;
+  gap: 2px;
+}

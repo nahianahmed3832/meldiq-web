@@ -216,6 +216,8 @@ export interface NewCommunity {
   name: string;
   description: string | null;
   template?: string;
+  /** Community parity E (template-links): a template made from a community, by its link's code, instead of a starter. */
+  templateCode?: string;
   visibility?: "private" | "public";
   joinPolicy?: "invite" | "open";
 }
@@ -227,7 +229,7 @@ export async function createCommunity(engine: Engine, c: NewCommunity, reqId: st
       description: c.description?.trim() || null,
       requestId: reqId,
       kind: "community",
-      ...(c.template ? { template: c.template } : {}),
+      ...(c.templateCode ? { templateCode: c.templateCode } : c.template ? { template: c.template } : {}),
       ...(c.visibility ? { visibility: c.visibility } : {}),
       ...(c.joinPolicy ? { joinPolicy: c.joinPolicy } : {}),
     },

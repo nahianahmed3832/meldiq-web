@@ -10,6 +10,7 @@ import { Dialog } from "../components/Overlay";
 import { useLoad } from "../workspace/useLoad";
 import type { DiscordReturn } from "../../application/discordReturn";
 import { DiscordImport } from "./DiscordImport";
+import { DISCOVERY_FEATURES, templateFromText, templateLink } from "../../sync/discovery/rules";
 
 /** The starter templates' names and what they're for (android CommunityTemplates; ids from the server). */
 const TEMPLATE_TEXT: Record<string, { name: string; hint: string }> = {
@@ -24,12 +25,20 @@ const TEMPLATE_TEXT: Record<string, { name: string; hint: string }> = {
  * Start a community (batch B2 starter templates, android CreateCommunitySheet): name, description, a template whose
  * categories and channels the server creates, and whether it's listed in Discover and open to join.
  */
-export function CreateCommunityDialog({ onClose, discord = null }: { onClose: () => void; discord?: DiscordReturn | null }) {
+interface CreateCommunityDialogProps {
+  onClose: () => void;
+  discord?: DiscordReturn | null;
+  /** Community parity E: a pasted template link opens its preview instead. */
+  onTemplate?: (code: string) => void;
+}
+
+export function CreateCommunityDialog({ onClose, discord = null, onTemplate }: CreateCommunityDialogProps) {
   const engine = useEngine();
   const canImport = useOrbit((s) => s.server?.features.includes("discord-import") ?? false);
   const [tab, setTab] = useState<"new" | "discord">(discord ? "discord" : "new");
   const reqId = useMemo(requestId, []);
   const hasTemplates = useOrbit((s) => s.server?.features.includes("community-templates") ?? false);
+  const templateLinks = useOrbit((s) => s.server?.features.includes(DISCOVERY_FEATURES.templates) ?? false);
   const templates = useLoad(() => (hasTemplates ? communityTemplates(engine) : Promise.resolve([])), [engine, hasTemplates]);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -114,6 +123,7 @@ export function CreateCommunityDialog({ onClose, discord = null }: { onClose: ()
             {chosen && <span className="hint">{chosen.categories.map((c) => `${c.name}: ${c.channels.map((ch) => (ch.voice ? ch.name : `#${ch.name}`)).join(", ")}`).join(" · ")}</span>}
           </div>
         )}
+        {templateLinks && onTemplate && <TemplateLinkField onTemplate={onTemplate} />}
         <div className="field">
           <span className="label">Who can find it</span>
           <div className="segmented" role="radiogroup" aria-label="Who can find it">
@@ -148,5 +158,46 @@ export function CreateCommunityDialog({ onClose, discord = null }: { onClose: ()
         </div>
       </form>
     </Dialog>
+  );
+}
+
+/** "Have a template link?": a pasted link (or code) opens that template's preview. */
+function TemplateLinkField({ onTemplate }: { onTemplate: (code: string) => void }) {
+  const [text, setText] = useState("");
+  const [problem, setProblem] = useState<string | null>(null);
+  const open = () => {
+    const code = templateFromText(text);
+    if (!code) return setProblem(`That isn't a template link. Template links look like ${templateLink("ABCD1234EFGH")}.`);
+    onTemplate(code);
+  };
+  return (
+    <div className="field">
+      <label htmlFor="cc-template">Or start from a template link</label>
+      <div className="row" style={{ gap: 8 }}>
+        <input
+          id="cc-template"
+          className="input grow"
+          value={text}
+          placeholder="Paste a template link"
+          onChange={(e) => {
+            setText(e.target.value);
+            setProblem(null);
+          }}
+          onKeyDown={(e) => {
+            if (e.key !== "Enter") return;
+            e.preventDefault();
+            open();
+          }}
+        />
+        <button type="button" className="btn btn-secondary btn-sm" disabled={!text.trim()} onClick={open}>
+          Use template
+        </button>
+      </div>
+      {problem && (
+        <p className="field-error" role="alert">
+          {problem}
+        </p>
+      )}
+    </div>
   );
 }

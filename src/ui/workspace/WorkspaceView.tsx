@@ -3,7 +3,8 @@ import { CalendarDays, Gauge, Hash, Laptop, LayoutGrid, ScrollText, ShieldCheck,
 import { ApplicationsPage, BansPage, SecurityPage } from "./ModerationPages";
 import { COMMUNITY_RAIL_GROUPS, communityPageTitle, communityRailKey, visibleCommunityRail } from "./communityRail";
 import { ThemePage } from "./ThemePage";
-import { CommunitySparksPage, PromotePage } from "./SparksPromotePages";
+import { CommunitySparksPage } from "./SparksPromotePages";
+import { PromotePage } from "./promote/PromotePage";
 import { ReportsPage } from "./ReportsPage";
 import { GuidePage, OnboardingPage } from "./GuidePages";
 import { ExpressionsPage } from "./ExpressionsPage";
@@ -162,7 +163,7 @@ export function WorkspaceView({ orgId, page, onDialog }: { orgId: string | null;
             ) : page === "sparks" ? (
               <CommunitySparksPage detail={d} />
             ) : page === "promote" ? (
-              <PromotePage />
+              <PromotePage detail={d} />
             ) : page === "bans" ? (
               <BansPage detail={d} />
             ) : (

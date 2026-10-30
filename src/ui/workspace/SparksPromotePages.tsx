@@ -24,15 +24,3 @@ export function CommunitySparksPage({ detail }: { detail: OrgAdminDetail }) {
     </div>
   );
 }
-
-/**
- * Community settings › Promote: a place in Discover. Only shown when the server announces it (PARITY_FEATURES.promote).
- * TODO(community-parity E): plans, prices and booking once the owner decides them.
- */
-export function PromotePage() {
-  return (
-    <div className="ws-page">
-      <Card title="Promote" sub="Help more people find this community in Discover. Options will show here when they're ready." />
-    </div>
-  );
-}
