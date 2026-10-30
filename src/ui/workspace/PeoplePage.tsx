@@ -139,6 +139,7 @@ function MemberRow(props: { member: DirectoryMember; detail: OrgAdminDetail; myR
         <span className="ellipsis">
           {m.nickname?.trim() ? m.nickname : m.displayName}
           {m.nickname?.trim() && <span className="faint"> ({m.displayName})</span>}
+          {m.bot && <span className="bot-tag">BOT</span>}
           {self && <span className="faint"> (you)</span>}
         </span>
         <small className="ellipsis">

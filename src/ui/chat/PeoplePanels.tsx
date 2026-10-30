@@ -87,7 +87,7 @@ export function MemberListPanel({ c, onClose }: { c: Conversation; onClose: () =
               {g.key === "online" ? t("people_online") : g.key === "offline" ? t("people_offline") : g.label} — {g.members.length}
             </h3>
             {g.members.map((m) => (
-              <MemberRow key={m.id} m={m} away={!isHere(m)} colors={roleNameColors(roles.get(m.id))} orgId={c.type === "CHANNEL" ? c.orgId : null} />
+              <MemberRow key={m.id} m={m} away={!m.bot && !isHere(m)} colors={roleNameColors(roles.get(m.id))} orgId={c.type === "CHANNEL" ? c.orgId : null} />
             ))}
           </section>
         ))}
