@@ -22,7 +22,8 @@ import { NewMessageDialog } from "../dialogs/NewMessageDialog";
 import { CreateWorkspaceDialog, JoinWorkspaceDialog } from "../dialogs/WorkspaceDialogs";
 import { SearchDialog } from "../dialogs/SearchDialog";
 import { CreateCommunityDialog } from "../community/CreateCommunityDialog";
-import { JOIN_INVITE_EVENT, openInApp } from "../chat/inAppLinks";
+import { JOIN_INVITE_EVENT, OPEN_TEMPLATE_EVENT, openInApp } from "../chat/inAppLinks";
+import { TemplatePreviewDialog } from "../community/TemplatePreviewDialog";
 import { noteGuideVisit } from "../../sync/guide";
 import { GUIDE_EVENT } from "../community/GuideOnboarding";
 import { OPEN_PROFILE_EVENT, ProfileDialog, type ProfileRequest } from "../people/ProfileDialog";
@@ -43,7 +44,7 @@ import { TopBar } from "./TopBar";
 import { ConnectionBanner } from "./ConnectionBanner";
 import { TabIndicators } from "./TabIndicators";
 import { AddMembersDialog } from "../workspace/AddMembersDialog";
-import { takePendingInvite, takePendingMessage, takeReferral } from "../../application/pendingInvite";
+import { takePendingInvite, takePendingMessage, takePendingTemplate, takeReferral } from "../../application/pendingInvite";
 import { type DiscordReturn, takeDiscordReturn } from "../../application/discordReturn";
 import { accountSelection, rememberSelection } from "../../sync/workspaceSelection";
 import { LOBBY_FEATURE } from "../../sync/lobby";
@@ -77,6 +78,8 @@ export type ShellDialog =
   | { kind: "identity"; userId: string }
   | { kind: "createWorkspace"; discord?: DiscordReturn | null }
   | { kind: "joinWorkspace"; code?: string }
+  // Community parity E: a template link's preview ("Create a community from this template").
+  | { kind: "template"; code: string }
   | { kind: "connections" }
   | { kind: "requests" }
   | { kind: "addMembers"; orgId?: string }
@@ -185,6 +188,9 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
     if (referral) void engine.api.call("POST", "/v2/billing/referral/claim", { body: { code: referral } }).catch(() => undefined);
     const code = takePendingInvite();
     if (code) return setDialog({ kind: "joinWorkspace", code });
+    // A template link opened in this tab (/template/<code>): its preview, once.
+    const template = takePendingTemplate();
+    if (template) return setDialog({ kind: "template", code: template });
     // A message link opened in this tab (/m/<conversation>/<message>): that conversation, at that message.
     const message = takePendingMessage();
     if (message) openInApp(engine, `${location.origin}${message}`);
@@ -205,6 +211,13 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
     const onInvite = (e: Event) => setDialog({ kind: "joinWorkspace", code: String((e as CustomEvent).detail ?? "") });
     window.addEventListener(JOIN_INVITE_EVENT, onInvite);
     return () => window.removeEventListener(JOIN_INVITE_EVENT, onInvite);
+  }, []);
+
+  // A template link clicked inside a chat opens its preview (community parity E).
+  useEffect(() => {
+    const onTemplate = (e: Event) => setDialog({ kind: "template", code: String((e as CustomEvent).detail ?? "") });
+    window.addEventListener(OPEN_TEMPLATE_EVENT, onTemplate);
+    return () => window.removeEventListener(OPEN_TEMPLATE_EVENT, onTemplate);
   }, []);
 
   useEffect(() => {
@@ -345,7 +358,11 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
       {dialog?.kind === "identity" && <IdentityReview userId={dialog.userId} onClose={() => setDialog(null)} />}
       {dialog?.kind === "newGroup" && <NewGroupDialog onClose={() => setDialog(null)} />}
       {dialog?.kind === "createWorkspace" &&
-        (communities ? <CreateCommunityDialog discord={dialog.discord ?? null} onClose={() => setDialog(null)} /> : <CreateWorkspaceDialog onClose={() => setDialog(null)} />)}
+        (communities ? (
+          <CreateCommunityDialog discord={dialog.discord ?? null} onClose={() => setDialog(null)} onTemplate={(code) => setDialog({ kind: "template", code })} />
+        ) : (
+          <CreateWorkspaceDialog onClose={() => setDialog(null)} />
+        ))}
       {dialog?.kind === "connections" && <ConnectionsDialog onClose={() => setDialog(null)} />}
       {dialog?.kind === "requests" && <MessageRequestsDialog onClose={() => setDialog(null)} />}
       {dialog?.kind === "addMembers" && (dialog.orgId ?? orgId) && (
@@ -361,6 +378,7 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
           onClose={() => setProfile(null)}
         />
       )}
+      {dialog?.kind === "template" && dialog.code && <TemplatePreviewDialog code={dialog.code} onClose={() => setDialog(null)} />}
       {dialog?.kind === "joinWorkspace" && <JoinWorkspaceDialog initialCode={dialog.code} onClose={() => setDialog(null)} />}
     </div>
   );

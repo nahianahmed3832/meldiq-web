@@ -23,6 +23,9 @@ import { PARITY_FEATURES } from "../../sync/communityParity";
 import { SETTINGS_LIMITS } from "../../sync/communitySettings";
 import { DeleteCommunityDialog } from "../community/DeleteCommunityDialog";
 import { TicketsSection } from "../community/tickets/TicketsCard";
+import { DISCOVERY_FEATURES } from "../../sync/discovery/rules";
+import { DiscoveryCard } from "./discovery/DiscoveryCard";
+import { TemplateCard } from "./discovery/TemplateCard";
 
 interface OverviewPageProps {
   detail: OrgAdminDetail;
@@ -56,7 +59,9 @@ export function OverviewPage({ detail, onChanged, focusSafety = false }: Overvie
       {!community && features.includes("community-branding") && <AppearanceCard detail={detail} onChanged={onChanged} />}
       {features.includes("community-tags") && <TagCard detail={detail} onChanged={onChanged} />}
       {community && can.canManageOrg && features.includes(PARITY_FEATURES.settings) && <ProfileExtrasCards detail={detail} onChanged={onChanged} />}
+      {community && can.canManageOrg && features.includes(DISCOVERY_FEATURES.templates) && <TemplateCard orgId={org.id} communityName={org.name} />}
       {community && <AccessCard detail={detail} />}
+      {community && can.canManageOrg && features.includes(DISCOVERY_FEATURES.listing) && <DiscoveryCard orgId={org.id} />}
       {community && can.canManageOrg && features.includes("join-applications") && <JoinQuestionsCard detail={detail} />}
       {community && <ProfileSafety detail={detail} focused={focusSafety} />}
       {community && <TicketsSection detail={detail} />}

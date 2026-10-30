@@ -117,3 +117,36 @@ export function takeReferral(): string | null {
   }
   return code && REF.test(code) ? code : null;
 }
+
+/**
+ * A template link opened in a fresh tab (/template/<code>, community parity E): kept for this tab like an invitation,
+ * then the shell opens its preview ("Create a community from this template") once someone is signed in.
+ */
+const TEMPLATE_KEY = "meldiq.pendingTemplate";
+const TEMPLATE_PATH = /^\/template\/([A-Za-z0-9]{6,32})\/?$/;
+
+export function capturePendingTemplate(): void {
+  const code = TEMPLATE_PATH.exec(location.pathname)?.[1];
+  if (!code) return;
+  try {
+    sessionStorage.setItem(TEMPLATE_KEY, code);
+  } catch {
+    pendingTemplate = code;
+  }
+  history.replaceState(history.state, "", "/home");
+}
+
+let pendingTemplate: string | null = null;
+
+/** The kept template code, once (null if none). */
+export function takePendingTemplate(): string | null {
+  let code = pendingTemplate;
+  pendingTemplate = null;
+  try {
+    code = sessionStorage.getItem(TEMPLATE_KEY) ?? code;
+    sessionStorage.removeItem(TEMPLATE_KEY);
+  } catch {
+    /* in memory only */
+  }
+  return code && /^[A-Za-z0-9]{6,32}$/.test(code) ? code.toUpperCase() : null;
+}

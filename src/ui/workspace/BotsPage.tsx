@@ -1,7 +1,9 @@
 import { Bot, Search, Trash2 } from "lucide-react";
 import { type FormEvent, useState } from "react";
 import type { OrgAdminDetail } from "../../api/workspaceSchemas";
-import { useEngine } from "../../application/orbit";
+import { useEngine, useOrbit } from "../../application/orbit";
+import { DISCOVERY_FEATURES } from "../../sync/discovery/rules";
+import { CommunityBotsCard } from "./bots/CommunityBotsCard";
 import { type BotProfile, botProfile, installBot, removeBot } from "../../sync/bots";
 import { directory } from "../../sync/workspaces";
 import { useAction, useLoad } from "./useLoad";
@@ -22,10 +24,13 @@ export function BotsPage({ detail }: { detail: OrgAdminDetail }) {
   const installed = (members.data ?? []).filter((m) => m.bot);
   const remove = useAction();
   const reload = () => setRev((r) => r + 1);
+  // Community parity E: the community bot directory (bot-directory).
+  const directoryOn = useOrbit((s) => s.server?.features.includes(DISCOVERY_FEATURES.botDirectory) ?? false);
 
   return (
     <>
       <AddBot orgId={orgId} onAdded={reload} />
+      {directoryOn && <CommunityBotsCard orgId={orgId} installed={new Set(installed.map((b) => b.id))} onAdded={reload} />}
       <Card title={`Bots here · ${installed.length}`} sub="Bots are members: give them roles to choose which channels they see and where they can post.">
         <ErrorLine text={members.error ?? remove.error} />
         {!members.data && !members.error && <div className="skeleton" style={{ height: 60 }} aria-busy="true" />}

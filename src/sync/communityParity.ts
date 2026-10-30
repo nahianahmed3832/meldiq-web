@@ -15,8 +15,8 @@ export const PARITY_FEATURES = {
   safety: "community-safety",
   /** Name up to 100, background tint, links, custom and never-expiring invite links, the onboarding gate. */
   settings: "community-settings",
-  /** Paid promotion in Discover (an owner decision; no page until it exists). */
-  promote: "community-promote",
+  /** Paid promotion in Discover: boosts and the Promoted row (community parity E, src/ui/workspace/promote). */
+  promote: "discovery-promote",
 } as const;
 
 const enc = encodeURIComponent;

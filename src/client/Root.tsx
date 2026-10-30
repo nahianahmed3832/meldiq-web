@@ -1,5 +1,5 @@
 import { captureDiscordReturn } from "../application/discordReturn";
-import { capturePendingInvite, capturePendingMessage, captureReferral } from "../application/pendingInvite";
+import { capturePendingInvite, capturePendingMessage, capturePendingTemplate, captureReferral } from "../application/pendingInvite";
 import { StrictMode, useEffect, useState } from "react";
 import { startConfig } from "../application/config";
 import { applyTheme, getPrefs } from "../application/prefs";
@@ -32,6 +32,7 @@ export default function Root() {
     capturePendingInvite();
     captureReferral();
     capturePendingMessage();
+    capturePendingTemplate();
     captureDiscordReturn();
     const stopRouting = startRouting();
     let alive = true;

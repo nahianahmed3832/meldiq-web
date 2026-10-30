@@ -1,7 +1,9 @@
 import { Bot, KeyRound, Pencil, Plus, Trash2 } from "lucide-react";
 import { type FormEvent, useState } from "react";
 import { ApiError } from "../../api/client";
-import { useEngine } from "../../application/orbit";
+import { useEngine, useOrbit } from "../../application/orbit";
+import { DISCOVERY_FEATURES } from "../../sync/discovery/rules";
+import { BotListingCard } from "./BotListingCard";
 import { createBot, deleteBot, type DeveloperBot, developerBots, rotateBotToken, updateBot } from "../../sync/developer";
 import { CopyButton, SecretBox } from "../components/CopyButton";
 import { Toggle } from "../components/Toggle";
@@ -101,6 +103,8 @@ function BotRow({ bot, onChanged, onSecret }: { bot: DeveloperBot; onChanged: ()
   const [renaming, setRenaming] = useState(false);
   const [name, setName] = useState(bot.displayName);
   const run = (fn: () => Promise<unknown>) => void act.act(fn).then((ok) => ok && onChanged());
+  // Community parity E: list a public bot in Community bots (bot-directory).
+  const directoryOn = useOrbit((s) => s.server?.features.includes(DISCOVERY_FEATURES.botDirectory) ?? false);
 
   return (
     <li className="dev-item">
@@ -173,6 +177,7 @@ function BotRow({ bot, onChanged, onSecret }: { bot: DeveloperBot; onChanged: ()
           {act.error}
         </div>
       )}
+      {directoryOn && <BotListingCard botId={bot.id} botName={bot.displayName} isPublic={bot.public} />}
     </li>
   );
 }
