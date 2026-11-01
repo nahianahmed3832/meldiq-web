@@ -3,7 +3,7 @@ import { actionFor, comboOf } from "../../application/shortcuts";
 import { ShortcutsDialog } from "../dialogs/ShortcutsDialog";
 import { usePushToTalk } from "../call/usePushToTalk";
 import { quietContextMenu } from "../components/Overlay";
-import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
+import { lazy, Suspense, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { shallowEqual, useEngine, useOrbit } from "../../application/orbit";
 import { getPrefs, setPrefs, usePrefs } from "../../application/prefs";
 import { ConsentPage } from "../oauth/ConsentPage";
@@ -144,14 +144,20 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
     rememberSelection(engine, orgId).catch(() => undefined);
   }, [orgId, synced, engine]);
 
-  // The conversation on screen (marks it read; new messages there don't count as unread while the window has focus).
-  useEffect(() => {
-    void engine.openConversation(isFullPage(route.section) ? null : route.conversationId);
+  // Invalidate the previous window before paint; position only after the new page renders.
+  useLayoutEffect(() => {
+    const selected = isFullPage(route.section) ? null : route.conversationId;
+    void engine.openConversation(selected);
+    const restored = (event: PageTransitionEvent) => {
+      if (event.persisted) void engine.openConversation(selected);
+    };
+    window.addEventListener("pageshow", restored);
     setDrawer(false);
     // Batch B8b: opening a channel ticks the community guide's tasks that point to it (kept on this browser).
     const c = route.conversationId ? engine.state.get().conversations[route.conversationId] : null;
     const guide = c?.orgId ? (engine.state.get().orgs.find((o) => o.id === c.orgId)?.guide ?? null) : null;
     if (c?.orgId && guide) void noteGuideVisit(engine.store, c.orgId, guide, c.id).then((changed) => changed && window.dispatchEvent(new Event(GUIDE_EVENT)));
+    return () => window.removeEventListener("pageshow", restored);
   }, [engine, route.conversationId, route.section]);
 
   // Where the person is, for the next time Meldiq opens (application/lastPlace.ts); settings windows aren't places.

@@ -212,6 +212,9 @@ export function appHref(raw: string, origin = location.origin): string | null {
  * app's paths move within the page instead of loading it again (modifier keys, other targets and downloads keep the browser's own behaviour).
  */
 export function startRouting(): () => void {
+  // The message viewport owns its position after data renders, including Back/Forward and reload.
+  const scrollRestoration = history.scrollRestoration;
+  history.scrollRestoration = "manual";
   const legacy = () => {
     if (location.hash.startsWith("#/")) go(appHref(location.hash) ?? "/home", true);
   };
@@ -236,6 +239,7 @@ export function startRouting(): () => void {
   Router.events.on("routeChangeComplete", afterNext);
   Router.events.on("hashChangeComplete", afterNext); // what it reports when only the "#…" part differs
   return () => {
+    history.scrollRestoration = scrollRestoration;
     document.removeEventListener("click", onClick);
     window.removeEventListener("hashchange", legacy);
     Router.events.off("routeChangeComplete", afterNext);

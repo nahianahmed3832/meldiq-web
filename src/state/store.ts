@@ -81,6 +81,8 @@ export interface ConversationMessages {
   hasMore: boolean;
   /** The initial history request settled; snapshots and summary previews must not choose the opening anchor. */
   historyReady?: boolean;
+  /** A new ordinary entry resets the viewport even when the conversation component stays mounted. */
+  opening?: number;
   /** A search/history window is separate from the newest messages. */
   detached?: boolean;
   /** Read boundary captured before opening; retained while the person reads this visit. */

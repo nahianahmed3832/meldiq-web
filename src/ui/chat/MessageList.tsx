@@ -10,7 +10,6 @@ import { JUMP_EVENT } from "./jump";
 import { useT } from "../../i18n";
 import { shownName } from "../../sync/communityParity";
 import { useCommunityMembers } from "../community/useCommunityMembers";
-import { readingScope } from "../../application/readingPosition";
 import { useReadingPosition } from "./useReadingPosition";
 
 const GROUP_MS = 5 * 60_000;
@@ -24,7 +23,6 @@ interface MessageListProps {
   historyReady?: boolean;
   unreadAfter?: number | null;
   onLoadLatest?: () => Promise<void>;
-  onRestoreAnchor?: (id: string) => Promise<void>;
   onReading?: (atLatest: boolean) => void;
   /** Thread view: shows replies; the main view hides them under their root. */
   threadRoot?: string;
@@ -92,12 +90,9 @@ export function MessageList(props: MessageListProps) {
   const unreadId = props.unreadAfter != null ? visible.find((m) => !m.outgoing && (m.serverTs ?? m.sortTs) > props.unreadAfter!)?.id : undefined;
   const positionEntries = useMemo(() => timeline.map((entry) => ({ id: entry.id, mine: entry.kind === "msg" ? entry.m.outgoing : entry.e.mine })), [timeline]);
   const position = useReadingPosition({
-    scope: readingScope(me?.userId ?? "", props.conversationId, threadRoot),
     entries: positionEntries,
     ready: props.historyReady ?? true,
     detached: props.detached,
-    unreadId,
-    onRestore: props.onRestoreAnchor,
     onReading: props.onReading,
   });
   const { scroller } = position;
@@ -113,8 +108,8 @@ export function MessageList(props: MessageListProps) {
     }
   }, [hasMore, onLoadOlder]);
   const onScroll = () => {
-    position.onScroll();
-    if (scroller.current && scroller.current.scrollTop < 200) void loadOlder();
+    const reading = position.onScroll();
+    if (reading && scroller.current && scroller.current.scrollTop < 200) void loadOlder();
   };
   const toLatest = async () => {
     if (loadingLatest) return;

@@ -27,7 +27,7 @@ async function expectAnchor(list: Locator, anchor: { id: string; offset: number 
     .toBeLessThanOrEqual(2);
 }
 
-test("reading anchors survive pagination, incoming messages, late layout changes, switches and reloads", async ({ page }) => {
+test("opening always shows latest; active reading survives pagination, arrivals and late layout changes", async ({ page }) => {
   const alice = await newPhone("anchor", "Alice Anchor");
   const bob = await newPhone("reader", "Bob Reader");
   const dm = (await alice.req("POST", "/v1/conversations/dm", { userId: bob.userId })).conversation.id;
@@ -46,14 +46,13 @@ test("reading anchors survive pagination, incoming messages, late layout changes
     el.scrollTop = el.scrollHeight - el.clientHeight - 350;
   });
   await expect(page.getByRole("button", { name: "Jump to latest", exact: true })).toBeVisible();
-  const saved = await visibleAnchor(list);
   await page.goto("/home");
   await page.goto(`/dms/c/${dm}`);
   await expect(list).toHaveAttribute("aria-busy", "false");
-  await expectAnchor(list, saved);
+  await expect.poll(() => bottomGap(list)).toBeLessThan(2);
   await page.reload();
   await expect(list).toHaveAttribute("aria-busy", "false");
-  await expectAnchor(list, saved);
+  await expect.poll(() => bottomGap(list)).toBeLessThan(2);
 
   // Hold the prepend until an incoming message has rendered, exercising both changes in the same reading window.
   let release!: () => void;
@@ -76,6 +75,11 @@ test("reading anchors survive pagination, incoming messages, late layout changes
   await expect(page.getByRole("button", { name: /1 new message/ })).toBeVisible();
   release();
   await expect(list.getByText("Reading line 11:", { exact: false })).toBeAttached();
+  await expectAnchor(list, beforePrepend);
+
+  // A message synced from another device of this account must also respect the active reader.
+  await alice.send(dm, { type: "text", text: "Sent from my other device while reading" });
+  await expect(list.getByText("Sent from my other device while reading")).toBeAttached();
   await expectAnchor(list, beforePrepend);
 
   // Media and fonts can expand a preceding message after the page has settled.
@@ -169,7 +173,7 @@ test("the expression picker finds joined-community emoji and previews uploads wi
   await expect(page.getByRole("textbox", { name: "Message Bob Expressions" })).toHaveValue(":tiny_preview: ");
 });
 
-test("opening unread history shows its boundary and waits to acknowledge until latest is visible", async ({ page }) => {
+test("opening unread history starts at latest and acknowledges only the visible fresh window", async ({ page }) => {
   const alice = await newPhone("unread", "Alice Unread");
   const bob = await newPhone("unreadpeer", "Bob Unread");
   const dm = (await alice.req("POST", "/v1/conversations/dm", { userId: bob.userId })).conversation.id;
@@ -177,12 +181,8 @@ test("opening unread history shows its boundary and waits to acknowledge until l
   await link(page, alice);
   await page.goto(`/dms/c/${dm}`);
   const list = listOf(page);
-  await expect(list.getByRole("separator", { name: "New messages" })).toBeVisible();
-  await expect(page.getByRole("button", { name: "Jump to latest", exact: true })).toBeVisible();
-  const before = await alice.req("GET", "/v2/messages/summary");
-  expect(before.conversations.find((c: { conversationId: string }) => c.conversationId === dm)?.unread).toBeGreaterThan(0);
-  // The control takes the reader to current messages and releases the pending read receipt.
-  await page.getByRole("button", { name: "Jump to latest", exact: true }).click();
+  await expect(list).toHaveAttribute("aria-busy", "false");
+  await expect(list.getByRole("separator", { name: "New messages" })).toBeAttached();
   await expect.poll(() => bottomGap(list)).toBeLessThan(2);
   await expect(list.getByText(/^Unread line 70:/)).toBeVisible();
   await expect

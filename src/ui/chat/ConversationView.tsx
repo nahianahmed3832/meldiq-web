@@ -234,8 +234,9 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
         <VoiceRoomView c={c} />
       ) : c.type === "CHANNEL" && c.format === "forum" ? (
         <ForumView c={c} section={route.section} />
-      ) : loaded ? (
+      ) : loaded?.historyReady ? (
         <MessageList
+          key={`${id}:${loaded.opening ?? 0}`}
           conversationId={id}
           items={loaded.items}
           hasMore={loaded.hasMore}
@@ -243,7 +244,6 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
           historyReady={loaded.historyReady ?? false}
           unreadAfter={loaded.unreadAfter}
           onLoadLatest={() => engine.loadLatest(id)}
-          onRestoreAnchor={(messageId) => engine.restoreReadingAnchor(id, messageId)}
           onReading={(latest) => engine.setReadingLatest(id, latest)}
           onLoadOlder={() => engine.loadOlder(id)}
           canPost={posting.post}

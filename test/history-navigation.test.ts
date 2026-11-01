@@ -55,6 +55,70 @@ afterEach(async () => {
 });
 
 describe("history navigation", () => {
+  it("reopens a detached conversation with a fresh newest page", async () => {
+    const { engine, api } = await setup();
+    api
+      .mockResolvedValueOnce(page([event("m100", 100)], true))
+      .mockResolvedValueOnce(page([event("m10", 10)], true))
+      .mockResolvedValueOnce(page([event("m101", 101), event("m100", 100)], true));
+    await engine.openConversation(CONV);
+    await engine.loadAround(CONV, "m10");
+    await engine.openConversation(null);
+    await engine.openConversation(CONV);
+    expect(api).toHaveBeenCalledTimes(3);
+    expect(api.mock.calls[2]?.[1]).not.toContain("around=");
+    expect(ids(engine)).toEqual(["m100", "m101"]);
+    expect(engine.state.get().messages[CONV]).toMatchObject({ detached: false, historyReady: true });
+  });
+
+  it("does not reuse an earlier opening's in-flight request or publish it over the new opening", async () => {
+    const { engine, api } = await setup();
+    const stale = deferred<ServerHistoryPage>();
+    const fresh = deferred<ServerHistoryPage>();
+    api.mockImplementationOnce(() => stale.promise).mockImplementationOnce(() => fresh.promise);
+    const first = engine.openConversation(CONV);
+    await vi.waitFor(() => expect(api).toHaveBeenCalledTimes(1));
+    await engine.openConversation(null);
+    const second = engine.openConversation(CONV);
+    await vi.waitFor(() => expect(api).toHaveBeenCalledTimes(2));
+    fresh.resolve(page([event("m200", 200)], true));
+    await second;
+    stale.resolve(page([event("m100", 100)], false));
+    await first;
+    expect(ids(engine)).toEqual(["m200"]);
+    expect(engine.state.get().messages[CONV]?.hasMore).toBe(true);
+  });
+
+  it("reopening replaces cached timestamp ties and edits with the fresh bounded page", async () => {
+    const { engine, api } = await setup();
+    api
+      .mockResolvedValueOnce(page([event("m_c", 1000), event("m_b", 1000)], true))
+      .mockResolvedValueOnce(page([event("m_a", 1000)]))
+      .mockResolvedValueOnce({ ...page([event("m_c", 1000)], true), changes: [{ ...event("edit_c", 1001), cls: "control", payload: { type: "edit", target: "m_c", text: "edited on the server" } }] });
+    await engine.openConversation(CONV);
+    await engine.loadOlder(CONV);
+    expect(ids(engine)).toEqual(["m_a", "m_b", "m_c"]);
+    await engine.openConversation(null);
+    await engine.openConversation(CONV);
+    expect(ids(engine)).toEqual(["m_c"]);
+    expect(engine.state.get().messages[CONV]?.items[0]?.text).toBe("edited on the server");
+  });
+
+  it("preserves an arrival delivered while the opening reads its cached window", async () => {
+    const { engine, store, api } = await setup();
+    const cached = deferred<StoredMessage[]>();
+    const cacheRead = vi.spyOn(store, "latestMessages").mockImplementationOnce(() => cached.promise);
+    api.mockResolvedValueOnce(page([event("m100", 100)], true));
+    const opening = engine.openConversation(CONV);
+    await vi.waitFor(() => expect(cacheRead).toHaveBeenCalled());
+    const incoming = message("m101", 101);
+    await store.putMessage(incoming);
+    engine.show(incoming);
+    cached.resolve([message("m100", 100)]);
+    await opening;
+    expect(ids(engine)).toEqual(["m100", "m101"]);
+  });
+
   it("coalesces button/scroll pagination and merges overlapping pages by ID", async () => {
     const { engine, api } = await setup();
     const older = deferred<ServerHistoryPage>();

@@ -1,6 +1,6 @@
 import "fake-indexeddb/auto";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { Conversation } from "../src/api/schemas";
+import type { Conversation, ServerHistoryPage, StoredEvent } from "../src/api/schemas";
 import type { DeviceRecord, StoredMessage } from "../src/model/types";
 import { initialState } from "../src/state/store";
 import { LocalStore } from "../src/store/db";
@@ -42,12 +42,17 @@ async function openOnSnapshot(shown: StoredMessage[], server: StoredMessage[], o
   await new SnapshotVault(store, ME).save(snapshotOf(before, [CONV]));
 
   const engine = new Engine(device, store, { base: "http://meldiq.test", wsUrl: "ws://meldiq.test/v1/ws", liveWaitMs: opts.liveWaitMs });
+  vi.spyOn(engine, "syncSummaries").mockResolvedValue();
+  vi.spyOn(engine, "syncCalls").mockResolvedValue();
   let page: Page = { resolve: () => undefined, fail: () => undefined };
-  const fetches = vi.spyOn(engine as unknown as { fetchHistory(id: string): Promise<void> }, "fetchHistory").mockImplementation(
+  const fetches = vi.spyOn(engine as unknown as { fetchHistory(id: string): Promise<ServerHistoryPage> }, "fetchHistory").mockImplementation(
     () =>
-      new Promise<void>((resolve, reject) => {
+      new Promise<ServerHistoryPage>((resolve, reject) => {
         page = {
-          resolve: () => void store.putMessages(server).then(() => resolve()),
+          resolve: () =>
+            void store
+              .putMessages(server)
+              .then(() => resolve({ messages: [...server].reverse().map((m) => ({ id: m.id, serverTs: m.serverTs ?? m.sortTs }) as StoredEvent), changes: [], more: false })),
           fail: () => reject(new Error("offline")),
         };
       }),

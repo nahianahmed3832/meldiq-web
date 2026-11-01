@@ -375,29 +375,30 @@ export class Engine implements EngineContext {
   /** Conversations whose messages on screen are still the snapshot's: their first server page hasn't replaced them. */
   private readonly fromSnapshot = new Set<string>();
   /** Each conversation's first server page while it loads (one load, however many ask). */
-  private readonly firstPages = new Map<string, Promise<boolean>>();
+  private readonly firstPages = new Map<string, Promise<ServerHistoryPage | null>>();
 
   /**
-   * The conversation's newest page from the server; true once it's in. A conversation drawn from the snapshot then shows
+   * The conversation's newest page from the server; null if unavailable. A conversation drawn from the snapshot then shows
    * the server's messages instead, and actions on its messages run against them (live()).
    */
-  private firstPage(id: string): Promise<boolean> {
-    let p = this.firstPages.get(id);
+  private firstPage(id: string): Promise<ServerHistoryPage | null> {
+    const key = `${id}:${this.windowVersions.get(id) ?? 0}`;
+    let p = this.firstPages.get(key);
     if (!p) {
       const version = this.windowVersions.get(id);
       p = this.fetchHistory(id, null)
-        .then(async () => {
+        .then(async (page) => {
           if (version === this.windowVersions.get(id) && this.fromSnapshot.has(id)) {
             const items = await this.store.latestMessages(id, PAGE);
-            if (version !== this.windowVersions.get(id)) return true;
+            if (version !== this.windowVersions.get(id)) return page;
             this.set((s) => withMessages(s, id, items, this.serverPages.get(id)?.more ?? items.length === PAGE));
             this.fromSnapshot.delete(id);
           }
-          return true;
+          return page;
         })
-        .catch(() => false)
-        .finally(() => this.firstPages.delete(id));
-      this.firstPages.set(id, p);
+        .catch(() => null)
+        .finally(() => this.firstPages.delete(key));
+      this.firstPages.set(key, p);
     }
     return p;
   }
@@ -1118,38 +1119,56 @@ export class Engine implements EngineContext {
     this.readingLatest = false;
     this.viewReady = false;
     if (!id) return;
+    const version = (this.windowVersions.get(id) ?? 0) + 1;
+    this.windowVersions.set(id, version);
     this.snapshots.opened(id);
-    // Read markers must arrive before the first window can be acknowledged, including a fresh sign-in/reload.
+    // Each entry owns a fresh newest window. Cached/search windows cannot initialize its viewport.
+    this.set((s) => ({
+      ...s,
+      messages: {
+        ...s.messages,
+        [id]: {
+          ...s.messages[id],
+          items: s.messages[id]?.items ?? [],
+          hasMore: false,
+          opening,
+          historyReady: false,
+          detached: false,
+        },
+      },
+    }));
+    // Read markers must arrive before the fresh rendered window can be acknowledged.
     if (!this.summariesLoaded) await this.syncSummaries();
-    if (opening !== this.openVersion) return;
+    if (opening !== this.openVersion || version !== this.windowVersions.get(id)) return;
     const boundary = this.state.get().local[id];
     const unreadAfter = boundary?.unread ? boundary.readUpTo : null;
-    const withBoundary = (s: AppState, items: StoredMessage[], more: boolean, historyReady = this.serverPages.has(id)) => {
-      const next = withMessages(s, id, items, more);
-      return { ...next, messages: { ...next.messages, [id]: { ...next.messages[id]!, unreadAfter, historyReady } } };
-    };
-    const existing = this.state.get().messages[id];
-    if (existing) this.set((s) => withBoundary(s, existing.items, existing.hasMore));
-    if (!this.serverPages.has(id) && !this.state.get().messages[id]) {
-      const stored = await this.store.latestMessages(id, PAGE);
-      if (opening !== this.openVersion) return;
-      if (stored.length && !this.state.get().messages[id]) this.set((s) => withBoundary(s, stored, true));
-    }
-    // Returning to a loaded conversation keeps its contiguous window and its reading position.
-    const version = this.windowVersions.get(id);
-    const hadPage = this.serverPages.has(id);
-    const fetched = hadPage || (await this.firstPage(id));
+    const page = await this.firstPage(id);
     if (opening !== this.openVersion || version !== this.windowVersions.get(id)) return;
+    const cached = await this.store.latestMessages(id, PAGE);
+    const received = page ? await Promise.all(page.messages.map((m) => this.store.message(m.id))) : [];
+    if (opening !== this.openVersion || version !== this.windowVersions.get(id)) return;
+    const newest = page?.messages[0];
+    const newer = (m: StoredMessage) => !newest || m.sortTs > newest.serverTs || (m.sortTs === newest.serverTs && m.id > newest.id);
+    const items = page ? [...received.filter((m): m is StoredMessage => !!m), ...cached.filter(newer)] : cached;
+    this.fromSnapshot.delete(id);
     this.viewReady = true;
-    const current = this.state.get().messages[id];
-    if (!hadPage || !current?.items.length || this.fromSnapshot.has(id)) {
-      const items = await this.store.latestMessages(id, PAGE);
-      if (opening !== this.openVersion || version !== this.windowVersions.get(id)) return;
-      if (fetched || items.length || !current) this.set((s) => withBoundary(s, items, this.serverPages.get(id)?.more ?? items.length === PAGE, true));
-    }
     this.set((s) => {
-      const loaded = s.messages[id];
-      return loaded ? { ...s, messages: { ...s.messages, [id]: { ...loaded, unreadAfter, historyReady: true } } } : s;
+      const known = new Set(items.map((m) => m.id));
+      const arrivals = page ? (s.messages[id]?.items.filter((m) => newer(m) && !known.has(m.id)) ?? []) : [];
+      const next = withMessages(s, id, [...items, ...arrivals], page?.more ?? items.length === PAGE);
+      return {
+        ...next,
+        messages: {
+          ...next.messages,
+          [id]: {
+            ...next.messages[id]!,
+            opening,
+            unreadAfter,
+            detached: false,
+            historyReady: true,
+          },
+        },
+      };
     });
     void this.syncCalls(id);
   }
@@ -1199,9 +1218,13 @@ export class Engine implements EngineContext {
     const latest = await this.store.latestMessages(id, PAGE);
     if (version !== this.windowVersions.get(id)) return;
     this.fromSnapshot.delete(id);
-    const newest = items.at(0)?.sortTs ?? 0;
+    if (this.viewingId === id) this.viewReady = true;
+    const newest = page.messages[0];
+    const newer = (m: StoredMessage) => !newest || m.sortTs > newest.serverTs || (m.sortTs === newest.serverTs && m.id > newest.id);
     this.set((s) => {
-      const next = withMessages(s, id, [...items, ...latest.filter((m) => m.sortTs >= newest)], page.more);
+      const known = new Set(items.map((m) => m.id));
+      const arrivals = s.messages[id]?.items.filter((m) => newer(m) && !known.has(m.id)) ?? [];
+      const next = withMessages(s, id, [...items, ...latest.filter(newer), ...arrivals], page.more);
       return { ...next, messages: { ...next.messages, [id]: { ...next.messages[id]!, detached: false, historyReady: true } } };
     });
   }
