@@ -40,6 +40,8 @@ Live web target: `/opt/meldiq-web/releases/0.5.0-beta-0193e7c`. Live API image: 
 
 The web verification script passed TLS, security headers, app routes, configuration cache policy, API proxy and WebSocket upgrade. Runtime configuration, environment and nginx site/header/media snippets are byte-equal to before. The live capture permission policy allows `display-capture=(self)`. API is healthy with MongoDB and LiveKit, zero restarts and no warnings/errors in the post-switch sample. LiveKit and ntfy were not restarted.
 
+Public browser smoke at 390 × 844 returned HTTP 200 and API 200/0.68.0, rendered Sign in to Meldiq, advertised all six new capabilities, and had no page errors or horizontal overflow.
+
 Both repositories have `codex/yapin-roadmap-completion` pushed. The committed web artifact source is `0193e7c`; subsequent changes to this report and the notification acceptance test do not alter product code.
 
 Rollback web: `bash /root/meldiq-web-0.5.0-beta-0193e7c/rollback.sh 0.5.0-beta-98828f0`. Rollback API: restore the backed-up Compose file and recreate **only** `api` with `up -d --no-deps --no-build api` in the existing Compose project. The old image `0.67.1-yapin-rollback` remains available; migrations 078–079 are additive. Do not restore a data snapshot merely to roll back the runtime; doing so would discard later user writes.
