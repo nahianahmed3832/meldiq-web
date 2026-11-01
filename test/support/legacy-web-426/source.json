@@ -1,0 +1,8 @@
+{
+  "commit": "426ad2b03a2afcdbd8ac549ef4f0711e16c6ccac",
+  "origin": "deployed web baseline, unmodified source files",
+  "sha256": {
+    "profileSchemas.ts": "d0c756adb142e51d86f50049710d28dcfef4ab219dd3938543569b83386828c0",
+    "enums.ts": "a2c01051d637db2875878fea133092fd2f6f444d9a6c6483c754afa993b727fb"
+  }
+}
