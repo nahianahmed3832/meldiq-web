@@ -175,5 +175,117 @@ for (const approved of [false, true]) {
     }
     await expect(page.getByRole("heading", { name: "Mojo Plus", exact: true })).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    if (!approved) {
+      await page.route("**/v2/billing/paypal/config", (route) => route.fulfill({ json: { provider: "paypal", environment: "live", clientId: "public-test", cards: false, subscriptions: true } }));
+      await page.route("https://www.paypal.com/sdk/js?**", (route) =>
+        route.fulfill({ contentType: "application/javascript", body: "window[document.currentScript.getAttribute('data-namespace')]={Buttons:()=>({isEligible:()=>false})};" }),
+      );
+      let reads = 0;
+      let creates = 0;
+      await page.route("**/v2/billing/paypal/checkouts/chk_pending", (route) => {
+        reads++;
+        return route.fulfill({
+          json: {
+            id: "chk_pending",
+            product: "plus",
+            providerRef: "I-PENDING",
+            status: "open",
+            confirmed: false,
+            currency: "USD",
+            amountMinor: 399,
+            interval: "month",
+            expiresAt: Date.now() + 3600000,
+          },
+        });
+      });
+      await page.route("**/v2/billing/paypal/checkouts", (route) => {
+        creates++;
+        return route.abort();
+      });
+      const requestKey = await page.evaluate((userId) => {
+        const requestKey = crypto.randomUUID();
+        sessionStorage.setItem(`meldiq.paypal.sandbox.${userId}`, JSON.stringify({ draft: { product: "plus" }, requestKey, purchaseId: "chk_pending", completed: false }));
+        return requestKey;
+      }, alice.userId);
+      await page.getByRole("button", { name: "Return to checkout", exact: true }).click();
+      await expect(page).toHaveURL(/\/settings\/checkout$/);
+      await expect(page.getByRole("heading", { name: "Make room for more." })).toBeVisible();
+      await expect.poll(() => reads).toBeGreaterThan(0);
+      await expect(page.getByRole("radio", { name: /Debit or credit card/ })).toBeDisabled();
+      await expect(page.getByRole("alert")).toHaveCount(0);
+      expect(await page.evaluate((userId) => JSON.parse(sessionStorage.getItem(`meldiq.paypal.sandbox.${userId}`)!), alice.userId)).toMatchObject({
+        draft: { product: "plus" },
+        requestKey,
+        purchaseId: "chk_pending",
+      });
+      expect(creates).toBe(0);
+      expect(cancelCalls).toBe(0);
+    }
   });
 }
+
+test("unapproved Bots+ returns to the selected community checkout without creating a purchase", async ({ page, context }) => {
+  await context.setExtraHTTPHeaders({ "x-orbit-test-ip": testAddress() });
+  const alice = await newPhone("botsreturn", "Bots Checkout Tester");
+  const { org } = await alice.req("POST", "/v1/orgs", { name: "Bots Return Lab" });
+  const catalog = await (await page.request.get("/v2/mojo/catalog")).json();
+  await page.route("**/v2/mojo/catalog", (route) =>
+    route.fulfill({
+      json: { ...catalog, onSale: { mode: "live", go: null, plus: { currency: "USD", amountMinor: 399 }, botsPlus: { currency: "USD", amountMinor: 399 }, spark: null, gifts: false } },
+    }),
+  );
+  await page.route("**/v2/billing/account", (route) => route.fulfill({ json: { available: true, provider: "paypal", mode: "live", portal: false, subscription: null } }));
+  await page.route("**/v2/billing/paypal/history", (route) =>
+    route.fulfill({
+      json: {
+        transactions: [],
+        history: [],
+        subscriptions: [
+          {
+            id: "sub_bots_pending",
+            product: "bots_plus",
+            orgId: org.id,
+            providerRef: "I-PENDING-BOTS",
+            status: "incomplete",
+            approvalPending: true,
+            currentPeriodEnd: null,
+            cancelAtPeriodEnd: false,
+            createdAt: Date.now(),
+          },
+        ],
+      },
+    }),
+  );
+  await page.route("**/v2/billing/paypal/config", (route) =>
+    route.fulfill({ json: { provider: "paypal", environment: "live", clientId: "public-test", cards: false, subscriptions: true, botsPlus: true } }),
+  );
+  await page.route("https://www.paypal.com/sdk/js?**", (route) =>
+    route.fulfill({ contentType: "application/javascript", body: "window[document.currentScript.getAttribute('data-namespace')]={Buttons:()=>({isEligible:()=>false})};" }),
+  );
+  let creates = 0;
+  await page.route("**/v2/billing/paypal/checkouts", (route) => {
+    creates++;
+    return route.abort();
+  });
+  await alice.connect();
+  await link(page, alice);
+  await page.goto("/settings/billing");
+  const bots = page.getByRole("region", { name: "Bots+ subscription" });
+  await expect(bots).toContainText("Bots Return Lab");
+  await page.evaluate(
+    (userId) =>
+      sessionStorage.setItem(`meldiq.paypal.sandbox.${userId}`, JSON.stringify({ draft: { product: "plus" }, requestKey: crypto.randomUUID(), purchaseId: "chk_personal", completed: false })),
+    alice.userId,
+  );
+  await bots.getByRole("button", { name: "Return to Bots+ checkout", exact: true }).click();
+  await expect(page).toHaveURL(/\/settings\/checkout$/);
+  await expect(page.getByRole("heading", { name: "Meldiq Bots+", exact: true })).toBeVisible();
+  await expect(page.locator(".checkout-title")).toContainText("Bots Return Lab");
+  await expect(page.getByRole("radio", { name: /Debit or credit card/ })).toBeDisabled();
+  await expect(page.getByRole("alert")).toHaveCount(0);
+  expect(await page.evaluate((userId) => JSON.parse(sessionStorage.getItem(`meldiq.paypal.sandbox.${userId}`)!), alice.userId)).toMatchObject({
+    draft: { product: "bots_plus", orgId: org.id },
+    purchaseId: null,
+  });
+  expect(creates).toBe(0);
+});
