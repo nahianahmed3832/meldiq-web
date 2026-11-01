@@ -6,7 +6,7 @@ import { useEngine, useOrbit } from "../../application/orbit";
 import { navigate } from "../../application/router";
 import { Dialog } from "../components/Overlay";
 import { money } from "../mojo/mojoFormat";
-import { selectCheckout } from "./checkoutDraft";
+import { type CheckoutDraft, selectCheckout } from "./checkoutDraft";
 
 const date = (value: number | null) => (value === null ? "Not available yet" : new Intl.DateTimeFormat(undefined, { dateStyle: "medium" }).format(value));
 
@@ -20,6 +20,10 @@ export function BillingPage() {
   const [notice, setNotice] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [canceling, setCanceling] = useState<{ id?: string; name: string; until: number | null } | null>(null);
+  const returnToCheckout = (draft: CheckoutDraft) => {
+    selectCheckout(engine.device.userId, draft);
+    navigate({ section: "settings", settingsPage: "checkout" });
+  };
   const refresh = useCallback(async () => {
     setBusy(true);
     setError(null);
@@ -145,7 +149,7 @@ export function BillingPage() {
             <p>No paid Plus subscription or recurring payment has been authorized.</p>
             <p className="muted">Close the PayPal window to leave this checkout. Nothing renews unless you approve payment. Any free Plus time is separate.</p>
           </div>
-          <button className="btn btn-secondary" disabled={!online} onClick={() => selectCheckout(engine.device.userId, { product: "plus" })}>
+          <button className="btn btn-secondary" disabled={!online} onClick={() => returnToCheckout({ product: "plus" })}>
             Return to checkout
           </button>
         </section>
@@ -179,7 +183,7 @@ export function BillingPage() {
               <button
                 className="btn btn-secondary"
                 disabled={!online || !subscription.orgId}
-                onClick={() => subscription.orgId && selectCheckout(engine.device.userId, { product: "bots_plus", orgId: subscription.orgId })}
+                onClick={() => subscription.orgId && returnToCheckout({ product: "bots_plus", orgId: subscription.orgId })}
               >
                 Return to Bots+ checkout
               </button>
