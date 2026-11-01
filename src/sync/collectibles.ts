@@ -43,5 +43,5 @@ export function previewLegacyStyle(style: ProfileStyle, change: ProfileStyleChan
   if (change.effect !== undefined) clear.add("particles");
   if (change.accent !== undefined || change.themeColors !== undefined) clear.add("profile-theme");
   if (change.nameColors !== undefined || change.nameEffect !== undefined) clear.add("name-effect");
-  return zProfileStyle.parse({ ...style, ...change, ...(style.collectibles ? { collectibles: style.collectibles.filter((x) => !clear.has(x.category)) } : {}) });
+  return zProfileStyle.parse({ ...style, ...change, ...(style.collectibles ? { collectibles: style.collectibles.filter((x) => !clear.has(x.category)) } : {}) }) ?? style;
 }
