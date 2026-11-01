@@ -1,3 +1,4 @@
+import path from "node:path";
 import { test, expect } from "@playwright/test";
 import { link } from "./link";
 import { newPhone, testAddress } from "./phone";
@@ -15,6 +16,7 @@ test("comfort controls persist across reload and mobile layouts", async ({ page 
   await page.getByLabel("Reduce motion", { exact: true }).selectOption("on");
   await page.getByRole("switch", { name: "Higher contrast" }).click();
   await expect(page.locator("html")).toHaveAttribute("data-motion", "on");
+  if (process.env.ORBIT_E2E_SHOTS) await page.screenshot({ path: path.join(process.env.ORBIT_E2E_SHOTS, `comfort-${test.info().project.name}.png`) });
   await page.reload();
   await expect(page.getByLabel("Message density", { exact: true })).toHaveValue("compact");
   await expect(page.locator("html")).toHaveAttribute("data-line-spacing", "relaxed");

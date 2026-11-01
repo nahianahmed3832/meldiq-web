@@ -1,5 +1,5 @@
 import { Star } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useEngine, useOrbit } from "../../application/orbit";
 import { expressions, type Expression } from "../../sync/expressions";
 import { CustomEmojiImage } from "../community/CustomEmoji";
@@ -11,6 +11,8 @@ export function ExpressionLibrary({ source, orgIds, kind, onPick, revision }: { 
   const prefs = useOrbit((s) => s.nav.personal);
   const [loaded, setLoaded] = useState<{ scope: string; items: Expression[]; failed: boolean } | null>(null);
   const [query, setQuery] = useState("");
+  const [limit, setLimit] = useState(60);
+  useEffect(() => setLimit(60), [source, kind]);
   const [filter, setFilter] = useState<"all" | "favorites" | "recent">("all");
   const [error, setError] = useState<string | null>(null);
   const scope = JSON.stringify(orgIds);
@@ -62,11 +64,21 @@ export function ExpressionLibrary({ source, orgIds, kind, onPick, revision }: { 
         aria-label="Search community expressions"
         placeholder="Search community expressions"
         value={query}
-        onChange={(e) => setQuery(e.target.value)}
+        onChange={(e) => {
+          setQuery(e.target.value);
+          setLimit(60);
+        }}
       />
       <div className="segmented" role="group" aria-label="Expression library filter">
         {(["all", "favorites", "recent"] as const).map((f) => (
-          <button key={f} aria-pressed={filter === f} onClick={() => setFilter(f)}>
+          <button
+            key={f}
+            aria-pressed={filter === f}
+            onClick={() => {
+              setFilter(f);
+              setLimit(60);
+            }}
+          >
             {{ all: "All", favorites: "Favorites", recent: "Recent" }[f]}
           </button>
         ))}
@@ -80,7 +92,7 @@ export function ExpressionLibrary({ source, orgIds, kind, onPick, revision }: { 
             <p className="hint">{filter === "favorites" ? "Star expressions to keep them here." : filter === "recent" ? "Expressions you use appear here." : "No matching expressions."}</p>
           )}
           <div className="xp-library-grid">
-            {shown.map((e) => (
+            {shown.slice(0, limit).map((e) => (
               <div className="xp-library-item" key={e.id}>
                 <button
                   type="button"
@@ -92,7 +104,7 @@ export function ExpressionLibrary({ source, orgIds, kind, onPick, revision }: { 
                     onPick(e);
                   }}
                 >
-                  <CustomEmojiImage id={e.id} name={e.name} sha256={e.sha256} size={28} sticker={kind === "sticker"} />
+                  <LazyExpression expression={e} sticker={kind === "sticker"} />
                   <small className="ellipsis">{e.name}</small>
                 </button>
                 <button
@@ -107,9 +119,42 @@ export function ExpressionLibrary({ source, orgIds, kind, onPick, revision }: { 
               </div>
             ))}
           </div>
+          {shown.length > limit && (
+            <button className="btn btn-secondary btn-sm" onClick={() => setLimit((n) => n + 60)}>
+              Load more expressions ({shown.length - limit})
+            </button>
+          )}
         </>
       )}
       {error && <p role="alert">{error}</p>}
     </section>
+  );
+}
+
+/** Opening the account library must not download every community image. */
+function LazyExpression({ expression: e, sticker }: { expression: Expression; sticker: boolean }) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    if (typeof IntersectionObserver === "undefined") {
+      setVisible(true);
+      return;
+    }
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          setVisible(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "60px" },
+    );
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, []);
+  return (
+    <span ref={ref} style={{ display: "inline-block", minWidth: sticker ? 54 : 28, minHeight: sticker ? 54 : 28 }}>
+      {visible && <CustomEmojiImage id={e.id} name={e.name} sha256={e.sha256} size={28} sticker={sticker} />}
+    </span>
   );
 }
