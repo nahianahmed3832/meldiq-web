@@ -19,6 +19,7 @@ export function useReadingPosition({
   const anchor = useRef<Anchor>({ id: null, offset: 0, atBottom: true });
   const initialized = useRef(false);
   const jumping = useRef(false);
+  const size = useRef({ height: 0, viewport: 0 });
   const previous = useRef<{ id: string; mine: boolean }[]>([]);
   const [away, setAway] = useState(false);
   const [unseen, setUnseen] = useState(0);
@@ -34,6 +35,7 @@ export function useReadingPosition({
   const capture = useCallback(() => {
     const el = scroller.current;
     if (!el || !ready || !initialized.current) return false;
+    size.current = { height: el.scrollHeight, viewport: el.clientHeight };
     const atBottom = el.scrollHeight - el.scrollTop - el.clientHeight < NEAR_BOTTOM;
     const top = el.getBoundingClientRect().top;
     const first = Array.from(el.querySelectorAll<HTMLElement>("[id^='msg-']")).find((child) => child.getBoundingClientRect().bottom > top);
@@ -117,5 +119,12 @@ export function useReadingPosition({
     el.scrollTo({ top: el.scrollHeight, behavior: smooth ? "smooth" : "instant" });
     capture();
   }, [capture, ready]);
-  return { scroller, onScroll: capture, away, unseen, latest };
+  const onScroll = useCallback(() => {
+    const el = scroller.current;
+    // Layout can emit scroll before ResizeObserver runs (notably lazy images after a reload).
+    // Do not mistake that movement for the reader choosing a new position.
+    if (el && initialized.current && !jumping.current && (size.current.height !== el.scrollHeight || size.current.viewport !== el.clientHeight)) restore(anchor.current);
+    return capture();
+  }, [capture, restore]);
+  return { scroller, onScroll, away, unseen, latest };
 }
