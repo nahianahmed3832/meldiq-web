@@ -53,6 +53,7 @@ export function AuthScreen(props: {
   onLinkWithPhone: () => void;
 }) {
   const base = props.base ?? apiBase();
+  const { savedAccounts, onUseSavedAccount } = props;
   const [step, setStep] = useState<Step>({ k: "signIn" });
   const [server, setServer] = useState<ServerInfo | null>(null);
   const t = useT();
@@ -73,19 +74,19 @@ export function AuthScreen(props: {
     (grant: AccountSessionGrant, password?: string) => {
       // Ended from elsewhere before setup finished (e.g. removed in the phone's session list): sign in again, email kept.
       const creds = new SetupCredentials(base, grant, (why) => setStep({ k: "signIn", notice: SETUP_ENDED[why], email: grant.account.email }));
-      const existing = props.savedAccounts?.find((a) => a.accountId === grant.account.id);
-      if (existing && props.onUseSavedAccount) {
+      const existing = savedAccounts?.find((a) => a.accountId === grant.account.id);
+      if (existing && onUseSavedAccount) {
         // This login only created a setup session. Keep the saved device/session and discard the extra setup session.
         void new AccountApi(new ApiClient(base, creds))
           .logout()
           .catch(() => undefined)
-          .then(() => props.onUseSavedAccount?.(existing.database));
+          .then(() => onUseSavedAccount?.(existing.database));
         return;
       }
       const account = grant.account;
       setStep(account.identity ? { k: "addDevice", creds, account, password } : { k: "create", creds, account, password });
     },
-    [base, props.savedAccounts, props.onUseSavedAccount],
+    [base, savedAccounts, onUseSavedAccount],
   );
 
   const accounts = server?.accounts;
