@@ -342,7 +342,7 @@
   align-items: center;
   gap: 12px;
   padding: 17px 20px;
-  margin-top: 16px;
+  margin: 0 0 16px;
   border: 1px solid color-mix(in srgb, var(--accent) 25%, var(--border));
   border-radius: 14px;
   background: var(--accent-soft);

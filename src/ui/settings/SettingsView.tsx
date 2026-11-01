@@ -179,7 +179,7 @@ export function SettingsView({ page: requestedPage, onSignedOut }: { page: Setti
               <ChevronLeft size={18} aria-hidden="true" /> {t("nav_you")}
             </button>
             {scope && (
-              <p className={`settings-scope${page === "profile" || page === "you" ? " sr-only" : ""}`}>
+              <p className={`settings-scope${page === "profile" || page === "you" || page === "leaderboards" ? " sr-only" : ""}`}>
                 {scope.scope}
                 <span>{scope.description}</span>
               </p>

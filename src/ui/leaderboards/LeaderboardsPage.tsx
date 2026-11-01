@@ -132,6 +132,14 @@ export function LeaderboardsPage() {
         ) : (
           board && (
             <>
+              <div className="rankings-your-place" aria-label="Your ranking">
+                <SettingsIcon name={metric} size={28} />
+                <div>
+                  <strong>Your place</strong>
+                  <span>{board.me ? `#${board.me.rank.toLocaleString()} of ${board.total.toLocaleString()} ranked people` : "Your next milestone is ahead"}</span>
+                </div>
+                <b>{board.me ? score(metric, board.me.value) : "Unranked"}</b>
+              </div>
               {board.entries.length ? (
                 <div className="rankings-arena">
                   <div className={`rankings-podium podium-count-${podium.length}`} aria-label="Top three people">
@@ -198,14 +206,6 @@ export function LeaderboardsPage() {
                   )}
                 </div>
               )}
-              <div className="rankings-your-place" aria-label="Your ranking">
-                <SettingsIcon name={metric} size={28} />
-                <div>
-                  <strong>Your place</strong>
-                  <span>{board.me ? `#${board.me.rank.toLocaleString()} of ${board.total.toLocaleString()} ranked people` : "Your next milestone is ahead"}</span>
-                </div>
-                <b>{board.me ? score(metric, board.me.value) : "Unranked"}</b>
-              </div>
               <footer className="rankings-footnote">
                 <p>
                   {weekly
