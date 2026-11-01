@@ -1,0 +1,3955 @@
+diff --git a/deploy/nginx/meldiq-web.conf.template b/deploy/nginx/meldiq-web.conf.template
+index b1c555f..6147c85 100644
+--- a/deploy/nginx/meldiq-web.conf.template
++++ b/deploy/nginx/meldiq-web.conf.template
+@@ -52,6 +52,16 @@ server {
+     proxy_send_timeout 120s;
+   }
+ 
++  # OAuth query strings contain one-use codes: never write them to nginx access logs.
++  location ^~ /v2/auth/social/ {
++    access_log off;
++    proxy_pass http://${API_UPSTREAM};
++    proxy_set_header Host $host;
++    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
++    proxy_set_header X-Forwarded-Proto $scheme;
++    proxy_buffering off;
++  }
++
+   # The API, same origin: no CORS. Attachments up to 1 GiB (FILE_MAX_BYTES + chunk tags) stream through unbuffered.
+   location ~ ^/v[12]/ {
+     proxy_pass http://${API_UPSTREAM};
+diff --git a/e2e/profile-collection.spec.ts b/e2e/profile-collection.spec.ts
+new file mode 100644
+index 0000000..f01c4cc
+--- /dev/null
++++ b/e2e/profile-collection.spec.ts
+@@ -0,0 +1,53 @@
++import path from "node:path";
++import { expect, test } from "@playwright/test";
++import { link } from "./link";
++import { newPhone, testAddress } from "./phone";
++test.use({ serviceWorkers: "block" });
++test.beforeEach(async ({ context }) => context.setExtraHTTPHeaders({ "x-orbit-test-ip": testAddress() }));
++test("profile collection previews, claims, equips and resets across devices", async ({ page }, info) => {
++  const phone = await newPhone("profilecollect", "Nightwave Explorer");
++  await link(page, phone);
++  await page.goto("/settings/profile");
++  await page.getByRole("button", { name: /Your profile. Your universe/ }).click();
++  const studio = page.getByRole("dialog", { name: "Profile collection", exact: true });
++  await expect(studio.getByRole("heading", { name: "A little more you." })).toBeVisible();
++  await studio.locator(".collection-pick").filter({ hasText: "Ion Halo" }).click();
++  await expect(studio.getByRole("button", { name: "Apply look", exact: true })).toBeDisabled();
++  expect((await phone.req("GET", "/v2/users/me/profile-customization")).profileStyle.collectibles ?? []).toEqual([]);
++  await studio.getByRole("button", { name: "Collect for free", exact: true }).click();
++  await expect(studio.getByText("Added to your inventory.", { exact: false })).toBeVisible();
++  await studio.getByRole("button", { name: "Apply look", exact: true }).click();
++  await expect(studio.getByText("Your look is saved across your devices.")).toBeVisible();
++  expect((await phone.req("GET", "/v2/users/me/profile-customization")).profileStyle.collectibles[0].id).toBe("ion-halo");
++  await studio.getByRole("button", { name: "Favorite Ion Halo", exact: true }).click();
++  await expect(studio.getByRole("button", { name: "Unfavorite Ion Halo", exact: true })).toBeVisible();
++  await studio.locator(".collection-pick").filter({ hasText: "Violet Circuit" }).click();
++  await expect(studio.getByText("Requires an authorized premium grant.")).toBeVisible();
++  await expect(studio.getByRole("button", { name: "Apply look", exact: true })).toBeDisabled();
++  await studio.getByRole("button", { name: "Backgrounds", exact: true }).click();
++  await studio.locator(".collection-pick").filter({ hasText: "Deep Current" }).click();
++  await expect(studio.locator(".collection-profile")).toHaveCSS("background-image", /repeating-linear-gradient/);
++  await studio.getByRole("button", { name: "Banners", exact: true }).click();
++  await studio.locator(".collection-pick").filter({ hasText: "Blue Horizon" }).click();
++  await expect(studio.locator(".collectible-banner")).toBeVisible();
++  await page.screenshot({ path: path.join("/tmp", `meldiq-collection-${info.project.name}.png`) });
++  expect(await studio.locator(".collection-studio").evaluate((el) => el.scrollWidth <= el.clientWidth + 1)).toBe(true);
++  await studio.getByRole("button", { name: "Reset to default", exact: true }).click();
++  await studio.getByRole("button", { name: "Apply look", exact: true }).click();
++  await expect(studio.getByText("Your look is saved across your devices.")).toBeVisible();
++  expect((await phone.req("GET", "/v2/users/me/profile-customization")).profileStyle.collectibles ?? []).toEqual([]);
++});
++
++test("keeps the profile preview visible on a compact phone with a long name", async ({ page }) => {
++  await page.setViewportSize({ width: 360, height: 740 });
++  await page.emulateMedia({ reducedMotion: "reduce" });
++  const phone = await newPhone("profilecompact", "N".repeat(80));
++  await link(page, phone);
++  await page.goto("/settings/profile");
++  await page.getByRole("button", { name: /Your profile. Your universe/ }).click();
++  const studio = page.getByRole("dialog", { name: "Profile collection", exact: true });
++  await expect(studio.locator(".collection-profile")).toBeVisible();
++  await studio.locator(".collection-pick").filter({ hasText: "Ion Halo" }).click();
++  await expect(studio.locator(".collection-profile .deco-aurora")).toBeVisible();
++  expect(await studio.locator(".collection-studio").evaluate((el) => el.scrollWidth <= el.clientWidth + 1)).toBe(true);
++});
+diff --git a/public/auth-provider-icons/discord.svg b/public/auth-provider-icons/discord.svg
+new file mode 100644
+index 0000000..65b8851
+--- /dev/null
++++ b/public/auth-provider-icons/discord.svg
+@@ -0,0 +1,3 @@
++<svg width="64" height="48" viewBox="0 0 64 48" fill="none" xmlns="http://www.w3.org/2000/svg">
++<path d="M40.575 0C39.9562 1.09866 39.4006 2.2352 38.8954 3.397C34.0967 2.67719 29.2096 2.67719 24.3982 3.397C23.9057 2.2352 23.3374 1.09866 22.7186 0C18.2104 0.770324 13.8157 2.12155 9.64839 4.02841C1.38951 16.2652 -0.845688 28.1863 0.265599 39.9432C5.10222 43.517 10.5197 46.2447 16.2909 47.9874C17.5916 46.2447 18.7407 44.3883 19.7257 42.4562C17.8568 41.7616 16.0509 40.8903 14.3208 39.88C14.7755 39.5517 15.2175 39.2107 15.6468 38.8824C25.7873 43.6559 37.5316 43.6559 47.6847 38.8824C48.1141 39.236 48.5561 39.577 49.0107 39.88C47.2806 40.9029 45.4748 41.7616 43.5931 42.4688C44.5781 44.4009 45.7273 46.2573 47.028 48C52.7991 46.2573 58.2167 43.5422 63.0533 39.9684C64.3666 26.3299 60.8055 14.5099 53.6452 4.04104C49.4905 2.13418 45.0959 0.782952 40.5876 0.0252565L40.575 0ZM21.1401 32.7072C18.0209 32.7072 15.4321 29.8785 15.4321 26.3804C15.4321 22.8824 17.9199 20.041 21.1275 20.041C24.3351 20.041 26.886 22.895 26.8354 26.3804C26.7849 29.8658 24.3224 32.7072 21.1401 32.7072ZM42.1788 32.7072C39.047 32.7072 36.4834 29.8785 36.4834 26.3804C36.4834 22.8824 38.9712 20.041 42.1788 20.041C45.3864 20.041 47.9246 22.895 47.8741 26.3804C47.8236 29.8658 45.3611 32.7072 42.1788 32.7072Z" fill="white"/>
++</svg>
+diff --git a/public/auth-provider-icons/google.svg b/public/auth-provider-icons/google.svg
+new file mode 100644
+index 0000000..d38f6e6
+--- /dev/null
++++ b/public/auth-provider-icons/google.svg
+@@ -0,0 +1,65 @@
++<svg width="20" height="20" viewBox="10 10 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
++<mask id="mask0_1298_12519" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="10" y="10" width="20" height="20">
++<path d="M29.3987 18.1814H19.9849V22.0445H25.3598C25.1286 23.294 24.4294 24.3596 23.3676 25.0712C22.4746 25.6716 21.3266 26.0211 19.9849 26.0211C17.3864 26.0211 15.1823 24.2666 14.3947 21.9004C14.1952 21.2989 14.0853 20.6599 14.0853 19.9983C14.0853 19.3367 14.1952 18.6966 14.3947 18.0962C15.1823 15.7311 17.3864 13.9755 19.9849 13.9755C21.4524 13.9755 22.767 14.4816 23.8039 15.4713L26.6653 12.6057C24.936 10.9908 22.6786 10 19.9849 10C16.0832 10 12.705 12.2414 11.0618 15.5076C10.383 16.8592 10 18.3834 10 19.9994C10 21.6155 10.383 23.1396 11.0618 24.4913C12.705 27.7597 16.0832 30 19.9849 30C22.6797 30 24.9485 29.1137 26.6018 27.5861C28.4887 25.8452 29.5732 23.2702 29.5732 20.2275C29.5732 19.5182 29.5131 18.835 29.3987 18.1825V18.1814Z" fill="#E94FFF"/>
++</mask>
++<g mask="url(#mask0_1298_12519)">
++<g filter="url(#filter0_f_1298_12519)">
++<g clip-path="url(#paint0_angular_1298_12519_clip_path)"><g transform="matrix(0.00804129 -0.00805186 0.00804128 0.00805186 19.6819 19.7927)"><foreignObject x="-2105.64" y="-2105.64" width="4211.29" height="4211.29"><div xmlns="http://www.w3.org/1999/xhtml" style="background:conic-gradient(from 90deg,rgba(255, 70, 65, 1) 0deg,rgba(255, 70, 65, 1) 4.14555deg,rgba(49, 134, 255, 1) 39.154deg,rgba(49, 134, 255, 1) 72.0044deg,rgba(0, 165, 183, 1) 96.7463deg,rgba(14, 188, 95, 1) 120.897deg,rgba(14, 188, 95, 1) 154.722deg,rgba(108, 196, 0, 1) 179.136deg,rgba(255, 204, 0, 1) 203.588deg,rgba(255, 211, 20, 1) 226.915deg,rgba(255, 204, 0, 1) 251.688deg,rgba(255, 106, 43, 1) 273.129deg,rgba(253, 70, 65, 1) 289.305deg,rgba(255, 70, 65, 1) 359.593deg,rgba(255, 70, 65, 1) 360deg);height:100%;width:100%;opacity:1"></div></foreignObject></g></g><path d="M7.25922 19.7927C7.25922 12.6759 13.0209 6.90668 20.1283 6.90668C27.2357 6.90668 32.9973 12.6759 32.9973 19.7927C32.9973 26.9094 27.2357 32.6786 20.1283 32.6786C13.0209 32.6786 7.25921 26.9094 7.25922 19.7927Z"/>
++</g>
++<g filter="url(#filter1_f_1298_12519)">
++<ellipse cx="20.0496" cy="20.2413" rx="5.39634" ry="2.83537" transform="rotate(24.4473 20.0496 20.2413)" fill="#3186FF"/>
++</g>
++<g filter="url(#filter2_f_1298_12519)">
++<ellipse cx="33.3538" cy="18.2155" rx="7.43918" ry="3.09357" fill="#3186FF"/>
++</g>
++<g filter="url(#filter3_f_1298_12519)">
++<ellipse cx="25.2744" cy="16.2195" rx="7.40854" ry="2.37805" fill="#FF4641"/>
++</g>
++<g filter="url(#filter4_f_1298_12519)">
++<ellipse cx="29.5427" cy="12.9268" rx="7.40854" ry="2.37805" fill="#FF5B8B"/>
++</g>
++<g filter="url(#filter5_f_1298_12519)">
++<ellipse cx="24.4817" cy="19.878" rx="8.5061" ry="3.10976" fill="#3186FF"/>
++</g>
++<g filter="url(#filter6_f_1298_12519)">
++<ellipse cx="25.1842" cy="14.0197" rx="4.53882" ry="2.37805" transform="rotate(-28.6599 25.1842 14.0197)" fill="#FF4641"/>
++</g>
++</g>
++<defs>
++<filter id="filter0_f_1298_12519" x="5.25922" y="4.90668" width="29.7381" height="29.772" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
++<feFlood flood-opacity="0" result="BackgroundImageFix"/>
++<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
++<feGaussianBlur stdDeviation="1" result="effect1_foregroundBlur_1298_12519"/>
++</filter>
++<clipPath id="paint0_angular_1298_12519_clip_path"><path d="M7.25922 19.7927C7.25922 12.6759 13.0209 6.90668 20.1283 6.90668C27.2357 6.90668 32.9973 12.6759 32.9973 19.7927C32.9973 26.9094 27.2357 32.6786 20.1283 32.6786C13.0209 32.6786 7.25921 26.9094 7.25922 19.7927Z"/></clipPath><filter id="filter1_f_1298_12519" x="12.9977" y="14.828" width="14.1038" height="10.8265" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
++<feFlood flood-opacity="0" result="BackgroundImageFix"/>
++<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
++<feGaussianBlur stdDeviation="1" result="effect1_foregroundBlur_1298_12519"/>
++</filter>
++<filter id="filter2_f_1298_12519" x="23.9146" y="13.1219" width="18.8784" height="10.1871" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
++<feFlood flood-opacity="0" result="BackgroundImageFix"/>
++<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
++<feGaussianBlur stdDeviation="1" result="effect1_foregroundBlur_1298_12519"/>
++</filter>
++<filter id="filter3_f_1298_12519" x="15.8659" y="11.8415" width="18.8171" height="8.7561" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
++<feFlood flood-opacity="0" result="BackgroundImageFix"/>
++<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
++<feGaussianBlur stdDeviation="1" result="effect1_foregroundBlur_1298_12519"/>
++</filter>
++<filter id="filter4_f_1298_12519" x="20.1341" y="8.54878" width="18.8171" height="8.7561" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
++<feFlood flood-opacity="0" result="BackgroundImageFix"/>
++<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
++<feGaussianBlur stdDeviation="1" result="effect1_foregroundBlur_1298_12519"/>
++</filter>
++<filter id="filter5_f_1298_12519" x="13.9756" y="14.7683" width="21.0122" height="10.2195" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
++<feFlood flood-opacity="0" result="BackgroundImageFix"/>
++<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
++<feGaussianBlur stdDeviation="1" result="effect1_foregroundBlur_1298_12519"/>
++</filter>
++<filter id="filter6_f_1298_12519" x="19.0404" y="9.00419" width="12.2878" height="10.0309" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
++<feFlood flood-opacity="0" result="BackgroundImageFix"/>
++<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
++<feGaussianBlur stdDeviation="1" result="effect1_foregroundBlur_1298_12519"/>
++</filter>
++</defs>
++</svg>
+diff --git a/public/social-auth-callback.html b/public/social-auth-callback.html
+new file mode 100644
+index 0000000..d11d2af
+--- /dev/null
++++ b/public/social-auth-callback.html
+@@ -0,0 +1 @@
++<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="referrer" content="no-referrer"><title>Return to Meldiq</title><script src="/social-auth-callback.js" defer></script></head><body><h1>Return to Meldiq</h1><p id="status">Finishing sign-in…</p><a href="/">Back to Meldiq</a></body></html>
+diff --git a/public/social-auth-callback.js b/public/social-auth-callback.js
+new file mode 100644
+index 0000000..90dfb0e
+--- /dev/null
++++ b/public/social-auth-callback.js
+@@ -0,0 +1,35 @@
++"use strict";
++(() => {
++  const result = new URLSearchParams(location.hash.slice(1));
++  history.replaceState(null, "", location.pathname);
++  const id = result.get("id");
++  const receipt = result.get("receipt");
++  const error = result.get("error");
++  const valid = /^[A-Za-z0-9_-]{43}$/.test(id || "") && (error || /^[A-Za-z0-9_-]{43}$/.test(receipt || ""));
++  if (valid) {
++    const message = { type: "meldiq-social", id, receipt, error };
++    try {
++      if (typeof BroadcastChannel !== "undefined") {
++        const channel = new BroadcastChannel(`meldiq-social:${id}`);
++        channel.onmessage = (event) => {
++          if (event.data?.type !== "meldiq-social-ack" || event.data.id !== id) return;
++          channel.close();
++          window.close();
++        };
++        window.addEventListener("pagehide", () => channel.close(), { once: true });
++        channel.postMessage(message);
++      }
++    } catch {
++      /* The checked opener path still works when channel storage is unavailable. */
++    }
++    try {
++      window.opener?.postMessage(message, location.origin);
++    } catch {
++      /* The provider may isolate its popup. */
++    }
++    document.getElementById("status").textContent = "Return to your Meldiq tab to finish signing in. You can close this window.";
++    // Close only after the initiating tab acknowledges the return; an orphan keeps its recovery message.
++  } else {
++    document.getElementById("status").textContent = "This sign-in window is no longer connected. Return to Meldiq and start sign-in again.";
++  }
++})();
+diff --git a/src/api/collectibleSchemas.ts b/src/api/collectibleSchemas.ts
+new file mode 100644
+index 0000000..489b0cb
+--- /dev/null
++++ b/src/api/collectibleSchemas.ts
+@@ -0,0 +1,72 @@
++import { z } from "zod";
++export const COLLECTION_CATEGORIES = ["avatar-frame", "avatar-effect", "background", "banner", "profile-theme", "name-effect", "badge", "particles"] as const;
++export type CollectionCategory = (typeof COLLECTION_CATEGORIES)[number];
++export const CATEGORY_LABELS: Record<CollectionCategory, string> = {
++  "avatar-frame": "Avatar frames",
++  "avatar-effect": "Avatar effects",
++  background: "Backgrounds",
++  banner: "Banners",
++  "profile-theme": "Card themes",
++  "name-effect": "Name effects",
++  badge: "Collectible badges",
++  particles: "Ambient effects",
++};
++/** Keep the public domain type shallow: this schema is nested throughout profile, member and message models. */
++export interface CollectibleLook {
++  id: string;
++  name: string;
++  category: CollectionCategory;
++  version: number;
++  recipe: {
++    colors: string[];
++    pattern: "solid" | "orbit" | "grid" | "prism";
++    frame?: "aurora" | "ember" | "frost" | "neon" | "sakura" | "pixel";
++    effect?: "sparkles" | "glow" | "stars" | "bubbles";
++    nameEffect?: "glow" | "shimmer";
++    assetId?: string;
++  };
++}
++export interface Collectible extends CollectibleLook {
++  description: string;
++  rarity: "common" | "rare" | "epic" | "legendary";
++  acquisitionType: "free" | "premium" | "event" | "purchase";
++  price: number;
++  currency: "USD" | "EMBERS";
++  isActive: boolean;
++  isFeatured: boolean;
++  availableFrom: number | null;
++  availableUntil: number | null;
++  supportedPlatforms: string[];
++}
++const lookSchema = z.object({
++  id: z.string().regex(/^[a-z][a-z0-9-]{2,63}$/),
++  name: z.string().max(80),
++  category: z.enum(COLLECTION_CATEGORIES),
++  version: z.number().int().positive(),
++  recipe: z.object({
++    colors: z.array(z.string().regex(/^#[0-9a-fA-F]{6}$/)).length(2),
++    pattern: z.enum(["solid", "orbit", "grid", "prism"]),
++    frame: z.enum(["aurora", "ember", "frost", "neon", "sakura", "pixel"]).optional(),
++    effect: z.enum(["sparkles", "glow", "stars", "bubbles"]).optional(),
++    nameEffect: z.enum(["glow", "shimmer"]).optional(),
++    assetId: z
++      .string()
++      .regex(/^[a-f0-9]{64}$/)
++      .optional(),
++  }),
++});
++export const zCollectibleLook: z.ZodType<CollectibleLook> = lookSchema;
++export const zCollectible: z.ZodType<Collectible> = lookSchema.extend({
++  description: z.string(),
++  rarity: z.enum(["common", "rare", "epic", "legendary"]),
++  acquisitionType: z.enum(["free", "premium", "event", "purchase"]),
++  price: z.number().int().nonnegative(),
++  currency: z.enum(["USD", "EMBERS"]),
++  isActive: z.boolean(),
++  isFeatured: z.boolean(),
++  availableFrom: z.number().nullable(),
++  availableUntil: z.number().nullable(),
++  supportedPlatforms: z.array(z.string()),
++});
++export const zCollectionPage = z.object({ items: z.array(zCollectible), next: z.string().nullable() });
++export const zCollectionInventory = z.object({ inventory: z.array(z.object({ decoration_id: z.string(), acquired_at: z.number(), acquisition_source: z.string(), is_favorite: z.number() })) });
+diff --git a/src/api/profileSchemas.ts b/src/api/profileSchemas.ts
+index 43db725..cb71bb4 100644
+--- a/src/api/profileSchemas.ts
++++ b/src/api/profileSchemas.ts
+@@ -1,3 +1,4 @@
++import { zCollectibleLook } from "./collectibleSchemas";
+ import { z } from "zod";
+ import { openEnum } from "./enums";
+ 
+@@ -60,6 +61,7 @@ const zThemeColors = z
+   .transform((v) => (v ? v.map((c) => c.toLowerCase()) : null));
+ export const zProfileStyle = z
+   .object({
++    collectibles: z.array(zCollectibleLook).max(8).optional().catch(undefined),
+     decoration: z.string().regex(DECORATION_ID).nullable().catch(null),
+     effect: z.enum(PROFILE_EFFECTS).nullable().catch(null),
+     accent: zAccent,
+diff --git a/src/auth/accountApi.ts b/src/auth/accountApi.ts
+index 9e1e391..0ce0691 100644
+--- a/src/auth/accountApi.ts
++++ b/src/auth/accountApi.ts
+@@ -229,3 +229,9 @@ export async function signInWithDevice(base: string, device: DeviceRecord, passw
+   const signature = await sign(device.keys.signing.privateKey, canonical.authProof("login", nonce, device.keys.signingPublic));
+   return accounts.login(email ?? device.account.email, password, device.deviceName, { deviceId: device.deviceId, nonce, signature }, totpCode);
+ }
++
++/** Fresh device proof for external sign-in; provider proof never substitutes for possession of encryption keys. */
++export async function socialDeviceProof(base: string, device: DeviceRecord): Promise<DeviceProof> {
++  const nonce = await AccountApi.anonymous(base).challenge();
++  return { deviceId: device.deviceId, nonce, signature: await sign(device.keys.signing.privateKey, canonical.authProof("login", nonce, device.keys.signingPublic)) };
++}
+diff --git a/src/auth/accountSession.ts b/src/auth/accountSession.ts
+index 4dc5c40..5177d0a 100644
+--- a/src/auth/accountSession.ts
++++ b/src/auth/accountSession.ts
+@@ -84,19 +84,29 @@ export class AccountSession implements Credentials {
+   }
+ 
+   private async refresh(): Promise<boolean> {
+-    let current = this.tokens;
+-    if (!current) {
+-      // First use after a page load: the stored access token, if it still has a while to run, saves a swap.
+-      current = await this.vault.load();
+-      if (current && current.accessTokenExpiresAt - Date.now() > STORED_TOKEN_MARGIN_MS) {
+-        this.tokens = current;
+-        return true;
+-      }
++    const before = this.tokens ?? (await this.vault.load());
++    if (!before) {
++      this.onEnded("session_ended");
++      return false;
+     }
++    const renew = () => this.refreshStored(before);
++    // The same account may be open in several tabs. Serialize rotations across those tabs as well as this instance.
++    return typeof navigator !== "undefined" && navigator.locks ? navigator.locks.request(`meldiq-session-refresh:${before.sessionId}`, renew) : renew();
++  }
++
++  private async refreshStored(before: AccountTokens): Promise<boolean> {
++    const current = await this.vault.load();
+     if (!current) {
++      this.tokens = null;
+       this.onEnded("session_ended");
+       return false;
+     }
++    // A tab that rotated while we waited already persisted the new pair; reuse it instead of replaying our old token.
++    const updated = !this.tokens || current.refreshToken !== before.refreshToken;
++    if (updated && current.accessTokenExpiresAt - Date.now() > STORED_TOKEN_MARGIN_MS) {
++      this.tokens = current;
++      return true;
++    }
+     try {
+       const grant = await this.accounts.refresh(current.refreshToken);
+       await this.adopt(grant);
+diff --git a/src/auth/socialAuth.ts b/src/auth/socialAuth.ts
+new file mode 100644
+index 0000000..29e2997
+--- /dev/null
++++ b/src/auth/socialAuth.ts
+@@ -0,0 +1,114 @@
++import { z } from "zod";
++import { ApiClient, ApiError } from "../api/client";
++import { zAccountSession } from "../api/accountSchemas";
++export type SocialProvider = "google" | "apple" | "discord";
++export const zSocialConfig = z.object({ providers: z.array(z.enum(["google", "apple", "discord"])), googleClientId: z.string().nullable() });
++export const zConnections = z.object({
++  password: z.boolean(),
++  identities: z.array(z.object({ provider: z.enum(["google", "apple", "discord"]), email: z.string().nullable(), connectedAt: z.number() })),
++  providers: z.array(z.enum(["google", "apple", "discord"])),
++});
++const zStarted = z.object({ id: z.string(), authorizeUrl: z.string().url(), expiresAt: z.number() });
++const zCompleted = z.union([z.object({ linked: z.literal(true) }), z.object({ grant: zAccountSession })]);
++export interface SocialReceipt {
++  id: string;
++  verifier: string;
++  receipt: string;
++}
++const random = () =>
++  btoa(String.fromCharCode(...crypto.getRandomValues(new Uint8Array(32))))
++    .replace(/\+/g, "-")
++    .replace(/\//g, "_")
++    .replace(/=+$/, "");
++export async function socialChallenge(verifier: string): Promise<string> {
++  return btoa(String.fromCharCode(...new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(verifier)))))
++    .replace(/\+/g, "-")
++    .replace(/\//g, "_")
++    .replace(/=+$/, "");
++}
++/** One-use receipts return over a same-origin channel or the checked popup; provider isolation may sever window.opener. */
++export async function startSocial(
++  api: ApiClient,
++  popup: Window,
++  provider: SocialProvider,
++  options: { mode?: "login" | "link"; password?: string; totpCode?: string },
++  signal: AbortSignal,
++): Promise<SocialReceipt> {
++  const verifier = random();
++  const started = await api.json("POST", "/v2/auth/social/start", zStarted, {
++    body: { provider, challenge: await socialChallenge(verifier), platform: "web", mode: options.mode ?? "login", password: options.password || undefined, totpCode: options.totpCode || undefined },
++    auth: options.mode === "link",
++    signal,
++  });
++  const authorize = new URL(started.authorizeUrl);
++  if (![new URL(api.base || location.origin).origin, location.origin].includes(authorize.origin) || authorize.pathname !== `/v2/auth/social/authorize/${started.id}`)
++    throw new Error("The server returned an unexpected sign-in address.");
++  if (signal.aborted) throw new DOMException("Cancelled", "AbortError");
++  return new Promise((resolve, reject) => {
++    let settled = false;
++    // Google can move the popup into another browsing-context group (especially Safari).
++    // BroadcastChannel survives that separation without weakening the verifier/receipt proof.
++    let channel: BroadcastChannel | null = null;
++    try {
++      if (typeof BroadcastChannel !== "undefined") channel = new BroadcastChannel(`meldiq-social:${started.id}`);
++    } catch {
++      /* Keep the checked postMessage fallback when storage is unavailable. */
++    }
++    const acknowledge = () => channel?.postMessage({ type: "meldiq-social-ack", id: started.id });
++    const cleanup = () => {
++      settled = true;
++      channel?.close();
++      clearInterval(timer);
++      window.removeEventListener("message", receive);
++      signal.removeEventListener("abort", abort);
++      try {
++        popup.close();
++      } catch {
++        /* Provider isolation may make the old window handle unusable. */
++      }
++    };
++    const fail = (message: string) => {
++      cleanup();
++      reject(new Error(message));
++    };
++    const abort = () => fail("Sign-in cancelled. You can try again.");
++    const accept = (data: unknown) => {
++      if (settled || !data || typeof data !== "object") return;
++      const message = data as { type?: unknown; id?: unknown; receipt?: unknown; error?: unknown };
++      if (message.type !== "meldiq-social" || message.id !== started.id) return;
++      if (message.error) {
++        acknowledge();
++        return fail(message.error === "cancelled" ? "Sign-in cancelled. You can try again." : "The provider couldn't verify this sign-in. Try again.");
++      }
++      if (typeof message.receipt !== "string" || !/^[A-Za-z0-9_-]{43}$/.test(message.receipt)) return;
++      acknowledge();
++      cleanup();
++      resolve({ id: started.id, verifier, receipt: message.receipt });
++    };
++    const receive = (e: MessageEvent) => {
++      if (e.origin === location.origin && e.source === popup) accept(e.data);
++    };
++    if (channel) channel.onmessage = (e: MessageEvent) => accept(e.data);
++    window.addEventListener("message", receive);
++    signal.addEventListener("abort", abort, { once: true });
++    const timer = setInterval(() => {
++      // A detached popup reports closed=true while the provider is still visibly open.
++      // Cancellation is explicit; a verified return or the flow deadline ends the wait.
++      if (Date.now() >= started.expiresAt) fail("Sign-in expired. Please try again.");
++    }, 500);
++    popup.location.href = authorize.href;
++  });
++}
++export async function completeSocial(
++  api: ApiClient,
++  receipt: SocialReceipt,
++  details: { name?: string; inviteCode?: string; totpCode?: string; deviceName: string; device?: { deviceId: string; nonce: string; signature: string } },
++  link = false,
++) {
++  return api.json("POST", "/v2/auth/social/complete", zCompleted, { body: { ...receipt, ...details }, auth: link });
++}
++export function socialError(e: unknown): string {
++  return e instanceof ApiError || e instanceof Error ? e.message : "Couldn't sign in. Please try again.";
++}
++
++export const socialProviderName = (provider: SocialProvider) => ({ google: "Google", apple: "Apple", discord: "Discord" })[provider];
+diff --git a/src/pages/_app.tsx b/src/pages/_app.tsx
+index 389106b..ed43ee0 100644
+--- a/src/pages/_app.tsx
++++ b/src/pages/_app.tsx
+@@ -27,6 +27,7 @@ import "../styles/official-bots.css";
+ import "../styles/responsive.css";
+ import "../styles/settings-redesign.css";
+ import "../styles/embers.css";
++import "../styles/collection.css";
+ import "../styles/leaderboards.css";
+ import "../styles/identity-marks.css";
+ import "../styles/mobile.css"; // mobile interaction and visual-viewport refinements
+diff --git a/src/styles/collection.css b/src/styles/collection.css
+new file mode 100644
+index 0000000..68107d0
+--- /dev/null
++++ b/src/styles/collection.css
+@@ -0,0 +1,474 @@
++.collection-launch {
++  display: flex;
++  align-items: center;
++  gap: 16px;
++  padding: 22px;
++  border: 1px solid #22d3ee45;
++  border-radius: 16px;
++  background: radial-gradient(ellipse at right, #6366f132, transparent 75%), #101a2c;
++  color: #e5efff;
++  text-align: left;
++  cursor: pointer;
++  width: 100%;
++  margin-bottom: 20px;
++}
++.collection-launch small {
++  color: #a6b5ce;
++  margin-top: 5px;
++}
++.collection-launch-mark {
++  display: grid;
++  place-items: center;
++  width: 52px;
++  height: 52px;
++  border: 1px solid #22d3ee55;
++  border-radius: 16px;
++  color: #67e8f9;
++  background: #22d3ee12;
++}
++.collection-studio {
++  padding: 0 !important;
++  background: #0b1020;
++  color: #e3eaff;
++}
++.collection-hero {
++  position: relative;
++  padding: 28px 30px;
++  background: radial-gradient(ellipse at 80% 90%, #8b5cf64a, transparent 50%), radial-gradient(ellipse at 50% 0%, #22d3ee25, transparent 55%), #10192c;
++  border-bottom: 1px solid #ffffff10;
++}
++.collection-eyebrow {
++  font-size: 10px;
++  font-weight: 700;
++  letter-spacing: 1.8px;
++  color: #8cd8ef;
++}
++.collection-hero h2 {
++  font-size: 30px;
++  letter-spacing: -1px;
++  margin: 10px 0;
++}
++.collection-hero p {
++  color: #a8b8d3;
++  font-size: 14px;
++  margin: 0 0 10px;
++}
++.collection-hero > span:last-child {
++  font-size: 11px;
++  color: #9caac3;
++}
++.collection-layout {
++  display: grid;
++  grid-template-columns: minmax(0, 1fr) 290px;
++  gap: 26px;
++  padding: 24px;
++}
++.collection-browser {
++  min-width: 0;
++}
++.collection-categories {
++  display: flex;
++  gap: 7px;
++  flex-wrap: wrap;
++  margin-bottom: 20px;
++}
++.collection-categories button {
++  border: 1px solid #ffffff12;
++  background: #ffffff04;
++  color: #a6b7d5;
++  border-radius: 8px;
++  padding: 9px 11px;
++  font-size: 12px;
++  cursor: pointer;
++}
++.collection-categories button[aria-pressed="true"] {
++  background: #22d3ee15;
++  border-color: #22d3ee65;
++  color: #9beaff;
++}
++.collection-tools {
++  display: flex;
++  gap: 10px;
++}
++.collection-tools input,
++.collection-tools select {
++  min-width: 0;
++  border: 1px solid #ffffff18;
++  border-radius: 9px;
++  background: #141c30;
++  color: #dce8ff;
++  padding: 11px;
++  font: inherit;
++  font-size: 12px;
++}
++.collection-tools input {
++  flex: 1;
++}
++.collection-browser > .faint {
++  font-size: 11px;
++  margin: 12px 0;
++}
++.collection-grid {
++  display: grid;
++  grid-template-columns: repeat(3, minmax(0, 1fr));
++  gap: 12px;
++}
++.collection-item {
++  position: relative;
++  border: 1px solid #ffffff16;
++  background: #121b2d;
++  border-radius: 12px;
++  overflow: hidden;
++  color: inherit;
++}
++.collection-pick {
++  display: flex;
++  flex-direction: column;
++  align-items: flex-start;
++  border: 0;
++  background: transparent;
++  color: inherit;
++  text-align: left;
++  padding: 9px;
++  width: 100%;
++  height: 100%;
++  cursor: pointer;
++  gap: 5px;
++}
++.collection-pick[aria-pressed="true"],
++.collection-none[aria-pressed="true"] {
++  outline: 2px solid #22d3ee;
++  outline-offset: -2px;
++  border-radius: 12px;
++  background: #22d3ee09;
++}
++.collection-art {
++  position: relative;
++  display: flex;
++  align-items: center;
++  justify-content: center;
++  width: 100%;
++  height: 116px;
++  overflow: hidden;
++  border-radius: 7px;
++  margin-bottom: 7px;
++  color: #b8c8e3;
++  background: #0b1224;
++}
++.collection-art img {
++  width: 100%;
++  height: 100%;
++  object-fit: contain;
++}
++.collection-avatar-sample {
++  display: grid;
++  place-items: center;
++  height: 62px;
++  width: 62px;
++  border-radius: 50%;
++  background: #131c2f;
++  color: white;
++  font-weight: 800;
++  font-size: 22px;
++  border: 3px solid #a7edff;
++  box-shadow:
++    0 0 0 5px #ffffff1a,
++    0 0 20px #6ee7ff77;
++}
++.collection-name-sample {
++  font-size: 23px;
++  font-weight: 800;
++  color: white;
++  text-shadow: 0 0 18px #ffffffb0;
++}
++.collection-gem {
++  font-size: 54px;
++  color: #fff2d2;
++  text-shadow: 0 0 30px #fff2d2;
++}
++.collection-artwork {
++  width: 80%;
++  height: 70%;
++  border: 1px solid #ffffff55;
++  border-radius: 50%;
++  transform: rotate(-25deg);
++  box-shadow:
++    0 0 0 14px #ffffff0b,
++    0 0 0 30px #ffffff06;
++}
++.collection-artwork-prism {
++  border-radius: 15%;
++  transform: rotate(35deg);
++}
++.collection-artwork-grid {
++  border-radius: 8px;
++  transform: perspective(100px) rotateX(25deg);
++}
++.collection-item strong {
++  font-size: 12px;
++  font-weight: 650;
++  padding-right: 16px;
++}
++.collection-item small {
++  font-size: 10px;
++  color: #b4bdd1;
++  text-transform: capitalize;
++}
++.collection-ownership {
++  display: flex;
++  gap: 4px;
++  align-items: center;
++  font-size: 10px;
++  color: #93dcee;
++  margin-top: 5px;
++}
++.collection-star {
++  position: absolute;
++  right: 7px;
++  bottom: 10px;
++  padding: 4px;
++  border: 0;
++  border-radius: 5px;
++  color: #a4b8d6;
++  background: #121b2d;
++  cursor: pointer;
++}
++.collection-star[aria-pressed="true"] {
++  color: #facc15;
++}
++.collection-star[aria-pressed="true"] svg {
++  fill: currentColor;
++}
++.collection-star:disabled {
++  opacity: 0.3;
++  cursor: default;
++}
++.collection-none {
++  padding: 9px;
++  text-align: left;
++  display: flex;
++  flex-direction: column;
++  gap: 5px;
++  cursor: pointer;
++}
++.collection-pagination {
++  display: flex;
++  justify-content: space-between;
++  gap: 8px;
++  margin-top: 18px;
++}
++.collection-preview {
++  position: sticky;
++  top: 0;
++  align-self: start;
++  display: flex;
++  flex-direction: column;
++  gap: 16px;
++}
++.collection-profile {
++  overflow: hidden;
++  border: 1px solid #ffffff20;
++  border-radius: 15px;
++  background: #111b2d;
++  box-shadow: 0 16px 40px #0003;
++}
++.collection-profile-banner {
++  position: relative;
++  height: 110px;
++  background: linear-gradient(140deg, #164e63, #312e81);
++  overflow: hidden;
++}
++.collection-profile-body {
++  padding: 0 20px 22px;
++}
++.collection-profile-body > .styled-avatar {
++  margin-top: -36px;
++  border: 5px solid #111b2d;
++  border-radius: 50%;
++  box-sizing: content-box;
++}
++.collection-profile-body h3 {
++  font-size: 19px;
++  margin: 15px 0 3px;
++}
++.collection-profile-body > small {
++  font-size: 12px;
++  color: #92a4c4;
++}
++.collection-profile-body p {
++  font-size: 12px;
++  line-height: 1.6;
++  color: #c3cde1;
++  margin: 18px 0 0;
++}
++.collection-detail {
++  padding: 17px;
++  border: 1px solid #ffffff10;
++  border-radius: 12px;
++  background: #ffffff04;
++}
++.collection-detail h3 {
++  font-size: 17px;
++  margin: 10px 0;
++}
++.collection-detail p {
++  font-size: 12px;
++  color: #aab8d2;
++  line-height: 1.6;
++}
++.collection-detail > small {
++  font-size: 10px;
++  color: #92a4c4;
++}
++.collection-detail .btn {
++  width: 100%;
++  margin-top: 16px;
++}
++.collection-detail small[role="status"] {
++  display: block;
++  margin-top: 12px;
++  color: #67e8f9;
++}
++.collectible-banner {
++  position: absolute;
++  inset: 0;
++  pointer-events: none;
++}
++.collectible-banner img {
++  width: 100%;
++  height: 100%;
++  object-fit: cover;
++}
++.collectible-badge {
++  display: inline-flex;
++  align-items: center;
++  gap: 6px;
++  font-size: 11px;
++  border: 1px solid currentColor;
++  border-radius: 20px;
++  padding: 4px 9px;
++  margin-top: 12px;
++  max-width: 100%;
++}
++.collectible-aura:before {
++  content: "";
++  position: absolute;
++  inset: -8px;
++  border-radius: 50%;
++  background: conic-gradient(from 20deg, transparent, var(--collectible-a), transparent, var(--collectible-b), transparent);
++  filter: blur(8px);
++  opacity: 0.65;
++  pointer-events: none;
++}
++.collection-studio button:focus-visible,
++.collection-studio input:focus-visible,
++.collection-studio select:focus-visible {
++  outline: 2px solid #67e8f9;
++  outline-offset: 2px;
++}
++.collection-studio > .banner {
++  margin: 12px 24px;
++}
++.collection-studio .btn {
++  font-size: 12px;
++}
++.collection-studio .faint {
++  color: #a8b8d3;
++}
++.collection-studio button:disabled {
++  cursor: default;
++}
++@media (min-width: 800px) {
++  .collection-studio {
++    max-height: 75vh;
++    overflow: auto;
++  }
++}
++@media (max-width: 800px) {
++  .collection-layout {
++    grid-template-columns: minmax(0, 1fr);
++    padding: 16px;
++    gap: 20px;
++  }
++  .collection-preview {
++    position: static;
++    grid-row: 1;
++    display: grid;
++    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
++    gap: 12px;
++  }
++  .collection-preview > .collection-eyebrow {
++    grid-column: 1/-1;
++  }
++  .collection-preview > .btn {
++    grid-column: 1/-1;
++  }
++  .collection-profile-banner {
++    height: 80px;
++  }
++  .collection-profile-body {
++    padding: 0 12px 14px;
++  }
++  .collection-profile-body p {
++    display: none;
++  }
++  .collection-detail {
++    padding: 12px;
++  }
++  .collection-detail .collection-eyebrow {
++    font-size: 9px;
++    letter-spacing: 1px;
++  }
++  .collection-tools {
++    flex-wrap: wrap;
++  }
++  .collection-tools select {
++    max-width: 100%;
++  }
++  .collection-hero {
++    padding: 22px 18px;
++  }
++  .collection-hero h2 {
++    font-size: 25px;
++  }
++  .collection-art {
++    height: 100px;
++  }
++  .collection-launch {
++    padding: 16px;
++    gap: 12px;
++  }
++  .collection-launch-mark {
++    flex-shrink: 0;
++  }
++  .collection-launch small {
++    font-size: 11px;
++  }
++}
++@media (max-width: 380px) {
++  .collection-grid {
++    grid-template-columns: repeat(2, minmax(0, 1fr));
++  }
++  .collection-preview {
++    grid-template-columns: minmax(0, 1fr);
++  }
++}
++@media (prefers-reduced-motion: reduce) {
++  .collectible-aura:before {
++    filter: none;
++    opacity: 0.3;
++  }
++}
++
++.collection-profile-body h3 {
++  overflow: hidden;
++  text-overflow: ellipsis;
++  white-space: nowrap;
++}
++.collection-profile-body p,
++.collection-item strong,
++.collection-detail h3,
++.collectible-badge {
++  overflow-wrap: anywhere;
++  max-width: 100%;
++}
+diff --git a/src/sync/collectibles.ts b/src/sync/collectibles.ts
+new file mode 100644
+index 0000000..98fc79f
+--- /dev/null
++++ b/src/sync/collectibles.ts
+@@ -0,0 +1,47 @@
++import { z } from "zod";
++import { apiBase } from "../application/config";
++import { zProfileStyle, type ProfileStyle } from "../api/profileSchemas";
++import { zCollectionPage, zCollectionInventory, type Collectible, type CollectionCategory } from "../api/collectibleSchemas";
++import type { Engine } from "./engine";
++import type { ProfileStyleChange } from "./account";
++export const zCustomization = z.object({ profileStyle: zProfileStyle, styleRevision: z.string() });
++export type Customization = z.infer<typeof zCustomization>;
++export const collectionAsset = (id: string, variant: "full" | "poster" | "thumbnail" = "poster") => `${apiBase()}/v2/profile-collectibles/assets/${encodeURIComponent(id)}/${variant}.webp`;
++export const collectionPage = (engine: Engine, category: CollectionCategory, q: string, after: string | null, filter = "all") =>
++  engine.api.json("GET", `/v2/profile-collectibles?${new URLSearchParams({ category, q, filter, limit: "24", ...(after ? { after } : {}) })}`, zCollectionPage);
++export const collectionInventory = (engine: Engine) => engine.api.json("GET", "/v2/users/me/profile-collectibles", zCollectionInventory);
++export const customization = (engine: Engine) => engine.api.json("GET", "/v2/users/me/profile-customization", zCustomization);
++export const claimCollectible = (engine: Engine, id: string) => engine.api.json("POST", `/v2/users/me/profile-collectibles/${encodeURIComponent(id)}/claim`, zCollectionInventory);
++export const favoriteCollectible = (engine: Engine, id: string, on: boolean) => engine.api.call(on ? "PUT" : "DELETE", `/v2/users/me/profile-collectibles/${encodeURIComponent(id)}/favorite`);
++export async function equipCollection(engine: Engine, revision: string, slots: Partial<Record<CollectionCategory, string | null>>) {
++  const result = await engine.api.json("PATCH", "/v2/users/me/profile-customization", zCustomization, { body: { baseStyleRevision: revision, slots } });
++  await engine.refreshAll();
++  return result;
++}
++/** Local preview only. The server repeats selection and ownership checks on apply. */
++export function previewCollectible(style: ProfileStyle, item: Collectible | null, category: CollectionCategory): ProfileStyle {
++  const next = { ...style };
++  const r = item?.recipe;
++  if (category === "avatar-frame") next.decoration = r?.frame ?? null;
++  if (category === "profile-theme") {
++    next.themeColors = r?.colors ?? null;
++    next.accent = r?.colors[0] ?? null;
++  }
++  if (category === "name-effect") {
++    next.nameColors = r?.colors ?? null;
++    next.nameEffect = r?.nameEffect ?? null;
++  }
++  if (category === "particles") next.effect = r?.effect ?? null;
++  next.collectibles = [...(style.collectibles ?? []).filter((x) => x.category !== category), ...(item ? [item] : [])];
++  return next;
++}
++
++/** Match the server's overlap rules while previewing edits in the existing style controls. */
++export function previewLegacyStyle(style: ProfileStyle, change: ProfileStyleChange): ProfileStyle {
++  const clear = new Set<CollectionCategory>();
++  if (change.decoration !== undefined) clear.add("avatar-frame");
++  if (change.effect !== undefined) clear.add("particles");
++  if (change.accent !== undefined || change.themeColors !== undefined) clear.add("profile-theme");
++  if (change.nameColors !== undefined || change.nameEffect !== undefined) clear.add("name-effect");
++  return zProfileStyle.parse({ ...style, ...change, ...(style.collectibles ? { collectibles: style.collectibles.filter((x) => !clear.has(x.category)) } : {}) }) ?? style;
++}
+diff --git a/src/sync/engine.ts b/src/sync/engine.ts
+index 2ce13b4..8ea1269 100644
+--- a/src/sync/engine.ts
++++ b/src/sync/engine.ts
+@@ -571,6 +571,18 @@ export class Engine implements EngineContext {
+     this.outbox.kick();
+   }
+ 
++  /** A verified provider session must prove this exact account and device before unlocking its local messages. */
++  async signInAgainWithProvider(grant: AccountSessionGrant): Promise<void> {
++    if (!(this.session instanceof AccountSession) || grant.account.id !== this.record.account?.id || grant.session.deviceId !== this.record.deviceId) throw new Error("Sign in with the Meldiq account that owns this browser's messages.");
++    await this.session.adopt(grant);
++    await this.accountEmailChanged(grant.account.email);
++    this.set(s => ({ ...s, phase: "ready", phaseReason: null }));
++    this.stopped = false;
++    this.realtime.start();
++    void this.refreshAll();
++    this.outbox.kick();
++  }
++
+   /** The account's email changed here (Settings › My Account, API 0.46.0): sign-ins from now on use the new address. */
+   async accountEmailChanged(email: string): Promise<void> {
+     const account = this.record.account;
+diff --git a/src/ui/auth/AccountForms.tsx b/src/ui/auth/AccountForms.tsx
+index a869a0d..4842611 100644
+--- a/src/ui/auth/AccountForms.tsx
++++ b/src/ui/auth/AccountForms.tsx
+@@ -1,3 +1,4 @@
++import { SocialSignIn } from "./SocialSignIn";
+ import { ArrowLeft, ChevronRight, KeyRound, LockKeyhole, MailX, Smartphone } from "lucide-react";
+ import { type FormEvent, type ReactNode, useState } from "react";
+ import type { AccountSessionGrant } from "../../api/accountSchemas";
+@@ -112,6 +113,7 @@ export function SignInForm(props: {
+   return (
+     <form className="auth-form" onSubmit={submitHandler(submit)} noValidate>
+       <AuthHeading title={t("signin_title")} sub={t("signin_sub")} />
++      <SocialSignIn api={props.ctx.accounts.api} onSignedIn={props.onSignedIn} />
+       <FormNotice text={props.notice ?? null} />
+       <FormError text={error} />
+       <Field id="si-email" label={t("common_email")}>
+diff --git a/src/ui/auth/ReauthScreen.tsx b/src/ui/auth/ReauthScreen.tsx
+index 8bcc369..d4a272d 100644
+--- a/src/ui/auth/ReauthScreen.tsx
++++ b/src/ui/auth/ReauthScreen.tsx
+@@ -1,3 +1,7 @@
++import { useMemo } from "react";
++import { ApiClient } from "../../api/client";
++import { socialDeviceProof } from "../../auth/accountApi";
++import { SocialSignIn } from "./SocialSignIn";
+ import { type FormEvent, useState } from "react";
+ import type { Engine } from "../../sync/engine";
+ import { AuthFrame, AuthHeading, FormError, LinkButton } from "./AuthFrame";
+@@ -11,6 +15,7 @@ import { ApiError } from "../../api/client";
+  * with this browser's device key, starts a new one; messages and keys kept here stay as they are.
+  */
+ export function ReauthScreen({ engine, onSignOut }: { engine: Engine; onSignOut: () => void }) {
++  const socialApi = useMemo(() => new ApiClient(engine.api.base), [engine]);
+   const [password, setPassword] = useState("");
+   const { busy, error, setError, run } = useSubmit();
+   const t = useT();
+@@ -37,6 +42,7 @@ export function ReauthScreen({ engine, onSignOut }: { engine: Engine; onSignOut:
+       <form className="auth-form" onSubmit={submit} noValidate>
+         <AuthHeading title={t("reauth_title")} sub={t("reauth_sub", { email })} />
+         <FormError text={error} />
++        <SocialSignIn api={socialApi} deviceProof={() => socialDeviceProof(engine.api.base, engine.device)} onSignedIn={(g) => engine.signInAgainWithProvider(g)} />
+         {otherEmail === null ? (
+           <input type="email" autoComplete="username" value={email} readOnly hidden />
+         ) : (
+diff --git a/src/ui/auth/SocialSignIn.tsx b/src/ui/auth/SocialSignIn.tsx
+new file mode 100644
+index 0000000..05b228c
+--- /dev/null
++++ b/src/ui/auth/SocialSignIn.tsx
+@@ -0,0 +1,162 @@
++import { useEffect, useRef, useState } from "react";
++import { ApiClient, ApiError } from "../../api/client";
++import type { AccountSessionGrant } from "../../api/accountSchemas";
++import { completeSocial, socialError, socialProviderName, startSocial, zSocialConfig, type SocialProvider, type SocialReceipt } from "../../auth/socialAuth";
++import { browserDeviceName } from "../../sync/session";
++
++export function SocialSignIn({
++  api,
++  mode = "login",
++  password,
++  totpCode,
++  onSignedIn,
++  onLinked,
++  deviceProof,
++}: {
++  api: ApiClient;
++  mode?: "login" | "link";
++  password?: string;
++  totpCode?: string;
++  onSignedIn?: (grant: AccountSessionGrant) => void | Promise<void>;
++  onLinked?: () => void;
++  deviceProof?: () => Promise<{ deviceId: string; nonce: string; signature: string }>;
++}) {
++  const [providers, setProviders] = useState<SocialProvider[]>([]);
++  const [busy, setBusy] = useState<SocialProvider | null>(null);
++  const [error, setError] = useState<string | null>(null);
++  const [pending, setPending] = useState<SocialReceipt | null>(null);
++  const [needsName, setNeedsName] = useState(false);
++  const [needsCode, setNeedsCode] = useState(false);
++  const [name, setName] = useState("");
++  const [invite, setInvite] = useState("");
++  const [code, setCode] = useState("");
++  const abort = useRef<AbortController | null>(null);
++  useEffect(() => {
++    let live = true;
++    api
++      .json("GET", "/v2/auth/social/config", zSocialConfig, { auth: false })
++      .then((c) => {
++        if (live) setProviders(c.providers);
++      })
++      .catch(() => undefined);
++    return () => {
++      live = false;
++      abort.current?.abort();
++    };
++  }, [api]);
++  const finish = async (receipt: SocialReceipt) => {
++    try {
++      const result = await completeSocial(
++        api,
++        receipt,
++        {
++          deviceName: browserDeviceName(),
++          name: name.trim() || undefined,
++          inviteCode: invite.trim() || undefined,
++          totpCode: code.trim() || totpCode || undefined,
++          device: deviceProof ? await deviceProof() : undefined,
++        },
++        mode === "link",
++      );
++      setPending(null);
++      if ("grant" in result) await onSignedIn?.(result.grant);
++      else onLinked?.();
++    } catch (e) {
++      if (e instanceof ApiError && ["social_profile_required", "invite_required", "invalid_invite"].includes(e.code)) {
++        setNeedsName(true);
++        setPending(receipt);
++      }
++      if (e instanceof ApiError && ["totp_required", "totp_invalid"].includes(e.code)) {
++        setNeedsCode(true);
++        setPending(receipt);
++      }
++      setError(socialError(e));
++    }
++  };
++  const begin = async (provider: SocialProvider) => {
++    // Open synchronously so Safari can allow the user-initiated popup.
++    const popup = window.open("about:blank", "_blank", "popup,width=500,height=700");
++    if (!popup) return setError("Allow pop-ups for Meldiq, then try again.");
++    abort.current?.abort();
++    const controller = new AbortController();
++    abort.current = controller;
++    setBusy(provider);
++    setError(null);
++    setPending(null);
++    setNeedsCode(false);
++    setNeedsName(false);
++    try {
++      await finish(await startSocial(api, popup, provider, { mode, password, totpCode }, controller.signal));
++    } catch (e) {
++      try {
++        popup.close();
++      } catch {
++        /* A provider-isolated popup may have detached its handle. */
++      }
++      setError(socialError(e));
++    } finally {
++      setBusy(null);
++    }
++  };
++  if (!providers.length) return null;
++  return (
++    <div style={{ display: "grid", gap: 10 }} aria-label="Connected sign-in methods">
++      {providers.map((provider) => (
++        <button key={provider} type="button" className="btn btn-secondary btn-lg" disabled={!!busy} onClick={() => void begin(provider)}>
++          {(provider === "google" || provider === "discord") && (
++            <img src={`/auth-provider-icons/${provider}.svg`} width={20} height={20} alt="" aria-hidden="true" style={{ flexShrink: 0, objectFit: "contain" }} />
++          )}
++          <span>{busy === provider ? "Connecting…" : `${mode === "link" ? "Connect" : "Continue with"} ${socialProviderName(provider)}`}</span>
++        </button>
++      ))}
++      {busy && (
++        <div style={{ display: "grid", gap: 6 }}>
++          <p className="muted" role="status">
++            Complete sign-in in the provider window, then return here.
++          </p>
++          <button className="btn btn-ghost" type="button" onClick={() => abort.current?.abort()}>
++            Cancel sign-in
++          </button>
++        </div>
++      )}
++      {error && (
++        <p className="banner danger" role="alert">
++          {error}
++        </p>
++      )}
++      {pending && (
++        <div style={{ display: "grid", gap: 8 }}>
++          {needsName && (
++            <>
++              <label>
++                Display name
++                <input className="input" autoComplete="nickname" value={name} maxLength={80} onChange={(e) => setName(e.target.value)} />
++              </label>
++              <label>
++                Invitation code (if required)
++                <input className="input" value={invite} onChange={(e) => setInvite(e.target.value)} />
++              </label>
++            </>
++          )}
++          {needsCode && (
++            <label>
++              Authenticator or backup code
++              <input className="input" autoComplete="one-time-code" value={code} onChange={(e) => setCode(e.target.value)} />
++            </label>
++          )}
++          <button
++            type="button"
++            className="btn btn-primary"
++            disabled={!!busy || (needsName && !name.trim()) || (needsCode && !code.trim())}
++            onClick={() => {
++              setBusy("google");
++              void finish(pending).finally(() => setBusy(null));
++            }}
++          >
++            Continue
++          </button>
++        </div>
++      )}
++    </div>
++  );
++}
+diff --git a/src/ui/chat/PeoplePanels.tsx b/src/ui/chat/PeoplePanels.tsx
+index 597d1af..093c8ae 100644
+--- a/src/ui/chat/PeoplePanels.tsx
++++ b/src/ui/chat/PeoplePanels.tsx
+@@ -159,6 +159,7 @@ function MemberRow({ m, away, colors, orgId }: { m: Member; away: boolean; color
+           photoRev={m.photoRev}
+           media={m.avatarMedia}
+           decoration={m.profileStyle?.decoration ?? null}
++          collectibles={m.profileStyle?.collectibles}
+           size={40}
+           online={away ? null : true}
+           presence={away ? null : m.presence}
+diff --git a/src/ui/people/CollectibleLayers.tsx b/src/ui/people/CollectibleLayers.tsx
+new file mode 100644
+index 0000000..6e4866a
+--- /dev/null
++++ b/src/ui/people/CollectibleLayers.tsx
+@@ -0,0 +1,49 @@
++import type { CSSProperties } from "react";
++import type { ProfileStyle } from "../../api/profileSchemas";
++import type { CollectibleLook } from "../../api/collectibleSchemas";
++import { collectionAsset } from "../../sync/collectibles";
++import { useReducedMotion } from "./ProfileStyle";
++export const collectibleOf = (style: ProfileStyle | null | undefined, category: CollectibleLook["category"]) => style?.collectibles?.find((x) => x.category === category);
++export function recipeBackground(item: CollectibleLook): CSSProperties {
++  const [a, b] = item.recipe.colors;
++  const base = `linear-gradient(135deg, ${a}, ${b})`;
++  const patterns = {
++    solid: base,
++    orbit: `radial-gradient(ellipse at 75% 20%, ${a} 0%, transparent 60%), linear-gradient(150deg, #0b1224, ${b})`,
++    grid: `repeating-linear-gradient(0deg, transparent, transparent 19px, ${a}33 20px), repeating-linear-gradient(90deg, transparent, transparent 19px, ${a}33 20px), linear-gradient(135deg, #0b1224, ${b})`,
++    prism: `conic-gradient(from 35deg at 70% 20%, #0b1224, ${a}, ${b}, #0b1224)`,
++  };
++  return { background: patterns[item.recipe.pattern] };
++}
++export function collectibleCardVars(style: ProfileStyle | null | undefined, animate = false): CSSProperties {
++  const background = collectibleOf(style, "background");
++  const theme = collectibleOf(style, "profile-theme");
++  return {
++    ...(background
++      ? {
++          backgroundImage: `linear-gradient(#0b1224d9, #0b1224e8), ${background.recipe.assetId ? `url("${collectionAsset(background.recipe.assetId, animate ? "full" : "poster")}")` : recipeBackground(background).background}`,
++          backgroundSize: "cover",
++        }
++      : {}),
++    ...(theme ? { borderColor: theme.recipe.colors[0], boxShadow: `0 0 28px ${theme.recipe.colors[1]}25` } : {}),
++  };
++}
++export function CollectibleBanner({ style }: { style: ProfileStyle | null | undefined }) {
++  const item = collectibleOf(style, "banner");
++  const reduced = useReducedMotion();
++  if (!item) return null;
++  return (
++    <span className="collectible-banner" style={recipeBackground(item)} aria-hidden="true">
++      {item.recipe.assetId && <img src={collectionAsset(item.recipe.assetId, reduced ? "poster" : "full")} alt="" decoding="async" />}
++    </span>
++  );
++}
++export function CollectibleBadge({ style }: { style: ProfileStyle | null | undefined }) {
++  const item = collectibleOf(style, "badge");
++  if (!item) return null;
++  return (
++    <span className="collectible-badge" title={`Collectible: ${item.name}`} style={{ color: item.recipe.colors[0] }}>
++      <span aria-hidden="true">✦</span> {item.name}
++    </span>
++  );
++}
+diff --git a/src/ui/people/NameStyle.tsx b/src/ui/people/NameStyle.tsx
+index 605d031..08da2bb 100644
+--- a/src/ui/people/NameStyle.tsx
++++ b/src/ui/people/NameStyle.tsx
+@@ -156,6 +156,7 @@ export function LookAvatar(p: LookAvatarProps) {
+       photoRev={p.photoRev ?? null}
+       media={look.avatarMedia ?? null}
+       decoration={look.profileStyle?.decoration ?? null}
++      collectibles={look.profileStyle?.collectibles}
+       size={p.size}
+       online={p.online}
+       presence={p.presence}
+diff --git a/src/ui/people/ProfileDialog.tsx b/src/ui/people/ProfileDialog.tsx
+index a21c102..cbe60cb 100644
+--- a/src/ui/people/ProfileDialog.tsx
++++ b/src/ui/people/ProfileDialog.tsx
+@@ -1,3 +1,4 @@
++import { CollectibleBanner, CollectibleBadge, collectibleCardVars } from "./CollectibleLayers";
+ import { Check, Copy, Flag, MoreHorizontal, SendHorizontal, ShieldBan, ShieldCheck, Ticket, UserCheck, UserPlus, UserX, X } from "lucide-react";
+ import { useEffect, useState } from "react";
+ import { ApiError } from "../../api/client";
+@@ -12,7 +13,7 @@ import { ReportDialog } from "../chat/ReportDialog";
+ import { usePhoto } from "../components/photos";
+ import { StyledName } from "./NameStyle";
+ import { SafeLink } from "../chat/SafeLink";
+-import { ProfileEffect, StyledAvatar } from "./ProfileStyle";
++import { ProfileEffect, StyledAvatar, useReducedMotion } from "./ProfileStyle";
+ import { ArtistDecorations } from "./ArtistDecorations";
+ import { ProfilePins } from "./ProfilePins";
+ import { LevelRing } from "./LevelRing";
+@@ -62,6 +63,7 @@ interface ProfileDialogProps {
+ 
+ export function ProfileDialog({ userId, fallbackName, orgId = null, near = null, onClose }: ProfileDialogProps) {
+   const engine = useEngine();
++  const reducedMotion = useReducedMotion();
+   const me = useOrbit((s) => s.me?.userId);
+   const features = useOrbit((s) => s.server?.features ?? [], shallowEqual);
+   const pinsOn = features.includes("profile-pins");
+@@ -207,11 +209,12 @@ export function ProfileDialog({ userId, fallbackName, orgId = null, near = null,
+       title={name}
+       onClose={onClose}
+       className={`profile-pop${theme ? " themed" : ""}`}
+-      vars={themeVars(theme)}
++      vars={{ ...themeVars(theme), ...collectibleCardVars(profile?.profileStyle, !reducedMotion) }}
+       near={near}
+       header={
+         <>
+           <div className="profile-pop-banner" style={bannerUrl ? { backgroundImage: `url(${bannerUrl})` } : { background: theme ? themeBackground(theme) : toneOf(profile?.avatarColor ?? 0) }}>
++            <CollectibleBanner style={profile?.profileStyle} />
+             <ProfileEffect effect={profile?.profileStyle?.effect} />
+             {!self && more.length > 0 && (
+               <button className="icon-btn profile-pop-btn" onClick={(e) => moreMenu.open(e.currentTarget)} aria-label={`More for ${name}`} aria-haspopup="menu" aria-expanded={!!moreMenu.anchor}>
+@@ -231,6 +234,7 @@ export function ProfileDialog({ userId, fallbackName, orgId = null, near = null,
+                 photoRev={profile.photoRev}
+                 media={profile.avatarMedia}
+                 decoration={profile.profileStyle?.decoration ?? null}
++                collectibles={profile.profileStyle?.collectibles}
+                 size={92}
+                 online={profile.online}
+                 presence={profile.presence}
+@@ -272,8 +276,11 @@ export function ProfileDialog({ userId, fallbackName, orgId = null, near = null,
+             </p>
+             {(profile.statusEmoji || profile.statusText) && <p className="profile-pop-status">{[profile.statusEmoji, profile.statusText].filter(Boolean).join(" ")}</p>}
+             {/* API 0.64.0: pins replace the Bug Hunter and Artist pills (both are Meldiq pins now). */}
++            <CollectibleBadge style={profile?.profileStyle} />
+             {pinsOn ? (
+-              <ProfilePins pins={profile.pins} />
++              <>
++                <ProfilePins pins={profile.pins} />
++              </>
+             ) : (
+               <>
+                 {profile.badges.includes("bug-hunter") && (
+diff --git a/src/ui/people/ProfileStyle.tsx b/src/ui/people/ProfileStyle.tsx
+index 713816b..741a827 100644
+--- a/src/ui/people/ProfileStyle.tsx
++++ b/src/ui/people/ProfileStyle.tsx
+@@ -1,3 +1,5 @@
++import type { CollectibleLook } from "../../api/collectibleSchemas";
++import { collectionAsset } from "../../sync/collectibles";
+ import { usePrefs } from "../../application/prefs";
+ import { useEffect, useState } from "react";
+ import { isClassicDecoration, type ProfileStyle } from "../../api/schemas";
+@@ -36,6 +38,7 @@ export function decorationWidth(size: number): number {
+ }
+ 
+ interface StyledAvatarProps {
++  collectibles?: CollectibleLook[];
+   userId: string;
+   name: string;
+   colorIndex: number;
+@@ -59,8 +62,13 @@ export function StyledAvatar(p: StyledAvatarProps) {
+   const url = p.previewUrl?.url ?? stored;
+   const video = p.previewUrl ? p.previewUrl.video : kind === "video";
+   const animate = !!url && !reduced;
++  const aura = p.collectibles?.find((x) => x.category === "avatar-effect");
++  const frame = p.collectibles?.find((x) => x.category === "avatar-frame" && x.recipe.assetId);
+   return (
+-    <span className="styled-avatar" style={{ width: p.size, height: p.size }}>
++    <span
++      className={`styled-avatar${aura ? " collectible-aura" : ""}`}
++      style={{ width: p.size, height: p.size, ...(aura ? { "--collectible-a": aura.recipe.colors[0], "--collectible-b": aura.recipe.colors[1] } : {}) } as React.CSSProperties}
++    >
+       {/* First, so the avatar and its presence dot are drawn over the frame (2026-10-28: the frame cut through the dot). */}
+       {p.decoration && isClassicDecoration(p.decoration) && (
+         <span className={`deco deco-${p.decoration}`} style={{ "--deco-w": `${decorationWidth(p.size)}px` } as React.CSSProperties} aria-hidden="true" />
+@@ -76,6 +84,17 @@ export function StyledAvatar(p: StyledAvatarProps) {
+       ) : (
+         <UserAvatar userId={p.userId} name={p.name} colorIndex={p.colorIndex} photoRev={p.photoRev} size={p.size} online={p.online} presence={p.presence} decorative />
+       )}
++      {frame?.recipe.assetId && (
++        <img
++          className="deco-img"
++          src={collectionAsset(frame.recipe.assetId, p.size < 64 ? "thumbnail" : reduced ? "poster" : "full")}
++          alt=""
++          aria-hidden="true"
++          width={p.size * 1.2}
++          height={p.size * 1.2}
++          style={{ left: -p.size * 0.1, top: -p.size * 0.1 }}
++        />
++      )}
+       {p.decoration && !isClassicDecoration(p.decoration) && <DecorationImage id={p.decoration} size={p.size} />}
+     </span>
+   );
+diff --git a/src/ui/settings/AccountSettingsPage.tsx b/src/ui/settings/AccountSettingsPage.tsx
+index ddb9765..a6694cb 100644
+--- a/src/ui/settings/AccountSettingsPage.tsx
++++ b/src/ui/settings/AccountSettingsPage.tsx
+@@ -1,3 +1,4 @@
++import { ConnectedAccountsCard } from "./ConnectedAccountsCard";
+ import { KeyRound, Laptop, LogOut, Trash2 } from "lucide-react";
+ import { type FormEvent, useState } from "react";
+ import { useEngine, useOrbit } from "../../application/orbit";
+@@ -58,6 +59,7 @@ function MyAccount({ email: initialEmail, onSignedOut }: { email: string; onSign
+         }}
+       />
+       <h2 className="settings-group">Password and authentication</h2>
++      <ConnectedAccountsCard />
+       <ChangePassword email={email} />
+       {twoStep && <TwoStepCard />}
+       <PasskeysCard />
+diff --git a/src/ui/settings/CollectionStudio.tsx b/src/ui/settings/CollectionStudio.tsx
+new file mode 100644
+index 0000000..bea16e8
+--- /dev/null
++++ b/src/ui/settings/CollectionStudio.tsx
+@@ -0,0 +1,421 @@
++import { userProfile } from "../../sync/account";
++import { useLoad } from "../workspace/useLoad";
++import { usePhoto } from "../components/photos";
++import { useEffect, useState } from "react";
++import { Sparkles, Star, Lock, Check, ArrowLeft, ArrowRight, RotateCcw } from "lucide-react";
++import { COLLECTION_CATEGORIES, CATEGORY_LABELS, type CollectionCategory, type Collectible } from "../../api/collectibleSchemas";
++import type { ProfileStyle } from "../../api/profileSchemas";
++import { useEngine, useOrbit } from "../../application/orbit";
++import { claimCollectible, collectionInventory, collectionPage, customization, equipCollection, favoriteCollectible, previewCollectible, type Customization } from "../../sync/collectibles";
++import { Dialog } from "../components/Overlay";
++import { StyledName } from "../people/NameStyle";
++import { StyledAvatar, ProfileEffect, useReducedMotion } from "../people/ProfileStyle";
++import { CollectibleBadge, CollectibleBanner, collectibleCardVars, recipeBackground } from "../people/CollectibleLayers";
++import { NO_STYLE } from "./noStyle";
++import { collectionAsset } from "../../sync/collectibles";
++type Inventory = Awaited<ReturnType<typeof collectionInventory>>["inventory"];
++export function CollectionStudio() {
++  const [open, setOpen] = useState(false);
++  const enabled = useOrbit((s) => s.server?.features.includes("profile-collectibles") ?? false);
++  if (!enabled) return null;
++  return (
++    <>
++      <button className="collection-launch" onClick={() => setOpen(true)}>
++        <span className="collection-launch-mark">
++          <Sparkles size={25} />
++        </span>
++        <span className="lines grow">
++          <strong>Your profile. Your universe.</strong>
++          <small>Explore the Nightwave collection · frames, themes & more</small>
++        </span>
++        <ArrowRight size={20} />
++      </button>
++      {open && <Studio onClose={() => setOpen(false)} />}
++    </>
++  );
++}
++function Studio({ onClose }: { onClose: () => void }) {
++  const engine = useEngine();
++  const reducedMotion = useReducedMotion();
++  const me = useOrbit((s) => s.me);
++  const photoRev = useOrbit((s) => (s.me ? (s.users[s.me.userId]?.photoRev ?? null) : null));
++  const profilesRev = useOrbit((s) => s.profilesRev);
++  const profile = useLoad(() => (me ? userProfile(engine, me.userId) : Promise.resolve(null)), [engine, me?.userId, profilesRev]);
++  const bannerKind = profile.data?.profileBanner?.kind;
++  const bannerUrl = usePhoto("profileBanner", me?.userId ?? "", profile.data?.profileBanner?.rev, bannerKind === "gif" ? "image/gif" : bannerKind === "webp" ? "image/webp" : "image/jpeg");
++
++  const [category, setCategory] = useState<CollectionCategory>("avatar-frame");
++  const [query, setQuery] = useState("");
++  const [search, setSearch] = useState("");
++  const [cursor, setCursor] = useState<string | null>(null);
++  const [history, setHistory] = useState<(string | null)[]>([]);
++  const [next, setNext] = useState<string | null>(null);
++  const [items, setItems] = useState<Collectible[]>([]);
++  const [inventory, setInventory] = useState<Inventory>([]);
++  const [base, setBase] = useState<Customization | null>(null);
++  const [draft, setDraft] = useState<ProfileStyle>(NO_STYLE);
++  const [slots, setSlots] = useState<Partial<Record<CollectionCategory, string | null>>>({});
++  const [selected, setSelected] = useState<Collectible | null>(null);
++  const [filter, setFilter] = useState("all");
++  const [error, setError] = useState<string | null>(null);
++  const [busy, setBusy] = useState(false);
++  const [loading, setLoading] = useState(true);
++  const [notice, setNotice] = useState<string | null>(null);
++  useEffect(() => {
++    const timer = setTimeout(() => {
++      setSearch(query);
++      setCursor(null);
++      setHistory([]);
++    }, 250);
++    return () => clearTimeout(timer);
++  }, [query]);
++  useEffect(() => {
++    let alive = true;
++    customization(engine)
++      .then((s) => {
++        if (alive) {
++          setBase(s);
++          setDraft(s.profileStyle ?? NO_STYLE);
++        }
++      })
++      .catch((e) => alive && setError(e.message));
++    return () => {
++      alive = false;
++    };
++  }, [engine]);
++  useEffect(() => {
++    let alive = true;
++    collectionInventory(engine)
++      .then((i) => {
++        if (alive) setInventory((previous) => (JSON.stringify(previous) === JSON.stringify(i.inventory) ? previous : i.inventory));
++      })
++      .catch((e) => alive && setError(e.message));
++    return () => {
++      alive = false;
++    };
++  }, [engine, profilesRev]);
++  useEffect(() => {
++    let alive = true;
++    setLoading(true);
++    setError(null);
++    collectionPage(engine, category, search, cursor, filter)
++      .then((p) => {
++        if (alive) {
++          setItems(p.items);
++          setNext(p.next);
++        }
++      })
++      .catch((e) => alive && setError(e.message))
++      .finally(() => alive && setLoading(false));
++    return () => {
++      alive = false;
++    };
++  }, [engine, category, search, cursor, filter, inventory]);
++  const run = async (fn: () => Promise<void>) => {
++    if (busy) return;
++    setBusy(true);
++    setError(null);
++    setNotice(null);
++    try {
++      await fn();
++    } catch (e) {
++      setError(e instanceof Error ? e.message : "Couldn't save this change.");
++    } finally {
++      setBusy(false);
++    }
++  };
++  const choose = (item: Collectible | null) => {
++    setSelected(item);
++    setDraft((s) => previewCollectible(s, item, category));
++    setSlots((s) => ({ ...s, [category]: item?.id ?? null }));
++  };
++  const own = (id: string) => inventory.find((x) => x.decoration_id === id);
++  const visible = items;
++  const missing = Object.values(slots).some((id) => id && !own(id));
++  const dirty = Object.keys(slots).length > 0;
++  if (!me) return null;
++  return (
++    <Dialog
++      title="Profile collection"
++      onClose={onClose}
++      width="min(1180px, 97vw)"
++      footer={
++        <>
++          <button className="btn btn-ghost" onClick={onClose}>
++            Close
++          </button>
++          <button
++            className="btn btn-secondary"
++            disabled={busy || !base}
++            onClick={() =>
++              void run(async () => {
++                const s = await customization(engine);
++                setInventory((await collectionInventory(engine)).inventory);
++                setBase(s);
++                setDraft(s.profileStyle ?? NO_STYLE);
++                setSlots({});
++                setSelected(null);
++                setNotice("Latest look loaded.");
++              })
++            }
++          >
++            Reload saved look
++          </button>
++          <button
++            className="btn btn-primary"
++            disabled={busy || !base || !dirty || missing}
++            onClick={() =>
++              void run(async () => {
++                const s = await equipCollection(engine, base!.styleRevision, slots);
++                setBase(s);
++                setDraft(s.profileStyle ?? NO_STYLE);
++                setSlots({});
++                setNotice("Your look is saved across your devices.");
++              })
++            }
++          >
++            {busy ? "Saving…" : "Apply look"}
++          </button>
++        </>
++      }
++    >
++      <div className="dialog-body collection-studio">
++        <div className="collection-hero">
++          <span className="collection-eyebrow">THE NIGHTWAVE COLLECTION</span>
++          <h2>A little more you.</h2>
++          <p>Find your signature. Collect something unexpected.</p>
++          <span>Original Meldiq designs · One look, everywhere</span>
++        </div>
++        {error && (
++          <p className="banner danger" role="alert">
++            {error}
++          </p>
++        )}
++        {notice && (
++          <p className="banner" role="status">
++            {notice}
++          </p>
++        )}
++        <div className="collection-layout">
++          <section className="collection-browser" aria-label="Decoration marketplace">
++            <div className="collection-categories" aria-label="Decoration categories">
++              {COLLECTION_CATEGORIES.map((cat) => (
++                <button
++                  key={cat}
++                  aria-pressed={cat === category}
++                  onClick={() => {
++                    setCategory(cat);
++                    setSelected(null);
++                    setCursor(null);
++                    setHistory([]);
++                  }}
++                >
++                  {CATEGORY_LABELS[cat]}
++                </button>
++              ))}
++            </div>
++            <div className="collection-tools">
++              <input maxLength={80} aria-label="Search decorations" placeholder="Find your next favorite…" value={query} onChange={(e) => setQuery(e.target.value)} />
++              <select
++                aria-label="Filter decorations"
++                value={filter}
++                onChange={(e) => {
++                  setFilter(e.target.value);
++                  setCursor(null);
++                  setHistory([]);
++                }}
++              >
++                <option value="all">Marketplace</option>
++                <option value="owned">My inventory</option>
++                <option value="unowned">Not collected</option>
++                <option value="favorites">Favorites</option>
++                <option value="recent">Recently acquired</option>
++              </select>
++            </div>
++            <p className="faint">{CATEGORY_LABELS[category]}</p>
++            {loading ? (
++              <p role="status">Loading collection…</p>
++            ) : (
++              <div className="collection-grid">
++                <button className="collection-item collection-none" aria-pressed={slots[category] === null} onClick={() => choose(null)}>
++                  <span className="collection-art">
++                    <RotateCcw size={26} />
++                  </span>
++                  <strong>Default</strong>
++                  <small>Unequip this category</small>
++                </button>
++                {visible.map((item) => (
++                  <div className={`collection-item rarity-${item.rarity}`} key={item.id}>
++                    <button className="collection-pick" aria-pressed={draft.collectibles?.some((x) => x.id === item.id) ?? false} onClick={() => choose(item)}>
++                      <span className="collection-art" style={recipeBackground(item)}>
++                        {item.recipe.assetId ? (
++                          <img loading="lazy" src={collectionAsset(item.recipe.assetId, "thumbnail")} alt="" />
++                        ) : item.category === "avatar-frame" ? (
++                          <span className="collection-avatar-sample">M</span>
++                        ) : item.category === "name-effect" ? (
++                          <span className="collection-name-sample">Meldiq</span>
++                        ) : item.category === "badge" ? (
++                          <span className="collection-gem">✦</span>
++                        ) : (
++                          <span className={`collection-artwork collection-artwork-${item.recipe.pattern}`} />
++                        )}
++                      </span>
++                      <strong>{item.name}</strong>
++                      <small>
++                        {item.rarity} {item.isFeatured ? "· Featured" : ""}
++                      </small>
++                      <span className="collection-ownership">
++                        {own(item.id) ? (
++                          <>
++                            <Check size={12} /> Owned
++                          </>
++                        ) : item.acquisitionType === "free" ? (
++                          "Free to collect"
++                        ) : (
++                          <>
++                            <Lock size={12} />
++                            {item.acquisitionType === "purchase"
++                              ? item.currency === "EMBERS"
++                                ? `${item.price} Embers`
++                                : `USD ${(item.price / 100).toFixed(2)}`
++                              : item.acquisitionType === "premium"
++                                ? "Premium grant"
++                                : "Event reward"}
++                          </>
++                        )}
++                      </span>
++                    </button>
++                    <button
++                      className="collection-star"
++                      aria-label={`${own(item.id)?.is_favorite ? "Unfavorite" : "Favorite"} ${item.name}`}
++                      aria-pressed={!!own(item.id)?.is_favorite}
++                      disabled={busy || !own(item.id)}
++                      title={own(item.id) ? "Favorite" : "Collect to favorite"}
++                      onClick={() =>
++                        void run(async () => {
++                          await favoriteCollectible(engine, item.id, !own(item.id)?.is_favorite);
++                          setInventory((await collectionInventory(engine)).inventory);
++                        })
++                      }
++                    >
++                      <Star size={16} />
++                    </button>
++                  </div>
++                ))}
++              </div>
++            )}
++            {!loading && !visible.length && <p role="status">No matching decorations. Try another filter.</p>}
++            <div className="collection-pagination">
++              <button
++                className="btn btn-secondary"
++                disabled={!history.length || loading}
++                onClick={() => {
++                  setCursor(history.at(-1) ?? null);
++                  setHistory((h) => h.slice(0, -1));
++                }}
++              >
++                <ArrowLeft size={14} />
++                Previous
++              </button>
++              <button
++                className="btn btn-secondary"
++                disabled={!next || loading}
++                onClick={() => {
++                  setHistory((h) => [...h, cursor]);
++                  setCursor(next);
++                }}
++              >
++                Next
++                <ArrowRight size={14} />
++              </button>
++            </div>
++          </section>
++          <aside className="collection-preview" aria-label="Live profile preview">
++            <span className="collection-eyebrow">LIVE PREVIEW</span>
++            <div className="collection-profile" style={collectibleCardVars(draft, !reducedMotion)}>
++              <div className="collection-profile-banner" style={bannerUrl ? { backgroundImage: `url(${bannerUrl})`, backgroundSize: "cover", backgroundPosition: "center" } : undefined}>
++                <CollectibleBanner style={draft} />
++                <ProfileEffect effect={draft.effect} />
++              </div>
++              <div className="collection-profile-body">
++                <StyledAvatar
++                  userId={me.userId}
++                  name={me.displayName}
++                  colorIndex={me.avatarColor}
++                  photoRev={photoRev}
++                  media={profile.data?.avatarMedia ?? null}
++                  decoration={draft.decoration}
++                  collectibles={draft.collectibles}
++                  size={80}
++                />
++                <h3>
++                  <StyledName name={me.displayName} style={draft} />
++                </h3>
++                <small>@{me.username}</small>
++                <p>{profile.data?.aboutMe || "Good conversations start with a little personality."}</p>
++                <CollectibleBadge style={draft} />
++              </div>
++            </div>
++            <div className="collection-detail" aria-live="polite">
++              {selected ? (
++                <>
++                  <span className="collection-eyebrow">
++                    {selected.rarity.toUpperCase()} · {CATEGORY_LABELS[selected.category]}
++                  </span>
++                  <h3>{selected.name}</h3>
++                  <p>{selected.description}</p>
++                  <small>{selected.supportedPlatforms.map((p) => ({ web: "Web", android: "Android", windows: "Windows", macos: "macOS" })[p]).join(" · ")}</small>
++                  {!own(selected.id) &&
++                    (selected.acquisitionType === "free" ? (
++                      <button
++                        className="btn btn-primary"
++                        disabled={busy}
++                        onClick={() =>
++                          void run(async () => {
++                            setInventory((await claimCollectible(engine, selected.id)).inventory);
++                            setNotice("Added to your inventory. Apply your look when ready.");
++                          })
++                        }
++                      >
++                        Collect for free
++                      </button>
++                    ) : (
++                      <p className="faint">
++                        <Lock size={13} />{" "}
++                        {selected.acquisitionType === "premium"
++                          ? "Requires an authorized premium grant."
++                          : selected.acquisitionType === "event"
++                            ? "Awarded through a Meldiq event."
++                            : "Purchases are not available for this item yet."}
++                      </p>
++                    ))}
++                </>
++              ) : (
++                <p>Select a decoration to try it on.</p>
++              )}
++              {missing && <p className="faint">Collect every selected item before applying.</p>}
++              {dirty && <small role="status">Unsaved preview</small>}
++            </div>
++            <button
++              className="btn btn-ghost"
++              disabled={busy || !base}
++              onClick={() => {
++                let s: ProfileStyle = base?.profileStyle ?? NO_STYLE;
++                const reset: Partial<Record<CollectionCategory, null>> = {};
++                for (const cat of COLLECTION_CATEGORIES) {
++                  s = previewCollectible(s, null, cat);
++                  reset[cat] = null;
++                }
++                setDraft(s);
++                setSlots(reset);
++                setSelected(null);
++              }}
++            >
++              Reset to default
++            </button>
++          </aside>
++        </div>
++      </div>
++    </Dialog>
++  );
++}
+diff --git a/src/ui/settings/ConnectedAccountsCard.tsx b/src/ui/settings/ConnectedAccountsCard.tsx
+new file mode 100644
+index 0000000..f7804c0
+--- /dev/null
++++ b/src/ui/settings/ConnectedAccountsCard.tsx
+@@ -0,0 +1,122 @@
++import { useState } from "react";
++import { useEngine } from "../../application/orbit";
++import { zConnections, socialError, socialProviderName, type SocialProvider } from "../../auth/socialAuth";
++import { Dialog } from "../components/Overlay";
++import { useLoad } from "../workspace/useLoad";
++import { SocialSignIn } from "../auth/SocialSignIn";
++
++export function ConnectedAccountsCard() {
++  const engine = useEngine();
++  const list = useLoad(() => engine.api.json("GET", "/v2/account/identities", zConnections), [engine]);
++  const [action, setAction] = useState<"connect" | SocialProvider | null>(null);
++  const [password, setPassword] = useState("");
++  const [code, setCode] = useState("");
++  const [busy, setBusy] = useState(false);
++  const [error, setError] = useState<string | null>(null);
++  const [notice, setNotice] = useState<string | null>(null);
++  const close = () => {
++    setAction(null);
++    setPassword("");
++    setCode("");
++    setError(null);
++  };
++  const disconnect = async () => {
++    if (!action || action === "connect") return;
++    setBusy(true);
++    setError(null);
++    try {
++      await engine.api.call("DELETE", `/v2/account/identities/${action}`, { body: { password: password || undefined, totpCode: code || undefined } });
++      close();
++      setNotice("Provider disconnected. Other sessions were signed out.");
++      list.reload();
++    } catch (e) {
++      setError(socialError(e));
++    } finally {
++      setBusy(false);
++    }
++  };
++  // An older server has no provider API. Existing email settings remain usable.
++  if (!list.data) return null;
++  return (
++    <div className="card" style={{ padding: 20, display: "grid", gap: 12 }}>
++      <h3 style={{ margin: 0 }}>Connected Accounts</h3>
++      <p className="muted">Connect Google, Apple or Discord to sign in to this same Meldiq account.</p>
++      {notice && (
++        <p role="status" className="banner ok">
++          {notice}
++        </p>
++      )}
++      {(["google", "apple", "discord"] as const).map((provider) => {
++        const identity = list.data!.identities.find((i) => i.provider === provider);
++        const last = !list.data!.password && list.data!.identities.length < 2;
++        return (
++          <div key={provider} className="ws-row">
++            <span className="grow">
++              <strong>{socialProviderName(provider)}</strong>
++              <br />
++              <small>{identity ? `${identity.email ?? "Connected"} · Connected ${new Date(identity.connectedAt).toLocaleDateString()}` : "Not connected"}</small>
++            </span>
++            {identity ? (
++              <button
++                type="button"
++                className="btn btn-danger-quiet btn-sm"
++                disabled={last}
++                title={last ? "Connect another provider or use Forgot password to set a password first." : undefined}
++                onClick={() => setAction(provider)}
++              >
++                Disconnect
++              </button>
++            ) : (
++              <button type="button" className="btn btn-secondary btn-sm" disabled={!list.data!.providers.includes(provider)} onClick={() => setAction("connect")}>
++                Connect
++              </button>
++            )}
++          </div>
++        );
++      })}
++      {!list.data.password && <p className="muted">To add an email password, sign out and choose Forgot password with your account email. Keep a connected provider until the password is set.</p>}
++      {action && (
++        <Dialog title={action === "connect" ? "Connect a sign-in method" : `Disconnect ${socialProviderName(action)}?`} onClose={close}>
++          <p>
++            {action === "connect"
++              ? "Confirm your password, or use a session you signed in to in the last five minutes."
++              : "Another login method must remain. Disconnecting also signs out your other sessions."}
++          </p>
++          <label className="field">
++            Current password (if you have one)
++            <input className="input" type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} />
++          </label>
++          <label className="field">
++            Authenticator code (if enabled)
++            <input className="input" autoComplete="one-time-code" value={code} onChange={(e) => setCode(e.target.value)} />
++          </label>
++          {error && (
++            <p role="alert" className="banner danger">
++              {error}
++            </p>
++          )}
++          {action === "connect" ? (
++            <SocialSignIn
++              api={engine.api}
++              mode="link"
++              password={password}
++              totpCode={code}
++              onLinked={() => {
++                close();
++                setNotice("Sign-in method connected to your Meldiq account.");
++                list.reload();
++              }}
++            />
++          ) : (
++            <button type="button" className="btn btn-danger" disabled={busy} onClick={() => void disconnect()}>
++              {busy ? "Disconnecting…" : "Disconnect provider"}
++            </button>
++          )}
++          <button type="button" className="btn btn-ghost" disabled={busy} onClick={close}>
++            Cancel
++          </button>
++        </Dialog>
++      )}
++    </div>
++  );
++}
+diff --git a/src/ui/settings/NameStyleWindow.tsx b/src/ui/settings/NameStyleWindow.tsx
+index af338c8..99c56df 100644
+--- a/src/ui/settings/NameStyleWindow.tsx
++++ b/src/ui/settings/NameStyleWindow.tsx
+@@ -55,7 +55,9 @@ export function NameStyleWindow({ me, photoRev, style, onApply, onClose }: NameS
+     set({ nameColors: m === "none" ? null : m === "solid" ? (look.nameColors?.slice(0, 1) ?? DEFAULT_SOLID) : look.nameColors && look.nameColors.length > 1 ? look.nameColors : DEFAULT_GRADIENT });
+   const setColor = (i: number, value: string) => set({ nameColors: (look.nameColors ?? []).map((c, j) => (j === i ? value : c)) });
+   const surprise = () => set({ nameFont: pick(FONTS), nameColors: pick(COLOR_PRESETS).colors, nameEffect: pick([null, ...NAME_EFFECTS] as (NameEffect | null)[]) });
+-  const avatar = (size: number) => <StyledAvatar userId={me.userId} name={me.displayName} colorIndex={me.avatarColor} photoRev={photoRev} media={null} decoration={style.decoration} size={size} />;
++  const avatar = (size: number) => (
++    <StyledAvatar userId={me.userId} name={me.displayName} colorIndex={me.avatarColor} photoRev={photoRev} media={null} decoration={style.decoration} collectibles={style.collectibles} size={size} />
++  );
+   const name = <StyledName name={me.displayName} style={preview} className="ellipsis" />;
+ 
+   return (
+diff --git a/src/ui/settings/ProfilePreviewCard.tsx b/src/ui/settings/ProfilePreviewCard.tsx
+index eeb2c1b..1c43e6f 100644
+--- a/src/ui/settings/ProfilePreviewCard.tsx
++++ b/src/ui/settings/ProfilePreviewCard.tsx
+@@ -1,8 +1,9 @@
++import { CollectibleBanner, CollectibleBadge, collectibleCardVars } from "../people/CollectibleLayers";
+ import { useEngine, useOrbit } from "../../application/orbit";
+ import { userProfile } from "../../sync/account";
+ import { usePhoto } from "../components/photos";
+ import { StyledName } from "../people/NameStyle";
+-import { ProfileEffect, StyledAvatar } from "../people/ProfileStyle";
++import { ProfileEffect, StyledAvatar, useReducedMotion } from "../people/ProfileStyle";
+ import { LevelRing } from "../people/LevelRing";
+ import { themeBackground, themeColorsOf, themeVars } from "../people/profileTheme";
+ import { useLoad } from "../workspace/useLoad";
+@@ -16,6 +17,7 @@ import { ProfilePins } from "../people/ProfilePins";
+  */
+ export function ProfilePreviewCard() {
+   const engine = useEngine();
++  const reducedMotion = useReducedMotion();
+   const me = useOrbit((s) => s.me);
+   const photoRev = useOrbit((s) => (s.me ? (s.users[s.me.userId]?.photoRev ?? null) : null));
+   const profilesRev = useOrbit((s) => s.profilesRev);
+@@ -39,12 +41,22 @@ export function ProfilePreviewCard() {
+         <span className="settings-label">Live preview</span>
+         <span className="profile-preview-dot" aria-hidden="true" />
+       </div>
+-      <div className={`profile-pop style-preview card${theme ? " themed" : ""}`} style={themeVars(theme)}>
++      <div className={`profile-pop style-preview card${theme ? " themed" : ""}`} style={{ ...themeVars(theme), ...collectibleCardVars(style, !reducedMotion) }}>
+         <div className="profile-pop-banner" style={bannerUrl ? { backgroundImage: `url(${bannerUrl})` } : { background: theme ? themeBackground(theme) : "var(--brand-gradient)" }}>
++          <CollectibleBanner style={style} />
+           <ProfileEffect effect={style.effect} />
+         </div>
+         <div className="profile-pop-avatar">
+-          <StyledAvatar userId={me.userId} name={name} colorIndex={me.avatarColor} photoRev={photoRev} media={p?.avatarMedia ?? null} decoration={style.decoration} size={84} />
++          <StyledAvatar
++            userId={me.userId}
++            name={name}
++            colorIndex={me.avatarColor}
++            photoRev={photoRev}
++            media={p?.avatarMedia ?? null}
++            decoration={style.decoration}
++            collectibles={style.collectibles}
++            size={84}
++          />
+         </div>
+         <div className="profile-pop-body">
+           <h3 className="profile-pop-name ellipsis" style={{ fontSize: 19 }}>
+@@ -56,6 +68,7 @@ export function ProfilePreviewCard() {
+             {pronouns && <span className="faint"> · {pronouns}</span>}
+           </p>
+           {about && <p className="profile-preview-about">{about}</p>}
++          <CollectibleBadge style={style} />
+           <ProfilePins pins={p?.pins ?? []} />
+         </div>
+       </div>
+diff --git a/src/ui/settings/ProfileStyleCard.tsx b/src/ui/settings/ProfileStyleCard.tsx
+index 0e966ca..292a85f 100644
+--- a/src/ui/settings/ProfileStyleCard.tsx
++++ b/src/ui/settings/ProfileStyleCard.tsx
+@@ -1,3 +1,4 @@
++import { CollectionStudio } from "./CollectionStudio";
+ import { ChevronRight, Clapperboard, ImagePlus, Sparkles, Trash2 } from "lucide-react";
+ import { type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
+ import { ApiError } from "../../api/client";
+@@ -104,9 +105,19 @@ export function ProfileStyleCard({ nameStyles, pictureControls }: { nameStyles:
+   if (!me) return null;
+   return (
+     <div className="profile-look" aria-label="Look">
++      <CollectionStudio />
+       <div className="profile-customize-banner">
+         <div className="profile-customize-art" aria-hidden="true">
+-          <StyledAvatar userId={me.userId} name={me.displayName} colorIndex={me.avatarColor} photoRev={photoRev} media={null} decoration={style.decoration} size={48} />
++          <StyledAvatar
++            userId={me.userId}
++            name={me.displayName}
++            colorIndex={me.avatarColor}
++            photoRev={photoRev}
++            media={null}
++            decoration={style.decoration}
++            collectibles={style.collectibles}
++            size={48}
++          />
+           <Sparkles size={20} />
+         </div>
+         <div className="lines grow">
+@@ -201,7 +212,16 @@ export function ProfileStyleCard({ nameStyles, pictureControls }: { nameStyles:
+ 
+       <div className="style-rows">
+         <button type="button" className="style-row" onClick={() => setOpen("decoration")}>
+-          <StyledAvatar userId={me.userId} name={me.displayName} colorIndex={me.avatarColor} photoRev={photoRev} media={null} decoration={style.decoration} size={36} />
++          <StyledAvatar
++            userId={me.userId}
++            name={me.displayName}
++            colorIndex={me.avatarColor}
++            photoRev={photoRev}
++            media={null}
++            decoration={style.decoration}
++            collectibles={style.collectibles}
++            size={36}
++          />
+           <span className="lines grow">
+             <strong>Avatar decoration</strong>
+             <small className="faint">{decorationName}</small>
+diff --git a/src/ui/settings/settingsSearch.ts b/src/ui/settings/settingsSearch.ts
+index ca62d51..869baa8 100644
+--- a/src/ui/settings/settingsSearch.ts
++++ b/src/ui/settings/settingsSearch.ts
+@@ -3,7 +3,7 @@ import type { SettingsPage } from "../../application/router";
+ type SettingInfo = { scope: string; description: string; keywords: string };
+ /** Search routes to the existing settings pages; availability is filtered by the caller's features and permissions. */
+ export const SETTINGS_INFO: Partial<Record<SettingsPage, SettingInfo>> = {
+-  account: { scope: "Your account", description: "Email, password and account recovery", keywords: "login sign in delete recovery codes" },
++  account: { scope: "Your account", description: "Email, password and account recovery", keywords: "login sign in delete recovery codes google apple discord connected accounts" },
+   profile: { scope: "Your global profile", description: "Avatar, banner, name style, decoration and bio", keywords: "photo picture pronouns badge tag identity color colour font animation" },
+   security: { scope: "Your account", description: "Privacy, encryption and account protection", keywords: "keys recovery safety block passkey" },
+   devices: { scope: "Your account", description: "Manage signed-in devices and link a browser", keywords: "sessions phone approve sign out" },
+diff --git a/src/ui/settings/useStyleDraft.ts b/src/ui/settings/useStyleDraft.ts
+index ea29968..9d0f155 100644
+--- a/src/ui/settings/useStyleDraft.ts
++++ b/src/ui/settings/useStyleDraft.ts
+@@ -1,3 +1,4 @@
++import { previewLegacyStyle } from "../../sync/collectibles";
+ import { useMemo, useRef, useState } from "react";
+ import type { ProfileStyle } from "../../api/schemas";
+ import { setProfileStyle, type ProfileStyleChange } from "../../sync/account";
+@@ -18,7 +19,7 @@ export function useStyleDraft(engine: Engine, server: ProfileStyle, onSaved: ()
+     setError(null);
+   };
+   return {
+-    style: useMemo((): ProfileStyle => ({ ...server, ...pending }) as ProfileStyle, [server, pending]),
++    style: useMemo(() => previewLegacyStyle(server, pending), [server, pending]),
+     error,
+     busy,
+     dirty: Object.keys(pending).length > 0,
+diff --git a/test/contract-fixtures/http/DELETE_admin_v1_profile-collectibles_id.json b/test/contract-fixtures/http/DELETE_admin_v1_profile-collectibles_id.json
+new file mode 100644
+index 0000000..0287aed
+--- /dev/null
++++ b/test/contract-fixtures/http/DELETE_admin_v1_profile-collectibles_id.json
+@@ -0,0 +1,3 @@
++{
++  "ok": true
++}
+diff --git a/test/contract-fixtures/http/DELETE_v2_account_identities_provider.json b/test/contract-fixtures/http/DELETE_v2_account_identities_provider.json
+new file mode 100644
+index 0000000..0287aed
+--- /dev/null
++++ b/test/contract-fixtures/http/DELETE_v2_account_identities_provider.json
+@@ -0,0 +1,3 @@
++{
++  "ok": true
++}
+diff --git a/test/contract-fixtures/http/DELETE_v2_users_me_profile-collectibles_id_favorite.json b/test/contract-fixtures/http/DELETE_v2_users_me_profile-collectibles_id_favorite.json
+new file mode 100644
+index 0000000..0287aed
+--- /dev/null
++++ b/test/contract-fixtures/http/DELETE_v2_users_me_profile-collectibles_id_favorite.json
+@@ -0,0 +1,3 @@
++{
++  "ok": true
++}
+diff --git a/test/contract-fixtures/http/GET_admin_v1_profile-collectibles.json b/test/contract-fixtures/http/GET_admin_v1_profile-collectibles.json
+new file mode 100644
+index 0000000..7e6e44c
+--- /dev/null
++++ b/test/contract-fixtures/http/GET_admin_v1_profile-collectibles.json
+@@ -0,0 +1,685 @@
++{
++  "items": [
++    {
++      "id": "afterglow",
++      "name": "Afterglow",
++      "category": "banner",
++      "version": 1,
++      "recipe": {
++        "colors": [
++          "#a78bfa",
++          "#ec4899"
++        ],
++        "pattern": "prism"
++      },
++      "description": "Original Meldiq banner from the Nightwave collection.",
++      "rarity": "epic",
++      "acquisitionType": "premium",
++      "price": 0,
++      "currency": "USD",
++      "isActive": true,
++      "isFeatured": false,
++      "availableFrom": null,
++      "availableUntil": null,
++      "supportedPlatforms": [
++        "web",
++        "android",
++        "windows",
++        "macos"
++      ]
++    },
++    {
++      "id": "blue-horizon",
++      "name": "Blue Horizon",
++      "category": "banner",
++      "version": 1,
++      "recipe": {
++        "colors": [
++          "#22d3ee",
++          "#6366f1"
++        ],
++        "pattern": "orbit"
++      },
++      "description": "Original Meldiq banner from the Nightwave collection.",
++      "rarity": "common",
++      "acquisitionType": "free",
++      "price": 0,
++      "currency": "USD",
++      "isActive": true,
++      "isFeatured": true,
++      "availableFrom": null,
++      "availableUntil": null,
++      "supportedPlatforms": [
++        "web",
++        "android",
++        "windows",
++        "macos"
++      ]
++    },
++    {
++      "id": "calm-waters",
++      "name": "Calm Waters",
++      "category": "profile-theme",
++      "version": 1,
++      "recipe": {
++        "colors": [
++          "#38bdf8",
++          "#164e63"
++        ],
++        "pattern": "grid"
++      },
++      "description": "Original Meldiq profile theme from the Nightwave collection.",
++      "rarity": "rare",
++      "acquisitionType": "free",
++      "price": 0,
++      "currency": "USD",
++      "isActive": true,
++      "isFeatured": false,
++      "availableFrom": null,
++      "availableUntil": null,
++      "supportedPlatforms": [
++        "web",
++        "android",
++        "windows",
++        "macos"
++      ]
++    },
++    {
++      "id": "community-heart",
++      "name": "Community Heart",
++      "category": "badge",
++      "version": 1,
++      "recipe": {
++        "colors": [
++          "#a78bfa",
++          "#ec4899"
++        ],
++        "pattern": "prism"
++      },
++      "description": "Original Meldiq badge from the Nightwave collection.",
++      "rarity": "epic",
++      "acquisitionType": "event",
++      "price": 0,
++      "currency": "USD",
++      "isActive": true,
++      "isFeatured": false,
++      "availableFrom": null,
++      "availableUntil": null,
++      "supportedPlatforms": [
++        "web",
++        "android",
++        "windows",
++        "macos"
++      ]
++    },
++    {
++      "id": "deep-current",
++      "name": "Deep Current",
++      "category": "background",
++      "version": 1,
++      "recipe": {
++        "colors": [
++          "#38bdf8",
++          "#164e63"
++        ],
++        "pattern": "grid"
++      },
++      "description": "Original Meldiq background from the Nightwave collection.",
++      "rarity": "rare",
++      "acquisitionType": "free",
++      "price": 0,
++      "currency": "USD",
++      "isActive": true,
++      "isFeatured": false,
++      "availableFrom": null,
++      "availableUntil": null,
++      "supportedPlatforms": [
++        "web",
++        "android",
++        "windows",
++        "macos"
++      ]
++    },
++    {
++      "id": "electric-ink",
++      "name": "Electric Ink",
++      "category": "name-effect",
++      "version": 1,
++      "recipe": {
++        "colors": [
++          "#22d3ee",
++          "#6366f1"
++        ],
++        "pattern": "orbit",
++        "nameEffect": "shimmer"
++      },
++      "description": "Original Meldiq name effect from the Nightwave collection.",
++      "rarity": "common",
++      "acquisitionType": "free",
++      "price": 0,
++      "currency": "USD",
++      "isActive": true,
++      "isFeatured": true,
++      "availableFrom": null,
++      "availableUntil": null,
++      "supportedPlatforms": [
++        "web",
++        "android",
++        "windows",
++        "macos"
++      ]
++    },
++    {
++      "id": "explorer",
++      "name": "Explorer",
++      "category": "badge",
++      "version": 1,
++      "recipe": {
++        "colors": [
++          "#38bdf8",
++          "#164e63"
++        ],
++        "pattern": "grid"
++      },
++      "description": "Original Meldiq badge from the Nightwave collection.",
++      "rarity": "rare",
++      "acquisitionType": "free",
++      "price": 0,
++      "currency": "USD",
++      "isActive": true,
++      "isFeatured": false,
++      "availableFrom": null,
++      "availableUntil": null,
++      "supportedPlatforms": [
++        "web",
++        "android",
++        "windows",
++        "macos"
++      ]
++    },
++    {
++      "id": "first-light",
++      "name": "First Light",
++      "category": "badge",
++      "version": 1,
++      "recipe": {
++        "colors": [
++          "#22d3ee",
++          "#6366f1"
++        ],
++        "pattern": "orbit"
++      },
++      "description": "Original Meldiq badge from the Nightwave collection.",
++      "rarity": "common",
++      "acquisitionType": "free",
++      "price": 0,
++      "currency": "USD",
++      "isActive": true,
++      "isFeatured": true,
++      "availableFrom": null,
++      "availableUntil": null,
++      "supportedPlatforms": [
++        "web",
++        "android",
++        "windows",
++        "macos"
++      ]
++    },
++    {
++      "id": "frostlight",
++      "name": "Frostlight",
++      "category": "name-effect",
++      "version": 1,
++      "recipe": {
++        "colors": [
++          "#38bdf8",
++          "#164e63"
++        ],
++        "pattern": "grid",
++        "nameEffect": "glow"
++      },
++      "description": "Original Meldiq name effect from the Nightwave collection.",
++      "rarity": "rare",
++      "acquisitionType": "free",
++      "price": 0,
++      "currency": "USD",
++      "isActive": true,
++      "isFeatured": false,
++      "availableFrom": null,
++      "availableUntil": null,
++      "supportedPlatforms": [
++        "web",
++        "android",
++        "windows",
++        "macos"
++      ]
++    },
++    {
++      "id": "glacier-ring",
++      "name": "Glacier Ring",
++      "category": "avatar-frame",
++      "version": 1,
++      "recipe": {
++        "colors": [
++          "#38bdf8",
++          "#164e63"
++        ],
++        "pattern": "grid",
++        "frame": "frost"
++      },
++      "description": "Original Meldiq avatar frame from the Nightwave collection.",
++      "rarity": "rare",
++      "acquisitionType": "free",
++      "price": 0,
++      "currency": "USD",
++      "isActive": true,
++      "isFeatured": false,
++      "availableFrom": null,
++      "availableUntil": null,
++      "supportedPlatforms": [
++        "web",
++        "android",
++        "windows",
++        "macos"
++      ]
++    },
++    {
++      "id": "ion-halo",
++      "name": "Ion Halo",
++      "category": "avatar-frame",
++      "version": 1,
++      "recipe": {
++        "colors": [
++          "#22d3ee",
++          "#6366f1"
++        ],
++        "pattern": "orbit",
++        "frame": "aurora"
++      },
++      "description": "Original Meldiq avatar frame from the Nightwave collection.",
++      "rarity": "common",
++      "acquisitionType": "free",
++      "price": 0,
++      "currency": "USD",
++      "isActive": true,
++      "isFeatured": true,
++      "availableFrom": null,
++      "availableUntil": null,
++      "supportedPlatforms": [
++        "web",
++        "android",
++        "windows",
++        "macos"
++      ]
++    },
++    {
++      "id": "midnight-mesh",
++      "name": "Midnight Mesh",
++      "category": "background",
++      "version": 1,
++      "recipe": {
++        "colors": [
++          "#22d3ee",
++          "#6366f1"
++        ],
++        "pattern": "orbit"
++      },
++      "description": "Original Meldiq background from the Nightwave collection.",
++      "rarity": "common",
++      "acquisitionType": "free",
++      "price": 0,
++      "currency": "USD",
++      "isActive": true,
++      "isFeatured": true,
++      "availableFrom": null,
++      "availableUntil": null,
++      "supportedPlatforms": [
++        "web",
++        "android",
++        "windows",
++        "macos"
++      ]
++    },
++    {
++      "id": "nightwave",
++      "name": "Nightwave",
++      "category": "profile-theme",
++      "version": 1,
++      "recipe": {
++        "colors": [
++          "#22d3ee",
++          "#6366f1"
++        ],
++        "pattern": "orbit"
++      },
++      "description": "Original Meldiq profile theme from the Nightwave collection.",
++      "rarity": "common",
++      "acquisitionType": "free",
++      "price": 0,
++      "currency": "USD",
++      "isActive": true,
++      "isFeatured": true,
++      "availableFrom": null,
++      "availableUntil": null,
++      "supportedPlatforms": [
++        "web",
++        "android",
++        "windows",
++        "macos"
++      ]
++    },
++    {
++      "id": "orbit-dust",
++      "name": "Orbit Dust",
++      "category": "particles",
++      "version": 1,
++      "recipe": {
++        "colors": [
++          "#22d3ee",
++          "#6366f1"
++        ],
++        "pattern": "orbit",
++        "effect": "sparkles"
++      },
++      "description": "Original Meldiq particles from the Nightwave collection.",
++      "rarity": "common",
++      "acquisitionType": "free",
++      "price": 0,
++      "currency": "USD",
++      "isActive": true,
++      "isFeatured": true,
++      "availableFrom": null,
++      "availableUntil": null,
++      "supportedPlatforms": [
++        "web",
++        "android",
++        "windows",
++        "macos"
++      ]
++    },
++    {
++      "id": "petal-orbit",
++      "name": "Petal Orbit",
++      "category": "avatar-effect",
++      "version": 1,
++      "recipe": {
++        "colors": [
++          "#a78bfa",
++          "#ec4899"
++        ],
++        "pattern": "prism"
++      },
++      "description": "Original Meldiq avatar effect from the Nightwave collection.",
++      "rarity": "epic",
++      "acquisitionType": "premium",
++      "price": 0,
++      "currency": "USD",
++      "isActive": true,
++      "isFeatured": false,
++      "availableFrom": null,
++      "availableUntil": null,
++      "supportedPlatforms": [
++        "web",
++        "android",
++        "windows",
++        "macos"
++      ]
++    },
++    {
++      "id": "polar-pulse",
++      "name": "Polar Pulse",
++      "category": "avatar-effect",
++      "version": 1,
++      "recipe": {
++        "colors": [
++          "#38bdf8",
++          "#164e63"
++        ],
++        "pattern": "grid"
++      },
++      "description": "Original Meldiq avatar effect from the Nightwave collection.",
++      "rarity": "rare",
++      "acquisitionType": "free",
++      "price": 0,
++      "currency": "USD",
++      "isActive": true,
++      "isFeatured": false,
++      "availableFrom": null,
++      "availableUntil": null,
++      "supportedPlatforms": [
++        "web",
++        "android",
++        "windows",
++        "macos"
++      ]
++    },
++    {
++      "id": "prism-garden",
++      "name": "Prism Garden",
++      "category": "background",
++      "version": 1,
++      "recipe": {
++        "colors": [
++          "#a78bfa",
++          "#ec4899"
++        ],
++        "pattern": "prism"
++      },
++      "description": "Original Meldiq background from the Nightwave collection.",
++      "rarity": "epic",
++      "acquisitionType": "premium",
++      "price": 0,
++      "currency": "USD",
++      "isActive": true,
++      "isFeatured": false,
++      "availableFrom": null,
++      "availableUntil": null,
++      "supportedPlatforms": [
++        "web",
++        "android",
++        "windows",
++        "macos"
++      ]
++    },
++    {
++      "id": "prism-sparks",
++      "name": "Prism Sparks",
++      "category": "particles",
++      "version": 1,
++      "recipe": {
++        "colors": [
++          "#a78bfa",
++          "#ec4899"
++        ],
++        "pattern": "prism",
++        "effect": "bubbles"
++      },
++      "description": "Original Meldiq particles from the Nightwave collection.",
++      "rarity": "epic",
++      "acquisitionType": "premium",
++      "price": 0,
++      "currency": "USD",
++      "isActive": true,
++      "isFeatured": false,
++      "availableFrom": null,
++      "availableUntil": null,
++      "supportedPlatforms": [
++        "web",
++        "android",
++        "windows",
++        "macos"
++      ]
++    },
++    {
++      "id": "quiet-stars",
++      "name": "Quiet Stars",
++      "category": "particles",
++      "version": 1,
++      "recipe": {
++        "colors": [
++          "#38bdf8",
++          "#164e63"
++        ],
++        "pattern": "grid",
++        "effect": "stars"
++      },
++      "description": "Original Meldiq particles from the Nightwave collection.",
++      "rarity": "rare",
++      "acquisitionType": "free",
++      "price": 0,
++      "currency": "USD",
++      "isActive": true,
++      "isFeatured": false,
++      "availableFrom": null,
++      "availableUntil": null,
++      "supportedPlatforms": [
++        "web",
++        "android",
++        "windows",
++        "macos"
++      ]
++    },
++    {
++      "id": "signal-glow",
++      "name": "Signal Glow",
++      "category": "avatar-effect",
++      "version": 1,
++      "recipe": {
++        "colors": [
++          "#22d3ee",
++          "#6366f1"
++        ],
++        "pattern": "orbit"
++      },
++      "description": "Original Meldiq avatar effect from the Nightwave collection.",
++      "rarity": "common",
++      "acquisitionType": "free",
++      "price": 0,
++      "currency": "USD",
++      "isActive": true,
++      "isFeatured": true,
++      "availableFrom": null,
++      "availableUntil": null,
++      "supportedPlatforms": [
++        "web",
++        "android",
++        "windows",
++        "macos"
++      ]
++    },
++    {
++      "id": "signal-grid",
++      "name": "Signal Grid",
++      "category": "banner",
++      "version": 1,
++      "recipe": {
++        "colors": [
++          "#38bdf8",
++          "#164e63"
++        ],
++        "pattern": "grid"
++      },
++      "description": "Original Meldiq banner from the Nightwave collection.",
++      "rarity": "rare",
++      "acquisitionType": "free",
++      "price": 0,
++      "currency": "USD",
++      "isActive": true,
++      "isFeatured": false,
++      "availableFrom": null,
++      "availableUntil": null,
++      "supportedPlatforms": [
++        "web",
++        "android",
++        "windows",
++        "macos"
++      ]
++    },
++    {
++      "id": "velvet-arcade",
++      "name": "Velvet Arcade",
++      "category": "profile-theme",
++      "version": 1,
++      "recipe": {
++        "colors": [
++          "#a78bfa",
++          "#ec4899"
++        ],
++        "pattern": "prism"
++      },
++      "description": "Original Meldiq profile theme from the Nightwave collection.",
++      "rarity": "epic",
++      "acquisitionType": "premium",
++      "price": 0,
++      "currency": "USD",
++      "isActive": true,
++      "isFeatured": false,
++      "availableFrom": null,
++      "availableUntil": null,
++      "supportedPlatforms": [
++        "web",
++        "android",
++        "windows",
++        "macos"
++      ]
++    },
++    {
++      "id": "violet-circuit",
++      "name": "Violet Circuit",
++      "category": "avatar-frame",
++      "version": 1,
++      "recipe": {
++        "colors": [
++          "#a78bfa",
++          "#ec4899"
++        ],
++        "pattern": "prism",
++        "frame": "sakura"
++      },
++      "description": "Original Meldiq avatar frame from the Nightwave collection.",
++      "rarity": "epic",
++      "acquisitionType": "premium",
++      "price": 0,
++      "currency": "USD",
++      "isActive": true,
++      "isFeatured": false,
++      "availableFrom": null,
++      "availableUntil": null,
++      "supportedPlatforms": [
++        "web",
++        "android",
++        "windows",
++        "macos"
++      ]
++    },
++    {
++      "id": "violet-signature",
++      "name": "Violet Signature",
++      "category": "name-effect",
++      "version": 1,
++      "recipe": {
++        "colors": [
++          "#a78bfa",
++          "#ec4899"
++        ],
++        "pattern": "prism",
++        "nameEffect": "glow"
++      },
++      "description": "Original Meldiq name effect from the Nightwave collection.",
++      "rarity": "epic",
++      "acquisitionType": "premium",
++      "price": 0,
++      "currency": "USD",
++      "isActive": true,
++      "isFeatured": false,
++      "availableFrom": null,
++      "availableUntil": null,
++      "supportedPlatforms": [
++        "web",
++        "android",
++        "windows",
++        "macos"
++      ]
++    }
++  ]
++}
+diff --git a/test/contract-fixtures/http/GET_v2_account_identities.json b/test/contract-fixtures/http/GET_v2_account_identities.json
+new file mode 100644
+index 0000000..8e0eba4
+--- /dev/null
++++ b/test/contract-fixtures/http/GET_v2_account_identities.json
+@@ -0,0 +1,15 @@
++{
++  "password": false,
++  "identities": [
++    {
++      "provider": "apple",
++      "email": "apple.mvy41a2r21@example.test",
++      "connectedAt": 1793554490706
++    }
++  ],
++  "providers": [
++    "google",
++    "apple",
++    "discord"
++  ]
++}
+diff --git a/test/contract-fixtures/http/GET_v2_auth_social_config.json b/test/contract-fixtures/http/GET_v2_auth_social_config.json
+new file mode 100644
+index 0000000..1e67d7c
+--- /dev/null
++++ b/test/contract-fixtures/http/GET_v2_auth_social_config.json
+@@ -0,0 +1,5 @@
++{
++  "providers": [],
++  "googleClientId": null,
++  "authorizeOrigin": null
++}
+diff --git a/test/contract-fixtures/http/GET_v2_profile-collectibles.json b/test/contract-fixtures/http/GET_v2_profile-collectibles.json
+new file mode 100644
+index 0000000..093185f
+--- /dev/null
++++ b/test/contract-fixtures/http/GET_v2_profile-collectibles.json
+@@ -0,0 +1,63 @@
++{
++  "items": [
++    {
++      "id": "glacier-ring",
++      "name": "Glacier Ring",
++      "category": "avatar-frame",
++      "version": 1,
++      "recipe": {
++        "colors": [
++          "#38bdf8",
++          "#164e63"
++        ],
++        "pattern": "grid",
++        "frame": "frost"
++      },
++      "description": "Original Meldiq avatar frame from the Nightwave collection.",
++      "rarity": "rare",
++      "acquisitionType": "free",
++      "price": 0,
++      "currency": "USD",
++      "isActive": true,
++      "isFeatured": false,
++      "availableFrom": null,
++      "availableUntil": null,
++      "supportedPlatforms": [
++        "web",
++        "android",
++        "windows",
++        "macos"
++      ]
++    },
++    {
++      "id": "ion-halo",
++      "name": "Ion Halo",
++      "category": "avatar-frame",
++      "version": 1,
++      "recipe": {
++        "colors": [
++          "#22d3ee",
++          "#6366f1"
++        ],
++        "pattern": "orbit",
++        "frame": "aurora"
++      },
++      "description": "Original Meldiq avatar frame from the Nightwave collection.",
++      "rarity": "common",
++      "acquisitionType": "free",
++      "price": 0,
++      "currency": "USD",
++      "isActive": true,
++      "isFeatured": true,
++      "availableFrom": null,
++      "availableUntil": null,
++      "supportedPlatforms": [
++        "web",
++        "android",
++        "windows",
++        "macos"
++      ]
++    }
++  ],
++  "next": "ion-halo"
++}
+diff --git a/test/contract-fixtures/http/GET_v2_profile-collectibles_categories.json b/test/contract-fixtures/http/GET_v2_profile-collectibles_categories.json
+new file mode 100644
+index 0000000..86b0224
+--- /dev/null
++++ b/test/contract-fixtures/http/GET_v2_profile-collectibles_categories.json
+@@ -0,0 +1,12 @@
++{
++  "categories": [
++    "avatar-frame",
++    "avatar-effect",
++    "background",
++    "banner",
++    "profile-theme",
++    "name-effect",
++    "badge",
++    "particles"
++  ]
++}
+diff --git a/test/contract-fixtures/http/GET_v2_users_me_profile-collectibles.json b/test/contract-fixtures/http/GET_v2_users_me_profile-collectibles.json
+new file mode 100644
+index 0000000..9cb1a40
+--- /dev/null
++++ b/test/contract-fixtures/http/GET_v2_users_me_profile-collectibles.json
+@@ -0,0 +1,11 @@
++{
++  "inventory": [
++    {
++      "user_id": "u_DfjaPGpY-JOtWcyvuatKyA",
++      "decoration_id": "ion-halo",
++      "acquired_at": 1793550102728,
++      "acquisition_source": "free",
++      "is_favorite": 1
++    }
++  ]
++}
+diff --git a/test/contract-fixtures/http/GET_v2_users_me_profile-customization.json b/test/contract-fixtures/http/GET_v2_users_me_profile-customization.json
+new file mode 100644
+index 0000000..ffbc63b
+--- /dev/null
++++ b/test/contract-fixtures/http/GET_v2_users_me_profile-customization.json
+@@ -0,0 +1,14 @@
++{
++  "profileStyle": {
++    "decoration": null,
++    "effect": null,
++    "accent": "#123456",
++    "nameFont": "mono",
++    "nameColors": null,
++    "nameEffect": null,
++    "tagOrgId": null,
++    "themeColors": null,
++    "shownBadge": null
++  },
++  "styleRevision": "517fb1982f52ddeb6c82d0543f47509d5a950019e731424d990ef8cda7a20225"
++}
+diff --git a/test/contract-fixtures/http/PATCH_v2_users_me_profile-customization.json b/test/contract-fixtures/http/PATCH_v2_users_me_profile-customization.json
+new file mode 100644
+index 0000000..a0942be
+--- /dev/null
++++ b/test/contract-fixtures/http/PATCH_v2_users_me_profile-customization.json
+@@ -0,0 +1,30 @@
++{
++  "profileStyle": {
++    "collectibles": [
++      {
++        "id": "ion-halo",
++        "name": "Ion Halo",
++        "category": "avatar-frame",
++        "version": 1,
++        "recipe": {
++          "colors": [
++            "#22d3ee",
++            "#6366f1"
++          ],
++          "pattern": "orbit",
++          "frame": "aurora"
++        }
++      }
++    ],
++    "decoration": "aurora",
++    "effect": null,
++    "accent": "#123456",
++    "nameFont": "mono",
++    "nameColors": null,
++    "nameEffect": null,
++    "tagOrgId": null,
++    "themeColors": null,
++    "shownBadge": null
++  },
++  "styleRevision": "0b8795b85b686fc8485103ad1bd04682c9c673eaccee72926224c04821616c7b"
++}
+diff --git a/test/contract-fixtures/http/POST_admin_v1_profile-collectibles_id_grant.json b/test/contract-fixtures/http/POST_admin_v1_profile-collectibles_id_grant.json
+new file mode 100644
+index 0000000..0287aed
+--- /dev/null
++++ b/test/contract-fixtures/http/POST_admin_v1_profile-collectibles_id_grant.json
+@@ -0,0 +1,3 @@
++{
++  "ok": true
++}
+diff --git a/test/contract-fixtures/http/POST_v2_auth_social_complete.json b/test/contract-fixtures/http/POST_v2_auth_social_complete.json
+new file mode 100644
+index 0000000..eb5487f
+--- /dev/null
++++ b/test/contract-fixtures/http/POST_v2_auth_social_complete.json
+@@ -0,0 +1,3 @@
++{
++  "linked": true
++}
+diff --git a/test/contract-fixtures/http/POST_v2_auth_social_start.json b/test/contract-fixtures/http/POST_v2_auth_social_start.json
+new file mode 100644
+index 0000000..58f56cc
+--- /dev/null
++++ b/test/contract-fixtures/http/POST_v2_auth_social_start.json
+@@ -0,0 +1,6 @@
++{
++  "id": "_AfY-vRHmVxm8FuiIVufX9gqlBVI0B-yMwaEF8YyUFQ",
++  "authorizeUrl": "https://web.example/v2/auth/social/authorize/_AfY-vRHmVxm8FuiIVufX9gqlBVI0B-yMwaEF8YyUFQ",
++  "nonce": "6e601709823c234e07531d217aa6a21799964361bf285e8a415e9d7396a5a3b0",
++  "expiresAt": 1793555089890
++}
+diff --git a/test/contract-fixtures/http/POST_v2_users_me_profile-collectibles_id_claim.json b/test/contract-fixtures/http/POST_v2_users_me_profile-collectibles_id_claim.json
+new file mode 100644
+index 0000000..8532d53
+--- /dev/null
++++ b/test/contract-fixtures/http/POST_v2_users_me_profile-collectibles_id_claim.json
+@@ -0,0 +1,11 @@
++{
++  "inventory": [
++    {
++      "user_id": "u_DfjaPGpY-JOtWcyvuatKyA",
++      "decoration_id": "ion-halo",
++      "acquired_at": 1793550102728,
++      "acquisition_source": "free",
++      "is_favorite": 0
++    }
++  ]
++}
+diff --git a/test/contract-fixtures/http/PUT_admin_v1_profile-collectibles_id.json b/test/contract-fixtures/http/PUT_admin_v1_profile-collectibles_id.json
+new file mode 100644
+index 0000000..d719679
+--- /dev/null
++++ b/test/contract-fixtures/http/PUT_admin_v1_profile-collectibles_id.json
+@@ -0,0 +1,31 @@
++{
++  "item": {
++    "id": "violet-circuit",
++    "name": "Violet Circuit",
++    "category": "avatar-frame",
++    "version": 2,
++    "recipe": {
++      "colors": [
++        "#a78bfa",
++        "#ec4899"
++      ],
++      "pattern": "prism",
++      "frame": "sakura"
++    },
++    "description": "Original Meldiq avatar frame from the Nightwave collection.",
++    "rarity": "epic",
++    "acquisitionType": "premium",
++    "price": 0,
++    "currency": "USD",
++    "isActive": true,
++    "isFeatured": true,
++    "availableFrom": null,
++    "availableUntil": null,
++    "supportedPlatforms": [
++      "web",
++      "android",
++      "windows",
++      "macos"
++    ]
++  }
++}
+diff --git a/test/contract-fixtures/http/PUT_v2_users_me_profile-collectibles_id_favorite.json b/test/contract-fixtures/http/PUT_v2_users_me_profile-collectibles_id_favorite.json
+new file mode 100644
+index 0000000..0287aed
+--- /dev/null
++++ b/test/contract-fixtures/http/PUT_v2_users_me_profile-collectibles_id_favorite.json
+@@ -0,0 +1,3 @@
++{
++  "ok": true
++}
+diff --git a/test/contract-fixtures/http/errors/account_link_required.json b/test/contract-fixtures/http/errors/account_link_required.json
+new file mode 100644
+index 0000000..4308eb9
+--- /dev/null
++++ b/test/contract-fixtures/http/errors/account_link_required.json
+@@ -0,0 +1,6 @@
++{
++  "error": {
++    "code": "account_link_required",
++    "message": "Sign in with your existing Meldiq login, then connect this provider in Settings > Account > Connected Accounts."
++  }
++}
+diff --git a/test/contract-fixtures/http/errors/acquisition_required.json b/test/contract-fixtures/http/errors/acquisition_required.json
+new file mode 100644
+index 0000000..9da826b
+--- /dev/null
++++ b/test/contract-fixtures/http/errors/acquisition_required.json
+@@ -0,0 +1,6 @@
++{
++  "error": {
++    "code": "acquisition_required",
++    "message": "This decoration requires a verified grant"
++  }
++}
+diff --git a/test/contract-fixtures/http/errors/collectible_unavailable.json b/test/contract-fixtures/http/errors/collectible_unavailable.json
+new file mode 100644
+index 0000000..105821d
+--- /dev/null
++++ b/test/contract-fixtures/http/errors/collectible_unavailable.json
+@@ -0,0 +1,6 @@
++{
++  "error": {
++    "code": "collectible_unavailable",
++    "message": "This decoration is not available"
++  }
++}
+diff --git a/test/contract-fixtures/http/errors/fresh_auth_required.json b/test/contract-fixtures/http/errors/fresh_auth_required.json
+new file mode 100644
+index 0000000..7e390c0
+--- /dev/null
++++ b/test/contract-fixtures/http/errors/fresh_auth_required.json
+@@ -0,0 +1,6 @@
++{
++  "error": {
++    "code": "fresh_auth_required",
++    "message": "Confirm your password or sign in again before changing connected accounts."
++  }
++}
+diff --git a/test/contract-fixtures/http/errors/identity_conflict.json b/test/contract-fixtures/http/errors/identity_conflict.json
+new file mode 100644
+index 0000000..6cb6958
+--- /dev/null
++++ b/test/contract-fixtures/http/errors/identity_conflict.json
+@@ -0,0 +1,6 @@
++{
++  "error": {
++    "code": "identity_conflict",
++    "message": "This identity belongs to another Meldiq account. Sign in to that account or recover it. Nothing was merged."
++  }
++}
+diff --git a/test/contract-fixtures/http/errors/invalid_device_proof.json b/test/contract-fixtures/http/errors/invalid_device_proof.json
+new file mode 100644
+index 0000000..635aaef
+--- /dev/null
++++ b/test/contract-fixtures/http/errors/invalid_device_proof.json
+@@ -0,0 +1,6 @@
++{
++  "error": {
++    "code": "invalid_device_proof",
++    "message": "This phone's keys don't belong to this account. Set up encryption again."
++  }
++}
+diff --git a/test/contract-fixtures/http/errors/last_login_method.json b/test/contract-fixtures/http/errors/last_login_method.json
+new file mode 100644
+index 0000000..bbcb9ca
+--- /dev/null
++++ b/test/contract-fixtures/http/errors/last_login_method.json
+@@ -0,0 +1,6 @@
++{
++  "error": {
++    "code": "last_login_method",
++    "message": "Connect another provider or set a password using Forgot password before disconnecting your only login method."
++  }
++}
+diff --git a/test/contract-fixtures/http/errors/not_owned.json b/test/contract-fixtures/http/errors/not_owned.json
+new file mode 100644
+index 0000000..a997fe2
+--- /dev/null
++++ b/test/contract-fixtures/http/errors/not_owned.json
+@@ -0,0 +1,6 @@
++{
++  "error": {
++    "code": "not_owned",
++    "message": "You can only equip decorations you own"
++  }
++}
+diff --git a/test/contract-fixtures/http/errors/provider_email_required.json b/test/contract-fixtures/http/errors/provider_email_required.json
+new file mode 100644
+index 0000000..d89103e
+--- /dev/null
++++ b/test/contract-fixtures/http/errors/provider_email_required.json
+@@ -0,0 +1,6 @@
++{
++  "error": {
++    "code": "provider_email_required",
++    "message": "The provider didn't supply a verified email. Use email sign-up, then connect this provider from Settings."
++  }
++}
+diff --git a/test/contract-fixtures/http/errors/social_flow_expired.json b/test/contract-fixtures/http/errors/social_flow_expired.json
+new file mode 100644
+index 0000000..830461b
+--- /dev/null
++++ b/test/contract-fixtures/http/errors/social_flow_expired.json
+@@ -0,0 +1,6 @@
++{
++  "error": {
++    "code": "social_flow_expired",
++    "message": "This sign-in expired or was already used. Start again."
++  }
++}
+diff --git a/test/contract-fixtures/http/errors/social_profile_required.json b/test/contract-fixtures/http/errors/social_profile_required.json
+new file mode 100644
+index 0000000..d7009dd
+--- /dev/null
++++ b/test/contract-fixtures/http/errors/social_profile_required.json
+@@ -0,0 +1,6 @@
++{
++  "error": {
++    "code": "social_profile_required",
++    "message": "Choose your Meldiq display name to finish creating your account."
++  }
++}
+diff --git a/test/contract-fixtures/http/errors/social_state_invalid.json b/test/contract-fixtures/http/errors/social_state_invalid.json
+new file mode 100644
+index 0000000..d4a752c
+--- /dev/null
++++ b/test/contract-fixtures/http/errors/social_state_invalid.json
+@@ -0,0 +1,6 @@
++{
++  "error": {
++    "code": "social_state_invalid",
++    "message": "Sign-in state is missing. Start again from Meldiq."
++  }
++}
+diff --git a/test/contract-fixtures/http/errors/wrong_category.json b/test/contract-fixtures/http/errors/wrong_category.json
+new file mode 100644
+index 0000000..fb65ac1
+--- /dev/null
++++ b/test/contract-fixtures/http/errors/wrong_category.json
+@@ -0,0 +1,6 @@
++{
++  "error": {
++    "code": "wrong_category",
++    "message": "Decoration does not fit this slot"
++  }
++}
+diff --git a/test/contract-fixtures/realtime-client.schema.json b/test/contract-fixtures/realtime-client.schema.json
+index 7d8ab7f..061b3d1 100644
+--- a/test/contract-fixtures/realtime-client.schema.json
++++ b/test/contract-fixtures/realtime-client.schema.json
+@@ -1,5 +1,5 @@
+ {
+-  "anyOf": [
++  "oneOf": [
+     {
+       "type": "object",
+       "properties": {
+diff --git a/test/contract-fixtures/routes.json b/test/contract-fixtures/routes.json
+index b84ada0..d9d0b4c 100644
+--- a/test/contract-fixtures/routes.json
++++ b/test/contract-fixtures/routes.json
+@@ -1,6 +1,78 @@
+ {
+-  "version": "0.73.0",
++  "version": "0.74.0",
+   "routes": [
++    {
++      "method": "GET",
++      "path": "/v2/profile-collectibles/categories"
++    },
++    {
++      "method": "GET",
++      "path": "/v2/profile-collectibles"
++    },
++    {
++      "method": "GET",
++      "path": "/v2/profile-collectibles/{id}"
++    },
++    {
++      "method": "GET",
++      "path": "/v2/users/me/profile-collectibles"
++    },
++    {
++      "method": "POST",
++      "path": "/v2/users/me/profile-collectibles/{id}/claim"
++    },
++    {
++      "method": "PUT",
++      "path": "/v2/users/me/profile-collectibles/{id}/favorite"
++    },
++    {
++      "method": "DELETE",
++      "path": "/v2/users/me/profile-collectibles/{id}/favorite"
++    },
++    {
++      "method": "GET",
++      "path": "/v2/users/me/profile-customization"
++    },
++    {
++      "method": "PATCH",
++      "path": "/v2/users/me/profile-customization"
++    },
++    {
++      "method": "GET",
++      "path": "/v2/profile-collectibles/assets/{id}/{variant}"
++    },
++    {
++      "method": "GET",
++      "path": "/admin/v1/profile-collectibles"
++    },
++    {
++      "method": "PUT",
++      "path": "/admin/v1/profile-collectibles/{id}"
++    },
++    {
++      "method": "DELETE",
++      "path": "/admin/v1/profile-collectibles/{id}"
++    },
++    {
++      "method": "POST",
++      "path": "/admin/v1/profile-collectibles/{id}/grant"
++    },
++    {
++      "method": "POST",
++      "path": "/admin/v1/profile-collectibles/assets"
++    },
++    {
++      "method": "GET",
++      "path": "/admin/v1/profile-collectibles/assets/{id}/{variant}"
++    },
++    {
++      "method": "POST",
++      "path": "/admin/v1/profile-collectibles/uploads"
++    },
++    {
++      "method": "POST",
++      "path": "/admin/v1/profile-collectibles/uploads/{id}/complete"
++    },
+     {
+       "method": "DELETE",
+       "path": "/admin/v1/orgs/{orgId}"
+@@ -385,6 +457,38 @@
+       "method": "POST",
+       "path": "/v2/migration/legacy/complete"
+     },
++    {
++      "method": "GET",
++      "path": "/v2/auth/social/config"
++    },
++    {
++      "method": "POST",
++      "path": "/v2/auth/social/start"
++    },
++    {
++      "method": "GET",
++      "path": "/v2/auth/social/authorize/{id}"
++    },
++    {
++      "method": "GET",
++      "path": "/v2/auth/social/callback"
++    },
++    {
++      "method": "POST",
++      "path": "/v2/auth/social/native"
++    },
++    {
++      "method": "POST",
++      "path": "/v2/auth/social/complete"
++    },
++    {
++      "method": "GET",
++      "path": "/v2/account/identities"
++    },
++    {
++      "method": "DELETE",
++      "path": "/v2/account/identities/{provider}"
++    },
+     {
+       "method": "POST",
+       "path": "/v1/auth/challenge"
+@@ -1795,6 +1899,60 @@
+     }
+   ],
+   "errors": {
++    "account_link_required": [
++      409
++    ],
++    "social_state_invalid": [
++      400
++    ],
++    "social_flow_expired": [
++      400
++    ],
++    "provider_not_configured": [
++      503
++    ],
++    "fresh_auth_required": [
++      403
++    ],
++    "identity_conflict": [
++      409
++    ],
++    "provider_email_required": [
++      400
++    ],
++    "social_profile_required": [
++      400
++    ],
++    "last_login_method": [
++      409
++    ],
++    "external_identity_invalid": [
++      401
++    ],
++    "provider_unavailable": [
++      503
++    ],
++    "collectible_unavailable": [
++      409
++    ],
++    "acquisition_required": [
++      403
++    ],
++    "not_owned": [
++      403
++    ],
++    "wrong_category": [
++      400
++    ],
++    "unknown_asset": [
++      400
++    ],
++    "direct_unavailable": [
++      409
++    ],
++    "bad_upload": [
++      400
++    ],
+     "account_deleted": [
+       401
+     ],
+diff --git a/test/contract-source.txt b/test/contract-source.txt
+new file mode 100644
+index 0000000..7739471
+--- /dev/null
++++ b/test/contract-source.txt
+@@ -0,0 +1 @@
++70eb02725d522585ab8e63ac2d8ce1c369e3a000
+diff --git a/test/legacy-profile-compatibility.test.ts b/test/legacy-profile-compatibility.test.ts
+new file mode 100644
+index 0000000..aaa818d
+--- /dev/null
++++ b/test/legacy-profile-compatibility.test.ts
+@@ -0,0 +1,14 @@
++import { expect, it } from "vitest";
++import { zProfileStyle as releasedProfileStyle } from "./support/legacy-web-426/profileSchemas";
++import { readCopy } from "./support/contracts";
++
++it("the deployed web reader keeps legacy fallbacks when a profile contains collectible descriptors", () => {
++  const response = readCopy<{ profileStyle: Record<string, unknown> }>("http/PATCH_v2_users_me_profile-customization.json");
++  expect(response.profileStyle.collectibles).toBeInstanceOf(Array);
++  const legacy = releasedProfileStyle.parse(response.profileStyle);
++  expect(legacy).not.toBeNull();
++  expect(legacy).not.toHaveProperty("collectibles");
++  expect(legacy?.decoration).toBe(response.profileStyle.decoration);
++  expect(legacy?.accent).toBe(response.profileStyle.accent);
++  expect(legacy?.nameFont).toBe(response.profileStyle.nameFont);
++});
+diff --git a/test/profile-collectibles.test.ts b/test/profile-collectibles.test.ts
+new file mode 100644
+index 0000000..f9a89e9
+--- /dev/null
++++ b/test/profile-collectibles.test.ts
+@@ -0,0 +1,57 @@
++import { describe, expect, it } from "vitest";
++import { zCollectible, zCollectibleLook } from "../src/api/collectibleSchemas";
++import { zProfileStyle } from "../src/api/profileSchemas";
++import { previewCollectible, previewLegacyStyle } from "../src/sync/collectibles";
++import { NO_STYLE } from "../src/ui/settings/noStyle";
++import { recipeBackground, collectibleCardVars } from "../src/ui/people/CollectibleLayers";
++const item = zCollectible.parse({
++  id: "ion-halo",
++  name: "Ion Halo",
++  category: "avatar-frame",
++  version: 1,
++  recipe: { colors: ["#22d3ee", "#6366f1"], pattern: "orbit", frame: "aurora" },
++  description: "Original Meldiq artwork",
++  rarity: "common",
++  acquisitionType: "free",
++  price: 0,
++  currency: "USD",
++  isActive: true,
++  isFeatured: true,
++  availableFrom: null,
++  availableUntil: null,
++  supportedPlatforms: ["web", "android", "windows", "macos"],
++});
++describe("profile collectible rendering and draft safety", () => {
++  it("previews a slot without changing the saved profile or unrelated styles", () => {
++    const saved = { ...NO_STYLE, nameFont: "mono" as const, tagOrgId: "community" };
++    const next = previewCollectible(saved, item, "avatar-frame");
++    expect(saved.decoration).toBeNull();
++    expect(next.decoration).toBe("aurora");
++    expect(next.nameFont).toBe("mono");
++    expect(next.tagOrgId).toBe("community");
++    expect(next.collectibles?.map((x) => x.id)).toEqual(["ion-halo"]);
++    expect(previewCollectible(next, null, "avatar-frame").collectibles).toEqual([]);
++  });
++  it("drops malformed public artwork while preserving older profile fields", () => {
++    const style = zProfileStyle.parse({ ...NO_STYLE, collectibles: [{ ...item, recipe: { ...item.recipe, colors: ["url(javascript:alert(1))", "#000000"] } }] });
++    expect(style?.collectibles).toBeUndefined();
++    expect(zCollectibleLook.safeParse({ ...item, recipe: { ...item.recipe, assetId: "https://evil.example/x.svg" } }).success).toBe(false);
++    expect(zCollectibleLook.safeParse({ ...item, recipe: { ...item.recipe, pattern: "<script>" } }).success).toBe(false);
++  });
++  it("uses a static, bounded recipe and asset references supplied by the API", () => {
++    expect(recipeBackground(item).background).toContain("radial-gradient");
++    const grid = { ...item, category: "background" as const, recipe: { ...item.recipe, pattern: "grid" as const } };
++    expect(collectibleCardVars({ ...NO_STYLE, collectibles: [grid] }).backgroundImage).toContain("repeating-linear-gradient");
++    const background = { ...item, category: "background" as const, recipe: { ...item.recipe, assetId: "a".repeat(64) } };
++    expect(collectibleCardVars({ ...NO_STYLE, collectibles: [background] }).backgroundImage).toContain(`/v2/profile-collectibles/assets/${"a".repeat(64)}/poster`);
++  });
++});
++
++it("clears overlapping collection layers in the existing style preview without dropping unrelated slots", () => {
++  const theme = { ...item, id: "nightwave", category: "profile-theme" as const };
++  const background = { ...item, id: "midnight-mesh", category: "background" as const };
++  const style = { ...NO_STYLE, collectibles: [theme, background] };
++  const next = previewLegacyStyle(style, { accent: "#123456" });
++  expect(next.collectibles?.map((x) => x.id)).toEqual(["midnight-mesh"]);
++  expect(style.collectibles).toHaveLength(2);
++});
+diff --git a/test/realtime-frames.test.ts b/test/realtime-frames.test.ts
+index 59df47e..00489c4 100644
+--- a/test/realtime-frames.test.ts
++++ b/test/realtime-frames.test.ts
+@@ -7,12 +7,15 @@ import { listCopy, readCopy } from "./support/contracts";
+  * ClientEvent, and every captured server frame is read by the socket and the engine; unknown names and fields are ignored.
+  */
+ type Shape = { properties: Record<string, { const?: string; type?: string; items?: { type: string } }>; required: string[]; additionalProperties: boolean };
+-const clientEvents = readCopy<{ anyOf: Shape[] }>("realtime-client.schema.json").anyOf;
++const clientUnion = readCopy<{ anyOf?: Shape[]; oneOf?: Shape[] }>("realtime-client.schema.json");
++// Current generated discriminated unions use oneOf; older published contracts used anyOf.
++const clientEvents = clientUnion.oneOf ?? clientUnion.anyOf;
++if (!clientEvents?.length) throw new Error("The published ClientEvent contract has no union members");
+ 
+ /** The schema's own rules for one frame: its `t`, required fields, no others, and each field's JSON type. */
+ function problems(text: string): string[] {
+   const f = JSON.parse(text) as Record<string, unknown>;
+-  const shape = clientEvents.find((s) => s.properties.t?.const === f.t);
++  const shape = clientEvents!.find((s) => s.properties.t?.const === f.t);
+   if (!shape) return [`no ClientEvent "${String(f.t)}"`];
+   const out: string[] = [];
+   for (const k of shape.required) if (!(k in f)) out.push(`missing ${k}`);
+diff --git a/test/social-auth.test.ts b/test/social-auth.test.ts
+new file mode 100644
+index 0000000..5f4314c
+--- /dev/null
++++ b/test/social-auth.test.ts
+@@ -0,0 +1,74 @@
++import { afterEach, describe, expect, it, vi } from "vitest";
++import { AccountSession } from "../src/auth/accountSession";
++import type { AccountTokens, TokenVault } from "../src/auth/tokenVault";
++import { socialChallenge } from "../src/auth/socialAuth";
++import type { AccountSessionGrant } from "../src/api/accountSchemas";
++afterEach(() => {
++  vi.unstubAllGlobals();
++});
++const grant = (token: string): AccountSessionGrant => ({
++  accessToken: `access-${token}`,
++  accessTokenExpiresAt: Date.now() + 900_000,
++  refreshToken: token,
++  refreshTokenExpiresAt: Date.now() + 999_999,
++  session: { id: "shared-session", deviceId: "device", createdAt: 1 },
++  account: { id: "account", email: "person@example.test", name: "Person", createdAt: 1, legacyLinkedAt: null, selectedWorkspaceId: null, identity: null },
++});
++describe("social sessions reuse existing Meldiq session security", () => {
++  it("uses the S256 PKCE proof challenge", async () => {
++    expect(await socialChallenge("dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk")).toBe("E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM");
++  });
++  it("serializes refresh across tabs and adopts the rotated pair", async () => {
++    let stored: AccountTokens | null = null;
++    const vault = {
++      save: async (v: AccountTokens) => {
++        stored = v;
++      },
++      load: async () => stored,
++      clear: async () => {
++        stored = null;
++      },
++    } as TokenVault;
++    let lock: Promise<unknown> = Promise.resolve();
++    vi.stubGlobal("navigator", {
++      locks: {
++        request: (_key: string, fn: () => Promise<unknown>) => {
++          const result = lock.then(fn);
++          lock = result.catch(() => undefined);
++          return result;
++        },
++      },
++    });
++    const refresh = vi.fn(async () => Response.json(grant("next-token")));
++    vi.stubGlobal("fetch", refresh);
++    const a = new AccountSession("", vault, vi.fn());
++    const b = new AccountSession("", vault, vi.fn());
++    await a.adopt(grant("old-token"));
++    await b.adopt(grant("old-token"));
++    expect(await Promise.all([a.reauthenticate(), b.reauthenticate()])).toEqual([true, true]);
++    expect(refresh).toHaveBeenCalledTimes(1);
++    expect(a.token()).toBe(b.token());
++    expect(stored).toMatchObject({ accessToken: "access-next-token", refreshToken: "next-token", sessionId: "shared-session" });
++  });
++  it("does not revive a session another tab forgot", async () => {
++    let stored: AccountTokens | null = null;
++    const vault = {
++      save: async (v: AccountTokens) => {
++        stored = v;
++      },
++      load: async () => stored,
++      clear: async () => {
++        stored = null;
++      },
++    } as TokenVault;
++    const ended = vi.fn();
++    const session = new AccountSession("", vault, ended);
++    await session.adopt(grant("old-token"));
++    stored = null;
++    const fetcher = vi.fn();
++    vi.stubGlobal("fetch", fetcher);
++    expect(await session.reauthenticate()).toBe(false);
++    expect(ended).toHaveBeenCalledWith("session_ended");
++    expect(fetcher).not.toHaveBeenCalled();
++  });
++});
+diff --git a/test/support/contracts.ts b/test/support/contracts.ts
+index 21e7280..09070a1 100644
+--- a/test/support/contracts.ts
++++ b/test/support/contracts.ts
+@@ -57,11 +57,14 @@ const METHODS = ["get", "post", "put", "patch", "delete"];
+ const CONTRACT_PATHS = ["shared/contracts/fixtures", "docs/api/openapi.json", "docs/api/realtime.schema.json"];
+ 
+ /**
+- * The contract files as committed (MELDIQ_CONTRACTS_REF, default HEAD), so another session's uncommitted work in that
++ * The contract files as committed (MELDIQ_CONTRACTS_REF, default test/contract-source.txt or HEAD), so another session's uncommitted work in that
+  * checkout never changes the copy; a folder that isn't a git checkout is read as it is.
+  */
+ function committed(repo: string): string {
+-  const ref = process.env.MELDIQ_CONTRACTS_REF ?? "HEAD";
++  // Pin the contract shipped with this web release; a neighboring checkout may be on an older branch.
++  const pin = path.join(WEB_ROOT, "test", "contract-source.txt");
++  const recorded = fs.existsSync(pin) ? fs.readFileSync(pin, "utf8").trim() : "HEAD";
++  const ref = process.env.MELDIQ_CONTRACTS_REF ?? recorded;
+   let tar: Buffer;
+   try {
+     tar = execFileSync("git", ["-C", repo, "archive", "--format=tar", ref, ...CONTRACT_PATHS], { maxBuffer: 64 * 1024 * 1024 });
+diff --git a/test/support/legacy-web-426/enums.ts b/test/support/legacy-web-426/enums.ts
+new file mode 100644
+index 0000000..f972ea3
+--- /dev/null
++++ b/test/support/legacy-web-426/enums.ts
+@@ -0,0 +1,16 @@
++import { z } from "zod";
++
++/** A value the server sent that this version doesn't know (a newer enum member). Shown as such, never as a real one. */
++export const UNKNOWN = "unknown" as const;
++export type Unknown = typeof UNKNOWN;
++
++/**
++ * An enum the server may extend within an API version (docs/api/README.md › Rules for clients): a value this version
++ * doesn't know parses as "unknown" instead of failing the whole answer, or becoming a real value it isn't (an unknown
++ * overwrite kind read as a role, an unknown privacy setting read as "everyone" and saved back that way). Screens show
++ * "unknown" as such and don't offer to change what they can't read. The contract test reports every such value
++ * (test/contract-fixtures.test.ts, strict pass).
++ */
++export function openEnum<const T extends readonly [string, ...string[]]>(values: T) {
++  return z.enum([...values, UNKNOWN] as unknown as [T[number] | Unknown, ...(T[number] | Unknown)[]]).catch(UNKNOWN);
++}
+diff --git a/test/support/legacy-web-426/profileSchemas.ts b/test/support/legacy-web-426/profileSchemas.ts
+new file mode 100644
+index 0000000..43db725
+--- /dev/null
++++ b/test/support/legacy-web-426/profileSchemas.ts
+@@ -0,0 +1,173 @@
++import { z } from "zod";
++import { openEnum } from "./enums";
++
++/**
++ * A person's and a community's look as the server sends it (API 0.44.0–0.46.0): accent colours, animated avatars,
++ * banners, profile and name styles, worn community tags. Unknown or malformed values are dropped, never shown.
++ */
++
++const nullableString = z
++  .string()
++  .nullish()
++  .transform((v) => v ?? null);
++
++/** A community's accent colour (API 0.44.0): only "#rrggbb" is kept; anything else is dropped (Meldiq's theme). */
++export const zAccent = z
++  .unknown()
++  .optional()
++  .transform((v) => (typeof v === "string" && /^#[0-9a-f]{6}$/i.test(v) ? v.toLowerCase() : null));
++
++/** Profile style ids the web draws (API 0.45.0, server PROFILE_DECORATIONS / PROFILE_EFFECTS); unknown ones are dropped. */
++export const PROFILE_DECORATIONS = ["aurora", "ember", "frost", "neon", "sakura", "pixel"] as const;
++export const PROFILE_EFFECTS = ["sparkles", "glow", "stars", "bubbles"] as const;
++/**
++ * A worn decoration (API 0.60.0, server docs/PROFILE_DECORATIONS.md): one of the classic frames above, which the web
++ * draws, or an image by id (Meldiq's own, or an approved community one: "c_" and 16 letters or digits).
++ */
++export const DECORATION_ID = /^(?:[a-z0-9-]{2,32}|c_[a-z0-9]{16})$/;
++export const isClassicDecoration = (id: string): boolean => (PROFILE_DECORATIONS as readonly string[]).includes(id);
++export const zAvatarMedia = z
++  .object({ kind: z.enum(["gif", "webp", "video"]), rev: z.number().int() })
++  .nullish()
++  .catch(null)
++  .transform((v) => v ?? null);
++export const zProfileBanner = z
++  .object({ kind: z.enum(["jpeg", "gif", "webp"]), rev: z.number().int() })
++  .nullish()
++  .catch(null)
++  .transform((v) => v ?? null);
++/** Name styles (API 0.46.0, server NAME_FONTS / NAME_EFFECTS): fonts the web ships, and effects it draws. */
++export const NAME_FONTS = ["pixel", "arcade", "script", "block", "tech", "mono"] as const;
++export const NAME_EFFECTS = ["glow", "shimmer"] as const;
++export type NameFont = (typeof NAME_FONTS)[number];
++export type NameEffect = (typeof NAME_EFFECTS)[number];
++const zHexList = z
++  .array(z.string().regex(/^#[0-9a-fA-F]{6}$/))
++  .min(1)
++  .max(3)
++  .nullish()
++  .catch(null)
++  .transform((v) => v ?? null);
++/** API 0.65.0 (server SHOWABLE_BADGES): the badges someone can choose to show by their name, and "none". */
++export const SHOWN_BADGES = ["mojo", "bug-hunter", "artist", "none"] as const;
++export type ShownBadge = (typeof SHOWN_BADGES)[number];
++const zThemeColors = z
++  .array(z.string().regex(/^#[0-9a-fA-F]{6}$/))
++  .min(1)
++  .max(2)
++  .nullish()
++  .catch(null)
++  .transform((v) => (v ? v.map((c) => c.toLowerCase()) : null));
++export const zProfileStyle = z
++  .object({
++    decoration: z.string().regex(DECORATION_ID).nullable().catch(null),
++    effect: z.enum(PROFILE_EFFECTS).nullable().catch(null),
++    accent: zAccent,
++    nameFont: z
++      .enum(NAME_FONTS)
++      .nullish()
++      .catch(null)
++      .transform((v) => v ?? null),
++    nameColors: zHexList,
++    nameEffect: z
++      .enum(NAME_EFFECTS)
++      .nullish()
++      .catch(null)
++      .transform((v) => v ?? null),
++    tagOrgId: nullableString,
++    /** API 0.65.0: the profile theme, one colour or two for a gradient (older servers: only [accent]). */
++    themeColors: zThemeColors,
++    /** API 0.65.0: the badge shown next to the name; "none" shows none, null is the apps' default (the Mojo badge). */
++    shownBadge: z
++      .enum(SHOWN_BADGES)
++      .nullish()
++      .catch(null)
++      .transform((v) => v ?? null),
++  })
++  .nullish()
++  .catch(null)
++  .transform((v) => v ?? null);
++export type ProfileStyle = NonNullable<z.infer<typeof zProfileStyle>>;
++/** The community tag someone wears by their name (API 0.46.0): its letters, colour and community. */
++export const zWornTag = z
++  .object({ orgId: z.string(), text: z.string().max(8), color: zAccent })
++  .nullish()
++  .catch(null)
++  .transform((v) => v ?? null);
++export type WornTag = NonNullable<z.infer<typeof zWornTag>>;
++
++/** API 0.46.0: About me, links (https only) and badges earned, on profiles. */
++export const zAboutMe = nullableString;
++export const zProfileLinks = z
++  .array(z.object({ label: z.string().max(40), url: z.string().regex(/^https:\/\//) }))
++  .max(5)
++  .nullish()
++  .catch(null)
++  .transform((v) => v ?? []);
++export const zBadges = z
++  .array(z.string())
++  .nullish()
++  .catch(null)
++  .transform((v) => (v ?? []).filter((b): b is "bug-hunter" => b === "bug-hunter"));
++
++/** API 0.64.0: pins on a profile (server docs/PROFILE_PINS.md), Meldiq's for milestones, then communities' own. */
++export const zProfilePins = z
++  .array(
++    z.object({
++      id: z.string().regex(/^(?:[a-z0-9-]{2,32}|p_[a-z0-9]{16})$/),
++      kind: z.enum(["meldiq", "community"]).catch("community"),
++      name: z.string().max(64),
++      description: z
++        .string()
++        .max(200)
++        .nullish()
++        .transform((v) => v ?? null),
++      animated: z.boolean().catch(false),
++      community: z
++        .object({ id: z.string(), name: z.string() })
++        .nullish()
++        .transform((v) => v ?? null),
++      since: z
++        .number()
++        .nullish()
++        .transform((v) => v ?? null),
++    }),
++  )
++  .max(100)
++  .nullish()
++  .catch(null)
++  .transform((v) => v ?? []);
++export type ProfilePin = z.infer<typeof zProfilePins>[number];
++
++/** API 0.54.0: the Mojo badge someone shows (server docs/MOJO.md); "check" is Meldiq Check, a Plus perk, not verification. */
++export const zMojoMark = z
++  .object({ badge: z.enum(["go", "plus"]), check: z.boolean() })
++  .nullish()
++  .catch(null)
++  .transform((v) => v ?? null);
++export type MojoMark = NonNullable<z.infer<typeof zMojoMark>>;
++
++/** API 0.65.0 batch B (connections-v2): the linked accounts a profile shows (sync/linkedAccounts.ts). */
++export const PROVIDERS = ["steam", "anilist", "lastfm", "trakt"] as const;
++export type Provider = (typeof PROVIDERS)[number];
++
++const zItem = z.object({ title: z.string(), subtitle: z.string().nullable(), url: z.string().nullable() });
++
++/** A connection as profiles show it; unknown providers or kinds (a newer server) are kept out by [visibleConnections]. */
++export const zProfileConnection = z.object({
++  provider: openEnum(PROVIDERS),
++  name: z.string(),
++  url: z.string(),
++  itemsKind: z.string(),
++  items: z.array(zItem).max(10),
++  updatedAt: z.number(),
++});
++export type ProfileConnection = z.infer<typeof zProfileConnection>;
++
++/** On profiles: absent when there are none (and for someone who blocked you). */
++export const zProfileConnections = z
++  .array(zProfileConnection)
++  .max(20)
++  .nullish()
++  .catch(null)
++  .transform((v) => v ?? []);
+diff --git a/test/support/legacy-web-426/source.json b/test/support/legacy-web-426/source.json
+new file mode 100644
+index 0000000..1f4bf30
+--- /dev/null
++++ b/test/support/legacy-web-426/source.json
+@@ -0,0 +1,8 @@
++{
++  "commit": "426ad2b03a2afcdbd8ac549ef4f0711e16c6ccac",
++  "origin": "deployed web baseline, unmodified source files",
++  "sha256": {
++    "profileSchemas.ts": "d0c756adb142e51d86f50049710d28dcfef4ab219dd3938543569b83386828c0",
++    "enums.ts": "a2c01051d637db2875878fea133092fd2f6f444d9a6c6483c754afa993b727fb"
++  }
++}

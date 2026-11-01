@@ -1,0 +1,12 @@
+
+ RUN  v4.1.12 /Volumes/code_files/meldiq_android/.claude/worktrees/profile-customization-system/server
+
+(node:37819) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:37819) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+
+ Test Files  1 passed (1)
+      Tests  1 passed | 17 skipped (18)
+   Start at  04:19:23
+   Duration  13.97s (transform 6.73s, setup 0ms, import 9.27s, tests 1.30s, environment 0ms)
+

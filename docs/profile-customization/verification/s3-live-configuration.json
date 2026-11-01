@@ -1,0 +1,44 @@
+{
+  "verifiedAt": "2026-11-01T19:51:29.588243+00:00",
+  "bucket": "griipbuddy-orbit-media-sg",
+  "region": "ap-southeast-1",
+  "allFourPublicAccessBlocks": true,
+  "versioning": "Enabled",
+  "encryption": "AES256",
+  "sseCustomerKeysBlocked": true,
+  "cors": {
+    "CORSRules": [
+      {
+        "ID": "meldiq-approved-browser-media",
+        "AllowedHeaders": [
+          "content-type",
+          "content-length",
+          "range",
+          "if-none-match",
+          "if-match",
+          "x-amz-*"
+        ],
+        "AllowedMethods": [
+          "GET",
+          "HEAD",
+          "PUT"
+        ],
+        "AllowedOrigins": [
+          "https://web.meldiq.app",
+          "https://admin.meldiq.app"
+        ],
+        "ExposeHeaders": [
+          "ETag",
+          "x-amz-checksum-sha256",
+          "x-amz-version-id",
+          "Content-Length",
+          "Content-Range",
+          "Accept-Ranges"
+        ],
+        "MaxAgeSeconds": 3600
+      }
+    ]
+  },
+  "runtimeCredentialsChecked": false,
+  "cdnHitAfterDeploymentChecked": false
+}

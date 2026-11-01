@@ -1,0 +1,17 @@
+{
+  "historicalCommit": "c111376cab3d732f59b0ed17ecd16b03b309beee",
+  "decoder": "GriipJson",
+  "historicalAndCurrentConfigMatch": true,
+  "ignoreUnknownKeys": true,
+  "configSha256": "b0dd0170094b0ebcc338f4a16bb695c787d81bed1795c55cdd69fb4b401d2f04",
+  "profileDtoFields": [
+    "decoration",
+    "effect",
+    "accent",
+    "nameFont",
+    "nameColors",
+    "nameEffect",
+    "tagOrgId"
+  ],
+  "verificationScope": "historical source/DTO; installed Play binaries not inspected"
+}

@@ -1,0 +1,11 @@
+
+ RUN  v4.1.12 /private/tmp/meldiq-profile-web-release
+
+(node:24116) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+ Test Files  3 passed (3)
+      Tests  42 passed (42)
+   Start at  03:46:29
+   Duration  5.19s (transform 789ms, setup 183ms, import 1.72s, tests 2.42s, environment 0ms)
+

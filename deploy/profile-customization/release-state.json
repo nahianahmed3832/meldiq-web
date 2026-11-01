@@ -1,0 +1,88 @@
+{
+  "status": "validated-clients-awaiting-coordinated-cutover",
+  "backendCandidate": "70eb0272",
+  "webCandidate": "76660f312c154c424a51ca8b8622dea395668499",
+  "productionApiChanged": false,
+  "databaseAuthorityChanged": false,
+  "runtimeConfigChanged": false,
+  "newImageBuild": "interrupted under host memory pressure; completion not verified",
+  "webBuild": "passed",
+  "webTests": {
+    "passed": 853,
+    "skipped": 1,
+    "failed": 0,
+    "total": 854
+  },
+  "browserTests": {
+    "passed": 4,
+    "failed": 0
+  },
+  "android": {
+    "assembleRelease": "passed",
+    "bundleRelease": "passed",
+    "lintRelease": "passed",
+    "jvmPassed": 988,
+    "jvmSkipped": 10,
+    "jvmFailed": 0,
+    "signed": false
+  },
+  "s3": "private/versioned/AES256/CORS and isolated signed-upload tests verified",
+  "cdn": "deployed cache-hit/304 verification pending",
+  "blocker": "host recovered; waiting for migration-owned sustained health/copy/cutover and final candidate verification",
+  "coordinationLock": "/run/lock/meldiq-production-release.lock",
+  "migrationChat": "01a1974d-b309-7333-b5fc-64c1f28119d8",
+  "adminCompatibility": "new concurrent admin envelope/search API changes must be reconciled before console publication",
+  "backendBuild": "passed locally with1536MiB heap;1GiB attempt exhausted compiler heap",
+  "apiCompiledArchive": "artifacts/api-precompiled-70eb0272.tar.gz",
+  "recovery": {
+    "reportedAt": "2026-11-01T20:05:46Z",
+    "publicHealthStatus": 200,
+    "healthMs": 431,
+    "availableMemoryGiB": 3.84,
+    "originalApiRestored": true,
+    "authorityMarkers": 8,
+    "authoritySwitch": false,
+    "unlockRequiredForRecovery": false
+  },
+  "backendRegression": {
+    "sourceCommit": "70eb02725d522585ab8e63ac2d8ce1c369e3a000",
+    "fullRun": {
+      "total": 1937,
+      "passed": 1916,
+      "failed": 1,
+      "skipped": 20,
+      "failure": "storage_s3.test.ts / retries a temporary S3 failure"
+    },
+    "freshSuiteRerun": {
+      "suite": "storage_s3.test.ts",
+      "passed": 18,
+      "failed": 0,
+      "skipped": 0
+    },
+    "isolatedFailureCaseRepeats": {
+      "runs": 3,
+      "passed": 3,
+      "codeChanged": false,
+      "cause": "not reproduced; no cause asserted"
+    },
+    "liveS3": {
+      "suite": "profile_assets_live.test.ts",
+      "passed": 2,
+      "failed": 0,
+      "isolatedSyntheticPrefix": true,
+      "productionAccountDataTouched": false
+    },
+    "note": "The initial full run remains recorded as one failure; these later passing runs do not rewrite it.",
+    "cleanFullConfirmation": {
+      "total": 1937,
+      "passed": 1917,
+      "failed": 0,
+      "skipped": 20
+    }
+  },
+  "rollbackAssessment": "../../docs/profile-customization/ROLLBACK-COMPATIBILITY.md",
+  "webArtifact": "/Volumes/code_files/meldiq_web/deploy/profile-customization/artifacts/web-76660f3.tar.gz",
+  "webArtifactSha256": "e42da9383a2a1d1b3344818afcddab000c7c852436c01d5e1081f7081daef80c",
+  "cdnExistingStatic": "Cloudflare HIT twice/Age10293 +304, 2026-11-01T20:28:15Z",
+  "legacyClientCompatibility": "deployed web reader and historical Android DTO accepted new profile fixture; production runtime code unchanged"
+}

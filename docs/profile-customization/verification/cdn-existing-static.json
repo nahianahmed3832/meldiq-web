@@ -1,0 +1,24 @@
+{
+  "checkedAt": "2026-11-01T20:28:15.478Z",
+  "scope": "existing production static asset, no profile deployment",
+  "asset": "https://web.meldiq.app/_next/static/css/66db921735e71eea.css",
+  "observations": [
+    {
+      "status": 200,
+      "cache": "HIT",
+      "age": "10293",
+      "cacheControl": "public, max-age=31536000, immutable",
+      "cloudflare": true
+    },
+    {
+      "status": 200,
+      "cache": "HIT",
+      "age": "10293",
+      "cacheControl": "public, max-age=31536000, immutable",
+      "cloudflare": true
+    }
+  ],
+  "conditionalStatus": 304,
+  "cacheHit": true,
+  "profileAssetCacheHitVerified": false
+}

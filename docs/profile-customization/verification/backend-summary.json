@@ -1,0 +1,38 @@
+{
+  "sourceCommit": "70eb02725d522585ab8e63ac2d8ce1c369e3a000",
+  "fullRun": {
+    "total": 1937,
+    "passed": 1916,
+    "failed": 1,
+    "skipped": 20,
+    "failure": "storage_s3.test.ts / retries a temporary S3 failure"
+  },
+  "freshSuiteRerun": {
+    "suite": "storage_s3.test.ts",
+    "passed": 18,
+    "failed": 0,
+    "skipped": 0
+  },
+  "isolatedFailureCaseRepeats": {
+    "runs": 3,
+    "passed": 3,
+    "codeChanged": false,
+    "cause": "not reproduced; no cause asserted"
+  },
+  "liveS3": {
+    "suite": "profile_assets_live.test.ts",
+    "passed": 2,
+    "failed": 0,
+    "isolatedSyntheticPrefix": true,
+    "productionAccountDataTouched": false
+  },
+  "note": "The initial full run remains recorded as one failure; these later passing runs do not rewrite it.",
+  "cleanFullConfirmation": {
+    "total": 1937,
+    "passed": 1917,
+    "failed": 0,
+    "skipped": 20,
+    "sourceCommit": "70eb02725d522585ab8e63ac2d8ce1c369e3a000",
+    "sourceChangedSinceOriginalRun": false
+  }
+}

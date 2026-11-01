@@ -1,0 +1,76 @@
+
+> meldiq-web@0.5.0-beta build
+> tsc -b && rm -rf out && next build && node scripts/finish-export.mjs && vite build --config vite.sw.config.ts
+
+▲ Next.js 16.3.8 (Turbopack)
+✓ Running next.config.mjs took 30ms
+
+  Skipping validation of types
+  Finished TypeScript config validation in 8ms ...
+  Creating an optimized production build ...
+✓ Compiled successfully in 1762ms
+  Collecting page data using 5 workers ...
+  Generating static pages using 5 workers (0/3) ...
+✓ Generating static pages using 5 workers (3/3) in 307ms
+  Finalizing page optimization ...
+  Exporting using 7 workers (0/3) ...
+✓ Exporting using 7 workers (3/3) in 307ms
+
+Route (pages)
+┌ ○ /
+├   /_app
+└ ○ /404
+
+○  (Static)  prerendered as static content
+
+dist/ is ready
+vite v7.3.7 building client environment for production...
+transforming...
+[plugin vite:resolve] Module "crypto" has been externalized for browser compatibility, imported by "/private/tmp/meldiq-profile-web-release/node_modules/@hpke/common/esm/src/algorithm.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+[plugin vite:resolve] Module "crypto" has been externalized for browser compatibility, imported by "/private/tmp/meldiq-profile-web-release/node_modules/@hpke/common/esm/src/utils/misc.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+[plugin vite:resolve] Module "crypto" has been externalized for browser compatibility, imported by "/private/tmp/meldiq-profile-web-release/node_modules/@hpke/common/esm/src/utils/misc.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+node_modules/@hpke/common/esm/src/hash/sha3.js (559:0): A comment
+
+"// export const sha3_224: CHash = /* @__PURE__ */ genKeccak("
+
+in "node_modules/@hpke/common/esm/src/hash/sha3.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+node_modules/@hpke/common/esm/src/hash/sha3.js (563:0): A comment
+
+"//   /* @__PURE__ */ oidNist(0x07),"
+
+in "node_modules/@hpke/common/esm/src/hash/sha3.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+node_modules/@hpke/common/esm/src/hash/sha3.js (593:0): A comment
+
+"//   /* @__PURE__ */"
+
+in "node_modules/@hpke/common/esm/src/hash/sha3.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+node_modules/@hpke/common/esm/src/hash/sha3.js (594:0): A comment
+
+"//   genShake(0x1f, 168, 32, /* @__PURE__ */ oidNist(0x0b));"
+
+in "node_modules/@hpke/common/esm/src/hash/sha3.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+node_modules/@hpke/common/esm/src/hash/sha3.js (597:0): A comment
+
+"//   /* @__PURE__ */"
+
+in "node_modules/@hpke/common/esm/src/hash/sha3.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+node_modules/@hpke/common/esm/src/hash/sha3.js (598:0): A comment
+
+"//   genShake(0x1f, 136, 64, /* @__PURE__ */ oidNist(0x0c));"
+
+in "node_modules/@hpke/common/esm/src/hash/sha3.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+node_modules/@hpke/common/esm/src/utils/noble.js (82:20): A comment
+
+"/* @__PURE__ */"
+
+in "node_modules/@hpke/common/esm/src/utils/noble.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+node_modules/@hpke/common/esm/src/utils/noble.js (122:22): A comment
+
+"/* @__PURE__ */"
+
+in "node_modules/@hpke/common/esm/src/utils/noble.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+✓ 107 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/sw.js  162.57 kB │ gzip: 49.07 kB
+✓ built in 1.77s

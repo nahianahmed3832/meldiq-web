@@ -1,0 +1,4 @@
+
+> meldiq-server@0.75.0 typecheck
+> tsc -p tsconfig.json --noEmit
+

@@ -1,0 +1,17 @@
+[
+  {
+    "run": 1,
+    "exitCode": 0,
+    "log": "/tmp/meldiq-profile-s3-retry-confirm-1.log"
+  },
+  {
+    "run": 2,
+    "exitCode": 0,
+    "log": "/tmp/meldiq-profile-s3-retry-confirm-2.log"
+  },
+  {
+    "run": 3,
+    "exitCode": 0,
+    "log": "/tmp/meldiq-profile-s3-retry-confirm-3.log"
+  }
+]

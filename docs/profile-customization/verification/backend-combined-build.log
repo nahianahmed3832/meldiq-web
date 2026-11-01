@@ -1,0 +1,4 @@
+
+> meldiq-server@0.75.0 build
+> tsc -p tsconfig.json
+

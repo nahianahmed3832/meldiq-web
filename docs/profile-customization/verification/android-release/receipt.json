@@ -1,0 +1,40 @@
+{
+  "applicationId": "com.meldiq.android",
+  "versionName": "0.5.3",
+  "versionCode": 32,
+  "debuggable": false,
+  "api": "https://msg.meldiq.app",
+  "signed": false,
+  "playPublished": false,
+  "tasks": [
+    "assembleRelease",
+    "bundleRelease",
+    "lintRelease",
+    "testReleaseUnitTest"
+  ],
+  "jvm": {
+    "tests": 998,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 10
+  },
+  "suites": 188,
+  "artifacts": {
+    "app-release-unsigned.apk": {
+      "path": "/Volumes/code_files/meldiq_android/android/profile-customization-release/app-release-unsigned.apk",
+      "bytes": 121373521,
+      "sha256": "0c982e3e7cd81e4bf8749e34b6f197a6269ba017dc98265faa811b1fc204d178"
+    },
+    "app-release.aab": {
+      "path": "/Volumes/code_files/meldiq_android/android/profile-customization-release/app-release.aab",
+      "bytes": 71455653,
+      "sha256": "a7802e4b6bde02839d108847616cb071b42778dd16c8a5b53c9f9331e5e171f7"
+    },
+    "mapping.txt": {
+      "path": "/Volumes/code_files/meldiq_android/android/profile-customization-release/mapping.txt",
+      "bytes": 165393391,
+      "sha256": "a0c4d46eeed7eece94e5bcd77bdb7892ebbed272539ef0593352d7276f018589"
+    }
+  },
+  "legacyReaderCompatibility": "passed historical DTO against new profile fixture"
+}

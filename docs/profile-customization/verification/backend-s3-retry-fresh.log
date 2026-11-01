@@ -1,0 +1,51 @@
+
+ RUN  v4.1.12 /Volumes/code_files/meldiq_android/.claude/worktrees/profile-customization-system/server
+
+(node:36216) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:36216) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+stderr | test/storage_s3.test.ts > S3 blob store (against a local fake S3, never AWS) > never replaces an existing object
+An error was encountered in a non-retryable streaming request.
+
+ ✓ test/storage_s3.test.ts > SigV4 signing matches AWS's published S3 examples > presigned GET 3ms
+ ✓ test/storage_s3.test.ts > SigV4 signing matches AWS's published S3 examples > GET with Range 0ms
+ ✓ test/storage_s3.test.ts > SigV4 signing matches AWS's published S3 examples > PUT with a signed payload 0ms
+ ✓ test/storage_s3.test.ts > disk blob store > reads whole files and ranges, and every read stream ends after its last byte 19ms
+ ✓ test/storage_s3.test.ts > S3 blob store (against a local fake S3, never AWS) > stores, reads (whole and ranges), checks and deletes an object, with server-side encryption 40ms
+ ✓ test/storage_s3.test.ts > S3 blob store (against a local fake S3, never AWS) > never replaces an existing object 11ms
+ ✓ test/storage_s3.test.ts > S3 blob store (against a local fake S3, never AWS) > uploads large files in parts and assembles them in order 423ms
+stderr | test/storage_s3.test.ts > S3 blob store (against a local fake S3, never AWS) > retries a temporary S3 failure
+An error was encountered in a non-retryable streaming request.
+
+stderr | test/storage_s3.test.ts > S3 blob store (against a local fake S3, never AWS) > retries a temporary S3 failure
+An error was encountered in a non-retryable streaming request.
+
+ ✓ test/storage_s3.test.ts > S3 blob store (against a local fake S3, never AWS) > retries a temporary S3 failure 1217ms
+stderr | test/storage_s3.test.ts > S3 blob store (against a local fake S3, never AWS) > refuses bytes that don't match their declared hash, and never puts credentials in errors
+An error was encountered in a non-retryable streaming request.
+
+ ✓ test/storage_s3.test.ts > S3 blob store (against a local fake S3, never AWS) > refuses bytes that don't match their declared hash, and never puts credentials in errors 8ms
+ ✓ test/storage_s3.test.ts > S3 blob store (against a local fake S3, never AWS) > presigned links work for a few minutes and only for that object 23ms
+ ✓ test/storage_s3.test.ts > S3 blob store (against a local fake S3, never AWS) > only accepts plain ids as keys 1ms
+ ✓ test/storage_s3.test.ts > the server on S3 storage > stores attachment ciphertext in S3 under opaque keys, streams it to members only, and deletes it when it expires 804ms
+stderr | test/storage_s3.test.ts > the server on S3 storage > an S3 outage fails the upload cleanly (503) and leaves nothing behind
+An error was encountered in a non-retryable streaming request.
+
+ ✓ test/storage_s3.test.ts > the server on S3 storage > with presigned downloads, a member is redirected to a short-lived link; others still get 404 447ms
+ ✓ test/storage_s3.test.ts > the server on S3 storage > profile photos are stored in S3, replaced without leaving old copies, and removed 45ms
+stderr | test/storage_s3.test.ts > the server on S3 storage > an S3 outage fails the upload cleanly (503) and leaves nothing behind
+An error was encountered in a non-retryable streaming request.
+
+stderr | test/storage_s3.test.ts > the server on S3 storage > an S3 outage fails the upload cleanly (503) and leaves nothing behind
+An error was encountered in a non-retryable streaming request.
+
+ ✓ test/storage_s3.test.ts > the server on S3 storage > an S3 outage fails the upload cleanly (503) and leaves nothing behind 1221ms
+ ✓ test/storage_s3.test.ts > the server on S3 storage > refuses to start on S3 without its settings 1ms
+ ✓ test/storage_s3.test.ts > switching between the disk and S3 without moving files (STORAGE_READ_FALLBACK) > disk files stay readable after moving to S3, and S3 files after a rollback to the disk 551ms
+ ✓ test/storage_s3.test.ts > switching between the disk and S3 without moving files (STORAGE_READ_FALLBACK) > refuses a fallback that is the same store, or S3 without its settings 2ms
+
+ Test Files  1 passed (1)
+      Tests  18 passed (18)
+   Start at  04:16:29
+   Duration  11.38s (transform 3.60s, setup 0ms, import 5.01s, tests 4.84s, environment 0ms)
+

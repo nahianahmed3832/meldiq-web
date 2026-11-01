@@ -1,0 +1,15 @@
+--- 70eb0272/server/Dockerfile
++++ precompiled/server/Dockerfile
+@@ -7,9 +7,9 @@
+ ENV MONGOMS_DISABLE_POSTINSTALL=1
+ COPY package.json package-lock.json ./
+ RUN npm ci
+-COPY tsconfig.json ./
+-COPY src ./src
+-RUN NODE_OPTIONS=--max-old-space-size=1536 npm run build && npm prune --omit=dev
++# Portable JavaScript compiled and type-checked off the production host from the recorded source commit.
++COPY dist ./dist
++RUN node --input-type=module -e "const {VERSION}=await import('./dist/app/server.js'); if(VERSION !== '0.75.0') throw Error('unexpected compiled API version')" && npm prune --omit=dev
+ 
+ FROM node:22.22.3-alpine3.24
+ ENV NODE_ENV=production \
