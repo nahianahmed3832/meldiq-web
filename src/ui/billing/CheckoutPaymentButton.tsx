@@ -1,4 +1,5 @@
-import type { ComponentProps } from "react";
+import { useEffect, type ComponentProps } from "react";
+import { holdUpdates } from "../../application/updates";
 import type { PayPalNamespace } from "@paypal/paypal-js";
 import { PayPalButton } from "./PayPalButton";
 import { PayPalCardButton, type CardAvailability } from "./PayPalCardButton";
@@ -10,6 +11,8 @@ export function CheckoutPaymentButton({
   cardStatus,
   ...props
 }: ComponentProps<typeof PayPalButton> & { method: PaymentMethod; cardSdk: PayPalNamespace | null; cardStatus: CardAvailability }) {
+  // Keep a background update from interrupting authorization in the provider's popup.
+  useEffect(() => holdUpdates(), []);
   if (method === "paypal") return <PayPalButton {...props} />;
   if (!cardSdk)
     return cardStatus === "loading" ? (
