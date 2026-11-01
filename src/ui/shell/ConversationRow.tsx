@@ -146,7 +146,7 @@ export const ConversationRow = memo(function ConversationRow({ id, twoLine, hide
         <span className="row">
           {c.type === "DM" && peerId ? (
             <span className="grow ellipsis">
-              <LookName userId={peerId} name={title} />
+              <LookName userId={peerId} name={title} withSubscription />
             </span>
           ) : (
             <span className="grow ellipsis">{title}</span>

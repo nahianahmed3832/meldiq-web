@@ -17,6 +17,7 @@ export const SETTINGS_INFO: Partial<Record<SettingsPage, SettingInfo>> = {
   calls: { scope: "This browser", description: "Microphone, speakers and voice controls", keywords: "audio sound video input output noise echo push to talk screen share" },
   notifications: { scope: "This browser", description: "Desktop alerts, sounds, read receipts and typing", keywords: "mute chime volume privacy unread mentions groups ringtone" },
   shortcuts: { scope: "This browser", description: "Keyboard shortcuts and key bindings", keywords: "hotkeys keyboard navigation" },
+  leaderboards: { scope: "Meldiq community", description: "Rankings, levels and community milestones", keywords: "leaderboard podium rank trophy messages voice embers gifts invites top" },
   points: { scope: "Your account", description: "Embers, achievements and account levels", keywords: "xp rewards progress points quests badges milestones" },
   advanced: { scope: "This browser", description: "Builder mode and trusted sites", keywords: "developer copy id links privacy" },
   developer: { scope: "Your account", description: "Bots and Log in with Meldiq apps", keywords: "oauth token application client api" },

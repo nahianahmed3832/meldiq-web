@@ -231,7 +231,7 @@ export function ProfilePanel({ c, onClose }: { c: Conversation; onClose: () => v
           <div className="profile-panel-avatar">
             <LookAvatar userId={peer.id} name={name} colorIndex={color} photoRev={known?.photoRev ?? profile?.photoRev} size={84} online={online} presence={presence} />
           </div>
-          <h2 className="ellipsis">
+          <h2 className="profile-panel-name">
             <LookName userId={peer.id} name={name} withMarks />
           </h2>
           <p className="profile-handle">

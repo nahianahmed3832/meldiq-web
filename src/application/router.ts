@@ -35,6 +35,7 @@ export type SettingsPage =
   | "billing"
   | "mojo"
   | "spark"
+  | "leaderboards"
   | "points"
   | "creators"
   | "developer";
@@ -102,6 +103,7 @@ const PAGES: SettingsPage[] = [
   "spark",
   // API 0.65.0: points, quests and levels.
   "points",
+  "leaderboards",
   // API 0.65.0 batch B: the creator programme; bots and "Log in with Meldiq" apps.
   "creators",
   "developer",

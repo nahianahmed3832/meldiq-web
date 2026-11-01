@@ -1,29 +1,5 @@
 import { useAccountActions } from "../shell/AccountActions";
-import {
-  ArrowRightLeft,
-  LogOut,
-  Activity,
-  BarChart3,
-  Bell,
-  Bookmark,
-  ChevronLeft,
-  ChevronRight,
-  Clapperboard,
-  Code2,
-  Headphones,
-  Keyboard,
-  KeyRound,
-  Laptop,
-  Palette,
-  Shield,
-  Search,
-  X,
-  SlidersHorizontal,
-  Smartphone,
-  Gem,
-  Sparkles,
-  UserRound,
-} from "lucide-react";
+import { ArrowRightLeft, LogOut, Activity, BarChart3, Bookmark, ChevronLeft, ChevronRight, Laptop, Search, X } from "lucide-react";
 import { useState } from "react";
 import { matchesSetting, SETTINGS_INFO } from "./settingsSearch";
 import { ShortcutsPage } from "./ShortcutsPage";
@@ -47,7 +23,8 @@ import { BillingPage } from "../billing/BillingPage";
 import { MojoPage } from "../mojo/MojoPage";
 import { SparkPage } from "../mojo/SparkPage";
 import { PointsPage } from "../points/PointsPage";
-import { EmberIcon } from "../components/EmberIcon";
+import { SettingsIcon } from "../components/SettingsIcon";
+import { LeaderboardsPage } from "../leaderboards/LeaderboardsPage";
 import { CreatorsPage } from "../creators/CreatorsPage";
 import { DeveloperPage } from "../developer/DeveloperPage";
 
@@ -57,27 +34,28 @@ const NO_FEATURES: string[] = [];
 
 /** The reference's two groups (2026-10-28): you and your account, then how the app looks and behaves here. */
 const USER_PAGES: PageEntry[] = [
-  { key: "account", label: "settings_account", icon: <KeyRound size={17} /> },
-  { key: "profile", label: "settings_profile", icon: <UserRound size={17} /> },
-  { key: "security", label: "settings_security", icon: <Shield size={17} /> },
-  { key: "devices", label: "settings_devices", icon: <Smartphone size={17} /> },
+  { key: "account", label: "settings_account", icon: <SettingsIcon name="account" /> },
+  { key: "profile", label: "settings_profile", icon: <SettingsIcon name="profile" /> },
+  { key: "security", label: "settings_security", icon: <SettingsIcon name="security" /> },
+  { key: "devices", label: "settings_devices", icon: <SettingsIcon name="devices" /> },
   // Meldiq Mojo (server docs/MOJO.md): with the account, not pushed anywhere else.
-  { key: "mojo", label: "settings_mojo", icon: <Sparkles size={17} /> },
+  { key: "mojo", label: "settings_mojo", icon: <SettingsIcon name="mojo" /> },
   // Meldiq Spark: its own page (2026-10-28), boosting the communities you love.
-  { key: "spark", label: "settings_spark", icon: <Gem size={17} /> },
+  { key: "spark", label: "settings_spark", icon: <SettingsIcon name="spark" /> },
 ];
 const APP_PAGES: PageEntry[] = [
-  { key: "appearance", label: "settings_appearance", icon: <Palette size={17} /> },
-  { key: "calls", label: "settings_calls", icon: <Headphones size={17} /> },
-  { key: "notifications", label: "settings_notifications", icon: <Bell size={17} /> },
-  { key: "shortcuts", label: "settings_shortcuts", icon: <Keyboard size={17} /> },
+  { key: "appearance", label: "settings_appearance", icon: <SettingsIcon name="appearance" /> },
+  { key: "calls", label: "settings_calls", icon: <SettingsIcon name="voice" /> },
+  { key: "notifications", label: "settings_notifications", icon: <SettingsIcon name="notifications" /> },
+  { key: "shortcuts", label: "settings_shortcuts", icon: <SettingsIcon name="shortcuts" /> },
   // API 0.65.0: points, quests and account levels (Gem is Spark's).
-  { key: "points", label: "settings_points", icon: <EmberIcon size={19} />, features: ["points"] },
-  { key: "advanced", label: "settings_advanced", icon: <SlidersHorizontal size={17} /> },
+  { key: "leaderboards", label: "settings_leaderboards", icon: <SettingsIcon name="leaderboards" /> },
+  { key: "points", label: "settings_points", icon: <SettingsIcon name="embers" />, features: ["points"] },
+  { key: "advanced", label: "settings_advanced", icon: <SettingsIcon name="advanced" /> },
   // API 0.65.0 batch B: bots and "Log in with Meldiq" apps.
-  { key: "developer", label: "settings_developer", icon: <Code2 size={17} />, features: ["bots", "oauth-apps"] },
+  { key: "developer", label: "settings_developer", icon: <SettingsIcon name="developer" />, features: ["bots", "oauth-apps"] },
   // API 0.65.0 batch B: the creator programme.
-  { key: "creators", label: "settings_creators", icon: <Clapperboard size={17} />, features: ["creator-program"] },
+  { key: "creators", label: "settings_creators", icon: <SettingsIcon name="creators" />, features: ["creator-program"] },
 ];
 
 export function SettingsView({ page: requestedPage, onSignedOut }: { page: SettingsPage; onSignedOut: () => void }) {
@@ -196,7 +174,7 @@ export function SettingsView({ page: requestedPage, onSignedOut }: { page: Setti
           </div>
         </nav>
         <div className="settings-page scroll">
-          <div className={`inner${page === "mojo" || page === "spark" || page === "profile" || page === "billing" || page === "checkout" ? " wide" : ""}`}>
+          <div className={`inner${page === "leaderboards" || page === "mojo" || page === "spark" || page === "profile" || page === "billing" || page === "checkout" ? " wide" : ""}`}>
             <button className="settings-back" aria-label="Back to settings" onClick={() => navigate({ section: "settings", settingsPage: "you" })}>
               <ChevronLeft size={18} aria-hidden="true" /> {t("nav_you")}
             </button>
@@ -221,6 +199,7 @@ export function SettingsView({ page: requestedPage, onSignedOut }: { page: Setti
             {page === "billing" && <BillingPage />}
             {page === "mojo" && <MojoPage />}
             {page === "spark" && <SparkPage />}
+            {page === "leaderboards" && <LeaderboardsPage />}
             {page === "points" && <PointsPage />}
             {page === "creators" && <CreatorsPage />}
             {page === "developer" && <DeveloperPage />}

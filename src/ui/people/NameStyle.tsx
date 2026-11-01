@@ -75,7 +75,7 @@ export function StyledName({ name, style, tag, mojo, everyBadge, roleColor, role
     .join(" ");
   const badge = everyBadge ? (mojo ? "mojo" : null) : nameBadge(style?.shownBadge, mojo);
   return (
-    <>
+    <span className="identity-name">
       <span className={classes} style={paint}>
         {name}
       </span>
@@ -83,7 +83,7 @@ export function StyledName({ name, style, tag, mojo, everyBadge, roleColor, role
       {tag && <WornTagChip tag={tag} />}
       {badge === "mojo" && mojo && <MojoBadgeMark badge={mojo.badge} check={mojo.check} />}
       {(badge === "bug-hunter" || badge === "artist") && <NameBadgeMark badge={badge} />}
-    </>
+    </span>
   );
 }
 
@@ -121,13 +121,16 @@ interface LookNameProps {
   name: string;
   /** With their community tag and badge (messages, profiles); without, only the font and colours (lists, headers). */
   withMarks?: boolean;
+  /** Compact membership mark in conversation rows and headers. */
+  withSubscription?: boolean;
   toneClass?: string;
   className?: string;
 }
 
 /** A name as its owner styled it (API 0.46.0), wherever this browser shows it: messages, lists, headers and panels. */
-export function LookName({ userId, name, withMarks = false, toneClass, className = "ellipsis" }: LookNameProps) {
+export function LookName({ userId, name, withMarks = false, withSubscription = false, toneClass, className = "ellipsis" }: LookNameProps) {
   const look = useUserLook(userId);
+  if (withSubscription) return <StyledName name={name} style={look.profileStyle} mojo={look.mojo} everyBadge toneClass={toneClass} className={className} />;
   if (!withMarks) return <StyledName name={name} style={look.profileStyle} toneClass={toneClass} className={className} />;
   return <StyledName name={name} style={look.profileStyle} tag={look.tag} mojo={look.mojo} bot={look.bot} toneClass={toneClass} className={className} />;
 }

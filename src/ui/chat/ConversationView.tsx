@@ -130,7 +130,7 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
               <div className="conv-title">
                 <h1>
                   {glyph}
-                  {c.type === "DM" && peer ? <LookName userId={peer.id} name={title} /> : <span className="ellipsis">{title}</span>}
+                  {c.type === "DM" && peer ? <LookName userId={peer.id} name={title} withSubscription /> : <span className="ellipsis">{title}</span>}
                   {c.type === "CHANNEL" && c.topic && <span className="conv-topic ellipsis hide-sm">{c.topic}</span>}
                   {c.archived && (
                     <span className="tag">

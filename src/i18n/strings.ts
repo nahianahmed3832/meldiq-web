@@ -712,6 +712,7 @@ export const STRINGS = {
   settings_security: ["Privacy & security", "隐私与安全", "গোপনীয়তা ও নিরাপত্তা"],
   settings_mojo: ["Meldiq Mojo", "Meldiq Mojo", "Meldiq Mojo"],
   settings_spark: ["Meldiq Spark", "Meldiq Spark", "Meldiq Spark"],
+  settings_leaderboards: ["Leaderboards", "排行榜", "লিডারবোর্ড"],
   settings_points: ["Embers", "余烬", "এম্বার্স"],
   settings_creators: ["Creators", "创作者", "ক্রিয়েটর"],
   settings_developer: ["Developer", "开发者", "ডেভেলপার"],
