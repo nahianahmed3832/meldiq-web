@@ -1,3 +1,5 @@
+import { CHECKOUT_DRAFT_EVENT, restoreCheckout } from "./checkoutDraft";
+import { AddonCheckoutPage } from "./AddonCheckoutPage";
 import { ArrowLeft, ArrowRight, Check, CheckCircle2, CreditCard, Crown, Gift, LockKeyhole, RefreshCw, ShieldCheck, Sparkles } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ApiError } from "../../api/client";
@@ -12,12 +14,12 @@ import { PayPalButton } from "./PayPalButton";
 const billing = () => navigate({ section: "settings", settingsPage: "billing" });
 
 /** Meldiq owns the review and confirmation. The API owns pricing, payment verification and all entitlements. */
-export function CheckoutPage() {
+function PlusCheckoutPage({ initial }: { initial: ReturnType<typeof readCheckout> }) {
   const engine = useEngine();
   const catalog = useOrbit((s) => s.mojo.catalog);
   const online = useOrbit((s) => s.connection === "online");
   const userId = engine.device.userId;
-  const [saved, setSaved] = useState(() => readCheckout(userId));
+  const [saved, setSaved] = useState(() => initial);
   const savedRef = useRef(saved);
   const [config, setConfig] = useState<PayPalConfig | null>(null);
   const [purchase, setPurchase] = useState<PayPalPurchase | null>(null);
@@ -131,7 +133,9 @@ export function CheckoutPage() {
           <p>
             {gift
               ? "Your gift payment is confirmed. Your friend can start their Plus time from Meldiq Mojo."
-              : deferred && !purchase?.confirmed ? `PayPal has confirmed your approval. Your first payment is ${startDate}; your existing Plus time stays available until then.` : "Your subscription is confirmed. Your Plus benefits are now available across your Meldiq devices."}
+              : deferred && !purchase?.confirmed
+                ? `PayPal has confirmed your approval. Your first payment is ${startDate}; your existing Plus time stays available until then.`
+                : "Your subscription is confirmed. Your Plus benefits are now available across your Meldiq devices."}
           </p>
           <p className="muted">
             {money(purchase!.amountMinor, purchase!.currency)} {gift ? "· one-time payment" : "· monthly"}
@@ -159,7 +163,15 @@ export function CheckoutPage() {
                   <h2 id="checkout-payment-title">Your payment</h2>
                   {sandbox && <span className="checkout-sandbox">Sandbox</span>}
                 </div>
-                {config && <p className="muted">{sandbox ? "This is a test purchase. No real money is taken." : deferred ? `Your existing Plus time stays available. Your first payment is ${startDate}.` : "Review your purchase before authorizing payment with PayPal."}</p>}
+                {config && (
+                  <p className="muted">
+                    {sandbox
+                      ? "This is a test purchase. No real money is taken."
+                      : deferred
+                        ? `Your existing Plus time stays available. Your first payment is ${startDate}.`
+                        : "Review your purchase before authorizing payment with PayPal."}
+                  </p>
+                )}
                 <div className="checkout-account">
                   <ShieldCheck size={21} aria-hidden="true" />
                   <div>
@@ -311,7 +323,9 @@ export function CheckoutPage() {
               <p className="checkout-renewal">
                 {gift
                   ? "One payment. No automatic renewal. Your friend chooses when to start their gift."
-                  : deferred ? `${money(amount, currency)} ${currency} on ${startDate}, then every month until you cancel. Your existing Plus time is preserved.` : `Then ${money(amount, currency)} ${currency} every month until you cancel. Cancel from Billing; your verified paid period remains available.`}
+                  : deferred
+                    ? `${money(amount, currency)} ${currency} on ${startDate}, then every month until you cancel. Your existing Plus time is preserved.`
+                    : `Then ${money(amount, currency)} ${currency} every month until you cancel. Cancel from Billing; your verified paid period remains available.`}
               </p>
               {plus && (
                 <ul className="checkout-perks">
@@ -346,5 +360,58 @@ export function CheckoutPage() {
         </>
       )}
     </div>
+  );
+}
+
+/** Add-ons have their own receipts and terms; no Plus subscription is required. */
+export function CheckoutPage() {
+  const engine = useEngine();
+  const [selected, setSelected] = useState(() => readCheckout(engine.device.userId));
+  useEffect(() => {
+    const change = () => {
+      const next = readCheckout(engine.device.userId);
+      setSelected((previous) => (previous.requestKey === next.requestKey ? previous : next));
+    };
+    window.addEventListener(CHECKOUT_DRAFT_EVENT, change);
+    return () => window.removeEventListener(CHECKOUT_DRAFT_EVENT, change);
+  }, [engine]);
+  const [resuming, setResuming] = useState(() => new URLSearchParams(window.location.search).has("purchase"));
+  const [resumeError, setResumeError] = useState<string | null>(null);
+  useEffect(() => {
+    const id = new URLSearchParams(window.location.search).get("purchase");
+    if (!id) return;
+    let disposed = false;
+    void engine.api
+      .json("GET", `/v2/billing/paypal/checkouts/${encodeURIComponent(id)}`, zPayPalCheckout)
+      .then((purchase) => {
+        if (disposed) return;
+        restoreCheckout(engine.device.userId, purchase);
+        const url = new URL(window.location.href);
+        url.searchParams.delete("purchase");
+        window.history.replaceState(window.history.state, "", url);
+        setResuming(false);
+      })
+      .catch((e: unknown) => {
+        if (!disposed) setResumeError(e instanceof Error ? e.message : "Purchase could not be loaded.");
+      });
+    return () => {
+      disposed = true;
+    };
+  }, [engine]);
+  if (resuming)
+    return (
+      <div className="mojo checkout-page">
+        <h1>Resume your purchase</h1>
+        <p role={resumeError ? "alert" : "status"}>{resumeError ?? "Checking your purchase…"}</p>
+        <button className="btn btn-secondary" onClick={billing}>
+          Back to billing
+        </button>
+      </div>
+    );
+  const draft = selected.draft;
+  return draft.product === "spark" || draft.product === "bots_plus" ? (
+    <AddonCheckoutPage key={selected.requestKey} draft={draft} initial={selected} />
+  ) : (
+    <PlusCheckoutPage key={selected.requestKey} initial={selected} />
   );
 }

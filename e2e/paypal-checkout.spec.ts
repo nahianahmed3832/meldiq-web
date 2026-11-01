@@ -17,9 +17,8 @@ async function checkout(page: Page, deferred = false) {
   const alice = await newPhone("paypalcheckout", "Checkout Tester");
   await alice.connect();
   await link(page, alice);
+  const catalog = await (await page.request.get("/v2/mojo/catalog")).json();
   await page.route("**/v2/mojo/catalog", async (route) => {
-    const response = await route.fetch();
-    const catalog = await response.json();
     catalog.onSale = { mode: "live", go: null, plus: { currency: "USD", amountMinor: 399 }, spark: null, gifts: true };
     await route.fulfill({ json: catalog });
   });
@@ -94,7 +93,6 @@ test("small-screen order review remains readable", async ({ page }, info) => {
   await page.screenshot({ path: info.outputPath("checkout-360.png"), fullPage: true });
 });
 
-
 test("live approval schedules renewal after existing free time without claiming payment", async ({ page }) => {
   const p = await checkout(page, true);
   await expect(page.locator(".checkout-total")).toContainText("0.00");
@@ -105,3 +103,61 @@ test("live approval schedules renewal after existing free time without claiming 
   await expect(page.getByRole("heading", { name: "Welcome to Plus." })).toHaveCount(0);
   await expect(page.getByText("PayPal has confirmed your approval.", { exact: false })).toBeVisible();
 });
+
+for (const product of ["spark", "bots_plus"] as const) {
+  test(`${product} is reviewed separately and only server-confirmed payment completes it`, async ({ page }, info) => {
+    await checkout(page);
+    const catalog = await (await page.request.get("/v2/mojo/catalog")).json();
+    await page.route("**/v2/mojo/catalog", async (route) => {
+      catalog.onSale = {
+        mode: "live",
+        go: null,
+        plus: { currency: "USD", amountMinor: 399 },
+        spark: { currency: "USD", amountMinor: 99 },
+        botsPlus: { currency: "USD", amountMinor: 399 },
+        gifts: false,
+      };
+      await route.fulfill({ json: catalog });
+    });
+    await page.route("**/v2/billing/paypal/config", (route) =>
+      route.fulfill({ json: { provider: "paypal", environment: "live", clientId: "public-live-test", subscriptions: true, sparks: true, botsPlus: true, cards: false } }),
+    );
+    const p = {
+      id: `checkout_${product}`,
+      product,
+      orgId: product === "bots_plus" ? "org_owned" : null,
+      quantity: product === "spark" ? 2 : undefined,
+      providerRef: product === "spark" ? "ORDER-OWNED" : "I-OWNED",
+      status: "pending",
+      confirmed: false,
+      currency: "USD",
+      amountMinor: product === "spark" ? 198 : 399,
+      interval: product === "spark" ? "one_time" : "month",
+      expiresAt: Date.now() + 3600000,
+    };
+    await page.route("**/v2/billing/paypal/checkouts", async (route) => {
+      expect(route.request().postDataJSON()).toMatchObject({ product });
+      await route.fulfill({ json: p });
+    });
+    await page.route(`**/v2/billing/paypal/checkouts/${p.id}`, (route) => route.fulfill({ json: p }));
+    await page.route(`**/v2/billing/paypal/checkouts/${p.id}/confirm`, (route) => route.fulfill({ json: p }));
+    await page.evaluate((kind) => {
+      const id = (window as unknown as { __orbit: { device: { userId: string } } }).__orbit.device.userId;
+      const draft = kind === "spark" ? { product: kind, quantity: 2 } : { product: kind, orgId: "org_owned" };
+      sessionStorage.setItem(`meldiq.paypal.sandbox.${id}`, JSON.stringify({ draft, requestKey: crypto.randomUUID(), purchaseId: null, completed: false }));
+    }, product);
+    await page.reload();
+    await expect(page.locator(".meldiq-checkout")).toContainText(product === "spark" ? "1.98" : "3.99");
+    await expect(page.getByText(/No Mojo subscription is required|purchased separately from Mojo Plus/).first()).toBeVisible();
+    await page.getByRole("checkbox").check();
+    await expect(page.locator("paypal-button")).toBeVisible();
+    await page.screenshot({ path: info.outputPath(`${product}-review.png`), fullPage: true });
+    await page.locator("paypal-button").click();
+    await expect(page.getByRole("button", { name: "Check payment status" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: /Your Sparks are ready|Bots\+ is active/ })).toHaveCount(0);
+    p.confirmed = true;
+    p.status = product === "spark" ? "paid" : "active";
+    await page.getByRole("button", { name: "Check payment status" }).click();
+    await expect(page.getByRole("heading", { name: /Your Sparks are ready|Bots\+ is active/ })).toBeVisible();
+  });
+}

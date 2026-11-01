@@ -18,6 +18,7 @@ import { openProfile } from "../people/ProfileDialog";
 import { useMembers } from "./ConversationDetails";
 import { isHere, memberListGroups, roleNameColors } from "./memberListRules";
 import { useT } from "../../i18n";
+import { CommunityOwnerBadge } from "../components/CommunityOwnerBadge";
 import { ProfilePins } from "../people/ProfilePins";
 
 /** Wide enough to keep a member list or profile beside the messages; narrower screens open them over the messages. */
@@ -103,6 +104,7 @@ function MemberRow({ m, away, colors, orgId }: { m: Member; away: boolean; color
   const builder = usePrefs().builderMode;
   const menu = useMenu();
   const status = [m.statusEmoji, m.statusText].filter(Boolean).join(" ");
+  const owner = !!orgId && m.orgRole === "OWNER";
   const entries: MenuEntry[] = [
     { label: "View profile", icon: <UserRound size={16} />, onSelect: () => openProfile(m.id, m.displayName, { orgId, anchor: menu.anchor }) },
     ...(m.id !== me
@@ -146,7 +148,7 @@ function MemberRow({ m, away, colors, orgId }: { m: Member; away: boolean; color
         className={`member-row${away ? " away" : ""}${plate ? " has-plate" : ""}`}
         style={plate ? ({ "--plate-a": plate[0], "--plate-b": plate[plate.length - 1] } as React.CSSProperties) : undefined}
         onClick={(e) => openProfile(m.id, m.displayName, { orgId, anchor: e.currentTarget })}
-        aria-label={`${m.displayName}${away ? ", offline" : ""}: profile`}
+        aria-label={`${m.displayName}${owner ? ", community owner" : ""}${away ? ", offline" : ""}: profile`}
         aria-haspopup="menu"
         {...contextMenuProps(menu.openAt)}
       >
@@ -174,6 +176,7 @@ function MemberRow({ m, away, colors, orgId }: { m: Member; away: boolean; color
               toneClass={nameTone(m.avatarColor)}
               className="ellipsis"
             />
+            {owner && <CommunityOwnerBadge />}
           </span>
           {status && <small className="ellipsis">{status}</small>}
         </span>

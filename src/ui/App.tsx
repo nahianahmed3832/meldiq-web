@@ -19,7 +19,6 @@ import { AuthScreen } from "./auth/AuthScreen";
 import { ReauthScreen } from "./auth/ReauthScreen";
 import { TEST_DEVICE_LINKING } from "../auth/testLinking";
 import { watchInstall } from "../application/install";
-import { Shell } from "./shell/Shell";
 import { ElsewhereScreen, LoadingScreen, RevokedScreen, UnsupportedScreen } from "./StatusScreens";
 import { watchForUpdates } from "../application/updates";
 import { UpdateNotice } from "./UpdateNotice";
@@ -42,6 +41,9 @@ type Boot =
  * start syncing (local data shows at once, even offline).
  */
 // The pre-email phone link (auth/testLinking.ts): its own chunk, loaded only where the flag is on, never in a release.
+const loadShell = () => import("./shell/Shell");
+const Shell = lazy(() => loadShell().then((m) => ({ default: m.Shell })));
+
 const LinkScreen = lazy(() => import("./LinkScreen").then((m) => ({ default: m.LinkScreen })));
 
 // The browser may offer installing as soon as the page loads: listen before anything renders (brief v4 §17).
@@ -80,6 +82,7 @@ export function App() {
         rememberReturning(false);
         return setBoot({ s: "signedOut", store });
       }
+      void loadShell().catch(() => undefined);
       const engine = createEngine(device, store);
       engineRef = engine;
       // The frame opens on what this browser holds (no network yet), where the person left off; then it syncs.
@@ -197,7 +200,9 @@ export function App() {
         if (boot.reauth) return <ReauthScreen engine={boot.engine} onSignOut={() => void eraseAndSignOut(boot.engine)} />;
         return (
           <EngineProvider engine={boot.engine}>
-            <Shell onSignedOut={() => void signedOut()} />
+            <Suspense fallback={<LoadingScreen />}>
+              <Shell onSignedOut={() => void signedOut()} />
+            </Suspense>
           </EngineProvider>
         );
     }

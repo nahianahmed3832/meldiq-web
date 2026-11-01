@@ -196,7 +196,7 @@ export function BotWindow({ orgId, orgName, memberCount, catalog, bot, botsPlus,
         {key === "tickets" && canEdit && ticketsOn && unavailable === null && <TicketsCard key={String(enabled)} orgId={orgId} hideSwitch />}
         {key === "alerts" && canEdit && unavailable === null && <AlertsWatches orgId={orgId} channels={channels} roles={givable} botsPlus={botsPlus} />}
         {!canEdit && <p className="faint">Only people who can edit this community turn bots on and change them.</p>}
-        {!botsPlus && catalog.limits.length > 0 && <PlusUpsell perks={perks} />}
+        {!botsPlus && catalog.limits.length > 0 && <PlusUpsell perks={perks} orgId={orgId} />}
         <FreePlusTable limits={catalog.limits} />
       </div>
     </Dialog>

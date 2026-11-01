@@ -12,7 +12,7 @@ import { usePrefs } from "../../application/prefs";
 import type { StoredMessage } from "../../model/types";
 import type { RichContent } from "../../model/types";
 import { fileLimit, MAX_FILES_PER_MESSAGE, sendFiles } from "../../sync/attachments";
-import { type PhotoQuality, preparePhoto, QUALITY_LABEL, reencodable } from "../../sync/photoQuality";
+import { preparePhoto } from "../../sync/photoQuality";
 import { UploadCancelled } from "../../sync/largeUpload";
 import { transfersOf } from "../../sync/transfers";
 import { TransferList } from "./TransferList";
@@ -70,8 +70,6 @@ export function Composer(props: ComposerProps) {
   const [text, setText] = useState("");
   const [files, setFiles] = useState<File[]>([]);
   // Starts at the default chosen in Settings › Appearance › Photo upload quality (android upload quality).
-  const [quality, setQuality] = useState<PhotoQuality>(() => prefs.uploadQuality);
-  const hasPhotos = files.some((f) => reencodable(f.type));
   const [busy, setBusy] = useState<string | null>(null);
   const [members, setMembers] = useState<Member[]>([]);
   const [suggest, setSuggest] = useState<{ start: number; items: Member[]; index: number } | null>(null);
@@ -226,10 +224,10 @@ export function Composer(props: ComposerProps) {
     if (!props.threadRoot) void engine.saveDraft(c.id, "");
     try {
       if (files.length) {
-        setBusy(hasPhotos && quality !== "original" ? "Preparing photos…" : null);
+        setBusy("Preparing uploads…");
         // One at a time: decoding several large photos at once can run a phone's browser out of memory.
         const prepared: File[] = [];
-        for (const f of files) prepared.push(await preparePhoto(f, quality));
+        for (const f of files) prepared.push(await preparePhoto(f));
         setBusy(null);
         // The transfer belongs to the app (sync/transfers.ts): it keeps going, with its progress shown above this box,
         // if this conversation is left; the same send while it runs joins it rather than starting another.
@@ -359,23 +357,6 @@ export function Composer(props: ComposerProps) {
                 </button>
               </span>
             ))}
-            {hasPhotos && (
-              <label className="file-quality">
-                <span>Photo quality</span>
-                <select className="input input-sm" value={quality} onChange={(e) => setQuality(e.target.value as PhotoQuality)} disabled={!!busy}>
-                  {(Object.keys(QUALITY_LABEL) as PhotoQuality[]).map((q) => (
-                    <option key={q} value={q}>
-                      {QUALITY_LABEL[q]}
-                    </option>
-                  ))}
-                </select>
-                <small className="faint">
-                  {quality === "original"
-                    ? "Sent as it is, with its details, including where it was taken if the photo records that."
-                    : "Resized and re-saved here, so details such as location aren't sent."}
-                </small>
-              </label>
-            )}
           </div>
         )}
         {voice ? (

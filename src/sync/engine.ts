@@ -587,12 +587,12 @@ export class Engine implements EngineContext {
   }
 
   private async loadLocal(): Promise<void> {
-    const locals = await this.store.conversations();
-    // The server's last known features come back with the rest (brief v4 §15): the first paint lays communities out as
-    // the server does (categories, saved order), not in the older workspace layout until server-info answers.
-    const cache = await this.store.getValue<{ orgs: Org[]; conversations: Conversation[]; users: UserLite[]; server?: ServerInfo | null }>(CACHE_KEY);
-    const pins = await this.store.changedPins();
-    const callLog = await this.callLog.load();
+    const [locals, cache, pins, callLog] = await Promise.all([
+      this.store.conversations(),
+      this.store.getValue<{ orgs: Org[]; conversations: Conversation[]; users: UserLite[]; server?: ServerInfo | null }>(CACHE_KEY),
+      this.store.changedPins(),
+      this.callLog.load(),
+    ]);
     this.set((s) => ({
       ...s,
       callLog,
@@ -1109,6 +1109,8 @@ export class Engine implements EngineContext {
       const prev = before !== null ? this.serverPages.get(id) : undefined;
       this.serverPages.set(id, { oldest: page.messages.at(-1)?.serverTs ?? prev?.oldest ?? null, more: page.more, nextCursor: page.nextCursor });
     }
+    // Hydrate visible history authors together; text rendering never waits on a profile waterfall.
+    void Promise.all([...new Set(page.messages.map((m) => m.senderUserId))].map((userId) => this.ensureUser(userId).catch(() => undefined)));
     return page;
   }
 
@@ -1137,12 +1139,14 @@ export class Engine implements EngineContext {
         },
       },
     }));
+    // Fetch the selected chat alongside summaries, not after every sidebar preview is populated.
+    const newestPage = this.firstPage(id);
     // Read markers must arrive before the fresh rendered window can be acknowledged.
     if (!this.summariesLoaded) await this.syncSummaries();
     if (opening !== this.openVersion || version !== this.windowVersions.get(id)) return;
     const boundary = this.state.get().local[id];
     const unreadAfter = boundary?.unread ? boundary.readUpTo : null;
-    const page = await this.firstPage(id);
+    const page = await newestPage;
     if (opening !== this.openVersion || version !== this.windowVersions.get(id)) return;
     const cached = await this.store.latestMessages(id, PAGE);
     const received = page ? await Promise.all(page.messages.map((m) => this.store.message(m.id))) : [];

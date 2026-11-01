@@ -16,7 +16,7 @@ export function BillingPage() {
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
-  const [canceling, setCanceling] = useState(false);
+  const [canceling, setCanceling] = useState<{ id?: string; name: string; until: number | null } | null>(null);
   const refresh = useCallback(async () => {
     setBusy(true);
     setError(null);
@@ -37,13 +37,13 @@ export function BillingPage() {
     setBusy(true);
     setError(null);
     try {
-      const result = await engine.api.json("POST", "/v2/billing/paypal/cancel", zPayPalCancellation, { body: { confirm: true } });
+      const result = await engine.api.json("POST", "/v2/billing/paypal/cancel", zPayPalCancellation, { body: { confirm: true, ...(canceling?.id ? { subscriptionId: canceling.id } : {}) } });
       setNotice(
         result.confirmed
           ? `PayPal confirmed cancellation. Your paid benefits continue until ${date(result.accessUntil)}.`
           : "PayPal has not confirmed cancellation yet. Refresh your billing status before trying again.",
       );
-      setCanceling(false);
+      setCanceling(null);
       await engine.mojo.refresh();
       await refresh();
     } catch (e) {
@@ -53,7 +53,7 @@ export function BillingPage() {
     }
   };
   const sub = billing?.subscription;
-  const latest = history?.subscriptions[0];
+  const latest = history?.subscriptions.find((subscription) => subscription.product !== "bots_plus");
   const ending = sub?.cancelAtPeriodEnd || latest?.cancelAtPeriodEnd;
   const paypal = billing?.provider === "paypal";
   return (
@@ -96,7 +96,7 @@ export function BillingPage() {
           {paypal && <small>Payment provider: PayPal{billing?.mode === "test" ? " · Sandbox" : ""}</small>}
         </div>
         {sub && paypal && !ending && (
-          <button className="btn btn-secondary" disabled={busy || !online} onClick={() => setCanceling(true)}>
+          <button className="btn btn-secondary" disabled={busy || !online} onClick={() => setCanceling({ name: "Plus", until: sub.currentPeriodEnd ?? null })}>
             Cancel renewal
           </button>
         )}
@@ -107,6 +107,29 @@ export function BillingPage() {
           </button>
         )}
       </section>
+      {history?.subscriptions
+        .filter((subscription) => subscription.product === "bots_plus")
+        .map((subscription) => (
+          <section className="checkout-card billing-current" aria-label="Bots+ subscription" key={subscription.id}>
+            <div className="grow">
+              <h2>Bots+</h2>
+              <p>$3.99 USD/month · {subscription.status.replaceAll("_", " ")}</p>
+              <small>Community: {subscription.orgId}</small>
+              <p className="muted">
+                {subscription.cancelAtPeriodEnd ? "Paid access ends" : "Next billing date"}: {date(subscription.currentPeriodEnd)}
+              </p>
+            </div>
+            {subscription.cancelAtPeriodEnd || subscription.status === "canceled" ? (
+              <span className="checkout-sandbox">Renewal cancelled</span>
+            ) : (
+              !["incomplete", "incomplete_expired", "expired"].includes(subscription.status) && (
+                <button className="btn btn-secondary" disabled={busy || !online} onClick={() => setCanceling({ id: subscription.id, name: "Bots+", until: subscription.currentPeriodEnd })}>
+                  Cancel Bots+ renewal
+                </button>
+              )
+            )}
+          </section>
+        ))}
       {sub && (sub.status === "past_due" || sub.status === "unpaid" || sub.status === "paused") && (
         <div className="banner danger" role="alert">
           <TriangleAlert size={18} aria-hidden="true" />
@@ -180,14 +203,14 @@ export function BillingPage() {
       </section>
       {canceling && (
         <Dialog
-          title="Cancel Plus renewal?"
+          title={`Cancel ${canceling.name} renewal?`}
           onClose={() => {
-            if (!busy) setCanceling(false);
+            if (!busy) setCanceling(null);
           }}
           footer={
             <>
-              <button className="btn btn-secondary" disabled={busy} onClick={() => setCanceling(false)}>
-                Keep Plus
+              <button className="btn btn-secondary" disabled={busy} onClick={() => setCanceling(null)}>
+                Keep {canceling.name}
               </button>
               <button className="btn btn-danger" disabled={busy || !online} onClick={() => void cancel()}>
                 {busy ? "Confirming with PayPal…" : "Confirm cancellation"}
@@ -196,7 +219,9 @@ export function BillingPage() {
           }
         >
           <div className="dialog-body">
-            <p>PayPal will stop future renewals. Your verified paid Plus benefits continue until {date(sub?.currentPeriodEnd ?? null)}.</p>
+            <p>
+              PayPal will stop future renewals. Your verified paid {canceling.name} benefits continue until {date(canceling.until)}.
+            </p>
             <p>We’ll show confirmation after PayPal verifies the cancellation.</p>
             {error && <p role="alert">{error}</p>}
           </div>

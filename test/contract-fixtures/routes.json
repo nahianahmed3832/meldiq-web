@@ -1,6 +1,38 @@
 {
-  "version": "0.69.0",
+  "version": "0.71.0",
   "routes": [
+    {
+      "method": "DELETE",
+      "path": "/admin/v1/orgs/{orgId}"
+    },
+    {
+      "method": "GET",
+      "path": "/admin/v1/reports"
+    },
+    {
+      "method": "GET",
+      "path": "/admin/v1/reports/assignees"
+    },
+    {
+      "method": "GET",
+      "path": "/admin/v1/reports/{reportId}"
+    },
+    {
+      "method": "PATCH",
+      "path": "/admin/v1/reports/{reportId}"
+    },
+    {
+      "method": "GET",
+      "path": "/admin/v1/admins/{accountId}/permissions"
+    },
+    {
+      "method": "PUT",
+      "path": "/admin/v1/admins/{accountId}/permissions"
+    },
+    {
+      "method": "POST",
+      "path": "/admin/v1/orgs/{orgId}/restriction"
+    },
     {
       "method": "GET",
       "path": "/healthz"

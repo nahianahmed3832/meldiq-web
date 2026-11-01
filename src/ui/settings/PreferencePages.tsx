@@ -17,7 +17,6 @@ import {
   type TextSize,
   THEMES,
   TIME_FORMATS,
-  UPLOAD_QUALITIES,
   usePrefs,
   volumeOf,
 } from "../../application/prefs";
@@ -32,7 +31,6 @@ import { LanguagePicker } from "../components/LanguagePicker";
 const THEME_KEY = { system: "ap_system", light: "ap_light", dark: "ap_dark", black: "ap_black" } as const satisfies Record<Prefs["theme"], StringKey>;
 const PALETTE_KEY = { meldiq: "ap_meldiq", midnight: "ap_midnight", charcoal: "ap_charcoal", indigo: "ap_indigo", plum: "ap_plum", amber: "ap_amber" } as const satisfies Record<Palette, StringKey>;
 const SIZE_KEY = { small: "ap_small", default: "ap_default", large: "ap_large" } as const satisfies Record<TextSize, StringKey>;
-const QUALITY_KEY = { standard: "ap_standard", hd: "ap_hd", original: "ap_original" } as const satisfies Record<"standard" | "hd" | "original", StringKey>;
 
 export function NotificationsPage() {
   const prefs = usePrefs();
@@ -277,15 +275,8 @@ export function AppearancePage() {
         </div>
         <div className="setting">
           <div className="lines">
-            <strong>{t("ap_quality")}</strong>
-            <small>{t("ap_quality_sub")}</small>
-          </div>
-          <div className="segmented" role="group" aria-label={t("ap_quality")}>
-            {UPLOAD_QUALITIES.map((q) => (
-              <button key={q} aria-pressed={prefs.uploadQuality === q} onClick={() => setPrefs({ uploadQuality: q })}>
-                {t(QUALITY_KEY[q])}
-              </button>
-            ))}
+            <strong>Photo uploads</strong>
+            <small>Photos are optimized automatically. Animations and transparency are preserved.</small>
           </div>
         </div>
         <div className="setting">

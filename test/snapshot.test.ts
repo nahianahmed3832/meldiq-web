@@ -197,7 +197,7 @@ describe("keeping it current", () => {
     await vi.advanceTimersByTimeAsync(3000);
     change({ ...state, users: { ...state.users } });
     await vi.advanceTimersByTimeAsync(3000);
-    expect(vault.save).not.toHaveBeenCalled(); // still changing
+    expect(vault.save).toHaveBeenCalledTimes(1); // continuous updates must not postpone every snapshot
     await vi.advanceTimersByTimeAsync(1000);
     expect(vault.save).toHaveBeenCalledTimes(1);
 

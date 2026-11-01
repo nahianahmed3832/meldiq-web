@@ -119,6 +119,33 @@ describe("history navigation", () => {
     expect(ids(engine)).toEqual(["m100", "m101"]);
   });
 
+  it("requests the newest page while summaries are still pending", async () => {
+    const { engine, api } = await setup();
+    const summaries = deferred<void>();
+    vi.mocked(engine.syncSummaries).mockImplementationOnce(() => summaries.promise);
+    api.mockResolvedValueOnce(page([event("latest", 100)]));
+    const opening = engine.openConversation(CONV);
+    await vi.waitFor(() => expect(api).toHaveBeenCalled());
+    expect(engine.state.get().messages[CONV]?.historyReady).toBe(false);
+    summaries.resolve();
+    await opening;
+    expect(ids(engine)).toEqual(["latest"]);
+    expect(engine.state.get().messages[CONV]?.historyReady).toBe(true);
+  });
+
+  it("renders history without waiting for individual sender profiles", async () => {
+    const { engine, api } = await setup();
+    const profile = deferred<void>();
+    vi.mocked(engine.ensureUser).mockImplementationOnce(() => profile.promise);
+    api.mockResolvedValueOnce(page([event("latest", 100)]));
+    const done = vi.fn();
+    const opening = engine.openConversation(CONV).then(done);
+    await vi.waitFor(() => expect(done).toHaveBeenCalled());
+    expect(ids(engine)).toEqual(["latest"]);
+    profile.resolve();
+    await opening;
+  });
+
   it("coalesces button/scroll pagination and merges overlapping pages by ID", async () => {
     const { engine, api } = await setup();
     const older = deferred<ServerHistoryPage>();

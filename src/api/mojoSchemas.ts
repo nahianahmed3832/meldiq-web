@@ -48,7 +48,7 @@ export const zMojoCatalog = z.object({
   gifts: z.object({ months: z.array(z.number()), noteMax: z.number() }),
   /** Whether plan limits apply on this server now; false: the server's own limits, as before plans. */
   enforced: z.boolean().default(false),
-  onSale: z.object({ mode: z.enum(["test", "live"]).nullable(), go: zPrice, plus: zPrice, spark: zPrice, gifts: z.boolean() }),
+  onSale: z.object({ mode: z.enum(["test", "live"]).nullable(), go: zPrice, plus: zPrice, spark: zPrice, botsPlus: zPrice.optional().default(null), gifts: z.boolean() }),
 });
 export type MojoCatalog = z.infer<typeof zMojoCatalog>;
 

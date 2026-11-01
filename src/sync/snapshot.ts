@@ -257,7 +257,7 @@ export class SnapshotKeeper {
 
   private schedule(): void {
     if (this.stopped) return;
-    if (this.timer) clearTimeout(this.timer);
+    if (this.timer) return; // Keep a bounded save interval even while presence/messages keep changing.
     this.timer = setTimeout(() => void this.flush(), this.delayMs);
   }
 

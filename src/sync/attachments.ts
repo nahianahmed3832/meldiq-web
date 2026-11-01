@@ -1,3 +1,4 @@
+import { photoDownload } from "./photoQuality";
 import { z } from "zod";
 import { ApiError } from "../api/client";
 import { decryptFile, encryptFile } from "../crypto/attachment";
@@ -364,11 +365,11 @@ export async function saveAttachment(engine: Engine, ref: AttachmentRef): Promis
     }
     return;
   }
-  const blob = await openAttachment(engine, ref);
-  const url = URL.createObjectURL(blob);
+  const file = await photoDownload(await openAttachment(engine, ref), ref.name);
+  const url = URL.createObjectURL(file.blob);
   const a = document.createElement("a");
   a.href = url;
-  a.download = ref.name;
+  a.download = file.name;
   a.rel = "noopener";
   document.body.appendChild(a);
   a.click();
