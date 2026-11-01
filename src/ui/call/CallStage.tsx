@@ -95,6 +95,10 @@ function Verification({ call }: { call: CallUiState }) {
   const code = call.verification!;
   return (
     <section className="call-verify" aria-label="Verification code">
+      <p>
+        Meldiq does not record calls or create clips. A participant report sends your written details; it does not attach call audio, video or a screen recording. Open a participant’s profile and
+        choose Report to report them.
+      </p>
       <div className="code">
         <span className="emoji" aria-label={`Emoji ${code.emoji.join(" ")}`}>
           {code.emoji.join("")}

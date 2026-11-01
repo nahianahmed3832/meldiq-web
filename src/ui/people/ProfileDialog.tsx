@@ -4,6 +4,8 @@ import { ApiError } from "../../api/client";
 import { shallowEqual, useEngine, useOrbit } from "../../application/orbit";
 import { navigate } from "../../application/router";
 import { startDirect, userProfile } from "../../sync/account";
+import { NO_STYLE } from "../settings/noStyle";
+import { communityProfile } from "../../sync/communityProfile";
 import { block, blockedIds, unblock } from "../../sync/profile";
 import { acceptConnection, connect, connections, connectionState, invitableCommunities, inviteFromProfile, presenceWords, removeConnection } from "../../sync/social";
 import { ReportDialog } from "../chat/ReportDialog";
@@ -68,7 +70,9 @@ export function ProfileDialog({ userId, fallbackName, orgId = null, near = null,
   // Their profile changed elsewhere (API 0.28 user.updated): loaded again.
   const profilesRev = useOrbit((s) => s.profilesRev);
   const orgs = useOrbit((s) => invitableCommunities(s.orgs), shallowEqual);
-  const [profile, setProfile] = useState<Profile | null>(null);
+  const scope = `${userId}:${orgId ?? "global"}`;
+  const [profileResult, setProfileResult] = useState<{ scope: string; profile: Profile } | null>(null);
+  const profile = profileResult?.scope === scope ? profileResult.profile : null;
   const [state, setState] = useState<ReturnType<typeof connectionState> | null>(null);
   const [blocked, setBlocked] = useState<boolean | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -94,7 +98,17 @@ export function ProfileDialog({ userId, fallbackName, orgId = null, near = null,
   useEffect(() => {
     let alive = true;
     userProfile(engine, userId)
-      .then((p) => alive && setProfile(p))
+      .then(async (p) => {
+        if (orgId && features.includes("community-profiles")) {
+          const local = await communityProfile(engine, orgId, userId).catch(() => null);
+          if (local) {
+            if (local.profile.aboutMe != null) p = { ...p, aboutMe: local.profile.aboutMe };
+            if (local.profile.pronouns != null) p = { ...p, pronouns: local.profile.pronouns };
+            if (local.profile.theme) p = { ...p, profileStyle: { ...(p.profileStyle ?? NO_STYLE), themeColors: local.profile.theme } };
+          }
+        }
+        if (alive) setProfileResult({ scope, profile: p });
+      })
       .catch(
         (e: unknown) =>
           alive && setError(e instanceof ApiError && (e.status === 404 || e.status === 403) ? "This profile isn't available to you." : e instanceof Error ? e.message : "Couldn't load this profile."),
@@ -105,7 +119,7 @@ export function ProfileDialog({ userId, fallbackName, orgId = null, near = null,
     return () => {
       alive = false;
     };
-  }, [engine, userId, profilesRev]);
+  }, [engine, userId, orgId, scope, features, profilesRev]);
   useEffect(() => {
     if (!hasConnections || self) return;
     let alive = true;

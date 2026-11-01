@@ -1,3 +1,4 @@
+import { usePrefs } from "../../application/prefs";
 import { useEffect, useState } from "react";
 import { isClassicDecoration, type ProfileStyle } from "../../api/schemas";
 import { decorationImage } from "../../sync/decorations";
@@ -17,6 +18,7 @@ export const DECORATION_LABEL: Record<string, string> = { aurora: "Aurora", embe
 export const EFFECT_LABEL: Record<string, string> = { sparkles: "Sparkles", glow: "Glow", stars: "Stars", bubbles: "Bubbles" };
 
 export function useReducedMotion(): boolean {
+  const { reducedMotion } = usePrefs();
   const query = typeof window !== "undefined" && window.matchMedia ? window.matchMedia("(prefers-reduced-motion: reduce)") : null;
   const [reduced, setReduced] = useState(!!query?.matches);
   useEffect(() => {
@@ -25,7 +27,7 @@ export function useReducedMotion(): boolean {
     query.addEventListener("change", on);
     return () => query.removeEventListener("change", on);
   }, [query]);
-  return reduced;
+  return reducedMotion === "on" || (reducedMotion === "system" && reduced);
 }
 
 /** How thick a frame is around an avatar of [size]: thin on list rows, up to 6 px on a profile. It sits wholly outside the face. */

@@ -135,7 +135,7 @@ export const STRINGS = {
   ],
 
   // ── setting up this browser ──
-  create_title: ["Set up end-to-end encryption", "设置端到端加密", "এন্ড-টু-এন্ড এনক্রিপশন চালু করুন"],
+  create_title: ["Set up your security keys", "设置安全密钥", "আপনার নিরাপত্তা কী সেট আপ করুন"],
   create_signed_in: ["Signed in as {email}.", "已登录为 {email}。", "{email} হিসেবে সাইন ইন করেছেন।"],
   create_body: [
     "This browser will make your account's encryption keys. They're backed up locked with your password, so a new device needs your password and a code sent to your email. You'll also get a recovery key for when the email can't work, for example after a password reset.",

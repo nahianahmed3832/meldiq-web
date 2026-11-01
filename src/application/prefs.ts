@@ -37,6 +37,10 @@ export interface Prefs {
   theme: (typeof THEMES)[number];
   /** Whether the person picked the theme themselves; until then it follows the default (dark since 2026-10-28). */
   themeChosen: boolean;
+  density: "comfortable" | "compact";
+  reducedMotion: "system" | "on" | "off";
+  highContrast: boolean;
+  lineSpacing: "normal" | "relaxed";
   /** The interface language (src/i18n): the browser's, or one picked on the sign-in screens or in Settings › Appearance. */
   language: LanguageChoice;
   palette: Palette;
@@ -136,6 +140,10 @@ const KEY = "orbit.prefs.v1";
 const defaults: Prefs = {
   theme: "dark",
   themeChosen: false,
+  density: "comfortable",
+  reducedMotion: "system",
+  highContrast: false,
+  lineSpacing: "normal",
   language: "system",
   palette: "meldiq",
   textSize: "default",
@@ -206,6 +214,10 @@ function load(): Prefs {
       theme: !THEMES.includes(stored.theme) || (stored.theme === "system" && !stored.themeChosen) ? defaults.theme : stored.theme,
       language: stored.language === "system" || LANGUAGES.some((l) => l === stored.language) ? stored.language : defaults.language,
       palette: paletteOf(stored),
+      density: stored.density === "compact" ? "compact" : "comfortable",
+      reducedMotion: ["on", "off"].includes(stored.reducedMotion) ? stored.reducedMotion : "system",
+      highContrast: stored.highContrast === true,
+      lineSpacing: stored.lineSpacing === "relaxed" ? "relaxed" : "normal",
       textSize: TEXT_SIZES.includes(stored.textSize) ? stored.textSize : defaults.textSize,
       messageLayout: MESSAGE_LAYOUTS.includes(stored.messageLayout) ? stored.messageLayout : defaults.messageLayout,
       animatedEmoji: typeof stored.animatedEmoji === "boolean" ? stored.animatedEmoji : defaults.animatedEmoji,
@@ -331,10 +343,19 @@ export function applyTheme({
   vibe = null,
   vibeCustom = null,
   vibeStrength = 60,
-}: Pick<Prefs, "theme" | "palette" | "textSize" | "messageLayout"> & Partial<Pick<Prefs, "language" | "vibe" | "vibeCustom" | "vibeStrength">>): void {
+  density = "comfortable",
+  reducedMotion = "system",
+  highContrast = false,
+  lineSpacing = "normal",
+}: Pick<Prefs, "theme" | "palette" | "textSize" | "messageLayout"> &
+  Partial<Pick<Prefs, "language" | "vibe" | "vibeCustom" | "vibeStrength" | "density" | "reducedMotion" | "highContrast" | "lineSpacing">>): void {
   const root = document.documentElement;
   // The page's language follows the interface's (screen readers, fonts, spelling).
   root.setAttribute("lang", resolveLanguage(language ?? "system"));
+  root.setAttribute("data-density", density);
+  root.setAttribute("data-motion", reducedMotion);
+  root.setAttribute("data-contrast", highContrast ? "high" : "normal");
+  root.setAttribute("data-line-spacing", lineSpacing);
   root.setAttribute("data-text-size", textSize);
   root.setAttribute("data-message-layout", messageLayout);
   if (theme === "system") root.removeAttribute("data-theme");

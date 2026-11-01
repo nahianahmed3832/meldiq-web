@@ -484,6 +484,10 @@ export class Engine implements EngineContext {
     return this.nav.change(workspaceOf(this.state.get().conversations[conversationId]?.orgId ?? null), op);
   }
 
+  expressionPreference(op: Extract<NavOp, { op: "expressionFavorite" | "expressionUsed" }>): Promise<void> {
+    return this.nav.change(PERSONAL, op);
+  }
+
   /** Saved for later (android Home › Later): kept in the personal document, so every device of the person shows it. */
   later(op: Extract<NavOp, { op: "save" | "unsave" | "savedDone" | "remind" }>): Promise<void> {
     return this.nav.change(PERSONAL, op);

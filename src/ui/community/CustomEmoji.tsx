@@ -1,3 +1,4 @@
+import { MotionImage } from "../components/MotionImage";
 import { useEffect, useState } from "react";
 import { useEngine, useOrbit } from "../../application/orbit";
 import type { CustomEmojiRef } from "../../protocol/payload";
@@ -42,7 +43,7 @@ export function CustomEmojiImage({ id, name, sha256, size = 22, sticker }: { id:
   }, [engine, id, sha256, memberships]);
   const url = image?.id === id && image.sha256 === sha256 ? image.url : null;
   if (!url) return <span className="custom-emoji-text">:{name}:</span>;
-  return <img src={url} alt={`:${name}:`} title={`:${name}:`} className={sticker ? "custom-sticker" : "custom-emoji"} style={sticker ? undefined : { width: size, height: size }} draggable={false} />;
+  return <MotionImage src={url} alt={`:${name}:`} title={`:${name}:`} className={sticker ? "custom-sticker" : "custom-emoji"} style={sticker ? undefined : { width: size, height: size }} />;
 }
 
 /** A message's community emoji, by reference. */

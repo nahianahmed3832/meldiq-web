@@ -629,3 +629,45 @@
   color: var(--text-3);
   font-size: 11px;
 }
+
+/* Reader choices always override decorative community colours. */
+:root[data-contrast="high"] {
+  --text-2: var(--text);
+  --text-3: var(--text);
+  --border: currentColor;
+}
+:root[data-contrast="high"] .faint,
+:root[data-contrast="high"] .muted {
+  opacity: 1;
+}
+:root[data-contrast="high"] :is(input, select, textarea, button):focus-visible {
+  outline: 3px solid currentColor;
+  outline-offset: 3px;
+}
+:root[data-density="compact"] .msg {
+  padding-block: 1px;
+}
+:root[data-line-spacing="relaxed"] .msg-text {
+  line-height: 1.85;
+}
+:root[data-motion="on"] *,
+:root[data-motion="on"] *::before,
+:root[data-motion="on"] *::after {
+  animation: none !important;
+  transition: none !important;
+  scroll-behavior: auto !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  :root[data-motion="system"] *,
+  :root[data-motion="system"] *::before,
+  :root[data-motion="system"] *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+:root[data-density="compact"] .msg.first {
+  padding-top: 4px;
+  margin-top: 3px;
+}

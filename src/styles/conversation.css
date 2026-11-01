@@ -2655,3 +2655,41 @@ button.media-card {
   color: var(--accent);
   font-weight: 700;
 }
+
+.xp-library {
+  padding: 8px;
+  display: grid;
+  gap: 8px;
+  border-bottom: 1px solid var(--border);
+  max-height: 220px;
+  overflow: auto;
+  flex-shrink: 0;
+}
+.xp-library-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(74px, 1fr));
+  gap: 4px;
+}
+.xp-library-item {
+  min-width: 0;
+  display: grid;
+  justify-items: center;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+.xp-library-pick {
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  min-width: 0;
+  width: 100%;
+  padding: 6px;
+}
+.xp-library-pick small {
+  max-width: 65px;
+}
+.xp-library-pick .custom-sticker {
+  max-height: 54px;
+  width: auto;
+  max-width: 100%;
+}

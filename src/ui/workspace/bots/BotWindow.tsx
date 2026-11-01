@@ -1,3 +1,4 @@
+import { BotDiagnostics } from "./BotDiagnostics";
 import { Check, Clock, X } from "lucide-react";
 import { type CSSProperties, useMemo, useState } from "react";
 import { useEngine, useOrbit } from "../../../application/orbit";
@@ -44,6 +45,7 @@ function unavailableNote(catalog: CatalogBot, bot: OfficialBot | null): string |
  */
 export function BotWindow({ orgId, orgName, memberCount, catalog, bot, botsPlus, perks, canEdit, onChanged, onClose }: BotWindowProps) {
   const engine = useEngine();
+  const diagnosticsOn = useOrbit((s) => s.server?.features.includes("bot-diagnostics") ?? false);
   const key = catalog.key;
   const channels = textChannels(useOrbit((s) => panelChannels(s, orgId)));
   const ticketsOn = useOrbit((s) => s.server?.features.includes(POSTING_FEATURES.tickets) ?? false);
@@ -144,6 +146,7 @@ export function BotWindow({ orgId, orgName, memberCount, catalog, bot, botsPlus,
         )}
         {!footer && error && <div className="banner danger">{error}</div>}
         <p>{catalog.description}</p>
+        {canEdit && diagnosticsOn && <BotDiagnostics key={bot?.updatedAt ?? "new"} orgId={orgId} botKey={key} />}
         {catalog.features.length > 0 && (
           <div className="obot-chips">
             {catalog.features.map((f) => (

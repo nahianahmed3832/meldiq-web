@@ -13,7 +13,7 @@ import { DecorationWindow, useDecorationName } from "./DecorationWindow";
 import { describeNameLook, NameStyleWindow } from "./NameStyleWindow";
 import { NO_STYLE } from "./noStyle";
 import { useProfileDraft } from "./profileDraft";
-import { useStyleSaver } from "./useStyleSaver";
+import { useStyleDraft } from "./useStyleDraft";
 import { ProfileThemePicker } from "./ProfileThemePicker";
 import { ShownBadgePicker } from "./ShownBadgePicker";
 import type { NameBadgeKind } from "../people/NameBadge";
@@ -53,7 +53,7 @@ export function ProfileStyleCard({ nameStyles }: { nameStyles: boolean }) {
   const bannerInput = useRef<HTMLInputElement>(null);
   const p = profile.data;
   const reload = useCallback(() => setVersion((v) => v + 1), []);
-  const saver = useStyleSaver(
+  const saver = useStyleDraft(
     engine,
     useMemo(() => p?.profileStyle ?? NO_STYLE, [p]),
     reload,
@@ -107,8 +107,8 @@ export function ProfileStyleCard({ nameStyles }: { nameStyles: boolean }) {
       <div>
         <h2 style={{ margin: 0, fontSize: 17 }}>Look</h2>
         <p className="muted" style={{ margin: "4px 0 0" }}>
-          How you show up in messages, member lists and your profile card. The avatar and banner are shown to whoever may see your photo (Privacy). Changes here save automatically; decoration and
-          name-style previews save when you choose Apply.
+          How you show up in messages, member lists and your profile card. The avatar and banner are shown to whoever may see your photo (Privacy). Photo and banner uploads save immediately. Style
+          choices preview here until you choose Apply look.
         </p>
       </div>
 
@@ -228,6 +228,25 @@ export function ProfileStyleCard({ nameStyles }: { nameStyles: boolean }) {
       </section>
 
       {themeOn && <ProfileThemePicker style={style} onSave={setStyle} />}
+      <div className="row" style={{ gap: 8, flexWrap: "wrap" }}>
+        <button className="btn btn-secondary" disabled={saver.busy || !saver.dirty} onClick={saver.undo}>
+          Undo look change
+        </button>
+        <button
+          className="btn btn-secondary"
+          disabled={saver.busy || !saver.dirty}
+          onClick={() => {
+            saver.reset();
+            reload();
+          }}
+        >
+          Reset look
+        </button>
+        <button className="btn btn-primary" disabled={saver.busy || !saver.dirty} onClick={() => void saver.apply()}>
+          {saver.busy ? "Applying…" : "Apply look"}
+        </button>
+        {saver.dirty && <small role="status">Unsaved look preview</small>}
+      </div>
 
       {!themeOn && (
         <section className="setting-group" aria-labelledby="ps-accent">

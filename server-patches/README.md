@@ -19,3 +19,9 @@ git am /path/to/meldiq-web/server-patches/0002-server-web-origins.patch
 
 With both applied: the full server suite passes (409 passed, 10 skipped: the live-S3 suite without credentials and a
 MongoDB-only case). The tests in this repository find a patched server through `ORBIT_SERVER_DIR`.
+
+### Core Yapin roadmap continuation (API 0.68.0)
+
+`0005-core-yapin-roadmap.patch` contains backend commits `c840c12` and `2be38ad`, based on `f084e0d`. Apply to that backend baseline with `git am`; it includes the generated API contracts and integration cases. Do not reapply older patches to a backend that already contains them.
+
+This adds optional expression preferences, authenticated attachment streaming, read-only permission previews, private/revisioned community profile overrides, atomic profile/style revisions, and editor-only bot diagnostics. Migrations 078–079 add tables. Existing offer/grant policies are unchanged. The previous runtime can read the migrated copy; its backup verifier intentionally rejects snapshots newer than its own schema, so use the new verifier when checking a migrated snapshot.

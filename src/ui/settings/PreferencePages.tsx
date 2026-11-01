@@ -1,4 +1,5 @@
-import { VibesCard } from "./AppearanceExtras";
+import { NotificationOverview } from "./NotificationOverview";
+import { AccessibilityCard, VibesCard } from "./AppearanceExtras";
 import { fileLimit, MAX_FILES_PER_MESSAGE } from "../../sync/attachments";
 import { APP_VERSION } from "../../application/env";
 import { serverHost } from "../../application/config";
@@ -49,6 +50,7 @@ export function NotificationsPage() {
   return (
     <>
       <h1>{t("settings_notifications")}</h1>
+      <NotificationOverview />
       <div className="card">
         <div className="setting">
           <div className="lines">
@@ -340,6 +342,7 @@ export function AppearancePage() {
           <Toggle label={t("ap_enter")} checked={prefs.enterToSend} onChange={(v) => setPrefs({ enterToSend: v })} />
         </div>
       </div>
+      <AccessibilityCard />
       <VibesCard />
     </>
   );

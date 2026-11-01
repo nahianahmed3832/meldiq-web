@@ -6,8 +6,8 @@ import { LocalStore } from "../store/db";
 import { type NavPrefs, PERSONAL, workspaceOf, zNavDoc } from "../sync/navPrefs";
 import { SessionManager } from "../sync/session";
 import { notificationPath, SW_OPEN, SW_WAKE } from "./messages";
-import { loadWakePrefs } from "./swPrefs";
-import { type WakeNotice, wakeNotices, type WakePrefs } from "./wakeRules";
+import { loadWakePrefs, showWakeNoticeOnce } from "./swPrefs";
+import { type WakeNotice, wakeBatch, type WakePrefs } from "./wakeRules";
 import { shellHandler, type FetchEventLike } from "./shell";
 
 /**
@@ -16,8 +16,8 @@ import { shellHandler, type FetchEventLike } from "./shell";
  *   - a Meldiq page in front: it's told to fetch now, and it notifies as usual;
  *   - otherwise this signs in as this browser (its device key, as the page does), reads what the server holds for it
  *     without acknowledging it, and shows one notification per conversation with new messages and one per ringing call,
- *     following the same settings as the app. Message text is never shown here: it's end-to-end encrypted, and only the
- *     app decrypts it. Pages in the background are told to fetch too; their notifications replace these (same tag).
+ *     following the same settings as the app. Server-stored message previews follow the notification-text choice.
+ *     Pages in the background are told to fetch too; their notifications replace these (same tag).
  * A click focuses Meldiq (or opens it) at that conversation.
  *
  * In release builds it also serves the app shell (src/sw/shell.ts): the page and its build files from this browser at
@@ -68,20 +68,26 @@ async function onWake(): Promise<void> {
   // A page in front shows what's new itself; the browser doesn't ask for a notification then.
   if (pages.some((p) => p.visibilityState === "visible")) return;
   let notices: WakeNotice[];
+  let deviceId = "";
+  let identities: Record<string, string> = {};
   try {
-    notices = await lookUp();
+    ({ notices, deviceId, identities } = await lookUp());
   } catch {
     notices = [GENERIC];
   }
-  for (const n of notices)
-    await sw.registration.showNotification(n.title, { body: n.body, tag: n.tag, renotify: true, requireInteraction: n.call, icon: ICON, badge: BADGE, data: { url: n.url } } as NotificationOptions);
+  for (const n of notices) {
+    const show = () =>
+      sw.registration.showNotification(n.title, { body: n.body, tag: n.tag, renotify: true, requireInteraction: n.call, icon: ICON, badge: BADGE, data: { url: n.url } } as NotificationOptions);
+    if (deviceId && identities[n.tag]) await showWakeNoticeOnce(deviceId, n.tag, identities[n.tag], show);
+    else await show();
+  }
 }
 
 const zQueue = z.object({ items: z.array(zQueueItem) });
 const zConversations = z.object({ conversations: z.array(zConversation) });
 
 /** What's waiting for this browser, as notifications (nothing is acknowledged: the app still fetches it all). */
-async function lookUp(): Promise<WakeNotice[]> {
+async function lookUp(): Promise<{ notices: WakeNotice[]; identities: Record<string, string>; deviceId: string }> {
   await installLegacyCurves().catch(() => []); // signing in below needs Ed25519 (Safari before 17: the fallback)
   const store = await LocalStore.open();
   let device;
@@ -90,9 +96,9 @@ async function lookUp(): Promise<WakeNotice[]> {
   } finally {
     store.close();
   }
-  if (!device) return [];
+  if (!device) return { notices: [], identities: {}, deviceId: "" };
   const session = new SessionManager("", device, () => undefined);
-  if (!(await session.reauthenticate())) return [];
+  if (!(await session.reauthenticate())) return { notices: [], identities: {}, deviceId: device.deviceId };
   const api = new ApiClient("", session);
   const [{ items }, { conversations }, { user }, saved] = await Promise.all([
     api.json("GET", "/v1/queue?limit=200", zQueue),
@@ -112,7 +118,10 @@ async function lookUp(): Promise<WakeNotice[]> {
     }),
   );
   nav[PERSONAL] ??= undefined;
-  return wakeNotices({ me: device.userId, now: Date.now(), items, conversations: byId, nav, prefs: saved ?? defaultPrefs(), pausedUntil: user.notificationsPausedUntil ?? null });
+  return {
+    ...wakeBatch({ me: device.userId, now: Date.now(), items, conversations: byId, nav, prefs: saved ?? defaultPrefs(), pausedUntil: user.notificationsPausedUntil ?? null }),
+    deviceId: device.deviceId,
+  };
 }
 
 /** Before the page has copied its choices here: on, as permission was granted for this site. */

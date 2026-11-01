@@ -275,7 +275,7 @@ async function openSingle(engine: Engine, ref: AttachmentRef): Promise<Blob> {
 let throughWebServer = false;
 
 export async function attachmentResponse(engine: Engine, id: string, signal?: AbortSignal, range?: string): Promise<Response> {
-  const direct = `/v1/attachments/${encodeURIComponent(id)}`;
+  const direct = `/v1/attachments/${encodeURIComponent(id)}${engine.state.get().server?.features.includes("attachment-proxy") ? "?proxy=1" : ""}`;
   const headers = range ? { range } : undefined;
   if (throughWebServer) return (await viaWebServer(engine, id, signal, range)) ?? engine.api.response(direct, { signal, headers });
   try {

@@ -84,3 +84,47 @@ export function VibesCard() {
     </>
   );
 }
+
+export function AccessibilityCard() {
+  const p = usePrefs();
+  return (
+    <>
+      <h2 className="settings-group">Comfort & accessibility</h2>
+      <div className="card setting-card">
+        <p className="hint">Free controls saved in this browser. Your choices take precedence over community styling.</p>
+        <label className="field">
+          <span>Message density</span>
+          <select className="input" aria-label="Message density" value={p.density} onChange={(e) => setPrefs({ density: e.target.value as typeof p.density })}>
+            <option value="comfortable">Comfortable</option>
+            <option value="compact">Compact</option>
+          </select>
+        </label>
+        <label className="field">
+          <span>Line spacing</span>
+          <select className="input" aria-label="Line spacing" value={p.lineSpacing} onChange={(e) => setPrefs({ lineSpacing: e.target.value as typeof p.lineSpacing })}>
+            <option value="normal">Normal</option>
+            <option value="relaxed">Relaxed</option>
+          </select>
+        </label>
+        <label className="field">
+          <span>Reduce motion</span>
+          <select className="input" aria-label="Reduce motion" value={p.reducedMotion} onChange={(e) => setPrefs({ reducedMotion: e.target.value as typeof p.reducedMotion })}>
+            <option value="system">Follow device</option>
+            <option value="on">Always</option>
+            <option value="off">Never</option>
+          </select>
+        </label>
+        <div className="setting">
+          <span className="lines">
+            <strong>Higher contrast</strong>
+            <small>Stronger text and visible borders.</small>
+          </span>
+          <Toggle label="Higher contrast" checked={p.highContrast} onChange={(highContrast) => setPrefs({ highContrast })} />
+        </div>
+        <button className="btn btn-secondary" onClick={() => setPrefs({ density: "comfortable", lineSpacing: "normal", reducedMotion: "system", highContrast: false })}>
+          Reset comfort controls
+        </button>
+      </div>
+    </>
+  );
+}

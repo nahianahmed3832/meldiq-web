@@ -2,7 +2,8 @@ import { Check, Minus, RefreshCw, X } from "lucide-react";
 import { useState } from "react";
 import { ApiError } from "../../api/client";
 import type { Overwrite, Overwrites } from "../../api/communitySchemas";
-import { useEngine } from "../../application/orbit";
+import { PermissionPreview } from "./PermissionPreview";
+import { useEngine, useOrbit } from "../../application/orbit";
 import { type OverwriteTarget, overwrites, setOverwrite } from "../../sync/community";
 import {
   accessRule,
@@ -48,11 +49,12 @@ export function PermissionsDialog({ orgId, target, title, onClose }: { orgId: st
 /** The permissions themselves, also Edit channel's Permissions tab: Basic (who can see it) and Advanced (3-state rows). */
 export function PermissionsBody({ orgId, target }: { orgId: string; target: OverwriteTarget }) {
   const engine = useEngine();
+  const previewOn = useOrbit((s) => s.server?.features.includes("permission-preview") ?? false);
   const loaded = useLoad(() => overwrites(engine, target), [engine, target.type, target.id]);
   const [data, setData] = useState<Overwrites | null>(null);
   const [subject, setSubject] = useState<string>(EVERYONE);
   // Android A3: Basic (private or not, and who can see it) first; Advanced is every capability for every subject.
-  const [mode, setMode] = useState<"basic" | "advanced">("basic");
+  const [mode, setMode] = useState<"basic" | "advanced" | "preview">("basic");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const d = data ?? loaded.data;
@@ -96,8 +98,15 @@ export function PermissionsBody({ orgId, target }: { orgId: string; target: Over
         <button aria-pressed={mode === "advanced"} onClick={() => setMode("advanced")}>
           Advanced
         </button>
+        {previewOn && (
+          <button aria-pressed={mode === "preview"} onClick={() => setMode("preview")}>
+            View as
+          </button>
+        )}
       </div>
-      {mode === "basic" ? (
+      {mode === "preview" ? (
+        <PermissionPreview orgId={orgId} target={target} roles={d.roles} revision={d} />
+      ) : mode === "basic" ? (
         <BasicPermissions orgId={orgId} d={d} kind={target.type} busy={busy} write={write} />
       ) : (
         <AdvancedPermissions d={d} subject={subject} onSubject={setSubject} busy={busy} write={write} />

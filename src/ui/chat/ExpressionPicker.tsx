@@ -1,3 +1,4 @@
+import { MotionImage } from "../components/MotionImage";
 import { Search, Smile, Sticker as StickerIcon, Upload } from "lucide-react";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -11,6 +12,7 @@ import { UploadDialog } from "../workspace/ExpressionsPage";
 import { useCommunityAccess } from "../community/useCommunityAccess";
 import { CustomEmojiImage, useExpressions } from "../community/CustomEmoji";
 import { useFocusTrap } from "../components/Overlay";
+import { ExpressionLibrary } from "./ExpressionLibrary";
 import { EmojiPicker } from "./EmojiPicker";
 import { StickerArt } from "./StickerView";
 
@@ -107,7 +109,7 @@ export function ExpressionPicker(p: ExpressionPickerProps) {
             <label>
               <span className="hint">Community expressions</span>
               <select className="input" aria-label="Expression community" value={selectedSource?.id ?? ""} onChange={(e) => setSource(e.target.value || null)}>
-                <option value="">Standard emoji & stickers</option>
+                <option value="">All communities & standard</option>
                 {availableSources.map((o) => (
                   <option key={o.id} value={o.id}>
                     {o.name}
@@ -136,10 +138,19 @@ export function ExpressionPicker(p: ExpressionPickerProps) {
             e.target.value = "";
           }}
         />
+        {p.library && expressionsOn && p.community && p.tab !== "gifs" && (
+          <ExpressionLibrary
+            source={selectedSource?.id ?? ""}
+            orgIds={availableSources.map((o) => o.id)}
+            kind={p.tab === "stickers" ? "sticker" : "emoji"}
+            revision={revision}
+            onPick={p.tab === "stickers" ? p.community.onSticker : p.community.onEmoji}
+          />
+        )}
         <div className="xp-panel" role="tabpanel" id={`xp-panel-${p.tab}`} aria-labelledby={`xp-tab-${p.tab}`}>
-          {p.tab === "emoji" && <EmojiPicker onPick={p.onEmoji} community={community ? { list: community.list, onEmoji: community.onEmoji } : undefined} />}
+          {p.tab === "emoji" && <EmojiPicker onPick={p.onEmoji} community={!p.library && community ? { list: community.list, onEmoji: community.onEmoji } : undefined} />}
           {p.tab === "gifs" && <GifPicker onGif={p.onGif} />}
-          {p.tab === "stickers" && <StickerPicker community={community} onSticker={p.onSticker} onAnimoji={p.onAnimoji} />}
+          {p.tab === "stickers" && <StickerPicker community={p.library ? undefined : community} onSticker={p.onSticker} onAnimoji={p.onAnimoji} />}
         </div>
       </div>
       {uploading && (
@@ -295,7 +306,7 @@ function GifTile({ gif, onPick }: { gif: GifResult; onPick: () => void }) {
   }, [engine, gif.preview.url]);
   return (
     <button ref={ref} type="button" className="gif-tile" style={{ aspectRatio: `${gif.preview.width} / ${gif.preview.height}` }} onClick={onPick} aria-label={`Send GIF: ${gif.title || "GIF"}`}>
-      {url ? <img src={url} alt="" draggable={false} /> : <span className="skeleton" />}
+      {url ? <MotionImage src={url} alt="" /> : <span className="skeleton" />}
     </button>
   );
 }

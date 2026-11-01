@@ -112,6 +112,33 @@ describe("what a background wake-up shows (service worker, no Meldiq tab open)",
     expect(wakeNotices(input({ items: [item("c_ch", { mentionAll: true })], nav: { o_1: ignoreEveryone } }))).toEqual([]);
   });
 
+  it("lets a direct mention through a muted channel and counts each message once", () => {
+    const base = item("c_ch");
+    const mentioned: QueueItem = {
+      ...base,
+      kind: "message",
+      payload: {
+        event: {
+          id: base.messageId,
+          conversationId: "c_ch",
+          senderUserId: "u_bob",
+          senderDeviceId: "d_bob",
+          cls: "message",
+          payload: { type: "text", text: "Please look", mentions: [ME] },
+          sentAt: NOW,
+          serverTs: NOW,
+          mentionAll: false,
+          importedBy: null,
+        },
+      },
+    };
+    const muted = applyOp(EMPTY_PREFS, { op: "notify", conversationId: "c_ch", level: "none" });
+    const args = input({ items: [mentioned, { ...mentioned, id: mentioned.id + 100 }], nav: { o_1: muted }, prefs: { notifications: true, groupNotifications: false, notificationText: true } });
+    expect(wakeNotices(args)).toMatchObject([{ tag: "c_ch", body: "Please look" }]);
+    expect(wakeNotices({ ...args, pausedUntil: NOW + 1000 })).toEqual([]);
+    expect(wakeNotices({ ...args, items: [{ ...mentioned, payload: { event: { ...mentioned.payload.event!, payload: { type: "text", mentions: ["u_other"] } } } }] })).toEqual([]);
+  });
+
   it("stays quiet when notifications are off, paused, or for message requests; group notifications off keeps DMs", () => {
     expect(wakeNotices(input({ items: [item("c_dm")], prefs: { notifications: false, groupNotifications: true, notificationText: true } }))).toEqual([]);
     expect(wakeNotices(input({ items: [item("c_dm")], pausedUntil: NOW + 1000 }))).toEqual([]);

@@ -16,7 +16,7 @@ test.beforeEach(async ({ context }) => {
 });
 
 /** The app under test (playwright.config.ts WEB_PORT). */
-const origin = () => "http://127.0.0.1:5181";
+const origin = () => `http://127.0.0.1:${process.env.ORBIT_E2E_WEB_PORT ?? "5181"}`;
 
 /** Delivers one push to this site's service worker, as the browser's push service would. */
 async function deliverPush(context: BrowserContext, page: Page): Promise<void> {
@@ -102,4 +102,20 @@ test("with Meldiq closed, a ringing call shows as an incoming call that opens it
   await viewer.goto(origin() + "/#/settings/notifications");
   await expect.poll(() => shown(viewer), { timeout: 15_000 }).toContainEqual({ title: "Bob Chen", body: "Incoming voice call", tag: `call-${dm}`, url: `/dms/c/${dm}` });
   await bob.req("POST", `/v1/calls/${res.call.id}/end`).catch(() => undefined);
+});
+
+test("a direct mention still notifies from a muted conversation while ordinary messages stay quiet", async ({ page, context }) => {
+  test.skip(process.env.ORBIT_E2E_BUILD === "1", "mutes through the development engine hook");
+  const { alice, bob, dm } = await setUp(page);
+  await page.evaluate(async (id) => {
+    const engine = (window as unknown as { __orbit: { arrange(id: string, op: unknown): Promise<void> } }).__orbit;
+    await engine.arrange(id, { op: "notify", conversationId: id, level: "none" });
+  }, dm);
+  await page.goto("about:blank");
+  await bob.send(dm, { type: "text", text: "An ordinary quiet message" });
+  await bob.send(dm, { type: "text", text: "Direct mention for you", mentions: [alice.userId] });
+  await deliverPush(context, page);
+  const viewer = await context.newPage();
+  await viewer.goto(origin() + "/settings/notifications");
+  await expect.poll(() => shown(viewer), { timeout: 15000 }).toContainEqual({ title: "Bob Chen", body: "Direct mention for you", tag: dm, url: `/dms/c/${dm}` });
 });

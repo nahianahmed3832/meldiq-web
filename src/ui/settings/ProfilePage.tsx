@@ -1,3 +1,4 @@
+import { CommunityProfileCard } from "./CommunityProfileCard";
 import { ProfileDraftProvider, useProfileDraft } from "./profileDraft";
 import { ProfilePreviewCard } from "./ProfilePreviewCard";
 import type { ProfileLink } from "../../sync/profile";
@@ -52,6 +53,9 @@ function ProfileEditor() {
 
   // The values last loaded: a newer load replaces the form only while it still shows them (nothing edited here).
   const shown = useRef<typeof form | null>(null);
+  const shownLinks = useRef<ProfileLink[]>([]);
+  const baseRevision = useRef<string | undefined>(undefined);
+  const [conflict, setConflict] = useState(false);
   useEffect(() => {
     if (!p) return;
     const next = {
@@ -65,9 +69,13 @@ function ProfileEditor() {
       pronouns: p.pronouns ?? "",
       aboutMe: p.aboutMe ?? "",
     };
-    const edited = shown.current !== null && JSON.stringify(form) !== JSON.stringify(shown.current);
-    shown.current = next;
+    const edited = shown.current !== null && (JSON.stringify(form) !== JSON.stringify(shown.current) || JSON.stringify(links) !== JSON.stringify(shownLinks.current));
+    if (edited && baseRevision.current && p.profileRevision !== baseRevision.current) setConflict(true);
     if (!edited) {
+      shown.current = next;
+      shownLinks.current = p.links;
+      baseRevision.current = p.profileRevision;
+      setConflict(false);
       setForm(next);
       setLinks(p.links);
     }
@@ -89,6 +97,7 @@ function ProfileEditor() {
     if (problem || !p) return;
     void save.act(async () => {
       const change = {
+        baseProfileRevision: baseRevision.current,
         statusText: form.statusText.trim() || null,
         firstName: form.firstName.trim() || null,
         lastName: form.lastName.trim() || null,
@@ -98,12 +107,14 @@ function ProfileEditor() {
         ...(linksOffered ? { aboutMe: form.aboutMe.trim() || null, links: links.map((l) => ({ label: l.label.trim(), url: l.url.trim() })) } : {}),
         ...(form.username.trim() !== p.username ? { username: form.username.trim() } : {}),
       };
-      // An Orbit 2.0 account keeps its name and the encryption identity's display name together (PATCH /v2/account).
-      if (form.displayName.trim() !== p.displayName) {
-        if (engine.device.account) await new AccountApi(engine.api).rename(form.displayName.trim());
-        else await updateMyProfile(engine, { displayName: form.displayName.trim() });
-      }
-      await updateMyProfile(engine, change);
+      const name = form.displayName.trim();
+      const updated = await updateMyProfile(engine, { ...change, ...(name !== p.displayName ? { displayName: name } : {}) });
+      baseRevision.current = updated.profileRevision;
+      shown.current = { ...form };
+      shownLinks.current = [...links];
+      setConflict(false);
+      // Keep the login account's name aligned with the saved public profile.
+      if (name !== p.displayName && engine.device.account) await new AccountApi(engine.api).rename(name);
       setVersion((v) => v + 1);
       setSaved(true);
       setTimeout(() => setSaved(false), 2000);
@@ -176,7 +187,7 @@ function ProfileEditor() {
               {linksOffered && (
                 <label className="field ws-wide">
                   <span>About me</span>
-                  <textarea className="input" rows={4} maxLength={300} placeholder="Say something about yourself." {...field("aboutMe")} />
+                  <textarea aria-label="About me" className="input" rows={4} maxLength={300} placeholder="Say something about yourself." {...field("aboutMe")} />
                   <small className="faint" style={{ justifySelf: "end" }}>
                     {300 - form.aboutMe.length} left
                   </small>
@@ -235,6 +246,22 @@ function ProfileEditor() {
                   {save.error ?? problem}
                 </div>
               )}
+              {conflict && (
+                <div className="banner warn ws-wide" role="alert">
+                  Your profile changed on another device. Your draft is kept. Reload the latest profile before applying it.
+                  <button
+                    type="button"
+                    className="btn btn-secondary"
+                    onClick={() => {
+                      shown.current = null;
+                      profile.reload();
+                      setConflict(false);
+                    }}
+                  >
+                    Reload latest profile
+                  </button>
+                </div>
+              )}
               {profile.error && <div className="banner danger ws-wide">{profile.error}</div>}
               <div className="ws-form-actions">
                 <button
@@ -243,20 +270,36 @@ function ProfileEditor() {
                   disabled={!p || !shown.current || save.busy}
                   onClick={() => {
                     if (!shown.current || !p) return;
-                    setForm({ ...shown.current });
+                    shown.current = null;
+                    setForm({
+                      displayName: p.displayName,
+                      firstName: p.firstName ?? "",
+                      lastName: p.lastName ?? "",
+                      username: p.username,
+                      statusText: p.statusText ?? "",
+                      birthday: p.birthday ?? "",
+                      phone: p.phone ?? "",
+                      pronouns: p.pronouns ?? "",
+                      aboutMe: p.aboutMe ?? "",
+                    });
                     setLinks(p.links);
+                    baseRevision.current = p.profileRevision;
+                    shownLinks.current = p.links;
+                    setConflict(false);
+                    profile.reload();
                     setSaved(false);
                   }}
                 >
                   Reset unsaved changes
                 </button>
-                <button className="btn btn-primary" disabled={!p || !!problem || save.busy}>
+                <button className="btn btn-primary" disabled={!p || !!problem || save.busy || conflict}>
                   {saved ? "Saved" : save.busy ? "Saving…" : "Save changes"}
                 </button>
               </div>
             </form>
           </div>
           {profileMedia && <ProfileStyleCard nameStyles={nameStyles} />}
+          <CommunityProfileCard aboutMe={form.aboutMe} pronouns={form.pronouns} />
           <ConnectionsCard />
         </div>
         <ProfilePreviewCard />

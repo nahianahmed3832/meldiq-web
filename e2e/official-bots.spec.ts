@@ -40,6 +40,10 @@ test("official bots: turn on, rename, set up, test, and see them work", async ({
   await official.getByRole("button", { name: "Welcomer: details" }).click();
   const welcomer = page.getByRole("dialog", { name: "Welcomer" });
   await expect(welcomer.getByText("Greets every newcomer by name")).toBeVisible();
+  const diagnostics = welcomer.getByLabel("Bot health & event history");
+  await expect(diagnostics.getByText("Runtime", { exact: true })).toBeVisible();
+  await diagnostics.getByRole("button", { name: "Run configuration check" }).click();
+  await expect(diagnostics.getByText("Available on this server", { exact: true })).toBeVisible();
   await welcomer.getByRole("switch", { name: "Welcomer on" }).click();
   await expect(welcomer.getByRole("region", { name: "Look in this server" })).toBeVisible();
   await welcomer.getByRole("button", { name: "Change" }).click();

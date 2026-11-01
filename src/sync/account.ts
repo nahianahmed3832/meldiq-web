@@ -81,6 +81,7 @@ export async function removeProfileBanner(engine: Engine): Promise<void> {
 }
 
 export interface ProfileStyleChange {
+  baseStyleRevision?: string;
   decoration?: string | null;
   effect?: string | null;
   accent?: string | null;

@@ -12,7 +12,7 @@ export const SETTINGS_INFO: Partial<Record<SettingsPage, SettingInfo>> = {
   appearance: {
     scope: "This browser",
     description: "Themes, colors, text size and message layout",
-    keywords: "colour color font dark light contrast background language emoji animation bubbles photo gestures reaction",
+    keywords: "colour color font dark light contrast background language emoji animation bubbles photo gestures reaction density spacing motion accessibility",
   },
   calls: { scope: "This browser", description: "Microphone, speakers and voice controls", keywords: "audio sound video input output noise echo push to talk screen share" },
   notifications: { scope: "This browser", description: "Desktop alerts, sounds, read receipts and typing", keywords: "mute chime volume privacy unread mentions groups ringtone" },
