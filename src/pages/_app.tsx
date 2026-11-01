@@ -11,6 +11,7 @@ import "../styles/profile.css";
 import "../styles/decorations.css";
 import "../styles/settings.css";
 import "../styles/mojo.css";
+import "../styles/billing.css";
 import "../styles/settings-profile.css";
 import "../styles/settings-parity.css";
 import "../styles/settings-parity-b.css";

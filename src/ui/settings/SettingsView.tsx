@@ -43,6 +43,8 @@ import { StoragePage } from "./StoragePage";
 import { type StringKey, useT } from "../../i18n";
 import { YouCard } from "./YouCard";
 import { InstallButton } from "./InstallButton";
+import { CheckoutPage } from "../billing/CheckoutPage";
+import { BillingPage } from "../billing/BillingPage";
 import { MojoPage } from "../mojo/MojoPage";
 import { SparkPage } from "../mojo/SparkPage";
 import { PointsPage } from "../points/PointsPage";
@@ -168,7 +170,7 @@ export function SettingsView({ page, onSignedOut }: { page: SettingsPage; onSign
           </button>
         </nav>
         <div className="settings-page scroll">
-          <div className={`inner${page === "mojo" || page === "spark" || page === "profile" ? " wide" : ""}`}>
+          <div className={`inner${page === "mojo" || page === "spark" || page === "profile" || page === "billing" || page === "checkout" ? " wide" : ""}`}>
             <button className="settings-back" aria-label="Back to settings" onClick={() => navigate({ section: "settings", settingsPage: "you" })}>
               <ChevronLeft size={18} aria-hidden="true" /> {t("nav_you")}
             </button>
@@ -191,6 +193,8 @@ export function SettingsView({ page, onSignedOut }: { page: SettingsPage; onSign
             {page === "shortcuts" && <ShortcutsPage />}
             {page === "health" && <ServiceHealthPage />}
             {page === "usage" && <AdminUsagePage />}
+            {page === "checkout" && <CheckoutPage />}
+            {page === "billing" && <BillingPage />}
             {page === "mojo" && <MojoPage />}
             {page === "spark" && <SparkPage />}
             {page === "points" && <PointsPage />}

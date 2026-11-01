@@ -7,6 +7,7 @@ import { relative } from "../format";
 import { GiftDialog, GiftsReceived } from "./MojoGifts";
 import { money, planPrice, screenLabel, size } from "./mojoFormat";
 import { CompareTable, type PlanAction, PlanCards, PlusPerks } from "./MojoPlans";
+import { selectCheckout } from "../billing/checkoutDraft";
 import { navigate } from "../../application/router";
 import { MojoBadgeMark } from "./MojoBadge";
 
@@ -38,7 +39,7 @@ export function MojoPage() {
     if (back) {
       // The query is the payment page's; the plan itself arrives with the provider's signed event.
       window.history.replaceState(window.history.state, "", window.location.pathname);
-      if (back === "canceled") engine.notice("info", "Nothing was charged.");
+      if (back === "canceled") engine.notice("info", "Checkout was closed. Check billing for the latest payment status.");
       else {
         setConfirming(back);
         void engine.mojo.afterReturn().finally(() => setConfirming(null));
@@ -91,14 +92,22 @@ export function MojoPage() {
     const price = planPrice(catalog, p.key);
     const current = me.plan === p.key;
     if (p.key === "free") return { label: current ? "Your plan" : "Always free", kind: "secondary", disabled: true };
+    if (current && paid && billing?.provider === "paypal")
+      return { label: "Manage subscription", kind: "secondary", disabled: false, onClick: () => navigate({ section: "settings", settingsPage: "billing" }) };
     if (current && paid)
       return { label: busy === "portal" ? "Opening…" : "Manage subscription", kind: "secondary", disabled: busy !== null || offline, onClick: () => void open("portal", () => engine.mojo.portal()) };
+    if (current && billing?.provider === "paypal" && price.onSale) return { label: `Subscribe for ${price.label}/month after your free period`, kind: "mojo", disabled: offline || busy !== null, onClick: () => { selectCheckout(engine.device.userId, { product: "plus" }); navigate({ section: "settings", settingsPage: "checkout" }); } };
     if (current) return { label: "Your plan (a free period)", kind: "secondary", disabled: true };
     return {
       label: busy === p.key ? "Opening…" : !price.onSale ? "Not on sale yet" : paid ? "Switch from the billing page" : `Get ${p.name} for ${price.label}/month`,
       kind: p.key === "plus" ? "mojo" : "primary",
       disabled: !price.onSale || busy !== null || offline || (!!paid && me.plan !== "free"),
-      onClick: () => void open(p.key, () => engine.mojo.checkout(p.key as "go" | "plus")),
+      onClick: () => {
+        if (billing?.provider === "paypal") {
+          selectCheckout(engine.device.userId, { product: "plus" });
+          navigate({ section: "settings", settingsPage: "checkout" });
+        } else void open(p.key, () => engine.mojo.checkout(p.key as "go" | "plus"));
+      },
     };
   };
   const heroAction = plus && me.plan !== "plus" && plusPrice.onSale ? actionFor(plus) : null;
@@ -106,6 +115,11 @@ export function MojoPage() {
   return (
     <div className="mojo">
       <h1>Meldiq Mojo</h1>
+      {billing?.provider === "paypal" && (
+        <button className="btn btn-secondary btn-sm" onClick={() => navigate({ section: "settings", settingsPage: "billing" })}>
+          Billing & purchases
+        </button>
+      )}
       {confirming && (
         <div className="banner info" role="status">
           <Loader2 size={16} className="spin" aria-hidden="true" /> {confirming === "gift" ? "Confirming your gift with the payment provider…" : "Confirming your payment…"} Mojo applies the moment the
@@ -240,7 +254,20 @@ export function MojoPage() {
           {screenLabel(catalog, free.screen)}, {free.customItems} custom emoji and stickers, and communities of your own.
         </p>
       )}
-      {gifting && <GiftDialog catalog={catalog} onClose={() => setGifting(false)} onPay={(input) => open("gift", () => engine.mojo.gift(input))} busy={busy === "gift"} />}
+      {gifting && (
+        <GiftDialog
+          catalog={catalog}
+          onClose={() => setGifting(false)}
+          onPay={async (input) => {
+            if (billing?.provider === "paypal") {
+              selectCheckout(engine.device.userId, { product: "gift", recipientUserId: input.recipientUserId, months: input.months as 1 | 3 | 12, note: input.note });
+              setGifting(false);
+              navigate({ section: "settings", settingsPage: "checkout" });
+            } else await open("gift", () => engine.mojo.gift(input));
+          }}
+          busy={busy === "gift"}
+        />
+      )}
       <p className="muted mojo-footnote">
         Mojo prices: Plus {money(plus?.listPriceMinor ?? 0, "USD")}, each Spark {money(catalog.spark.listPriceMinor, "USD")}, monthly.
       </p>

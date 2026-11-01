@@ -1,5 +1,5 @@
 {
-  "version": "0.68.0",
+  "version": "0.69.0",
   "routes": [
     {
       "method": "GET",
@@ -1456,6 +1456,38 @@
     {
       "method": "GET",
       "path": "/v1/federation/resolve"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/billing/paypal/config"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/billing/paypal/checkouts"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/billing/paypal/checkouts/{id}"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/billing/paypal/checkouts/{id}/confirm"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/billing/paypal/history"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/billing/paypal/cancel"
+    },
+    {
+      "method": "GET",
+      "path": "/admin/v1/billing/paypal/transactions"
+    },
+    {
+      "method": "POST",
+      "path": "/admin/v1/billing/paypal/transactions/{id}/refund"
     },
     {
       "method": "GET",

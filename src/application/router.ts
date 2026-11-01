@@ -31,6 +31,8 @@ export type SettingsPage =
   | "shortcuts"
   | "health"
   | "usage"
+  | "checkout"
+  | "billing"
   | "mojo"
   | "spark"
   | "points"
@@ -94,6 +96,8 @@ const PAGES: SettingsPage[] = [
   "shortcuts",
   "health",
   "usage",
+  "checkout",
+  "billing",
   "mojo",
   "spark",
   // API 0.65.0: points, quests and levels.

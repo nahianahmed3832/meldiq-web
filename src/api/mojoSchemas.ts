@@ -96,6 +96,8 @@ export const zCheckoutStarted = z.object({ checkoutId: z.string().optional(), gi
 
 /** The account's own billing page (docs/BILLING.md): its plan subscription, for renewal and cancellation wording. */
 export const zOwnerBilling = z.object({
+  provider: z.string().nullable().optional(),
+  mode: z.enum(["test", "live"]).nullable().optional(),
   available: z.boolean(),
   subscription: z
     .object({
@@ -103,6 +105,7 @@ export const zOwnerBilling = z.object({
       status: z.string(),
       standing: z.string(),
       currentPeriodEnd: z.number().nullable(),
+      trialEnd: z.number().nullable().optional(),
       cancelAtPeriodEnd: z.boolean(),
       currency: z.string(),
       amountMinor: z.number(),
