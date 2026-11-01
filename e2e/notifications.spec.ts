@@ -50,6 +50,11 @@ async function setUp(page: Page): Promise<{ alice: Phone; bob: Phone; dm: string
   return { alice, bob, dm };
 }
 
+async function muteConversation(phone: Phone, id: string): Promise<void> {
+  const doc = await phone.req("GET", "/v1/me/preferences/personal");
+  await phone.req("PUT", "/v1/me/preferences/personal", { baseRev: doc.rev, prefs: { ...doc.prefs, notify: { ...doc.prefs.notify, [id]: "none" } } });
+}
+
 test("with Meldiq closed, a wake-up shows who wrote and their newest message, and opens that conversation", async ({ page, context }) => {
   const { bob, dm } = await setUp(page);
   // Notifications were allowed for this site in the browser (never chosen in Meldiq): they're on.
@@ -69,12 +74,8 @@ test("with Meldiq closed, a wake-up shows who wrote and their newest message, an
 });
 
 test("a muted conversation's messages wake nothing; with Meldiq open, the page shows them itself", async ({ page, context }) => {
-  test.skip(process.env.ORBIT_E2E_BUILD === "1", "mutes through the development build's engine hook");
-  const { bob, dm } = await setUp(page);
-  await page.evaluate(async (id) => {
-    const engine = (window as unknown as { __orbit: { arrange(id: string, op: unknown): Promise<void> } }).__orbit;
-    await engine.arrange(id, { op: "notify", conversationId: id, level: "none" });
-  }, dm);
+  const { alice, bob, dm } = await setUp(page);
+  await muteConversation(alice, dm);
   await page.goto("about:blank");
   await bob.send(dm, { type: "text", text: "quiet please" });
   await new Promise((r) => setTimeout(r, 1000));
@@ -105,12 +106,8 @@ test("with Meldiq closed, a ringing call shows as an incoming call that opens it
 });
 
 test("a direct mention still notifies from a muted conversation while ordinary messages stay quiet", async ({ page, context }) => {
-  test.skip(process.env.ORBIT_E2E_BUILD === "1", "mutes through the development engine hook");
   const { alice, bob, dm } = await setUp(page);
-  await page.evaluate(async (id) => {
-    const engine = (window as unknown as { __orbit: { arrange(id: string, op: unknown): Promise<void> } }).__orbit;
-    await engine.arrange(id, { op: "notify", conversationId: id, level: "none" });
-  }, dm);
+  await muteConversation(alice, dm);
   await page.goto("about:blank");
   await bob.send(dm, { type: "text", text: "An ordinary quiet message" });
   await bob.send(dm, { type: "text", text: "Direct mention for you", mentions: [alice.userId] });
