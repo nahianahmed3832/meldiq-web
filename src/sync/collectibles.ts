@@ -3,6 +3,7 @@ import { apiBase } from "../application/config";
 import { zProfileStyle, type ProfileStyle } from "../api/profileSchemas";
 import { zCollectionPage, zCollectionInventory, type Collectible, type CollectionCategory } from "../api/collectibleSchemas";
 import type { Engine } from "./engine";
+import type { ProfileStyleChange } from "./account";
 export const zCustomization = z.object({ profileStyle: zProfileStyle, styleRevision: z.string() });
 export type Customization = z.infer<typeof zCustomization>;
 export const collectionAsset = (id: string, variant: "full" | "poster" | "thumbnail" = "poster") => `${apiBase()}/v2/profile-collectibles/assets/${encodeURIComponent(id)}/${variant}.webp`;
@@ -36,11 +37,11 @@ export function previewCollectible(style: ProfileStyle, item: Collectible | null
 }
 
 /** Match the server's overlap rules while previewing edits in the existing style controls. */
-export function previewLegacyStyle(style: ProfileStyle, change: Partial<ProfileStyle>): ProfileStyle {
+export function previewLegacyStyle(style: ProfileStyle, change: ProfileStyleChange): ProfileStyle {
   const clear = new Set<CollectionCategory>();
   if (change.decoration !== undefined) clear.add("avatar-frame");
   if (change.effect !== undefined) clear.add("particles");
   if (change.accent !== undefined || change.themeColors !== undefined) clear.add("profile-theme");
   if (change.nameColors !== undefined || change.nameEffect !== undefined) clear.add("name-effect");
-  return { ...style, ...change, ...(style.collectibles ? { collectibles: style.collectibles.filter((x) => !clear.has(x.category)) } : {}) };
+  return zProfileStyle.parse({ ...style, ...change, ...(style.collectibles ? { collectibles: style.collectibles.filter((x) => !clear.has(x.category)) } : {}) });
 }
