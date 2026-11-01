@@ -114,6 +114,10 @@ for (const kind of ["dm", "group", "channel"] as const) {
       await page.reload();
       await newest(page, "Latest with a photo attachment");
       await expect(messages(page).getByRole("button", { name: /Open image/ })).toBeVisible();
+      await messages(page)
+        .getByRole("button", { name: /Open image/ })
+        .locator("img")
+        .evaluate((image: HTMLImageElement) => image.decode());
       await expect.poll(() => messages(page).evaluate((el) => el.scrollHeight - el.scrollTop - el.clientHeight)).toBeLessThan(2);
     }
   });

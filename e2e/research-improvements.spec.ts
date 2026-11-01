@@ -91,6 +91,9 @@ test("opening always shows latest; active reading survives pagination, arrivals 
   // Older Safari has no scrollend event: finishing the smooth jump must still restore media following.
   await page.evaluate(() => window.addEventListener("scrollend", (event) => event.stopImmediatePropagation(), true));
   await page.getByRole("button", { name: /1 new message/ }).click();
+  await list.evaluate((el) => {
+    el.querySelector<HTMLElement>("[id^='msg-']")!.style.paddingBottom = "300px";
+  });
   await expect.poll(() => bottomGap(list)).toBeLessThan(2);
   await list.evaluate((el) => {
     el.querySelector<HTMLElement>("[id^='msg-']")!.style.paddingBottom = "360px";

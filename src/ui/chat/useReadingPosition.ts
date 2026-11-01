@@ -88,7 +88,14 @@ export function useReadingPosition({
     const el = scroller.current;
     if (!el || typeof ResizeObserver === "undefined") return;
     const observer = new ResizeObserver(() => {
-      if (!initialized.current || jumping.current) return;
+      if (!initialized.current) return;
+      if (jumping.current) {
+        if (size.current.height !== el.scrollHeight || size.current.viewport !== el.clientHeight) {
+          size.current = { height: el.scrollHeight, viewport: el.clientHeight };
+          el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
+        }
+        return;
+      }
       restore(anchor.current);
       capture();
     });
@@ -100,7 +107,13 @@ export function useReadingPosition({
   useEffect(() => {
     const el = scroller.current;
     if (!el) return;
-    const finish = () => {
+    const finish = (event: Event) => {
+      if (!jumping.current) return;
+      // A completed old target may be short of an image that expanded during the animation.
+      if (event.type === "scrollend" && el.scrollHeight - el.scrollTop - el.clientHeight > 1) {
+        el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
+        return;
+      }
       jumping.current = false;
       capture();
     };
@@ -123,7 +136,12 @@ export function useReadingPosition({
     const el = scroller.current;
     // Layout can emit scroll before ResizeObserver runs (notably lazy images after a reload).
     // Do not mistake that movement for the reader choosing a new position.
-    if (el && initialized.current && !jumping.current && (size.current.height !== el.scrollHeight || size.current.viewport !== el.clientHeight)) restore(anchor.current);
+    if (el && initialized.current && (size.current.height !== el.scrollHeight || size.current.viewport !== el.clientHeight)) {
+      if (jumping.current) {
+        size.current = { height: el.scrollHeight, viewport: el.clientHeight };
+        el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
+      } else restore(anchor.current);
+    }
     return capture();
   }, [capture, restore]);
   return { scroller, onScroll, away, unseen, latest };
