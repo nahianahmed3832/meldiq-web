@@ -8,7 +8,7 @@ test.use({ serviceWorkers: "block" });
 // The authenticated app and catalog are real; the PayPal REST boundary and SDK are explicit UI test doubles.
 const fakeSdk = `
 customElements.define('paypal-button', class extends HTMLElement {
-  connectedCallback() { this.innerHTML = '<button type="button" style="width:100%;padding:16px;background:#ffc439;color:#003087;border:0;border-radius:10px;font-weight:700">PayPal Subscribe</button>'; }
+  connectedCallback() { this.innerHTML = '<button type="button" style="width:100%;padding:16px;background:#ffc439;color:#003087;border:0;border-radius:10px;font-weight:700">' + (this.getAttribute('type') === 'subscribe' ? 'PayPal Subscribe' : 'Pay with PayPal') + '</button>'; }
 });
 window.paypal = { version:'6.0.0', createInstance: async () => ({
   findEligibleMethods: async () => ({ isEligible: () => true }),
@@ -161,6 +161,8 @@ for (const product of ["spark", "bots_plus"] as const) {
     await expect(page.getByText(/No Mojo subscription is required|purchased separately from Mojo Plus/).first()).toBeVisible();
     await page.getByRole("checkbox").check();
     await expect(page.locator("paypal-button")).toBeVisible();
+    await expect(page.locator("paypal-button")).toHaveAttribute("type", product === "spark" ? "pay" : "subscribe");
+    await page.locator(".checkout-brand").scrollIntoViewIfNeeded();
     await page.screenshot({ path: info.outputPath(`${product}-review.png`), fullPage: true });
     await page.locator("paypal-button").click();
     await expect(page.getByRole("button", { name: "Check payment status" })).toBeVisible();
