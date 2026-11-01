@@ -1,3 +1,5 @@
+import type { CollectibleLook } from "../../api/collectibleSchemas";
+import { collectionAsset } from "../../sync/collectibles";
 import { usePrefs } from "../../application/prefs";
 import { useEffect, useState } from "react";
 import { isClassicDecoration, type ProfileStyle } from "../../api/schemas";
@@ -36,6 +38,7 @@ export function decorationWidth(size: number): number {
 }
 
 interface StyledAvatarProps {
+  collectibles?: CollectibleLook[];
   userId: string;
   name: string;
   colorIndex: number;
@@ -59,8 +62,13 @@ export function StyledAvatar(p: StyledAvatarProps) {
   const url = p.previewUrl?.url ?? stored;
   const video = p.previewUrl ? p.previewUrl.video : kind === "video";
   const animate = !!url && !reduced;
+  const aura = p.collectibles?.find((x) => x.category === "avatar-effect");
+  const frame = p.collectibles?.find((x) => x.category === "avatar-frame" && x.recipe.assetId);
   return (
-    <span className="styled-avatar" style={{ width: p.size, height: p.size }}>
+    <span
+      className={`styled-avatar${aura ? " collectible-aura" : ""}`}
+      style={{ width: p.size, height: p.size, ...(aura ? { "--collectible-a": aura.recipe.colors[0], "--collectible-b": aura.recipe.colors[1] } : {}) } as React.CSSProperties}
+    >
       {/* First, so the avatar and its presence dot are drawn over the frame (2026-10-28: the frame cut through the dot). */}
       {p.decoration && isClassicDecoration(p.decoration) && (
         <span className={`deco deco-${p.decoration}`} style={{ "--deco-w": `${decorationWidth(p.size)}px` } as React.CSSProperties} aria-hidden="true" />
@@ -75,6 +83,17 @@ export function StyledAvatar(p: StyledAvatarProps) {
         </span>
       ) : (
         <UserAvatar userId={p.userId} name={p.name} colorIndex={p.colorIndex} photoRev={p.photoRev} size={p.size} online={p.online} presence={p.presence} decorative />
+      )}
+      {frame?.recipe.assetId && (
+        <img
+          className="deco-img"
+          src={collectionAsset(frame.recipe.assetId, p.size < 64 ? "thumbnail" : reduced ? "poster" : "full")}
+          alt=""
+          aria-hidden="true"
+          width={p.size * 1.2}
+          height={p.size * 1.2}
+          style={{ left: -p.size * 0.1, top: -p.size * 0.1 }}
+        />
       )}
       {p.decoration && !isClassicDecoration(p.decoration) && <DecorationImage id={p.decoration} size={p.size} />}
     </span>

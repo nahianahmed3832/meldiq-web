@@ -1,3 +1,4 @@
+import { CollectibleBanner, CollectibleBadge, collectibleCardVars } from "./CollectibleLayers";
 import { Check, Copy, Flag, MoreHorizontal, SendHorizontal, ShieldBan, ShieldCheck, Ticket, UserCheck, UserPlus, UserX, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { ApiError } from "../../api/client";
@@ -12,7 +13,7 @@ import { ReportDialog } from "../chat/ReportDialog";
 import { usePhoto } from "../components/photos";
 import { StyledName } from "./NameStyle";
 import { SafeLink } from "../chat/SafeLink";
-import { ProfileEffect, StyledAvatar } from "./ProfileStyle";
+import { ProfileEffect, StyledAvatar, useReducedMotion } from "./ProfileStyle";
 import { ArtistDecorations } from "./ArtistDecorations";
 import { ProfilePins } from "./ProfilePins";
 import { LevelRing } from "./LevelRing";
@@ -62,6 +63,7 @@ interface ProfileDialogProps {
 
 export function ProfileDialog({ userId, fallbackName, orgId = null, near = null, onClose }: ProfileDialogProps) {
   const engine = useEngine();
+  const reducedMotion = useReducedMotion();
   const me = useOrbit((s) => s.me?.userId);
   const features = useOrbit((s) => s.server?.features ?? [], shallowEqual);
   const pinsOn = features.includes("profile-pins");
@@ -207,11 +209,12 @@ export function ProfileDialog({ userId, fallbackName, orgId = null, near = null,
       title={name}
       onClose={onClose}
       className={`profile-pop${theme ? " themed" : ""}`}
-      vars={themeVars(theme)}
+      vars={{ ...themeVars(theme), ...collectibleCardVars(profile?.profileStyle, !reducedMotion) }}
       near={near}
       header={
         <>
           <div className="profile-pop-banner" style={bannerUrl ? { backgroundImage: `url(${bannerUrl})` } : { background: theme ? themeBackground(theme) : toneOf(profile?.avatarColor ?? 0) }}>
+            <CollectibleBanner style={profile?.profileStyle} />
             <ProfileEffect effect={profile?.profileStyle?.effect} />
             {!self && more.length > 0 && (
               <button className="icon-btn profile-pop-btn" onClick={(e) => moreMenu.open(e.currentTarget)} aria-label={`More for ${name}`} aria-haspopup="menu" aria-expanded={!!moreMenu.anchor}>
@@ -231,6 +234,7 @@ export function ProfileDialog({ userId, fallbackName, orgId = null, near = null,
                 photoRev={profile.photoRev}
                 media={profile.avatarMedia}
                 decoration={profile.profileStyle?.decoration ?? null}
+                collectibles={profile.profileStyle?.collectibles}
                 size={92}
                 online={profile.online}
                 presence={profile.presence}
@@ -272,8 +276,11 @@ export function ProfileDialog({ userId, fallbackName, orgId = null, near = null,
             </p>
             {(profile.statusEmoji || profile.statusText) && <p className="profile-pop-status">{[profile.statusEmoji, profile.statusText].filter(Boolean).join(" ")}</p>}
             {/* API 0.64.0: pins replace the Bug Hunter and Artist pills (both are Meldiq pins now). */}
+            <CollectibleBadge style={profile?.profileStyle} />
             {pinsOn ? (
-              <ProfilePins pins={profile.pins} />
+              <>
+                <ProfilePins pins={profile.pins} />
+              </>
             ) : (
               <>
                 {profile.badges.includes("bug-hunter") && (

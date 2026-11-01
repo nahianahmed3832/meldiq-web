@@ -55,7 +55,9 @@ export function NameStyleWindow({ me, photoRev, style, onApply, onClose }: NameS
     set({ nameColors: m === "none" ? null : m === "solid" ? (look.nameColors?.slice(0, 1) ?? DEFAULT_SOLID) : look.nameColors && look.nameColors.length > 1 ? look.nameColors : DEFAULT_GRADIENT });
   const setColor = (i: number, value: string) => set({ nameColors: (look.nameColors ?? []).map((c, j) => (j === i ? value : c)) });
   const surprise = () => set({ nameFont: pick(FONTS), nameColors: pick(COLOR_PRESETS).colors, nameEffect: pick([null, ...NAME_EFFECTS] as (NameEffect | null)[]) });
-  const avatar = (size: number) => <StyledAvatar userId={me.userId} name={me.displayName} colorIndex={me.avatarColor} photoRev={photoRev} media={null} decoration={style.decoration} size={size} />;
+  const avatar = (size: number) => (
+    <StyledAvatar userId={me.userId} name={me.displayName} colorIndex={me.avatarColor} photoRev={photoRev} media={null} decoration={style.decoration} collectibles={style.collectibles} size={size} />
+  );
   const name = <StyledName name={me.displayName} style={preview} className="ellipsis" />;
 
   return (

@@ -1,0 +1,72 @@
+[WebServer] (node:83278) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:83312) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:83322) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:83322) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+[WebServer] (node:83322) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+[WebServer] (node:83487) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] [plugin vite:resolve] Module "crypto" has been externalized for browser compatibility, imported by "/Volumes/code_files/meldiq_web/node_modules/@hpke/common/esm/src/utils/misc.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+[WebServer] [plugin vite:resolve] Module "crypto" has been externalized for browser compatibility, imported by "/Volumes/code_files/meldiq_web/node_modules/@hpke/common/esm/src/utils/misc.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+[WebServer] ../../../Volumes/code_files/meldiq_web/node_modules/@hpke/common/esm/src/utils/noble.js (82:20): A comment
+[WebServer] 
+[WebServer] "/* @__PURE__ */"
+[WebServer] 
+[WebServer] in "../../../Volumes/code_files/meldiq_web/node_modules/@hpke/common/esm/src/utils/noble.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+[WebServer] ../../../Volumes/code_files/meldiq_web/node_modules/@hpke/common/esm/src/utils/noble.js (122:22): A comment
+[WebServer] 
+[WebServer] "/* @__PURE__ */"
+[WebServer] 
+[WebServer] in "../../../Volumes/code_files/meldiq_web/node_modules/@hpke/common/esm/src/utils/noble.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+[WebServer] ../../../Volumes/code_files/meldiq_web/node_modules/@hpke/common/esm/src/hash/sha3.js (559:0): A comment
+[WebServer] 
+[WebServer] "// export const sha3_224: CHash = /* @__PURE__ */ genKeccak("
+[WebServer] 
+[WebServer] in "../../../Volumes/code_files/meldiq_web/node_modules/@hpke/common/esm/src/hash/sha3.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+[WebServer] ../../../Volumes/code_files/meldiq_web/node_modules/@hpke/common/esm/src/hash/sha3.js (563:0): A comment
+[WebServer] 
+[WebServer] "//   /* @__PURE__ */ oidNist(0x07),"
+[WebServer] 
+[WebServer] in "../../../Volumes/code_files/meldiq_web/node_modules/@hpke/common/esm/src/hash/sha3.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+[WebServer] ../../../Volumes/code_files/meldiq_web/node_modules/@hpke/common/esm/src/hash/sha3.js (593:0): A comment
+[WebServer] 
+[WebServer] "//   /* @__PURE__ */"
+[WebServer] 
+[WebServer] in "../../../Volumes/code_files/meldiq_web/node_modules/@hpke/common/esm/src/hash/sha3.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+[WebServer] ../../../Volumes/code_files/meldiq_web/node_modules/@hpke/common/esm/src/hash/sha3.js (594:0): A comment
+[WebServer] 
+[WebServer] "//   genShake(0x1f, 168, 32, /* @__PURE__ */ oidNist(0x0b));"
+[WebServer] 
+[WebServer] in "../../../Volumes/code_files/meldiq_web/node_modules/@hpke/common/esm/src/hash/sha3.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+[WebServer] ../../../Volumes/code_files/meldiq_web/node_modules/@hpke/common/esm/src/hash/sha3.js (597:0): A comment
+[WebServer] 
+[WebServer] "//   /* @__PURE__ */"
+[WebServer] 
+[WebServer] in "../../../Volumes/code_files/meldiq_web/node_modules/@hpke/common/esm/src/hash/sha3.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+[WebServer] ../../../Volumes/code_files/meldiq_web/node_modules/@hpke/common/esm/src/hash/sha3.js (598:0): A comment
+[WebServer] 
+[WebServer] "//   genShake(0x1f, 136, 64, /* @__PURE__ */ oidNist(0x0c));"
+[WebServer] 
+[WebServer] in "../../../Volumes/code_files/meldiq_web/node_modules/@hpke/common/esm/src/hash/sha3.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+[WebServer] [plugin vite:resolve] Module "crypto" has been externalized for browser compatibility, imported by "/Volumes/code_files/meldiq_web/node_modules/@hpke/common/esm/src/algorithm.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+[WebServer] (node:83553) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:83588) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:83595) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] ⚠ Specified "rewrites" will not automatically work with "output: export". See more info here: https://nextjs.org/docs/messages/export-no-custom-routes
+[WebServer] (node:83821) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 1 test using 1 worker
+
+(node:83826) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] [browser] Service Worker registration blocked by Playwright (<anonymous>:3:100)
+[WebServer] [browser] Service Worker registration blocked by Playwright (<anonymous>:3:100)
+  ✓  1 [phone-width] › e2e/profile-collection.spec.ts:7:1 › profile collection previews, claims, equips and resets across devices (1.0m)
+
+  1 passed (2.9m)

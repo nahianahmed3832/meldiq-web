@@ -52,6 +52,16 @@ server {
     proxy_send_timeout 120s;
   }
 
+  # OAuth query strings contain one-use codes: never write them to nginx access logs.
+  location ^~ /v2/auth/social/ {
+    access_log off;
+    proxy_pass http://${API_UPSTREAM};
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_buffering off;
+  }
+
   # The API, same origin: no CORS. Attachments up to 1 GiB (FILE_MAX_BYTES + chunk tags) stream through unbuffered.
   location ~ ^/v[12]/ {
     proxy_pass http://${API_UPSTREAM};

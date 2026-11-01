@@ -571,6 +571,18 @@ export class Engine implements EngineContext {
     this.outbox.kick();
   }
 
+  /** A verified provider session must prove this exact account and device before unlocking its local messages. */
+  async signInAgainWithProvider(grant: AccountSessionGrant): Promise<void> {
+    if (!(this.session instanceof AccountSession) || grant.account.id !== this.record.account?.id || grant.session.deviceId !== this.record.deviceId) throw new Error("Sign in with the Meldiq account that owns this browser's messages.");
+    await this.session.adopt(grant);
+    await this.accountEmailChanged(grant.account.email);
+    this.set(s => ({ ...s, phase: "ready", phaseReason: null }));
+    this.stopped = false;
+    this.realtime.start();
+    void this.refreshAll();
+    this.outbox.kick();
+  }
+
   /** The account's email changed here (Settings › My Account, API 0.46.0): sign-ins from now on use the new address. */
   async accountEmailChanged(email: string): Promise<void> {
     const account = this.record.account;

@@ -1,3 +1,4 @@
+import { zCollectibleLook } from "./collectibleSchemas";
 import { z } from "zod";
 import { openEnum } from "./enums";
 
@@ -60,6 +61,7 @@ const zThemeColors = z
   .transform((v) => (v ? v.map((c) => c.toLowerCase()) : null));
 export const zProfileStyle = z
   .object({
+    collectibles: z.array(zCollectibleLook).max(8).optional().catch(undefined),
     decoration: z.string().regex(DECORATION_ID).nullable().catch(null),
     effect: z.enum(PROFILE_EFFECTS).nullable().catch(null),
     accent: zAccent,

@@ -1,6 +1,78 @@
 {
-  "version": "0.73.0",
+  "version": "0.74.0",
   "routes": [
+    {
+      "method": "GET",
+      "path": "/v2/profile-collectibles/categories"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/profile-collectibles"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/profile-collectibles/{id}"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/users/me/profile-collectibles"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/users/me/profile-collectibles/{id}/claim"
+    },
+    {
+      "method": "PUT",
+      "path": "/v2/users/me/profile-collectibles/{id}/favorite"
+    },
+    {
+      "method": "DELETE",
+      "path": "/v2/users/me/profile-collectibles/{id}/favorite"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/users/me/profile-customization"
+    },
+    {
+      "method": "PATCH",
+      "path": "/v2/users/me/profile-customization"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/profile-collectibles/assets/{id}/{variant}"
+    },
+    {
+      "method": "GET",
+      "path": "/admin/v1/profile-collectibles"
+    },
+    {
+      "method": "PUT",
+      "path": "/admin/v1/profile-collectibles/{id}"
+    },
+    {
+      "method": "DELETE",
+      "path": "/admin/v1/profile-collectibles/{id}"
+    },
+    {
+      "method": "POST",
+      "path": "/admin/v1/profile-collectibles/{id}/grant"
+    },
+    {
+      "method": "POST",
+      "path": "/admin/v1/profile-collectibles/assets"
+    },
+    {
+      "method": "GET",
+      "path": "/admin/v1/profile-collectibles/assets/{id}/{variant}"
+    },
+    {
+      "method": "POST",
+      "path": "/admin/v1/profile-collectibles/uploads"
+    },
+    {
+      "method": "POST",
+      "path": "/admin/v1/profile-collectibles/uploads/{id}/complete"
+    },
     {
       "method": "DELETE",
       "path": "/admin/v1/orgs/{orgId}"
@@ -384,6 +456,38 @@
     {
       "method": "POST",
       "path": "/v2/migration/legacy/complete"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/auth/social/config"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/auth/social/start"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/auth/social/authorize/{id}"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/auth/social/callback"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/auth/social/native"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/auth/social/complete"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/account/identities"
+    },
+    {
+      "method": "DELETE",
+      "path": "/v2/account/identities/{provider}"
     },
     {
       "method": "POST",
@@ -1795,6 +1899,60 @@
     }
   ],
   "errors": {
+    "account_link_required": [
+      409
+    ],
+    "social_state_invalid": [
+      400
+    ],
+    "social_flow_expired": [
+      400
+    ],
+    "provider_not_configured": [
+      503
+    ],
+    "fresh_auth_required": [
+      403
+    ],
+    "identity_conflict": [
+      409
+    ],
+    "provider_email_required": [
+      400
+    ],
+    "social_profile_required": [
+      400
+    ],
+    "last_login_method": [
+      409
+    ],
+    "external_identity_invalid": [
+      401
+    ],
+    "provider_unavailable": [
+      503
+    ],
+    "collectible_unavailable": [
+      409
+    ],
+    "acquisition_required": [
+      403
+    ],
+    "not_owned": [
+      403
+    ],
+    "wrong_category": [
+      400
+    ],
+    "unknown_asset": [
+      400
+    ],
+    "direct_unavailable": [
+      409
+    ],
+    "bad_upload": [
+      400
+    ],
     "account_deleted": [
       401
     ],

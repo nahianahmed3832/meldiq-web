@@ -1,3 +1,4 @@
+import { ConnectedAccountsCard } from "./ConnectedAccountsCard";
 import { KeyRound, Laptop, LogOut, Trash2 } from "lucide-react";
 import { type FormEvent, useState } from "react";
 import { useEngine, useOrbit } from "../../application/orbit";
@@ -58,6 +59,7 @@ function MyAccount({ email: initialEmail, onSignedOut }: { email: string; onSign
         }}
       />
       <h2 className="settings-group">Password and authentication</h2>
+      <ConnectedAccountsCard />
       <ChangePassword email={email} />
       {twoStep && <TwoStepCard />}
       <PasskeysCard />

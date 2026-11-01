@@ -159,6 +159,7 @@ function MemberRow({ m, away, colors, orgId }: { m: Member; away: boolean; color
           photoRev={m.photoRev}
           media={m.avatarMedia}
           decoration={m.profileStyle?.decoration ?? null}
+          collectibles={m.profileStyle?.collectibles}
           size={40}
           online={away ? null : true}
           presence={away ? null : m.presence}

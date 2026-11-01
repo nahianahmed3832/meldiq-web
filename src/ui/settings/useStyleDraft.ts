@@ -1,3 +1,4 @@
+import { previewLegacyStyle } from "../../sync/collectibles";
 import { useMemo, useRef, useState } from "react";
 import type { ProfileStyle } from "../../api/schemas";
 import { setProfileStyle, type ProfileStyleChange } from "../../sync/account";
@@ -18,7 +19,7 @@ export function useStyleDraft(engine: Engine, server: ProfileStyle, onSaved: () 
     setError(null);
   };
   return {
-    style: useMemo((): ProfileStyle => ({ ...server, ...pending }) as ProfileStyle, [server, pending]),
+    style: useMemo(() => previewLegacyStyle(server, pending), [server, pending]),
     error,
     busy,
     dirty: Object.keys(pending).length > 0,

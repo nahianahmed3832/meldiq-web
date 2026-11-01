@@ -1,3 +1,4 @@
+import { SocialSignIn } from "./SocialSignIn";
 import { ArrowLeft, ChevronRight, KeyRound, LockKeyhole, MailX, Smartphone } from "lucide-react";
 import { type FormEvent, type ReactNode, useState } from "react";
 import type { AccountSessionGrant } from "../../api/accountSchemas";
@@ -112,6 +113,7 @@ export function SignInForm(props: {
   return (
     <form className="auth-form" onSubmit={submitHandler(submit)} noValidate>
       <AuthHeading title={t("signin_title")} sub={t("signin_sub")} />
+      <SocialSignIn api={props.ctx.accounts.api} onSignedIn={props.onSignedIn} />
       <FormNotice text={props.notice ?? null} />
       <FormError text={error} />
       <Field id="si-email" label={t("common_email")}>

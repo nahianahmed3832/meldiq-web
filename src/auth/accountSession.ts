@@ -84,18 +84,28 @@ export class AccountSession implements Credentials {
   }
 
   private async refresh(): Promise<boolean> {
-    let current = this.tokens;
-    if (!current) {
-      // First use after a page load: the stored access token, if it still has a while to run, saves a swap.
-      current = await this.vault.load();
-      if (current && current.accessTokenExpiresAt - Date.now() > STORED_TOKEN_MARGIN_MS) {
-        this.tokens = current;
-        return true;
-      }
-    }
-    if (!current) {
+    const before = this.tokens ?? (await this.vault.load());
+    if (!before) {
       this.onEnded("session_ended");
       return false;
+    }
+    const renew = () => this.refreshStored(before);
+    // The same account may be open in several tabs. Serialize rotations across those tabs as well as this instance.
+    return typeof navigator !== "undefined" && navigator.locks ? navigator.locks.request(`meldiq-session-refresh:${before.sessionId}`, renew) : renew();
+  }
+
+  private async refreshStored(before: AccountTokens): Promise<boolean> {
+    const current = await this.vault.load();
+    if (!current) {
+      this.tokens = null;
+      this.onEnded("session_ended");
+      return false;
+    }
+    // A tab that rotated while we waited already persisted the new pair; reuse it instead of replaying our old token.
+    const updated = !this.tokens || current.refreshToken !== before.refreshToken;
+    if (updated && current.accessTokenExpiresAt - Date.now() > STORED_TOKEN_MARGIN_MS) {
+      this.tokens = current;
+      return true;
     }
     try {
       const grant = await this.accounts.refresh(current.refreshToken);

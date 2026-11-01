@@ -1,0 +1,72 @@
+
+ RUN  v4.1.12 /Volumes/code_files/meldiq_android/.claude/worktrees/profile-customization-system/server
+
+(node:79860) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:79860) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ✓ test/profile_media.test.ts > recognising media by its bytes > reads GIF and WebP sizes and frames, JPEG sizes, and refuses broken files 54ms
+ ✓ test/profile_media.test.ts > animated avatars > are advertised, and a GIF is served only to whoever may see the photo 370ms
+ ✓ test/profile_media.test.ts > animated avatars > refuse other files, oversized images and too many frames 903ms
+ ✓ test/profile_media.test.ts > animated avatars > turn a short video into a 3 s silent square loop with a poster, and refuse long ones 3800ms
+ ✓ test/profile_media.test.ts > animated avatars > are removed cleanly 49ms
+ ✓ test/profile_media.test.ts > profile banners and style > take a still JPEG or an animated GIF/WebP within the limits, never a video 127ms
+ ✓ test/profile_media.test.ts > profile banners and style > keeps a decoration, effect and accent from the fixed lists, shown to everyone 133ms
+(node:79860) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:79860) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ✓ test/profile_decorations.test.ts > the PNG parser > reads the size and an animated PNG's frames, and refuses broken files 35ms
+ ✓ test/profile_decorations.test.ts > kept in memory > Meldiq's own decorations > are listed with the classic frames and the template, and anyone can load their images 97ms
+ ✓ test/profile_decorations.test.ts > kept in memory > Meldiq's own decorations > are worn like the classic frames; an unknown one is refused 119ms
+ ✓ test/profile_decorations.test.ts > kept in memory > sending one in > takes a square PNG, WebP or GIF of 128 to 1024 px, with the maker's word that it's theirs 96ms
+ ✓ test/profile_decorations.test.ts > kept in memory > sending one in > stays out of sight until it's approved; its maker can see it and withdraw it 83ms
+ ✓ test/profile_decorations.test.ts > kept in memory > sending one in > allows three waiting at once, six for an artist 98ms
+ ✓ test/profile_decorations.test.ts > kept in memory > review in the admin console > is for support and operations admins, not billing admins 44ms
+ ✓ test/profile_decorations.test.ts > kept in memory > review in the admin console > approves one: it joins the catalog with its maker, its maker gets the Artist badge and room for six 136ms
+ ✓ test/profile_decorations.test.ts > kept in memory > review in the admin console > turns one down with a reason its maker sees 25ms
+ ✓ test/profile_decorations.test.ts > kept in memory > review in the admin console > counts who wears one, and taking it down takes it off them 158ms
+ ✓ test/profile_decorations.test.ts > kept in mongodb > Meldiq's own decorations > are listed with the classic frames and the template, and anyone can load their images 19ms
+ ✓ test/profile_decorations.test.ts > kept in mongodb > Meldiq's own decorations > are worn like the classic frames; an unknown one is refused 49ms
+ ✓ test/profile_decorations.test.ts > kept in mongodb > sending one in > takes a square PNG, WebP or GIF of 128 to 1024 px, with the maker's word that it's theirs 141ms
+ ✓ test/profile_decorations.test.ts > kept in mongodb > sending one in > stays out of sight until it's approved; its maker can see it and withdraw it 156ms
+ ✓ test/profile_decorations.test.ts > kept in mongodb > sending one in > allows three waiting at once, six for an artist 124ms
+ ✓ test/profile_decorations.test.ts > kept in mongodb > review in the admin console > is for support and operations admins, not billing admins 88ms
+ ✓ test/profile_decorations.test.ts > kept in mongodb > review in the admin console > approves one: it joins the catalog with its maker, its maker gets the Artist badge and room for six 200ms
+ ✓ test/profile_decorations.test.ts > kept in mongodb > review in the admin console > turns one down with a reason its maker sees 60ms
+ ✓ test/profile_decorations.test.ts > kept in mongodb > review in the admin console > counts who wears one, and taking it down takes it off them 177ms
+(node:79860) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:79860) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ✓ test/profile_collectibles.test.ts > profile collection (sqlite) > requires authentication and paginates every category without duplicates 378ms
+ ✓ test/profile_collectibles.test.ts > profile collection (sqlite) > preserves an existing profile and refuses unowned and forged recipes 289ms
+ ✓ test/profile_collectibles.test.ts > profile collection (sqlite) > claims atomically once, persists ownership and never accepts a client price 108ms
+ ✓ test/profile_collectibles.test.ts > profile collection (sqlite) > keeps favorites private and equips owned slots with a revision check 1772ms
+ ✓ test/profile_collectibles.test.ts > profile collection (sqlite) > rolls back mixed invalid updates and reconciles old-client changes 188ms
+ ✓ test/profile_collectibles.test.ts > profile collection (sqlite) > enforces super-admin catalog editing, supports grants and deactivation 315ms
+ ✓ test/profile_collectibles.test.ts > profile collection (sqlite) > publishes only profile notices and handles seasonal expiry without deleting ownership 865ms
+ ✓ test/profile_collectibles.test.ts > profile collection (sqlite) > decodes raster assets, generates static fallbacks, enforces safe types and cache validators 1469ms
+ ✓ test/profile_collectibles.test.ts > profile collection (mongodb) > requires authentication and paginates every category without duplicates 109ms
+ ✓ test/profile_collectibles.test.ts > profile collection (mongodb) > preserves an existing profile and refuses unowned and forged recipes 132ms
+ ✓ test/profile_collectibles.test.ts > profile collection (mongodb) > claims atomically once, persists ownership and never accepts a client price 263ms
+ ✓ test/profile_collectibles.test.ts > profile collection (mongodb) > keeps favorites private and equips owned slots with a revision check 658ms
+ ✓ test/profile_collectibles.test.ts > profile collection (mongodb) > rolls back mixed invalid updates and reconciles old-client changes 88ms
+ ✓ test/profile_collectibles.test.ts > profile collection (mongodb) > enforces super-admin catalog editing, supports grants and deactivation 499ms
+ ✓ test/profile_collectibles.test.ts > profile collection (mongodb) > publishes only profile notices and handles seasonal expiry without deleting ownership 589ms
+ ✓ test/profile_collectibles.test.ts > profile collection (mongodb) > decodes raster assets, generates static fallbacks, enforces safe types and cache validators 1145ms
+ ✓ test/schema.test.ts > checked-in schema > is what the migrations create (run `npm run schema` after adding a migration) 2637ms
+ ✓ test/schema.test.ts > checked-in schema > gives every table its domain without a database 129ms
+ ✓ test/schema.test.ts > checked-in schema > matches the live schema table by table, keys and indexes included 1151ms
+ ✓ test/schema.test.ts > which domains may be in MongoDB together > refuses identity in MongoDB while tables that reference it are still in SQLite 7ms
+ ✓ test/schema.test.ts > which domains may be in MongoDB together > accepts every stage of the cutover runbook, and everything at once 1ms
+(node:79860) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:79860) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ✓ test/profile_live.test.ts > live profile changes > a new name or status reaches the person's own devices and the people they talk with, not strangers 446ms
+ ✓ test/profile_live.test.ts > live profile changes > a new or removed photo is announced 30ms
+ ✓ test/profile_live.test.ts > live profile changes > privacy changes are announced, since what others may see changed 37ms
+ ✓ test/profile_live.test.ts > live profile changes > blocking and message settings reach only the person's own devices 440ms
+
+ Test Files  5 passed (5)
+      Tests  51 passed (51)
+   Start at  00:15:04
+   Duration  235.00s (transform 13.57s, setup 0ms, import 66.55s, tests 159.46s, environment 4ms)
+

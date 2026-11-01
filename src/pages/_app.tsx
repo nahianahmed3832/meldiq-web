@@ -27,6 +27,7 @@ import "../styles/official-bots.css";
 import "../styles/responsive.css";
 import "../styles/settings-redesign.css";
 import "../styles/embers.css";
+import "../styles/collection.css";
 import "../styles/leaderboards.css";
 import "../styles/identity-marks.css";
 import "../styles/mobile.css"; // mobile interaction and visual-viewport refinements

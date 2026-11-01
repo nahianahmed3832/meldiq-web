@@ -1,0 +1,25 @@
+id,name,category,rarity,acquisition,format,colors,pattern,platforms
+ion-halo,Ion Halo,avatar-frame,common,free,Original procedural CSS/Compose; optional approved raster overlay,#22d3ee #6366f1,orbit,web android windows macos
+violet-circuit,Violet Circuit,avatar-frame,epic,premium,Original procedural CSS/Compose; optional approved raster overlay,#a78bfa #ec4899,prism,web android windows macos
+glacier-ring,Glacier Ring,avatar-frame,rare,free,Original procedural CSS/Compose; optional approved raster overlay,#38bdf8 #164e63,grid,web android windows macos
+signal-glow,Signal Glow,avatar-effect,common,free,Original procedural CSS/Compose; optional approved raster overlay,#22d3ee #6366f1,orbit,web android windows macos
+petal-orbit,Petal Orbit,avatar-effect,epic,premium,Original procedural CSS/Compose; optional approved raster overlay,#a78bfa #ec4899,prism,web android windows macos
+polar-pulse,Polar Pulse,avatar-effect,rare,free,Original procedural CSS/Compose; optional approved raster overlay,#38bdf8 #164e63,grid,web android windows macos
+midnight-mesh,Midnight Mesh,background,common,free,Original procedural CSS/Compose; optional approved raster overlay,#22d3ee #6366f1,orbit,web android windows macos
+prism-garden,Prism Garden,background,epic,premium,Original procedural CSS/Compose; optional approved raster overlay,#a78bfa #ec4899,prism,web android windows macos
+deep-current,Deep Current,background,rare,free,Original procedural CSS/Compose; optional approved raster overlay,#38bdf8 #164e63,grid,web android windows macos
+blue-horizon,Blue Horizon,banner,common,free,Original SVG plus CSS/Compose fallback; WebP/AVIF derivatives,#22d3ee #6366f1,orbit,web android windows macos
+afterglow,Afterglow,banner,epic,premium,Original procedural CSS/Compose; optional approved raster overlay,#a78bfa #ec4899,prism,web android windows macos
+signal-grid,Signal Grid,banner,rare,free,Original procedural CSS/Compose; optional approved raster overlay,#38bdf8 #164e63,grid,web android windows macos
+nightwave,Nightwave,profile-theme,common,free,Original procedural CSS/Compose; optional approved raster overlay,#22d3ee #6366f1,orbit,web android windows macos
+velvet-arcade,Velvet Arcade,profile-theme,epic,premium,Original procedural CSS/Compose; optional approved raster overlay,#a78bfa #ec4899,prism,web android windows macos
+calm-waters,Calm Waters,profile-theme,rare,free,Original procedural CSS/Compose; optional approved raster overlay,#38bdf8 #164e63,grid,web android windows macos
+electric-ink,Electric Ink,name-effect,common,free,Original procedural CSS/Compose; optional approved raster overlay,#22d3ee #6366f1,orbit,web android windows macos
+violet-signature,Violet Signature,name-effect,epic,premium,Original procedural CSS/Compose; optional approved raster overlay,#a78bfa #ec4899,prism,web android windows macos
+frostlight,Frostlight,name-effect,rare,free,Original procedural CSS/Compose; optional approved raster overlay,#38bdf8 #164e63,grid,web android windows macos
+first-light,First Light,badge,common,free,Original procedural CSS/Compose; optional approved raster overlay,#22d3ee #6366f1,orbit,web android windows macos
+community-heart,Community Heart,badge,epic,event,Original procedural CSS/Compose; optional approved raster overlay,#a78bfa #ec4899,prism,web android windows macos
+explorer,Explorer,badge,rare,free,Original procedural CSS/Compose; optional approved raster overlay,#38bdf8 #164e63,grid,web android windows macos
+orbit-dust,Orbit Dust,particles,common,free,Original procedural CSS/Compose; optional approved raster overlay,#22d3ee #6366f1,orbit,web android windows macos
+prism-sparks,Prism Sparks,particles,epic,premium,Original procedural CSS/Compose; optional approved raster overlay,#a78bfa #ec4899,prism,web android windows macos
+quiet-stars,Quiet Stars,particles,rare,free,Original procedural CSS/Compose; optional approved raster overlay,#38bdf8 #164e63,grid,web android windows macos

@@ -1,8 +1,9 @@
+import { CollectibleBanner, CollectibleBadge, collectibleCardVars } from "../people/CollectibleLayers";
 import { useEngine, useOrbit } from "../../application/orbit";
 import { userProfile } from "../../sync/account";
 import { usePhoto } from "../components/photos";
 import { StyledName } from "../people/NameStyle";
-import { ProfileEffect, StyledAvatar } from "../people/ProfileStyle";
+import { ProfileEffect, StyledAvatar, useReducedMotion } from "../people/ProfileStyle";
 import { LevelRing } from "../people/LevelRing";
 import { themeBackground, themeColorsOf, themeVars } from "../people/profileTheme";
 import { useLoad } from "../workspace/useLoad";
@@ -16,6 +17,7 @@ import { ProfilePins } from "../people/ProfilePins";
  */
 export function ProfilePreviewCard() {
   const engine = useEngine();
+  const reducedMotion = useReducedMotion();
   const me = useOrbit((s) => s.me);
   const photoRev = useOrbit((s) => (s.me ? (s.users[s.me.userId]?.photoRev ?? null) : null));
   const profilesRev = useOrbit((s) => s.profilesRev);
@@ -39,12 +41,22 @@ export function ProfilePreviewCard() {
         <span className="settings-label">Live preview</span>
         <span className="profile-preview-dot" aria-hidden="true" />
       </div>
-      <div className={`profile-pop style-preview card${theme ? " themed" : ""}`} style={themeVars(theme)}>
+      <div className={`profile-pop style-preview card${theme ? " themed" : ""}`} style={{ ...themeVars(theme), ...collectibleCardVars(style, !reducedMotion) }}>
         <div className="profile-pop-banner" style={bannerUrl ? { backgroundImage: `url(${bannerUrl})` } : { background: theme ? themeBackground(theme) : "var(--brand-gradient)" }}>
+          <CollectibleBanner style={style} />
           <ProfileEffect effect={style.effect} />
         </div>
         <div className="profile-pop-avatar">
-          <StyledAvatar userId={me.userId} name={name} colorIndex={me.avatarColor} photoRev={photoRev} media={p?.avatarMedia ?? null} decoration={style.decoration} size={84} />
+          <StyledAvatar
+            userId={me.userId}
+            name={name}
+            colorIndex={me.avatarColor}
+            photoRev={photoRev}
+            media={p?.avatarMedia ?? null}
+            decoration={style.decoration}
+            collectibles={style.collectibles}
+            size={84}
+          />
         </div>
         <div className="profile-pop-body">
           <h3 className="profile-pop-name ellipsis" style={{ fontSize: 19 }}>
@@ -56,6 +68,7 @@ export function ProfilePreviewCard() {
             {pronouns && <span className="faint"> · {pronouns}</span>}
           </p>
           {about && <p className="profile-preview-about">{about}</p>}
+          <CollectibleBadge style={style} />
           <ProfilePins pins={p?.pins ?? []} />
         </div>
       </div>

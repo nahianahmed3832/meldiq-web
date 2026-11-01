@@ -229,3 +229,9 @@ export async function signInWithDevice(base: string, device: DeviceRecord, passw
   const signature = await sign(device.keys.signing.privateKey, canonical.authProof("login", nonce, device.keys.signingPublic));
   return accounts.login(email ?? device.account.email, password, device.deviceName, { deviceId: device.deviceId, nonce, signature }, totpCode);
 }
+
+/** Fresh device proof for external sign-in; provider proof never substitutes for possession of encryption keys. */
+export async function socialDeviceProof(base: string, device: DeviceRecord): Promise<DeviceProof> {
+  const nonce = await AccountApi.anonymous(base).challenge();
+  return { deviceId: device.deviceId, nonce, signature: await sign(device.keys.signing.privateKey, canonical.authProof("login", nonce, device.keys.signingPublic)) };
+}

@@ -1,0 +1,110 @@
+[WebServer] (node:80091) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:80137) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:80141) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:80141) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+[WebServer] (node:80141) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+[WebServer] (node:80239) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] [plugin vite:resolve] Module "crypto" has been externalized for browser compatibility, imported by "/Volumes/code_files/meldiq_web/node_modules/@hpke/common/esm/src/algorithm.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+[WebServer] [plugin vite:resolve] Module "crypto" has been externalized for browser compatibility, imported by "/Volumes/code_files/meldiq_web/node_modules/@hpke/common/esm/src/utils/misc.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+[WebServer] [plugin vite:resolve] Module "crypto" has been externalized for browser compatibility, imported by "/Volumes/code_files/meldiq_web/node_modules/@hpke/common/esm/src/utils/misc.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+[WebServer] ../../../Volumes/code_files/meldiq_web/node_modules/@hpke/common/esm/src/utils/noble.js (82:20): A comment
+[WebServer] 
+[WebServer] "/* @__PURE__ */"
+[WebServer] 
+[WebServer] in "../../../Volumes/code_files/meldiq_web/node_modules/@hpke/common/esm/src/utils/noble.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+[WebServer] ../../../Volumes/code_files/meldiq_web/node_modules/@hpke/common/esm/src/utils/noble.js (122:22): A comment
+[WebServer] 
+[WebServer] "/* @__PURE__ */"
+[WebServer] 
+[WebServer] in "../../../Volumes/code_files/meldiq_web/node_modules/@hpke/common/esm/src/utils/noble.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+[WebServer] ../../../Volumes/code_files/meldiq_web/node_modules/@hpke/common/esm/src/hash/sha3.js (559:0): A comment
+[WebServer] 
+[WebServer] "// export const sha3_224: CHash = /* @__PURE__ */ genKeccak("
+[WebServer] 
+[WebServer] in "../../../Volumes/code_files/meldiq_web/node_modules/@hpke/common/esm/src/hash/sha3.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+[WebServer] ../../../Volumes/code_files/meldiq_web/node_modules/@hpke/common/esm/src/hash/sha3.js (563:0): A comment
+[WebServer] 
+[WebServer] "//   /* @__PURE__ */ oidNist(0x07),"
+[WebServer] 
+[WebServer] in "../../../Volumes/code_files/meldiq_web/node_modules/@hpke/common/esm/src/hash/sha3.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+[WebServer] ../../../Volumes/code_files/meldiq_web/node_modules/@hpke/common/esm/src/hash/sha3.js (593:0): A comment
+[WebServer] 
+[WebServer] "//   /* @__PURE__ */"
+[WebServer] 
+[WebServer] in "../../../Volumes/code_files/meldiq_web/node_modules/@hpke/common/esm/src/hash/sha3.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+[WebServer] ../../../Volumes/code_files/meldiq_web/node_modules/@hpke/common/esm/src/hash/sha3.js (594:0): A comment
+[WebServer] 
+[WebServer] "//   genShake(0x1f, 168, 32, /* @__PURE__ */ oidNist(0x0b));"
+[WebServer] 
+[WebServer] in "../../../Volumes/code_files/meldiq_web/node_modules/@hpke/common/esm/src/hash/sha3.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+[WebServer] ../../../Volumes/code_files/meldiq_web/node_modules/@hpke/common/esm/src/hash/sha3.js (597:0): A comment
+[WebServer] 
+[WebServer] "//   /* @__PURE__ */"
+[WebServer] 
+[WebServer] in "../../../Volumes/code_files/meldiq_web/node_modules/@hpke/common/esm/src/hash/sha3.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+[WebServer] ../../../Volumes/code_files/meldiq_web/node_modules/@hpke/common/esm/src/hash/sha3.js (598:0): A comment
+[WebServer] 
+[WebServer] "//   genShake(0x1f, 136, 64, /* @__PURE__ */ oidNist(0x0c));"
+[WebServer] 
+[WebServer] in "../../../Volumes/code_files/meldiq_web/node_modules/@hpke/common/esm/src/hash/sha3.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+[WebServer] (node:80287) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:80341) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:80354) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] ⚠ Specified "rewrites" will not automatically work with "output: export". See more info here: https://nextjs.org/docs/messages/export-no-custom-routes
+[WebServer] (node:81541) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 2 tests using 1 worker
+
+(node:81543) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] [browser] Service Worker registration blocked by Playwright (<anonymous>:3:100)
+[WebServer] [browser] Service Worker registration blocked by Playwright (<anonymous>:3:100)
+  ✓  1 [chromium] › e2e/profile-collection.spec.ts:7:1 › profile collection previews, claims, equips and resets across devices (50.0s)
+(node:81929) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] [browser] Service Worker registration blocked by Playwright (<anonymous>:3:100)
+[WebServer] [browser] Service Worker registration blocked by Playwright (<anonymous>:3:100)
+  ✘  2 [phone-width] › e2e/profile-collection.spec.ts:7:1 › profile collection previews, claims, equips and resets across devices (3.1m)
+
+
+  1) [phone-width] › e2e/profile-collection.spec.ts:7:1 › profile collection previews, claims, equips and resets across devices 
+
+    Test timeout of 180000ms exceeded.
+
+    Error: locator.click: Test timeout of 180000ms exceeded.
+    Call log:
+      - waiting for getByRole('dialog', { name: 'Profile collection', exact: true }).locator('.collection-pick').filter({ hasText: 'Ion Halo' })
+        - waiting for navigation to finish...
+        - navigated to "http://127.0.0.1:5581/settings/profile"
+
+
+      12 |   const studio = page.getByRole("dialog", { name: "Profile collection", exact: true });
+      13 |   await expect(studio.getByRole("heading", { name: "A little more you." })).toBeVisible();
+    > 14 |   await studio.locator(".collection-pick").filter({ hasText: "Ion Halo" }).click();
+         |                                                                            ^
+      15 |   await expect(studio.getByRole("button", { name: "Apply look", exact: true })).toBeDisabled();
+      16 |   expect((await phone.req("GET", "/v2/users/me/profile-customization")).profileStyle.collectibles ?? []).toEqual([]);
+      17 |   await studio.getByRole("button", { name: "Collect for free", exact: true }).click();
+        at /private/tmp/meldiq-collection-web-verify/e2e/profile-collection.spec.ts:14:76
+
+    Error Context: test-results/profile-collection-profile-0661f-s-and-resets-across-devices-phone-width/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    test-results/profile-collection-profile-0661f-s-and-resets-across-devices-phone-width/trace.zip
+    Usage:
+
+        npx playwright show-trace test-results/profile-collection-profile-0661f-s-and-resets-across-devices-phone-width/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [phone-width] › e2e/profile-collection.spec.ts:7:1 › profile collection previews, claims, equips and resets across devices 
+  1 passed (9.9m)

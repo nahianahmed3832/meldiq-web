@@ -1,3 +1,4 @@
+import { CollectionStudio } from "./CollectionStudio";
 import { ChevronRight, Clapperboard, ImagePlus, Sparkles, Trash2 } from "lucide-react";
 import { type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ApiError } from "../../api/client";
@@ -104,9 +105,19 @@ export function ProfileStyleCard({ nameStyles, pictureControls }: { nameStyles: 
   if (!me) return null;
   return (
     <div className="profile-look" aria-label="Look">
+      <CollectionStudio />
       <div className="profile-customize-banner">
         <div className="profile-customize-art" aria-hidden="true">
-          <StyledAvatar userId={me.userId} name={me.displayName} colorIndex={me.avatarColor} photoRev={photoRev} media={null} decoration={style.decoration} size={48} />
+          <StyledAvatar
+            userId={me.userId}
+            name={me.displayName}
+            colorIndex={me.avatarColor}
+            photoRev={photoRev}
+            media={null}
+            decoration={style.decoration}
+            collectibles={style.collectibles}
+            size={48}
+          />
           <Sparkles size={20} />
         </div>
         <div className="lines grow">
@@ -201,7 +212,16 @@ export function ProfileStyleCard({ nameStyles, pictureControls }: { nameStyles: 
 
       <div className="style-rows">
         <button type="button" className="style-row" onClick={() => setOpen("decoration")}>
-          <StyledAvatar userId={me.userId} name={me.displayName} colorIndex={me.avatarColor} photoRev={photoRev} media={null} decoration={style.decoration} size={36} />
+          <StyledAvatar
+            userId={me.userId}
+            name={me.displayName}
+            colorIndex={me.avatarColor}
+            photoRev={photoRev}
+            media={null}
+            decoration={style.decoration}
+            collectibles={style.collectibles}
+            size={36}
+          />
           <span className="lines grow">
             <strong>Avatar decoration</strong>
             <small className="faint">{decorationName}</small>

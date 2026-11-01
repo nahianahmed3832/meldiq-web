@@ -3,7 +3,7 @@ import type { SettingsPage } from "../../application/router";
 type SettingInfo = { scope: string; description: string; keywords: string };
 /** Search routes to the existing settings pages; availability is filtered by the caller's features and permissions. */
 export const SETTINGS_INFO: Partial<Record<SettingsPage, SettingInfo>> = {
-  account: { scope: "Your account", description: "Email, password and account recovery", keywords: "login sign in delete recovery codes" },
+  account: { scope: "Your account", description: "Email, password and account recovery", keywords: "login sign in delete recovery codes google apple discord connected accounts" },
   profile: { scope: "Your global profile", description: "Avatar, banner, name style, decoration and bio", keywords: "photo picture pronouns badge tag identity color colour font animation" },
   security: { scope: "Your account", description: "Privacy, encryption and account protection", keywords: "keys recovery safety block passkey" },
   devices: { scope: "Your account", description: "Manage signed-in devices and link a browser", keywords: "sessions phone approve sign out" },

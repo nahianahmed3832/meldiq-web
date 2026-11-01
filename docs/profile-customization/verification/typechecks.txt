@@ -1,0 +1,6 @@
+Backend TypeScript: PASS (tsc --noEmit, incremental, 1536 MiB heap).
+Web TypeScript: PASS (tsc -b; final shallow collectible domain type annotations included).
+Admin TypeScript: PASS (tsc -b, 512 MiB heap).
+Web/admin changed-file ESLint: PASS.
+Web changed-file Prettier check: PASS.
+Android compileDebugKotlin: PASS. Full testDebugUnitTest: 987 passed, 10 skipped, 0 failures.

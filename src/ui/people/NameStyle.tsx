@@ -156,6 +156,7 @@ export function LookAvatar(p: LookAvatarProps) {
       photoRev={p.photoRev ?? null}
       media={look.avatarMedia ?? null}
       decoration={look.profileStyle?.decoration ?? null}
+      collectibles={look.profileStyle?.collectibles}
       size={p.size}
       online={p.online}
       presence={p.presence}

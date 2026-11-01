@@ -7,12 +7,15 @@ import { listCopy, readCopy } from "./support/contracts";
  * ClientEvent, and every captured server frame is read by the socket and the engine; unknown names and fields are ignored.
  */
 type Shape = { properties: Record<string, { const?: string; type?: string; items?: { type: string } }>; required: string[]; additionalProperties: boolean };
-const clientEvents = readCopy<{ anyOf: Shape[] }>("realtime-client.schema.json").anyOf;
+const clientUnion = readCopy<{ anyOf?: Shape[]; oneOf?: Shape[] }>("realtime-client.schema.json");
+// Current generated discriminated unions use oneOf; older published contracts used anyOf.
+const clientEvents = clientUnion.oneOf ?? clientUnion.anyOf;
+if (!clientEvents?.length) throw new Error("The published ClientEvent contract has no union members");
 
 /** The schema's own rules for one frame: its `t`, required fields, no others, and each field's JSON type. */
 function problems(text: string): string[] {
   const f = JSON.parse(text) as Record<string, unknown>;
-  const shape = clientEvents.find((s) => s.properties.t?.const === f.t);
+  const shape = clientEvents!.find((s) => s.properties.t?.const === f.t);
   if (!shape) return [`no ClientEvent "${String(f.t)}"`];
   const out: string[] = [];
   for (const k of shape.required) if (!(k in f)) out.push(`missing ${k}`);
