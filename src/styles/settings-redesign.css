@@ -520,7 +520,7 @@
 
 /* The settings tab is deliberately lighter than the app behind it. */
 .settings-window:has(.user-settings) {
-  width: min(1400px, calc(100vw - 80px));
+  width: min(1400px, 84vw);
   height: min(940px, calc(100dvh - 48px));
   background: color-mix(in srgb, var(--surface-raised) 88%, #797b94);
   border: 1px solid color-mix(in srgb, var(--border) 65%, #999bae 16%);

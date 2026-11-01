@@ -9,7 +9,7 @@ function QuestRow({ quest }: { quest: Quest }) {
   const shown = Math.min(quest.progress, quest.goal);
   return (
     <li className={`quest${done ? " done" : ""}`}>
-      <span className="quest-reward" aria-label={`${quest.reward} points`}>
+      <span className="quest-reward" aria-label={`${quest.reward} Embers`}>
         +{quest.reward}
       </span>
       <span className="lines grow">

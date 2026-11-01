@@ -26,6 +26,19 @@ const zHistoryRow = z.object({
 });
 export type PointsHistoryRow = z.infer<typeof zHistoryRow>;
 
+const zAchievement = z.object({
+  id: z.string(),
+  name: z.string(),
+  description: z.string(),
+  category: z.string(),
+  tier: z.enum(["bronze", "silver", "gold", "mythic"]),
+  icon: z.string(),
+  goal: z.number().positive(),
+  progress: z.number().nonnegative(),
+  earnedAt: z.number().nullable(),
+});
+export type Achievement = z.infer<typeof zAchievement>;
+
 export const zPoints = z.object({
   balance: z.number().int(),
   earnedToday: z.number().int(),
@@ -43,6 +56,7 @@ export const zPoints = z.object({
   quests: z.array(zQuest),
   invites: z.object({ pending: z.number().int(), credited: z.number().int(), creditedThisMonth: z.number().int(), monthlyLimit: z.number().int() }),
   history: z.array(zHistoryRow),
+  achievements: z.array(zAchievement).default([]),
 });
 export type Points = z.infer<typeof zPoints>;
 

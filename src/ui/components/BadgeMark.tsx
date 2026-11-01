@@ -13,7 +13,13 @@ export function BadgeMark({ name, description, className = "", children }: { nam
   useEffect(() => {
     if (!at) return;
     const dismiss = (event: Event) => {
-      if (event instanceof KeyboardEvent && event.key !== "Escape") return;
+      if (event instanceof KeyboardEvent) {
+        if (event.key !== "Escape") return;
+        event.preventDefault();
+        event.stopPropagation();
+        setAt(null);
+        return;
+      }
       if (!ref.current?.contains(event.target as Node)) setAt(null);
     };
     document.addEventListener("pointerdown", dismiss, true);
@@ -34,6 +40,7 @@ export function BadgeMark({ name, description, className = "", children }: { nam
         role="img"
         aria-label={`${name}: ${description}`}
         tabIndex={0}
+        onBlur={() => setAt(null)}
         onClick={(e) => {
           e.stopPropagation();
           open();

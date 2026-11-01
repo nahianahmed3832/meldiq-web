@@ -8,6 +8,7 @@ import { themeBackground, themeColorsOf, themeVars } from "../people/profileThem
 import { useLoad } from "../workspace/useLoad";
 import { NO_STYLE } from "./noStyle";
 import { useProfileDraft } from "./profileDraft";
+import { ProfilePins } from "../people/ProfilePins";
 
 /**
  * Settings › My Profile's right column (the reference, 2026-10-29): your profile card as others see it, following what
@@ -55,6 +56,7 @@ export function ProfilePreviewCard() {
             {pronouns && <span className="faint"> · {pronouns}</span>}
           </p>
           {about && <p className="profile-preview-about">{about}</p>}
+          <ProfilePins pins={p?.pins ?? []} />
         </div>
       </div>
       <p className="profile-preview-hint">A preview of how you’ll appear to others.</p>

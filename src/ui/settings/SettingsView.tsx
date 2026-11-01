@@ -8,7 +8,6 @@ import {
   Bookmark,
   ChevronLeft,
   ChevronRight,
-  Coins,
   Clapperboard,
   Code2,
   Headphones,
@@ -36,11 +35,10 @@ import { useLoad } from "../workspace/useLoad";
 import { ServiceHealthPage } from "./ServiceHealthPage";
 import { AdminUsagePage } from "./AdminUsagePage";
 import { navigate, type SettingsPage } from "../../application/router";
-import { AboutPage, AppearancePage, NotificationsPage } from "./PreferencePages";
+import { AppearancePage, NotificationsPage } from "./PreferencePages";
 import { AccountSettingsPage } from "./AccountSettingsPage";
 import { DevicesPage, SecurityPage } from "./AccountPages";
 import { ProfilePage } from "./ProfilePage";
-import { StoragePage } from "./StoragePage";
 import { type StringKey, useT } from "../../i18n";
 import { YouCard } from "./YouCard";
 import { InstallButton } from "./InstallButton";
@@ -49,6 +47,7 @@ import { BillingPage } from "../billing/BillingPage";
 import { MojoPage } from "../mojo/MojoPage";
 import { SparkPage } from "../mojo/SparkPage";
 import { PointsPage } from "../points/PointsPage";
+import { EmberIcon } from "../components/EmberIcon";
 import { CreatorsPage } from "../creators/CreatorsPage";
 import { DeveloperPage } from "../developer/DeveloperPage";
 
@@ -73,7 +72,7 @@ const APP_PAGES: PageEntry[] = [
   { key: "notifications", label: "settings_notifications", icon: <Bell size={17} /> },
   { key: "shortcuts", label: "settings_shortcuts", icon: <Keyboard size={17} /> },
   // API 0.65.0: points, quests and account levels (Gem is Spark's).
-  { key: "points", label: "settings_points", icon: <Coins size={17} />, features: ["points"] },
+  { key: "points", label: "settings_points", icon: <EmberIcon size={19} />, features: ["points"] },
   { key: "advanced", label: "settings_advanced", icon: <SlidersHorizontal size={17} /> },
   // API 0.65.0 batch B: bots and "Log in with Meldiq" apps.
   { key: "developer", label: "settings_developer", icon: <Code2 size={17} />, features: ["bots", "oauth-apps"] },
@@ -81,7 +80,8 @@ const APP_PAGES: PageEntry[] = [
   { key: "creators", label: "settings_creators", icon: <Clapperboard size={17} />, features: ["creator-program"] },
 ];
 
-export function SettingsView({ page, onSignedOut }: { page: SettingsPage; onSignedOut: () => void }) {
+export function SettingsView({ page: requestedPage, onSignedOut }: { page: SettingsPage; onSignedOut: () => void }) {
+  const page = requestedPage === "storage" || requestedPage === "about" ? "profile" : requestedPage;
   const engine = useEngine();
   const accountAction = useAccountActions();
   const [query, setQuery] = useState("");
@@ -212,9 +212,7 @@ export function SettingsView({ page, onSignedOut }: { page: SettingsPage; onSign
             {page === "notifications" && <NotificationsPage />}
             {page === "calls" && <CallsPage />}
             {page === "appearance" && <AppearancePage />}
-            {page === "storage" && <StoragePage />}
             {page === "security" && <SecurityPage onSignedOut={onSignedOut} />}
-            {page === "about" && <AboutPage />}
             {page === "advanced" && <AdvancedPage />}
             {page === "shortcuts" && <ShortcutsPage />}
             {page === "health" && <ServiceHealthPage />}

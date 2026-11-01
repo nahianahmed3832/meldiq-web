@@ -17,6 +17,17 @@ const QUESTS: Record<string, { task: (goal: number) => string; name: string }> =
   communities: { task: (n) => `Join ${n} communities`, name: "Join communities" },
   decoration: { task: () => "Wear an avatar decoration", name: "Wear a decoration" },
   "two-step": { task: () => "Turn on two-step sign-in", name: "Two-step sign-in" },
+  "daily-active": { task: (n) => `Chat during ${n} different active minutes`, name: "Keep the conversation going" },
+  "daily-appreciation": { task: (n) => `Appreciate ${n} messages from other people`, name: "Share some appreciation" },
+  "daily-thoughtful": { task: (n) => `Reply thoughtfully to ${n} different messages`, name: "Thoughtful replies" },
+  "daily-conversations": { task: (n) => `Join the conversation in ${n} different chats`, name: "Make the rounds" },
+  avatar: { task: () => "Choose a profile picture", name: "A face to remember" },
+  bio: { task: () => "Write your About me", name: "Tell your story" },
+  banner: { task: () => "Add a profile banner", name: "Set the scene" },
+  pronouns: { task: () => "Add your pronouns if you'd like to share them", name: "Introduce yourself" },
+  "first-community": { task: () => "Join your first community", name: "Find your campfire" },
+  "community-explorer": { task: (n) => `Explore ${n} communities`, name: "Explore together" },
+  "close-circle": { task: (n) => `Make ${n} connections`, name: "Build your circle" },
 };
 
 /** An id this version doesn't know, read as words ("new-quest" → "New quest"). */
@@ -43,7 +54,7 @@ export function historyLabel(row: Pick<PointsHistoryRow, "kind" | "detail">): st
     case "level":
       return row.detail ? `Reached level ${row.detail}` : "Level up";
     default:
-      return "Points";
+      return "Embers";
   }
 }
 
