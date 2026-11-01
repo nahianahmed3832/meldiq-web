@@ -40,6 +40,8 @@ describe("profile collectible rendering and draft safety", () => {
   });
   it("uses a static, bounded recipe and asset references supplied by the API", () => {
     expect(recipeBackground(item).background).toContain("radial-gradient");
+    const grid = { ...item, category: "background" as const, recipe: { ...item.recipe, pattern: "grid" as const } };
+    expect(collectibleCardVars({ ...NO_STYLE, collectibles: [grid] }).backgroundImage).toContain("repeating-linear-gradient");
     const background = { ...item, category: "background" as const, recipe: { ...item.recipe, assetId: "a".repeat(64) } };
     expect(collectibleCardVars({ ...NO_STYLE, collectibles: [background] }).backgroundImage).toContain(`/v2/profile-collectibles/assets/${"a".repeat(64)}/poster`);
   });

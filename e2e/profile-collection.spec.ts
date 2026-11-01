@@ -24,6 +24,9 @@ test("profile collection previews, claims, equips and resets across devices", as
   await studio.locator(".collection-pick").filter({ hasText: "Violet Circuit" }).click();
   await expect(studio.getByText("Requires an authorized premium grant.")).toBeVisible();
   await expect(studio.getByRole("button", { name: "Apply look", exact: true })).toBeDisabled();
+  await studio.getByRole("button", { name: "Backgrounds", exact: true }).click();
+  await studio.locator(".collection-pick").filter({ hasText: "Deep Current" }).click();
+  await expect(studio.locator(".collection-profile")).toHaveCSS("background-image", /repeating-linear-gradient/);
   await studio.getByRole("button", { name: "Banners", exact: true }).click();
   await studio.locator(".collection-pick").filter({ hasText: "Blue Horizon" }).click();
   await expect(studio.locator(".collectible-banner")).toBeVisible();

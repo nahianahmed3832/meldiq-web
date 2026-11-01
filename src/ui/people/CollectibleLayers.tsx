@@ -21,7 +21,7 @@ export function collectibleCardVars(style: ProfileStyle | null | undefined, anim
   return {
     ...(background
       ? {
-          backgroundImage: `linear-gradient(#0b1224d9, #0b1224e8), ${background.recipe.assetId ? `url("${collectionAsset(background.recipe.assetId, animate ? "full" : "poster")}")` : `linear-gradient(135deg, ${background.recipe.colors.join(",")})`}`,
+          backgroundImage: `linear-gradient(#0b1224d9, #0b1224e8), ${background.recipe.assetId ? `url("${collectionAsset(background.recipe.assetId, animate ? "full" : "poster")}")` : recipeBackground(background).background}`,
           backgroundSize: "cover",
         }
       : {}),
