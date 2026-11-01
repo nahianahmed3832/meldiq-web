@@ -39,7 +39,11 @@ export function useReadingPosition({
     const first = Array.from(el.querySelectorAll<HTMLElement>("[id^='msg-']")).find((child) => child.getBoundingClientRect().bottom > top);
     anchor.current = { id: first?.id.slice(4) ?? null, offset: first ? first.getBoundingClientRect().top - top : 0, atBottom };
     setAway(!atBottom);
-    if (atBottom) setUnseen(0);
+    if (atBottom) {
+      setUnseen(0);
+      // Safari versions without scrollend still finish following when the actual bottom is reached.
+      if (el.scrollHeight - el.scrollTop - el.clientHeight <= 1) jumping.current = false;
+    }
     callbacks.current.onReading?.(atBottom && !detached);
     return true;
   }, [detached, ready]);
