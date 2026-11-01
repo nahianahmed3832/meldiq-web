@@ -1,7 +1,7 @@
 import { AccountApi } from "../src/auth/accountApi";
 import type { AccountSessionGrant } from "../src/api/accountSchemas";
 import { AccountSession } from "../src/auth/accountSession";
-import { switchSavedAccount } from "../src/application/accountSwitch";
+import { blocksAccountSwitch, switchSavedAccount } from "../src/application/accountSwitch";
 import type { Engine } from "../src/sync/engine";
 import "fake-indexeddb/auto";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -112,7 +112,7 @@ describe("saved accounts", () => {
   it("a pending send prevents a switch before the active account changes", async () => {
     const a = await add(DB_NAME, "alice");
     const flush = vi.fn();
-    const engine = { store: { name: a.name, outbox: async () => [{}] }, state: { get: () => ({ call: { phase: "idle" } }) }, snapshots: { flush } } as unknown as Engine;
+    const engine = { store: { name: a.name, outbox: async () => [{ cls: "message" }] }, state: { get: () => ({ call: { phase: "idle" } }) }, snapshots: { flush } } as unknown as Engine;
     await expect(switchSavedAccount(engine, "another-account")).rejects.toThrow("pending messages");
     expect((await accountDirectory()).active).toBe(a.name);
     expect(flush).not.toHaveBeenCalled();
@@ -148,5 +148,12 @@ describe("saved accounts", () => {
     expect((await new TokenVault(a).load())?.refreshToken).toBe("refresh-rotated");
     session.resume();
     a.close();
+  });
+  it("read receipts do not block switching; pending messages and user changes still do", () => {
+    const item = (type: string, cls: "message" | "control" = "control") => ({ cls, payloadJson: JSON.stringify({ type }) }) as import("../src/model/types").OutboxItem;
+    expect(blocksAccountSwitch(item("read"))).toBe(false);
+    for (const type of ["reaction", "edit", "delete", "vote", "pin"]) expect(blocksAccountSwitch(item(type))).toBe(true);
+    expect(blocksAccountSwitch(item("text", "message"))).toBe(true);
+    expect(blocksAccountSwitch({ cls: "control", payloadJson: "broken" } as import("../src/model/types").OutboxItem)).toBe(true);
   });
 });

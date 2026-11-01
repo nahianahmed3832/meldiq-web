@@ -38,6 +38,12 @@ async function choose(page: Page, name: string, isMobile: boolean) {
 
 test("two real account sessions survive switching, cancellation, reload and logout of only one account", async ({ page, isMobile }, info) => {
   test.setTimeout(240000);
+  // A delayed read receipt is background bookkeeping, and must not trap the user in this account.
+  await page.route("**/v2/messages", async (route) => {
+    const body = route.request().postDataJSON();
+    if (body?.cls === "control" && body?.payload?.type === "read") return route.fulfill({ status: 503, json: { error: "busy", message: "Read receipt delayed" } });
+    await route.continue();
+  });
   const auth = new Map<string, { token: string; userId: string }>();
   page.on("response", async (response) => {
     if (new URL(response.url()).pathname !== "/v1/users/me" || !response.ok()) return;
