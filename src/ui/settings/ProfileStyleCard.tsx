@@ -1,5 +1,5 @@
-import { ChevronRight, Clapperboard, ImagePlus, Trash2 } from "lucide-react";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { ChevronRight, Clapperboard, ImagePlus, Sparkles, Trash2 } from "lucide-react";
+import { type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ApiError } from "../../api/client";
 import { PROFILE_EFFECTS } from "../../api/schemas";
 import { shallowEqual, useEngine, useOrbit } from "../../application/orbit";
@@ -13,7 +13,7 @@ import { DecorationWindow, useDecorationName } from "./DecorationWindow";
 import { describeNameLook, NameStyleWindow } from "./NameStyleWindow";
 import { NO_STYLE } from "./noStyle";
 import { useProfileDraft } from "./profileDraft";
-import { useStyleSaver } from "./useStyleSaver";
+import { useStyleDraft } from "./useStyleDraft";
 import { ProfileThemePicker } from "./ProfileThemePicker";
 import { ShownBadgePicker } from "./ShownBadgePicker";
 import type { NameBadgeKind } from "../people/NameBadge";
@@ -32,7 +32,7 @@ const LIMITS = { avatarImageMb: 4, clipMb: 12, clipSeconds: 6, bannerAnimatedMb:
  * preview is My Profile's right column. Each change saves at once; uploads say what's happening and what went wrong.
  * Who sees the avatar and banner follows the photo's setting under Privacy.
  */
-export function ProfileStyleCard({ nameStyles }: { nameStyles: boolean }) {
+export function ProfileStyleCard({ nameStyles, pictureControls }: { nameStyles: boolean; pictureControls?: ReactNode }) {
   const engine = useEngine();
   const me = useOrbit((s) => s.me);
   const photoRev = useOrbit((s) => (s.me ? (s.users[s.me.userId]?.photoRev ?? null) : null));
@@ -53,7 +53,7 @@ export function ProfileStyleCard({ nameStyles }: { nameStyles: boolean }) {
   const bannerInput = useRef<HTMLInputElement>(null);
   const p = profile.data;
   const reload = useCallback(() => setVersion((v) => v + 1), []);
-  const saver = useStyleSaver(
+  const saver = useStyleDraft(
     engine,
     useMemo(() => p?.profileStyle ?? NO_STYLE, [p]),
     reload,
@@ -103,13 +103,25 @@ export function ProfileStyleCard({ nameStyles }: { nameStyles: boolean }) {
 
   if (!me) return null;
   return (
-    <div className="card" style={{ padding: 20, display: "grid", gap: 18 }} aria-label="Look">
-      <div>
-        <h2 style={{ margin: 0, fontSize: 17 }}>Look</h2>
-        <p className="muted" style={{ margin: "4px 0 0" }}>
-          How you show up in messages, member lists and your profile card. The avatar and banner are shown to whoever may see your photo (Privacy).
-        </p>
+    <div className="profile-look" aria-label="Look">
+      <div className="profile-customize-banner">
+        <div className="profile-customize-art" aria-hidden="true">
+          <StyledAvatar userId={me.userId} name={me.displayName} colorIndex={me.avatarColor} photoRev={photoRev} media={null} decoration={style.decoration} size={48} />
+          <Sparkles size={20} />
+        </div>
+        <div className="lines grow">
+          <strong>Make your profile feel like you</strong>
+          <p>Find a frame that fits your personality.</p>
+        </div>
+        <button className="btn btn-primary" onClick={() => setOpen("decoration")}>
+          Browse frames <ChevronRight size={16} />
+        </button>
       </div>
+      <div className="profile-look-heading">
+        <h2>Look</h2>
+        <small className="faint">Preview your style before applying it.</small>
+      </div>
+      {pictureControls}
 
       {(error ?? saver.error) && (
         <div className="banner danger" role="alert">
@@ -227,6 +239,25 @@ export function ProfileStyleCard({ nameStyles }: { nameStyles: boolean }) {
       </section>
 
       {themeOn && <ProfileThemePicker style={style} onSave={setStyle} />}
+      <div className="row" style={{ gap: 8, flexWrap: "wrap" }}>
+        <button className="btn btn-secondary" disabled={saver.busy || !saver.dirty} onClick={saver.undo}>
+          Undo look change
+        </button>
+        <button
+          className="btn btn-secondary"
+          disabled={saver.busy || !saver.dirty}
+          onClick={() => {
+            saver.reset();
+            reload();
+          }}
+        >
+          Reset look
+        </button>
+        <button className="btn btn-primary" disabled={saver.busy || !saver.dirty} onClick={() => void saver.apply()}>
+          {saver.busy ? "Applying…" : "Apply look"}
+        </button>
+        {saver.dirty && <small role="status">Unsaved look preview</small>}
+      </div>
 
       {!themeOn && (
         <section className="setting-group" aria-labelledby="ps-accent">

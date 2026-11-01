@@ -117,10 +117,10 @@ export function SparkDialog({ orgId, name, onClose }: { orgId: string; name: str
                   className="btn btn-lg btn-mojo"
                   onClick={() => {
                     onClose();
-                    navigate({ section: "settings", settingsPage: "mojo" });
+                    navigate({ section: "settings", settingsPage: "spark" });
                   }}
                 >
-                  <Sparkles size={15} /> Get Sparks{catalog.onSale.spark ? ` (${money(catalog.onSale.spark.amountMinor, catalog.onSale.spark.currency)}/month each)` : ""}
+                  <Sparkles size={15} /> Get Sparks{catalog.onSale.spark ? ` (${money(catalog.onSale.spark.amountMinor, catalog.onSale.spark.currency)} each · one time)` : ""}
                 </button>
               )}
               {mine.length > 0 && !confirmTake && (

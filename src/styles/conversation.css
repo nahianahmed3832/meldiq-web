@@ -2446,8 +2446,29 @@ button.media-card {
   }
 }
 .member-list .member-row {
-  gap: 12px;
-  padding: 6px 8px;
+  gap: 14px;
+  padding: 10px 12px;
+  margin-block: 12px;
+  min-height: 64px;
+  border-radius: 12px;
+}
+.member-list .member-name {
+  gap: 6px;
+  flex-wrap: wrap;
+  row-gap: 4px;
+}
+.community-owner-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+  padding: 2px 6px;
+  border-radius: 6px;
+  color: var(--accent);
+  background: var(--accent-soft);
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1.4;
 }
 .member-list .member-name {
   font-size: var(--fs-lg);
@@ -2649,4 +2670,47 @@ button.media-card {
   .icon-btn.hide-xs {
     display: none;
   }
+}
+
+.unread-divider {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.xp-library {
+  padding: 8px;
+  display: grid;
+  gap: 8px;
+  border-bottom: 1px solid var(--border);
+  max-height: 220px;
+  overflow: auto;
+  flex-shrink: 0;
+}
+.xp-library-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(74px, 1fr));
+  gap: 4px;
+}
+.xp-library-item {
+  min-width: 0;
+  display: grid;
+  justify-items: center;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+.xp-library-pick {
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  min-width: 0;
+  width: 100%;
+  padding: 6px;
+}
+.xp-library-pick small {
+  max-width: 65px;
+}
+.xp-library-pick .custom-sticker {
+  max-height: 54px;
+  width: auto;
+  max-width: 100%;
 }

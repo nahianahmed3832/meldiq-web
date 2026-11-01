@@ -27,6 +27,7 @@ export function tokensOf(grant: AccountSessionGrant): AccountTokens {
 export class AccountSession implements Credentials {
   private tokens: AccountTokens | null = null;
   private inflight: Promise<boolean> | null = null;
+  private suspended = false;
   private readonly accounts: AccountApi;
 
   constructor(
@@ -67,8 +68,19 @@ export class AccountSession implements Credentials {
   }
 
   reauthenticate(): Promise<boolean> {
+    if (this.suspended) return Promise.resolve(false);
     this.inflight ??= this.refresh().finally(() => (this.inflight = null));
     return this.inflight;
+  }
+
+  /** Finish a rotating refresh before leaving this page, and prevent later responses starting another one. */
+  async suspend(): Promise<void> {
+    this.suspended = true;
+    await this.inflight;
+  }
+
+  resume(): void {
+    this.suspended = false;
   }
 
   private async refresh(): Promise<boolean> {

@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { clearExpressionCache } from "./expressions";
 import { ApiClient, ApiError } from "../api/client";
 import type { AccountSessionGrant } from "../api/accountSchemas";
 import {
@@ -7,6 +8,7 @@ import {
   type Member,
   type Org,
   type ServerInfo,
+  type ServerHistoryPage,
   type SessionGrant,
   zConversation,
   zMember,
@@ -147,7 +149,14 @@ export class Engine implements EngineContext {
   private uploader: HistoryUploader | null = null;
   private readTimers = new Map<string, ReturnType<typeof setTimeout>>();
   /** Per conversation: the oldest server time loaded from its history, and whether older messages remain. */
-  private readonly serverPages = new Map<string, { oldest: number | null; more: boolean }>();
+  private readonly serverPages = new Map<string, { oldest: number | null; more: boolean; nextCursor?: ServerHistoryPage["nextCursor"] }>();
+  private readonly olderLoads = new Map<string, Promise<void>>();
+  private readonly windowVersions = new Map<string, number>();
+  private openVersion = 0;
+  private readingLatest = false;
+  private viewReady = false;
+  private summariesLoaded = false;
+  private summaryLoad: Promise<void> | null = null;
   private lastReadSent = new Map<string, number>();
   private convFetches = new Map<string, Promise<Conversation | null>>();
   private userFetches = new Map<string, Promise<void>>();
@@ -366,27 +375,30 @@ export class Engine implements EngineContext {
   /** Conversations whose messages on screen are still the snapshot's: their first server page hasn't replaced them. */
   private readonly fromSnapshot = new Set<string>();
   /** Each conversation's first server page while it loads (one load, however many ask). */
-  private readonly firstPages = new Map<string, Promise<boolean>>();
+  private readonly firstPages = new Map<string, Promise<ServerHistoryPage | null>>();
 
   /**
-   * The conversation's newest page from the server; true once it's in. A conversation drawn from the snapshot then shows
+   * The conversation's newest page from the server; null if unavailable. A conversation drawn from the snapshot then shows
    * the server's messages instead, and actions on its messages run against them (live()).
    */
-  private firstPage(id: string): Promise<boolean> {
-    let p = this.firstPages.get(id);
+  private firstPage(id: string): Promise<ServerHistoryPage | null> {
+    const key = `${id}:${this.windowVersions.get(id) ?? 0}`;
+    let p = this.firstPages.get(key);
     if (!p) {
+      const version = this.windowVersions.get(id);
       p = this.fetchHistory(id, null)
-        .then(async () => {
-          if (this.fromSnapshot.has(id)) {
+        .then(async (page) => {
+          if (version === this.windowVersions.get(id) && this.fromSnapshot.has(id)) {
             const items = await this.store.latestMessages(id, PAGE);
+            if (version !== this.windowVersions.get(id)) return page;
             this.set((s) => withMessages(s, id, items, this.serverPages.get(id)?.more ?? items.length === PAGE));
             this.fromSnapshot.delete(id);
           }
-          return true;
+          return page;
         })
-        .catch(() => false)
-        .finally(() => this.firstPages.delete(id));
-      this.firstPages.set(id, p);
+        .catch(() => null)
+        .finally(() => this.firstPages.delete(key));
+      this.firstPages.set(key, p);
     }
     return p;
   }
@@ -441,6 +453,7 @@ export class Engine implements EngineContext {
   };
 
   stop(): void {
+    clearExpressionCache(this);
     this.stopped = true;
     this.snapshots.stop();
     this.uploader?.stop();
@@ -470,6 +483,10 @@ export class Engine implements EngineContext {
   /** Arranges a conversation on Home (starred, a section, its notification level) in its workspace's synced document. */
   arrange(conversationId: string, op: NavOp): Promise<void> {
     return this.nav.change(workspaceOf(this.state.get().conversations[conversationId]?.orgId ?? null), op);
+  }
+
+  expressionPreference(op: Extract<NavOp, { op: "expressionFavorite" | "expressionUsed" }>): Promise<void> {
+    return this.nav.change(PERSONAL, op);
   }
 
   /** Saved for later (android Home › Later): kept in the personal document, so every device of the person shows it. */
@@ -570,12 +587,12 @@ export class Engine implements EngineContext {
   }
 
   private async loadLocal(): Promise<void> {
-    const locals = await this.store.conversations();
-    // The server's last known features come back with the rest (brief v4 §15): the first paint lays communities out as
-    // the server does (categories, saved order), not in the older workspace layout until server-info answers.
-    const cache = await this.store.getValue<{ orgs: Org[]; conversations: Conversation[]; users: UserLite[]; server?: ServerInfo | null }>(CACHE_KEY);
-    const pins = await this.store.changedPins();
-    const callLog = await this.callLog.load();
+    const [locals, cache, pins, callLog] = await Promise.all([
+      this.store.conversations(),
+      this.store.getValue<{ orgs: Org[]; conversations: Conversation[]; users: UserLite[]; server?: ServerInfo | null }>(CACHE_KEY),
+      this.store.changedPins(),
+      this.callLog.load(),
+    ]);
     this.set((s) => ({
       ...s,
       callLog,
@@ -611,8 +628,18 @@ export class Engine implements EngineContext {
     this.set((s) => ({ ...s, profilesRev: s.profilesRev + 1 }));
   }
 
+  private refreshLoad: Promise<void> | null = null;
+
+  /** Startup and the socket's hello share one metadata refresh instead of fetching every list twice. */
+  refreshAll(): Promise<void> {
+    this.refreshLoad ??= this.refreshMetadata().finally(() => {
+      this.refreshLoad = null;
+    });
+    return this.refreshLoad;
+  }
+
   /** Server info, profile, workspaces and conversations: on start and after every reconnect (what changed while away). */
-  async refreshAll(): Promise<void> {
+  private async refreshMetadata(): Promise<void> {
     try {
       const [server, meRes, orgs, convs] = await Promise.all([
         this.api.json("GET", "/v1/server-info", zServerInfo, { auth: false }),
@@ -621,6 +648,8 @@ export class Engine implements EngineContext {
         this.api.json("GET", "/v1/conversations", zConversations),
       ]);
       const u = meRes.user;
+      const memberships = new Set(orgs.orgs.map((o) => o.id));
+      if (this.state.get().orgs.some((o) => !memberships.has(o.id))) clearExpressionCache(this);
       this.set((s) => {
         const users = { ...s.users };
         for (const c of convs.conversations) for (const m of c.members ?? []) users[m.id] = toUser(m, users[m.id]);
@@ -812,6 +841,7 @@ export class Engine implements EngineContext {
         await this.nav.refresh([f.workspaceId]);
         return;
       case "org.deleted":
+        clearExpressionCache(this);
         this.set((s) => orgDeletedFrame(s, f.orgId));
         this.community.forget(f.orgId);
         return;
@@ -846,7 +876,7 @@ export class Engine implements EngineContext {
   // ───────────────────────── EngineContext ─────────────────────────
 
   viewing(): string | null {
-    return this.focused ? this.viewingId : null;
+    return this.focused && this.readingLatest ? this.viewingId : null;
   }
 
   async ensureConversation(id: string): Promise<Conversation | null> {
@@ -972,15 +1002,20 @@ export class Engine implements EngineContext {
   }
 
   /** A conversation's unsent text, kept with this browser's other local data (never in localStorage). */
-  saveDraft(conversationId: string, text: string): Promise<void> {
-    return this.locals.saveDraft(conversationId, text);
+  async saveDraft(conversationId: string, text: string): Promise<void> {
+    await this.locals.saveDraft(conversationId, text);
+    // Locals are an in-memory working set. Drafts must reach the existing sealed snapshot before a reload.
+    await this.snapshots.flush();
   }
 
   markReadSoon(conversationId: string): void {
     clearTimeout(this.readTimers.get(conversationId));
     this.readTimers.set(
       conversationId,
-      setTimeout(() => void this.markRead(conversationId), 400),
+      setTimeout(() => {
+        this.readTimers.delete(conversationId);
+        if (this.viewing() === conversationId) void this.markRead(conversationId);
+      }, 400),
     );
   }
 
@@ -990,7 +1025,7 @@ export class Engine implements EngineContext {
    * "none" (muted) only a mention of them by name.
    */
   notifyIncoming(m: StoredMessage, conversation: Conversation | null, mention: "me" | "all" | null): void {
-    if (!this.opts.notify) return;
+    if (!this.opts.notify || (this.focused && this.viewingId === m.conversationId)) return;
     // Batch B6: a message request arrives without a notification (it waits under DMs › Message requests).
     if (conversation?.request?.incoming) return;
     const st = this.state.get();
@@ -1042,62 +1077,182 @@ export class Engine implements EngineContext {
    * Each conversation's newest message, read position and unread counts, from the server (API 0.57.0): the list after a
    * page load or a reconnect, when this browser keeps nothing between visits.
    */
-  async syncSummaries(): Promise<void> {
+  syncSummaries(): Promise<void> {
+    this.summaryLoad ??= this.fetchSummaries().finally(() => {
+      this.summaryLoad = null;
+    });
+    return this.summaryLoad;
+  }
+
+  private async fetchSummaries(): Promise<void> {
     const res = await this.api.json("GET", "/v2/messages/summary", zSummary).catch(() => null);
-    if (!res) return;
+    if (!res) {
+      this.summariesLoaded = true;
+      return;
+    }
     for (const c of res.conversations) {
       if (c.last) await this.receiver.ingest(c.last, 0, { history: true });
       await this.locals.update(c.conversationId, (l) => ({
         ...l,
         readUpTo: Math.max(l.readUpTo, c.readUpTo),
-        unread: this.viewingId === c.conversationId ? 0 : c.unread,
-        mentions: this.viewingId === c.conversationId ? 0 : c.mentions,
+        unread: this.viewing() === c.conversationId ? 0 : c.unread,
+        mentions: this.viewing() === c.conversationId ? 0 : c.mentions,
       }));
       await this.refreshPreview(c.conversationId);
     }
+    this.summariesLoaded = true;
   }
 
   /**
    * One page of a conversation's history from the server, older than [before] (null: the newest): its messages oldest
    * first, then the changes to them, applied as live ones are. Remembers whether older ones remain.
    */
-  private async fetchHistory(id: string, before: number | null, around?: string): Promise<void> {
+  private async fetchHistory(id: string, before: number | null, around?: string, beforeId?: string): Promise<ServerHistoryPage> {
+    const version = this.windowVersions.get(id);
     const q = new URLSearchParams({ limit: String(PAGE) });
-    if (before) q.set("before", String(before));
+    if (before !== null) q.set("before", String(before));
+    if (beforeId) q.set("beforeId", beforeId);
     if (around) q.set("around", around);
     const page = await this.api.json("GET", `/v2/conversations/${encodeURIComponent(id)}/messages?${q}`, zServerHistoryPage);
+    if (around && !page.messages.some((m) => m.id === around)) throw new Error("That message is no longer available.");
     for (const e of [...page.messages].reverse()) await this.receiver.ingest(e, 0, { history: true });
     for (const e of page.changes) await this.receiver.ingest(e, 0, { history: true });
-    const oldest = page.messages.at(-1)?.serverTs ?? null;
-    const prev = this.serverPages.get(id);
-    this.serverPages.set(id, { oldest: prev?.oldest != null && oldest != null ? Math.min(prev.oldest, oldest) : (oldest ?? prev?.oldest ?? null), more: around ? (prev?.more ?? true) : page.more });
+    if (version === this.windowVersions.get(id)) {
+      const prev = before !== null ? this.serverPages.get(id) : undefined;
+      this.serverPages.set(id, { oldest: page.messages.at(-1)?.serverTs ?? prev?.oldest ?? null, more: page.more, nextCursor: page.nextCursor });
+    }
+    // Hydrate visible history authors together; text rendering never waits on a profile waterfall.
+    void Promise.all([...new Set(page.messages.map((m) => m.senderUserId))].map((userId) => this.ensureUser(userId).catch(() => undefined)));
+    return page;
   }
 
-  /** The conversation now on screen (null: none). Loads its newest messages from the server and marks it read. */
+  /** Loads the selected conversation. Read receipts wait until its latest messages are actually in view. */
   async openConversation(id: string | null): Promise<void> {
+    const opening = ++this.openVersion;
     this.viewingId = id;
+    this.readingLatest = false;
+    this.viewReady = false;
     if (!id) return;
+    const version = (this.windowVersions.get(id) ?? 0) + 1;
+    this.windowVersions.set(id, version);
     this.snapshots.opened(id);
-    // What this page already holds for it (messages that arrived live before it was opened) shows at once; the server's
-    // newest page follows and replaces it. Messages aren't kept between page loads, so after a reload the skeleton
-    // shows until the server answers.
-    if (!this.serverPages.has(id) && !this.state.get().messages[id]) {
-      const stored = await this.store.latestMessages(id, PAGE);
-      if (stored.length && !this.state.get().messages[id]) this.set((s) => withMessages(s, id, stored, true));
-    }
-    const fetched = this.serverPages.has(id) || (await this.firstPage(id));
-    const items = await this.store.latestMessages(id, PAGE);
-    // Offline with nothing new: what's shown (the snapshot's) stays rather than an empty conversation.
-    if (fetched || items.length || !this.state.get().messages[id]) this.set((s) => withMessages(s, id, items, this.serverPages.get(id)?.more ?? items.length === PAGE));
-    await this.markRead(id);
+    // Each entry owns a fresh newest window. Cached/search windows cannot initialize its viewport.
+    this.set((s) => ({
+      ...s,
+      messages: {
+        ...s.messages,
+        [id]: {
+          ...s.messages[id],
+          items: s.messages[id]?.items ?? [],
+          hasMore: false,
+          opening,
+          historyReady: false,
+          preview: this.fromSnapshot.has(id) && !!s.messages[id]?.items.length,
+          detached: false,
+        },
+      },
+    }));
+    // Fetch the selected chat alongside summaries, not after every sidebar preview is populated.
+    const newestPage = this.firstPage(id);
+    // Read markers must arrive before the fresh rendered window can be acknowledged.
+    if (!this.summariesLoaded) await this.syncSummaries();
+    if (opening !== this.openVersion || version !== this.windowVersions.get(id)) return;
+    const boundary = this.state.get().local[id];
+    const unreadAfter = boundary?.unread ? boundary.readUpTo : null;
+    const page = await newestPage;
+    if (opening !== this.openVersion || version !== this.windowVersions.get(id)) return;
+    // Offline returns keep their saved messages and server-confirmation guard until a page actually arrives.
+    if (!page && this.fromSnapshot.has(id)) return;
+    const cached = await this.store.latestMessages(id, PAGE);
+    const received = page ? await Promise.all(page.messages.map((m) => this.store.message(m.id))) : [];
+    if (opening !== this.openVersion || version !== this.windowVersions.get(id)) return;
+    const newest = page?.messages[0];
+    const newer = (m: StoredMessage) => !newest || m.sortTs > newest.serverTs || (m.sortTs === newest.serverTs && m.id > newest.id);
+    const items = page ? [...received.filter((m): m is StoredMessage => !!m), ...cached.filter(newer)] : cached;
+    this.fromSnapshot.delete(id);
+    this.viewReady = true;
+    this.set((s) => {
+      const known = new Set(items.map((m) => m.id));
+      const arrivals = page ? (s.messages[id]?.items.filter((m) => newer(m) && !known.has(m.id)) ?? []) : [];
+      const next = withMessages(s, id, [...items, ...arrivals], page?.more ?? items.length === PAGE);
+      return {
+        ...next,
+        messages: {
+          ...next.messages,
+          [id]: {
+            ...next.messages[id]!,
+            opening,
+            unreadAfter,
+            detached: false,
+            historyReady: true,
+            preview: false,
+          },
+        },
+      };
+    });
     void this.syncCalls(id);
   }
 
-  /** Loads the messages around [messageId] from the server (a link or a search result in history not loaded yet). */
+  /** Wait for a fresh page before deciding a snapshot's saved anchor needs a distant history window. */
+  async restoreReadingAnchor(id: string, messageId: string): Promise<void> {
+    await this.firstPage(id);
+    if (this.viewingId !== id) return;
+    if (this.state.get().messages[id]?.items.some((m) => m.id === messageId)) return;
+    const latest = await this.store.latestMessages(id, PAGE);
+    if (this.viewingId !== id) return;
+    if (latest.some((m) => m.id === messageId)) {
+      this.set((s) => withMessages(s, id, latest, this.serverPages.get(id)?.more ?? true));
+      return;
+    }
+    await this.loadAround(id, messageId);
+  }
+
+  /** A distant result replaces the active window; unrelated cached history never fills its middle with a gap. */
   async loadAround(id: string, messageId: string): Promise<void> {
-    await this.fetchHistory(id, null, messageId);
-    const items = await this.store.latestMessages(id, Number.MAX_SAFE_INTEGER);
-    this.set((s) => withMessages(s, id, items, this.serverPages.get(id)?.more ?? false));
+    const version = (this.windowVersions.get(id) ?? 0) + 1;
+    this.windowVersions.set(id, version);
+    this.readingLatest = false;
+    const page = await this.fetchHistory(id, null, messageId);
+    if (version !== this.windowVersions.get(id)) return;
+    const messages = await Promise.all(page.messages.map((m) => this.store.message(m.id)));
+    if (version !== this.windowVersions.get(id)) return;
+    const items = messages.filter((m): m is StoredMessage => !!m);
+    if (!items.some((m) => m.id === messageId)) throw new Error("That message is no longer available.");
+    this.fromSnapshot.delete(id);
+    this.set((s) => {
+      const next = withMessages(s, id, items, page.more);
+      return { ...next, messages: { ...next.messages, [id]: { ...next.messages[id]!, detached: true, historyReady: true } } };
+    });
+  }
+
+  /** Explicitly returns from a search/older window to the server's newest contiguous page. */
+  async loadLatest(id: string): Promise<void> {
+    const version = (this.windowVersions.get(id) ?? 0) + 1;
+    this.windowVersions.set(id, version);
+    const page = await this.fetchHistory(id, null);
+    if (version !== this.windowVersions.get(id)) return;
+    const messages = await Promise.all(page.messages.map((m) => this.store.message(m.id)));
+    if (version !== this.windowVersions.get(id)) return;
+    const items = messages.filter((m): m is StoredMessage => !!m);
+    // Keep messages delivered while the request was in flight, too.
+    const latest = await this.store.latestMessages(id, PAGE);
+    if (version !== this.windowVersions.get(id)) return;
+    this.fromSnapshot.delete(id);
+    if (this.viewingId === id) this.viewReady = true;
+    const newest = page.messages[0];
+    const newer = (m: StoredMessage) => !newest || m.sortTs > newest.serverTs || (m.sortTs === newest.serverTs && m.id > newest.id);
+    this.set((s) => {
+      const known = new Set(items.map((m) => m.id));
+      const arrivals = s.messages[id]?.items.filter((m) => newer(m) && !known.has(m.id)) ?? [];
+      const next = withMessages(s, id, [...items, ...latest.filter(newer), ...arrivals], page.more);
+      return { ...next, messages: { ...next.messages, [id]: { ...next.messages[id]!, detached: false, historyReady: true } } };
+    });
+  }
+
+  setReadingLatest(id: string, latest: boolean): void {
+    if (this.viewingId !== id || !this.viewReady) return;
+    this.readingLatest = latest && !this.state.get().messages[id]?.detached;
+    if (this.viewing() === id && !this.waitsForServer({ conversationId: id })) this.markReadSoon(id);
   }
 
   /** The conversation's calls from the server's record (catches up calls that ended while this browser was away). */
@@ -1107,18 +1262,36 @@ export class Engine implements EngineContext {
 
   setFocused(focused: boolean): void {
     this.focused = focused;
-    if (focused && this.viewingId) this.markReadSoon(this.viewingId);
+    if (focused && this.viewing()) this.markReadSoon(this.viewingId!);
   }
 
-  async loadOlder(id: string): Promise<void> {
+  loadOlder(id: string): Promise<void> {
+    const version = this.windowVersions.get(id);
+    const key = `${id}:${version ?? 0}`;
+    const pending = this.olderLoads.get(key);
+    if (pending) return pending;
+    const request = this.loadOlderPage(id, version).finally(() => this.olderLoads.delete(key));
+    this.olderLoads.set(key, request);
+    return request;
+  }
+
+  private async loadOlderPage(id: string, version: number | undefined): Promise<void> {
     const loaded = this.state.get().messages[id];
     if (!loaded?.hasMore || loaded.items.length === 0) return;
-    const first = loaded.items[0];
-    // Older messages come from the server, one page at a time.
-    const page = this.serverPages.get(id);
-    if (page?.more) await this.fetchHistory(id, Math.min(page.oldest ?? Number.MAX_SAFE_INTEGER, first.serverTs ?? first.sortTs)).catch(() => undefined);
-    const older = await this.store.latestMessages(id, PAGE, first.sortTs);
-    this.set((s) => withMessages(s, id, [...older, ...(s.messages[id]?.items ?? [])], older.length > 0 && ((this.serverPages.get(id)?.more ?? false) || older.length === PAGE)));
+    const first = loaded.items[0]!;
+    const cursor = this.serverPages.get(id);
+    try {
+      const page = cursor?.more
+        ? await this.fetchHistory(id, cursor.nextCursor?.serverTs ?? Math.min(cursor.oldest ?? Number.MAX_SAFE_INTEGER, first.serverTs ?? first.sortTs), undefined, cursor.nextCursor?.id)
+        : null;
+      if (version !== this.windowVersions.get(id)) return;
+      const older = page ? (await Promise.all(page.messages.map((m) => this.store.message(m.id)))).filter((m): m is StoredMessage => !!m) : await this.store.latestMessages(id, PAGE, first);
+      if (version !== this.windowVersions.get(id)) return;
+      this.set((s) => withMessages(s, id, [...older, ...(s.messages[id]?.items ?? [])], page ? page.more : older.length === PAGE));
+    } catch (e) {
+      // Keep the cursor and retry control available after a transient failure.
+      if (version === this.windowVersions.get(id)) this.notice("error", e instanceof ApiError ? e.message : "Couldn't load earlier messages. Try again.");
+    }
   }
 
   /** Clears unread on this device and, where the phone would, tells the others with an encrypted read receipt. */

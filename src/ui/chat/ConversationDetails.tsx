@@ -1,3 +1,4 @@
+import { CommunityOwnerBadge } from "../components/CommunityOwnerBadge";
 import { Bell, BellOff, Hash, Lock, MessageSquare, Search, Shield, ShieldCheck, User, UserPlus, UsersRound } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { Conversation, Member } from "../../api/schemas";
@@ -215,7 +216,7 @@ export function MembersList({ c, members, error, onAdded, showAdd }: MembersList
   const me = useOrbit((s) => s.me?.userId);
   const memberIds = useMemo(() => new Set((members ?? []).map((m) => m.id)), [members]);
   return (
-    <div style={{ display: "grid", gap: 4 }} role="tabpanel" aria-label="Members">
+    <div style={{ display: "grid", gap: 12 }} role="tabpanel" aria-label="Members">
       <div className="panel-section-title">
         <span>Members</span>
         <span>{c.memberCount}</span>
@@ -231,6 +232,7 @@ export function MembersList({ c, members, error, onAdded, showAdd }: MembersList
               {m.displayName}
               {m.id === me ? " (you)" : ""}
             </button>
+            {c.orgId && m.orgRole === "OWNER" && <CommunityOwnerBadge />}
             <small className="ellipsis">
               @{m.username}
               {m.role === "ADMIN" ? " · admin" : ""}

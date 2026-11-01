@@ -34,7 +34,10 @@ export function ProfilePreviewCard() {
 
   return (
     <aside className="profile-preview" aria-label="Preview">
-      <div className="settings-label">Preview</div>
+      <div className="profile-preview-label">
+        <span className="settings-label">Live preview</span>
+        <span className="profile-preview-dot" aria-hidden="true" />
+      </div>
       <div className={`profile-pop style-preview card${theme ? " themed" : ""}`} style={themeVars(theme)}>
         <div className="profile-pop-banner" style={bannerUrl ? { backgroundImage: `url(${bannerUrl})` } : { background: theme ? themeBackground(theme) : "var(--brand-gradient)" }}>
           <ProfileEffect effect={style.effect} />
@@ -48,12 +51,13 @@ export function ProfilePreviewCard() {
             {level !== null && <LevelRing level={level} size={22} className="profile-level" />}
           </h3>
           <p className="profile-pop-handle">
-            @{me.username}
+            @{draft?.username || me.username}
             {pronouns && <span className="faint"> · {pronouns}</span>}
           </p>
           {about && <p className="profile-preview-about">{about}</p>}
         </div>
       </div>
+      <p className="profile-preview-hint">A preview of how you’ll appear to others.</p>
     </aside>
   );
 }

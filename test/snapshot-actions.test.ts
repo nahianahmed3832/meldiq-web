@@ -1,6 +1,6 @@
 import "fake-indexeddb/auto";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { Conversation } from "../src/api/schemas";
+import type { Conversation, ServerHistoryPage, StoredEvent } from "../src/api/schemas";
 import type { DeviceRecord, StoredMessage } from "../src/model/types";
 import { initialState } from "../src/state/store";
 import { LocalStore } from "../src/store/db";
@@ -42,20 +42,25 @@ async function openOnSnapshot(shown: StoredMessage[], server: StoredMessage[], o
   await new SnapshotVault(store, ME).save(snapshotOf(before, [CONV]));
 
   const engine = new Engine(device, store, { base: "http://meldiq.test", wsUrl: "ws://meldiq.test/v1/ws", liveWaitMs: opts.liveWaitMs });
+  vi.spyOn(engine, "syncSummaries").mockResolvedValue();
+  vi.spyOn(engine, "syncCalls").mockResolvedValue();
   let page: Page = { resolve: () => undefined, fail: () => undefined };
-  const fetches = vi.spyOn(engine as unknown as { fetchHistory(id: string): Promise<void> }, "fetchHistory").mockImplementation(
+  const fetches = vi.spyOn(engine as unknown as { fetchHistory(id: string): Promise<ServerHistoryPage> }, "fetchHistory").mockImplementation(
     () =>
-      new Promise<void>((resolve, reject) => {
+      new Promise<ServerHistoryPage>((resolve, reject) => {
         page = {
-          resolve: () => void store.putMessages(server).then(() => resolve()),
+          resolve: () =>
+            void store
+              .putMessages(server)
+              .then(() => resolve({ messages: [...server].reverse().map((m) => ({ id: m.id, serverTs: m.serverTs ?? m.sortTs }) as StoredEvent), changes: [], more: false })),
           fail: () => reject(new Error("offline")),
         };
       }),
   );
   await engine.open();
-  void engine.openConversation(CONV); // as Shell does: its first page is now on its way
+  const opening = engine.openConversation(CONV); // as Shell does: its first page is now on its way
   await vi.waitFor(() => expect(fetches).toHaveBeenCalled());
-  return { engine, store, page: () => page, fetches };
+  return { engine, store, page: () => page, fetches, opening };
 }
 
 afterEach(() => {
@@ -63,6 +68,31 @@ afterEach(() => {
 });
 
 describe("actions on messages drawn from the snapshot", () => {
+  it("keeps the saved window visible and guarded when the fresh page fails", async () => {
+    const { engine, store, page, opening } = await openOnSnapshot([msg("m1", "saved while online")], []);
+    const read = vi.spyOn(engine, "markRead").mockResolvedValue();
+    expect(engine.state.get().messages[CONV]).toMatchObject({ preview: true, historyReady: false });
+    engine.setReadingLatest(CONV, true);
+    page().fail();
+    await opening;
+    expect(engine.state.get().messages[CONV]?.items.map((m) => m.text)).toEqual(["saved while online"]);
+    expect(engine.waitsForServer({ conversationId: CONV })).toBe(true);
+    expect(read).not.toHaveBeenCalled();
+    engine.stop();
+    await LocalStore.erase(store);
+  });
+  it("persists drafts through the existing encrypted snapshot before the save resolves", async () => {
+    const { engine, store } = await openOnSnapshot([msg("m1", "shown")], [msg("m1", "server")]);
+    engine.state.update((s) => ({ ...s, synced: true }));
+    engine.snapshots.start();
+    await engine.saveDraft(CONV, "Draft before navigation");
+    expect((await new SnapshotVault(store, ME).load())?.local.find((local) => local.id === CONV)?.draft).toBe("Draft before navigation");
+    await engine.saveDraft(CONV, "");
+    expect((await new SnapshotVault(store, ME).load())?.local.find((local) => local.id === CONV)?.draft).toBe("");
+    engine.snapshots.stop();
+    await LocalStore.erase(store);
+  });
+
   it("shows the snapshot's messages before the server answers", async () => {
     const { engine, store } = await openOnSnapshot([msg("m1", "from last time")], [msg("m1", "from the server")]);
     expect(engine.state.get().messages[CONV]?.items.map((m) => m.text)).toEqual(["from last time"]);

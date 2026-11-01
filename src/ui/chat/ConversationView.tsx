@@ -62,7 +62,7 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
   }, shallowEqual);
   const loaded = useOrbit((s) => s.messages[id]);
   useEffect(() => {
-    if (loaded) markStartup("view");
+    if (loaded?.historyReady || (loaded?.preview && loaded.items.length)) markStartup("view");
   }, [loaded]);
   const call = useOrbit((s) => s.calls[id]);
   const myCall = useOrbit((s) => (s.call.phase === "idle" || s.call.phase === "ended" ? null : s.call.conversationId));
@@ -234,11 +234,18 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
         <VoiceRoomView c={c} />
       ) : c.type === "CHANNEL" && c.format === "forum" ? (
         <ForumView c={c} section={route.section} />
-      ) : loaded ? (
+      ) : loaded && (loaded.historyReady || (loaded.preview && loaded.items.length > 0)) ? (
         <MessageList
+          key={`${id}:${loaded.opening ?? 0}`}
           conversationId={id}
           items={loaded.items}
-          hasMore={loaded.hasMore}
+          hasMore={loaded.historyReady ? loaded.hasMore : false}
+          detached={loaded.detached}
+          preview={loaded.preview}
+          historyReady={loaded.historyReady ?? false}
+          unreadAfter={loaded.unreadAfter}
+          onLoadLatest={() => engine.loadLatest(id)}
+          onReading={(latest) => engine.setReadingLatest(id, latest)}
           onLoadOlder={() => engine.loadOlder(id)}
           canPost={posting.post}
           canReact={posting.react}

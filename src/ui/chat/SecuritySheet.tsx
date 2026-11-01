@@ -43,8 +43,8 @@ const TEXT: Record<SecurityPoint, { icon: ReactNode; tone: "ok" | "warn" | "plai
   calls_e2ee: {
     icon: <Phone size={18} />,
     tone: "ok",
-    title: "Calls are encrypted in transit",
-    body: () => "Call audio and video travel encrypted between each device and Meldiq's call server. Calls aren't recorded.",
+    title: "Check call encryption",
+    body: () => "The call’s security badge shows whether audio, video and screen sharing are verified end-to-end encrypted. Meldiq does not record calls.",
   },
   other_servers: { icon: <Server size={18} />, tone: "plain", title: "Members on another server", body: () => "Their server receives the messages too, to deliver them." },
   app_updates: {
@@ -53,7 +53,12 @@ const TEXT: Record<SecurityPoint, { icon: ReactNode; tone: "ok" | "warn" | "plai
     title: "App updates",
     body: () => "What connected apps post in this channel goes through Meldiq's server and is labelled as an app update.",
   },
-  metadata: { icon: <Info size={18} />, tone: "plain", title: "Who can read them", body: () => "Members of this conversation, and Meldiq's staff when a report or the law requires it." },
+  metadata: {
+    icon: <Info size={18} />,
+    tone: "plain",
+    title: "Who can read them",
+    body: () => "Conversation members can read them. Meldiq’s servers store message and file contents. Sending a report shares the selected context with moderators.",
+  },
 };
 
 /** What protects this conversation, and what doesn't (android ConversationSecuritySheet). */

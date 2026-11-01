@@ -57,7 +57,9 @@ export function EmojiPicker({ onPick, community }: { onPick: (emoji: string) => 
       () => live && setFailed(true),
     );
     // The menu focuses its first item after mounting; the search box should have the focus instead.
-    const t = window.setTimeout(() => search.current?.focus(), 0);
+    const t = window.setTimeout(() => {
+      if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) search.current?.focus({ preventScroll: true });
+    }, 0);
     return () => {
       live = false;
       window.clearTimeout(t);
@@ -84,6 +86,14 @@ export function EmojiPicker({ onPick, community }: { onPick: (emoji: string) => 
   };
   const customEmoji = community?.list.expressions.filter((e) => e.kind === "emoji") ?? [];
   const customStickers = community && !community.reactions && community.onSticker ? community.list.expressions.filter((e) => e.kind === "sticker") : [];
+  const customMatches = customEmoji.filter((e) =>
+    query
+      .toLowerCase()
+      .replace(/[:_]/g, " ")
+      .trim()
+      .split(/\s+/)
+      .every((part) => e.name.replace(/_/g, " ").includes(part)),
+  );
   const available = new Set([...(customEmoji.length || customStickers.length ? [COMMUNITY] : []), ...(recent.length ? [RECENT] : []), ...(groups ?? []).map((g) => g.id)]);
 
   return (
@@ -127,11 +137,32 @@ export function EmojiPicker({ onPick, community }: { onPick: (emoji: string) => 
         {!groups && !failed && <p className="muted emoji-note">Loading emoji…</p>}
         {failed && <p className="muted emoji-note">Emoji couldn't be loaded. Recent emoji still work.</p>}
         {query.trim() ? (
-          groups && results.length === 0 ? (
-            <p className="muted emoji-note">No emoji match “{query.trim()}”</p>
-          ) : (
-            <Grid items={results.map((it) => [inTone(it, tone), it.name])} onPick={pick} />
-          )
+          <>
+            {customMatches.length > 0 && (
+              <section aria-label="Community emoji search results">
+                <h4 className="emoji-heading">Community</h4>
+                <div className="emoji-grid">
+                  {customMatches.map((e) => (
+                    <button
+                      key={e.id}
+                      type="button"
+                      role="menuitem"
+                      aria-label={`:${e.name}:`}
+                      title={`:${e.name}:`}
+                      onClick={() => (community?.reactions ? onPick(`:${e.name}:`) : community?.onEmoji?.(e))}
+                    >
+                      <CustomEmojiImage id={e.id} name={e.name} sha256={e.sha256} size={24} />
+                    </button>
+                  ))}
+                </div>
+              </section>
+            )}
+            {groups && results.length === 0 && customMatches.length === 0 ? (
+              <p className="muted emoji-note">No emoji match “{query.trim()}”</p>
+            ) : (
+              <Grid items={results.map((it) => [inTone(it, tone), it.name])} onPick={pick} />
+            )}
+          </>
         ) : (
           <>
             {(customEmoji.length > 0 || customStickers.length > 0) && (

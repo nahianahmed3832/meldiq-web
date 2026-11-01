@@ -1,4 +1,4 @@
-import { ArrowLeft, Bell, BellOff, ChevronRight, KeyRound, Search, Settings, ShieldCheck } from "lucide-react";
+import { ArrowLeft, Bell, BellOff, ChevronRight, KeyRound, Search, Settings, ShieldCheck, UsersRound } from "lucide-react";
 import { useState } from "react";
 import type { Conversation } from "../../api/schemas";
 import { useEngine, useOrbit } from "../../application/orbit";
@@ -91,6 +91,7 @@ export function ChannelDetails({ c, onClose }: { c: Conversation; onClose: () =>
     );
 
   const actions: DetailsAction[] = [
+    { key: "members", label: "Members", icon: <UsersRound size={20} />, onClick: () => navigate({ section: route.section, conversationId: c.id, panel: "members" }) },
     ...(c.voice ? [] : [{ key: "search", label: "Search", icon: <Search size={20} />, onClick: () => navigate({ section: route.section, conversationId: c.id, panel: "search" }) }]),
     { key: "mute", label: muted ? "Unmute" : "Mute", icon: muted ? <BellOff size={20} /> : <Bell size={20} />, onClick: toggleMute, active: muted },
     { key: "settings", label: "Settings", icon: <Settings size={20} />, onClick: () => setView("settings") },

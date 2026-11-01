@@ -41,6 +41,13 @@ afterEach(() => {
 });
 
 describe("the snapshot on this computer", () => {
+  it("excludes distant search windows so a return never presents them as the latest messages", () => {
+    const s = stateWith(2);
+    s.messages.c_0 = { ...s.messages.c_0!, detached: true };
+    const saved = snapshotOf(s, ["c_0", "c_1"]);
+    expect(saved.recent).toEqual(["c_1"]);
+    expect(saved.messages.c_0).toBeUndefined();
+  });
   it("is kept sealed and comes back as it was, the newest messages of the conversations opened last", async () => {
     const store = await open();
     const vault = new SnapshotVault(store, ME);
@@ -176,6 +183,32 @@ describe("the snapshot on this computer", () => {
 });
 
 describe("keeping it current", () => {
+  it("serializes overlapping draft and background saves so the newest state wins", async () => {
+    let state = stateWith(1, 3);
+    let release!: () => void;
+    const held = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    const saved: string[] = [];
+    const vault = {
+      save: vi.fn(async (data: ReturnType<typeof snapshotOf>) => {
+        saved.push(data.me!.displayName);
+        if (saved.length === 1) await held;
+      }),
+    } as unknown as SnapshotVault;
+    const keeper = new SnapshotKeeper(vault, { get: () => state, subscribe: () => () => undefined });
+    keeper.start();
+    const first = keeper.flush();
+    await vi.waitFor(() => expect(vault.save).toHaveBeenCalledTimes(1));
+    state = { ...state, me: { ...state.me!, displayName: "Newer state" } };
+    const second = keeper.flush();
+    expect(vault.save).toHaveBeenCalledTimes(1);
+    release();
+    await Promise.all([first, second]);
+    expect(saved).toEqual(["Alice", "Newer state"]);
+    keeper.stop();
+  });
+
   it("writes once changes settle for about 4 s, only after the server answered, and not while signed out of the session", async () => {
     vi.useFakeTimers();
     let state = stateWith(1, 3, { synced: false });
@@ -197,7 +230,7 @@ describe("keeping it current", () => {
     await vi.advanceTimersByTimeAsync(3000);
     change({ ...state, users: { ...state.users } });
     await vi.advanceTimersByTimeAsync(3000);
-    expect(vault.save).not.toHaveBeenCalled(); // still changing
+    expect(vault.save).toHaveBeenCalledTimes(1); // continuous updates must not postpone every snapshot
     await vi.advanceTimersByTimeAsync(1000);
     expect(vault.save).toHaveBeenCalledTimes(1);
 

@@ -1,14 +1,20 @@
-import { Search, Smile, Sticker as StickerIcon } from "lucide-react";
+import { MotionImage } from "../components/MotionImage";
+import { Search, Smile, Sticker as StickerIcon, Upload, X } from "lucide-react";
+import { PHONE_LAYOUT, visibleViewport } from "../../application/viewport";
+import { ROUTE_EVENT } from "../../application/router";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { ApiError } from "../../api/client";
-import { useEngine } from "../../application/orbit";
+import { useEngine, useOrbit } from "../../application/orbit";
 import { ANIMOJI } from "../../sync/animoji";
-import type { Expression, ExpressionList } from "../../sync/expressions";
+import { suggestName, uploadExpression, type Expression, type ExpressionList } from "../../sync/expressions";
 import { type GifResult, type GifStatus, gifObjectUrl, gifPage, gifStatus } from "../../sync/gifs";
 import { STICKER_PACKS } from "../../sync/stickers";
-import { CustomEmojiImage } from "../community/CustomEmoji";
+import { UploadDialog } from "../workspace/ExpressionsPage";
+import { useCommunityAccess } from "../community/useCommunityAccess";
+import { CustomEmojiImage, useExpressions } from "../community/CustomEmoji";
 import { useFocusTrap } from "../components/Overlay";
+import { ExpressionLibrary } from "./ExpressionLibrary";
 import { EmojiPicker } from "./EmojiPicker";
 import { StickerArt } from "./StickerView";
 
@@ -34,6 +40,7 @@ interface ExpressionPickerProps {
   canSend: boolean;
   /** Community parity A1: the tabs this channel allows (text only and no-GIF channels); all when left out. */
   allowedTabs?: readonly PickerTab[];
+  library?: { currentOrgId: string | null; externalAllowed: boolean };
   community?: { list: ExpressionList; onEmoji: (e: Expression) => void; onSticker: (e: Expression) => void };
   onSticker: (pack: string, id: string) => void;
   onAnimoji: (emoji: string) => void;
@@ -41,49 +48,150 @@ interface ExpressionPickerProps {
 }
 
 export function ExpressionPicker(p: ExpressionPickerProps) {
+  const engine = useEngine();
+  const orgs = useOrbit((s) => s.orgs);
+  const expressionsOn = useOrbit((s) => s.server?.features.includes("community-expressions") ?? false);
+  const [source, setSource] = useState<string | null>(() => p.library?.currentOrgId ?? null);
+  const availableSources = expressionsOn && p.library ? orgs.filter((o) => p.library!.externalAllowed || o.id === p.library!.currentOrgId) : [];
+  const selectedSource = availableSources.find((o) => o.id === source) ?? null;
+  const [revision, setRevision] = useState(0);
+  const sourceList = useExpressions(selectedSource?.id ?? null, true, revision);
+  const access = useCommunityAccess(selectedSource?.id ?? null);
+  const canManage = !!selectedSource && !!access && (access.isOwner || access.effective.includes("expressions.manage"));
+  const [uploading, setUploading] = useState<{ file: File; kind: "emoji" | "sticker"; orgId: string } | null>(null);
+  const fileInput = useRef<HTMLInputElement>(null);
+  const community = p.library ? (selectedSource && sourceList && p.community ? { ...p.community, list: sourceList } : undefined) : p.community;
   const ref = useRef<HTMLDivElement>(null);
-  const [pos, setPos] = useState<{ left: number; bottom: number } | null>(null);
-  useFocusTrap(ref, true);
+  const [pos, setPos] = useState<{ left: number; top: number; height: number } | null>(null);
+  useFocusTrap(ref, !uploading);
   useLayoutEffect(() => {
-    const r = p.anchor.getBoundingClientRect();
-    const w = ref.current?.offsetWidth ?? 380;
-    setPos({ left: Math.max(8, Math.min(r.right - w, window.innerWidth - w - 8)), bottom: Math.max(8, window.innerHeight - r.top + 8) });
+    const place = () => {
+      const v = visibleViewport();
+      const r = p.anchor.getBoundingClientRect();
+      const w = ref.current?.offsetWidth ?? 380;
+      const phone = window.matchMedia(PHONE_LAYOUT).matches;
+      const height = Math.min(460, Math.max(0, phone ? v.height - 16 : Math.min(v.height - 16, r.top - v.top - 16)));
+      setPos({
+        left: Math.max(v.left + 8, Math.min(r.right - w, v.right - w - 8)),
+        top: Math.max(v.top + 8, (phone ? v.bottom : r.top) - height - 8),
+        height,
+      });
+    };
+    place();
+    window.addEventListener("resize", place);
+    window.visualViewport?.addEventListener("resize", place);
+    window.visualViewport?.addEventListener("scroll", place);
+    return () => {
+      window.removeEventListener("resize", place);
+      window.visualViewport?.removeEventListener("resize", place);
+      window.visualViewport?.removeEventListener("scroll", place);
+    };
   }, [p.anchor]);
   useEffect(() => {
     const key = (e: KeyboardEvent) => {
-      if (e.key !== "Escape") return;
+      if (uploading || e.key !== "Escape") return;
       e.preventDefault();
       p.onClose();
       p.anchor.focus();
     };
     const down = (e: MouseEvent) => {
-      if (!ref.current?.contains(e.target as Node) && !p.anchor.contains(e.target as Node)) p.onClose();
+      if (!uploading && !ref.current?.contains(e.target as Node) && !p.anchor.contains(e.target as Node)) p.onClose();
     };
     document.addEventListener("keydown", key);
     document.addEventListener("mousedown", down);
-    window.addEventListener("resize", p.onClose);
+    window.addEventListener("popstate", p.onClose);
+    window.addEventListener(ROUTE_EVENT, p.onClose);
     return () => {
       document.removeEventListener("keydown", key);
       document.removeEventListener("mousedown", down);
-      window.removeEventListener("resize", p.onClose);
+      window.removeEventListener("popstate", p.onClose);
+      window.removeEventListener(ROUTE_EVENT, p.onClose);
     };
-  }, [p]);
+  }, [p, uploading]);
   const tabs = TABS.filter((t) => t.id === "emoji" || (p.canSend && (!p.allowedTabs || p.allowedTabs.includes(t.id))));
   return createPortal(
-    <div ref={ref} className="expression-picker" role="dialog" aria-label="Emoji, GIFs and stickers" style={pos ? { left: pos.left, bottom: pos.bottom } : { visibility: "hidden" }}>
-      <div className="xp-tabs" role="tablist" aria-label="Pick from">
-        {tabs.map((t) => (
-          <button key={t.id} role="tab" id={`xp-tab-${t.id}`} aria-selected={p.tab === t.id} aria-controls={`xp-panel-${t.id}`} onClick={() => p.onTab(t.id)}>
-            {t.label}
+    <>
+      <div
+        ref={ref}
+        className="expression-picker"
+        role="dialog"
+        aria-label="Emoji, GIFs and stickers"
+        inert={!!uploading}
+        style={{ ...(pos ? { left: pos.left, top: pos.top, height: pos.height } : { visibility: "hidden" as const }), ...(uploading ? { zIndex: 49 } : {}) }}
+      >
+        <div className="xp-tabs" role="tablist" aria-label="Pick from">
+          {tabs.map((t) => (
+            <button key={t.id} role="tab" id={`xp-tab-${t.id}`} aria-selected={p.tab === t.id} aria-controls={`xp-panel-${t.id}`} onClick={() => p.onTab(t.id)}>
+              {t.label}
+            </button>
+          ))}
+          <button className="icon-btn xp-close" aria-label="Close expression picker" onClick={p.onClose}>
+            <X size={18} />
           </button>
-        ))}
+        </div>
+        {p.library && expressionsOn && p.tab !== "gifs" && (
+          <div className="xp-source">
+            <label>
+              <span className="hint">Community expressions</span>
+              <select className="input" aria-label="Expression community" value={selectedSource?.id ?? ""} onChange={(e) => setSource(e.target.value || null)}>
+                <option value="">All communities & standard</option>
+                {availableSources.map((o) => (
+                  <option key={o.id} value={o.id}>
+                    {o.name}
+                  </option>
+                ))}
+              </select>
+            </label>
+            {canManage && (
+              <button className="btn btn-secondary btn-sm" aria-label={p.tab === "stickers" ? "Upload a sticker" : "Upload an emoji"} onClick={() => fileInput.current?.click()}>
+                <Upload size={14} />
+                <span>Upload</span>
+              </button>
+            )}
+            {selectedSource && !sourceList && <small role="status">Loading community expressions…</small>}
+            {p.library.currentOrgId && !p.library.externalAllowed && <small>Only this community's expressions are allowed in this channel.</small>}
+          </div>
+        )}
+        <input
+          ref={fileInput}
+          type="file"
+          accept="image/*"
+          hidden
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            if (file && selectedSource && canManage) setUploading({ file, kind: p.tab === "stickers" ? "sticker" : "emoji", orgId: selectedSource.id });
+            e.target.value = "";
+          }}
+        />
+        {p.library && expressionsOn && p.community && p.tab !== "gifs" && (
+          <ExpressionLibrary
+            source={selectedSource?.id ?? ""}
+            orgIds={availableSources.map((o) => o.id)}
+            kind={p.tab === "stickers" ? "sticker" : "emoji"}
+            revision={revision}
+            onPick={p.tab === "stickers" ? p.community.onSticker : p.community.onEmoji}
+          />
+        )}
+        <div className="xp-panel" role="tabpanel" id={`xp-panel-${p.tab}`} aria-labelledby={`xp-tab-${p.tab}`}>
+          {p.tab === "emoji" && <EmojiPicker onPick={p.onEmoji} community={!p.library && community ? { list: community.list, onEmoji: community.onEmoji } : undefined} />}
+          {p.tab === "gifs" && <GifPicker onGif={p.onGif} />}
+          {p.tab === "stickers" && <StickerPicker community={p.library ? undefined : community} onSticker={p.onSticker} onAnimoji={p.onAnimoji} />}
+        </div>
       </div>
-      <div className="xp-panel" role="tabpanel" id={`xp-panel-${p.tab}`} aria-labelledby={`xp-tab-${p.tab}`}>
-        {p.tab === "emoji" && <EmojiPicker onPick={p.onEmoji} community={p.community ? { list: p.community.list, onEmoji: p.community.onEmoji } : undefined} />}
-        {p.tab === "gifs" && <GifPicker onGif={p.onGif} />}
-        {p.tab === "stickers" && <StickerPicker community={p.community} onSticker={p.onSticker} onAnimoji={p.onAnimoji} />}
-      </div>
-    </div>,
+      {uploading && (
+        <UploadDialog
+          file={uploading.file}
+          kind={uploading.kind}
+          title={uploading.kind === "emoji" ? "Upload an emoji" : "Upload a sticker"}
+          initial={suggestName(uploading.file.name)}
+          onClose={() => setUploading(null)}
+          onSave={async (name, bytes) => {
+            await uploadExpression(engine, uploading.orgId, uploading.kind, name, bytes);
+            setRevision((r) => r + 1);
+          }}
+        />
+      )}
+    </>,
     document.body,
   );
 }
@@ -223,7 +331,7 @@ function GifTile({ gif, onPick }: { gif: GifResult; onPick: () => void }) {
   }, [engine, gif.preview.url]);
   return (
     <button ref={ref} type="button" className="gif-tile" style={{ aspectRatio: `${gif.preview.width} / ${gif.preview.height}` }} onClick={onPick} aria-label={`Send GIF: ${gif.title || "GIF"}`}>
-      {url ? <img src={url} alt="" draggable={false} /> : <span className="skeleton" />}
+      {url ? <MotionImage src={url} alt="" /> : <span className="skeleton" />}
     </button>
   );
 }

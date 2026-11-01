@@ -1,3 +1,4 @@
+import { BotDiagnostics } from "./BotDiagnostics";
 import { Check, Clock, X } from "lucide-react";
 import { type CSSProperties, useMemo, useState } from "react";
 import { useEngine, useOrbit } from "../../../application/orbit";
@@ -44,6 +45,7 @@ function unavailableNote(catalog: CatalogBot, bot: OfficialBot | null): string |
  */
 export function BotWindow({ orgId, orgName, memberCount, catalog, bot, botsPlus, perks, canEdit, onChanged, onClose }: BotWindowProps) {
   const engine = useEngine();
+  const diagnosticsOn = useOrbit((s) => s.server?.features.includes("bot-diagnostics") ?? false);
   const key = catalog.key;
   const channels = textChannels(useOrbit((s) => panelChannels(s, orgId)));
   const ticketsOn = useOrbit((s) => s.server?.features.includes(POSTING_FEATURES.tickets) ?? false);
@@ -144,6 +146,7 @@ export function BotWindow({ orgId, orgName, memberCount, catalog, bot, botsPlus,
         )}
         {!footer && error && <div className="banner danger">{error}</div>}
         <p>{catalog.description}</p>
+        {canEdit && diagnosticsOn && <BotDiagnostics key={bot?.updatedAt ?? "new"} orgId={orgId} botKey={key} />}
         {catalog.features.length > 0 && (
           <div className="obot-chips">
             {catalog.features.map((f) => (
@@ -193,7 +196,7 @@ export function BotWindow({ orgId, orgName, memberCount, catalog, bot, botsPlus,
         {key === "tickets" && canEdit && ticketsOn && unavailable === null && <TicketsCard key={String(enabled)} orgId={orgId} hideSwitch />}
         {key === "alerts" && canEdit && unavailable === null && <AlertsWatches orgId={orgId} channels={channels} roles={givable} botsPlus={botsPlus} />}
         {!canEdit && <p className="faint">Only people who can edit this community turn bots on and change them.</p>}
-        {!botsPlus && catalog.limits.length > 0 && <PlusUpsell perks={perks} />}
+        {!botsPlus && catalog.limits.length > 0 && <PlusUpsell perks={perks} orgId={orgId} />}
         <FreePlusTable limits={catalog.limits} />
       </div>
     </Dialog>

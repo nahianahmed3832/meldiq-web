@@ -1,3 +1,4 @@
+import { MotionImage } from "../components/MotionImage";
 import { useEffect, useState } from "react";
 import { useEngine } from "../../application/orbit";
 import type { GifRef } from "../../protocol/payload";
@@ -32,7 +33,7 @@ export function GifView({ gif }: { gif: GifRef }) {
     );
   return (
     <span className="gif-view" style={{ width: w, aspectRatio: `${gif.width} / ${gif.height}`, maxHeight: Math.max(h, 1) }}>
-      {url ? <img src={url} alt={gif.title || "GIF"} loading="lazy" draggable={false} /> : <span className="skeleton" aria-busy="true" />}
+      {url ? <MotionImage src={url} alt={gif.title || "GIF"} /> : <span className="skeleton" aria-busy="true" />}
       <span className="gif-badge" aria-hidden="true">
         GIF
       </span>

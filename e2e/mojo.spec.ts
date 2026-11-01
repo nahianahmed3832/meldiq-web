@@ -19,16 +19,18 @@ test("Settings › Meldiq Mojo shows the plans and their limits, and says it isn
   await page.goto("/settings/mojo");
   await expect(page.getByRole("heading", { name: "Meldiq Mojo", level: 1 })).toBeVisible({ timeout: 15_000 });
   await expect(page.getByText("Mojo isn't on sale yet")).toBeVisible();
-  for (const plan of ["Free", "Mojo Go", "Mojo Plus"]) await expect(page.getByRole("region", { name: plan, exact: true })).toBeVisible();
+  for (const plan of ["Free", "Mojo Plus"]) await expect(page.getByRole("region", { name: plan, exact: true })).toBeVisible();
+  await expect(page.getByRole("region", { name: "Mojo Go", exact: true })).toHaveCount(0);
+  await expect(page.getByRole("region", { name: "Mojo Plus", exact: true })).toContainText("3.99");
   // Nothing can be bought: no dead button pretends to.
   await expect(page.getByRole("button", { name: /^Get Mojo/ })).toHaveCount(0);
   await expect(page.getByRole("button", { name: "Not on sale yet" }).first()).toBeDisabled();
 
   const table = page.getByRole("table");
   // The plans of 2026-10-30 (server docs/PLANS.md).
-  await expect(table.getByRole("row", { name: /Characters in a message 2,000 4,000 8,000/ })).toBeVisible();
-  await expect(table.getByRole("row", { name: /Largest file you share 50 MB 500 MB 2 GB/ })).toBeVisible();
-  await expect(table.getByRole("row", { name: /Bots you can make 2 4 10/ })).toBeVisible();
+  await expect(table.getByRole("row", { name: /Characters in a message 2,000 8,000/ })).toBeVisible();
+  await expect(table.getByRole("row", { name: /Largest file you share 50 MB 1,024 MB/ })).toBeVisible();
+  await expect(table.getByRole("row", { name: /Bots you can make 2 10/ })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Why subscriptions?" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Meldiq Spark", exact: true })).toBeVisible();
 });

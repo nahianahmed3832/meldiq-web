@@ -12,8 +12,7 @@ export type ReportTarget =
 
 /**
  * Report a message or a person (batch B4, android ReportSheet): a reason (with "Just don't want to see them? Block"),
- * then a review step that says who reads it and exactly what's shared, an optional note, Send. Messages are end-to-end
- * encrypted, so nothing leaves this browser unless the report is sent.
+ * then a review step that says who reads it and exactly what's shared, an optional note, Send. Messages are stored by the server; sending this report additionally shares the selected context with reviewers.
  */
 export function ReportDialog({ target, onBlock, onClose }: { target: ReportTarget; onBlock?: () => void; onClose: () => void }) {
   const engine = useEngine();

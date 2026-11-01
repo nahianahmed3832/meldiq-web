@@ -37,6 +37,10 @@ export interface Prefs {
   theme: (typeof THEMES)[number];
   /** Whether the person picked the theme themselves; until then it follows the default (dark since 2026-10-28). */
   themeChosen: boolean;
+  density: "comfortable" | "compact";
+  reducedMotion: "system" | "on" | "off";
+  highContrast: boolean;
+  lineSpacing: "normal" | "relaxed";
   /** The interface language (src/i18n): the browser's, or one picked on the sign-in screens or in Settings › Appearance. */
   language: LanguageChoice;
   palette: Palette;
@@ -51,6 +55,8 @@ export interface Prefs {
   /** Received photos load by themselves (android Download photos automatically); off: a click loads each one. */
   autoLoadPhotos: boolean;
   notifications: boolean;
+  /** Occasional in-app reminders that Plus supports Meldiq's independent development. */
+  plusReminders: boolean;
   /**
    * Whether the person chose Desktop notifications themselves. Until they do, notifications follow the browser's
    * permission for this site (granted in its site settings counts), instead of staying off although it was allowed.
@@ -136,6 +142,10 @@ const KEY = "orbit.prefs.v1";
 const defaults: Prefs = {
   theme: "dark",
   themeChosen: false,
+  density: "comfortable",
+  reducedMotion: "system",
+  highContrast: false,
+  lineSpacing: "normal",
   language: "system",
   palette: "meldiq",
   textSize: "default",
@@ -145,6 +155,7 @@ const defaults: Prefs = {
   askBeforeLinks: false,
   autoLoadPhotos: true,
   notifications: false,
+  plusReminders: true,
   notifyChoice: "unset",
   groupNotifications: true,
   messageSound: true,
@@ -206,6 +217,10 @@ function load(): Prefs {
       theme: !THEMES.includes(stored.theme) || (stored.theme === "system" && !stored.themeChosen) ? defaults.theme : stored.theme,
       language: stored.language === "system" || LANGUAGES.some((l) => l === stored.language) ? stored.language : defaults.language,
       palette: paletteOf(stored),
+      density: stored.density === "compact" ? "compact" : "comfortable",
+      reducedMotion: ["on", "off"].includes(stored.reducedMotion) ? stored.reducedMotion : "system",
+      highContrast: stored.highContrast === true,
+      lineSpacing: stored.lineSpacing === "relaxed" ? "relaxed" : "normal",
       textSize: TEXT_SIZES.includes(stored.textSize) ? stored.textSize : defaults.textSize,
       messageLayout: MESSAGE_LAYOUTS.includes(stored.messageLayout) ? stored.messageLayout : defaults.messageLayout,
       animatedEmoji: typeof stored.animatedEmoji === "boolean" ? stored.animatedEmoji : defaults.animatedEmoji,
@@ -226,6 +241,7 @@ function load(): Prefs {
       quickReaction: QUICK_REACTIONS.some((e) => e === stored.quickReaction) ? stored.quickReaction : defaults.quickReaction,
       youtubeInApp: typeof stored.youtubeInApp === "boolean" ? stored.youtubeInApp : defaults.youtubeInApp,
       inAppSound: typeof stored.inAppSound === "boolean" ? stored.inAppSound : defaults.inAppSound,
+      plusReminders: stored.plusReminders !== false,
       builderMode: stored.builderMode === true,
       microphoneId: typeof stored.microphoneId === "string" ? stored.microphoneId : null,
       speakerId: typeof stored.speakerId === "string" ? stored.speakerId : null,
@@ -331,10 +347,19 @@ export function applyTheme({
   vibe = null,
   vibeCustom = null,
   vibeStrength = 60,
-}: Pick<Prefs, "theme" | "palette" | "textSize" | "messageLayout"> & Partial<Pick<Prefs, "language" | "vibe" | "vibeCustom" | "vibeStrength">>): void {
+  density = "comfortable",
+  reducedMotion = "system",
+  highContrast = false,
+  lineSpacing = "normal",
+}: Pick<Prefs, "theme" | "palette" | "textSize" | "messageLayout"> &
+  Partial<Pick<Prefs, "language" | "vibe" | "vibeCustom" | "vibeStrength" | "density" | "reducedMotion" | "highContrast" | "lineSpacing">>): void {
   const root = document.documentElement;
   // The page's language follows the interface's (screen readers, fonts, spelling).
   root.setAttribute("lang", resolveLanguage(language ?? "system"));
+  root.setAttribute("data-density", density);
+  root.setAttribute("data-motion", reducedMotion);
+  root.setAttribute("data-contrast", highContrast ? "high" : "normal");
+  root.setAttribute("data-line-spacing", lineSpacing);
   root.setAttribute("data-text-size", textSize);
   root.setAttribute("data-message-layout", messageLayout);
   if (theme === "system") root.removeAttribute("data-theme");

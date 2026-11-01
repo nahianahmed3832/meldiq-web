@@ -1,4 +1,5 @@
 import type { MojoMark, ShownBadge } from "../../api/profileSchemas";
+import { BadgeMark } from "../components/BadgeMark";
 
 /**
  * The badge shown next to a name (API 0.65.0): each person picks one they hold, or none. Without a choice it's the
@@ -24,8 +25,8 @@ export function nameBadge(shown: ShownBadge | null | undefined, mojo: MojoMark |
 export function NameBadgeMark({ badge }: { badge: "bug-hunter" | "artist" }) {
   const hint = BADGE_HINT[badge];
   return (
-    <span className="name-badge" title={hint.title} aria-label={hint.title} role="img">
+    <BadgeMark className="name-badge" name={BADGE_LABEL[badge]} description={hint.title}>
       {hint.icon}
-    </span>
+    </BadgeMark>
   );
 }

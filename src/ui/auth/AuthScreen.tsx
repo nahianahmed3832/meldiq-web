@@ -1,3 +1,4 @@
+import type { SavedAccount } from "../../auth/savedAccounts";
 import { apiBase } from "../../application/config";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { AccountSessionGrant, AccountView } from "../../api/accountSchemas";
@@ -44,6 +45,8 @@ const SETUP_ENDED: Record<SetupSessionEnd, string> = {
 
 export function AuthScreen(props: {
   base?: string;
+  savedAccounts?: SavedAccount[];
+  onUseSavedAccount?: (database: string) => void;
   /** Keeps the new device and its session, before the recovery key is shown (so a reload then doesn't lose the device). */
   onSave: (device: DeviceRecord, grant: AccountSessionGrant) => Promise<void>;
   onReady: (device: DeviceRecord, grant: AccountSessionGrant) => void;
@@ -70,10 +73,19 @@ export function AuthScreen(props: {
     (grant: AccountSessionGrant, password?: string) => {
       // Ended from elsewhere before setup finished (e.g. removed in the phone's session list): sign in again, email kept.
       const creds = new SetupCredentials(base, grant, (why) => setStep({ k: "signIn", notice: SETUP_ENDED[why], email: grant.account.email }));
+      const existing = props.savedAccounts?.find((a) => a.accountId === grant.account.id);
+      if (existing && props.onUseSavedAccount) {
+        // This login only created a setup session. Keep the saved device/session and discard the extra setup session.
+        void new AccountApi(new ApiClient(base, creds))
+          .logout()
+          .catch(() => undefined)
+          .then(() => props.onUseSavedAccount?.(existing.database));
+        return;
+      }
       const account = grant.account;
       setStep(account.identity ? { k: "addDevice", creds, account, password } : { k: "create", creds, account, password });
     },
-    [base],
+    [base, props.savedAccounts, props.onUseSavedAccount],
   );
 
   const accounts = server?.accounts;

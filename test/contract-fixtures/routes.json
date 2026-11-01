@@ -1,6 +1,38 @@
 {
-  "version": "0.67.0",
+  "version": "0.71.1",
   "routes": [
+    {
+      "method": "DELETE",
+      "path": "/admin/v1/orgs/{orgId}"
+    },
+    {
+      "method": "GET",
+      "path": "/admin/v1/reports"
+    },
+    {
+      "method": "GET",
+      "path": "/admin/v1/reports/assignees"
+    },
+    {
+      "method": "GET",
+      "path": "/admin/v1/reports/{reportId}"
+    },
+    {
+      "method": "PATCH",
+      "path": "/admin/v1/reports/{reportId}"
+    },
+    {
+      "method": "GET",
+      "path": "/admin/v1/admins/{accountId}/permissions"
+    },
+    {
+      "method": "PUT",
+      "path": "/admin/v1/admins/{accountId}/permissions"
+    },
+    {
+      "method": "POST",
+      "path": "/admin/v1/orgs/{orgId}/restriction"
+    },
     {
       "method": "GET",
       "path": "/healthz"
@@ -830,6 +862,14 @@
       "path": "/v1/orgs/{orgId}/audit"
     },
     {
+      "method": "GET",
+      "path": "/v1/orgs/{orgId}/members/{userId}/profile"
+    },
+    {
+      "method": "PUT",
+      "path": "/v1/orgs/{orgId}/members/{userId}/profile"
+    },
+    {
       "method": "PUT",
       "path": "/v1/orgs/{orgId}/roles/everyone"
     },
@@ -884,6 +924,14 @@
     {
       "method": "POST",
       "path": "/v1/discord/imports/{id}/retry"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/categories/{id}/permission-preview"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/conversations/{id}/permission-preview"
     },
     {
       "method": "GET",
@@ -1207,6 +1255,10 @@
     },
     {
       "method": "GET",
+      "path": "/v1/orgs/{orgId}/official-bots/{key}/diagnostics"
+    },
+    {
+      "method": "GET",
       "path": "/v1/official-bots"
     },
     {
@@ -1436,6 +1488,38 @@
     {
       "method": "GET",
       "path": "/v1/federation/resolve"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/billing/paypal/config"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/billing/paypal/checkouts"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/billing/paypal/checkouts/{id}"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/billing/paypal/checkouts/{id}/confirm"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/billing/paypal/history"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/billing/paypal/cancel"
+    },
+    {
+      "method": "GET",
+      "path": "/admin/v1/billing/paypal/transactions"
+    },
+    {
+      "method": "POST",
+      "path": "/admin/v1/billing/paypal/transactions/{id}/refund"
     },
     {
       "method": "GET",

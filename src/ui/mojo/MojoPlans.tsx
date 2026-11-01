@@ -36,40 +36,42 @@ interface PlanCardsProps {
   actionFor: (plan: PlanPerks) => PlanAction;
 }
 
-/** Free, Mojo Go and Mojo Plus side by side: price, what it gives, and its one button. */
+/** Free and Mojo Plus side by side: price, what it gives, and its one button. */
 export function PlanCards({ catalog, me, actionFor }: PlanCardsProps) {
   return (
     <div className="mojo-plans">
-      {catalog.plans.map((p) => {
-        const price = planPrice(catalog, p.key);
-        const current = me.plan === p.key;
-        const action = actionFor(p);
-        return (
-          <section key={p.key} className={`mojo-plan plan-${p.key}${current ? " current" : ""}`} aria-label={p.name}>
-            {(current || p.key === "plus") && <span className="mojo-plan-flag">{current ? "Your plan" : "All the perks"}</span>}
-            <header>
-              <h3>
-                {p.name} {p.badge && <MojoBadgeMark badge={p.badge} check={false} />}
-              </h3>
-              <div className="mojo-price">
-                <strong>{price.label}</strong>
-                {p.key !== "free" && <span>/month</span>}
-              </div>
-              <p>{PITCH[p.key]}</p>
-            </header>
-            <ul>
-              <PlanLine>{p.messageChars.toLocaleString()} characters a message</PlanLine>
-              <PlanLine>Files up to {size(p.uploadBytes)}</PlanLine>
-              <PlanLine>Screen sharing: {screenLabel(catalog, p.screen)}</PlanLine>
-              <PlanLine>{p.sparks === 0 ? "Sparks: buy them separately" : `${p.sparks} Meldiq Spark${p.sparks === 1 ? "" : "s"} included`}</PlanLine>
-              <PlanLine>{p.customItems} custom emoji and stickers</PlanLine>
-            </ul>
-            <button className={`btn btn-lg btn-${action.kind}`} disabled={action.disabled} onClick={action.onClick}>
-              {action.label}
-            </button>
-          </section>
-        );
-      })}
+      {catalog.plans
+        .filter((p) => p.key !== "go")
+        .map((p) => {
+          const price = planPrice(catalog, p.key);
+          const current = me.plan === p.key;
+          const action = actionFor(p);
+          return (
+            <section key={p.key} className={`mojo-plan plan-${p.key}${current ? " current" : ""}`} aria-label={p.name}>
+              {(current || p.key === "plus") && <span className="mojo-plan-flag">{current ? "Your plan" : "All the perks"}</span>}
+              <header>
+                <h3>
+                  {p.name} {p.badge && <MojoBadgeMark badge={p.badge} check={false} />}
+                </h3>
+                <div className="mojo-price">
+                  <strong>{price.label}</strong>
+                  {p.key !== "free" && <span>/month</span>}
+                </div>
+                <p>{PITCH[p.key]}</p>
+              </header>
+              <ul>
+                <PlanLine>{p.messageChars.toLocaleString()} characters a message</PlanLine>
+                <PlanLine>Files up to {size(p.uploadBytes)}</PlanLine>
+                <PlanLine>Screen sharing: {screenLabel(catalog, p.screen)}</PlanLine>
+                <PlanLine>{p.sparks === 0 ? "Sparks: buy them separately" : `${p.sparks} Meldiq Spark${p.sparks === 1 ? "" : "s"} included`}</PlanLine>
+                <PlanLine>{p.customItems} custom emoji and stickers</PlanLine>
+              </ul>
+              <button className={`btn btn-lg btn-${action.kind}`} disabled={action.disabled} onClick={action.onClick}>
+                {action.label}
+              </button>
+            </section>
+          );
+        })}
     </div>
   );
 }
@@ -137,31 +139,37 @@ export function CompareTable({ catalog, me }: { catalog: MojoCatalog; me: MojoMe
         <thead>
           <tr>
             <th scope="col">What you get</th>
-            {catalog.plans.map((p) => (
-              <th key={p.key} scope="col" className={cls(p.key)}>
-                {p.name}
-              </th>
-            ))}
+            {catalog.plans
+              .filter((p) => p.key !== "go")
+              .map((p) => (
+                <th key={p.key} scope="col" className={cls(p.key)}>
+                  {p.name}
+                </th>
+              ))}
           </tr>
         </thead>
         <tbody>
           {ROWS.map((r) => (
             <tr key={r.label}>
               <th scope="row">{r.label}</th>
-              {catalog.plans.map((p) => (
-                <td key={p.key} className={cls(p.key)}>
-                  {r.value(p, catalog)}
-                </td>
-              ))}
+              {catalog.plans
+                .filter((p) => p.key !== "go")
+                .map((p) => (
+                  <td key={p.key} className={cls(p.key)}>
+                    {r.value(p, catalog)}
+                  </td>
+                ))}
             </tr>
           ))}
           <tr>
             <th scope="row">Price</th>
-            {catalog.plans.map((p) => (
-              <td key={p.key} className={cls(p.key)}>
-                {p.key === "free" ? "Free" : `${planPrice(catalog, p.key).label} a month`}
-              </td>
-            ))}
+            {catalog.plans
+              .filter((p) => p.key !== "go")
+              .map((p) => (
+                <td key={p.key} className={cls(p.key)}>
+                  {p.key === "free" ? "Free" : `${planPrice(catalog, p.key).label} a month`}
+                </td>
+              ))}
           </tr>
         </tbody>
       </table>

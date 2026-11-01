@@ -1,5 +1,8 @@
+import { useEngine, useOrbit } from "../../../application/orbit";
+import { navigate } from "../../../application/router";
+import { selectCheckout } from "../../billing/checkoutDraft";
 import { PauseCircle, Sparkles, X } from "lucide-react";
-import { type ReactNode, useState } from "react";
+import { type ReactNode } from "react";
 import { BOTS_PLUS_PRICE } from "../../../sync/officialBotRules";
 import type { CatalogBot, OfficialBot } from "../../../sync/officialBots";
 import type { PanelChannel } from "../../../sync/communityRules";
@@ -48,24 +51,34 @@ export function BotField({ label, hint, plus, botsPlus, paused, children }: { la
 }
 
 /** "Get Bots+": billing for it isn't set up yet, so the button says so (the reference's "Coming soon"). */
-export function GetBotsPlusButton() {
-  const [note, setNote] = useState(false);
+export function GetBotsPlusButton({ orgId }: { orgId: string }) {
+  const engine = useEngine();
+  const owner = useOrbit((s) => s.orgs.find((org) => org.id === orgId)?.myRole === "OWNER");
+  const online = useOrbit((s) => s.connection === "online");
+  const price = useOrbit((s) => s.mojo.catalog?.onSale.botsPlus);
   return (
     <span className="obot-get-plus">
-      <button type="button" className="btn btn-primary btn-sm" onClick={() => setNote(true)}>
-        <Sparkles size={14} /> Get Bots+ · {BOTS_PLUS_PRICE}
+      <button
+        type="button"
+        className="btn btn-primary btn-sm"
+        disabled={!owner || !online || !price}
+        onClick={() => {
+          selectCheckout(engine.device.userId, { product: "bots_plus", orgId });
+          navigate({ section: "settings", settingsPage: "checkout" });
+        }}
+      >
+        <Sparkles size={14} />
+        Get Bots+ · {BOTS_PLUS_PRICE}
       </button>
-      {note && (
-        <small className="faint" role="status">
-          Payments for Bots+ aren't set up yet. Coming soon.
-        </small>
-      )}
+      {!owner && <small className="faint">A community owner can purchase Bots+.</small>}
+      {owner && !price && <small className="faint">Bots+ checkout is not available yet.</small>}
+      <small className="faint">One subscription for this community. Separate from Mojo Plus.</small>
     </span>
   );
 }
 
 /** The upsell under a bot's settings when the community has no Bots+. */
-export function PlusUpsell({ perks }: { perks: string[] }) {
+export function PlusUpsell({ perks, orgId }: { perks: string[]; orgId: string }) {
   return (
     <div className="obot-upsell">
       <span className="lines">
@@ -81,7 +94,7 @@ export function PlusUpsell({ perks }: { perks: string[] }) {
           ))}
         </ul>
       )}
-      <GetBotsPlusButton />
+      <GetBotsPlusButton orgId={orgId} />
     </div>
   );
 }

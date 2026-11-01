@@ -60,6 +60,8 @@ export const zNavPrefs = z.object({
   hidden: z.array(z.string()).optional(),
   /** Community parity A3, personal document: show communities' accent and background tint (false: Meldiq's own). */
   communityThemes: z.boolean().optional(),
+  expressionFavorites: z.array(z.string()).max(100).optional(),
+  expressionRecents: z.array(z.string()).max(40).optional(),
 });
 export type NavPrefs = z.infer<typeof zNavPrefs>;
 export type NavSection = NavPrefs["sections"][number];
@@ -92,7 +94,9 @@ export type NavOp =
   | { op: "muteUntil"; conversationId: string; until: number | null }
   | { op: "categoryNotify"; categoryId: string; level: NotifyLevel | null }
   | { op: "hide"; conversationId: string; hidden: boolean }
-  | { op: "communityThemes"; on: boolean };
+  | { op: "communityThemes"; on: boolean }
+  | { op: "expressionFavorite"; id: string; on: boolean }
+  | { op: "expressionUsed"; id: string };
 
 export type NavPlace = { k: "default" } | { k: "starred" } | { k: "section"; id: string };
 
@@ -201,6 +205,10 @@ function place(p: NavPrefs, id: string, sectionId: string | null, star: boolean)
 
 export function applyOp(p: NavPrefs, o: NavOp): NavPrefs {
   switch (o.op) {
+    case "expressionFavorite":
+      return { ...p, expressionFavorites: o.on ? [...new Set([...(p.expressionFavorites ?? []), o.id])].slice(-100) : (p.expressionFavorites ?? []).filter((id) => id !== o.id) };
+    case "expressionUsed":
+      return { ...p, expressionRecents: [o.id, ...(p.expressionRecents ?? []).filter((id) => id !== o.id)].slice(0, 40) };
     case "place":
       return place(p, o.conversationId, o.sectionId, o.starred);
     case "move":

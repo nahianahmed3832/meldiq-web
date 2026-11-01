@@ -7,6 +7,7 @@ import { callStatus } from "./callText";
 import { clampToViewport, loadPosition, nudge, type Point, savePosition } from "./miniPosition";
 import { useNow } from "./useNow";
 import { holdUpdates } from "../../application/updates";
+import { visibleViewport } from "../../application/viewport";
 
 /** Whatever this browser's call needs on screen: the ringing card, the call stage, or the minimised bar. */
 export function CallLayer() {
@@ -90,14 +91,22 @@ function MiniCall() {
 
   const fit = useCallback((p: Point): Point => {
     const box = ref.current?.getBoundingClientRect();
-    return clampToViewport(p, { width: box?.width ?? 0, height: box?.height ?? 0 }, { width: window.innerWidth, height: window.innerHeight });
+    const v = visibleViewport();
+    const clamped = clampToViewport({ x: p.x - v.left, y: p.y - v.top }, { width: box?.width ?? 0, height: box?.height ?? 0 }, { width: v.width, height: v.height });
+    return { x: clamped.x + v.left, y: clamped.y + v.top };
   }, []);
   // A remembered place from a larger window, or a window made smaller: pulled back on screen.
   useEffect(() => {
     const refit = () => setPos((p) => (p ? fit(p) : p));
     refit();
     window.addEventListener("resize", refit);
-    return () => window.removeEventListener("resize", refit);
+    window.visualViewport?.addEventListener("resize", refit);
+    window.visualViewport?.addEventListener("scroll", refit);
+    return () => {
+      window.removeEventListener("resize", refit);
+      window.visualViewport?.removeEventListener("resize", refit);
+      window.visualViewport?.removeEventListener("scroll", refit);
+    };
   }, [fit]);
 
   const start = (e: PointerEvent<HTMLElement>) => {

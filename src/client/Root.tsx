@@ -25,7 +25,7 @@ export default function Root() {
 
   useEffect(() => {
     applyTheme(getPrefs());
-    followVisualViewport();
+    const stopViewport = followVisualViewport();
     guardInspectorKeys();
     startSplash();
     // Before routing reads the address: an invitation link's code is kept for after signing in (pendingInvite.ts).
@@ -37,8 +37,7 @@ export default function Root() {
     const stopRouting = startRouting();
     let alive = true;
     void (async () => {
-      await installLegacyCurves().catch(() => []);
-      await startConfig();
+      await Promise.all([installLegacyCurves().catch(() => []), startConfig()]);
     })().then(
       () => alive && setStart({ s: "ready" }),
       (e: unknown) => {
@@ -51,6 +50,7 @@ export default function Root() {
     return () => {
       alive = false;
       stopRouting();
+      stopViewport();
     };
   }, []);
 

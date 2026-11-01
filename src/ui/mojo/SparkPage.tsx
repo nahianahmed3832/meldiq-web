@@ -1,3 +1,5 @@
+import { navigate } from "../../application/router";
+import { selectCheckout } from "../billing/checkoutDraft";
 import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useEngine, useOrbit } from "../../application/orbit";
@@ -23,6 +25,11 @@ export function SparkPage() {
     setBusy(true);
     setError(null);
     try {
+      if (mojo.billing?.provider === "paypal") {
+        selectCheckout(engine.device.userId, { product: "spark", quantity });
+        navigate({ section: "settings", settingsPage: "checkout" });
+        return;
+      }
       const url = await engine.mojo.buySparks(quantity);
       if (url) window.location.assign(url);
     } catch (e) {

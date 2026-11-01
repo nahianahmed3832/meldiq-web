@@ -1,7 +1,8 @@
-import { ChevronDown, Maximize, MonitorUp, Radio, Users } from "lucide-react";
+import { ChevronDown, Maximize, MonitorUp, Play, Radio, Users } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { setPrefs, usePrefs } from "../../application/prefs";
 import { useEngine, useOrbit } from "../../application/orbit";
+import { screenShareSupport } from "../../call/screenShareSupport";
 import { frameShape } from "../../call/rules";
 import { clampShareQuality, SHARE_QUALITIES, SHARE_QUALITY_ORDER, type ShareQuality } from "../../call/shareQuality";
 import { navigate } from "../../application/router";
@@ -26,6 +27,7 @@ export function ScreenView({ share, stats, onShape }: ScreenViewProps) {
   const figure = useRef<HTMLElement>(null);
   const video = useRef<HTMLVideoElement>(null);
   const epoch = useOrbit((s) => s.call.mediaEpoch);
+  const [playbackBlocked, setPlaybackBlocked] = useState(false);
   useEffect(() => {
     const el = video.current;
     if (!el || !share.ready) return;
@@ -33,7 +35,15 @@ export function ScreenView({ share, stats, onShape }: ScreenViewProps) {
     el.addEventListener("resize", resized);
     el.addEventListener("loadedmetadata", resized);
     const detach = engine.calls.attachShare(share.key, el);
+    let active = true;
+    const playing = () => setPlaybackBlocked(false);
+    el.addEventListener("playing", playing);
+    void el.play().catch(() => {
+      if (active) setPlaybackBlocked(true);
+    });
     return () => {
+      active = false;
+      el.removeEventListener("playing", playing);
       el.removeEventListener("resize", resized);
       el.removeEventListener("loadedmetadata", resized);
       detach();
@@ -63,6 +73,11 @@ export function ScreenView({ share, stats, onShape }: ScreenViewProps) {
         )}
       </figcaption>
       <div className="call-screen-actions">
+        {share.ready && playbackBlocked && (
+          <button className="btn btn-primary btn-sm" onClick={() => void video.current?.play().catch(() => setPlaybackBlocked(true))}>
+            <Play size={17} aria-hidden="true" /> Play shared screen
+          </button>
+        )}
         <button className="icon-btn" onClick={() => engine.calls.watchShare(null)} aria-label="Stop watching and show the people" title="Show the people">
           <Users size={17} />
         </button>
@@ -164,11 +179,26 @@ export function ShareDialog({ onClose }: { onClose: () => void }) {
   const [quality, setQuality] = useState<ShareQuality>(() => clampShareQuality(prefs.shareQuality, allowed));
   const more = allowed.length < SHARE_QUALITY_ORDER.length && allowed[allowed.length - 1] !== "max60";
   const [audio, setAudio] = useState(prefs.shareAudio);
+  const support = screenShareSupport();
   const share = () => {
+    if (!screenShareSupport().ok) return;
     setPrefs({ shareQuality: quality, shareAudio: audio });
     onClose();
     void engine.calls.toggleScreenShare({ quality, audio });
   };
+  if (!support.ok)
+    return (
+      <Dialog title="Share your screen" onClose={onClose}>
+        <div className="dialog-body">
+          <p role="status">{support.reason}</p>
+          <div className="row" style={{ justifyContent: "flex-end" }}>
+            <button className="btn btn-primary" onClick={onClose}>
+              Got it
+            </button>
+          </div>
+        </div>
+      </Dialog>
+    );
   return (
     <Dialog title="Share your screen" onClose={onClose}>
       <div className="dialog-body">

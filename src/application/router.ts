@@ -31,6 +31,8 @@ export type SettingsPage =
   | "shortcuts"
   | "health"
   | "usage"
+  | "checkout"
+  | "billing"
   | "mojo"
   | "spark"
   | "points"
@@ -94,6 +96,8 @@ const PAGES: SettingsPage[] = [
   "shortcuts",
   "health",
   "usage",
+  "checkout",
+  "billing",
   "mojo",
   "spark",
   // API 0.65.0: points, quests and levels.
@@ -173,7 +177,7 @@ export function routeHref(r: Partial<Route> & { section: Section }): string {
   return h;
 }
 
-const ROUTE_EVENT = "meldiq:route";
+export const ROUTE_EVENT = "meldiq:route";
 /** History entries this app made (Next.js's own router leaves entries without its marker alone). */
 const STATE = { meldiq: 1 };
 
@@ -212,6 +216,9 @@ export function appHref(raw: string, origin = location.origin): string | null {
  * app's paths move within the page instead of loading it again (modifier keys, other targets and downloads keep the browser's own behaviour).
  */
 export function startRouting(): () => void {
+  // The message viewport owns its position after data renders, including Back/Forward and reload.
+  const scrollRestoration = history.scrollRestoration;
+  history.scrollRestoration = "manual";
   const legacy = () => {
     if (location.hash.startsWith("#/")) go(appHref(location.hash) ?? "/home", true);
   };
@@ -236,6 +243,7 @@ export function startRouting(): () => void {
   Router.events.on("routeChangeComplete", afterNext);
   Router.events.on("hashChangeComplete", afterNext); // what it reports when only the "#…" part differs
   return () => {
+    history.scrollRestoration = scrollRestoration;
     document.removeEventListener("click", onClick);
     window.removeEventListener("hashchange", legacy);
     Router.events.off("routeChangeComplete", afterNext);

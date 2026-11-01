@@ -115,3 +115,36 @@ for (const [name, w, h] of [
     }
   });
 }
+
+test("a browser without capture can still watch an encrypted share, dismiss it and watch again", async ({ page }) => {
+  // Models mobile browsers without display capture, independently of receiving WebRTC video.
+  const call = await callWithShare(page, 540, 1170);
+  // WebKit may initialize mediaDevices after document-start scripts, so override the live API explicitly.
+  await page.evaluate(() => {
+    Object.defineProperty(navigator.mediaDevices, "getDisplayMedia", { configurable: true, value: undefined });
+  });
+  expect(await page.evaluate(() => typeof navigator.mediaDevices.getDisplayMedia)).toBe("undefined");
+  const stage = page.locator("section.call-stage");
+  const screen = stage.getByRole("figure", { name: "Bob Chen's screen" });
+  const frames = () => screen.locator("video").evaluate((v: HTMLVideoElement) => ({ width: v.videoWidth, time: v.currentTime, paused: v.paused }));
+  try {
+    await stage.getByRole("button", { name: "Share your screen", exact: true }).click();
+    const dialog = page.getByRole("dialog", { name: "Share your screen" });
+    await expect(dialog.getByRole("status")).toContainText("You can still watch");
+    await expect(dialog.getByRole("button", { name: "Share", exact: true })).toHaveCount(0);
+    await dialog.getByRole("button", { name: "Got it" }).click();
+    await expect.poll(async () => (await frames()).width).toBe(540);
+    await expect.poll(async () => (await frames()).paused).toBe(false);
+    const before = (await frames()).time;
+    await expect.poll(async () => (await frames()).time).toBeGreaterThan(before + 0.2);
+    await stage.getByRole("button", { name: "Stop watching and show the people" }).click();
+    await expect(screen).toHaveCount(0);
+    await stage.getByRole("button", { name: "Watch Bob Chen's screen", exact: true }).click();
+    await expect(screen).toBeVisible();
+    await expect.poll(async () => (await frames()).width, { timeout: 20_000 }).toBe(540);
+    const resumed = (await frames()).time;
+    await expect.poll(async () => (await frames()).time).toBeGreaterThan(resumed + 0.2);
+  } finally {
+    await call.media.leave();
+  }
+});

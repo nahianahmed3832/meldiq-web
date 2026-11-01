@@ -135,7 +135,7 @@ export const STRINGS = {
   ],
 
   // ── setting up this browser ──
-  create_title: ["Set up end-to-end encryption", "设置端到端加密", "এন্ড-টু-এন্ড এনক্রিপশন চালু করুন"],
+  create_title: ["Set up your security keys", "设置安全密钥", "আপনার নিরাপত্তা কী সেট আপ করুন"],
   create_signed_in: ["Signed in as {email}.", "已登录为 {email}。", "{email} হিসেবে সাইন ইন করেছেন।"],
   create_body: [
     "This browser will make your account's encryption keys. They're backed up locked with your password, so a new device needs your password and a code sent to your email. You'll also get a recovery key for when the email can't work, for example after a password reset.",
@@ -712,7 +712,7 @@ export const STRINGS = {
   settings_security: ["Privacy & security", "隐私与安全", "গোপনীয়তা ও নিরাপত্তা"],
   settings_mojo: ["Meldiq Mojo", "Meldiq Mojo", "Meldiq Mojo"],
   settings_spark: ["Meldiq Spark", "Meldiq Spark", "Meldiq Spark"],
-  settings_points: ["Points", "积分", "পয়েন্ট"],
+  settings_points: ["Embers", "余烬", "এম্বার্স"],
   settings_creators: ["Creators", "创作者", "ক্রিয়েটর"],
   settings_developer: ["Developer", "开发者", "ডেভেলপার"],
   settings_about: ["About", "关于", "সম্পর্কে"],

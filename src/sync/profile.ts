@@ -21,7 +21,7 @@ const opt = z
   .nullish()
   .transform((v) => v ?? null);
 
-export const zMyProfile = zProfile.extend({ birthday: opt, phone: opt, privacy: zPrivacy.partial().optional() });
+export const zMyProfile = zProfile.extend({ birthday: opt, phone: opt, privacy: zPrivacy.partial().optional(), profileRevision: z.string().optional(), styleRevision: z.string().optional() });
 export type MyProfile = z.infer<typeof zMyProfile>;
 
 export async function myProfile(engine: Engine): Promise<MyProfile> {
@@ -29,6 +29,7 @@ export async function myProfile(engine: Engine): Promise<MyProfile> {
 }
 
 export interface ProfileChange {
+  baseProfileRevision?: string;
   displayName?: string;
   statusText?: string | null;
   firstName?: string | null;

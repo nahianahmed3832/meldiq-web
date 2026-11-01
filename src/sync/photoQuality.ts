@@ -1,9 +1,6 @@
-/**
- * Photo quality before sending (android BatchComposer, server docs/ATTACHMENTS.md › Quality): Standard (longest edge
- * ≤ 1600 px, JPEG 82, the default) and HD (≤ 4096 px, JPEG 92) re-encode the photo upright, so camera metadata,
- * including location, isn't carried over; Original sends the file as it is. Transparent images stay PNG; GIFs are
- * never re-encoded (they may be animated).
- */
+import { expressionFormat } from "./prepareExpression";
+
+/** Automatic uploads use efficient, upright static photos. Explicit quality modes remain for stored legacy preferences. */
 export type PhotoQuality = "standard" | "hd" | "original";
 
 export const QUALITY_LABEL: Record<PhotoQuality, string> = { standard: "Standard", hd: "HD", original: "Original" };
@@ -28,15 +25,17 @@ export function fitWithin(width: number, height: number, edge: number): { width:
 
 /** The sent file's name: a re-encoded JPEG ends in .jpg. */
 export function encodedName(name: string, type: string): string {
-  if (type !== "image/jpeg") return name;
+  const extension = ({ "image/jpeg": "jpg", "image/webp": "webp", "image/png": "png" } as Record<string, string>)[type];
+  if (!extension) return name;
   const base = name.replace(/\.[A-Za-z0-9]{1,5}$/, "");
-  return `${base || "photo"}.jpg`;
+  return `${base || "photo"}.${extension}`;
 }
 
 export class PhotoPrepareError extends Error {}
 
 /** Re-encodes [file] at [quality] (browser only: needs createImageBitmap and a canvas). */
-export async function preparePhoto(file: File, quality: PhotoQuality): Promise<File> {
+export async function preparePhoto(file: File, quality: PhotoQuality | "auto" = "auto"): Promise<File> {
+  if (quality === "auto") return optimizePhoto(file);
   if (quality === "original" || !reencodable(file.type)) return file;
   const { edge, jpeg } = SETTINGS[quality];
   let bitmap: ImageBitmap;
@@ -60,5 +59,63 @@ export async function preparePhoto(file: File, quality: PhotoQuality): Promise<F
     return new File([blob], encodedName(file.name, type), { type, lastModified: file.lastModified });
   } finally {
     bitmap.close();
+  }
+}
+
+/** Automatic sending is best effort: preserve animations, and keep files the browser cannot decode. */
+export async function optimizePhoto(file: File): Promise<File> {
+  if (!reencodable(file.type) || file.size > 32 * 1024 * 1024) return file;
+  try {
+    if (expressionFormat(new Uint8Array(await file.arrayBuffer()))?.animated) return file;
+    const bitmap = await createImageBitmap(file, { imageOrientation: "from-image" });
+    try {
+      const size = fitWithin(bitmap.width, bitmap.height, 2560);
+      const canvas = document.createElement("canvas");
+      canvas.width = size.width;
+      canvas.height = size.height;
+      const context = canvas.getContext("2d");
+      if (!context) return file;
+      context.drawImage(bitmap, 0, 0, size.width, size.height);
+      const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/webp", 0.85));
+      // Some browsers fall back to PNG. Keep valid fallback files correctly named and never inflate a small photo.
+      if (!blob || (blob.size >= file.size && size.width === bitmap.width && size.height === bitmap.height)) return file;
+      return new File([blob], encodedName(file.name, blob.type), { type: blob.type, lastModified: file.lastModified });
+    } finally {
+      bitmap.close();
+    }
+  } catch {
+    return file;
+  }
+}
+
+/** Save optimized photos in a widely supported format; preserve alpha and animation. */
+export async function photoDownload(blob: Blob, name: string): Promise<{ blob: Blob; name: string }> {
+  const original = { blob, name };
+  if (blob.type !== "image/webp") return original;
+  try {
+    if (expressionFormat(new Uint8Array(await blob.arrayBuffer()))?.animated) return original;
+    const bitmap = await createImageBitmap(blob);
+    try {
+      const canvas = document.createElement("canvas");
+      canvas.width = bitmap.width;
+      canvas.height = bitmap.height;
+      const context = canvas.getContext("2d");
+      if (!context) return original;
+      context.drawImage(bitmap, 0, 0);
+      const pixels = context.getImageData(0, 0, bitmap.width, bitmap.height).data;
+      let alpha = false;
+      for (let i = 3; i < pixels.length; i += 4)
+        if (pixels[i] !== 255) {
+          alpha = true;
+          break;
+        }
+      const type = alpha ? "image/png" : "image/jpeg";
+      const encoded = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, type, 0.94));
+      return encoded ? { blob: encoded, name: encodedName(name, encoded.type) } : original;
+    } finally {
+      bitmap.close();
+    }
+  } catch {
+    return original;
   }
 }

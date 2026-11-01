@@ -14,7 +14,7 @@ export const SHELL_KEY = "/";
 export const MAX_ASSETS = 400;
 
 /** The app's own routes, opened at their address (src/application/router.ts); a query (the consent page, an import) goes to the network. */
-const SHELL_PATH = /^\/((home|dms|friends|activity|later|discover|settings|workspace)(\/[A-Za-z0-9_%-]{1,128}){0,4})?$/;
+const SHELL_PATH = /^\/((home|lobby|dms|friends|activity|later|discover|settings|workspace)(\/[A-Za-z0-9_%-]{1,128}){0,4})?$/;
 /** Small files that aren't content-hashed: served from the cache while the newest is fetched. */
 const FRESHENED = new Set(["/boot.js"]);
 

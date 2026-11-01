@@ -151,8 +151,9 @@ export class Receiver {
         const m = textMessage(pl, item, mine, serverTs, mentions);
         if (replacesPlaceholder) await store.putMessage(m);
         else if (!(await store.insertMessageIfAbsent(m))) return;
-        if (!mine) await this.ctx.ensureUser(item.senderUserId);
-        this.ctx.show(m);
+        if (!mine && !history) await this.ctx.ensureUser(item.senderUserId);
+        // History pages are published atomically by the engine, keeping distant windows separate.
+        if (!history) this.ctx.show(m);
         await this.replayPending(item.conversationId, item.messageId);
         if (history) return;
         const viewing = this.ctx.viewing() === item.conversationId;

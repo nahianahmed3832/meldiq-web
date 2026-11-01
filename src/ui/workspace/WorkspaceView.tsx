@@ -1,5 +1,5 @@
 import { MeldlingArt } from "../components/MeldlingArt";
-import { CalendarDays, Gauge, Hash, Laptop, LayoutGrid, ScrollText, ShieldCheck, Ticket, UsersRound } from "lucide-react";
+import { ArrowLeft, CalendarDays, Gauge, Hash, Laptop, LayoutGrid, ScrollText, ShieldCheck, Ticket, UsersRound } from "lucide-react";
 import { ApplicationsPage, BansPage, SecurityPage } from "./ModerationPages";
 import { COMMUNITY_RAIL_GROUPS, communityPageTitle, communityRailKey, visibleCommunityRail } from "./communityRail";
 import { ThemePage } from "./ThemePage";
@@ -81,15 +81,48 @@ export function WorkspaceView({ orgId, page, onDialog }: { orgId: string | null;
 
   const d = detail.data;
   const community = features.includes("community-channels");
+  const workspacePages = PAGES.filter((p) => (!p.shown || (d && p.shown(d.permissions, d))) && (!p.feature || features.includes(p.feature)));
+  const mobilePages = community ? visibleCommunityRail(features, d?.permissions ?? null) : workspacePages;
+  const mobileGroups = community ? COMMUNITY_RAIL_GROUPS : GROUPS;
+  const currentPage = community ? communityRailKey(page) : page;
   return (
     <section className="main main-split" aria-label={`${org.name} settings`} style={{ display: "flex", flexDirection: "column" }}>
-      <div className={`settings${community ? " community-settings" : ""}`}>
+      <div className={`settings workspace-settings${community ? " community-settings" : ""}`}>
         <nav className="settings-nav" aria-label={community ? "Community settings" : "Community pages"}>
+          <div className="mobile-workspace-nav">
+            <button className="icon-btn" aria-label="Back to community" onClick={() => navigate({ section: "home" })}>
+              <ArrowLeft size={20} />
+            </button>
+            <label className="grow">
+              <span className="sr-only">Community settings page</span>
+              <select
+                className="input"
+                value={mobilePages.some((p) => p.key === currentPage) ? currentPage : ""}
+                onChange={(e) => navigate({ section: "workspace", workspacePage: e.target.value as WorkspacePage })}
+              >
+                <option value="" disabled>
+                  Choose a settings page
+                </option>
+                {mobileGroups.map((group) => {
+                  const pages = mobilePages.filter((p) => p.group === group.key);
+                  return pages.length ? (
+                    <optgroup key={group.key} label={group.label ?? org.name}>
+                      {pages.map((p) => (
+                        <option key={p.key} value={p.key}>
+                          {p.label}
+                        </option>
+                      ))}
+                    </optgroup>
+                  ) : null;
+                })}
+              </select>
+            </label>
+          </div>
           {!community && <h2 className="ellipsis">{org.name}</h2>}
           {community && <CommunityRail name={org.name} page={page} features={features} permissions={d?.permissions ?? null} />}
           {!community &&
             GROUPS.map((g) => {
-              const pages = PAGES.filter((p) => p.group === g.key && (!p.shown || (d && p.shown(d.permissions, d))) && (!p.feature || features.includes(p.feature)));
+              const pages = workspacePages.filter((p) => p.group === g.key);
               if (pages.length === 0) return null;
               return (
                 <div key={g.key} role="group" aria-labelledby={`ws-group-${g.key}`} className="settings-nav-group">

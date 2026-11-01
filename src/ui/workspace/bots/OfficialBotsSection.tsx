@@ -95,7 +95,7 @@ export function OfficialBotsSection({ detail }: { detail: OrgAdminDetail }) {
         )}
       </Card>
       <OwnBotCard />
-      {catalog.data && view && <BotsPlusCard info={catalog.data.botsPlus} active={view.botsPlus} until={view.botsPlusUntil} />}
+      {catalog.data && view && <BotsPlusCard orgId={orgId} info={catalog.data.botsPlus} active={view.botsPlus} until={view.botsPlusUntil} />}
       {opened && view && (
         <BotWindow
           key={opened.key}
@@ -126,7 +126,7 @@ function OwnBotCard() {
   );
 }
 
-function BotsPlusCard({ info, active, until }: { info: { name: string; description: string; perks: string[] }; active: boolean; until: number | null }) {
+function BotsPlusCard({ info, active, until, orgId }: { orgId: string; info: { name: string; description: string; perks: string[] }; active: boolean; until: number | null }) {
   return (
     <Card title={info.name} sub={info.description} actions={<PlusChip />}>
       <ul className="obot-perks">
@@ -139,7 +139,7 @@ function BotsPlusCard({ info, active, until }: { info: { name: string; descripti
           <Sparkles size={14} aria-hidden="true" /> This community has {info.name} {untilText(until)}.
         </p>
       ) : (
-        <GetBotsPlusButton />
+        <GetBotsPlusButton orgId={orgId} />
       )}
     </Card>
   );

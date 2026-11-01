@@ -34,11 +34,15 @@ export const pushSupported = (): boolean =>
 export async function startServiceWorker(engine: Engine): Promise<void> {
   if (typeof navigator === "undefined" || !("serviceWorker" in navigator) || !window.isSecureContext) return;
   navigator.serviceWorker.addEventListener("message", (e: MessageEvent) => {
-    const d = e.data as { type?: unknown; href?: unknown } | null;
+    const d = e.data as { type?: unknown; href?: unknown; database?: unknown } | null;
     if (d?.type === SW_WAKE) engine.reconnect();
     else if (d?.type === SW_OPEN && isAppPath(d.href)) {
       window.focus();
-      go(d.href);
+      if (typeof d.database === "string" && d.database !== engine.store.name) {
+        void import("./accountSwitch")
+          .then(({ switchSavedAccount }) => switchSavedAccount(engine, d.database as string, d.href as string))
+          .catch((err: unknown) => engine.notice("error", err instanceof Error ? err.message : "Switch accounts to open this notification."));
+      } else go(d.href);
     }
   });
   const mirror = () => {
@@ -56,6 +60,7 @@ export async function startServiceWorker(engine: Engine): Promise<void> {
 }
 
 export interface SystemNotice {
+  database?: string;
   title: string;
   body: string;
   /** Same tag: the newer notification replaces the older, and still alerts (renotify). */
@@ -70,13 +75,13 @@ export interface SystemNotice {
 export function systemNotify(n: SystemNotice): void {
   const options = {
     body: n.body,
-    tag: n.tag,
+    tag: n.database ? `${n.database}:${n.tag}` : n.tag,
     renotify: true,
     silent: n.silent ?? false,
     requireInteraction: n.requireInteraction ?? false,
     icon: ICON,
     badge: BADGE,
-    data: { url: n.href ?? "/" },
+    data: { url: n.href ?? "/", database: n.database },
   };
   if (registration?.active) {
     void registration.showNotification(n.title, options as NotificationOptions).catch(() => fallback(n));

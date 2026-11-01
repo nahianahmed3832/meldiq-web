@@ -4,6 +4,7 @@ import type { ProfileStyle } from "../../api/schemas";
 /** What the profile preview shows while you edit: the typed fields and the style picks not yet back from the server. */
 export interface ProfileDraft {
   displayName: string;
+  username: string;
   pronouns: string;
   aboutMe: string;
   style: ProfileStyle | null;
@@ -14,7 +15,7 @@ interface ProfileDraftValue {
   update: (change: Partial<ProfileDraft>) => void;
 }
 
-const EMPTY: ProfileDraft = { displayName: "", pronouns: "", aboutMe: "", style: null };
+const EMPTY: ProfileDraft = { displayName: "", username: "", pronouns: "", aboutMe: "", style: null };
 
 const Ctx = createContext<ProfileDraftValue | null>(null);
 

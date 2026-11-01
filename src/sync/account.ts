@@ -81,6 +81,7 @@ export async function removeProfileBanner(engine: Engine): Promise<void> {
 }
 
 export interface ProfileStyleChange {
+  baseStyleRevision?: string;
   decoration?: string | null;
   effect?: string | null;
   accent?: string | null;
@@ -160,7 +161,7 @@ export async function signOut(engine: Engine, force = false, skipBackup = false)
     }
   }
   engine.stop();
-  engine.session.forget();
+  await engine.session.forget();
   await LocalStore.erase(engine.store);
   // Then this browser stops receiving background notifications (the server removed its token with the device).
   forgetPush();
@@ -174,7 +175,7 @@ export async function deleteAccount(engine: Engine, password: string, typedEmail
   await new AccountApi(engine.api).deleteAccount(password, normalizeEmail(typedEmail));
   engine.setSigningOut(true);
   engine.stop();
-  engine.session.forget();
+  await engine.session.forget();
   await LocalStore.erase(engine.store);
   // Then this browser stops receiving background notifications (the server removed its token with the device).
   forgetPush();

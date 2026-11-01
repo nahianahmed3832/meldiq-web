@@ -1,3 +1,4 @@
+import { screenShareSupport, ScreenShareUnavailable } from "./screenShareSupport";
 import { DEV } from "../application/env";
 import {
   AudioPresets,
@@ -115,7 +116,10 @@ export class LiveKitSession implements MediaSession {
     this.worker = worker;
     const keyProvider = new ExternalE2EEKeyProvider();
     const room = new Room({
-      adaptiveStream: true,
+      // Video is attached only after the E2EE worker verifies its first frames. Adaptive stream waits for a
+      // visible attached element before receiving frames, which can leave shares/cameras waiting forever.
+      // Keep reception independent of DOM visibility; syncSubscriptions still receives only the selected share.
+      adaptiveStream: false,
       dynacast: true,
       e2ee: { keyProvider, worker },
       // Microphones go first when the connection is short (screen and camera video give way before speech does).
@@ -169,6 +173,8 @@ export class LiveKitSession implements MediaSession {
   }
 
   async setScreenShare(on: boolean, opts: ShareOptions = { quality: "standard", audio: false }): Promise<void> {
+    const support = screenShareSupport();
+    if (on && !support.ok) throw new ScreenShareUnavailable(support.reason);
     try {
       // The shared tab's or system's sound comes along where the browser offers it (Chromium); frame encryption covers
       // every track.
