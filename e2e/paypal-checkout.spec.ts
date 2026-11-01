@@ -16,6 +16,30 @@ window.paypal = { version:'6.0.0', createInstance: async () => ({
   createPayPalOneTimePaymentSession: (callbacks) => ({ start: async (_, purchase) => { await purchase; await callbacks.onApprove({ orderId: 'UNTRUSTED-BROWSER' }); }, destroy() {} })
 }) };
 `;
+const fakeCards = `
+const namespace = document.currentScript.getAttribute('data-namespace');
+window[namespace] = { FUNDING: { CARD: 'card' }, Buttons: (options) => {
+  let button;
+  return {
+    isEligible: () => window.paypalCardsEligible !== false,
+    render: async (root) => {
+      button = document.createElement('button');
+      button.textContent = 'Debit or Credit Card';
+      button.type = 'button';
+      button.onclick = async () => {
+        try {
+          window.cardPurchaseReference = await (options.createSubscription || options.createOrder)();
+          window.cardPurchaseFlow = options.createSubscription ? 'subscription' : 'order';
+          if (window.paypalCardCancel) options.onCancel({});
+          else await options.onApprove({ orderID: 'UNTRUSTED-CARD-ORDER', subscriptionID: 'I-UNTRUSTED-CARD' });
+        } catch { options.onError(new Error('Card interrupted')); }
+      };
+      root.append(button);
+    },
+    close: async () => button?.remove()
+  };
+} };
+`;
 async function checkout(page: Page, deferred = false) {
   const alice = await newPhone("paypalcheckout", "Checkout Tester");
   await alice.connect();
@@ -30,6 +54,7 @@ async function checkout(page: Page, deferred = false) {
     route.fulfill({ json: { provider: "paypal", environment: "live", clientId: "public-live-test", billingStartAt: deferred ? Date.now() + 7 * 86400000 : null, subscriptions: true, cards: false } }),
   );
   await page.route("https://www.paypal.com/web-sdk/v6/core", (route) => route.fulfill({ contentType: "application/javascript", body: fakeSdk }));
+  await page.route("https://www.paypal.com/sdk/js?**", (route) => route.fulfill({ contentType: "application/javascript", body: fakeCards }));
   const purchase = {
     id: "chk_test",
     product: "plus",
@@ -107,6 +132,41 @@ test("live approval schedules renewal after existing free time without claiming 
   await expect(page.getByText("PayPal has confirmed your approval.", { exact: false })).toBeVisible();
 });
 
+test("card subscription uses the owned purchase and preserves deferred Plus time", async ({ page }, info) => {
+  const { purchase } = await checkout(page, true);
+  await page.getByRole("radio", { name: /Debit or credit card/ }).check();
+  await expect(page.getByRole("button", { name: "Debit or Credit Card", exact: true })).toHaveCount(0);
+  await page.getByRole("checkbox").check();
+  await expect(page.locator("paypal-button")).toHaveCount(0);
+  await page.screenshot({ path: info.outputPath("card-choice.png"), fullPage: true });
+  await page.getByRole("button", { name: "Debit or Credit Card", exact: true }).click();
+  await expect.poll(() => page.evaluate(() => (window as unknown as { cardPurchaseReference: string }).cardPurchaseReference)).toBe(purchase.providerRef);
+  await expect(page.getByRole("heading", { name: /Welcome to Plus|Your Plus renewal is scheduled/ })).toHaveCount(0);
+  await page.route("**/v2/billing/paypal/checkouts/chk_test/confirm", (route) => route.fulfill({ json: { ...purchase, approved: true } }));
+  await page.getByRole("button", { name: "Debit or Credit Card", exact: true }).click();
+  await expect(page.getByRole("heading", { name: "Your Plus renewal is scheduled." })).toBeVisible();
+});
+
+test("ineligible cards keep PayPal available", async ({ page }) => {
+  await page.addInitScript(() => {
+    (window as unknown as { paypalCardsEligible: boolean }).paypalCardsEligible = false;
+  });
+  await checkout(page);
+  await page.getByRole("checkbox").check();
+  await expect(page.locator("paypal-button")).toBeVisible();
+  await expect(page.getByRole("radio", { name: /Debit or credit card/ })).toHaveCount(0);
+});
+
+test("switching payment methods removes the old payment control", async ({ page }) => {
+  await checkout(page);
+  await page.getByRole("radio", { name: /Debit or credit card/ }).check();
+  await page.getByRole("checkbox").check();
+  await expect(page.getByRole("button", { name: "Debit or Credit Card", exact: true })).toBeVisible();
+  await page.getByRole("radio", { name: /^PayPal/ }).check();
+  await expect(page.getByRole("button", { name: "Debit or Credit Card", exact: true })).toHaveCount(0);
+  await expect(page.locator("paypal-button")).toBeVisible();
+});
+
 async function addonCheckout(page: Page, product: "spark" | "bots_plus") {
   const { userId } = await checkout(page);
   const catalog = await (await page.request.get("/v2/mojo/catalog")).json();
@@ -155,6 +215,27 @@ async function addonCheckout(page: Page, product: "spark" | "bots_plus") {
 }
 
 for (const product of ["spark", "bots_plus"] as const) {
+  test(`${product} cards use the correct flow and cancellation never grants benefits`, async ({ page }) => {
+    const purchase = await addonCheckout(page, product);
+    await page.getByRole("radio", { name: /Debit or credit card/ }).check();
+    await page.getByRole("checkbox").check();
+    await page.evaluate(() => {
+      (window as unknown as { paypalCardCancel: boolean }).paypalCardCancel = true;
+    });
+    await page.getByRole("button", { name: "Debit or Credit Card", exact: true }).click();
+    await expect(page.getByRole("alert")).toContainText("canceled");
+    expect(await page.evaluate(() => (window as unknown as { cardPurchaseReference: string }).cardPurchaseReference)).toBe(purchase.providerRef);
+    expect(await page.evaluate(() => (window as unknown as { cardPurchaseFlow: string }).cardPurchaseFlow)).toBe(product === "spark" ? "order" : "subscription");
+    await expect(page.getByRole("heading", { name: /Your Sparks are ready|Bots\+ is active/ })).toHaveCount(0);
+    await page.evaluate(() => {
+      (window as unknown as { paypalCardCancel: boolean }).paypalCardCancel = false;
+    });
+    purchase.confirmed = true;
+    purchase.status = product === "spark" ? "paid" : "active";
+    await page.getByRole("button", { name: "Debit or Credit Card", exact: true }).click();
+    await expect(page.getByRole("heading", { name: /Your Sparks are ready|Bots\+ is active/ })).toBeVisible();
+  });
+
   test(`${product} is reviewed separately and only server-confirmed payment completes it`, async ({ page }, info) => {
     const p = await addonCheckout(page, product);
     await expect(page.locator(".meldiq-checkout")).toContainText(product === "spark" ? "1.98" : "3.99");

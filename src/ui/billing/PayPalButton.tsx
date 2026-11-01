@@ -32,7 +32,7 @@ export function PayPalButton({
       const sdk = await loadCoreSdkScript({ environment: config.environment === "live" ? "production" : "sandbox" });
       if (!sdk || disposed) return;
       const instance = await sdk.createInstance({ clientId: config.clientId, components: ["paypal-payments", "paypal-subscriptions"], pageType: "checkout" });
-      const methods = await instance.findEligibleMethods({ currencyCode: "USD" });
+      const methods = await instance.findEligibleMethods({ currencyCode: "USD", paymentFlow: subscription ? "RECURRING_PAYMENT" : "ONE_TIME_PAYMENT" });
       if (disposed) return;
       if (!methods.isEligible("paypal")) throw new Error("PayPal is not available for this purchase. Please try another eligible PayPal account.");
       const options = {

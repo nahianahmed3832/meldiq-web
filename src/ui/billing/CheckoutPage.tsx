@@ -1,6 +1,6 @@
 import { CHECKOUT_DRAFT_EVENT, restoreCheckout } from "./checkoutDraft";
 import { AddonCheckoutPage } from "./AddonCheckoutPage";
-import { ArrowLeft, ArrowRight, Check, CheckCircle2, CreditCard, Crown, Gift, LockKeyhole, RefreshCw, ShieldCheck, Sparkles } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, CheckCircle2, Crown, Gift, LockKeyhole, RefreshCw, ShieldCheck, Sparkles } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ApiError } from "../../api/client";
 import { type PayPalConfig, type PayPalPurchase, zPayPalCheckout, zPayPalConfig } from "../../api/paypalSchemas";
@@ -9,7 +9,9 @@ import { navigate } from "../../application/router";
 import { BrandMark } from "../components/BrandMark";
 import { money, size } from "../mojo/mojoFormat";
 import { readCheckout, writeCheckout } from "./checkoutDraft";
-import { PayPalButton } from "./PayPalButton";
+import { usePayPalCardSdk } from "./PayPalCardButton";
+import { CheckoutPaymentButton } from "./CheckoutPaymentButton";
+import { PaymentMethods, type PaymentMethod } from "./PaymentMethods";
 
 const billing = () => navigate({ section: "settings", settingsPage: "billing" });
 
@@ -24,12 +26,15 @@ function PlusCheckoutPage({ initial }: { initial: ReturnType<typeof readCheckout
   const [config, setConfig] = useState<PayPalConfig | null>(null);
   const [purchase, setPurchase] = useState<PayPalPurchase | null>(null);
   const [accepted, setAccepted] = useState(false);
+  const [method, setMethod] = useState<PaymentMethod>("paypal");
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [checking, setChecking] = useState(false);
   const [attempt, setAttempt] = useState(0);
   const draft = saved.draft;
   const gift = draft.product === "gift";
+  const cardSdk = usePayPalCardSdk(config, !gift);
+  const card = method === "card" && cardSdk != null;
   const recipient = useOrbit((s) => (gift ? (s.users[draft.recipientUserId]?.displayName ?? draft.recipientUserId) : null));
   const price = catalog?.onSale.plus;
   const amount = (price?.amountMinor ?? 399) * (gift ? draft.months : 1);
@@ -169,7 +174,7 @@ function PlusCheckoutPage({ initial }: { initial: ReturnType<typeof readCheckout
                       ? "This is a test purchase. No real money is taken."
                       : deferred
                         ? `Your existing Plus time stays available. Your first payment is ${startDate}.`
-                        : "Review your purchase before authorizing payment with PayPal."}
+                        : "Review your purchase and choose how to pay."}
                   </p>
                 )}
                 <div className="checkout-account">
@@ -181,16 +186,14 @@ function PlusCheckoutPage({ initial }: { initial: ReturnType<typeof readCheckout
                   <Check size={16} aria-hidden="true" />
                 </div>
                 <h3>Payment method</h3>
-                <div className="checkout-method" role="radiogroup" aria-label="Payment method">
-                  <div role="radio" aria-checked="true" tabIndex={0}>
-                    <span className="checkout-radio" />
-                    <div>
-                      <strong>PayPal</strong>
-                      <small>Authorize securely with PayPal</small>
-                    </div>
-                    <CreditCard size={24} aria-hidden="true" />
-                  </div>
-                </div>
+                <PaymentMethods
+                  value={card ? "card" : "paypal"}
+                  cards={cardSdk != null}
+                  onChange={(value) => {
+                    setMethod(value);
+                    setError(null);
+                  }}
+                />
                 <p className="checkout-security">
                   <LockKeyhole size={15} aria-hidden="true" />
                   <span>PayPal securely handles payment authorization. Meldiq never sees your card number or security code.</span>
@@ -238,11 +241,12 @@ function PlusCheckoutPage({ initial }: { initial: ReturnType<typeof readCheckout
                     This offer is not available for purchase yet.
                   </p>
                 )}
-                {!accepted && <p className="checkout-hint">Agree to the terms to continue with PayPal.</p>}
+                {!accepted && <p className="checkout-hint">Agree to the terms to continue to payment.</p>}
                 {config && accepted && online && price && (gift || config.subscriptions) && (
-                  <PayPalButton
+                  <CheckoutPaymentButton
                     key={attempt}
                     config={config}
+                    cardSdk={card ? cardSdk : null}
                     subscription={!gift}
                     create={create}
                     approve={() => verify(true)}

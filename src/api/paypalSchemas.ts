@@ -6,6 +6,7 @@ export const zPayPalConfig = z.object({
   clientId: z.string().min(1),
   billingStartAt: z.number().nullable().optional(),
   subscriptions: z.boolean(),
+  // Direct card fields are disabled. Hosted guest card buttons check buyer eligibility separately in PayPal's SDK.
   cards: z.literal(false),
   sparks: z.boolean().optional(),
   botsPlus: z.boolean().optional(),

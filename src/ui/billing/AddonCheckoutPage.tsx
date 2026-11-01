@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { ArrowLeft, Bot, CheckCircle2, CreditCard, LockKeyhole, ShieldCheck, Sparkles } from "lucide-react";
+import { ArrowLeft, Bot, CheckCircle2, LockKeyhole, ShieldCheck, Sparkles } from "lucide-react";
 import { useEngine, useOrbit } from "../../application/orbit";
 import { setPrefs } from "../../application/prefs";
 import { navigate } from "../../application/router";
@@ -7,7 +7,9 @@ import { type PayPalConfig, type PayPalPurchase, zPayPalCheckout, zPayPalConfig 
 import { BrandMark } from "../components/BrandMark";
 import { money } from "../mojo/mojoFormat";
 import { type CheckoutDraft, readCheckout, selectCheckout, writeCheckout } from "./checkoutDraft";
-import { PayPalButton } from "./PayPalButton";
+import { usePayPalCardSdk } from "./PayPalCardButton";
+import { CheckoutPaymentButton } from "./CheckoutPaymentButton";
+import { PaymentMethods, type PaymentMethod } from "./PaymentMethods";
 
 type Addon = Extract<CheckoutDraft, { product: "spark" | "bots_plus" }>;
 
@@ -20,11 +22,14 @@ export function AddonCheckoutPage({ draft, initial }: { draft: Addon; initial: R
   const [config, setConfig] = useState<PayPalConfig | null>(null);
   const [purchase, setPurchase] = useState<PayPalPurchase | null>(null);
   const [accepted, setAccepted] = useState(false);
+  const [method, setMethod] = useState<PaymentMethod>("paypal");
   const [checking, setChecking] = useState(false);
   const [awaiting, setAwaiting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [attempt, setAttempt] = useState(0);
   const spark = draft.product === "spark";
+  const cardSdk = usePayPalCardSdk(config, !spark);
+  const card = method === "card" && cardSdk != null;
   const quantity = spark ? draft.quantity : 1;
   const price = spark ? catalog?.onSale.spark : catalog?.onSale.botsPlus;
   const amount = (price?.amountMinor ?? (spark ? 99 : 399)) * quantity;
@@ -199,16 +204,14 @@ export function AddonCheckoutPage({ draft, initial }: { draft: Addon; initial: R
                   </div>
                 </div>
                 <h3>Payment method</h3>
-                <div className="checkout-method" role="radiogroup" aria-label="Payment method">
-                  <div role="radio" aria-checked="true" tabIndex={0}>
-                    <span className="checkout-radio" />
-                    <div>
-                      <strong>PayPal</strong>
-                      <small>Authorize securely with PayPal</small>
-                    </div>
-                    <CreditCard size={24} aria-hidden="true" />
-                  </div>
-                </div>
+                <PaymentMethods
+                  value={card ? "card" : "paypal"}
+                  cards={cardSdk != null}
+                  onChange={(value) => {
+                    setMethod(value);
+                    setError(null);
+                  }}
+                />
                 <p className="checkout-security">
                   <LockKeyhole size={15} aria-hidden="true" />
                   <span>PayPal handles your payment authorization. Meldiq never sees your card number or security code.</span>
@@ -251,11 +254,12 @@ export function AddonCheckoutPage({ draft, initial }: { draft: Addon; initial: R
                     PayPal is not available for this product yet.
                   </p>
                 )}
-                {!accepted && <p className="checkout-hint">Agree to the terms to continue with PayPal.</p>}
+                {!accepted && <p className="checkout-hint">Agree to the terms to continue to payment.</p>}
                 {enabled && accepted && online && !closed && (
-                  <PayPalButton
+                  <CheckoutPaymentButton
                     key={attempt}
                     config={config}
+                    cardSdk={card ? cardSdk : null}
                     subscription={!spark}
                     create={create}
                     approve={async () => {
