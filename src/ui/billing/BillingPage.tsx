@@ -11,6 +11,7 @@ const date = (value: number | null) => (value === null ? "Not available yet" : n
 export function BillingPage() {
   const engine = useEngine();
   const { billing, me } = useOrbit((s) => s.mojo);
+  const communities = useOrbit((s) => s.orgs);
   const online = useOrbit((s) => s.connection === "online");
   const [history, setHistory] = useState<PayPalHistory | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -56,6 +57,7 @@ export function BillingPage() {
   const latest = history?.subscriptions.find((subscription) => subscription.product !== "bots_plus");
   const ending = sub?.cancelAtPeriodEnd || latest?.cancelAtPeriodEnd;
   const paypal = billing?.provider === "paypal";
+  const fundingUrl = billing?.mode === "live" ? "https://www.paypal.com/myaccount/autopay/" : "https://www.sandbox.paypal.com/myaccount/autopay/";
   return (
     <div className="mojo billing-page">
       <button className="btn btn-ghost btn-sm" onClick={() => navigate({ section: "settings", settingsPage: "mojo" })}>
@@ -114,10 +116,19 @@ export function BillingPage() {
             <div className="grow">
               <h2>Bots+</h2>
               <p>$3.99 USD/month · {subscription.status.replaceAll("_", " ")}</p>
-              <small>Community: {subscription.orgId}</small>
+              <small>{communities.find((community) => community.id === subscription.orgId)?.name ?? "Community subscription"}</small>
               <p className="muted">
                 {subscription.cancelAtPeriodEnd ? "Paid access ends" : "Next billing date"}: {date(subscription.currentPeriodEnd)}
               </p>
+              {["past_due", "unpaid", "paused"].includes(subscription.status) && (
+                <p role="status">
+                  Bots+ needs payment attention.{" "}
+                  <a href={fundingUrl} target="_blank" rel="noreferrer">
+                    Update your payment method in PayPal
+                  </a>
+                  , then refresh billing.
+                </p>
+              )}
             </div>
             {subscription.cancelAtPeriodEnd || subscription.status === "canceled" ? (
               <span className="checkout-sandbox">Renewal cancelled</span>
@@ -134,7 +145,7 @@ export function BillingPage() {
         <div className="banner danger" role="alert">
           <TriangleAlert size={18} aria-hidden="true" />
           <span>Your subscription needs attention. Update your funding method in PayPal, then refresh billing. Benefits follow the verified payment state and your plan’s recovery policy.</span>
-          <a href={billing?.mode === "live" ? "https://www.paypal.com/myaccount/autopay/" : "https://www.sandbox.paypal.com/myaccount/autopay/"} target="_blank" rel="noreferrer">
+          <a href={fundingUrl} target="_blank" rel="noreferrer">
             Open PayPal
           </a>
         </div>

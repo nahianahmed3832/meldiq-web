@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Bot, CheckCircle2, Sparkles } from "lucide-react";
+import { ArrowLeft, Bot, CheckCircle2, CreditCard, LockKeyhole, ShieldCheck, Sparkles } from "lucide-react";
 import { useEngine, useOrbit } from "../../application/orbit";
 import { setPrefs } from "../../application/prefs";
 import { navigate } from "../../application/router";
@@ -41,7 +41,14 @@ export function AddonCheckoutPage({ draft, initial }: { draft: Addon; initial: R
   );
   const validate = useCallback(
     (p: PayPalPurchase) => {
-      if (p.product !== product || p.currency !== "USD" || p.amountMinor !== amount || (product === "spark" && p.quantity !== quantity) || (product === "bots_plus" && p.orgId !== orgId)) {
+      if (
+        p.product !== product ||
+        p.currency !== "USD" ||
+        p.interval !== (product === "spark" ? "one_time" : "month") ||
+        p.amountMinor !== amount ||
+        (product === "spark" && p.quantity !== quantity) ||
+        (product === "bots_plus" && p.orgId !== orgId)
+      ) {
         throw new Error("The order changed. Return to the product page and review a new checkout.");
       }
       return p;
@@ -79,6 +86,7 @@ export function AddonCheckoutPage({ draft, initial }: { draft: Addon; initial: R
       const id = saved.current.purchaseId;
       if (!id) return;
       setChecking(true);
+      setError(null);
       try {
         const result = validate(await engine.api.json(capture ? "POST" : "GET", `/v2/billing/paypal/checkouts/${encodeURIComponent(id)}${capture ? "/confirm" : ""}`, zPayPalCheckout));
         remember(result);
@@ -100,11 +108,13 @@ export function AddonCheckoutPage({ draft, initial }: { draft: Addon; initial: R
     let count = 0;
     let timer: ReturnType<typeof setTimeout>;
     const poll = async () => {
-      if (stopped || ++count > 15) return;
+      if (stopped) return;
       await check(false);
-      if (!stopped) timer = setTimeout(() => void poll(), 2000);
+      if (!stopped && ++count < 6) timer = setTimeout(() => void poll(), 5000);
+      else if (!stopped) setAwaiting(false);
     };
-    timer = setTimeout(() => void poll(), 2000);
+    // Six checks over 30 seconds leave room for refreshes within the API's 10/minute limit.
+    timer = setTimeout(() => void poll(), 5000);
     return () => {
       stopped = true;
       clearTimeout(timer);
@@ -113,7 +123,7 @@ export function AddonCheckoutPage({ draft, initial }: { draft: Addon; initial: R
 
   const create = async () => {
     setError(null);
-    if (!accepted || !online || !price) throw new Error("Review the order before paying.");
+    if (!accepted || !online || !price || price.currency !== "USD") throw new Error("Review the order before paying.");
     const current = saved.current;
     const result = validate(
       current.purchaseId
@@ -127,105 +137,221 @@ export function AddonCheckoutPage({ draft, initial }: { draft: Addon; initial: R
   };
 
   const closed = purchase && !purchase.confirmed && ["expired", "failed", "refunded", "canceled", "incomplete_expired"].includes(purchase.status);
+  const enabled = config && (spark ? config.sparks : config.botsPlus) && price?.currency === "USD";
+  const back = () => {
+    if (draft.product === "bots_plus") {
+      setPrefs({ orgId: draft.orgId });
+      navigate({ section: "workspace", workspacePage: "bots" });
+    } else navigate({ section: "settings", settingsPage: "spark" });
+  };
   return (
     <div className="meldiq-checkout">
       <header className="checkout-brand">
-        <span className="row">
-          <BrandMark size={30} />
+        <div className="checkout-logo">
+          <BrandMark size={34} />
           <strong>Meldiq</strong>
+        </div>
+        <span>
+          <LockKeyhole size={14} aria-hidden="true" /> Secure checkout
         </span>
-        <button className="btn btn-ghost" onClick={() => navigate({ section: "settings", settingsPage: "billing" })}>
-          Billing
-        </button>
       </header>
-      <div className="settings-page" style={{ maxWidth: 720, margin: "0 auto" }}>
-        {purchase?.confirmed ? (
-          <section className="card setting-card" role="status">
-            <CheckCircle2 size={30} aria-hidden="true" />
-            <h1>{spark ? "Your Sparks are ready." : "Bots+ is active."}</h1>
-            <p>{spark ? "Choose a community to boost. Your purchased Sparks do not renew or expire." : `Premium bot features are now available for ${community}.`}</p>
-            <button
-              className="btn btn-primary"
-              onClick={() => {
-                if (draft.product === "bots_plus") {
-                  setPrefs({ orgId: draft.orgId });
-                  navigate({ section: "workspace", workspacePage: "bots" });
-                } else navigate({ section: "settings", settingsPage: "spark" });
-              }}
-            >
-              {spark ? "Use your Sparks" : "Open community bots"}
-            </button>
-          </section>
-        ) : (
-          <section className="card setting-card">
-            {spark ? <Sparkles size={30} aria-hidden="true" /> : <Bot size={30} aria-hidden="true" />}
+      <button className="btn btn-ghost btn-sm checkout-back" onClick={back}>
+        <ArrowLeft size={15} aria-hidden="true" /> {spark ? "Back to Sparks" : "Back to community bots"}
+      </button>
+      {purchase?.confirmed ? (
+        <section className="checkout-success" role="status">
+          <CheckCircle2 size={52} aria-hidden="true" />
+          <span className="checkout-kicker">ALL SET</span>
+          <h1>{spark ? "Your Sparks are ready." : "Bots+ is active."}</h1>
+          <p>{spark ? "Choose a community to boost. Your purchased Sparks do not renew or expire." : `Premium bot features are now available for ${community}.`}</p>
+          <p className="muted">
+            {money(purchase.amountMinor, purchase.currency)} {purchase.currency} · {spark ? "one-time payment" : "monthly"}
+            <br />
+            PayPal reference: <code>{purchase.providerRef}</code>
+          </p>
+          <button className="btn btn-mojo" onClick={back}>
+            {spark ? "Use your Sparks" : "Open community bots"}
+          </button>
+        </section>
+      ) : (
+        <>
+          <div className="checkout-title">
+            <span className="checkout-kicker">
+              <Sparkles size={14} aria-hidden="true" /> MORE FOR YOUR COMMUNITY
+            </span>
             <h1>{title}</h1>
             <p>{spark ? "Boost communities with a one-time purchase. No Mojo subscription is required." : `Premium community bots for ${community}, purchased separately from Mojo Plus.`}</p>
-            <p className="checkout-total">
-              <strong>{money(amount, "USD")}</strong> {spark ? "one time" : "per month"}
-            </p>
-            <p>
-              {spark
-                ? "$0.99 per Spark. No automatic renewal. Use a Spark in one community at a time, and move it with your account."
-                : "$3.99 per month for this community. Renews until canceled. Mojo Plus is a separate subscription."}
-            </p>
-            {config?.environment === "sandbox" && <p className="banner warn">PayPal Sandbox · test purchases only</p>}
-            {error && (
-              <p className="banner danger" role="alert">
-                {error}
+          </div>
+          <div className="checkout-layout">
+            <div className="checkout-payment">
+              <section className="checkout-card" aria-labelledby="addon-payment-title">
+                <div className="checkout-card-heading">
+                  <span className="checkout-step">1</span>
+                  <h2 id="addon-payment-title">Your payment</h2>
+                  {config?.environment === "sandbox" && <span className="checkout-sandbox">Sandbox</span>}
+                </div>
+                {config?.environment === "sandbox" && <p className="muted">This is a test purchase. No real money is taken.</p>}
+                <div className="checkout-account">
+                  <ShieldCheck size={21} aria-hidden="true" />
+                  <div>
+                    <strong>Your Meldiq account</strong>
+                    <p>{spark ? "Your purchased Sparks stay with your account." : `This subscription covers ${community}.`}</p>
+                  </div>
+                </div>
+                <h3>Payment method</h3>
+                <div className="checkout-method" role="radiogroup" aria-label="Payment method">
+                  <div role="radio" aria-checked="true" tabIndex={0}>
+                    <span className="checkout-radio" />
+                    <div>
+                      <strong>PayPal</strong>
+                      <small>Authorize securely with PayPal</small>
+                    </div>
+                    <CreditCard size={24} aria-hidden="true" />
+                  </div>
+                </div>
+                <p className="checkout-security">
+                  <LockKeyhole size={15} aria-hidden="true" />
+                  <span>PayPal handles your payment authorization. Meldiq never sees your card number or security code.</span>
+                </p>
+                <label className="checkout-agreement">
+                  <input type="checkbox" checked={accepted} onChange={(event) => setAccepted(event.target.checked)} />
+                  <span>
+                    {spark ? "I understand this is a one-time payment" : "I agree to the monthly subscription and cancellation terms"}, and agree to the{" "}
+                    <a href="https://meldiq.app/legal/terms" target="_blank" rel="noopener noreferrer">
+                      Terms of Service
+                    </a>{" "}
+                    and{" "}
+                    <a href="https://meldiq.app/legal/billing" target="_blank" rel="noopener noreferrer">
+                      payment terms
+                    </a>
+                    , and have read the{" "}
+                    <a href="https://meldiq.app/legal/privacy" target="_blank" rel="noopener noreferrer">
+                      Privacy Policy
+                    </a>
+                    .
+                  </span>
+                </label>
+                {error && (
+                  <p className="banner danger" role="alert">
+                    {error}
+                  </p>
+                )}
+                {!online && (
+                  <p className="muted" role="status">
+                    Reconnect to continue checkout.
+                  </p>
+                )}
+                {catalog && !price && (
+                  <p className="muted" role="status">
+                    This product is not available for checkout yet.
+                  </p>
+                )}
+                {config && price && !enabled && (
+                  <p className="muted" role="status">
+                    PayPal is not available for this product yet.
+                  </p>
+                )}
+                {!accepted && <p className="checkout-hint">Agree to the terms to continue with PayPal.</p>}
+                {enabled && accepted && online && !closed && (
+                  <PayPalButton
+                    key={attempt}
+                    config={config}
+                    subscription={!spark}
+                    create={create}
+                    approve={async () => {
+                      setAwaiting(true);
+                      await check(true);
+                    }}
+                    cancel={() => setError("Checkout was canceled. Nothing is granted until payment is confirmed.")}
+                    fail={setError}
+                  />
+                )}
+                {purchase && !closed && (
+                  <p role="status" className="muted">
+                    {awaiting ? "Waiting for payment confirmation…" : "Your payment is awaiting confirmation. You can safely check its status again."}
+                  </p>
+                )}
+                {saved.current.purchaseId && (
+                  <button className="btn btn-secondary checkout-check" disabled={checking || !online} onClick={() => void check(false)}>
+                    {checking ? "Checking…" : "Check payment status"}
+                  </button>
+                )}
+                {closed && (
+                  <button className="btn btn-secondary" onClick={() => selectCheckout(engine.device.userId, draft)}>
+                    Start a new checkout
+                  </button>
+                )}
+                {error && !closed && (
+                  <button
+                    className="btn btn-ghost btn-sm"
+                    onClick={() => {
+                      setError(null);
+                      setAwaiting(false);
+                      setAttempt((value) => value + 1);
+                    }}
+                  >
+                    Retry checkout
+                  </button>
+                )}
+              </section>
+              <div className="checkout-trust">
+                <ShieldCheck size={18} aria-hidden="true" />
+                <p>
+                  Securely processed by PayPal.
+                  <br />
+                  <span>Benefits begin after payment is verified.</span>
+                </p>
+              </div>
+            </div>
+            <aside className="checkout-card checkout-summary" aria-labelledby="addon-summary-title">
+              <div className="checkout-card-heading">
+                <span className="checkout-step">2</span>
+                <h2 id="addon-summary-title">Order summary</h2>
+              </div>
+              <div className="checkout-plan-art">
+                <span>{spark ? <Sparkles size={30} aria-hidden="true" /> : <Bot size={30} aria-hidden="true" />}</span>
+                <span className="checkout-kicker">{spark ? "MELDIQ SPARK" : "COMMUNITY BOTS"}</span>
+                <h3>{spark ? `${quantity} Spark${quantity === 1 ? "" : "s"}` : "Bots+"}</h3>
+                <p>{spark ? "More for the communities you love" : community}</p>
+              </div>
+              <dl className="checkout-breakdown">
+                <div>
+                  <dt>{spark ? "Per Spark" : "Monthly subscription"}</dt>
+                  <dd>{price ? money(price.amountMinor, price.currency) : "Loading…"}</dd>
+                </div>
+                {spark && (
+                  <div>
+                    <dt>Quantity</dt>
+                    <dd>{quantity}</dd>
+                  </div>
+                )}
+                <div className="checkout-total">
+                  <dt>
+                    Total today<small>{spark ? "One-time purchase" : "Renews monthly"}</small>
+                  </dt>
+                  <dd>
+                    {price ? money(amount, price.currency) : "—"}
+                    <small>USD</small>
+                  </dd>
+                </div>
+              </dl>
+              <p className="checkout-renewal">
+                {spark
+                  ? "$0.99 per Spark. No automatic renewal or expiry. Use a Spark in one community at a time, and move it with your account."
+                  : "$3.99 per month for this community. Renews until canceled. Manage renewal in Billing. Mojo Plus is a separate subscription."}
               </p>
-            )}
-            {!online && <p className="banner warn">Reconnect to continue checkout.</p>}
-            {price === null && <p className="muted">This product is not available for checkout yet.</p>}
-            <label className="row">
-              <input type="checkbox" checked={accepted} onChange={(event) => setAccepted(event.target.checked)} />
-              {spark ? "I understand this is a one-time payment." : "I agree to the monthly subscription and cancellation terms."}
-            </label>
-            <p className="faint">
-              By purchasing, you agree to the{" "}
-              <a href="https://meldiq.app/terms" target="_blank" rel="noopener noreferrer">
-                Terms of Service
-              </a>
-              .
-            </p>
-            {config && (spark ? config.sparks : config.botsPlus) && price && accepted && online && !closed && (
-              <PayPalButton
-                config={config}
-                subscription={!spark}
-                create={create}
-                approve={async () => {
-                  setAwaiting(true);
-                  await check(true);
-                }}
-                cancel={() => setError("Checkout was canceled. Nothing is granted until payment is confirmed.")}
-                fail={setError}
-              />
-            )}
-            {awaiting && <p role="status">Waiting for payment confirmation…</p>}
-            {saved.current.purchaseId && (
-              <button className="btn btn-secondary" disabled={checking || !online} onClick={() => void check(false)}>
-                {checking ? "Checking…" : "Check payment status"}
-              </button>
-            )}
-            {closed && (
-              <button className="btn btn-secondary" onClick={() => selectCheckout(engine.device.userId, draft)}>
-                Start a new checkout
-              </button>
-            )}
-            {error && !closed && (
-              <button
-                className="btn btn-ghost"
-                onClick={() => {
-                  setError(null);
-                  setAttempt((value) => value + 1);
-                }}
-              >
-                Retry checkout
-              </button>
-            )}
-          </section>
-        )}
-      </div>
+              <p className="checkout-fees">Billed in USD. Your payment provider may apply currency conversion fees.</p>
+            </aside>
+          </div>
+          <footer className="checkout-footer">
+            <BrandMark size={22} />
+            <span>More connection. More Meldiq.</span>
+            <button className="btn btn-ghost btn-sm" onClick={() => navigate({ section: "settings", settingsPage: "billing" })}>
+              Billing
+            </button>
+          </footer>
+        </>
+      )}
     </div>
   );
 }
