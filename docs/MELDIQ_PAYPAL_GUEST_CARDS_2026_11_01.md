@@ -26,3 +26,15 @@ The application build, unit suite and deployment evidence are recorded below aft
 - [PayPal v5 buttons, subscriptions and standalone funding eligibility](https://developer.paypal.com/sdk/js/v5/reference/)
 - [PayPal v6 subscriptions](https://developer.paypal.com/subscriptions/integrate/v6)
 - [PayPal merchant subscription FAQ: guest cards and market availability](https://www.paypal.com/us/cshelp/article/merchant-subscription-faqs-help289)
+
+## Release verification
+
+- TypeScript and ESLint passed. Unit suite: **818 passed, 1 skipped** across 110 files.
+- Production export built with browser-test linking disabled.
+- Release: `meldiq-web-0.5.0-beta-8d387bc.tar.gz`.
+- SHA-256: `c90c33bdbd143b345be81060f1b2c21c82019c1de611859ae03c1bb99d491319`.
+- Installed atomically at `/opt/meldiq-web/releases/0.5.0-beta-8d387bc`; previous `0.5.0-beta-1559456` retained for rollback. Existing runtime configuration was copied byte-for-byte. API and nginx configuration were unchanged.
+- API remained healthy at **0.71.1**, including MongoDB and LiveKit.
+- A separate unapproved $0.99 live order using the existing Orders API request shape opened **Pay with bank or card**, with **No, I don’t want an account now** and **Pay Now**. No card or payer details were entered and the order was not approved/captured.
+- The deliberately unowned subscription capability probe's signature-verified CREATED webhook was ignored with an operator audit entry, preventing retries. No customer checkout or entitlement was altered.
+- Public smoke check: served checkout chunk matched the local release by SHA-256, including card choices and the guest hint; signed-out checkout stayed protected and the private PayPal config endpoint returned 401. Both the live v6 wallet and namespaced v5 subscription-card eligibility checks succeeded, with no PayPal CSP violations. Public product prices remained unchanged.
