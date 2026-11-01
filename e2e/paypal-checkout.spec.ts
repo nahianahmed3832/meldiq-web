@@ -154,7 +154,23 @@ test("ineligible cards keep PayPal available", async ({ page }) => {
   await checkout(page);
   await page.getByRole("checkbox").check();
   await expect(page.locator("paypal-button")).toBeVisible();
-  await expect(page.getByRole("radio", { name: /Debit or credit card/ })).toHaveCount(0);
+  await expect(page.getByRole("radio", { name: /Debit or credit card/ })).toBeVisible();
+  await expect(page.getByRole("radio", { name: /Debit or credit card/ })).toBeDisabled();
+  await expect(page.getByRole("button", { name: "Check card availability again" })).toBeVisible();
+});
+
+test("blocked card SDK keeps a visible choice, explains failure and retries without opening the wallet", async ({ page }) => {
+  await checkout(page);
+  await page.route("https://www.paypal.com/sdk/js?**", (route) => route.abort("blockedbyclient"));
+  await page.reload();
+  await page.getByRole("radio", { name: /Debit or credit card/ }).check();
+  await page.getByRole("checkbox").check();
+  await expect(page.getByText("Card checkout could not load.", { exact: false })).toBeVisible();
+  await expect(page.locator("paypal-button")).toHaveCount(0);
+  await page.route("https://www.paypal.com/sdk/js?**", (route) => route.fulfill({ contentType: "application/javascript", body: fakeCards }));
+  await page.getByRole("button", { name: "Check card availability again" }).click();
+  await expect(page.getByRole("button", { name: "Debit or Credit Card", exact: true })).toBeVisible();
+  await expect(page.locator("paypal-button")).toHaveCount(0);
 });
 
 test("switching payment methods removes the old payment control", async ({ page }) => {

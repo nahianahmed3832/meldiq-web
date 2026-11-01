@@ -18,7 +18,7 @@ const SHELL_PATH = /^\/((home|dms|friends|activity|later|discover|settings|works
 /** Small files that aren't content-hashed: served from the cache while the newest is fetched. */
 const FRESHENED = new Set(["/boot.js"]);
 
-export type Strategy = "shell" | "asset" | "fresh" | null;
+export type Strategy = "shell" | "payment" | "asset" | "fresh" | null;
 
 /** How the worker answers a request: the shell, a build file, a freshened file, or the network as before (null). */
 export function strategyFor(req: { method: string; mode: string; url: string }, origin: string): Strategy {
@@ -30,7 +30,11 @@ export function strategyFor(req: { method: string; mode: string; url: string }, 
     return null;
   }
   if (u.origin !== origin) return null;
-  if (req.mode === "navigate") return SHELL_PATH.test(u.pathname) && !u.search ? "shell" : null;
+  if (req.mode === "navigate") {
+    if (u.search) return null;
+    if (/^\/settings\/(checkout|billing)\/?$/.test(u.pathname)) return "payment";
+    return SHELL_PATH.test(u.pathname) ? "shell" : null;
+  }
   if (u.pathname.startsWith("/_next/static/") && !u.search) return "asset";
   if (FRESHENED.has(u.pathname) && !u.search) return "fresh";
   return null;
@@ -61,6 +65,22 @@ interface ShellDeps {
 
 /** The worker's fetch listener (src/sw/sw.ts): answers what strategyFor picks, leaves the rest to the browser. */
 export function shellHandler({ caches, fetch, origin }: ShellDeps): (e: FetchEventLike) => void {
+  /** Money-related screens load the current release online, with the cached shell only as an offline fallback. */
+  async function payment(e: FetchEventLike): Promise<Response> {
+    const cache = await caches.open(SHELL_CACHE);
+    try {
+      const res = await fetch(e.request, { cache: "no-store", credentials: "same-origin" });
+      if (isShellResponse(res)) {
+        e.waitUntil(keepShell(cache, res.clone()).catch(() => undefined));
+        return res;
+      }
+      return (await cache.match(SHELL_KEY)) ?? res;
+    } catch (error) {
+      const kept = await cache.match(SHELL_KEY);
+      if (kept) return kept;
+      throw error;
+    }
+  }
   /** The page: the kept copy at once, fetched again for next time; the first time, from the network (and kept). */
   async function shell(e: FetchEventLike): Promise<Response> {
     const cache = await caches.open(SHELL_CACHE);
@@ -126,7 +146,8 @@ export function shellHandler({ caches, fetch, origin }: ShellDeps): (e: FetchEve
 
   return (e) => {
     const how = strategyFor(e.request, origin);
-    if (how === "shell") e.respondWith(shell(e));
+    if (how === "payment") e.respondWith(payment(e));
+    else if (how === "shell") e.respondWith(shell(e));
     else if (how === "asset") e.respondWith(asset(e));
     else if (how === "fresh") e.respondWith(freshened(e));
   };

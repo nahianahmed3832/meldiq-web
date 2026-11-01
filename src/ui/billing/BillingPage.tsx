@@ -1,10 +1,12 @@
 import { ArrowLeft, ArrowUpRight, CheckCircle2, Clock3, CreditCard, RefreshCw, TriangleAlert } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
+import { z } from "zod";
 import { type PayPalHistory, zPayPalCancellation, zPayPalHistory } from "../../api/paypalSchemas";
 import { useEngine, useOrbit } from "../../application/orbit";
 import { navigate } from "../../application/router";
 import { Dialog } from "../components/Overlay";
 import { money } from "../mojo/mojoFormat";
+import { selectCheckout } from "./checkoutDraft";
 
 const date = (value: number | null) => (value === null ? "Not available yet" : new Intl.DateTimeFormat(undefined, { dateStyle: "medium" }).format(value));
 
@@ -22,6 +24,11 @@ export function BillingPage() {
     setBusy(true);
     setError(null);
     try {
+      try {
+        await engine.api.json("POST", "/v2/billing/sync", z.object({ checked: z.number() }), { body: {} });
+      } catch {
+        setError("PayPal status could not refresh. Showing the last verified billing state; try Refresh again.");
+      }
       await engine.mojo.refresh();
       const result = await engine.api.json("GET", "/v2/billing/paypal/history", zPayPalHistory);
       setHistory(result);
@@ -40,9 +47,13 @@ export function BillingPage() {
     try {
       const result = await engine.api.json("POST", "/v2/billing/paypal/cancel", zPayPalCancellation, { body: { confirm: true, ...(canceling?.id ? { subscriptionId: canceling.id } : {}) } });
       setNotice(
-        result.confirmed
-          ? `PayPal confirmed cancellation. Your paid benefits continue until ${date(result.accessUntil)}.`
-          : "PayPal has not confirmed cancellation yet. Refresh your billing status before trying again.",
+        result.approvalPending
+          ? "No recurring payment has been authorized. Close the PayPal checkout window to leave this purchase. Your free Plus time does not renew."
+          : result.confirmed
+            ? result.accessUntil
+              ? `PayPal confirmed cancellation. Your paid benefits continue until ${date(result.accessUntil)}.`
+              : "PayPal confirmed cancellation. No future payments are scheduled. Any existing free Plus time stays available."
+            : "PayPal has not confirmed cancellation yet. Refresh your billing status before trying again.",
       );
       setCanceling(null);
       await engine.mojo.refresh();
@@ -54,8 +65,11 @@ export function BillingPage() {
     }
   };
   const sub = billing?.subscription;
-  const latest = history?.subscriptions.find((subscription) => subscription.product !== "bots_plus");
-  const ending = sub?.cancelAtPeriodEnd || latest?.cancelAtPeriodEnd;
+  const latest = history?.subscriptions.find((subscription) => subscription.product !== "bots_plus" && subscription.status === sub?.status);
+  const pending = sub?.status === "incomplete" && (sub.approvalPending ?? latest?.approvalPending ?? true);
+  const ending = !pending && (sub?.cancelAtPeriodEnd || latest?.cancelAtPeriodEnd);
+  const freePeriod = billing?.freePeriod;
+  const renewalDate = sub?.currentPeriodEnd ?? sub?.trialEnd ?? latest?.billingStartAt ?? null;
   const paypal = billing?.provider === "paypal";
   const fundingUrl = billing?.mode === "live" ? "https://www.paypal.com/myaccount/autopay/" : "https://www.sandbox.paypal.com/myaccount/autopay/";
   return (
@@ -88,17 +102,30 @@ export function BillingPage() {
           <span className="muted">Current plan</span>
           <h2>{me?.perks.name ?? "Loading…"}</h2>
           <p>
-            {sub
-              ? `${money(sub.amountMinor, sub.currency)} ${sub.currency}/month · ${sub.status.replaceAll("_", " ")}`
-              : me?.plan === "free"
-                ? "Free · no recurring payment"
-                : "Granted Plus time · no recurring payment"}
+            {sub && !pending
+              ? `${money(sub.amountMinor, sub.currency)} ${sub.currency}/month · ${sub.status === "incomplete" ? "Awaiting first payment" : sub.status.replaceAll("_", " ")}`
+              : freePeriod?.source === "signup_trial"
+                ? "Free signup trial · no recurring payment"
+                : me?.plan === "free"
+                  ? "Free · no recurring payment"
+                  : "Granted Plus time · no recurring payment"}
           </p>
-          <p className="muted">{sub ? `${ending ? "Paid access ends" : "Next billing date"}: ${date(sub.currentPeriodEnd ?? sub.trialEnd ?? null)}` : "No upcoming billing date"}</p>
+          <p className="muted">
+            {sub && !pending
+              ? renewalDate
+                ? `${ending ? "Paid access ends" : "First / next billing date"}: ${date(renewalDate)}`
+                : "Billing date will appear after PayPal confirms it."
+              : freePeriod
+                ? `Free Plus time ends ${date(freePeriod.endsAt)}. It does not renew or charge you.`
+                : "No upcoming billing date"}
+          </p>
+          {freePeriod && (!sub || pending || sub.status === "incomplete") && (
+            <p className="muted">Your free Plus time is separate from checkout. A paid renewal starts only after you approve payment.</p>
+          )}
           {paypal && <small>Payment provider: PayPal{billing?.mode === "test" ? " · Sandbox" : ""}</small>}
         </div>
-        {sub && paypal && !ending && (
-          <button className="btn btn-secondary" disabled={busy || !online} onClick={() => setCanceling({ name: "Plus", until: sub.currentPeriodEnd ?? null })}>
+        {sub && paypal && !pending && !ending && (
+          <button className="btn btn-secondary" disabled={busy || !online} onClick={() => setCanceling({ id: latest?.id, name: "Plus", until: sub.currentPeriodEnd ?? null })}>
             Cancel renewal
           </button>
         )}
@@ -109,16 +136,32 @@ export function BillingPage() {
           </button>
         )}
       </section>
+      {pending && (
+        <section className="checkout-card billing-current" aria-label="Unfinished Plus checkout">
+          <div className="grow">
+            <h2>Checkout awaiting approval</h2>
+            <p>No paid Plus subscription or recurring payment has been authorized.</p>
+            <p className="muted">Close the PayPal window to leave this checkout. Nothing renews unless you approve payment. Any free Plus time is separate.</p>
+          </div>
+          <button className="btn btn-secondary" disabled={!online} onClick={() => selectCheckout(engine.device.userId, { product: "plus" })}>
+            Return to checkout
+          </button>
+        </section>
+      )}
       {history?.subscriptions
         .filter((subscription) => subscription.product === "bots_plus")
         .map((subscription) => (
           <section className="checkout-card billing-current" aria-label="Bots+ subscription" key={subscription.id}>
             <div className="grow">
               <h2>Bots+</h2>
-              <p>$3.99 USD/month · {subscription.status.replaceAll("_", " ")}</p>
+              <p>$3.99 USD/month · {subscription.approvalPending ? "Checkout awaiting approval" : subscription.status.replaceAll("_", " ")}</p>
               <small>{communities.find((community) => community.id === subscription.orgId)?.name ?? "Community subscription"}</small>
               <p className="muted">
-                {subscription.cancelAtPeriodEnd ? "Paid access ends" : "Next billing date"}: {date(subscription.currentPeriodEnd)}
+                {subscription.approvalPending
+                  ? "No recurring payment has been authorized."
+                  : subscription.currentPeriodEnd || subscription.billingStartAt
+                    ? `${subscription.cancelAtPeriodEnd ? "Paid access ends" : "First / next billing date"}: ${date(subscription.currentPeriodEnd ?? subscription.billingStartAt ?? null)}`
+                    : "No verified paid period yet."}
               </p>
               {["past_due", "unpaid", "paused"].includes(subscription.status) && (
                 <p role="status">
@@ -130,10 +173,18 @@ export function BillingPage() {
                 </p>
               )}
             </div>
-            {subscription.cancelAtPeriodEnd || subscription.status === "canceled" ? (
+            {subscription.approvalPending ? (
+              <button
+                className="btn btn-secondary"
+                disabled={!online || !subscription.orgId}
+                onClick={() => subscription.orgId && selectCheckout(engine.device.userId, { product: "bots_plus", orgId: subscription.orgId })}
+              >
+                Return to Bots+ checkout
+              </button>
+            ) : subscription.cancelAtPeriodEnd || subscription.status === "canceled" ? (
               <span className="checkout-sandbox">Renewal cancelled</span>
             ) : (
-              !["incomplete", "incomplete_expired", "expired"].includes(subscription.status) && (
+              !["incomplete_expired", "expired"].includes(subscription.status) && (
                 <button className="btn btn-secondary" disabled={busy || !online} onClick={() => setCanceling({ id: subscription.id, name: "Bots+", until: subscription.currentPeriodEnd })}>
                   Cancel Bots+ renewal
                 </button>
@@ -205,7 +256,7 @@ export function BillingPage() {
             <li key={`${h.subscriptionId}-${h.at}-${i}`}>
               <span>
                 {h.from ? `${h.from.replaceAll("_", " ")} → ` : "Subscription "}
-                {h.to.replaceAll("_", " ")}
+                {h.to === "incomplete" ? "checkout awaiting approval or first payment" : h.to.replaceAll("_", " ")}
               </span>
               <time dateTime={new Date(h.at).toISOString()}>{date(h.at)}</time>
             </li>
@@ -231,7 +282,10 @@ export function BillingPage() {
         >
           <div className="dialog-body">
             <p>
-              PayPal will stop future renewals. Your verified paid {canceling.name} benefits continue until {date(canceling.until)}.
+              PayPal will stop future renewals.{" "}
+              {canceling.until
+                ? `Your verified paid ${canceling.name} benefits continue until ${date(canceling.until)}.`
+                : "Any existing free Plus time stays available. No paid period has been verified yet."}
             </p>
             <p>We’ll show confirmation after PayPal verifies the cancellation.</p>
             {error && <p role="alert">{error}</p>}

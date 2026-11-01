@@ -27,6 +27,10 @@ const nav = (path: string, method = "GET") => ({ method, mode: "navigate", url: 
 const sub = (path: string, origin = ORIGIN) => ({ method: "GET", mode: "cors", url: origin + path });
 
 describe("the app shell from the service worker", () => {
+  it("loads current billing and checkout screens from the network", () => {
+    expect(strategyFor(nav("/settings/checkout"), ORIGIN)).toBe("payment");
+    expect(strategyFor(nav("/settings/billing"), ORIGIN)).toBe("payment");
+  });
   it("answers opening the app's own routes with the kept page", () => {
     for (const p of ["/", "/home", "/home/c/c_abc", "/dms/c/c_1/thread/m_2", "/friends", "/settings/appearance", "/workspace/roles", "/discover"]) expect(strategyFor(nav(p), ORIGIN)).toBe("shell");
   });
@@ -103,6 +107,21 @@ async function dispatch(onFetch: (e: FetchEventLike) => void, url: string, mode 
 }
 
 describe("the service worker's fetch handling", () => {
+  it("uses the current payment screen online and preserves its offline fallback", async () => {
+    const { caches } = memoryCaches();
+    let build = "old";
+    let offline = false;
+    const fetch = vi.fn(async () => {
+      if (offline) throw new Error("offline");
+      return page(build);
+    });
+    const onFetch = shellHandler({ caches, fetch, origin: ORIGIN });
+    await dispatch(onFetch, "/home");
+    build = "new";
+    expect(await dispatch(onFetch, "/settings/checkout")).toContain("new.js");
+    offline = true;
+    expect(await dispatch(onFetch, "/settings/billing")).toContain("new.js");
+  });
   it("opens on the kept page at once and keeps the newest one for next time", async () => {
     const { caches, stores } = memoryCaches();
     let build = "one";

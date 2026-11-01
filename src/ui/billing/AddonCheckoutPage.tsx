@@ -28,8 +28,7 @@ export function AddonCheckoutPage({ draft, initial }: { draft: Addon; initial: R
   const [error, setError] = useState<string | null>(null);
   const [attempt, setAttempt] = useState(0);
   const spark = draft.product === "spark";
-  const cardSdk = usePayPalCardSdk(config, !spark);
-  const card = method === "card" && cardSdk != null;
+  const cards = usePayPalCardSdk(config, !spark, attempt);
   const quantity = spark ? draft.quantity : 1;
   const price = spark ? catalog?.onSale.spark : catalog?.onSale.botsPlus;
   const amount = (price?.amountMinor ?? (spark ? 99 : 399)) * quantity;
@@ -205,8 +204,9 @@ export function AddonCheckoutPage({ draft, initial }: { draft: Addon; initial: R
                 </div>
                 <h3>Payment method</h3>
                 <PaymentMethods
-                  value={card ? "card" : "paypal"}
-                  cards={cardSdk != null}
+                  value={method}
+                  cardStatus={cards.status}
+                  retry={() => setAttempt((value) => value + 1)}
                   onChange={(value) => {
                     setMethod(value);
                     setError(null);
@@ -259,7 +259,9 @@ export function AddonCheckoutPage({ draft, initial }: { draft: Addon; initial: R
                   <CheckoutPaymentButton
                     key={attempt}
                     config={config}
-                    cardSdk={card ? cardSdk : null}
+                    method={method}
+                    cardSdk={cards.sdk}
+                    cardStatus={cards.status}
                     subscription={!spark}
                     create={create}
                     approve={async () => {

@@ -107,11 +107,13 @@ export const zOwnerBilling = z.object({
       currentPeriodEnd: z.number().nullable(),
       trialEnd: z.number().nullable().optional(),
       cancelAtPeriodEnd: z.boolean(),
+      approvalPending: z.boolean().optional(),
       currency: z.string(),
       amountMinor: z.number(),
     })
     .nullable(),
   portal: z.boolean(),
+  freePeriod: z.object({ source: z.string(), planKey: z.string(), endsAt: z.number() }).nullable().optional(),
 });
 export type OwnerBilling = z.infer<typeof zOwnerBilling>;
 

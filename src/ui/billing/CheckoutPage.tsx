@@ -33,8 +33,7 @@ function PlusCheckoutPage({ initial }: { initial: ReturnType<typeof readCheckout
   const [attempt, setAttempt] = useState(0);
   const draft = saved.draft;
   const gift = draft.product === "gift";
-  const cardSdk = usePayPalCardSdk(config, !gift);
-  const card = method === "card" && cardSdk != null;
+  const cards = usePayPalCardSdk(config, !gift, attempt);
   const recipient = useOrbit((s) => (gift ? (s.users[draft.recipientUserId]?.displayName ?? draft.recipientUserId) : null));
   const price = catalog?.onSale.plus;
   const amount = (price?.amountMinor ?? 399) * (gift ? draft.months : 1);
@@ -173,7 +172,7 @@ function PlusCheckoutPage({ initial }: { initial: ReturnType<typeof readCheckout
                     {sandbox
                       ? "This is a test purchase. No real money is taken."
                       : deferred
-                        ? `Your existing Plus time stays available. Your first payment is ${startDate}.`
+                        ? `Your existing Plus time is separate and does not renew. If you approve this subscription, your first payment will be ${startDate}.`
                         : "Review your purchase and choose how to pay."}
                   </p>
                 )}
@@ -187,8 +186,9 @@ function PlusCheckoutPage({ initial }: { initial: ReturnType<typeof readCheckout
                 </div>
                 <h3>Payment method</h3>
                 <PaymentMethods
-                  value={card ? "card" : "paypal"}
-                  cards={cardSdk != null}
+                  value={method}
+                  cardStatus={cards.status}
+                  retry={() => setAttempt((value) => value + 1)}
                   onChange={(value) => {
                     setMethod(value);
                     setError(null);
@@ -246,7 +246,9 @@ function PlusCheckoutPage({ initial }: { initial: ReturnType<typeof readCheckout
                   <CheckoutPaymentButton
                     key={attempt}
                     config={config}
-                    cardSdk={card ? cardSdk : null}
+                    method={method}
+                    cardSdk={cards.sdk}
+                    cardStatus={cards.status}
                     subscription={!gift}
                     create={create}
                     approve={() => verify(true)}

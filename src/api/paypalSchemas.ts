@@ -27,7 +27,7 @@ export const zPayPalCheckout = z.object({
   expiresAt: z.number(),
 });
 export type PayPalPurchase = z.infer<typeof zPayPalCheckout>;
-export const zPayPalCancellation = z.object({ confirmed: z.boolean(), accessUntil: z.number().nullable(), status: z.string() });
+export const zPayPalCancellation = z.object({ confirmed: z.boolean(), accessUntil: z.number().nullable(), status: z.string(), approvalPending: z.boolean().optional() });
 const zTransaction = z.object({
   id: z.string(),
   product: z.string(),
@@ -49,6 +49,8 @@ export const zPayPalHistory = z.object({
       orgId: z.string().nullable().optional(),
       providerRef: z.string(),
       status: z.string(),
+      approvalPending: z.boolean().optional(),
+      billingStartAt: z.number().nullable().optional(),
       currentPeriodEnd: z.number().nullable(),
       cancelAtPeriodEnd: z.boolean(),
       createdAt: z.number(),

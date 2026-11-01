@@ -4,16 +4,19 @@ import type { PayPalConfig, PayPalPurchase } from "../../api/paypalSchemas";
 
 const scripts = new Map<string, Promise<PayPalNamespace | null>>();
 
-/** Hosted guest cards use the v5 funding button; v6 currently exposes guest sessions only for orders. */
-export function usePayPalCardSdk(config: PayPalConfig | null, subscription: boolean) {
-  const key = config ? `${config.environment}:${config.clientId}:${subscription}` : "";
-  const [ready, setReady] = useState<{ key: string; sdk: PayPalNamespace } | null>(null);
+export type CardAvailability = "loading" | "ready" | "unavailable" | "error";
+
+/** Keep a visible card choice even if PayPal blocks or cannot load its eligibility check. */
+export function usePayPalCardSdk(config: PayPalConfig | null, subscription: boolean, attempt = 0) {
+  const scriptKey = config ? `${config.environment}:${config.clientId}:${subscription}` : "";
+  const key = `${scriptKey}:${attempt}`;
+  const [result, setResult] = useState<{ key: string; sdk: PayPalNamespace | null; status: CardAvailability } | null>(null);
   useEffect(() => {
     if (!config) return;
     let disposed = false;
-    let script = scripts.get(key);
+    let script = scripts.get(scriptKey);
     if (!script) {
-      script = loadScript({
+      const loaded = loadScript({
         clientId: config.clientId,
         environment: config.environment === "live" ? "production" : "sandbox",
         components: ["buttons", "funding-eligibility"],
@@ -21,32 +24,34 @@ export function usePayPalCardSdk(config: PayPalConfig | null, subscription: bool
         intent: subscription ? "subscription" : "capture",
         vault: subscription,
         enableFunding: ["card"],
-        // Keep both transaction types and the existing v6 wallet SDK independent.
         dataNamespace: subscription ? "meldiqSubscriptionCards" : "meldiqOrderCards",
       });
-      scripts.set(key, script);
-      void script.catch(() => scripts.delete(key));
+      script = new Promise((resolve, reject) => {
+        const timer = setTimeout(() => reject(new Error("Card eligibility timed out")), 15000);
+        void loaded.then(resolve, reject).finally(() => clearTimeout(timer));
+      });
+      scripts.set(scriptKey, script);
+      void script.catch(() => scripts.delete(scriptKey));
     }
     void script
       .then((sdk) => {
-        if (disposed || !sdk?.Buttons) return;
+        if (disposed) return;
+        if (!sdk?.Buttons) throw new Error("Card SDK unavailable");
         const eligibilityOnly = async (): Promise<string> => {
           throw new Error("Eligibility checks cannot create purchases.");
         };
-        const button = sdk.Buttons({
-          fundingSource: sdk.FUNDING?.CARD ?? "card",
-          ...(subscription ? { createSubscription: eligibilityOnly } : { createOrder: eligibilityOnly }),
-        });
-        if (button.isEligible()) setReady({ key, sdk });
+        const button = sdk.Buttons({ fundingSource: sdk.FUNDING?.CARD ?? "card", ...(subscription ? { createSubscription: eligibilityOnly } : { createOrder: eligibilityOnly }) });
+        const eligible = button.isEligible();
+        setResult({ key, sdk: eligible ? sdk : null, status: eligible ? "ready" : "unavailable" });
       })
       .catch(() => {
-        // A failed card eligibility check must leave the wallet checkout available.
+        if (!disposed) setResult({ key, sdk: null, status: "error" });
       });
     return () => {
       disposed = true;
     };
-  }, [config, key, subscription]);
-  return ready?.key === key ? ready.sdk : null;
+  }, [config, key, scriptKey, subscription]);
+  return result?.key === key ? result : { sdk: null, status: "loading" as const };
 }
 
 export function PayPalCardButton({
