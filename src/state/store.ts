@@ -79,8 +79,10 @@ type AvatarMedia = NonNullable<z.infer<typeof zAvatarMedia>>;
 export interface ConversationMessages {
   items: StoredMessage[];
   hasMore: boolean;
-  /** The initial history request settled; snapshots and summary previews must not choose the opening anchor. */
+  /** Fresh history and the opening read boundary are ready; saved previews cannot acknowledge reads. */
   historyReady?: boolean;
+  /** A restored newest window can be drawn while its fresh page and read boundary are loading. */
+  preview?: boolean;
   /** A new ordinary entry resets the viewport even when the conversation component stays mounted. */
   opening?: number;
   /** A search/history window is separate from the newest messages. */

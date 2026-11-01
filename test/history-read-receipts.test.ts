@@ -47,7 +47,11 @@ async function reload(page: { messages: StoredEvent[]; changes: StoredEvent[] })
 }
 
 describe("read ticks after a reload", () => {
-  const messages = [event("m3", ME, 3000, "message", { type: "text", text: "three" }), event("m2", ME, 2000, "message", { type: "text", text: "two" }), event("m1", ME, 1000, "message", { type: "text", text: "one" })];
+  const messages = [
+    event("m3", ME, 3000, "message", { type: "text", text: "three" }),
+    event("m2", ME, 2000, "message", { type: "text", text: "two" }),
+    event("m1", ME, 1000, "message", { type: "text", text: "one" }),
+  ];
 
   it("your messages up to the other person's read receipt show as read, later ones as sent", async () => {
     const read = event("r1", BOB, 2500, "control", { type: "read", upTo: 2000 });

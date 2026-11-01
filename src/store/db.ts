@@ -58,7 +58,7 @@ const VERSION = 3;
  * The only values written to disk: this browser's device (its sign-in keys), the account session's sealed tokens, and
  * the sealed snapshot with its key (sync/snapshot.ts SNAPSHOT_KEY, SNAPSHOT_CRYPTO_KEY).
  */
-const ON_DISK = new Set(["device", "accountTokenKey", "accountTokens", "legacy.imported", "snapshot", "snapshotKey"]);
+const ON_DISK = new Set(["device", "accountTokenKey", "accountTokens", "legacy.imported", "snapshot", "snapshotKey", "plusSupport"]);
 
 /** The repository the sync engine reads and writes. */
 export type MessageWriteListener = (ids: string[]) => void;

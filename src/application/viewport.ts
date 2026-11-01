@@ -5,6 +5,8 @@
  * --app-height and --app-top (src/styles/layout.css). Android Chrome resizes the page itself (interactive-widget in
  * index.html); the values then simply follow.
  */
+export const PHONE_LAYOUT = "(max-width: 640px), (max-width: 960px) and (max-height: 500px) and (pointer: coarse)";
+
 export function followVisualViewport(win: Window = window): () => void {
   const vv = win.visualViewport;
   const root = win.document.documentElement;
@@ -23,9 +25,27 @@ export function followVisualViewport(win: Window = window): () => void {
   update();
   vv.addEventListener("resize", schedule);
   vv.addEventListener("scroll", schedule);
+  win.addEventListener("resize", schedule);
+  win.addEventListener("pageshow", schedule);
   return () => {
     vv.removeEventListener("resize", schedule);
     vv.removeEventListener("scroll", schedule);
+    win.removeEventListener("resize", schedule);
+    win.removeEventListener("pageshow", schedule);
     if (frame) win.cancelAnimationFrame(frame);
+    root.style.removeProperty("--app-height");
+    root.style.removeProperty("--app-top");
   };
+}
+
+/** Coordinates for fixed popovers. Safari's keyboard can pan as well as shrink the visible viewport. */
+export function visibleViewport(win: Window = window) {
+  const vv = win.visualViewport;
+  // Keep the browser's zoom behavior: don't reposition the content someone is magnifying.
+  const useVisual = vv && vv.scale <= 1.01;
+  const top = useVisual ? vv.offsetTop : 0;
+  const left = useVisual ? vv.offsetLeft : 0;
+  const width = useVisual ? vv.width : win.innerWidth;
+  const height = useVisual ? vv.height : win.innerHeight;
+  return { top, left, width, height, right: left + width, bottom: top + height };
 }

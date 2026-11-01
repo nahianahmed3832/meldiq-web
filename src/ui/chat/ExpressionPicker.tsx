@@ -1,5 +1,7 @@
 import { MotionImage } from "../components/MotionImage";
-import { Search, Smile, Sticker as StickerIcon, Upload } from "lucide-react";
+import { Search, Smile, Sticker as StickerIcon, Upload, X } from "lucide-react";
+import { PHONE_LAYOUT, visibleViewport } from "../../application/viewport";
+import { ROUTE_EVENT } from "../../application/router";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { ApiError } from "../../api/client";
@@ -60,12 +62,30 @@ export function ExpressionPicker(p: ExpressionPickerProps) {
   const fileInput = useRef<HTMLInputElement>(null);
   const community = p.library ? (selectedSource && sourceList && p.community ? { ...p.community, list: sourceList } : undefined) : p.community;
   const ref = useRef<HTMLDivElement>(null);
-  const [pos, setPos] = useState<{ left: number; bottom: number } | null>(null);
+  const [pos, setPos] = useState<{ left: number; top: number; height: number } | null>(null);
   useFocusTrap(ref, !uploading);
   useLayoutEffect(() => {
-    const r = p.anchor.getBoundingClientRect();
-    const w = ref.current?.offsetWidth ?? 380;
-    setPos({ left: Math.max(8, Math.min(r.right - w, window.innerWidth - w - 8)), bottom: Math.max(8, window.innerHeight - r.top + 8) });
+    const place = () => {
+      const v = visibleViewport();
+      const r = p.anchor.getBoundingClientRect();
+      const w = ref.current?.offsetWidth ?? 380;
+      const phone = window.matchMedia(PHONE_LAYOUT).matches;
+      const height = Math.min(460, Math.max(0, phone ? v.height - 16 : Math.min(v.height - 16, r.top - v.top - 16)));
+      setPos({
+        left: Math.max(v.left + 8, Math.min(r.right - w, v.right - w - 8)),
+        top: Math.max(v.top + 8, (phone ? v.bottom : r.top) - height - 8),
+        height,
+      });
+    };
+    place();
+    window.addEventListener("resize", place);
+    window.visualViewport?.addEventListener("resize", place);
+    window.visualViewport?.addEventListener("scroll", place);
+    return () => {
+      window.removeEventListener("resize", place);
+      window.visualViewport?.removeEventListener("resize", place);
+      window.visualViewport?.removeEventListener("scroll", place);
+    };
   }, [p.anchor]);
   useEffect(() => {
     const key = (e: KeyboardEvent) => {
@@ -79,11 +99,13 @@ export function ExpressionPicker(p: ExpressionPickerProps) {
     };
     document.addEventListener("keydown", key);
     document.addEventListener("mousedown", down);
-    window.addEventListener("resize", p.onClose);
+    window.addEventListener("popstate", p.onClose);
+    window.addEventListener(ROUTE_EVENT, p.onClose);
     return () => {
       document.removeEventListener("keydown", key);
       document.removeEventListener("mousedown", down);
-      window.removeEventListener("resize", p.onClose);
+      window.removeEventListener("popstate", p.onClose);
+      window.removeEventListener(ROUTE_EVENT, p.onClose);
     };
   }, [p, uploading]);
   const tabs = TABS.filter((t) => t.id === "emoji" || (p.canSend && (!p.allowedTabs || p.allowedTabs.includes(t.id))));
@@ -95,7 +117,7 @@ export function ExpressionPicker(p: ExpressionPickerProps) {
         role="dialog"
         aria-label="Emoji, GIFs and stickers"
         inert={!!uploading}
-        style={{ ...(pos ? { left: pos.left, bottom: pos.bottom } : { visibility: "hidden" as const }), ...(uploading ? { zIndex: 49 } : {}) }}
+        style={{ ...(pos ? { left: pos.left, top: pos.top, height: pos.height } : { visibility: "hidden" as const }), ...(uploading ? { zIndex: 49 } : {}) }}
       >
         <div className="xp-tabs" role="tablist" aria-label="Pick from">
           {tabs.map((t) => (
@@ -103,6 +125,9 @@ export function ExpressionPicker(p: ExpressionPickerProps) {
               {t.label}
             </button>
           ))}
+          <button className="icon-btn xp-close" aria-label="Close expression picker" onClick={p.onClose}>
+            <X size={18} />
+          </button>
         </div>
         {p.library && expressionsOn && p.tab !== "gifs" && (
           <div className="xp-source">

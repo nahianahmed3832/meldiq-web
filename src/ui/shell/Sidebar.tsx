@@ -20,7 +20,6 @@ import { useCommunityThemes } from "../community/useCommunityThemes";
 import { usePhoto } from "../components/photos";
 import { useCommunityDetail } from "../community/useCommunityPermissions";
 import { useT } from "../../i18n";
-import { UserPanel } from "./UserPanel";
 import { ConnectedCallPanel } from "../call/ConnectedCallPanel";
 import { LobbyRow } from "../lobby/LobbyRow";
 
@@ -218,7 +217,6 @@ export function Sidebar({ orgId, section, open, onDialog }: SidebarProps) {
         )}
       </div>
       <ConnectedCallPanel />
-      <UserPanel />
       {blankMenu.anchor && <Menu anchor={blankMenu.anchor} point={blankMenu.point} label={org && !messages ? org.name : t("side_direct_messages")} onClose={blankMenu.close} entries={blankEntries} />}
       {community.dialogs}
     </aside>

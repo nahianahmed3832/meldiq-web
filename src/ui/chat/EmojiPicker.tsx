@@ -57,7 +57,9 @@ export function EmojiPicker({ onPick, community }: { onPick: (emoji: string) => 
       () => live && setFailed(true),
     );
     // The menu focuses its first item after mounting; the search box should have the focus instead.
-    const t = window.setTimeout(() => search.current?.focus(), 0);
+    const t = window.setTimeout(() => {
+      if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) search.current?.focus({ preventScroll: true });
+    }, 0);
     return () => {
       live = false;
       window.clearTimeout(t);

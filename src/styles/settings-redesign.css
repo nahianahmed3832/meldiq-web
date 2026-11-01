@@ -1,0 +1,632 @@
+/* Meldiq settings: a compact navigation rail, open editor and persistent preview. */
+.settings-window:has(.user-settings) {
+  width: min(1320px, 100%);
+  height: min(940px, 100%);
+  border-radius: 18px;
+}
+.settings-window:has(.user-settings) .settings-window-close {
+  top: 16px;
+  right: 16px;
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  background: transparent;
+  box-shadow: none;
+  color: var(--text-3);
+}
+.settings-window .user-settings {
+  grid-template-columns: 224px minmax(0, 1fr);
+}
+.user-settings .settings-nav {
+  padding: 22px 12px 16px;
+  background: var(--surface-sunken);
+  gap: 4px;
+}
+.settings-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 10px 20px;
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+}
+.settings-brand small {
+  display: block;
+  margin-top: 2px;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0;
+  color: var(--text-3);
+}
+.user-settings .settings-search {
+  margin: 0 2px 10px;
+  min-height: 40px;
+  padding: 8px 10px;
+  border-radius: 9px;
+  background: var(--surface);
+}
+.user-settings .settings-search input {
+  font-size: 12px;
+}
+.user-settings .settings-nav-group {
+  margin: 0 0 10px;
+  gap: 3px;
+}
+.user-settings .settings-nav-title {
+  padding: 12px 10px 7px;
+  font-size: 10px;
+  letter-spacing: 0.09em;
+}
+.user-settings .settings-nav .side-item {
+  min-height: 38px;
+  padding: 9px 10px;
+  gap: 10px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 550;
+}
+.user-settings .settings-nav .side-item[aria-current="page"] {
+  background: var(--accent-soft);
+  color: var(--accent-text);
+}
+.user-settings .settings-nav .side-item[aria-current="page"]::before {
+  display: none;
+}
+.settings-account-actions {
+  display: grid;
+  gap: 3px;
+  border-top: 1px solid var(--hairline);
+  padding-top: 12px;
+}
+.user-settings .settings-logout {
+  color: var(--danger);
+}
+.user-settings .settings-page {
+  padding: 28px 34px 48px;
+  background: var(--surface);
+}
+.user-settings .settings-page .inner {
+  gap: 24px;
+  max-width: 880px;
+  margin: 0 auto;
+}
+.user-settings .settings-page .inner.wide {
+  max-width: 1040px;
+  margin: 0;
+}
+.user-settings .settings-scope {
+  margin: 0;
+  padding-right: 24px;
+  font-size: 11px;
+  color: var(--accent-text);
+}
+.user-settings .settings-scope span {
+  font-size: 12px;
+  line-height: 1.6;
+}
+.settings-page-heading {
+  padding-right: 28px;
+}
+.settings-eyebrow {
+  display: block;
+  margin-bottom: 7px;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  color: var(--accent-text);
+}
+.user-settings .settings-page h1 {
+  font-size: 25px;
+  letter-spacing: -0.045em;
+}
+.settings-page-heading p {
+  margin: 7px 0 0;
+  color: var(--text-3);
+  font-size: 13px;
+}
+.user-settings .profile-columns {
+  grid-template-columns: minmax(0, 1fr) 284px;
+  gap: 28px;
+}
+.user-settings .profile-main {
+  gap: 28px;
+}
+.profile-look {
+  display: grid;
+  gap: 24px;
+  min-width: 0;
+}
+.profile-customize-banner {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  padding: 18px;
+  border: 1px solid color-mix(in srgb, var(--accent) 20%, var(--border));
+  border-radius: 12px;
+  background: linear-gradient(110deg, var(--accent-soft), var(--surface-sunken));
+}
+.profile-customize-art {
+  position: relative;
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 64px;
+  height: 64px;
+}
+.profile-customize-art > svg {
+  position: absolute;
+  top: -3px;
+  right: -3px;
+  color: var(--accent-text);
+}
+.profile-customize-banner .lines {
+  flex-basis: 180px;
+  min-width: 0;
+}
+.profile-customize-banner strong {
+  font-size: 15px;
+  line-height: 1.5;
+}
+.profile-customize-banner p {
+  margin: 5px 0 0;
+  font-size: 12px;
+  line-height: 1.65;
+  color: var(--text-2);
+}
+.profile-customize-banner .btn {
+  min-height: 36px;
+  border-radius: 8px;
+  font-size: 11px;
+}
+.profile-look-heading {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  border-bottom: 1px solid var(--hairline);
+  padding-bottom: 14px;
+}
+.profile-look-heading h2,
+.profile-details h2 {
+  margin: 0;
+  font-size: 16px;
+  letter-spacing: -0.025em;
+}
+.profile-look-heading small {
+  font-size: 11px;
+}
+.profile-photo-controls {
+  display: grid;
+  gap: 12px;
+}
+.profile-photo-controls .settings-label {
+  margin: 0;
+}
+.profile-look .setting-group {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+  padding-bottom: 22px;
+  border-bottom: 1px solid var(--hairline);
+}
+.profile-look .invite-or-title,
+.profile-photo-controls .settings-label {
+  font-size: 10px;
+  font-weight: 750;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--text-2);
+}
+.profile-look small {
+  font-size: 12px;
+  line-height: 1.7;
+}
+.profile-look .tag-tile {
+  position: relative;
+  min-height: 86px;
+  border-radius: 10px;
+  background: var(--surface-sunken);
+}
+.profile-look .tag-tile[aria-pressed="true"]::after {
+  content: "✓";
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  display: grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--on-accent);
+  font-size: 10px;
+}
+.profile-details {
+  display: grid;
+  gap: 18px;
+  padding: 20px;
+  border-radius: 12px;
+}
+.profile-details > div > p {
+  margin: 6px 0 0;
+  font-size: 12px;
+  line-height: 1.7;
+}
+.user-settings .profile-preview {
+  top: 0;
+  min-width: 0;
+}
+.profile-preview-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 2px 0 14px;
+}
+.profile-preview-label .settings-label {
+  margin: 0;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+}
+.profile-preview-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 4px var(--accent-soft);
+}
+.user-settings .profile-preview .profile-pop {
+  width: 100%;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px #00000014;
+}
+.user-settings .profile-preview .profile-pop-banner {
+  height: 144px;
+}
+.user-settings .profile-preview .profile-pop-body {
+  padding: 12px 20px 24px;
+}
+.profile-preview-hint {
+  margin: 14px 8px 0;
+  text-align: center;
+  font-size: 10px;
+  line-height: 1.7;
+  color: var(--text-3);
+}
+.user-settings .account-card {
+  border-radius: 14px;
+}
+.user-settings .account-card-banner {
+  height: 112px;
+}
+.user-settings .account-rows {
+  border-radius: 10px;
+}
+.user-panel {
+  flex-wrap: wrap;
+}
+.user-panel-me {
+  flex-basis: calc(100% - 44px);
+}
+.user-panel-account {
+  order: -1;
+  width: 28px;
+  min-width: 28px;
+  margin-left: auto;
+}
+.user-panel-me {
+  order: -2;
+}
+.user-panel > .user-panel-pair {
+  margin-left: 0;
+}
+.user-panel > .user-panel-pair:has([aria-label="Input device"]) {
+  margin-left: auto;
+}
+.user-panel .user-panel-pair .user-panel-btn {
+  height: 30px;
+}
+@media (min-width: 961px) and (max-width: 1150px) {
+  .settings-window .user-settings {
+    grid-template-columns: 200px minmax(0, 1fr);
+  }
+  .user-settings .settings-page {
+    padding-inline: 24px;
+  }
+  .user-settings .profile-columns {
+    grid-template-columns: minmax(0, 1fr) 240px;
+    gap: 20px;
+  }
+}
+@media (min-width: 641px) and (max-width: 960px) {
+  .settings-window .user-settings {
+    grid-template-columns: 190px minmax(0, 1fr);
+  }
+  .user-settings .settings-nav {
+    display: grid;
+    grid-auto-flow: row;
+    align-content: start;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+  .user-settings .profile-columns {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .user-settings .profile-preview {
+    position: static;
+    order: -1;
+    max-width: 340px;
+    width: 100%;
+  }
+}
+@media (max-width: 640px), (max-width: 960px) and (max-height: 500px) and (pointer: coarse) {
+  .user-settings .settings-page {
+    padding: 18px 16px 36px;
+  }
+  .user-settings .settings-page h1 {
+    font-size: 24px;
+  }
+  .user-settings .profile-columns {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 24px;
+  }
+  .user-settings .profile-preview {
+    position: static;
+    order: -1;
+  }
+  .user-settings .profile-preview .profile-pop-banner {
+    height: 112px;
+  }
+  .profile-details {
+    padding: 16px;
+  }
+  .profile-customize-banner {
+    padding: 16px;
+    gap: 12px;
+  }
+  .user-settings.at-you .settings-nav h2 {
+    display: block;
+  }
+  .user-settings.at-you .settings-nav .side-item {
+    min-height: 46px;
+    font-size: 13px;
+  }
+  .settings-account-actions {
+    margin-top: 12px;
+  }
+}
+
+@media (min-width: 641px) {
+  .user-settings .settings-nav {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .user-settings .settings-nav > :not(.settings-nav-pages) {
+    flex-shrink: 0;
+  }
+  .user-settings .settings-nav-pages {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    overscroll-behavior: contain;
+    padding-right: 2px;
+  }
+  .user-settings .settings-account-actions {
+    padding-top: 8px;
+    margin-top: 8px;
+  }
+}
+@media (max-width: 960px) and (max-height: 500px) and (pointer: coarse) {
+  .user-settings.at-you .settings-nav {
+    display: grid;
+    overflow-y: auto;
+  }
+  .user-settings .settings-nav-pages {
+    overflow: visible;
+  }
+}
+
+.saved-account-list {
+  gap: 12px;
+}
+.saved-account-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  text-align: start;
+}
+.saved-account-row .lines {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+.saved-account-row small {
+  color: var(--text-3);
+}
+.saved-account-row[aria-pressed="true"] {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+.saved-account-avatar {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--surface-raised);
+}
+.adding-account-bar {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 12px 16px;
+  font-size: 12px;
+  background: var(--surface-sunken);
+  border-bottom: 1px solid var(--border);
+}
+
+/* Embers refresh: a slim horizontal account dock reaching beneath the community rail. */
+@media (min-width: 961px) {
+  .app > .user-panel {
+    position: fixed;
+    z-index: 35;
+    left: calc(env(safe-area-inset-left, 0px) + var(--frame-gap));
+    bottom: var(--frame-gap);
+    width: calc(var(--rail-w) + var(--frame-gap) + var(--sidebar-w));
+    height: 60px;
+    min-height: 60px;
+    margin: 0;
+    padding: 7px 9px;
+    flex-wrap: nowrap;
+    gap: 2px;
+    border-radius: 16px;
+  }
+  .app > .user-panel .user-panel-me {
+    flex: 1 1 0;
+    order: 0;
+    min-width: 0;
+  }
+  .app > .user-panel .user-panel-account {
+    order: 0;
+    margin-left: 0;
+  }
+  .app > .user-panel .user-panel-pair {
+    margin-left: 0;
+  }
+  .app > .user-panel .user-panel-name {
+    font-size: 13px;
+  }
+  .app > .user-panel .user-panel-me small {
+    font-size: 11px;
+  }
+  .app:has(> .user-panel) > .rail {
+    padding-bottom: 76px;
+  }
+  .app:has(> .user-panel) .sidebar {
+    padding-bottom: 70px;
+  }
+}
+
+/* The settings tab is deliberately lighter than the app behind it. */
+.settings-window:has(.user-settings) {
+  width: min(1400px, 84vw);
+  height: min(940px, calc(100dvh - 48px));
+  background: color-mix(in srgb, var(--surface-raised) 88%, #797b94);
+  border: 1px solid color-mix(in srgb, var(--border) 65%, #999bae 16%);
+  box-shadow: 0 24px 100px #0008;
+}
+.settings-window .user-settings {
+  grid-template-columns: 224px minmax(0, 1fr);
+}
+.user-settings .settings-nav {
+  background: color-mix(in srgb, var(--surface-sunken) 88%, #54576c);
+}
+.user-settings .settings-page {
+  background: color-mix(in srgb, var(--surface) 86%, #666a82);
+}
+.user-settings .settings-nav .side-item {
+  min-height: 40px;
+  font-size: 13px;
+}
+.user-settings .settings-nav .side-item[aria-current="page"] {
+  background: color-mix(in srgb, var(--accent) 12%, var(--surface-raised));
+  color: var(--text);
+}
+.user-settings .settings-nav-title {
+  color: var(--text-3);
+  font-size: 10px;
+}
+.user-settings .profile-customize-banner {
+  background: color-mix(in srgb, var(--surface-sunken) 94%, var(--accent));
+  border-color: var(--hairline);
+}
+.user-settings .settings-page .inner.wide {
+  max-width: none;
+}
+.user-settings .profile-columns {
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 31%);
+  gap: 26px;
+}
+.user-settings .profile-preview .profile-pop {
+  background: var(--surface-sunken);
+  border: 1px solid var(--border);
+}
+.user-settings .settings-page-heading {
+  margin-bottom: 2px;
+}
+@media (min-width: 641px) and (max-width: 1100px) {
+  .settings-window:has(.user-settings) {
+    width: calc(100vw - 32px);
+  }
+  .settings-window .user-settings {
+    grid-template-columns: 200px minmax(0, 1fr);
+  }
+  .user-settings .settings-page {
+    padding: 24px;
+  }
+  .user-settings .profile-columns {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .user-settings .profile-preview {
+    max-width: 360px;
+  }
+}
+@media (max-width: 640px) {
+  .user-settings .profile-columns {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .user-settings .settings-page {
+    padding: 18px 16px 36px;
+  }
+}
+.badge-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  cursor: pointer;
+  vertical-align: middle;
+}
+.badge-mark.mojo-badge,
+.badge-mark.community-owner-badge {
+  width: 22px;
+  height: 22px;
+  padding: 2px;
+  border-radius: 7px;
+}
+.badge-mark:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+.badge-detail {
+  position: fixed;
+  z-index: 240;
+  display: grid;
+  gap: 6px;
+  width: 260px;
+  padding: 13px 15px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface-raised);
+  color: var(--text);
+  box-shadow: var(--shadow-lg);
+  font-size: 12px;
+  line-height: 1.5;
+}
+.badge-detail strong {
+  font-size: 13px;
+}
+.badge-detail span {
+  color: var(--text-2);
+}

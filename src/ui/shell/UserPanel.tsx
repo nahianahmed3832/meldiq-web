@@ -1,4 +1,6 @@
-import { ChevronDown, Headphones, HeadphoneOff, Mic, MicOff, RotateCw, Settings } from "lucide-react";
+import { Avatar } from "../components/Avatar";
+import { useAccountActions, useAccountSwitcher } from "./AccountActions";
+import { ArrowRightLeft, Plus, ChevronDown, Headphones, HeadphoneOff, Mic, MicOff, LogOut, RotateCw, Settings } from "lucide-react";
 import { useState } from "react";
 import { useEngine, useOrbit } from "../../application/orbit";
 import { setPrefs, usePrefs } from "../../application/prefs";
@@ -36,6 +38,9 @@ export function UserPanel() {
   const look = useUserLook(me?.userId ?? "");
   const profile = useProfileMenu();
   const deviceMenu = useMenu();
+  const accounts = useMenu();
+  const accountAction = useAccountActions();
+  const switcher = useAccountSwitcher();
   const [which, setWhich] = useState<{ kind: "audioinput" | "audiooutput"; list: MediaDeviceChoice[] } | null>(null);
   const banner = me?.profileBanner ?? null;
   const bannerUrl = usePhoto("profileBanner", me?.userId ?? "", banner?.rev ?? null, banner?.kind === "gif" ? "image/gif" : banner?.kind === "webp" ? "image/webp" : "image/jpeg");
@@ -146,6 +151,40 @@ export function UserPanel() {
       <button className="icon-btn user-panel-btn" onClick={() => navigate({ section: "settings", settingsPage: "account" })} aria-label="Settings" title="Settings">
         <Settings size={19} />
       </button>
+      <button
+        className="icon-btn user-panel-btn user-panel-account"
+        aria-label="Account options"
+        title="Switch account or log out"
+        aria-haspopup="menu"
+        aria-expanded={!!accounts.anchor}
+        onClick={(e) => accounts.open(e.currentTarget)}
+      >
+        <ChevronDown size={17} />
+      </button>
+      {accounts.anchor && (
+        <Menu
+          anchor={accounts.anchor}
+          align="end"
+          label="Account options"
+          onClose={accounts.close}
+          entries={[
+            { heading: "Your accounts" },
+            ...switcher.accounts.map((a) => ({
+              label: a.displayName,
+              hint: `@${a.username}`,
+              icon: <Avatar name={a.displayName} colorIndex={a.avatarColor} size={24} decorative />,
+              checked: a.database === switcher.current,
+              disabled: switcher.busy,
+              onSelect: () => switcher.switchTo(a.database),
+            })),
+            "separator",
+            { label: "Add account", icon: <Plus size={16} />, disabled: switcher.busy, onSelect: switcher.add },
+            { label: "Switch account", icon: <ArrowRightLeft size={16} />, onSelect: () => accountAction("switch") },
+            "separator",
+            { label: "Log out", icon: <LogOut size={16} />, danger: true, onSelect: () => accountAction("logout") },
+          ]}
+        />
+      )}
       {deviceMenu.anchor && which && (
         <Menu anchor={deviceMenu.anchor} align="end" label={which.kind === "audioinput" ? "Input device" : "Output device"} onClose={deviceMenu.close} entries={deviceEntries} />
       )}

@@ -71,6 +71,8 @@ async function checkout(page: Page, deferred = false) {
   await page.route("**/v2/billing/paypal/checkouts/chk_test/confirm", (route) => route.fulfill({ json: purchase }));
   await page.goto("/settings/checkout");
   await expect(page.getByRole("heading", { name: "Make room for more." })).toBeVisible();
+  // Checkout replaces the settings rail; the payment column must retain usable width after settings redesigns.
+  await expect.poll(() => page.locator(".checkout-payment").evaluate((el) => el.getBoundingClientRect().width)).toBeGreaterThan(240);
   return { purchase, userId: alice.userId };
 }
 test.beforeEach(async ({ context }) => {

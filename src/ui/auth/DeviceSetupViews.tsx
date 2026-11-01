@@ -245,8 +245,7 @@ function EmailUnlock(props: AddDeviceProps & { onSignOut: () => void; onRecovery
   const [trouble, setTrouble] = useState(false);
   const { busy, error, run } = useSubmit();
   const t = useT();
-  const enroll = async (c: string | null, pw: string) =>
-    props.onEnrolled((await enrollWithEmailCode(props.creds.accounts, props.account, c, pw, props.deviceName)).device);
+  const enroll = async (c: string | null, pw: string) => props.onEnrolled((await enrollWithEmailCode(props.creds.accounts, props.account, c, pw, props.deviceName)).device);
   const send = () =>
     void run(async () => {
       const started = await props.creds.accounts.startKeyUnlock();

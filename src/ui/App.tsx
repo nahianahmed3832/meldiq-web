@@ -1,3 +1,5 @@
+import { accountStoreForBoot, accountDirectory, rememberAccount, forgetAccount, cancelAddingAccount, selectAccount, type AccountDirectory } from "../auth/savedAccounts";
+import { AccountActionsProvider } from "./shell/AccountActions";
 import { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { createEngine, holdDeviceLock, missingCapabilities, startNotifications } from "../application/boot";
 import { hideSplash, rememberReturning } from "../application/splash";
@@ -59,6 +61,8 @@ function reopenLastPlace(engine: Engine): void {
 }
 
 export function App() {
+  const activeEngineRef = useRef<Engine | null>(null);
+  const [directory, setDirectory] = useState<AccountDirectory | null>(null);
   const [boot, setBoot] = useState<Boot>({ s: "loading" });
   // The launch screen goes as soon as there's something to show: sign-in, the app, or what went wrong.
   useEffect(() => {
@@ -70,13 +74,13 @@ export function App() {
     try {
       const missing = await missingCapabilities();
       if (missing.length) return setBoot({ s: "unsupported", missing });
-      let engineRef: Engine | null = null;
       const held = await holdDeviceLock(steal, () => {
-        engineRef?.stop();
+        activeEngineRef.current?.stop();
         setBoot({ s: "elsewhere" });
       });
       if (!held) return setBoot({ s: "elsewhere" });
-      const store = await LocalStore.open();
+      const { store, directory: saved } = await accountStoreForBoot();
+      setDirectory(saved);
       const device = await store.device();
       if (!device) {
         rememberReturning(false);
@@ -84,7 +88,7 @@ export function App() {
       }
       void loadShell().catch(() => undefined);
       const engine = createEngine(device, store);
-      engineRef = engine;
+      activeEngineRef.current = engine;
       // The frame opens on what this browser holds (no network yet), where the person left off; then it syncs.
       await engine.open();
       reopenLastPlace(engine);
@@ -121,7 +125,9 @@ export function App() {
         forgetPlace();
         forgetReadingPositions();
         rememberReturning(false);
-        void LocalStore.erase(engine.store).finally(() => setBoot({ s: "revoked", reason: st.phaseReason }));
+        void LocalStore.erase(engine.store)
+          .then(() => forgetAccount(engine.store.name))
+          .finally(() => setBoot({ s: "revoked", reason: st.phaseReason }));
         return;
       }
       const reauth = st.phase === "reauth";
@@ -131,7 +137,10 @@ export function App() {
 
   const linked = useCallback(async (store: LocalStore, device: DeviceRecord, grant: SessionGrant | AccountSessionGrant) => {
     await store.saveDevice(device);
+    await rememberAccount(store.name, device);
+    setDirectory(await accountDirectory());
     const engine = createEngine(device, store);
+    activeEngineRef.current = engine;
     setBoot({ s: "ready", engine, reauth: false });
     await engine.start(grant);
     startNotifications(engine);
@@ -140,6 +149,8 @@ export function App() {
   const saveAccountDevice = useCallback(async (store: LocalStore, device: DeviceRecord, grant: AccountSessionGrant) => {
     await store.saveDevice(device);
     await new TokenVault(store).save(tokensOf(grant));
+    await rememberAccount(store.name, device, grant.account.name);
+    setDirectory(await accountDirectory());
   }, []);
 
   const signedOut = useCallback(async () => {
@@ -149,8 +160,10 @@ export function App() {
     rememberReturning(false);
     resetPrefs();
     forgetRecentSearches();
-    setBoot({ s: "signedOut", store: await LocalStore.open() });
-  }, []);
+    if (engine) await forgetAccount(engine.store.name);
+    // Reload into the remaining saved account, or the ordinary sign-in screen.
+    location.replace("/");
+  }, [engine]);
 
   /** From "Sign in again": signs this browser out without a session (it can't remove itself from the account first). */
   const eraseAndSignOut = useCallback(
@@ -164,6 +177,26 @@ export function App() {
 
   return (
     <>
+      {directory?.pending && (boot.s === "signedOut" || boot.s === "phoneLink") && (
+        <div className="adding-account-bar">
+          <span>Add another account · your other accounts stay signed in</span>
+          <button className="btn btn-secondary btn-sm" onClick={() => void cancelAddingAccount().then(() => location.replace("/"))}>
+            Cancel adding account
+          </button>
+        </div>
+      )}
+      {boot.s === "ready" && boot.reauth && directory && directory.accounts.length > 1 && (
+        <div className="adding-account-bar">
+          <span>This account needs you to sign in again.</span>
+          {directory.accounts
+            .filter((a) => a.database !== boot.engine.store.name)
+            .map((a) => (
+              <button key={a.database} className="btn btn-secondary btn-sm" onClick={() => void selectAccount(a.database).then(() => location.replace("/"))}>
+                Use {a.displayName}
+              </button>
+            ))}
+        </div>
+      )}
       {screenFor()}
       <UpdateNotice />
     </>
@@ -184,6 +217,8 @@ export function App() {
       case "signedOut":
         return (
           <AuthScreen
+            savedAccounts={directory?.accounts ?? []}
+            onUseSavedAccount={(database) => void selectAccount(database).then(() => location.replace("/"))}
             onSave={(d, g) => saveAccountDevice(boot.store, d, g)}
             onReady={(d, g) => void linked(boot.store, d, g)}
             onLinkWithPhone={() => TEST_DEVICE_LINKING && setBoot({ s: "phoneLink", store: boot.store })}
@@ -201,7 +236,9 @@ export function App() {
         return (
           <EngineProvider engine={boot.engine}>
             <Suspense fallback={<LoadingScreen />}>
-              <Shell onSignedOut={() => void signedOut()} />
+              <AccountActionsProvider onSignedOut={signedOut}>
+                <Shell onSignedOut={() => void signedOut()} />
+              </AccountActionsProvider>
             </Suspense>
           </EngineProvider>
         );

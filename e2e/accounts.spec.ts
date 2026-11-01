@@ -52,7 +52,7 @@ test("sign up, set up encryption, come back after a reload, and add a second bro
   await page.getByLabel("Code").fill(await emailedCode(email, "verify"));
   await page.getByRole("button", { name: "Confirm" }).click();
 
-  await expect(page.getByRole("heading", { name: "Set up end-to-end encryption" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Set up your security keys" })).toBeVisible();
   await page.getByRole("button", { name: "Set up encryption" }).click();
   await expect(page.getByRole("heading", { name: "Save your recovery key" })).toBeVisible();
   const recovery = ((await page.getByLabel("Recovery key", { exact: true }).innerText()) ?? "").replace(/\s+/g, "-");
@@ -78,12 +78,33 @@ test("sign up, set up encryption, come back after a reload, and add a second bro
   await page.reload();
   await expect(page.locator(":is(.app[data-connection=online])").first()).toBeVisible({ timeout: 15_000 });
   // Back to the conversations, where a new direct message shows.
-  // Desktop: the settings list's way back; phones: the Messages tab.
-  if (isMobile) await page.getByRole("navigation", { name: "Sections" }).getByRole("button", { name: "Messages" }).click();
-  else await page.getByRole("button", { name: "Back to conversations" }).click();
+  // Desktop: the settings list's way back; phones: back to You, then the Messages tab.
+  if (isMobile) {
+    await page.getByRole("button", { name: "Back to settings", exact: true }).click();
+    await page.getByRole("navigation", { name: "Sections" }).getByRole("button", { name: "Messages" }).click();
+  } else await page.getByRole("button", { name: "Back to conversations" }).click();
 
   // Someone writes to the new account from their phone.
-  const me = await page.evaluate(() => (window as unknown as { __orbit: { device: { userId: string } } }).__orbit.device.userId);
+  // Release bundles don't expose the development engine hook. Read the signed-in device's public user ID.
+  const me = await page.evaluate(
+    () =>
+      new Promise<string>((resolve, reject) => {
+        const open = indexedDB.open("orbit-web");
+        open.onerror = () => reject(open.error);
+        open.onsuccess = () => {
+          const db = open.result;
+          const req = db.transaction("kv").objectStore("kv").get("device");
+          req.onsuccess = () => {
+            db.close();
+            resolve(req.result.userId);
+          };
+          req.onerror = () => {
+            db.close();
+            reject(req.error);
+          };
+        };
+      }),
+  );
   const bob = await newPhone("bob", "Bob Chen");
   const dm = (await bob.req("POST", "/v1/conversations/dm", { userId: me })).conversation.id as string;
   await bob.send(dm, { type: "text", text: "Welcome to Meldiq, Nadia" });

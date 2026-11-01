@@ -21,6 +21,8 @@ interface MessageListProps {
   onLoadOlder: () => Promise<void> | void;
   detached?: boolean;
   historyReady?: boolean;
+  /** Position the saved newest messages immediately; read receipts still wait for fresh history. */
+  preview?: boolean;
   unreadAfter?: number | null;
   onLoadLatest?: () => Promise<void>;
   onReading?: (atLatest: boolean) => void;
@@ -91,9 +93,9 @@ export function MessageList(props: MessageListProps) {
   const positionEntries = useMemo(() => timeline.map((entry) => ({ id: entry.id, mine: entry.kind === "msg" ? entry.m.outgoing : entry.e.mine })), [timeline]);
   const position = useReadingPosition({
     entries: positionEntries,
-    ready: props.historyReady ?? true,
+    ready: props.preview || (props.historyReady ?? true),
     detached: props.detached,
-    onReading: props.onReading,
+    onReading: props.historyReady === false ? undefined : props.onReading,
   });
   const { scroller } = position;
   const loadOlder = useCallback(async () => {
@@ -166,7 +168,7 @@ export function MessageList(props: MessageListProps) {
             </button>
           </div>
         ) : (
-          props.start
+          props.historyReady !== false && props.start
         )}
         {timeline.map((entry, i) => {
           const prevEntry = timeline[i - 1];

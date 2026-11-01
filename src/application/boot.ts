@@ -45,14 +45,21 @@ const room = (id: string | null): string | null => (id ? `/home/c/${encodeURICom
  * looked at (src/application/webPush.ts shows it), and otherwise the in-app chime. Never both: a system notification
  * with sound already makes one.
  */
-function notify(title: string, body: string, conversationId: string): void {
+function notify(title: string, body: string, conversationId: string, database: string): void {
   const p = getPrefs();
   const system = allowed() && !lookedAt();
   // Meldiq's own chime when it can play (the browser's notification is then silent, so there's one sound, and one
   // that doesn't depend on the system's notification sound settings); the system's sound otherwise.
   const chime = p.inAppSound && p.soundVolume > 0 && chimeState() === "ready";
   if (system)
-    systemNotify({ title: p.notificationText ? title : "Meldiq", body: p.notificationText ? body : "New message", tag: conversationId, href: room(conversationId), silent: chime || !p.messageSound });
+    systemNotify({
+      database,
+      title: p.notificationText ? title : "Meldiq",
+      body: p.notificationText ? body : "New message",
+      tag: conversationId,
+      href: room(conversationId),
+      silent: chime || !p.messageSound,
+    });
   if (!p.inAppSound) return;
   void playChime(p.soundVolume).then((played) => {
     if (!played && !soundHinted && lookedAt()) {
@@ -71,18 +78,25 @@ export function onChimeBlocked(fn: () => void): void {
 }
 
 /** A reminder that went off (Later): a system notification (when allowed) that opens Later or the saved message. */
-function notifyReminder(title: string, body: string, conversationId: string | null): void {
+function notifyReminder(title: string, body: string, conversationId: string | null, database: string): void {
   if (!allowed()) return;
   const p = getPrefs();
   // Reminders are private by default: with message text hidden, the notification doesn't say what it's about.
-  systemNotify({ title: p.notificationText ? title : "Meldiq reminder", body: p.notificationText ? body : "You have a reminder", tag: `reminder:${title}`, href: room(conversationId) ?? "/later" });
+  systemNotify({
+    database,
+    title: p.notificationText ? title : "Meldiq reminder",
+    body: p.notificationText ? body : "You have a reminder",
+    tag: `reminder:${title}`,
+    href: room(conversationId) ?? "/later",
+  });
 }
 
 /** A scheduled meeting starting in ten minutes (round 7): opens its voice room. */
-function notifyMeeting(title: string, body: string, roomId: string | null): void {
+function notifyMeeting(title: string, body: string, roomId: string | null, database: string): void {
   if (!allowed()) return;
   const p = getPrefs();
   systemNotify({
+    database,
     title: p.notificationText ? title : "Meldiq meeting",
     body: p.notificationText ? body : "A meeting starts soon",
     tag: `meeting:${title}`,
@@ -92,10 +106,11 @@ function notifyMeeting(title: string, body: string, roomId: string | null): void
 }
 
 /** A ringing call while this tab isn't looked at: a system notification that brings the tab forward to its conversation. */
-function ringAlert(title: string, video: boolean, conversationId: string): void {
+function ringAlert(title: string, video: boolean, conversationId: string, database: string): void {
   if (!allowed() || lookedAt()) return;
   const p = getPrefs();
   systemNotify({
+    database,
     title: p.notificationText ? title : "Meldiq",
     body: video ? "Incoming video call" : "Incoming voice call",
     tag: `call-${conversationId}`,
@@ -110,9 +125,9 @@ export function createEngine(device: DeviceRecord, store: LocalStore): Engine {
   const engine = new Engine(device, store, {
     base: apiBase(),
     wsUrl: wsUrl(),
-    notify,
-    notifyReminder,
-    notifyMeeting,
+    notify: (title, body, id) => notify(title, body, id, store.name),
+    notifyReminder: (title, body, id) => notifyReminder(title, body, id, store.name),
+    notifyMeeting: (title, body, id) => notifyMeeting(title, body, id, store.name),
     media: liveKitMedia,
     ringtone: new Ringtone(() => getPrefs().callRingtone),
     callPrefs: () => {
@@ -131,7 +146,7 @@ export function createEngine(device: DeviceRecord, store: LocalStore): Engine {
         pushToTalk: p.pushToTalk && !!p.pttKey,
       };
     },
-    ringAlert,
+    ringAlert: (title, video, id) => ringAlert(title, video, id, store.name),
     prefs: () => {
       const p = getPrefs();
       return { readReceipts: p.readReceipts, typing: p.typing, groupNotifications: p.groupNotifications };

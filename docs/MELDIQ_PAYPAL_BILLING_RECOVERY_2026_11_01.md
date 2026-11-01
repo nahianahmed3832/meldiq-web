@@ -19,3 +19,9 @@ The backend's PayPal/standalone-commerce/contract checks passed 33 tests. Other 
 An expired saved Plus purchase now closes its payment control and offers a fresh checkout with a new retry key. The API only expires definitively missing, never-paid attempts and isolates provider read failures; it never treats a timeout, authorization error or missing paid mandate as confirmed cancellation.
 
 Browser validation completed: **21 Chromium production-build checks**, **18 focused WebKit/phone production-build checks**, and **3 updated expired-checkout restart checks** in the development app. These cover card eligibility/loading/failure/retry, consent, buyer approval, free periods, cancellation, price/ownership verification, one-time Spark and separate Bots+ flows, cached-release recovery and checkout restart. No real buyer payment was submitted.
+
+## Integrated production release
+
+The final web source preserves the active production release 00bec97477b3 (saved accounts, mobile/settings layout and Embers), then restores the card, checkout and billing fixes above. API 0.72.1 at 3c4d53a2 preserves active message-collections and Embers features. The combined web source passed typechecking, linting, formatting, 845 unit tests (one skipped), and the API passed all 38 targeted PayPal/commerce/contract checks. Live read-only verification found all 18 original free-grant windows unchanged, two unapproved attempts with no billing trial date, and one expired never-paid attempt.
+
+Integration checks also found the newer settings grid overriding checkout’s full-width layout in Safari. The checkout rule now takes precedence over the settings rail, with a browser regression requiring a usable payment-column width. No real buyer payment was submitted during validation.

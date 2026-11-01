@@ -89,7 +89,18 @@ async function madeInConsole(accountId: string, verification: "verified" | "stat
   const t = Date.now();
   const codeHash = staticCode ? crypto.createHash("sha256").update(`${accountId}:static_verify_email:${staticCode}`).digest("hex") : null;
   await server.ctx.platform.write((w) =>
-    w.insert("operator_accounts", { account_id: accountId, verification, code_hash: codeHash, code_expires_at: null, tester: 1, note: null, created_by: "acc_op", created_at: t, updated_by: "acc_op", updated_at: t }),
+    w.insert("operator_accounts", {
+      account_id: accountId,
+      verification,
+      code_hash: codeHash,
+      code_expires_at: null,
+      tester: 1,
+      note: null,
+      created_by: "acc_op",
+      created_at: t,
+      updated_by: "acc_op",
+      updated_at: t,
+    }),
   );
 }
 

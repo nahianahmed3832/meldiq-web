@@ -32,7 +32,8 @@ describe("the app shell from the service worker", () => {
     expect(strategyFor(nav("/settings/billing"), ORIGIN)).toBe("payment");
   });
   it("answers opening the app's own routes with the kept page", () => {
-    for (const p of ["/", "/home", "/home/c/c_abc", "/dms/c/c_1/thread/m_2", "/friends", "/settings/appearance", "/workspace/roles", "/discover"]) expect(strategyFor(nav(p), ORIGIN)).toBe("shell");
+    for (const p of ["/", "/lobby", "/home", "/home/c/c_abc", "/dms/c/c_1/thread/m_2", "/friends", "/settings/appearance", "/workspace/roles", "/discover"])
+      expect(strategyFor(nav(p), ORIGIN)).toBe("shell");
   });
 
   it("leaves links with a query, other pages, the API and other methods to the network", () => {

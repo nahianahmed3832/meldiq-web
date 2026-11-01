@@ -55,6 +55,8 @@ export interface Prefs {
   /** Received photos load by themselves (android Download photos automatically); off: a click loads each one. */
   autoLoadPhotos: boolean;
   notifications: boolean;
+  /** Occasional in-app reminders that Plus supports Meldiq's independent development. */
+  plusReminders: boolean;
   /**
    * Whether the person chose Desktop notifications themselves. Until they do, notifications follow the browser's
    * permission for this site (granted in its site settings counts), instead of staying off although it was allowed.
@@ -153,6 +155,7 @@ const defaults: Prefs = {
   askBeforeLinks: false,
   autoLoadPhotos: true,
   notifications: false,
+  plusReminders: true,
   notifyChoice: "unset",
   groupNotifications: true,
   messageSound: true,
@@ -238,6 +241,7 @@ function load(): Prefs {
       quickReaction: QUICK_REACTIONS.some((e) => e === stored.quickReaction) ? stored.quickReaction : defaults.quickReaction,
       youtubeInApp: typeof stored.youtubeInApp === "boolean" ? stored.youtubeInApp : defaults.youtubeInApp,
       inAppSound: typeof stored.inAppSound === "boolean" ? stored.inAppSound : defaults.inAppSound,
+      plusReminders: stored.plusReminders !== false,
       builderMode: stored.builderMode === true,
       microphoneId: typeof stored.microphoneId === "string" ? stored.microphoneId : null,
       speakerId: typeof stored.speakerId === "string" ? stored.speakerId : null,

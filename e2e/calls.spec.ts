@@ -95,6 +95,36 @@ test("a video call from the phone app rings here and connects with media verifie
     await expect(s.getByRole("status")).toHaveText(/^\d+:\d\d$/); // the call timer
     await remoteVideoPlays(page);
     await expect(page.locator("[data-orbit-call-audio] audio")).toHaveCount(1); // Bob's voice, once proven to decrypt
+    if (isMobile) {
+      for (const [width, height] of [
+        [320, 568],
+        [390, 844],
+        [844, 390],
+      ]) {
+        await page.setViewportSize({ width, height });
+        await expect
+          .poll(() =>
+            s.evaluate((el) => {
+              const r = el.getBoundingClientRect();
+              return r.left >= 0 && r.top >= 0 && r.right <= innerWidth + 1 && r.bottom <= innerHeight + 1;
+            }),
+          )
+          .toBe(true);
+        const controls = s.locator(".call-controls .call-btn");
+        expect(await controls.count()).toBeGreaterThanOrEqual(5);
+        await expect
+          .poll(() =>
+            controls.evaluateAll((buttons) =>
+              buttons.every((button) => {
+                const r = button.getBoundingClientRect();
+                return r.width >= 44 && r.height >= 44 && r.left >= 0 && r.right <= innerWidth + 1 && r.bottom <= innerHeight + 1;
+              }),
+            ),
+          )
+          .toBe(true);
+        await page.screenshot({ path: test.info().outputPath(`call-${width}x${height}.png`) });
+      }
+    }
     if (!isMobile) {
       // 2026-10-28: the call fills the middle and leaves the channels usable; its panel sits at the foot of the list.
       const panel = page.getByRole("region", { name: "Your call" });
@@ -150,7 +180,7 @@ test("the browser calls the phone app; each side decrypts the other's audio", as
 const overlaps = (a: { x: number; y: number; width: number; height: number }, b: { x: number; y: number; width: number; height: number }) =>
   a.x < b.x + b.width && b.x < a.x + a.width && a.y < b.y + b.height && b.y < a.y + a.height;
 
-test("a minimised call stays clear of the message box, can be dragged and moved with the keys, and messages still send", async ({ page }) => {
+test("a minimised call stays clear of the message box, can be dragged and moved with the keys, and messages still send", async ({ page, hasTouch }) => {
   const { bob, dm } = await setUp(page);
   // The floating bar is for narrower windows (2026-10-28): a wide window shows the call's panel in the channel list.
   await page.setViewportSize({ width: 900, height: 820 });
@@ -197,6 +227,30 @@ test("a minimised call stays clear of the message box, can be dragged and moved 
     await page.keyboard.press("ArrowDown");
     expect([Math.round((await mini.boundingBox())!.x), Math.round((await mini.boundingBox())!.y)]).toEqual([24, 24]);
     expect(await page.evaluate(() => localStorage.getItem("meldiq.miniCall.position"))).toBe(JSON.stringify({ x: 24, y: 24 }));
+
+    if (hasTouch) {
+      await page.setViewportSize({ width: 390, height: 844 });
+      await page.evaluate(() => {
+        const vv = window.visualViewport!;
+        Object.defineProperty(vv, "height", { configurable: true, value: 380 });
+        Object.defineProperty(vv, "offsetTop", { configurable: true, value: 80 });
+        vv.dispatchEvent(new Event("resize"));
+        vv.dispatchEvent(new Event("scroll"));
+      });
+      await expect
+        .poll(() =>
+          mini.evaluate((el) => {
+            const r = el.getBoundingClientRect();
+            return r.top >= 80 && r.bottom <= 460 && r.right <= innerWidth;
+          }),
+        )
+        .toBe(true);
+      await page.evaluate(() => {
+        Reflect.deleteProperty(window.visualViewport!, "height");
+        Reflect.deleteProperty(window.visualViewport!, "offsetTop");
+        window.visualViewport!.dispatchEvent(new Event("resize"));
+      });
+    }
 
     await mini.getByRole("button", { name: "Hang up" }).click();
     await expect(mini).toBeHidden({ timeout: 10_000 });

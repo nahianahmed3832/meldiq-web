@@ -74,16 +74,16 @@ export function MojoPromoCard() {
   const plan = useOrbit((s) => s.mojo.me?.plan ?? null);
   const name = useOrbit((s) => s.mojo.me?.perks.name ?? null);
   const enabled = useOrbit((s) => s.server?.features.includes("mojo") ?? false);
-  if (!enabled) return null;
-  const free = plan === null || plan === "free";
+  if (!enabled || plan === null) return null;
+  const free = plan === "free";
   return (
     <button className="mojo-promo" onClick={() => navigate({ section: "settings", settingsPage: "mojo" })}>
       <span className="mojo-perk-icon" aria-hidden="true">
         <Sparkles size={18} />
       </span>
       <span className="lines grow">
-        <strong>{free ? "Get Meldiq Mojo" : `You have ${name ?? "Mojo"}`}</strong>
-        <small>{free ? "Bigger files, sharper streams and Sparks for your servers." : "Thanks for keeping Meldiq going. See your perks."}</small>
+        <strong>{free ? "Keep Meldiq independent" : `You have ${name ?? "Mojo"}`}</strong>
+        <small>{free ? "Explore Plus. Help fund servers and development without corporate investment." : "Thanks for keeping Meldiq going. See your perks."}</small>
       </span>
     </button>
   );

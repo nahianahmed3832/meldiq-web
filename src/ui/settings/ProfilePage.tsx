@@ -83,7 +83,10 @@ function ProfileEditor() {
   }, [p]);
 
   const updateDraft = useProfileDraft()?.update;
-  useEffect(() => updateDraft?.({ displayName: form.displayName, pronouns: form.pronouns, aboutMe: form.aboutMe }), [form.displayName, form.pronouns, form.aboutMe, updateDraft]);
+  useEffect(
+    () => updateDraft?.({ displayName: form.displayName, username: form.username, pronouns: form.pronouns, aboutMe: form.aboutMe }),
+    [form.displayName, form.username, form.pronouns, form.aboutMe, updateDraft],
+  );
 
   if (!me) return null;
   const field = (k: keyof typeof form) => ({ value: form[k], onChange: (e: { target: { value: string } }) => setForm((f) => ({ ...f, [k]: e.target.value })) });
@@ -126,34 +129,46 @@ function ProfileEditor() {
     void photo.act(async () => setMyPhoto(engine, await squareJpeg(f)));
   };
 
+  const photoControls = (
+    <section className="profile-photo-controls" aria-label="Profile picture">
+      <h3 className="settings-label">Profile picture</h3>
+      <div className="row" style={{ gap: 16, flexWrap: "wrap" }}>
+        <UserAvatar userId={me.userId} name={form.displayName || me.displayName} colorIndex={me.avatarColor} photoRev={photoRev} size={64} decorative />
+        <input ref={file} type="file" accept="image/*" hidden onChange={(e) => pick(e.target.files?.[0])} />
+        <button className="btn btn-secondary btn-sm" disabled={photo.busy} onClick={() => file.current?.click()}>
+          <Camera size={14} /> {photoRev ? "Change photo" : "Add photo"}
+        </button>
+        {photoRev && (
+          <button className="btn btn-ghost btn-sm" disabled={photo.busy} onClick={() => void photo.act(() => removeMyPhoto(engine))}>
+            Remove
+          </button>
+        )}
+      </div>
+      {photo.error && (
+        <div className="banner danger" role="alert">
+          {photo.error}
+        </div>
+      )}
+      <small className="faint">Upload a JPG, PNG or WebP. Your picture updates immediately.</small>
+    </section>
+  );
+
   return (
     <>
-      <h1>My Profile</h1>
+      <header className="settings-page-heading">
+        <span className="settings-eyebrow">MAKE IT YOURS</span>
+        <h1>My Profile</h1>
+        <p>A little more you, everywhere you show up.</p>
+      </header>
       <div className="profile-columns">
         <div className="profile-main">
+          {profileMedia ? <ProfileStyleCard nameStyles={nameStyles} pictureControls={photoControls} /> : photoControls}
           {address.data && <NetworkAddress address={address.data} />}
-          <div className="card" style={{ padding: 20, display: "grid", gap: 18 }}>
-            <div className="row" style={{ gap: 16, flexWrap: "wrap" }}>
-              <UserAvatar userId={me.userId} name={form.displayName || me.displayName} colorIndex={me.avatarColor} photoRev={photoRev} size={64} decorative />
-              <div className="grow">
-                <div style={{ fontWeight: 700, fontSize: 16 }}>{form.displayName || me.displayName}</div>
-                <div className="faint">@{me.username}</div>
-              </div>
-              <input ref={file} type="file" accept="image/*" hidden onChange={(e) => pick(e.target.files?.[0])} />
-              <button className="btn btn-secondary btn-sm" disabled={photo.busy} onClick={() => file.current?.click()}>
-                <Camera size={14} /> {photoRev ? "Change photo" : "Add photo"}
-              </button>
-              {photoRev && (
-                <button className="btn btn-ghost btn-sm" disabled={photo.busy} onClick={() => void photo.act(() => removeMyPhoto(engine))}>
-                  Remove
-                </button>
-              )}
+          <section className="card profile-details" aria-label="Profile details">
+            <div>
+              <h2>About you</h2>
+              <p className="muted">The name, details and story people see on your profile.</p>
             </div>
-            {photo.error && (
-              <div className="banner danger" role="alert">
-                {photo.error}
-              </div>
-            )}
             <p className="hint" style={{ margin: 0 }}>
               Profile details update your global profile when you choose Save changes. Photo changes save immediately.
             </p>
@@ -297,8 +312,7 @@ function ProfileEditor() {
                 </button>
               </div>
             </form>
-          </div>
-          {profileMedia && <ProfileStyleCard nameStyles={nameStyles} />}
+          </section>
           <CommunityProfileCard aboutMe={form.aboutMe} pronouns={form.pronouns} />
           <ConnectionsCard />
         </div>

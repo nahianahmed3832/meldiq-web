@@ -628,8 +628,18 @@ export class Engine implements EngineContext {
     this.set((s) => ({ ...s, profilesRev: s.profilesRev + 1 }));
   }
 
+  private refreshLoad: Promise<void> | null = null;
+
+  /** Startup and the socket's hello share one metadata refresh instead of fetching every list twice. */
+  refreshAll(): Promise<void> {
+    this.refreshLoad ??= this.refreshMetadata().finally(() => {
+      this.refreshLoad = null;
+    });
+    return this.refreshLoad;
+  }
+
   /** Server info, profile, workspaces and conversations: on start and after every reconnect (what changed while away). */
-  async refreshAll(): Promise<void> {
+  private async refreshMetadata(): Promise<void> {
     try {
       const [server, meRes, orgs, convs] = await Promise.all([
         this.api.json("GET", "/v1/server-info", zServerInfo, { auth: false }),
@@ -992,8 +1002,10 @@ export class Engine implements EngineContext {
   }
 
   /** A conversation's unsent text, kept with this browser's other local data (never in localStorage). */
-  saveDraft(conversationId: string, text: string): Promise<void> {
-    return this.locals.saveDraft(conversationId, text);
+  async saveDraft(conversationId: string, text: string): Promise<void> {
+    await this.locals.saveDraft(conversationId, text);
+    // Locals are an in-memory working set. Drafts must reach the existing sealed snapshot before a reload.
+    await this.snapshots.flush();
   }
 
   markReadSoon(conversationId: string): void {
@@ -1135,6 +1147,7 @@ export class Engine implements EngineContext {
           hasMore: false,
           opening,
           historyReady: false,
+          preview: this.fromSnapshot.has(id) && !!s.messages[id]?.items.length,
           detached: false,
         },
       },
@@ -1148,6 +1161,8 @@ export class Engine implements EngineContext {
     const unreadAfter = boundary?.unread ? boundary.readUpTo : null;
     const page = await newestPage;
     if (opening !== this.openVersion || version !== this.windowVersions.get(id)) return;
+    // Offline returns keep their saved messages and server-confirmation guard until a page actually arrives.
+    if (!page && this.fromSnapshot.has(id)) return;
     const cached = await this.store.latestMessages(id, PAGE);
     const received = page ? await Promise.all(page.messages.map((m) => this.store.message(m.id))) : [];
     if (opening !== this.openVersion || version !== this.windowVersions.get(id)) return;
@@ -1170,6 +1185,7 @@ export class Engine implements EngineContext {
             unreadAfter,
             detached: false,
             historyReady: true,
+            preview: false,
           },
         },
       };

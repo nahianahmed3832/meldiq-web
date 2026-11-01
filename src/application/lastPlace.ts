@@ -1,4 +1,5 @@
 import { appHref } from "./router";
+import { COMMUNITY_PLACES_KEY } from "./communityLanding";
 
 /**
  * Where the person was (2026-10-29, the owner: "ours refreshes like a website"): the last conversation or section, kept
@@ -28,6 +29,7 @@ export function rememberPlace(userId: string, path: string): void {
 export function forgetPlace(): void {
   try {
     localStorage.removeItem(KEY);
+    localStorage.removeItem(COMMUNITY_PLACES_KEY);
   } catch {
     /* nothing kept */
   }

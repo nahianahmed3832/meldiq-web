@@ -1,3 +1,4 @@
+import type { SavedAccount } from "../../auth/savedAccounts";
 import { apiBase } from "../../application/config";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { AccountSessionGrant, AccountView } from "../../api/accountSchemas";
@@ -44,12 +45,15 @@ const SETUP_ENDED: Record<SetupSessionEnd, string> = {
 
 export function AuthScreen(props: {
   base?: string;
+  savedAccounts?: SavedAccount[];
+  onUseSavedAccount?: (database: string) => void;
   /** Keeps the new device and its session, before the recovery key is shown (so a reload then doesn't lose the device). */
   onSave: (device: DeviceRecord, grant: AccountSessionGrant) => Promise<void>;
   onReady: (device: DeviceRecord, grant: AccountSessionGrant) => void;
   onLinkWithPhone: () => void;
 }) {
   const base = props.base ?? apiBase();
+  const { savedAccounts, onUseSavedAccount } = props;
   const [step, setStep] = useState<Step>({ k: "signIn" });
   const [server, setServer] = useState<ServerInfo | null>(null);
   const t = useT();
@@ -70,10 +74,19 @@ export function AuthScreen(props: {
     (grant: AccountSessionGrant, password?: string) => {
       // Ended from elsewhere before setup finished (e.g. removed in the phone's session list): sign in again, email kept.
       const creds = new SetupCredentials(base, grant, (why) => setStep({ k: "signIn", notice: SETUP_ENDED[why], email: grant.account.email }));
+      const existing = savedAccounts?.find((a) => a.accountId === grant.account.id);
+      if (existing && onUseSavedAccount) {
+        // This login only created a setup session. Keep the saved device/session and discard the extra setup session.
+        void new AccountApi(new ApiClient(base, creds))
+          .logout()
+          .catch(() => undefined)
+          .then(() => onUseSavedAccount?.(existing.database));
+        return;
+      }
       const account = grant.account;
       setStep(account.identity ? { k: "addDevice", creds, account, password } : { k: "create", creds, account, password });
     },
-    [base],
+    [base, savedAccounts, onUseSavedAccount],
   );
 
   const accounts = server?.accounts;

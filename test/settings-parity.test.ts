@@ -75,7 +75,7 @@ describe("account levels", () => {
   });
 
   it("says what a refused level-up costs", () => {
-    expect(levelUpProblem(new ApiError(409, "not_enough_points", "x", { cost: 100, balance: 30 }))).toBe("The next level costs 100 points and you have 30.");
+    expect(levelUpProblem(new ApiError(409, "not_enough_points", "x", { cost: 100, balance: 30 }))).toBe("The next level costs 100 Embers and you have 30.");
     expect(levelUpProblem(new ApiError(500, "internal", "Server trouble"))).toBe("Server trouble");
     expect(levelUpProblem(new Error("boom"))).toBe("Couldn't level up. Try again.");
   });
@@ -88,7 +88,7 @@ describe("points page words", () => {
     expect(questLabel({ id: "new-thing", goal: 1 })).toBe("New thing");
     expect(historyLabel({ kind: "quest", detail: "friend" })).toBe("Quest: Make a friend");
     expect(historyLabel({ kind: "level", detail: "3" })).toBe("Reached level 3");
-    expect(historyLabel({ kind: "unknown", detail: null })).toBe("Points");
+    expect(historyLabel({ kind: "unknown", detail: null })).toBe("Embers");
   });
 
   it("signs amounts, bounds progress and shows a full week on the 7th day", () => {

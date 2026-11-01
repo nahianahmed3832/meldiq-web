@@ -5,10 +5,11 @@ import { AtSign, BarChart3, FileUp, Lock, MapPin, Mic, Paperclip, Plus, SendHori
 import { useExpressions } from "../community/CustomEmoji";
 import { forSending, refOf } from "../../sync/expressions";
 import type { CustomEmojiRef } from "../../protocol/payload";
-import { type ClipboardEvent, type DragEvent, useCallback, useEffect, useRef, useState } from "react";
+import { type ClipboardEvent, type DragEvent, useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import type { Conversation, Member } from "../../api/schemas";
 import { useEngine } from "../../application/orbit";
 import { usePrefs } from "../../application/prefs";
+import { ROUTE_EVENT } from "../../application/router";
 import type { StoredMessage } from "../../model/types";
 import type { RichContent } from "../../model/types";
 import { fileLimit, MAX_FILES_PER_MESSAGE, sendFiles } from "../../sync/attachments";
@@ -93,6 +94,14 @@ export function Composer(props: ComposerProps) {
   const [rich, setRich] = useState<"contact" | "location" | "poll" | null>(null);
   const canRecord = !props.threadRoot && voiceMime() !== null && can.voice;
   const draftTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const pendingDraft = useRef<string | null>(null);
+  const flushDraft = useCallback(() => {
+    clearTimeout(draftTimer.current);
+    if (!props.threadRoot && pendingDraft.current !== null) {
+      void engine.saveDraft(c.id, pendingDraft.current);
+      pendingDraft.current = null;
+    }
+  }, [c.id, engine, props.threadRoot]);
   // Batch B9: a community's own emoji and stickers in its channels; the ones picked for this message by name.
   const communityEmoji = useExpressions(c.type === "CHANNEL" ? c.orgId : null, true);
   const picked = useRef(new Map<string, CustomEmojiRef>());
@@ -110,8 +119,24 @@ export function Composer(props: ComposerProps) {
     if (props.threadRoot) return;
     const l = engine.state.get().local[c.id];
     setText(l?.draft ?? "");
-    input.current?.focus();
-  }, [c.id, engine, props.threadRoot]);
+    // Opening a conversation on touch should leave its history visible until the person chooses to type.
+    if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) input.current?.focus({ preventScroll: true });
+    const hidden = () => {
+      if (document.visibilityState === "hidden") flushDraft();
+    };
+    window.addEventListener("pagehide", flushDraft);
+    window.addEventListener(ROUTE_EVENT, flushDraft);
+    window.addEventListener("popstate", flushDraft);
+    document.addEventListener("visibilitychange", hidden);
+    return () => {
+      flushDraft();
+      engine.setTyping(c.id, false);
+      window.removeEventListener("pagehide", flushDraft);
+      window.removeEventListener(ROUTE_EVENT, flushDraft);
+      window.removeEventListener("popstate", flushDraft);
+      document.removeEventListener("visibilitychange", hidden);
+    };
+  }, [c.id, engine, props.threadRoot, flushDraft]);
 
   useEffect(() => {
     if (c.type === "DM") return;
@@ -133,13 +158,29 @@ export function Composer(props: ComposerProps) {
     if (props.replyTo) input.current?.focus();
   }, [props.replyTo]);
 
-  const autosize = () => {
+  const autosize = useCallback(() => {
     const el = input.current;
     if (!el) return;
     el.style.height = "auto";
-    el.style.height = `${Math.min(el.scrollHeight, 220)}px`;
-  };
-  useEffect(autosize, [text]);
+    const limit = parseFloat(getComputedStyle(el).maxHeight) || 220;
+    el.style.height = `${Math.min(el.scrollHeight, limit)}px`;
+  }, []);
+  useLayoutEffect(autosize, [text, autosize]);
+  useEffect(() => {
+    // Reflow wrapped lines on rotation and keyboard resizing, even when the draft hasn't changed.
+    let frame = 0;
+    const resize = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(autosize);
+    };
+    window.addEventListener("resize", resize);
+    window.visualViewport?.addEventListener("resize", resize);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("resize", resize);
+      window.visualViewport?.removeEventListener("resize", resize);
+    };
+  }, [autosize]);
 
   const addFiles = useCallback(
     (list: File[]) => {
@@ -164,7 +205,8 @@ export function Composer(props: ComposerProps) {
     setText(value);
     if (!props.threadRoot) {
       clearTimeout(draftTimer.current);
-      draftTimer.current = setTimeout(() => void engine.saveDraft(c.id, value), 400);
+      pendingDraft.current = value;
+      draftTimer.current = setTimeout(flushDraft, 400);
     }
     engine.setTyping(c.id, value.trim().length > 0);
     const caret = input.current?.selectionStart ?? value.length;
@@ -187,7 +229,7 @@ export function Composer(props: ComposerProps) {
     if (role) pickedRoles.current = [...pickedRoles.current.filter((r) => r.id !== role.id), role];
     const token = role ? roleToken(role.name) : `@${m.username}`;
     const next = `${text.slice(0, suggest.start)}${token} ${text.slice(caret)}`;
-    setText(next);
+    onChange(next);
     setSuggest(null);
     requestAnimationFrame(() => {
       const pos = suggest.start + token.length + 1;
@@ -210,6 +252,7 @@ export function Composer(props: ComposerProps) {
       if (ran === "kept") return;
       if (ran === "sent") {
         clearTimeout(draftTimer.current);
+        pendingDraft.current = null;
         setText("");
         void engine.saveDraft(c.id, "");
         engine.setTyping(c.id, false);
@@ -217,6 +260,7 @@ export function Composer(props: ComposerProps) {
       }
     }
     clearTimeout(draftTimer.current); // before anything async: a pending draft save must not bring the text back
+    pendingDraft.current = null;
     const opts = { replyTo: props.replyTo?.id, threadRoot: props.threadRoot };
     // The box empties at once (the message shows as Sending), so whatever is typed while it encrypts and goes out
     // starts the next message instead of joining this one or being wiped when this one finishes.
@@ -250,7 +294,9 @@ export function Composer(props: ComposerProps) {
       engine.setTyping(c.id, false);
     } catch (e) {
       // Not sent: the text comes back unless something new has been typed meanwhile.
-      setText((now) => now || body);
+      const restored = input.current?.value || body;
+      setText(restored);
+      if (!props.threadRoot) void engine.saveDraft(c.id, restored);
       if (!(e instanceof UploadCancelled)) engine.notice("error", e instanceof Error ? e.message : "Couldn't send.");
     } finally {
       setBusy(null);
@@ -385,10 +431,16 @@ export function Composer(props: ComposerProps) {
                 id={`composer-${c.id}-${props.threadRoot ?? "main"}`}
                 ref={input}
                 rows={1}
+                autoCapitalize="sentences"
+                enterKeyHint={prefs.enterToSend ? "send" : "enter"}
+                spellCheck
                 value={text}
                 placeholder={props.threadRoot ? t("composer_thread") : t("composer_message", { name: `${c.type === "CHANNEL" ? "#" : ""}${props.title}` })}
                 onChange={(e) => onChange(e.target.value)}
-                onBlur={() => engine.setTyping(c.id, false)}
+                onBlur={() => {
+                  flushDraft();
+                  engine.setTyping(c.id, false);
+                }}
                 onPaste={(e: ClipboardEvent<HTMLTextAreaElement>) => {
                   const pasted = Array.from(e.clipboardData.files);
                   if (pasted.length) {
@@ -466,6 +518,7 @@ export function Composer(props: ComposerProps) {
                 <button
                   key="send"
                   className="send-btn"
+                  onPointerDown={(e) => e.preventDefault()}
                   onClick={() => void send()}
                   disabled={(!text.trim() && !files.length) || !!busy}
                   aria-label={t("composer_send")}

@@ -24,7 +24,10 @@ import "../styles/lobby-editor.css";
 import "../styles/landing.css";
 import "../styles/discovery.css";
 import "../styles/official-bots.css";
-import "../styles/responsive.css"; // last: its media queries override the rest
+import "../styles/responsive.css";
+import "../styles/settings-redesign.css";
+import "../styles/embers.css";
+import "../styles/mobile.css"; // mobile interaction and visual-viewport refinements
 
 export default function MeldiqApp({ Component, pageProps }: AppProps) {
   return (

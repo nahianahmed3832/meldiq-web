@@ -177,7 +177,7 @@ export function routeHref(r: Partial<Route> & { section: Section }): string {
   return h;
 }
 
-const ROUTE_EVENT = "meldiq:route";
+export const ROUTE_EVENT = "meldiq:route";
 /** History entries this app made (Next.js's own router leaves entries without its marker alone). */
 const STATE = { meldiq: 1 };
 

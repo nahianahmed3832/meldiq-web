@@ -49,6 +49,9 @@ import { type DiscordReturn, takeDiscordReturn } from "../../application/discord
 import { accountSelection, rememberSelection } from "../../sync/workspaceSelection";
 import { LOBBY_FEATURE } from "../../sync/lobby";
 import { useLobbyLanding } from "../lobby/useLobbyLanding";
+import { PHONE_LAYOUT } from "../../application/viewport";
+import { PlusSupportNotice } from "../mojo/PlusSupportNotice";
+import { UserPanel } from "./UserPanel";
 
 const SettingsView = lazy(() => import("../settings/SettingsView").then((m) => ({ default: m.SettingsView })));
 const WorkspaceView = lazy(() => import("../workspace/WorkspaceView").then((m) => ({ default: m.WorkspaceView })));
@@ -56,13 +59,12 @@ const LobbyPage = lazy(() => import("../lobby/LobbyPage").then((m) => ({ default
 
 /** What shows behind settings opened straight from a link: Home. */
 const HOME_ROUTE: Route = { section: "home", conversationId: null, panel: null, threadRoot: null, settingsPage: "profile", workspacePage: "overview" };
-const PHONE = "(max-width: 640px)";
 
 /** Whether the phone layout applies (one screen at a time), following the window as it's resized. */
 function usePhoneLayout(): boolean {
-  const [phone, setPhone] = useState(() => typeof window !== "undefined" && window.matchMedia(PHONE).matches);
+  const [phone, setPhone] = useState(() => typeof window !== "undefined" && window.matchMedia(PHONE_LAYOUT).matches);
   useEffect(() => {
-    const q = window.matchMedia(PHONE);
+    const q = window.matchMedia(PHONE_LAYOUT);
     const on = () => setPhone(q.matches);
     q.addEventListener("change", on);
     return () => q.removeEventListener("change", on);
@@ -118,7 +120,7 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
   useEffect(() => {
     if (orgId !== prefs.orgId && synced) setPrefs({ orgId });
   }, [orgId, prefs.orgId, synced]);
-  useLobbyLanding(orgId, route);
+  useLobbyLanding(orgId, route, phone);
 
   // The account's selected workspace, shared with the phone (PUT /v2/account/preferences): adopted once when the app
   // opens, then every switch made here is saved for the other devices. Best effort: if either call fails, this browser
@@ -162,7 +164,7 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
 
   // Where the person is, for the next time Meldiq opens (application/lastPlace.ts); settings windows aren't places.
   useEffect(() => {
-    if (!isFullPage(route.section) && route.section !== "oauth") rememberPlace(engine.device.userId, routeHref(route));
+    if (!isFullPage(route.section) && route.section !== "oauth" && (route.conversationId || route.section === "lobby")) rememberPlace(engine.device.userId, routeHref(route));
   }, [engine, route]);
   // From now on this browser opens straight into the app's frame, not the launch screen (application/splash.ts).
   useEffect(() => rememberReturning(true), []);
@@ -352,8 +354,10 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
           {full}
         </SettingsWindow>
       )}
-      <TabBar section={route.section} hidden={!!route.conversationId && !isFullPage(route.section)} />
+      <TabBar section={route.section} hidden={!!route.conversationId || route.section === "workspace" || (route.section === "settings" && route.settingsPage !== "you")} />
       <Notices />
+      {!phone && !settings && <UserPanel />}
+      <PlusSupportNotice blocked={!!dialog || !!profile || drawer} />
       <TabIndicators />
       <ConnectionRequestWatcher />
       <CallLayer />

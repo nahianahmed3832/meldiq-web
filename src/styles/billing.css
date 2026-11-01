@@ -1,4 +1,4 @@
-.settings:has(.meldiq-checkout) {
+.settings-window .settings:has(.meldiq-checkout) {
   grid-template-columns: minmax(0, 1fr);
 }
 .settings:has(.meldiq-checkout) .settings-nav {

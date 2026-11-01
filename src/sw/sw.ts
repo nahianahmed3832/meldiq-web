@@ -1,3 +1,4 @@
+import { accountDirectory, selectAccount } from "../auth/savedAccounts";
 import { z } from "zod";
 import { ApiClient } from "../api/client";
 import { zConversation, zProfile, zQueueItem } from "../api/schemas";
@@ -59,7 +60,7 @@ if (process.env.NODE_ENV === "production") {
 }
 sw.addEventListener("notificationclick", (e) => {
   e.notification.close();
-  e.waitUntil(openApp((e.notification.data as { url?: unknown } | null)?.url));
+  e.waitUntil(openApp((e.notification.data as { url?: unknown } | null)?.url, (e.notification.data as { database?: unknown } | null)?.database));
 });
 
 async function onWake(): Promise<void> {
@@ -69,15 +70,24 @@ async function onWake(): Promise<void> {
   if (pages.some((p) => p.visibilityState === "visible")) return;
   let notices: WakeNotice[];
   let deviceId = "";
+  let database: string | null = null;
   let identities: Record<string, string> = {};
   try {
-    ({ notices, deviceId, identities } = await lookUp());
+    ({ notices, deviceId, identities, database } = await lookUp());
   } catch {
     notices = [GENERIC];
   }
   for (const n of notices) {
     const show = () =>
-      sw.registration.showNotification(n.title, { body: n.body, tag: n.tag, renotify: true, requireInteraction: n.call, icon: ICON, badge: BADGE, data: { url: n.url } } as NotificationOptions);
+      sw.registration.showNotification(n.title, {
+        body: n.body,
+        tag: database ? `${database}:${n.tag}` : n.tag,
+        renotify: true,
+        requireInteraction: n.call,
+        icon: ICON,
+        badge: BADGE,
+        data: { url: n.url, database },
+      } as NotificationOptions);
     if (deviceId && identities[n.tag]) await showWakeNoticeOnce(deviceId, n.tag, identities[n.tag], show);
     else await show();
   }
@@ -87,18 +97,19 @@ const zQueue = z.object({ items: z.array(zQueueItem) });
 const zConversations = z.object({ conversations: z.array(zConversation) });
 
 /** What's waiting for this browser, as notifications (nothing is acknowledged: the app still fetches it all). */
-async function lookUp(): Promise<{ notices: WakeNotice[]; identities: Record<string, string>; deviceId: string }> {
+async function lookUp(): Promise<{ notices: WakeNotice[]; identities: Record<string, string>; deviceId: string; database: string | null }> {
   await installLegacyCurves().catch(() => []); // signing in below needs Ed25519 (Safari before 17: the fallback)
-  const store = await LocalStore.open();
+  const directory = await accountDirectory();
+  const store = await LocalStore.open(directory.active ?? undefined);
   let device;
   try {
     device = await store.device();
   } finally {
     store.close();
   }
-  if (!device) return { notices: [], identities: {}, deviceId: "" };
+  if (!device) return { notices: [], identities: {}, deviceId: "", database: null };
   const session = new SessionManager("", device, () => undefined);
-  if (!(await session.reauthenticate())) return { notices: [], identities: {}, deviceId: device.deviceId };
+  if (!(await session.reauthenticate())) return { notices: [], identities: {}, deviceId: device.deviceId, database: store.name };
   const api = new ApiClient("", session);
   const [{ items }, { conversations }, { user }, saved] = await Promise.all([
     api.json("GET", "/v1/queue?limit=200", zQueue),
@@ -121,13 +132,14 @@ async function lookUp(): Promise<{ notices: WakeNotice[]; identities: Record<str
   return {
     ...wakeBatch({ me: device.userId, now: Date.now(), items, conversations: byId, nav, prefs: saved ?? defaultPrefs(), pausedUntil: user.notificationsPausedUntil ?? null }),
     deviceId: device.deviceId,
+    database: store.name,
   };
 }
 
 /** Before the page has copied its choices here: on, as permission was granted for this site. */
 const defaultPrefs = (): WakePrefs => ({ notifications: true, groupNotifications: true, notificationText: true });
 
-async function openApp(url: unknown): Promise<void> {
+async function openApp(url: unknown, database: unknown): Promise<void> {
   const target = new URL(typeof url === "string" ? url : "/", sw.location.origin);
   // Only this site, and only its own routes.
   const href = notificationPath(target, sw.location.origin);
@@ -135,8 +147,15 @@ async function openApp(url: unknown): Promise<void> {
   const page = pages.find((p) => p.visibilityState === "visible") ?? pages[0];
   if (page) {
     await page.focus().catch(() => undefined);
-    if (href) page.postMessage({ type: SW_OPEN, href });
+    if (href) page.postMessage({ type: SW_OPEN, href, database });
     return;
+  }
+  if (typeof database === "string") {
+    try {
+      await selectAccount(database);
+    } catch {
+      return;
+    }
   }
   await sw.clients.openWindow(`${sw.location.origin}${href ?? "/"}`);
 }

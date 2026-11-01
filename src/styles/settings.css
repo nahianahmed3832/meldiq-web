@@ -434,7 +434,7 @@
 .settings-back {
   display: none;
 }
-@media (max-width: 640px) {
+@media (max-width: 640px), (max-width: 960px) and (max-height: 500px) and (pointer: coarse) {
   .settings .settings-nav .not-phone {
     display: none;
   }

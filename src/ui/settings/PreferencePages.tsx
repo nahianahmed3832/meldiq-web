@@ -52,6 +52,15 @@ export function NotificationsPage() {
       <div className="card">
         <div className="setting">
           <div className="lines">
+            <strong>Support Meldiq reminders</strong>
+            <small>Occasional in-app reminders about optional Plus subscriptions that fund independent development. No sound or desktop notifications.</small>
+          </div>
+          <Toggle label="Support Meldiq reminders" checked={prefs.plusReminders} onChange={(plusReminders) => setPrefs({ plusReminders })} />
+        </div>
+      </div>
+      <div className="card">
+        <div className="setting">
+          <div className="lines">
             <strong>{t("nt_desktop")}</strong>
             <small>{permission === "unsupported" ? t("nt_desktop_unsupported") : permission === "denied" ? t("nt_desktop_blocked") : t("nt_desktop_sub")}</small>
           </div>

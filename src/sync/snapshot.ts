@@ -51,7 +51,7 @@ interface Sealed {
 
 /** The parts of the state a snapshot keeps, with the newest messages of the [recent] conversations. */
 export function snapshotOf(s: AppState, recent: readonly string[]): SnapshotData {
-  const kept = recent.filter((id) => s.messages[id]?.items.length).slice(0, SNAPSHOT_CONVERSATIONS);
+  const kept = recent.filter((id) => s.messages[id]?.items.length && !s.messages[id]?.detached).slice(0, SNAPSHOT_CONVERSATIONS);
   return {
     me: s.me,
     server: s.server,
@@ -70,7 +70,7 @@ export function snapshotOf(s: AppState, recent: readonly string[]): SnapshotData
 export function withSnapshot(s: AppState, d: SnapshotData): AppState {
   const byId = <T extends { id: string }>(list: T[]) => Object.fromEntries(list.map((x) => [x.id, x]));
   const messages = { ...s.messages };
-  for (const [id, items] of Object.entries(d.messages)) if (!messages[id] && items.length) messages[id] = { items, hasMore: true };
+  for (const [id, items] of Object.entries(d.messages)) if (!messages[id] && items.length) messages[id] = { items, hasMore: true, preview: true };
   return {
     ...s,
     me: s.me ?? d.me,
@@ -205,6 +205,7 @@ export class SnapshotKeeper {
   private stopped = true;
   private unsubscribe: (() => void) | null = null;
   private seen: AppState | null = null;
+  private saving: Promise<void> = Promise.resolve();
 
   constructor(
     private readonly vault: SnapshotVault,
@@ -249,10 +250,15 @@ export class SnapshotKeeper {
   async flush(): Promise<void> {
     if (this.timer) clearTimeout(this.timer);
     this.timer = null;
-    const s = this.state.get();
-    if (this.stopped || s.phase !== "ready" || !s.synced) return;
-    this.seen = s;
-    await this.vault.save(snapshotOf(s, this.recent)).catch(() => undefined);
+    const save = async () => {
+      // Draft, timer and page-hide saves can overlap. Read the latest state when this write starts, in order.
+      const s = this.state.get();
+      if (this.stopped || s.phase !== "ready" || !s.synced) return;
+      this.seen = s;
+      await this.vault.save(snapshotOf(s, this.recent)).catch(() => undefined);
+    };
+    this.saving = this.saving.then(save, save);
+    await this.saving;
   }
 
   private schedule(): void {
