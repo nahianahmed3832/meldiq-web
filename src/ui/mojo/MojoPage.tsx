@@ -96,7 +96,7 @@ export function MojoPage() {
       return { label: "Manage subscription", kind: "secondary", disabled: false, onClick: () => navigate({ section: "settings", settingsPage: "billing" }) };
     if (current && paid)
       return { label: busy === "portal" ? "Opening…" : "Manage subscription", kind: "secondary", disabled: busy !== null || offline, onClick: () => void open("portal", () => engine.mojo.portal()) };
-    if (current && billing?.provider === "paypal" && price.onSale) return { label: `Subscribe for ${price.label}/month after your free period`, kind: "mojo", disabled: offline || busy !== null, onClick: () => { selectCheckout(engine.device.userId, { product: "plus" }); navigate({ section: "settings", settingsPage: "checkout" }); } };
+    if (current && billing?.provider === "paypal" && price.onSale) return { label: `Subscribe for ${price.label}/month`, kind: "mojo", disabled: offline || busy !== null, onClick: () => { selectCheckout(engine.device.userId, { product: "plus" }); navigate({ section: "settings", settingsPage: "checkout" }); } };
     if (current) return { label: "Your plan (a free period)", kind: "secondary", disabled: true };
     return {
       label: busy === p.key ? "Opening…" : !price.onSale ? "Not on sale yet" : paid ? "Switch from the billing page" : `Get ${p.name} for ${price.label}/month`,
