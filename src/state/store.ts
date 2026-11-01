@@ -79,6 +79,12 @@ type AvatarMedia = NonNullable<z.infer<typeof zAvatarMedia>>;
 export interface ConversationMessages {
   items: StoredMessage[];
   hasMore: boolean;
+  /** The initial history request settled; snapshots and summary previews must not choose the opening anchor. */
+  historyReady?: boolean;
+  /** A search/history window is separate from the newest messages. */
+  detached?: boolean;
+  /** Read boundary captured before opening; retained while the person reads this visit. */
+  unreadAfter?: number | null;
 }
 
 export interface HistoryState {
@@ -214,14 +220,15 @@ export class Store {
 /** Returns [s] with one conversation's loaded messages replaced, kept in display order. */
 export function withMessages(s: AppState, conversationId: string, items: StoredMessage[], hasMore?: boolean): AppState {
   const prev = s.messages[conversationId];
-  const sorted = [...items].sort(byDisplayOrder);
-  return { ...s, messages: { ...s.messages, [conversationId]: { items: sorted, hasMore: hasMore ?? prev?.hasMore ?? false } } };
+  const sorted = [...new Map(items.map((m) => [m.id, m])).values()].sort(byDisplayOrder);
+  return { ...s, messages: { ...s.messages, [conversationId]: { ...prev, items: sorted, hasMore: hasMore ?? prev?.hasMore ?? false } } };
 }
 
 /** Inserts or replaces one message in a loaded conversation (no-op when that conversation isn't loaded). */
 export function upsertLoaded(s: AppState, m: StoredMessage): AppState {
   const prev = s.messages[m.conversationId];
   if (!prev) return s;
+  if (prev.detached && !prev.items.some((x) => x.id === m.id)) return s;
   const items = prev.items.some((x) => x.id === m.id) ? prev.items.map((x) => (x.id === m.id ? m : x)) : [...prev.items, m];
   return withMessages(s, m.conversationId, items);
 }

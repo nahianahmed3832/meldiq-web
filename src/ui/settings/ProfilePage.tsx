@@ -143,6 +143,9 @@ function ProfileEditor() {
                 {photo.error}
               </div>
             )}
+            <p className="hint" style={{ margin: 0 }}>
+              Profile details update your global profile when you choose Save changes. Photo changes save immediately.
+            </p>
             <form onSubmit={submit} className="ws-form" noValidate>
               <label className="field">
                 <span>Display name</span>
@@ -234,6 +237,19 @@ function ProfileEditor() {
               )}
               {profile.error && <div className="banner danger ws-wide">{profile.error}</div>}
               <div className="ws-form-actions">
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  disabled={!p || !shown.current || save.busy}
+                  onClick={() => {
+                    if (!shown.current || !p) return;
+                    setForm({ ...shown.current });
+                    setLinks(p.links);
+                    setSaved(false);
+                  }}
+                >
+                  Reset unsaved changes
+                </button>
                 <button className="btn btn-primary" disabled={!p || !!problem || save.busy}>
                   {saved ? "Saved" : save.busy ? "Saving…" : "Save changes"}
                 </button>

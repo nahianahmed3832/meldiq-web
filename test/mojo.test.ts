@@ -83,6 +83,7 @@ describe("Meldiq Mojo on the web", () => {
   it("shows sizes in the server's decimal units and prices from what's on sale", () => {
     expect(size(50_000_000)).toBe("50 MB");
     expect(size(2_000_000_000)).toBe("2 GB");
+    expect(size(1_024_000_000)).toBe("1,024 MB");
     expect(money(399, "USD")).toMatch(/3\.99/);
     expect(planPrice(catalog, "go")).toEqual({ label: expect.stringMatching(/0\.99/), onSale: true });
     // Plus isn't on sale on this server: its list price, marked so.

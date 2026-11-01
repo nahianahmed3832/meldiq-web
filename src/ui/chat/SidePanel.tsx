@@ -84,6 +84,7 @@ function ThreadPanel({ conversationId, root, onClose }: { conversationId: string
       {rootMsg ? (
         <>
           <MessageList
+            key={`${conversationId}:${root}`}
             conversationId={conversationId}
             items={items}
             hasMore={false}

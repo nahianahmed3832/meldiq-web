@@ -239,6 +239,12 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
           conversationId={id}
           items={loaded.items}
           hasMore={loaded.hasMore}
+          detached={loaded.detached}
+          historyReady={loaded.historyReady ?? false}
+          unreadAfter={loaded.unreadAfter}
+          onLoadLatest={() => engine.loadLatest(id)}
+          onRestoreAnchor={(messageId) => engine.restoreReadingAnchor(id, messageId)}
+          onReading={(latest) => engine.setReadingLatest(id, latest)}
           onLoadOlder={() => engine.loadOlder(id)}
           canPost={posting.post}
           canReact={posting.react}

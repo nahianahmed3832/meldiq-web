@@ -550,3 +550,82 @@
     white-space: nowrap;
   }
 }
+
+/* Search keeps feature/permission filtering and opens the canonical settings page. */
+.settings-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 4px 14px;
+  padding: 6px 9px;
+  border: 1px solid var(--hairline);
+  border-radius: 8px;
+  color: var(--text-3);
+  background: var(--surface);
+}
+.settings-search:focus-within {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.settings-search input {
+  min-width: 0;
+  width: 100%;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-size: 13px;
+}
+.settings-search-result {
+  display: grid;
+  gap: 3px;
+  text-align: left;
+}
+.settings-search-result small {
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--text-3);
+  white-space: normal;
+}
+.settings-search-empty {
+  padding: 8px 10px;
+  font-size: 13px;
+}
+.settings-scope {
+  margin: 0 0 16px;
+  font-size: 12px;
+  font-weight: 650;
+  color: var(--text-2);
+}
+.settings-scope span {
+  display: block;
+  margin-top: 3px;
+  font-weight: 400;
+  color: var(--text-3);
+}
+
+.xp-source {
+  display: flex;
+  align-items: end;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--hairline);
+}
+.xp-source label {
+  display: grid;
+  flex: 1;
+  min-width: 0;
+  gap: 4px;
+}
+.xp-source .input {
+  min-width: 0;
+  width: 100%;
+  font-size: 12px;
+}
+.xp-source > small {
+  width: 100%;
+  color: var(--text-3);
+  font-size: 11px;
+}

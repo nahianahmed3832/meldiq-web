@@ -531,28 +531,25 @@ export function Composer(props: ComposerProps) {
             emoji.close();
             insertAtCaret(em);
           }}
-          community={
-            communityEmoji
-              ? {
-                  list: communityEmoji,
-                  onEmoji: (e) => {
-                    emoji.close();
-                    picked.current.set(e.name, refOf(e));
-                    insertAtCaret(`:${e.name}: `);
-                  },
-                  onSticker: (e) => {
-                    emoji.close();
-                    void engine
-                      .sendText(c.id, `:${e.name}:`, { rich: { customSticker: refOf(e) }, replyTo: props.replyTo?.id, threadRoot: props.threadRoot })
-                      .then(() => {
-                        props.onCancelReply();
-                        if (slowed && !props.threadRoot) setLastSent(Date.now());
-                      })
-                      .catch((err: unknown) => engine.notice("error", err instanceof Error ? err.message : "Couldn't send the sticker."));
-                  },
-                }
-              : undefined
-          }
+          library={{ currentOrgId: c.type === "CHANNEL" ? c.orgId : null, externalAllowed: can.externalEmoji }}
+          community={{
+            list: communityEmoji ?? { expressions: [], limits: { emoji: 50, sticker: 20 } },
+            onEmoji: (e) => {
+              emoji.close();
+              picked.current.set(e.name, refOf(e));
+              insertAtCaret(`:${e.name}: `);
+            },
+            onSticker: (e) => {
+              emoji.close();
+              void engine
+                .sendText(c.id, `:${e.name}:`, { rich: { customSticker: refOf(e) }, replyTo: props.replyTo?.id, threadRoot: props.threadRoot })
+                .then(() => {
+                  props.onCancelReply();
+                  if (slowed && !props.threadRoot) setLastSent(Date.now());
+                })
+                .catch((err: unknown) => engine.notice("error", err instanceof Error ? err.message : "Couldn't send the sticker."));
+            },
+          }}
           onSticker={(pack, id) => {
             emoji.close();
             void sendRich({ sticker: { pack, id } });

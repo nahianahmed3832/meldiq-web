@@ -1,33 +1,14 @@
 import { Pencil, Trash2, Upload } from "lucide-react";
-import { useRef, useState } from "react";
+import { type ReactNode, useEffect, useRef, useState } from "react";
 import type { OrgAdminDetail } from "../../api/workspaceSchemas";
 import { useEngine } from "../../application/orbit";
-import { EXPRESSION_MAX_BYTES, EXPRESSION_NAME, type Expression, expressions, removeExpression, renameExpression, SHRINK_TO, suggestName, uploadExpression } from "../../sync/expressions";
+import { EXPRESSION_NAME, type Expression, expressions, removeExpression, renameExpression, suggestName, uploadExpression } from "../../sync/expressions";
+import { prepareExpression, type PreparedExpression } from "../../sync/prepareExpression";
 import { CustomEmojiImage } from "../community/CustomEmoji";
 import { Dialog } from "../components/Overlay";
-import { shortWhen } from "../format";
+import { bytes, shortWhen } from "../format";
 import { useAction, useLoad } from "./useLoad";
 import { Card, ErrorLine } from "./WorkspaceView";
-
-const KEPT = ["image/png", "image/gif", "image/webp"];
-
-/** PNG, GIF and WebP up to 256 KB are kept as they are; other pictures are shrunk to a PNG (android ExpressionsScreen). */
-async function prepare(file: File, kind: "emoji" | "sticker"): Promise<Uint8Array> {
-  if (KEPT.includes(file.type) && file.size <= EXPRESSION_MAX_BYTES) return new Uint8Array(await file.arrayBuffer());
-  const bitmap = await createImageBitmap(file).catch(() => {
-    throw new Error("That picture couldn't be read.");
-  });
-  const side = SHRINK_TO[kind];
-  const scale = Math.min(1, side / Math.max(bitmap.width, bitmap.height));
-  const canvas = document.createElement("canvas");
-  canvas.width = Math.max(1, Math.round(bitmap.width * scale));
-  canvas.height = Math.max(1, Math.round(bitmap.height * scale));
-  canvas.getContext("2d")?.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
-  const blob = await new Promise<Blob | null>((r) => canvas.toBlob(r, "image/png"));
-  if (!blob) throw new Error("This browser can't resize pictures.");
-  if (blob.size > EXPRESSION_MAX_BYTES) throw new Error("That picture is too large even after shrinking it.");
-  return new Uint8Array(await blob.arrayBuffer());
-}
 
 /**
  * Emoji & stickers (batch B9, android ExpressionsScreen): Emoji · n/50 and Stickers · n/20, each with Upload (a picture
@@ -117,12 +98,14 @@ export function ExpressionsPage({ detail }: { detail: OrgAdminDetail }) {
       {group("emoji")}
       {group("sticker")}
       {uploading && (
-        <NameDialog
+        <UploadDialog
+          file={uploading.file}
+          kind={uploading.kind}
           title={`Upload ${uploading.kind === "emoji" ? "an emoji" : "a sticker"}`}
           initial={suggestName(uploading.file.name)}
           onClose={() => setUploading(null)}
-          onSave={async (name) => {
-            await uploadExpression(engine, orgId, uploading.kind, name, await prepare(uploading.file, uploading.kind));
+          onSave={async (name, prepared) => {
+            await uploadExpression(engine, orgId, uploading.kind, name, prepared);
             setRev((r) => r + 1);
           }}
         />
@@ -142,7 +125,21 @@ export function ExpressionsPage({ detail }: { detail: OrgAdminDetail }) {
   );
 }
 
-function NameDialog({ title, initial, onSave, onClose }: { title: string; initial: string; onSave: (name: string) => Promise<void>; onClose: () => void }) {
+function NameDialog({
+  title,
+  initial,
+  onSave,
+  onClose,
+  preview,
+  ready = true,
+}: {
+  title: string;
+  initial: string;
+  onSave: (name: string) => Promise<void>;
+  onClose: () => void;
+  preview?: ReactNode;
+  ready?: boolean;
+}) {
   const [name, setName] = useState(initial);
   const act = useAction();
   const clean = name.trim().toLowerCase().replace(/^:|:$/g, "");
@@ -152,12 +149,14 @@ function NameDialog({ title, initial, onSave, onClose }: { title: string; initia
         className="dialog-body"
         onSubmit={(e) => {
           e.preventDefault();
+          if (!ready || act.busy || !EXPRESSION_NAME.test(clean)) return;
           void act.act(async () => {
             await onSave(clean);
             onClose();
           });
         }}
       >
+        {preview}
         <div className="field">
           <label htmlFor="ex-name">Name</label>
           <input id="ex-name" className="input mono" data-autofocus value={name} maxLength={34} onChange={(e) => setName(e.target.value)} placeholder="party_parrot" />
@@ -168,11 +167,63 @@ function NameDialog({ title, initial, onSave, onClose }: { title: string; initia
           <button type="button" className="btn btn-secondary" onClick={onClose}>
             Cancel
           </button>
-          <button className="btn btn-primary" disabled={act.busy || !EXPRESSION_NAME.test(clean)}>
+          <button className="btn btn-primary" disabled={!ready || act.busy || !EXPRESSION_NAME.test(clean)}>
             {act.busy ? "Saving…" : "Save"}
           </button>
         </div>
       </form>
     </Dialog>
+  );
+}
+
+/** Preview the exact bytes that will be uploaded, and surface local preparation failures before saving. */
+export function UploadDialog({
+  file,
+  kind,
+  ...props
+}: {
+  file: File;
+  kind: "emoji" | "sticker";
+  title: string;
+  initial: string;
+  onSave: (name: string, bytes: Uint8Array) => Promise<void>;
+  onClose: () => void;
+}) {
+  const [prepared, setPrepared] = useState<(PreparedExpression & { url: string }) | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  useEffect(() => {
+    let live = true;
+    let url: string | null = null;
+    void prepareExpression(file, kind)
+      .then((p) => {
+        if (!live) return;
+        url = URL.createObjectURL(new Blob([p.bytes], { type: p.mime }));
+        setPrepared({ ...p, url });
+      })
+      .catch((e: unknown) => {
+        if (live) setError(e instanceof Error ? e.message : "Couldn't prepare this picture.");
+      });
+    return () => {
+      live = false;
+      if (url) URL.revokeObjectURL(url);
+    };
+  }, [file, kind]);
+  return (
+    <NameDialog
+      {...props}
+      ready={!!prepared}
+      onSave={(name) => (prepared ? props.onSave(name, prepared.bytes) : Promise.resolve())}
+      preview={
+        <div className="expression-upload-preview">
+          {prepared && <img src={prepared.url} alt="Upload preview" style={{ width: kind === "emoji" ? 64 : 128, height: kind === "emoji" ? 64 : 128, objectFit: "contain" }} />}
+          <p className="hint">
+            {file.name} · {bytes(prepared?.bytes.length ?? file.size)} · 256 KB maximum
+          </p>
+          {prepared && <p className="hint">{prepared.converted ? "Resized and converted to PNG. The preview shows what members will see." : "Original image kept, including any animation."}</p>}
+          {!prepared && !error && <p role="status">Preparing preview…</p>}
+          <ErrorLine text={error} />
+        </div>
+      }
+    />
   );
 }

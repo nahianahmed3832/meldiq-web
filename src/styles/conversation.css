@@ -2650,3 +2650,8 @@ button.media-card {
     display: none;
   }
 }
+
+.unread-divider {
+  color: var(--accent);
+  font-weight: 700;
+}

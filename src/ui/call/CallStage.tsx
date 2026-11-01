@@ -29,7 +29,7 @@ import { ScreenView, ShareDialog, SharePill, StreamTray } from "./ShareViews";
 import type { CallParticipantView, CallUiState, DeviceKind, MediaDeviceChoice } from "../../call/types";
 import { Avatar } from "../components/Avatar";
 import { Menu, useMenu } from "../components/Overlay";
-import { canShareScreen, INVITE_EVENT } from "./callShared";
+import { screenShareSupport, INVITE_EVENT } from "./callShared";
 import { useNow } from "./useNow";
 import { callStatus, SECURITY_LABEL } from "./callText";
 import { HandButton, PeopleButton, RoomPeople, roomRows } from "./RoomControls";
@@ -272,18 +272,16 @@ function Controls({ call, people }: { call: CallUiState; people: { open: boolean
         >
           {call.cameraOn ? <Video size={22} /> : <VideoOff size={22} />}
         </button>
-        {canShareScreen() && (
-          <button
-            className={`call-btn${call.screenSharing ? " on" : ""}`}
-            onClick={() => (call.screenSharing ? void engine.calls.toggleScreenShare() : setSharing(true))}
-            aria-pressed={call.screenSharing}
-            aria-label={call.screenSharing ? "Stop sharing your screen" : "Share your screen"}
-            title={call.screenSharing ? "Stop sharing" : "Share your screen"}
-            disabled={!media}
-          >
-            {call.screenSharing ? <MonitorOff size={22} /> : <MonitorUp size={22} />}
-          </button>
-        )}
+        <button
+          className={`call-btn${call.screenSharing ? " on" : ""}`}
+          onClick={() => (call.screenSharing ? void engine.calls.toggleScreenShare() : setSharing(true))}
+          aria-pressed={call.screenSharing}
+          aria-label={call.screenSharing ? "Stop sharing your screen" : "Share your screen"}
+          title={call.screenSharing ? "Stop sharing" : screenShareSupport().ok ? "Share your screen" : "Screen sharing availability"}
+          disabled={!media}
+        >
+          {call.screenSharing ? <MonitorOff size={22} /> : <MonitorUp size={22} />}
+        </button>
         {call.voiceRoom && <HandButton call={call} />}
         {people && <PeopleButton open={people.open} onToggle={people.toggle} count={roomRows(call).length} />}
         <DeviceMenu disabled={!media} />

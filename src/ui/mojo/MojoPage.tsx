@@ -128,6 +128,11 @@ export function MojoPage() {
         </div>
       )}
 
+      {me.plan === "plus" && paid && (
+        <div className="banner info" role="note">
+          Your current Plus benefits continue until renewal. The new price and benefits apply at your next renewal. The 1,024 MB file limit applies now.
+        </div>
+      )}
       <section className="mojo-hero" aria-labelledby="mojo-hero-title">
         <div className="mojo-hero-text">
           <span className="mojo-eyebrow">
@@ -190,8 +195,8 @@ export function MojoPage() {
           <Gem size={20} aria-hidden="true" /> Meldiq Spark
         </h2>
         <p>
-          Boost the servers you love: every Spark helps a community unlock more emoji slots, bigger uploads, and better voice and screen sharing for everyone there. Mojo Go includes one Spark, Mojo
-          Plus two.
+          Boost the servers you love: every Spark helps a community unlock more emoji slots, bigger uploads, and better voice and screen sharing for everyone there. Mojo Plus includes two Sparks. You
+          can buy additional Sparks separately.
         </p>
         <div>
           <button className="btn btn-mojo" onClick={() => navigate({ section: "settings", settingsPage: "spark" })}>
@@ -237,8 +242,7 @@ export function MojoPage() {
       )}
       {gifting && <GiftDialog catalog={catalog} onClose={() => setGifting(false)} onPay={(input) => open("gift", () => engine.mojo.gift(input))} busy={busy === "gift"} />}
       <p className="muted mojo-footnote">
-        Mojo prices: Go {money(catalog.plans.find((p) => p.key === "go")?.listPriceMinor ?? 0, "USD")}, Plus {money(plus?.listPriceMinor ?? 0, "USD")}, each Spark{" "}
-        {money(catalog.spark.listPriceMinor, "USD")}, monthly.
+        Mojo prices: Plus {money(plus?.listPriceMinor ?? 0, "USD")}, each Spark {money(catalog.spark.listPriceMinor, "USD")}, monthly.
       </p>
     </div>
   );

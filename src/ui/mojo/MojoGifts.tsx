@@ -70,7 +70,7 @@ export function GiftDialog({
         <div className="field">
           <span>Plan</span>
           <div className="segmented" role="radiogroup" aria-label="Plan">
-            {(["go", "plus"] as const).map((k) => (
+            {(["plus"] as const).map((k) => (
               <button key={k} type="button" role="radio" aria-checked={planKey === k} onClick={() => setPlanKey(k)}>
                 {PLAN_NAME[k]}
               </button>
@@ -90,7 +90,7 @@ export function GiftDialog({
         <label className="field">
           <span>A note (optional)</span>
           <textarea className="textarea" rows={2} maxLength={catalog.gifts.noteMax} value={note} onChange={(e) => setNote(e.target.value)} placeholder="Happy birthday!" />
-          <small className="muted">The note is sent with the gift. It isn't end-to-end encrypted like your messages.</small>
+          <small className="muted">The note is stored with the gift and is visible to its recipient.</small>
         </label>
         <p className="muted" style={{ margin: 0, fontSize: 13 }}>
           One payment, nothing renews. Your friend starts it when they like. If they already have free Mojo time, the gift follows on after it.

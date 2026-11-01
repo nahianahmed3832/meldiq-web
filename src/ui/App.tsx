@@ -1,6 +1,7 @@
 import { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { createEngine, holdDeviceLock, missingCapabilities, startNotifications } from "../application/boot";
 import { hideSplash, rememberReturning } from "../application/splash";
+import { forgetReadingPositions } from "../application/readingPosition";
 import { forgetPlace, placeToRestore } from "../application/lastPlace";
 import { go } from "../application/router";
 import { EngineProvider } from "../application/orbit";
@@ -115,6 +116,7 @@ export function App() {
       if (st.phase === "revoked") {
         engine.stop();
         forgetPlace();
+        forgetReadingPositions();
         rememberReturning(false);
         void LocalStore.erase(engine.store).finally(() => setBoot({ s: "revoked", reason: st.phaseReason }));
         return;
@@ -140,6 +142,7 @@ export function App() {
   const signedOut = useCallback(async () => {
     voicePlayback.reset();
     forgetPlace();
+    forgetReadingPositions();
     rememberReturning(false);
     resetPrefs();
     forgetRecentSearches();

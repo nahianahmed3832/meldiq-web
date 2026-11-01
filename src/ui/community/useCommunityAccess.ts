@@ -9,9 +9,14 @@ import { workspaceDetail } from "../../sync/workspaces";
  * This person's effective permissions and roles in a community (GET /v1/orgs/:id), shared by every composer and message
  * list of it and loaded again whenever the community changes (the org list refreshes on org.updated).
  */
-const cache = new Map<string, { org: Org; access: Promise<CommunityAccess | null> }>();
+const caches = new WeakMap<Engine, Map<string, { org: Org; access: Promise<CommunityAccess | null> }>>();
 
 function load(engine: Engine, org: Org): Promise<CommunityAccess | null> {
+  let cache = caches.get(engine);
+  if (!cache) {
+    cache = new Map();
+    caches.set(engine, cache);
+  }
   const hit = cache.get(org.id);
   if (hit && hit.org === org) return hit.access;
   const access = workspaceDetail(engine, org.id)
@@ -24,16 +29,16 @@ function load(engine: Engine, org: Org): Promise<CommunityAccess | null> {
 export function useCommunityAccess(orgId: string | null): CommunityAccess | null {
   const engine = useEngine();
   const org = useOrbit((s) => (orgId ? (s.orgs.find((o) => o.id === orgId) ?? null) : null));
-  const [access, setAccess] = useState<CommunityAccess | null>(null);
+  const [result, setResult] = useState<{ org: Org; access: CommunityAccess | null } | null>(null);
   useEffect(() => {
-    if (!org) return setAccess(null);
+    if (!org) return setResult(null);
     let alive = true;
-    void load(engine, org).then((a) => alive && setAccess(a));
+    void load(engine, org).then((a) => alive && setResult({ org, access: a }));
     return () => {
       alive = false;
     };
   }, [engine, org]);
-  return access;
+  return result?.org === org ? (result?.access ?? null) : null;
 }
 
 /** Whether the server announces [feature]. */

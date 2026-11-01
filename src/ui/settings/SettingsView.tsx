@@ -16,12 +16,16 @@ import {
   Laptop,
   Palette,
   Shield,
+  Search,
+  X,
   SlidersHorizontal,
   Smartphone,
   Gem,
   Sparkles,
   UserRound,
 } from "lucide-react";
+import { useState } from "react";
+import { matchesSetting, SETTINGS_INFO } from "./settingsSearch";
 import { ShortcutsPage } from "./ShortcutsPage";
 import { AdvancedPage } from "./AdvancedPage";
 import { CallsPage } from "./CallsPage";
@@ -78,6 +82,7 @@ const APP_PAGES: PageEntry[] = [
 
 export function SettingsView({ page, onSignedOut }: { page: SettingsPage; onSignedOut: () => void }) {
   const engine = useEngine();
+  const [query, setQuery] = useState("");
   // Service health and workspace usage are for platform administrators only (android round 7 C1, C7); the server checks again.
   const admin = useLoad(() => isPlatformAdmin(engine).catch(() => false), [engine]).data === true;
   const t = useT();
@@ -98,6 +103,8 @@ export function SettingsView({ page, onSignedOut }: { page: SettingsPage; onSign
         ]
       : []),
   ];
+  const filtered = groups.map((g) => ({ ...g, pages: g.pages.filter((p) => matchesSetting(p.key, p.label, query)) })).filter((g) => g.pages.length);
+  const scope = SETTINGS_INFO[page === "you" ? "profile" : page];
   return (
     <section className="main main-split" aria-label="Settings" style={{ display: "flex", flexDirection: "column" }}>
       <div className={`settings${page === "you" ? " at-you" : ""}`}>
@@ -115,13 +122,39 @@ export function SettingsView({ page, onSignedOut }: { page: SettingsPage; onSign
             <span className="grow">{t("top_saved")}</span>
             <ChevronRight size={16} className="faint you-only" aria-hidden="true" />
           </button>
-          {groups.map((g) => (
+          <div className="settings-search">
+            <Search size={16} aria-hidden="true" />
+            <input
+              type="search"
+              aria-label="Search settings"
+              placeholder="Search settings"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Escape") setQuery("");
+              }}
+            />
+            {query && (
+              <button className="icon-btn" aria-label="Clear settings search" onClick={() => setQuery("")}>
+                <X size={14} />
+              </button>
+            )}
+          </div>
+          {query && !filtered.length && (
+            <p className="faint settings-search-empty" role="status">
+              No settings found for “{query}”. Try a different word.
+            </p>
+          )}
+          {filtered.map((g) => (
             <div key={g.title} role="group" aria-label={g.title} className="settings-nav-group">
               <div className="settings-nav-title">{g.title}</div>
               {g.pages.map((p) => (
                 <button key={p.key} className="side-item" aria-current={page === p.key ? "page" : undefined} onClick={() => navigate({ section: "settings", settingsPage: p.key })}>
                   <span className="glyph">{p.icon}</span>
-                  <span className="grow">{p.label}</span>
+                  <span className="grow settings-search-result">
+                    <span>{p.label}</span>
+                    {query && <small>{SETTINGS_INFO[p.key]?.description}</small>}
+                  </span>
                   <ChevronRight size={16} className="faint you-only" aria-hidden="true" />
                 </button>
               ))}
@@ -136,9 +169,15 @@ export function SettingsView({ page, onSignedOut }: { page: SettingsPage; onSign
         </nav>
         <div className="settings-page scroll">
           <div className={`inner${page === "mojo" || page === "spark" || page === "profile" ? " wide" : ""}`}>
-            <button className="settings-back" onClick={() => navigate({ section: "settings", settingsPage: "you" })}>
+            <button className="settings-back" aria-label="Back to settings" onClick={() => navigate({ section: "settings", settingsPage: "you" })}>
               <ChevronLeft size={18} aria-hidden="true" /> {t("nav_you")}
             </button>
+            {scope && (
+              <p className="settings-scope">
+                {scope.scope}
+                <span>{scope.description}</span>
+              </p>
+            )}
             {(page === "profile" || page === "you") && <ProfilePage />}
             {page === "account" && <AccountSettingsPage onSignedOut={onSignedOut} />}
             {page === "devices" && <DevicesPage />}

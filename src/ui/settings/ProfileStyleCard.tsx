@@ -107,7 +107,8 @@ export function ProfileStyleCard({ nameStyles }: { nameStyles: boolean }) {
       <div>
         <h2 style={{ margin: 0, fontSize: 17 }}>Look</h2>
         <p className="muted" style={{ margin: "4px 0 0" }}>
-          How you show up in messages, member lists and your profile card. The avatar and banner are shown to whoever may see your photo (Privacy).
+          How you show up in messages, member lists and your profile card. The avatar and banner are shown to whoever may see your photo (Privacy). Changes here save automatically; decoration and
+          name-style previews save when you choose Apply.
         </p>
       </div>
 

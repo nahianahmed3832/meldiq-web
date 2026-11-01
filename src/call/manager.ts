@@ -1,3 +1,4 @@
+import { ScreenShareUnavailable } from "./screenShareSupport";
 import { type ApiClient, ApiError } from "../api/client";
 import { type Call, zCallGrant, zCallList, zCallRes } from "../api/schemas";
 import type { Payload } from "../protocol/payload";
@@ -597,7 +598,8 @@ export class CallManager {
       this.patch({ error: null, shareQuality: on ? share.quality : null, shareAudio: on && share.audio, ...(on ? {} : { shareStats: null }) });
     } catch (e) {
       // Closing the browser's screen picker isn't a failure to show.
-      if (!(e instanceof DeviceError && e.issue === "denied")) this.patch({ error: "Your screen couldn't be shared." });
+      if (e instanceof ScreenShareUnavailable) this.patch({ error: e.message });
+      else if (!(e instanceof DeviceError && e.issue === "denied")) this.patch({ error: "Your screen couldn't be shared." });
     }
     if (this.session === session) this.refresh();
   }

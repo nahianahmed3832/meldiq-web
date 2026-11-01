@@ -1,5 +1,5 @@
 import { ArrowDown, Hash, Lock, Megaphone, Pencil, UserPlus } from "lucide-react";
-import { Fragment, type ReactNode, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { Fragment, type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useOrbit } from "../../application/orbit";
 import type { StoredMessage } from "../../model/types";
 import { Avatar } from "../components/Avatar";
@@ -10,15 +10,22 @@ import { JUMP_EVENT } from "./jump";
 import { useT } from "../../i18n";
 import { shownName } from "../../sync/communityParity";
 import { useCommunityMembers } from "../community/useCommunityMembers";
+import { readingScope } from "../../application/readingPosition";
+import { useReadingPosition } from "./useReadingPosition";
 
 const GROUP_MS = 5 * 60_000;
-const NEAR_BOTTOM = 120;
 
 interface MessageListProps {
   conversationId: string;
   items: StoredMessage[];
   hasMore: boolean;
   onLoadOlder: () => Promise<void> | void;
+  detached?: boolean;
+  historyReady?: boolean;
+  unreadAfter?: number | null;
+  onLoadLatest?: () => Promise<void>;
+  onRestoreAnchor?: (id: string) => Promise<void>;
+  onReading?: (atLatest: boolean) => void;
   /** Thread view: shows replies; the main view hides them under their root. */
   threadRoot?: string;
   canPost: boolean;
@@ -49,7 +56,7 @@ export interface TimelineExtra {
 type Entry = { kind: "msg"; id: string; at: number; m: StoredMessage } | { kind: "extra"; id: string; at: number; e: TimelineExtra };
 
 export function MessageList(props: MessageListProps) {
-  const { items, threadRoot } = props;
+  const { items, threadRoot, hasMore, onLoadOlder } = props;
   const me = useOrbit((s) => s.me);
   const users = useOrbit((s) => s.users);
   const typing = useOrbit((s) => s.typing[props.conversationId]);
@@ -59,11 +66,11 @@ export function MessageList(props: MessageListProps) {
     return c?.type === "CHANNEL" ? c.orgId : null;
   });
   const { nicknames } = useCommunityMembers(communityId);
-  const scroller = useRef<HTMLDivElement>(null);
-  const prev = useRef<{ first: string | null; last: string | null; height: number; atBottom: boolean }>({ first: null, last: null, height: 0, atBottom: true });
-  const [unseen, setUnseen] = useState(0);
   const [highlight, setHighlight] = useState<string | null>(null);
   const loading = useRef(false);
+  const [loadingOlder, setLoadingOlder] = useState(false);
+  const [loadingLatest, setLoadingLatest] = useState(false);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [, tick] = useState(0);
 
   const visible = useMemo(() => (threadRoot ? items.filter((m) => m.id === threadRoot || m.threadRootId === threadRoot) : items.filter((m) => !m.threadRootId)), [items, threadRoot]);
@@ -82,52 +89,46 @@ export function MessageList(props: MessageListProps) {
     return out.sort((a, b) => a.at - b.at);
   }, [visible, extras, threadRoot]);
 
-  const isNearBottom = () => {
-    const el = scroller.current;
-    return !el || el.scrollHeight - el.scrollTop - el.clientHeight < NEAR_BOTTOM;
+  const unreadId = props.unreadAfter != null ? visible.find((m) => !m.outgoing && (m.serverTs ?? m.sortTs) > props.unreadAfter!)?.id : undefined;
+  const positionEntries = useMemo(() => timeline.map((entry) => ({ id: entry.id, mine: entry.kind === "msg" ? entry.m.outgoing : entry.e.mine })), [timeline]);
+  const position = useReadingPosition({
+    scope: readingScope(me?.userId ?? "", props.conversationId, threadRoot),
+    entries: positionEntries,
+    ready: props.historyReady ?? true,
+    detached: props.detached,
+    unreadId,
+    onRestore: props.onRestoreAnchor,
+    onReading: props.onReading,
+  });
+  const { scroller } = position;
+  const loadOlder = useCallback(async () => {
+    if (loading.current || !hasMore) return;
+    loading.current = true;
+    setLoadingOlder(true);
+    try {
+      await onLoadOlder();
+    } finally {
+      loading.current = false;
+      setLoadingOlder(false);
+    }
+  }, [hasMore, onLoadOlder]);
+  const onScroll = () => {
+    position.onScroll();
+    if (scroller.current && scroller.current.scrollTop < 200) void loadOlder();
   };
-
-  // Keep the reader's place: pinned to the newest message when they were there, unchanged when older pages load.
-  useLayoutEffect(() => {
-    const el = scroller.current;
-    if (!el) return;
-    const first = timeline[0]?.id ?? null;
-    const last = timeline[timeline.length - 1]?.id ?? null;
-    const p = prev.current;
-    if (p.first === null && p.last === null) el.scrollTop = el.scrollHeight;
-    else if (first !== p.first && last === p.last) el.scrollTop += el.scrollHeight - p.height;
-    else if (last !== p.last) {
-      const lastEntry = timeline[timeline.length - 1];
-      const mine = lastEntry?.kind === "msg" ? lastEntry.m.outgoing : lastEntry?.e.mine;
-      if (p.atBottom || mine) {
-        el.scrollTop = el.scrollHeight;
-        setUnseen(0);
-      } else setUnseen((n) => n + 1);
+  const toLatest = async () => {
+    if (loadingLatest) return;
+    setLoadError(null);
+    setLoadingLatest(true);
+    try {
+      if (props.detached) await props.onLoadLatest?.();
+      position.latest();
+    } catch {
+      setLoadError("Couldn't load the latest messages. Try again.");
+    } finally {
+      setLoadingLatest(false);
     }
-    prev.current = { first, last, height: el.scrollHeight, atBottom: isNearBottom() };
-  }, [timeline]);
-
-  const onScroll = useCallback(() => {
-    const el = scroller.current;
-    if (!el) return;
-    prev.current = { ...prev.current, height: el.scrollHeight, atBottom: isNearBottom() };
-    if (prev.current.atBottom) setUnseen(0);
-    if (el.scrollTop < 200 && props.hasMore && !loading.current) {
-      loading.current = true;
-      void Promise.resolve(props.onLoadOlder()).finally(() => (loading.current = false));
-    }
-  }, [props]);
-
-  // Images load after layout: stay at the bottom if that's where the reader is.
-  useEffect(() => {
-    const el = scroller.current;
-    if (!el || typeof ResizeObserver === "undefined") return;
-    const ro = new ResizeObserver(() => {
-      if (prev.current.atBottom) el.scrollTop = el.scrollHeight;
-    });
-    for (const child of Array.from(el.children)) ro.observe(child);
-    return () => ro.disconnect();
-  }, [timeline.length]);
+  };
 
   // Typing indicators expire on their own.
   useEffect(() => {
@@ -136,14 +137,17 @@ export function MessageList(props: MessageListProps) {
     return () => clearInterval(t);
   }, [typing]);
 
-  const jump = useCallback((id: string) => {
-    const el = document.getElementById(`msg-${id}`);
-    if (!el) return;
-    el.scrollIntoView({ block: "center", behavior: "smooth" });
-    el.focus({ preventScroll: true });
-    setHighlight(id);
-    setTimeout(() => setHighlight(null), 1700);
-  }, []);
+  const jump = useCallback(
+    (id: string) => {
+      const el = Array.from(scroller.current?.querySelectorAll<HTMLElement>("[id^='msg-']") ?? []).find((node) => node.id === `msg-${id}`);
+      if (!el) return;
+      el.scrollIntoView({ block: "center", behavior: "smooth" });
+      el.focus({ preventScroll: true });
+      setHighlight(id);
+      setTimeout(() => setHighlight(null), 1700);
+    },
+    [scroller],
+  );
   // A search result chosen in the side panel (after it loaded the message): shown once the list has rendered it.
   useEffect(() => {
     const onJump = (e: Event) => requestAnimationFrame(() => jump((e as CustomEvent<string>).detail));
@@ -159,11 +163,11 @@ export function MessageList(props: MessageListProps) {
 
   return (
     <div style={{ position: "relative", flex: 1, minHeight: 0, display: "flex", flexDirection: "column" }}>
-      <div ref={scroller} className="messages scroll" onScroll={onScroll} role="log" aria-live="polite" aria-relevant="additions" aria-label="Messages">
+      <div ref={scroller} className="messages scroll" onScroll={onScroll} role="log" aria-busy={props.historyReady === false} aria-live="polite" aria-relevant="additions" aria-label="Messages">
         {props.hasMore ? (
           <div className="load-older">
-            <button className="btn btn-ghost btn-sm" onClick={() => void props.onLoadOlder()}>
-              Load earlier messages
+            <button className="btn btn-ghost btn-sm" disabled={loadingOlder} onClick={() => void loadOlder()}>
+              {loadingOlder ? "Loading earlier messages…" : "Load earlier messages"}
             </button>
           </div>
         ) : (
@@ -211,6 +215,11 @@ export function MessageList(props: MessageListProps) {
                   <span>{dayLabel(m.sortTs)}</span>
                 </div>
               )}
+              {m.id === unreadId && (
+                <div className="day unread-divider" role="separator" aria-label="New messages">
+                  <span>New messages</span>
+                </div>
+              )}
               <MessageItem
                 m={m}
                 first={first}
@@ -237,16 +246,14 @@ export function MessageList(props: MessageListProps) {
         })}
       </div>
       <TypingIndicator names={typers} />
-      {unseen > 0 && (
-        <button
-          className="btn btn-primary btn-sm jump-latest"
-          onClick={() => {
-            const el = scroller.current;
-            if (el) el.scrollTop = el.scrollHeight;
-            setUnseen(0);
-          }}
-        >
-          <ArrowDown size={14} /> {unseen} new {unseen === 1 ? "message" : "messages"}
+      {loadError && (
+        <div className="banner danger" role="alert">
+          {loadError}
+        </div>
+      )}
+      {(position.away || position.unseen > 0 || props.detached) && (
+        <button className="btn btn-primary btn-sm jump-latest" disabled={loadingLatest} onClick={() => void toLatest()}>
+          <ArrowDown size={14} /> {loadingLatest ? "Loading latest…" : position.unseen > 0 ? `${position.unseen} new ${position.unseen === 1 ? "message" : "messages"}` : "Jump to latest"}
         </button>
       )}
     </div>

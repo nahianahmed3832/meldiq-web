@@ -5,23 +5,23 @@ import { type Expression, expressionImage, type ExpressionList, expressions } fr
 
 /** A community's emoji and stickers for its members, loaded again when the community changes (`org.updated`). */
 /** [forNew]: only what may go in a new message (locked ones, Meldiq Mojo, still show in sent messages and reactions). */
-export function useExpressions(orgId: string | null, forNew = false): ExpressionList | null {
+export function useExpressions(orgId: string | null, forNew = false, revision = 0): ExpressionList | null {
   const engine = useEngine();
   const org = useOrbit((s) => (orgId ? (s.orgs.find((o) => o.id === orgId) ?? null) : null));
   const offered = useOrbit((s) => s.server?.features.includes("community-expressions") ?? false);
-  const [list, setList] = useState<ExpressionList | null>(null);
+  const [result, setResult] = useState<{ orgId: string; list: ExpressionList } | null>(null);
   useEffect(() => {
-    if (!orgId || !org || !offered) return setList(null);
+    if (!orgId || !org || !offered) return setResult(null);
     let alive = true;
     expressions(engine, orgId, true)
       // Locked ones (over a Spark level or a plan, Meldiq Mojo) aren't offered for new messages.
-      .then((l) => alive && setList(forNew ? { ...l, expressions: l.expressions.filter((e) => !e.locked) } : l))
-      .catch(() => alive && setList(null));
+      .then((l) => alive && setResult({ orgId, list: forNew ? { ...l, expressions: l.expressions.filter((e) => !e.locked) } : l }))
+      .catch(() => alive && setResult(null));
     return () => {
       alive = false;
     };
-  }, [engine, orgId, org, offered, forNew]);
-  return list;
+  }, [engine, orgId, org, offered, forNew, revision]);
+  return org && offered && result?.orgId === orgId ? result.list : null;
 }
 
 /**
@@ -31,14 +31,16 @@ export function useExpressions(orgId: string | null, forNew = false): Expression
  */
 export function CustomEmojiImage({ id, name, sha256, size = 22, sticker }: { id: string; name: string; sha256: string | null; size?: number; sticker?: boolean }) {
   const engine = useEngine();
-  const [url, setUrl] = useState<string | null>(null);
+  const memberships = useOrbit((s) => s.orgs);
+  const [image, setImage] = useState<{ id: string; sha256: string | null; url: string | null } | null>(null);
   useEffect(() => {
     let alive = true;
-    void expressionImage(engine, id, sha256).then((u) => alive && setUrl(u));
+    void expressionImage(engine, id, sha256).then((url) => alive && setImage({ id, sha256, url }));
     return () => {
       alive = false;
     };
-  }, [engine, id, sha256]);
+  }, [engine, id, sha256, memberships]);
+  const url = image?.id === id && image.sha256 === sha256 ? image.url : null;
   if (!url) return <span className="custom-emoji-text">:{name}:</span>;
   return <img src={url} alt={`:${name}:`} title={`:${name}:`} className={sticker ? "custom-sticker" : "custom-emoji"} style={sticker ? undefined : { width: size, height: size }} draggable={false} />;
 }

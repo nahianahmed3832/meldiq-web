@@ -63,8 +63,8 @@ const ON_DISK = new Set(["device", "accountTokenKey", "accountTokens", "legacy.i
 /** The repository the sync engine reads and writes. */
 export type MessageWriteListener = (ids: string[]) => void;
 
-const newestFirst = (a: StoredMessage, b: StoredMessage) => b.sortTs - a.sortTs;
-const oldestFirst = (a: StoredMessage, b: StoredMessage) => a.sortTs - b.sortTs;
+const oldestFirst = (a: StoredMessage, b: StoredMessage) => a.sortTs - b.sortTs || (a.id < b.id ? -1 : a.id > b.id ? 1 : 0);
+const newestFirst = (a: StoredMessage, b: StoredMessage) => oldestFirst(b, a);
 
 export class LocalStore {
   private readonly writeListeners = new Set<MessageWriteListener>();
@@ -208,9 +208,9 @@ export class LocalStore {
   }
 
   /** The newest [limit] messages of a conversation before [beforeSortTs], oldest first. */
-  async latestMessages(conversationId: string, limit: number, beforeSortTs = Number.MAX_SAFE_INTEGER): Promise<StoredMessage[]> {
+  async latestMessages(conversationId: string, limit: number, beforeSortTs: number | StoredMessage = Number.MAX_SAFE_INTEGER): Promise<StoredMessage[]> {
     return this.inConversation(conversationId)
-      .filter((m) => m.sortTs < beforeSortTs)
+      .filter((m) => (typeof beforeSortTs === "number" ? m.sortTs < beforeSortTs : oldestFirst(m, beforeSortTs) < 0))
       .sort(newestFirst)
       .slice(0, limit)
       .reverse();

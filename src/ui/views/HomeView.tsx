@@ -168,7 +168,7 @@ export function HomeView({ orgId, section, onDialog }: { orgId: string | null; s
           </div>
 
           <p className="faint row" style={{ fontSize: 12.5, margin: 0, gap: 6 }}>
-            <ShieldCheck size={14} /> Messages are end-to-end encrypted. This browser is one of your account's devices; your phone sees everything you send here.
+            <ShieldCheck size={14} /> Messages sync through Meldiq’s servers over encrypted connections. Voice and video calls are end-to-end encrypted.
           </p>
         </div>
       </div>

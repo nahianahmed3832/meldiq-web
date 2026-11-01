@@ -480,7 +480,12 @@ export const zStoredEvent = z.object({
 });
 export type StoredEvent = z.infer<typeof zStoredEvent>;
 
-export const zServerHistoryPage = z.object({ messages: z.array(zStoredEvent), changes: z.array(zStoredEvent), more: z.boolean() });
+export const zServerHistoryPage = z.object({
+  messages: z.array(zStoredEvent),
+  changes: z.array(zStoredEvent),
+  more: z.boolean(),
+  nextCursor: z.object({ serverTs: z.number().int().positive(), id: z.string() }).nullable().optional(),
+});
 export type ServerHistoryPage = z.infer<typeof zServerHistoryPage>;
 
 /** One delivery-queue item (server hub.ts queueItemToWire). */

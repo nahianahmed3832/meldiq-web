@@ -2,7 +2,7 @@ import { Maximize2, MonitorOff, MonitorUp, PhoneOff, Signal, UserPlus, Video, Vi
 import { useState } from "react";
 import { useEngine, useOrbit } from "../../application/orbit";
 import { ShareDialog } from "./ShareViews";
-import { canShareScreen, INVITE_EVENT } from "./callShared";
+import { screenShareSupport, INVITE_EVENT } from "./callShared";
 import { useNow } from "./useNow";
 
 /**
@@ -60,18 +60,16 @@ export function ConnectedCallPanel() {
           {call.cameraOn ? <Video size={18} /> : <VideoOff size={18} />}
           <span className="sr-only">{call.cameraOn ? "Turn camera off" : "Turn camera on"}</span>
         </button>
-        {canShareScreen() && (
-          <button
-            className={`call-panel-btn${call.screenSharing ? " on" : ""}`}
-            onClick={() => (call.screenSharing ? void engine.calls.toggleScreenShare() : setSharing(true))}
-            aria-pressed={call.screenSharing}
-            disabled={!media}
-            title={call.screenSharing ? "Stop sharing" : "Share your screen"}
-          >
-            {call.screenSharing ? <MonitorOff size={18} /> : <MonitorUp size={18} />}
-            <span className="sr-only">{call.screenSharing ? "Stop sharing" : "Share your screen"}</span>
-          </button>
-        )}
+        <button
+          className={`call-panel-btn${call.screenSharing ? " on" : ""}`}
+          onClick={() => (call.screenSharing ? void engine.calls.toggleScreenShare() : setSharing(true))}
+          aria-pressed={call.screenSharing}
+          disabled={!media}
+          title={call.screenSharing ? "Stop sharing" : screenShareSupport().ok ? "Share your screen" : "Screen sharing availability"}
+        >
+          {call.screenSharing ? <MonitorOff size={18} /> : <MonitorUp size={18} />}
+          <span className="sr-only">{call.screenSharing ? "Stop sharing" : "Share your screen"}</span>
+        </button>
         {place.orgId && (
           <button className="call-panel-btn" onClick={() => window.dispatchEvent(new CustomEvent(INVITE_EVENT, { detail: place.orgId }))} title="Invite people">
             <UserPlus size={18} />

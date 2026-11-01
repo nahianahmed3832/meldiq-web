@@ -29,6 +29,8 @@ export interface ChannelAbilities {
   moderate: boolean;
   /** Mentioning any role, mentionable or not. */
   mentionAnyRole: boolean;
+  /** Source communities remain membership-checked by the server. */
+  externalEmoji: boolean;
   /** A read-only channel this person may not post in. */
   readOnlyHere: boolean;
 }
@@ -46,6 +48,7 @@ const OPEN: ChannelAbilities = {
   threads: true,
   moderate: false,
   mentionAnyRole: false,
+  externalEmoji: true,
   readOnlyHere: false,
 };
 
@@ -75,6 +78,7 @@ export function channelAbilities(c: ChannelLike, access: CommunityAccess | null,
     threads: holds("threads.create"),
     moderate: permissionsOn ? moderator : c.canPost,
     mentionAnyRole: known("messages.mention_all"),
+    externalEmoji: !permissionsOn || known("messages.external_emoji"),
     readOnlyHere: !poster,
   };
 }

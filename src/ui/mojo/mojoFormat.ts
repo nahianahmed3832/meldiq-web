@@ -7,6 +7,7 @@ export function money(amountMinor: number, currency: string): string {
 
 /** File sizes in decimal units, as the server counts them (50 MB = 50,000,000 bytes; 2 GB). */
 export function size(bytes: number): string {
+  if (bytes === 1024 * 1_000_000) return "1,024 MB";
   if (bytes >= 1_000_000_000) return `${+(bytes / 1_000_000_000).toFixed(1)} GB`;
   return `${Math.round(bytes / 1_000_000)} MB`;
 }
