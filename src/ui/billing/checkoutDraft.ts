@@ -48,5 +48,10 @@ export function restoreCheckout(userId: string, purchase: PayPalPurchase): void 
   else if (purchase.product === "bots_plus" && purchase.orgId) draft = { product: "bots_plus", orgId: purchase.orgId };
   else if (purchase.product === "plus") draft = { product: "plus" };
   else throw new Error("Open this purchase from its original checkout.");
-  writeCheckout(userId, { draft, purchaseId: purchase.id, requestKey: crypto.randomUUID(), completed: purchase.confirmed });
+  writeCheckout(userId, {
+    draft,
+    purchaseId: purchase.id,
+    requestKey: crypto.randomUUID(),
+    completed: purchase.confirmed || purchase.approved === true || ["expired", "incomplete_expired", "canceled", "failed", "refunded"].includes(purchase.status),
+  });
 }

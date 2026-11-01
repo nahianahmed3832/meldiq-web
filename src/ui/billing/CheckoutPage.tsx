@@ -8,12 +8,13 @@ import { useEngine, useOrbit } from "../../application/orbit";
 import { navigate } from "../../application/router";
 import { BrandMark } from "../components/BrandMark";
 import { money, size } from "../mojo/mojoFormat";
-import { readCheckout, writeCheckout } from "./checkoutDraft";
+import { readCheckout, selectCheckout, writeCheckout } from "./checkoutDraft";
 import { usePayPalCardSdk } from "./PayPalCardButton";
 import { CheckoutPaymentButton } from "./CheckoutPaymentButton";
 import { PaymentMethods, type PaymentMethod } from "./PaymentMethods";
 
 const billing = () => navigate({ section: "settings", settingsPage: "billing" });
+const endedStatuses = new Set(["expired", "incomplete_expired", "canceled", "failed", "refunded"]);
 
 /** Meldiq owns the review and confirmation. The API owns pricing, payment verification and all entitlements. */
 function PlusCheckoutPage({ initial }: { initial: ReturnType<typeof readCheckout> }) {
@@ -43,6 +44,7 @@ function PlusCheckoutPage({ initial }: { initial: ReturnType<typeof readCheckout
   const deferred = !gift && config?.billingStartAt != null && config.billingStartAt > Date.now();
   const startDate = config?.billingStartAt ? new Intl.DateTimeFormat(undefined, { dateStyle: "medium" }).format(config.billingStartAt) : null;
   const complete = purchase?.confirmed === true || (purchase?.approved === true && deferred);
+  const closed = purchase != null && endedStatuses.has(purchase.status);
 
   const remember = useCallback(
     (value: ReturnType<typeof readCheckout>) => {
@@ -64,8 +66,8 @@ function PlusCheckoutPage({ initial }: { initial: ReturnType<typeof readCheckout
           ? await engine.api.json("POST", `/v2/billing/paypal/checkouts/${encodeURIComponent(id)}/confirm`, zPayPalCheckout, { body: {} })
           : await engine.api.json("GET", `/v2/billing/paypal/checkouts/${encodeURIComponent(id)}`, zPayPalCheckout);
         setPurchase(p);
-        if (p.confirmed || p.approved) remember({ ...savedRef.current, completed: true });
-        setMessage(p.confirmed ? null : "Your payment is still awaiting confirmation. You can safely check its status again.");
+        if (p.confirmed || p.approved || endedStatuses.has(p.status)) remember({ ...savedRef.current, completed: true });
+        setMessage(p.confirmed || endedStatuses.has(p.status) ? null : "Your payment is still awaiting confirmation. You can safely check its status again.");
         await engine.mojo.refresh();
       } catch (e) {
         setError(e instanceof Error ? e.message : "We could not verify the payment yet. Check its status before trying again.");
@@ -108,8 +110,9 @@ function PlusCheckoutPage({ initial }: { initial: ReturnType<typeof readCheckout
     const p = current.purchaseId
       ? await engine.api.json("GET", `/v2/billing/paypal/checkouts/${encodeURIComponent(current.purchaseId)}`, zPayPalCheckout)
       : await engine.api.json("POST", "/v2/billing/paypal/checkouts", zPayPalCheckout, { body: { ...current.draft, requestKey: current.requestKey } });
-    remember({ ...current, purchaseId: p.id, completed: p.confirmed || p.approved === true });
+    remember({ ...current, purchaseId: p.id, completed: p.confirmed || p.approved === true || endedStatuses.has(p.status) });
     setPurchase(p);
+    if (endedStatuses.has(p.status)) throw new Error("This checkout has ended. Start a new checkout to continue.");
     if (p.confirmed || p.approved) throw new Error("This purchase is already confirmed. Open Billing to view it.");
     if (p.amountMinor !== amount || p.currency !== currency) throw new Error("The price changed before checkout. Reload this page and review the updated order.");
     return p;
@@ -242,7 +245,17 @@ function PlusCheckoutPage({ initial }: { initial: ReturnType<typeof readCheckout
                   </p>
                 )}
                 {!accepted && <p className="checkout-hint">Agree to the terms to continue to payment.</p>}
-                {config && accepted && online && price && (gift || config.subscriptions) && (
+                {closed && (
+                  <div className="banner info" role="status">
+                    This checkout has ended. Start a new checkout if you want to purchase.
+                  </div>
+                )}
+                {closed && (
+                  <button className="btn btn-secondary" disabled={!online} onClick={() => selectCheckout(userId, draft)}>
+                    Start a new checkout
+                  </button>
+                )}
+                {config && accepted && online && price && !closed && (gift || config.subscriptions) && (
                   <CheckoutPaymentButton
                     key={attempt}
                     config={config}

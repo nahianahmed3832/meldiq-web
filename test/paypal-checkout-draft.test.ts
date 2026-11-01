@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { readCheckout, selectCheckout, writeCheckout } from "../src/ui/billing/checkoutDraft";
+import { readCheckout, restoreCheckout, selectCheckout, writeCheckout } from "../src/ui/billing/checkoutDraft";
 
 describe("PayPal purchase intent recovery", () => {
   beforeEach(() => {
@@ -31,5 +31,22 @@ describe("PayPal purchase intent recovery", () => {
     writeCheckout("alice", { ...first, purchaseId: "chk_private" });
     expect(readCheckout("bob").purchaseId).toBeNull();
     expect(readCheckout("bob").requestKey).not.toBe(first.requestKey);
+  });
+  it("starts a fresh request after restoring an expired owned checkout", () => {
+    restoreCheckout("alice", {
+      id: "chk_expired",
+      product: "plus",
+      providerRef: "I-EXPIRED",
+      status: "incomplete_expired",
+      confirmed: false,
+      currency: "USD",
+      amountMinor: 399,
+      interval: "month",
+      expiresAt: Date.now() - 1000,
+    });
+    const expired = readCheckout("alice");
+    selectCheckout("alice", { product: "plus" });
+    expect(readCheckout("alice").purchaseId).toBeNull();
+    expect(readCheckout("alice").requestKey).not.toBe(expired.requestKey);
   });
 });

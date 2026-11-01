@@ -337,3 +337,25 @@ for (const changed of ["amount", "interval"] as const) {
     await expect(page.getByRole("heading", { name: "Your Sparks are ready." })).toHaveCount(0);
   });
 }
+
+test("an expired Plus attempt can start a new owned checkout instead of reusing its dead reference", async ({ page }) => {
+  const { purchase } = await checkout(page);
+  const keys: string[] = [];
+  await page.route("**/v2/billing/paypal/checkouts", async (route) => {
+    keys.push(route.request().postDataJSON().requestKey);
+    await route.fulfill({ json: keys.length === 1 ? purchase : { ...purchase, id: "chk_replacement", providerRef: "I-REPLACEMENT" } });
+  });
+  await page.route("**/v2/billing/paypal/checkouts/chk_replacement/confirm", (route) => route.fulfill({ json: { ...purchase, id: "chk_replacement", providerRef: "I-REPLACEMENT" } }));
+  await page.getByRole("checkbox").check();
+  await page.locator("paypal-button").click();
+  await expect(page.getByRole("button", { name: "Check purchase status" })).toBeVisible();
+  await page.route("**/v2/billing/paypal/checkouts/chk_test", (route) => route.fulfill({ json: { ...purchase, status: "incomplete_expired" } }));
+  await page.getByRole("button", { name: "Check purchase status" }).click();
+  await expect(page.locator("paypal-button")).toHaveCount(0);
+  await page.getByRole("button", { name: "Start a new checkout" }).click();
+  await expect(page.getByRole("checkbox")).not.toBeChecked();
+  await page.getByRole("checkbox").check();
+  await page.locator("paypal-button").click();
+  await expect.poll(() => keys.length).toBe(2);
+  expect(keys[1]).not.toBe(keys[0]);
+});

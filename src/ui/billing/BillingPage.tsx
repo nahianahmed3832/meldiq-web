@@ -47,13 +47,15 @@ export function BillingPage() {
     try {
       const result = await engine.api.json("POST", "/v2/billing/paypal/cancel", zPayPalCancellation, { body: { confirm: true, ...(canceling?.id ? { subscriptionId: canceling.id } : {}) } });
       setNotice(
-        result.approvalPending
-          ? "No recurring payment has been authorized. Close the PayPal checkout window to leave this purchase. Your free Plus time does not renew."
-          : result.confirmed
-            ? result.accessUntil
-              ? `PayPal confirmed cancellation. Your paid benefits continue until ${date(result.accessUntil)}.`
-              : "PayPal confirmed cancellation. No future payments are scheduled. Any existing free Plus time stays available."
-            : "PayPal has not confirmed cancellation yet. Refresh your billing status before trying again.",
+        result.checkoutExpired
+          ? "This unfinished checkout has expired. No paid subscription was verified. Your free Plus time is unchanged."
+          : result.approvalPending
+            ? "No recurring payment has been authorized. Close the PayPal checkout window to leave this purchase. Your free Plus time does not renew."
+            : result.confirmed
+              ? result.accessUntil
+                ? `PayPal confirmed cancellation. Your paid benefits continue until ${date(result.accessUntil)}.`
+                : "PayPal confirmed cancellation. No future payments are scheduled. Any existing free Plus time stays available."
+              : "PayPal has not confirmed cancellation yet. Refresh your billing status before trying again.",
       );
       setCanceling(null);
       await engine.mojo.refresh();
@@ -256,7 +258,7 @@ export function BillingPage() {
             <li key={`${h.subscriptionId}-${h.at}-${i}`}>
               <span>
                 {h.from ? `${h.from.replaceAll("_", " ")} → ` : "Subscription "}
-                {h.to === "incomplete" ? "checkout awaiting approval or first payment" : h.to.replaceAll("_", " ")}
+                {h.to === "incomplete" ? "checkout awaiting approval or first payment" : h.to === "incomplete_expired" ? "checkout expired" : h.to.replaceAll("_", " ")}
               </span>
               <time dateTime={new Date(h.at).toISOString()}>{date(h.at)}</time>
             </li>
