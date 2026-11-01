@@ -53,8 +53,12 @@ for (const kind of ["dm", "group", "channel"] as const) {
     expect(requests[0]).not.toMatch(/before=|around=/);
     await expect(messages(page).locator("[id^='msg-']")).toHaveCount(60);
     await expect(messages(page).getByText(`${kind} line 1:`, { exact: false })).toHaveCount(0);
-    const ordered = await messages(page).locator(".msg-text").allTextContents();
-    expect(ordered.map((text) => Number(text.match(/line (\d+)/)?.[1]))).toEqual(Array.from({ length: 60 }, (_, i) => i + 36));
+    // Equal millisecond timestamps use message IDs, so send-loop ordinals need not be consecutive in the DOM.
+    const initialPage = await alice.req("GET", `/v2/conversations/${id}/messages?limit=60`);
+    const ordered = await messages(page)
+      .locator("[id^='msg-']")
+      .evaluateAll((nodes) => nodes.map((node) => node.id.slice(4)));
+    expect(ordered).toEqual(initialPage.messages.map((message: { id: string }) => message.id).reverse());
 
     // A stale session anchor from the previous release must not control entry or refresh.
     await messages(page).evaluate((el) => {
