@@ -1,0 +1,16 @@
+{
+  "observedAt": "2026-11-02T17:18:17.991832+00:00",
+  "databaseMode": "atlas",
+  "apiImage": "griip-internal-messaging-api:0.76.1-plus-708353fe",
+  "apiImageId": "sha256:d3eb8ae81b8332444d25fdeb5d01e57c08da36f135788334657e363b70e73f47",
+  "apiContainerId": "454c3bb39652d4aced2fbf1473dc0d48c42d626ea46763f283f73661d81aaf6d",
+  "restartCount": 0,
+  "healthy": true,
+  "mongodb": true,
+  "redis": true,
+  "livekit": true,
+  "version": "0.76.1",
+  "readOnly": true,
+  "supabaseTrafficCutover": false,
+  "productionChangedByRehearsal": false
+}

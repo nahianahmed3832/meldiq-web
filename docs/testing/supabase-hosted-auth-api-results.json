@@ -1,0 +1,24 @@
+{
+  "observedAt": "2026-11-02T10:26:39.957Z",
+  "projectRef": "bkvlxbsnzqkhbifawcww",
+  "synthetic": true,
+  "productionChanged": false,
+  "checks": {
+    "postgresOnlyRestrictedRuntime": true,
+    "health": true,
+    "accountVerificationLoginDeviceBinding": true,
+    "realProviderJwtLegacyOwnershipAndDeviceProof": true,
+    "messageHistoryIdempotencyAndOutbox": true,
+    "preferenceOwnership": true,
+    "anonymousHistoryDenied": true,
+    "providerRefreshKeepsCertifiedBinding": true,
+    "restartDurabilityAndRefresh": true,
+    "logoutRevocation": true,
+    "providerOnlyLogoutRejectsUnexpiredJwt": true
+  },
+  "phase": "complete",
+  "startupMs": 43306,
+  "legacySqlAttempts": 0,
+  "restartMs": 33966,
+  "ok": true
+}

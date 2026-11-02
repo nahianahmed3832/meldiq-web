@@ -1,0 +1,37 @@
+name: Supabase schema and security
+on:
+  push:
+    branches: [main]
+    paths: ['supabase/**', 'scripts/supabase/**', 'src/auth/supabase*.ts', 'src/realtime/supabaseEvents.ts', 'test/supabase*.test.ts', 'package*.json', '.github/workflows/supabase.yml']
+  pull_request:
+    paths: ['supabase/**', 'scripts/supabase/**', 'src/auth/supabase*.ts', 'src/realtime/supabaseEvents.ts', 'test/supabase*.test.ts', 'package*.json', '.github/workflows/supabase.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  local-supabase:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version: 22.22.3
+          cache: npm
+      - run: npm ci
+      - run: node scripts/supabase/check-migrations.mjs
+      - name: Start isolated synthetic Supabase stack
+        run: npx --yes supabase@2.122.0 start
+      - name: Replay versioned migrations
+        run: npx --yes supabase@2.122.0 db reset --local
+      - name: SQL security assertions
+        run: npx --yes supabase@2.122.0 test db
+      - name: Database function lint
+        run: npx --yes supabase@2.122.0 db lint --local --level error
+      - name: Web vault and reconnect lifecycle
+        run: npx vitest run test/supabase-client.test.ts test/supabase-events.test.ts test/supabase-migration.test.ts
+      - name: Stop test stack
+        if: always()
+        run: npx --yes supabase@2.122.0 stop --no-backup

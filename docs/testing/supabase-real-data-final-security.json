@@ -1,0 +1,14 @@
+{
+  "observedAt": "2026-11-02T17:18:52.259Z",
+  "projectRef": "bkvlxbsnzqkhbifawcww",
+  "productionChanged": false,
+  "syntheticOperationsRefused": true,
+  "databaseBytes": 156939955,
+  "protectedTables": 289,
+  "fixtureTriggersRestored": true,
+  "pendingOutbox": 0,
+  "activeRuntimeConnections": 0,
+  "providerLinks": 0,
+  "floatPrecision": "3",
+  "ok": true
+}

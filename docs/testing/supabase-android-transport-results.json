@@ -1,0 +1,12 @@
+{
+  "scope": "actual Android Supabase transport source and tests, isolated Kotlin/JVM harness; no Android UI or device runtime",
+  "kotlin": "2.2.21",
+  "jvm": "Android Studio JBR 21",
+  "tests": 10,
+  "failures": 0,
+  "errors": 0,
+  "physicalDeviceTested": false,
+  "fullAndroidAppBuildAfterTheseChanges": false,
+  "productionChanged": false,
+  "ok": true
+}

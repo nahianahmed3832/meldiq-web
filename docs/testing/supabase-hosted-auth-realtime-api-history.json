@@ -1,0 +1,85 @@
+[
+  {
+    "observedAt": "2026-11-02T11:39:00.812Z",
+    "projectRef": "bkvlxbsnzqkhbifawcww",
+    "synthetic": true,
+    "productionChanged": false,
+    "checks": {
+      "postgresOnlyRestrictedRuntime": true,
+      "health": true,
+      "accountVerificationLoginDeviceBinding": true,
+      "realProviderJwtLegacyOwnershipAndDeviceProof": true,
+      "apiIssuedPrivateConversationGrants": true,
+      "foreignPrivateUserTopicsDenied": true,
+      "messageHistoryIdempotencyAndOutbox": true
+    },
+    "phase": "messages",
+    "productionAcceptancePassed": false,
+    "startupMs": 32008,
+    "ok": false,
+    "errorCode": "operation_failed"
+  },
+  {
+    "observedAt": "2026-11-02T11:48:21.163Z",
+    "projectRef": "bkvlxbsnzqkhbifawcww",
+    "synthetic": true,
+    "productionChanged": false,
+    "checks": {
+      "postgresOnlyRestrictedRuntime": true,
+      "health": true,
+      "accountVerificationLoginDeviceBinding": true,
+      "realProviderJwtLegacyOwnershipAndDeviceProof": true,
+      "apiIssuedPrivateConversationGrants": true,
+      "foreignPrivateUserTopicsDenied": true,
+      "messageHistoryIdempotencyAndOutbox": true,
+      "apiMessageCommittedOutboxAndBothPrivateReceipts": true,
+      "preferenceOwnership": true,
+      "anonymousHistoryDenied": true,
+      "boundedHostedHttpReads": true,
+      "providerRefreshKeepsCertifiedBinding": true,
+      "restartDurabilityAndRefresh": true,
+      "providerOnlyLogoutRejectsUnexpiredJwt": true,
+      "logoutRevocation": true
+    },
+    "phase": "complete",
+    "productionAcceptancePassed": false,
+    "startupMs": 38904,
+    "realtimeReceiptMs": 2093.59,
+    "httpBaseline": {
+      "samples": 20,
+      "p50Ms": 1414.43,
+      "p95Ms": 1549.59,
+      "maxMs": 1565.53,
+      "errors": 0,
+      "concurrency": 2,
+      "origin": "MacBook loopback API to Frankfurt hosted PostgreSQL",
+      "peakWaitingSample": 0,
+      "poolAfter": {
+        "total": 3,
+        "idle": 2,
+        "waiting": 0,
+        "errors": 0
+      },
+      "scope": "Small warm history-read baseline, not capacity/load or VPS placement evidence"
+    },
+    "databaseBaseline": {
+      "samples": 10,
+      "p50Ms": 324.08,
+      "p95Ms": 356.35,
+      "maxMs": 356.35,
+      "scope": "MacBook-to-Frankfurt verified-TLS session-pooler round trip, SELECT 1; not server execution time"
+    },
+    "legacySqlAttempts": 0,
+    "restartMs": 26752,
+    "realtimeRevocation": {
+      "providerLogoutApiDenied": true,
+      "uncooperativeSocketKeptOriginalJwt": true,
+      "authorizedControlReceived": true,
+      "revokedSocketReceived": true,
+      "observationWindowMs": 5000,
+      "immediateSocketRevocationProven": false,
+      "status": "BLOCKED_cached_channel_receives_after_provider_logout"
+    },
+    "ok": true
+  }
+]

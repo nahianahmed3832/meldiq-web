@@ -1,0 +1,19 @@
+{
+  "ok": true,
+  "observedAt": "2026-11-02T16:58:09.613Z",
+  "projectRef": null,
+  "local": true,
+  "productionChanged": false,
+  "sourceSha256": "3bf606760224f367d378c1e0661061fb20d7aff7f4ee0e84671f63e23d58f472",
+  "catalogSha256": "c59c75ad003c04eeeab81cd5f5c2859be847c4147ab0e580c1aa954489a56a94",
+  "ownedDatabase": "meldiq_copy_rehearsal_32c386d1d03aaa5f",
+  "phase": "complete",
+  "copyMilliseconds": 4006.0999580000002,
+  "tables": 282,
+  "records": 677617,
+  "allRecordHashesMatch": true,
+  "timestampRangesAndFinancialTotalsMatch": true,
+  "sourceCounterFloorsPreserved": true,
+  "exactRunResumePassed": true,
+  "completedAt": "2026-11-02T16:58:20.393Z"
+}

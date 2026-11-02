@@ -1,0 +1,95 @@
+[
+  {
+    "phase": "source-normalization-initial",
+    "ok": false,
+    "productionChanged": false,
+    "reason": "Recent attachment/billing fields, explicit archival collections and legacy counter shapes required mapping; nothing imported"
+  },
+  {
+    "phase": "source-normalization-reviewed",
+    "ok": true,
+    "sourceCollections": 275,
+    "sourceRecords": 692113,
+    "applicationTables": 282,
+    "applicationRecords": 677617
+  },
+  {
+    "phase": "local-typed-import-initial",
+    "ok": false,
+    "reason": "JSONB arrays encoded as PostgreSQL arrays; mismatched batch rolled back"
+  },
+  {
+    "phase": "local-typed-import-resume-and-reconcile",
+    "ok": true,
+    "records": 677617
+  },
+  {
+    "phase": "local-copy-initial-reconciliation",
+    "ok": false,
+    "reason": "Owned read-only comparison intentionally stopped to replace expensive composite tuple-IN plans"
+  },
+  {
+    "phase": "local-copy-values-join-reconciliation-and-resume",
+    "ok": true,
+    "records": 677617
+  },
+  {
+    "phase": "hosted-atomic-copy",
+    "copyCommitted": true,
+    "records": 677617,
+    "milliseconds": 547094.241959,
+    "productionChanged": false
+  },
+  {
+    "phase": "hosted-reconciliation-initial",
+    "ok": false,
+    "completedTables": 46,
+    "failedTable": "alert_state",
+    "reason": "Pooler default extra_float_digits=0 shortened returned doubles; stored values matched after full-precision read"
+  },
+  {
+    "phase": "hosted-reconciliation-confirmation",
+    "ok": false,
+    "dataReimported": false,
+    "reason": "Confirmed the same float-text precision mismatch"
+  },
+  {
+    "phase": "hosted-full-precision-reconciliation-and-resume",
+    "ok": true,
+    "records": 677617,
+    "allRecordHashesMatch": true,
+    "timestampRangesAndFinancialTotalsMatch": true,
+    "sourceCounterFloorsPreserved": true,
+    "productionChanged": false,
+    "completedAt": "2026-11-02T17:18:00.946Z"
+  },
+  {
+    "phase": "final-security",
+    "ok": true,
+    "protectedTables": 289,
+    "syntheticOperationsRefused": true,
+    "fixtureTriggersRestored": true,
+    "pendingOutbox": 0,
+    "activeRuntimeConnections": 0,
+    "providerLinks": 0
+  },
+  {
+    "phase": "supplementary-history-test-harness",
+    "ok": false,
+    "reason": "An explicit Mongo-only case was initially selected under the PostgreSQL-only harness; correct PostgreSQL selection passed without test code changes"
+  },
+  {
+    "phase": "post-import-encrypted-backup-toc-listing",
+    "ok": false,
+    "errorCode": "EPIPE",
+    "reason": "TOC-only reader exited before consuming large encrypted stream; original dump and source snapshot fingerprints retained"
+  },
+  {
+    "phase": "post-import-encrypted-backup-resumed-restore",
+    "ok": true,
+    "wholeArchiveAuthenticated": true,
+    "reconciledTables": 317,
+    "reconciledRows": 678057,
+    "productionChanged": false
+  }
+]

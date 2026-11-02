@@ -1,0 +1,45 @@
+groups:
+  - name: meldiq-supabase-quotas
+    rules:
+      - alert: MeldiqSupabaseQuota50
+        expr: meldiq_usage_ratio >= 0.50 and meldiq_usage_ratio < 0.70
+        for: 10m
+        labels:
+          severity: info
+        annotations:
+          summary: 'Meldiq usage exceeded 50% of its configured budget'
+      - alert: MeldiqSupabaseQuota70
+        expr: meldiq_usage_ratio >= 0.70 and meldiq_usage_ratio < 0.85
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: 'Meldiq usage exceeded 70% of its configured budget'
+      - alert: MeldiqSupabaseQuota85
+        expr: meldiq_usage_ratio >= 0.85
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: 'Meldiq usage exceeded 85% of its configured budget'
+      - alert: MeldiqOutboxDeadLetter
+        expr: meldiq_outbox_dead > 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: 'Meldiq delivery requires replay or repair'
+      - alert: MeldiqOutboxStalled
+        expr: meldiq_outbox_oldest_seconds > 120
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: 'Meldiq committed events are waiting for delivery'
+      - alert: MeldiqUsageFeedMissing
+        expr: meldiq_usage_feed_present == 0
+        for: 30m
+        labels:
+          severity: warning
+        annotations:
+          summary: 'Monthly Realtime, Auth and egress budgets are not being metered'

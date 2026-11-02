@@ -1,0 +1,18 @@
+{
+  "ok": true,
+  "observedAt": "2026-11-02T16:48:53.524Z",
+  "database": "meldiq_customer_rehearsal_97af77f869674a549559830e61993b32",
+  "synthetic": false,
+  "sourceSha256": "3bf606760224f367d378c1e0661061fb20d7aff7f4ee0e84671f63e23d58f472",
+  "catalogSha256": "c59c75ad003c04eeeab81cd5f5c2859be847c4147ab0e580c1aa954489a56a94",
+  "productionChanged": false,
+  "hostedImported": false,
+  "allRecordHashesMatch": true,
+  "resumedOwnedDatabase": true,
+  "initialImportMilliseconds": 29407.655291,
+  "resumeImportMilliseconds": 25884.873792,
+  "tables": 282,
+  "records": 677617,
+  "databaseBytes": 151656115,
+  "applicationBytes": 138428416
+}

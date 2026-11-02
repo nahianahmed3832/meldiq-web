@@ -1,0 +1,18 @@
+{
+  "observedAt": "2026-11-02T12:12:42.113436+00:00",
+  "candidate": "9eec6c7fed1564f9343c4962626bbff786bc9c01",
+  "backendBuild": {
+    "command": "NODE_OPTIONS=--max-old-space-size=2048 npm run build",
+    "exitCode": 0
+  },
+  "webTypecheck": {
+    "command": "NODE_OPTIONS=--max-old-space-size=2048 npm run typecheck -- --pretty false",
+    "exitCode": 0,
+    "scope": "Completed earlier in the same resumed work; web Auth/Realtime source unchanged since that check"
+  },
+  "targetedWebAndMigrationScriptLint": {
+    "exitCode": 0
+  },
+  "productionChanged": false,
+  "ok": true
+}

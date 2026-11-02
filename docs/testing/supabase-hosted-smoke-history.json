@@ -1,0 +1,89 @@
+[
+  {
+    "observedAt": "2026-11-02T07:52:01.739Z",
+    "projectRef": "bkvlxbsnzqkhbifawcww",
+    "synthetic": true,
+    "productionChanged": false,
+    "checks": {
+      "passwordLoginAndJwtOwnership": true,
+      "privateDataApiDenied": true,
+      "foreignPrivateTopicDenied": true
+    },
+    "policyProbe": {
+      "active": true,
+      "allowed": true
+    },
+    "ownerJoinStatus": "SUBSCRIBED",
+    "lastChannelError": {
+      "status": "CHANNEL_ERROR",
+      "message": "Unauthorized: You do not have permissions to read from this Channel topic: user:staginga810187273620"
+    },
+    "publicJoinStatus": "SUBSCRIBED",
+    "ok": false,
+    "failure": "Public channel access was not explicitly denied",
+    "syntheticAccountsCreated": 2
+  },
+  {
+    "observedAt": "2026-11-02T07:56:01.950Z",
+    "projectRef": "bkvlxbsnzqkhbifawcww",
+    "synthetic": true,
+    "productionChanged": false,
+    "checks": {
+      "passwordLoginAndJwtOwnership": true,
+      "privateDataApiDenied": true,
+      "foreignPrivateTopicDenied": true,
+      "publicChannelsDisabled": true,
+      "hostedPrivateBroadcast": true,
+      "hostedPrivatePresence": true,
+      "reconnectAndDurableGapRecovery": true,
+      "sessionRefresh": true,
+      "providerLogoutRevokesApi": true,
+      "apiSessionRevocation": true
+    },
+    "policyProbe": {
+      "active": true,
+      "allowed": true
+    },
+    "ownerJoinStatus": "SUBSCRIBED",
+    "lastChannelError": {
+      "status": "CHANNEL_ERROR",
+      "message": "Unauthorized: You do not have permissions to read from this Channel topic: user:staging2e9b2a9dff690"
+    },
+    "publicJoinStatus": "CHANNEL_ERROR",
+    "realtimeReceiptMilliseconds": 1485.4660409999997,
+    "ok": true,
+    "syntheticAccountsCreated": 2
+  },
+  {
+    "observedAt": "2026-11-02T10:42:31.714Z",
+    "projectRef": "bkvlxbsnzqkhbifawcww",
+    "synthetic": true,
+    "productionChanged": false,
+    "implementationSource": "typescript",
+    "checks": {
+      "passwordLoginAndJwtOwnership": true,
+      "privateDataApiDenied": true,
+      "foreignPrivateTopicDenied": true,
+      "publicChannelsDisabled": true,
+      "hostedPrivateBroadcast": true,
+      "hostedPrivatePresence": true,
+      "reconnectAndDurableGapRecovery": true,
+      "sessionRefresh": true,
+      "providerLogoutRevokesApi": true,
+      "apiSessionRevocation": true
+    },
+    "policyProbe": {
+      "active": true,
+      "allowed": true
+    },
+    "ownerJoinStatus": "SUBSCRIBED",
+    "lastChannelError": {
+      "status": "CHANNEL_ERROR",
+      "message": "Unauthorized: You do not have permissions to read from this Channel topic: user:stagingdd96df227bf50"
+    },
+    "publicJoinStatus": "CHANNEL_ERROR",
+    "realtimeReceiptMilliseconds": 1793.9739589999954,
+    "ok": true,
+    "syntheticAccountsCreated": 2
+  }
+]

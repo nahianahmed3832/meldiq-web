@@ -1,0 +1,522 @@
+{
+  "observedAt": "2026-11-02T17:19:37.281Z",
+  "sourceCommit": "2cf5268f14632c39d3200eb88b62b4c25b7b45fb",
+  "sourceWorkingTreeHasChanges": false,
+  "scope": "Static Mongo collection() references and exact reviewed source trigger hashes. Dynamic catalog/DocumentStore factories require separate explicit model and repository review.",
+  "modeledTables": 282,
+  "literalReferences": [
+    {
+      "collection": "message_events",
+      "file": "src/app/maintenance/retrievalSnapshot.ts",
+      "line": 18,
+      "disposition": "relational model"
+    },
+    {
+      "collection": "message_events",
+      "file": "src/app/maintenance/retrievalSnapshot.ts",
+      "line": 29,
+      "disposition": "relational model"
+    },
+    {
+      "collection": "database_migration_conflicts",
+      "file": "src/infrastructure/database/mongo/migrate.ts",
+      "line": 208,
+      "disposition": "legacy migration evidence retained"
+    },
+    {
+      "collection": "user_activities",
+      "file": "src/modules/accounts/activity/mongoStore.ts",
+      "line": 24,
+      "disposition": "relational model"
+    },
+    {
+      "collection": "decoration_favorites",
+      "file": "src/modules/accounts/decorations/mongoFavoritesStore.ts",
+      "line": 21,
+      "disposition": "relational model"
+    },
+    {
+      "collection": "profile_decorations",
+      "file": "src/modules/accounts/decorations/mongoStore.ts",
+      "line": 61,
+      "disposition": "relational model"
+    },
+    {
+      "collection": "account_key_backups",
+      "file": "src/modules/accounts/mongoKeyBackupStore.ts",
+      "line": 23,
+      "disposition": "relational model"
+    },
+    {
+      "collection": "account_key_unlocks",
+      "file": "src/modules/accounts/mongoKeyBackupStore.ts",
+      "line": 24,
+      "disposition": "relational model"
+    },
+    {
+      "collection": "account_recovery_codes",
+      "file": "src/modules/accounts/mongoRecoveryStore.ts",
+      "line": 24,
+      "disposition": "relational model"
+    },
+    {
+      "collection": "account_recovery_tickets",
+      "file": "src/modules/accounts/mongoRecoveryStore.ts",
+      "line": 25,
+      "disposition": "relational model"
+    },
+    {
+      "collection": "accounts",
+      "file": "src/modules/accounts/mongoStore.ts",
+      "line": 74,
+      "disposition": "relational model"
+    },
+    {
+      "collection": "account_sessions",
+      "file": "src/modules/accounts/mongoStore.ts",
+      "line": 75,
+      "disposition": "relational model"
+    },
+    {
+      "collection": "account_codes",
+      "file": "src/modules/accounts/mongoStore.ts",
+      "line": 76,
+      "disposition": "relational model"
+    },
+    {
+      "collection": "legacy_tickets",
+      "file": "src/modules/accounts/mongoStore.ts",
+      "line": 77,
+      "disposition": "relational model"
+    },
+    {
+      "collection": "account_session_factors",
+      "file": "src/modules/accounts/mongoStore.ts",
+      "line": 151,
+      "disposition": "relational model"
+    },
+    {
+      "collection": "account_session_factors",
+      "file": "src/modules/accounts/mongoStore.ts",
+      "line": 160,
+      "disposition": "relational model"
+    },
+    {
+      "collection": "account_social_identities",
+      "file": "src/modules/accounts/mongoStore.ts",
+      "line": 163,
+      "disposition": "relational model"
+    },
+    {
+      "collection": "account_session_factors",
+      "file": "src/modules/accounts/mongoStore.ts",
+      "line": 197,
+      "disposition": "relational model"
+    },
+    {
+      "collection": "account_session_factors",
+      "file": "src/modules/accounts/mongoStore.ts",
+      "line": 328,
+      "disposition": "relational model"
+    },
+    {
+      "collection": "username_holds",
+      "file": "src/modules/accounts/mongoUsernameHoldStore.ts",
+      "line": 23,
+      "disposition": "relational model"
+    },
+    {
+      "collection": "community_pins",
+      "file": "src/modules/accounts/pins/mongoStore.ts",
+      "line": 49,
+      "disposition": "relational model"
+    },
+    {
+      "collection": "community_pin_awards",
+      "file": "src/modules/accounts/pins/mongoStore.ts",
+      "line": 50,
+      "disposition": "relational model"
+    },
+    {
+      "collection": "nav_preferences",
+      "file": "src/modules/accounts/preferences/mongoStore.ts",
+      "line": 32,
+      "disposition": "relational model"
+    },
+    {
+      "collection": "privacy_settings",
+      "file": "src/modules/accounts/relationships/mongoPrivacyStore.ts",
+      "line": 22,
+      "disposition": "relational model"
+    },
+    {
+      "collection": "connections",
+      "file": "src/modules/accounts/relationships/mongoStore.ts",
+      "line": 24,
+      "disposition": "relational model"
+    },
+    {
+      "collection": "dm_requests",
+      "file": "src/modules/accounts/relationships/mongoStore.ts",
+      "line": 25,
+      "disposition": "relational model"
+    },
+    {
+      "collection": "messaging_settings",
+      "file": "src/modules/accounts/relationships/mongoStore.ts",
+      "line": 26,
+      "disposition": "relational model"
+    },
+    {
+      "collection": "account_social_flows",
+      "file": "src/modules/accounts/social/store.ts",
+      "line": 54,
+      "disposition": "relational model"
+    },
+    {
+      "collection": "account_social_flows",
+      "file": "src/modules/accounts/social/store.ts",
+      "line": 68,
+      "disposition": "relational model"
+    },
+    {
+      "collection": "account_social_flows",
+      "file": "src/modules/accounts/social/store.ts",
+      "line": 86,
+      "disposition": "relational model"
+    },
+    {
+      "collection": "account_social_identities",
+      "file": "src/modules/accounts/social/store.ts",
+      "line": 108,
+      "disposition": "relational model"
+    },
+    {
+      "collection": "account_social_identities",
+      "file": "src/modules/accounts/social/store.ts",
+      "line": 122,
+      "disposition": "relational model"
+    },
+    {
+      "collection": "account_social_identities",
+      "file": "src/modules/accounts/social/store.ts",
+      "line": 142,
+      "disposition": "relational model"
+    },
+    {
+      "collection": "account_social_identities",
+      "file": "src/modules/accounts/social/store.ts",
+      "line": 187,
+      "disposition": "relational model"
+    },
+    {
+      "collection": "account_social_flows",
+      "file": "src/modules/accounts/social/store.ts",
+      "line": 201,
+      "disposition": "relational model"
+    },
+    {
+      "collection": "bots",
+      "file": "src/modules/bots/mongoStore.ts",
+      "line": 57,
+      "disposition": "relational model"
+    },
+    {
+      "collection": "bot_interactions",
+      "file": "src/modules/bots/mongoStore.ts",
+      "line": 58,
+      "disposition": "relational model"
+    },
+    {
+      "collection": "calls",
+      "file": "src/modules/calls/mongoStore.ts",
+      "line": 51,
+      "disposition": "relational model"
+    },
+    {
+      "collection": "call_participants",
+      "file": "src/modules/calls/mongoStore.ts",
+      "line": 52,
+      "disposition": "relational model"
+    },
+    {
+      "collection": "call_hands",
+      "file": "src/modules/calls/mongoStore.ts",
+      "line": 53,
+      "disposition": "relational model"
+    },
+    {
+      "collection": "attachments",
+      "file": "src/modules/files/mongoStore.ts",
+      "line": 30,
+      "disposition": "relational model"
+    },
+    {
+      "collection": "attachment_uploads",
+      "file": "src/modules/files/mongoStore.ts",
+      "line": 31,
+      "disposition": "relational model"
+    },
+    {
+      "collection": "abandoned_uploads",
+      "file": "src/modules/files/mongoStore.ts",
+      "line": 32,
+      "disposition": "relational model"
+    },
+    {
+      "collection": "pending_blob_deletes",
+      "file": "src/modules/files/mongoStore.ts",
+      "line": 33,
+      "disposition": "relational model"
+    },
+    {
+      "collection": "history_items",
+      "file": "src/modules/messaging/history/mongoStore.ts",
+      "line": 41,
+      "disposition": "relational model"
+    },
+    {
+      "collection": "history_accounts",
+      "file": "src/modules/messaging/history/mongoStore.ts",
+      "line": 42,
+      "disposition": "relational model"
+    },
+    {
+      "collection": "message_events",
+      "file": "src/modules/messaging/messageCollections.ts",
+      "line": 47,
+      "disposition": "relational model"
+    },
+    {
+      "collection": "message_events",
+      "file": "src/modules/messaging/messageCollections.ts",
+      "line": 143,
+      "disposition": "relational model"
+    },
+    {
+      "collection": "delivery_queue",
+      "file": "src/modules/messaging/relay/mongoStore.ts",
+      "line": 38,
+      "disposition": "relational model"
+    },
+    {
+      "collection": "submitted_messages",
+      "file": "src/modules/messaging/relay/mongoStore.ts",
+      "line": 39,
+      "disposition": "relational model"
+    },
+    {
+      "collection": "message_events",
+      "file": "src/modules/messaging/store/mongoStore.ts",
+      "line": 23,
+      "disposition": "relational model"
+    },
+    {
+      "collection": "message_events",
+      "file": "src/modules/messaging/store/retrievalMeta.ts",
+      "line": 24,
+      "disposition": "relational model"
+    },
+    {
+      "collection": "oauth_apps",
+      "file": "src/modules/oauth/mongoStore.ts",
+      "line": 109,
+      "disposition": "relational model"
+    },
+    {
+      "collection": "oauth_codes",
+      "file": "src/modules/oauth/mongoStore.ts",
+      "line": 110,
+      "disposition": "relational model"
+    },
+    {
+      "collection": "oauth_grants",
+      "file": "src/modules/oauth/mongoStore.ts",
+      "line": 111,
+      "disposition": "relational model"
+    },
+    {
+      "collection": "oauth_tokens",
+      "file": "src/modules/oauth/mongoStore.ts",
+      "line": 112,
+      "disposition": "relational model"
+    },
+    {
+      "collection": "reports",
+      "file": "src/modules/organizations/reports/mongoStore.ts",
+      "line": 14,
+      "disposition": "relational model"
+    },
+    {
+      "collection": "community_rules",
+      "file": "src/modules/organizations/rules/mongoStore.ts",
+      "line": 41,
+      "disposition": "relational model"
+    },
+    {
+      "collection": "community_rule_agreements",
+      "file": "src/modules/organizations/rules/mongoStore.ts",
+      "line": 42,
+      "disposition": "relational model"
+    },
+    {
+      "collection": "platform_audit",
+      "file": "src/modules/platformAdmin/auditValidation.ts",
+      "line": 8,
+      "disposition": "relational model"
+    },
+    {
+      "collection": "points_accounts",
+      "file": "src/modules/points/mongoStore.ts",
+      "line": 113,
+      "disposition": "relational model"
+    },
+    {
+      "collection": "points_ledger",
+      "file": "src/modules/points/mongoStore.ts",
+      "line": 114,
+      "disposition": "relational model"
+    },
+    {
+      "collection": "points_days",
+      "file": "src/modules/points/mongoStore.ts",
+      "line": 115,
+      "disposition": "relational model"
+    },
+    {
+      "collection": "points_invites",
+      "file": "src/modules/points/mongoStore.ts",
+      "line": 116,
+      "disposition": "relational model"
+    }
+  ],
+  "dynamicReferencesRequiringReview": [
+    {
+      "file": "src/admin.ts",
+      "line": 565
+    },
+    {
+      "file": "src/infrastructure/database/documents.ts",
+      "line": 155
+    },
+    {
+      "file": "src/infrastructure/database/mongo/admin.ts",
+      "line": 77
+    },
+    {
+      "file": "src/infrastructure/database/mongo/admin.ts",
+      "line": 132
+    },
+    {
+      "file": "src/infrastructure/database/mongo/capacity.ts",
+      "line": 120
+    },
+    {
+      "file": "src/infrastructure/database/mongo/client.ts",
+      "line": 83
+    },
+    {
+      "file": "src/infrastructure/database/mongo/client.ts",
+      "line": 86
+    },
+    {
+      "file": "src/infrastructure/database/mongo/migrate.ts",
+      "line": 140
+    },
+    {
+      "file": "src/infrastructure/database/mongo/migrate.ts",
+      "line": 155
+    },
+    {
+      "file": "src/infrastructure/database/mongo/migrate.ts",
+      "line": 182
+    },
+    {
+      "file": "src/infrastructure/database/mongo/migrate.ts",
+      "line": 216
+    },
+    {
+      "file": "src/infrastructure/database/mongo/migrate.ts",
+      "line": 231
+    },
+    {
+      "file": "src/infrastructure/database/mongo/migrate.ts",
+      "line": 253
+    },
+    {
+      "file": "src/infrastructure/database/mongo/migrate.ts",
+      "line": 277
+    },
+    {
+      "file": "src/infrastructure/database/mongo/migrate.ts",
+      "line": 303
+    },
+    {
+      "file": "src/infrastructure/database/mongo/migrate.ts",
+      "line": 308
+    },
+    {
+      "file": "src/infrastructure/database/mongo/validate.ts",
+      "line": 27
+    },
+    {
+      "file": "src/infrastructure/database/rows/mongoRows.ts",
+      "line": 67
+    },
+    {
+      "file": "src/infrastructure/database/rows/mongoRows.ts",
+      "line": 122
+    },
+    {
+      "file": "src/infrastructure/database/rows/mongoRows.ts",
+      "line": 143
+    },
+    {
+      "file": "src/infrastructure/database/rows/mongoRows.ts",
+      "line": 167
+    },
+    {
+      "file": "src/infrastructure/database/rows/mongoRows.ts",
+      "line": 176
+    },
+    {
+      "file": "src/infrastructure/database/rows/mongoRows.ts",
+      "line": 217
+    },
+    {
+      "file": "src/infrastructure/database/rows/mongoRows.ts",
+      "line": 220
+    },
+    {
+      "file": "src/modules/messaging/relay/mongoStore.ts",
+      "line": 40
+    }
+  ],
+  "unclassified": [],
+  "sourceTriggers": [
+    {
+      "name": "billing_plan_frequency_frozen",
+      "sha256": "17a2cc415039011ba9f8549b65cbbaf9bcb8accf0ca224b55a34a29ba6dadb13",
+      "preservedBy": "20261103001300_current_production_fields.sql"
+    },
+    {
+      "name": "billing_plan_versions_frozen",
+      "sha256": "48fe826bbac385eea8258d0ed3f1198df530be70da034f0b92986ae77013473a",
+      "preservedBy": "20261102001000_immutable_audit_and_prices.sql"
+    },
+    {
+      "name": "platform_audit_no_delete",
+      "sha256": "7b8296518543acd1fbae19ab296120a19080d6b79709a36fa0c7f35fadc4750f",
+      "preservedBy": "20261102001000_immutable_audit_and_prices.sql"
+    },
+    {
+      "name": "platform_audit_no_update",
+      "sha256": "934c7eea2c2f87667eb728b9f9b2050f62d8cf8b951de93618712fe08bdc1e14",
+      "preservedBy": "20261102001000_immutable_audit_and_prices.sql"
+    }
+  ],
+  "unreviewedTriggers": [],
+  "customerRecordsRead": 0,
+  "productionChanged": false,
+  "ok": true
+}

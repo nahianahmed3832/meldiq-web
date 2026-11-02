@@ -1,0 +1,1689 @@
+{
+  "tables": [
+    {
+      "name": "auth_device_sessions",
+      "domain": "accounts",
+      "columns": [
+        {
+          "name": "id",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "auth_user_id",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "account_id",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "user_id",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "device_id",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "link_method",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "password_changed_at",
+          "type": "INTEGER",
+          "notNull": true
+        },
+        {
+          "name": "bound_at",
+          "type": "INTEGER",
+          "notNull": true
+        },
+        {
+          "name": "revoked_at",
+          "type": "INTEGER",
+          "notNull": false
+        }
+      ],
+      "primaryKey": [
+        "id"
+      ],
+      "indexes": [],
+      "foreignKeys": [
+        {
+          "columns": [
+            "account_id"
+          ],
+          "table": "accounts",
+          "references": [
+            "id"
+          ],
+          "onDelete": "CASCADE"
+        },
+        {
+          "columns": [
+            "user_id"
+          ],
+          "table": "users",
+          "references": [
+            "id"
+          ],
+          "onDelete": "CASCADE"
+        },
+        {
+          "columns": [
+            "device_id"
+          ],
+          "table": "devices",
+          "references": [
+            "id"
+          ],
+          "onDelete": "CASCADE"
+        }
+      ],
+      "autoincrement": false
+    },
+    {
+      "name": "points_accounts",
+      "domain": "identity",
+      "columns": [
+        {
+          "name": "id",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "balance",
+          "type": "INTEGER",
+          "notNull": true
+        },
+        {
+          "name": "earned_total",
+          "type": "INTEGER",
+          "notNull": true
+        },
+        {
+          "name": "level",
+          "type": "INTEGER",
+          "notNull": true
+        },
+        {
+          "name": "streak",
+          "type": "INTEGER",
+          "notNull": true
+        },
+        {
+          "name": "updated_at",
+          "type": "INTEGER",
+          "notNull": true
+        },
+        {
+          "name": "last_visit_day",
+          "type": "TEXT",
+          "notNull": false
+        }
+      ],
+      "primaryKey": [
+        "id"
+      ],
+      "indexes": [],
+      "foreignKeys": [
+        {
+          "columns": [
+            "id"
+          ],
+          "table": "users",
+          "references": [
+            "id"
+          ],
+          "onDelete": "CASCADE"
+        }
+      ],
+      "autoincrement": false
+    },
+    {
+      "name": "points_ledger",
+      "domain": "identity",
+      "columns": [
+        {
+          "name": "id",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "user_id",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "kind",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "day",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "amount",
+          "type": "INTEGER",
+          "notNull": true
+        },
+        {
+          "name": "at",
+          "type": "INTEGER",
+          "notNull": true
+        },
+        {
+          "name": "detail",
+          "type": "TEXT",
+          "notNull": false
+        }
+      ],
+      "primaryKey": [
+        "id"
+      ],
+      "indexes": [],
+      "foreignKeys": [
+        {
+          "columns": [
+            "user_id"
+          ],
+          "table": "users",
+          "references": [
+            "id"
+          ],
+          "onDelete": "CASCADE"
+        }
+      ],
+      "autoincrement": false
+    },
+    {
+      "name": "points_days",
+      "domain": "identity",
+      "columns": [
+        {
+          "name": "id",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "user_id",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "day",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "earned",
+          "type": "INTEGER",
+          "notNull": true
+        },
+        {
+          "name": "chats",
+          "type": "TEXT[]",
+          "notNull": true
+        },
+        {
+          "name": "reacted",
+          "type": "TEXT[]",
+          "notNull": true
+        },
+        {
+          "name": "replied",
+          "type": "TEXT[]",
+          "notNull": true
+        },
+        {
+          "name": "minutes",
+          "type": "BIGINT[]",
+          "notNull": true
+        }
+      ],
+      "primaryKey": [
+        "id"
+      ],
+      "indexes": [],
+      "foreignKeys": [
+        {
+          "columns": [
+            "user_id"
+          ],
+          "table": "users",
+          "references": [
+            "id"
+          ],
+          "onDelete": "CASCADE"
+        }
+      ],
+      "autoincrement": false
+    },
+    {
+      "name": "points_invites",
+      "domain": "identity",
+      "columns": [
+        {
+          "name": "id",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "inviter_id",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "joiner_id",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "org_id",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "state",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "joined_at",
+          "type": "INTEGER",
+          "notNull": true
+        },
+        {
+          "name": "settled_at",
+          "type": "INTEGER",
+          "notNull": false
+        }
+      ],
+      "primaryKey": [
+        "id"
+      ],
+      "indexes": [],
+      "foreignKeys": [
+        {
+          "columns": [
+            "inviter_id"
+          ],
+          "table": "users",
+          "references": [
+            "id"
+          ],
+          "onDelete": "CASCADE"
+        },
+        {
+          "columns": [
+            "joiner_id"
+          ],
+          "table": "users",
+          "references": [
+            "id"
+          ],
+          "onDelete": "CASCADE"
+        },
+        {
+          "columns": [
+            "org_id"
+          ],
+          "table": "orgs",
+          "references": [
+            "id"
+          ],
+          "onDelete": "CASCADE"
+        }
+      ],
+      "autoincrement": false
+    },
+    {
+      "name": "oauth_apps",
+      "domain": "identity",
+      "columns": [
+        {
+          "name": "id",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "owner_id",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "name",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "secret_hash",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "created_at",
+          "type": "INTEGER",
+          "notNull": true
+        },
+        {
+          "name": "updated_at",
+          "type": "INTEGER",
+          "notNull": true
+        },
+        {
+          "name": "secret_rotated_at",
+          "type": "INTEGER",
+          "notNull": true
+        },
+        {
+          "name": "redirect_uris",
+          "type": "TEXT[]",
+          "notNull": true
+        }
+      ],
+      "primaryKey": [
+        "id"
+      ],
+      "indexes": [],
+      "foreignKeys": [
+        {
+          "columns": [
+            "owner_id"
+          ],
+          "table": "users",
+          "references": [
+            "id"
+          ],
+          "onDelete": "CASCADE"
+        }
+      ],
+      "autoincrement": false
+    },
+    {
+      "name": "oauth_codes",
+      "domain": "identity",
+      "columns": [
+        {
+          "name": "id",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "app_id",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "user_id",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "redirect_uri",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "created_at",
+          "type": "INTEGER",
+          "notNull": true
+        },
+        {
+          "name": "expires_at",
+          "type": "INTEGER",
+          "notNull": true
+        },
+        {
+          "name": "challenge",
+          "type": "TEXT",
+          "notNull": false
+        },
+        {
+          "name": "family_id",
+          "type": "TEXT",
+          "notNull": false
+        },
+        {
+          "name": "used_at",
+          "type": "INTEGER",
+          "notNull": false
+        },
+        {
+          "name": "scopes",
+          "type": "TEXT[]",
+          "notNull": true
+        }
+      ],
+      "primaryKey": [
+        "id"
+      ],
+      "indexes": [],
+      "foreignKeys": [
+        {
+          "columns": [
+            "app_id"
+          ],
+          "table": "oauth_apps",
+          "references": [
+            "id"
+          ],
+          "onDelete": "CASCADE"
+        },
+        {
+          "columns": [
+            "user_id"
+          ],
+          "table": "users",
+          "references": [
+            "id"
+          ],
+          "onDelete": "CASCADE"
+        }
+      ],
+      "autoincrement": false
+    },
+    {
+      "name": "oauth_grants",
+      "domain": "identity",
+      "columns": [
+        {
+          "name": "id",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "app_id",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "user_id",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "created_at",
+          "type": "INTEGER",
+          "notNull": true
+        },
+        {
+          "name": "updated_at",
+          "type": "INTEGER",
+          "notNull": true
+        },
+        {
+          "name": "scopes",
+          "type": "TEXT[]",
+          "notNull": true
+        }
+      ],
+      "primaryKey": [
+        "id"
+      ],
+      "indexes": [],
+      "foreignKeys": [
+        {
+          "columns": [
+            "app_id"
+          ],
+          "table": "oauth_apps",
+          "references": [
+            "id"
+          ],
+          "onDelete": "CASCADE"
+        },
+        {
+          "columns": [
+            "user_id"
+          ],
+          "table": "users",
+          "references": [
+            "id"
+          ],
+          "onDelete": "CASCADE"
+        }
+      ],
+      "autoincrement": false
+    },
+    {
+      "name": "oauth_tokens",
+      "domain": "identity",
+      "columns": [
+        {
+          "name": "id",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "app_id",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "user_id",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "access_hash",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "refresh_hash",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "access_expires_at",
+          "type": "INTEGER",
+          "notNull": true
+        },
+        {
+          "name": "refresh_expires_at",
+          "type": "INTEGER",
+          "notNull": true
+        },
+        {
+          "name": "created_at",
+          "type": "INTEGER",
+          "notNull": true
+        },
+        {
+          "name": "rotated_at",
+          "type": "INTEGER",
+          "notNull": true
+        },
+        {
+          "name": "previous_refresh_hash",
+          "type": "TEXT",
+          "notNull": false
+        },
+        {
+          "name": "confidential",
+          "type": "BOOLEAN",
+          "notNull": true
+        },
+        {
+          "name": "scopes",
+          "type": "TEXT[]",
+          "notNull": true
+        }
+      ],
+      "primaryKey": [
+        "id"
+      ],
+      "indexes": [],
+      "foreignKeys": [
+        {
+          "columns": [
+            "app_id"
+          ],
+          "table": "oauth_apps",
+          "references": [
+            "id"
+          ],
+          "onDelete": "CASCADE"
+        },
+        {
+          "columns": [
+            "user_id"
+          ],
+          "table": "users",
+          "references": [
+            "id"
+          ],
+          "onDelete": "CASCADE"
+        }
+      ],
+      "autoincrement": false
+    },
+    {
+      "name": "bots",
+      "domain": "identity",
+      "columns": [
+        {
+          "name": "id",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "owner_id",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "token_hash",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "created_at",
+          "type": "INTEGER",
+          "notNull": true
+        },
+        {
+          "name": "token_rotated_at",
+          "type": "INTEGER",
+          "notNull": true
+        },
+        {
+          "name": "public",
+          "type": "BOOLEAN",
+          "notNull": true
+        },
+        {
+          "name": "commands",
+          "type": "JSONB",
+          "notNull": true
+        }
+      ],
+      "primaryKey": [
+        "id"
+      ],
+      "indexes": [],
+      "foreignKeys": [
+        {
+          "columns": [
+            "owner_id"
+          ],
+          "table": "users",
+          "references": [
+            "id"
+          ],
+          "onDelete": "CASCADE"
+        },
+        {
+          "columns": [
+            "id"
+          ],
+          "table": "users",
+          "references": [
+            "id"
+          ],
+          "onDelete": "CASCADE"
+        }
+      ],
+      "autoincrement": false
+    },
+    {
+      "name": "bot_interactions",
+      "domain": "identity",
+      "columns": [
+        {
+          "name": "id",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "bot_id",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "user_id",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "org_id",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "conversation_id",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "command",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "state",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "created_at",
+          "type": "INTEGER",
+          "notNull": true
+        },
+        {
+          "name": "expires_at",
+          "type": "INTEGER",
+          "notNull": true
+        },
+        {
+          "name": "delivered_at",
+          "type": "INTEGER",
+          "notNull": false
+        },
+        {
+          "name": "replied_at",
+          "type": "INTEGER",
+          "notNull": false
+        },
+        {
+          "name": "options",
+          "type": "JSONB",
+          "notNull": true
+        }
+      ],
+      "primaryKey": [
+        "id"
+      ],
+      "indexes": [],
+      "foreignKeys": [
+        {
+          "columns": [
+            "bot_id"
+          ],
+          "table": "bots",
+          "references": [
+            "id"
+          ],
+          "onDelete": "CASCADE"
+        },
+        {
+          "columns": [
+            "user_id"
+          ],
+          "table": "users",
+          "references": [
+            "id"
+          ],
+          "onDelete": "CASCADE"
+        },
+        {
+          "columns": [
+            "org_id"
+          ],
+          "table": "orgs",
+          "references": [
+            "id"
+          ],
+          "onDelete": "CASCADE"
+        },
+        {
+          "columns": [
+            "conversation_id"
+          ],
+          "table": "conversations",
+          "references": [
+            "id"
+          ],
+          "onDelete": "CASCADE"
+        }
+      ],
+      "autoincrement": false
+    },
+    {
+      "name": "profile_decorations",
+      "domain": "identity",
+      "columns": [
+        {
+          "name": "id",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "creator_id",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "name",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "status",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "format",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "size",
+          "type": "INTEGER",
+          "notNull": true
+        },
+        {
+          "name": "created_at",
+          "type": "INTEGER",
+          "notNull": true
+        },
+        {
+          "name": "wearers",
+          "type": "INTEGER",
+          "notNull": true
+        },
+        {
+          "name": "reviewed_by",
+          "type": "TEXT",
+          "notNull": false
+        },
+        {
+          "name": "reason",
+          "type": "TEXT",
+          "notNull": false
+        },
+        {
+          "name": "reviewed_at",
+          "type": "INTEGER",
+          "notNull": false
+        },
+        {
+          "name": "animated",
+          "type": "BOOLEAN",
+          "notNull": true
+        }
+      ],
+      "primaryKey": [
+        "id"
+      ],
+      "indexes": [],
+      "foreignKeys": [
+        {
+          "columns": [
+            "creator_id"
+          ],
+          "table": "users",
+          "references": [
+            "id"
+          ],
+          "onDelete": "CASCADE"
+        }
+      ],
+      "autoincrement": false
+    },
+    {
+      "name": "decoration_favorites",
+      "domain": "identity",
+      "columns": [
+        {
+          "name": "id",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "user_id",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "decoration_id",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "created_at",
+          "type": "INTEGER",
+          "notNull": true
+        }
+      ],
+      "primaryKey": [
+        "id"
+      ],
+      "indexes": [],
+      "foreignKeys": [
+        {
+          "columns": [
+            "user_id"
+          ],
+          "table": "users",
+          "references": [
+            "id"
+          ],
+          "onDelete": "CASCADE"
+        }
+      ],
+      "autoincrement": false
+    },
+    {
+      "name": "privacy_settings",
+      "domain": "identity",
+      "columns": [
+        {
+          "name": "id",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "group_add_policy",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "updated_at",
+          "type": "INTEGER",
+          "notNull": true
+        },
+        {
+          "name": "suggestable",
+          "type": "BOOLEAN",
+          "notNull": true
+        }
+      ],
+      "primaryKey": [
+        "id"
+      ],
+      "indexes": [],
+      "foreignKeys": [
+        {
+          "columns": [
+            "id"
+          ],
+          "table": "users",
+          "references": [
+            "id"
+          ],
+          "onDelete": "CASCADE"
+        }
+      ],
+      "autoincrement": false
+    },
+    {
+      "name": "community_pins",
+      "domain": "workspace",
+      "columns": [
+        {
+          "name": "id",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "org_id",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "name",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "format",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "created_by",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "created_at",
+          "type": "INTEGER",
+          "notNull": true
+        },
+        {
+          "name": "description",
+          "type": "TEXT",
+          "notNull": false
+        },
+        {
+          "name": "animated",
+          "type": "BOOLEAN",
+          "notNull": true
+        }
+      ],
+      "primaryKey": [
+        "id"
+      ],
+      "indexes": [],
+      "foreignKeys": [
+        {
+          "columns": [
+            "org_id"
+          ],
+          "table": "orgs",
+          "references": [
+            "id"
+          ],
+          "onDelete": "CASCADE"
+        }
+      ],
+      "autoincrement": false
+    },
+    {
+      "name": "community_pin_awards",
+      "domain": "workspace",
+      "columns": [
+        {
+          "name": "id",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "pin_id",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "org_id",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "user_id",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "awarded_by",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "awarded_at",
+          "type": "INTEGER",
+          "notNull": true
+        }
+      ],
+      "primaryKey": [
+        "id"
+      ],
+      "indexes": [],
+      "foreignKeys": [
+        {
+          "columns": [
+            "pin_id"
+          ],
+          "table": "community_pins",
+          "references": [
+            "id"
+          ],
+          "onDelete": "CASCADE"
+        },
+        {
+          "columns": [
+            "org_id"
+          ],
+          "table": "orgs",
+          "references": [
+            "id"
+          ],
+          "onDelete": "CASCADE"
+        },
+        {
+          "columns": [
+            "user_id"
+          ],
+          "table": "users",
+          "references": [
+            "id"
+          ],
+          "onDelete": "CASCADE"
+        }
+      ],
+      "autoincrement": false
+    },
+    {
+      "name": "community_rules",
+      "domain": "workspace",
+      "columns": [
+        {
+          "name": "id",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "updated_by",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "updated_at",
+          "type": "INTEGER",
+          "notNull": true
+        },
+        {
+          "name": "channel_id",
+          "type": "TEXT",
+          "notNull": false
+        },
+        {
+          "name": "required",
+          "type": "BOOLEAN",
+          "notNull": true
+        },
+        {
+          "name": "rules",
+          "type": "JSONB",
+          "notNull": true
+        }
+      ],
+      "primaryKey": [
+        "id"
+      ],
+      "indexes": [],
+      "foreignKeys": [
+        {
+          "columns": [
+            "id"
+          ],
+          "table": "orgs",
+          "references": [
+            "id"
+          ],
+          "onDelete": "CASCADE"
+        }
+      ],
+      "autoincrement": false
+    },
+    {
+      "name": "community_rule_agreements",
+      "domain": "workspace",
+      "columns": [
+        {
+          "name": "id",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "org_id",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "user_id",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "agreed_at",
+          "type": "INTEGER",
+          "notNull": true
+        }
+      ],
+      "primaryKey": [
+        "id"
+      ],
+      "indexes": [],
+      "foreignKeys": [
+        {
+          "columns": [
+            "org_id"
+          ],
+          "table": "orgs",
+          "references": [
+            "id"
+          ],
+          "onDelete": "CASCADE"
+        },
+        {
+          "columns": [
+            "user_id"
+          ],
+          "table": "users",
+          "references": [
+            "id"
+          ],
+          "onDelete": "CASCADE"
+        }
+      ],
+      "autoincrement": false
+    },
+    {
+      "name": "user_activities",
+      "domain": "identity",
+      "columns": [
+        {
+          "name": "id",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "updated_at",
+          "type": "INTEGER",
+          "notNull": true
+        },
+        {
+          "name": "expires_at",
+          "type": "INTEGER",
+          "notNull": true
+        },
+        {
+          "name": "activity",
+          "type": "JSONB",
+          "notNull": true
+        }
+      ],
+      "primaryKey": [
+        "id"
+      ],
+      "indexes": [],
+      "foreignKeys": [
+        {
+          "columns": [
+            "id"
+          ],
+          "table": "users",
+          "references": [
+            "id"
+          ],
+          "onDelete": "CASCADE"
+        }
+      ],
+      "autoincrement": false
+    },
+    {
+      "name": "username_holds",
+      "domain": "identity",
+      "columns": [
+        {
+          "name": "id",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "user_id",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "created_at",
+          "type": "INTEGER",
+          "notNull": true
+        },
+        {
+          "name": "expires_at",
+          "type": "INTEGER",
+          "notNull": true
+        }
+      ],
+      "primaryKey": [
+        "id"
+      ],
+      "indexes": [],
+      "foreignKeys": [
+        {
+          "columns": [
+            "user_id"
+          ],
+          "table": "users",
+          "references": [
+            "id"
+          ],
+          "onDelete": "CASCADE"
+        }
+      ],
+      "autoincrement": false
+    },
+    {
+      "name": "creator_verifications",
+      "domain": "identity",
+      "columns": [
+        {
+          "name": "id",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "user_id",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "platform",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "channel_name",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "link",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "status",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "proof_type",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "proof_size",
+          "type": "INTEGER",
+          "notNull": true
+        },
+        {
+          "name": "created_at",
+          "type": "INTEGER",
+          "notNull": true
+        },
+        {
+          "name": "notes",
+          "type": "TEXT",
+          "notNull": false
+        },
+        {
+          "name": "reason",
+          "type": "TEXT",
+          "notNull": false
+        },
+        {
+          "name": "reviewed_by",
+          "type": "TEXT",
+          "notNull": false
+        },
+        {
+          "name": "username_at_approval",
+          "type": "TEXT",
+          "notNull": false
+        },
+        {
+          "name": "reviewed_at",
+          "type": "INTEGER",
+          "notNull": false
+        }
+      ],
+      "primaryKey": [
+        "id"
+      ],
+      "indexes": [],
+      "foreignKeys": [
+        {
+          "columns": [
+            "user_id"
+          ],
+          "table": "users",
+          "references": [
+            "id"
+          ],
+          "onDelete": "CASCADE"
+        }
+      ],
+      "autoincrement": false
+    },
+    {
+      "name": "creator_program",
+      "domain": "identity",
+      "columns": [
+        {
+          "name": "id",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "user_id",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "status",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "created_at",
+          "type": "INTEGER",
+          "notNull": true
+        },
+        {
+          "name": "reason",
+          "type": "TEXT",
+          "notNull": false
+        },
+        {
+          "name": "reviewed_by",
+          "type": "TEXT",
+          "notNull": false
+        },
+        {
+          "name": "reviewed_at",
+          "type": "INTEGER",
+          "notNull": false
+        }
+      ],
+      "primaryKey": [
+        "id"
+      ],
+      "indexes": [],
+      "foreignKeys": [
+        {
+          "columns": [
+            "user_id"
+          ],
+          "table": "users",
+          "references": [
+            "id"
+          ],
+          "onDelete": "CASCADE"
+        }
+      ],
+      "autoincrement": false
+    },
+    {
+      "name": "creator_posts",
+      "domain": "identity",
+      "columns": [
+        {
+          "name": "id",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "user_id",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "url",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "platform",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "created_at",
+          "type": "INTEGER",
+          "notNull": true
+        },
+        {
+          "name": "reward_note",
+          "type": "TEXT",
+          "notNull": false
+        },
+        {
+          "name": "reviewed_by",
+          "type": "TEXT",
+          "notNull": false
+        },
+        {
+          "name": "views",
+          "type": "INTEGER",
+          "notNull": false
+        },
+        {
+          "name": "reviewed_at",
+          "type": "INTEGER",
+          "notNull": false
+        },
+        {
+          "name": "counted",
+          "type": "BOOLEAN",
+          "notNull": true
+        }
+      ],
+      "primaryKey": [
+        "id"
+      ],
+      "indexes": [],
+      "foreignKeys": [
+        {
+          "columns": [
+            "user_id"
+          ],
+          "table": "users",
+          "references": [
+            "id"
+          ],
+          "onDelete": "CASCADE"
+        }
+      ],
+      "autoincrement": false
+    },
+    {
+      "name": "linked_accounts",
+      "domain": "identity",
+      "columns": [
+        {
+          "name": "id",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "user_id",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "provider",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "external_id",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "name",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "url",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "items_kind",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "connected_at",
+          "type": "INTEGER",
+          "notNull": true
+        },
+        {
+          "name": "updated_at",
+          "type": "INTEGER",
+          "notNull": true
+        },
+        {
+          "name": "checked_at",
+          "type": "INTEGER",
+          "notNull": true
+        },
+        {
+          "name": "tokens",
+          "type": "TEXT",
+          "notNull": false
+        },
+        {
+          "name": "visible",
+          "type": "BOOLEAN",
+          "notNull": true
+        },
+        {
+          "name": "items",
+          "type": "JSONB",
+          "notNull": true
+        }
+      ],
+      "primaryKey": [
+        "id"
+      ],
+      "indexes": [],
+      "foreignKeys": [
+        {
+          "columns": [
+            "user_id"
+          ],
+          "table": "users",
+          "references": [
+            "id"
+          ],
+          "onDelete": "CASCADE"
+        }
+      ],
+      "autoincrement": false
+    },
+    {
+      "name": "linked_account_starts",
+      "domain": "identity",
+      "columns": [
+        {
+          "name": "id",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "user_id",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "provider",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "verifier",
+          "type": "TEXT",
+          "notNull": true
+        },
+        {
+          "name": "expires_at",
+          "type": "INTEGER",
+          "notNull": true
+        }
+      ],
+      "primaryKey": [
+        "id"
+      ],
+      "indexes": [],
+      "foreignKeys": [
+        {
+          "columns": [
+            "user_id"
+          ],
+          "table": "users",
+          "references": [
+            "id"
+          ],
+          "onDelete": "CASCADE"
+        }
+      ],
+      "autoincrement": false
+    }
+  ]
+}

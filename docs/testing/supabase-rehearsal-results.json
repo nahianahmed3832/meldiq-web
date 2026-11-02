@@ -1,0 +1,40 @@
+{
+  "observedAt": "2026-11-02T12:03:52.351Z",
+  "synthetic": true,
+  "productionChanged": false,
+  "privateDirectory": "/Users/nahian/.local/share/meldiq-supabase/rehearsal-1793621032332",
+  "importMilliseconds": 5459.101041,
+  "resumeMilliseconds": 1172.5480830000015,
+  "tablesReconciled": 279,
+  "recordsReconciled": 1009,
+  "reconciliationPassed": true,
+  "syntheticFinancialTotal": {
+    "amount_minor": "1250"
+  },
+  "dumpMilliseconds": 1707.7146670000002,
+  "restoreMilliseconds": 5312.865958999999,
+  "restoreReconciliationPassed": true,
+  "localRepositoryLoad": {
+    "requests": 200,
+    "concurrency": 10,
+    "errors": 0,
+    "errorRate": 0,
+    "elapsedMilliseconds": 656.7595409999994,
+    "p50Milliseconds": 17.293875000003027,
+    "p95Milliseconds": 292.36466700000165,
+    "connectionPool": {
+      "total": 6,
+      "idle": 6,
+      "waiting": 0,
+      "errors": 0
+    },
+    "processRssBytes": 42385408,
+    "scope": "local PostgreSQL repository only, not HTTP or hosted Realtime"
+  },
+  "testRealtimeEnqueue": {
+    "delivered": 200,
+    "elapsedMilliseconds": 1448.9492079999982,
+    "scope": "plain-Postgres managed-table INSERT capture contract; not a hosted socket delivery test"
+  },
+  "ok": true
+}

@@ -1,0 +1,21 @@
+{
+  "ok": true,
+  "observedAt": "2026-11-02T17:12:42.735Z",
+  "projectRef": "bkvlxbsnzqkhbifawcww",
+  "local": false,
+  "productionChanged": false,
+  "sourceSha256": "3bf606760224f367d378c1e0661061fb20d7aff7f4ee0e84671f63e23d58f472",
+  "catalogSha256": "c59c75ad003c04eeeab81cd5f5c2859be847c4147ab0e580c1aa954489a56a94",
+  "databaseBytesBefore": 157382323,
+  "conservativeProjectedDatabaseBytes": 365024947,
+  "phase": "complete",
+  "copyMilliseconds": 4037.065375,
+  "tables": 282,
+  "records": 677617,
+  "allRecordHashesMatch": true,
+  "timestampRangesAndFinancialTotalsMatch": true,
+  "sourceCounterFloorsPreserved": true,
+  "exactRunResumePassed": true,
+  "syntheticFixtureOperationsProtected": true,
+  "completedAt": "2026-11-02T17:18:00.946Z"
+}
