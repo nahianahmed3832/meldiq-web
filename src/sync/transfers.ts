@@ -1,12 +1,13 @@
+import { mediaPreview } from "./mediaPreview";
 import { aesGcmDecrypt, aesGcmEncrypt } from "../crypto/aead";
 import { fromB64, randomBytes, sha256, toB64, utf8 } from "../crypto/bytes";
 import { encryptFile } from "../crypto/attachment";
 import type { AttachmentRef } from "../protocol/payload";
 import { holdUpdates } from "../application/updates";
 import { ApiError } from "../api/client";
-import { AttachmentError, fileLimit, MAX_FILES_PER_MESSAGE, SINGLE_FORMAT_BYTES, uploadSingle } from "./attachments";
+import { AttachmentError, fileLimit, MAX_FILES_PER_MESSAGE, SINGLE_FORMAT_BYTES } from "./attachments";
 import { CHUNK_BYTES } from "../crypto/fileStream";
-import { prepareLarge, type PreparedFile, preparedRef, type UploadCheckpoint, UploadCancelled, uploadPrepared } from "./largeUpload";
+import { prepareLarge, type PreparedFile, checkUploadSignal, type UploadCheckpoint, UploadCancelled, uploadPrepared } from "./largeUpload";
 import type { Engine } from "./engine";
 
 /**
@@ -16,7 +17,7 @@ import type { Engine } from "./engine";
  * - One transfer per operation: its id is a hash of the conversation, the files (name, size, last change), the caption
  *   and the reply, so sending the same thing again while it's running joins the running transfer.
  * - Checkpoints in this browser's database (erased with the rest on sign-out): each large file's ciphertext (as a Blob,
- *   still end-to-end encrypted), where its upload got to, and the stored attachment's id. A file's key is kept only
+ *   still encrypted), where its upload got to, and the stored attachment's id. A file's key is kept only
  *   sealed with a non-extractable AES-GCM key that never leaves this browser, never as bytes.
  * - After a reload the transfer comes back as interrupted: Resume continues from the stored ciphertext and the parts the
  *   server already has; a file whose encryption hadn't finished is chosen again (a page can't reopen a file by itself).
@@ -24,7 +25,7 @@ import type { Engine } from "./engine";
  */
 
 export type TransferStatus = "running" | "interrupted" | "failed" | "sent" | "cancelled";
-export type FilePhase = "waiting" | "encrypting" | "uploading" | "done";
+export type FilePhase = "waiting" | "encrypting" | "uploading" | "previewing" | "done" | "failed" | "cancelled";
 
 export interface TransferFile {
   name: string;
@@ -35,6 +36,9 @@ export interface TransferFile {
   /** Bytes of this phase done and in all (encrypting: ciphertext bytes; uploading: bytes sent). */
   done: number;
   total: number;
+  originalUploaded?: boolean;
+  speedBps?: number;
+  remainingSeconds?: number;
   /** The file is needed again to continue (its encryption hadn't finished before a reload). */
   needsFile?: boolean;
 }
@@ -66,6 +70,10 @@ interface SealedKey {
 
 /** A file's checkpoint as kept in the database: no plaintext, no raw key. */
 interface StoredFile {
+  thumbnail?: StoredFile;
+  w?: number;
+  h?: number;
+  durationMs?: number;
   name: string;
   type: string;
   size: number;
@@ -84,6 +92,7 @@ interface StoredFile {
 
 interface StoredTransfer {
   id: string;
+  messageId?: string;
   conversationId: string;
   caption: string;
   replyTo?: string;
@@ -112,6 +121,10 @@ export class Transfers {
   private lastEmit = 0;
   private emitTimer: ReturnType<typeof setTimeout> | null = null;
   private loaded: Promise<void> | null = null;
+  private wrapping: Promise<CryptoKey> | null = null;
+  private active = 0;
+  private readonly slots = new Set<() => void>();
+  private writes = new Map<string, Promise<void>>();
 
   constructor(private readonly engine: Engine) {}
 
@@ -164,6 +177,8 @@ export class Transfers {
    * running joins it instead of starting again.
    */
   async start(conversationId: string, files: OutgoingFile[], caption: string, opts: { replyTo?: string; threadRoot?: string } = {}): Promise<string> {
+    if (!files.length) throw new AttachmentError("Choose at least one file.");
+    if (files.some((f) => !Number.isSafeInteger(f.size) || f.size !== f.source.size)) throw new AttachmentError("The selected file size changed. Choose the file again.");
     if (files.length > MAX_FILES_PER_MESSAGE) throw new AttachmentError(`Send at most ${MAX_FILES_PER_MESSAGE} files in one message.`);
     const limit = fileLimit(this.engine.state.get().server);
     const tooBig = files.find((f) => f.size > limit);
@@ -177,6 +192,7 @@ export class Transfers {
       id,
       conversationId,
       caption,
+      messageId: crypto.randomUUID(),
       replyTo: opts.replyTo,
       threadRoot: opts.threadRoot,
       createdAt: Date.now(),
@@ -198,7 +214,16 @@ export class Transfers {
       createdAt: kept?.createdAt ?? record.createdAt,
       files: files.map((f) => ({ name: f.name, type: f.type, size: f.size, lastModified: f.lastModified ?? 0, phase: "waiting", done: 0, total: 0 })),
     });
-    if (!kept) await this.save(id);
+    if (!kept) {
+      try {
+        await this.save(id);
+      } catch (e) {
+        this.jobs.delete(id);
+        this.stored.delete(id);
+        this.sources.delete(id);
+        throw e;
+      }
+    }
     this.emit(true);
     void this.run(id);
     return id;
@@ -242,14 +267,50 @@ export class Transfers {
     this.aborts.set(id, abort);
     const release = holdUpdates();
     const refs: AttachmentRef[] = [];
+    let releaseSlot = () => {};
     try {
+      releaseSlot = await this.acquire(abort.signal);
       for (const [i, f] of rec.files.entries()) {
         const view = job.files[i];
-        refs.push(await this.sendFile(id, i, f, view, abort.signal));
+        checkUploadSignal(abort.signal);
+        let ref = await this.sendFile(id, i, f, view, abort.signal);
+        view.originalUploaded = true;
+        const source = this.sources.get(id)?.[i];
+        let previewSource: Blob | undefined;
+        if (!f.thumbnail && source && f.voiceDurationMs === undefined) {
+          view.phase = "previewing";
+          this.emit(true);
+          const preview = await mediaPreview(source, f.name, abort.signal);
+          if (preview) {
+            Object.assign(f, { w: preview.w, h: preview.h, durationMs: preview.durationMs });
+            f.thumbnail = { name: preview.file.name, type: preview.file.type, size: preview.file.size, lastModified: 0 };
+            previewSource = preview.file;
+            await this.save(id);
+          }
+        }
+        if (f.thumbnail && (previewSource || f.thumbnail.sealedKey)) {
+          try {
+            const thumbnail = await this.sendFile(id, i, f.thumbnail, view, abort.signal, { source: previewSource, preview: true });
+            const mime = thumbnail.mime;
+            if (mime !== "image/jpeg" && mime !== "image/png" && mime !== "image/webp") throw new AttachmentError("The generated preview format is unsupported.");
+            ref = { ...ref, thumbnail: { ...thumbnail, mime }, w: f.w, h: f.h, ...(f.durationMs !== undefined ? { durationMs: f.durationMs } : {}) };
+          } catch (e) {
+            if (e instanceof ApiError && ["quota_exceeded", "upload_limit", "storage_full", "too_large"].includes(e.code) && !abort.signal.aborted) {
+              delete f.thumbnail;
+              await this.save(id);
+              this.engine.notice("info", "The preview could not fit in your storage allowance. The original file is ready.");
+            } else throw e;
+          }
+        }
+        refs.push(ref);
+        checkUploadSignal(abort.signal);
         view.phase = "done";
         this.emit(true);
       }
-      await this.engine.sendText(rec.conversationId, rec.caption, { replyTo: rec.replyTo, threadRoot: rec.threadRoot, attachments: refs });
+      rec.messageId ??= crypto.randomUUID();
+      await this.save(id);
+      checkUploadSignal(abort.signal);
+      await this.engine.sendText(rec.conversationId, rec.caption, { presetId: rec.messageId, replyTo: rec.replyTo, threadRoot: rec.threadRoot, attachments: refs });
       await this.finish(id, "sent");
     } catch (e) {
       if (e instanceof UploadCancelled || abort.signal.aborted) return void (await this.finish(id, "cancelled"));
@@ -259,38 +320,66 @@ export class Transfers {
         job.error = `Choose "${rec.files[e.index].name}" again to continue.`;
       } else {
         job.status = "failed";
+        const failed = job.files.find((f) => f.phase !== "done");
+        if (failed) failed.phase = "failed";
         job.error = e instanceof Error ? e.message : "Couldn't send the files.";
       }
       this.emit(true);
     } finally {
+      releaseSlot();
       release();
       this.aborts.delete(id);
     }
   }
 
-  private async sendFile(id: string, i: number, f: StoredFile, view: TransferFile, signal: AbortSignal): Promise<AttachmentRef> {
+  /** A bounded queue across messages, with cancellation while waiting for a slot. */
+  private acquire(signal: AbortSignal): Promise<() => void> {
+    checkUploadSignal(signal);
+    return new Promise((resolve, reject) => {
+      const abort = () => {
+        this.slots.delete(check);
+        reject(new UploadCancelled("Upload cancelled."));
+      };
+      const check = () => {
+        if (this.active >= 2) return;
+        this.slots.delete(check);
+        signal.removeEventListener("abort", abort);
+        this.active++;
+        resolve(() => {
+          this.active--;
+          for (const wake of [...this.slots]) wake();
+        });
+      };
+      this.slots.add(check);
+      signal.addEventListener("abort", abort, { once: true });
+      check();
+    });
+  }
+
+  private async sendFile(id: string, i: number, f: StoredFile, view: TransferFile, signal: AbortSignal, opts: { source?: Blob; preview?: boolean } = {}): Promise<AttachmentRef> {
+    let sample = { phase: "waiting" as FilePhase, at: performance.now(), done: 0 };
     const progress = (phase: FilePhase) => (p: { done: number; total: number }) => {
+      const now = performance.now();
+      if (sample.phase !== phase || p.done < sample.done) {
+        sample = { phase, at: now, done: p.done };
+        delete view.speedBps;
+        delete view.remainingSeconds;
+      } else if (phase === "uploading" && now - sample.at >= 1500 && p.done - sample.done >= 65536) {
+        view.speedBps = ((p.done - sample.done) * 1000) / (now - sample.at);
+        view.remainingSeconds = Math.ceil(Math.max(0, p.total - p.done) / view.speedBps);
+        sample = { phase, at: now, done: p.done };
+      }
       view.phase = phase;
       view.done = p.done;
       view.total = p.total;
       this.emit();
     };
     if (f.attachmentId && f.sealedKey && f.nonce && f.sha256) return this.refFromStored(f, f.attachmentId);
-    const source = this.sources.get(id)?.[i] ?? null;
-    if (f.size <= SINGLE_FORMAT_BYTES) {
-      if (!source) throw new NeedsFile(i);
-      view.phase = "encrypting";
-      view.total = f.size;
-      this.emit(true);
-      const enc = await encryptFile(new Uint8Array(await source.arrayBuffer()));
-      progress("uploading")({ done: 0, total: enc.ciphertext.length });
-      const attachmentId = await uploadSingle(this.engine, this.stored.get(id)!.conversationId, enc.ciphertext);
-      Object.assign(f, { attachmentId, sealedKey: await this.seal(fromB64(enc.key)), nonce: enc.nonce, sha256: enc.sha256 });
-      await this.save(id);
-      return this.ref(f, attachmentId, enc.key);
-    }
+    checkUploadSignal(signal);
+    const slot = 2 * i + (opts.preview ? 1 : 0);
+    const source = opts.source ?? (opts.preview ? null : this.sources.get(id)?.[i]) ?? null;
     // Large: encrypt once (unless a checkpoint has the ciphertext), then upload, continuing where it stopped.
-    let prepared = this.prepared.get(id)?.[i] ?? null;
+    let prepared = this.prepared.get(id)?.[slot] ?? null;
     if (!prepared && f.ciphertext && f.sealedKey && f.nonce && f.sha256) {
       prepared = {
         name: f.name,
@@ -305,20 +394,39 @@ export class Transfers {
     }
     if (!prepared) {
       if (!source) throw new NeedsFile(i);
-      prepared = await prepareLarge(
-        { name: f.name, type: f.type, size: f.size, source, slice: (a, b) => source.slice(a, b) },
-        { signal, voiceDurationMs: f.voiceDurationMs, onProgress: (p) => progress("encrypting")(p) },
-      );
-      Object.assign(f, { ciphertext: prepared.ciphertext, sealedKey: await this.seal(prepared.rawKey), nonce: toB64(prepared.nonce), sha256: prepared.sha256, chunk: CHUNK_BYTES });
+      checkUploadSignal(signal);
+      view.phase = "encrypting";
+      this.emit(true);
+      if (f.size <= SINGLE_FORMAT_BYTES) {
+        const enc = await encryptFile(new Uint8Array(await source.arrayBuffer()));
+        prepared = {
+          name: f.name,
+          type: f.type,
+          size: f.size,
+          ciphertext: new Blob([new Uint8Array(enc.ciphertext)]),
+          rawKey: fromB64(enc.key),
+          nonce: fromB64(enc.nonce),
+          sha256: enc.sha256,
+          voiceDurationMs: f.voiceDurationMs,
+        };
+      } else {
+        prepared = await prepareLarge(
+          { name: f.name, type: f.type, size: f.size, source, slice: (a, b) => source.slice(a, b) },
+          { signal, voiceDurationMs: f.voiceDurationMs, onProgress: (p) => progress("encrypting")(p) },
+        );
+        f.chunk = CHUNK_BYTES;
+      }
+      checkUploadSignal(signal);
+      Object.assign(f, { ciphertext: prepared.ciphertext, sealedKey: await this.seal(prepared.rawKey), nonce: toB64(prepared.nonce), sha256: prepared.sha256 });
       await this.save(id);
     }
-    this.prepared.set(id, Object.assign(this.prepared.get(id) ?? [], { [i]: prepared }));
+    this.prepared.set(id, Object.assign(this.prepared.get(id) ?? [], { [slot]: prepared }));
     const attachmentId = await uploadPrepared(this.engine, this.stored.get(id)!.conversationId, prepared, {
       signal,
       checkpoint: f.checkpoint,
-      onCheckpoint: (c) => {
+      onCheckpoint: async (c) => {
         f.checkpoint = c;
-        void this.save(id);
+        await this.save(id);
       },
       onProgress: (p) => progress("uploading")(p),
     });
@@ -326,7 +434,7 @@ export class Transfers {
     // Uploaded: the ciphertext needn't be kept any longer; the reference has everything the message needs.
     delete f.ciphertext;
     await this.save(id);
-    return preparedRef(prepared, attachmentId);
+    return this.ref(f, attachmentId, toB64(prepared.rawKey));
   }
 
   private async refFromStored(f: StoredFile, attachmentId: string): Promise<AttachmentRef> {
@@ -347,6 +455,9 @@ export class Transfers {
       key,
       nonce: f.nonce!,
       sha256: f.sha256!,
+      ...(f.w ? { w: f.w } : {}),
+      ...(f.h ? { h: f.h } : {}),
+      ...(f.durationMs !== undefined ? { durationMs: f.durationMs } : {}),
       ...(f.chunk ? { chunk: f.chunk } : {}),
       ...(f.voiceDurationMs !== undefined ? { voice: true, durationMs: Math.round(f.voiceDurationMs) } : {}),
     };
@@ -357,13 +468,19 @@ export class Transfers {
     const rec = this.stored.get(id);
     if (status === "cancelled" && rec) {
       // Whatever reached the store for an unfinished upload is removed (the server also expires abandoned uploads).
-      for (const f of rec.files) {
+      for (const f of rec.files.flatMap((f) => (f.thumbnail ? [f, f.thumbnail] : [f]))) {
         if (!f.attachmentId && f.checkpoint?.uploadId) await this.engine.api.call("DELETE", `/v1/attachments/uploads/${encodeURIComponent(f.checkpoint.uploadId)}`).catch(() => undefined);
       }
     }
     await this.forget(id);
     if (job) {
       job.status = status;
+      if (status === "cancelled")
+        job.files
+          .filter((f) => f.phase !== "done")
+          .forEach((f) => {
+            f.phase = "cancelled";
+          });
       job.error = null;
       // A sent message shows in the conversation; the finished transfer leaves the list shortly after.
       if (status === "sent") setTimeout(() => (this.jobs.delete(id), this.emit(true)), 1500);
@@ -376,16 +493,26 @@ export class Transfers {
     this.prepared.delete(id);
     this.sources.delete(id);
     this.stored.delete(id);
-    await this.engine.store.deleteValue(KEY_PREFIX + id).catch(() => undefined);
+    await this.writes.get(id)?.catch(() => undefined);
+    this.writes.delete(id);
+    await this.engine.store.deleteValue(KEY_PREFIX + id);
   }
 
   private async save(id: string): Promise<void> {
     const rec = this.stored.get(id);
-    if (rec) await this.engine.store.setValue(KEY_PREFIX + id, rec).catch(() => undefined);
+    if (!rec) return;
+    const snapshot = structuredClone(rec);
+    const write = (this.writes.get(id) ?? Promise.resolve()).catch(() => undefined).then(() => this.engine.store.setValue(KEY_PREFIX + id, snapshot));
+    this.writes.set(id, write);
+    await write;
   }
 
   /** The non-extractable key that seals file keys in this browser, made once. */
-  private async wrapKey(): Promise<CryptoKey> {
+  private wrapKey(): Promise<CryptoKey> {
+    return (this.wrapping ??= this.loadWrapKey());
+  }
+
+  private async loadWrapKey(): Promise<CryptoKey> {
     const kept = await this.engine.store.getValue<CryptoKey>(WRAP_KEY);
     if (kept instanceof CryptoKey) return kept;
     const key = await crypto.subtle.generateKey({ name: "AES-GCM", length: 256 }, false, ["encrypt", "decrypt"]);

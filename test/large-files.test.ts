@@ -67,7 +67,8 @@ describe("chunked files streamed (android ChunkedAttachmentCrypto)", () => {
   });
 
   it("takes the per-file limit from the server", () => {
-    expect(fileLimit({ fileMaxBytes: 1024 ** 3, attachmentMaxBytes: 1024 ** 3 + 1024 ** 2 })).toBe(1024 ** 3);
+    expect(fileLimit({ fileMaxBytes: 1024 ** 3, attachmentMaxBytes: 1024 ** 3 + 1024 ** 2 })).toBe(1_000_000_000);
+    expect(fileLimit({ fileMaxBytes: 1_000_000_000, attachmentMaxBytes: 1_001_000_000 })).toBe(1_000_000_000);
     expect(fileLimit({ attachmentMaxBytes: 25 * 1024 * 1024 })).toBe(25 * 1024 * 1024 - 16);
     expect(fileLimit(null)).toBe(25 * 1024 * 1024);
     expect(new ApiError(413, "too_large", "x").status).toBe(413);

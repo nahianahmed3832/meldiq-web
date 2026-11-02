@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.meldiq.android.data.model.AttachmentThumbnailTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-11-02T12:09:53.736Z" hostname="MDNAHIANs-MacBook-Pro.local" time="0.1">
+  <properties/>
+  <testcase name="legacyReferencesAndSeparatePreviewsRoundTrip" classname="com.meldiq.android.data.model.AttachmentThumbnailTest" time="0.1"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

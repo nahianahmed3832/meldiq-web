@@ -1,0 +1,6 @@
+
+> meldiq-web@0.5.0-beta format:check
+> prettier --check "src/**/*.{ts,tsx,css}" "test/**/*.ts" "e2e/**/*.ts" "scripts/**/*.{ts,mjs}"
+
+Checking formatting...
+All matched files use Prettier code style!

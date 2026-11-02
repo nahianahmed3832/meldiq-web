@@ -1,0 +1,96 @@
+{
+  "date": "2026-11-02",
+  "backendBase": "f77d0790",
+  "backendCheckout": "/Volumes/code_files/meldiq_media_module",
+  "database": "Current release base: Atlas schema 6 across sixteen domains; additive media schema 7; FileStore abstraction and SQLite compatibility retained",
+  "architecture": [
+    "File bodies are encrypted on clients before S3 upload; the current v2 message relay can read reference keys and is not E2EE against the relay",
+    "Private S3, existing presigned single/multipart APIs and FileStore metadata retained",
+    "Filename, MIME, dimensions and duration follow the existing message payload security model",
+    "No server-side media decoding, transcoding or claim of malware scanning encrypted files",
+    "No production deployment, bucket mutation or rewrite of existing media"
+  ],
+  "retained": [
+    "AES-GCM legacy and chunked wire formats",
+    "Multipart size/checksum-bound presigning and completion verification",
+    "Member-only expiring downloads and range requests",
+    "Web encrypted IndexedDB checkpoints and sealed file keys",
+    "Android URI streaming, photo picker, camera, Media3 playback and optional on-device compression",
+    "Existing Free/Plus and community Spark entitlements; legacy Go reader only",
+    "Albums, captions, viewers, local media gallery and retention jobs"
+  ],
+  "checklist": [
+    {
+      "area": "backend",
+      "issue": "Completion misses canPost and changed plan checks; multipart finalization cannot recover if S3 completed before metadata write",
+      "status": "complete",
+      "result": "Completion rechecks membership, posting/attachment rights and current entitlements; persisted completion manifests and assembled-object recovery are tested"
+    },
+    {
+      "area": "web upload",
+      "issue": "Network fallback aborts multipart progress; workers can continue after sibling failure; single PUT expiration and cancellation need fixes",
+      "status": "complete",
+      "result": "Retains multipart progress after transient failures, settles sibling workers, refreshes authorization and honors cancellation"
+    },
+    {
+      "area": "web transfers",
+      "issue": "Small uploads ignore cancellation; async checkpoint persistence race; empty and mismatched Blob sizes accepted",
+      "status": "complete",
+      "result": "Small and large files use persisted encrypted checkpoints, serialized writes and stable message IDs; empty/size mismatch checks added"
+    },
+    {
+      "area": "images",
+      "issue": "Automatic WebP rewrite and download conversion remove original fidelity; explicit quality controls missing",
+      "status": "complete",
+      "result": "Original is default; original downloads retain exact bytes; explicit optimization and animation/alpha guards added"
+    },
+    {
+      "area": "composer",
+      "issue": "No photo/video previews, dedicated pickers or camera entries; selection truncates silently",
+      "status": "complete",
+      "result": "Dedicated photo/video/camera selectors, bounded previews, filenames/sizes and clear selection errors; mobile captions verified visible"
+    },
+    {
+      "area": "downloads",
+      "issue": "File card lacks progress/cancel; resumed ranges not validated; unbounded shared plaintext cache",
+      "status": "complete",
+      "result": "Progress/cancel/retry, validated ranges and byte limits, bounded per-engine cache and account-scoped proxy fallback"
+    },
+    {
+      "area": "viewer",
+      "issue": "No zoom; unsupported codec playback has no actionable error; Safari fullscreen fallback missing",
+      "status": "complete",
+      "result": "Web zoom/pinch/pan, native bounded drawable decoding, decoder errors and Safari fullscreen fallback implemented; physical device checks remain"
+    },
+    {
+      "area": "gallery",
+      "issue": "Local loaded-message index only; no separate video tab or filename search/context action",
+      "status": "complete",
+      "result": "Preserved concurrent native paginated collections and existing Web pages; both now offer photo/video and filename filters within the visible page, with thumbnail loading and original-message context actions"
+    },
+    {
+      "area": "android",
+      "issue": "Cancellation leaves direct upload until TTL; animated WebP/AVIF can be flattened; default photo compression; legacy ciphertext ceiling does not subtract GCM tag",
+      "status": "complete",
+      "result": "Native network cancellation, durable ciphertext/session/manifest checkpoints, conservative animation preservation and legacy GCM limit corrected"
+    },
+    {
+      "area": "derivatives",
+      "issue": "Cross-platform encrypted derivative protocol and persisted paginated attachment index require design and implementation",
+      "status": "complete",
+      "result": "Additive encrypted thumbnail descriptors generated/read/retained by both clients; current release collection APIs retained; no extra media database/provider"
+    },
+    {
+      "area": "verification",
+      "issue": "Run deterministic S3/API, Web crypto/upload/browser, Android JVM/build; real devices and paid staging unavailable unless discovered",
+      "status": "partial",
+      "result": "Backend, Web unit/integration/browser, native JVM and build checks run; physical device, staging S3, near-1 GB transfers and load/operations certification remain"
+    },
+    {
+      "area": "limits",
+      "issue": "Server/client maxima used inconsistent decimal/binary units above the requested absolute 1 GB ceiling",
+      "status": "complete",
+      "result": "New uploads and admin bounds cap at exactly 1,000,000,000 plaintext bytes; lower configured entitlements remain effective; encryption overhead is separate and legacy larger originals remain downloadable"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "baseCommit": "64fc3f4fc0a096924513d685c61f4e87753d162a",
+  "sourceCommit": "b34d3ee82eeb82cdcce8d2e5af0ad06ead17398d",
+  "branch": "codex/media-production-20261102",
+  "patch": "server-patches/0011-media-sharing.patch",
+  "sha256": "e41bbb26e3a97116dbaa5bf93da573b71b4ef1fe18392b067af1ed2c4a16e12d",
+  "migration": "092_attachment_publication.sql",
+  "mongoSchemaVersion": 8,
+  "productionDeployed": false,
+  "absoluteFileMaxBytes": 1000000000,
+  "preservesCurrentAdminPolicy": true,
+  "runtimeOverlayKeepsUnchangedDeployedModules": true
+}

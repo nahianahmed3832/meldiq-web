@@ -39,20 +39,25 @@ function TransferRow({ job }: { job: Transfer }) {
   const pick = useRef<HTMLInputElement>(null);
   const current = job.files.find((f) => f.phase !== "done") ?? job.files[job.files.length - 1];
   const pct = current && current.total ? Math.floor((100 * current.done) / current.total) : 0;
+  const total = job.files.reduce((sum, f) => sum + f.size, 0);
+  const uploaded = job.files.reduce((sum, f) => sum + (f.phase === "done" || f.originalUploaded ? f.size : f.phase === "uploading" && f.total ? f.size * Math.min(1, f.done / f.total) : 0), 0);
+  const overall = total ? Math.floor((100 * uploaded) / total) : 0;
   const what =
     job.status === "sent"
-      ? "Sent"
+      ? "Ready · message queued"
       : job.status === "cancelled"
         ? "Cancelled"
         : job.status === "failed"
           ? (job.error ?? "Couldn't send")
           : job.status === "interrupted"
             ? (job.error ?? "Interrupted: continue where it stopped")
-            : current?.phase === "encrypting"
-              ? `Encrypting… ${pct}%`
-              : current?.phase === "uploading"
-                ? `Uploading… ${pct}% · ${mb(current.done)} of ${mb(current.total)}`
-                : "Waiting…";
+            : current?.phase === "previewing"
+              ? "Preparing preview…"
+              : current?.phase === "encrypting"
+                ? `Encrypting… ${pct}%`
+                : current?.phase === "uploading"
+                  ? `Uploading… ${pct}% · ${mb(current.done)} of ${mb(current.total)}`
+                  : "Waiting…";
   const names = job.files.length === 1 ? job.files[0].name : `${job.files.length} files`;
   const needsFiles = job.files.some((f) => f.needsFile);
   return (
@@ -60,8 +65,41 @@ function TransferRow({ job }: { job: Transfer }) {
       <FileUp size={16} aria-hidden="true" className="faint" />
       <span className="transfer-text">
         <strong className="ellipsis">{names}</strong>
-        <small aria-live="polite">{what}</small>
-        {job.status === "running" && <progress className="transfer-bar" max={100} value={pct} aria-label={`${names}: ${pct}%`} />}
+        <small aria-live="polite">
+          {what}
+          {job.status === "running" && current?.phase === "uploading" && current.speedBps
+            ? ` · ${mb(current.speedBps)}/s${current.remainingSeconds ? ` · about ${current.remainingSeconds}s left` : ""}`
+            : ""}
+        </small>
+        {job.status === "running" && <progress className="transfer-bar" max={100} value={overall} aria-label={`Overall upload ${names}: ${overall}%`} />}
+        {job.files.length > 1 && (
+          <details className="transfer-files">
+            <summary>
+              {job.files.filter((f) => f.phase === "done").length} of {job.files.length} uploaded · {overall}% overall
+            </summary>
+            <ul>
+              {job.files.map((f, i) => (
+                <li key={i}>
+                  <span className="ellipsis">{f.name}</span>
+                  <small>
+                    {f.phase === "done"
+                      ? "Ready"
+                      : f.phase === "failed"
+                        ? "Failed"
+                        : f.phase === "cancelled"
+                          ? "Cancelled"
+                          : f.phase === "previewing"
+                            ? "Preparing preview"
+                            : f.phase === "waiting"
+                              ? "Queued"
+                              : `${f.phase === "encrypting" ? "Encrypting" : "Uploading"} ${f.total ? Math.floor((100 * f.done) / f.total) : 0}%`}{" "}
+                    · {mb(f.size)}
+                  </small>
+                </li>
+              ))}
+            </ul>
+          </details>
+        )}
       </span>
       {job.status === "running" && (
         <button className="icon-btn" onClick={() => transfers.cancel(job.id)} aria-label={`Cancel sending ${names}`} title="Cancel">

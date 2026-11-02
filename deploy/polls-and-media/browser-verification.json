@@ -1,0 +1,22 @@
+{
+  "status": "passed",
+  "buildId": "f-otm9QqHC_AazXAtKGtI",
+  "artifactRun": 41445857996,
+  "workflowsPassed": 4,
+  "engines": [
+    "chromium",
+    "webkit"
+  ],
+  "viewportChecks": [
+    "1440x900",
+    "390x844"
+  ],
+  "checks": [
+    "Named and hidden vote results, percentages, filters, reload, changes, removal, creator closure and scheduled expiry",
+    "Original 600x6000 screenshot dimensions, aspect ratio, fit width, scrolling, zoom, dragging, cross-message arrows and keyboard navigation",
+    "Phone image remains visibly within the viewport after resize",
+    "Escape and focus restoration, Media tab previous/next navigation"
+  ],
+  "unexpectedRuntimeErrors": 0,
+  "webKitUnloadCancellationDiagnostics": "Only same-origin aborted-fetch browser diagnostics during explicit page navigation are excluded; application runtime errors remain checked."
+}

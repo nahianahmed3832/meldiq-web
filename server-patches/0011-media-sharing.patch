@@ -1,0 +1,733 @@
+diff --git a/server/migrations/092_attachment_publication.sql b/server/migrations/092_attachment_publication.sql
+new file mode 100644
+index 00000000..fdf62eaf
+--- /dev/null
++++ b/server/migrations/092_attachment_publication.sql
+@@ -0,0 +1,7 @@
++-- New server-message uploads remain temporary until a message publishes them.
++-- NULL on every existing row preserves all previous retention decisions.
++ALTER TABLE attachments ADD COLUMN pending_message_until INTEGER;
++ALTER TABLE attachments ADD COLUMN message_id TEXT;
++ALTER TABLE attachments ADD COLUMN sha256 TEXT;
++CREATE INDEX idx_attachments_pending_message ON attachments(pending_message_until) WHERE pending_message_until IS NOT NULL;
++CREATE INDEX idx_attachments_message ON attachments(conversation_id, message_id) WHERE message_id IS NOT NULL;
+diff --git a/server/package-lock.json b/server/package-lock.json
+index d366bda4..e7956684 100644
+--- a/server/package-lock.json
++++ b/server/package-lock.json
+@@ -1,12 +1,12 @@
+ {
+   "name": "meldiq-server",
+-  "version": "0.76.0",
++  "version": "0.76.1",
+   "lockfileVersion": 3,
+   "requires": true,
+   "packages": {
+     "": {
+       "name": "meldiq-server",
+-      "version": "0.76.0",
++      "version": "0.76.1",
+       "dependencies": {
+         "@aws-sdk/client-s3": "3.1144.0",
+         "@aws-sdk/client-sesv2": "3.1144.0",
+diff --git a/server/package.json b/server/package.json
+index d6bcf381..a8eb90ec 100644
+--- a/server/package.json
++++ b/server/package.json
+@@ -1,6 +1,6 @@
+ {
+   "name": "meldiq-server",
+-  "version": "0.76.0",
++  "version": "0.76.1",
+   "private": true,
+   "description": "Meldiq relay/API server (internal beta)",
+   "type": "module",
+diff --git a/server/src/app/config.ts b/server/src/app/config.ts
+index 7a035a57..16453c44 100644
+--- a/server/src/app/config.ts
++++ b/server/src/app/config.ts
+@@ -16,10 +16,8 @@ import { type LinkedAccountsConfig, linkedAccountsConfig } from "../modules/link
+ 
+ const SEVEN_DAYS_S = 7 * 24 * 3600;
+ const MiB = 1024 * 1024;
+-/**
+- * Server-wide ceiling: 1024 MB (decimal), before encryption. Applies immediately to every plan and Spark level.
+- */
+-export const DEFAULT_FILE_MAX_BYTES = 1024 * 1_000_000;
++/** Absolute plaintext ceiling: 1 GB in decimal bytes, regardless of a configured plan's larger legacy value. */
++export const DEFAULT_FILE_MAX_BYTES = 1_000_000_000;
+ /** Room for encryption overhead on top of the file limit: the chunked format adds 16 bytes per 1 MiB chunk. */
+ const ENCRYPTION_HEADROOM_BYTES = MiB;
+ 
+diff --git a/server/src/app/server.ts b/server/src/app/server.ts
+index 07cde5d8..beabbf5f 100644
+--- a/server/src/app/server.ts
++++ b/server/src/app/server.ts
+@@ -156,7 +156,7 @@ import { now } from "../shared/utilities/util.js";
+ import wsRoutes from "../modules/realtime/ws.js";
+ import { Billing, billingRoutes } from "../modules/billing/index.js";
+ 
+-export const VERSION = "0.76.0";
++export const VERSION = "0.76.1";
+ /**
+  * The client API this server speaks and the oldest client API it accepts. Clients refuse a server whose
+  * minClientApi is newer than theirs; servers from before these fields existed count as API 1.
+diff --git a/server/src/infrastructure/database/mongo/client.ts b/server/src/infrastructure/database/mongo/client.ts
+index 5c87e7d3..3deb24e1 100644
+--- a/server/src/infrastructure/database/mongo/client.ts
++++ b/server/src/infrastructure/database/mongo/client.ts
+@@ -4,7 +4,7 @@ import { indexesFor, type TableSpec, tableSpecs, validatorFor } from "./catalog.
+ import { type MongoConfig, type MongoDomain } from "./config.js";
+ 
+ /** Bumped whenever the collections' validators or indexes change; recorded in orbit_meta. */
+-export const MONGO_SCHEMA_VERSION = 7;
++export const MONGO_SCHEMA_VERSION = 8;
+ export const META_COLLECTION = "orbit_meta";
+ 
+ export interface Logger {
+diff --git a/server/src/infrastructure/database/schema.generated.ts b/server/src/infrastructure/database/schema.generated.ts
+index aaf32cfb..cf605327 100644
+--- a/server/src/infrastructure/database/schema.generated.ts
++++ b/server/src/infrastructure/database/schema.generated.ts
+@@ -1089,9 +1089,14 @@ export const SCHEMA: readonly TableShape[] = [
+       {"name":"created_at","type":"INTEGER","notNull":true},
+       {"name":"expires_at","type":"INTEGER","notNull":true},
+       {"name":"kept","type":"INTEGER","notNull":true,"default":0},
++      {"name":"pending_message_until","type":"INTEGER","notNull":false},
++      {"name":"message_id","type":"TEXT","notNull":false},
++      {"name":"sha256","type":"TEXT","notNull":false},
+     ],
+     primaryKey: ["id"],
+     indexes: [
++      {"name":"idx_attachments_message","columns":["conversation_id","message_id"],"unique":false,"nocase":false,"partialNotNull":["message_id"]},
++      {"name":"idx_attachments_pending_message","columns":["pending_message_until"],"unique":false,"nocase":false,"partialNotNull":["pending_message_until"]},
+       {"name":"idx_attachments_uploader_kept","columns":["uploader_user_id","kept","expires_at"],"unique":false,"nocase":false,"partialNotNull":null},
+       {"name":"idx_attachments_uploader","columns":["uploader_user_id","created_at"],"unique":false,"nocase":false,"partialNotNull":null},
+       {"name":"idx_attachments_expiry","columns":["expires_at"],"unique":false,"nocase":false,"partialNotNull":null},
+diff --git a/server/src/modules/billing/controls.ts b/server/src/modules/billing/controls.ts
+index 53f35813..11c8405a 100644
+--- a/server/src/modules/billing/controls.ts
++++ b/server/src/modules/billing/controls.ts
+@@ -1,7 +1,7 @@
+ import type { Rows } from "../../infrastructure/database/rows/index.js";
+ import { ApiError } from "../../shared/errors.js";
+ import type { MojoEnforce } from "./mojo.js";
+-import { CATALOG_VERSION, PLAN_KEYS, PLAN_PERKS, type PlanKey, type PlanPerks, SCREEN_PRESETS, type ScreenPresetId, SPARK_LEVELS, type SparkLevel } from "./perks.js";
++import { CATALOG_VERSION, GB, PLAN_KEYS, PLAN_PERKS, type PlanKey, type PlanPerks, SCREEN_PRESETS, type ScreenPresetId, SPARK_LEVELS, type SparkLevel } from "./perks.js";
+ 
+ /**
+  * Meldiq Mojo run from the Platform Admin Console (docs/MOJO.md › Running Mojo from the console): whether plan limits
+@@ -23,7 +23,7 @@ export type LevelOverrides = Partial<Record<"1" | "2" | "3", Partial<Record<Leve
+ /** Hard bounds on what the console may set, whatever the plan (the server's own limits still apply on top). */
+ export const LIMIT_BOUNDS: Readonly<Record<PlanLimitKey | LevelLimitKey, { min: number; max: number }>> = {
+   messageChars: { min: 100, max: 20_000 },
+-  uploadBytes: { min: 1_000_000, max: PLAN_PERKS.plus.uploadBytes },
++  uploadBytes: { min: 1_000_000, max: GB },
+   sparks: { min: 0, max: 100 },
+   customItems: { min: 0, max: 5_000 },
+   bots: { min: 0, max: 100 },
+@@ -62,7 +62,7 @@ export function plansWith(o: PlanOverrides): Record<PlanKey, PlanPerks> {
+   return Object.fromEntries(
+     PLAN_KEYS.map((k) => {
+       const { screen, ...numbers } = o[k] ?? {};
+-      return [k, { ...PLAN_PERKS[k], ...numbers, uploadBytes: Math.min(numbers.uploadBytes ?? PLAN_PERKS[k].uploadBytes, PLAN_PERKS.plus.uploadBytes), ...(screen ? { screen: [screen] } : {}) }];
++      return [k, { ...PLAN_PERKS[k], ...numbers, uploadBytes: Math.min(numbers.uploadBytes ?? PLAN_PERKS[k].uploadBytes, GB), ...(screen ? { screen: [screen] } : {}) }];
+     }),
+   ) as Record<PlanKey, PlanPerks>;
+ }
+@@ -77,7 +77,7 @@ const COMPARED = ["messageChars", "uploadBytes", "customItems", "bots", "sparks"
+ 
+ /** The Spark levels with [o] applied over perks.ts (level 0 never changes: it's a server without Sparks). */
+ export function levelsWith(o: LevelOverrides): SparkLevel[] {
+-  return SPARK_LEVELS.map((l) => (l.level === 0 ? l : { ...l, ...(o[String(l.level) as "1" | "2" | "3"] ?? {}), uploadBytes: Math.min(o[String(l.level) as "1" | "2" | "3"]?.uploadBytes ?? l.uploadBytes!, PLAN_PERKS.plus.uploadBytes) }));
++  return SPARK_LEVELS.map((l) => (l.level === 0 ? l : { ...l, ...(o[String(l.level) as "1" | "2" | "3"] ?? {}), uploadBytes: Math.min(o[String(l.level) as "1" | "2" | "3"]?.uploadBytes ?? l.uploadBytes!, GB) }));
+ }
+ 
+ /**
+diff --git a/server/src/modules/files/messageAttachments.ts b/server/src/modules/files/messageAttachments.ts
+new file mode 100644
+index 00000000..f610cf1d
+--- /dev/null
++++ b/server/src/modules/files/messageAttachments.ts
+@@ -0,0 +1,43 @@
++import { z } from "zod/v4";
++import type { AppContext } from "../../app/context.js";
++import { effectiveFileMaxBytes } from "../../app/config.js";
++import { ApiError } from "../../shared/errors.js";
++import { runtimePolicy } from "../platformAdmin/index.js";
++import { KEPT_FOREVER } from "./store.js";
++
++const descriptor = z.object({
++  id: z.string().min(1).max(128), name: z.string().max(512), mime: z.string().max(255),
++  size: z.number().int().positive(), key: z.string().regex(/^[A-Za-z0-9+/]{43}=$/), nonce: z.string().regex(/^[A-Za-z0-9+/]{16}$/), sha256: z.string().regex(/^[A-Za-z0-9+/]{43}=$/),
++  chunk: z.number().int().min(1024).max(16 * 1024 * 1024).optional(),
++});
++const attachment = descriptor.extend({ thumbnail: descriptor.extend({
++  mime: z.enum(["image/jpeg", "image/png", "image/webp"]), size: z.number().int().positive().max(128 * 1024), chunk: z.undefined().optional(),
++}).nullish() });
++
++/** Validate completed objects before publishing references. No decryption or media processing runs on the API. */
++export async function messageAttachments(ctx: AppContext, userId: string, conversationId: string, orgId: string | null, raw: unknown): Promise<string[]> {
++  if (raw === undefined || raw === null) return [];
++  const parsed = z.array(attachment).max(10).safeParse(raw);
++  if (!parsed.success) throw new ApiError(400, "bad_request", "Choose valid files and upload them before sending.");
++  const seen = new Set<string>();
++  const max = Math.min(effectiveFileMaxBytes(ctx.config), ctx.mojo.uploadBytes(userId, orgId), runtimePolicy(ctx.platform).policy.maxFileBytes);
++  for (const original of parsed.data) {
++    if (original.size > max) throw new ApiError(413, "upload_limit", "This file exceeds your upload limit here.", { maxBytes: max });
++    for (const ref of [original, ...(original.thumbnail ? [original.thumbnail] : [])]) {
++      if (seen.has(ref.id)) throw new ApiError(400, "bad_request", "The same file appears more than once.");
++      seen.add(ref.id);
++      const stored = await ctx.files.attachment(ref.id);
++      const size = ref.size + (ref.chunk === undefined ? 16 : 16 * Math.max(1, Math.ceil(ref.size / ref.chunk)));
++      // A member may re-share an existing file in the same conversation; another conversation requires a fresh upload.
++      if (!stored || stored.conversation_id !== conversationId || stored.expires_at <= Date.now() || stored.size !== size || (stored.sha256 != null && stored.sha256 !== ref.sha256) || (stored.pending_message_until != null && stored.uploader_user_id !== userId)) {
++        throw new ApiError(400, "bad_request", "A file is unavailable or has not finished uploading. Upload it again.");
++      }
++    }
++  }
++  return [...seen];
++}
++
++/** New uploads expire if never sent; published files follow the operator's existing retention policy. */
++export async function retainMessageAttachments(ctx: AppContext, ids: string[], messageId: string): Promise<void> {
++  for (const id of ids) await ctx.files.publish(id, messageId, ctx.config.attachmentKeepForever ? KEPT_FOREVER : undefined);
++}
+diff --git a/server/src/modules/files/mongoStore.ts b/server/src/modules/files/mongoStore.ts
+index 9eb5f053..47edeb72 100644
+--- a/server/src/modules/files/mongoStore.ts
++++ b/server/src/modules/files/mongoStore.ts
+@@ -43,7 +43,11 @@ export class MongoFileStore implements FileStore {
+   }
+ 
+   async keep(id: string, expiresAt: number): Promise<void> {
+-    await this.attachments.updateOne({ _id: id }, { $set: { kept: 1, expires_at: expiresAt } });
++    await this.attachments.updateOne({ _id: id }, { $set: { kept: 1, expires_at: expiresAt, pending_message_until: null } });
++  }
++
++  async publish(id: string, messageId: string, expiresAt?: number): Promise<void> {
++    await this.attachments.updateOne({ _id: id }, [{ $set: { message_id: { $ifNull: ["$message_id", messageId] }, pending_message_until: null, ...(expiresAt !== undefined ? { expires_at: expiresAt } : {}) } }]);
+   }
+ 
+   async storedUsage(f: UsageFilter): Promise<Usage> {
+@@ -98,7 +102,7 @@ export class MongoFileStore implements FileStore {
+   }
+ 
+   async keepAllForever(now: number): Promise<number> {
+-    return (await this.attachments.updateMany({ expires_at: { $gt: now, $lt: KEPT_FOREVER } }, { $set: { expires_at: KEPT_FOREVER } })).modifiedCount;
++    return (await this.attachments.updateMany({ expires_at: { $gt: now, $lt: KEPT_FOREVER }, pending_message_until: null }, { $set: { expires_at: KEPT_FOREVER } })).modifiedCount;
+   }
+ 
+   async purgeExpired(now: number): Promise<string[]> {
+diff --git a/server/src/modules/files/routes.ts b/server/src/modules/files/routes.ts
+index decc5139..37e1deb7 100644
+--- a/server/src/modules/files/routes.ts
++++ b/server/src/modules/files/routes.ts
+@@ -21,8 +21,8 @@ import { newId, now } from "../../shared/utilities/util.js";
+ import { refusal, scopesFor } from "../quotas/index.js";
+ 
+ /**
+- * Encrypted attachment relay. Clients encrypt files locally (AES-256-GCM, key travels inside the
+- * E2EE message), so the server only ever stores opaque ciphertext. Downloads require membership of
++ * Encrypted attachment bodies (AES-256-GCM); object storage receives opaque ciphertext. Current v2 message payloads
++ * include reference keys readable by the relay, while legacy encrypted envelopes protect those keys. Downloads require membership of
+  * the conversation the blob was uploaded to; ids are 128-bit random and never listed.
+  *
+  * Bytes live in ctx.blobs (the server's disk or S3, docs/STORAGE_AND_DATA.md). An upload is received into a spool
+@@ -229,6 +229,7 @@ export default async function attachmentRoutes(app: FastifyInstance, ctx: AppCon
+       track(who, reserve, 1);
+     });
+     let storedSize: number | null = null;
++    let storedHash: string | null = null;
+     const tmp = spoolFor(id);
+     let size = 0;
+     const hash = crypto.createHash("sha256");
+@@ -252,7 +253,9 @@ export default async function attachmentRoutes(app: FastifyInstance, ctx: AppCon
+         throw badRequest("Upload was interrupted");
+       }
+       try {
+-        await blobs.putFile("attachments", id, tmp, size, hash.digest("hex"));
++        const digest = hash.digest("hex");
++        storedHash = Buffer.from(digest, "hex").toString("base64");
++        await blobs.putFile("attachments", id, tmp, size, digest);
+       } catch (e) {
+         await fs.promises.rm(tmp, { force: true });
+         ctx.log.error({ err: e }, "attachment store write failed");
+@@ -271,6 +274,8 @@ export default async function attachmentRoutes(app: FastifyInstance, ctx: AppCon
+       size,
+       created_at: t,
+       expires_at: expiresAt,
++      pending_message_until: cfg.messages.acceptEncrypted ? null : expiresAt,
++      sha256: storedHash,
+     });
+     ctx.usage?.add(conv.org_id, "files.upload_bytes", size);
+     ctx.telemetry?.activity.addTraffic(userId, "files.upload", size, t);
+@@ -292,7 +297,7 @@ export default async function attachmentRoutes(app: FastifyInstance, ctx: AppCon
+     const { proxy } = parse(AttachmentDownloadQuery, req.query);
+     const a = await files.attachment(id);
+     // Same 404 for unknown, expired and unauthorised: no oracle for guessing ids.
+-    if (!a || a.expires_at <= now() || !ctx.authz.isMember(a.conversation_id, userId)) throw notFound("Attachment not found or expired");
++    if (!a || a.expires_at <= now() || !ctx.authz.isMember(a.conversation_id, userId) || (a.pending_message_until != null && a.uploader_user_id !== userId)) throw notFound("Attachment not found or expired");
+     reply.header("cache-control", "private, no-store");
+     // Usage (round 7): bytes asked for, whether served here or from S3 (a range counts its own length).
+     const orgOf = (ctx.authz.conversation(a.conversation_id)?.org_id ?? null) as string | null;
+@@ -383,7 +388,18 @@ export default async function attachmentRoutes(app: FastifyInstance, ctx: AppCon
+     const u = await files.upload(id);
+     if (!u || u.user_id !== userId) throw notFound("Upload not found");
+     if (u.expires_at <= now()) throw new ApiError(410, "upload_expired", "This upload took too long. Start it again.");
+-    if (!allowOversized && u.size > encryptedAttachmentBytes(Math.min(effectiveFileMaxBytes(cfg), runtimePolicy(ctx.platform).policy.maxFileBytes))) throw uploadLimit(Math.min(effectiveFileMaxBytes(cfg), runtimePolicy(ctx.platform).policy.maxFileBytes));
++    if (!allowOversized) {
++      requireFeature(ctx.platform, "uploads");
++      const conv = ctx.authz.conversation(u.conversation_id);
++      if (!conv || !ctx.authz.isMember(conv.id, userId) || !ctx.authz.canPost(conv, userId) || !ctx.authz.canAttach(conv, userId)) {
++        await files.abandonUpload(u);
++        await quotaSettle(u.id, null);
++        throw new ApiError(403, "forbidden", "You can't share files in this conversation any more");
++      }
++      const max = Math.min(effectiveFileMaxBytes(cfg), ctx.mojo.uploadBytes(userId, conv.org_id), runtimePolicy(ctx.platform).policy.maxFileBytes);
++      // Refuse new authorizations but leave the owned session available for explicit cancellation.
++      if (u.size > Math.min(cfg.attachmentMaxBytes, encryptedAttachmentBytes(max))) throw uploadLimit(max);
++    }
+     return u;
+   };
+   const storeFailure = (e: unknown, what: string): never => {
+@@ -498,43 +514,43 @@ export default async function attachmentRoutes(app: FastifyInstance, ctx: AppCon
+     const d = requireDirect();
+     const { id } = parse(idParams, req.params);
+     const done = await files.attachment(id);
+-    if (done && done.uploader_user_id === userId) return { id: done.id, size: done.size, expiresAt: done.expires_at };
++    if (done && done.uploader_user_id === userId && done.expires_at > now() && ctx.authz.isMember(done.conversation_id, userId)) return { id: done.id, size: done.size, expiresAt: done.expires_at };
+     const u = await loadUpload(id, userId);
+     const body = parse(CompleteBody, req.body ?? {});
+     // Membership is checked again: someone removed while uploading can't add a file afterwards.
+     const conv = ctx.authz.conversation(u.conversation_id);
+-    if (!conv || !ctx.authz.isMember(conv.id, userId) || !ctx.authz.canAttach(conv, userId)) {
++    if (!conv || !ctx.authz.isMember(conv.id, userId) || !ctx.authz.canPost(conv, userId) || !ctx.authz.canAttach(conv, userId)) {
+       await files.abandonUpload(u);
+       throw new ApiError(403, "forbidden", "You can't post in this conversation any more");
+     }
++    let stored = await d.head("attachments", u.id).catch((e) => storeFailure(e, "head"));
++    let composite: string | undefined;
+     if (u.multipart_id) {
+       const parts = body.parts ?? [];
+       const expected = partCount(u);
+       if (parts.length !== expected || parts.some((p, i) => p.n !== i + 1)) throw badRequest(`Send all ${expected} parts, in order`);
+-      const have = new Map((await d.listParts("attachments", u.id, u.multipart_id).catch((e) => storeFailure(e, "list-parts"))).map((p) => [p.partNumber, p]));
+-      for (const p of parts) {
+-        const s3 = have.get(p.n);
+-        if (!s3 || s3.etag !== p.etag || s3.size !== partSizeOf(u, p.n) || (s3.sha256 && s3.sha256 !== p.sha256)) {
+-          throw new ApiError(409, "upload_incomplete", `Part ${p.n} isn't uploaded yet, or differs. Upload it again.`);
++      composite = `${crypto.createHash("sha256").update(Buffer.concat(parts.map((p) => Buffer.from(p.sha256, "base64")))).digest("base64")}-${expected}`;
++      if (!stored) {
++        const have = new Map((await d.listParts("attachments", u.id, u.multipart_id).catch((e) => storeFailure(e, "list-parts"))).map((p) => [p.partNumber, p]));
++        for (const p of parts) {
++          const s3 = have.get(p.n);
++          if (!s3 || s3.etag !== p.etag || s3.size !== partSizeOf(u, p.n) || (s3.sha256 && s3.sha256 !== p.sha256)) {
++            throw new ApiError(409, "upload_incomplete", `Part ${p.n} isn't uploaded yet, or differs. Upload it again.`);
++          }
++        }
++        try {
++          await d.completeMultipart("attachments", u.id, u.multipart_id, parts.map((p) => ({ partNumber: p.n, etag: p.etag, sha256: p.sha256 })));
++        } catch (e) {
++          // Another completion or a lost S3 answer may have committed the object. Verify it before retrying metadata.
++          stored = await d.head("attachments", u.id).catch((e) => storeFailure(e, "head"));
++          if (!stored) return storeFailure(e, "complete-multipart");
+         }
+       }
+-      await d
+-        .completeMultipart(
+-          "attachments",
+-          u.id,
+-          u.multipart_id,
+-          parts.map((p) => ({
+-            partNumber: p.n,
+-            etag: p.etag,
+-            sha256: p.sha256,
+-          })),
+-        )
+-        .catch((e) => storeFailure(e, "complete-multipart"));
+     }
+-    const stored = await d.head("attachments", u.id).catch((e) => storeFailure(e, "head"));
++    stored ??= await d.head("attachments", u.id).catch((e) => storeFailure(e, "head"));
+     if (!stored) throw new ApiError(409, "not_uploaded", "The file hasn't reached the server's storage yet. Upload it again.");
+     // The presigned request already bound size and hash; this catches anything else (a misbehaving store or app).
+-    if (stored.size !== u.size || (!u.multipart_id && stored.sha256 !== u.sha256)) {
++    if (stored.size !== u.size || (u.multipart_id ? stored.sha256 !== composite : stored.sha256 !== u.sha256)) {
+       await files.abandonUpload(u);
+       throw new ApiError(400, "upload_corrupt", "The stored file doesn't match what was announced. Send it again.");
+     }
+@@ -548,8 +564,12 @@ export default async function attachmentRoutes(app: FastifyInstance, ctx: AppCon
+       size: u.size,
+       created_at: t,
+       expires_at: expiresAt,
++      pending_message_until: cfg.messages.acceptEncrypted ? null : expiresAt,
++      sha256: u.sha256,
+     });
+     if (!recorded) {
++      const completed = await files.attachment(u.id);
++      if (completed && completed.uploader_user_id === userId) return { id: completed.id, size: completed.size, expiresAt: completed.expires_at };
+       await quotaSettle(u.id, null);
+       throw new ApiError(410, "upload_expired", "This upload took too long. Start it again.");
+     }
+@@ -588,8 +608,8 @@ export function removeStalePartials(dir: string): number {
+ }
+ 
+ /** When a file uploaded at [t] expires: never while files are kept for good (ATTACHMENT_KEEP_FOREVER), else after the relay window. */
+-function expiryOf(cfg: Pick<Config, "attachmentKeepForever" | "attachmentTtlSeconds">, t: number): number {
+-  return cfg.attachmentKeepForever ? KEPT_FOREVER : t + cfg.attachmentTtlSeconds * 1000;
++function expiryOf(cfg: Pick<Config, "attachmentKeepForever" | "attachmentTtlSeconds" | "messages">, t: number): number {
++  return cfg.messages.acceptEncrypted && cfg.attachmentKeepForever ? KEPT_FOREVER : t + cfg.attachmentTtlSeconds * 1000;
+ }
+ 
+ /**
+diff --git a/server/src/modules/files/store.ts b/server/src/modules/files/store.ts
+index 9fe34a4a..1f39c86b 100644
+--- a/server/src/modules/files/store.ts
++++ b/server/src/modules/files/store.ts
+@@ -20,6 +20,9 @@ export interface AttachmentRow {
+   expires_at: number;
+   /** 1: kept for encrypted history beyond the relay window (POST /v1/attachments/:id/keep). */
+   kept: number;
++  pending_message_until?: number | null;
++  message_id?: string | null;
++  sha256?: string | null;
+ }
+ 
+ export interface UploadRow {
+@@ -73,6 +76,7 @@ export interface FileStore {
+   attachment(id: string): Promise<AttachmentRow | null>;
+   recordAttachment(row: Omit<AttachmentRow, "kept">): Promise<void>;
+   keep(id: string, expiresAt: number): Promise<void>;
++  publish(id: string, messageId: string, expiresAt?: number): Promise<void>;
+   /** Stored attachments matching [f]. */
+   storedUsage(f: UsageFilter): Promise<Usage>;
+   /** Open direct uploads matching [f] (their size counts as if stored). */
+@@ -126,12 +130,16 @@ export class SqliteFileStore implements FileStore {
+ 
+   async recordAttachment(r: Omit<AttachmentRow, "kept">): Promise<void> {
+     this.db
+-      .prepare("INSERT INTO attachments (id, conversation_id, uploader_user_id, size, created_at, expires_at) VALUES (?, ?, ?, ?, ?, ?)")
+-      .run(r.id, r.conversation_id, r.uploader_user_id, r.size, r.created_at, r.expires_at);
++      .prepare("INSERT INTO attachments (id, conversation_id, uploader_user_id, size, created_at, expires_at, pending_message_until, sha256) VALUES (?, ?, ?, ?, ?, ?, ?, ?)")
++      .run(r.id, r.conversation_id, r.uploader_user_id, r.size, r.created_at, r.expires_at, r.pending_message_until ?? null, r.sha256 ?? null);
+   }
+ 
+   async keep(id: string, expiresAt: number): Promise<void> {
+-    this.db.prepare("UPDATE attachments SET kept = 1, expires_at = ? WHERE id = ?").run(expiresAt, id);
++    this.db.prepare("UPDATE attachments SET kept = 1, expires_at = ?, pending_message_until = NULL WHERE id = ?").run(expiresAt, id);
++  }
++
++  async publish(id: string, messageId: string, expiresAt?: number): Promise<void> {
++    this.db.prepare("UPDATE attachments SET message_id = COALESCE(message_id, ?), pending_message_until = NULL, expires_at = COALESCE(?, expires_at) WHERE id = ?").run(messageId, expiresAt ?? null, id);
+   }
+ 
+   async storedUsage(f: UsageFilter): Promise<Usage> {
+@@ -185,14 +193,14 @@ export class SqliteFileStore implements FileStore {
+     return this.db.transaction(() => {
+       if (this.db.prepare("DELETE FROM attachment_uploads WHERE id = ?").run(id).changes === 0) return false;
+       this.db
+-        .prepare("INSERT INTO attachments (id, conversation_id, uploader_user_id, size, created_at, expires_at) VALUES (?, ?, ?, ?, ?, ?)")
+-        .run(a.id, a.conversation_id, a.uploader_user_id, a.size, a.created_at, a.expires_at);
++        .prepare("INSERT INTO attachments (id, conversation_id, uploader_user_id, size, created_at, expires_at, pending_message_until, sha256) VALUES (?, ?, ?, ?, ?, ?, ?, ?)")
++        .run(a.id, a.conversation_id, a.uploader_user_id, a.size, a.created_at, a.expires_at, a.pending_message_until ?? null, a.sha256 ?? null);
+       return true;
+     })();
+   }
+ 
+   async keepAllForever(now: number): Promise<number> {
+-    return this.db.prepare("UPDATE attachments SET expires_at = ? WHERE expires_at > ? AND expires_at < ?").run(KEPT_FOREVER, now, KEPT_FOREVER).changes;
++    return this.db.prepare("UPDATE attachments SET expires_at = ? WHERE expires_at > ? AND expires_at < ? AND pending_message_until IS NULL").run(KEPT_FOREVER, now, KEPT_FOREVER).changes;
+   }
+ 
+   async purgeExpired(now: number): Promise<string[]> {
+diff --git a/server/src/modules/messaging/serverSend.ts b/server/src/modules/messaging/serverSend.ts
+index acb4f826..2313a46b 100644
+--- a/server/src/modules/messaging/serverSend.ts
++++ b/server/src/modules/messaging/serverSend.ts
+@@ -1,3 +1,4 @@
++import { messageAttachments, retainMessageAttachments } from "../files/messageAttachments.js";
+ import type { FastifyBaseLogger } from "fastify";
+ import { MAX_PAYLOAD_BYTES, type SendMessage, type StoredEvent } from "../../shared/contracts/http/serverMessages.js";
+ import type { AppContext } from "../../app/context.js";
+@@ -82,11 +83,19 @@ export async function sendServerMessage(ctx: AppContext, sender: Sender, m: Send
+     const prior = await ctx.messages.get(m.messageId);
+     if (!prior) return null;
+     if (prior.sender_user_id !== userId || prior.conversation_id !== conv.id) throw conflict("Message id collision");
++    const priorFiles = (JSON.parse(prior.payload) as { attachments?: { id: string; thumbnail?: { id: string } }[] }).attachments;
++    if (Array.isArray(priorFiles)) {
++      const ids = priorFiles.flatMap((ref) => ref.thumbnail ? [ref.id, ref.thumbnail.id] : [ref.id]);
++      await retainMessageAttachments(ctx, ids, m.messageId).catch((err) => log.warn({ err }, "attachment publication retry failed"));
++    }
+     return { messageId: m.messageId, serverTs: prior.server_ts, duplicate: true };
+   };
+   const earlier = await retry();
+   if (earlier) return earlier;
+ 
++  const attachmentIds = (m.cls === "message" || type === "edit")
++    ? await messageAttachments(ctx, userId, conv.id, conv.org_id, m.payload.attachments) : [];
++
+   // A change to a message: only to one in this conversation, and edits, deletions and closing a poll only by its sender.
+   // Community parity A1: a channel's moderators also delete other people's messages.
+   const target = typeof m.payload.target === "string" ? m.payload.target : null;
+@@ -169,6 +178,7 @@ export async function sendServerMessage(ctx: AppContext, sender: Sender, m: Send
+   // Controls (reactions, read markers, call keys) don't wake a sleeping phone; messages do, unless it's a request's.
+   for (const row of queued) ctx.hub.pushQueued(row.recipient_device_id, [row], { wake: m.cls === "message" && !quietFor.has(ownerOf.get(row.recipient_device_id) ?? "") });
+   if (request?.state === "pending" && m.cls === "message") await ctx.relationships.countSent(conv.id);
++  await retainMessageAttachments(ctx, attachmentIds, m.messageId).catch((err) => log.warn({ err }, "attachment retention will be retried by history keep"));
+   // Posting tools: a reaction may give or take a reaction role, a deleted message takes its reaction roles with it.
+   // Like points, this never fails a message that was accepted.
+   if (m.cls === "control" && conv.org_id) {
+diff --git a/server/test/direct_uploads.test.ts b/server/test/direct_uploads.test.ts
+index d94c8ff7..38684304 100644
+--- a/server/test/direct_uploads.test.ts
++++ b/server/test/direct_uploads.test.ts
+@@ -1,6 +1,6 @@
+ import crypto from "node:crypto";
+ import http from "node:http";
+-import { afterAll, beforeAll, describe, expect, it } from "vitest";
++import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
+ import { runCleanup } from "../src/modules/administration/jobs.js";
+ import { type FakeS3, startFakeS3 } from "./support/fakeS3.js";
+ import type { GriipClient } from "./support/griipClient.js";
+@@ -180,6 +180,44 @@ describe("direct uploads to S3", () => {
+     expect(sha(Buffer.from(await bob.req("GET", `/v1/attachments/${done.id}`)))).toBe(sha(body));
+   });
+ 
++  it("recovers multipart completion after S3 commits but the metadata write fails", async () => {
++    const body = crypto.randomBytes(6 * MiB + 21);
++    const s = await alice.req("POST", "/v1/attachments/uploads", { conversationId: dm, size: body.length, sha256: sha(body) });
++    const specs = [0, 1].map((i) => {
++      const b = body.subarray(i * s.partSize, (i + 1) * s.partSize);
++      return { n: i + 1, size: b.length, sha256: sha(b), body: b };
++    });
++    const { parts: signed } = await alice.req("POST", `/v1/attachments/uploads/${s.uploadId}/parts`, { parts: specs.map(({ body: _, ...p }) => p) });
++    for (let i = 0; i < specs.length; i++) expect((await put(signed[i].upload, specs[i].body)).status).toBe(200);
++    const { parts } = await alice.req("GET", `/v1/attachments/uploads/${s.uploadId}/parts`);
++    const fail = vi.spyOn(h.ctx.files, "completeUpload").mockRejectedValueOnce(new Error("synthetic metadata interruption"));
++    try {
++      await expectStatus(alice.req("POST", `/v1/attachments/uploads/${s.uploadId}/complete`, { parts }), 500);
++      expect(s3.objects.has(`orbit/attachments/${s.uploadId}`)).toBe(true);
++      expect((await alice.req("POST", `/v1/attachments/uploads/${s.uploadId}/complete`, { parts })).id).toBe(s.uploadId);
++      expect(sha(s3.objects.get(`orbit/attachments/${s.uploadId}`)!.body)).toBe(sha(body));
++    } finally { fail.mockRestore(); }
++  });
++
++  it("rechecks posting permission and entitlements before renewing or completing an upload", async () => {
++    const body = crypto.randomBytes(3000);
++    const s = await alice.req("POST", "/v1/attachments/uploads", { conversationId: dm, size: body.length, sha256: sha(body) });
++    await put(s.upload, body);
++    const permission = vi.spyOn(h.ctx.authz, "canPost").mockReturnValue(false);
++    try {
++      await expectStatus(alice.req("POST", `/v1/attachments/uploads/${s.uploadId}/complete`, {}), 403);
++      expect(await h.ctx.files.attachment(s.uploadId)).toBeNull();
++    } finally { permission.mockRestore(); }
++    const next = await alice.req("POST", "/v1/attachments/uploads", { conversationId: dm, size: body.length, sha256: sha(body) });
++    const entitlement = vi.spyOn(h.ctx.mojo, "uploadBytes").mockReturnValue(1000);
++    try {
++      await expectStatus(alice.req("POST", `/v1/attachments/uploads/${next.uploadId}/url`, {}), 413);
++      expect(await h.ctx.files.upload(next.uploadId)).not.toBeNull();
++      await alice.req("DELETE", `/v1/attachments/uploads/${next.uploadId}`);
++    } finally { entitlement.mockRestore(); }
++    await runCleanup(h.ctx);
++  });
++
+   it("abandoned uploads expire and their objects and parts are removed; nothing recorded is touched", async () => {
+     const body = crypto.randomBytes(2000);
+     const single = await alice.req("POST", "/v1/attachments/uploads", { conversationId: dm, size: body.length, sha256: sha(body) });
+diff --git a/server/test/files_1g.test.ts b/server/test/files_1g.test.ts
+index 24d64297..3a8ed525 100644
+--- a/server/test/files_1g.test.ts
++++ b/server/test/files_1g.test.ts
+@@ -1,21 +1,27 @@
+ import crypto from "node:crypto";
+ import { afterAll, beforeAll, describe, expect, it } from "vitest";
+ import { DEFAULT_FILE_MAX_BYTES, effectiveFileMaxBytes, loadConfig } from "../src/app/config.js";
++import { LIMIT_BOUNDS, levelsWith, plansWith } from "../src/modules/billing/controls.js";
+ import { type FakeS3, startFakeS3 } from "./support/fakeS3.js";
+ import type { GriipClient } from "./support/griipClient.js";
+ import { expectStatus, type Harness, startServer } from "./support/harness.js";
+ 
+-// The server-wide ceiling is 1024 MB (decimal), with exact encryption overhead allowed on the wire.
++// The server-wide ceiling is exactly 1 GB (decimal), with exact encryption overhead allowed on the wire.
+ const MiB = 1024 * 1024;
+ const GiB = 1024 * MiB;
+-const FILE_MAX = 1024 * 1_000_000;
++const FILE_MAX = 1_000_000_000;
+ const creds = { accessKeyId: "AKIDFILES1G", secretAccessKey: "files-1g-test-secret" };
+ const anySha = crypto.createHash("sha256").update("x").digest("base64");
+ /** Ciphertext size of a file in the chunked format: 16 bytes of tag per started 1 MiB chunk. */
+ const encryptedSize = (plain: number) => plain + 16 * Math.max(Math.ceil(plain / MiB), 1);
+ 
+-describe("the 1 GiB limit in configuration", () => {
+-  it("defaults to exactly 1024 MB with room for encryption on top", () => {
++describe("the 1 GB limit in configuration", () => {
++  it("bounds admin settings and previously stored plan/level overrides to one decimal GB", () => {
++    expect(LIMIT_BOUNDS.uploadBytes.max).toBe(FILE_MAX);
++    expect(plansWith({ plus: { uploadBytes: 1_100_000_000 } }).plus.uploadBytes).toBe(FILE_MAX);
++    expect(levelsWith({ "3": { uploadBytes: 1_100_000_000 } })[3]!.uploadBytes).toBe(FILE_MAX);
++  });
++  it("defaults to exactly 1 GB with room for encryption on top", () => {
+     const c = loadConfig({ DATA_DIR: "/tmp/orbit-config-test", FILE_MAX_BYTES: "2000000000" } as NodeJS.ProcessEnv);
+     expect(DEFAULT_FILE_MAX_BYTES).toBe(FILE_MAX);
+     expect(c.fileMaxBytes).toBe(FILE_MAX);
+@@ -32,7 +38,7 @@ describe("the 1 GiB limit in configuration", () => {
+     expect(encryptedSize(advertised)).toBeLessThanOrEqual(c.attachmentMaxBytes);
+   });
+ 
+-  it("has no file upload limits other than 1 GiB per file (owner's decision, UI-003)", () => {
++  it("has no file upload limits other than 1 GB per file (owner's decision, UI-003)", () => {
+     const c = loadConfig({ DATA_DIR: "/tmp/orbit-config-test" } as NodeJS.ProcessEnv);
+     expect(c.fileMaxBytes).toBe(FILE_MAX);
+     // 0 means no limit: no daily, stored, total, kept, new-account or hourly upload quotas.
+@@ -55,7 +61,7 @@ describe("the 1 GiB limit in configuration", () => {
+   });
+ });
+ 
+-describe("1 GiB uploads straight to S3", () => {
++describe("1 GB uploads straight to S3", () => {
+   let s3: FakeS3;
+   let h: Harness;
+   let alice: GriipClient, bob: GriipClient, eve: GriipClient;
+@@ -90,7 +96,7 @@ describe("1 GiB uploads straight to S3", () => {
+     expect(info.minClientApi).toBe(1);
+   });
+ 
+-  it("starts a multipart upload for an encrypted 1 GiB file, and refuses one byte over the limit", async () => {
++  it("starts a multipart upload for an encrypted 1 GB file, and refuses one byte over the limit", async () => {
+     const size = encryptedSize(FILE_MAX);
+     const s = await alice.req("POST", "/v1/attachments/uploads", { conversationId: dm, size, sha256: anySha });
+     expect(s.mode).toBe("multipart");
+diff --git a/server/test/history_keep.test.ts b/server/test/history_keep.test.ts
+index a1984285..17a30996 100644
+--- a/server/test/history_keep.test.ts
++++ b/server/test/history_keep.test.ts
+@@ -132,8 +132,8 @@ describe("keeping files for history", () => {
+ });
+ 
+ describe("keeping every file for good (ATTACHMENT_KEEP_FOREVER, the default since API 0.66.0)", () => {
+-  it("never expires a new upload, keeps files stored before the setting, and keeps what the retention job sees", async () => {
+-    const s = await startServer({});
++  it("preserves legacy encrypted-relay retention, files stored before the setting, and explicit history keep", async () => {
++    const s = await startServer({ MESSAGES_ACCEPT_ENCRYPTED: "true" });
+     try {
+       const x = await s.client("forevera");
+       const y = await s.client("foreverb");
+diff --git a/server/test/media_publication.test.ts b/server/test/media_publication.test.ts
+new file mode 100644
+index 00000000..3097732f
+--- /dev/null
++++ b/server/test/media_publication.test.ts
+@@ -0,0 +1,61 @@
++import crypto from "node:crypto";
++import { afterAll, beforeAll, describe, expect, it } from "vitest";
++import { startServer, type Harness, expectStatus } from "./support/harness.js";
++import type { GriipClient } from "./support/griipClient.js";
++import { KEPT_FOREVER } from "../src/modules/files/store.js";
++import { runCleanup } from "../src/modules/administration/jobs.js";
++
++function encrypted(name = "original.png") {
++  const key = crypto.randomBytes(32), nonce = crypto.randomBytes(12), plain = crypto.randomBytes(300);
++  const cipher = crypto.createCipheriv("aes-256-gcm", key, nonce);
++  const bytes = Buffer.concat([cipher.update(plain), cipher.final(), cipher.getAuthTag()]);
++  return { bytes, ref: { name, size: plain.length, mime: "image/png", key: key.toString("base64"), nonce: nonce.toString("base64"), sha256: crypto.createHash("sha256").update(bytes).digest("base64") } };
++}
++describe("publishing completed attachments", () => {
++  let h: Harness, alice: GriipClient, bob: GriipClient, other: GriipClient, dm: string, elsewhere: string;
++  beforeAll(async () => {
++    h = await startServer({ MESSAGES_ACCEPT_ENCRYPTED: "false" });
++    alice = await h.client("publishalice"); bob = await h.client("publishbob"); other = await h.client("publishother");
++    dm = (await alice.req("POST", "/v1/conversations/dm", { userId: bob.userId })).conversation.id;
++    elsewhere = (await alice.req("POST", "/v1/conversations/dm", { userId: other.userId })).conversation.id;
++  });
++  afterAll(async () => h.close());
++  const upload = async (cid: string, name?: string) => {
++    const f = encrypted(name);
++    const result = await alice.req("POST", `/v1/attachments?conversationId=${cid}`, undefined, f.bytes);
++    return { ...f.ref, id: result.id };
++  };
++  const send = (cid: string, attachments: unknown[], messageId = crypto.randomUUID(), sender = alice) => sender.req("POST", "/v2/messages", { conversationId: cid, messageId, cls: "message", sentAt: Date.now(), payload: { type: "text", text: "caption", attachments } });
++  it("refuses missing, foreign, duplicate, size-mismatched and hash-mismatched attachments", async () => {
++    const ref = await upload(dm);
++    const foreign = await upload(elsewhere);
++    for (const invalid of [[{ ...ref, id: "missing" }], [foreign], [ref, ref], [{ ...ref, size: ref.size + 1 }], [{ ...ref, sha256: crypto.randomBytes(32).toString("base64") }]]) {
++      await expectStatus(send(dm, invalid), 400);
++    }
++    // An unpublished object belongs to its uploader, even inside a shared conversation.
++    await expectStatus(send(dm, [ref], crypto.randomUUID(), bob), 400);
++  });
++  it("retains originals and bounded encrypted previews only after publication, with an idempotent message id", async () => {
++    const original = await upload(dm), thumbnail = await upload(dm, "preview.png");
++    const pending = await h.ctx.files.attachment(original.id);
++    expect(pending!.expires_at).toBeLessThan(KEPT_FOREVER);
++    expect(pending!.pending_message_until).toBeGreaterThan(Date.now());
++    await expectStatus(bob.req("GET", `/v1/attachments/${original.id}`), 404);
++    const messageId = crypto.randomUUID();
++    const refs = [{ ...original, thumbnail }];
++    expect((await send(dm, refs, messageId)).duplicate).toBe(false);
++    expect((await send(dm, refs, messageId)).duplicate).toBe(true);
++    await bob.req("GET", `/v1/attachments/${original.id}`);
++    for (const id of [original.id, thumbnail.id]) expect(await h.ctx.files.attachment(id)).toMatchObject({ message_id: messageId, pending_message_until: null, expires_at: KEPT_FOREVER });
++    await expectStatus(send(dm, [{ ...original, thumbnail: { ...thumbnail, mime: "image/svg+xml" } }]), 400);
++  });
++  it("cleans new unsent completed objects while preserving legacy records and published media", async () => {
++    const abandoned = await upload(dm);
++    // A fresh unbound upload remains temporary through the regular forever-retention pass.
++    await runCleanup(h.ctx);
++    const row = await h.ctx.files.attachment(abandoned.id);
++    expect(row!.expires_at).toBeLessThan(KEPT_FOREVER);
++    const gone = await h.ctx.files.purgeExpired(row!.expires_at + 1);
++    expect(gone).toContain(abandoned.id);
++  });
++});
+diff --git a/server/test/mojo.test.ts b/server/test/mojo.test.ts
+index bb169c6f..9ef7a330 100644
+--- a/server/test/mojo.test.ts
++++ b/server/test/mojo.test.ts
+@@ -151,22 +151,22 @@ describe("Meldiq Mojo", () => {
+       expect(MojoCatalog.safeParse(c).success).toBe(true);
+       expect(c.plans.map((p: any) => [p.key, p.messageChars, p.uploadBytes, p.sparks, p.customItems, p.bots, p.badge, p.check])).toEqual([
+         ["free", 2000, 50 * MB, 0, 20, 2, null, false],
+-        ["plus", 8000, 1024 * MB, 2, 250, 10, "plus", true],
++        ["plus", 8000, 1000 * MB, 2, 250, 10, "plus", true],
+       ]);
+       expect(c.spark.levels.map((l: any) => [l.level, l.sparks, l.emojiSlots, l.uploadBytes, l.voiceKbps, l.screen])).toEqual([
+         [0, 0, 50, null, 48, []],
+         // The owner's thresholds (2026-10-28): 2, 5 and 8 active Sparks in total.
+         [1, 2, 100, 50 * MB, 128, ["720p30"]],
+         [2, 5, 200, 200 * MB, 256, ["1080p60"]],
+-        [3, 8, 500, 1024 * MB, 384, ["1080p60", "1440p30"]],
++        [3, 8, 500, 1000 * MB, 384, ["1080p60", "1440p30"]],
+       ]);
+       expect(c.onSale).toEqual({ mode: "test", go: null, plus: { currency: "USD", amountMinor: 399 }, spark: { currency: "USD", amountMinor: 99 }, gifts: true, botsPlus: null });
+     });
+ 
+     it("never offers a larger file than the server takes (FILE_MAX_BYTES)", () => {
+       const capped = new Mojo(h.ctx.billing, h.ctx.billing.rows, { isMember: () => false, enforce: "on", maxUploadBytes: 1_073_741_824 });
+-      expect(Object.values(capped.plans()).map((p) => p.uploadBytes)).toEqual([50 * MB, 500 * MB, 1024 * MB]);
+-      expect(capped.levels().map((l) => l.uploadBytes)).toEqual([null, 50 * MB, 200 * MB, 1024 * MB]);
++      expect(Object.values(capped.plans()).map((p) => p.uploadBytes)).toEqual([50 * MB, 500 * MB, 1000 * MB]);
++      expect(capped.levels().map((l) => l.uploadBytes)).toEqual([null, 50 * MB, 200 * MB, 1000 * MB]);
+       expect(capped.uploadBytes("u_nobody", null)).toBe(50 * MB);
+     });
+ 
+@@ -297,7 +297,7 @@ describe("Meldiq Mojo", () => {
+       for (let i = 0; i < 3; i++) await free.req("POST", "/v2/mojo/sparks", { orgId });
+       expect((await sparksOf(free)).level).toBe(2);
+       expect(h.ctx.mojo.uploadBytes(free.userId, orgId)).toBe(200 * MB);
+-      expect(h.ctx.mojo.uploadBytes(plus.userId, null)).toBe(1024 * MB);
++      expect(h.ctx.mojo.uploadBytes(plus.userId, null)).toBe(1000 * MB);
+     });
+ 
+     it("gives everyone in a boosted server its screen shares and voice, never less than their own plan", () => {
+diff --git a/server/test/support/mongoGlobal.ts b/server/test/support/mongoGlobal.ts
+index dca96548..d1e38d17 100644
+--- a/server/test/support/mongoGlobal.ts
++++ b/server/test/support/mongoGlobal.ts
+@@ -18,6 +18,7 @@ export async function setup(project: TestProject): Promise<void> {
+     instanceOpts: [
+       {
+         ip: "127.0.0.1",
++        launchTimeout: 60_000,
+         args: [
+           "--wiredTigerCacheSizeGB",
+           "0.25",

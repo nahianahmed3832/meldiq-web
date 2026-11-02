@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.meldiq.android.data.model.AttachmentPolicyTest" tests="10" skipped="0" failures="0" errors="0" timestamp="2026-11-02T12:09:51.065Z" hostname="MDNAHIANs-MacBook-Pro.local" time="0.25">
+  <properties/>
+  <testcase name="aCompressedVideoThatWontFitIsFlaggedBeforeCompressing" classname="com.meldiq.android.data.model.AttachmentPolicyTest" time="0.193"/>
+  <testcase name="animationsAreNeverFlattenedAndAvifIsRecognizedWithoutTrustingMime" classname="com.meldiq.android.data.model.AttachmentPolicyTest" time="0.02"/>
+  <testcase name="namesAreSafeToShowAndSave" classname="com.meldiq.android.data.model.AttachmentPolicyTest" time="0.008"/>
+  <testcase name="sizeLimitsDependOnWhetherTheFileIsCompressed" classname="com.meldiq.android.data.model.AttachmentPolicyTest" time="0.0"/>
+  <testcase name="qualitiesAreRealDifferences" classname="com.meldiq.android.data.model.AttachmentPolicyTest" time="0.0"/>
+  <testcase name="theRealTypeComesFromTheFirstBytes" classname="com.meldiq.android.data.model.AttachmentPolicyTest" time="0.001"/>
+  <testcase name="largeFilesFollowTheServersLimitUpToOneDecimalGB" classname="com.meldiq.android.data.model.AttachmentPolicyTest" time="0.005"/>
+  <testcase name="aDisguisedFileIsSentAsAFileNeverAsAPhoto" classname="com.meldiq.android.data.model.AttachmentPolicyTest" time="0.004"/>
+  <testcase name="previewsAndAlbumLayout" classname="com.meldiq.android.data.model.AttachmentPolicyTest" time="0.011"/>
+  <testcase name="filesThatRunSoftwareAreFlagged" classname="com.meldiq.android.data.model.AttachmentPolicyTest" time="0.006"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

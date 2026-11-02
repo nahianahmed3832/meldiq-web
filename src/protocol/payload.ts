@@ -2,7 +2,8 @@ import { z } from "zod";
 import { withinJsonBudget } from "../api/jsonBudget";
 
 /**
- * The plaintext inside griip-envelope-v1 (android data/model/Models.kt `Payload`). It comes from other people's devices, so
+ * Message payload shared by server-stored v2 messages and legacy griip-envelope-v1 (Android Models.kt `Payload`).
+ * It comes from other people's devices, so
  * it is validated like any untrusted input. Unknown fields are dropped and unknown types ignored, so newer apps' messages
  * never break this one (android/app/src/test/resources/griip-payload-v1-vectors.json › forwardCompatible).
  */
@@ -14,6 +15,21 @@ const opt = <T extends z.ZodTypeAny>(t: T) =>
     .transform((v) => v ?? undefined)
     .optional();
 
+/** Bounded, non-recursive preview descriptor. Its key travels with the original under the conversation's message security. */
+const zAttachmentThumbnail = z.object({
+  id,
+  name: z.string().max(512),
+  mime: z.enum(["image/jpeg", "image/png", "image/webp"]),
+  size: z
+    .number()
+    .int()
+    .positive()
+    .max(128 * 1024),
+  key: z.string().max(64),
+  nonce: z.string().max(32),
+  sha256: z.string().max(64),
+});
+
 export const zAttachmentRef = z.object({
   id,
   name: z.string().max(512),
@@ -24,7 +40,16 @@ export const zAttachmentRef = z.object({
   sha256: z.string().max(64),
   voice: opt(z.boolean()),
   durationMs: opt(z.number().int().nonnegative()),
-  chunk: opt(z.number().int().positive()),
+  chunk: opt(
+    z
+      .number()
+      .int()
+      .min(1024)
+      .max(16 * 1024 * 1024),
+  ),
+  w: opt(z.number().int().positive().max(32768)),
+  h: opt(z.number().int().positive().max(32768)),
+  thumbnail: opt(zAttachmentThumbnail).catch(undefined),
 });
 export type AttachmentRef = z.infer<typeof zAttachmentRef>;
 

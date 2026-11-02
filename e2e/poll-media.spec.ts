@@ -152,12 +152,14 @@ test("poll percentages, named and hidden ballots survive reload, change, remove 
           { id: "b", text: "No" },
         ],
         multi: false,
-        endsAt: Date.now() + 2500,
+        endsAt: Date.now() + 6000,
       },
     },
   });
+  await runtime.navigate(() => page.reload());
   const timed = page.getByRole("group", { name: "Poll: Quick decision", exact: true });
   await expect(timed).toBeVisible();
+  await expect(timed.getByRole("radio").first()).toBeEnabled();
   await expect(timed.getByRole("radio").first()).toBeDisabled();
   await expect(timed).toContainText("Voting closed");
   expect(runtime.unexpected()).toEqual([]);

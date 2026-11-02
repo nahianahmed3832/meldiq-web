@@ -135,7 +135,7 @@ describe("direct uploads to S3 in parts (simulated store)", () => {
     expect(ref).toMatchObject({ id: "a_1", size: plain.length, chunk: MB });
   });
 
-  it("removes a half-done upload when a part is refused", async () => {
+  it("retains uploaded parts when storage has a transient server failure", async () => {
     const f = fakeServer(5 * MB);
     const plain = nodeCrypto.randomBytes(7 * MB);
     const failing: BodySender = async (req, onSent) => {
@@ -143,6 +143,8 @@ describe("direct uploads to S3 in parts (simulated store)", () => {
       return f.send(req, onSent);
     };
     await expect(uploadLarge(f.engine, "c1", { name: "x", type: "", size: plain.length, slice: (a, b) => new Blob([plain]).slice(a, b) }, { send: failing })).rejects.toThrow("boom");
-    expect(f.deleted()).toBe(true);
+    expect(f.deleted()).toBe(false);
+    expect(f.stored.has(1)).toBe(true);
+    expect(f.completed()).toBeNull();
   });
 });

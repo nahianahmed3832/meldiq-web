@@ -1,0 +1,101 @@
+
+ RUN  v4.1.12 /Volumes/code_files/meldiq_web
+
+ ❯ test/contract-fixtures.test.ts (4 tests | 2 failed) 2820ms
+     × test/contract-fixtures is the server checkout's current copy 463ms
+     × decodes every answer the web reads, frame and error, with the strict findings only where already known 2349ms
+(node:45797) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:45808) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:45832) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:45842) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:45844) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:45855) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:45856) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:45859) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:45867) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:45882) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:45907) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:45915) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:45923) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:45932) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:45933) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:45936) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:45943) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:45984) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:45985) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:45989) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/contract-fixtures.test.ts > server contract fixtures (meldiq_android shared/contracts, API 0.75.0) > test/contract-fixtures is the server checkout's current copy
+AssertionError: differs from /Volumes/code_files/meldiq_android: run npx tsx scripts/sync-contract-fixtures.ts: expected [ Array(1) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "changed http/GET_v2_mojo_catalog.json",
++ ]
+
+ ❯ test/contract-fixtures.test.ts:168:131
+    166|   it.skipIf(!contractsRepo())("test/contract-fixtures is the server ch…
+    167|     const repo = contractsRepo()!;
+    168|     expect(differences(expectedCopy(repo), currentCopy()), `differs fr…
+       |                                                                                                                                   ^
+    169|   });
+    170|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  test/contract-fixtures.test.ts > server contract fixtures (meldiq_android shared/contracts, API 0.75.0) > decodes every answer the web reads, frame and error, with the strict findings only where already known
+AssertionError: new contract gaps: a value a .catch() replaced, or a call with no server route: expected [ …(5) ] to deeply equal []
+
+- Expected
++ Received
+
+- []
++ [
++   "unrouted GET /v2/billing/promotions/{}",
++   "unrouted POST /v2/billing/promotions/activity",
++   "unrouted POST /v2/billing/promotions/claim",
++   "unrouted POST /v2/billing/promotions/events",
++   "unrouted PUT /v2/billing/promotions/preference",
++ ]
+
+ ❯ test/contract-fixtures.test.ts:262:7
+    260|       now.filter((l) => !allowed.has(l)),
+    261|       "new contract gaps: a value a .catch() replaced, or a call with …
+    262|     ).toEqual([]);
+       |       ^
+    263|     expect(
+    264|       [...allowed].filter((l) => !now.includes(l)),
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed | 130 passed (131)
+      Tests  2 failed | 905 passed | 1 skipped (908)
+   Start at  19:25:33
+   Duration  23.26s (transform 3.45s, setup 3.05s, import 12.58s, tests 8.07s, environment 10ms)
+

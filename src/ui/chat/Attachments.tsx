@@ -1,13 +1,14 @@
-import { Download, FileText, Film, Image as ImageIcon, Mic, Pause, Play, TriangleAlert } from "lucide-react";
-import { useContext, useEffect, useId, useMemo, useState } from "react";
+import { Download, X, FileText, Film, Image as ImageIcon, Mic, Pause, Play, TriangleAlert } from "lucide-react";
+import { useContext, useEffect, useId, useMemo, useRef, useState } from "react";
 import { useEngine, useOrbit } from "../../application/orbit";
 import { usePrefs } from "../../application/prefs";
 import { useVoicePlayback, voicePlayback } from "../../application/voicePlayback";
 import type { StoredMessage } from "../../model/types";
 import { galleryOf } from "./gallery";
 import type { AttachmentRef } from "../../protocol/payload";
-import { isInlineImage, safeMime, saveAttachment } from "../../sync/attachments";
+import { type DownloadProgress, isInlineImage, safeMime, saveAttachment } from "../../sync/attachments";
 import { clock, isVoice, shownDuration } from "../../sync/voice";
+import { attachmentName, riskyAttachment } from "../../sync/attachmentPolicy";
 import { bytes } from "../format";
 import { albumOverflow, albumRows } from "./album";
 import { useNearScreen } from "./useNearScreen";
@@ -156,12 +157,16 @@ function VoiceAttachment({ r }: { r: AttachmentRef }) {
 export function MediaAttachment({ r }: { r: AttachmentRef }) {
   const viewer = useViewer(r);
   const [open, setOpen] = useState(false);
-  const { url, error, loading } = useBlobUrl(r, open && !isVideo(r));
+  const { url, error, loading } = useBlobUrl(r, open);
+  const [tile, tileNear] = useNearScreen<HTMLButtonElement>();
+  const { autoLoadPhotos } = usePrefs();
+  const { url: poster } = useBlobUrl(r.thumbnail ?? r, !!r.thumbnail && autoLoadPhotos && tileNear);
   if (error) return <FileAttachment r={r} error={error} />;
   if (isVideo(r))
     return (
       <>
         <button
+          ref={tile}
           className="att-video-tile"
           onClick={(e) => {
             e.currentTarget.focus();
@@ -169,6 +174,7 @@ export function MediaAttachment({ r }: { r: AttachmentRef }) {
           }}
           aria-label={`Play video ${r.name}, ${bytes(r.size)}`}
         >
+          {poster && <img className="att-video-poster" src={poster} alt="" loading="lazy" />}
           <span className="att-video-play" aria-hidden="true">
             <Play size={22} />
           </span>
@@ -177,6 +183,10 @@ export function MediaAttachment({ r }: { r: AttachmentRef }) {
             <small>{bytes(r.size)}</small>
           </span>
         </button>
+        <button className="btn btn-ghost btn-sm" disabled={open && loading} onClick={() => setOpen(true)} aria-label={`Play ${r.name} inline`}>
+          {open && loading ? "Loading video…" : "Play inline"}
+        </button>
+        {open && url && <video className="att-inline-video" src={url} controls playsInline autoPlay preload="metadata" aria-label={`Inline video ${r.name}`} />}
         {viewer.own}
       </>
     );
@@ -202,12 +212,14 @@ export function ImageAttachment({ r }: { r: AttachmentRef }) {
   // Download photos automatically off (android Settings › Chats): each photo waits for a click.
   const { autoLoadPhotos } = usePrefs();
   const [asked, setAsked] = useState(false);
+  const [decodeFailed, setDecodeFailed] = useState(false);
   // Loaded when scrolled near, not with the whole history (and then kept in this browser: src/store/mediaCache.ts).
   const [spot, near] = useNearScreen<HTMLDivElement>();
-  const { url, error, loading } = useBlobUrl(r, (autoLoadPhotos && near) || asked);
+  const automatic = autoLoadPhotos && (r.thumbnail !== undefined || r.size <= 10 * 1024 * 1024);
+  const { url, error, loading } = useBlobUrl(r.thumbnail ?? r, (automatic && near) || asked);
   const viewer = useViewer(r);
-  if (error) return <FileAttachment r={r} error={error} />;
-  if (!autoLoadPhotos && !asked)
+  if (error || decodeFailed) return <FileAttachment r={r} error={error ?? "This browser cannot preview this image. Download the original."} />;
+  if (!automatic && !asked)
     return (
       <button className="att-file" onClick={() => setAsked(true)} aria-label={`Load photo ${r.name}, ${bytes(r.size)}`}>
         <span className="file-icon">
@@ -232,7 +244,7 @@ export function ImageAttachment({ r }: { r: AttachmentRef }) {
         }}
         aria-label={`Open image ${r.name}`}
       >
-        <img src={url} alt={r.name} loading="lazy" />
+        <img src={url} alt={r.name} loading="lazy" onError={() => setDecodeFailed(true)} />
       </button>
       {viewer.own}
     </>
@@ -261,7 +273,7 @@ function AlbumGrid({ items }: { items: AttachmentRef[] }) {
 function AlbumTile({ r, more, onOpen }: { r: AttachmentRef; more: number; onOpen: () => void }) {
   const { autoLoadPhotos } = usePrefs();
   const [spot, near] = useNearScreen<HTMLButtonElement>();
-  const { url, error } = useBlobUrl(r, autoLoadPhotos && near);
+  const { url, error } = useBlobUrl(r.thumbnail ?? r, autoLoadPhotos && near && (r.thumbnail !== undefined || r.size <= 10 * 1024 * 1024));
   return (
     <button
       ref={spot}
@@ -289,33 +301,48 @@ function AlbumTile({ r, more, onOpen }: { r: AttachmentRef; more: number; onOpen
 export function FileAttachment({ r, error: initialError }: { r: AttachmentRef; error?: string }) {
   const engine = useEngine();
   const [busy, setBusy] = useState(false);
+  const [progress, setProgress] = useState<DownloadProgress | null>(null);
+  const abort = useRef<AbortController | null>(null);
   const [error, setError] = useState<string | null>(initialError ?? null);
+  useEffect(() => () => abort.current?.abort(), []);
   const download = async () => {
+    if (abort.current) return;
+    const control = new AbortController();
+    abort.current = control;
     setBusy(true);
     setError(null);
+    setProgress(null);
     try {
-      await saveAttachment(engine, r);
+      await saveAttachment(engine, r, { signal: control.signal, onProgress: setProgress });
     } catch (e) {
-      if (e instanceof DOMException && e.name === "AbortError") return; // the save dialog was closed
-      setError(e instanceof Error ? e.message : "Couldn't download this file.");
+      if (control.signal.aborted || (e instanceof DOMException && e.name === "AbortError")) return;
+      setError(e instanceof Error ? e.message : "Couldn't download this file. Try again.");
     } finally {
+      abort.current = null;
       setBusy(false);
     }
   };
+  const name = attachmentName(r.name);
+  const extension = name.includes(".") ? name.split(".").pop()!.toUpperCase() : "FILE";
+  const pct = progress?.total ? Math.min(100, Math.floor((100 * progress.done) / progress.total)) : 0;
   return (
-    <button className="att-file" onClick={() => void download()} disabled={busy} aria-label={`Download ${r.name}, ${bytes(r.size)}`}>
+    <div className="att-file">
       <span className="file-icon">{error ? <TriangleAlert size={18} /> : r.voice ? <Mic size={18} /> : <FileText size={18} />}</span>
-      <span className="grow" style={{ minWidth: 0 }}>
-        <span className="ellipsis" style={{ display: "block", fontWeight: 600 }}>
-          {r.voice ? "Voice message" : r.name}
-        </span>
-        <small className={error ? "" : undefined} style={error ? { color: "var(--danger)" } : undefined}>
-          {error ?? (busy ? "Loading…" : bytes(r.size))}
+      <button className="file-download-name grow" onClick={() => void download()} disabled={busy} aria-label={`Download ${name}, ${bytes(r.size)}`}>
+        <strong className="ellipsis">{r.voice ? "Voice message" : name}</strong>
+        <small role={error ? "alert" : undefined}>
+          {error ?? (busy ? (progress ? `${progress.phase === "decrypting" ? "Verifying" : "Downloading"} · ${pct}%` : "Starting download…") : `${extension} · ${bytes(r.size)}`)}
         </small>
-      </span>
-      {!error && <Download size={16} className="faint" />}
-    </button>
+        {busy && <progress max={100} value={pct} aria-label={`Download ${name}: ${pct}%`} />}
+        {riskyAttachment(name) && <small>Open only if you trust the sender.</small>}
+      </button>
+      {busy ? (
+        <button className="icon-btn" onClick={() => abort.current?.abort()} aria-label={`Cancel downloading ${name}`}>
+          <X size={16} />
+        </button>
+      ) : (
+        <Download size={16} className="faint" aria-hidden="true" />
+      )}
+    </div>
   );
 }
-
-/** Under the picture: who sent it and when, the message's text, and quick reactions. */

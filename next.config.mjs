@@ -21,6 +21,8 @@ export default function config(phase) {
     output: "export",
     reactStrictMode: false, // the client root has its own <StrictMode> (src/client/Root.tsx)
     poweredByHeader: false,
+    // The development indicator covers the mobile attachment button during browser automation.
+    ...(process.env.ORBIT_E2E_API ? { devIndicators: false } : {}),
     // No source maps in releases (the owner, 2026-10-29): browsers only get the minified code, not the readable source.
     productionBrowserSourceMaps: false,
     images: { unoptimized: true },
