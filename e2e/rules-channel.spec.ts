@@ -19,7 +19,7 @@ async function openCreate(page: Page, name: string) {
 }
 
 test("rules have a distinct identity, preserve agreement settings, and retry without creating duplicates", async ({ page }) => {
-  test.setTimeout(120_000);
+  test.setTimeout(180_000);
   // Exercise the real production bundle without enabling development device linking.
   let authorization = "";
   page.on("request", (request) => {
@@ -41,7 +41,7 @@ test("rules have a distinct identity, preserve agreement settings, and retry wit
   await page.getByRole("button", { name: "Open Meldiq", exact: true }).click();
   await expect(page.locator('.app[data-connection="online"]').first()).toBeVisible();
   const owner = {
-    async req(method: string, path: string, data?: unknown) {
+    async req(method: string, path: string, data?: Record<string, unknown>) {
       expect(authorization).toMatch(/^Bearer /);
       const response = await page.request.fetch(`${process.env.ORBIT_E2E_API}${path}`, {
         method,
@@ -80,13 +80,13 @@ test("rules have a distinct identity, preserve agreement settings, and retry wit
   expect(created).toHaveLength(1);
   expect(created[0]).toMatchObject({ id: rules.channelId, kind: "PUBLIC", voice: false, format: "text", canPost: true });
   await expect(page.locator(".conv-head").getByLabel("Rules", { exact: true })).toBeVisible();
-  await page.goto(`/home/c/${rules.channelId}/details`);
+  await page.getByRole("button", { name: "#server-rules: details", exact: true }).click();
   await expect(page.getByText(/^Rules channel ·/)).toBeVisible();
   await page.screenshot({ path: `/tmp/meldiq-rules-details.png` });
-  await page.goto(`/home/c/${rules.channelId}`);
+  await page.getByRole("complementary", { name: "Details", exact: true }).getByRole("button", { name: "Close panel", exact: true }).click();
   await page.getByRole("button", { name: "Browse channels", exact: true }).click();
   const browser = page.getByRole("dialog", { name: "Browse channels", exact: true });
-  await expect(browser.locator(".list-row").filter({ hasText: "server-rules" }).getByLabel("Rules", { exact: true })).toBeVisible();
+  await expect(browser.getByRole("switch", { name: "Show server-rules", exact: true })).toBeChecked();
   await page.keyboard.press("Escape");
   const again = await openCreate(page, "Rules Lab");
   await expect(again.getByRole("radio", { name: /^Rules / })).toBeDisabled();

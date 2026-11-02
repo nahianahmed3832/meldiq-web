@@ -14,6 +14,7 @@ export default defineConfig({
         REGISTRATION_MODE: "open",
         APP_ENV: "development",
         MAIL_TRANSPORT: "file",
+        MAIL_FILE_DIR: process.env.ORBIT_E2E_DATA + "/mail",
         STORAGE_BACKEND: "local",
         DATABASE_MODE: "hybrid",
         MONGODB_URI: "",
