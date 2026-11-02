@@ -1,0 +1,37 @@
+{
+  "buildCommit": "4fd6ed1053a1f9548dc6a92ff35e666c5f3cb8c0",
+  "ci": "https://github.com/nahianahmed3832/meldiq-web/actions/runs/41427657567",
+  "unitTestsPassed": 873,
+  "unitTestsSkipped": 2,
+  "typecheck": "passed",
+  "lint": "passed",
+  "formatting": "passed",
+  "productionBuild": "passed",
+  "rulesWorkflowBrowsers": [
+    "chromium",
+    "webkit"
+  ],
+  "rulesWorkflowTestsPassed": 2,
+  "publicIndexSha256": "49fc09edc499477a40c90f53cc966a2764a34c2cf9533dac57b0834070bb18cd",
+  "archiveSha256": "2d1f635f5e519f0748b9c0930771a5658f0a65b93449b227ec67579e13ced271",
+  "applicationSourceMatchesGitHubMain": true,
+  "verificationCommit": "85816f5b7eb596e64f9d08aa2de34088592a77ab",
+  "mainCi": "https://github.com/nahianahmed3832/meldiq-web/actions/runs/41428867561",
+  "publicBrowserChecks": [
+    {
+      "browser": "chromium",
+      "status": 200,
+      "signInVisible": true,
+      "testLinkingDisabled": true,
+      "errors": []
+    },
+    {
+      "browser": "webkit",
+      "status": 200,
+      "signInVisible": true,
+      "testLinkingDisabled": true,
+      "errors": []
+    }
+  ],
+  "excludedExternalCspErrors": "Cloudflare analytics beacon blocked by the existing unchanged CSP."
+}
