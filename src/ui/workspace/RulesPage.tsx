@@ -6,6 +6,7 @@ import { useT } from "../../i18n";
 import { communityRules, moveRule, type RuleDraft, RULES_LIMITS, rulesProblem, saveCommunityRules } from "../../sync/rulesChannel";
 import { workspaceChannels } from "../../sync/workspaces";
 import { Toggle } from "../components/Toggle";
+import { CreateChannelDialog } from "../community/CreateChannelDialog";
 import { RulesList } from "../community/RulesViews";
 import { useAction, useLoad } from "./useLoad";
 import { Card, ErrorLine } from "./WorkspaceView";
@@ -25,6 +26,7 @@ export function RulesPage({ detail }: { detail: OrgAdminDetail }) {
   const [required, setRequired] = useState(false);
   const [rules, setRules] = useState<RuleDraft[]>([]);
   const [saved, setSaved] = useState(false);
+  const [creating, setCreating] = useState(false);
   const save = useAction();
   useEffect(() => {
     if (!current.data) return;
@@ -45,6 +47,20 @@ export function RulesPage({ detail }: { detail: OrgAdminDetail }) {
 
   return (
     <div className="ws-page">
+      {creating && (
+        <CreateChannelDialog
+          orgId={orgId}
+          initialType="rules"
+          categories={detail.categories}
+          categoryId={null}
+          canCreateTop={detail.permissions.canCreateChannels}
+          onClose={() => {
+            setCreating(false);
+            current.reload();
+            channels.reload();
+          }}
+        />
+      )}
       <Card title={t("rules_title")} sub={t("rules_settings_sub")}>
         <ErrorLine text={current.error ?? channels.error ?? save.error} />
         <div className="field">
@@ -66,6 +82,11 @@ export function RulesPage({ detail }: { detail: OrgAdminDetail }) {
             ))}
           </select>
           <p className="hint">{t("rules_settings_channel_hint")}</p>
+          {current.data && !current.data.channelId && detail.permissions.canCreateChannels && (
+            <button className="btn btn-secondary btn-sm" onClick={() => setCreating(true)}>
+              <Plus size={14} /> Create rules channel
+            </button>
+          )}
         </div>
 
         <h3 className="ws-subhead">{t("rules_title")}</h3>

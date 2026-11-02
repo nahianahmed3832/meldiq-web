@@ -17,8 +17,18 @@ import { SecuritySheet } from "./SecuritySheet";
 import { ThreadList } from "./ThreadsPanel";
 
 /** What kind of channel this is, in words. */
-function kindOf(c: Conversation): string {
-  const kind = c.voice ? "Voice channel" : c.format === "forum" ? "Forum" : c.kind === "ANNOUNCEMENT" ? "Announcement channel" : c.kind === "PRIVATE" ? "Private channel" : "Channel";
+function kindOf(c: Conversation, rules: boolean): string {
+  const kind = rules
+    ? "Rules channel"
+    : c.voice
+      ? "Voice channel"
+      : c.format === "forum"
+        ? "Forum"
+        : c.kind === "ANNOUNCEMENT"
+          ? "Announcement channel"
+          : c.kind === "PRIVATE"
+            ? "Private channel"
+            : "Channel";
   return c.categoryName ? `${kind} in ${c.categoryName}` : kind;
 }
 
@@ -31,6 +41,7 @@ function kindOf(c: Conversation): string {
  */
 export function ChannelDetails({ c, onClose }: { c: Conversation; onClose: () => void }) {
   const engine = useEngine();
+  const isRules = useOrbit((s) => !!c.orgId && s.orgs.find((o) => o.id === c.orgId)?.rulesChannel?.channelId === c.id);
   const route = useRoute();
   const nav = useOrbit((s) => s.nav[workspaceOf(c.orgId)]);
   const { members, error, reload } = useMembers(c.id, c.memberCount);
@@ -105,11 +116,11 @@ export function ChannelDetails({ c, onClose }: { c: Conversation; onClose: () =>
         <DetailsHero
           avatar={
             <span className="details-channel-icon" aria-hidden>
-              <ChannelGlyph kind={c.kind} voice={c.voice} format={c.format} size={30} />
+              <ChannelGlyph kind={c.kind} voice={c.voice} format={c.format} rules={isRules} size={30} />
             </span>
           }
           title={name}
-          sub={`${kindOf(c)} · ${membersText(c.memberCount)}`}
+          sub={`${kindOf(c, isRules)} · ${membersText(c.memberCount)}`}
           presence={null}
         />
         {c.topic && <p className="details-topic">{c.topic}</p>}

@@ -1,15 +1,16 @@
 import { members } from "../format";
-import { Hash, Lock, Megaphone } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import type { Conversation } from "../../api/schemas";
-import { useEngine } from "../../application/orbit";
+import { useEngine, useOrbit } from "../../application/orbit";
 import { navigate } from "../../application/router";
 import { browseChannels, joinChannel } from "../../sync/account";
+import { ChannelGlyph } from "../community/ChannelDialogs";
 import { Dialog } from "../components/Overlay";
 
 /** Channels the server lets you see in this workspace: open the ones you're in, join public ones in your scope. */
 export function ChannelBrowser({ orgId, onClose }: { orgId: string; onClose: () => void }) {
   const engine = useEngine();
+  const rulesChannelId = useOrbit((s) => s.orgs.find((o) => o.id === orgId)?.rulesChannel?.channelId);
   const [list, setList] = useState<Conversation[] | null>(null);
   const [q, setQ] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -35,7 +36,7 @@ export function ChannelBrowser({ orgId, onClose }: { orgId: string; onClose: () 
           {shown.map((c) => (
             <div key={c.id} className="list-row">
               <span className="empty-orb" style={{ width: 36, height: 36 }}>
-                {c.kind === "PRIVATE" ? <Lock size={16} /> : c.kind === "ANNOUNCEMENT" ? <Megaphone size={16} /> : <Hash size={16} />}
+                <ChannelGlyph kind={c.kind} voice={c.voice} format={c.format} rules={c.id === rulesChannelId} />
               </span>
               <span className="lines">
                 <span className="ellipsis" style={{ fontWeight: 600 }}>

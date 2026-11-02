@@ -1,0 +1,67 @@
+import { expect, test, type Page } from "@playwright/test";
+import { link } from "./link";
+import { newPhone, testAddress } from "./phone";
+
+test.use({ serviceWorkers: "block" });
+test.skip(({ isMobile }) => isMobile, "Server channel management on desktop");
+test.beforeEach(async ({ context }) => {
+  await context.setExtraHTTPHeaders({ "x-orbit-test-ip": testAddress() });
+});
+
+async function openCreate(page: Page, name: string) {
+  await page
+    .getByRole("button", { name: new RegExp(`^${name}`) })
+    .first()
+    .click({ button: "right" });
+  await page.getByRole("menu", { name }).getByRole("menuitem", { name: "Create channel", exact: true }).click();
+  return page.getByRole("dialog", { name: /Create channel/ });
+}
+
+test("rules have a distinct identity, preserve agreement settings, and retry without creating duplicates", async ({ page }) => {
+  test.setTimeout(120_000);
+  const owner = await newPhone("rulesowner", "Rules owner");
+  const member = await newPhone("rulesreader", "Rules reader");
+  const { org } = await owner.req("POST", "/v1/orgs", { name: "Rules Lab" });
+  const { invite } = await owner.req("POST", `/v1/orgs/${org.id}/invites`, { role: "MEMBER", maxUses: 1, expiresInHours: 1 });
+  await member.req("POST", "/v1/invites/accept", { code: invite.code });
+  await owner.req("PUT", `/v1/orgs/${org.id}/rules`, { channelId: null, required: true, rules: [{ title: "Be kind", description: "Respect everyone." }] });
+  await owner.connect();
+  await link(page, owner);
+  const create = await openCreate(page, "Rules Lab");
+  await create.getByRole("radio", { name: /^Rules / }).click();
+  await expect(create.getByRole("switch", { name: "Private channel" })).toHaveCount(0);
+  await create.getByLabel("Name", { exact: true }).fill("server-rules");
+  let failed = false;
+  await page.route(`**/v1/orgs/${org.id}/rules`, async (route) => {
+    if (route.request().method() === "PUT" && !failed) {
+      failed = true;
+      await route.fulfill({ status: 503, contentType: "application/json", body: JSON.stringify({ error: "unavailable", message: "Temporary rules save failure" }) });
+    } else await route.continue();
+  });
+  await create.getByRole("button", { name: "Create channel", exact: true }).click();
+  await expect(create.getByText(/Retry to finish setting/)).toBeVisible();
+  await create.getByRole("button", { name: "Create channel", exact: true }).click();
+  await expect(create).toHaveCount(0);
+  const rules = await owner.req("GET", `/v1/orgs/${org.id}/rules`);
+  expect(rules).toMatchObject({ required: true, rules: [{ title: "Be kind", description: "Respect everyone." }] });
+  const channels = (await owner.req("GET", `/v1/orgs/${org.id}/channels`)).channels;
+  const created = channels.filter((c: { name: string }) => c.name === "server-rules");
+  expect(created).toHaveLength(1);
+  expect(created[0]).toMatchObject({ id: rules.channelId, kind: "PUBLIC", voice: false, format: "text", canPost: true });
+  await expect(page.locator(".conv-head").getByLabel("Rules", { exact: true })).toBeVisible();
+  await page.goto(`/home/c/${rules.channelId}/details`);
+  await expect(page.getByText(/^Rules channel ·/)).toBeVisible();
+  await page.screenshot({ path: `/tmp/meldiq-rules-details.png` });
+  await page.goto(`/home/c/${rules.channelId}`);
+  await page.getByRole("button", { name: "Browse channels", exact: true }).click();
+  const browser = page.getByRole("dialog", { name: "Browse channels", exact: true });
+  await expect(browser.locator(".list-row").filter({ hasText: "server-rules" }).getByLabel("Rules", { exact: true })).toBeVisible();
+  await page.keyboard.press("Escape");
+  const again = await openCreate(page, "Rules Lab");
+  await expect(again.getByRole("radio", { name: /^Rules / })).toBeDisabled();
+  await again.getByRole("button", { name: "Cancel", exact: true }).click();
+  await member.req("POST", `/v1/orgs/${org.id}/rules/agree`);
+  const memberChannel = (await member.req("GET", `/v1/orgs/${org.id}/channels`)).channels.find((c: { id: string }) => c.id === rules.channelId);
+  expect(memberChannel.canPost).toBe(false);
+  await owner.disconnect();
+});
