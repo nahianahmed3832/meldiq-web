@@ -14,7 +14,7 @@ Existing subscriptions retain their immutable plan version, original amount, pro
 
 PayPal currently documents that a plan-level price change also affects existing subscribers, with email notice and a ten-day window, and deferral when the next cycle falls within that window. This implementation avoids that operation. Any future repricing requires a separate review of affected customers, applicable consent, required notices and effective dates. See [PayPal plan pricing](https://developer.paypal.com/subscriptions/change-price), [subscriptions](https://developer.paypal.com/docs/subscriptions/), [webhook verification](https://developer.paypal.com/api/webhooks/v1), and [idempotency](https://developer.paypal.com/api/rest/reference/idempotency/).
 
-The read-only `/admin/v1/billing/pricing-migration` endpoint groups subscriptions by original plan/version/amount/provider plan/status and counts gifts and pending checkouts. Run it in the actual deployment before publication; this candidate has not read production customer records. The public pre-change catalog snapshot is stored separately and shows the old live 399-cent offer; it is not a customer inventory.
+The read-only `/admin/v1/billing/pricing-migration` endpoint groups subscriptions by original plan/version/amount/provider plan/status and counts gifts and pending checkouts. Run it before paid-offer publication. The code rollout privately compared account and financial records, preserving all seven existing stored subscriptions; no customer-level data is included in public evidence. The public pre-change catalog snapshot is stored separately and shows the old live 399-cent offer; it is not a customer inventory.
 
 ## Sandbox evidence and outstanding payment checks
 
@@ -64,3 +64,7 @@ Acquire both the global production lease and web deployment lock. Guard the curr
 The compatible fallback contains the current production API plus the schema-10 migration/catalog metadata. It may be used only before new paid Plus terms are published. It preserves read receipts, media publication and all database authorities. It never downgrades the database or restores an old snapshot over new transactions. Never use this pre-publication fallback after accepting 499/1299/4999-cent Plus agreements.
 
 The current production media ceiling is 1,000,000,000 bytes. Preserve the newer media release's decimal-gigabyte limit and client-side encryption, previews and retries.
+
+## Applied release
+
+The code/schema rollout completed at 2026-11-02T15:25:45Z on the existing VPS and Atlas Cluster0 `meldiq` database. Schema is 10; original runtime permissions were restored before traffic reopened. See `production-receipt.json` and `runtime-verification.json` for exact artifact IDs and preserved configuration. Paid offers and campaigns remain withheld.

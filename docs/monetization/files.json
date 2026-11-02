@@ -1,14 +1,6 @@
 {
-  "note": "Web and API/Android diffs are against the production call-fix sources; admin lists the published console source. Historical candidate validation is retained separately. Runtime secrets and restore data are excluded.",
+  "note": "Web diff is against pre-Plus production source 0a32019; API/Android diff is against 0f77a9d8 and includes the preserved newer Android media source. Admin lists all published tracked source files. No claim that every integrated change originated in the Plus task. Runtime secrets, customer data, restore logs and private comparison maps are excluded.",
   "web": [
-    {
-      "path": "deploy/call-receipts-sidebar/README.md",
-      "sha256": "0d8b6eb0856502c40dbeaa391f774aeb7dbf14895a1c04f029a83ead7bf208d7"
-    },
-    {
-      "path": "deploy/call-receipts-sidebar/production-status.json",
-      "sha256": "c087a99bb7375d6d10a881116429784630c2e975c8717ada2ef4380a173cf022"
-    },
     {
       "path": "deploy/monetization/accounts-check.mjs",
       "sha256": "31899ff91cafb142c8625f5ecc3ac7132dd6205f9acf949a260255ae2aab4c61"
@@ -46,6 +38,10 @@
       "sha256": null
     },
     {
+      "path": "docs/monetization/permissions-restored.json",
+      "sha256": null
+    },
+    {
       "path": "docs/monetization/plus-popup-desktop.png",
       "sha256": null
     },
@@ -62,7 +58,19 @@
       "sha256": null
     },
     {
+      "path": "docs/monetization/post-backup-receipt.json",
+      "sha256": null
+    },
+    {
       "path": "docs/monetization/prior-candidate-validation.json",
+      "sha256": null
+    },
+    {
+      "path": "docs/monetization/production-receipt.json",
+      "sha256": null
+    },
+    {
+      "path": "docs/monetization/public-browser-verification.json",
       "sha256": null
     },
     {
@@ -70,7 +78,15 @@
       "sha256": null
     },
     {
+      "path": "docs/monetization/public-http-verification.json",
+      "sha256": null
+    },
+    {
       "path": "docs/monetization/rail-badges-fixed.png",
+      "sha256": null
+    },
+    {
+      "path": "docs/monetization/runtime-verification.json",
       "sha256": null
     },
     {
@@ -488,6 +504,26 @@
   ],
   "backend_android": [
     {
+      "path": "android/app/src/androidTest/assets/media/animated.gif",
+      "sha256": "683f9336166235c2556f7dda2ca3aa8c33d8bef1f52029add6a5c15e5750a678"
+    },
+    {
+      "path": "android/app/src/androidTest/assets/media/animated.webp",
+      "sha256": "cf0df2488efac2ff44238bb5155439556f5b3b0feaf5b409d6333fb05d0070fe"
+    },
+    {
+      "path": "android/app/src/androidTest/java/com/meldiq/android/MediaDecodeTest.kt",
+      "sha256": "30ec322a9cdb53b608473a7e1916e8be9a6abeac36b66f99290cd799f4ffdf92"
+    },
+    {
+      "path": "android/app/src/androidTest/java/com/meldiq/android/MediaViewerTest.kt",
+      "sha256": "c00c25ca815f9d620e7f2c621f839294da4c060815e7223afbe6064b1c934397"
+    },
+    {
+      "path": "android/app/src/main/java/com/meldiq/android/data/api/ApiClient.kt",
+      "sha256": "9fe024b0145509139065b8e7020e87671aeee3ca6021702279e8988dae0a9c75"
+    },
+    {
       "path": "android/app/src/main/java/com/meldiq/android/data/api/RealtimeEvents.kt",
       "sha256": "0574392bef9a848b98d6cf3a4cccf26fcd90b9ed46dd2df4805bb4a6d47faea4"
     },
@@ -501,7 +537,7 @@
     },
     {
       "path": "android/app/src/main/java/com/meldiq/android/data/billing/MojoRepository.kt",
-      "sha256": "b5f2a0d94623b855ea178df0c427be914a67944afd7275a8e21723861e7cceed"
+      "sha256": "60a2fb6c2e2e04a2781d0e2a4bf464e5da43a84d738c5b0cd9cc03ee34a8a3e1"
     },
     {
       "path": "android/app/src/main/java/com/meldiq/android/data/billing/PlayBilling.kt",
@@ -516,16 +552,72 @@
       "sha256": "241a36e78d6ef5106791070a619106f1d98603b3d7de938d71a6bcd94f537817"
     },
     {
+      "path": "android/app/src/main/java/com/meldiq/android/data/model/AttachmentPolicy.kt",
+      "sha256": "78bae8b08694410606a9f31e9b462f87df3f1379dc5ac958d4b289d2a6e24d33"
+    },
+    {
+      "path": "android/app/src/main/java/com/meldiq/android/data/model/Models.kt",
+      "sha256": "6fb8e14e931146da05cfdd2f2dfde686cad30b929fcc8ae5cb7c9feb6020f06d"
+    },
+    {
+      "path": "android/app/src/main/java/com/meldiq/android/data/repo/AttachmentFiles.kt",
+      "sha256": "e8fe24de3a190779e80a22ec65fa45e20770cfc48a61aed3c7a5520d0f5ecd77"
+    },
+    {
+      "path": "android/app/src/main/java/com/meldiq/android/data/repo/AttachmentUploader.kt",
+      "sha256": "374495fdb96129c7dbee7054cb699c38f880125166bab48d039c6c620115f0e8"
+    },
+    {
+      "path": "android/app/src/main/java/com/meldiq/android/data/repo/HistorySync.kt",
+      "sha256": "987a963dc207e8e2cf2fd959cced745fab31b6402379f98543655a10486b34f2"
+    },
+    {
+      "path": "android/app/src/main/java/com/meldiq/android/data/repo/MessageRepository.kt",
+      "sha256": "c343f7a16e9b701a50d1dc30de07e117084ce2998e092107e3fc7aac9be271cf"
+    },
+    {
       "path": "android/app/src/main/java/com/meldiq/android/data/repo/MessageSignals.kt",
       "sha256": "a0861583257f5d0757e7b94563c43690b56527c79173bda28ffbe3195809aaca"
     },
     {
+      "path": "android/app/src/main/java/com/meldiq/android/data/repo/SettingsStore.kt",
+      "sha256": "78a44422e26717a0d1a811a49168a7467302fa0db848066e49213ddaf0929ef5"
+    },
+    {
       "path": "android/app/src/main/java/com/meldiq/android/di/AppContainer.kt",
-      "sha256": "f4cd2ce849c02c4a20387f2b23b87983fe10ceee9ec60507ee7779281ca54062"
+      "sha256": "91f96317ca062a0d5fb42044063d78a4c69bb5cbb6700e1d655dc97e548933c9"
+    },
+    {
+      "path": "android/app/src/main/java/com/meldiq/android/ui/media/MediaExport.kt",
+      "sha256": "e4df6aff0a3902d1d9667fe67b8b4e7fa20081f1c71dcf8fc7d48d0d22f63276"
+    },
+    {
+      "path": "android/app/src/main/java/com/meldiq/android/ui/media/MediaGallery.kt",
+      "sha256": "b14c6d12537b2cd8980e2e2c12fec49653d1da22a612af9af68e86bd2b06bf53"
+    },
+    {
+      "path": "android/app/src/main/java/com/meldiq/android/ui/media/MediaViewer.kt",
+      "sha256": "f6d5f1d56ac18acfe5921680eaa76c9b19dcf9161a2dba06635a86fbd29cfc07"
     },
     {
       "path": "android/app/src/main/java/com/meldiq/android/ui/screens/community/CommunityHomeScreen.kt",
       "sha256": "1596467479e283f37713816bf02f134698b5e5258dcf9a71864f2f696e5772d8"
+    },
+    {
+      "path": "android/app/src/main/java/com/meldiq/android/ui/screens/conversation/AlbumGrid.kt",
+      "sha256": "447c88345d5d47c54e893e4a7f15935974033f735817f599f6b228c77a932366"
+    },
+    {
+      "path": "android/app/src/main/java/com/meldiq/android/ui/screens/conversation/ConversationViewModel.kt",
+      "sha256": "08324ab41d1752ada8a03e0ab9f73d8799358bc73c254c2dfdbbcb6677f0cf30"
+    },
+    {
+      "path": "android/app/src/main/java/com/meldiq/android/ui/screens/conversation/DmDetails.kt",
+      "sha256": "08524964f805fed9f7e93c81a6cdb1cacc4fc87719148d09169f48981e6aea06"
+    },
+    {
+      "path": "android/app/src/main/java/com/meldiq/android/ui/screens/conversation/MessageBubble.kt",
+      "sha256": "2f989a9beeda06adc94d06fdd14b47249722947edf3c7f1ec1e08b3c429a5a14"
     },
     {
       "path": "android/app/src/main/java/com/meldiq/android/ui/screens/mojo/MojoGiftSheet.kt",
@@ -552,12 +644,24 @@
       "sha256": "d7abdaa518c7f74f49553c7fd24ef74e326b6eb12c708d61124449c538d7d43f"
     },
     {
+      "path": "android/app/src/main/res/values-bn/media_sharing.xml",
+      "sha256": "bd7b2e01110d446548ae09df75e6f48422434abbfeaaf3a900e438f4f528d1dc"
+    },
+    {
       "path": "android/app/src/main/res/values-bn/strings_mojo.xml",
       "sha256": "d99348dbb239a48224d897fa1747854fa7cd3badf8bdf1bd8e2efba76e056967"
     },
     {
+      "path": "android/app/src/main/res/values-zh-rCN/media_sharing.xml",
+      "sha256": "28649c22fca4f0e5168789a6588d6ee2e01bb546ae0605f129d4f68af19ccc01"
+    },
+    {
       "path": "android/app/src/main/res/values-zh-rCN/strings_mojo.xml",
       "sha256": "b043125088e6d20908f74c96e35b50a2bde37f627979ddd6535de810ff1cd544"
+    },
+    {
+      "path": "android/app/src/main/res/values/media_sharing.xml",
+      "sha256": "4aa2b7fafd8ba491f102aab9f21d0460da1bd6f0e5f36e86b2d3a5e331d62346"
     },
     {
       "path": "android/app/src/main/res/values/strings_mojo.xml",
@@ -568,12 +672,32 @@
       "sha256": "3e834648963266f601e3c3c147ac419018d3aac5f255aaa8b0155e3c7a7c773b"
     },
     {
+      "path": "android/app/src/test/java/com/meldiq/android/data/api/ResumableDownloadTest.kt",
+      "sha256": "db432e836993aeeaeec10e8135b764b81de4e4d02a0049f2b35f04403b4f4a7f"
+    },
+    {
       "path": "android/app/src/test/java/com/meldiq/android/data/billing/MojoPlansTest.kt",
       "sha256": "e23b5038b9e15f2aa21d3e96ba1b853d9517a1d0df942ada8559c1ba8e1ef204"
     },
     {
       "path": "android/app/src/test/java/com/meldiq/android/data/billing/MojoRepositoryTest.kt",
-      "sha256": "32652ed2d25453b0b1307dd905881be2a1e864892cddc9d2d69bb8acdd5577a2"
+      "sha256": "2c06bb531490bc09ad7993c8ed40fe050b27c2393449ab542e8340154d78eee1"
+    },
+    {
+      "path": "android/app/src/test/java/com/meldiq/android/data/model/AttachmentPolicyTest.kt",
+      "sha256": "29cc1f0665bf85945a4ade4c8905db838898b1f4a093d346c6599fd873b1dad3"
+    },
+    {
+      "path": "android/app/src/test/java/com/meldiq/android/data/model/AttachmentThumbnailTest.kt",
+      "sha256": "176d8cb81a1bcc9e81f4bc52fe14aaaaa215c4101027fff2acfbd6100c779f14"
+    },
+    {
+      "path": "android/app/src/test/java/com/meldiq/android/data/repo/AttachmentUploaderTest.kt",
+      "sha256": "03eee8be890d1c3a5f9ca2b6c8f67ff471b724caeb67bb5ee529ee375908a260"
+    },
+    {
+      "path": "android/app/src/test/java/com/meldiq/android/ui/media/MediaGalleryTest.kt",
+      "sha256": "e37d253ed5e032da8d57ee6e29b1838051ebae4de976111b174e1eb9d91d4a07"
     },
     {
       "path": "docs/api/COVERAGE.md",
@@ -582,6 +706,22 @@
     {
       "path": "docs/api/openapi.json",
       "sha256": "47932243046281dbdb295741d76e041e561cc7a1ebd2dfa9f43a8244625a42cb"
+    },
+    {
+      "path": "docs/media-sharing/ANDROID.md",
+      "sha256": "94e89986dfbbfae02f94c7ac8d92c2318c982d8e2b21c8b88ff1b606b26c5cc6"
+    },
+    {
+      "path": "docs/media-sharing/android-evidence/focused-build.log",
+      "sha256": "620a400c41a8445be1ae29cd56fafc94ab0f00ee586933fa86aa6b8316d3e0e4"
+    },
+    {
+      "path": "docs/media-sharing/android-evidence/full-unit-run.log",
+      "sha256": "e9e1920f193ea935b094d7bfda7970375440a59fb78a8d447466769d09ad13fd"
+    },
+    {
+      "path": "docs/media-sharing/android-evidence/verification.json",
+      "sha256": "83aef64a97f1893e551b0a831f8e2d20fb39342998f035b39b9ea2e0d64005ad"
     },
     {
       "path": "server/migrations/093_plus_promotions.sql",
@@ -1014,6 +1154,54 @@
   ],
   "admin": [
     {
+      "path": ".gitignore",
+      "sha256": "fccb1e1a2ff0395840d3dc9687e5ec2caac298538b32ce0145a4be2521054236"
+    },
+    {
+      "path": ".prettierignore",
+      "sha256": "1cdb1e035a3783a5bc413b581c1dc103d933dbb1802979286617d01a83158ab1"
+    },
+    {
+      "path": ".prettierrc.json",
+      "sha256": "7626de30892630d61e03a4663e5a56f0ed8499fcf01504610717826bde9bf2d7"
+    },
+    {
+      "path": "README.md",
+      "sha256": "d6cee1e85ce3c688b63e6f5c4af649833737725be5cbb9aa0a67150bbfed2fd8"
+    },
+    {
+      "path": "e2e/billing.spec.ts",
+      "sha256": "3fedf1c06c5e45be464b1e4004e4672e6d4f55fe25ea15e9e267accb687bad14"
+    },
+    {
+      "path": "e2e/console.spec.ts",
+      "sha256": "cf8b007abd6fa9366876ffd114dd728a6fb0a53520ddcd3ed2f1f0ff297b340b"
+    },
+    {
+      "path": "e2e/fixtures/decoration.png",
+      "sha256": "2b4dbb72cf0ff15ce9cbc7fed7f2cd80a2e3ca5eac5916ca5100aeb5925f63d2"
+    },
+    {
+      "path": "e2e/global-setup.ts",
+      "sha256": "71df2afcf4793bcf83efae5be617dff98c65a20d4a0966007137b19503f5280c"
+    },
+    {
+      "path": "e2e/operational-controls.spec.ts",
+      "sha256": "06208c8c4fb031a348371d16ee5e96051edc80ba5e4ad41c91b68553142cd36e"
+    },
+    {
+      "path": "e2e/parity.spec.ts",
+      "sha256": "1bd31fb8ad6f1c6358dd66673933f719aa90dde3cc620dd2b7edf741b4476b4a"
+    },
+    {
+      "path": "e2e/seed-people.ts",
+      "sha256": "a2a8a8355606e854ae79fe9d66277ff8ff11fb440b6e0d9738f504fdecb2318e"
+    },
+    {
+      "path": "eslint.config.js",
+      "sha256": "e24a7ca60bb473c40aea7c020bb1878460b568e06b32bd6c5e5aca816a07b007"
+    },
+    {
       "path": "index.html",
       "sha256": "8383cd1142ea918ec7796da9905380259aa9ad58491389fe92ba7dd8469d080f"
     },
@@ -1024,6 +1212,10 @@
     {
       "path": "package.json",
       "sha256": "73cad1b7dce1c05403b788aab22d37fedffe81598e5dce9808621ba4e5e70c73"
+    },
+    {
+      "path": "playwright.config.ts",
+      "sha256": "02fd57647b8f630c99b5a18a6c52116a84a81fe7444690adcd5fe1803580d54d"
     },
     {
       "path": "public/favicon-dark-32.png",
@@ -1048,6 +1240,10 @@
     {
       "path": "scripts/contracts.ts",
       "sha256": "837cab4fd15a66ef8596b5f5fbf00455648f29ecd2dbc14e61ab40e50523bacb"
+    },
+    {
+      "path": "server.config.json",
+      "sha256": "195b373c5d6bd848a4207516a41667e50cb05e2bf392b73018dbae75f216668a"
     },
     {
       "path": "src/api/client.ts",
@@ -1620,6 +1816,22 @@
     {
       "path": "test/webauthn.test.ts",
       "sha256": "30af3f9c137b2e42862b06b9d464397f868c060a32d08cba0f6b47169adf4195"
+    },
+    {
+      "path": "tsconfig.app.json",
+      "sha256": "e1e617f6ae6a4476ea0b31c0f992772ee9aff71e48aacfbb74d6561430b9dfd0"
+    },
+    {
+      "path": "tsconfig.json",
+      "sha256": "e8d6f7b50828db3953e21c7e92584f9206b3cd2551b4012507372afbb7fe9ce3"
+    },
+    {
+      "path": "tsconfig.node.json",
+      "sha256": "5a83054ef005396afa0e1a4ff8e4854d5d0d35dcea0eaffc9a6bbdea8c9bdadd"
+    },
+    {
+      "path": "vite.config.ts",
+      "sha256": "bd112b3015bcbf62503bc10ae18e1b4a0c2b729e6303290bded981fd2a2e5144"
     }
   ]
 }

@@ -1,0 +1,41 @@
+{
+  "ok": true,
+  "checks": [
+    {
+      "host": "web.meldiq.app",
+      "path": "index.html",
+      "http": 200,
+      "sha256Matches": true
+    },
+    {
+      "host": "web.meldiq.app",
+      "path": "sw.js",
+      "http": 200,
+      "sha256Matches": true
+    },
+    {
+      "host": "web.meldiq.app",
+      "path": "_next/static/css/28f3cff74d959cad.css",
+      "http": 200,
+      "sha256Matches": true
+    },
+    {
+      "host": "web.meldiq.app",
+      "path": "_next/static/chunks/pages/_app-5ea959798805fdd9.js",
+      "http": 200,
+      "sha256Matches": true
+    },
+    {
+      "host": "admin.meldiq.app",
+      "path": "index.html",
+      "http": 200,
+      "sha256Matches": true
+    },
+    {
+      "host": "admin.meldiq.app",
+      "path": "assets/index-C8T3llAZ.js",
+      "http": 200,
+      "sha256Matches": true
+    }
+  ]
+}

@@ -1,10 +1,10 @@
 {
   "date": "2026-11-02",
   "timezone": "Asia/Shanghai",
-  "productionStatus": "staged-awaiting-Atlas-permission-application",
+  "productionStatus": "deployed-and-verified",
   "liveBillingActivated": false,
   "campaignsEnabled": false,
-  "productionMigrated": false,
+  "productionMigrated": true,
   "apiApplicationSource": "708353fe33aebfaa59b78ca0e3c0da5ae713f047",
   "webApplicationSource": "ef16f7323356efb11d62e95f55298eb78bbadeb9",
   "webBuildId": "1boOIuz-6XPTmKIf7VCgs",
@@ -97,9 +97,24 @@
   ],
   "unresolvedBackendFailures": 0,
   "native": {
-    "earlierPlusCandidateJvmPassed": 767,
+    "source": "a98bc638186013ffe79e1bfc6803099e4d511e2f",
+    "unitTestsPassed": 789,
+    "unitTestSuites": 151,
+    "unitTestsFailed": 0,
     "storePublished": false,
-    "physicalDevicePurchaseVerified": false
+    "physicalDevicePurchaseVerified": false,
+    "logSha256": "098ca2063138d41aef31370b41262a4af5bf1100a4f667f23759804748a94e26",
+    "resourceTranslationSource": "9138dfd6",
+    "lint": {
+      "status": "passed",
+      "source": "9138dfd6",
+      "errors": 0,
+      "issueCounts": {
+        "Warning": 810,
+        "Hint": 14
+      },
+      "logSha256": "86ebab74f94105d1663298e15e68808ee8e21407b9da463fdbde151f77b91406"
+    }
   },
   "privateDataExcluded": [
     "database restores",
@@ -107,5 +122,22 @@
     "credentials",
     "restore keys",
     "account and financial digests"
-  ]
+  ],
+  "apiAndAndroidPublishedSource": "9138dfd6",
+  "databaseMigrationPermissionApproved": true,
+  "runtimePermissionsRestored": true,
+  "productionReceipt": "production-receipt.json",
+  "productionBrowserPassed": 6,
+  "publicHashesVerified": 6,
+  "credentialPatternScan": "passed",
+  "postReleaseBackup": {
+    "complete": true,
+    "capturedAt": "20261102T152902Z",
+    "verified": true,
+    "collections": 275,
+    "records": 690387,
+    "offHostEncryptedCopyVerified": true,
+    "archiveSha256": "b9edd341c592860ffd355fb44d5755b25e8aa37de037ccbc4b1ae25e63d5e8f6"
+  },
+  "productionReleaseLockReleased": true
 }

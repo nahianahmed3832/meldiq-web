@@ -1,0 +1,51 @@
+{
+  "ok": true,
+  "signedOutOnly": true,
+  "productionAccountsCreated": 0,
+  "passed": 6,
+  "buildId": "1boOIuz-6XPTmKIf7VCgs",
+  "results": [
+    {
+      "engine": "chromium",
+      "surface": "desktop",
+      "http": 200,
+      "uncaughtErrors": 0,
+      "overflow": false
+    },
+    {
+      "engine": "chromium",
+      "surface": "phone",
+      "http": 200,
+      "uncaughtErrors": 0,
+      "overflow": false
+    },
+    {
+      "engine": "chromium",
+      "surface": "admin",
+      "http": 200,
+      "uncaughtErrors": 0,
+      "overflow": false
+    },
+    {
+      "engine": "webkit",
+      "surface": "desktop",
+      "http": 200,
+      "uncaughtErrors": 0,
+      "overflow": false
+    },
+    {
+      "engine": "webkit",
+      "surface": "phone",
+      "http": 200,
+      "uncaughtErrors": 0,
+      "overflow": false
+    },
+    {
+      "engine": "webkit",
+      "surface": "admin",
+      "http": 200,
+      "uncaughtErrors": 0,
+      "overflow": false
+    }
+  ]
+}

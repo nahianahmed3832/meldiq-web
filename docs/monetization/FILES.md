@@ -1,11 +1,9 @@
 # Production Plus source file manifest
 
-Web and API/Android diffs are against the production call-fix sources; admin lists the published console source. Historical candidate validation is retained separately. Runtime secrets and restore data are excluded.
+Web diff is against pre-Plus production source 0a32019; API/Android diff is against 0f77a9d8 and includes the preserved newer Android media source. Admin lists all published tracked source files. No claim that every integrated change originated in the Plus task. Runtime secrets, customer data, restore logs and private comparison maps are excluded.
 
 ## Web
 
-- `deploy/call-receipts-sidebar/README.md`
-- `deploy/call-receipts-sidebar/production-status.json`
 - `deploy/monetization/accounts-check.mjs`
 - `deploy/monetization/build-images.py`
 - `deploy/monetization/deploy.py`
@@ -15,13 +13,19 @@ Web and API/Android diffs are against the production call-fix sources; admin lis
 - `docs/monetization/DEPLOYMENT.md`
 - `docs/monetization/FILES.md`
 - `docs/monetization/files.json`
+- `docs/monetization/permissions-restored.json`
 - `docs/monetization/plus-popup-desktop.png`
 - `docs/monetization/plus-popup-mobile.png`
 - `docs/monetization/popup-browser-desktop.png`
 - `docs/monetization/popup-browser-phone.png`
+- `docs/monetization/post-backup-receipt.json`
 - `docs/monetization/prior-candidate-validation.json`
+- `docs/monetization/production-receipt.json`
+- `docs/monetization/public-browser-verification.json`
 - `docs/monetization/public-catalog-before.json`
+- `docs/monetization/public-http-verification.json`
 - `docs/monetization/rail-badges-fixed.png`
+- `docs/monetization/runtime-verification.json`
 - `docs/monetization/sandbox-plan.json`
 - `docs/monetization/sandbox-quarterly.json`
 - `docs/monetization/sandbox-verification.json`
@@ -128,6 +132,11 @@ Web and API/Android diffs are against the production call-fix sources; admin lis
 
 ## Backend Android
 
+- `android/app/src/androidTest/assets/media/animated.gif`
+- `android/app/src/androidTest/assets/media/animated.webp`
+- `android/app/src/androidTest/java/com/meldiq/android/MediaDecodeTest.kt`
+- `android/app/src/androidTest/java/com/meldiq/android/MediaViewerTest.kt`
+- `android/app/src/main/java/com/meldiq/android/data/api/ApiClient.kt`
 - `android/app/src/main/java/com/meldiq/android/data/api/RealtimeEvents.kt`
 - `android/app/src/main/java/com/meldiq/android/data/billing/MojoModels.kt`
 - `android/app/src/main/java/com/meldiq/android/data/billing/MojoPlans.kt`
@@ -135,23 +144,49 @@ Web and API/Android diffs are against the production call-fix sources; admin lis
 - `android/app/src/main/java/com/meldiq/android/data/billing/PlayBilling.kt`
 - `android/app/src/main/java/com/meldiq/android/data/billing/PlayProducts.kt`
 - `android/app/src/main/java/com/meldiq/android/data/billing/PlusPromotions.kt`
+- `android/app/src/main/java/com/meldiq/android/data/model/AttachmentPolicy.kt`
+- `android/app/src/main/java/com/meldiq/android/data/model/Models.kt`
+- `android/app/src/main/java/com/meldiq/android/data/repo/AttachmentFiles.kt`
+- `android/app/src/main/java/com/meldiq/android/data/repo/AttachmentUploader.kt`
+- `android/app/src/main/java/com/meldiq/android/data/repo/HistorySync.kt`
+- `android/app/src/main/java/com/meldiq/android/data/repo/MessageRepository.kt`
 - `android/app/src/main/java/com/meldiq/android/data/repo/MessageSignals.kt`
+- `android/app/src/main/java/com/meldiq/android/data/repo/SettingsStore.kt`
 - `android/app/src/main/java/com/meldiq/android/di/AppContainer.kt`
+- `android/app/src/main/java/com/meldiq/android/ui/media/MediaExport.kt`
+- `android/app/src/main/java/com/meldiq/android/ui/media/MediaGallery.kt`
+- `android/app/src/main/java/com/meldiq/android/ui/media/MediaViewer.kt`
 - `android/app/src/main/java/com/meldiq/android/ui/screens/community/CommunityHomeScreen.kt`
+- `android/app/src/main/java/com/meldiq/android/ui/screens/conversation/AlbumGrid.kt`
+- `android/app/src/main/java/com/meldiq/android/ui/screens/conversation/ConversationViewModel.kt`
+- `android/app/src/main/java/com/meldiq/android/ui/screens/conversation/DmDetails.kt`
+- `android/app/src/main/java/com/meldiq/android/ui/screens/conversation/MessageBubble.kt`
 - `android/app/src/main/java/com/meldiq/android/ui/screens/mojo/MojoGiftSheet.kt`
 - `android/app/src/main/java/com/meldiq/android/ui/screens/mojo/MojoPlanCards.kt`
 - `android/app/src/main/java/com/meldiq/android/ui/screens/mojo/MojoScreen.kt`
 - `android/app/src/main/java/com/meldiq/android/ui/screens/mojo/PlusBillingSheet.kt`
 - `android/app/src/main/java/com/meldiq/android/ui/screens/mojo/PlusPromotionHost.kt`
 - `android/app/src/main/java/com/meldiq/android/ui/screens/mojo/PlusRenewalHost.kt`
+- `android/app/src/main/res/values-bn/media_sharing.xml`
 - `android/app/src/main/res/values-bn/strings_mojo.xml`
+- `android/app/src/main/res/values-zh-rCN/media_sharing.xml`
 - `android/app/src/main/res/values-zh-rCN/strings_mojo.xml`
+- `android/app/src/main/res/values/media_sharing.xml`
 - `android/app/src/main/res/values/strings_mojo.xml`
 - `android/app/src/test/java/com/meldiq/android/data/api/RealtimeCodecTest.kt`
+- `android/app/src/test/java/com/meldiq/android/data/api/ResumableDownloadTest.kt`
 - `android/app/src/test/java/com/meldiq/android/data/billing/MojoPlansTest.kt`
 - `android/app/src/test/java/com/meldiq/android/data/billing/MojoRepositoryTest.kt`
+- `android/app/src/test/java/com/meldiq/android/data/model/AttachmentPolicyTest.kt`
+- `android/app/src/test/java/com/meldiq/android/data/model/AttachmentThumbnailTest.kt`
+- `android/app/src/test/java/com/meldiq/android/data/repo/AttachmentUploaderTest.kt`
+- `android/app/src/test/java/com/meldiq/android/ui/media/MediaGalleryTest.kt`
 - `docs/api/COVERAGE.md`
 - `docs/api/openapi.json`
+- `docs/media-sharing/ANDROID.md`
+- `docs/media-sharing/android-evidence/focused-build.log`
+- `docs/media-sharing/android-evidence/full-unit-run.log`
+- `docs/media-sharing/android-evidence/verification.json`
 - `server/migrations/093_plus_promotions.sql`
 - `server/migrations/094_plus_billing_terms.sql`
 - `server/plus-pricing.env.example`
@@ -262,15 +297,29 @@ Web and API/Android diffs are against the production call-fix sources; admin lis
 
 ## Admin
 
+- `.gitignore`
+- `.prettierignore`
+- `.prettierrc.json`
+- `README.md`
+- `e2e/billing.spec.ts`
+- `e2e/console.spec.ts`
+- `e2e/fixtures/decoration.png`
+- `e2e/global-setup.ts`
+- `e2e/operational-controls.spec.ts`
+- `e2e/parity.spec.ts`
+- `e2e/seed-people.ts`
+- `eslint.config.js`
 - `index.html`
 - `package-lock.json`
 - `package.json`
+- `playwright.config.ts`
 - `public/favicon-dark-32.png`
 - `public/favicon-light-32.png`
 - `public/fonts/OFL.txt`
 - `public/fonts/PlusJakartaSans.ttf`
 - `public/meldling-128.png`
 - `scripts/contracts.ts`
+- `server.config.json`
 - `src/api/client.ts`
 - `src/api/collectibles.ts`
 - `src/api/contracts.ts`
@@ -414,3 +463,7 @@ Web and API/Android diffs are against the production call-fix sources; admin lis
 - `test/money.test.ts`
 - `test/parity.test.ts`
 - `test/webauthn.test.ts`
+- `tsconfig.app.json`
+- `tsconfig.json`
+- `tsconfig.node.json`
+- `vite.config.ts`

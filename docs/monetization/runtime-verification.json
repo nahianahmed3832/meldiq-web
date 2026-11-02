@@ -1,0 +1,48 @@
+{
+  "healthy": true,
+  "version": "0.76.1",
+  "redisHealthy": true,
+  "restarts": 0,
+  "memoryLimit": 805306368,
+  "existingFinancialRecordCounts": {
+    "billing_plans": 2,
+    "billing_plan_versions": 2,
+    "billing_customers": 0,
+    "billing_checkouts": 7,
+    "billing_subscriptions": 7,
+    "billing_subscription_history": 14,
+    "billing_invoices": 0,
+    "billing_grants": 20,
+    "billing_play_purchases": 0,
+    "billing_payment_methods": 0,
+    "billing_card_mandates": 0,
+    "billing_commerce_orders": 0,
+    "mojo_gifts": 0,
+    "mojo_gift_credits": 0
+  },
+  "newPaidPlusOffersAvailable": false,
+  "terms": [
+    {
+      "months": 1,
+      "amountMinor": 499,
+      "interval": "month",
+      "billingFrequency": 1,
+      "available": false
+    },
+    {
+      "months": 3,
+      "amountMinor": 1299,
+      "interval": "month",
+      "billingFrequency": 3,
+      "available": false
+    },
+    {
+      "months": 12,
+      "amountMinor": 4999,
+      "interval": "year",
+      "billingFrequency": 1,
+      "available": false
+    }
+  ],
+  "sourceMapsPackaged": false
+}
