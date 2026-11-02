@@ -23,7 +23,11 @@ lock = open("/run/lock/meldiq-production-release.lock", "a+")
 fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
 
 def command(args, input=None):
-    return subprocess.check_output(args, input=input, cwd=base, stderr=subprocess.PIPE)
+    try:
+        return subprocess.check_output(args, input=input, cwd=base, stderr=subprocess.PIPE)
+    except subprocess.CalledProcessError as error:
+        (run / "last-command.stderr").write_bytes(error.stderr or b"")
+        raise
 
 def inspection():
     return json.loads(command(["docker", "inspect", container]))[0]
@@ -55,6 +59,9 @@ assert before["State"]["Health"]["Status"] == "healthy"
 assert link.resolve() == old and not new.exists()
 for filename, digest in manifest["archives"].items():
     assert hashlib.sha256((run / filename).read_bytes()).hexdigest() == digest
+with tarfile.open(run / "api-overlay.tar.gz") as bundle:
+    (run / "api-overlay").mkdir()
+    bundle.extractall(run / "api-overlay", filter="data")
 assert hashlib.sha256(served("index.html")).hexdigest() == hashlib.sha256((old / "index.html").read_bytes()).hexdigest()
 (run / "compose.before.yaml").write_bytes((base / "compose.yaml").read_bytes())
 (run / "nginx.before.txt").write_bytes(command(["nginx", "-T"]))
