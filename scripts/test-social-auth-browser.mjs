@@ -7,7 +7,7 @@ import { chromium, webkit, devices, expect } from "@playwright/test";
 
 const bundled = await build({
   stdin: {
-    contents: `import React,{useState} from 'react'; import {createRoot} from 'react-dom/client'; import {ApiClient} from './src/api/client'; import {SocialSignIn} from './src/ui/auth/SocialSignIn'; const api=new ApiClient('',{token:()=> 'test-session',reauthenticate:async()=>false}); function App(){const [result,setResult]=useState('waiting'); return <><SocialSignIn api={api} mode={location.search.includes('link')?'link':'login'} password="test-password" onSignedIn={g=>setResult(g.account.id)} onLinked={()=>setResult('linked')}/><output>{result}</output></>} createRoot(document.getElementById('app')).render(<App/>);`,
+    contents: `import React,{useState} from 'react'; import {createRoot} from 'react-dom/client'; import {ApiClient} from './src/api/client'; import {AccountApi} from './src/auth/accountApi'; import {SocialSignIn} from './src/ui/auth/SocialSignIn'; import {SignInForm} from './src/ui/auth/AccountForms'; const api=new ApiClient('',{token:()=> 'test-session',reauthenticate:async()=>false}); const ctx={accounts:new AccountApi(api),deviceName:'Test browser'}; function App(){const [result,setResult]=useState('waiting'); return <>{location.search.includes('link')?<SocialSignIn api={api} mode="link" password="test-password" onLinked={()=>setResult('linked')}/>:<SignInForm ctx={ctx} canSignUp={true} canLinkWithPhone={false} passkeyRpId="localhost" onSignedIn={g=>setResult(g.account.id)} onUnverified={()=>{}} onSignUp={()=>setResult('signup')} onForgot={()=>{}} onLinkWithPhone={()=>{}}/>}<output>{result}</output></>} createRoot(document.getElementById('app')).render(<App/>);`,
     loader: "tsx",
     resolveDir: process.cwd(),
   },
@@ -69,6 +69,10 @@ const server = createServer(async (req, res) => {
   } else if (url.pathname.startsWith("/auth-provider-icons/")) {
     res.setHeader("content-type", "image/svg+xml");
     res.end(await readFile(`public${url.pathname}`));
+  } else if (url.pathname === "/v2/auth/login") {
+    const data = JSON.parse(await body(req));
+    if (scenario === "email-totp" && data.totpCode !== "123456") return json({ error: { code: "totp_required", message: "Enter authenticator code." } }, 401);
+    json(grant);
   } else if (url.pathname === "/v2/auth/social/config") json({ providers: ["google", "apple", "discord"], googleClientId: null });
   else if (url.pathname === "/v2/auth/social/start") {
     const data = JSON.parse(await body(req));
@@ -124,13 +128,41 @@ try {
       browser = await browserType.launch({ headless: true });
       const context = await browser.newContext(device ?? {});
       const page = await context.newPage();
-      for (const testCase of ["login", "discord", "profile", "invite", "totp", "link", "isolated", "cancel", "fallback"]) {
+      for (const testCase of ["options", "email", "email-totp", "email-back", "login", "discord", "profile", "invite", "totp", "link", "isolated", "cancel", "fallback"]) {
         scenario = testCase;
         if (testCase === "fallback")
           await page.addInitScript(() => {
             window.BroadcastChannel = undefined;
           });
         await page.goto(`${origin}/${testCase === "link" ? "?link" : ""}`);
+        if (["options", "email", "email-totp", "email-back"].includes(testCase)) {
+          await expect(page.getByRole("button", { name: "Sign in with a passkey", exact: true })).toBeVisible();
+          await expect(page.getByLabel("Email", { exact: true })).toHaveCount(0);
+          if (testCase !== "options") {
+            await page.getByRole("button", { name: "Continue with email", exact: true }).click();
+            await expect(page.getByRole("heading", { name: "Sign in with email", exact: true })).toBeVisible();
+            await expect(page.getByRole("button", { name: "Continue with Google", exact: true })).toHaveCount(0);
+            await page.getByLabel("Email", { exact: true }).fill("mock@example.test");
+            await page.getByLabel("Password", { exact: true }).fill("test-password");
+            if (testCase === "email-back") {
+              await page.getByRole("button", { name: "Back", exact: true }).click();
+              await expect(page.getByRole("button", { name: "Continue with Google", exact: true })).toBeVisible();
+              await expect(page.getByLabel("Password", { exact: true })).toHaveCount(0);
+            } else {
+              await page.getByRole("button", { name: "Sign in", exact: true }).click();
+              if (testCase === "email-totp") {
+                await expect(page.getByRole("heading", { name: "Verify it’s you", exact: true })).toBeVisible();
+                await expect(page.getByLabel("Email", { exact: true })).toHaveCount(0);
+                await expect(page.getByLabel("Password", { exact: true })).toHaveCount(0);
+                await page.getByLabel("Authenticator or backup code", { exact: true }).fill("123456");
+                await page.getByRole("button", { name: "Verify and sign in", exact: true }).click();
+              }
+              await expect(page.locator("output")).toHaveText("same-meldiq-account");
+            }
+          }
+          results.push({ platform: name, flow: testCase, result: "passed", provider: "local test double" });
+          continue;
+        }
         const [popup] = await Promise.all([
           page.waitForEvent("popup", { timeout: 60000 }),
           page
@@ -142,7 +174,8 @@ try {
           await popup.close();
           await expect(page.getByRole("button", { name: "Cancel sign-in", exact: true })).toBeVisible();
           await page.getByRole("button", { name: "Cancel sign-in", exact: true }).click();
-          await expect(page.getByRole("alert")).toContainText("cancelled");
+          await expect(page.getByRole("alert")).toHaveCount(0);
+          await expect(page.getByRole("button", { name: "Continue with Google", exact: true })).toBeVisible();
         } else {
           if (testCase === "isolated") {
             await expect(popup.getByRole("heading", { name: "Isolated provider" })).toBeVisible();
@@ -157,6 +190,12 @@ try {
             await expect(popup.getByRole("button", { name: "Finish isolated sign-in" })).toBeEnabled();
             expect(await page.evaluate(() => document.querySelector('[role="alert"]')?.textContent ?? null)).toBeNull();
             await popup.getByRole("button", { name: "Finish isolated sign-in" }).click();
+          }
+          if (["invite", "totp"].includes(testCase)) {
+            await expect(page.getByRole("alert")).toHaveCount(0);
+            await expect(page.getByLabel("Email", { exact: true })).toHaveCount(0);
+            await expect(page.getByLabel("Password", { exact: true })).toHaveCount(0);
+            await expect(page.getByRole("button", { name: "Continue with Google", exact: true })).toHaveCount(0);
           }
           if (testCase === "invite") {
             await expect(page.getByLabel("Display name", { exact: true })).toHaveCount(0);

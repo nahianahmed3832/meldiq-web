@@ -1,9 +1,9 @@
 import { expect, type Page } from "@playwright/test";
 import { approve, type Phone } from "./phone";
 
-/** The signed-out screen: Orbit 2.0 sign-in (email and password). */
+/** The signed-out method chooser or dedicated email sign-in screen. */
 export async function expectSignedOut(page: Page): Promise<void> {
-  await expect(page.getByRole("heading", { name: "Sign in to Meldiq" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: /^Sign in (?:to Meldiq|with email)$/ })).toBeVisible();
 }
 
 /**

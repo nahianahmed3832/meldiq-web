@@ -1,3 +1,6 @@
+import { ArrowLeft } from "lucide-react";
+import { AuthHeading } from "./AuthFrame";
+import { useT } from "../../i18n";
 import { useEffect, useRef, useState } from "react";
 import { ApiClient, ApiError } from "../../api/client";
 import type { AccountSessionGrant } from "../../api/accountSchemas";
@@ -12,8 +15,12 @@ export function SocialSignIn({
   onSignedIn,
   onLinked,
   deviceProof,
+  onStepChange,
+  disabled = false,
 }: {
   api: ApiClient;
+  onStepChange?: (active: boolean) => void;
+  disabled?: boolean;
   mode?: "login" | "link";
   password?: string;
   totpCode?: string;
@@ -31,6 +38,22 @@ export function SocialSignIn({
   const [code, setCode] = useState("");
   const abort = useRef<AbortController | null>(null);
   const pendingProvider = useRef<SocialProvider>("google");
+  const t = useT();
+  const dedicated = mode === "login" && !!onStepChange;
+  const activeStep = dedicated && (!!busy || !!pending);
+  useEffect(() => {
+    onStepChange?.(activeStep);
+  }, [activeStep, onStepChange]);
+  const reset = () => {
+    abort.current?.abort();
+    setPending(null);
+    setBusy(null);
+    setError(null);
+    setNeedsInvite(false);
+    setNeedsCode(false);
+    setInvite("");
+    setCode("");
+  };
   useEffect(() => {
     let live = true;
     api
@@ -45,6 +68,7 @@ export function SocialSignIn({
     };
   }, [api]);
   const finish = async (receipt: SocialReceipt, initial = false) => {
+    setError(null);
     try {
       const result = await completeSocial(
         api,
@@ -69,7 +93,7 @@ export function SocialSignIn({
         setNeedsCode(true);
         setPending(receipt);
       }
-      setError(socialError(e));
+      setError(e instanceof ApiError && ["invite_required", "totp_required"].includes(e.code) ? null : socialError(e));
     }
   };
   const begin = async (provider: SocialProvider) => {
@@ -95,28 +119,47 @@ export function SocialSignIn({
       } catch {
         /* A provider-isolated popup may have detached its handle. */
       }
-      setError(socialError(e));
+      if (!controller.signal.aborted) setError(socialError(e));
     } finally {
       setBusy(null);
     }
   };
+  const continuePending = () => {
+    if (!pending || busy || (needsInvite && !invite.trim()) || (needsCode && !code.trim())) return;
+    setBusy(pendingProvider.current);
+    void finish(pending).finally(() => setBusy(null));
+  };
   if (!providers.length) return null;
   return (
-    <div style={{ display: "grid", gap: 10 }} aria-label="Connected sign-in methods">
-      {providers.map((provider) => (
-        <button key={provider} type="button" className="btn btn-secondary btn-lg" disabled={!!busy} onClick={() => void begin(provider)}>
-          {(provider === "google" || provider === "discord") && (
-            <img src={`/auth-provider-icons/${provider}.svg`} width={20} height={20} alt="" aria-hidden="true" style={{ flexShrink: 0, objectFit: "contain" }} />
+    <div style={{ display: "grid", gap: 10 }} aria-label="Connected sign-in methods" aria-busy={!!busy}>
+      {activeStep && (
+        <>
+          {pending && (
+            <button type="button" className="btn btn-ghost btn-sm auth-back" disabled={!!busy} onClick={reset}>
+              <ArrowLeft size={14} /> {t("signin_options_back")}
+            </button>
           )}
-          <span>{busy === provider ? "Connecting…" : `${mode === "link" ? "Connect" : "Continue with"} ${socialProviderName(provider)}`}</span>
-        </button>
-      ))}
-      {busy && (
+          <AuthHeading
+            title={t(needsCode ? "signin_verify_title" : needsInvite ? "signin_invite_title" : "signin_provider_title", { provider: socialProviderName(pendingProvider.current) })}
+            sub={t(needsCode ? "signin_verify_sub" : needsInvite ? "signin_invite_sub" : "signin_provider_sub", { provider: socialProviderName(pendingProvider.current) })}
+          />
+        </>
+      )}
+      {!activeStep &&
+        providers.map((provider) => (
+          <button key={provider} type="button" className="btn btn-secondary btn-lg" disabled={!!busy || disabled} onClick={() => void begin(provider)}>
+            {(provider === "google" || provider === "discord") && (
+              <img src={`/auth-provider-icons/${provider}.svg`} width={20} height={20} alt="" aria-hidden="true" style={{ flexShrink: 0, objectFit: "contain" }} />
+            )}
+            <span>{busy === provider ? "Connecting…" : `${mode === "link" ? "Connect" : "Continue with"} ${socialProviderName(provider)}`}</span>
+          </button>
+        ))}
+      {busy && !pending && (
         <div style={{ display: "grid", gap: 6 }}>
           <p className="muted" role="status">
             Complete sign-in in the provider window, then return here.
           </p>
-          <button className="btn btn-ghost" type="button" onClick={() => abort.current?.abort()}>
+          <button className="btn btn-ghost" type="button" onClick={reset}>
             Cancel sign-in
           </button>
         </div>
@@ -127,29 +170,29 @@ export function SocialSignIn({
         </p>
       )}
       {pending && (
-        <div style={{ display: "grid", gap: 8 }}>
+        <div
+          style={{ display: "grid", gap: 8 }}
+          onKeyDown={(event) => {
+            if (event.key === "Enter") {
+              event.preventDefault();
+              continuePending();
+            }
+          }}
+        >
           {needsInvite && (
             <label>
               Invitation code
-              <input className="input" value={invite} onChange={(e) => setInvite(e.target.value)} />
+              <input className="input" autoFocus={dedicated} value={invite} onChange={(e) => setInvite(e.target.value)} />
             </label>
           )}
           {needsCode && (
             <label>
-              Authenticator or backup code
-              <input className="input" autoComplete="one-time-code" value={code} onChange={(e) => setCode(e.target.value)} />
+              {t("signin_code_label")}
+              <input className="input" autoComplete="one-time-code" autoFocus={dedicated} value={code} onChange={(e) => setCode(e.target.value)} />
             </label>
           )}
-          <button
-            type="button"
-            className="btn btn-primary"
-            disabled={!!busy || (needsInvite && !invite.trim()) || (needsCode && !code.trim())}
-            onClick={() => {
-              setBusy(pendingProvider.current);
-              void finish(pending).finally(() => setBusy(null));
-            }}
-          >
-            Continue
+          <button type="button" className="btn btn-primary" disabled={!!busy || (needsInvite && !invite.trim()) || (needsCode && !code.trim())} onClick={continuePending}>
+            {t("common_continue")}
           </button>
         </div>
       )}

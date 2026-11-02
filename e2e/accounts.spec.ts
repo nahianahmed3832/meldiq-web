@@ -32,6 +32,7 @@ async function removeSetupSessionElsewhere(email: string): Promise<void> {
 
 async function signIn(page: Page, email: string): Promise<void> {
   await expectSignedOut(page);
+  if (await page.getByRole("button", { name: "Continue with email", exact: true }).isVisible()) await page.getByRole("button", { name: "Continue with email", exact: true }).click();
   await page.getByLabel("Email").fill(email);
   await page.getByLabel("Password", { exact: true }).fill(PASSWORD);
   // The form reads what React holds: make sure the typing landed before sending.
@@ -125,6 +126,7 @@ test("sign up, set up encryption, come back after a reload, and add a second bro
   await second.getByLabel("Recovery key", { exact: true }).fill(recovery);
   await second.getByRole("button", { name: "Set up this browser" }).click();
   await expect(second.getByText(/This sign-in was ended before the browser was set up/)).toBeVisible();
+  await second.getByRole("button", { name: "Continue with email", exact: true }).click();
   await expect(second.getByLabel("Email")).toHaveValue(email);
 
   // Signing in again sets it up with the same recovery key.

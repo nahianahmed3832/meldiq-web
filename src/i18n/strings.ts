@@ -38,6 +38,25 @@ export const STRINGS = {
   landing_terms: ["Terms", "条款", "শর্তাবলি"],
   landing_privacy: ["Privacy", "隐私", "গোপনীয়তা"],
 
+  signin_or: ["or", "或", "অথবা"],
+  signin_email_method: ["Continue with email", "使用邮箱继续", "ইমেইল দিয়ে চালিয়ে যান"],
+  signin_email_title: ["Sign in with email", "使用邮箱登录", "ইমেইল দিয়ে সাইন ইন করুন"],
+  signin_email_sub: ["Use your Meldiq email and password.", "输入你的 Meldiq 邮箱和密码。", "আপনার Meldiq ইমেইল ও পাসওয়ার্ড দিন।"],
+  signin_verify_title: ["Verify it’s you", "验证身份", "পরিচয় যাচাই করুন"],
+  signin_verify_sub: ["Enter a code from your authenticator app, or use a backup code.", "输入验证器应用中的验证码，或使用备用码。", "আপনার অথেনটিকেটর অ্যাপের কোড অথবা ব্যাকআপ কোড দিন।"],
+  signin_code_label: ["Authenticator or backup code", "验证器验证码或备用码", "অথেনটিকেটর বা ব্যাকআপ কোড"],
+  signin_verify_button: ["Verify and sign in", "验证并登录", "যাচাই করে সাইন ইন করুন"],
+  signin_invite_title: ["Enter your invitation", "输入邀请码", "আমন্ত্রণ কোড দিন"],
+  signin_invite_sub: ["This server requires an invitation to create an account.", "此服务器需要邀请码才能创建账户。", "এই সার্ভারে অ্যাকাউন্ট খুলতে আমন্ত্রণ প্রয়োজন।"],
+  signin_invite_label: ["Invitation code", "邀请码", "আমন্ত্রণ কোড"],
+  signin_options_back: ["Back to sign-in options", "返回登录选项", "সাইন ইন পদ্ধতিতে ফিরে যান"],
+  signin_provider_title: ["Continue with {provider}", "使用 {provider} 继续", "{provider} দিয়ে চালিয়ে যান"],
+  signin_provider_sub: [
+    "Finish signing in in the {provider} window. You’ll continue here automatically.",
+    "在 {provider} 窗口中完成登录后，此页面将自动继续。",
+    "{provider} উইন্ডোতে সাইন ইন শেষ করুন। এখানে স্বয়ংক্রিয়ভাবে এগিয়ে যাবে।",
+  ],
+
   // ── common ──
   common_back: ["Back", "返回", "ফিরে যান"],
   common_continue: ["Continue", "继续", "চালিয়ে যান"],
@@ -57,7 +76,7 @@ export const STRINGS = {
 
   // ── sign in ──
   signin_title: ["Sign in to Meldiq", "登录 Meldiq", "Meldiq-এ সাইন ইন করুন"],
-  signin_sub: ["Use the email and password of your Meldiq account.", "使用你 Meldiq 账户的邮箱和密码。", "আপনার Meldiq অ্যাকাউন্টের ইমেইল ও পাসওয়ার্ড দিন।"],
+  signin_sub: ["Choose how to sign in to your account.", "选择账户登录方式。", "কীভাবে আপনার অ্যাকাউন্টে সাইন ইন করবেন তা বেছে নিন।"],
   signin_button: ["Sign in", "登录", "সাইন ইন"],
   signin_busy: ["Signing in…", "正在登录…", "সাইন ইন হচ্ছে…"],
   signin_passkey: ["Sign in with a passkey", "使用通行密钥登录", "পাসকি দিয়ে সাইন ইন করুন"],

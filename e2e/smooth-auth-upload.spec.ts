@@ -51,12 +51,13 @@ test("authenticator sign-in unlocks the real encrypted backup without another em
     const other = await context.newPage();
     await other.goto("/");
     await expectSignedOut(other);
+    await other.getByRole("button", { name: "Continue with email", exact: true }).click();
     await other.getByLabel("Email").fill(email);
     await other.getByLabel("Password", { exact: true }).fill(password);
     await other.getByRole("button", { name: "Sign in", exact: true }).click();
     const field = other.locator('input[autocomplete="one-time-code"]');
     await field.fill(totpCode(fromBase32(setup.secret), stepAt(Date.now() + 30000)));
-    await other.getByRole("button", { name: "Sign in", exact: true }).click();
+    await other.getByRole("button", { name: "Verify and sign in", exact: true }).click();
     await expect(other.locator(".app[data-connection=online]").first()).toBeVisible({ timeout: 20000 });
     expect(unlockMails()).toBe(before);
     await expect(other.getByLabel("Verification code")).toHaveCount(0);
