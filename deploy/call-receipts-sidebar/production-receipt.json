@@ -1,0 +1,38 @@
+{
+  "status": "deployed-and-verified",
+  "deployedAt": "2026-11-02T14:43:31.483728+00:00",
+  "buildId": "xVmZPqYTpRM-vmVd8YpNp",
+  "webSource": "35001a44999aa6a8d52b71d735443cbfd2f35403",
+  "apiSource": "0f77a9d8a7679d9db148ec690fceef18b46a8f20",
+  "previousWeb": "/opt/meldiq-web/releases/0.5.0-beta-media-production-20261102",
+  "newWeb": "/opt/meldiq-web/releases/0.5.0-beta-call-fixes-35001a4",
+  "previousApiImage": "griip-internal-messaging-api:0.76.1-media-b34d3ee8",
+  "newApiImage": "griip-internal-messaging-api:0.76.1-read-receipts-0f77a9d8",
+  "apiModulesReplaced": [
+    "modules/messaging/messageCollections.js",
+    "modules/messaging/store/messageStore.js",
+    "modules/messaging/store/mongoStore.js"
+  ],
+  "runtimeConfigurationPreserved": true,
+  "databaseMigrationsChanged": false,
+  "nginxUnchanged": true,
+  "otherContainersUnchanged": true,
+  "publicSourceMaps": false,
+  "validation": {
+    "webCi": 41461469422,
+    "apiCi": 41461658491,
+    "webUnitTestsPassed": 903,
+    "apiTestsPassed": 18,
+    "browsers": {
+      "passed": 6,
+      "engines": [
+        "chromium",
+        "webkit"
+      ],
+      "normalEmailSignup": true,
+      "realEncryptedCalls": true,
+      "phoneWidth": 390
+    },
+    "webUnitTestsSkipped": 2
+  }
+}

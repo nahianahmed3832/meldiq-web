@@ -1,0 +1,9 @@
+{
+  "ok": true,
+  "apiModulesMatchCheckedBuild": true,
+  "files": {
+    "modules/messaging/messageCollections.js": "bc1600da762ece2ab023ad3ce11318fbe8b9ed2873a25a161dff6fe8fdbd9cf0",
+    "modules/messaging/store/messageStore.js": "47cb0701696d4dc63d5bae6ad1a78f57c90946e5290bdd05fc37ef44a42e68a9",
+    "modules/messaging/store/mongoStore.js": "ff60f8c87e6c625ad715e8743bc2fb6a54c14c592a0cdf2dba19a0aa59f7761d"
+  }
+}
