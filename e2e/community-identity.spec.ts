@@ -116,11 +116,11 @@ test("owner priority, editable role heading, themed PLUS and persistent bot labe
   await expect(list.locator(".member-row").first()).toContainText("Zoya Rahman");
   await expect(botSection.locator(".bot-tag")).toHaveText("BOT");
   await list.screenshot({ path: info.outputPath("owner-custom-heading.png") });
-  const bot = (await owner.req("GET", `/v1/orgs/${org.id}/members`)).members.find((m: { bot?: boolean }) => m.bot);
-  const { conversation } = await owner.req("POST", "/v1/conversations/dm", { userId: bot.id });
-  await page.goto(`/dms/c/${conversation.id}`);
-  await expect(page.locator(".conv-head .bot-tag")).toHaveText("BOT");
-  await expect(page.locator(".sidebar .side-item .bot-tag").first()).toBeVisible();
+  await botSection.locator(".member-row").click();
+  const details = page.getByRole("dialog", { name: "Bot details", exact: true });
+  await expect(details.locator(".bot-tag")).toHaveText("BOT");
+  await expect(details).toContainText("Automated community account");
+  await details.getByRole("button", { name: "Done", exact: true }).click();
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto(`/home/c/${channel.id}/members`);
   await expect(list).toBeVisible();

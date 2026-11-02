@@ -102,6 +102,16 @@
   align-items: center;
   gap: 5px;
 }
+.bot-identity {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding-block: 8px;
+}
+.bot-identity > .lines {
+  min-width: 0;
+  flex: 1;
+}
 .brand-mark {
   box-shadow:
     0 0 0 1px #ffffff12,

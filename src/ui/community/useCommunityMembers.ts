@@ -1,6 +1,6 @@
 import { useEffect, useState, useSyncExternalStore } from "react";
 import type { DirectoryMember } from "../../api/workspaceSchemas";
-import { useEngine } from "../../application/orbit";
+import { useEngine, useOrbit } from "../../application/orbit";
 import type { Engine } from "../../sync/engine";
 import { directory } from "../../sync/workspaces";
 import type { ListedRole } from "../chat/memberListRules";
@@ -18,7 +18,7 @@ export interface CommunityMembers {
 
 const TTL_MS = 60_000;
 const EMPTY: CommunityMembers = { roles: new Map(), nicknames: new Map(), bots: [] };
-const cache = new Map<string, { at: number; members: CommunityMembers }>();
+const cache = new Map<string, { userId: string; at: number; members: CommunityMembers }>();
 const loading = new Map<string, Promise<CommunityMembers>>();
 const listeners = new Set<() => void>();
 let directoryRevision = 0;
@@ -36,18 +36,19 @@ export function membersFrom(people: readonly DirectoryMember[]): CommunityMember
   };
 }
 
-function load(engine: Engine, orgId: string): Promise<CommunityMembers> {
-  let p = loading.get(orgId);
+function load(engine: Engine, orgId: string, userId: string): Promise<CommunityMembers> {
+  const key = JSON.stringify([userId, orgId]);
+  let p = loading.get(key);
   if (!p) {
     p = directory(engine, orgId)
       .then((people) => {
         const members = membersFrom(people);
-        cache.set(orgId, { at: Date.now(), members });
+        cache.set(orgId, { userId, at: Date.now(), members });
         return members;
       })
       .catch(() => EMPTY)
-      .finally(() => loading.delete(orgId));
-    loading.set(orgId, p);
+      .finally(() => loading.delete(key));
+    loading.set(key, p);
   }
   return p;
 }
@@ -61,18 +62,22 @@ export function forgetCommunityMembers(orgId: string): void {
 
 export function useCommunityMembers(orgId: string | null, version = 0): CommunityMembers {
   const engine = useEngine();
+  const userId = useOrbit((s) => s.me?.userId ?? "");
   const changed = useSyncExternalStore(subscribe, revision, () => 0);
-  const [loaded, setLoaded] = useState(() => ({ orgId, members: (orgId && cache.get(orgId)?.members) || EMPTY }));
+  const [loaded, setLoaded] = useState(() => {
+    const hit = orgId ? cache.get(orgId) : undefined;
+    return { orgId, userId, members: hit?.userId === userId ? hit.members : EMPTY };
+  });
   useEffect(() => {
-    const setMembers = (members: CommunityMembers) => setLoaded({ orgId, members });
+    const setMembers = (members: CommunityMembers) => setLoaded({ orgId, userId, members });
     if (!orgId) return setMembers(EMPTY);
     const hit = cache.get(orgId);
-    if (hit && Date.now() - hit.at < TTL_MS) return setMembers(hit.members);
+    if (hit?.userId === userId && Date.now() - hit.at < TTL_MS) return setMembers(hit.members);
     let alive = true;
-    void load(engine, orgId).then((m) => alive && setMembers(m));
+    void load(engine, orgId, userId).then((m) => alive && setMembers(m));
     return () => {
       alive = false;
     };
-  }, [engine, orgId, version, changed]);
-  return loaded.orgId === orgId ? loaded.members : EMPTY;
+  }, [engine, orgId, userId, version, changed]);
+  return loaded.orgId === orgId && loaded.userId === userId ? loaded.members : EMPTY;
 }

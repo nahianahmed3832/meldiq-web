@@ -10,6 +10,7 @@ import { shownName } from "../../sync/communityParity";
 import { useCommunityMembers } from "../community/useCommunityMembers";
 import { nameTone, toneOf } from "../components/Avatar";
 import { contextMenuProps, Menu, type MenuEntry, useMenu } from "../components/Overlay";
+import { BotProfileDialog } from "../people/BotProfileDialog";
 import { LookAvatar, LookName, StyledName } from "../people/NameStyle";
 import { StyledAvatar } from "../people/ProfileStyle";
 import { themeBackground, themeColorsOf } from "../people/profileTheme";
@@ -109,11 +110,16 @@ function MemberRow({ m, away, colors, orgId }: { m: Member; away: boolean; color
   const me = useOrbit((s) => s.me?.userId);
   const builder = usePrefs().builderMode;
   const menu = useMenu();
+  const [botOpen, setBotOpen] = useState(false);
   const status = [m.statusEmoji, m.statusText].filter(Boolean).join(" ");
   const owner = !!orgId && m.orgRole === "OWNER";
   const entries: MenuEntry[] = [
-    { label: "View profile", icon: <UserRound size={16} />, onSelect: () => openProfile(m.id, m.displayName, { orgId, anchor: menu.anchor }) },
-    ...(m.id !== me
+    {
+      label: m.bot ? "View bot details" : "View profile",
+      icon: <UserRound size={16} />,
+      onSelect: () => (m.bot ? setBotOpen(true) : openProfile(m.id, m.displayName, { orgId, anchor: menu.anchor })),
+    },
+    ...(m.id !== me && !m.bot
       ? [
           {
             label: `Message ${m.displayName}`,
@@ -150,8 +156,8 @@ function MemberRow({ m, away, colors, orgId }: { m: Member; away: boolean; color
     <>
       <button
         className={`member-row${away ? " away" : ""}`}
-        onClick={(e) => openProfile(m.id, m.displayName, { orgId, anchor: e.currentTarget })}
-        aria-label={`${m.displayName}${owner ? ", community owner" : ""}${m.bot ? ", bot" : ""}${!isHere(m) ? ", offline" : ""}: profile`}
+        onClick={(e) => (m.bot ? setBotOpen(true) : openProfile(m.id, m.displayName, { orgId, anchor: e.currentTarget }))}
+        aria-label={`${m.displayName}${owner ? ", community owner" : ""}${m.bot ? ", bot" : ""}${!isHere(m) ? ", offline" : ""}: ${m.bot ? "bot details" : "profile"}`}
         aria-haspopup="menu"
         {...contextMenuProps(menu.openAt)}
       >
@@ -186,6 +192,7 @@ function MemberRow({ m, away, colors, orgId }: { m: Member; away: boolean; color
         </span>
       </button>
       {menu.anchor && <Menu anchor={menu.anchor} point={menu.point} label={m.displayName} onClose={menu.close} entries={entries} />}
+      {botOpen && <BotProfileDialog bot={m} onClose={() => setBotOpen(false)} />}
     </>
   );
 }

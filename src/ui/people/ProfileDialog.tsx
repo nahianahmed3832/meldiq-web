@@ -1,5 +1,6 @@
 import { CollectibleBanner, CollectibleBadge, collectibleCardVars } from "./CollectibleLayers";
 import { IdentityGlyph } from "../components/IdentityGlyph";
+import { BotProfileDialog } from "./BotProfileDialog";
 import { Check, Copy, Flag, MoreHorizontal, SendHorizontal, ShieldBan, ShieldCheck, Ticket, UserCheck, UserPlus, UserX, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { ApiError } from "../../api/client";
@@ -62,7 +63,12 @@ interface ProfileDialogProps {
   onClose: () => void;
 }
 
-export function ProfileDialog({ userId, fallbackName, orgId = null, near = null, onClose }: ProfileDialogProps) {
+export function ProfileDialog(props: ProfileDialogProps) {
+  const known = useOrbit((s) => s.users[props.userId]);
+  return known?.bot ? <BotProfileDialog bot={known} onClose={props.onClose} /> : <PersonProfileDialog {...props} />;
+}
+
+function PersonProfileDialog({ userId, fallbackName, orgId = null, near = null, onClose }: ProfileDialogProps) {
   const engine = useEngine();
   const reducedMotion = useReducedMotion();
   const me = useOrbit((s) => s.me?.userId);
