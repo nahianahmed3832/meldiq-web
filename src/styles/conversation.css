@@ -1349,6 +1349,8 @@
   color: var(--text-2);
 }
 .poll-privacy > .lines {
+  display: grid;
+  gap: 3px;
   flex: 1;
   min-width: 0;
 }
@@ -1417,6 +1419,8 @@
   border-bottom: 1px solid var(--hairline);
 }
 .poll-voter .lines {
+  display: grid;
+  gap: 3px;
   min-width: 0;
 }
 .poll-voter strong {

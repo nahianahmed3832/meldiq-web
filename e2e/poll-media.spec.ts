@@ -5,6 +5,29 @@ import { newPhone, testAddress } from "./phone";
 
 test.use({ serviceWorkers: "block", actionTimeout: 20_000 });
 test.setTimeout(180_000);
+// WebKit reports aborted same-origin fetches as page errors while an old document unloads.
+// Keep runtime errors strict; exclude only that browser diagnostic during an explicit navigation.
+function watchErrors(page: Page) {
+  const errors: { message: string; at: number }[] = [];
+  const navigations: { start: number; end: number }[] = [];
+  page.on("pageerror", (e) => errors.push({ message: e.message, at: Date.now() }));
+  return {
+    navigate: async (run: () => Promise<unknown>) => {
+      const span = { start: Date.now(), end: Infinity };
+      navigations.push(span);
+      try {
+        await run();
+      } finally {
+        span.end = Date.now() + 100;
+      }
+    },
+    unexpected: () =>
+      errors
+        .filter((e) => !(e.message.startsWith("/127.0.0.1:") && e.message.endsWith("due to access control checks.") && navigations.some((n) => e.at >= n.start && e.at <= n.end)))
+        .map((e) => e.message),
+  };
+}
+
 async function onboard(page: Page, context: BrowserContext) {
   await context.setExtraHTTPHeaders({ "x-orbit-test-ip": testAddress() });
   // Use normal email onboarding against the exact production export, without development device linking.
@@ -41,8 +64,7 @@ async function onboard(page: Page, context: BrowserContext) {
 }
 
 test("poll percentages, named and hidden ballots survive reload, change, remove and close", async ({ page, context }, info) => {
-  const errors: string[] = [];
-  page.on("pageerror", (e) => errors.push(e.message));
+  const runtime = watchErrors(page);
   const owner = await onboard(page, context);
   const named = await newPhone("pollpublic", "Mina Public");
   const hidden = await newPhone("pollhidden", "Secret Person");
@@ -52,7 +74,7 @@ test("poll percentages, named and hidden ballots survive reload, change, remove 
   const conversations = (await owner.req("GET", "/v1/conversations")).conversations as { id: string; orgId: string; name: string }[];
   const channel = conversations.find((c) => c.orgId === org.id && c.name === "general")!;
   for (const peer of [named, hidden]) await peer.req("POST", `/v1/conversations/${channel.id}/join`).catch(() => undefined);
-  await page.goto(`/home/c/${channel.id}`);
+  await runtime.navigate(() => page.goto(`/home/c/${channel.id}`));
   await page.locator(".composer-plus").click();
   await page.getByRole("menuitem", { name: "Poll…", exact: true }).click();
   const create = page.getByRole("dialog", { name: "New poll", exact: true });
@@ -88,7 +110,7 @@ test("poll percentages, named and hidden ballots survive reload, change, remove 
   await poll.getByRole("switch", { name: "Vote anonymously" }).click();
   await poll.getByRole("checkbox", { name: /^Movie night,/ }).click();
   await expect(poll).toContainText("3 people voted");
-  await page.reload();
+  await runtime.navigate(() => page.reload());
   await expect(poll).toContainText("3 people voted");
   await expect(poll.getByRole("switch", { name: "Vote anonymously" })).toHaveAttribute("aria-checked", "true");
   await poll.getByRole("button", { name: "View votes" }).click();
@@ -113,18 +135,17 @@ test("poll percentages, named and hidden ballots survive reload, change, remove 
   await page.getByRole("dialog", { name: "Close this poll?" }).getByRole("button", { name: "Close poll", exact: true }).click();
   await expect(poll.getByRole("checkbox").first()).toBeDisabled();
   await expect(poll).toContainText("Voting closed");
-  await page.reload();
+  await runtime.navigate(() => page.reload());
   await expect(poll).toContainText("Voting closed");
-  expect(errors).toEqual([]);
+  expect(runtime.unexpected()).toEqual([]);
 });
 
 test("long originals fit completely, zoom and pan, and navigate across separate image messages", async ({ page, context }, info) => {
-  const errors: string[] = [];
-  page.on("pageerror", (e) => errors.push(e.message));
+  const runtime = watchErrors(page);
   const owner = await onboard(page, context);
   const peer = await newPhone("imagepeer", "Image Friend");
   const dm = (await owner.req("POST", "/v1/conversations/dm", { userId: peer.userId })).conversation.id as string;
-  await page.goto(`/dms/c/${dm}`);
+  await runtime.navigate(() => page.goto(`/dms/c/${dm}`));
   const png = await page.evaluate(() => {
     const canvas = document.createElement("canvas");
     canvas.width = 600;
@@ -185,6 +206,8 @@ test("long originals fit completely, zoom and pan, and navigate across separate 
   await expect(image).toBeVisible();
   await page.keyboard.press("ArrowLeft");
   await expect(viewer.locator(".viewer-position")).toContainText("long-original.png");
+  await expect(image).toBeVisible();
+  await expect.poll(() => image.evaluate((im: HTMLImageElement) => im.naturalHeight)).toBe(6000);
   await page.keyboard.press("1");
   await expect(viewer.getByLabel("Zoom level")).toHaveText("100%");
   await page.keyboard.press("0");
@@ -193,9 +216,28 @@ test("long originals fit completely, zoom and pan, and navigate across separate 
   expect(await viewer.evaluate((el) => el.scrollWidth <= el.clientWidth)).toBe(true);
   await expect(viewer.getByRole("button", { name: /^Next/ })).toBeVisible();
   await expect(viewer.getByRole("button", { name: "Zoom in", exact: true })).toBeVisible();
+  await expect
+    .poll(() =>
+      image.evaluate((im) => {
+        const r = im.getBoundingClientRect(),
+          v = im.closest(".viewer-image-viewport")!.getBoundingClientRect();
+        return Math.max(0, Math.min(r.bottom, v.bottom) - Math.max(r.top, v.top));
+      }),
+    )
+    .toBeGreaterThan(100);
+  await info.attach("phone-image-metrics.json", {
+    body: JSON.stringify(
+      await image.evaluate((im) => ({
+        image: im.getBoundingClientRect().toJSON(),
+        viewport: im.closest(".viewer-image-viewport")!.getBoundingClientRect().toJSON(),
+        visibility: getComputedStyle(im).visibility,
+      })),
+    ),
+    contentType: "application/json",
+  });
   await viewer.screenshot({ path: info.outputPath("image-viewer-phone.png") });
   await page.keyboard.press("Escape");
   await expect(viewer).toHaveCount(0);
   await expect(opener).toBeFocused();
-  expect(errors).toEqual([]);
+  expect(runtime.unexpected()).toEqual([]);
 });

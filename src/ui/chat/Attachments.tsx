@@ -161,7 +161,14 @@ export function MediaAttachment({ r }: { r: AttachmentRef }) {
   if (isVideo(r))
     return (
       <>
-        <button className="att-video-tile" onClick={viewer.open} aria-label={`Play video ${r.name}, ${bytes(r.size)}`}>
+        <button
+          className="att-video-tile"
+          onClick={(e) => {
+            e.currentTarget.focus();
+            viewer.open();
+          }}
+          aria-label={`Play video ${r.name}, ${bytes(r.size)}`}
+        >
           <span className="att-video-play" aria-hidden="true">
             <Play size={22} />
           </span>
@@ -217,7 +224,14 @@ export function ImageAttachment({ r }: { r: AttachmentRef }) {
   if (loading || !url) return <div ref={spot} className="att-image att-pending skeleton" aria-label={`Loading ${r.name}`} />;
   return (
     <>
-      <button className="att-image" onClick={viewer.open} aria-label={`Open image ${r.name}`}>
+      <button
+        className="att-image"
+        onClick={(e) => {
+          e.currentTarget.focus();
+          viewer.open();
+        }}
+        aria-label={`Open image ${r.name}`}
+      >
         <img src={url} alt={r.name} loading="lazy" />
       </button>
       {viewer.own}
@@ -249,7 +263,15 @@ function AlbumTile({ r, more, onOpen }: { r: AttachmentRef; more: number; onOpen
   const [spot, near] = useNearScreen<HTMLButtonElement>();
   const { url, error } = useBlobUrl(r, autoLoadPhotos && near);
   return (
-    <button ref={spot} className="album-tile" onClick={onOpen} aria-label={more ? `Open photos, ${more} more` : `Open image ${r.name}`}>
+    <button
+      ref={spot}
+      className="album-tile"
+      onClick={(e) => {
+        e.currentTarget.focus();
+        onOpen();
+      }}
+      aria-label={more ? `Open photos, ${more} more` : `Open image ${r.name}`}
+    >
       {url ? (
         <img src={url} alt="" loading="lazy" />
       ) : error ? (
