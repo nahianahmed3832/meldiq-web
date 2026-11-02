@@ -139,5 +139,14 @@
     "offHostEncryptedCopyVerified": true,
     "archiveSha256": "b9edd341c592860ffd355fb44d5755b25e8aa37de037ccbc4b1ae25e63d5e8f6"
   },
-  "productionReleaseLockReleased": true
+  "productionReleaseLockReleased": true,
+  "currentWebFollowup": {
+    "source": "c7faea3e2b336b17efdce41861b2cc81dc5a5939",
+    "containsPlusSource": true,
+    "productionReceipt": "../../deploy/media-optimized-default/production-receipt.json",
+    "apiPreserved": true,
+    "unitPassed": 910,
+    "browserPassed": 12,
+    "publicHashesVerified": 4
+  }
 }

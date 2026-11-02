@@ -1,5 +1,5 @@
 {
-  "note": "Web diff is against pre-Plus production source 0a32019; API/Android diff is against 0f77a9d8 and includes the preserved newer Android media source. Admin lists all published tracked source files. No claim that every integrated change originated in the Plus task. Runtime secrets, customer data, restore logs and private comparison maps are excluded.",
+  "note": "Web diff is against pre-Plus production source 0a32019; API/Android diff is against 0f77a9d8 and includes the preserved newer Android media source. Admin lists all published tracked source files. No claim that every integrated change originated in the Plus task. Runtime secrets, customer data, restore logs and private comparison maps are excluded. Web entries describe the Plus publication, before the separately recorded c7faea3 media follow-up.",
   "web": [
     {
       "path": "deploy/monetization/accounts-check.mjs",
