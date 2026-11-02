@@ -1,0 +1,13 @@
+{
+  "status": "verified-awaiting-release-lock",
+  "buildId": "xVmZPqYTpRM-vmVd8YpNp",
+  "webSource": "35001a44999aa6a8d52b71d735443cbfd2f35403",
+  "apiSource": "0f77a9d8",
+  "webTestsPassed": 903,
+  "webTestsSkipped": 2,
+  "serverTestsPassed": 18,
+  "browserWorkflowsPassed": 6,
+  "lockOwner": "plus-release-20261102",
+  "previousAttempt": "Rolled back after an environment-array-order comparison; semantic configuration values were verified equal.",
+  "productionPredecessorRecheckedBeforePublication": true
+}
