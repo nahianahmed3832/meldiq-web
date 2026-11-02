@@ -1,5 +1,5 @@
 {
-  "version": "0.75.0",
+  "version": "0.76.0",
   "routes": [
     {
       "method": "GET",
@@ -156,6 +156,142 @@
     {
       "method": "POST",
       "path": "/v2/billing/gifts/{id}/resend"
+    },
+    {
+      "method": "GET",
+      "path": "/admin/v1/operations/notices"
+    },
+    {
+      "method": "POST",
+      "path": "/admin/v1/operations/notices"
+    },
+    {
+      "method": "POST",
+      "path": "/admin/v1/operations/notices/{id}/state"
+    },
+    {
+      "method": "GET",
+      "path": "/admin/v1/operations/notices/{id}/receipts"
+    },
+    {
+      "method": "GET",
+      "path": "/admin/v1/operations/appeals"
+    },
+    {
+      "method": "POST",
+      "path": "/admin/v1/operations/appeals/{id}/decision"
+    },
+    {
+      "method": "GET",
+      "path": "/admin/v1/operations/promotions"
+    },
+    {
+      "method": "PUT",
+      "path": "/admin/v1/operations/promotions"
+    },
+    {
+      "method": "GET",
+      "path": "/admin/v1/operations/policy"
+    },
+    {
+      "method": "PUT",
+      "path": "/admin/v1/operations/policy"
+    },
+    {
+      "method": "GET",
+      "path": "/admin/v1/operations/policy/history"
+    },
+    {
+      "method": "GET",
+      "path": "/admin/v1/operations/operators"
+    },
+    {
+      "method": "PUT",
+      "path": "/admin/v1/operations/operators/{id}"
+    },
+    {
+      "method": "GET",
+      "path": "/admin/v1/operations/ownership"
+    },
+    {
+      "method": "POST",
+      "path": "/admin/v1/operations/ownership"
+    },
+    {
+      "method": "GET",
+      "path": "/admin/v1/operations/orders"
+    },
+    {
+      "method": "POST",
+      "path": "/admin/v1/operations/orders/{id}/refund"
+    },
+    {
+      "method": "POST",
+      "path": "/admin/v1/operations/orders/reconcile"
+    },
+    {
+      "method": "GET",
+      "path": "/admin/v1/operations/warnings"
+    },
+    {
+      "method": "POST",
+      "path": "/admin/v1/operations/warnings"
+    },
+    {
+      "method": "POST",
+      "path": "/admin/v1/operations/warnings/{id}/revoke"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/platform/notices"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/platform/notices/{id}/read"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/platform/appeals"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/platform/appeals"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/platform/features"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/platform/promotions/redeem"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/platform/ownership"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/platform/ownership/{id}/approve"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/collectible-purchases"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/collectible-purchases"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/collectible-purchases/{id}/confirm"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/platform/appeals/email/start"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/platform/appeals/email/complete"
     },
     {
       "method": "DELETE",
@@ -2002,9 +2138,6 @@
       409
     ],
     "provider_email_required": [
-      400
-    ],
-    "social_profile_required": [
       400
     ],
     "last_login_method": [
