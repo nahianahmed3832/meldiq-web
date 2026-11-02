@@ -34,9 +34,11 @@ export function encodedName(name: string, type: string): string {
 export class PhotoPrepareError extends Error {}
 
 /** Re-encodes [file] at [quality] (browser only: needs createImageBitmap and a canvas). */
-export async function preparePhoto(file: File, quality: PhotoQuality | "auto" = "auto"): Promise<File> {
+export async function preparePhoto(file: File, quality: PhotoQuality | "auto" = "original"): Promise<File> {
   if (quality === "auto") return optimizePhoto(file);
   if (quality === "original" || !reencodable(file.type)) return file;
+  if (file.size > 32 * 1024 * 1024) return file;
+  if (expressionFormat(new Uint8Array(await file.arrayBuffer()))?.animated) return file;
   const { edge, jpeg } = SETTINGS[quality];
   let bitmap: ImageBitmap;
   try {
@@ -53,8 +55,8 @@ export async function preparePhoto(file: File, quality: PhotoQuality | "auto" = 
     const ctx = canvas.getContext("2d");
     if (!ctx) throw new PhotoPrepareError(`"${file.name}" couldn't be prepared in this browser. Choose Original to send it as it is.`);
     ctx.drawImage(bitmap, 0, 0, size.width, size.height);
-    const type = file.type === "image/png" ? "image/png" : "image/jpeg";
-    const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, type, type === "image/jpeg" ? jpeg : undefined));
+    const type = file.type;
+    const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, type, jpeg));
     if (!blob) throw new PhotoPrepareError(`"${file.name}" couldn't be prepared in this browser. Choose Original to send it as it is.`);
     return new File([blob], encodedName(file.name, type), { type, lastModified: file.lastModified });
   } finally {
@@ -90,34 +92,7 @@ export async function optimizePhoto(file: File): Promise<File> {
   }
 }
 
-/** Save optimized photos in a widely supported format; preserve alpha and animation. */
+/** Downloads return the exact verified file. Format conversion is an explicit export operation, never a download side effect. */
 export async function photoDownload(blob: Blob, name: string): Promise<{ blob: Blob; name: string }> {
-  const original = { blob, name };
-  if (blob.type !== "image/webp") return original;
-  try {
-    if (expressionFormat(new Uint8Array(await blob.arrayBuffer()))?.animated) return original;
-    const bitmap = await createImageBitmap(blob);
-    try {
-      const canvas = document.createElement("canvas");
-      canvas.width = bitmap.width;
-      canvas.height = bitmap.height;
-      const context = canvas.getContext("2d");
-      if (!context) return original;
-      context.drawImage(bitmap, 0, 0);
-      const pixels = context.getImageData(0, 0, bitmap.width, bitmap.height).data;
-      let alpha = false;
-      for (let i = 3; i < pixels.length; i += 4)
-        if (pixels[i] !== 255) {
-          alpha = true;
-          break;
-        }
-      const type = alpha ? "image/png" : "image/jpeg";
-      const encoded = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, type, 0.94));
-      return encoded ? { blob: encoded, name: encodedName(name, encoded.type) } : original;
-    } finally {
-      bitmap.close();
-    }
-  } catch {
-    return original;
-  }
+  return { blob, name };
 }

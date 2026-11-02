@@ -1,0 +1,9 @@
+
+ RUN  v4.1.12 /Volumes/code_files/meldiq_web
+
+
+ Test Files  3 passed (3)
+      Tests  15 passed (15)
+   Start at  19:16:02
+   Duration  1.23s (transform 140ms, setup 78ms, import 288ms, tests 479ms, environment 0ms)
+

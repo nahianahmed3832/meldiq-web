@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.meldiq.android.data.repo.AttachmentFilesTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-11-02T12:09:54.310Z" hostname="MDNAHIANs-MacBook-Pro.local" time="0.033">
+  <properties/>
+  <testcase name="deletesTheMessagesFilesAndKeepsEverythingElse" classname="com.meldiq.android.data.repo.AttachmentFilesTest" time="0.028"/>
+  <testcase name="keepsExistingFileNamesForServerIds" classname="com.meldiq.android.data.repo.AttachmentFilesTest" time="0.001"/>
+  <testcase name="namesFromAMessageCannotReachOutsideTheFolder" classname="com.meldiq.android.data.repo.AttachmentFilesTest" time="0.004"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,27 @@
+[WebServer] (node:68032) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:68032) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+[WebServer] (node:68032) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+[WebServer] (node:68074) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 8 tests using 1 worker
+
+(node:68078) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 [chromium] › e2e/media-sharing.spec.ts:54:1 › a photo album and a document share one caption, retain original bytes and support zoom (13.3s)
+  ✓  2 [chromium] › e2e/media-sharing.spec.ts:88:1 › a selected video previews, uploads and plays inline and in the viewer (12.0s)
+(node:68162) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  3 [webkit] › e2e/media-sharing.spec.ts:54:1 › a photo album and a document share one caption, retain original bytes and support zoom (13.7s)
+  ✓  4 [webkit] › e2e/media-sharing.spec.ts:88:1 › a selected video previews, uploads and plays inline and in the viewer (16.7s)
+(node:68482) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  5 [phone-width] › e2e/media-sharing.spec.ts:54:1 › a photo album and a document share one caption, retain original bytes and support zoom (14.2s)
+  ✓  6 [phone-width] › e2e/media-sharing.spec.ts:88:1 › a selected video previews, uploads and plays inline and in the viewer (12.2s)
+(node:68703) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  7 [iphone-width] › e2e/media-sharing.spec.ts:54:1 › a photo album and a document share one caption, retain original bytes and support zoom (27.6s)
+  ✓  8 [iphone-width] › e2e/media-sharing.spec.ts:88:1 › a selected video previews, uploads and plays inline and in the viewer (23.5s)
+
+  8 passed (2.6m)

@@ -1,0 +1,18 @@
+{
+  "tests": 56,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "suites": [
+    "com.meldiq.android.data.model.AttachmentThumbnailTest",
+    "com.meldiq.android.ui.media.MediaGalleryTest",
+    "com.meldiq.android.crypto.AttachmentFileCryptoTest",
+    "com.meldiq.android.crypto.ChunkedAttachmentCryptoTest",
+    "com.meldiq.android.data.model.AttachmentPolicyTest",
+    "com.meldiq.android.data.api.ResumableDownloadTest",
+    "com.meldiq.android.data.repo.MessageCollectionsTest",
+    "com.meldiq.android.data.repo.AttachmentUploaderTest",
+    "com.meldiq.android.crypto.AttachmentCryptoTest",
+    "com.meldiq.android.data.repo.AttachmentFilesTest"
+  ]
+}

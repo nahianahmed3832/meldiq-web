@@ -1,0 +1,10 @@
+{
+  "Rules": [
+    {
+      "ID": "meldiq-abandoned-attachment-parts",
+      "Status": "Enabled",
+      "Filter": { "Prefix": "orbit/attachments/" },
+      "AbortIncompleteMultipartUpload": { "DaysAfterInitiation": 7 }
+    }
+  ]
+}

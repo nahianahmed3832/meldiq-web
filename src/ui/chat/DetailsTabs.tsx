@@ -84,13 +84,43 @@ export function MediaTab({ conversationId, gallery: cached, nameOf }: ItemsTabPr
   const gallery = collection.supported ? galleryOf(collection.page?.messages ?? []) : cached;
   const [shown, setShown] = useState(PAGE);
   const [missing, setMissing] = useState(false);
+  const [kind, setKind] = useState<"all" | "photos" | "videos">("all");
+  const [query, setQuery] = useState("");
+  const items = filterFiles(gallery.media, query).filter((i) => kind === "all" || (kind === "photos" ? isInlineImage(i.ref) : !isInlineImage(i.ref)));
   return (
     <GalleryMediaViewer items={gallery.media} nameOf={nameOf}>
       <CollectionControls collection={collection} />
-      {!collection.loading && !collection.error && gallery.media.length === 0 && <Empty text="No photos or videos on this page." />}
+      <div className="segmented" role="tablist" aria-label="Media type">
+        {(["all", "photos", "videos"] as const).map((value) => (
+          <button
+            key={value}
+            role="tab"
+            aria-selected={kind === value}
+            onClick={() => {
+              setKind(value);
+              setShown(PAGE);
+            }}
+          >
+            {value === "all" ? "All media" : value === "photos" ? "Photos" : "Videos"}
+          </button>
+        ))}
+      </div>
+      <label className="forum-search">
+        <Search size={15} aria-hidden="true" />
+        <input
+          aria-label="Search media on this page"
+          placeholder="Filter this page"
+          value={query}
+          onChange={(e) => {
+            setQuery(e.target.value);
+            setShown(PAGE);
+          }}
+        />
+      </label>
+      {!collection.loading && !collection.error && items.length === 0 && <Empty text="No photos or videos on this page." />}
       {missing && <Missing />}
       <div className="gallery-grid details-grid" role="tabpanel" aria-label="Photos and videos">
-        {gallery.media.slice(0, shown).map((i) => (
+        {items.slice(0, shown).map((i) => (
           <figure key={i.ref.id} className="gallery-cell">
             {isInlineImage(i.ref) ? <ImageAttachment r={i.ref} /> : <MediaAttachment r={i.ref} />}
             <figcaption className="details-caption">
@@ -102,9 +132,9 @@ export function MediaTab({ conversationId, gallery: cached, nameOf }: ItemsTabPr
           </figure>
         ))}
       </div>
-      {gallery.media.length > shown && (
+      {items.length > shown && (
         <button className="btn btn-secondary btn-sm" style={{ justifySelf: "center" }} onClick={() => setShown((n) => n + PAGE)}>
-          Show more ({gallery.media.length - shown})
+          Show more ({items.length - shown})
         </button>
       )}
       <SaveSeveral gallery={gallery} nameOf={nameOf} />

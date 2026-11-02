@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.meldiq.android.data.repo.AttachmentUploaderTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-11-02T12:09:54.354Z" hostname="MDNAHIANs-MacBook-Pro.local" time="4.749">
+  <properties/>
+  <testcase name="completedMultipartCheckpointSurvivesANewUploaderWithoutSendingBytesAgain" classname="com.meldiq.android.data.repo.AttachmentUploaderTest" time="0.295"/>
+  <testcase name="partsTheStoreAlreadyHasAreNotSentAgain" classname="com.meldiq.android.data.repo.AttachmentUploaderTest" time="0.046"/>
+  <testcase name="partHashesAreComputedOverExactlyTheirBytes" classname="com.meldiq.android.data.repo.AttachmentUploaderTest" time="0.008"/>
+  <testcase name="aFailedUploadIsCancelledOnTheServer" classname="com.meldiq.android.data.repo.AttachmentUploaderTest" time="0.086"/>
+  <testcase name="cancellingStopsTheRequestAndAbandonsTheDirectSession" classname="com.meldiq.android.data.repo.AttachmentUploaderTest" time="0.06"/>
+  <testcase name="largeFilesGoInPartsWithTheirOwnHashesAndADroppedPartIsSentAgain" classname="com.meldiq.android.data.repo.AttachmentUploaderTest" time="2.103"/>
+  <testcase name="serversWithoutDirectUploadsGetTheOriginalUpload" classname="com.meldiq.android.data.repo.AttachmentUploaderTest" time="0.066"/>
+  <testcase name="aSingleUploadGoesStraightToTheStoreWithItsSignedHeadersAndNoMeldiqCredentials" classname="com.meldiq.android.data.repo.AttachmentUploaderTest" time="0.046"/>
+  <testcase name="anExpiredUploadLinkIsRenewedOnce" classname="com.meldiq.android.data.repo.AttachmentUploaderTest" time="2.038"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

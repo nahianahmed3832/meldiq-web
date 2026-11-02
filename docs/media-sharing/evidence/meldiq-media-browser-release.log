@@ -1,0 +1,111 @@
+[WebServer] (node:46186) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:46206) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:46207) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:46207) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+[WebServer] (node:46207) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+[WebServer] (node:46257) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] node_modules/zod/v4/core/util.js (400:0): A comment
+[WebServer] 
+[WebServer] "// Wrapped in a `@__PURE__` IIFE: esbuild never tree-shakes a top-level initializer that contains a member access on `Number`, so the bare object literal survived into every bundle."
+[WebServer] 
+[WebServer] in "node_modules/zod/v4/core/util.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+[WebServer] node_modules/zod/v4/core/regexes.js (74:0): A comment
+[WebServer] 
+[WebServer] "/** Anchors a pattern source. The interpolation lives here rather than at the call site because
+[WebServer]  * esbuild will not drop a `@__PURE__` call whose own argument interpolates a variable, but it
+[WebServer]  * will drop `anchor(dateSource)`. Keeping it inline pinned `date` into every bundle. */"
+[WebServer] 
+[WebServer] in "node_modules/zod/v4/core/regexes.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+[WebServer] [plugin vite:resolve] Module "crypto" has been externalized for browser compatibility, imported by "/Volumes/code_files/meldiq_web/node_modules/@hpke/common/esm/src/algorithm.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+[WebServer] node_modules/@hpke/common/esm/src/utils/noble.js (82:20): A comment
+[WebServer] 
+[WebServer] "/* @__PURE__ */"
+[WebServer] 
+[WebServer] in "node_modules/@hpke/common/esm/src/utils/noble.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+[WebServer] node_modules/@hpke/common/esm/src/utils/noble.js (122:22): A comment
+[WebServer] 
+[WebServer] "/* @__PURE__ */"
+[WebServer] 
+[WebServer] in "node_modules/@hpke/common/esm/src/utils/noble.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+[WebServer] [plugin vite:resolve] Module "crypto" has been externalized for browser compatibility, imported by "/Volumes/code_files/meldiq_web/node_modules/@hpke/common/esm/src/utils/misc.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+[WebServer] [plugin vite:resolve] Module "crypto" has been externalized for browser compatibility, imported by "/Volumes/code_files/meldiq_web/node_modules/@hpke/common/esm/src/utils/misc.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+[WebServer] node_modules/@hpke/common/esm/src/hash/sha3.js (559:0): A comment
+[WebServer] 
+[WebServer] "// export const sha3_224: CHash = /* @__PURE__ */ genKeccak("
+[WebServer] 
+[WebServer] in "node_modules/@hpke/common/esm/src/hash/sha3.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+[WebServer] node_modules/@hpke/common/esm/src/hash/sha3.js (563:0): A comment
+[WebServer] 
+[WebServer] "//   /* @__PURE__ */ oidNist(0x07),"
+[WebServer] 
+[WebServer] in "node_modules/@hpke/common/esm/src/hash/sha3.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+[WebServer] node_modules/@hpke/common/esm/src/hash/sha3.js (593:0): A comment
+[WebServer] 
+[WebServer] "//   /* @__PURE__ */"
+[WebServer] 
+[WebServer] in "node_modules/@hpke/common/esm/src/hash/sha3.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+[WebServer] node_modules/@hpke/common/esm/src/hash/sha3.js (594:0): A comment
+[WebServer] 
+[WebServer] "//   genShake(0x1f, 168, 32, /* @__PURE__ */ oidNist(0x0b));"
+[WebServer] 
+[WebServer] in "node_modules/@hpke/common/esm/src/hash/sha3.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+[WebServer] node_modules/@hpke/common/esm/src/hash/sha3.js (597:0): A comment
+[WebServer] 
+[WebServer] "//   /* @__PURE__ */"
+[WebServer] 
+[WebServer] in "node_modules/@hpke/common/esm/src/hash/sha3.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+[WebServer] node_modules/@hpke/common/esm/src/hash/sha3.js (598:0): A comment
+[WebServer] 
+[WebServer] "//   genShake(0x1f, 136, 64, /* @__PURE__ */ oidNist(0x0c));"
+[WebServer] 
+[WebServer] in "node_modules/@hpke/common/esm/src/hash/sha3.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.
+[WebServer] (node:46260) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:46276) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:46277) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] ⚠ Specified "rewrites" will not automatically work with "output: export". See more info here: https://nextjs.org/docs/messages/export-no-custom-routes
+[WebServer] (node:46284) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 8 tests using 1 worker
+
+(node:46287) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] [browser] Service Worker registration blocked by Playwright (<anonymous>:3:100)
+[WebServer] [browser] Service Worker registration blocked by Playwright (<anonymous>:3:100)
+  ✓  1 [chromium] › e2e/media-sharing.spec.ts:20:1 › a photo album and a document share one caption, retain original bytes and support zoom (6.0s)
+[WebServer] [browser] Service Worker registration blocked by Playwright (<anonymous>:3:100)
+[WebServer] [browser] Service Worker registration blocked by Playwright (<anonymous>:3:100)
+  ✓  2 [chromium] › e2e/media-sharing.spec.ts:53:1 › a selected video previews, uploads and plays inline and in the viewer (5.3s)
+(node:46366) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] [browser] Service Worker registration blocked by Playwright (web-inspector://bootstrap.js:19:104)
+[WebServer] [browser] Service Worker registration blocked by Playwright (web-inspector://bootstrap.js:19:104)
+  ✓  3 [webkit] › e2e/media-sharing.spec.ts:20:1 › a photo album and a document share one caption, retain original bytes and support zoom (6.7s)
+[WebServer] [browser] Service Worker registration blocked by Playwright (web-inspector://bootstrap.js:19:104)
+[WebServer] [browser] Service Worker registration blocked by Playwright (web-inspector://bootstrap.js:19:104)
+  ✓  4 [webkit] › e2e/media-sharing.spec.ts:53:1 › a selected video previews, uploads and plays inline and in the viewer (7.5s)
+(node:46426) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] [browser] Service Worker registration blocked by Playwright (<anonymous>:3:100)
+[WebServer] [browser] Service Worker registration blocked by Playwright (<anonymous>:3:100)
+  ✓  5 [phone-width] › e2e/media-sharing.spec.ts:20:1 › a photo album and a document share one caption, retain original bytes and support zoom (6.0s)
+[WebServer] [browser] Service Worker registration blocked by Playwright (<anonymous>:3:100)
+[WebServer] [browser] Service Worker registration blocked by Playwright (<anonymous>:3:100)
+  ✓  6 [phone-width] › e2e/media-sharing.spec.ts:53:1 › a selected video previews, uploads and plays inline and in the viewer (4.9s)
+(node:46495) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] [browser] Service Worker registration blocked by Playwright (web-inspector://bootstrap.js:18:104)
+[WebServer] [browser] Service Worker registration blocked by Playwright (web-inspector://bootstrap.js:18:104)
+  ✓  7 [iphone-width] › e2e/media-sharing.spec.ts:20:1 › a photo album and a document share one caption, retain original bytes and support zoom (6.9s)
+[WebServer] [browser] Service Worker registration blocked by Playwright (web-inspector://bootstrap.js:18:104)
+[WebServer] [browser] Service Worker registration blocked by Playwright (web-inspector://bootstrap.js:18:104)
+  ✓  8 [iphone-width] › e2e/media-sharing.spec.ts:53:1 › a selected video previews, uploads and plays inline and in the viewer (6.8s)
+
+  8 passed (1.1m)
