@@ -1,0 +1,29 @@
+{
+  "status": "deployed-and-verified",
+  "sourceCommit": "0216562c626dbd0404c95116f74d192fd9179453",
+  "buildId": "f-otm9QqHC_AazXAtKGtI",
+  "archiveSha256": "d88f73efeba8b87a70630f9df91db7e330b69effb4509d121a20b24dc69a920b",
+  "previousWeb": "/opt/meldiq-web/releases/0.5.0-beta-community-identity-687d6eab",
+  "newWeb": "/opt/meldiq-web/releases/0.5.0-beta-polls-media-0216562",
+  "deployedAt": "2026-11-02T13:10:19.655199+00:00",
+  "runtimeConfigPreserved": true,
+  "previousStaticAssetsRetained": true,
+  "apiContainerUnchanged": true,
+  "nginxUnchanged": true,
+  "sourceMapsPublished": false,
+  "validation": {
+    "ci": "https://github.com/nahianahmed3832/meldiq-web/actions/runs/41445857996",
+    "unitTestsPassed": 891,
+    "unitTestsSkipped": 1,
+    "productionBrowserChecks": {
+      "passed": 4,
+      "engines": [
+        "chromium",
+        "webkit"
+      ],
+      "normalEmailOnboarding": true,
+      "phoneWidth": 390,
+      "testSourceCommit": "a5cd6ea"
+    }
+  }
+}

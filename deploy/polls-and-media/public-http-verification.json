@@ -1,0 +1,16 @@
+{
+  "ok": true,
+  "buildId": "f-otm9QqHC_AazXAtKGtI",
+  "verifiedAt": "2026-11-02T13:13:25.085707+00:00",
+  "assets": {
+    "index.html": {
+      "sha256Matches": true
+    },
+    "sw.js": {
+      "sha256Matches": true
+    },
+    "_next/static/css/56fd18b5268d4b9b.css": {
+      "sha256Matches": true
+    }
+  }
+}
