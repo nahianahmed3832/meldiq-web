@@ -1,3 +1,4 @@
+import { PurchaseCollectible } from "../operations/PlatformInbox";
 import { userProfile } from "../../sync/account";
 import { useLoad } from "../workspace/useLoad";
 import { usePhoto } from "../components/photos";
@@ -379,6 +380,18 @@ function Studio({ onClose }: { onClose: () => void }) {
                       >
                         Collect for free
                       </button>
+                    ) : selected.acquisitionType === "purchase" && selected.currency === "USD" && selected.price > 0 ? (
+                      <PurchaseCollectible
+                        key={selected.id}
+                        itemId={selected.id}
+                        price={selected.price}
+                        onOwned={() =>
+                          void run(async () => {
+                            setInventory((await collectionInventory(engine)).inventory);
+                            setNotice("Purchase verified. Apply your look when ready.");
+                          })
+                        }
+                      />
                     ) : (
                       <p className="faint">
                         <Lock size={13} />{" "}

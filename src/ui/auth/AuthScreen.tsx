@@ -1,3 +1,4 @@
+import { AppealAccess } from "../operations/AppealAccess";
 import type { SavedAccount } from "../../auth/savedAccounts";
 import { GiftSignInNotice } from "../billing/GiftSignInNotice";
 import { apiBase } from "../../application/config";
@@ -196,6 +197,7 @@ export function AuthScreen(props: {
     <AuthFrame>
       <GiftSignInNotice />
       {body}
+      {step.k === "signIn" && server?.features.includes("platform-operations") && <AppealAccess base={base} />}
     </AuthFrame>
   );
 }

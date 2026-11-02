@@ -1,3 +1,4 @@
+import { PlatformInbox } from "../operations/PlatformInbox";
 import { byActivity, markAllReadTargets, unreadOf } from "../selectors";
 import { actionFor, comboOf } from "../../application/shortcuts";
 import { ShortcutsDialog } from "../dialogs/ShortcutsDialog";
@@ -341,6 +342,7 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
       <div className={`workspace${settings ? "" : " with-sidebar"}`}>
         <TopBar onMenu={() => setDrawer((d) => !d)} onSearch={() => setDialog({ kind: "search" })} section={section} orgId={orgId} />
         <ConnectionBanner />
+        <PlatformInbox />
         <div className={`body${view.conversationId ? " has-conversation" : ""}${phoneList ? " phone-list" : " phone-main"}${settings ? " settings-mode" : ""}`}>
           {!settings && <Sidebar orgId={orgId} section={section === "friends" ? "dms" : section} open={drawer} onDialog={ctx.open} />}
           {drawer && !settings && <div className="sidebar-scrim" onClick={() => setDrawer(false)} aria-hidden="true" />}
