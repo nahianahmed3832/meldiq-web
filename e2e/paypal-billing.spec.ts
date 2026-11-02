@@ -35,7 +35,7 @@ test("Bots+ renewal targets its own subscription and preserves personal Plus", a
         mode: "live",
         portal: false,
         subscription: {
-          plan: { key: "plus", name: "Mojo Plus" },
+          plan: { key: "plus", name: "Meldiq Plus" },
           status: "active",
           standing: "paid",
           currentPeriodEnd: until,
@@ -111,7 +111,7 @@ for (const approved of [false, true]) {
           subscription: canceled
             ? null
             : {
-                plan: { key: "plus", name: "Mojo Plus" },
+                plan: { key: "plus", name: "Meldiq Plus" },
                 status: "incomplete",
                 standing: "not_entitled",
                 currentPeriodEnd: null,
@@ -173,7 +173,7 @@ for (const approved of [false, true]) {
       await expect(page.getByRole("button", { name: "Cancel renewal", exact: true })).toHaveCount(0);
       expect(cancelCalls).toBe(0);
     }
-    await expect(page.getByRole("heading", { name: "Mojo Plus", exact: true })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Meldiq Plus", exact: true })).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
     if (!approved) {
       await page.route("**/v2/billing/paypal/config", (route) => route.fulfill({ json: { provider: "paypal", environment: "live", clientId: "public-test", cards: false, subscriptions: true } }));

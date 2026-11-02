@@ -184,7 +184,7 @@ export function AddonCheckoutPage({ draft, initial }: { draft: Addon; initial: R
               <Sparkles size={14} aria-hidden="true" /> MORE FOR YOUR COMMUNITY
             </span>
             <h1>{title}</h1>
-            <p>{spark ? "Boost communities with a one-time purchase. No Mojo subscription is required." : `Premium community bots for ${community}, purchased separately from Mojo Plus.`}</p>
+            <p>{spark ? "Boost communities with a one-time purchase. No Meldiq Plus subscription is required." : `Premium community bots for ${community}, purchased separately from Meldiq Plus.`}</p>
           </div>
           <div className="checkout-layout">
             <div className="checkout-payment">
@@ -346,7 +346,7 @@ export function AddonCheckoutPage({ draft, initial }: { draft: Addon; initial: R
               <p className="checkout-renewal">
                 {spark
                   ? "$0.99 per Spark. No automatic renewal or expiry. Use a Spark in one community at a time, and move it with your account."
-                  : "$3.99 per month for this community. Renews until canceled. Manage renewal in Billing. Mojo Plus is a separate subscription."}
+                  : "$3.99 per month for this community. Renews until canceled. Manage renewal in Billing. Meldiq Plus is a separate subscription."}
               </p>
               <p className="checkout-fees">Billed in USD. Your payment provider may apply currency conversion fees.</p>
             </aside>

@@ -8,7 +8,7 @@ export const SETTINGS_INFO: Partial<Record<SettingsPage, SettingInfo>> = {
   security: { scope: "Your account", description: "Privacy, encryption and account protection", keywords: "keys recovery safety block passkey" },
   devices: { scope: "Your account", description: "Manage signed-in devices and link a browser", keywords: "sessions phone approve sign out" },
   gifts: { scope: "Your account", description: "Send, receive and redeem Plus gifts", keywords: "gift friend email link present credit redeem" },
-  mojo: { scope: "Your account", description: "Mojo plans, benefits and gifts", keywords: "subscription plus free billing payment upload limit" },
+  mojo: { scope: "Your account", description: "Meldiq Plus plans, benefits and gifts", keywords: "subscription plus free billing payment upload limit" },
   spark: { scope: "Community boosts", description: "Manage Sparks and community benefits", keywords: "boost level subscription" },
   appearance: {
     scope: "This browser",

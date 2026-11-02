@@ -35,9 +35,9 @@ export const BOARD_INFO: Record<LeaderboardMetric, { label: string; description:
   },
   gifts: {
     label: "Gifts",
-    description: "For the people who brighten someone else’s day. Verified Mojo gifts sent.",
+    description: "For the people who brighten someone else’s day. Verified Meldiq Plus gifts sent.",
     unit: "gifts",
-    empty: "The first gift is yet to arrive. Paid Mojo gifts appear here after payment is verified.",
+    empty: "The first gift is yet to arrive. Paid Meldiq Plus gifts appear here after payment is verified.",
   },
   invites: {
     label: "Invites",

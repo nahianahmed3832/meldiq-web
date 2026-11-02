@@ -72,7 +72,7 @@ export function GetBotsPlusButton({ orgId }: { orgId: string }) {
       </button>
       {!owner && <small className="faint">A community owner can purchase Bots+.</small>}
       {owner && !price && <small className="faint">Bots+ checkout is not available yet.</small>}
-      <small className="faint">One subscription for this community. Separate from Mojo Plus.</small>
+      <small className="faint">One subscription for this community. Separate from Meldiq Plus.</small>
     </span>
   );
 }

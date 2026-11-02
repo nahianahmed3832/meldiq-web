@@ -111,7 +111,7 @@ function PlusCheckoutPage({ initial }: { initial: ReturnType<typeof readCheckout
   const create = async () => {
     setError(null);
     setMessage(null);
-    if (!accepted || !online || !price || currency !== "USD") throw new Error("Review the order and agree to the terms before paying.");
+    if (!accepted || !online || (!price && !purchase) || currency !== "USD") throw new Error("Review the order and agree to the terms before paying.");
     const current = savedRef.current;
     const p = current.purchaseId
       ? await engine.api.json("GET", `/v2/billing/paypal/checkouts/${encodeURIComponent(current.purchaseId)}`, zPayPalCheckout)
@@ -300,7 +300,7 @@ function PlusCheckoutPage({ initial }: { initial: ReturnType<typeof readCheckout
                     Start a new checkout
                   </button>
                 )}
-                {config && accepted && online && price && !closed && (gift || config.subscriptions) && (
+                {config && accepted && online && (price || purchase) && !closed && (gift || config.subscriptions) && (
                   <CheckoutPaymentButton
                     key={attempt}
                     config={config}
