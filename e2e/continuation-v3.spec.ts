@@ -6,13 +6,12 @@ import { link } from "./link";
 import { newPhone } from "./phone";
 
 /**
- * Continuation brief v3: the composer's picker in the order Emoji → GIFs → Stickers (GIFs saying plainly when no
- * provider is set up), Meldiq's own right-click menu on messages (the browser's stays on the message box), invitation
+ * The unified expression picker, Meldiq's own right-click menu on messages (the browser's stays on the message box), invitation
  * links that open in a fresh browser, and a message link opened in a new tab.
  */
 test.skip(({ browserName, isMobile }) => browserName !== "chromium" || isMobile, "desktop Chromium");
 
-test("the composer's picker: Emoji, GIFs, Stickers in that order; a sticker sends; GIFs say when they aren't set up", async ({ page }) => {
+test("the composer has one searchable expression picker and a sticker sends", async ({ page }) => {
   const alice = await newPhone("xpalice", "Alice Rahman");
   const bob = await newPhone("xpbob", "Bob Chen");
   const dm = (await alice.req("POST", "/v1/conversations/dm", { userId: bob.userId })).conversation.id;
@@ -24,15 +23,12 @@ test("the composer's picker: Emoji, GIFs, Stickers in that order; a sticker send
   await expect(composer).toBeVisible();
 
   const order = await page.locator(".composer-wrap button[aria-haspopup='dialog']").evaluateAll((els) => els.map((e) => e.getAttribute("title")));
-  expect(order).toEqual(["Emoji", "GIFs", "Stickers"]);
+  expect(order).toEqual(["Emoji"]);
 
-  await page.getByRole("button", { name: "GIFs" }).click();
-  const picker = page.getByRole("dialog", { name: "Emoji, GIFs and stickers" });
-  await expect(picker.getByRole("tab", { name: "GIFs" })).toHaveAttribute("aria-selected", "true");
-  await expect(picker).toContainText("GIFs aren't set up on this server yet");
-  await expect(picker.getByRole("tab")).toHaveText(["Emoji", "GIFs", "Stickers"]);
-
-  await picker.getByRole("tab", { name: "Stickers" }).click();
+  await page.getByRole("button", { name: "Insert emoji" }).click();
+  const picker = page.getByRole("dialog", { name: "Expressions", exact: true });
+  await expect(picker.getByRole("tab", { name: /^(GIFs|Stickers)$/ })).toHaveCount(0);
+  await expect(picker.getByRole("searchbox")).toHaveCount(1);
   await picker
     .getByRole("button", { name: /^Send sticker:/ })
     .first()
@@ -45,7 +41,7 @@ test("the composer's picker: Emoji, GIFs, Stickers in that order; a sticker send
   await composer.press("Home");
   for (let i = 0; i < 5; i++) await composer.press("ArrowRight");
   await page.getByRole("button", { name: "Insert emoji" }).click();
-  await page.getByRole("searchbox", { name: "Search emoji" }).fill("grinning face");
+  await page.getByRole("searchbox", { name: "Search emoji and expressions", exact: true }).fill("grinning face");
   await page.getByRole("menuitem", { name: "grinning face", exact: true }).click();
   await expect(composer).toHaveValue("hello😀 world");
 });

@@ -562,14 +562,12 @@ export function Composer(props: ComposerProps) {
           canSend={props.conversation.canPost}
           allowedTabs={["emoji", ...(can.gifs ? (["gifs"] as const) : []), ...(can.stickers ? (["stickers"] as const) : [])]}
           onEmoji={(em) => {
-            emoji.close();
             insertAtCaret(em);
           }}
           library={{ currentOrgId: c.type === "CHANNEL" ? c.orgId : null, externalAllowed: can.externalEmoji }}
           community={{
             list: communityEmoji ?? { expressions: [], limits: { emoji: 50, sticker: 20 } },
             onEmoji: (e) => {
-              emoji.close();
               picked.current.set(e.name, refOf(e));
               insertAtCaret(`:${e.name}: `);
             },

@@ -18,6 +18,7 @@ interface ReactionListProps {
   myUserId: string;
   canPost: boolean;
   communityEmoji: ExpressionList | null;
+  onAdd?: (anchor: HTMLElement) => void;
 }
 
 /**
@@ -25,7 +26,7 @@ interface ReactionListProps {
  * keyboard, shows who chose it; a long press (touch) or right-click opens the Reactions dialog with everyone, for every
  * reaction. The same component serves DMs, groups and community channels.
  */
-export function ReactionList({ message: m, myUserId, canPost, communityEmoji }: ReactionListProps) {
+export function ReactionList({ message: m, myUserId, canPost, communityEmoji, onAdd }: ReactionListProps) {
   const [dialogFor, setDialogFor] = useState<string | null>(null);
   const reactions = Object.entries(m.reactions).filter(([, users]) => users.length > 0);
   if (reactions.length === 0) return null;
@@ -34,6 +35,11 @@ export function ReactionList({ message: m, myUserId, canPost, communityEmoji }: 
       {reactions.map(([emoji, users]) => (
         <ReactionChip key={emoji} message={m} emoji={emoji} userIds={users} myUserId={myUserId} canPost={canPost} communityEmoji={communityEmoji} onShowAll={() => setDialogFor(emoji)} />
       ))}
+      {onAdd && (
+        <button className="reaction reaction-add" aria-label="Add another reaction" onClick={(event) => onAdd(event.currentTarget)}>
+          ＋
+        </button>
+      )}
       {dialogFor !== null && <ReactionsDialog message={m} initial={dialogFor} myUserId={myUserId} communityEmoji={communityEmoji} onClose={() => setDialogFor(null)} />}
     </div>
   );

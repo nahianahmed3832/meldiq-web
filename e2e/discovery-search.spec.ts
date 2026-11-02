@@ -15,10 +15,14 @@ test("public communities load, search and recover from no matches with Meldiq ar
     await member.req("POST", `/v1/communities/${org.id}/join`);
   }
   await owner.req("POST", "/v1/orgs", { name: "Private Makers", visibility: "private" });
-  await link(page, owner);
+  const png = Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jRZkAAAAASUVORK5CYII=", "base64");
+  await owner.req("PUT", `/v1/orgs/${org.id}/photo`, undefined, png);
+  const visitor = await newPhone("discovervisitor", "Discovery Visitor");
+  await link(page, visitor);
   await page.goto("/discover");
   const card = page.locator(`.discover-card[aria-labelledby="dc-${org.id}"]`);
   await expect(card).toBeVisible();
+  await expect.poll(() => card.locator(".avatar-photo").evaluate((image: HTMLImageElement) => image.complete && image.naturalWidth > 0)).toBe(true);
   const search = page.getByRole("searchbox", { name: "Search communities" });
   for (const query of ["Creative", "projects", "design"]) {
     await Promise.all([

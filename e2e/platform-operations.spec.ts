@@ -42,7 +42,11 @@ test("service inbox delivers notices, submits a real warning appeal and redeems 
       { encoding: "utf8" },
     ),
   );
-  await page.getByRole("button", { name: /Service inbox/ }).click();
+  await page.goto("/settings/account");
+  await page
+    .getByRole("region", { name: "Account standing", exact: true })
+    .getByRole("button", { name: /Service inbox/ })
+    .click();
   const inbox = page.getByRole("dialog", { name: "Service inbox", exact: true });
   await expect(inbox.getByRole("heading", { name: "Verified service announcement" })).toBeVisible();
   await inbox.getByRole("button", { name: "Mark read", exact: true }).click();

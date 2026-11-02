@@ -1,3 +1,4 @@
+import { PlatformInbox } from "../operations/PlatformInbox";
 import { Copy, ShieldCheck, ShieldAlert } from "lucide-react";
 import { type FormEvent, useState } from "react";
 import { ApiError } from "../../api/client";
@@ -209,7 +210,7 @@ export function StandingCard() {
   const level = st?.level ?? "good";
   const at = STANDING_LEVELS.indexOf(level);
   return (
-    <div className="card setting-card">
+    <section className="card setting-card" aria-label="Account standing">
       <strong>Account standing</strong>
       <div className="standing-head">
         <span className={`standing-icon ${level}`} aria-hidden="true">
@@ -242,6 +243,7 @@ export function StandingCard() {
         <li>Warnings from Meldiq's staff count for a set number of days, then stop counting by themselves.</li>
         <li>One warning limits your account, two limit it more, three suspend it.</li>
       </ul>
-    </div>
+      <PlatformInbox />
+    </section>
   );
 }

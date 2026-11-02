@@ -5,7 +5,7 @@ import { newPhone, testAddress } from "./phone";
 test.use({ serviceWorkers: "block" });
 test.beforeEach(async ({ context }) => context.setExtraHTTPHeaders({ "x-orbit-test-ip": testAddress() }));
 
-test("service inbox stays compact and the work area fills the remaining viewport", async ({ page, isMobile }, info) => {
+test("service inbox stays in account settings and the work area fills the remaining viewport", async ({ page, isMobile }, info) => {
   test.setTimeout(120_000);
   const phone = await newPhone("inboxlayout", "Inbox Layout");
   let enabled = true;
@@ -26,19 +26,13 @@ test("service inbox stays compact and the work area fills the remaining viewport
     expect(body).not.toBeNull();
     expect(body!.height).toBeGreaterThan(workspace!.height * 0.7);
     expect(Math.abs(body!.y + body!.height - workspace!.y - workspace!.height)).toBeLessThanOrEqual(1);
-    if (enabled) {
-      const button = page.getByRole("button", { name: "Service inbox", exact: true });
-      await expect(button).toBeVisible();
-      const bar = await button.locator("..").boundingBox();
-      expect(bar!.height).toBeLessThanOrEqual(60);
-      expect(Math.abs(body!.y - bar!.y - bar!.height)).toBeLessThanOrEqual(1);
-    }
+    await expect(page.getByRole("button", { name: "Service inbox", exact: true })).toHaveCount(0);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   };
 
   for (const path of ["/dms", "/discover"]) {
     await page.goto(path);
-    await expect(page.getByRole("button", { name: "Service inbox", exact: true })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Service inbox", exact: true })).toHaveCount(0);
     await check();
   }
   if (!isMobile) {

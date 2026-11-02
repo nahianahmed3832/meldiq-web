@@ -154,11 +154,11 @@ test("keyboard shrink and pan retain latest and the older reading anchor; long i
   await keyboard(page, 460, 20);
   await expect.poll(() => log.evaluate((el, id) => document.getElementById(id)!.getBoundingClientRect().top - el.getBoundingClientRect().top, anchor.id)).toBeCloseTo(anchor.offset, 0);
   await page.getByRole("button", { name: "Insert emoji" }).click();
-  const picker = page.getByRole("dialog", { name: "Emoji, GIFs and stickers" });
+  const picker = page.getByRole("dialog", { name: "Expressions" });
   await fits(picker, 20, 480);
   await keyboard(page, 300, 80);
   await fits(picker, 80, 380);
-  await picker.getByRole("tab", { name: "Stickers", exact: true }).click();
+  await picker.getByRole("searchbox", { name: "Search emoji and expressions", exact: true }).fill("wave");
   await picker.getByRole("button", { name: "Close expression picker" }).click();
   await page.locator(".conv-head").getByRole("button", { name: "More", exact: true }).click();
   const menu = page.getByRole("menu", { name: "Conversation", exact: true });

@@ -28,6 +28,7 @@ export interface ComposeHost {
  * that change messages for everyone: reactions, edits, deletions and pins (android MessageRepository).
  */
 export class Compose {
+  private readonly reactionWrites = new Map<string, Promise<void>>();
   constructor(private readonly host: ComposeHost) {}
 
   /** Posting and reacting as the server allows them, with the community's rules applied (API 0.65.0). */
@@ -148,7 +149,18 @@ export class Compose {
     });
   }
 
-  async react(m: StoredMessage, emoji: string): Promise<void> {
+  react(m: StoredMessage, emoji: string): Promise<void> {
+    // Multiple quick picks must not overwrite each other's read-modify-write of the same message.
+    const task = (this.reactionWrites.get(m.id) ?? Promise.resolve()).catch(() => undefined).then(() => this.toggleReaction(m, emoji));
+    this.reactionWrites.set(m.id, task);
+    const clear = () => {
+      if (this.reactionWrites.get(m.id) === task) this.reactionWrites.delete(m.id);
+    };
+    void task.then(clear, clear);
+    return task;
+  }
+
+  private async toggleReaction(m: StoredMessage, emoji: string): Promise<void> {
     const conv = this.host.state().conversations[m.conversationId];
     if (!this.canReact(m.conversationId) || !reactionAllowed(emoji, conv?.type === "CHANNEL" && !!conv.orgId)) return;
     const fresh = (await this.host.store.message(m.id)) ?? m;

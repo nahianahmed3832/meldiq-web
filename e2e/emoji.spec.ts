@@ -41,14 +41,18 @@ test("search, skin tone and categories, into the composer and as a reaction", as
 
   // Into the composer: search, with a skin tone chosen once.
   await page.getByRole("button", { name: "Insert emoji" }).click();
-  const search = page.getByRole("searchbox", { name: "Search emoji" });
-  await expect(search).toBeFocused();
+  const search = page.getByRole("searchbox", { name: "Search emoji and expressions", exact: true });
+  await expect(search).toBeVisible();
   await page.getByRole("button", { name: "Skin tone" }).click();
   await page.getByRole("radio", { name: "Medium skin tone" }).click();
   await search.fill("thumbs up");
   await page.screenshot({ path: "test-results/emoji-search.png" });
   await page.getByRole("menuitem", { name: "thumbs up" }).click();
   await expect(page.getByRole("textbox", { name: /Message/ })).toHaveValue(/👍🏽/);
+
+  await page.getByRole("menuitem", { name: "thumbs up", exact: true }).click();
+  await expect(page.getByRole("textbox", { name: /Message/ })).toHaveValue(/👍🏽👍🏽/);
+  await page.getByRole("button", { name: "Close expression picker" }).click();
 
   // A reaction from the picker: the Flags tab jumps to its section; recent emoji come first next time.
   // With a mouse: the message's toolbar on hover. On a touch screen: a long press opens its menu (longPress.ts).
@@ -67,5 +71,13 @@ test("search, skin tone and categories, into the composer and as a reaction", as
   await expect(page.getByRole("menuitem", { name: "chequered flag" })).toBeInViewport();
   await page.screenshot({ path: "test-results/emoji-flags.png" });
   await page.getByRole("menuitem", { name: "flag: bangladesh" }).click();
-  await expect(page.getByRole("button", { name: /🇧🇩 1/ })).toBeVisible();
+  await page.getByRole("searchbox", { name: "Search emoji", exact: true }).fill("red heart");
+  await page.getByRole("menuitem", { name: "red heart", exact: true }).click();
+  await expect(message.getByRole("button", { name: /🇧🇩 1/ })).toBeVisible();
+  await expect(message.getByRole("button", { name: /❤️ 1/ })).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(message.getByRole("button", { name: "Add another reaction" })).toBeVisible();
+  await page.reload();
+  await expect(message.getByRole("button", { name: /🇧🇩 1/ })).toHaveAttribute("aria-pressed", "true");
+  await expect(message.getByRole("button", { name: /❤️ 1/ })).toHaveAttribute("aria-pressed", "true");
 });

@@ -2727,3 +2727,221 @@ button.media-card {
 .collection-controls .row {
   justify-content: space-between;
 }
+
+/* One searchable expression collection: compact tiles and community sections. */
+.expression-picker.unified {
+  width: min(440px, calc(100vw - 16px));
+  border-radius: 16px;
+}
+.xp-unified-search {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 10px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.xp-unified-search label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+  padding: 0 10px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface-sunken);
+  color: var(--text-3);
+}
+.xp-unified-search label:focus-within {
+  border-color: var(--accent);
+}
+.xp-unified-search input {
+  width: 100%;
+  min-width: 0;
+  height: 40px;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+}
+.xp-unified-search .icon-btn {
+  width: 34px;
+  height: 40px;
+  flex-shrink: 0;
+}
+.xp-unified-content {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0 12px 12px;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+}
+.unified .xp-library {
+  display: block;
+  padding: 0;
+  max-height: none;
+  overflow: visible;
+  border: 0;
+}
+.xp-expression-group {
+  margin: 0 0 16px;
+}
+.xp-group-heading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 16px 0 8px;
+  min-height: 24px;
+  font-size: 12px;
+  line-height: 1.4;
+  font-weight: 750;
+  color: var(--text-2);
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+}
+.xp-group-heading .avatar {
+  flex-shrink: 0;
+}
+.xp-group-heading small {
+  font-size: 11px;
+  font-weight: 400;
+  text-transform: none;
+}
+.xp-expression-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+  gap: 6px;
+}
+.xp-expression-tile {
+  position: relative;
+  min-width: 0;
+  aspect-ratio: 1;
+}
+.xp-expression-pick,
+.xp-builtin {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  min-height: 42px;
+  border-radius: 8px;
+  padding: 4px;
+  font-size: 26px;
+}
+.xp-expression-pick:hover,
+.xp-expression-pick:focus-visible,
+.xp-builtin:hover {
+  background: var(--surface-hover);
+}
+.xp-expression-pick > span {
+  display: grid;
+  place-items: center;
+  width: 100%;
+}
+.xp-expression-pick .custom-sticker {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+}
+.xp-expression-pick .custom-emoji-text {
+  max-width: 36px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 10px;
+}
+.xp-favorite {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  opacity: 0;
+  background: var(--surface-sunken);
+  color: var(--text-2);
+}
+.xp-expression-tile:hover .xp-favorite,
+.xp-expression-tile:focus-within .xp-favorite,
+.xp-expression-tile.favorite .xp-favorite {
+  opacity: 1;
+}
+.xp-expression-tile.favorite .xp-favorite {
+  color: var(--accent);
+}
+.xp-unified-foot {
+  flex-shrink: 0;
+  padding: 8px 12px;
+  border-top: 1px solid var(--border);
+  color: var(--text-3);
+  font-size: 10.5px;
+}
+.xp-upload-options {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 100px;
+  gap: 8px;
+  padding: 10px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.xp-upload-options label {
+  min-width: 0;
+  font-size: 12px;
+  color: var(--text-2);
+}
+.xp-upload-options .input {
+  width: 100%;
+  margin-top: 4px;
+  min-height: 36px;
+  padding: 6px;
+  font-size: 12px;
+}
+.xp-upload-options .btn,
+.xp-upload-options small {
+  grid-column: 1 / -1;
+}
+.emoji-picker.embedded {
+  display: block;
+  width: 100%;
+  padding: 0;
+}
+.emoji-picker.embedded .emoji-scroll {
+  height: auto;
+  overflow: visible;
+}
+.emoji-picker.embedded .emoji-picker-top {
+  justify-content: space-between;
+}
+.emoji-picker.embedded .emoji-tabs {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: var(--surface-raised);
+  padding: 4px 0;
+}
+.emoji-picker.embedded .emoji-grid {
+  grid-template-columns: repeat(auto-fill, minmax(36px, 1fr));
+  gap: 4px;
+  justify-items: center;
+}
+.unified .gif-picker {
+  display: block;
+  height: auto;
+}
+.unified .gif-grid {
+  overflow: visible;
+}
+.reaction-add {
+  color: var(--text-2);
+  min-width: 32px;
+}
+.standing-inbox {
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}

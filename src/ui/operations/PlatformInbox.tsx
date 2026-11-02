@@ -38,8 +38,8 @@ export function PlatformInbox() {
   if (!enabled) return null;
   return (
     <>
-      <div style={{ padding: "6px 14px", borderBottom: "1px solid var(--line)", display: "flex", justifyContent: "flex-end" }}>
-        <button className="btn btn-ghost btn-sm" onClick={() => setOpen(true)}>
+      <div className="standing-inbox">
+        <button className="btn btn-secondary btn-sm" onClick={() => setOpen(true)}>
           Service inbox{count ? ` (${count})` : ""}
         </button>
       </div>

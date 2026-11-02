@@ -189,32 +189,32 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
         {m.rich?.poll ? (
           <div>
             <PollView m={m} myUserId={p.myUserId} canPost={canReact} />
-            {mine && <Status m={m} onRetry={() => void engine.retry(m.id)} onReview={p.onReview} />}
+            {mine && <Status receipts={conv?.type === "DM"} m={m} onRetry={() => void engine.retry(m.id)} onReview={p.onReview} />}
           </div>
         ) : m.rich?.gif ? (
           <div>
             <GifView gif={m.rich.gif} />
-            {mine && <Status m={m} onRetry={() => void engine.retry(m.id)} onReview={p.onReview} />}
+            {mine && <Status receipts={conv?.type === "DM"} m={m} onRetry={() => void engine.retry(m.id)} onReview={p.onReview} />}
           </div>
         ) : m.rich?.sticker ? (
           <div>
             <StickerView sticker={m.rich.sticker} fallback={m.text} />
-            {mine && <Status m={m} onRetry={() => void engine.retry(m.id)} onReview={p.onReview} />}
+            {mine && <Status receipts={conv?.type === "DM"} m={m} onRetry={() => void engine.retry(m.id)} onReview={p.onReview} />}
           </div>
         ) : m.rich?.customSticker ? (
           <div>
             <CustomEmojiImage id={m.rich.customSticker.id} name={m.rich.customSticker.name} sha256={m.rich.customSticker.sha256} sticker />
-            {mine && <Status m={m} onRetry={() => void engine.retry(m.id)} onReview={p.onReview} />}
+            {mine && <Status receipts={conv?.type === "DM"} m={m} onRetry={() => void engine.retry(m.id)} onReview={p.onReview} />}
           </div>
         ) : m.rich?.animoji ? (
           <div>
             <AnimojiView emoji={m.rich.animoji} />
-            {mine && <Status m={m} onRetry={() => void engine.retry(m.id)} onReview={p.onReview} />}
+            {mine && <Status receipts={conv?.type === "DM"} m={m} onRetry={() => void engine.retry(m.id)} onReview={p.onReview} />}
           </div>
         ) : m.rich?.contact?.userId ? (
           <div>
             <ProfileCardView card={m.rich.contact} />
-            {mine && <Status m={m} onRetry={() => void engine.retry(m.id)} onReview={p.onReview} />}
+            {mine && <Status receipts={conv?.type === "DM"} m={m} onRetry={() => void engine.retry(m.id)} onReview={p.onReview} />}
           </div>
         ) : m.rich?.contact ? (
           <span className="msg-call">
@@ -235,12 +235,12 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
             <RichText text={shownText} mentionNames={p.mentionNames} myUsername={p.myUsername} customEmoji={m.rich?.customEmoji} />
             {m.editedAt && <span className="msg-meta">(edited)</span>}
             {translation && <TranslationView text={translation} onHide={() => setTranslation(null)} />}
-            {mine && <Status m={m} onRetry={() => void engine.retry(m.id)} onReview={p.onReview} />}
+            {mine && <Status receipts={conv?.type === "DM"} m={m} onRetry={() => void engine.retry(m.id)} onReview={p.onReview} />}
           </div>
         ) : (
           mine && (
             <div>
-              <Status m={m} onRetry={() => void engine.retry(m.id)} onReview={p.onReview} />
+              <Status receipts={conv?.type === "DM"} m={m} onRetry={() => void engine.retry(m.id)} onReview={p.onReview} />
             </div>
           )
         )}
@@ -390,7 +390,7 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
           </div>
         )}
         {body()}
-        <ReactionList message={m} myUserId={p.myUserId} canPost={canReact} communityEmoji={communityEmoji} />
+        <ReactionList message={m} myUserId={p.myUserId} canPost={canReact} communityEmoji={communityEmoji} onAdd={canAddReaction ? (anchor) => picker.open(anchor) : undefined} />
         {p.threadCount > 0 && p.onThread && (
           <button className="thread-link" onClick={() => p.onThread?.(m)}>
             <MessagesSquare size={15} /> {p.threadCount} {p.threadCount === 1 ? "reply" : "replies"}
@@ -446,7 +446,6 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
                 <EmojiPicker
                   community={communityEmoji ? { list: communityEmoji, reactions: true } : undefined}
                   onPick={(e) => {
-                    picker.close();
                     void engine.react(m, e);
                   }}
                 />
@@ -595,7 +594,8 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
   );
 });
 
-function Status({ m, onRetry, onReview }: { m: StoredMessage; onRetry: () => void; onReview: () => void }) {
+function Status({ m, onRetry, onReview, receipts }: { m: StoredMessage; onRetry: () => void; onReview: () => void; receipts: boolean }) {
+  if (!receipts && ["SENT", "DELIVERED", "READ"].includes(m.status)) return null;
   switch (m.status) {
     case "SENDING":
       return (

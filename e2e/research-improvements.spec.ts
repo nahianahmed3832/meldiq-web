@@ -156,12 +156,13 @@ test("the expression picker finds joined-community emoji and previews uploads wi
   await link(page, alice);
   await page.goto(`/dms/c/${dm}`);
   await page.getByRole("button", { name: "Insert emoji" }).click();
-  const picker = page.getByRole("dialog", { name: "Emoji, GIFs and stickers" });
-  await picker.getByRole("combobox", { name: "Expression community" }).selectOption(org);
-  await picker.getByRole("searchbox", { name: "Search community expressions" }).fill("party parrot");
+  const picker = page.getByRole("dialog", { name: "Expressions" });
+  await picker.getByRole("searchbox", { name: "Search emoji and expressions" }).fill("party parrot");
   await expect(picker.getByRole("button", { name: ":party_parrot:", exact: true })).toBeVisible();
 
-  await expect(picker.getByRole("button", { name: "Upload an emoji", exact: true })).toBeVisible();
+  await picker.getByRole("button", { name: "Upload expressions", exact: true }).click();
+  await picker.getByRole("combobox", { name: "Upload community" }).selectOption(org);
+  await expect(picker.getByRole("button", { name: "Choose image", exact: true })).toBeEnabled();
   const oversized = Buffer.alloc(256 * 1024 + 1);
   oversized.write("GIF89a");
   await picker.locator("input[type=file]").setInputFiles({ name: "animated.gif", mimeType: "image/gif", buffer: oversized });
@@ -176,7 +177,7 @@ test("the expression picker finds joined-community emoji and previews uploads wi
   await expect(upload.getByRole("button", { name: "Save", exact: true })).toBeEnabled();
   await upload.getByRole("button", { name: "Save", exact: true }).click();
   await expect(upload).toHaveCount(0);
-  await picker.getByRole("searchbox", { name: "Search community expressions" }).fill("tiny preview");
+  await picker.getByRole("searchbox", { name: "Search emoji and expressions" }).fill("tiny preview");
   await expect(picker.getByRole("button", { name: ":tiny_preview:", exact: true })).toBeVisible();
   await picker.getByRole("button", { name: ":tiny_preview:", exact: true }).click();
   await expect(page.getByRole("textbox", { name: "Message Bob Expressions" })).toHaveValue(":tiny_preview: ");

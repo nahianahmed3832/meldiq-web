@@ -40,10 +40,11 @@ export interface CommunityPick {
   onSticker?: (e: Expression) => void;
 }
 
-export function EmojiPicker({ onPick, community }: { onPick: (emoji: string) => void; community?: CommunityPick }) {
+export function EmojiPicker({ onPick, community, query: sharedQuery, embedded = false }: { onPick: (emoji: string) => void; community?: CommunityPick; query?: string; embedded?: boolean }) {
   const [groups, setGroups] = useState<EmojiGroup[] | null>(null);
   const [failed, setFailed] = useState(false);
-  const [query, setQuery] = useState("");
+  const [localQuery, setQuery] = useState("");
+  const query = sharedQuery ?? localQuery;
   const [choosingTone, setChoosingTone] = useState(false);
   const [current, setCurrent] = useState<string | null>(null);
   const { recent, tone } = useEmojiPrefs();
@@ -58,13 +59,13 @@ export function EmojiPicker({ onPick, community }: { onPick: (emoji: string) => 
     );
     // The menu focuses its first item after mounting; the search box should have the focus instead.
     const t = window.setTimeout(() => {
-      if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) search.current?.focus({ preventScroll: true });
+      if (!embedded && window.matchMedia("(hover: hover) and (pointer: fine)").matches) search.current?.focus({ preventScroll: true });
     }, 0);
     return () => {
       live = false;
       window.clearTimeout(t);
     };
-  }, []);
+  }, [embedded]);
 
   const results = useMemo(() => (groups && query.trim() ? searchEmoji(groups, query) : []), [groups, query]);
   const pick = (emoji: string) => {
@@ -75,7 +76,10 @@ export function EmojiPicker({ onPick, community }: { onPick: (emoji: string) => 
     const box = scroller.current;
     const section = box?.querySelector<HTMLElement>(`[data-section="${id}"]`);
     // .emoji-scroll is positioned, so a section's offsetTop is measured from the top of its content.
-    if (box && section) box.scrollTop = section.offsetTop;
+    if (embedded) {
+      section?.scrollIntoView({ block: "nearest" });
+      setCurrent(id);
+    } else if (box && section) box.scrollTop = section.offsetTop;
   };
   const onScroll = () => {
     const box = scroller.current;
@@ -97,9 +101,13 @@ export function EmojiPicker({ onPick, community }: { onPick: (emoji: string) => 
   const available = new Set([...(customEmoji.length || customStickers.length ? [COMMUNITY] : []), ...(recent.length ? [RECENT] : []), ...(groups ?? []).map((g) => g.id)]);
 
   return (
-    <div className="emoji-picker">
+    <div className={`emoji-picker${embedded ? " embedded" : ""}`}>
       <div className="emoji-picker-top">
-        <input ref={search} className="input" type="search" placeholder="Search emoji" aria-label="Search emoji" value={query} onChange={(e) => setQuery(e.target.value.slice(0, MAX_QUERY))} />
+        {embedded ? (
+          <h3 className="xp-group-heading">Default emoji</h3>
+        ) : (
+          <input ref={search} className="input" type="search" placeholder="Search emoji" aria-label="Search emoji" value={query} onChange={(e) => setQuery(e.target.value.slice(0, MAX_QUERY))} />
+        )}
         <button type="button" className="emoji-cell" aria-label="Skin tone" aria-expanded={choosingTone} onClick={() => setChoosingTone((v) => !v)}>
           {inTone(TONE_SAMPLE, tone)}
         </button>
