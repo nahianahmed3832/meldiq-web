@@ -123,7 +123,7 @@ export class LiveKitSession implements MediaSession {
       dynacast: true,
       e2ee: { keyProvider, worker },
       // Microphones go first when the connection is short (screen and camera video give way before speech does).
-      // The voice bitrate ceiling comes from the community's Spark level (Meldiq Mojo); LiveKit's music preset otherwise.
+      // The voice bitrate ceiling comes from the community's Spark level (Meldiq Plus); LiveKit's music preset otherwise.
       publishDefaults: {
         simulcast: true,
         videoCodec: "vp8",

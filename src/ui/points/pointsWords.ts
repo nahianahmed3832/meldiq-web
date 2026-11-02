@@ -2,7 +2,7 @@ import type { PointsHistoryRow, Quest } from "../../sync/points";
 
 /**
  * What the points page calls things (API 0.65.0). The server sends quest ids and ledger kinds; the words are Meldiq's
- * own. The base amounts below are the server's rules (docs/SETTINGS_PARITY_API.md), shown before Mojo Plus's 1.5×.
+ * own. The base amounts below are the server's rules (docs/SETTINGS_PARITY_API.md), shown before Meldiq Plus's 1.5×.
  */
 
 export const EARN = { visit: 5, streak: 30, streakDays: 7, chatPoints: 5, chatMinutes: 5, invite: 100, inviteDays: 7 } as const;

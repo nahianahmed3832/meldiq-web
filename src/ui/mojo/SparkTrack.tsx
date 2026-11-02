@@ -4,7 +4,7 @@ import { screenLabel, size } from "./mojoFormat";
 
 interface SparkTrackProps {
   levels: readonly SparkLevel[];
-  /** The community's level now; null on the Mojo page, where no community is in view. */
+  /** The community's level now; null on the Meldiq Plus page, where no community is in view. */
   level: number | null;
   /** Active Sparks there, for the track's fill (null: the levels alone). */
   active: number | null;
@@ -34,7 +34,7 @@ export function SparkTrack({ levels, level, active }: SparkTrackProps) {
 interface SparkLevelCardsProps {
   catalog: MojoCatalog;
   levels: readonly SparkLevel[];
-  /** The community's level, to mark which are unlocked; null on the Mojo page. */
+  /** The community's level, to mark which are unlocked; null on the Meldiq Plus page. */
   level: number | null;
 }
 

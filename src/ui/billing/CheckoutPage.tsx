@@ -8,7 +8,7 @@ import { useEngine, useOrbit } from "../../application/orbit";
 import { navigate } from "../../application/router";
 import { BrandMark } from "../components/BrandMark";
 import { money, size } from "../mojo/mojoFormat";
-import { readCheckout, selectCheckout, writeCheckout } from "./checkoutDraft";
+import { readCheckout, writeCheckout, selectCheckout } from "./checkoutDraft";
 import { usePayPalCardSdk } from "./PayPalCardButton";
 import { CheckoutPaymentButton } from "./CheckoutPaymentButton";
 import { PaymentMethods, type PaymentMethod } from "./PaymentMethods";
@@ -37,9 +37,14 @@ function PlusCheckoutPage({ initial }: { initial: ReturnType<typeof readCheckout
   const cards = usePayPalCardSdk(config, !gift, attempt);
   const recipientId = gift ? (draft.recipient?.kind === "user" ? draft.recipient.userId : draft.recipientUserId) : undefined;
   const recipient = useOrbit((s) => (recipientId ? (s.users[recipientId]?.displayName ?? recipientId) : gift && draft.recipient?.kind === "email" ? draft.recipient.email : "a gift link"));
-  const price = catalog?.onSale.plus;
-  const amount = (price?.amountMinor ?? 399) * (gift ? draft.months : 1);
-  const currency = price?.currency ?? "USD";
+  const selectedTerm = draft.product === "plus" ? (draft.term ?? "monthly") : "monthly";
+  const termOffer = catalog?.plusTerms.find((t) => (gift ? t.months === draft.months : t.key === selectedTerm));
+  const price = !gift && selectedTerm !== "monthly" ? (termOffer?.available ? termOffer : null) : catalog?.onSale.plus;
+  const amount = purchase?.amountMinor ?? (gift ? (termOffer?.amountMinor ?? (price?.amountMinor ?? 0) * draft.months) : (termOffer?.amountMinor ?? price?.amountMinor ?? 0));
+  const months = purchase && purchase.interval !== "one_time" ? (purchase.interval === "year" ? 12 : 1) * (purchase.billingFrequency ?? 1) : gift ? draft.months : (termOffer?.months ?? 1);
+  const cadence = months === 1 ? "month" : `${months} months`;
+  const savings = termOffer && !gift ? termOffer.savingsMinor : 0;
+  const currency = purchase?.currency ?? price?.currency ?? "USD";
   const plus = catalog?.plans.find((p) => p.key === "plus");
   const sandbox = config?.environment === "sandbox";
   const deferred = !gift && config?.billingStartAt != null && config.billingStartAt > Date.now();
@@ -111,11 +116,19 @@ function PlusCheckoutPage({ initial }: { initial: ReturnType<typeof readCheckout
     const p = current.purchaseId
       ? await engine.api.json("GET", `/v2/billing/paypal/checkouts/${encodeURIComponent(current.purchaseId)}`, zPayPalCheckout)
       : await engine.api.json("POST", "/v2/billing/paypal/checkouts", zPayPalCheckout, { body: { ...current.draft, requestKey: current.requestKey } });
+    if (p.product !== (gift ? "gift" : "plus")) throw new Error("This saved purchase is for another product. Review it in Billing before paying.");
+    if (!gift && (p.interval !== (selectedTerm === "yearly" ? "year" : "month") || (p.billingFrequency ?? 1) !== (selectedTerm === "quarterly" ? 3 : 1))) {
+      setAccepted(false);
+      throw new Error("The saved purchase has a different billing interval. Review or cancel it in Billing before paying.");
+    }
     remember({ ...current, purchaseId: p.id, completed: p.confirmed || p.approved === true || endedStatuses.has(p.status) });
     setPurchase(p);
     if (endedStatuses.has(p.status)) throw new Error("This checkout has ended. Start a new checkout to continue.");
     if (p.confirmed || p.approved) throw new Error("This purchase is already confirmed. Open Billing to view it.");
-    if (p.amountMinor !== amount || p.currency !== currency) throw new Error("The price changed before checkout. Reload this page and review the updated order.");
+    if (p.amountMinor !== amount || p.currency !== currency) {
+      setAccepted(false);
+      throw new Error("Your saved purchase keeps its original quote. Review the displayed price and accept the terms again before paying.");
+    }
     return p;
   };
 
@@ -131,27 +144,27 @@ function PlusCheckoutPage({ initial }: { initial: ReturnType<typeof readCheckout
         </span>
       </header>
       <button className="btn btn-ghost btn-sm checkout-back" onClick={() => navigate({ section: "settings", settingsPage: "mojo" })}>
-        <ArrowLeft size={15} aria-hidden="true" /> Back to Mojo
+        <ArrowLeft size={15} aria-hidden="true" /> Back to Meldiq Plus
       </button>
       {complete ? (
         <section className="checkout-success" aria-labelledby="checkout-success-title">
           <CheckCircle2 size={52} aria-hidden="true" />
           <span className="checkout-kicker">ALL SET</span>
-          <h1 id="checkout-success-title">{gift ? "A little more Mojo, gifted." : deferred && !purchase?.confirmed ? "Your Plus renewal is scheduled." : "Welcome to Plus."}</h1>
+          <h1 id="checkout-success-title">{gift ? "A little more Meldiq Plus, gifted." : deferred && !purchase?.confirmed ? "Your Plus renewal is scheduled." : "Welcome to Plus."}</h1>
           <p>
             {gift
-              ? "Your gift payment is confirmed. Open Gifts to deliver it or check its status."
+              ? "Your gift payment is confirmed. Your friend can start their Plus time from Meldiq Plus."
               : deferred && !purchase?.confirmed
                 ? `PayPal has confirmed your approval. Your first payment is ${startDate}; your existing Plus time stays available until then.`
                 : "Your subscription is confirmed. Your Plus benefits are now available across your Meldiq devices."}
           </p>
           <p className="muted">
-            {money(purchase!.amountMinor, purchase!.currency)} {gift ? "· one-time payment" : "· monthly"}
+            {money(purchase!.amountMinor, purchase!.currency)} {gift ? "· one-time payment" : `· every ${cadence}`}
             <br />
             PayPal reference: <code>{purchase?.providerRef}</code>
           </p>
-          <button className="btn btn-mojo" onClick={gift ? () => navigate({ section: "settings", settingsPage: "gifts" }) : billing}>
-            {gift ? "View gifts" : "View billing"} <ArrowRight size={16} aria-hidden="true" />
+          <button className="btn btn-mojo" onClick={billing}>
+            View billing <ArrowRight size={16} aria-hidden="true" />
           </button>
         </section>
       ) : (
@@ -176,8 +189,8 @@ function PlusCheckoutPage({ initial }: { initial: ReturnType<typeof readCheckout
                     {sandbox
                       ? "This is a test purchase. No real money is taken."
                       : deferred
-                        ? `Your existing Plus time is separate and does not renew. If you approve this subscription, your first payment will be ${startDate}.`
-                        : "Review your purchase and choose how to pay."}
+                        ? `Your existing Plus time stays available. Your first payment is ${startDate}.`
+                        : "Review your purchase before authorizing payment with PayPal."}
                   </p>
                 )}
                 <div className="checkout-account">
@@ -188,6 +201,37 @@ function PlusCheckoutPage({ initial }: { initial: ReturnType<typeof readCheckout
                   </div>
                   <Check size={16} aria-hidden="true" />
                 </div>
+                {!gift && catalog && catalog.plusTerms.length > 0 && (
+                  <fieldset className="plus-term-choices" disabled={!!purchase}>
+                    <legend>Choose your billing interval</legend>
+                    {catalog.plusTerms.map((t) => (
+                      <label className={`plus-term-option${selectedTerm === t.key ? " selected" : ""}`} key={t.key}>
+                        <input
+                          type="radio"
+                          name="plus-term"
+                          checked={selectedTerm === t.key}
+                          onChange={() => {
+                            setAccepted(false);
+                            selectCheckout(userId, { product: "plus", term: t.key });
+                          }}
+                        />
+                        <span>
+                          <strong>{t.months === 1 ? "Monthly" : `${t.months} months`}</strong>
+                          <small>
+                            {money(t.amountMinor, t.currency)} billed every {t.months === 1 ? "month" : `${t.months} months`}
+                          </small>
+                          {t.savingsMinor > 0 && (
+                            <small className="plus-term-saving">
+                              Save {money(t.savingsMinor, t.currency)} ({t.savingsPercent}%) vs monthly · about {money(t.monthlyEquivalentMinor, t.currency)}/month
+                            </small>
+                          )}
+                          {!t.available && !(t.key === "monthly" && catalog.onSale.plus) && <small>Not available for purchase yet</small>}
+                        </span>
+                      </label>
+                    ))}
+                    {purchase && <small>A pending purchase keeps its billing interval. Review or cancel it in Billing before choosing another.</small>}
+                  </fieldset>
+                )}
                 <h3>Payment method</h3>
                 <PaymentMethods
                   value={method}
@@ -245,7 +289,7 @@ function PlusCheckoutPage({ initial }: { initial: ReturnType<typeof readCheckout
                     This offer is not available for purchase yet.
                   </p>
                 )}
-                {!accepted && <p className="checkout-hint">Agree to the terms to continue to payment.</p>}
+                {!accepted && <p className="checkout-hint">Agree to the terms to continue with PayPal.</p>}
                 {closed && (
                   <div className="banner info" role="status">
                     This checkout has ended. Start a new checkout if you want to purchase.
@@ -305,13 +349,13 @@ function PlusCheckoutPage({ initial }: { initial: ReturnType<typeof readCheckout
               <div className="checkout-plan-art">
                 <span>{gift ? <Gift size={30} aria-hidden="true" /> : <Crown size={30} aria-hidden="true" />}</span>
                 <Sparkles size={18} className="checkout-art-spark" aria-hidden="true" />
-                <span className="checkout-kicker">MELDIQ MOJO</span>
+                <span className="checkout-kicker">MELDIQ PLUS</span>
                 <h3>Plus{gift ? " Gift" : ""}</h3>
                 <p>{gift ? `${draft.months} month${draft.months === 1 ? "" : "s"} of more` : "More of what brings you together"}</p>
               </div>
               <dl className="checkout-breakdown">
                 <div>
-                  <dt>{gift ? `Plus · ${draft.months} month${draft.months === 1 ? "" : "s"}` : "Plus · monthly"}</dt>
+                  <dt>{gift ? `Plus · ${draft.months} month${draft.months === 1 ? "" : "s"}` : `Plus · every ${cadence}`}</dt>
                   <dd>{money(amount, currency)}</dd>
                 </div>
                 <div>
@@ -321,7 +365,7 @@ function PlusCheckoutPage({ initial }: { initial: ReturnType<typeof readCheckout
                 <div className="checkout-total">
                   <dt>
                     {gift ? "Total" : "Total today"}
-                    <small>{gift ? "One-time purchase" : deferred ? `First payment ${startDate}` : "Renews monthly"}</small>
+                    <small>{gift ? "One-time purchase" : deferred ? `First payment ${startDate}` : `Renews every ${cadence}`}</small>
                   </dt>
                   <dd>
                     {money(deferred ? 0 : amount, currency)}
@@ -344,9 +388,15 @@ function PlusCheckoutPage({ initial }: { initial: ReturnType<typeof readCheckout
                 {gift
                   ? "One payment. No automatic renewal. Your friend chooses when to start their gift."
                   : deferred
-                    ? `${money(amount, currency)} ${currency} on ${startDate}, then every month until you cancel. Your existing Plus time is preserved.`
-                    : `Then ${money(amount, currency)} ${currency} every month until you cancel. Cancel from Billing; your verified paid period remains available.`}
+                    ? `${money(amount, currency)} ${currency} on ${startDate}, then every ${cadence} until you cancel. Your existing Plus time is preserved.`
+                    : `Then ${money(amount, currency)} ${currency} every ${cadence} until you cancel. Cancel from Billing; your verified paid period remains available.`}
               </p>
+              {!gift && (
+                <div className="plus-support-summary">
+                  <strong>{savings > 0 ? `You save ${money(savings, currency)} versus monthly billing.` : "Support Meldiq with Plus."}</strong>
+                  <p>Your {money(amount, currency)} subscription helps support servers, storage, bandwidth, security and continued development of an open and accessible communication platform.</p>
+                </div>
+              )}
               {plus && (
                 <ul className="checkout-perks">
                   <li>

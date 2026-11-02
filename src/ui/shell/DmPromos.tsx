@@ -15,7 +15,7 @@ export function inviteLink(origin: string, code: string | null): string {
 /**
  * Invite friends to Meldiq (the owner's request, 2026-10-28): on Home and messages, an invitation to the platform with
  * your own invite link; a community's invitations stay inside that community. Where the server runs trials, both of
- * you get the invite's free Mojo days, and the card says so.
+ * you get the invite's free Meldiq Plus days, and the card says so.
  */
 export function InviteToMeldiqCard() {
   const engine = useEngine();
@@ -52,7 +52,7 @@ export function InviteToMeldiqCard() {
       engine.notice("error", "Couldn't copy the link. Copy it from the address bar instead.");
     }
   };
-  const bonus = referral?.available && referral.daysEach > 0 ? `You both get ${referral.daysEach} days of Mojo free.` : null;
+  const bonus = referral?.available && referral.daysEach > 0 ? `You both get ${referral.daysEach} days of Meldiq Plus free.` : null;
   return (
     <section className="invite-card" aria-labelledby="invite-card-title">
       <span className="invite-card-icon" aria-hidden="true">
@@ -69,21 +69,20 @@ export function InviteToMeldiqCard() {
   );
 }
 
-/** Meldiq Mojo in the messages list: what it adds, for the Free plan; your plan, for subscribers. */
+/** Meldiq Plus in the messages list: what it adds, for the Free plan; your plan, for subscribers. */
 export function MojoPromoCard() {
   const plan = useOrbit((s) => s.mojo.me?.plan ?? null);
   const name = useOrbit((s) => s.mojo.me?.perks.name ?? null);
   const enabled = useOrbit((s) => s.server?.features.includes("mojo") ?? false);
-  if (!enabled || plan === null) return null;
-  const free = plan === "free";
+  if (!enabled || plan === null || plan === "free") return null;
   return (
     <button className="mojo-promo" onClick={() => navigate({ section: "settings", settingsPage: "mojo" })}>
       <span className="mojo-perk-icon" aria-hidden="true">
         <Sparkles size={18} />
       </span>
       <span className="lines grow">
-        <strong>{free ? "Keep Meldiq independent" : `You have ${name ?? "Mojo"}`}</strong>
-        <small>{free ? "Explore Plus. Help fund servers and development without corporate investment." : "Thanks for keeping Meldiq going. See your perks."}</small>
+        <strong>{`You have ${name ?? "Meldiq Plus"}`}</strong>
+        <small>Thanks for keeping Meldiq going. See your perks.</small>
       </span>
     </button>
   );

@@ -219,8 +219,12 @@ describe("server contract fixtures (meldiq_android shared/contracts, API " + tab
     const api = new ApiClient("http://contract.test");
     const realFetch = globalThis.fetch;
     try {
-      for (const code of listCopy("http/errors")) {
-        const body = readCopy<{ error: { code: string; message: string } }>(`http/errors/${code}.json`);
+      const errors = listCopy("http/errors").map((code) => readCopy<{ error: { code: string; message: string } }>(`http/errors/${code}.json`));
+      // Newer peers can send additional errors; these examples are separate from the pinned server's actual catalog.
+      const forward = path.join(WEB_ROOT, "test/forward-contract-fixtures/errors");
+      if (fs.existsSync(forward)) for (const file of fs.readdirSync(forward).filter((f) => f.endsWith(".json"))) errors.push(JSON.parse(fs.readFileSync(path.join(forward, file), "utf8")));
+      for (const body of errors) {
+        const code = body.error.code;
         const status = table.errors[code]?.[0] ?? 400;
         globalThis.fetch = async () => new Response(JSON.stringify(body), { status, headers: { "content-type": "application/json" } });
         const e = await api.call("GET", "/v1/x").then(

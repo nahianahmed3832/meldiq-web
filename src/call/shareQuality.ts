@@ -30,7 +30,7 @@ export const SHARE_QUALITIES: Record<ShareQuality, ShareQualitySpec> = {
     label: "Standard",
     hint: "1280×720 at 30 frames a second. Works on most connections.",
   },
-  // Plans (server docs/PLANS.md, 2026-10-30): Free shares up to 720p 60, Mojo Go up to 1080p 60, Plus up to 2K 60.
+  // Plans (server docs/PLANS.md, 2026-10-30): Free shares up to 720p 60, Legacy Go up to 1080p 60, Plus up to 2K 60.
   smooth: {
     width: 1280,
     height: 720,
@@ -78,7 +78,7 @@ export const SHARE_QUALITIES: Record<ShareQuality, ShareQualitySpec> = {
   },
 };
 
-/** A screen-share ceiling as the server sends it in a call's media grant (Meldiq Mojo). */
+/** A screen-share ceiling as the server sends it in a call's media grant (Meldiq Plus). */
 export interface SharePresetLimit {
   width: number;
   height: number;
@@ -87,7 +87,7 @@ export interface SharePresetLimit {
 
 /**
  * The qualities [limits] allow, lowest first: one is allowed when some ceiling covers its size and frame rate (the
- * server's rule, docs/MOJO.md). Without limits (a server before Mojo, or limits not enforced) Standard and High, as
+ * server's rule, docs/MOJO.md). Without limits (a server before Meldiq Plus, or limits not enforced) Standard and High, as
  * before.
  */
 export function allowedShareQualities(limits: readonly SharePresetLimit[] | null | undefined): ShareQuality[] {

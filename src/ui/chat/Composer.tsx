@@ -185,14 +185,14 @@ export function Composer(props: ComposerProps) {
   const addFiles = useCallback(
     (list: File[]) => {
       const serverLimit = fileLimit(engine.state.get().server);
-      // Meldiq Mojo (server docs/MOJO.md): the person's plan, or the community's Sparks, may set a lower limit.
+      // Meldiq Plus (server docs/MOJO.md): the person's plan, or the community's Sparks, may set a lower limit.
       const limit = planUploadLimit === null ? serverLimit : Math.min(serverLimit, planUploadLimit);
       const tooBig = list.find((f) => f.size > limit);
       if (tooBig) {
         engine.notice(
           "error",
           planUploadLimit !== null && limit === planUploadLimit
-            ? `"${tooBig.name}" is larger than ${size(limit)}, the limit on your plan here. Mojo raises it, and so do a community's Sparks.`
+            ? `"${tooBig.name}" is larger than ${size(limit)}, the limit on your plan here. Meldiq Plus raises it, and so do a community's Sparks.`
             : `"${tooBig.name}" is larger than this server accepts (${Math.floor(limit / (1024 * 1024))} MB per file).`,
         );
       }

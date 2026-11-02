@@ -93,7 +93,7 @@ export function ProfileStyleCard({ nameStyles, pictureControls }: { nameStyles: 
     void run("Uploading…", async () => setProfileBanner(engine, animated ? new Uint8Array(await f.arrayBuffer()) : await bannerJpeg(f)));
   };
   const setStyle = saver.save;
-  // The badges you hold now (API 0.65.0): from your own profile, and your Mojo plan's badge.
+  // The badges you hold now (API 0.65.0): from your own profile, and your Meldiq Plus plan's badge.
   const mojoMark: MojoMark | null = p?.mojo ?? (mojoBadge?.kind ? { badge: mojoBadge.kind, check: mojoBadge.check } : null);
   const held: NameBadgeKind[] = [...(mojoMark ? ["mojo" as const] : []), ...(p?.badges.includes("bug-hunter") ? ["bug-hunter" as const] : []), ...(p?.decorationArtist ? ["artist" as const] : [])];
 

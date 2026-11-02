@@ -79,7 +79,7 @@ export const zProfileStyle = z
     tagOrgId: nullableString,
     /** API 0.65.0: the profile theme, one colour or two for a gradient (older servers: only [accent]). */
     themeColors: zThemeColors,
-    /** API 0.65.0: the badge shown next to the name; "none" shows none, null is the apps' default (the Mojo badge). */
+    /** API 0.65.0: the badge shown next to the name; "none" shows none, null is the apps' default (the Meldiq Plus badge). */
     shownBadge: z
       .enum(SHOWN_BADGES)
       .nullish()
@@ -141,7 +141,7 @@ export const zProfilePins = z
   .transform((v) => v ?? []);
 export type ProfilePin = z.infer<typeof zProfilePins>[number];
 
-/** API 0.54.0: the Mojo badge someone shows (server docs/MOJO.md); "check" is Meldiq Check, a Plus perk, not verification. */
+/** API 0.54.0: the Meldiq Plus badge someone shows (server docs/MOJO.md); "check" is Meldiq Check, a Plus perk, not verification. */
 export const zMojoMark = z
   .object({ badge: z.enum(["go", "plus"]), check: z.boolean() })
   .nullish()

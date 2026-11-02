@@ -69,7 +69,7 @@ export interface UserLite {
   avatarMedia?: AvatarMedia | null;
   profileStyle?: ProfileStyle | null;
   tag?: WornTag | null;
-  /** API 0.54.0: the Mojo badge they show (server docs/MOJO.md). */
+  /** API 0.54.0: the Meldiq Plus badge they show (server docs/MOJO.md). */
   mojo?: MojoMark | null;
   /** API 0.65.0 batch B: a bot's account. */
   bot?: boolean;
@@ -136,7 +136,7 @@ export interface AppState {
   call: CallUiState;
   identityAlerts: PinnedIdentity[];
   history: HistoryState;
-  /** Meldiq Mojo: plans, perks, Sparks and gifts (sync/mojo.ts). */
+  /** Meldiq Plus: plans, perks, Sparks and gifts (sync/mojo.ts). */
   mojo: MojoState;
   notices: Notice[];
   /** Personal navigation preferences by workspace ("personal" or an organisation id), with unsent changes applied. */

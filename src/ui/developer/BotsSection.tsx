@@ -16,7 +16,7 @@ export function botLimitText(e: unknown): string {
   if (!(e instanceof ApiError)) return "Couldn't make the bot. Try again.";
   if (e.code !== "limit_reached") return e.message;
   const d = e.details as { limit?: unknown } | null | undefined;
-  return typeof d?.limit === "number" ? `Your plan allows ${d.limit} bots. Delete one, or upgrade with Meldiq Mojo for more.` : e.message;
+  return typeof d?.limit === "number" ? `Your plan allows ${d.limit} bots. Delete one, or upgrade with Meldiq Plus for more.` : e.message;
 }
 
 /**

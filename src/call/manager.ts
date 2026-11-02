@@ -258,7 +258,7 @@ export class CallManager {
   }
 
   private async connect(gen: number, session: MediaSession, callId: string, grant: MediaGrant, key: string): Promise<void> {
-    // What the server allows this person to share at here (Meldiq Mojo); older servers send nothing: as before.
+    // What the server allows this person to share at here (Meldiq Plus); older servers send nothing: as before.
     this.patch({ verification: await verificationCode(key, callId), security: "verifying", shareQualities: allowedShareQualities(grant.limits?.screen) });
     this.check(gen);
     try {
@@ -586,7 +586,7 @@ export class CallManager {
     const share = { ...wanted, quality: clampShareQuality(wanted.quality, this.state.shareQualities) };
     const on = !this.state.screenSharing;
     if (on && share.quality !== wanted.quality) {
-      this.patch({ notice: `Sharing at ${SHARE_QUALITIES[share.quality].label}: higher quality comes with Meldiq Mojo or this community's Sparks.` });
+      this.patch({ notice: `Sharing at ${SHARE_QUALITIES[share.quality].label}: higher quality comes with Meldiq Plus or this community's Sparks.` });
     }
     const max = Math.max(2, this.opts.maxScreenShares ?? MAX_SCREEN_SHARES);
     if (on && !mayShare(session.shares(), max)) {

@@ -9,7 +9,7 @@ export const giftRecipientSchema = z.discriminatedUnion("kind", [
 export type GiftRecipient = z.infer<typeof giftRecipientSchema>;
 
 const draftSchema = z.discriminatedUnion("product", [
-  z.object({ product: z.literal("plus") }),
+  z.object({ product: z.literal("plus"), term: z.enum(["monthly", "quarterly", "yearly"]).optional() }),
   z.object({ product: z.literal("spark"), quantity: z.number().int().min(1).max(20) }),
   z.object({ product: z.literal("bots_plus"), orgId: z.string().min(1).max(150) }),
   z.object({
@@ -59,7 +59,7 @@ export function restoreCheckout(userId: string, purchase: PayPalPurchase): void 
   let draft: CheckoutDraft;
   if (purchase.product === "spark" && purchase.quantity) draft = { product: "spark", quantity: purchase.quantity };
   else if (purchase.product === "bots_plus" && purchase.orgId) draft = { product: "bots_plus", orgId: purchase.orgId };
-  else if (purchase.product === "plus") draft = { product: "plus" };
+  else if (purchase.product === "plus") draft = { product: "plus", term: purchase.interval === "year" ? "yearly" : purchase.billingFrequency === 3 ? "quarterly" : "monthly" };
   else throw new Error("Open this purchase from its original checkout.");
   writeCheckout(userId, {
     draft,

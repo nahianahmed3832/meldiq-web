@@ -86,8 +86,8 @@ export function useProfileMenu(): { open: (anchor: HTMLElement) => void; expande
             "separator",
             { label: "Profile", icon: <UserRound size={16} />, onSelect: () => navigate({ section: "settings", settingsPage: "profile" }) },
             { label: "Devices", icon: <Smartphone size={16} />, onSelect: () => navigate({ section: "settings", settingsPage: "devices" }) },
-            // Meldiq Mojo (server docs/MOJO.md): findable here, never pushed at people.
-            ...(mojoOffered ? [{ label: "Meldiq Mojo", icon: <Sparkles size={16} />, onSelect: () => navigate({ section: "settings", settingsPage: "mojo" }) }] : []),
+            // Meldiq Plus (server docs/MOJO.md): findable here, never pushed at people.
+            ...(mojoOffered ? [{ label: "Meldiq Plus", icon: <Sparkles size={16} />, onSelect: () => navigate({ section: "settings", settingsPage: "mojo" }) }] : []),
             { label: "Settings", icon: <Settings size={16} />, onSelect: () => navigate({ section: "settings", settingsPage: "notifications" }) },
             "separator",
             { heading: "Theme" },

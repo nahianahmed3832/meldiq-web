@@ -19,8 +19,6 @@ import { type StringKey, useT } from "../../i18n";
 import { YouCard } from "./YouCard";
 import { InstallButton } from "./InstallButton";
 import { CheckoutPage } from "../billing/CheckoutPage";
-import { GiftsPage } from "../billing/GiftsPage";
-import { Gift } from "lucide-react";
 import { BillingPage } from "../billing/BillingPage";
 import { MojoPage } from "../mojo/MojoPage";
 import { SparkPage } from "../mojo/SparkPage";
@@ -40,8 +38,7 @@ const USER_PAGES: PageEntry[] = [
   { key: "profile", label: "settings_profile", icon: <SettingsIcon name="profile" /> },
   { key: "security", label: "settings_security", icon: <SettingsIcon name="security" /> },
   { key: "devices", label: "settings_devices", icon: <SettingsIcon name="devices" /> },
-  // Meldiq Mojo (server docs/MOJO.md): with the account, not pushed anywhere else.
-  { key: "gifts", label: "settings_gifts", icon: <Gift size={17} /> },
+  // Meldiq Plus (server docs/MOJO.md): with the account, not pushed anywhere else.
   { key: "mojo", label: "settings_mojo", icon: <SettingsIcon name="mojo" /> },
   // Meldiq Spark: its own page (2026-10-28), boosting the communities you love.
   { key: "spark", label: "settings_spark", icon: <SettingsIcon name="spark" /> },
@@ -199,7 +196,6 @@ export function SettingsView({ page: requestedPage, onSignedOut }: { page: Setti
             {page === "health" && <ServiceHealthPage />}
             {page === "usage" && <AdminUsagePage />}
             {page === "checkout" && <CheckoutPage />}
-            {page === "gifts" && <GiftsPage />}
             {page === "billing" && <BillingPage />}
             {page === "mojo" && <MojoPage />}
             {page === "spark" && <SparkPage />}

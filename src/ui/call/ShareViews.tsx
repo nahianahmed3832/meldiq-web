@@ -174,7 +174,7 @@ export function SharePill({ call }: { call: CallUiState }) {
 export function ShareDialog({ onClose }: { onClose: () => void }) {
   const engine = useEngine();
   const prefs = usePrefs();
-  // Only the qualities this person may share at here (Meldiq Mojo: their plan and the community's Sparks).
+  // Only the qualities this person may share at here (Meldiq Plus: their plan and the community's Sparks).
   const allowed = useOrbit((s) => s.call.shareQualities);
   const [quality, setQuality] = useState<ShareQuality>(() => clampShareQuality(prefs.shareQuality, allowed));
   const more = allowed.length < SHARE_QUALITY_ORDER.length && allowed[allowed.length - 1] !== "max60";
@@ -215,7 +215,7 @@ export function ShareDialog({ onClose }: { onClose: () => void }) {
         </div>
         {more && (
           <p className="muted" style={{ margin: 0, fontSize: 13 }}>
-            Higher quality comes with Meldiq Mojo, or when this community has Sparks.{" "}
+            Higher quality comes with Meldiq Plus, or when this community has Sparks.{" "}
             <button
               className="char-limit-link"
               onClick={() => {
@@ -223,7 +223,7 @@ export function ShareDialog({ onClose }: { onClose: () => void }) {
                 navigate({ section: "settings", settingsPage: "mojo" });
               }}
             >
-              See Mojo
+              See Meldiq Plus
             </button>
           </p>
         )}

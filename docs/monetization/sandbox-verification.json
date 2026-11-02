@@ -1,0 +1,22 @@
+{
+  "environment": "sandbox",
+  "planVerified": true,
+  "planId": "P-3TE66117X4961564JNLUGRCQ",
+  "productId": "PROD-2S4746620H719100X",
+  "subscription": {
+    "created": true,
+    "status": "incomplete",
+    "paid": false,
+    "cleanup": "approval_pending_not_cancellable"
+  },
+  "giftOrder": {
+    "created": true,
+    "amountMinor": 499,
+    "currency": "USD",
+    "paid": false
+  },
+  "buyerApprovalPerformed": false,
+  "capturePerformed": false,
+  "liveModified": false,
+  "webhookTest": "blocked: Sandbox webhook not configured"
+}

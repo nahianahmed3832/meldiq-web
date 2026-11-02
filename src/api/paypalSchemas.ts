@@ -26,7 +26,8 @@ export const zPayPalCheckout = z.object({
   approved: z.boolean().optional(),
   currency: z.literal("USD"),
   amountMinor: z.number().int().nonnegative(),
-  interval: z.enum(["month", "one_time"]),
+  interval: z.enum(["month", "year", "one_time"]),
+  billingFrequency: z.number().int().positive().optional(),
   expiresAt: z.number(),
 });
 export type PayPalPurchase = z.infer<typeof zPayPalCheckout>;

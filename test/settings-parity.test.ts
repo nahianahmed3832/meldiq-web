@@ -44,7 +44,7 @@ describe("profile theme", () => {
 
 describe("the badge shown by a name", () => {
   const mojo = { badge: "plus" as const, check: false };
-  it("shows the chosen badge, none for none, and the Mojo badge by default", () => {
+  it("shows the chosen badge, none for none, and the Meldiq Plus badge by default", () => {
     expect(nameBadge(null, mojo)).toBe("mojo");
     expect(nameBadge(null, null)).toBeNull();
     expect(nameBadge("none", mojo)).toBeNull();

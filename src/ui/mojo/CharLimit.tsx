@@ -28,7 +28,7 @@ export function CharLimitNote({ text, limit }: { text: string; limit: number | n
           {" "}
           That's {(n - limit).toLocaleString()} over your plan's limit.{" "}
           <button className="char-limit-link" onClick={() => navigate({ section: "settings", settingsPage: "mojo" })}>
-            Mojo gives more room
+            Meldiq Plus gives more room
           </button>
         </span>
       )}

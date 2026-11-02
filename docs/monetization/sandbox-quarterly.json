@@ -1,0 +1,14 @@
+{
+  "environment": "sandbox",
+  "term": "quarterly",
+  "amountMinor": 1299,
+  "billingInterval": "month",
+  "billingFrequency": 3,
+  "pricingVersion": "2026-11-02.plus-terms-v3",
+  "productId": "PROD-2S4746620H719100X",
+  "planId": "P-5UD87361W9855621PNLUH6NQ",
+  "verified": true,
+  "webhookConfigured": false,
+  "published": false,
+  "instruction": "Save these versioned IDs privately. Complete Sandbox/compatibility checks, then separately publish a new catalog version. Keep historical versions."
+}

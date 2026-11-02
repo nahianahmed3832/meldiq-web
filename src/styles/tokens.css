@@ -430,7 +430,7 @@
     --accent-end: #b8e85a;
     --on-brand: #0b0b0b;
     --brand-gradient: linear-gradient(120deg, #f4ffac 0%, #dcfb7c 55%, #b8e85a 100%);
-    /* Calls to action (Join, Invite, Copy, Send, Get Mojo): solid lime with near-black text (16:1 on the lime). */
+    /* Calls to action (Join, Invite, Copy, Send, Get Meldiq Plus): solid lime with near-black text (16:1 on the lime). */
     --cta: light-dark(#d4ee4e, #f4ffac);
     --cta-hover: light-dark(#c4e132, #fbffd6);
     --on-cta: #0b0b0b;

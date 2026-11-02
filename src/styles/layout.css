@@ -1147,3 +1147,31 @@
   font-size: clamp(22px, 3vw, 32px);
   margin: 16px 0 8px;
 }
+
+/* Avatar effects stay in their own layer so unread counts remain legible above rings and artwork. */
+.rail-home,
+.rail-org,
+.rail-dm {
+  flex-shrink: 0;
+  isolation: isolate;
+  overflow: visible;
+}
+.rail-home > .rail-mascot,
+.rail-org > .avatar,
+.rail-org > .styled-avatar,
+.rail-dm > .styled-avatar {
+  position: relative;
+  z-index: 0;
+  isolation: isolate;
+}
+.rail-home > .count,
+.rail-org > .count,
+.rail-dm > .count {
+  z-index: 3;
+  isolation: isolate;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.rail-live {
+  z-index: 4;
+}

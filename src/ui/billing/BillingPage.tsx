@@ -84,7 +84,7 @@ export function BillingPage() {
   return (
     <div className="mojo billing-page">
       <button className="btn btn-ghost btn-sm" onClick={() => navigate({ section: "settings", settingsPage: "mojo" })}>
-        <ArrowLeft size={15} aria-hidden="true" /> Back to Mojo
+        <ArrowLeft size={15} aria-hidden="true" /> Back to Meldiq Plus
       </button>
       <div className="billing-title">
         <div>
@@ -112,7 +112,7 @@ export function BillingPage() {
           <h2>{me?.perks.name ?? "Loading…"}</h2>
           <p>
             {sub && !pending
-              ? `${money(sub.amountMinor, sub.currency)} ${sub.currency}/month · ${sub.status === "incomplete" ? "Awaiting first payment" : sub.status.replaceAll("_", " ")}`
+              ? `${money(sub.amountMinor, sub.currency)} ${sub.currency} every ${(sub.interval === "year" ? 12 : 1) * (sub.billingFrequency ?? 1)} month(s) · ${sub.status === "incomplete" ? "Awaiting first payment" : sub.status.replaceAll("_", " ")}`
               : freePeriod?.source === "signup_trial"
                 ? "Free signup trial · no recurring payment"
                 : me?.plan === "free"

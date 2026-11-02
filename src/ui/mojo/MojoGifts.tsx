@@ -10,10 +10,10 @@ import type { GiftRecipient } from "../billing/checkoutDraft";
 import { zGiftRedemption } from "../../api/giftSchemas";
 import { money } from "./mojoFormat";
 
-const PLAN_NAME = { go: "Mojo Go", plus: "Mojo Plus" } as const;
+const PLAN_NAME = { go: "Legacy Go", plus: "Meldiq Plus" } as const;
 
 /**
- * Buying Mojo for a friend (server docs/MOJO.md › Gifts): one payment, for 1, 3 or 12 months, priced by the server. The
+ * Buying Meldiq Plus for a friend (server docs/MOJO.md › Gifts): one payment, for 1, 3 or 12 months, priced by the server. The
  * friend chooses when to start it; nothing renews. Only friends are offered (the server checks again).
  */
 export function GiftDialog({
@@ -42,7 +42,7 @@ export function GiftDialog({
   const ready = (kind === "link" || (kind === "email" && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) || (kind === "user" && !!to)) && !!monthly && note.length <= catalog.gifts.noteMax;
   return (
     <Dialog
-      title="Gift Mojo to a friend"
+      title="Gift Meldiq Plus to a friend"
       onClose={onClose}
       footer={
         <>
@@ -62,7 +62,7 @@ export function GiftDialog({
               })
             }
           >
-            {busy ? "Opening…" : monthly ? `Pay ${money(monthly.amountMinor * months, monthly.currency)}` : "Not on sale yet"}
+            {busy ? "Opening…" : monthly ? `Pay ${money(catalog.plusTerms.find((t) => t.months === months)?.amountMinor ?? monthly.amountMinor * months, monthly.currency)}` : "Not on sale yet"}
           </button>
         </>
       }

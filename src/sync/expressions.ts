@@ -93,7 +93,7 @@ export const zExpression = z.object({
   createdBy: z.string().nullish(),
   createdAt: z.number(),
   /**
-   * API 0.54.0 (Meldiq Mojo): over a limit, kept but not offered for new messages: "slots" beyond the community's Spark
+   * API 0.54.0 (Meldiq Plus): over a limit, kept but not offered for new messages: "slots" beyond the community's Spark
    * level, "plan" beyond its adder's plan. Sent messages still show it.
    */
   locked: z.enum(["slots", "plan"]).nullish(),

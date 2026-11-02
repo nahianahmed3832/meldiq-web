@@ -24,6 +24,7 @@ export function screenLabel(catalog: MojoCatalog | null, presets: readonly Scree
 
 /** The price a plan shows: what's on sale at the payment provider, else its list price ("not on sale yet"). */
 export function planPrice(catalog: MojoCatalog | null, key: PlanKey): { label: string; onSale: boolean } {
+  if (key === "go") return { label: "Discontinued", onSale: false };
   if (key === "free") return { label: money(0, "USD"), onSale: true };
   const sale = catalog?.onSale[key] ?? null;
   if (sale) return { label: money(sale.amountMinor, sale.currency), onSale: true };

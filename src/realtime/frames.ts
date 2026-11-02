@@ -58,7 +58,7 @@ export type ServerFrame =
   | { t: "meeting.updated" }
   | { t: "meeting.soon"; meetingId: string | null }
   | { t: "reminders.changed" | "reminder.due" }
-  /** API 0.52.0: a plan, a Spark or a gift changed (Meldiq Mojo, server docs/MOJO.md). */
+  /** API 0.52.0: a plan, a Spark or a gift changed (Meldiq Plus, server docs/MOJO.md). */
   | { t: "entitlements.changed" }
   | { t: "prefs.updated"; workspaceId: string }
   | { t: "org.deleted"; orgId: string }

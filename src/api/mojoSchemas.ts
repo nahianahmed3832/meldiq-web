@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 /**
- * Meldiq Mojo, Meldiq Spark and gifts (server docs/MOJO.md, API 0.54.0). Every limit comes from the server's catalog
+ * Meldiq Plus, Meldiq Spark and gifts (server docs/MOJO.md, API 0.54.0). Every limit comes from the server's catalog
  * (GET /v2/mojo/catalog); what a person has from GET /v2/mojo/me, worked out on the server from verified billing.
  * Read tolerantly: a newer server may add fields.
  */
@@ -39,7 +39,21 @@ export type SparkLevel = z.infer<typeof zSparkLevel>;
 
 const zPrice = z.object({ currency: z.string(), amountMinor: z.number() }).nullable();
 
+export const zPlusTerm = z.object({
+  key: z.enum(["monthly", "quarterly", "yearly"]),
+  months: z.number().int().positive(),
+  amountMinor: z.number().int().positive(),
+  currency: z.literal("USD"),
+  interval: z.enum(["month", "year"]),
+  billingFrequency: z.number().int().positive(),
+  savingsMinor: z.number().int().nonnegative(),
+  monthlyEquivalentMinor: z.number().int(),
+  savingsPercent: z.number(),
+  available: z.boolean(),
+});
+export type PlusTerm = z.infer<typeof zPlusTerm>;
 export const zMojoCatalog = z.object({
+  plusTerms: z.array(zPlusTerm).optional().default([]),
   version: z.string(),
   units: z.object({ mb: z.number(), gb: z.number() }),
   plans: z.array(zPlanPerks),
@@ -110,6 +124,8 @@ export const zOwnerBilling = z.object({
       approvalPending: z.boolean().optional(),
       currency: z.string(),
       amountMinor: z.number(),
+      interval: z.enum(["month", "year"]).optional(),
+      billingFrequency: z.number().int().positive().optional(),
     })
     .nullable(),
   portal: z.boolean(),
@@ -117,6 +133,6 @@ export const zOwnerBilling = z.object({
 });
 export type OwnerBilling = z.infer<typeof zOwnerBilling>;
 
-/** A person's Mojo badge in member lists and profiles: "check" is Meldiq Check, a Plus perk, not verification. */
+/** A person's Meldiq Plus badge in member lists and profiles: "check" is Meldiq Check, a Plus perk, not verification. */
 export const zMojoBadge = z.object({ badge: z.enum(["go", "plus"]), check: z.boolean() });
 export type MojoBadge = z.infer<typeof zMojoBadge>;

@@ -131,7 +131,7 @@ export class Engine implements EngineContext {
   readonly nav: NavSync;
   /** Server reminders (Later › Reminders), sealed with this browser's reminder key. */
   readonly reminders: ReminderSync;
-  /** Meldiq Mojo: plans, Sparks, gifts and badges (server docs/MOJO.md). */
+  /** Meldiq Plus: plans, Sparks, gifts and badges (server docs/MOJO.md). */
   readonly mojo: MojoSync;
   /** Experiments and content-free analytics counts, silent unless the server turns them on (src/sync/signals.ts). */
   readonly signals: Signals;
@@ -850,7 +850,7 @@ export class Engine implements EngineContext {
         await this.reminders.refresh();
         return;
       case "entitlements.changed":
-        // A plan, a Spark or a gift changed (here or on another device): read Mojo again.
+        // A plan, a Spark or a gift changed (here or on another device): read Meldiq Plus again.
         await this.mojo.refresh();
         return;
       case "prefs.updated":

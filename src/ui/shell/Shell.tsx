@@ -50,6 +50,7 @@ import { accountSelection, rememberSelection } from "../../sync/workspaceSelecti
 import { LOBBY_FEATURE } from "../../sync/lobby";
 import { useLobbyLanding } from "../lobby/useLobbyLanding";
 import { PHONE_LAYOUT } from "../../application/viewport";
+import { PlusRenewalNotice } from "../mojo/PlusRenewalNotice";
 import { PlusSupportNotice } from "../mojo/PlusSupportNotice";
 import { UserPanel } from "./UserPanel";
 
@@ -358,6 +359,7 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
       <Notices />
       {!phone && !settings && <UserPanel />}
       <PlusSupportNotice blocked={!!dialog || !!profile || drawer} />
+      <PlusRenewalNotice blocked={!!dialog || !!profile || drawer} />
       <TabIndicators />
       <ConnectionRequestWatcher />
       <CallLayer />

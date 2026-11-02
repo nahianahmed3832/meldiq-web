@@ -12,16 +12,16 @@ test.beforeEach(async ({ context }) => {
   await context.setExtraHTTPHeaders({ "x-orbit-test-ip": testAddress() });
 });
 
-test("Settings › Meldiq Mojo shows the plans and their limits, and says it isn't on sale yet", async ({ page }) => {
+test("Settings › Meldiq Plus shows the plans and their limits, and says it isn't on sale yet", async ({ page }) => {
   const alice = await newPhone("mojoalice", "Alice Rahman");
   await alice.connect();
   await link(page, alice);
   await page.goto("/settings/mojo");
-  await expect(page.getByRole("heading", { name: "Meldiq Mojo", level: 1 })).toBeVisible({ timeout: 15_000 });
-  await expect(page.getByText("Mojo isn't on sale yet")).toBeVisible();
-  for (const plan of ["Free", "Mojo Plus"]) await expect(page.getByRole("region", { name: plan, exact: true })).toBeVisible();
-  await expect(page.getByRole("region", { name: "Mojo Go", exact: true })).toHaveCount(0);
-  await expect(page.getByRole("region", { name: "Mojo Plus", exact: true })).toContainText("3.99");
+  await expect(page.getByRole("heading", { name: "Meldiq Plus", level: 1 })).toBeVisible({ timeout: 15_000 });
+  await expect(page.getByText("Meldiq Plus isn't on sale yet")).toBeVisible();
+  for (const plan of ["Meldiq Free", "Meldiq Plus"]) await expect(page.getByRole("region", { name: plan, exact: true })).toBeVisible();
+  await expect(page.getByRole("region", { name: "Legacy Go", exact: true })).toHaveCount(0);
+  await expect(page.getByRole("region", { name: "Meldiq Plus", exact: true })).toContainText("4.99");
   // Nothing can be bought: no dead button pretends to.
   await expect(page.getByRole("button", { name: /^Get Mojo/ })).toHaveCount(0);
   await expect(page.getByRole("button", { name: "Not on sale yet" }).first()).toBeDisabled();

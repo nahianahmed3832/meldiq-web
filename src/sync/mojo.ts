@@ -3,7 +3,7 @@ import { ApiError } from "../api/client";
 import { type MojoCatalog, type MojoMe, type OrgSparks, type OwnerBilling, type PlanKey, zCheckoutStarted, zMojoCatalog, zMojoMe, zOrgSparks, zOwnerBilling } from "../api/mojoSchemas";
 
 /**
- * Meldiq Mojo on this browser (server docs/MOJO.md): the catalog, the person's plan, perks, Sparks, badge and gifts,
+ * Meldiq Plus on this browser (server docs/MOJO.md): the catalog, the person's plan, perks, Sparks, badge and gifts,
  * and each community's Spark level. The server decides everything: this only reads its answers and asks it to act.
  * Refreshed at start, on the `entitlements.changed` frame, and when the person comes back from a payment page.
  */
@@ -14,7 +14,7 @@ export interface MojoState {
   billing: OwnerBilling | null;
   /** Spark levels of communities looked at, by id. */
   orgs: Record<string, OrgSparks>;
-  /** False until the first answer (or when this server has no Mojo: an older API). */
+  /** False until the first answer (or when this server has no Meldiq Plus: an older API). */
   available: boolean;
   error: string | null;
 }
@@ -34,7 +34,7 @@ export class MojoSync {
 
   constructor(private readonly host: MojoHost) {}
 
-  /** Reads the catalog, the person's Mojo and their plan subscription again. */
+  /** Reads the catalog, the person's Meldiq Plus and their plan subscription again. */
   refresh(): Promise<void> {
     this.refreshing ??= this.load().finally(() => {
       this.refreshing = null;
@@ -50,9 +50,9 @@ export class MojoSync {
       // Levels already on screen may have changed too (a Spark given elsewhere, a plan that lapsed).
       await Promise.all(Object.keys(this.host.get().orgs).map((id) => this.loadOrg(id)));
     } catch (e) {
-      // An API without Mojo (older server) answers 404: the app simply shows no Mojo.
+      // An API without Meldiq Plus (older server) answers 404: the app simply shows no Meldiq Plus.
       const missing = e instanceof ApiError && e.status === 404;
-      this.host.publish((m) => ({ ...m, available: m.available && !missing, error: missing ? null : e instanceof Error ? e.message : "Couldn't load Meldiq Mojo" }));
+      this.host.publish((m) => ({ ...m, available: m.available && !missing, error: missing ? null : e instanceof Error ? e.message : "Couldn't load Meldiq Plus" }));
     }
   }
 
@@ -67,7 +67,7 @@ export class MojoSync {
     }
   }
 
-  /** Opens the payment provider's page for a plan (Go, Plus) and comes back to this app's Mojo page. */
+  /** Opens the payment provider's page for a plan (Go, Plus) and comes back to this app's Meldiq Plus page. */
   async checkout(planKey: Exclude<PlanKey, "free">): Promise<string | null> {
     const r = await this.host.json("POST", "/v2/billing/checkout", zCheckoutStarted, { body: { planKey, returnTo: "web" } });
     return r.url;

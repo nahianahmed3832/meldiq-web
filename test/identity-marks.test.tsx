@@ -8,9 +8,9 @@ describe("identity mark placement and meaning", () => {
     const html = renderToStaticMarkup(<StyledName name="Explorer" style={null} tag={{ orgId: "club", text: "MDQ", color: null }} mojo={{ badge: "plus", check: true }} />);
     expect(html).toContain('class="identity-name"');
     expect(html.indexOf("Explorer")).toBeLessThan(html.indexOf("Community tag MDQ"));
-    expect(html.indexOf("Community tag MDQ")).toBeLessThan(html.indexOf('title="Mojo Plus"'));
+    expect(html.indexOf("Community tag MDQ")).toBeLessThan(html.indexOf('title="Meldiq Plus"'));
     expect(html).toContain("PLUS</span>");
-    expect(html).toContain("Mojo Plus membership");
+    expect(html).toContain("Meldiq Plus membership");
     expect(renderToStaticMarkup(<MojoBadgeMark badge="plus" check />)).not.toContain("<svg");
   });
   it("shows no subscription indicator for a free account and respects the chosen message badge", () => {

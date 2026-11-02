@@ -1,4 +1,4 @@
-/* Meldiq Mojo (ui/mojo, server docs/MOJO.md), floating redesign 2026-10-28. Mojo's colour follows the palette's brand
+/* Meldiq Plus (ui/mojo, server docs/MOJO.md), floating redesign 2026-10-28. Meldiq Plus's colour follows the palette's brand
    ends (lime on Meldiq, cyan into violet on Midnight), with the text colour made for them, so every palette and the
    light, dark and black themes all work. */
 :root {
@@ -34,7 +34,7 @@
   letter-spacing: -0.01em;
 }
 
-/* ── The plan header: what Mojo is, and the plan you're on ── */
+/* ── The plan header: what Meldiq Plus is, and the plan you're on ── */
 .mojo-hero {
   position: relative;
   display: flex;
@@ -131,7 +131,7 @@
   font-size: 16px;
 }
 
-/* Gift Mojo: a dashed, inviting row, as wide as the page. */
+/* Gift Meldiq Plus: a dashed, inviting row, as wide as the page. */
 .mojo-gift-entry {
   display: flex;
   align-items: center;
@@ -834,7 +834,7 @@
   color: var(--text-3);
 }
 
-/* Meldiq Mojo in the messages list (ui/shell/DmPromos.tsx). */
+/* Meldiq Plus in the messages list (ui/shell/DmPromos.tsx). */
 .mojo-promo {
   display: flex;
   align-items: center;
@@ -959,4 +959,155 @@
   .plus-support-actions .btn {
     min-height: 44px;
   }
+}
+
+.plus-promotion-card {
+  border: 1px solid var(--border);
+  border-radius: 18px;
+}
+.plus-promotion-modal img,
+.plus-support-notice img {
+  width: 100%;
+  max-height: 180px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+.plus-promotion-modal .plus-support-actions {
+  flex-wrap: wrap;
+  margin-top: 16px;
+}
+@media (max-width: 600px) {
+  .plus-support-notice {
+    max-width: calc(100vw - 24px);
+  }
+  .plus-support-actions {
+    flex-wrap: wrap;
+  }
+}
+
+/* Optional Plus popup, with the supplied reference's warm gradient and compact benefit list. */
+.plus-promotion {
+  padding: 0;
+  overflow: hidden;
+  border-radius: 22px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: 0 20px 70px #0005;
+}
+.plus-promotion-modal {
+  width: min(480px, calc(100vw - 28px));
+}
+.plus-promotion-header {
+  position: relative;
+  padding: 23px 26px;
+  padding-right: 76px;
+  background: linear-gradient(115deg, #6c3b31, #42285f);
+  color: #fff;
+}
+.plus-promotion-header h2 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 8px;
+  font-size: 21px;
+  line-height: 1.3;
+}
+.plus-promotion-header h2 svg {
+  color: #ffc86e;
+  flex-shrink: 0;
+}
+.plus-promotion-header p {
+  margin: 0;
+  color: #ddd0e0;
+  font-size: 14px;
+  line-height: 1.55;
+}
+.plus-promotion-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  color: #d8cfe1;
+}
+.plus-promotion-body {
+  padding: 23px 26px 18px;
+}
+.plus-promotion-benefits {
+  list-style: none;
+  margin: 0 0 23px;
+  padding: 0;
+  display: grid;
+  gap: 14px;
+}
+.plus-promotion-benefits li {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  font-size: 15px;
+}
+.plus-promotion-benefits svg {
+  flex-shrink: 0;
+}
+.plus-promotion-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.plus-promotion-upgrade {
+  background: #ff603c;
+  color: white;
+  border: none;
+  padding: 12px 18px;
+  border-radius: 12px;
+  font-weight: 700;
+}
+.plus-promotion-upgrade:hover {
+  background: #ed512e;
+}
+.plus-promotion-body small {
+  display: block;
+  font-size: 11px;
+  color: var(--text-3);
+  line-height: 1.5;
+}
+.plus-promotion-optout {
+  background: none;
+  border: none;
+  color: var(--text-3);
+  text-decoration: underline;
+  font-size: 11px;
+  padding: 10px 0 0;
+  cursor: pointer;
+}
+.plus-promotion-banner .plus-promotion-header {
+  padding: 16px 76px 16px 18px;
+}
+.plus-promotion-banner .plus-promotion-body {
+  padding: 14px 18px;
+}
+.plus-promotion-banner .plus-promotion-benefits {
+  display: none;
+}
+@media (max-width: 520px) {
+  .plus-promotion-header {
+    padding: 20px;
+    padding-right: 76px;
+  }
+  .plus-promotion-body {
+    padding: 20px;
+  }
+  .plus-promotion-header h2 {
+    font-size: 19px;
+  }
+  .plus-promotion-upgrade {
+    width: 100%;
+  }
+}
+
+.plus-support-notice.plus-promotion {
+  width: min(460px, calc(100vw - 28px));
+  max-height: calc(100dvh - 40px);
+  overflow: auto;
 }

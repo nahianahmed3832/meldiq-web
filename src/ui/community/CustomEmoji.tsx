@@ -5,7 +5,7 @@ import type { CustomEmojiRef } from "../../protocol/payload";
 import { type Expression, expressionImage, type ExpressionList, expressions } from "../../sync/expressions";
 
 /** A community's emoji and stickers for its members, loaded again when the community changes (`org.updated`). */
-/** [forNew]: only what may go in a new message (locked ones, Meldiq Mojo, still show in sent messages and reactions). */
+/** [forNew]: only what may go in a new message (locked ones, Meldiq Plus, still show in sent messages and reactions). */
 export function useExpressions(orgId: string | null, forNew = false, revision = 0): ExpressionList | null {
   const engine = useEngine();
   const org = useOrbit((s) => (orgId ? (s.orgs.find((o) => o.id === orgId) ?? null) : null));
@@ -15,7 +15,7 @@ export function useExpressions(orgId: string | null, forNew = false, revision = 
     if (!orgId || !org || !offered) return setResult(null);
     let alive = true;
     expressions(engine, orgId, true)
-      // Locked ones (over a Spark level or a plan, Meldiq Mojo) aren't offered for new messages.
+      // Locked ones (over a Spark level or a plan, Meldiq Plus) aren't offered for new messages.
       .then((l) => alive && setResult({ orgId, list: forNew ? { ...l, expressions: l.expressions.filter((e) => !e.locked) } : l }))
       .catch(() => alive && setResult(null));
     return () => {

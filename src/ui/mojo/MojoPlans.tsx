@@ -12,6 +12,7 @@ const ROWS: { label: string; value: (p: PlanPerks, c: MojoCatalog) => string }[]
   { label: "Meldiq Sparks included", value: (p) => String(p.sparks) },
   { label: "Custom emoji and stickers you add", value: (p) => String(p.customItems) },
   { label: "Bots you can make", value: (p) => String(p.bots) },
+  { label: "Profile customization", value: () => "Free: avatars, decorations, effects and appearance" },
   { label: "Name badge", value: (p) => (p.badge === "plus" ? "Plus, with Meldiq Check" : p.badge === "go" ? "Go" : "None") },
 ];
 
@@ -36,7 +37,7 @@ interface PlanCardsProps {
   actionFor: (plan: PlanPerks) => PlanAction;
 }
 
-/** Free and Mojo Plus side by side: price, what it gives, and its one button. */
+/** Free and Meldiq Plus side by side: price, what it gives, and its one button. */
 export function PlanCards({ catalog, me, actionFor }: PlanCardsProps) {
   return (
     <div className="mojo-plans">
@@ -84,7 +85,7 @@ function PlanLine({ children }: { children: ReactNode }) {
   );
 }
 
-/** What Mojo Plus adds, as benefit cards with the catalog's numbers. */
+/** What Meldiq Plus adds, as benefit cards with the catalog's numbers. */
 export function PlusPerks({ catalog }: { catalog: MojoCatalog }) {
   const plus = catalog.plans.find((p) => p.key === "plus");
   const free = catalog.plans.find((p) => p.key === "free");

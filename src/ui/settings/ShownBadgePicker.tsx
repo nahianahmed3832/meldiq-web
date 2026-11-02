@@ -7,14 +7,14 @@ interface ShownBadgePickerProps {
   style: ProfileStyle;
   /** The badges you hold now (the server refuses any other). */
   held: NameBadgeKind[];
-  /** Your Mojo badge, drawn on its tile. */
+  /** Your Meldiq Plus badge, drawn on its tile. */
   mojo: MojoMark | null;
   onSave: (change: ProfileStyleChange) => void;
 }
 
 /**
  * Settings › My Profile › Look › Badge (API 0.65.0): None, or one badge you hold, shown next to your name in messages
- * and member lists. Without a choice the Mojo badge shows, as before, so that tile reads as picked.
+ * and member lists. Without a choice the Meldiq Plus badge shows, as before, so that tile reads as picked.
  */
 export function ShownBadgePicker({ style, held, mojo, onSave }: ShownBadgePickerProps) {
   const showing = nameBadge(style.shownBadge, mojo);
@@ -24,7 +24,7 @@ export function ShownBadgePicker({ style, held, mojo, onSave }: ShownBadgePicker
         Badge
       </h3>
       {held.length === 0 ? (
-        <small className="faint">You don't have a badge yet. Mojo, Bug Hunter and Artist badges show up here once you earn them.</small>
+        <small className="faint">You don't have a badge yet. Meldiq Plus, Bug Hunter and Artist badges show up here once you earn them.</small>
       ) : (
         <>
           <div className="tag-tiles" role="group" aria-labelledby="ps-badge">

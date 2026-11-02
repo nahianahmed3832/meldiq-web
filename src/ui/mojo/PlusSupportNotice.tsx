@@ -1,12 +1,14 @@
-import { HeartHandshake, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useEngine, useOrbit } from "../../application/orbit";
 import { getPrefs, setPrefs, usePrefs } from "../../application/prefs";
 import { navigate, useRoute } from "../../application/router";
-import { recordSupportActivity, SUPPORT_EXPLORE_MS, SUPPORT_KEY, SUPPORT_SNOOZE_MS, SUPPORT_TICK_MS, supportOnSale, supportProgress, supportReminderDue } from "../../application/plusSupport";
-import { money } from "./mojoFormat";
+import { communicationBusy } from "../../application/updates";
+import { supportOnSale, syncPlusReminderPreference } from "../../application/plusSupport";
+import { zPromotionClaim, zPromotionCurrent, type Promotion } from "../../api/promotionSchemas";
+import { transfersOf } from "../../sync/transfers";
+import { PlusPromotion } from "./PlusPromotion";
 
-/** Occasional in-app support reminders. No push permission, network requests, focus changes or sound. */
+/** All impressions are reserved by the backend before presentation; an unavailable backend always suppresses them. */
 export function PlusSupportNotice({ blocked }: { blocked: boolean }) {
   const engine = useEngine();
   const mojo = useOrbit((s) => s.mojo);
@@ -16,104 +18,145 @@ export function PlusSupportNotice({ blocked }: { blocked: boolean }) {
   const paused = useOrbit((s) => (s.me?.notificationsPausedUntil ?? 0) > Date.now());
   const route = useRoute();
   const prefs = usePrefs();
-  const [visible, setVisible] = useState(false);
+  const [promotion, setPromotion] = useState<Promotion | null>(null);
   const context = useRef({ ready, blocked, calling, notices, paused, mojo, route });
+  const current = useRef<Promotion | null>(null);
+  const session = useRef(crypto.randomUUID());
+  const preferenceReady = useRef(false);
   useEffect(() => {
     context.current = { ready, blocked, calling, notices, paused, mojo, route };
   });
+  useEffect(() => {
+    current.current = promotion;
+  }, [promotion]);
+
+  useEffect(() => {
+    let alive = true;
+    preferenceReady.current = false;
+    if (ready)
+      void syncPlusReminderPreference(engine)
+        .then(() => {
+          if (alive) preferenceReady.current = true;
+        })
+        .catch(() => undefined);
+    return () => {
+      alive = false;
+    };
+  }, [engine, ready]);
 
   useEffect(() => {
     let alive = true;
     let pending = false;
-    let shown = false;
-    let visitActiveMs = 0;
-    let lastTick = Date.now();
     let lastInput = Date.now();
-    const input = () => (lastInput = Date.now());
+    let lastActivity = 0;
+    let claimed = false;
+    const input = () => {
+      lastInput = Date.now();
+    };
+    const safe = () => {
+      const c = context.current;
+      const otherDialog = [...document.querySelectorAll("[role='dialog'], [role='menu'], .lightbox")].some((el) => !el.closest(".plus-promotion-modal"));
+      return (
+        !communicationBusy() &&
+        c.ready &&
+        !c.blocked &&
+        !c.calling &&
+        !c.notices &&
+        !c.paused &&
+        !c.route.conversationId &&
+        c.route.section === "home" &&
+        document.visibilityState === "visible" &&
+        document.hasFocus() &&
+        !otherDialog &&
+        !document.activeElement?.matches("input, textarea, [contenteditable='true']") &&
+        !document.querySelector("[role='progressbar'], [data-recording='true'], [data-downloading='true'], .voice-recording") &&
+        !transfersOf(engine)
+          .list()
+          .some((t) => t.status === "running")
+      );
+    };
     const tick = async () => {
-      const now = Date.now();
-      const elapsed = now - lastTick;
-      lastTick = now;
-      const ctx = context.current;
-      if (pending || !ctx.ready || !getPrefs().plusReminders || !supportOnSale(ctx.mojo) || document.visibilityState !== "visible" || !document.hasFocus() || now - lastInput > 120_000) return;
+      if (pending || !context.current.ready || !preferenceReady.current) return;
       pending = true;
       try {
-        let progress = supportProgress(await engine.store.getValue(SUPPORT_KEY), engine.device.userId);
+        const now = Date.now();
+        if (!getPrefs().plusReminders || !supportOnSale(context.current.mojo)) {
+          if (alive) setPromotion(null);
+          return;
+        }
+        if (document.visibilityState === "visible" && document.hasFocus() && now - lastInput < 120_000 && now - lastActivity >= 15_000) {
+          lastActivity = now;
+          await engine.api.call("POST", "/v2/billing/promotions/activity", { body: { sessionId: session.current, onboardingComplete: true, active: true } });
+        }
         if (!alive) return;
-        progress = recordSupportActivity(progress, now, elapsed);
-        visitActiveMs += Math.max(0, Math.min(SUPPORT_TICK_MS, elapsed));
-        const quiet = !ctx.blocked && !ctx.calling && !ctx.notices && !ctx.paused && !ctx.route.conversationId && !["settings", "workspace", "oauth"].includes(ctx.route.section);
-        const editing = document.activeElement?.matches("input, textarea, [contenteditable='true']");
-        const popup = document.querySelector("[role='dialog'], [role='menu'], .lightbox");
-        const due = !shown && quiet && !editing && !popup && now - lastInput >= SUPPORT_TICK_MS && supportReminderDue(progress, now, visitActiveMs);
-        if (due) progress = { ...progress, lastShownAt: now };
-        // Persist the impression before showing it, so an immediate reload still respects the cooldown.
-        await engine.store.setValue(SUPPORT_KEY, progress);
-        if (alive && due) {
-          shown = true;
-          setVisible(true);
+        if (!safe()) {
+          setPromotion(null);
+          return;
+        }
+        if (current.current) {
+          const result = await engine.api.json("GET", `/v2/billing/promotions/${encodeURIComponent(current.current.id)}`, zPromotionCurrent);
+          if (alive) setPromotion((p) => (result.active && p && result.expiresAt ? { ...p, expiresAt: result.expiresAt } : null));
+        } else if (!claimed && now - lastInput >= 15_000) {
+          const result = await engine.api.json("POST", "/v2/billing/promotions/claim", zPromotionClaim, {
+            body: { sessionId: session.current, trigger: "consistent_usage", screen: "home", safe: true },
+          });
+          if (result.promotion) claimed = true;
+          if (alive && safe()) setPromotion(result.promotion);
         }
       } catch {
-        // If reminder preferences cannot be persisted, stay quiet instead of repeating the prompt.
+        if (alive) setPromotion(null);
       } finally {
         pending = false;
       }
     };
     const events = ["pointerdown", "keydown", "scroll"] as const;
-    for (const event of events) window.addEventListener(event, input, { passive: true, capture: true });
-    const timer = setInterval(() => void tick(), SUPPORT_TICK_MS);
+    for (const e of events) window.addEventListener(e, input, { passive: true, capture: true });
+    const timer = setInterval(() => void tick(), 5_000);
     return () => {
       alive = false;
       clearInterval(timer);
-      for (const event of events) window.removeEventListener(event, input, true);
+      for (const e of events) window.removeEventListener(e, input, true);
     };
   }, [engine]);
 
   useEffect(() => {
-    if (!visible) return;
-    const timer = setTimeout(() => setVisible(false), 30_000);
+    if (!promotion) return;
+    const timer = setTimeout(() => setPromotion(null), Math.max(0, promotion.expiresAt - Date.now()));
     return () => clearTimeout(timer);
-  }, [visible]);
+  }, [promotion]);
 
-  const dismiss = async (delay: number) => {
-    setVisible(false);
-    const progress = supportProgress(await engine.store.getValue(SUPPORT_KEY), engine.device.userId);
-    await engine.store.setValue(SUPPORT_KEY, { ...progress, snoozedUntil: Date.now() + delay });
+  const impressionId = promotion?.id;
+  useEffect(() => {
+    if (impressionId) void engine.api.call("POST", "/v2/billing/promotions/events", { body: { impressionId, sessionId: session.current, event: "impression" } }).catch(() => setPromotion(null));
+  }, [engine, impressionId]);
+
+  const feedback = async (event: "dismiss" | "snooze" | "click" | "pricing_visit") => {
+    const p = promotion;
+    setPromotion(null);
+    if (p) await engine.api.call("POST", "/v2/billing/promotions/events", { body: { impressionId: p.id, sessionId: session.current, event } });
   };
-  const quiet = ready && !blocked && !calling && !notices && !paused && !route.conversationId && !["settings", "workspace", "oauth"].includes(route.section);
-  if (!visible || !quiet || !prefs.plusReminders || !supportOnSale(mojo)) return null;
-  const price = mojo.catalog!.onSale.plus!;
+  const optOut = async () => {
+    setPromotion(null);
+    setPrefs({ plusReminders: false });
+    try {
+      await engine.api.call("PUT", "/v2/billing/promotions/preference", { body: { optOut: true } });
+    } catch {
+      engine.notice("error", "Reminders are hidden here. We couldn’t save your preference across devices; try again in Notifications settings.");
+    }
+  };
+  const quiet = ready && !blocked && !calling && !notices && !paused && !route.conversationId && route.section === "home";
+  if (!promotion || !quiet || !prefs.plusReminders || !supportOnSale(mojo)) return null;
   return (
-    <aside className="plus-support-notice" role="status" aria-live="polite" aria-labelledby="plus-support-title">
-      <div className="plus-support-heading">
-        <HeartHandshake size={20} aria-hidden="true" />
-        <strong id="plus-support-title">Help keep Meldiq independent</strong>
-        <button className="icon-btn" aria-label="Remind me in 30 days" onClick={() => void dismiss(SUPPORT_SNOOZE_MS).catch(() => undefined)}>
-          <X size={17} />
-        </button>
-      </div>
-      <p>We’re choosing community support over corporate investment. Mojo Plus helps pay for servers and ongoing development.</p>
-      <small>Plus is optional · {money(price.amountMinor, price.currency)}/month · Renews until canceled.</small>
-      <div className="plus-support-actions">
-        <button
-          className="btn btn-primary btn-sm"
-          onClick={() => {
-            void dismiss(SUPPORT_EXPLORE_MS).catch(() => undefined);
-            navigate({ section: "settings", settingsPage: "mojo" });
-          }}
-        >
-          Explore Plus
-        </button>
-        <button
-          className="btn btn-ghost btn-sm"
-          onClick={() => {
-            setVisible(false);
-            setPrefs({ plusReminders: false });
-          }}
-        >
-          Don’t show again
-        </button>
-      </div>
-    </aside>
+    <PlusPromotion
+      promotion={promotion}
+      catalog={mojo.catalog!}
+      onDismiss={() => void feedback("dismiss").catch(() => undefined)}
+      onSnooze={() => void feedback("snooze").catch(() => undefined)}
+      onUpgrade={() => {
+        void Promise.all([feedback("click"), feedback("pricing_visit")]).catch(() => undefined);
+        navigate({ section: "settings", settingsPage: "mojo" });
+      }}
+      onOptOut={() => void optOut()}
+    />
   );
 }

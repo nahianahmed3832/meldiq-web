@@ -46,9 +46,9 @@ interface StyledNameProps {
   name: string;
   style: ProfileStyle | null | undefined;
   tag?: WornTag | null;
-  /** API 0.54.0: their Mojo badge (GO / PLUS with Meldiq Check), after the tag. */
+  /** API 0.54.0: their Meldiq Plus badge (GO / PLUS with Meldiq Check), after the tag. */
   mojo?: MojoMark | null;
-  /** The profile card: the Mojo badge whatever badge they chose to show (the card lists the others itself). */
+  /** The profile card: the Meldiq Plus badge whatever badge they chose to show (the card lists the others itself). */
   everyBadge?: boolean;
   /** A role's colour, used when the person picked no colour of their own. */
   roleColor?: string | null;

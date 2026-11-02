@@ -5,7 +5,7 @@ import { money } from "./mojoFormat";
 import { SparkLevelCards, SparkTrack } from "./SparkTrack";
 
 /**
- * Meldiq Spark on the Mojo page (server docs/MOJO.md › Meldiq Spark): what the three levels unlock, the person's Sparks
+ * Meldiq Spark on the Meldiq Plus page (server docs/MOJO.md › Meldiq Spark): what the three levels unlock, the person's Sparks
  * and where each one is, and buying more. Giving one to a community is also on the community's menu (SparkDialog).
  */
 export function SparkSection({ onBuy, busy, offline }: { onBuy: (quantity: number) => void; busy: boolean; offline: boolean }) {
@@ -41,7 +41,7 @@ export function SparkSection({ onBuy, busy, offline }: { onBuy: (quantity: numbe
           Meldiq Spark
         </h2>
         <p>
-          Give a Spark to a server you love. Every Spark helps unlock more emoji slots, bigger uploads, and better voice and screen sharing for everyone in it. Mojo Go includes one Spark, Mojo Plus
+          Give a Spark to a server you love. Every Spark helps unlock more emoji slots, bigger uploads, and better voice and screen sharing for everyone in it. Legacy Go includes one Spark, Meldiq Plus
           two, and anyone can add more for {money(catalog.spark.listPriceMinor, "USD")} per Spark as a one-time purchase.
         </p>
         <SparkTrack levels={levels} level={null} active={null} />
@@ -121,7 +121,7 @@ export function SparkSection({ onBuy, busy, offline }: { onBuy: (quantity: numbe
           <span className="grow">
             <strong>Get more Sparks</strong>
             <small className="muted" style={{ display: "block" }}>
-              {price ? `${money(price.amountMinor, price.currency)} per Spark, paid once. No Mojo subscription or automatic renewal.` : "Sparks are purchased separately from Mojo Plus."}
+              {price ? `${money(price.amountMinor, price.currency)} per Spark, paid once. No Meldiq Plus subscription or automatic renewal.` : "Sparks are purchased separately from Meldiq Plus."}
               {sparks.subscription ? ` Existing subscription: ${sparks.subscription.quantity} Sparks. Manage it in Billing.` : ""}
             </small>
           </span>

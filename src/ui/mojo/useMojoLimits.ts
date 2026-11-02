@@ -4,7 +4,7 @@ import { useEngine, useOrbit } from "../../application/orbit";
 
 /**
  * The plan limits that apply to this person now (server docs/MOJO.md), or null when the server doesn't enforce them
- * (Mojo not on sale yet, an older server) or they aren't known yet: then the app keeps its old limits. The server
+ * (Meldiq Plus not on sale yet, an older server) or they aren't known yet: then the app keeps its old limits. The server
  * checks every limit again; this only lets the app say so before trying.
  */
 export function useMojoLimits(): PlanPerks | null {

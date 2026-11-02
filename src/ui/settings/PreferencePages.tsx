@@ -1,10 +1,11 @@
+import { syncPlusReminderPreference } from "../../application/plusSupport";
 import { NotificationOverview } from "./NotificationOverview";
 import { AccessibilityCard, VibesCard } from "./AppearanceExtras";
 import { fileLimit, MAX_FILES_PER_MESSAGE } from "../../sync/attachments";
 import { APP_VERSION } from "../../application/env";
 import { serverHost } from "../../application/config";
-import { useState } from "react";
-import { useOrbit } from "../../application/orbit";
+import { useEffect, useState } from "react";
+import { useEngine, useOrbit } from "../../application/orbit";
 import {
   LIST_PREVIEWS,
   MESSAGE_LAYOUTS,
@@ -33,6 +34,19 @@ const PALETTE_KEY = { meldiq: "ap_meldiq", midnight: "ap_midnight", charcoal: "a
 const SIZE_KEY = { small: "ap_small", default: "ap_default", large: "ap_large" } as const satisfies Record<TextSize, StringKey>;
 
 export function NotificationsPage() {
+  const engine = useEngine();
+  const [reminderLoading, setReminderLoading] = useState(true);
+  useEffect(() => {
+    let alive = true;
+    void syncPlusReminderPreference(engine)
+      .catch(() => undefined)
+      .finally(() => {
+        if (alive) setReminderLoading(false);
+      });
+    return () => {
+      alive = false;
+    };
+  }, [engine]);
   const prefs = usePrefs();
   const t = useT();
   const supported = typeof Notification !== "undefined";
@@ -55,7 +69,17 @@ export function NotificationsPage() {
             <strong>Support Meldiq reminders</strong>
             <small>Occasional in-app reminders about optional Plus subscriptions that fund independent development. No sound or desktop notifications.</small>
           </div>
-          <Toggle label="Support Meldiq reminders" checked={prefs.plusReminders} onChange={(plusReminders) => setPrefs({ plusReminders })} />
+          <Toggle
+            label="Support Meldiq reminders"
+            disabled={reminderLoading}
+            checked={prefs.plusReminders}
+            onChange={(plusReminders) => {
+              setPrefs({ plusReminders });
+              void engine.api
+                .call("PUT", "/v2/billing/promotions/preference", { body: { optOut: !plusReminders } })
+                .catch(() => engine.notice("error", "Your reminder preference could not be saved across devices. Please try again."));
+            }}
+          />
         </div>
       </div>
       <div className="card">

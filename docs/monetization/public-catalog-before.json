@@ -1,0 +1,34 @@
+{
+  "observedAt": "2026-11-02T10:32:06.577Z",
+  "http": 200,
+  "version": "2026-11-01.2",
+  "plans": [
+    {
+      "key": "free",
+      "name": "Free",
+      "listPriceMinor": 0
+    },
+    {
+      "key": "plus",
+      "name": "Mojo Plus",
+      "listPriceMinor": 399
+    }
+  ],
+  "onSale": {
+    "mode": "live",
+    "go": null,
+    "plus": {
+      "currency": "USD",
+      "amountMinor": 399
+    },
+    "spark": {
+      "currency": "USD",
+      "amountMinor": 99
+    },
+    "botsPlus": {
+      "currency": "USD",
+      "amountMinor": 399
+    },
+    "gifts": true
+  }
+}

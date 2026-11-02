@@ -88,7 +88,7 @@ export interface CallUiState {
   deafened: boolean;
   /** The quality this browser shares its screen at (2026-10-24: Standard 720p30 or High 1080p60), and whether with sound. */
   shareQuality: ShareQuality | null;
-  /** The qualities this person may share at in this call (Meldiq Mojo: their plan and the community's Sparks), lowest first. */
+  /** The qualities this person may share at in this call (Meldiq Plus: their plan and the community's Sparks), lowest first. */
   shareQualities: ShareQuality[];
   shareAudio: boolean;
   /** What this browser's share actually captures and sends (null when not sharing). */
@@ -154,7 +154,7 @@ export interface MediaGrant {
   url: string;
   token: string;
   room: string;
-  /** Meldiq Mojo (API 0.54.0): what this person may publish here; absent from older servers. */
+  /** Meldiq Plus (API 0.54.0): what this person may publish here; absent from older servers. */
   limits?: { screen: { id: string; width: number; height: number; fps: number }[]; voiceKbps: number } | null;
 }
 

@@ -31,6 +31,8 @@ const listeners = new Set<() => void>();
 let holds = 0;
 
 /** Keeps the tab from reloading by itself until the returned release is called (calls and uploads). */
+export const communicationBusy = (): boolean => holds > 0;
+
 export function holdUpdates(): () => void {
   holds++;
   let released = false;
@@ -125,7 +127,6 @@ export function watchForUpdates(): () => void {
     }
   };
   const timer = setInterval(() => void check(), CHECK_EVERY_MS);
-  void check();
   const onVisible = () => (document.visibilityState === "visible" ? void check() : maybeApply());
   const onRejection = (e: PromiseRejectionEvent) => isStaleChunkError(e.reason) && reloadForStaleChunk();
   document.addEventListener("visibilitychange", onVisible);

@@ -1822,6 +1822,42 @@
       "path": "/v1/federation/resolve"
     },
     {
+      "method": "POST",
+      "path": "/v2/billing/reminders/renewal"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/billing/promotions/activity"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/billing/promotions/claim"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/billing/promotions/{id}"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/billing/promotions/events"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/billing/promotions/preference"
+    },
+    {
+      "method": "PUT",
+      "path": "/v2/billing/promotions/preference"
+    },
+    {
+      "method": "GET",
+      "path": "/admin/v1/billing/promotions"
+    },
+    {
+      "method": "PUT",
+      "path": "/admin/v1/billing/promotions"
+    },
+    {
       "method": "GET",
       "path": "/v2/billing/paypal/config"
     },

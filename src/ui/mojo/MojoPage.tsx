@@ -21,7 +21,7 @@ function returnedFrom(): "checkout" | "gift" | "canceled" | null {
 }
 
 /**
- * Settings › Meldiq Mojo (server docs/MOJO.md): the plans, what each gives, Sparks, gifts and the badge. Every number
+ * Settings › Meldiq Plus (server docs/MOJO.md): the plans, what each gives, Sparks, gifts and the badge. Every number
  * comes from the server's catalog, and every button asks the server, which asks the payment provider: nothing here
  * grants anything.
  */
@@ -64,7 +64,7 @@ export function MojoPage() {
   if (!catalog || !me) {
     return (
       <>
-        <h1>Meldiq Mojo</h1>
+        <h1>Meldiq Plus</h1>
         {mojo.error ? (
           <div className="banner danger" role="alert">
             <span className="grow">{mojo.error}</span>
@@ -74,7 +74,7 @@ export function MojoPage() {
           </div>
         ) : (
           <div className="mojo-loading" role="status">
-            <Loader2 size={18} className="spin" aria-hidden="true" /> Loading Meldiq Mojo…
+            <Loader2 size={18} className="spin" aria-hidden="true" /> Loading Meldiq Plus…
           </div>
         )}
       </>
@@ -123,7 +123,7 @@ export function MojoPage() {
 
   return (
     <div className="mojo">
-      <h1>Meldiq Mojo</h1>
+      <h1>Meldiq Plus</h1>
       {billing?.provider === "paypal" && (
         <button className="btn btn-secondary btn-sm" onClick={() => navigate({ section: "settings", settingsPage: "billing" })}>
           Billing & purchases
@@ -131,8 +131,8 @@ export function MojoPage() {
       )}
       {confirming && (
         <div className="banner info" role="status">
-          <Loader2 size={16} className="spin" aria-hidden="true" /> {confirming === "gift" ? "Confirming your gift with the payment provider…" : "Confirming your payment…"} Mojo applies the moment the
-          payment provider confirms it.
+          <Loader2 size={16} className="spin" aria-hidden="true" /> {confirming === "gift" ? "Confirming your gift with the payment provider…" : "Confirming your payment…"} Meldiq Plus applies the
+          moment the payment provider confirms it.
         </div>
       )}
       {error && (
@@ -142,7 +142,7 @@ export function MojoPage() {
       )}
       {!catalog.onSale.go && !catalog.onSale.plus && (
         <div className="banner info" role="note">
-          Mojo isn't on sale yet. Everything below is what each plan will include; nothing can be bought or charged until it is.
+          Meldiq Plus isn't on sale yet. Everything below is what each plan will include; nothing can be bought or charged until it is.
         </div>
       )}
       {catalog.onSale.mode === "test" && (
@@ -153,18 +153,18 @@ export function MojoPage() {
 
       {me.plan === "plus" && paid && (
         <div className="banner info" role="note">
-          Your current Plus benefits continue until renewal. The new price and benefits apply at your next renewal. The 1,024 MB file limit applies now.
+          Your existing billing agreement keeps its current price. The price shown below applies to new purchases. Manage your subscription in Billing.
         </div>
       )}
       <section className="mojo-hero" aria-labelledby="mojo-hero-title">
         <div className="mojo-hero-text">
           <span className="mojo-eyebrow">
-            <Sparkles size={15} aria-hidden="true" /> Meldiq Mojo
+            <Sparkles size={15} aria-hidden="true" /> Meldiq Plus
           </span>
           <h2 id="mojo-hero-title">
-            Free to talk. <span className="mojo-glow">Mojo to go further.</span>
+            Free to talk. <span className="mojo-glow">Meldiq Plus to go further.</span>
           </h2>
-          <p>Talking, calling, sharing and communities are free and stay free. Mojo adds bigger files, sharper screen shares, Sparks for the servers you love, and a badge.</p>
+          <p>Talking, calling, sharing and communities are free and stay free. Meldiq Plus adds bigger files, sharper screen shares, Sparks for the servers you love, and a badge.</p>
         </div>
         <div className="mojo-hero-plan" aria-label="Your plan">
           <span className="faint">You're on</span>
@@ -193,21 +193,22 @@ export function MojoPage() {
           <Gift size={18} />
         </span>
         <span className="lines grow">
-          <strong>Gift Mojo to a friend</strong>
-          <small>{catalog.onSale.gifts ? "One payment for 1, 3 or 12 months, straight to their account, with a note from you." : "Gifts open when Mojo goes on sale."}</small>
+          <strong>Gift Meldiq Plus to a friend</strong>
+          <small>{catalog.onSale.gifts ? "One payment for 1, 3 or 12 months, straight to their account, with a note from you." : "Gifts open when Meldiq Plus goes on sale."}</small>
         </span>
       </button>
       <GiftsReceived me={me} />
 
       <h2 className="mojo-h2">Choose your plan</h2>
+      <p className="muted">Meldiq Free and Meldiq Plus. Choose monthly, 3-month or yearly Plus billing at checkout.</p>
       <PlanCards catalog={catalog} me={me} actionFor={actionFor} />
       <p className="mojo-terms muted">
-        Mojo renews every month at the price shown until you cancel. Cancel any time from Manage subscription: you keep Mojo until the end of the month you paid for, and nothing you made is deleted.
-        Prices are in US dollars; your bank may add conversion fees.
+        Meldiq Plus renews at the price and interval chosen at checkout until you cancel. Cancel any time from Manage subscription: you keep Meldiq Plus until the end of the month you paid for, and
+        nothing you made is deleted. Prices are in US dollars; your bank may add conversion fees.
       </p>
 
-      <MojoBanner icon={<Crown size={26} />} title="Mojo Plus" line="The biggest files, the sharpest streams, two Sparks and the Plus badge." />
-      <h2 className="mojo-h2">What Mojo Plus adds</h2>
+      <MojoBanner icon={<Crown size={26} />} title="Meldiq Plus" line="The biggest files, the sharpest streams, two Sparks and the Plus badge." />
+      <h2 className="mojo-h2">What Meldiq Plus adds</h2>
       <PlusPerks catalog={catalog} />
 
       <h2 className="mojo-h2">Compare plans</h2>
@@ -218,8 +219,8 @@ export function MojoPage() {
           <Gem size={20} aria-hidden="true" /> Meldiq Spark
         </h2>
         <p>
-          Boost the servers you love: every Spark helps a community unlock more emoji slots, bigger uploads, and better voice and screen sharing for everyone there. Mojo Plus includes two Sparks. You
-          can buy additional Sparks separately.
+          Boost the servers you love: every Spark helps a community unlock more emoji slots, bigger uploads, and better voice and screen sharing for everyone there. Meldiq Plus includes two Sparks.
+          You can buy additional Sparks separately.
         </p>
         <div>
           <button className="btn btn-mojo" onClick={() => navigate({ section: "settings", settingsPage: "spark" })}>
@@ -251,9 +252,8 @@ export function MojoPage() {
         <div className="lines">
           <h2 id="mojo-why">Why subscriptions?</h2>
           <p>
-            Meldiq has no external investors. We pay for the infrastructure and tools that keep the service running, including servers, storage, voice and video bandwidth, and moderation and
-            development tooling. Subscriptions help cover these real operating costs. Anything left after operating costs helps us keep improving Meldiq and is our thank-you for supporting it.
-            Talking, calling and communities stay useful on the Free plan.
+            We believe in a free and open internet. Supporting Meldiq through Plus helps cover servers, storage, bandwidth and continued development. Free remains meaningful, and profile customization
+            stays free.
           </p>
         </div>
       </section>
@@ -284,7 +284,7 @@ export function MojoPage() {
         />
       )}
       <p className="muted mojo-footnote">
-        Mojo Plus: {money(plus?.listPriceMinor ?? 0, "USD")} per month. Sparks: {money(catalog.spark.listPriceMinor, "USD")} each, paid once.
+        Meldiq Plus: {money(plus?.listPriceMinor ?? 0, "USD")} per month. Sparks: {money(catalog.spark.listPriceMinor, "USD")} each, paid once.
       </p>
     </div>
   );

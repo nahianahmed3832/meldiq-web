@@ -30,7 +30,7 @@ const catalog = zMojoCatalog.parse({
     },
     {
       key: "go",
-      name: "Mojo Go",
+      name: "Legacy Go",
       listPriceMinor: 99,
       messageChars: 2000,
       uploadBytes: 200_000_000,
@@ -44,8 +44,8 @@ const catalog = zMojoCatalog.parse({
     },
     {
       key: "plus",
-      name: "Mojo Plus",
-      listPriceMinor: 399,
+      name: "Meldiq Plus",
+      listPriceMinor: 499,
       messageChars: 5000,
       uploadBytes: 2_000_000_000,
       screen: ["1080p60", "1440p30"],
@@ -66,7 +66,7 @@ const catalog = zMojoCatalog.parse({
   somethingNew: 1,
 });
 
-describe("Meldiq Mojo on the web", () => {
+describe("Meldiq Plus on the web", () => {
   it("counts characters as people do: an emoji with its skin tone, a flag, a family is one", () => {
     expect(countChars("hello")).toBe(5);
     expect(countChars("👍🏽")).toBe(1);
@@ -85,9 +85,9 @@ describe("Meldiq Mojo on the web", () => {
     expect(size(2_000_000_000)).toBe("2 GB");
     expect(size(1_024_000_000)).toBe("1,024 MB");
     expect(money(399, "USD")).toMatch(/3\.99/);
-    expect(planPrice(catalog, "go")).toEqual({ label: expect.stringMatching(/0\.99/), onSale: true });
+    expect(planPrice(catalog, "go")).toEqual({ label: "Discontinued", onSale: false });
     // Plus isn't on sale on this server: its list price, marked so.
-    expect(planPrice(catalog, "plus")).toEqual({ label: expect.stringMatching(/3\.99/), onSale: false });
+    expect(planPrice(catalog, "plus")).toEqual({ label: expect.stringMatching(/4\.99/), onSale: false });
   });
 
   it("offers only the screen-share qualities the server allows, and steps a choice down to them", () => {
@@ -106,7 +106,7 @@ describe("Meldiq Mojo on the web", () => {
     expect(SHARE_QUALITIES.max).toMatchObject({ width: 2560, height: 1440, frameRate: 30 });
   });
 
-  it("reads a person's Mojo", () => {
+  it("reads a person's Meldiq Plus", () => {
     const me = zMojoMe.parse({
       plan: "go",
       perks: catalog.plans[1],

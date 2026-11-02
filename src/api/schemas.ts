@@ -49,7 +49,7 @@ export const zMember = z.object({
   avatarMedia: zAvatarMedia,
   profileStyle: zProfileStyle,
   tag: zWornTag,
-  /** API 0.54.0: the Mojo badge they show (server docs/MOJO.md). */
+  /** API 0.54.0: the Meldiq Plus badge they show (server docs/MOJO.md). */
   mojo: zMojoMark.optional(),
   /** API 0.65.0 batch B: a bot's account (absent for people), shown with a BOT tag by its name. */
   bot: z
@@ -582,7 +582,7 @@ export const zCallGrant = z.object({
     url: z.string().max(2048),
     token: z.string().max(8192),
     room: z.string().max(128),
-    /** API 0.54.0 (Meldiq Mojo): screen-share ceilings and the voice bitrate ceiling for this person here. */
+    /** API 0.54.0 (Meldiq Plus): screen-share ceilings and the voice bitrate ceiling for this person here. */
     limits: z.object({ screen: z.array(z.object({ id: z.string(), width: z.number(), height: z.number(), fps: z.number() })).max(10), voiceKbps: z.number().int().min(8).max(510) }).nullish(),
   }),
   joinedExisting: z.boolean().optional(),
