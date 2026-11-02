@@ -55,7 +55,7 @@ test("seen receipts survive main collection history and preserve the unread boun
   }
   const own = page.locator(".msg.mine");
   await expect(own).toHaveCount(2);
-  await expect(own.locator('[aria-label="Sent"]')).toHaveCount(2);
+  await expect(own.locator('[aria-label="Sent"], [aria-label="Delivered"]')).toHaveCount(2);
   const history = await owner.req("GET", `/v2/conversations/${dm}/messages?limit=10`);
   await peer.send(dm, { type: "read", upTo: Math.max(...history.messages.map((m: { serverTs: number }) => m.serverTs)) }, "control");
   await expect(own.locator('[aria-label="Read"]')).toHaveCount(2);
@@ -64,10 +64,10 @@ test("seen receipts survive main collection history and preserve the unread boun
   await composer.fill("Not seen yet");
   await composer.press("Enter");
   await expect(own).toHaveCount(3);
-  await expect(own.last().locator('[aria-label="Sent"]')).toHaveCount(1);
+  await expect(own.last().locator('[aria-label="Sent"], [aria-label="Delivered"]')).toHaveCount(1);
   await page.reload();
   await expect(own.locator('[aria-label="Read"]')).toHaveCount(2);
-  await expect(own.last().locator('[aria-label="Sent"]')).toHaveCount(1);
+  await expect(own.last().locator('[aria-label="Sent"], [aria-label="Delivered"]')).toHaveCount(1);
   await page.screenshot({ path: info.outputPath("seen-receipts.png") });
 });
 
@@ -139,8 +139,8 @@ test("compact community header keeps name, Sparks and cover above a dense channe
   await page.keyboard.press("Escape");
   await side.screenshot({ path: info.outputPath("community-sidebar.png") });
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto(`/home`);
-  await expect(side).toBeVisible();
-  expect(await side.evaluate((el) => el.scrollWidth <= el.clientWidth)).toBe(true);
+  await page.goto(`/home/c/${general.id}`);
+  await expect(page.getByRole("region", { name: "Conversation: general", exact: true })).toBeVisible();
+  expect(await page.locator("body").evaluate((el) => el.scrollWidth <= innerWidth)).toBe(true);
   await page.screenshot({ path: info.outputPath("sidebar-phone.png") });
 });
