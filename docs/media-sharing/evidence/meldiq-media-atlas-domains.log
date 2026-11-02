@@ -1,0 +1,15 @@
+
+ RUN  v4.1.12 /Volumes/code_files/meldiq_media_module/server
+
+(node:42755) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:42755) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:42774) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:42774) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+
+ Test Files  2 passed (2)
+      Tests  16 passed (16)
+   Start at  19:06:27
+   Duration  30.98s (transform 2.16s, setup 0ms, import 4.55s, tests 24.78s, environment 0ms)
+

@@ -1,4 +1,4 @@
-import { ChevronLeft, ChevronRight, Download, ExternalLink, Film, ImageDown, Maximize, MoreHorizontal, Pause, Play, Volume2, VolumeX, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, Download, ExternalLink, Film, ImageDown, Maximize, MoreHorizontal, Pause, Play, Volume2, VolumeX, X, Share2 } from "lucide-react";
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { useEngine } from "../../application/orbit";
@@ -7,6 +7,7 @@ import { isInlineImage, safeMime, saveAttachment } from "../../sync/attachments"
 import { dayLabel, clock as timeOfDay } from "../format";
 import { Menu, useFocusTrap, useMenu } from "../components/Overlay";
 import { useBlobUrl } from "./blobUrl";
+import { attachmentName } from "../../sync/attachmentPolicy";
 import { copyImage } from "./contextTarget";
 import { ZoomableImage } from "./ZoomableImage";
 import { usePrefs } from "../../application/prefs";
@@ -88,6 +89,24 @@ export function MediaViewer({ items, at, onMove, onClose }: { items: AttachmentR
                 onSelect: () => void copyImage(url).then((ok) => engine.notice("info", ok ? "Image copied." : "This browser can't copy images. Download it instead.")),
               },
             ]),
+        ...(typeof navigator.share === "function"
+          ? [
+              {
+                label: "Share original…",
+                icon: <Share2 size={16} />,
+                onSelect: () => {
+                  void (async () => {
+                    const blob = await (await fetch(url)).blob();
+                    const file = new File([blob], attachmentName(r.name), { type: blob.type });
+                    if (!navigator.canShare?.({ files: [file] })) throw new Error("This browser cannot share this file. Download the original instead.");
+                    await navigator.share({ files: [file], title: attachmentName(r.name) });
+                  })().catch((e: unknown) => {
+                    if (!(e instanceof DOMException && e.name === "AbortError")) engine.notice("error", e instanceof Error ? e.message : "Couldn't share this file.");
+                  });
+                },
+              },
+            ]
+          : []),
         { label: "Open in a new tab", icon: <ExternalLink size={16} />, onSelect: () => void window.open(url, "_blank", "noopener") },
       ]
     : [];
@@ -191,7 +210,7 @@ export function MediaViewer({ items, at, onMove, onClose }: { items: AttachmentR
 function StripThumb({ r, current, onPick }: { r: AttachmentRef; current: boolean; onPick: () => void }) {
   const image = isInlineImage(r);
   const { autoLoadPhotos } = usePrefs();
-  const { url } = useBlobUrl(r, image && (current || autoLoadPhotos));
+  const { url } = useBlobUrl(r.thumbnail ?? r, (current || autoLoadPhotos) && (!!r.thumbnail || (image && r.size <= 10 * 1024 * 1024)));
   return (
     <button className="viewer-thumb" aria-current={current} onClick={onPick} aria-label={`${image ? "Photo" : "Video"}: ${r.name}`}>
       {image && url ? <img src={url} alt="" /> : <Film size={18} aria-hidden="true" />}
@@ -228,6 +247,7 @@ export function VideoPlayer({ url, name }: { url: string; name: string }) {
   const [length, setLength] = useState(0);
   const [muted, setMuted] = useState(false);
   const [volume, setVolume] = useState(1);
+  const [playbackError, setPlaybackError] = useState(false);
   const toggle = useCallback(() => {
     const el = v.current;
     if (!el) return;
@@ -252,6 +272,7 @@ export function VideoPlayer({ url, name }: { url: string; name: string }) {
         autoPlay
         playsInline
         aria-label={name}
+        onError={() => setPlaybackError(true)}
         onClick={toggle}
         onPlay={() => setPlaying(true)}
         onPause={() => setPlaying(false)}
@@ -262,6 +283,11 @@ export function VideoPlayer({ url, name }: { url: string; name: string }) {
           setVolume(e.currentTarget.volume);
         }}
       />
+      {playbackError && (
+        <p className="viewer-error" role="alert">
+          This browser cannot play this video's codec. Download the original to play it in another app.
+        </p>
+      )}
       <div className="video-controls">
         <button className="icon-btn" onClick={toggle} aria-label={playing ? "Pause" : "Play"}>
           {playing ? <Pause size={18} /> : <Play size={18} />}
@@ -302,7 +328,12 @@ export function VideoPlayer({ url, name }: { url: string; name: string }) {
         />
         <button
           className="icon-btn"
-          onClick={() => (document.fullscreenElement ? void document.exitFullscreen() : void box.current?.requestFullscreen?.().catch(() => undefined))}
+          onClick={() => {
+            if (document.fullscreenElement) void document.exitFullscreen();
+            else if (box.current?.requestFullscreen)
+              void box.current.requestFullscreen().catch(() => (v.current as HTMLVideoElement & { webkitEnterFullscreen?: () => void })?.webkitEnterFullscreen?.());
+            else (v.current as HTMLVideoElement & { webkitEnterFullscreen?: () => void })?.webkitEnterFullscreen?.();
+          }}
           aria-label="Full screen"
         >
           <Maximize size={17} />

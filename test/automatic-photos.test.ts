@@ -51,13 +51,12 @@ describe("automatic photo upload and export", () => {
     expect(await photoDownload(file, file.name)).toEqual({ blob: file, name: file.name });
     expect(createImageBitmap).not.toHaveBeenCalled();
   });
-  it.each([
-    [255, "image/jpeg", "photo.jpg"],
-    [0, "image/png", "photo.png"],
-  ])("exports alpha %i as %s", async (alpha, type, name) => {
-    const { close } = canvas(Number(alpha));
-    const downloaded = await photoDownload(new Blob(["webp"], { type: "image/webp" }), "photo.webp");
-    expect([downloaded.blob.type, downloaded.name]).toEqual([type, name]);
-    expect(close).toHaveBeenCalledOnce();
+  it("downloads every original without conversion or a filename change", async () => {
+    canvas();
+    for (const type of ["image/webp", "image/png", "image/jpeg", "image/avif"]) {
+      const blob = new Blob(["original bytes"], { type });
+      expect(await photoDownload(blob, "original.webp")).toEqual({ blob, name: "original.webp" });
+    }
+    expect(createImageBitmap).not.toHaveBeenCalled();
   });
 });

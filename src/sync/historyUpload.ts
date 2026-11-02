@@ -179,7 +179,7 @@ export class HistoryUploader {
       if (keeps && m.attachments.length && m.sortTs > Date.now() - KEEP_WINDOW_MS)
         keepFiles.set(
           id,
-          m.attachments.map((a) => a.id),
+          m.attachments.flatMap((a) => (a.thumbnail ? [a.id, a.thumbnail.id] : [a.id])),
         );
     }
     if (items.length) {

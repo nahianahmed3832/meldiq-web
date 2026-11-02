@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.meldiq.android.data.api.ResumableDownloadTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-11-02T12:09:52.814Z" hostname="MDNAHIANs-MacBook-Pro.local" time="0.814">
+  <properties/>
+  <testcase name="resumesWithARangeRequestAndAppends" classname="com.meldiq.android.data.api.ResumableDownloadTest" time="0.692"/>
+  <testcase name="anExpiredFileIsReportedAsNotFound" classname="com.meldiq.android.data.api.ResumableDownloadTest" time="0.035"/>
+  <testcase name="boundedExactLimitSucceeds" classname="com.meldiq.android.data.api.ResumableDownloadTest" time="0.013"/>
+  <testcase name="aServerIgnoringTheRangeRestartsTheFile" classname="com.meldiq.android.data.api.ResumableDownloadTest" time="0.013"/>
+  <testcase name="rejectsUnknownLengthStreamAndDeletesPartial" classname="com.meldiq.android.data.api.ResumableDownloadTest" time="0.009"/>
+  <testcase name="boundedResumeCountsPreviouslyDownloadedBytes" classname="com.meldiq.android.data.api.ResumableDownloadTest" time="0.01"/>
+  <testcase name="aFreshDownloadSendsNoRange" classname="com.meldiq.android.data.api.ResumableDownloadTest" time="0.016"/>
+  <testcase name="rejectsDeclaredOversizeBeforeWriting" classname="com.meldiq.android.data.api.ResumableDownloadTest" time="0.011"/>
+  <testcase name="refusesMismatchedRangeBeforeAppending" classname="com.meldiq.android.data.api.ResumableDownloadTest" time="0.014"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

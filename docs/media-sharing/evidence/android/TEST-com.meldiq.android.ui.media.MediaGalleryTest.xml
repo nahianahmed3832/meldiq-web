@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.meldiq.android.ui.media.MediaGalleryTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-11-02T12:09:59.740Z" hostname="MDNAHIANs-MacBook-Pro.local" time="0.061">
+  <properties/>
+  <testcase name="photosAndVideosOpenTheViewerEverythingElseStaysAFile" classname="com.meldiq.android.ui.media.MediaGalleryTest" time="0.022"/>
+  <testcase name="collectionPageCanFilterPhotosVideosAndFilenamesWithoutChangingOriginalRefs" classname="com.meldiq.android.ui.media.MediaGalleryTest" time="0.0"/>
+  <testcase name="theViewerPagesOldestFirstAndSkipsDeletedAndUndecryptableMessages" classname="com.meldiq.android.ui.media.MediaGalleryTest" time="0.038"/>
+  <testcase name="only photos up to 10 MB download by themselves once on screen" classname="com.meldiq.android.ui.media.MediaGalleryTest" time="0.0"/>
+  <testcase name="savedFilesGetSafeNamesWithTheRightExtension" classname="com.meldiq.android.ui.media.MediaGalleryTest" time="0.001"/>
+  <testcase name="galleryFoldersPermissionsAndSampling" classname="com.meldiq.android.ui.media.MediaGalleryTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

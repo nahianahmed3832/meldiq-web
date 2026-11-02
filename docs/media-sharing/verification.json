@@ -1,0 +1,150 @@
+{
+  "recordedAt": "2026-11-02T12:16:42.707651+00:00",
+  "productionDeployed": false,
+  "testCountsOverlap": true,
+  "checks": [
+    {
+      "name": "backend",
+      "cwd": "/Volumes/code_files/meldiq_media_module/server",
+      "command": "node node_modules/vitest/vitest.mjs run test/media_publication.test.ts test/direct_uploads.test.ts test/storage_s3.test.ts test/calls_attachments.test.ts test/server_messages.test.ts test/history_keep.test.ts test/files_mongo.test.ts test/files_1g.test.ts test/schema.test.ts --maxWorkers=1 --hookTimeout=90000 --testTimeout=60000 test/mojo.test.ts",
+      "passed": 100,
+      "failed": 1,
+      "log": "/Volumes/code_files/meldiq_web/docs/media-sharing/evidence/meldiq-media-backend-limits-verified.log",
+      "mediaSuitesPassed": 79,
+      "billingMojoPassed": 21,
+      "failures": [
+        "Unchanged billing gift test: foreign redemption returns HTTP 409; expected 404"
+      ]
+    },
+    {
+      "name": "all sixteen Atlas domains",
+      "cwd": "/Volumes/code_files/meldiq_media_module/server",
+      "command": "MELDIQ_TEST_MONGO_DOMAINS=accounts,preferences,history,reports,relationships,relay,files,calls,workspace,conversations,billing,safety,platform,federation,ephemeral,identity node node_modules/vitest/vitest.mjs run test/media_publication.test.ts test/direct_uploads.test.ts --maxWorkers=1 --hookTimeout=90000 --testTimeout=60000",
+      "passed": 16,
+      "failed": 0,
+      "log": "/Volumes/code_files/meldiq_web/docs/media-sharing/evidence/meldiq-media-atlas-ceiling-final.log"
+    },
+    {
+      "name": "focused Web including local encrypted round trip",
+      "cwd": "/Volumes/code_files/meldiq_web",
+      "command": "ORBIT_SERVER_DIR=/Volumes/code_files/meldiq_media_module/server node node_modules/vitest/vitest.mjs run test/live-large.test.ts test/upload-reliability.test.ts test/download-reliability.test.ts test/attachment-policy.test.ts test/transfers.test.ts test/automatic-photos.test.ts test/photo-quality.test.ts test/large-files.test.ts test/gallery.test.ts --maxWorkers=1",
+      "passed": 39,
+      "failed": 0,
+      "log": "/Volumes/code_files/meldiq_web/docs/media-sharing/evidence/meldiq-media-focused-last.log"
+    },
+    {
+      "name": "Web delivery regressions",
+      "cwd": "/Volumes/code_files/meldiq_web",
+      "command": "node node_modules/vitest/vitest.mjs run test/download-reliability.test.ts test/upload-reliability.test.ts test/transfers.test.ts --maxWorkers=1",
+      "passed": 15,
+      "failed": 0,
+      "log": "/Volumes/code_files/meldiq_web/docs/media-sharing/evidence/meldiq-media-delivery.log"
+    },
+    {
+      "name": "broad Web unit suite",
+      "cwd": "/Volumes/code_files/meldiq_web",
+      "command": "node node_modules/vitest/vitest.mjs run --exclude 'test/live*.test.ts' --maxWorkers=2",
+      "passed": 905,
+      "failed": 2,
+      "skipped": 1,
+      "log": "/Volumes/code_files/meldiq_web/docs/media-sharing/evidence/meldiq-media-all-web-tests-final.log",
+      "failures": [
+        "test/contract-fixtures.test.ts: Mojo catalog fixture mismatch between checkouts",
+        "test/contract-fixtures.test.ts: existing billing promotion APIs missing from contract table"
+      ]
+    },
+    {
+      "name": "browser engines and phone viewports",
+      "cwd": "/Volumes/code_files/meldiq_web",
+      "command": "ORBIT_SERVER_DIR=/Volumes/code_files/meldiq_media_module/server ORBIT_E2E_API_PORT=8391 ORBIT_E2E_WEB_PORT=8381 ORBIT_E2E_NEXT_PORT=8382 ORBIT_E2E_LIVEKIT_PORT=8495 node node_modules/@playwright/test/cli.js test e2e/media-sharing.spec.ts --project=chromium --project=webkit --project=phone-width --project=iphone-width --workers=1",
+      "passed": 8,
+      "failed": 0,
+      "log": "/Volumes/code_files/meldiq_web/docs/media-sharing/evidence/meldiq-media-browser-release.log"
+    },
+    {
+      "name": "Web production build, typecheck, export and service worker",
+      "cwd": "/Volumes/code_files/meldiq_web",
+      "command": "npm run build",
+      "exitCode": 0,
+      "log": "/Volumes/code_files/meldiq_web/docs/media-sharing/evidence/meldiq-media-web-build-certified.log"
+    },
+    {
+      "name": "backend typecheck",
+      "cwd": "/Volumes/code_files/meldiq_media_module/server",
+      "command": "node node_modules/typescript/bin/tsc -p tsconfig.json --noEmit --incremental --tsBuildInfoFile /tmp/meldiq-media-backend.tsbuildinfo",
+      "exitCode": 0,
+      "log": "/Volumes/code_files/meldiq_web/docs/media-sharing/evidence/meldiq-media-backend-typecheck-final-complete.log"
+    },
+    {
+      "name": "focused Web lint",
+      "cwd": "/Volumes/code_files/meldiq_web",
+      "exitCode": 0,
+      "log": "/Volumes/code_files/meldiq_web/docs/media-sharing/evidence/meldiq-media-lint-final.log"
+    },
+    {
+      "name": "Web exact 1 GB ceiling and transfer regressions",
+      "command": "node node_modules/vitest/vitest.mjs run test/large-files.test.ts test/transfers.test.ts test/download-reliability.test.ts test/upload-reliability.test.ts --maxWorkers=1",
+      "passed": 20,
+      "failed": 0,
+      "log": "/Volumes/code_files/meldiq_web/docs/media-sharing/evidence/meldiq-media-web-ceiling-final.log"
+    },
+    {
+      "name": "Android JVM and APKs",
+      "cwd": "/Volumes/code_files/meldiq_android/android",
+      "command": "JAVA_HOME='/Applications/Android Studio.app/Contents/jbr/Contents/Home' ./gradlew :app:testDebugUnitTest --tests '*AttachmentPolicyTest' --tests '*AttachmentUploaderTest' --tests '*AttachmentFilesTest' --tests '*MediaGalleryTest' --tests '*AttachmentCryptoTest' --tests '*ChunkedAttachmentCryptoTest' --tests '*AttachmentFileCryptoTest' --tests '*AttachmentThumbnailTest' --tests '*ResumableDownloadTest' --tests '*MessageCollectionsTest' :app:assembleDebug :app:assembleDebugAndroidTest --max-workers=2 --console=plain",
+      "passed": 56,
+      "failed": 0,
+      "skipped": 0,
+      "exitCode": 0,
+      "log": "/Volumes/code_files/meldiq_web/docs/media-sharing/evidence/meldiq-media-android-certified.log"
+    },
+    {
+      "name": "Native platform decoder and viewer",
+      "command": "adb -s emulator-5582 shell am instrument -w -r -e class com.meldiq.android.MediaDecodeTest,com.meldiq.android.MediaViewerTest com.meldiq.android.androidtest/androidx.test.runner.AndroidJUnitRunner",
+      "passed": 3,
+      "failed": 0,
+      "environment": "Fresh isolated Android API-36.1 AVD; networking disabled; no user account; synthetic GIF/WebP; closed after tests",
+      "log": "/Volumes/code_files/meldiq_web/docs/media-sharing/evidence/meldiq-media-native-instrumentation.log"
+    },
+    {
+      "name": "Unpublished file download privacy",
+      "command": "node node_modules/vitest/vitest.mjs run test/media_publication.test.ts --maxWorkers=1 --hookTimeout=90000 --testTimeout=60000",
+      "passed": 3,
+      "failed": 0,
+      "log": "/Volumes/code_files/meldiq_web/docs/media-sharing/evidence/meldiq-media-draft-access.log"
+    },
+    {
+      "name": "Unpublished file privacy on all Atlas domains",
+      "command": "MELDIQ_TEST_MONGO_DOMAINS=accounts,preferences,history,reports,relationships,relay,files,calls,workspace,conversations,billing,safety,platform,federation,ephemeral,identity node node_modules/vitest/vitest.mjs run test/media_publication.test.ts --maxWorkers=1 --hookTimeout=90000 --testTimeout=60000",
+      "passed": 3,
+      "failed": 0,
+      "log": "/Volumes/code_files/meldiq_web/docs/media-sharing/evidence/meldiq-media-draft-access-atlas.log"
+    },
+    {
+      "name": "Final Web lint for ceiling changes",
+      "command": "node node_modules/eslint/bin/eslint.js src/sync/attachments.ts test/large-files.test.ts",
+      "exitCode": 0,
+      "log": "/Volumes/code_files/meldiq_web/docs/media-sharing/evidence/meldiq-media-lint-ceiling.log"
+    }
+  ],
+  "backendRelease": {
+    "baseCommit": "f77d07900ac4128493db84c31c7c845db34f6901",
+    "branch": "codex/media-sharing-20261102",
+    "patch": "/Volumes/code_files/meldiq_web/server-patches/0011-media-sharing.patch",
+    "sha256": "3eec58b0f97d0edf4863f0ed4392f29b0185c0de79173577315b0042c21ff4d2",
+    "migration": "091_attachment_publication.sql",
+    "mongoSchemaVersion": 7,
+    "productionDeployed": false,
+    "reverseCheckPassed": true,
+    "baseApplyCheckPassed": true,
+    "absoluteFileMaxBytes": 1000000000
+  },
+  "remainingGates": [
+    "staging S3 and lifecycle verification",
+    "near-1 GB full transfer and multiuser load",
+    "physical Android and iOS camera, permissions, background and share/save validation",
+    "production release and rollback rehearsal",
+    "unrelated billing contract drift"
+  ],
+  "temporaryQaAvdRemoved": true
+}

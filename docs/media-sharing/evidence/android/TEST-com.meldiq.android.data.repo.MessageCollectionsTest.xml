@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.meldiq.android.data.repo.MessageCollectionsTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-11-02T12:09:59.160Z" hostname="MDNAHIANs-MacBook-Pro.local" time="0.131">
+  <properties/>
+  <testcase name="browserRetainsOnePageAndRetriesTheFailedNextBoundary" classname="com.meldiq.android.data.repo.MessageCollectionsTest" time="0.031"/>
+  <testcase name="malformedCrossConversationPageNeverMutatesCache" classname="com.meldiq.android.data.repo.MessageCollectionsTest" time="0.049"/>
+  <testcase name="threadIndexCursorUsesLastActivityRatherThanRootsOriginalTimestamp" classname="com.meldiq.android.data.repo.MessageCollectionsTest" time="0.001"/>
+  <testcase name="refreshReplacesAuthoritativePinIdsAndPermissionFailureClearsThem" classname="com.meldiq.android.data.repo.MessageCollectionsTest" time="0.013"/>
+  <testcase name="scopedThreadRequestIngestsRootRepliesThenChangesAndExposesRootVisibility" classname="com.meldiq.android.data.repo.MessageCollectionsTest" time="0.006"/>
+  <testcase name="hiddenRootIsNotResurrectedFromCache" classname="com.meldiq.android.data.repo.MessageCollectionsTest" time="0.005"/>
+  <testcase name="repeatedOrMissingCursorIsAnErrorInsteadOfSilentIncompleteResults" classname="com.meldiq.android.data.repo.MessageCollectionsTest" time="0.008"/>
+  <testcase name="wrongThreadAndUnrelatedControlsAreRejectedBeforeIngest" classname="com.meldiq.android.data.repo.MessageCollectionsTest" time="0.01"/>
+  <testcase name="hiddenHistoryIsRejectedBeforeItCanEnterTheCache" classname="com.meldiq.android.data.repo.MessageCollectionsTest" time="0.007"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

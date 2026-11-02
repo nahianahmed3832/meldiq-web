@@ -66,7 +66,7 @@ test("authenticator sign-in unlocks the real encrypted backup without another em
   }
 });
 
-test("automatic photo upload and compatible download, with distinct owner rows", async ({ page, browserName, isMobile }) => {
+test("original photo upload and exact download, with distinct owner rows", async ({ page, browserName, isMobile }) => {
   const owner = await newPhone("smoothowner", "Community Owner");
   const member = await newPhone("smoothmember", "Community Member");
   const { org } = await owner.req("POST", "/v1/orgs", { name: "Smooth Community" });
@@ -77,7 +77,7 @@ test("automatic photo upload and compatible download, with distinct owner rows",
   await link(page, owner);
   await page.goto(`/home/c/${channel.id}`);
   await page.locator(".composer input[type=file]").setInputFiles(path.join(import.meta.dirname, "fixtures/photo.jpg"));
-  await expect(page.getByText("Photo quality", { exact: false })).toHaveCount(0);
+  await expect(page.getByText("Photo quality", { exact: false })).toBeVisible();
   await page.getByPlaceholder(/^Message #/).fill("Automatic photo");
   await page.getByRole("button", { name: "Send", exact: true }).click();
   const message = page.locator(".msg").filter({ hasText: "Automatic photo" });
@@ -89,7 +89,15 @@ test("automatic photo upload and compatible download, with distinct owner rows",
     .first()
     .click();
   const file = await download;
-  expect(file.suggestedFilename()).toMatch(/\.(jpg|png)$/);
+  expect(file.suggestedFilename()).toBe("photo.jpg");
+  const downloaded = await file.path();
+  expect(downloaded).not.toBeNull();
+  expect(crypto.createHash("sha256").update(fs.readFileSync(downloaded!)).digest("hex")).toBe(
+    crypto
+      .createHash("sha256")
+      .update(fs.readFileSync(path.join(import.meta.dirname, "fixtures/photo.jpg")))
+      .digest("hex"),
+  );
   await page.keyboard.press("Escape");
   if (isMobile) {
     await page.getByRole("button", { name: /^#.*: details$/ }).click();

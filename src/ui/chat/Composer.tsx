@@ -1,7 +1,7 @@
 import { CharLimitNote, overCharLimit } from "../mojo/CharLimit";
 import { useMojoLimits, useUploadLimit } from "../mojo/useMojoLimits";
 import { size } from "../mojo/mojoFormat";
-import { AtSign, BarChart3, FileUp, Lock, MapPin, Mic, Paperclip, Plus, SendHorizontal, UserRound, X } from "lucide-react";
+import { AtSign, BarChart3, Camera, FileUp, Image as ImageIcon, Video, Lock, MapPin, Mic, Plus, SendHorizontal, UserRound, X } from "lucide-react";
 import { useExpressions } from "../community/CustomEmoji";
 import { forSending, refOf } from "../../sync/expressions";
 import type { CustomEmojiRef } from "../../protocol/payload";
@@ -13,6 +13,8 @@ import { ROUTE_EVENT } from "../../application/router";
 import type { StoredMessage } from "../../model/types";
 import type { RichContent } from "../../model/types";
 import { fileLimit, MAX_FILES_PER_MESSAGE, sendFiles } from "../../sync/attachments";
+import { AttachmentDrafts } from "./AttachmentDrafts";
+import { inspectFile } from "../../sync/attachmentPolicy";
 import { preparePhoto } from "../../sync/photoQuality";
 import { UploadCancelled } from "../../sync/largeUpload";
 import { transfersOf } from "../../sync/transfers";
@@ -22,7 +24,6 @@ import { type Recording, voiceFileName, voiceMime } from "../../sync/voice";
 import { activeMentionQuery } from "../../sync/mentions";
 import { UserAvatar } from "../components/OrgAvatar";
 import { Menu, useMenu } from "../components/Overlay";
-import { bytes } from "../format";
 import { PollDialog } from "./PollDialog";
 import { ExpressionPicker, PICKER_BUTTONS, type PickerTab } from "./ExpressionPicker";
 import { LocationDialog } from "./RichDialogs";
@@ -70,7 +71,11 @@ export function Composer(props: ComposerProps) {
   const pickedRoles = useRef<MentionRole[]>([]);
   const [text, setText] = useState("");
   const [files, setFiles] = useState<File[]>([]);
-  // Starts at the default chosen in Settings › Appearance › Photo upload quality (android upload quality).
+  const [photoQuality, setPhotoQuality] = useState<"original" | "auto">("original");
+  const mediaInput = useRef<HTMLInputElement>(null);
+  const videoInput = useRef<HTMLInputElement>(null);
+  const cameraInput = useRef<HTMLInputElement>(null);
+  const recordInput = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState<string | null>(null);
   const [members, setMembers] = useState<Member[]>([]);
   const [suggest, setSuggest] = useState<{ start: number; items: Member[]; index: number } | null>(null);
@@ -184,21 +189,24 @@ export function Composer(props: ComposerProps) {
 
   const addFiles = useCallback(
     (list: File[]) => {
+      if (!can.attach) return engine.notice("error", "You can't share files in this channel.");
+      if (list.some((f) => f.size === 0)) engine.notice("error", "Empty files cannot be sent.");
+      if (files.length + list.length > MAX_FILES_PER_MESSAGE) engine.notice("info", `Send up to ${MAX_FILES_PER_MESSAGE} files per message. Extra files were left out.`);
       const serverLimit = fileLimit(engine.state.get().server);
-      // Meldiq Mojo (server docs/MOJO.md): the person's plan, or the community's Sparks, may set a lower limit.
+      // Meldiq Plus (server docs/MOJO.md): the person's plan, or the community's Sparks, may set a lower limit.
       const limit = planUploadLimit === null ? serverLimit : Math.min(serverLimit, planUploadLimit);
       const tooBig = list.find((f) => f.size > limit);
       if (tooBig) {
         engine.notice(
           "error",
           planUploadLimit !== null && limit === planUploadLimit
-            ? `"${tooBig.name}" is larger than ${size(limit)}, the limit on your plan here. Mojo raises it, and so do a community's Sparks.`
+            ? `"${tooBig.name}" is larger than ${size(limit)}, the limit on your plan here. Meldiq Plus raises it, and so do a community's Sparks.`
             : `"${tooBig.name}" is larger than this server accepts (${Math.floor(limit / (1024 * 1024))} MB per file).`,
         );
       }
       setFiles((cur) => [...cur, ...list.filter((f) => f.size <= limit && f.size > 0)].slice(0, MAX_FILES_PER_MESSAGE));
     },
-    [engine, planUploadLimit],
+    [engine, planUploadLimit, can.attach, files.length],
   );
 
   const onChange = (value: string) => {
@@ -271,8 +279,7 @@ export function Composer(props: ComposerProps) {
         setBusy("Preparing uploads…");
         // One at a time: decoding several large photos at once can run a phone's browser out of memory.
         const prepared: File[] = [];
-        for (const f of files) prepared.push(await preparePhoto(f));
-        setBusy(null);
+        for (const f of files) prepared.push(await preparePhoto(await inspectFile(f), photoQuality));
         // The transfer belongs to the app (sync/transfers.ts): it keeps going, with its progress shown above this box,
         // if this conversation is left; the same send while it runs joins it rather than starting another.
         await transfersOf(engine).start(
@@ -357,6 +364,54 @@ export function Composer(props: ComposerProps) {
 
   return (
     <div className="composer-wrap">
+      <input
+        ref={mediaInput}
+        type="file"
+        accept="image/*"
+        multiple
+        hidden
+        aria-label="Choose photos"
+        onChange={(e) => {
+          addFiles(Array.from(e.target.files ?? []));
+          e.target.value = "";
+        }}
+      />
+      <input
+        ref={videoInput}
+        type="file"
+        accept="video/*"
+        multiple
+        hidden
+        aria-label="Choose videos"
+        onChange={(e) => {
+          addFiles(Array.from(e.target.files ?? []));
+          e.target.value = "";
+        }}
+      />
+      <input
+        ref={cameraInput}
+        type="file"
+        accept="image/*"
+        capture="environment"
+        hidden
+        aria-label="Take a photo"
+        onChange={(e) => {
+          addFiles(Array.from(e.target.files ?? []));
+          e.target.value = "";
+        }}
+      />
+      <input
+        ref={recordInput}
+        type="file"
+        accept="video/*"
+        capture="environment"
+        hidden
+        aria-label="Record a video"
+        onChange={(e) => {
+          addFiles(Array.from(e.target.files ?? []));
+          e.target.value = "";
+        }}
+      />
       <TransferList conversationId={c.id} />
       <SlashCommandList slash={slash} />
       {suggest && (
@@ -392,18 +447,19 @@ export function Composer(props: ComposerProps) {
           </div>
         )}
         {files.length > 0 && (
-          <div className="composer-files" aria-label="Files to send">
-            {files.map((f, i) => (
-              <span key={`${f.name}-${i}`} className="file-chip">
-                <Paperclip size={13} />
-                <span className="ellipsis">{f.name}</span>
-                <span className="faint">{bytes(f.size)}</span>
-                <button className="icon-btn" style={{ width: 22, height: 22 }} onClick={() => setFiles((cur) => cur.filter((_, j) => j !== i))} aria-label={`Remove ${f.name}`}>
-                  <X size={12} />
-                </button>
-              </span>
-            ))}
-          </div>
+          <>
+            <AttachmentDrafts files={files} disabled={!!busy} onRemove={(index) => setFiles((cur) => cur.filter((_, i) => i !== index))} />
+            {files.some((f) => f.type.startsWith("image/")) && (
+              <label className="attachment-quality">
+                Photo quality
+                <select value={photoQuality} disabled={!!busy} onChange={(e) => setPhotoQuality(e.target.value as "original" | "auto")}>
+                  <option value="original">Original · unchanged file</option>
+                  <option value="auto">Optimized · smaller photos</option>
+                </select>
+                <small>{photoQuality === "original" ? "Full quality. Original files may include location metadata." : "Static photos may be resized. Choose Original to keep every detail."}</small>
+              </label>
+            )}
+          </>
         )}
         {voice ? (
           <VoiceBar onSend={sendVoice} onClose={() => setVoice(false)} />
@@ -543,7 +599,15 @@ export function Composer(props: ComposerProps) {
           label="Attach"
           onClose={attach.close}
           entries={[
-            ...(can.attach ? [{ label: `Files (up to ${MAX_FILES_PER_MESSAGE})`, icon: <FileUp size={16} />, onSelect: () => fileInput.current?.click() }] : []),
+            ...(can.attach
+              ? [
+                  { label: "Photos", icon: <ImageIcon size={16} />, onSelect: () => mediaInput.current?.click() },
+                  { label: "Videos", icon: <Video size={16} />, onSelect: () => videoInput.current?.click() },
+                  { label: "Camera", icon: <Camera size={16} />, onSelect: () => cameraInput.current?.click() },
+                  { label: "Record video", icon: <Video size={16} />, onSelect: () => recordInput.current?.click() },
+                  { label: `Files (up to ${MAX_FILES_PER_MESSAGE})`, icon: <FileUp size={16} />, onSelect: () => fileInput.current?.click() },
+                ]
+              : []),
             ...(can.polls ? [{ label: "Poll…", icon: <BarChart3 size={16} />, onSelect: () => setRich("poll") }] : []),
             { label: "Share a profile…", icon: <UserRound size={16} />, onSelect: () => setRich("contact") },
             { label: "Location…", icon: <MapPin size={16} />, onSelect: () => setRich("location") },
@@ -562,12 +626,14 @@ export function Composer(props: ComposerProps) {
           canSend={props.conversation.canPost}
           allowedTabs={["emoji", ...(can.gifs ? (["gifs"] as const) : []), ...(can.stickers ? (["stickers"] as const) : [])]}
           onEmoji={(em) => {
+            emoji.close();
             insertAtCaret(em);
           }}
           library={{ currentOrgId: c.type === "CHANNEL" ? c.orgId : null, externalAllowed: can.externalEmoji }}
           community={{
             list: communityEmoji ?? { expressions: [], limits: { emoji: 50, sticker: 20 } },
             onEmoji: (e) => {
+              emoji.close();
               picked.current.set(e.name, refOf(e));
               insertAtCaret(`:${e.name}: `);
             },
