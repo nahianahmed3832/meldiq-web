@@ -1,0 +1,94 @@
+{
+  "ok": true,
+  "buildId": "UpPvbbALV8iUCquO-NtNA",
+  "results": [
+    {
+      "browser": "chromium",
+      "width": 1440,
+      "height": 900,
+      "bare": false,
+      "workspace": 856,
+      "topbar": 0,
+      "bar": 44,
+      "body": 812,
+      "gap": 0
+    },
+    {
+      "browser": "chromium",
+      "width": 820,
+      "height": 900,
+      "bare": false,
+      "workspace": 880,
+      "topbar": 64,
+      "bar": 44,
+      "body": 772,
+      "gap": 0
+    },
+    {
+      "browser": "chromium",
+      "width": 390,
+      "height": 844,
+      "bare": false,
+      "workspace": 844,
+      "topbar": 56,
+      "bar": 44,
+      "body": 744,
+      "gap": 0
+    },
+    {
+      "browser": "chromium",
+      "width": 390,
+      "height": 844,
+      "bare": true,
+      "workspace": 844,
+      "topbar": 0,
+      "bar": 44,
+      "body": 800,
+      "gap": 0
+    },
+    {
+      "browser": "webkit",
+      "width": 1440,
+      "height": 900,
+      "bare": false,
+      "workspace": 856,
+      "topbar": 0,
+      "bar": 44,
+      "body": 812,
+      "gap": 0
+    },
+    {
+      "browser": "webkit",
+      "width": 820,
+      "height": 900,
+      "bare": false,
+      "workspace": 880,
+      "topbar": 64,
+      "bar": 44,
+      "body": 772,
+      "gap": 0
+    },
+    {
+      "browser": "webkit",
+      "width": 390,
+      "height": 844,
+      "bare": false,
+      "workspace": 844,
+      "topbar": 56,
+      "bar": 44,
+      "body": 744,
+      "gap": 0
+    },
+    {
+      "browser": "webkit",
+      "width": 390,
+      "height": 844,
+      "bare": true,
+      "workspace": 844,
+      "topbar": 0,
+      "bar": 44,
+      "body": 800,
+      "gap": 0
+    }
+  ]
+}

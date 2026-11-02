@@ -39,6 +39,64 @@
   height: 18px;
   flex-shrink: 0;
 }
+.identity-name .badge-mark.mojo-badge-plus {
+  color: #38a7f6;
+}
+.identity-name .badge-mark.mojo-badge-go {
+  color: #f5bf42;
+}
+.identity-name .mojo-badge svg {
+  width: 19px;
+  height: 19px;
+}
+.member-name > .identity-name {
+  flex: 0 1 auto;
+  overflow: hidden;
+}
+.member-list .styled-avatar {
+  --presence-cutout: color-mix(in srgb, var(--sidebar) 80%, var(--surface));
+}
+.identity-name .wtag {
+  gap: 3px;
+  padding: 1px 5px;
+  border-radius: 5px;
+  border-color: color-mix(in srgb, var(--text-2) 28%, transparent);
+  background: color-mix(in srgb, var(--text-2) 8%, transparent);
+  font-size: 10px;
+  line-height: 1.4;
+  letter-spacing: 0.025em;
+}
+.wtag svg {
+  flex-shrink: 0;
+  color: var(--tag, var(--text-3));
+}
+.badge-mark.community-owner-badge {
+  width: 18px;
+  height: 20px;
+  padding: 0;
+  color: #edbd55;
+  background: none;
+}
+.community-owner-badge svg {
+  fill: #edbd5528;
+  stroke-width: 2;
+}
+.identity-name .name-badge {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  color: #f6a8bc;
+  background: #db709320;
+}
+.identity-name .name-badge-bug-hunter {
+  color: #6dd6b1;
+  background: #34d39920;
+}
+.brand-mark {
+  box-shadow:
+    0 0 0 1px #ffffff12,
+    0 3px 10px #0002;
+}
 .side-row .identity-name {
   display: flex;
   width: 100%;

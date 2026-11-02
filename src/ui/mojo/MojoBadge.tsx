@@ -8,13 +8,16 @@ export function MojoBadgeMark({ badge, check }: { badge: "go" | "plus"; check: b
   const label = badge === "plus" ? (check ? "Mojo Plus member, with Meldiq Check (a Plus perk, not verification)" : "Mojo Plus member") : "Mojo Go member";
   return (
     <BadgeMark className={`mojo-badge mojo-badge-${badge}`} name={badge === "plus" ? "Mojo Plus" : "Mojo Go"} description={label}>
-      <svg width="16" height="18" viewBox="0 0 20 22" fill="none" aria-hidden="true">
-        <path d="m10 1 8 5v10l-8 5-8-5V6l8-5Z" fill="currentColor" opacity=".17" />
-        <path d="m10 1 8 5v10l-8 5-8-5V6l8-5Z" stroke="currentColor" strokeWidth="1.5" />
-        {check ? (
-          <path d="m6 11 3 3 5-6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        {badge === "plus" ? (
+          <path d="m12 1 2.6 2.3 3.4-.1 1 3.3 2.8 2-1.1 3.3 1.1 3.3-2.8 2-1 3.3-3.4-.1L12 23l-2.6-2.3-3.4.1-1-3.3-2.8-2L3.3 12 2.2 8.7l2.8-2 1-3.3 3.4.1L12 1Z" fill="currentColor" />
         ) : (
-          <path d="m10 5 1.5 4.5L16 11l-4.5 1.5L10 17l-1.5-4.5L4 11l4.5-1.5L10 5Z" fill="currentColor" />
+          <path d="m12 2 3.1 6.3 7 .9-5.1 5 1.2 7-6.2-3.3-6.2 3.3 1.2-7-5.1-5 7-.9L12 2Z" fill="currentColor" />
+        )}
+        {check && badge === "plus" ? (
+          <path d="m7.5 12 3 3 6-6" stroke="white" strokeWidth="2.3" strokeLinecap="round" strokeLinejoin="round" />
+        ) : (
+          <path d="m12 7 1.3 3.7L17 12l-3.7 1.3L12 17l-1.3-3.7L7 12l3.7-1.3L12 7Z" fill="white" opacity=".85" />
         )}
       </svg>
     </BadgeMark>

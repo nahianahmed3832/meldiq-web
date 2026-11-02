@@ -140,13 +140,10 @@ function MemberRow({ m, away, colors, orgId }: { m: Member; away: boolean; color
         ]
       : []),
   ];
-  // A nameplate (2026-10-28, the reference's lively member list): the person's own name colours, faint, behind the row.
-  const plate = m.profileStyle?.nameColors?.length ? m.profileStyle.nameColors : themeColorsOf(m.profileStyle);
   return (
     <>
       <button
-        className={`member-row${away ? " away" : ""}${plate ? " has-plate" : ""}`}
-        style={plate ? ({ "--plate-a": plate[0], "--plate-b": plate[plate.length - 1] } as React.CSSProperties) : undefined}
+        className={`member-row${away ? " away" : ""}`}
         onClick={(e) => openProfile(m.id, m.displayName, { orgId, anchor: e.currentTarget })}
         aria-label={`${m.displayName}${owner ? ", community owner" : ""}${away ? ", offline" : ""}: profile`}
         aria-haspopup="menu"

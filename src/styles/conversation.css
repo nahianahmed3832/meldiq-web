@@ -2184,8 +2184,8 @@
 
 /* ───────────────────────── member list and profile beside the messages ───────────────────────── */
 .panel.member-list {
-  width: 260px;
-  background: var(--sidebar);
+  width: 272px;
+  background: color-mix(in srgb, var(--sidebar) 80%, var(--surface));
 }
 .member-list-head {
   display: flex;
@@ -2201,19 +2201,20 @@
 .member-list-body {
   flex: 1;
   min-height: 0;
-  padding: 4px 8px 16px;
+  padding: 6px 10px 20px;
+  scrollbar-width: thin;
 }
 .member-list-note {
   padding: 8px;
   font-size: var(--fs-sm);
 }
 .member-group {
-  margin: 16px 8px 4px;
-  font-size: 12px;
+  margin: 20px 10px 8px;
+  font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.065em;
   text-transform: uppercase;
-  color: var(--text-3);
+  color: var(--text-2);
 }
 .member-row {
   display: flex;
@@ -2245,9 +2246,9 @@
   font-size: var(--fs-xs);
   color: var(--text-3);
 }
-/* Offline members are dimmed, as on Discord. */
+/* Presence is communicated by its mark; names and decorations stay readable offline. */
 .member-row.away {
-  opacity: 0.5;
+  opacity: 1;
 }
 .member-row.away:hover {
   opacity: 1;
@@ -2435,8 +2436,7 @@ button.media-card {
   padding: 4px 8px;
 }
 
-/* The member list as in the reference: no header of its own on wide screens (the conversation header toggles it), and
- * roomier rows with larger avatars and names. */
+/* Compact, aligned identities leave breathing room for decorations without spreading the list apart. */
 @media (min-width: 1241px) {
   .member-list-head {
     display: none;
@@ -2446,16 +2446,26 @@ button.media-card {
   }
 }
 .member-list .member-row {
-  gap: 14px;
-  padding: 10px 12px;
-  margin-block: 12px;
-  min-height: 64px;
-  border-radius: 12px;
+  gap: 12px;
+  padding: 8px 10px;
+  margin-block: 2px;
+  min-height: 58px;
+  border-radius: 8px;
+  transition: background 140ms ease;
+}
+.member-list .member-row:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+  background: var(--sidebar-hover);
+}
+.member-list .member-row .lines {
+  flex: 1;
+  display: grid;
+  gap: 3px;
 }
 .member-list .member-name {
   gap: 6px;
-  flex-wrap: wrap;
-  row-gap: 4px;
+  flex-wrap: nowrap;
 }
 .community-owner-badge {
   display: inline-flex;
@@ -2471,12 +2481,14 @@ button.media-card {
   line-height: 1.4;
 }
 .member-list .member-name {
-  font-size: var(--fs-lg);
-  font-weight: 700;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4;
 }
 .member-list .member-row small {
   font-size: var(--fs-xs);
-  color: var(--text-3);
+  color: var(--text-2);
+  line-height: 1.4;
 }
 
 /* Files on their way (sync/transfers.ts): above the message box, each with its phase, progress and actions. */

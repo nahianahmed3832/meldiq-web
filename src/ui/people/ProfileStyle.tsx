@@ -6,6 +6,8 @@ import { isClassicDecoration, type ProfileStyle } from "../../api/schemas";
 import { decorationImage } from "../../sync/decorations";
 import { UserAvatar } from "../components/OrgAvatar";
 import { usePhoto } from "../components/photos";
+import { PresenceMark } from "../components/Avatar";
+import { AvatarFrame } from "./AvatarFrame";
 
 /**
  * Profile customisation as people see it (continuation brief v3 §10, API 0.45.0): an animated avatar (a GIF, WebP or a
@@ -71,7 +73,9 @@ export function StyledAvatar(p: StyledAvatarProps) {
     >
       {/* First, so the avatar and its presence dot are drawn over the frame (2026-10-28: the frame cut through the dot). */}
       {p.decoration && isClassicDecoration(p.decoration) && (
-        <span className={`deco deco-${p.decoration}`} style={{ "--deco-w": `${decorationWidth(p.size)}px` } as React.CSSProperties} aria-hidden="true" />
+        <span className={`deco deco-art deco-${p.decoration}`} aria-hidden="true">
+          <AvatarFrame kind={p.decoration} />
+        </span>
       )}
       {animate ? (
         <span className="avatar-media" style={{ width: p.size, height: p.size }}>
@@ -82,7 +86,7 @@ export function StyledAvatar(p: StyledAvatarProps) {
           <img src={poster} alt="" draggable={false} />
         </span>
       ) : (
-        <UserAvatar userId={p.userId} name={p.name} colorIndex={p.colorIndex} photoRev={p.photoRev} size={p.size} online={p.online} presence={p.presence} decorative />
+        <UserAvatar userId={p.userId} name={p.name} colorIndex={p.colorIndex} photoRev={p.photoRev} size={p.size} decorative />
       )}
       {frame?.recipe.assetId && (
         <img
@@ -96,6 +100,7 @@ export function StyledAvatar(p: StyledAvatarProps) {
         />
       )}
       {p.decoration && !isClassicDecoration(p.decoration) && <DecorationImage id={p.decoration} size={p.size} />}
+      <PresenceMark online={p.online} presence={p.presence} />
     </span>
   );
 }

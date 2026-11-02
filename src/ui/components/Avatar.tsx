@@ -53,17 +53,20 @@ interface AvatarProps {
 
 const PRESENCE_TEXT = { online: "Online", idle: "Idle", dnd: "Do not disturb", offline: "Offline" } as const;
 
+/** Shared by photo and animated avatars so presence always sits above the artwork. */
+export function PresenceMark({ online, presence }: Pick<AvatarProps, "online" | "presence">) {
+  if (online === undefined || online === null) return null;
+  const state = online ? (presence === "idle" || presence === "dnd" ? presence : "online") : "offline";
+  return <span className={`presence${online ? " on" : ""}${state === "idle" ? " idle" : state === "dnd" ? " dnd" : ""}`} aria-label={PRESENCE_TEXT[state]} />;
+}
+
 export function Avatar({ name, colorIndex, size = 36, online, square, decorative, photoUrl, presence }: AvatarProps) {
   const [a1, a2] = TONES[((colorIndex % TONES.length) + TONES.length) % TONES.length];
   const style = { width: size, height: size, fontSize: Math.round(size * 0.36), "--a1": a1, "--a2": a2 } as CSSProperties;
   return (
     <span className={`avatar${square ? " square" : ""}`} style={style} role={decorative ? undefined : "img"} aria-label={decorative ? undefined : name} aria-hidden={decorative || undefined}>
       {photoUrl ? <img src={photoUrl} alt="" className="avatar-photo" draggable={false} /> : initialsOf(name)}
-      {presence && online ? (
-        <span className={`presence on${presence === "idle" ? " idle" : presence === "dnd" ? " dnd" : ""}`} aria-label={PRESENCE_TEXT[presence]} />
-      ) : (
-        online !== undefined && online !== null && <span className={`presence${online ? " on" : ""}`} aria-label={online ? "Online" : "Offline"} />
-      )}
+      <PresenceMark online={online} presence={presence} />
     </span>
   );
 }

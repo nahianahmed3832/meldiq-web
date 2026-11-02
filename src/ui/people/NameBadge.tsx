@@ -1,5 +1,6 @@
 import type { MojoMark, ShownBadge } from "../../api/profileSchemas";
 import { BadgeMark } from "../components/BadgeMark";
+import { Bug, Palette } from "lucide-react";
 
 /**
  * The badge shown next to a name (API 0.65.0): each person picks one they hold, or none. Without a choice it's the
@@ -25,8 +26,8 @@ export function nameBadge(shown: ShownBadge | null | undefined, mojo: MojoMark |
 export function NameBadgeMark({ badge }: { badge: "bug-hunter" | "artist" }) {
   const hint = BADGE_HINT[badge];
   return (
-    <BadgeMark className="name-badge" name={BADGE_LABEL[badge]} description={hint.title}>
-      {hint.icon}
+    <BadgeMark className={`name-badge name-badge-${badge}`} name={BADGE_LABEL[badge]} description={hint.title}>
+      {badge === "artist" ? <Palette size={15} aria-hidden="true" /> : <Bug size={15} aria-hidden="true" />}
     </BadgeMark>
   );
 }

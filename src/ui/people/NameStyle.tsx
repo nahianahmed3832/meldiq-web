@@ -6,6 +6,7 @@ import type { NameEffect, NameFont, ProfileStyle, WornTag } from "../../api/sche
 import { useOrbit } from "../../application/orbit";
 import type { UserLite } from "../../state/store";
 import { StyledAvatar } from "./ProfileStyle";
+import { Hash } from "lucide-react";
 
 /**
  * Name styles (API 0.46.0): a display name in one of Meldiq's fonts, in a colour or a gradient of two or three, with an
@@ -100,6 +101,7 @@ export function WornTagChip({ tag }: { tag: WornTag }) {
   return (
     <span className="wtag" style={tag.color ? ({ "--tag": tag.color } as CSSProperties) : undefined} title={`Community tag ${tag.text}`}>
       <span className="sr-only">tag </span>
+      <Hash size={10} aria-hidden="true" />
       {tag.text}
     </span>
   );
