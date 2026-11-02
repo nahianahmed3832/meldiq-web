@@ -1,7 +1,5 @@
-import crypto from "node:crypto";
 import { expect, test } from "@playwright/test";
-import { expectSignedOut } from "./link";
-import { emailedCode } from "./mail";
+import { link } from "./link";
 import { newPhone, testAddress } from "./phone";
 import { hold } from "./touchInput";
 
@@ -14,22 +12,9 @@ test.beforeEach(async ({ context }) => {
 });
 
 test("search, skin tone and categories, into the composer and as a reaction", async ({ page, hasTouch }) => {
-  const email = `e2e.${crypto.randomBytes(4).toString("hex")}@example.test`;
-  await page.goto("/");
-  await expectSignedOut(page);
-  await page.getByRole("button", { name: "Create an account" }).click();
-  await page.getByLabel("Your name").fill("Nadia Rahman");
-  await page.getByLabel("Email").fill(email);
-  await page.getByLabel("Password").fill("a long enough password");
-  await page.getByRole("button", { name: "Create account" }).click();
-  await page.getByLabel("Code").fill(await emailedCode(email, "verify"));
-  await page.getByRole("button", { name: "Confirm" }).click();
-  await page.getByRole("button", { name: "Set up encryption" }).click();
-  await page.getByLabel("I've stored my recovery key somewhere safe.").check();
-  await page.getByRole("button", { name: "Open Meldiq" }).click();
-  await expect(page.locator(":is(.app[data-connection=online])").first()).toBeVisible({ timeout: 15_000 });
-
-  const me = await page.evaluate(() => (window as unknown as { __orbit: { device: { userId: string } } }).__orbit.device.userId);
+  const alice = await newPhone("emojialice", "Nadia Rahman");
+  await link(page, alice);
+  const me = alice.userId;
   const bob = await newPhone("bob", "Bob Chen");
   const dm = (await bob.req("POST", "/v1/conversations/dm", { userId: me })).conversation.id as string;
   await bob.send(dm, { type: "text", text: "Pick an emoji" });

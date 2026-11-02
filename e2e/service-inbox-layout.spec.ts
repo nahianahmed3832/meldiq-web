@@ -20,6 +20,9 @@ test("service inbox stays in account settings and the work area fills the remain
   await link(page, phone);
 
   const check = async () => {
+    await expect(page.locator(".app[data-connection=online]")).toBeVisible();
+    await expect(page.locator(".workspace")).toBeVisible();
+    await expect(page.locator(".workspace > .body")).toBeVisible();
     const workspace = await page.locator(".workspace").boundingBox();
     const body = await page.locator(".workspace > .body").boundingBox();
     expect(workspace).not.toBeNull();

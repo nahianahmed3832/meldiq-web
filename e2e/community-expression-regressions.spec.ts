@@ -1,3 +1,4 @@
+import fs from "node:fs";
 import { expect, test } from "@playwright/test";
 import { link } from "./link";
 import { newPhone, testAddress } from "./phone";
@@ -9,7 +10,7 @@ test("community messages omit receipts while DMs retain them; expressions share 
   const bob = await newPhone("communitypeer", "Community Peer");
   const { org } = await alice.req("POST", "/v1/orgs", { name: "Meldiq Design Lab" });
   const { channel } = await alice.req("POST", `/v1/orgs/${org.id}/channels`, { name: "expression-room", scope: "ORG", kind: "PUBLIC" });
-  const png = Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jRZkAAAAASUVORK5CYII=", "base64");
+  const png = fs.readFileSync("public/meldling-192.png");
   await alice.req("POST", `/v1/orgs/${org.id}/expressions?kind=emoji&name=brand_wave`, undefined, png);
   await alice.req("POST", `/v1/orgs/${org.id}/expressions?kind=sticker&name=brand_hello`, undefined, png);
   await link(page, alice);

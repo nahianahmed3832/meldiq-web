@@ -166,7 +166,9 @@ export function EmojiPicker({ onPick, community, query: sharedQuery, embedded = 
               </section>
             )}
             {groups && results.length === 0 && customMatches.length === 0 ? (
-              <p className="muted emoji-note">No emoji match “{query.trim()}”</p>
+              <p className="muted emoji-note">
+                No {embedded ? "default emoji" : "emoji"} match “{query.trim()}”
+              </p>
             ) : (
               <Grid items={results.map((it) => [inTone(it, tone), it.name])} onPick={pick} />
             )}

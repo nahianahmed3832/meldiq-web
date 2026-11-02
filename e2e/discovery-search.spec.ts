@@ -1,3 +1,5 @@
+import fs from "node:fs";
+import path from "node:path";
 import { expect, test } from "@playwright/test";
 import { link } from "./link";
 import { newPhone, testAddress } from "./phone";
@@ -15,8 +17,8 @@ test("public communities load, search and recover from no matches with Meldiq ar
     await member.req("POST", `/v1/communities/${org.id}/join`);
   }
   await owner.req("POST", "/v1/orgs", { name: "Private Makers", visibility: "private" });
-  const png = Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jRZkAAAAASUVORK5CYII=", "base64");
-  await owner.req("PUT", `/v1/orgs/${org.id}/photo`, undefined, png);
+  const icon = fs.readFileSync(path.join(import.meta.dirname, "fixtures/photo.jpg"));
+  await owner.req("PUT", `/v1/orgs/${org.id}/photo`, undefined, icon);
   const visitor = await newPhone("discovervisitor", "Discovery Visitor");
   await link(page, visitor);
   await page.goto("/discover");
