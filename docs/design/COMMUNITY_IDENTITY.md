@@ -14,7 +14,7 @@ BOT stays visible beside every known bot's name, including compact conversation 
 
 Active includes online, idle and do-not-disturb presence. An active community owner appears first, under the highest assigned custom role marked “Show members separately”, or under Admin when no such role is assigned. The owner's group leads even if another role is positioned higher, and owners lead the members within that group. Other admins without a separately shown role share Admin. Other active human groups preserve role order, followed by Online.
 
-Bots have one separate Bots group regardless of presence, role assignment or alphabetical position. Their presence mark reflects actual availability. Offline human owners join Offline rather than being presented as active. Empty groups are omitted and no member is duplicated. Existing role editing controls customise the owner's heading, and saving roles refreshes cached member directories immediately.
+Bots have one separate Bots group regardless of presence, role assignment or alphabetical position. Installed bots come from the existing permission-checked community directory because the channel-member endpoint excludes bot accounts; unrelated directory people are not added. Cached directory data is scoped to the signed-in account and current community. Bot details use that community identity rather than the unavailable human profile or direct-message API. Their presence mark reflects actual availability. Offline human owners join Offline rather than being presented as active. Empty groups are omitted and no member is duplicated. Existing role editing controls customise the owner's heading, and saving roles refreshes cached member directories immediately.
 
 ## Research and decisions
 

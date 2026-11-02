@@ -1,0 +1,57 @@
+{
+  "ok": true,
+  "sourceCommit": "687d6eab17e32cf19c71ab05025b678c6c0f5cc1",
+  "buildId": "GNiGfVnYex-W8BzfbyNTw",
+  "ciRun": 41433770416,
+  "normalEmailOnboarding": true,
+  "developmentDeviceLinking": false,
+  "serviceWorkersBlockedForFeatureTests": true,
+  "browserWorkflows": [
+    {
+      "browser": "Chromium",
+      "result": "passed",
+      "palettes": [
+        "meldiq/dark",
+        "plum/dark",
+        "indigo/light"
+      ],
+      "phoneViewport": {
+        "width": 390,
+        "height": 844
+      },
+      "assertions": [
+        "owner-first Admin",
+        "editable Council heading stays first",
+        "installed bot group independent of channel member API",
+        "persistent message BOT label",
+        "PLUS wordmark with no tick SVG",
+        "theme-adaptive membership paint",
+        "bot details without human profile or DM requests",
+        "no horizontal overflow"
+      ]
+    },
+    {
+      "browser": "WebKit",
+      "result": "passed",
+      "palettes": [
+        "meldiq/dark",
+        "plum/dark",
+        "indigo/light"
+      ],
+      "phoneViewport": {
+        "width": 390,
+        "height": 844
+      },
+      "assertions": [
+        "owner-first Admin",
+        "editable Council heading stays first",
+        "installed bot group independent of channel member API",
+        "persistent message BOT label",
+        "PLUS wordmark with no tick SVG",
+        "theme-adaptive membership paint",
+        "bot details without human profile or DM requests",
+        "no horizontal overflow"
+      ]
+    }
+  ]
+}

@@ -116,6 +116,14 @@ test("owner priority, editable role heading, themed PLUS and persistent bot labe
   await expect(list.locator(".member-row").first()).toContainText("Zoya Rahman");
   await expect(botSection.locator(".bot-tag")).toHaveText("BOT");
   await list.screenshot({ path: info.outputPath("owner-custom-heading.png") });
+  const panelBox = await list.boundingBox();
+  const lastRow = await list.locator(".member-row").last().boundingBox();
+  if (panelBox && lastRow) {
+    await page.screenshot({
+      path: info.outputPath("community-identity-preview.png"),
+      clip: { x: panelBox.x, y: panelBox.y, width: panelBox.width, height: Math.min(panelBox.height, lastRow.y + lastRow.height - panelBox.y + 20) },
+    });
+  }
   await botSection.locator(".member-row").click();
   const details = page.getByRole("dialog", { name: "Bot details", exact: true });
   await expect(details.locator(".bot-tag")).toHaveText("BOT");

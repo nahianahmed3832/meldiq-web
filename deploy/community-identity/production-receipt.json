@@ -1,0 +1,30 @@
+{
+  "status": "deployed-and-verified",
+  "sourceCommit": "687d6eab17e32cf19c71ab05025b678c6c0f5cc1",
+  "buildId": "GNiGfVnYex-W8BzfbyNTw",
+  "archiveSha256": "092950873e1ead7fa9fd387d3e568a8a361fa9837872220b8f91cbe6f234fd01",
+  "previousWeb": "/opt/meldiq-web/releases/0.5.0-beta-community-expressions-280b80a7",
+  "newWeb": "/opt/meldiq-web/releases/0.5.0-beta-community-identity-687d6eab",
+  "deployedAt": "2026-11-02T11:10:51.695163+00:00",
+  "runtimeConfigPreserved": true,
+  "previousStaticAssetsRetained": true,
+  "apiContainerUnchanged": true,
+  "nginxUnchanged": true,
+  "sourceMapsPublished": false,
+  "validation": {
+    "ci": "https://github.com/nahianahmed3832/meldiq-web/actions/runs/41433770416",
+    "typecheck": "passed",
+    "lint": "passed",
+    "formatting": "passed",
+    "unitPassed": 882,
+    "unitSkipped": 2,
+    "productionBrowserPassed": 2,
+    "browsers": [
+      "Chromium",
+      "WebKit"
+    ],
+    "phoneWidth": 390,
+    "normalEmailOnboarding": true,
+    "productionBuild": "passed-webpack-linux-node22"
+  }
+}
