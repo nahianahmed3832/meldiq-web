@@ -1,0 +1,208 @@
+{
+  "date": "2026-11-02",
+  "timezone": "Asia/Shanghai",
+  "liveBillingActivated": false,
+  "productionMigrated": false,
+  "sandboxBuyerApproval": false,
+  "sandboxCapture": false,
+  "realSignedWebhookDelivery": false,
+  "checks": [
+    {
+      "name": "web unit and contract suite",
+      "command": "npm test -- --maxWorkers=1 --fileParallelism=false",
+      "passed": 918,
+      "skipped": 1,
+      "failed": 0,
+      "log": "/tmp/meldiq-plus-web-final.log",
+      "logSha256": "5013a9091a45948f5faffcc98a0ede708ab4f4215ecd0286b9390d32132f3318"
+    },
+    {
+      "name": "web production build",
+      "command": "npm run build",
+      "status": "passed",
+      "log": "/tmp/meldiq-plus-web-build-final.log",
+      "logSha256": "6cf27db5679f561c976696aece8de5696551e7ba2668599f09622d6c0e3729fe"
+    },
+    {
+      "name": "web focused lint",
+      "status": "passed",
+      "log": "/tmp/meldiq-plus-web-lint-release.log",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "admin unit and contract suite",
+      "command": "MELDIQ_SERVER_DIR=<candidate server> npm test -- --maxWorkers=1",
+      "passed": 33,
+      "failed": 0,
+      "log": "/tmp/meldiq-plus-admin-verified.log",
+      "logSha256": "ce1c995645b5891a935e61e08d03f609ec3d718f1464a3abfaa1b1a359058fb7"
+    },
+    {
+      "name": "admin production build",
+      "command": "npm run build",
+      "status": "passed",
+      "log": "/tmp/meldiq-plus-admin-build.log",
+      "logSha256": "0265ee9eeeae1b73b37e53f6a624291d5ef0da690a6d429c87d7c10b229cf3b1"
+    },
+    {
+      "name": "admin focused lint",
+      "status": "passed",
+      "log": "/tmp/meldiq-plus-admin-lint-release.log",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "backend typecheck",
+      "command": "npm run typecheck",
+      "status": "passed",
+      "log": "/tmp/meldiq-plus-backend-typecheck-complete.log",
+      "logSha256": "34bcc98698a59f3c9b1bd7a0cbbb72740290e91a3caed0e92c9726ffba14c91c"
+    },
+    {
+      "name": "backend focused billing, promotion and architecture checks",
+      "passed": 90,
+      "failed": 0,
+      "log": "/tmp/meldiq-plus-terms-checks.log",
+      "logSha256": "bb884fc3b2ac5c2c4fb59cbf836ad9f290b5f5f55b52208d732ff6459cfefa2b"
+    },
+    {
+      "name": "backend renewal and contract checks",
+      "passed": 10,
+      "failed": 0,
+      "log": "/tmp/meldiq-plus-renewal-fixed.log",
+      "logSha256": "ea394f5ed04d5871226fab2b3d5460086b4603b6747a02beed8f46b63d9e523a"
+    },
+    {
+      "name": "backend earlier full sweep",
+      "command": "npm test -- --maxWorkers=2",
+      "passed": 1967,
+      "failed": 4,
+      "skipped": 55,
+      "failedSuites": 3,
+      "log": "/tmp/meldiq-plus-backend-release.log",
+      "notes": "Two contract failures overlapped schema regeneration. Two capacity tests and three MongoDB setup hooks timed out. Fresh retries below passed.",
+      "logSha256": "db00c5d370c3d14d499801c7f5f7204b9eae4864d5d128afc5dcde11f30dc755"
+    },
+    {
+      "name": "backend fresh retry of all failed files plus actual Mongo promotion concurrency",
+      "command": "npx vitest run test/mongo_capacity.test.ts test/community_lobby.test.ts test/community_safety.test.ts test/community_settings.test.ts test/contracts.test.ts test/plus_promotions_mongo.test.ts --maxWorkers=1 --hookTimeout=90000",
+      "passed": 85,
+      "failed": 0,
+      "log": "/tmp/meldiq-plus-backend-failures-retest.log",
+      "logSha256": "cd4090f7e08f580391881530fda8fe292d7bc171e57009ccced7d04131361f98"
+    },
+    {
+      "name": "backend final full sweep",
+      "log": "/tmp/meldiq-plus-backend-complete.log",
+      "notes": "This run overlapped ongoing preference/contract edits, producing stale-module contract/API failures. It also had two 60-second full-catalog migration timeouts, a 20-second Rows timeout, and a forward-error catalog mismatch. All failed files were rerun successfully in a fresh process after fixing the catalog fixture placement; see final retry. This is not an all-green full-suite result.",
+      "passed": 1998,
+      "failed": 7,
+      "skipped": 21,
+      "logSha256": "01f386b7c10d2bfb6d44be1338ffc2ad694b4c446a3f084e9a524b368d3bc3ff"
+    },
+    {
+      "name": "Android full JVM suite",
+      "command": "JAVA_HOME=<Android Studio JBR> ./gradlew :app:testDebugUnitTest --console=plain",
+      "passed": 767,
+      "failed": 0,
+      "skipped": 0,
+      "files": 148,
+      "log": "/tmp/meldiq-plus-android-integrated-final.log",
+      "logSha256": "4a47d339bc264d5e38621cd156e1bf2408d1d470be331368b55f6886d51ebbc4"
+    },
+    {
+      "name": "Android billing subset",
+      "passed": 27,
+      "failed": 0,
+      "log": "/tmp/meldiq-plus-android-billing.log",
+      "logSha256": "dec29f64b7bc4eb57a866369da05fddc6e3a5f08160df4d6ffa2d121fcce3e31"
+    },
+    {
+      "name": "Android lint",
+      "status": "passed",
+      "log": "/tmp/meldiq-plus-android-lint-final.log",
+      "notes": "Final rerun includes the realtime compatibility model and signal handler.",
+      "logSha256": "c9d9ef9b69fd91edd4265825fcffce89b2a9322d28225c908880f37b1ccd955c"
+    },
+    {
+      "name": "desktop and phone checkout/popup/browser regression",
+      "passed": 21,
+      "failed": 1,
+      "log": "/tmp/meldiq-plus-browser.log",
+      "notes": "Phone rail assertion failed because that desktop rail is intentionally hidden; test corrected and retested below.",
+      "logSha256": "24ffc83308d0b6082b26a2db8db7618188416e176739e70f215567391c8207e8"
+    },
+    {
+      "name": "desktop unread decoration layering and paid-user renewal reminders on desktop and phone",
+      "passed": 3,
+      "failed": 0,
+      "skipped": 1,
+      "log": "/tmp/meldiq-plus-browser-reminder.log",
+      "logSha256": "8a763adc46d488bd0ca8ea9721ea99bb6a2545c908a5a1804ebde2bdcb048924"
+    },
+    {
+      "name": "backend fresh final retry of every latest failed file",
+      "command": "npx vitest run test/mongo_migration.test.ts test/rows.test.ts test/contracts.test.ts test/error_catalog.test.ts test/plus_promotions_api.test.ts --maxWorkers=1 --testTimeout=60000 --hookTimeout=90000",
+      "passed": 55,
+      "failed": 0,
+      "log": "/tmp/meldiq-plus-backend-last-retry.log",
+      "logSha256": "e6af4972ce97e973f9f430d9c1348887733f5f5342eb88728a0e16ed9cc93fd1"
+    },
+    {
+      "name": "backend preference API ownership/read/opt-out",
+      "passed": 4,
+      "failed": 0,
+      "log": "/tmp/meldiq-plus-preference-api.log",
+      "logSha256": "5721b6a838f91a3f73b2582f8af733d4d464bdfce7c677ca0389638151cd15ef"
+    },
+    {
+      "name": "backend fresh contracts and architecture boundaries",
+      "passed": 8,
+      "failed": 0,
+      "log": "/tmp/meldiq-plus-preference-contract.log",
+      "logSha256": "c24a756cc359036dd2ed96c582fc98a59829047d361f14ae47625a937b5f42d3"
+    },
+    {
+      "name": "web preference migration and promotion tests",
+      "passed": 6,
+      "failed": 0,
+      "log": "/tmp/meldiq-plus-preference-unit.log",
+      "logSha256": "55ef5a8136c99e706cb2d4c6d3b75d4df05c3dd9c3936da90c4bce026c0e42eb"
+    },
+    {
+      "name": "latest desktop and phone popup/renewal/preference/navigation/rail browser checks",
+      "passed": 9,
+      "failed": 0,
+      "skipped": 1,
+      "log": "/tmp/meldiq-plus-browser-final.log",
+      "logSha256": "c60caf8ee8f17e6f8071e647a9612e494d90e4a52ddc0fbc89e9b20e399f012e"
+    },
+    {
+      "name": "popup header clearance after visual review",
+      "passed": 2,
+      "failed": 0,
+      "log": "/tmp/meldiq-plus-popup-final.log",
+      "logSha256": "884cc13935d4785db35282b297cc5f208460f2e6114835b242b69597661c2bba"
+    },
+    {
+      "name": "Android final CTA telemetry compile",
+      "status": "passed",
+      "log": "/tmp/meldiq-plus-android-cta-compile.log",
+      "logSha256": "4f770f9713aee5136385d1758b1d4736751e6f06ac17e9c6c4d03a549aa0ba7a"
+    },
+    {
+      "name": "web final preference lint",
+      "status": "passed",
+      "log": "/tmp/meldiq-plus-lint-last.log",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "web final CTA lint",
+      "status": "passed",
+      "log": "/tmp/meldiq-plus-cta-lint.log",
+      "logSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "candidateBranch": "codex/plus-monetization-20261102",
+  "candidateCommit": "276788e1",
+  "frozenFullCIStillRequired": true
+}

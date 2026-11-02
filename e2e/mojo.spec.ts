@@ -3,7 +3,7 @@ import { link } from "./link";
 import { newPhone, testAddress } from "./phone";
 
 /**
- * Meldiq Mojo (server docs/MOJO.md) against a server with no payment provider, as production runs until Mojo goes on
+ * Meldiq Plus (server docs/MOJO.md) against a server with no payment provider, until reviewed offers go on
  * sale: the plans, their comparison and why subscriptions exist show, nothing can be bought, no limit is enforced, and a
  * community's Sparks open from its menu.
  */
@@ -29,7 +29,7 @@ test("Settings › Meldiq Plus shows the plans and their limits, and says it isn
   const table = page.getByRole("table");
   // The plans of 2026-10-30 (server docs/PLANS.md).
   await expect(table.getByRole("row", { name: /Characters in a message 2,000 8,000/ })).toBeVisible();
-  await expect(table.getByRole("row", { name: /Largest file you share 50 MB 1,024 MB/ })).toBeVisible();
+  await expect(table.getByRole("row", { name: /Largest file you share 50 MB 1 GB/ })).toBeVisible();
   await expect(table.getByRole("row", { name: /Bots you can make 2 10/ })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Why subscriptions?" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Meldiq Spark", exact: true })).toBeVisible();

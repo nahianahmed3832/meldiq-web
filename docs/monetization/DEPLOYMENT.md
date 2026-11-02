@@ -1,8 +1,8 @@
 # Meldiq Plus deployment and migration
 
-This candidate changes new Meldiq Plus purchases to **499 USD cents per month, 1,299 cents every three months, or 4,999 cents every twelve months**. The later scope correction preserves Bots+, Sparks and other existing products. Go remains discontinued. No live publication, customer repricing or production database migration was performed.
+This candidate changes new Meldiq Plus purchases to **499 USD cents per month, 1,299 cents every three months, or 4,999 cents every twelve months**. The later scope correction preserves Bots+, Sparks and other existing products. Go remains discontinued. New paid Plus offers and marketing campaigns remain unpublished until the provider compatibility matrix is complete. Existing agreements are never repriced. Code publication is separately authorized by the user.
 
-The server source is the isolated `codex/plus-monetization-20261102` worktree under `meldiq_android/.claude/worktrees/plus-monetization-20261102`, based on integrated API `dfb01073`. Reconcile this candidate with the latest release before deployment; other work is in progress in the shared workspace. Web edits retain the pre-existing changes. The administrator source is `meldiq_central_admin`.
+The server source is the isolated `codex/plus-monetization-20261102` worktree under `meldiq_android/.claude/worktrees/plus-monetization-20261102`, integrated with production media `b34d3ee8` and read receipts `0f77a9d8`. The release web worktree includes current main's call photos, RTT, seen receipts and compact sidebar. Use the exact sources recorded in the production receipt; never package the unrelated dirty shared checkout. The administrator source is `meldiq_central_admin`.
 
 ## Catalog and provider transition
 
@@ -40,7 +40,7 @@ Billing reminders are separate from promotional campaigns. During the last 72 ho
 
 ## Database and rollback
 
-Migration 092 adds `billing_promotion_settings`, `billing_promotion_state`, and `billing_promotion_events`, with indexes. The existing migration ledger makes application idempotent. Migration 093 adds billing frequency with a default of one to historical versions and freezes it after publication. MongoDB backfills missing frequency metadata before applying the new validator. MongoDB schema version is 9; the billing domain retains the existing database architecture. Financial, gift, customer and grant records are not rewritten or deleted. Existing promotion-code and gift-administration functions remain in their original module; upgrade discovery is in `upgradePromotions.ts`.
+Migration 093 adds `billing_promotion_settings`, `billing_promotion_state`, and `billing_promotion_events`, with indexes. The existing migration ledger makes application idempotent. Migration 094 adds billing frequency with a default of one to historical versions and freezes it after publication. MongoDB backfills missing frequency metadata before applying the new validator. MongoDB schema version is 10; the billing domain retains the existing database architecture. Financial, gift, customer and grant records are not rewritten or deleted. Existing promotion-code and gift-administration functions remain in their original module; upgrade discovery is in `upgradePromotions.ts`.
 
 Before applying anything, confirm migration/version numbers against the newest integrated source, acquire the existing release lock, take the current encrypted database/attachment backup, verify an isolated restore, and preserve a compatible fallback. Create/validate the new collections and indexes with the deployment's existing migration process and appropriate schema privileges. Do not switch database authority or storage adapters.
 
@@ -48,11 +48,19 @@ For rollback, first disable campaigns and make new Plus offers non-public while 
 
 ## Release gates
 
-1. Merge onto the current API, web, admin and Android sources and resolve concurrent contract/media/profile changes.
+1. Integrate current production sources, including attachment publication migration 092. Plus migrations remain additive at 093 and 094 (MongoDB schema 10).
 2. Finish the account-level migration inventory and verified backup/restore; preserve all provider references and history.
-3. Pass the remaining regression checks recorded in the completion report, including a frozen full regression run under the deployment test environment; earlier mixed-source runs were followed by green retries of every failing file. The earlier Android contract failures were fixed, and all 767 JVM tests pass.
-4. Complete the real Sandbox buyer and webhook matrix above, and validate guest/card eligibility without collecting raw card data.
+3. Validate the frozen release source and record exact test results and artifact hashes. The production web artifact must come from the checked GitHub Actions Node 22 build. Do not compile or run the full test suite on the VPS.
+4. Code/schema rollout may proceed with new Plus offers withheld and campaigns off. Before publishing paid offers, complete the real Sandbox buyer and webhook matrix above, and validate guest/card eligibility without collecting raw card data.
 5. Prepare distinct live product/plan IDs and verify all approved remote amounts and cadences. Obtain the compatibility/release approval before publication. Do not update a live plan's pricing scheme.
 6. Keep existing other-product settings unchanged. Configure the reviewed new Plus IDs and publish a new immutable version with `billing-paypal-plus --term=<monthly|quarterly|yearly> --publish` through the existing operator process. Record the audit/reference and verify public catalog/checkout against the provider.
 7. Verify authenticated web billing/gifts/history, unchanged add-ons and legacy renewals before enabling campaigns. Enable a limited campaign only after safety and cross-device checks.
 8. For Play-distributed Android builds, configure and verify the approved Google Play product/base-plan prices. The UI continues through native Play billing; promotions do not send users to PayPal. Follow [Google Play Payments policy](https://support.google.com/googleplay/android-developer/answer/9858738) and any applicable enrolled exception. Signing, physical-device checks and store publication remain separate release steps.
+
+## Guarded production cutover
+
+Acquire both the global production lease and web deployment lock. Guard the current image and site paths. Snapshot account and financial-record digests privately, then route all 13 API ingress entries to the existing maintenance responder. Change only the Compose API image, keeping all environment values, mounts, ports, limits and other services. Verify schema 10 across all 16 database authorities, preserved accounts/financial records, healthy Redis, legacy billing access and exact served artifact hashes. Restore ingress configuration byte-for-byte after verification. Keep previous hashed assets for open tabs.
+
+The compatible fallback contains the current production API plus the schema-10 migration/catalog metadata. It may be used only before new paid Plus terms are published. It preserves read receipts, media publication and all database authorities. It never downgrades the database or restores an old snapshot over new transactions. Never use this pre-publication fallback after accepting 499/1299/4999-cent Plus agreements.
+
+The current production media ceiling is 1,000,000,000 bytes. Preserve the newer media release's decimal-gigabyte limit and client-side encryption, previews and retries.

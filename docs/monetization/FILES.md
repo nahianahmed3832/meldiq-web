@@ -1,296 +1,416 @@
-# Files with Plus-task contributions
+# Production Plus source file manifest
 
-Web was already extensively modified and concurrently edited. These are files with task contributions, not a claim that every changed line belongs to this task. Backend/Android list is the isolated branch diff from dfb01073; admin list compares the pre-task src backup. Generated fixture synchronization also carries existing integrated API contracts. Docs hashes for this self-referential manifest are omitted.
+Web and API/Android diffs are against the production call-fix sources; admin lists the published console source. Historical candidate validation is retained separately. Runtime secrets and restore data are excluded.
 
 ## Web
 
-- [COMPLETION.md](/Volumes/code_files/meldiq_web/docs/monetization/COMPLETION.md) — `/Volumes/code_files/meldiq_web/docs/monetization/COMPLETION.md`
-- [DEPLOYMENT.md](/Volumes/code_files/meldiq_web/docs/monetization/DEPLOYMENT.md) — `/Volumes/code_files/meldiq_web/docs/monetization/DEPLOYMENT.md`
-- [FILES.md](/Volumes/code_files/meldiq_web/docs/monetization/FILES.md) — `/Volumes/code_files/meldiq_web/docs/monetization/FILES.md`
-- [files.json](/Volumes/code_files/meldiq_web/docs/monetization/files.json) — `/Volumes/code_files/meldiq_web/docs/monetization/files.json`
-- [plus-popup-desktop.png](/Volumes/code_files/meldiq_web/docs/monetization/plus-popup-desktop.png) — `/Volumes/code_files/meldiq_web/docs/monetization/plus-popup-desktop.png`
-- [plus-popup-mobile.png](/Volumes/code_files/meldiq_web/docs/monetization/plus-popup-mobile.png) — `/Volumes/code_files/meldiq_web/docs/monetization/plus-popup-mobile.png`
-- [popup-browser-desktop.png](/Volumes/code_files/meldiq_web/docs/monetization/popup-browser-desktop.png) — `/Volumes/code_files/meldiq_web/docs/monetization/popup-browser-desktop.png`
-- [popup-browser-phone.png](/Volumes/code_files/meldiq_web/docs/monetization/popup-browser-phone.png) — `/Volumes/code_files/meldiq_web/docs/monetization/popup-browser-phone.png`
-- [public-catalog-before.json](/Volumes/code_files/meldiq_web/docs/monetization/public-catalog-before.json) — `/Volumes/code_files/meldiq_web/docs/monetization/public-catalog-before.json`
-- [rail-badges-fixed.png](/Volumes/code_files/meldiq_web/docs/monetization/rail-badges-fixed.png) — `/Volumes/code_files/meldiq_web/docs/monetization/rail-badges-fixed.png`
-- [sandbox-plan.json](/Volumes/code_files/meldiq_web/docs/monetization/sandbox-plan.json) — `/Volumes/code_files/meldiq_web/docs/monetization/sandbox-plan.json`
-- [sandbox-quarterly.json](/Volumes/code_files/meldiq_web/docs/monetization/sandbox-quarterly.json) — `/Volumes/code_files/meldiq_web/docs/monetization/sandbox-quarterly.json`
-- [sandbox-verification.json](/Volumes/code_files/meldiq_web/docs/monetization/sandbox-verification.json) — `/Volumes/code_files/meldiq_web/docs/monetization/sandbox-verification.json`
-- [sandbox-yearly.json](/Volumes/code_files/meldiq_web/docs/monetization/sandbox-yearly.json) — `/Volumes/code_files/meldiq_web/docs/monetization/sandbox-yearly.json`
-- [validation.json](/Volumes/code_files/meldiq_web/docs/monetization/validation.json) — `/Volumes/code_files/meldiq_web/docs/monetization/validation.json`
-- [independent-support.spec.ts](/Volumes/code_files/meldiq_web/e2e/independent-support.spec.ts) — `/Volumes/code_files/meldiq_web/e2e/independent-support.spec.ts`
-- [mojo.spec.ts](/Volumes/code_files/meldiq_web/e2e/mojo.spec.ts) — `/Volumes/code_files/meldiq_web/e2e/mojo.spec.ts`
-- [paypal-checkout.spec.ts](/Volumes/code_files/meldiq_web/e2e/paypal-checkout.spec.ts) — `/Volumes/code_files/meldiq_web/e2e/paypal-checkout.spec.ts`
-- [rail-badges.spec.ts](/Volumes/code_files/meldiq_web/e2e/rail-badges.spec.ts) — `/Volumes/code_files/meldiq_web/e2e/rail-badges.spec.ts`
-- [mojoSchemas.ts](/Volumes/code_files/meldiq_web/src/api/mojoSchemas.ts) — `/Volumes/code_files/meldiq_web/src/api/mojoSchemas.ts`
-- [paypalSchemas.ts](/Volumes/code_files/meldiq_web/src/api/paypalSchemas.ts) — `/Volumes/code_files/meldiq_web/src/api/paypalSchemas.ts`
-- [profileSchemas.ts](/Volumes/code_files/meldiq_web/src/api/profileSchemas.ts) — `/Volumes/code_files/meldiq_web/src/api/profileSchemas.ts`
-- [promotionSchemas.ts](/Volumes/code_files/meldiq_web/src/api/promotionSchemas.ts) — `/Volumes/code_files/meldiq_web/src/api/promotionSchemas.ts`
-- [schemas.ts](/Volumes/code_files/meldiq_web/src/api/schemas.ts) — `/Volumes/code_files/meldiq_web/src/api/schemas.ts`
-- [plusSupport.ts](/Volumes/code_files/meldiq_web/src/application/plusSupport.ts) — `/Volumes/code_files/meldiq_web/src/application/plusSupport.ts`
-- [prefs.ts](/Volumes/code_files/meldiq_web/src/application/prefs.ts) — `/Volumes/code_files/meldiq_web/src/application/prefs.ts`
-- [updates.ts](/Volumes/code_files/meldiq_web/src/application/updates.ts) — `/Volumes/code_files/meldiq_web/src/application/updates.ts`
-- [livekitSession.ts](/Volumes/code_files/meldiq_web/src/call/livekitSession.ts) — `/Volumes/code_files/meldiq_web/src/call/livekitSession.ts`
-- [manager.ts](/Volumes/code_files/meldiq_web/src/call/manager.ts) — `/Volumes/code_files/meldiq_web/src/call/manager.ts`
-- [shareQuality.ts](/Volumes/code_files/meldiq_web/src/call/shareQuality.ts) — `/Volumes/code_files/meldiq_web/src/call/shareQuality.ts`
-- [types.ts](/Volumes/code_files/meldiq_web/src/call/types.ts) — `/Volumes/code_files/meldiq_web/src/call/types.ts`
-- [strings.ts](/Volumes/code_files/meldiq_web/src/i18n/strings.ts) — `/Volumes/code_files/meldiq_web/src/i18n/strings.ts`
-- [frames.ts](/Volumes/code_files/meldiq_web/src/realtime/frames.ts) — `/Volumes/code_files/meldiq_web/src/realtime/frames.ts`
-- [store.ts](/Volumes/code_files/meldiq_web/src/state/store.ts) — `/Volumes/code_files/meldiq_web/src/state/store.ts`
-- [billing.css](/Volumes/code_files/meldiq_web/src/styles/billing.css) — `/Volumes/code_files/meldiq_web/src/styles/billing.css`
-- [layout.css](/Volumes/code_files/meldiq_web/src/styles/layout.css) — `/Volumes/code_files/meldiq_web/src/styles/layout.css`
-- [mojo.css](/Volumes/code_files/meldiq_web/src/styles/mojo.css) — `/Volumes/code_files/meldiq_web/src/styles/mojo.css`
-- [tokens.css](/Volumes/code_files/meldiq_web/src/styles/tokens.css) — `/Volumes/code_files/meldiq_web/src/styles/tokens.css`
-- [engine.ts](/Volumes/code_files/meldiq_web/src/sync/engine.ts) — `/Volumes/code_files/meldiq_web/src/sync/engine.ts`
-- [expressions.ts](/Volumes/code_files/meldiq_web/src/sync/expressions.ts) — `/Volumes/code_files/meldiq_web/src/sync/expressions.ts`
-- [mojo.ts](/Volumes/code_files/meldiq_web/src/sync/mojo.ts) — `/Volumes/code_files/meldiq_web/src/sync/mojo.ts`
-- [transfers.ts](/Volumes/code_files/meldiq_web/src/sync/transfers.ts) — `/Volumes/code_files/meldiq_web/src/sync/transfers.ts`
-- [BillingPage.tsx](/Volumes/code_files/meldiq_web/src/ui/billing/BillingPage.tsx) — `/Volumes/code_files/meldiq_web/src/ui/billing/BillingPage.tsx`
-- [CheckoutPage.tsx](/Volumes/code_files/meldiq_web/src/ui/billing/CheckoutPage.tsx) — `/Volumes/code_files/meldiq_web/src/ui/billing/CheckoutPage.tsx`
-- [checkoutDraft.ts](/Volumes/code_files/meldiq_web/src/ui/billing/checkoutDraft.ts) — `/Volumes/code_files/meldiq_web/src/ui/billing/checkoutDraft.ts`
-- [ShareViews.tsx](/Volumes/code_files/meldiq_web/src/ui/call/ShareViews.tsx) — `/Volumes/code_files/meldiq_web/src/ui/call/ShareViews.tsx`
-- [Composer.tsx](/Volumes/code_files/meldiq_web/src/ui/chat/Composer.tsx) — `/Volumes/code_files/meldiq_web/src/ui/chat/Composer.tsx`
-- [CustomEmoji.tsx](/Volumes/code_files/meldiq_web/src/ui/community/CustomEmoji.tsx) — `/Volumes/code_files/meldiq_web/src/ui/community/CustomEmoji.tsx`
-- [BotsSection.tsx](/Volumes/code_files/meldiq_web/src/ui/developer/BotsSection.tsx) — `/Volumes/code_files/meldiq_web/src/ui/developer/BotsSection.tsx`
-- [CharLimit.tsx](/Volumes/code_files/meldiq_web/src/ui/mojo/CharLimit.tsx) — `/Volumes/code_files/meldiq_web/src/ui/mojo/CharLimit.tsx`
-- [MojoBadge.tsx](/Volumes/code_files/meldiq_web/src/ui/mojo/MojoBadge.tsx) — `/Volumes/code_files/meldiq_web/src/ui/mojo/MojoBadge.tsx`
-- [MojoBanner.tsx](/Volumes/code_files/meldiq_web/src/ui/mojo/MojoBanner.tsx) — `/Volumes/code_files/meldiq_web/src/ui/mojo/MojoBanner.tsx`
-- [MojoGifts.tsx](/Volumes/code_files/meldiq_web/src/ui/mojo/MojoGifts.tsx) — `/Volumes/code_files/meldiq_web/src/ui/mojo/MojoGifts.tsx`
-- [MojoPage.tsx](/Volumes/code_files/meldiq_web/src/ui/mojo/MojoPage.tsx) — `/Volumes/code_files/meldiq_web/src/ui/mojo/MojoPage.tsx`
-- [MojoPlans.tsx](/Volumes/code_files/meldiq_web/src/ui/mojo/MojoPlans.tsx) — `/Volumes/code_files/meldiq_web/src/ui/mojo/MojoPlans.tsx`
-- [PlusPromotion.tsx](/Volumes/code_files/meldiq_web/src/ui/mojo/PlusPromotion.tsx) — `/Volumes/code_files/meldiq_web/src/ui/mojo/PlusPromotion.tsx`
-- [PlusRenewalNotice.tsx](/Volumes/code_files/meldiq_web/src/ui/mojo/PlusRenewalNotice.tsx) — `/Volumes/code_files/meldiq_web/src/ui/mojo/PlusRenewalNotice.tsx`
-- [PlusSupportNotice.tsx](/Volumes/code_files/meldiq_web/src/ui/mojo/PlusSupportNotice.tsx) — `/Volumes/code_files/meldiq_web/src/ui/mojo/PlusSupportNotice.tsx`
-- [SparkSection.tsx](/Volumes/code_files/meldiq_web/src/ui/mojo/SparkSection.tsx) — `/Volumes/code_files/meldiq_web/src/ui/mojo/SparkSection.tsx`
-- [SparkTrack.tsx](/Volumes/code_files/meldiq_web/src/ui/mojo/SparkTrack.tsx) — `/Volumes/code_files/meldiq_web/src/ui/mojo/SparkTrack.tsx`
-- [mojoFormat.ts](/Volumes/code_files/meldiq_web/src/ui/mojo/mojoFormat.ts) — `/Volumes/code_files/meldiq_web/src/ui/mojo/mojoFormat.ts`
-- [useMojoLimits.ts](/Volumes/code_files/meldiq_web/src/ui/mojo/useMojoLimits.ts) — `/Volumes/code_files/meldiq_web/src/ui/mojo/useMojoLimits.ts`
-- [NameBadge.tsx](/Volumes/code_files/meldiq_web/src/ui/people/NameBadge.tsx) — `/Volumes/code_files/meldiq_web/src/ui/people/NameBadge.tsx`
-- [NameStyle.tsx](/Volumes/code_files/meldiq_web/src/ui/people/NameStyle.tsx) — `/Volumes/code_files/meldiq_web/src/ui/people/NameStyle.tsx`
-- [pointsWords.ts](/Volumes/code_files/meldiq_web/src/ui/points/pointsWords.ts) — `/Volumes/code_files/meldiq_web/src/ui/points/pointsWords.ts`
-- [PreferencePages.tsx](/Volumes/code_files/meldiq_web/src/ui/settings/PreferencePages.tsx) — `/Volumes/code_files/meldiq_web/src/ui/settings/PreferencePages.tsx`
-- [ProfileStyleCard.tsx](/Volumes/code_files/meldiq_web/src/ui/settings/ProfileStyleCard.tsx) — `/Volumes/code_files/meldiq_web/src/ui/settings/ProfileStyleCard.tsx`
-- [SettingsView.tsx](/Volumes/code_files/meldiq_web/src/ui/settings/SettingsView.tsx) — `/Volumes/code_files/meldiq_web/src/ui/settings/SettingsView.tsx`
-- [ShownBadgePicker.tsx](/Volumes/code_files/meldiq_web/src/ui/settings/ShownBadgePicker.tsx) — `/Volumes/code_files/meldiq_web/src/ui/settings/ShownBadgePicker.tsx`
-- [DmPromos.tsx](/Volumes/code_files/meldiq_web/src/ui/shell/DmPromos.tsx) — `/Volumes/code_files/meldiq_web/src/ui/shell/DmPromos.tsx`
-- [ProfileMenu.tsx](/Volumes/code_files/meldiq_web/src/ui/shell/ProfileMenu.tsx) — `/Volumes/code_files/meldiq_web/src/ui/shell/ProfileMenu.tsx`
-- [Shell.tsx](/Volumes/code_files/meldiq_web/src/ui/shell/Shell.tsx) — `/Volumes/code_files/meldiq_web/src/ui/shell/Shell.tsx`
-- [contract-fixtures.test.ts](/Volumes/code_files/meldiq_web/test/contract-fixtures.test.ts) — `/Volumes/code_files/meldiq_web/test/contract-fixtures.test.ts`
-- [GET_admin_v1_billing_gift-deliveries.json](/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_admin_v1_billing_gift-deliveries.json) — `/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_admin_v1_billing_gift-deliveries.json`
-- [GET_admin_v1_billing_orders.json](/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_admin_v1_billing_orders.json) — `/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_admin_v1_billing_orders.json`
-- [GET_admin_v1_billing_paypal_transactions.json](/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_admin_v1_billing_paypal_transactions.json) — `/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_admin_v1_billing_paypal_transactions.json`
-- [GET_admin_v1_billing_promotions.json](/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_admin_v1_billing_promotions.json) — `/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_admin_v1_billing_promotions.json`
-- [GET_admin_v1_operations_appeals.json](/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_admin_v1_operations_appeals.json) — `/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_admin_v1_operations_appeals.json`
-- [GET_admin_v1_operations_notices.json](/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_admin_v1_operations_notices.json) — `/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_admin_v1_operations_notices.json`
-- [GET_admin_v1_operations_notices_id_receipts.json](/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_admin_v1_operations_notices_id_receipts.json) — `/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_admin_v1_operations_notices_id_receipts.json`
-- [GET_admin_v1_operations_operators.json](/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_admin_v1_operations_operators.json) — `/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_admin_v1_operations_operators.json`
-- [GET_admin_v1_operations_orders.json](/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_admin_v1_operations_orders.json) — `/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_admin_v1_operations_orders.json`
-- [GET_admin_v1_operations_ownership.json](/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_admin_v1_operations_ownership.json) — `/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_admin_v1_operations_ownership.json`
-- [GET_admin_v1_operations_policy.json](/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_admin_v1_operations_policy.json) — `/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_admin_v1_operations_policy.json`
-- [GET_admin_v1_operations_policy_history.json](/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_admin_v1_operations_policy_history.json) — `/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_admin_v1_operations_policy_history.json`
-- [GET_admin_v1_operations_promotions.json](/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_admin_v1_operations_promotions.json) — `/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_admin_v1_operations_promotions.json`
-- [GET_admin_v1_reports.json](/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_admin_v1_reports.json) — `/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_admin_v1_reports.json`
-- [GET_admin_v1_reports_assignees.json](/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_admin_v1_reports_assignees.json) — `/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_admin_v1_reports_assignees.json`
-- [GET_v2_billing_gifts.json](/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_v2_billing_gifts.json) — `/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_v2_billing_gifts.json`
-- [GET_v2_billing_orders.json](/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_v2_billing_orders.json) — `/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_v2_billing_orders.json`
-- [GET_v2_billing_orders_id_receipt.json](/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_v2_billing_orders_id_receipt.json) — `/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_v2_billing_orders_id_receipt.json`
-- [GET_v2_billing_plans.json](/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_v2_billing_plans.json) — `/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_v2_billing_plans.json`
-- [GET_v2_billing_promotions_id.json](/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_v2_billing_promotions_id.json) — `/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_v2_billing_promotions_id.json`
-- [GET_v2_billing_promotions_preference.json](/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_v2_billing_promotions_preference.json) — `/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_v2_billing_promotions_preference.json`
-- [GET_v2_billing_referral.json](/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_v2_billing_referral.json) — `/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_v2_billing_referral.json`
-- [GET_v2_collectible-purchases.json](/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_v2_collectible-purchases.json) — `/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_v2_collectible-purchases.json`
-- [GET_v2_mojo_catalog.json](/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_v2_mojo_catalog.json) — `/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_v2_mojo_catalog.json`
-- [GET_v2_mojo_me.json](/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_v2_mojo_me.json) — `/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_v2_mojo_me.json`
-- [GET_v2_platform_appeals.json](/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_v2_platform_appeals.json) — `/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_v2_platform_appeals.json`
-- [GET_v2_platform_features.json](/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_v2_platform_features.json) — `/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_v2_platform_features.json`
-- [GET_v2_platform_notices.json](/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_v2_platform_notices.json) — `/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_v2_platform_notices.json`
-- [GET_v2_platform_ownership.json](/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_v2_platform_ownership.json) — `/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_v2_platform_ownership.json`
-- [POST_admin_v1_operations_appeals_id_decision.json](/Volumes/code_files/meldiq_web/test/contract-fixtures/http/POST_admin_v1_operations_appeals_id_decision.json) — `/Volumes/code_files/meldiq_web/test/contract-fixtures/http/POST_admin_v1_operations_appeals_id_decision.json`
-- [POST_admin_v1_operations_notices.json](/Volumes/code_files/meldiq_web/test/contract-fixtures/http/POST_admin_v1_operations_notices.json) — `/Volumes/code_files/meldiq_web/test/contract-fixtures/http/POST_admin_v1_operations_notices.json`
-- [POST_admin_v1_operations_notices_id_state.json](/Volumes/code_files/meldiq_web/test/contract-fixtures/http/POST_admin_v1_operations_notices_id_state.json) — `/Volumes/code_files/meldiq_web/test/contract-fixtures/http/POST_admin_v1_operations_notices_id_state.json`
-- [POST_admin_v1_operations_orders_id_refund.json](/Volumes/code_files/meldiq_web/test/contract-fixtures/http/POST_admin_v1_operations_orders_id_refund.json) — `/Volumes/code_files/meldiq_web/test/contract-fixtures/http/POST_admin_v1_operations_orders_id_refund.json`
-- [POST_admin_v1_operations_ownership.json](/Volumes/code_files/meldiq_web/test/contract-fixtures/http/POST_admin_v1_operations_ownership.json) — `/Volumes/code_files/meldiq_web/test/contract-fixtures/http/POST_admin_v1_operations_ownership.json`
-- [POST_admin_v1_operations_warnings.json](/Volumes/code_files/meldiq_web/test/contract-fixtures/http/POST_admin_v1_operations_warnings.json) — `/Volumes/code_files/meldiq_web/test/contract-fixtures/http/POST_admin_v1_operations_warnings.json`
-- [POST_v2_billing_gifts_id_link.json](/Volumes/code_files/meldiq_web/test/contract-fixtures/http/POST_v2_billing_gifts_id_link.json) — `/Volumes/code_files/meldiq_web/test/contract-fixtures/http/POST_v2_billing_gifts_id_link.json`
-- [POST_v2_billing_gifts_id_redeem.json](/Volumes/code_files/meldiq_web/test/contract-fixtures/http/POST_v2_billing_gifts_id_redeem.json) — `/Volumes/code_files/meldiq_web/test/contract-fixtures/http/POST_v2_billing_gifts_id_redeem.json`
-- [POST_v2_billing_gifts_redeem.json](/Volumes/code_files/meldiq_web/test/contract-fixtures/http/POST_v2_billing_gifts_redeem.json) — `/Volumes/code_files/meldiq_web/test/contract-fixtures/http/POST_v2_billing_gifts_redeem.json`
-- [POST_v2_billing_promotions_activity.json](/Volumes/code_files/meldiq_web/test/contract-fixtures/http/POST_v2_billing_promotions_activity.json) — `/Volumes/code_files/meldiq_web/test/contract-fixtures/http/POST_v2_billing_promotions_activity.json`
-- [POST_v2_billing_promotions_claim.json](/Volumes/code_files/meldiq_web/test/contract-fixtures/http/POST_v2_billing_promotions_claim.json) — `/Volumes/code_files/meldiq_web/test/contract-fixtures/http/POST_v2_billing_promotions_claim.json`
-- [POST_v2_billing_promotions_events.json](/Volumes/code_files/meldiq_web/test/contract-fixtures/http/POST_v2_billing_promotions_events.json) — `/Volumes/code_files/meldiq_web/test/contract-fixtures/http/POST_v2_billing_promotions_events.json`
-- [POST_v2_billing_referral_claim.json](/Volumes/code_files/meldiq_web/test/contract-fixtures/http/POST_v2_billing_referral_claim.json) — `/Volumes/code_files/meldiq_web/test/contract-fixtures/http/POST_v2_billing_referral_claim.json`
-- [POST_v2_billing_reminders_renewal.json](/Volumes/code_files/meldiq_web/test/contract-fixtures/http/POST_v2_billing_reminders_renewal.json) — `/Volumes/code_files/meldiq_web/test/contract-fixtures/http/POST_v2_billing_reminders_renewal.json`
-- [POST_v2_collectible-purchases.json](/Volumes/code_files/meldiq_web/test/contract-fixtures/http/POST_v2_collectible-purchases.json) — `/Volumes/code_files/meldiq_web/test/contract-fixtures/http/POST_v2_collectible-purchases.json`
-- [POST_v2_mojo_play_intent.json](/Volumes/code_files/meldiq_web/test/contract-fixtures/http/POST_v2_mojo_play_intent.json) — `/Volumes/code_files/meldiq_web/test/contract-fixtures/http/POST_v2_mojo_play_intent.json`
-- [POST_v2_mojo_play_verify.json](/Volumes/code_files/meldiq_web/test/contract-fixtures/http/POST_v2_mojo_play_verify.json) — `/Volumes/code_files/meldiq_web/test/contract-fixtures/http/POST_v2_mojo_play_verify.json`
-- [POST_v2_platform_appeals.json](/Volumes/code_files/meldiq_web/test/contract-fixtures/http/POST_v2_platform_appeals.json) — `/Volumes/code_files/meldiq_web/test/contract-fixtures/http/POST_v2_platform_appeals.json`
-- [POST_v2_platform_appeals_email_complete.json](/Volumes/code_files/meldiq_web/test/contract-fixtures/http/POST_v2_platform_appeals_email_complete.json) — `/Volumes/code_files/meldiq_web/test/contract-fixtures/http/POST_v2_platform_appeals_email_complete.json`
-- [POST_v2_platform_notices_id_read.json](/Volumes/code_files/meldiq_web/test/contract-fixtures/http/POST_v2_platform_notices_id_read.json) — `/Volumes/code_files/meldiq_web/test/contract-fixtures/http/POST_v2_platform_notices_id_read.json`
-- [POST_v2_platform_ownership_id_approve.json](/Volumes/code_files/meldiq_web/test/contract-fixtures/http/POST_v2_platform_ownership_id_approve.json) — `/Volumes/code_files/meldiq_web/test/contract-fixtures/http/POST_v2_platform_ownership_id_approve.json`
-- [POST_v2_platform_promotions_redeem.json](/Volumes/code_files/meldiq_web/test/contract-fixtures/http/POST_v2_platform_promotions_redeem.json) — `/Volumes/code_files/meldiq_web/test/contract-fixtures/http/POST_v2_platform_promotions_redeem.json`
-- [PUT_admin_v1_billing_promotions.json](/Volumes/code_files/meldiq_web/test/contract-fixtures/http/PUT_admin_v1_billing_promotions.json) — `/Volumes/code_files/meldiq_web/test/contract-fixtures/http/PUT_admin_v1_billing_promotions.json`
-- [PUT_admin_v1_operations_operators_id.json](/Volumes/code_files/meldiq_web/test/contract-fixtures/http/PUT_admin_v1_operations_operators_id.json) — `/Volumes/code_files/meldiq_web/test/contract-fixtures/http/PUT_admin_v1_operations_operators_id.json`
-- [PUT_admin_v1_operations_policy.json](/Volumes/code_files/meldiq_web/test/contract-fixtures/http/PUT_admin_v1_operations_policy.json) — `/Volumes/code_files/meldiq_web/test/contract-fixtures/http/PUT_admin_v1_operations_policy.json`
-- [PUT_admin_v1_operations_promotions.json](/Volumes/code_files/meldiq_web/test/contract-fixtures/http/PUT_admin_v1_operations_promotions.json) — `/Volumes/code_files/meldiq_web/test/contract-fixtures/http/PUT_admin_v1_operations_promotions.json`
-- [PUT_v2_billing_promotions_preference.json](/Volumes/code_files/meldiq_web/test/contract-fixtures/http/PUT_v2_billing_promotions_preference.json) — `/Volumes/code_files/meldiq_web/test/contract-fixtures/http/PUT_v2_billing_promotions_preference.json`
-- [billed_elsewhere.json](/Volumes/code_files/meldiq_web/test/contract-fixtures/http/errors/billed_elsewhere.json) — `/Volumes/code_files/meldiq_web/test/contract-fixtures/http/errors/billed_elsewhere.json`
-- [unavailable.json](/Volumes/code_files/meldiq_web/test/contract-fixtures/http/errors/unavailable.json) — `/Volumes/code_files/meldiq_web/test/contract-fixtures/http/errors/unavailable.json`
-- [routes.json](/Volumes/code_files/meldiq_web/test/contract-fixtures/routes.json) — `/Volumes/code_files/meldiq_web/test/contract-fixtures/routes.json`
-- [contract-source.txt](/Volumes/code_files/meldiq_web/test/contract-source.txt) — `/Volumes/code_files/meldiq_web/test/contract-source.txt`
-- [README.md](/Volumes/code_files/meldiq_web/test/forward-contract-fixtures/README.md) — `/Volumes/code_files/meldiq_web/test/forward-contract-fixtures/README.md`
-- [social_profile_required.json](/Volumes/code_files/meldiq_web/test/forward-contract-fixtures/errors/social_profile_required.json) — `/Volumes/code_files/meldiq_web/test/forward-contract-fixtures/errors/social_profile_required.json`
-- [mojo.test.ts](/Volumes/code_files/meldiq_web/test/mojo.test.ts) — `/Volumes/code_files/meldiq_web/test/mojo.test.ts`
-- [plus-promotion.test.tsx](/Volumes/code_files/meldiq_web/test/plus-promotion.test.tsx) — `/Volumes/code_files/meldiq_web/test/plus-promotion.test.tsx`
-- [plus-support.test.ts](/Volumes/code_files/meldiq_web/test/plus-support.test.ts) — `/Volumes/code_files/meldiq_web/test/plus-support.test.ts`
-- [settings-parity.test.ts](/Volumes/code_files/meldiq_web/test/settings-parity.test.ts) — `/Volumes/code_files/meldiq_web/test/settings-parity.test.ts`
+- `deploy/call-receipts-sidebar/README.md`
+- `deploy/call-receipts-sidebar/production-status.json`
+- `deploy/monetization/accounts-check.mjs`
+- `deploy/monetization/build-images.py`
+- `deploy/monetization/deploy.py`
+- `deploy/monetization/financial-check.mjs`
+- `deploy/monetization/probe-migration.mjs`
+- `docs/monetization/COMPLETION.md`
+- `docs/monetization/DEPLOYMENT.md`
+- `docs/monetization/FILES.md`
+- `docs/monetization/files.json`
+- `docs/monetization/plus-popup-desktop.png`
+- `docs/monetization/plus-popup-mobile.png`
+- `docs/monetization/popup-browser-desktop.png`
+- `docs/monetization/popup-browser-phone.png`
+- `docs/monetization/prior-candidate-validation.json`
+- `docs/monetization/public-catalog-before.json`
+- `docs/monetization/rail-badges-fixed.png`
+- `docs/monetization/sandbox-plan.json`
+- `docs/monetization/sandbox-quarterly.json`
+- `docs/monetization/sandbox-verification.json`
+- `docs/monetization/sandbox-yearly.json`
+- `docs/monetization/validation.json`
+- `e2e/independent-support.spec.ts`
+- `e2e/mojo.spec.ts`
+- `e2e/paypal-billing.spec.ts`
+- `e2e/paypal-checkout.spec.ts`
+- `e2e/paypal-existing-regression.spec.ts`
+- `e2e/rail-badges.spec.ts`
+- `src/api/mojoSchemas.ts`
+- `src/api/paypalSchemas.ts`
+- `src/api/profileSchemas.ts`
+- `src/api/promotionSchemas.ts`
+- `src/api/schemas.ts`
+- `src/application/plusSupport.ts`
+- `src/application/updates.ts`
+- `src/call/livekitSession.ts`
+- `src/call/manager.ts`
+- `src/call/shareQuality.ts`
+- `src/call/types.ts`
+- `src/i18n/strings.ts`
+- `src/realtime/frames.ts`
+- `src/state/store.ts`
+- `src/styles/billing.css`
+- `src/styles/layout.css`
+- `src/styles/mojo.css`
+- `src/styles/tokens.css`
+- `src/sync/engine.ts`
+- `src/sync/expressions.ts`
+- `src/sync/mojo.ts`
+- `src/ui/billing/AddonCheckoutPage.tsx`
+- `src/ui/billing/BillingPage.tsx`
+- `src/ui/billing/CheckoutPage.tsx`
+- `src/ui/billing/checkoutDraft.ts`
+- `src/ui/call/ShareViews.tsx`
+- `src/ui/community/CustomEmoji.tsx`
+- `src/ui/developer/BotsSection.tsx`
+- `src/ui/leaderboards/LeaderboardsPage.tsx`
+- `src/ui/mojo/CharLimit.tsx`
+- `src/ui/mojo/MojoBadge.tsx`
+- `src/ui/mojo/MojoBanner.tsx`
+- `src/ui/mojo/MojoGifts.tsx`
+- `src/ui/mojo/MojoPage.tsx`
+- `src/ui/mojo/MojoPlans.tsx`
+- `src/ui/mojo/PlusPromotion.tsx`
+- `src/ui/mojo/PlusRenewalNotice.tsx`
+- `src/ui/mojo/PlusSupportNotice.tsx`
+- `src/ui/mojo/SparkSection.tsx`
+- `src/ui/mojo/SparkTrack.tsx`
+- `src/ui/mojo/mojoFormat.ts`
+- `src/ui/mojo/useMojoLimits.ts`
+- `src/ui/people/NameBadge.tsx`
+- `src/ui/people/NameStyle.tsx`
+- `src/ui/points/pointsWords.ts`
+- `src/ui/settings/PreferencePages.tsx`
+- `src/ui/settings/ProfileStyleCard.tsx`
+- `src/ui/settings/SettingsView.tsx`
+- `src/ui/settings/ShownBadgePicker.tsx`
+- `src/ui/settings/settingsSearch.ts`
+- `src/ui/shell/DmPromos.tsx`
+- `src/ui/shell/ProfileMenu.tsx`
+- `src/ui/shell/Shell.tsx`
+- `src/ui/workspace/bots/BotParts.tsx`
+- `test/contract-fixtures.test.ts`
+- `test/contract-fixtures/http/GET_admin_v1_billing_gift-deliveries.json`
+- `test/contract-fixtures/http/GET_admin_v1_billing_orders.json`
+- `test/contract-fixtures/http/GET_admin_v1_billing_paypal_transactions.json`
+- `test/contract-fixtures/http/GET_admin_v1_billing_promotions.json`
+- `test/contract-fixtures/http/GET_admin_v1_operations_appeals.json`
+- `test/contract-fixtures/http/GET_admin_v1_operations_notices.json`
+- `test/contract-fixtures/http/GET_admin_v1_operations_operators.json`
+- `test/contract-fixtures/http/GET_admin_v1_operations_ownership.json`
+- `test/contract-fixtures/http/GET_admin_v1_operations_promotions.json`
+- `test/contract-fixtures/http/GET_admin_v1_reports.json`
+- `test/contract-fixtures/http/GET_admin_v1_reports_assignees.json`
+- `test/contract-fixtures/http/GET_v2_billing_plans.json`
+- `test/contract-fixtures/http/GET_v2_billing_promotions_id.json`
+- `test/contract-fixtures/http/GET_v2_billing_promotions_preference.json`
+- `test/contract-fixtures/http/GET_v2_billing_referral.json`
+- `test/contract-fixtures/http/GET_v2_mojo_catalog.json`
+- `test/contract-fixtures/http/GET_v2_mojo_me.json`
+- `test/contract-fixtures/http/POST_v2_billing_promotions_activity.json`
+- `test/contract-fixtures/http/POST_v2_billing_promotions_claim.json`
+- `test/contract-fixtures/http/POST_v2_billing_promotions_events.json`
+- `test/contract-fixtures/http/POST_v2_billing_referral_claim.json`
+- `test/contract-fixtures/http/POST_v2_billing_reminders_renewal.json`
+- `test/contract-fixtures/http/POST_v2_mojo_play_intent.json`
+- `test/contract-fixtures/http/POST_v2_mojo_play_verify.json`
+- `test/contract-fixtures/http/PUT_admin_v1_billing_promotions.json`
+- `test/contract-fixtures/http/PUT_v2_billing_promotions_preference.json`
+- `test/contract-fixtures/http/errors/billed_elsewhere.json`
+- `test/contract-fixtures/http/errors/unavailable.json`
+- `test/contract-fixtures/routes.json`
+- `test/contract-source.txt`
+- `test/forward-contract-fixtures/README.md`
+- `test/forward-contract-fixtures/errors/social_profile_required.json`
+- `test/identity-marks.test.tsx`
+- `test/mojo.test.ts`
+- `test/plus-promotion.test.tsx`
+- `test/plus-support.test.ts`
+- `test/settings-parity.test.ts`
 
-## API and Android isolated branch
+## Backend Android
 
-- [RealtimeEvents.kt](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/android/app/src/main/java/com/meldiq/android/data/api/RealtimeEvents.kt) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/android/app/src/main/java/com/meldiq/android/data/api/RealtimeEvents.kt`
-- [MojoModels.kt](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/android/app/src/main/java/com/meldiq/android/data/billing/MojoModels.kt) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/android/app/src/main/java/com/meldiq/android/data/billing/MojoModels.kt`
-- [MojoPlans.kt](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/android/app/src/main/java/com/meldiq/android/data/billing/MojoPlans.kt) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/android/app/src/main/java/com/meldiq/android/data/billing/MojoPlans.kt`
-- [MojoRepository.kt](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/android/app/src/main/java/com/meldiq/android/data/billing/MojoRepository.kt) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/android/app/src/main/java/com/meldiq/android/data/billing/MojoRepository.kt`
-- [PlayBilling.kt](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/android/app/src/main/java/com/meldiq/android/data/billing/PlayBilling.kt) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/android/app/src/main/java/com/meldiq/android/data/billing/PlayBilling.kt`
-- [PlayProducts.kt](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/android/app/src/main/java/com/meldiq/android/data/billing/PlayProducts.kt) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/android/app/src/main/java/com/meldiq/android/data/billing/PlayProducts.kt`
-- [PlusPromotions.kt](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/android/app/src/main/java/com/meldiq/android/data/billing/PlusPromotions.kt) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/android/app/src/main/java/com/meldiq/android/data/billing/PlusPromotions.kt`
-- [MessageSignals.kt](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/android/app/src/main/java/com/meldiq/android/data/repo/MessageSignals.kt) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/android/app/src/main/java/com/meldiq/android/data/repo/MessageSignals.kt`
-- [AppContainer.kt](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/android/app/src/main/java/com/meldiq/android/di/AppContainer.kt) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/android/app/src/main/java/com/meldiq/android/di/AppContainer.kt`
-- [CommunityHomeScreen.kt](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/android/app/src/main/java/com/meldiq/android/ui/screens/community/CommunityHomeScreen.kt) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/android/app/src/main/java/com/meldiq/android/ui/screens/community/CommunityHomeScreen.kt`
-- [MojoGiftSheet.kt](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/android/app/src/main/java/com/meldiq/android/ui/screens/mojo/MojoGiftSheet.kt) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/android/app/src/main/java/com/meldiq/android/ui/screens/mojo/MojoGiftSheet.kt`
-- [MojoPlanCards.kt](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/android/app/src/main/java/com/meldiq/android/ui/screens/mojo/MojoPlanCards.kt) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/android/app/src/main/java/com/meldiq/android/ui/screens/mojo/MojoPlanCards.kt`
-- [MojoScreen.kt](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/android/app/src/main/java/com/meldiq/android/ui/screens/mojo/MojoScreen.kt) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/android/app/src/main/java/com/meldiq/android/ui/screens/mojo/MojoScreen.kt`
-- [PlusBillingSheet.kt](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/android/app/src/main/java/com/meldiq/android/ui/screens/mojo/PlusBillingSheet.kt) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/android/app/src/main/java/com/meldiq/android/ui/screens/mojo/PlusBillingSheet.kt`
-- [PlusPromotionHost.kt](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/android/app/src/main/java/com/meldiq/android/ui/screens/mojo/PlusPromotionHost.kt) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/android/app/src/main/java/com/meldiq/android/ui/screens/mojo/PlusPromotionHost.kt`
-- [PlusRenewalHost.kt](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/android/app/src/main/java/com/meldiq/android/ui/screens/mojo/PlusRenewalHost.kt) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/android/app/src/main/java/com/meldiq/android/ui/screens/mojo/PlusRenewalHost.kt`
-- [strings_mojo.xml](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/android/app/src/main/res/values-bn/strings_mojo.xml) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/android/app/src/main/res/values-bn/strings_mojo.xml`
-- [strings_mojo.xml](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/android/app/src/main/res/values-zh-rCN/strings_mojo.xml) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/android/app/src/main/res/values-zh-rCN/strings_mojo.xml`
-- [strings_mojo.xml](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/android/app/src/main/res/values/strings_mojo.xml) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/android/app/src/main/res/values/strings_mojo.xml`
-- [RealtimeCodecTest.kt](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/android/app/src/test/java/com/meldiq/android/data/api/RealtimeCodecTest.kt) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/android/app/src/test/java/com/meldiq/android/data/api/RealtimeCodecTest.kt`
-- [MojoPlansTest.kt](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/android/app/src/test/java/com/meldiq/android/data/billing/MojoPlansTest.kt) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/android/app/src/test/java/com/meldiq/android/data/billing/MojoPlansTest.kt`
-- [MojoRepositoryTest.kt](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/android/app/src/test/java/com/meldiq/android/data/billing/MojoRepositoryTest.kt) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/android/app/src/test/java/com/meldiq/android/data/billing/MojoRepositoryTest.kt`
-- [COVERAGE.md](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/docs/api/COVERAGE.md) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/docs/api/COVERAGE.md`
-- [openapi.json](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/docs/api/openapi.json) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/docs/api/openapi.json`
-- [092_plus_promotions.sql](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/migrations/092_plus_promotions.sql) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/migrations/092_plus_promotions.sql`
-- [093_plus_billing_terms.sql](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/migrations/093_plus_billing_terms.sql) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/migrations/093_plus_billing_terms.sql`
-- [plus-pricing.env.example](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/plus-pricing.env.example) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/plus-pricing.env.example`
-- [paypal-live-setup.ts](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/scripts/paypal-live-setup.ts) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/scripts/paypal-live-setup.ts`
-- [paypal-plus-v2-setup.ts](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/scripts/paypal-plus-v2-setup.ts) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/scripts/paypal-plus-v2-setup.ts`
-- [paypal-sandbox-setup.ts](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/scripts/paypal-sandbox-setup.ts) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/scripts/paypal-sandbox-setup.ts`
-- [verify-plus-sandbox.ts](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/scripts/verify-plus-sandbox.ts) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/scripts/verify-plus-sandbox.ts`
-- [admin.ts](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/admin.ts) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/admin.ts`
-- [catalog.ts](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/infrastructure/database/mongo/catalog.ts) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/infrastructure/database/mongo/catalog.ts`
-- [client.ts](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/infrastructure/database/mongo/client.ts) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/infrastructure/database/mongo/client.ts`
-- [mongoRows.ts](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/infrastructure/database/rows/mongoRows.ts) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/infrastructure/database/rows/mongoRows.ts`
-- [schema.generated.ts](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/infrastructure/database/schema.generated.ts) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/infrastructure/database/schema.generated.ts`
-- [cardSubscriptions.ts](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/billing/cardSubscriptions.ts) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/billing/cardSubscriptions.ts`
-- [catalog.ts](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/billing/catalog.ts) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/billing/catalog.ts`
-- [config.ts](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/billing/config.ts) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/billing/config.ts`
-- [controls.ts](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/billing/controls.ts) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/billing/controls.ts`
-- [gifts.ts](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/billing/gifts.ts) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/billing/gifts.ts`
-- [index.ts](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/billing/index.ts) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/billing/index.ts`
-- [metrics.ts](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/billing/metrics.ts) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/billing/metrics.ts`
-- [mojo.ts](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/billing/mojo.ts) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/billing/mojo.ts`
-- [mojoRoutes.ts](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/billing/mojoRoutes.ts) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/billing/mojoRoutes.ts`
-- [notifications.ts](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/billing/notifications.ts) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/billing/notifications.ts`
-- [paypalCheckout.ts](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/billing/paypalCheckout.ts) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/billing/paypalCheckout.ts`
-- [perks.ts](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/billing/perks.ts) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/billing/perks.ts`
-- [play.ts](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/billing/play.ts) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/billing/play.ts`
-- [pricing.ts](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/billing/pricing.ts) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/billing/pricing.ts`
-- [pricingMigration.ts](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/billing/pricingMigration.ts) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/billing/pricingMigration.ts`
-- [promotionRoutes.ts](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/billing/promotionRoutes.ts) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/billing/promotionRoutes.ts`
-- [googlePlay.ts](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/billing/providers/googlePlay.ts) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/billing/providers/googlePlay.ts`
-- [paypal.ts](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/billing/providers/paypal.ts) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/billing/providers/paypal.ts`
-- [routes.ts](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/billing/routes.ts) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/billing/routes.ts`
-- [service.ts](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/billing/service.ts) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/billing/service.ts`
-- [stripeSetup.ts](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/billing/stripeSetup.ts) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/billing/stripeSetup.ts`
-- [subscriptions.ts](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/billing/subscriptions.ts) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/billing/subscriptions.ts`
-- [upgradePromotions.ts](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/billing/upgradePromotions.ts) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/billing/upgradePromotions.ts`
-- [routes.ts](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/files/routes.ts) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/files/routes.ts`
-- [expressionsRoutes.ts](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/organizations/expressionsRoutes.ts) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/organizations/expressionsRoutes.ts`
-- [audience.ts](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/platformAdmin/audience.ts) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/platformAdmin/audience.ts`
-- [billing.ts](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/platformAdmin/billing.ts) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/platformAdmin/billing.ts`
-- [index.ts](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/platformAdmin/index.ts) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/platformAdmin/index.ts`
-- [mojo.ts](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/platformAdmin/mojo.ts) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/platformAdmin/mojo.ts`
-- [opsRoutes.ts](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/platformAdmin/opsRoutes.ts) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/platformAdmin/opsRoutes.ts`
-- [billing.ts](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/shared/contracts/http/areas/billing.ts) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/shared/contracts/http/areas/billing.ts`
-- [mojo.ts](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/shared/contracts/http/areas/mojo.ts) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/shared/contracts/http/areas/mojo.ts`
-- [billing.ts](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/shared/contracts/http/billing.ts) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/shared/contracts/http/billing.ts`
-- [cardSubscriptions.ts](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/shared/contracts/http/cardSubscriptions.ts) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/shared/contracts/http/cardSubscriptions.ts`
-- [mojo.ts](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/shared/contracts/http/mojo.ts) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/shared/contracts/http/mojo.ts`
-- [paypal.ts](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/shared/contracts/http/paypal.ts) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/shared/contracts/http/paypal.ts`
-- [platformAdminBilling.ts](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/shared/contracts/http/platformAdminBilling.ts) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/shared/contracts/http/platformAdminBilling.ts`
-- [pricing.ts](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/shared/contracts/http/pricing.ts) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/shared/contracts/http/pricing.ts`
-- [promotions.ts](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/shared/contracts/http/promotions.ts) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/shared/contracts/http/promotions.ts`
-- [errors.ts](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/shared/errors.ts) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/shared/errors.ts`
-- [architecture_boundaries.test.ts](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/test/architecture_boundaries.test.ts) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/test/architecture_boundaries.test.ts`
-- [billing_paypal.test.ts](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/test/billing_paypal.test.ts) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/test/billing_paypal.test.ts`
-- [billing_paypal_live.test.ts](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/test/billing_paypal_live.test.ts) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/test/billing_paypal_live.test.ts`
-- [billing_plus_terms.test.ts](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/test/billing_plus_terms.test.ts) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/test/billing_plus_terms.test.ts`
-- [billing_program.test.ts](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/test/billing_program.test.ts) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/test/billing_program.test.ts`
-- [billing_stripe_e2e.test.ts](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/test/billing_stripe_e2e.test.ts) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/test/billing_stripe_e2e.test.ts`
-- [billing_trials.test.ts](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/test/billing_trials.test.ts) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/test/billing_trials.test.ts`
-- [card_subscriptions.test.ts](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/test/card_subscriptions.test.ts) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/test/card_subscriptions.test.ts`
-- [creators.test.ts](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/test/creators.test.ts) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/test/creators.test.ts`
-- [mojo.test.ts](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/test/mojo.test.ts) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/test/mojo.test.ts`
-- [mongo_capacity.test.ts](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/test/mongo_capacity.test.ts) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/test/mongo_capacity.test.ts`
-- [mongo_migration.test.ts](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/test/mongo_migration.test.ts) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/test/mongo_migration.test.ts`
-- [paypal_sandbox_gift_lifecycle.test.ts](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/test/paypal_sandbox_gift_lifecycle.test.ts) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/test/paypal_sandbox_gift_lifecycle.test.ts`
-- [platform_admin_sweep.test.ts](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/test/platform_admin_sweep.test.ts) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/test/platform_admin_sweep.test.ts`
-- [play.test.ts](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/test/play.test.ts) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/test/play.test.ts`
-- [plus_promotions.test.ts](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/test/plus_promotions.test.ts) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/test/plus_promotions.test.ts`
-- [plus_promotions_api.test.ts](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/test/plus_promotions_api.test.ts) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/test/plus_promotions_api.test.ts`
-- [plus_promotions_mongo.test.ts](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/test/plus_promotions_mongo.test.ts) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/test/plus_promotions_mongo.test.ts`
-- [points.test.ts](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/test/points.test.ts) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/test/points.test.ts`
-- [standalone_commerce_paypal.test.ts](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/test/standalone_commerce_paypal.test.ts) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/test/standalone_commerce_paypal.test.ts`
-- [mongoGlobal.ts](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/test/support/mongoGlobal.ts) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/test/support/mongoGlobal.ts`
-- [vitest.config.ts](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/vitest.config.ts) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/vitest.config.ts`
-- [vitest.plus.config.ts](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/vitest.plus.config.ts) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/vitest.plus.config.ts`
-- [GET_admin_v1_billing_gift-deliveries.json](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/GET_admin_v1_billing_gift-deliveries.json) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/GET_admin_v1_billing_gift-deliveries.json`
-- [GET_admin_v1_billing_orders.json](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/GET_admin_v1_billing_orders.json) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/GET_admin_v1_billing_orders.json`
-- [GET_admin_v1_billing_paypal_transactions.json](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/GET_admin_v1_billing_paypal_transactions.json) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/GET_admin_v1_billing_paypal_transactions.json`
-- [GET_admin_v1_billing_promotions.json](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/GET_admin_v1_billing_promotions.json) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/GET_admin_v1_billing_promotions.json`
-- [GET_admin_v1_operations_appeals.json](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/GET_admin_v1_operations_appeals.json) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/GET_admin_v1_operations_appeals.json`
-- [GET_admin_v1_operations_notices.json](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/GET_admin_v1_operations_notices.json) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/GET_admin_v1_operations_notices.json`
-- [GET_admin_v1_operations_operators.json](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/GET_admin_v1_operations_operators.json) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/GET_admin_v1_operations_operators.json`
-- [GET_admin_v1_operations_ownership.json](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/GET_admin_v1_operations_ownership.json) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/GET_admin_v1_operations_ownership.json`
-- [GET_admin_v1_operations_promotions.json](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/GET_admin_v1_operations_promotions.json) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/GET_admin_v1_operations_promotions.json`
-- [GET_admin_v1_reports.json](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/GET_admin_v1_reports.json) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/GET_admin_v1_reports.json`
-- [GET_admin_v1_reports_assignees.json](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/GET_admin_v1_reports_assignees.json) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/GET_admin_v1_reports_assignees.json`
-- [GET_v2_billing_plans.json](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/GET_v2_billing_plans.json) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/GET_v2_billing_plans.json`
-- [GET_v2_billing_promotions_id.json](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/GET_v2_billing_promotions_id.json) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/GET_v2_billing_promotions_id.json`
-- [GET_v2_billing_promotions_preference.json](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/GET_v2_billing_promotions_preference.json) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/GET_v2_billing_promotions_preference.json`
-- [GET_v2_billing_referral.json](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/GET_v2_billing_referral.json) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/GET_v2_billing_referral.json`
-- [GET_v2_mojo_catalog.json](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/GET_v2_mojo_catalog.json) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/GET_v2_mojo_catalog.json`
-- [GET_v2_mojo_me.json](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/GET_v2_mojo_me.json) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/GET_v2_mojo_me.json`
-- [POST_v2_billing_promotions_activity.json](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/POST_v2_billing_promotions_activity.json) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/POST_v2_billing_promotions_activity.json`
-- [POST_v2_billing_promotions_claim.json](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/POST_v2_billing_promotions_claim.json) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/POST_v2_billing_promotions_claim.json`
-- [POST_v2_billing_promotions_events.json](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/POST_v2_billing_promotions_events.json) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/POST_v2_billing_promotions_events.json`
-- [POST_v2_billing_referral_claim.json](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/POST_v2_billing_referral_claim.json) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/POST_v2_billing_referral_claim.json`
-- [POST_v2_billing_reminders_renewal.json](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/POST_v2_billing_reminders_renewal.json) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/POST_v2_billing_reminders_renewal.json`
-- [POST_v2_mojo_play_intent.json](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/POST_v2_mojo_play_intent.json) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/POST_v2_mojo_play_intent.json`
-- [POST_v2_mojo_play_verify.json](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/POST_v2_mojo_play_verify.json) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/POST_v2_mojo_play_verify.json`
-- [PUT_admin_v1_billing_promotions.json](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/PUT_admin_v1_billing_promotions.json) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/PUT_admin_v1_billing_promotions.json`
-- [PUT_v2_billing_promotions_preference.json](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/PUT_v2_billing_promotions_preference.json) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/PUT_v2_billing_promotions_preference.json`
-- [billed_elsewhere.json](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/errors/billed_elsewhere.json) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/errors/billed_elsewhere.json`
-- [unavailable.json](/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/errors/unavailable.json) — `/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/errors/unavailable.json`
+- `android/app/src/main/java/com/meldiq/android/data/api/RealtimeEvents.kt`
+- `android/app/src/main/java/com/meldiq/android/data/billing/MojoModels.kt`
+- `android/app/src/main/java/com/meldiq/android/data/billing/MojoPlans.kt`
+- `android/app/src/main/java/com/meldiq/android/data/billing/MojoRepository.kt`
+- `android/app/src/main/java/com/meldiq/android/data/billing/PlayBilling.kt`
+- `android/app/src/main/java/com/meldiq/android/data/billing/PlayProducts.kt`
+- `android/app/src/main/java/com/meldiq/android/data/billing/PlusPromotions.kt`
+- `android/app/src/main/java/com/meldiq/android/data/repo/MessageSignals.kt`
+- `android/app/src/main/java/com/meldiq/android/di/AppContainer.kt`
+- `android/app/src/main/java/com/meldiq/android/ui/screens/community/CommunityHomeScreen.kt`
+- `android/app/src/main/java/com/meldiq/android/ui/screens/mojo/MojoGiftSheet.kt`
+- `android/app/src/main/java/com/meldiq/android/ui/screens/mojo/MojoPlanCards.kt`
+- `android/app/src/main/java/com/meldiq/android/ui/screens/mojo/MojoScreen.kt`
+- `android/app/src/main/java/com/meldiq/android/ui/screens/mojo/PlusBillingSheet.kt`
+- `android/app/src/main/java/com/meldiq/android/ui/screens/mojo/PlusPromotionHost.kt`
+- `android/app/src/main/java/com/meldiq/android/ui/screens/mojo/PlusRenewalHost.kt`
+- `android/app/src/main/res/values-bn/strings_mojo.xml`
+- `android/app/src/main/res/values-zh-rCN/strings_mojo.xml`
+- `android/app/src/main/res/values/strings_mojo.xml`
+- `android/app/src/test/java/com/meldiq/android/data/api/RealtimeCodecTest.kt`
+- `android/app/src/test/java/com/meldiq/android/data/billing/MojoPlansTest.kt`
+- `android/app/src/test/java/com/meldiq/android/data/billing/MojoRepositoryTest.kt`
+- `docs/api/COVERAGE.md`
+- `docs/api/openapi.json`
+- `server/migrations/093_plus_promotions.sql`
+- `server/migrations/094_plus_billing_terms.sql`
+- `server/plus-pricing.env.example`
+- `server/scripts/paypal-live-setup.ts`
+- `server/scripts/paypal-plus-v2-setup.ts`
+- `server/scripts/paypal-sandbox-setup.ts`
+- `server/scripts/verify-plus-sandbox.ts`
+- `server/src/admin.ts`
+- `server/src/infrastructure/database/mongo/catalog.ts`
+- `server/src/infrastructure/database/mongo/client.ts`
+- `server/src/infrastructure/database/rows/mongoRows.ts`
+- `server/src/infrastructure/database/schema.generated.ts`
+- `server/src/modules/billing/cardSubscriptions.ts`
+- `server/src/modules/billing/catalog.ts`
+- `server/src/modules/billing/config.ts`
+- `server/src/modules/billing/controls.ts`
+- `server/src/modules/billing/gifts.ts`
+- `server/src/modules/billing/index.ts`
+- `server/src/modules/billing/metrics.ts`
+- `server/src/modules/billing/mojo.ts`
+- `server/src/modules/billing/mojoRoutes.ts`
+- `server/src/modules/billing/notifications.ts`
+- `server/src/modules/billing/paypalCheckout.ts`
+- `server/src/modules/billing/perks.ts`
+- `server/src/modules/billing/play.ts`
+- `server/src/modules/billing/pricing.ts`
+- `server/src/modules/billing/pricingMigration.ts`
+- `server/src/modules/billing/promotionRoutes.ts`
+- `server/src/modules/billing/providers/googlePlay.ts`
+- `server/src/modules/billing/providers/paypal.ts`
+- `server/src/modules/billing/routes.ts`
+- `server/src/modules/billing/service.ts`
+- `server/src/modules/billing/stripeSetup.ts`
+- `server/src/modules/billing/subscriptions.ts`
+- `server/src/modules/billing/upgradePromotions.ts`
+- `server/src/modules/files/index.ts`
+- `server/src/modules/files/routes.ts`
+- `server/src/modules/messaging/serverSend.ts`
+- `server/src/modules/organizations/expressionsRoutes.ts`
+- `server/src/modules/platformAdmin/audience.ts`
+- `server/src/modules/platformAdmin/billing.ts`
+- `server/src/modules/platformAdmin/index.ts`
+- `server/src/modules/platformAdmin/mojo.ts`
+- `server/src/modules/platformAdmin/opsRoutes.ts`
+- `server/src/shared/contracts/http/areas/billing.ts`
+- `server/src/shared/contracts/http/areas/mojo.ts`
+- `server/src/shared/contracts/http/billing.ts`
+- `server/src/shared/contracts/http/cardSubscriptions.ts`
+- `server/src/shared/contracts/http/mojo.ts`
+- `server/src/shared/contracts/http/paypal.ts`
+- `server/src/shared/contracts/http/platformAdminBilling.ts`
+- `server/src/shared/contracts/http/pricing.ts`
+- `server/src/shared/contracts/http/promotions.ts`
+- `server/src/shared/errors.ts`
+- `server/test/architecture_boundaries.test.ts`
+- `server/test/billing_paypal.test.ts`
+- `server/test/billing_paypal_live.test.ts`
+- `server/test/billing_plus_terms.test.ts`
+- `server/test/billing_program.test.ts`
+- `server/test/billing_stripe_e2e.test.ts`
+- `server/test/billing_trials.test.ts`
+- `server/test/card_subscriptions.test.ts`
+- `server/test/community_permissions.test.ts`
+- `server/test/creators.test.ts`
+- `server/test/mojo.test.ts`
+- `server/test/mongo_capacity.test.ts`
+- `server/test/mongo_migration.test.ts`
+- `server/test/official_bots_games.test.ts`
+- `server/test/paypal_sandbox_gift_lifecycle.test.ts`
+- `server/test/platform_admin_sweep.test.ts`
+- `server/test/play.test.ts`
+- `server/test/plus_promotions.test.ts`
+- `server/test/plus_promotions_api.test.ts`
+- `server/test/plus_promotions_mongo.test.ts`
+- `server/test/points.test.ts`
+- `server/test/standalone_commerce_paypal.test.ts`
+- `server/test/support/mongoGlobal.ts`
+- `server/vitest.config.ts`
+- `server/vitest.plus.config.ts`
+- `shared/contracts/fixtures/http/GET_admin_v1_billing_gift-deliveries.json`
+- `shared/contracts/fixtures/http/GET_admin_v1_billing_orders.json`
+- `shared/contracts/fixtures/http/GET_admin_v1_billing_paypal_transactions.json`
+- `shared/contracts/fixtures/http/GET_admin_v1_billing_promotions.json`
+- `shared/contracts/fixtures/http/GET_admin_v1_operations_appeals.json`
+- `shared/contracts/fixtures/http/GET_admin_v1_operations_notices.json`
+- `shared/contracts/fixtures/http/GET_admin_v1_operations_operators.json`
+- `shared/contracts/fixtures/http/GET_admin_v1_operations_ownership.json`
+- `shared/contracts/fixtures/http/GET_admin_v1_operations_promotions.json`
+- `shared/contracts/fixtures/http/GET_admin_v1_reports.json`
+- `shared/contracts/fixtures/http/GET_admin_v1_reports_assignees.json`
+- `shared/contracts/fixtures/http/GET_v2_billing_plans.json`
+- `shared/contracts/fixtures/http/GET_v2_billing_promotions_id.json`
+- `shared/contracts/fixtures/http/GET_v2_billing_promotions_preference.json`
+- `shared/contracts/fixtures/http/GET_v2_billing_referral.json`
+- `shared/contracts/fixtures/http/GET_v2_mojo_catalog.json`
+- `shared/contracts/fixtures/http/GET_v2_mojo_me.json`
+- `shared/contracts/fixtures/http/POST_v2_billing_promotions_activity.json`
+- `shared/contracts/fixtures/http/POST_v2_billing_promotions_claim.json`
+- `shared/contracts/fixtures/http/POST_v2_billing_promotions_events.json`
+- `shared/contracts/fixtures/http/POST_v2_billing_referral_claim.json`
+- `shared/contracts/fixtures/http/POST_v2_billing_reminders_renewal.json`
+- `shared/contracts/fixtures/http/POST_v2_mojo_play_intent.json`
+- `shared/contracts/fixtures/http/POST_v2_mojo_play_verify.json`
+- `shared/contracts/fixtures/http/PUT_admin_v1_billing_promotions.json`
+- `shared/contracts/fixtures/http/PUT_v2_billing_promotions_preference.json`
+- `shared/contracts/fixtures/http/errors/billed_elsewhere.json`
+- `shared/contracts/fixtures/http/errors/unavailable.json`
 
 ## Admin
 
-- [contracts.ts](/Volumes/code_files/meldiq_central_admin/src/api/contracts.ts) — `/Volumes/code_files/meldiq_central_admin/src/api/contracts.ts`
-- [SiteDetails.tsx](/Volumes/code_files/meldiq_central_admin/src/console/pages/SiteDetails.tsx) — `/Volumes/code_files/meldiq_central_admin/src/console/pages/SiteDetails.tsx`
-- [UserDetail.tsx](/Volumes/code_files/meldiq_central_admin/src/console/pages/UserDetail.tsx) — `/Volumes/code_files/meldiq_central_admin/src/console/pages/UserDetail.tsx`
-- [CreateAccountDialog.tsx](/Volumes/code_files/meldiq_central_admin/src/console/pages/accounts/CreateAccountDialog.tsx) — `/Volumes/code_files/meldiq_central_admin/src/console/pages/accounts/CreateAccountDialog.tsx`
-- [ResultDialog.tsx](/Volumes/code_files/meldiq_central_admin/src/console/pages/accounts/ResultDialog.tsx) — `/Volumes/code_files/meldiq_central_admin/src/console/pages/accounts/ResultDialog.tsx`
-- [Billing.tsx](/Volumes/code_files/meldiq_central_admin/src/console/pages/billing/Billing.tsx) — `/Volumes/code_files/meldiq_central_admin/src/console/pages/billing/Billing.tsx`
-- [MojoActivity.tsx](/Volumes/code_files/meldiq_central_admin/src/console/pages/billing/MojoActivity.tsx) — `/Volumes/code_files/meldiq_central_admin/src/console/pages/billing/MojoActivity.tsx`
-- [MojoControls.tsx](/Volumes/code_files/meldiq_central_admin/src/console/pages/billing/MojoControls.tsx) — `/Volumes/code_files/meldiq_central_admin/src/console/pages/billing/MojoControls.tsx`
-- [MojoLimitsDialog.tsx](/Volumes/code_files/meldiq_central_admin/src/console/pages/billing/MojoLimitsDialog.tsx) — `/Volumes/code_files/meldiq_central_admin/src/console/pages/billing/MojoLimitsDialog.tsx`
-- [PlanForms.tsx](/Volumes/code_files/meldiq_central_admin/src/console/pages/billing/PlanForms.tsx) — `/Volumes/code_files/meldiq_central_admin/src/console/pages/billing/PlanForms.tsx`
-- [Plans.tsx](/Volumes/code_files/meldiq_central_admin/src/console/pages/billing/Plans.tsx) — `/Volumes/code_files/meldiq_central_admin/src/console/pages/billing/Plans.tsx`
-- [Program.tsx](/Volumes/code_files/meldiq_central_admin/src/console/pages/billing/Program.tsx) — `/Volumes/code_files/meldiq_central_admin/src/console/pages/billing/Program.tsx`
-- [Promotions.tsx](/Volumes/code_files/meldiq_central_admin/src/console/pages/billing/Promotions.tsx) — `/Volumes/code_files/meldiq_central_admin/src/console/pages/billing/Promotions.tsx`
-- [SubscriptionDetail.tsx](/Volumes/code_files/meldiq_central_admin/src/console/pages/billing/SubscriptionDetail.tsx) — `/Volumes/code_files/meldiq_central_admin/src/console/pages/billing/SubscriptionDetail.tsx`
-- [mojo.tsx](/Volumes/code_files/meldiq_central_admin/src/console/pages/billing/mojo.tsx) — `/Volumes/code_files/meldiq_central_admin/src/console/pages/billing/mojo.tsx`
-- [mojoFields.ts](/Volumes/code_files/meldiq_central_admin/src/console/pages/billing/mojoFields.ts) — `/Volumes/code_files/meldiq_central_admin/src/console/pages/billing/mojoFields.ts`
-- [MojoPanel.tsx](/Volumes/code_files/meldiq_central_admin/src/console/pages/user/MojoPanel.tsx) — `/Volumes/code_files/meldiq_central_admin/src/console/pages/user/MojoPanel.tsx`
-- [billing.css](/Volumes/code_files/meldiq_central_admin/src/console/styles/pages/billing.css) — `/Volumes/code_files/meldiq_central_admin/src/console/styles/pages/billing.css`
+- `index.html`
+- `package-lock.json`
+- `package.json`
+- `public/favicon-dark-32.png`
+- `public/favicon-light-32.png`
+- `public/fonts/OFL.txt`
+- `public/fonts/PlusJakartaSans.ttf`
+- `public/meldling-128.png`
+- `scripts/contracts.ts`
+- `src/api/client.ts`
+- `src/api/collectibles.ts`
+- `src/api/contracts.ts`
+- `src/api/operations.ts`
+- `src/api/platformFeatures.ts`
+- `src/app/format.ts`
+- `src/app/session.tsx`
+- `src/app/useResource.ts`
+- `src/console/App.tsx`
+- `src/console/auth/AuthLayout.tsx`
+- `src/console/auth/Enrol.tsx`
+- `src/console/auth/ReauthDialog.tsx`
+- `src/console/auth/SignIn.tsx`
+- `src/console/auth/webauthn.ts`
+- `src/console/charts/BarCompareChart.tsx`
+- `src/console/charts/BarList.tsx`
+- `src/console/charts/ChartTable.tsx`
+- `src/console/charts/CohortGrid.tsx`
+- `src/console/charts/Donut.tsx`
+- `src/console/charts/Sparkline.tsx`
+- `src/console/charts/TrendChart.tsx`
+- `src/console/charts/scale.ts`
+- `src/console/charts/useWidth.ts`
+- `src/console/days.ts`
+- `src/console/kit/Card.tsx`
+- `src/console/kit/DataTable.tsx`
+- `src/console/kit/Dialog.tsx`
+- `src/console/kit/ExportButton.tsx`
+- `src/console/kit/Kpi.tsx`
+- `src/console/kit/PageHeader.tsx`
+- `src/console/kit/SearchBar.tsx`
+- `src/console/kit/States.tsx`
+- `src/console/kit/StatusBadge.tsx`
+- `src/console/kit/Switch.tsx`
+- `src/console/kit/Tabs.tsx`
+- `src/console/kit/Timestamp.tsx`
+- `src/console/main.tsx`
+- `src/console/money.ts`
+- `src/console/pages/Accounts.tsx`
+- `src/console/pages/Admins.tsx`
+- `src/console/pages/Analytics.tsx`
+- `src/console/pages/Audit.tsx`
+- `src/console/pages/CollectibleManager.tsx`
+- `src/console/pages/Controls.tsx`
+- `src/console/pages/Creators.tsx`
+- `src/console/pages/Decorations.tsx`
+- `src/console/pages/Devices.tsx`
+- `src/console/pages/IncidentDetail.tsx`
+- `src/console/pages/Incidents.tsx`
+- `src/console/pages/Infrastructure.tsx`
+- `src/console/pages/Live.tsx`
+- `src/console/pages/Moderation.tsx`
+- `src/console/pages/OperationalControls.tsx`
+- `src/console/pages/OrgDetail.tsx`
+- `src/console/pages/Orgs.tsx`
+- `src/console/pages/Overview.tsx`
+- `src/console/pages/Quotas.tsx`
+- `src/console/pages/Resources.tsx`
+- `src/console/pages/Settings.tsx`
+- `src/console/pages/SiteDetails.tsx`
+- `src/console/pages/UserDetail.tsx`
+- `src/console/pages/Users.tsx`
+- `src/console/pages/accounts/ChangeVerificationDialog.tsx`
+- `src/console/pages/accounts/CreateAccountDialog.tsx`
+- `src/console/pages/accounts/ResultDialog.tsx`
+- `src/console/pages/accounts/VerificationFields.tsx`
+- `src/console/pages/accounts/labels.ts`
+- `src/console/pages/billing/Billing.tsx`
+- `src/console/pages/billing/BillingOverview.tsx`
+- `src/console/pages/billing/FreePeriods.tsx`
+- `src/console/pages/billing/Gifts.tsx`
+- `src/console/pages/billing/Limits.tsx`
+- `src/console/pages/billing/MojoActivity.tsx`
+- `src/console/pages/billing/MojoControls.tsx`
+- `src/console/pages/billing/MojoLimitsDialog.tsx`
+- `src/console/pages/billing/Orders.tsx`
+- `src/console/pages/billing/PayPalTransactions.tsx`
+- `src/console/pages/billing/PlanForms.tsx`
+- `src/console/pages/billing/Plans.tsx`
+- `src/console/pages/billing/Program.tsx`
+- `src/console/pages/billing/ProgramDialog.tsx`
+- `src/console/pages/billing/Promotions.tsx`
+- `src/console/pages/billing/ProviderCompare.tsx`
+- `src/console/pages/billing/ProviderEvents.tsx`
+- `src/console/pages/billing/SetupBanner.tsx`
+- `src/console/pages/billing/SubscriptionDetail.tsx`
+- `src/console/pages/billing/SubscriptionInvoices.tsx`
+- `src/console/pages/billing/Subscriptions.tsx`
+- `src/console/pages/billing/labels.tsx`
+- `src/console/pages/billing/mojo.tsx`
+- `src/console/pages/billing/mojoFields.ts`
+- `src/console/pages/incidents/labels.ts`
+- `src/console/pages/org/CommunityOperations.tsx`
+- `src/console/pages/org/OrgCards.tsx`
+- `src/console/pages/org/OrgInsights.tsx`
+- `src/console/pages/org/OrgLimitsDialog.tsx`
+- `src/console/pages/org/RemoveMemberDialog.tsx`
+- `src/console/pages/org/labels.tsx`
+- `src/console/pages/quotas/AdjustDialog.tsx`
+- `src/console/pages/quotas/EffectiveQuotas.tsx`
+- `src/console/pages/quotas/Ledger.tsx`
+- `src/console/pages/quotas/Plans.tsx`
+- `src/console/pages/quotas/Policies.tsx`
+- `src/console/pages/quotas/PolicyDialog.tsx`
+- `src/console/pages/quotas/Usage.tsx`
+- `src/console/pages/quotas/UsageMeter.tsx`
+- `src/console/pages/quotas/labels.ts`
+- `src/console/pages/user/ActivityPanel.tsx`
+- `src/console/pages/user/DevicesPanel.tsx`
+- `src/console/pages/user/MojoPanel.tsx`
+- `src/console/pages/user/OverviewPanel.tsx`
+- `src/console/pages/user/ProfileHeader.tsx`
+- `src/console/pages/user/QuotasPanel.tsx`
+- `src/console/pages/user/UserActions.tsx`
+- `src/console/pages/user/person.tsx`
+- `src/console/pages/user/types.ts`
+- `src/console/router.ts`
+- `src/console/shell/Notifications.tsx`
+- `src/console/shell/Search.tsx`
+- `src/console/shell/Shell.tsx`
+- `src/console/shell/nav.ts`
+- `src/console/shell/theme.ts`
+- `src/console/styles/charts.css`
+- `src/console/styles/kit.css`
+- `src/console/styles/layout.css`
+- `src/console/styles/operations.css`
+- `src/console/styles/pages/accounts.css`
+- `src/console/styles/pages/billing.css`
+- `src/console/styles/pages/catalog.css`
+- `src/console/styles/pages/decorations.css`
+- `src/console/styles/pages/governance.css`
+- `src/console/styles/pages/ops.css`
+- `src/console/styles/pages/orgs.css`
+- `src/console/styles/pages/users.css`
+- `src/console/styles/theme.css`
+- `src/vite-env.d.ts`
+- `test/client.test.ts`
+- `test/console.test.ts`
+- `test/contracts.test.ts`
+- `test/headers.test.ts`
+- `test/money.test.ts`
+- `test/parity.test.ts`
+- `test/webauthn.test.ts`

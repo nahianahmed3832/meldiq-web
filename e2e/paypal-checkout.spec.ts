@@ -101,6 +101,34 @@ test("PayPal cancellation and interrupted verification keep the purchase pending
   await expect(page.getByRole("heading", { name: "Welcome to Plus." })).toHaveCount(0);
 });
 
+for (const choice of [
+  { term: "quarterly", months: 3, amountMinor: 1299, interval: "month", billingFrequency: 3, saving: "$1.98", percent: "13.23%" },
+  { term: "yearly", months: 12, amountMinor: 4999, interval: "year", billingFrequency: 1, saving: "$9.89", percent: "16.52%" },
+]) {
+  test(`${choice.months}-month Plus review uses the full recurring charge and resets consent`, async ({ page }) => {
+    const { purchase } = await checkout(page);
+    let starts = 0;
+    await page.route("**/v2/billing/paypal/checkouts", async (route) => {
+      starts++;
+      const body = route.request().postDataJSON();
+      expect(body).toMatchObject({ product: "plus", term: choice.term });
+      expect(body).not.toHaveProperty("amountMinor");
+      await route.fulfill({ json: { ...purchase, amountMinor: choice.amountMinor, interval: choice.interval, billingFrequency: choice.billingFrequency } });
+    });
+    await page.getByRole("checkbox").check();
+    await page.getByRole("radio", { name: new RegExp(`^${choice.months} months`) }).check();
+    await expect(page.getByRole("checkbox")).not.toBeChecked();
+    await expect(page.locator(".checkout-total")).toContainText((choice.amountMinor / 100).toFixed(2));
+    await expect(page.locator(".checkout-renewal")).toContainText(`every ${choice.months} months until you cancel`);
+    await expect(page.locator(".plus-term-option.selected")).toContainText(choice.percent);
+    await expect(page.locator(".plus-support-summary")).toContainText(`You save ${choice.saving}`);
+    await page.getByRole("checkbox").check();
+    await page.locator("paypal-button").click();
+    await expect.poll(() => starts).toBe(1);
+    await expect(page.getByRole("button", { name: "Check purchase status" })).toBeVisible();
+  });
+}
+
 test("small-screen order review remains readable", async ({ page }, info) => {
   await page.setViewportSize({ width: 360, height: 800 });
   await checkout(page);

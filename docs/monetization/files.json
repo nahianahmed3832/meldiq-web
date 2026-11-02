@@ -1,1183 +1,1625 @@
 {
-  "note": "Web was already extensively modified and concurrently edited. These are files with task contributions, not a claim that every changed line belongs to this task. Backend/Android list is the isolated branch diff from dfb01073; admin list compares the pre-task src backup. Generated fixture synchronization also carries existing integrated API contracts. Docs hashes for this self-referential manifest are omitted.",
+  "note": "Web and API/Android diffs are against the production call-fix sources; admin lists the published console source. Historical candidate validation is retained separately. Runtime secrets and restore data are excluded.",
   "web": [
     {
-      "path": "/Volumes/code_files/meldiq_web/docs/monetization/COMPLETION.md"
+      "path": "deploy/call-receipts-sidebar/README.md",
+      "sha256": "0d8b6eb0856502c40dbeaa391f774aeb7dbf14895a1c04f029a83ead7bf208d7"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/docs/monetization/DEPLOYMENT.md",
-      "sha256": "9140e9d4900fbf9234686b81035169c6c9fcf8e97ce6ca774d2478fd75def8e8"
+      "path": "deploy/call-receipts-sidebar/production-status.json",
+      "sha256": "c087a99bb7375d6d10a881116429784630c2e975c8717ada2ef4380a173cf022"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/docs/monetization/FILES.md"
+      "path": "deploy/monetization/accounts-check.mjs",
+      "sha256": "31899ff91cafb142c8625f5ecc3ac7132dd6205f9acf949a260255ae2aab4c61"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/docs/monetization/files.json"
+      "path": "deploy/monetization/build-images.py",
+      "sha256": "ab33f2c687d4596c3861cadcd972deecc4a48cbbd9f82734af4f53824a38a9da"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/docs/monetization/plus-popup-desktop.png",
-      "sha256": "9c2b9db8c38f14ab4ddf7f4108142fe297bef46f3cd8833c0d4bb2358f9f6f0e"
+      "path": "deploy/monetization/deploy.py",
+      "sha256": "7c30bc872215def40ff0af5c3416406325ebee4ff8f8bc61852efb96298278f4"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/docs/monetization/plus-popup-mobile.png",
-      "sha256": "6583989f541d95c975701b639c8966b9d1725c77c13c4b1b676cc11cb86d31f7"
+      "path": "deploy/monetization/financial-check.mjs",
+      "sha256": "c66dae14cc20b2588e87d080b2222f5092a1d014a16cf0df8d720785d9483354"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/docs/monetization/popup-browser-desktop.png",
-      "sha256": "33b26b6027a36e42a53c82cfe9a218f6774dbf8b934a9f38bfe23ad2d49c5bab"
+      "path": "deploy/monetization/probe-migration.mjs",
+      "sha256": "18263041949952390c36b4748ca8748ebb1e92e20be01eadc24de7e963c06c11"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/docs/monetization/popup-browser-phone.png",
-      "sha256": "8049f4b48ea69ae06a2380e66c9b03c0cb2b3b7f25ee5dc1b5fa981e38ec3199"
+      "path": "docs/monetization/COMPLETION.md",
+      "sha256": null
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/docs/monetization/public-catalog-before.json",
-      "sha256": "9d1863d1e44b6d5c32bf7449cb4811a970cc92124416f5c8bd3dbddd9655744c"
+      "path": "docs/monetization/DEPLOYMENT.md",
+      "sha256": null
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/docs/monetization/rail-badges-fixed.png",
-      "sha256": "97c78a262bb7923474f8f108b2a4ea9972e9dac4af76408134f730118c542340"
+      "path": "docs/monetization/FILES.md",
+      "sha256": null
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/docs/monetization/sandbox-plan.json",
-      "sha256": "0b6c05d740c5912962b2d7f1fab3259107c57f0e91a8b6a79a3b74beaa961fff"
+      "path": "docs/monetization/files.json",
+      "sha256": null
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/docs/monetization/sandbox-quarterly.json",
-      "sha256": "0a0fe7a03fa8afd29d7eefc5716f98bf0c9ea315ab4f6c9badfcfa5fac510f1e"
+      "path": "docs/monetization/plus-popup-desktop.png",
+      "sha256": null
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/docs/monetization/sandbox-verification.json",
-      "sha256": "c7311b989d855489b2f3a075d1c2f05bc26dde1c19558aec50c22c06e7162c7a"
+      "path": "docs/monetization/plus-popup-mobile.png",
+      "sha256": null
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/docs/monetization/sandbox-yearly.json",
-      "sha256": "720f87e35e36ce3f8e3f6b2dfaa487a869cf91969219a0b2a93285c6d805a113"
+      "path": "docs/monetization/popup-browser-desktop.png",
+      "sha256": null
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/docs/monetization/validation.json"
+      "path": "docs/monetization/popup-browser-phone.png",
+      "sha256": null
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/e2e/independent-support.spec.ts",
+      "path": "docs/monetization/prior-candidate-validation.json",
+      "sha256": null
+    },
+    {
+      "path": "docs/monetization/public-catalog-before.json",
+      "sha256": null
+    },
+    {
+      "path": "docs/monetization/rail-badges-fixed.png",
+      "sha256": null
+    },
+    {
+      "path": "docs/monetization/sandbox-plan.json",
+      "sha256": null
+    },
+    {
+      "path": "docs/monetization/sandbox-quarterly.json",
+      "sha256": null
+    },
+    {
+      "path": "docs/monetization/sandbox-verification.json",
+      "sha256": null
+    },
+    {
+      "path": "docs/monetization/sandbox-yearly.json",
+      "sha256": null
+    },
+    {
+      "path": "docs/monetization/validation.json",
+      "sha256": null
+    },
+    {
+      "path": "e2e/independent-support.spec.ts",
       "sha256": "d339bdc19894d93c9e1ef6239350e707948bf967b636fad1d88df1959c9cbd56"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/e2e/mojo.spec.ts",
-      "sha256": "83950693b284807e320c7b7dbf1d1ad2d0187b59b48deb0d2d57a7281a87b0fb"
+      "path": "e2e/mojo.spec.ts",
+      "sha256": "6e421c3c2005f62cca06f855f9ab30c1479f69a1399031fcd298310781dfa262"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/e2e/paypal-checkout.spec.ts",
-      "sha256": "53e5eb926094021b0d2609aaed9f62bd4b400a396f8f6211d8ea4048fd9efd44"
+      "path": "e2e/paypal-billing.spec.ts",
+      "sha256": "d69c656d801fbe39bb7314dbef089b50d2a92247f3d3062a442197197087c666"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/e2e/rail-badges.spec.ts",
+      "path": "e2e/paypal-checkout.spec.ts",
+      "sha256": "0d663c00648b2a56ced62e72c9e9be7befd36392b7473aeb19e76cd07cb5dd81"
+    },
+    {
+      "path": "e2e/paypal-existing-regression.spec.ts",
+      "sha256": "8c9aec9f686a244766c5a7c51afcc5dbd85f982d59337f95d2af65acfb887627"
+    },
+    {
+      "path": "e2e/rail-badges.spec.ts",
       "sha256": "480325ae921294db8c7c2c3487189f28b9e9cb37692be9f763cda997114a7c84"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/src/api/mojoSchemas.ts",
-      "sha256": "327bab521ef74e069a210c050f46dc02d8d21ff58d3230d71910d344e90c6a6d"
+      "path": "src/api/mojoSchemas.ts",
+      "sha256": "84ed88ddacb045cb506e43df109fdc3ec6b2c9cd5e8e536600851c389fe6d74d"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/src/api/paypalSchemas.ts",
-      "sha256": "b9d625f44a648fe5384075aaa6452ed1a8cf196ba67dcb110ffdb9e4548b7bdc"
+      "path": "src/api/paypalSchemas.ts",
+      "sha256": "6ed6fe9e76a55dcb12f36e52b1f4a393dee79b6914aa589bf4a915878680f601"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/src/api/profileSchemas.ts",
+      "path": "src/api/profileSchemas.ts",
       "sha256": "8fab282b284b97ea22e946bffa355052e628159a650da74581c7e9939ef32315"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/src/api/promotionSchemas.ts",
+      "path": "src/api/promotionSchemas.ts",
       "sha256": "f5b7c5563eebede24ef1f4a81e34cd924f16114ca3909f3d199c73ef05985d85"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/src/api/schemas.ts",
+      "path": "src/api/schemas.ts",
       "sha256": "447ebcb48aa0b0dee1ca017dc6ebee5b8ce296ce44858b6ff0ebe62cb68f291d"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/src/application/plusSupport.ts",
+      "path": "src/application/plusSupport.ts",
       "sha256": "93e664a08af23005a3e7db2820b4ad4bdffdc40dfcf5cb76abe8f97e7dfbbd89"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/src/application/prefs.ts",
-      "sha256": "356df41de4c628214dcde695de1905ad47083f0e9bcda38089855a1b910e39d5"
-    },
-    {
-      "path": "/Volumes/code_files/meldiq_web/src/application/updates.ts",
+      "path": "src/application/updates.ts",
       "sha256": "2dae810c1cd1c2577c1c608d776af0039802ebad28130306e274fd70d8f3f3e2"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/src/call/livekitSession.ts",
-      "sha256": "b05785a9a088cca160c3578796fc0fa38932cdc81dced508e50ddb655499168c"
+      "path": "src/call/livekitSession.ts",
+      "sha256": "6df0e6ce0be156753f954c27754db0726175137d18d1f0d4f2d2e29a2d1aad2e"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/src/call/manager.ts",
-      "sha256": "17f963cbd170e4f627fc79a3d21d697e800d6f04019d0294c17514127482d82d"
+      "path": "src/call/manager.ts",
+      "sha256": "699d86c6f83aac5acba6b0d17fbd740bfacb9ff61f6c7dafdc24306cebc02217"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/src/call/shareQuality.ts",
+      "path": "src/call/shareQuality.ts",
       "sha256": "a76f4eaaa0dbe29d9ea6cf33a6cb8955bdc0c705eb27a59b8462e7987f1a3dc8"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/src/call/types.ts",
-      "sha256": "de57efb73b3902826874b98c92d40d06b23acc4941076c2cc7d7cb9e60af5dcd"
+      "path": "src/call/types.ts",
+      "sha256": "140816ed40171629a90519862e2d1ad20b3e3d907029cc9b6c128480d4ea4c18"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/src/i18n/strings.ts",
-      "sha256": "838b185bae07ba18ba2afe107eca04971d0b5de77d6278dc46f5f8527f5c66cf"
+      "path": "src/i18n/strings.ts",
+      "sha256": "a56bb3d5bd26c1c8bdb20fc32cca83c0290905b953a9a89499cd3a464cff97d5"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/src/realtime/frames.ts",
+      "path": "src/realtime/frames.ts",
       "sha256": "9796db86ad2df2715f6a9f6aaa090fb04659dfe660f146a46e31ec083f38f3d0"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/src/state/store.ts",
+      "path": "src/state/store.ts",
       "sha256": "97cd96637b8ce4194fb672e8c517ed6b157608c1bad0bc25243f0ee13175664b"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/src/styles/billing.css",
+      "path": "src/styles/billing.css",
       "sha256": "9fad87d64a2b0b454524fa70e451f86ae6fdec8295bc1f24f15acab79f7c1e4a"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/src/styles/layout.css",
+      "path": "src/styles/layout.css",
       "sha256": "7589e87c76df856ffbaaac5630f8e1872ceb5c17b7800b530462e0032df1da56"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/src/styles/mojo.css",
-      "sha256": "c8c7c2edd912a6d698d54825b6bfea788e5dbac31c0bc6e476e0365377933f9b"
+      "path": "src/styles/mojo.css",
+      "sha256": "decab135eddfc61862058f8fda0cd6f35b1f86dc5dd4535adab34bb101ed765f"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/src/styles/tokens.css",
+      "path": "src/styles/tokens.css",
       "sha256": "b1b2382f4b7619058900519dc7e931fe69f313676cd7211fb10f68b02d2096bc"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/src/sync/engine.ts",
+      "path": "src/sync/engine.ts",
       "sha256": "84ce78272803b178ff402b3388f9421dbe561964b4816395022282d59748103a"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/src/sync/expressions.ts",
+      "path": "src/sync/expressions.ts",
       "sha256": "ac07406ad2f61c99523ea2bf66824136132b617fca7a35304133863e5f7b4961"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/src/sync/mojo.ts",
+      "path": "src/sync/mojo.ts",
       "sha256": "4db2d34283319870aa2cbee446d1a02c31af8e8961927911ff7a1a83926fa076"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/src/sync/transfers.ts",
-      "sha256": "1645430a41b983a42731c10dffba7486f40c9b90e5ce642c4908cd31961dc9a8"
+      "path": "src/ui/billing/AddonCheckoutPage.tsx",
+      "sha256": "11d33788f2c05ac054457d3c87194de629428cf6060ffd82877335832416fb4b"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/src/ui/billing/BillingPage.tsx",
-      "sha256": "73eba9cf39d59fe1e97fbc9f56bd246b83445fd3fad273f19a543da58f5abbba"
+      "path": "src/ui/billing/BillingPage.tsx",
+      "sha256": "d5089d41b730e41ebb1409415b173f71425d09e3950add7bfb8ae9c8fcdfc96b"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/src/ui/billing/CheckoutPage.tsx",
-      "sha256": "bc3b231683b6de47971d47641f6b5a7300a5933a4b4ea9a5ebd27a158385776d"
+      "path": "src/ui/billing/CheckoutPage.tsx",
+      "sha256": "506db3d7259e8392e684d2339afadaca255ffddd6f120da3aadf8809d205c9d3"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/src/ui/billing/checkoutDraft.ts",
-      "sha256": "0b7880d4ef7751850a4e9f7e3fe1a4ce299bee06a862a72af36a69418e634f51"
+      "path": "src/ui/billing/checkoutDraft.ts",
+      "sha256": "ff37e37198b3d4d70ece0727949d9377d17c9b190482c4541bb71476850211a5"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/src/ui/call/ShareViews.tsx",
+      "path": "src/ui/call/ShareViews.tsx",
       "sha256": "cf823fab665eacc5ac0a3d12a4dea63b996f81715d5f690673b0b6e12313e140"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/src/ui/chat/Composer.tsx",
-      "sha256": "4cbdfc97c2f87a47779a28bc2df3bff356d97bbfc13859c745d0ee6a7d79c01e"
-    },
-    {
-      "path": "/Volumes/code_files/meldiq_web/src/ui/community/CustomEmoji.tsx",
+      "path": "src/ui/community/CustomEmoji.tsx",
       "sha256": "88589740630ac702df5803bd0d97664f52da517b5f5f13dde2002007ee4a7e33"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/src/ui/developer/BotsSection.tsx",
+      "path": "src/ui/developer/BotsSection.tsx",
       "sha256": "6c422de623ddba7551a9d7d20b58438a9e8c015278a20866cd925892b0be9049"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/src/ui/mojo/CharLimit.tsx",
+      "path": "src/ui/leaderboards/LeaderboardsPage.tsx",
+      "sha256": "48b93573c3ee36587971e70c7b102a720ab4432d0b274fde602771a3930a0925"
+    },
+    {
+      "path": "src/ui/mojo/CharLimit.tsx",
       "sha256": "6b1ce57a07d57b3039102a745d770df58f67c657a4f684bdccae4f55426e6f9f"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/src/ui/mojo/MojoBadge.tsx",
+      "path": "src/ui/mojo/MojoBadge.tsx",
       "sha256": "74793bd75608d544c112d4b6412d28afc199a52f2bda83dbb8de1a4c905db3f9"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/src/ui/mojo/MojoBanner.tsx",
+      "path": "src/ui/mojo/MojoBanner.tsx",
       "sha256": "113af97ca8d3ae3958630fb0212eed1def0bcd509c15018aba6796efcb322196"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/src/ui/mojo/MojoGifts.tsx",
-      "sha256": "07164a30a2fbf5cd673deb40fedbe53ffb0349732bebc354b587ffa1648742f4"
+      "path": "src/ui/mojo/MojoGifts.tsx",
+      "sha256": "4bbbfc5285fce648ec72c44d1a90757e9357ba2f9b25fd964d2430d9be7c496f"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/src/ui/mojo/MojoPage.tsx",
-      "sha256": "156f00be7ac37d6dbcb14ddcf8b77a690f989163cb664442f256008a0ef4262d"
+      "path": "src/ui/mojo/MojoPage.tsx",
+      "sha256": "587895f6d13729f0807863d53b5e73bb8945c92fe9ed7570ef940898a4639bc8"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/src/ui/mojo/MojoPlans.tsx",
+      "path": "src/ui/mojo/MojoPlans.tsx",
       "sha256": "3a1ad3e42ff80ae6d496f1d67f5342222d9172346b7b6770cc4bbaa7dbacbaf0"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/src/ui/mojo/PlusPromotion.tsx",
+      "path": "src/ui/mojo/PlusPromotion.tsx",
       "sha256": "1c27f1e298b04e1e62b712cde6ae547ac6813ebfe2cc4927377b430596b467e0"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/src/ui/mojo/PlusRenewalNotice.tsx",
+      "path": "src/ui/mojo/PlusRenewalNotice.tsx",
       "sha256": "bd02c98ce11cea28f2d0417b424ce13cd97a081ddd18a5d4f51f2934ebb9f9a5"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/src/ui/mojo/PlusSupportNotice.tsx",
+      "path": "src/ui/mojo/PlusSupportNotice.tsx",
       "sha256": "ecd2cb1874ea86f10e8ac09f760bdab6379c3e19ec4e77358bda5878e80c49f5"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/src/ui/mojo/SparkSection.tsx",
-      "sha256": "6bf08941ea53c448405c1708cfc99986b2ad9347fb7533883486e9a15aba0b6e"
+      "path": "src/ui/mojo/SparkSection.tsx",
+      "sha256": "a02bd79d72265496cb6a13b4d71343db16b7a26fe4a7588e7392e5fa6ff6de81"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/src/ui/mojo/SparkTrack.tsx",
+      "path": "src/ui/mojo/SparkTrack.tsx",
       "sha256": "db303ae866a533e4a4e2a3cf6c126bb1407e692c0cdb36ae26f7a9fc4fdaff01"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/src/ui/mojo/mojoFormat.ts",
+      "path": "src/ui/mojo/mojoFormat.ts",
       "sha256": "d3af4cb3624a69a4bfe9d44d5dc9448693a5f551ea7a997617260de50eefbdcc"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/src/ui/mojo/useMojoLimits.ts",
+      "path": "src/ui/mojo/useMojoLimits.ts",
       "sha256": "b7994596b427edffad329cbc4db5e7f621bf678d3e2a549d2309965141bfc669"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/src/ui/people/NameBadge.tsx",
+      "path": "src/ui/people/NameBadge.tsx",
       "sha256": "96759d11b505f680448a094596358009486077b4f14672085c6b39dfce7082cb"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/src/ui/people/NameStyle.tsx",
+      "path": "src/ui/people/NameStyle.tsx",
       "sha256": "590d83d9bc2c02200ee9559e307e8475e6112336a1c47c30e3d02927dab46a26"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/src/ui/points/pointsWords.ts",
+      "path": "src/ui/points/pointsWords.ts",
       "sha256": "58e666131905d09a23ad491f671ff06a4ebd577947405ecfc97162240c896541"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/src/ui/settings/PreferencePages.tsx",
+      "path": "src/ui/settings/PreferencePages.tsx",
       "sha256": "985b1f2b2e3b3e2fc76934c090a50253c948a93d389834d83de21e47d5d0484e"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/src/ui/settings/ProfileStyleCard.tsx",
+      "path": "src/ui/settings/ProfileStyleCard.tsx",
       "sha256": "28225b072915c958ac0933aa1b9e9788a9107b0bd5e0600717b353ad88dab7ac"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/src/ui/settings/SettingsView.tsx",
-      "sha256": "13145f2b742d22f8448da6453aff3877b4388485b79731e6842d3fdcedcdad6c"
+      "path": "src/ui/settings/SettingsView.tsx",
+      "sha256": "e8826894a741987d96839fc99eda3d3647dc4d7abda46546d21ba1839fa9a864"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/src/ui/settings/ShownBadgePicker.tsx",
+      "path": "src/ui/settings/ShownBadgePicker.tsx",
       "sha256": "f819c7e6c4687c6e4754de3342af24eb1563f34bebaf96ee128f9588d6bdf592"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/src/ui/shell/DmPromos.tsx",
+      "path": "src/ui/settings/settingsSearch.ts",
+      "sha256": "f80f5d2ad712f28f47cb93b6e45d1d06190368e8825058880a19f2e331f512e4"
+    },
+    {
+      "path": "src/ui/shell/DmPromos.tsx",
       "sha256": "7c4e461198377ad0c12b7aa2001e1978137e27b5026d498cd498b0e7b85f6eb3"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/src/ui/shell/ProfileMenu.tsx",
+      "path": "src/ui/shell/ProfileMenu.tsx",
       "sha256": "7f951a0130dda56ea1f4cce20e30e1de5af8618ffe9de95eb4344302e2ad0645"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/src/ui/shell/Shell.tsx",
+      "path": "src/ui/shell/Shell.tsx",
       "sha256": "1739294bcae2f8866dda836975c34f66463af283ec2b83a6ca77711df7825479"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/test/contract-fixtures.test.ts",
+      "path": "src/ui/workspace/bots/BotParts.tsx",
+      "sha256": "665f33291d3965f0462caeeef5c6421c01a768ec2594a3bee5bc02f565ee7f18"
+    },
+    {
+      "path": "test/contract-fixtures.test.ts",
       "sha256": "053d3bbb94385802d8faa16c5cd6c2b9317e1b38851658fb4252a15491dbec44"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_admin_v1_billing_gift-deliveries.json",
+      "path": "test/contract-fixtures/http/GET_admin_v1_billing_gift-deliveries.json",
       "sha256": "4afcbdd1664e4e036d55ffa322072ddb5e1c1fdb40e801a2a3aa9610e610c615"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_admin_v1_billing_orders.json",
+      "path": "test/contract-fixtures/http/GET_admin_v1_billing_orders.json",
       "sha256": "8a83a6ce6cb3c9acc212a90130ef93bb55ba0f1bc2366e24448c366e314d0d78"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_admin_v1_billing_paypal_transactions.json",
+      "path": "test/contract-fixtures/http/GET_admin_v1_billing_paypal_transactions.json",
       "sha256": "8e2d77203beefe207e8adfb31e7d72c37b80f75011bd85ca6623cd82f0dca040"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_admin_v1_billing_promotions.json",
+      "path": "test/contract-fixtures/http/GET_admin_v1_billing_promotions.json",
       "sha256": "57132f530c72cbb32941c0849995472a85c7fd8daeddc57f3301bb528b6a80e6"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_admin_v1_operations_appeals.json",
+      "path": "test/contract-fixtures/http/GET_admin_v1_operations_appeals.json",
       "sha256": "732dad66c9e2c953e037401d02f64da8a60e47d3760478cdfd6d882ff7e7d2c1"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_admin_v1_operations_notices.json",
+      "path": "test/contract-fixtures/http/GET_admin_v1_operations_notices.json",
       "sha256": "732dad66c9e2c953e037401d02f64da8a60e47d3760478cdfd6d882ff7e7d2c1"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_admin_v1_operations_notices_id_receipts.json",
-      "sha256": "78222219b4a9b765f6b973e8c349e8c61a77e7208aafb26792182c8ac35075e2"
-    },
-    {
-      "path": "/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_admin_v1_operations_operators.json",
+      "path": "test/contract-fixtures/http/GET_admin_v1_operations_operators.json",
       "sha256": "0343639fac1511a32a4c9a92c7655a6e9f9ad3a600fc6f30b5bdad6806160a97"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_admin_v1_operations_orders.json",
-      "sha256": "7d42575f10c51b244e78a57f02ce2f89183eff2ca2f509b9b4759627ed3504fd"
-    },
-    {
-      "path": "/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_admin_v1_operations_ownership.json",
+      "path": "test/contract-fixtures/http/GET_admin_v1_operations_ownership.json",
       "sha256": "732dad66c9e2c953e037401d02f64da8a60e47d3760478cdfd6d882ff7e7d2c1"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_admin_v1_operations_policy.json",
-      "sha256": "d44a73336bea2a8a9eb8c4d551f9ddce7bfa1ba93c6c511c16ce7562a3c2b057"
-    },
-    {
-      "path": "/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_admin_v1_operations_policy_history.json",
-      "sha256": "70f3e6649c8e8df095ea772db4ffb05386b36153c98ab95c699af6000da6152c"
-    },
-    {
-      "path": "/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_admin_v1_operations_promotions.json",
+      "path": "test/contract-fixtures/http/GET_admin_v1_operations_promotions.json",
       "sha256": "732dad66c9e2c953e037401d02f64da8a60e47d3760478cdfd6d882ff7e7d2c1"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_admin_v1_reports.json",
+      "path": "test/contract-fixtures/http/GET_admin_v1_reports.json",
       "sha256": "65c3462fc77a10a216e8de4e88c3efef1c46baa955ae2779bf242915221a1dda"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_admin_v1_reports_assignees.json",
+      "path": "test/contract-fixtures/http/GET_admin_v1_reports_assignees.json",
       "sha256": "5f035031ae9bd78a5c8d03aa351470d21cfefb8ab1a65d48b75dfbb0305eaa5d"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_v2_billing_gifts.json",
-      "sha256": "858b32588b90f832f13cabbb8c273fdf71f183b1fef81e2365965c897df1bef3"
-    },
-    {
-      "path": "/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_v2_billing_orders.json",
-      "sha256": "6d0c14aa62355ae6ad91661e35a1de5e269371d3a7f9b8dca9f6e8ba1e5019d0"
-    },
-    {
-      "path": "/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_v2_billing_orders_id_receipt.json",
-      "sha256": "0ac6fec9f730e75ab7ec50a7acf494b9c1a6aa74a975765eaf8ef9b663860198"
-    },
-    {
-      "path": "/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_v2_billing_plans.json",
+      "path": "test/contract-fixtures/http/GET_v2_billing_plans.json",
       "sha256": "61a8fe194d85ad1d2b1558fba604d9273fd9157a5ab7eb391ec31669162736eb"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_v2_billing_promotions_id.json",
+      "path": "test/contract-fixtures/http/GET_v2_billing_promotions_id.json",
       "sha256": "595219792dd54a38a8ace80a6a7fc33b928ea74f0dd1bdfac6a2b708dbe0dd1e"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_v2_billing_promotions_preference.json",
+      "path": "test/contract-fixtures/http/GET_v2_billing_promotions_preference.json",
       "sha256": "57dc01e7ad9e6cc3eea1fae6003fda8e430c87f2fcedec1f9916959fa7bec1dd"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_v2_billing_referral.json",
+      "path": "test/contract-fixtures/http/GET_v2_billing_referral.json",
       "sha256": "6fc5f58f937c305832095c175ef6221830a21cc02e2d88e4140903515e67d325"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_v2_collectible-purchases.json",
-      "sha256": "8f35f7383def68bf357d7674ba4c36056b7f8f8039f7b3d7a8cbb14f9419e2b3"
-    },
-    {
-      "path": "/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_v2_mojo_catalog.json",
+      "path": "test/contract-fixtures/http/GET_v2_mojo_catalog.json",
       "sha256": "955508880ba2d832c92bf801db0aec0716fd0c5dbc26f1ed2807c29435622fac"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_v2_mojo_me.json",
+      "path": "test/contract-fixtures/http/GET_v2_mojo_me.json",
       "sha256": "f3f5f1359f6f4e3840dd85e014b0c26e1c63fc67b41f41b7cb0c3e4f4fd37c1f"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_v2_platform_appeals.json",
-      "sha256": "814bc9e14b0205e4e85bf24487f64beeeddfd65601ca7b78289ea3a51f59879a"
-    },
-    {
-      "path": "/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_v2_platform_features.json",
-      "sha256": "a59c136d774782b93e60fca2f90d07395ae27a70b151ba373522dd277f6799a4"
-    },
-    {
-      "path": "/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_v2_platform_notices.json",
-      "sha256": "732dad66c9e2c953e037401d02f64da8a60e47d3760478cdfd6d882ff7e7d2c1"
-    },
-    {
-      "path": "/Volumes/code_files/meldiq_web/test/contract-fixtures/http/GET_v2_platform_ownership.json",
-      "sha256": "0343639fac1511a32a4c9a92c7655a6e9f9ad3a600fc6f30b5bdad6806160a97"
-    },
-    {
-      "path": "/Volumes/code_files/meldiq_web/test/contract-fixtures/http/POST_admin_v1_operations_appeals_id_decision.json",
-      "sha256": "03f522d12d4192646012bc99fafb541aec80737bc1cadeb67fdd2f53edd49378"
-    },
-    {
-      "path": "/Volumes/code_files/meldiq_web/test/contract-fixtures/http/POST_admin_v1_operations_notices.json",
-      "sha256": "602337b624e855d1790647d6cce2b4ab830093f942706fec2adb5821f3ef904e"
-    },
-    {
-      "path": "/Volumes/code_files/meldiq_web/test/contract-fixtures/http/POST_admin_v1_operations_notices_id_state.json",
-      "sha256": "124ac1f8e917fa5f6af2b16e9fd0c7645f60c04b29b92bcb1554e9d37e1566e9"
-    },
-    {
-      "path": "/Volumes/code_files/meldiq_web/test/contract-fixtures/http/POST_admin_v1_operations_orders_id_refund.json",
-      "sha256": "7677aa2c85f9665219094e728277eaabc6b231375ef5f03568d369eca0a2365e"
-    },
-    {
-      "path": "/Volumes/code_files/meldiq_web/test/contract-fixtures/http/POST_admin_v1_operations_ownership.json",
-      "sha256": "52b0fe92095c438dc1012fd086a7a48a079f0cafc8924deb8587993329211a30"
-    },
-    {
-      "path": "/Volumes/code_files/meldiq_web/test/contract-fixtures/http/POST_admin_v1_operations_warnings.json",
-      "sha256": "98d72f6834bdaf07e0dd76702890f67593f9270f7a94c9aeddd73a5bada50174"
-    },
-    {
-      "path": "/Volumes/code_files/meldiq_web/test/contract-fixtures/http/POST_v2_billing_gifts_id_link.json",
-      "sha256": "c229340d1762df721c6bfc17658a50fe6fb267ee66199f7febd2a28aba9ebea9"
-    },
-    {
-      "path": "/Volumes/code_files/meldiq_web/test/contract-fixtures/http/POST_v2_billing_gifts_id_redeem.json",
-      "sha256": "e663537929aa2519184a142d9b86af2c9b1b034caaa02563af6f5156064f75bc"
-    },
-    {
-      "path": "/Volumes/code_files/meldiq_web/test/contract-fixtures/http/POST_v2_billing_gifts_redeem.json",
-      "sha256": "3a4fbf0a969d0bd70aa0157ebae1ad715768a3e704ab83ca3e5d519d4ff8d1d7"
-    },
-    {
-      "path": "/Volumes/code_files/meldiq_web/test/contract-fixtures/http/POST_v2_billing_promotions_activity.json",
+      "path": "test/contract-fixtures/http/POST_v2_billing_promotions_activity.json",
       "sha256": "7ac93da48d0c18ff7e8f8b82e33546f50a0aa84aa6a2cf25ce1e7dd0b8530864"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/test/contract-fixtures/http/POST_v2_billing_promotions_claim.json",
+      "path": "test/contract-fixtures/http/POST_v2_billing_promotions_claim.json",
       "sha256": "dfb3477d1107aeb771e3774fd8dd9654402213584d9dfb23b10770e802c97020"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/test/contract-fixtures/http/POST_v2_billing_promotions_events.json",
+      "path": "test/contract-fixtures/http/POST_v2_billing_promotions_events.json",
       "sha256": "12b34da73b0c67a0319e6eddbd3582af66e3b558b4d44e4a6860e0cec20d726f"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/test/contract-fixtures/http/POST_v2_billing_referral_claim.json",
+      "path": "test/contract-fixtures/http/POST_v2_billing_referral_claim.json",
       "sha256": "60cc6c697491b3da1499617f9028b6f51a14191e881f89dcdf8f72eb890a5f09"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/test/contract-fixtures/http/POST_v2_billing_reminders_renewal.json",
+      "path": "test/contract-fixtures/http/POST_v2_billing_reminders_renewal.json",
       "sha256": "512faf3ef785250b90a23f87000d6c16d7bdb3b7eda16221b95b80ef0ddabf8d"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/test/contract-fixtures/http/POST_v2_collectible-purchases.json",
-      "sha256": "9df9e30b8cbf3a155997a78c2016069df878d049710702c98d20c882ec105d2b"
-    },
-    {
-      "path": "/Volumes/code_files/meldiq_web/test/contract-fixtures/http/POST_v2_mojo_play_intent.json",
+      "path": "test/contract-fixtures/http/POST_v2_mojo_play_intent.json",
       "sha256": "2389d0931d7b919e1d7685eb11e3c0ae4e9e20e454adacab2337ee16f0f21389"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/test/contract-fixtures/http/POST_v2_mojo_play_verify.json",
+      "path": "test/contract-fixtures/http/POST_v2_mojo_play_verify.json",
       "sha256": "f8e35659c5c2cbddca5a46b0e3f48b50184c9b721b1523ceebcd91815efbbea4"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/test/contract-fixtures/http/POST_v2_platform_appeals.json",
-      "sha256": "5607c9d4292e4964e67cda64e025bda821c0c3fff836e14e5f6892ec69e4b90f"
-    },
-    {
-      "path": "/Volumes/code_files/meldiq_web/test/contract-fixtures/http/POST_v2_platform_appeals_email_complete.json",
-      "sha256": "edd861be02b75de2857a5cd30ffcc0bf5b7526f1785db7fae42ae460c37e6490"
-    },
-    {
-      "path": "/Volumes/code_files/meldiq_web/test/contract-fixtures/http/POST_v2_platform_notices_id_read.json",
-      "sha256": "12b34da73b0c67a0319e6eddbd3582af66e3b558b4d44e4a6860e0cec20d726f"
-    },
-    {
-      "path": "/Volumes/code_files/meldiq_web/test/contract-fixtures/http/POST_v2_platform_ownership_id_approve.json",
-      "sha256": "12b34da73b0c67a0319e6eddbd3582af66e3b558b4d44e4a6860e0cec20d726f"
-    },
-    {
-      "path": "/Volumes/code_files/meldiq_web/test/contract-fixtures/http/POST_v2_platform_promotions_redeem.json",
-      "sha256": "a9e0076e09cc481a898890c1ec972854f6091238795b75543a2707b3605eca7f"
-    },
-    {
-      "path": "/Volumes/code_files/meldiq_web/test/contract-fixtures/http/PUT_admin_v1_billing_promotions.json",
+      "path": "test/contract-fixtures/http/PUT_admin_v1_billing_promotions.json",
       "sha256": "10d9d2666cfa714562ce45de2188c135ea4cef3401c7fb8b3a88a59f0d3c51e5"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/test/contract-fixtures/http/PUT_admin_v1_operations_operators_id.json",
-      "sha256": "12b34da73b0c67a0319e6eddbd3582af66e3b558b4d44e4a6860e0cec20d726f"
-    },
-    {
-      "path": "/Volumes/code_files/meldiq_web/test/contract-fixtures/http/PUT_admin_v1_operations_policy.json",
-      "sha256": "78b3cddca954b9f2221decb5b538504c6c6e96af68951f70312da4e00b0fda60"
-    },
-    {
-      "path": "/Volumes/code_files/meldiq_web/test/contract-fixtures/http/PUT_admin_v1_operations_promotions.json",
-      "sha256": "2dc27e231acbf333ce939b91d3879d10104456c1f84ccd25a86e379b42d75526"
-    },
-    {
-      "path": "/Volumes/code_files/meldiq_web/test/contract-fixtures/http/PUT_v2_billing_promotions_preference.json",
+      "path": "test/contract-fixtures/http/PUT_v2_billing_promotions_preference.json",
       "sha256": "de602e9595694d10c98cd2f9b53a5cc7aaab261c68741da184c31cb7ed9b9152"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/test/contract-fixtures/http/errors/billed_elsewhere.json",
+      "path": "test/contract-fixtures/http/errors/billed_elsewhere.json",
       "sha256": "1e22d2795d8d229672044df984888d7601f08f809f6f61f105d4b143d7c7e82d"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/test/contract-fixtures/http/errors/unavailable.json",
+      "path": "test/contract-fixtures/http/errors/unavailable.json",
       "sha256": "b161a027e795390e759fa9bd8658bca0e0678397762d3e95dee9469d41a9fb61"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/test/contract-fixtures/routes.json",
-      "sha256": "6af98a9424ae919b93e335d60ef2535ae51bde2be07aaa59c1827c1aefd6b717"
+      "path": "test/contract-fixtures/routes.json",
+      "sha256": "897a456aec9d951d0a7a9e40130b6a54c269edd5f00eec692fb5b1ee95dbd9a9"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/test/contract-source.txt",
-      "sha256": "fa53b38c068c4c7f7d1a63018b74afcce90c8af08d57279ed501290b3a1c072c"
+      "path": "test/contract-source.txt",
+      "sha256": "15fac3b7608f1520c35447ee3a4c54538b1f7a0c01713f8ba8d47b6910da75e0"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/test/forward-contract-fixtures/README.md",
+      "path": "test/forward-contract-fixtures/README.md",
       "sha256": "218e02aec45d3550b5b4a10c41451728ca96b15b884add50d6a1fcd364214707"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/test/forward-contract-fixtures/errors/social_profile_required.json",
+      "path": "test/forward-contract-fixtures/errors/social_profile_required.json",
       "sha256": "d6202ee7f38f8a603224d7888c8e0bcb4f54afd0eb5611ec63fda5397b346aa7"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/test/mojo.test.ts",
+      "path": "test/identity-marks.test.tsx",
+      "sha256": "b2977309131a1eaee983d6e4898e1b3cc46b6b3697b0acf25d7e5713e4ed3097"
+    },
+    {
+      "path": "test/mojo.test.ts",
       "sha256": "180252f82af059a37a521c77a28fa6dc8265fd96e1952cf8be63a9019468bee3"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/test/plus-promotion.test.tsx",
-      "sha256": "9d7222e88e4295c9d7b4a82e49c30c8070cc7bb2b1874b06a6cecb68b9e3705d"
+      "path": "test/plus-promotion.test.tsx",
+      "sha256": "b819cbd4bc9ce736eff6ef73c26ef16e82699c505dff86a3f4bf4287625b153c"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/test/plus-support.test.ts",
+      "path": "test/plus-support.test.ts",
       "sha256": "5ed885706b771a38893a9780aa3cb4ad50b440a5d9cbd570e8482832c6bd4caf"
     },
     {
-      "path": "/Volumes/code_files/meldiq_web/test/settings-parity.test.ts",
+      "path": "test/settings-parity.test.ts",
       "sha256": "45075df9e80f58423b51f4e9480b95652c77c50c060ffed330577e04bd0ec47d"
     }
   ],
   "backend_android": [
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/android/app/src/main/java/com/meldiq/android/data/api/RealtimeEvents.kt",
+      "path": "android/app/src/main/java/com/meldiq/android/data/api/RealtimeEvents.kt",
       "sha256": "0574392bef9a848b98d6cf3a4cccf26fcd90b9ed46dd2df4805bb4a6d47faea4"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/android/app/src/main/java/com/meldiq/android/data/billing/MojoModels.kt",
+      "path": "android/app/src/main/java/com/meldiq/android/data/billing/MojoModels.kt",
       "sha256": "5f6da0a5379e3e91acafc32e7ef7f655fe4c39380a00700fed064f10885f77ad"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/android/app/src/main/java/com/meldiq/android/data/billing/MojoPlans.kt",
+      "path": "android/app/src/main/java/com/meldiq/android/data/billing/MojoPlans.kt",
       "sha256": "b656958759c17f2066aff0390ddda6a008f893ccd53419099496053bf50e9bbb"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/android/app/src/main/java/com/meldiq/android/data/billing/MojoRepository.kt",
+      "path": "android/app/src/main/java/com/meldiq/android/data/billing/MojoRepository.kt",
       "sha256": "b5f2a0d94623b855ea178df0c427be914a67944afd7275a8e21723861e7cceed"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/android/app/src/main/java/com/meldiq/android/data/billing/PlayBilling.kt",
+      "path": "android/app/src/main/java/com/meldiq/android/data/billing/PlayBilling.kt",
       "sha256": "43f14d244778698a8b822023e4110af42c0126e12cb7094edc5d52fdfb6899b8"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/android/app/src/main/java/com/meldiq/android/data/billing/PlayProducts.kt",
+      "path": "android/app/src/main/java/com/meldiq/android/data/billing/PlayProducts.kt",
       "sha256": "b2396ba9a9be0577683988b7a9f90e1bed509c18138b9cceba15d60334a4713b"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/android/app/src/main/java/com/meldiq/android/data/billing/PlusPromotions.kt",
+      "path": "android/app/src/main/java/com/meldiq/android/data/billing/PlusPromotions.kt",
       "sha256": "241a36e78d6ef5106791070a619106f1d98603b3d7de938d71a6bcd94f537817"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/android/app/src/main/java/com/meldiq/android/data/repo/MessageSignals.kt",
+      "path": "android/app/src/main/java/com/meldiq/android/data/repo/MessageSignals.kt",
       "sha256": "a0861583257f5d0757e7b94563c43690b56527c79173bda28ffbe3195809aaca"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/android/app/src/main/java/com/meldiq/android/di/AppContainer.kt",
+      "path": "android/app/src/main/java/com/meldiq/android/di/AppContainer.kt",
       "sha256": "f4cd2ce849c02c4a20387f2b23b87983fe10ceee9ec60507ee7779281ca54062"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/android/app/src/main/java/com/meldiq/android/ui/screens/community/CommunityHomeScreen.kt",
+      "path": "android/app/src/main/java/com/meldiq/android/ui/screens/community/CommunityHomeScreen.kt",
       "sha256": "1596467479e283f37713816bf02f134698b5e5258dcf9a71864f2f696e5772d8"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/android/app/src/main/java/com/meldiq/android/ui/screens/mojo/MojoGiftSheet.kt",
+      "path": "android/app/src/main/java/com/meldiq/android/ui/screens/mojo/MojoGiftSheet.kt",
       "sha256": "ffe6784c84552fdbdadd0cc4231dc8fc71368bccefcded8daeae4c7b4df17849"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/android/app/src/main/java/com/meldiq/android/ui/screens/mojo/MojoPlanCards.kt",
+      "path": "android/app/src/main/java/com/meldiq/android/ui/screens/mojo/MojoPlanCards.kt",
       "sha256": "b77bd517bd2d145f465b2571edfac0439ec0f74ca5269a8f9ab6613a64abd622"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/android/app/src/main/java/com/meldiq/android/ui/screens/mojo/MojoScreen.kt",
+      "path": "android/app/src/main/java/com/meldiq/android/ui/screens/mojo/MojoScreen.kt",
       "sha256": "247612a600b913efd9353f493517f6a764742c4a68e400d5d29390135959071f"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/android/app/src/main/java/com/meldiq/android/ui/screens/mojo/PlusBillingSheet.kt",
+      "path": "android/app/src/main/java/com/meldiq/android/ui/screens/mojo/PlusBillingSheet.kt",
       "sha256": "2ee2bb7f79b3d140743c24f45297c1234681e834cf73b7764e38e7f004642e76"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/android/app/src/main/java/com/meldiq/android/ui/screens/mojo/PlusPromotionHost.kt",
+      "path": "android/app/src/main/java/com/meldiq/android/ui/screens/mojo/PlusPromotionHost.kt",
       "sha256": "fce2c06e1c3fab1045fb74b53c948ebcb63e62fefbe6b081fc742ff9e35f8e76"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/android/app/src/main/java/com/meldiq/android/ui/screens/mojo/PlusRenewalHost.kt",
+      "path": "android/app/src/main/java/com/meldiq/android/ui/screens/mojo/PlusRenewalHost.kt",
       "sha256": "d7abdaa518c7f74f49553c7fd24ef74e326b6eb12c708d61124449c538d7d43f"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/android/app/src/main/res/values-bn/strings_mojo.xml",
+      "path": "android/app/src/main/res/values-bn/strings_mojo.xml",
       "sha256": "d99348dbb239a48224d897fa1747854fa7cd3badf8bdf1bd8e2efba76e056967"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/android/app/src/main/res/values-zh-rCN/strings_mojo.xml",
+      "path": "android/app/src/main/res/values-zh-rCN/strings_mojo.xml",
       "sha256": "b043125088e6d20908f74c96e35b50a2bde37f627979ddd6535de810ff1cd544"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/android/app/src/main/res/values/strings_mojo.xml",
+      "path": "android/app/src/main/res/values/strings_mojo.xml",
       "sha256": "d5a9e53811c86a9f144d5af113bf70835470d6e97826613cf709b418b2072a46"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/android/app/src/test/java/com/meldiq/android/data/api/RealtimeCodecTest.kt",
+      "path": "android/app/src/test/java/com/meldiq/android/data/api/RealtimeCodecTest.kt",
       "sha256": "3e834648963266f601e3c3c147ac419018d3aac5f255aaa8b0155e3c7a7c773b"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/android/app/src/test/java/com/meldiq/android/data/billing/MojoPlansTest.kt",
+      "path": "android/app/src/test/java/com/meldiq/android/data/billing/MojoPlansTest.kt",
       "sha256": "e23b5038b9e15f2aa21d3e96ba1b853d9517a1d0df942ada8559c1ba8e1ef204"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/android/app/src/test/java/com/meldiq/android/data/billing/MojoRepositoryTest.kt",
+      "path": "android/app/src/test/java/com/meldiq/android/data/billing/MojoRepositoryTest.kt",
       "sha256": "32652ed2d25453b0b1307dd905881be2a1e864892cddc9d2d69bb8acdd5577a2"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/docs/api/COVERAGE.md",
+      "path": "docs/api/COVERAGE.md",
       "sha256": "9e6213edeb600e25cfbe8cb22d946984eb8a5dd6b8c16159a98404a500006956"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/docs/api/openapi.json",
-      "sha256": "b0a634cd1c625332793631c5d34b398eddaf64937bafb0d8d5741412fe2e5a04"
+      "path": "docs/api/openapi.json",
+      "sha256": "47932243046281dbdb295741d76e041e561cc7a1ebd2dfa9f43a8244625a42cb"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/migrations/092_plus_promotions.sql",
+      "path": "server/migrations/093_plus_promotions.sql",
       "sha256": "c0b8e8810da26c5d35d384b9e84de180d6da768bb97247728ba69f55c9b0f327"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/migrations/093_plus_billing_terms.sql",
+      "path": "server/migrations/094_plus_billing_terms.sql",
       "sha256": "d9c451d4ebb79d47fa5c85510452d4d2403788efef813e3609ec518b72adc8dd"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/plus-pricing.env.example",
+      "path": "server/plus-pricing.env.example",
       "sha256": "46766837f7cecb8485465e5d744afeec21f945100df2bf6d514886acaed54824"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/scripts/paypal-live-setup.ts",
+      "path": "server/scripts/paypal-live-setup.ts",
       "sha256": "c7d79e3f8ef853a00f894a920f4140791211f71ad41fe9c5069f42e1a3f68a3c"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/scripts/paypal-plus-v2-setup.ts",
+      "path": "server/scripts/paypal-plus-v2-setup.ts",
       "sha256": "b72518c9e89405da83679c7ecb80b0e76ef9279b6812d57a1649b2e13e105dad"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/scripts/paypal-sandbox-setup.ts",
+      "path": "server/scripts/paypal-sandbox-setup.ts",
       "sha256": "5c8f131552325b8c71f907b8112e02b0bb0fe77cfd5b49651e897862ad05670d"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/scripts/verify-plus-sandbox.ts",
+      "path": "server/scripts/verify-plus-sandbox.ts",
       "sha256": "4591103e0661858d9a7e4c9a09fe243549f636442b532d8a74cfa57072c1364d"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/admin.ts",
+      "path": "server/src/admin.ts",
       "sha256": "a0c50e073989c865428deb69a2c19eb7cf7adb4f05b70b65db18ebb6670b32fc"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/infrastructure/database/mongo/catalog.ts",
+      "path": "server/src/infrastructure/database/mongo/catalog.ts",
       "sha256": "b91689903594d46fd5cd286ae59ef3eb802c22e98357f817bddca3680c4fd753"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/infrastructure/database/mongo/client.ts",
-      "sha256": "b56d3ac8ce145ff69bf56a93f834f45a0d4879cb952a319ff48455b5c8d3b909"
+      "path": "server/src/infrastructure/database/mongo/client.ts",
+      "sha256": "59fa610de4e1d23811c0263b785bb8c44da3b2c983a0869dbda662de39f8ed62"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/infrastructure/database/rows/mongoRows.ts",
+      "path": "server/src/infrastructure/database/rows/mongoRows.ts",
       "sha256": "0ead36149dd5be0b0849ec5763fc072834754002525b202a385c1384b8a9e22e"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/infrastructure/database/schema.generated.ts",
-      "sha256": "ade6bfbad4a1301892c8840426de4078bf1eb483f042947ba1ae50ceba0f1158"
+      "path": "server/src/infrastructure/database/schema.generated.ts",
+      "sha256": "2b8de14d3c2bae72283c42e80182f178f62f5f98da42c99287f63b23d8869d9c"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/billing/cardSubscriptions.ts",
+      "path": "server/src/modules/billing/cardSubscriptions.ts",
       "sha256": "43181202f3b20e45296889bbaa660202db9a0304d93a7c7003a0bae54609a380"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/billing/catalog.ts",
+      "path": "server/src/modules/billing/catalog.ts",
       "sha256": "5f26e6e3a94e521a54556c2e71667d55e3c5d81db8d6464aec31d3e67cd7a5d5"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/billing/config.ts",
-      "sha256": "f49e2d59c6e0b3164131f25aa419f6b3042e254607413ef6dac7cb73b69345d4"
+      "path": "server/src/modules/billing/config.ts",
+      "sha256": "5b6cf2af1af95ffa56bbf074131791283204d4e12196b44e978dc051f65bc99d"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/billing/controls.ts",
-      "sha256": "d0d06ad9c0008689eb624c005fed1a461363584a46173ebde767517088e82873"
+      "path": "server/src/modules/billing/controls.ts",
+      "sha256": "ec3ad3f78893d68b4cfae4981a43e33563b2407bf75a9a48e321236341e65765"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/billing/gifts.ts",
+      "path": "server/src/modules/billing/gifts.ts",
       "sha256": "4742f82b812702bd984f7e94547aa0cf04a376e683b21be5fcd67f5fe4000946"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/billing/index.ts",
+      "path": "server/src/modules/billing/index.ts",
       "sha256": "022e34358667588f60b162a71641f7ecf1d1ebedebcfff1730e301b275df2ad0"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/billing/metrics.ts",
+      "path": "server/src/modules/billing/metrics.ts",
       "sha256": "d8b1abcfc4303c73c12252db920797b4a8cbe26c34b0a18329e41f8b5da2f986"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/billing/mojo.ts",
+      "path": "server/src/modules/billing/mojo.ts",
       "sha256": "1d9b9da5830a9995d9cc50ffb1437cf6ee7e2c4838657e5e88e64b9eef3e22df"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/billing/mojoRoutes.ts",
+      "path": "server/src/modules/billing/mojoRoutes.ts",
       "sha256": "b1007062fae32e1a58dec50b469e11b22a1470e19e22f5f306b32c7410b99851"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/billing/notifications.ts",
+      "path": "server/src/modules/billing/notifications.ts",
       "sha256": "d4dea8be8ec065bb48d30bcacb3a56db54339132fd6f3c8a78604484a4bfe703"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/billing/paypalCheckout.ts",
+      "path": "server/src/modules/billing/paypalCheckout.ts",
       "sha256": "73a6c668d78ebdc470c3b8cb2a0bbeb760702f2a57d56726f6d939d56dac6865"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/billing/perks.ts",
+      "path": "server/src/modules/billing/perks.ts",
       "sha256": "995b0338499dc0240a9f1ea20fdaebb3ec12e012e06700ef9abc1cf41ca3fb6b"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/billing/play.ts",
+      "path": "server/src/modules/billing/play.ts",
       "sha256": "a86f4efd213ccbd9e995a009efec4988c6b6f2eef01463cb09ebc04e5fd3812c"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/billing/pricing.ts",
+      "path": "server/src/modules/billing/pricing.ts",
       "sha256": "83f3ce7bf389c7a3a12c111de4dd4878e90a8e2c76e2dc19f354068cede81df1"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/billing/pricingMigration.ts",
+      "path": "server/src/modules/billing/pricingMigration.ts",
       "sha256": "99f9c7a19d49f4bd78910d30ff875d6ca35ef0da8ff8df040cb1da761545d955"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/billing/promotionRoutes.ts",
+      "path": "server/src/modules/billing/promotionRoutes.ts",
       "sha256": "72c7d3c3e831a0eebf7a21119d64f0b115f41beda9217fd8aa75da23ac1ac61c"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/billing/providers/googlePlay.ts",
+      "path": "server/src/modules/billing/providers/googlePlay.ts",
       "sha256": "c6baeddab12125a6b22e2c03adafafe92b523fb6108057f6f2fded8d1055aafb"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/billing/providers/paypal.ts",
+      "path": "server/src/modules/billing/providers/paypal.ts",
       "sha256": "cea2e9a20b3b5ddda87eddaf0dfd1fa013fd01ba5a052b70359af95aeb245886"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/billing/routes.ts",
+      "path": "server/src/modules/billing/routes.ts",
       "sha256": "f76246520b8597a5d2369c8226059f8bfb33641045cd7070a19b2d0c2709afaa"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/billing/service.ts",
+      "path": "server/src/modules/billing/service.ts",
       "sha256": "c27a9fd3088e4cdb0aef4796f07ab37f63fc4734b17f36a6a078325981520b68"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/billing/stripeSetup.ts",
+      "path": "server/src/modules/billing/stripeSetup.ts",
       "sha256": "59380fca2d27dacbb83b3f25f177f672ae507974266afbfc9af5afa73d578c89"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/billing/subscriptions.ts",
+      "path": "server/src/modules/billing/subscriptions.ts",
       "sha256": "c67d2a9793b1330cfdb91dc293f161e617d3047e35f8931b9fd7b55c1ce35e08"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/billing/upgradePromotions.ts",
+      "path": "server/src/modules/billing/upgradePromotions.ts",
       "sha256": "200a0f74f1788692775ddb15af6f6da07908963d6a56cd763e059df6294f5a0f"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/files/routes.ts",
-      "sha256": "a4049d0cea8405a22963974f2c253f9fd16ba25754f8aa9018184397439171ed"
+      "path": "server/src/modules/files/index.ts",
+      "sha256": "821daab7002469dbbac1852a4bd204af0593749a98f2cfb88cc6b91f4f7cfd6a"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/organizations/expressionsRoutes.ts",
+      "path": "server/src/modules/files/routes.ts",
+      "sha256": "dba2b8c7e8a5a7a0640281fc2beaf91722c5ffc33677aea6ad2cfbf91021c3b1"
+    },
+    {
+      "path": "server/src/modules/messaging/serverSend.ts",
+      "sha256": "fbd5064d3cc89ebfd2dcc41ad3db694da0b285451964f6214c354812cfa36ce5"
+    },
+    {
+      "path": "server/src/modules/organizations/expressionsRoutes.ts",
       "sha256": "e5aa55485f733e4a40c1b9d0011cedf044a04a89f0e5307051e8cf2a8f4956ec"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/platformAdmin/audience.ts",
+      "path": "server/src/modules/platformAdmin/audience.ts",
       "sha256": "3ff92a67f9f0072abf350ae786a16ea71b3a1abd73a5eb7bf5d85abcda1936c1"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/platformAdmin/billing.ts",
+      "path": "server/src/modules/platformAdmin/billing.ts",
       "sha256": "a900c52956dc9fe1e534a62685a6a6a3e83e1358a6a628504a8de1207d40fb5d"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/platformAdmin/index.ts",
+      "path": "server/src/modules/platformAdmin/index.ts",
       "sha256": "6b353ed20bb9a679aac78ac8c12c599afd2c31823cf335e924318f47fc70d707"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/platformAdmin/mojo.ts",
+      "path": "server/src/modules/platformAdmin/mojo.ts",
       "sha256": "e283e46047797a269322c6a6cc12dd1e01c12898d7247c30eadce35c7b182555"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/modules/platformAdmin/opsRoutes.ts",
+      "path": "server/src/modules/platformAdmin/opsRoutes.ts",
       "sha256": "b16fd95d56120e6025d6ebef06b1ed18c7fcb45406212cb855b43bb1a95010d2"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/shared/contracts/http/areas/billing.ts",
+      "path": "server/src/shared/contracts/http/areas/billing.ts",
       "sha256": "2ed98ebab8f27dcd56f30cf4100533164405e509367936113c027927e830714b"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/shared/contracts/http/areas/mojo.ts",
+      "path": "server/src/shared/contracts/http/areas/mojo.ts",
       "sha256": "4ce1af2095043d64cb8d92f836562dc2c0730bc19dd04e222f6fb55ee36541ee"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/shared/contracts/http/billing.ts",
+      "path": "server/src/shared/contracts/http/billing.ts",
       "sha256": "dd7fd4670116c436dc643308da76f05b2e8b29ec889468fd1ab95a5e64fcb903"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/shared/contracts/http/cardSubscriptions.ts",
+      "path": "server/src/shared/contracts/http/cardSubscriptions.ts",
       "sha256": "259937d9b336dc1569fb64ae9d91e1299607dc2bbde1ee8b92ad798f2fa13896"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/shared/contracts/http/mojo.ts",
+      "path": "server/src/shared/contracts/http/mojo.ts",
       "sha256": "b8c13e0968f7649c849f22318a5104d5b3d11162b6f9ab5fd1a4db1e2597273e"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/shared/contracts/http/paypal.ts",
+      "path": "server/src/shared/contracts/http/paypal.ts",
       "sha256": "e1745ed210274edaf3584f63d05cc8c11a2811079e249dff2579d4bda19cb67e"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/shared/contracts/http/platformAdminBilling.ts",
+      "path": "server/src/shared/contracts/http/platformAdminBilling.ts",
       "sha256": "c056c5a5a9aaf28fb588c59ed84dcf0a31b50e5c081fe83a66baab49912fcfdf"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/shared/contracts/http/pricing.ts",
+      "path": "server/src/shared/contracts/http/pricing.ts",
       "sha256": "8dac274a6d5f9313b924ad00287a5f512166161fbe5a4f5a5217956dab8d3704"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/shared/contracts/http/promotions.ts",
+      "path": "server/src/shared/contracts/http/promotions.ts",
       "sha256": "b5fc25e9320edbd805bd85d0d154afc485150454ca9c66406f156e221efd5788"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/src/shared/errors.ts",
+      "path": "server/src/shared/errors.ts",
       "sha256": "9f0e5aa106c4b7673c30fff6e5d9b4475218a2cdb7654012259833db5eb63ad8"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/test/architecture_boundaries.test.ts",
+      "path": "server/test/architecture_boundaries.test.ts",
       "sha256": "a1970c5b3746da298f0bb35fb2d88fdd4760afbdc20aa80fc25760a4fadb3b7d"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/test/billing_paypal.test.ts",
+      "path": "server/test/billing_paypal.test.ts",
       "sha256": "fedfb87ce57a2f94e17f2cf6c5e0e889c192cc7799328e1a903311597ef359ce"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/test/billing_paypal_live.test.ts",
+      "path": "server/test/billing_paypal_live.test.ts",
       "sha256": "c6b7d5ab9054dfd0956f64a05d7ae90cb68989db2014bb82c9abc87029475b23"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/test/billing_plus_terms.test.ts",
+      "path": "server/test/billing_plus_terms.test.ts",
       "sha256": "ce90fdf172a6516344569796023acb2fbbfa49db6f76059f80979a2e287a1f31"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/test/billing_program.test.ts",
-      "sha256": "b9e132ece6d9f420baaa6b3369bf9408c760c750fc2eff60f03d97d11d7dcca2"
+      "path": "server/test/billing_program.test.ts",
+      "sha256": "761f14ba959968a806c9adc50096769923c987b164400f79ad245a8a9181f806"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/test/billing_stripe_e2e.test.ts",
+      "path": "server/test/billing_stripe_e2e.test.ts",
       "sha256": "7f0c29cbf96aa57af89942789994b11ad1b4dee341ca36798cd8eb0545ae4e57"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/test/billing_trials.test.ts",
-      "sha256": "772753e9722445a0b43fb5a92bd53a6da201ac7c840fe51ae1cf83742d9b1e71"
+      "path": "server/test/billing_trials.test.ts",
+      "sha256": "a8c8611a829ce77f6bc99f5d760349d5721d1ad46778587a0600baf70e8d7a56"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/test/card_subscriptions.test.ts",
+      "path": "server/test/card_subscriptions.test.ts",
       "sha256": "3365e143b7e4e8f4419148495b04050af22a7e511077fd5f9aa753d1512c816d"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/test/creators.test.ts",
+      "path": "server/test/community_permissions.test.ts",
+      "sha256": "f93bae1abdba64098812c99a84199cc48605723fdf14605f63c0e2bc8fe1dba0"
+    },
+    {
+      "path": "server/test/creators.test.ts",
       "sha256": "db967c2f4971cfc1f2064dac0e97b098626e513f7f3e1c31d7cdb4019b9940f1"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/test/mojo.test.ts",
-      "sha256": "92b1010ceb50c6c93f75ac5550149871719b77aa5d8a7406d50b70e0468985ae"
+      "path": "server/test/mojo.test.ts",
+      "sha256": "951c902f2b28c535ee6a511bca4087e0e4be89abd7cf9bf7eb3e4fefe51f13e1"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/test/mongo_capacity.test.ts",
+      "path": "server/test/mongo_capacity.test.ts",
       "sha256": "4e0d992f0ee4f27738386a0bdd8be3913daaca29c5c648364c865f17509437c7"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/test/mongo_migration.test.ts",
+      "path": "server/test/mongo_migration.test.ts",
       "sha256": "819c883bed5c8d215b31206d4e5aaffb3c51288323938d59769719e5552b2e34"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/test/paypal_sandbox_gift_lifecycle.test.ts",
+      "path": "server/test/official_bots_games.test.ts",
+      "sha256": "0a15c824497dcc08a1db0a9bfa0a87c3b6c4b712f3afa697490d112eae17f1cc"
+    },
+    {
+      "path": "server/test/paypal_sandbox_gift_lifecycle.test.ts",
       "sha256": "a1d23b62ede3d892b32885d1f5f2d5341eb0514c0a8900a53ac010e69857a8e8"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/test/platform_admin_sweep.test.ts",
+      "path": "server/test/platform_admin_sweep.test.ts",
       "sha256": "40d85cb1ea5e47a5ebe3ebbb5c422acd3d5a008f145d0536d3a12ae8d0cf53fe"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/test/play.test.ts",
+      "path": "server/test/play.test.ts",
       "sha256": "798c94aa289b534c26b9296220664e7fcd5cbac519278f219a9c51693f37eb63"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/test/plus_promotions.test.ts",
+      "path": "server/test/plus_promotions.test.ts",
       "sha256": "a4f4c3a7deea82c17e027535cc6676873a912e7f7fc024c402fe26a2270b997f"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/test/plus_promotions_api.test.ts",
+      "path": "server/test/plus_promotions_api.test.ts",
       "sha256": "fd12c19b18b119668f856af83c13ca8c11f239c14f9a3042accc23f498b0ec91"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/test/plus_promotions_mongo.test.ts",
+      "path": "server/test/plus_promotions_mongo.test.ts",
       "sha256": "a5888e19e9063b4eec91f93827637c3c865f3d642b0036b4a8908c0184a94775"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/test/points.test.ts",
+      "path": "server/test/points.test.ts",
       "sha256": "ab2066dd164107648d19d634a309029e42dca9d1644fa4bcacff80f9c6d7ee97"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/test/standalone_commerce_paypal.test.ts",
+      "path": "server/test/standalone_commerce_paypal.test.ts",
       "sha256": "423687cf1ff026e09a78308805feb3c2b9e9500eb685cf0a9469b00848000071"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/test/support/mongoGlobal.ts",
+      "path": "server/test/support/mongoGlobal.ts",
       "sha256": "19ea5c2c9ac9449286c0b2df3a5a1191be8e341d38928324b7316b63773beabe"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/vitest.config.ts",
+      "path": "server/vitest.config.ts",
       "sha256": "1af0d48990a2e85fd9cca5d9ed26a5ddff6a4aba8ecda7111b92d56b1dd60167"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/server/vitest.plus.config.ts",
+      "path": "server/vitest.plus.config.ts",
       "sha256": "66659922c7454b9ea67f9937d7c0ac93f43a4fd9bffc83dbfd29e7bc6ba092b5"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/GET_admin_v1_billing_gift-deliveries.json",
+      "path": "shared/contracts/fixtures/http/GET_admin_v1_billing_gift-deliveries.json",
       "sha256": "4afcbdd1664e4e036d55ffa322072ddb5e1c1fdb40e801a2a3aa9610e610c615"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/GET_admin_v1_billing_orders.json",
+      "path": "shared/contracts/fixtures/http/GET_admin_v1_billing_orders.json",
       "sha256": "8a83a6ce6cb3c9acc212a90130ef93bb55ba0f1bc2366e24448c366e314d0d78"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/GET_admin_v1_billing_paypal_transactions.json",
+      "path": "shared/contracts/fixtures/http/GET_admin_v1_billing_paypal_transactions.json",
       "sha256": "8e2d77203beefe207e8adfb31e7d72c37b80f75011bd85ca6623cd82f0dca040"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/GET_admin_v1_billing_promotions.json",
+      "path": "shared/contracts/fixtures/http/GET_admin_v1_billing_promotions.json",
       "sha256": "57132f530c72cbb32941c0849995472a85c7fd8daeddc57f3301bb528b6a80e6"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/GET_admin_v1_operations_appeals.json",
+      "path": "shared/contracts/fixtures/http/GET_admin_v1_operations_appeals.json",
       "sha256": "732dad66c9e2c953e037401d02f64da8a60e47d3760478cdfd6d882ff7e7d2c1"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/GET_admin_v1_operations_notices.json",
+      "path": "shared/contracts/fixtures/http/GET_admin_v1_operations_notices.json",
       "sha256": "732dad66c9e2c953e037401d02f64da8a60e47d3760478cdfd6d882ff7e7d2c1"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/GET_admin_v1_operations_operators.json",
+      "path": "shared/contracts/fixtures/http/GET_admin_v1_operations_operators.json",
       "sha256": "0343639fac1511a32a4c9a92c7655a6e9f9ad3a600fc6f30b5bdad6806160a97"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/GET_admin_v1_operations_ownership.json",
+      "path": "shared/contracts/fixtures/http/GET_admin_v1_operations_ownership.json",
       "sha256": "732dad66c9e2c953e037401d02f64da8a60e47d3760478cdfd6d882ff7e7d2c1"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/GET_admin_v1_operations_promotions.json",
+      "path": "shared/contracts/fixtures/http/GET_admin_v1_operations_promotions.json",
       "sha256": "732dad66c9e2c953e037401d02f64da8a60e47d3760478cdfd6d882ff7e7d2c1"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/GET_admin_v1_reports.json",
+      "path": "shared/contracts/fixtures/http/GET_admin_v1_reports.json",
       "sha256": "65c3462fc77a10a216e8de4e88c3efef1c46baa955ae2779bf242915221a1dda"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/GET_admin_v1_reports_assignees.json",
+      "path": "shared/contracts/fixtures/http/GET_admin_v1_reports_assignees.json",
       "sha256": "5f035031ae9bd78a5c8d03aa351470d21cfefb8ab1a65d48b75dfbb0305eaa5d"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/GET_v2_billing_plans.json",
+      "path": "shared/contracts/fixtures/http/GET_v2_billing_plans.json",
       "sha256": "61a8fe194d85ad1d2b1558fba604d9273fd9157a5ab7eb391ec31669162736eb"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/GET_v2_billing_promotions_id.json",
+      "path": "shared/contracts/fixtures/http/GET_v2_billing_promotions_id.json",
       "sha256": "595219792dd54a38a8ace80a6a7fc33b928ea74f0dd1bdfac6a2b708dbe0dd1e"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/GET_v2_billing_promotions_preference.json",
+      "path": "shared/contracts/fixtures/http/GET_v2_billing_promotions_preference.json",
       "sha256": "57dc01e7ad9e6cc3eea1fae6003fda8e430c87f2fcedec1f9916959fa7bec1dd"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/GET_v2_billing_referral.json",
+      "path": "shared/contracts/fixtures/http/GET_v2_billing_referral.json",
       "sha256": "6fc5f58f937c305832095c175ef6221830a21cc02e2d88e4140903515e67d325"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/GET_v2_mojo_catalog.json",
+      "path": "shared/contracts/fixtures/http/GET_v2_mojo_catalog.json",
       "sha256": "955508880ba2d832c92bf801db0aec0716fd0c5dbc26f1ed2807c29435622fac"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/GET_v2_mojo_me.json",
+      "path": "shared/contracts/fixtures/http/GET_v2_mojo_me.json",
       "sha256": "f3f5f1359f6f4e3840dd85e014b0c26e1c63fc67b41f41b7cb0c3e4f4fd37c1f"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/POST_v2_billing_promotions_activity.json",
+      "path": "shared/contracts/fixtures/http/POST_v2_billing_promotions_activity.json",
       "sha256": "7ac93da48d0c18ff7e8f8b82e33546f50a0aa84aa6a2cf25ce1e7dd0b8530864"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/POST_v2_billing_promotions_claim.json",
+      "path": "shared/contracts/fixtures/http/POST_v2_billing_promotions_claim.json",
       "sha256": "dfb3477d1107aeb771e3774fd8dd9654402213584d9dfb23b10770e802c97020"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/POST_v2_billing_promotions_events.json",
+      "path": "shared/contracts/fixtures/http/POST_v2_billing_promotions_events.json",
       "sha256": "12b34da73b0c67a0319e6eddbd3582af66e3b558b4d44e4a6860e0cec20d726f"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/POST_v2_billing_referral_claim.json",
+      "path": "shared/contracts/fixtures/http/POST_v2_billing_referral_claim.json",
       "sha256": "60cc6c697491b3da1499617f9028b6f51a14191e881f89dcdf8f72eb890a5f09"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/POST_v2_billing_reminders_renewal.json",
+      "path": "shared/contracts/fixtures/http/POST_v2_billing_reminders_renewal.json",
       "sha256": "512faf3ef785250b90a23f87000d6c16d7bdb3b7eda16221b95b80ef0ddabf8d"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/POST_v2_mojo_play_intent.json",
+      "path": "shared/contracts/fixtures/http/POST_v2_mojo_play_intent.json",
       "sha256": "2389d0931d7b919e1d7685eb11e3c0ae4e9e20e454adacab2337ee16f0f21389"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/POST_v2_mojo_play_verify.json",
+      "path": "shared/contracts/fixtures/http/POST_v2_mojo_play_verify.json",
       "sha256": "f8e35659c5c2cbddca5a46b0e3f48b50184c9b721b1523ceebcd91815efbbea4"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/PUT_admin_v1_billing_promotions.json",
+      "path": "shared/contracts/fixtures/http/PUT_admin_v1_billing_promotions.json",
       "sha256": "10d9d2666cfa714562ce45de2188c135ea4cef3401c7fb8b3a88a59f0d3c51e5"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/PUT_v2_billing_promotions_preference.json",
+      "path": "shared/contracts/fixtures/http/PUT_v2_billing_promotions_preference.json",
       "sha256": "de602e9595694d10c98cd2f9b53a5cc7aaab261c68741da184c31cb7ed9b9152"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/errors/billed_elsewhere.json",
+      "path": "shared/contracts/fixtures/http/errors/billed_elsewhere.json",
       "sha256": "1e22d2795d8d229672044df984888d7601f08f809f6f61f105d4b143d7c7e82d"
     },
     {
-      "path": "/Volumes/code_files/meldiq_android/.claude/worktrees/plus-monetization-20261102/shared/contracts/fixtures/http/errors/unavailable.json",
+      "path": "shared/contracts/fixtures/http/errors/unavailable.json",
       "sha256": "b161a027e795390e759fa9bd8658bca0e0678397762d3e95dee9469d41a9fb61"
     }
   ],
   "admin": [
     {
-      "path": "/Volumes/code_files/meldiq_central_admin/src/api/contracts.ts",
+      "path": "index.html",
+      "sha256": "8383cd1142ea918ec7796da9905380259aa9ad58491389fe92ba7dd8469d080f"
+    },
+    {
+      "path": "package-lock.json",
+      "sha256": "ea06fb479412392e4ba6dcfb20a374d28f2b0117e044abac4c880d93a930b5b8"
+    },
+    {
+      "path": "package.json",
+      "sha256": "73cad1b7dce1c05403b788aab22d37fedffe81598e5dce9808621ba4e5e70c73"
+    },
+    {
+      "path": "public/favicon-dark-32.png",
+      "sha256": "af90fcef9f4e21c483794d177c390ceeef011202d20c61f01897a69ee1d23f0c"
+    },
+    {
+      "path": "public/favicon-light-32.png",
+      "sha256": "4acb7f43113d820f46e09aebd32822fb92ad2c65d15591e7a965d22fd1157997"
+    },
+    {
+      "path": "public/fonts/OFL.txt",
+      "sha256": "995c7199cab65954f545996326755daee7b63cc6b42b06c13da1f9502ab08a99"
+    },
+    {
+      "path": "public/fonts/PlusJakartaSans.ttf",
+      "sha256": "89b3fb38aa0d275d7a731d0d817a4f1622b316b4d7fbdedcf02ee9099ff68bc8"
+    },
+    {
+      "path": "public/meldling-128.png",
+      "sha256": "c1b895935d640f5bcfdd4e081f5adbd43555de26441f11c82db6af5e33841d00"
+    },
+    {
+      "path": "scripts/contracts.ts",
+      "sha256": "837cab4fd15a66ef8596b5f5fbf00455648f29ecd2dbc14e61ab40e50523bacb"
+    },
+    {
+      "path": "src/api/client.ts",
+      "sha256": "92d68a340d3c05b4e0a6ff5073d40ecfc73a87c13de4c5f6c519d5102adc5e7a"
+    },
+    {
+      "path": "src/api/collectibles.ts",
+      "sha256": "90b4e95af2b4a4c9229f91651863b1dd52f063621ef5f4fac4d982188d052aab"
+    },
+    {
+      "path": "src/api/contracts.ts",
       "sha256": "f118a5a8083108ee8cbe476ed84a8030260646b49a0569a389aea5fadaa3d05a"
     },
     {
-      "path": "/Volumes/code_files/meldiq_central_admin/src/console/pages/SiteDetails.tsx",
+      "path": "src/api/operations.ts",
+      "sha256": "56614926a00a232f707443919490caab0633d88df74d5dd3c8cd3b4c44a22137"
+    },
+    {
+      "path": "src/api/platformFeatures.ts",
+      "sha256": "d719cf1c819c9b42c81fcd645b484b953ea8acfee708ff0ea24261ea42ed50ea"
+    },
+    {
+      "path": "src/app/format.ts",
+      "sha256": "789b28d767a5248d65d13301a4c876e18f36117f984771e7072b0a91c90ec289"
+    },
+    {
+      "path": "src/app/session.tsx",
+      "sha256": "c20e652b902db264b4b59cfd7fe78cd180343dabae6db3f9b27d5c96a6fe331f"
+    },
+    {
+      "path": "src/app/useResource.ts",
+      "sha256": "d6a4633a3b576617a816188e80825fd88a1de67402b9b8a1e65a8efcedcf3277"
+    },
+    {
+      "path": "src/console/App.tsx",
+      "sha256": "a6edca521391abcfde292d3fe990e80f9123b7ddb895c01e55a7b16ab85eda92"
+    },
+    {
+      "path": "src/console/auth/AuthLayout.tsx",
+      "sha256": "c42ad434ec49721944e6e9c5a550f0a872bc33f1bd026e0ddb2136c648c411d0"
+    },
+    {
+      "path": "src/console/auth/Enrol.tsx",
+      "sha256": "799b49de94c4807f21b9da8ed4f53d69705049d9843f053afd8b5d51ec99d554"
+    },
+    {
+      "path": "src/console/auth/ReauthDialog.tsx",
+      "sha256": "742267bbe54aaf9731ba204dc28ff9b3f4f36d7375538d1ba6d2e7f723a43da0"
+    },
+    {
+      "path": "src/console/auth/SignIn.tsx",
+      "sha256": "95fb74a6d68e508eb5627ae952364f60ce40ad1542cd0f13563fe89ca950fbe9"
+    },
+    {
+      "path": "src/console/auth/webauthn.ts",
+      "sha256": "acf636b5587eabdf1f7c361c955d4680c28a85d03937b55ae8354ecbb7e0ccde"
+    },
+    {
+      "path": "src/console/charts/BarCompareChart.tsx",
+      "sha256": "d2d4b87bb4520c58efe6576d6ca2299b916b77392b19ae380a099495acaa87dd"
+    },
+    {
+      "path": "src/console/charts/BarList.tsx",
+      "sha256": "cd8bdc5f247fd667d359f11d11f2fffde07bf983a0cee7643f898c165db16065"
+    },
+    {
+      "path": "src/console/charts/ChartTable.tsx",
+      "sha256": "36e74ca61d23b29b80f85906fcb1e24526a52cf738393430b53d40395dbc3433"
+    },
+    {
+      "path": "src/console/charts/CohortGrid.tsx",
+      "sha256": "710a3d3a5cbc6682b62ec11b460302384a2ad8b245d555a735756cf506c987a3"
+    },
+    {
+      "path": "src/console/charts/Donut.tsx",
+      "sha256": "b6b194d4b11a702c5fa766b1e71e30af8258eac1a562edc06bf4145ff114d459"
+    },
+    {
+      "path": "src/console/charts/Sparkline.tsx",
+      "sha256": "f4752fbda08186da470e3428d4d96529a9158e2f5944b345bd37ad372dfcbca0"
+    },
+    {
+      "path": "src/console/charts/TrendChart.tsx",
+      "sha256": "dc8928228974bead38fe2ecc362c2350142fea7007499de8766d3c5a07d1b106"
+    },
+    {
+      "path": "src/console/charts/scale.ts",
+      "sha256": "9afb8ac8a1b21ddf4b0d5f45e1ef6d60d101385e196971bef17bc5e0f0a618b8"
+    },
+    {
+      "path": "src/console/charts/useWidth.ts",
+      "sha256": "54b6eb5f09dfe39e7afef4a1d5b203d048dfc1fad6eb78c28fe87659bb424930"
+    },
+    {
+      "path": "src/console/days.ts",
+      "sha256": "8d92762a209b010422b1016c2985b867186e39a61e76c0b66150cad2dd03f284"
+    },
+    {
+      "path": "src/console/kit/Card.tsx",
+      "sha256": "9640d5807e1ddc9566b068f99c086f0de1c4a7bf46668f374f460f1b9dc2c611"
+    },
+    {
+      "path": "src/console/kit/DataTable.tsx",
+      "sha256": "2910cff9cd7634f8dd860e926ecc851c71b0e69169d91d7c01ed22f9c769a527"
+    },
+    {
+      "path": "src/console/kit/Dialog.tsx",
+      "sha256": "3c250ebe07e217caf8741e8c0774f76106ffc2baeb283b6d2b13fd9b335a8a0d"
+    },
+    {
+      "path": "src/console/kit/ExportButton.tsx",
+      "sha256": "87d1e688a3b1f2f82fb9f625606f53a5cddf365d8c8b736657d479e254f2da5b"
+    },
+    {
+      "path": "src/console/kit/Kpi.tsx",
+      "sha256": "fbac78b6b4a5957605d0d8adf7edbbceff61fb2f4b0689f1a393a48c6cb1060c"
+    },
+    {
+      "path": "src/console/kit/PageHeader.tsx",
+      "sha256": "4105ee920fac236cc3c58880b45474996108fbc6ce79a09a217e08f92c0165d2"
+    },
+    {
+      "path": "src/console/kit/SearchBar.tsx",
+      "sha256": "5d09e777ca44b4d443c6dbd591e32eefe94266d2dde2fc066fc2777a93b4a4e4"
+    },
+    {
+      "path": "src/console/kit/States.tsx",
+      "sha256": "601b71a514d836190ab617241fad24dc9c89460c4e7160176410ec2cd0d2cde2"
+    },
+    {
+      "path": "src/console/kit/StatusBadge.tsx",
+      "sha256": "5d7fce1b9cdb7e4a579f3c0438095a6e8ffda734a51ac71374ec5eec803fa31c"
+    },
+    {
+      "path": "src/console/kit/Switch.tsx",
+      "sha256": "d459810ff71aff3e385d90c5e3e37e180cca6025494642240113b1bcbe871fad"
+    },
+    {
+      "path": "src/console/kit/Tabs.tsx",
+      "sha256": "e5a0c2a25a870aa92403266b48f38cdc905c411e566b1fe078d01e2652ed1c92"
+    },
+    {
+      "path": "src/console/kit/Timestamp.tsx",
+      "sha256": "dd6dfef3bbe003388bdb0737a4f34f0f3aae8bf126b627b5942396d1838b41bf"
+    },
+    {
+      "path": "src/console/main.tsx",
+      "sha256": "a7b7e12987764f68dcb73ec1160fb8d94b6b51fdf7c5dfc6eb2752b442885d61"
+    },
+    {
+      "path": "src/console/money.ts",
+      "sha256": "a3a79c3456845d25e2d6884b05b4489cfe22491859f31f5e93c070806d3eba9b"
+    },
+    {
+      "path": "src/console/pages/Accounts.tsx",
+      "sha256": "b80dadcd3af3dfb12b9428a097bef7352e85a0d1a723d78cdd32b46b852fc4de"
+    },
+    {
+      "path": "src/console/pages/Admins.tsx",
+      "sha256": "a4f84a57ac563dd40927525a402dcd75fd4983602f50be4be68ac7457f7973e1"
+    },
+    {
+      "path": "src/console/pages/Analytics.tsx",
+      "sha256": "9a799b4b6bcb481083afe4589885886361eb6e4be1a35bc0b0428cc88eb43c4f"
+    },
+    {
+      "path": "src/console/pages/Audit.tsx",
+      "sha256": "38a533838c061c20a729d15035d2c07d9ba69a032be6ca39b5e882f0a2247cbd"
+    },
+    {
+      "path": "src/console/pages/CollectibleManager.tsx",
+      "sha256": "c5f8e575e2dcd3679c6e9b1b3b356aac7805a479ff5444ae5baf0c60f8b9c5ce"
+    },
+    {
+      "path": "src/console/pages/Controls.tsx",
+      "sha256": "5bf94b506a7cfaefddc401a29de7581fb738de1f29afe0ab15dcb78b17505626"
+    },
+    {
+      "path": "src/console/pages/Creators.tsx",
+      "sha256": "716e69048790f876381cc62a5de78a3bf8dae1c73bd0e0aba22601ed064c34f5"
+    },
+    {
+      "path": "src/console/pages/Decorations.tsx",
+      "sha256": "68f5dd8c95ac2ab36ae21b4d416f879df9a6c1197f8c1cd0862e76004106a2b6"
+    },
+    {
+      "path": "src/console/pages/Devices.tsx",
+      "sha256": "e1c3d2dfd72e2e1dcf9681861d6537ebe1e82abbeb461ee2622ac225037cde70"
+    },
+    {
+      "path": "src/console/pages/IncidentDetail.tsx",
+      "sha256": "14f021f3750fd223bb29b915090d5eaafe4c69cbd2dd74cfa9afbde32832fb10"
+    },
+    {
+      "path": "src/console/pages/Incidents.tsx",
+      "sha256": "879e8fa7cb2a71ee1e3f9e6b51bee50eeb199480a9a49d24c91678ec2796a69d"
+    },
+    {
+      "path": "src/console/pages/Infrastructure.tsx",
+      "sha256": "62a6c0b0a5a4adfdb0925082f666e00bc7a0d80d562910ade675c1617f55a312"
+    },
+    {
+      "path": "src/console/pages/Live.tsx",
+      "sha256": "322ee4262a07fbcd39d974e67fe1ce4bc1a8cfb6aa4cf9ae16df739cc66ebdb6"
+    },
+    {
+      "path": "src/console/pages/Moderation.tsx",
+      "sha256": "9892a60f9f4accd986874335c36cc173a76eaf094b51906f984f076fb9d6bbb3"
+    },
+    {
+      "path": "src/console/pages/OperationalControls.tsx",
+      "sha256": "c1c25323cc58577b5e97f2ca40eb7708ececfb55df7173c7f9218050d24478ee"
+    },
+    {
+      "path": "src/console/pages/OrgDetail.tsx",
+      "sha256": "7eb97327add78153983b293b0d4695411b70a5b59dd4f9751bef6b604217319f"
+    },
+    {
+      "path": "src/console/pages/Orgs.tsx",
+      "sha256": "2f2a6754e3347da721745b6b345be56924fb33a9376954bad79a3c391ce79434"
+    },
+    {
+      "path": "src/console/pages/Overview.tsx",
+      "sha256": "9fb97364a287769548da5ee8a2bd1509abecbf103a499f41041c0f3378de3b22"
+    },
+    {
+      "path": "src/console/pages/Quotas.tsx",
+      "sha256": "355adba7b0f2a5b69091aff8468035de8ec36840974193b6a727d885b98abb59"
+    },
+    {
+      "path": "src/console/pages/Resources.tsx",
+      "sha256": "8e02da1b7b7c259623f33fc4715df5cbc09faa267b9d47f613e6c84cf002b54d"
+    },
+    {
+      "path": "src/console/pages/Settings.tsx",
+      "sha256": "c376ec531fc10a87b1b31b7792fbfd02e89d7de2179ae7a2b4d7179dcd4d5ade"
+    },
+    {
+      "path": "src/console/pages/SiteDetails.tsx",
       "sha256": "88e76f4589100a73259443e360b5824f607bece65eed4b8c8274253b433dda01"
     },
     {
-      "path": "/Volumes/code_files/meldiq_central_admin/src/console/pages/UserDetail.tsx",
+      "path": "src/console/pages/UserDetail.tsx",
       "sha256": "c649d6ffb6a74e29273f7beca265582e92b0ca69499c52101b023b50ae8c336c"
     },
     {
-      "path": "/Volumes/code_files/meldiq_central_admin/src/console/pages/accounts/CreateAccountDialog.tsx",
+      "path": "src/console/pages/Users.tsx",
+      "sha256": "dc41c3b59a6cca2b941b873777e6fef3e9f3b40d02bf41c948dc7a05cf6ec3a6"
+    },
+    {
+      "path": "src/console/pages/accounts/ChangeVerificationDialog.tsx",
+      "sha256": "e542410afaf0f1cdc244c84ff894139281c5ae87a2d31b60890810c854206ba8"
+    },
+    {
+      "path": "src/console/pages/accounts/CreateAccountDialog.tsx",
       "sha256": "44a99d6c8befe61ac06c243c7b499d218c8aa574543a5ff2c0461f32100c6e84"
     },
     {
-      "path": "/Volumes/code_files/meldiq_central_admin/src/console/pages/accounts/ResultDialog.tsx",
+      "path": "src/console/pages/accounts/ResultDialog.tsx",
       "sha256": "0e58212a85df7ee1ffedad1c0dd23ecbf3094b6863e9bcebfccd1a58edcd9d23"
     },
     {
-      "path": "/Volumes/code_files/meldiq_central_admin/src/console/pages/billing/Billing.tsx",
+      "path": "src/console/pages/accounts/VerificationFields.tsx",
+      "sha256": "e3f7ed066e065fc070fa2103c43cb38b7902e1f674f8fe5ce1ffeb21b6f9d902"
+    },
+    {
+      "path": "src/console/pages/accounts/labels.ts",
+      "sha256": "57b518836087bd5b1f81d7120583b3aaec0b015ccf053bd88e2e560d317d4269"
+    },
+    {
+      "path": "src/console/pages/billing/Billing.tsx",
       "sha256": "616c9bc73c13404e1713b2f20e8ec290d828dd0264078d3c0f3e0ad7119b7780"
     },
     {
-      "path": "/Volumes/code_files/meldiq_central_admin/src/console/pages/billing/MojoActivity.tsx",
+      "path": "src/console/pages/billing/BillingOverview.tsx",
+      "sha256": "9f3b13b624239e192928736a0b46f8f8b79d344b17321ceb3eeb51554d248b0e"
+    },
+    {
+      "path": "src/console/pages/billing/FreePeriods.tsx",
+      "sha256": "92f5c68d9ad199da49ec3bb444ac358b08e238574f02f0f4c2e3269512404cee"
+    },
+    {
+      "path": "src/console/pages/billing/Gifts.tsx",
+      "sha256": "3782472de28be20329ce183c6f257d1a92a2a37d32b7569890dfacefb015a0eb"
+    },
+    {
+      "path": "src/console/pages/billing/Limits.tsx",
+      "sha256": "a5065c62a2461cc71d829bfca7d5d4460f1b6eb5a9b0bd177859f38bba6e3914"
+    },
+    {
+      "path": "src/console/pages/billing/MojoActivity.tsx",
       "sha256": "ec53d715495e6fcb9986d434c6408cdcee61dd30293f3302ddee5152ef4cffcf"
     },
     {
-      "path": "/Volumes/code_files/meldiq_central_admin/src/console/pages/billing/MojoControls.tsx",
+      "path": "src/console/pages/billing/MojoControls.tsx",
       "sha256": "b28dc2b7224ef34d5c2b64df362e0fc9072f66bc69e208cf5a98da6a1a3b5b31"
     },
     {
-      "path": "/Volumes/code_files/meldiq_central_admin/src/console/pages/billing/MojoLimitsDialog.tsx",
+      "path": "src/console/pages/billing/MojoLimitsDialog.tsx",
       "sha256": "67d5e6e760f496e628ab670a70d0bf1eb9be3681e93bd9ea7d5836c946dba404"
     },
     {
-      "path": "/Volumes/code_files/meldiq_central_admin/src/console/pages/billing/PlanForms.tsx",
+      "path": "src/console/pages/billing/Orders.tsx",
+      "sha256": "9c98ed93fe570eb0eb2f5bede6d95a563811acc43fb0b94cfac5ceded0648000"
+    },
+    {
+      "path": "src/console/pages/billing/PayPalTransactions.tsx",
+      "sha256": "46faca8f07621182b8afa1a5a23933124c6cbcaa07de8acb5b7c0ea1032748eb"
+    },
+    {
+      "path": "src/console/pages/billing/PlanForms.tsx",
       "sha256": "f178825cf60397784a80cc65cc3bad94847cd906050dca5a6df79166c1a06f78"
     },
     {
-      "path": "/Volumes/code_files/meldiq_central_admin/src/console/pages/billing/Plans.tsx",
+      "path": "src/console/pages/billing/Plans.tsx",
       "sha256": "802d7ef485b62d8cdd5e4f4bfd757f7b937c8f5ae39efc7517c56011162b9ccf"
     },
     {
-      "path": "/Volumes/code_files/meldiq_central_admin/src/console/pages/billing/Program.tsx",
+      "path": "src/console/pages/billing/Program.tsx",
       "sha256": "2024abcabffe7e5454a5ae239a6c82ce8648217d1a12a4da5edb18119a83d4fd"
     },
     {
-      "path": "/Volumes/code_files/meldiq_central_admin/src/console/pages/billing/Promotions.tsx",
+      "path": "src/console/pages/billing/ProgramDialog.tsx",
+      "sha256": "58d6590438bdac79581c6931a0e999ee51fa10cee7e485931fd2b2e911230457"
+    },
+    {
+      "path": "src/console/pages/billing/Promotions.tsx",
       "sha256": "feadb4c67e864ede9d9fa00a8f7c235bbd8dcfa3b11b686167cc41fc83e45f73"
     },
     {
-      "path": "/Volumes/code_files/meldiq_central_admin/src/console/pages/billing/SubscriptionDetail.tsx",
+      "path": "src/console/pages/billing/ProviderCompare.tsx",
+      "sha256": "0ba2d686d9c0789870d4eff805a95fa565340e89bb1bcff755fb2751818a187b"
+    },
+    {
+      "path": "src/console/pages/billing/ProviderEvents.tsx",
+      "sha256": "ca3cf4de57ecb10c947cc965474e1bc26c7a9b66c85039ed05247d70f50e4677"
+    },
+    {
+      "path": "src/console/pages/billing/SetupBanner.tsx",
+      "sha256": "8f149ddc6c56a311e0e65941b7a649761c1de8b30c21fc15537a5ca5ad8ef90d"
+    },
+    {
+      "path": "src/console/pages/billing/SubscriptionDetail.tsx",
       "sha256": "bb4676e7997c4959d680b343fb6e544ccf6ddb3b1e0a3094139a07e1f55768f1"
     },
     {
-      "path": "/Volumes/code_files/meldiq_central_admin/src/console/pages/billing/mojo.tsx",
+      "path": "src/console/pages/billing/SubscriptionInvoices.tsx",
+      "sha256": "6262049f760c0bfd431acc40b094b3f20663080c850fabeb99c98a53b0506bad"
+    },
+    {
+      "path": "src/console/pages/billing/Subscriptions.tsx",
+      "sha256": "71cb2a4ed613891995ce321db16e245a1f95340c375141ea57d69dc9f11492e4"
+    },
+    {
+      "path": "src/console/pages/billing/labels.tsx",
+      "sha256": "d9b6fba3ab55ede811c0be0bc8fa3552cd8c8aa5521ffb8ca709a6d7a0e9c5b4"
+    },
+    {
+      "path": "src/console/pages/billing/mojo.tsx",
       "sha256": "052fec1d4a1350a264f94015dea426a0b2e4b122ea08d03cd68af38097f0106f"
     },
     {
-      "path": "/Volumes/code_files/meldiq_central_admin/src/console/pages/billing/mojoFields.ts",
+      "path": "src/console/pages/billing/mojoFields.ts",
       "sha256": "b3e462c2ecba4e6414b6bc6066f230ac665d192535b13725914e05729300713f"
     },
     {
-      "path": "/Volumes/code_files/meldiq_central_admin/src/console/pages/user/MojoPanel.tsx",
+      "path": "src/console/pages/incidents/labels.ts",
+      "sha256": "a86fc0886e278d5eaca4d41ebf05af0f4c3f08864beba85a5e14f02240087e58"
+    },
+    {
+      "path": "src/console/pages/org/CommunityOperations.tsx",
+      "sha256": "be1cdc773a49d03e296dc9c365eb29ad32d2244055ff3768c40a41b5726afdd0"
+    },
+    {
+      "path": "src/console/pages/org/OrgCards.tsx",
+      "sha256": "3988603d313d8e60084b77d2809faff40ce8f49f4145b9961c99a6c166f1aa4c"
+    },
+    {
+      "path": "src/console/pages/org/OrgInsights.tsx",
+      "sha256": "847f6451261baab99393de5d08a3f900273d59be779e2a08a173d5b0a7b9b9d0"
+    },
+    {
+      "path": "src/console/pages/org/OrgLimitsDialog.tsx",
+      "sha256": "aeb4ab78354a87e4a83c3da47ef83906ae554684d2877a89b555ccb32dc917d0"
+    },
+    {
+      "path": "src/console/pages/org/RemoveMemberDialog.tsx",
+      "sha256": "f2644f4dab723aa8b5553d618b2feba939b3f9f088c4e839e163570854619fec"
+    },
+    {
+      "path": "src/console/pages/org/labels.tsx",
+      "sha256": "a830b0103b51b6af63ef39ba49625e80ad7dc7113907e5ff0ca540ac0554bd25"
+    },
+    {
+      "path": "src/console/pages/quotas/AdjustDialog.tsx",
+      "sha256": "d30545af85bae4beb24afa4ed70bffd27bf6d5010ec5a53aafb0017bfb05d037"
+    },
+    {
+      "path": "src/console/pages/quotas/EffectiveQuotas.tsx",
+      "sha256": "d07cfcf752fb4fe898f5847f7a3202d1a3d01899273deb90a5a7e31d6e285c3b"
+    },
+    {
+      "path": "src/console/pages/quotas/Ledger.tsx",
+      "sha256": "036cb8a9a32bce6a1529c6f128b5447aa7a83f54403a66d6c9da5230c760539d"
+    },
+    {
+      "path": "src/console/pages/quotas/Plans.tsx",
+      "sha256": "4403f482440feb9c7ee232f6c3ec2a6355ce372458e2c4c76d0d07e7c1bb7ee9"
+    },
+    {
+      "path": "src/console/pages/quotas/Policies.tsx",
+      "sha256": "bb9fb61d98cc5aa28024ffb9f1470b5612c017f2068ef14e4ac6779e14b7aeae"
+    },
+    {
+      "path": "src/console/pages/quotas/PolicyDialog.tsx",
+      "sha256": "4b378de97cbf94d5247b6b834bbff72eebdd51aad7958555d1e05b08a2945564"
+    },
+    {
+      "path": "src/console/pages/quotas/Usage.tsx",
+      "sha256": "689c5608e80b98d054644edd3281409700e747fda93f56d781dcc5d8c929a270"
+    },
+    {
+      "path": "src/console/pages/quotas/UsageMeter.tsx",
+      "sha256": "201cff855863fdc14a1c202be918f652546b687d491f733e5f87a3556bf4065e"
+    },
+    {
+      "path": "src/console/pages/quotas/labels.ts",
+      "sha256": "13434c81c75795840d3d28f936caa301c08cbce034c3c5a8005d2a20bcf5ec68"
+    },
+    {
+      "path": "src/console/pages/user/ActivityPanel.tsx",
+      "sha256": "8c56b4a0078f3019ce601473be7d747a832a1b2e7895dcbfa72137a4a1e9bcce"
+    },
+    {
+      "path": "src/console/pages/user/DevicesPanel.tsx",
+      "sha256": "b4c3bd966b7455c6895b8fd8ea801559a54634759576d03bb7b37aac5c3ea432"
+    },
+    {
+      "path": "src/console/pages/user/MojoPanel.tsx",
       "sha256": "bf009a030ad6ebb2064b465ea14dbbc8b0c6bbbd6038b0ef99153ab9f89bf076"
     },
     {
-      "path": "/Volumes/code_files/meldiq_central_admin/src/console/styles/pages/billing.css",
+      "path": "src/console/pages/user/OverviewPanel.tsx",
+      "sha256": "13a8f06a6714d8f938036e17ccd0909ddaff513897b218c475e27fa5502bfc30"
+    },
+    {
+      "path": "src/console/pages/user/ProfileHeader.tsx",
+      "sha256": "04369002389541f7e9f7a9d2a269e97d3851933335dc3e96f3986a2dc3d8f06a"
+    },
+    {
+      "path": "src/console/pages/user/QuotasPanel.tsx",
+      "sha256": "73fea7c6bf5d5b1f2545401d5adf2aaf2710cc7135d68295e0f031e1a69f0c06"
+    },
+    {
+      "path": "src/console/pages/user/UserActions.tsx",
+      "sha256": "25db68684c7cd5331f437c6377c04cc19d9884efdacbd9f7d859db574ba6fb9e"
+    },
+    {
+      "path": "src/console/pages/user/person.tsx",
+      "sha256": "abe6d6abfd1d2e98be258de60b0597992aebfb136fd74bd4461b9649f25fe2e8"
+    },
+    {
+      "path": "src/console/pages/user/types.ts",
+      "sha256": "3aafbfc10ce93b4f58aa5bc081a3505573ef45ecc092ad2ac9caa865637cd5a9"
+    },
+    {
+      "path": "src/console/router.ts",
+      "sha256": "3ce0402da747cb48e4a135bc1ca21f18239d4e6a2733893472abc99f6e7cfa69"
+    },
+    {
+      "path": "src/console/shell/Notifications.tsx",
+      "sha256": "aa7d9fffb25c6aeea95b4a0ca76d1656a61252d77818e18d1df12fbfaadbad9e"
+    },
+    {
+      "path": "src/console/shell/Search.tsx",
+      "sha256": "1a94c9346dfa969d179176aa133a2dcd5278de2b0938ee30af507e322218a38e"
+    },
+    {
+      "path": "src/console/shell/Shell.tsx",
+      "sha256": "5dd55989ff674ee651811080926304823b7ac26043549ce372cc597c49e54294"
+    },
+    {
+      "path": "src/console/shell/nav.ts",
+      "sha256": "ef101e509522ce9887e1ffe77b4140dd7c76f664db2bfd4842bb501c94897de0"
+    },
+    {
+      "path": "src/console/shell/theme.ts",
+      "sha256": "c6fee7cffe6572e4f7da0b11b68a9b0607f0f973562991eef03c77c1a95429e2"
+    },
+    {
+      "path": "src/console/styles/charts.css",
+      "sha256": "612230b90d12df1cf257cdc93e8ab99500c1b98004cfea0ab43896b368fb087f"
+    },
+    {
+      "path": "src/console/styles/kit.css",
+      "sha256": "87b20afbaceca79a1f19dc3781d8ee7228fc2b8db349e18b239137efd3a19220"
+    },
+    {
+      "path": "src/console/styles/layout.css",
+      "sha256": "54b73b1a59abc74667795ee01c72941376fe48cccae37e685d4d9fec2a0680fc"
+    },
+    {
+      "path": "src/console/styles/operations.css",
+      "sha256": "4a524ace70d164d07c00284f08bf38a8fe4d1806b35e6aa1d8f444f3131c3b28"
+    },
+    {
+      "path": "src/console/styles/pages/accounts.css",
+      "sha256": "5c4b9eeb6d0593fddaff1ae78aadcd437e8969003fa286882cc6a7489f51eb72"
+    },
+    {
+      "path": "src/console/styles/pages/billing.css",
       "sha256": "df0740e36c4898c5717e09ef7100eda48978814f491b9d783b653b1e8c088245"
+    },
+    {
+      "path": "src/console/styles/pages/catalog.css",
+      "sha256": "0b494020b3bd7cbeff3ae492835ff644492765359752dfbb16b1463e0c1e9340"
+    },
+    {
+      "path": "src/console/styles/pages/decorations.css",
+      "sha256": "2784e6b342725ad8a854d21a5194a9f09b8c5255214d48ced69ff7159eeebcb9"
+    },
+    {
+      "path": "src/console/styles/pages/governance.css",
+      "sha256": "09ed0326113863bdf57c0487b8824cf001119d3073210cce7ebca255e595fef6"
+    },
+    {
+      "path": "src/console/styles/pages/ops.css",
+      "sha256": "2cf37bd7b1b28345455652571c9520d837dac4145943d23e7e73a8f8cf9f3e98"
+    },
+    {
+      "path": "src/console/styles/pages/orgs.css",
+      "sha256": "0d52cc22852d979f02f97385123a6bd7f3e8954c92fdf71bb090b490487b0dac"
+    },
+    {
+      "path": "src/console/styles/pages/users.css",
+      "sha256": "55ca7d27369978d9b431a8d931b469a8d88762a0d7f8105cc82de6db0d97eabe"
+    },
+    {
+      "path": "src/console/styles/theme.css",
+      "sha256": "04d27e082aa8a9101829f94f038c3c89321cbc44d779b594c6230c3b01857e36"
+    },
+    {
+      "path": "src/vite-env.d.ts",
+      "sha256": "65996936fbb042915f7b74a200fcdde7e410f32a669b1ab9597cfaa4b0faddb5"
+    },
+    {
+      "path": "test/client.test.ts",
+      "sha256": "62fde36151bcda8b1dad45ea63836af28ebeb1d2b83854c197e1c215b151a3d6"
+    },
+    {
+      "path": "test/console.test.ts",
+      "sha256": "e43a123674c00690d30d98630448c1038085dbc91bb316b15470a06f34433a76"
+    },
+    {
+      "path": "test/contracts.test.ts",
+      "sha256": "d3969339021e0aa35810bd24b23225bd26e338c6603338661d76cf03eec3ea79"
+    },
+    {
+      "path": "test/headers.test.ts",
+      "sha256": "1a4aa9cec2f7eb8cbbafa4a7f398a4886bbb1ced9c9333769ed7569009b726e1"
+    },
+    {
+      "path": "test/money.test.ts",
+      "sha256": "f97445e51cd90732cf0efdb0fdd8d73177a4c92f51df9a32cbd6f146728be433"
+    },
+    {
+      "path": "test/parity.test.ts",
+      "sha256": "7801905795cc902507c4478ab51116ec2db85d4471ed24582588dd1a624a8663"
+    },
+    {
+      "path": "test/webauthn.test.ts",
+      "sha256": "30af3f9c137b2e42862b06b9d464397f868c060a32d08cba0f6b47169adf4195"
     }
-  ],
-  "branding_contributions_web": [
-    "e2e/mojo.spec.ts",
-    "src/api/mojoSchemas.ts",
-    "src/api/profileSchemas.ts",
-    "src/api/schemas.ts",
-    "src/call/livekitSession.ts",
-    "src/call/manager.ts",
-    "src/call/shareQuality.ts",
-    "src/call/types.ts",
-    "src/i18n/strings.ts",
-    "src/realtime/frames.ts",
-    "src/state/store.ts",
-    "src/styles/mojo.css",
-    "src/styles/tokens.css",
-    "src/sync/engine.ts",
-    "src/sync/expressions.ts",
-    "src/sync/mojo.ts",
-    "src/ui/call/ShareViews.tsx",
-    "src/ui/chat/Composer.tsx",
-    "src/ui/community/CustomEmoji.tsx",
-    "src/ui/developer/BotsSection.tsx",
-    "src/ui/mojo/CharLimit.tsx",
-    "src/ui/mojo/MojoBadge.tsx",
-    "src/ui/mojo/MojoBanner.tsx",
-    "src/ui/mojo/MojoGifts.tsx",
-    "src/ui/mojo/MojoPage.tsx",
-    "src/ui/mojo/MojoPlans.tsx",
-    "src/ui/mojo/SparkSection.tsx",
-    "src/ui/mojo/SparkTrack.tsx",
-    "src/ui/mojo/useMojoLimits.ts",
-    "src/ui/people/NameBadge.tsx",
-    "src/ui/people/NameStyle.tsx",
-    "src/ui/points/pointsWords.ts",
-    "src/ui/settings/ProfileStyleCard.tsx",
-    "src/ui/settings/SettingsView.tsx",
-    "src/ui/settings/ShownBadgePicker.tsx",
-    "src/ui/shell/DmPromos.tsx",
-    "src/ui/shell/ProfileMenu.tsx",
-    "test/contract-fixtures/http/GET_v2_mojo_catalog.json",
-    "test/mojo.test.ts",
-    "test/settings-parity.test.ts"
   ]
 }
