@@ -1,0 +1,10 @@
+{
+  "installedAt": "2026-11-02T10:27:53.115649+00:00",
+  "previous": "/opt/meldiq-web/releases/0.5.0-beta-member-identity-f37240b6",
+  "current": "/opt/meldiq-web/releases/0.5.0-beta-rules-channel-4fd6ed1",
+  "sourceCommit": "4fd6ed1053a1f9548dc6a92ff35e666c5f3cb8c0",
+  "apiUnchanged": true,
+  "nginxUnchanged": true,
+  "configPreserved": true,
+  "assetHashesVerified": true
+}
