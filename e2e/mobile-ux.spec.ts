@@ -64,7 +64,7 @@ test("composer stays usable at every phone width, preserves fast drafts, and sen
     const box = (await field.boundingBox())!;
     expect(box.width, `${width}px: space for actual text`).toBeGreaterThan(130);
     await fits(field, 0, 844);
-    for (const button of [page.locator(".composer-plus"), page.getByRole("button", { name: "Insert emoji" }), page.locator(".composer-row .send-btn")]) {
+    for (const button of [page.locator(".composer-file-button"), page.getByRole("button", { name: "Insert emoji" }), page.locator(".composer-row .send-btn")]) {
       const size = (await button.boundingBox())!;
       expect(size.width).toBeGreaterThanOrEqual(44);
       expect(size.height).toBeGreaterThanOrEqual(44);

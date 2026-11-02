@@ -1,0 +1,9 @@
+# One File picker
+
+The Web composer now has one paperclip/File button and one unrestricted multi-file picker for photos, videos and documents. Camera, Record video, Photos and Videos actions and their separate hidden capture/type-restricted inputs are removed. The attachment panel has a primary File card with an upload icon and clear description, followed by polls, profiles and location. Desktop uses a compact popup; phones use a full-width sheet with 44px touch targets. The File label is translated into English, Chinese and Bangla.
+
+Selected files are inspected using a bounded content signature before draft previews and quality controls appear. A mislabeled browser MIME type therefore still reaches the appropriate media pipeline. Detection occurs before encryption; the existing server upload-size, access, checksum and publication checks are retained. Photos/videos remain optimized by default, with Original file as the only optional quality choice. Documents remain unchanged.
+
+Validation: 910 unit tests passed (one skipped), lint/format/typecheck/build passed, all twelve media upload tests passed across Chromium, WebKit, phone and iPhone widths, and four final menu/picker tests passed after a readability/tap-highlight polish. Tests open the real single file chooser and send a video declared as application/octet-stream, verify the removed actions/inputs are absent, and cover Original bytes, default compression, audio and playback. Final desktop and mobile screenshots were visually reviewed. Browser widths are emulation, not physical-device certification.
+
+Publication swaps only the static export under both production locks, preserves current config and old chunks for active tabs, verifies served hashes and API health, and restores the previous Web symlink on failure. See deploy/unified-file-picker/production-receipt.json after publication.

@@ -1,7 +1,7 @@
 import { CharLimitNote, overCharLimit } from "../mojo/CharLimit";
 import { useMojoLimits, useUploadLimit } from "../mojo/useMojoLimits";
 import { size } from "../mojo/mojoFormat";
-import { AtSign, BarChart3, Camera, FileUp, Image as ImageIcon, Video, Lock, MapPin, Mic, Plus, SendHorizontal, UserRound, X } from "lucide-react";
+import { AtSign, BarChart3, FileUp, Paperclip, Lock, MapPin, Mic, SendHorizontal, UserRound, X } from "lucide-react";
 import { useExpressions } from "../community/CustomEmoji";
 import { forSending, refOf } from "../../sync/expressions";
 import type { CustomEmojiRef } from "../../protocol/payload";
@@ -75,10 +75,6 @@ export function Composer(props: ComposerProps) {
   const [photoQuality, setPhotoQuality] = useState<"original" | "auto">("auto");
   const preparing = useRef<AbortController | null>(null);
   useEffect(() => () => preparing.current?.abort(), []);
-  const mediaInput = useRef<HTMLInputElement>(null);
-  const videoInput = useRef<HTMLInputElement>(null);
-  const cameraInput = useRef<HTMLInputElement>(null);
-  const recordInput = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState<string | null>(null);
   const [members, setMembers] = useState<Member[]>([]);
   const [suggest, setSuggest] = useState<{ start: number; items: Member[]; index: number } | null>(null);
@@ -208,7 +204,15 @@ export function Composer(props: ComposerProps) {
         );
       }
       if (!files.length) setPhotoQuality("auto");
-      setFiles((cur) => [...cur, ...list.filter((f) => f.size <= limit && f.size > 0)].slice(0, MAX_FILES_PER_MESSAGE));
+      // One picker accepts every type. Detect bounded signatures before showing previews or quality controls.
+      void Promise.all(
+        list
+          .filter((f) => f.size <= limit && f.size > 0)
+          .slice(0, MAX_FILES_PER_MESSAGE)
+          .map(inspectFile),
+      )
+        .then((detected) => setFiles((cur) => [...cur, ...detected].slice(0, MAX_FILES_PER_MESSAGE)))
+        .catch(() => engine.notice("error", "Couldn't read that file. Choose it again."));
     },
     [engine, planUploadLimit, can.attach, files.length],
   );
@@ -380,54 +384,6 @@ export function Composer(props: ComposerProps) {
 
   return (
     <div className="composer-wrap">
-      <input
-        ref={mediaInput}
-        type="file"
-        accept="image/*"
-        multiple
-        hidden
-        aria-label="Choose photos"
-        onChange={(e) => {
-          addFiles(Array.from(e.target.files ?? []));
-          e.target.value = "";
-        }}
-      />
-      <input
-        ref={videoInput}
-        type="file"
-        accept="video/*"
-        multiple
-        hidden
-        aria-label="Choose videos"
-        onChange={(e) => {
-          addFiles(Array.from(e.target.files ?? []));
-          e.target.value = "";
-        }}
-      />
-      <input
-        ref={cameraInput}
-        type="file"
-        accept="image/*"
-        capture="environment"
-        hidden
-        aria-label="Take a photo"
-        onChange={(e) => {
-          addFiles(Array.from(e.target.files ?? []));
-          e.target.value = "";
-        }}
-      />
-      <input
-        ref={recordInput}
-        type="file"
-        accept="video/*"
-        capture="environment"
-        hidden
-        aria-label="Record a video"
-        onChange={(e) => {
-          addFiles(Array.from(e.target.files ?? []));
-          e.target.value = "";
-        }}
-      />
       <TransferList conversationId={c.id} />
       <SlashCommandList slash={slash} />
       {suggest && (
@@ -489,14 +445,24 @@ export function Composer(props: ComposerProps) {
             </label>
             {/* B14 (android one-row composer): actions, the text, emoji, and the microphone that becomes Send. */}
             <div className="composer-row">
-              <button className="icon-btn composer-plus" onClick={(e) => attach.open(e.currentTarget)} aria-label={t("composer_add")} aria-haspopup="menu" title={t("composer_add")} disabled={!!busy}>
-                <Plus size={19} />
+              <button
+                className={`composer-file-button${attach.anchor ? " open" : ""}`}
+                onClick={(e) => attach.open(e.currentTarget)}
+                aria-label={t("composer_add")}
+                aria-haspopup="menu"
+                aria-expanded={!!attach.anchor}
+                title={t("composer_add")}
+                disabled={!!busy}
+              >
+                <Paperclip size={18} aria-hidden="true" />
+                <span>{t("composer_file")}</span>
               </button>
               <input
                 ref={fileInput}
                 type="file"
                 multiple
                 hidden
+                aria-label="Choose files"
                 onChange={(e) => {
                   addFiles(Array.from(e.target.files ?? []));
                   e.target.value = "";
@@ -623,13 +589,17 @@ export function Composer(props: ComposerProps) {
           label="Attach"
           onClose={attach.close}
           entries={[
+            { heading: "Share something" },
             ...(can.attach
               ? [
-                  { label: "Photos", icon: <ImageIcon size={16} />, onSelect: () => mediaInput.current?.click() },
-                  { label: "Videos", icon: <Video size={16} />, onSelect: () => videoInput.current?.click() },
-                  { label: "Camera", icon: <Camera size={16} />, onSelect: () => cameraInput.current?.click() },
-                  { label: "Record video", icon: <Video size={16} />, onSelect: () => recordInput.current?.click() },
-                  { label: `Files (up to ${MAX_FILES_PER_MESSAGE})`, icon: <FileUp size={16} />, onSelect: () => fileInput.current?.click() },
+                  {
+                    label: t("composer_file"),
+                    hint: "Photos, videos and documents",
+                    icon: <FileUp size={22} aria-hidden="true" />,
+                    className: "attachment-file-option",
+                    onSelect: () => fileInput.current?.click(),
+                  },
+                  "separator" as const,
                 ]
               : []),
             ...(can.polls ? [{ label: "Poll…", icon: <BarChart3 size={16} />, onSelect: () => setRich("poll") }] : []),

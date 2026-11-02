@@ -75,7 +75,7 @@ test("poll percentages, named and hidden ballots survive reload, change, remove 
   const channel = conversations.find((c) => c.orgId === org.id && c.name === "general")!;
   for (const peer of [named, hidden]) await peer.req("POST", `/v1/conversations/${channel.id}/join`).catch(() => undefined);
   await runtime.navigate(() => page.goto(`/home/c/${channel.id}`));
-  await page.locator(".composer-plus").click();
+  await page.locator(".composer-file-button").click();
   await page.getByRole("menuitem", { name: "Poll…", exact: true }).click();
   const create = page.getByRole("dialog", { name: "New poll", exact: true });
   await create.getByLabel("Question", { exact: true }).fill("What should we do on Friday?");

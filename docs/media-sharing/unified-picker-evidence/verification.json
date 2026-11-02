@@ -1,0 +1,19 @@
+{
+  "verifiedAt": "2026-11-02T16:04:48.197343+00:00",
+  "unitPassed": 910,
+  "unitSkipped": 1,
+  "uploadBrowserTestsPassed": 12,
+  "finalMenuBrowserTestsPassed": 4,
+  "projects": [
+    "chromium",
+    "webkit",
+    "phone-width",
+    "iphone-width"
+  ],
+  "typecheckBuildPassed": true,
+  "lintPassed": true,
+  "formatPassed": true,
+  "singlePicker": true,
+  "noCameraOrVideoCaptureInputs": true,
+  "signatureDetectionBeforePreview": true
+}

@@ -2139,9 +2139,6 @@
   flex-shrink: 0;
   margin-left: 2px;
 }
-.composer-plus {
-  color: var(--text-2);
-}
 .composer-status {
   display: flex;
   align-items: center;
@@ -3355,4 +3352,112 @@ button.media-card {
   align-items: center;
   gap: 6px;
   cursor: pointer;
+}
+
+/* One attachment entry for every file type, with a clear primary action. */
+.composer-file-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  align-self: flex-end;
+  gap: 6px;
+  flex: 0 0 auto;
+  min-height: 36px;
+  padding: 0 10px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface-raised);
+  color: var(--text-2);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.composer-file-button:hover,
+.composer-file-button.open {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--accent-text);
+}
+.composer-file-button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+.composer-file-button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+.menu[aria-label="Attach"] {
+  width: min(336px, calc(100vw - 24px));
+  padding: 10px;
+  border-radius: 18px;
+}
+.menu[aria-label="Attach"] > .menu-label {
+  padding: 7px 8px 11px;
+  color: var(--text-2);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+}
+.menu[aria-label="Attach"] > button {
+  min-height: 44px;
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+.menu[aria-label="Attach"] > .attachment-file-option {
+  min-height: 82px;
+  gap: 12px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--surface-raised);
+}
+.attachment-file-option > svg {
+  box-sizing: content-box;
+  flex: 0 0 auto;
+  padding: 11px;
+  border-radius: 12px;
+  background: var(--accent-soft);
+  color: var(--accent-text);
+}
+.attachment-file-option .menu-text > span {
+  font-size: 15px;
+  font-weight: 650;
+}
+.attachment-file-option .menu-hint {
+  color: var(--text-2);
+  margin-top: 4px;
+  font-size: 11px;
+  line-height: 1.5;
+  white-space: normal;
+}
+.menu[aria-label="Attach"] > .attachment-file-option:hover,
+.menu[aria-label="Attach"] > .attachment-file-option:focus-visible {
+  background: var(--surface-hover);
+  border-color: var(--accent);
+}
+@media (max-width: 380px) {
+  .composer-file-button {
+    width: 36px;
+    padding: 0;
+  }
+  .composer-file-button > span {
+    display: none;
+  }
+}
+@media (max-width: 640px), (max-width: 960px) and (max-height: 500px) and (pointer: coarse) {
+  .composer-file-button {
+    min-width: var(--mobile-touch);
+    min-height: var(--mobile-touch);
+  }
+  .menu[aria-label="Attach"] {
+    width: auto;
+    max-width: none;
+    padding-bottom: calc(10px + var(--mobile-bottom));
+    border-radius: 24px 24px 0 0;
+  }
+  .menu[aria-label="Attach"] > .menu-label {
+    display: none;
+  }
 }

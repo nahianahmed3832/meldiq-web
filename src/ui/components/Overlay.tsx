@@ -148,6 +148,7 @@ export function Dialog({ title, onClose, children, footer, wide, width, header, 
 
 export interface MenuItem {
   label: string;
+  className?: string;
   icon?: ReactNode;
   /** Chosen: a leaf closes the whole menu first. Not called for an item with a [submenu]. */
   onSelect?: () => void;
@@ -325,7 +326,7 @@ function MenuLevel({ anchor, entries, onClose, onDone, align, label, point, besi
               aria-checked={e.checked}
               aria-haspopup={hasSub ? "menu" : undefined}
               aria-expanded={hasSub ? open?.index === i : undefined}
-              className={`${e.danger ? "danger" : ""}${hasSub && open?.index === i ? " open" : ""}`.trim() || undefined}
+              className={[e.className, e.danger ? "danger" : "", hasSub && open?.index === i ? "open" : ""].filter(Boolean).join(" ") || undefined}
               disabled={e.disabled}
               onMouseEnter={(ev) => {
                 const el = ev.currentTarget;

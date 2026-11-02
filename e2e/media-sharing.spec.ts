@@ -55,7 +55,7 @@ test("a photo album and a document share one caption, retain original bytes and 
   await conversation(page);
   const image = fs.readFileSync(path.join(import.meta.dirname, "fixtures/photo.jpg"));
   await page.locator(".composer input[type=file]").setInputFiles([
-    { name: "first.jpg", mimeType: "image/jpeg", buffer: image },
+    { name: "first.jpg", mimeType: "application/octet-stream", buffer: image },
     { name: "second.jpg", mimeType: "image/jpeg", buffer: image },
     { name: "note.txt", mimeType: "text/plain", buffer: Buffer.from("A shared original document") },
   ]);
@@ -92,10 +92,16 @@ test("a selected video previews, uploads and plays inline and in the viewer", as
   const add = page.getByRole("button", { name: /Add/ }).first();
   if (isMobile) await add.tap();
   else await add.click();
-  await expect(page.getByRole("menuitem", { name: "Photos", exact: true })).toBeVisible();
-  await expect(page.getByRole("menuitem", { name: "Camera", exact: true })).toBeVisible();
-  await page.keyboard.press("Escape");
-  await page.locator(".composer input[type=file]").setInputFiles(path.join(import.meta.dirname, "fixtures/media-synthetic.mp4"));
+  const menu = page.getByRole("menu", { name: "Attach", exact: true });
+  await expect(menu.getByRole("menuitem", { name: /^File/ })).toBeVisible();
+  for (const label of ["Photos", "Videos", "Camera", "Record video"]) await expect(menu.getByRole("menuitem", { name: label, exact: true })).toHaveCount(0);
+  await page.screenshot({ path: info.outputPath("unified-file-menu.png"), fullPage: true });
+  await expect(page.locator('.composer-wrap input[type="file"]')).toHaveCount(1);
+  await expect(page.locator('.composer input[type="file"]')).not.toHaveAttribute("accept");
+  await expect(page.locator('.composer input[type="file"]')).not.toHaveAttribute("capture");
+  const choosing = page.waitForEvent("filechooser");
+  await menu.getByRole("menuitem", { name: /^File/ }).click();
+  await (await choosing).setFiles({ name: "media-synthetic.mp4", mimeType: "application/octet-stream", buffer: fs.readFileSync(path.join(import.meta.dirname, "fixtures/media-synthetic.mp4")) });
   await expect(page.getByLabel("Preview media-synthetic.mp4")).toBeVisible();
   await page.getByRole("textbox", { name: /^Message / }).fill("Video sharing");
   await page.getByRole("button", { name: "Send", exact: true }).click();

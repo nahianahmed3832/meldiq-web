@@ -474,6 +474,7 @@ export const STRINGS = {
   row_draft: ["Draft", "草稿", "খসড়া"],
   composer_replying: ["Replying to", "回复", "উত্তর দিচ্ছেন"],
   composer_attachment: ["attachment", "附件", "সংযুক্তি"],
+  composer_file: ["File", "文件", "ফাইল"],
   composer_add: ["Add files, a poll and more", "添加文件、投票等", "ফাইল, পোল ও আরও যোগ করুন"],
   composer_voice: ["Record a voice message", "录制语音消息", "ভয়েস মেসেজ রেকর্ড করুন"],
   composer_send: ["Send", "发送", "পাঠান"],
