@@ -25,12 +25,12 @@ export function SocialSignIn({
   const [busy, setBusy] = useState<SocialProvider | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState<SocialReceipt | null>(null);
-  const [needsName, setNeedsName] = useState(false);
+  const [needsInvite, setNeedsInvite] = useState(false);
   const [needsCode, setNeedsCode] = useState(false);
-  const [name, setName] = useState("");
   const [invite, setInvite] = useState("");
   const [code, setCode] = useState("");
   const abort = useRef<AbortController | null>(null);
+  const pendingProvider = useRef<SocialProvider>("google");
   useEffect(() => {
     let live = true;
     api
@@ -44,16 +44,15 @@ export function SocialSignIn({
       abort.current?.abort();
     };
   }, [api]);
-  const finish = async (receipt: SocialReceipt) => {
+  const finish = async (receipt: SocialReceipt, initial = false) => {
     try {
       const result = await completeSocial(
         api,
         receipt,
         {
           deviceName: browserDeviceName(),
-          name: name.trim() || undefined,
-          inviteCode: invite.trim() || undefined,
-          totpCode: code.trim() || totpCode || undefined,
+          inviteCode: initial ? undefined : invite.trim() || undefined,
+          totpCode: initial ? totpCode : code.trim() || totpCode || undefined,
           device: deviceProof ? await deviceProof() : undefined,
         },
         mode === "link",
@@ -62,8 +61,8 @@ export function SocialSignIn({
       if ("grant" in result) await onSignedIn?.(result.grant);
       else onLinked?.();
     } catch (e) {
-      if (e instanceof ApiError && ["social_profile_required", "invite_required", "invalid_invite"].includes(e.code)) {
-        setNeedsName(true);
+      if (e instanceof ApiError && ["invite_required", "invalid_invite"].includes(e.code)) {
+        setNeedsInvite(true);
         setPending(receipt);
       }
       if (e instanceof ApiError && ["totp_required", "totp_invalid"].includes(e.code)) {
@@ -83,10 +82,13 @@ export function SocialSignIn({
     setBusy(provider);
     setError(null);
     setPending(null);
+    pendingProvider.current = provider;
+    setInvite("");
+    setCode("");
     setNeedsCode(false);
-    setNeedsName(false);
+    setNeedsInvite(false);
     try {
-      await finish(await startSocial(api, popup, provider, { mode, password, totpCode }, controller.signal));
+      await finish(await startSocial(api, popup, provider, { mode, password, totpCode }, controller.signal), true);
     } catch (e) {
       try {
         popup.close();
@@ -126,17 +128,11 @@ export function SocialSignIn({
       )}
       {pending && (
         <div style={{ display: "grid", gap: 8 }}>
-          {needsName && (
-            <>
-              <label>
-                Display name
-                <input className="input" autoComplete="nickname" value={name} maxLength={80} onChange={(e) => setName(e.target.value)} />
-              </label>
-              <label>
-                Invitation code (if required)
-                <input className="input" value={invite} onChange={(e) => setInvite(e.target.value)} />
-              </label>
-            </>
+          {needsInvite && (
+            <label>
+              Invitation code
+              <input className="input" value={invite} onChange={(e) => setInvite(e.target.value)} />
+            </label>
           )}
           {needsCode && (
             <label>
@@ -147,9 +143,9 @@ export function SocialSignIn({
           <button
             type="button"
             className="btn btn-primary"
-            disabled={!!busy || (needsName && !name.trim()) || (needsCode && !code.trim())}
+            disabled={!!busy || (needsInvite && !invite.trim()) || (needsCode && !code.trim())}
             onClick={() => {
-              setBusy("google");
+              setBusy(pendingProvider.current);
               void finish(pending).finally(() => setBusy(null));
             }}
           >
