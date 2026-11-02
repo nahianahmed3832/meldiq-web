@@ -1,4 +1,5 @@
-import { VibesCard } from "./AppearanceExtras";
+import { NotificationOverview } from "./NotificationOverview";
+import { AccessibilityCard, VibesCard } from "./AppearanceExtras";
 import { fileLimit, MAX_FILES_PER_MESSAGE } from "../../sync/attachments";
 import { APP_VERSION } from "../../application/env";
 import { serverHost } from "../../application/config";
@@ -16,13 +17,11 @@ import {
   type TextSize,
   THEMES,
   TIME_FORMATS,
-  UPLOAD_QUALITIES,
   usePrefs,
   volumeOf,
 } from "../../application/prefs";
 import { bytes } from "../format";
 import { Toggle } from "../components/Toggle";
-import { IntroPages } from "../auth/IntroPages";
 import { BackgroundNotifications } from "./BackgroundNotifications";
 import { type ChimeState, chimeState, playChime, unlockChime } from "../../application/messageChime";
 import { type StringKey, useT } from "../../i18n";
@@ -32,7 +31,6 @@ import { LanguagePicker } from "../components/LanguagePicker";
 const THEME_KEY = { system: "ap_system", light: "ap_light", dark: "ap_dark", black: "ap_black" } as const satisfies Record<Prefs["theme"], StringKey>;
 const PALETTE_KEY = { meldiq: "ap_meldiq", midnight: "ap_midnight", charcoal: "ap_charcoal", indigo: "ap_indigo", plum: "ap_plum", amber: "ap_amber" } as const satisfies Record<Palette, StringKey>;
 const SIZE_KEY = { small: "ap_small", default: "ap_default", large: "ap_large" } as const satisfies Record<TextSize, StringKey>;
-const QUALITY_KEY = { standard: "ap_standard", hd: "ap_hd", original: "ap_original" } as const satisfies Record<"standard" | "hd" | "original", StringKey>;
 
 export function NotificationsPage() {
   const prefs = usePrefs();
@@ -50,6 +48,16 @@ export function NotificationsPage() {
   return (
     <>
       <h1>{t("settings_notifications")}</h1>
+      <NotificationOverview />
+      <div className="card">
+        <div className="setting">
+          <div className="lines">
+            <strong>Support Meldiq reminders</strong>
+            <small>Occasional in-app reminders about optional Plus subscriptions that fund independent development. No sound or desktop notifications.</small>
+          </div>
+          <Toggle label="Support Meldiq reminders" checked={prefs.plusReminders} onChange={(plusReminders) => setPrefs({ plusReminders })} />
+        </div>
+      </div>
       <div className="card">
         <div className="setting">
           <div className="lines">
@@ -276,15 +284,8 @@ export function AppearancePage() {
         </div>
         <div className="setting">
           <div className="lines">
-            <strong>{t("ap_quality")}</strong>
-            <small>{t("ap_quality_sub")}</small>
-          </div>
-          <div className="segmented" role="group" aria-label={t("ap_quality")}>
-            {UPLOAD_QUALITIES.map((q) => (
-              <button key={q} aria-pressed={prefs.uploadQuality === q} onClick={() => setPrefs({ uploadQuality: q })}>
-                {t(QUALITY_KEY[q])}
-              </button>
-            ))}
+            <strong>Photo uploads</strong>
+            <small>Photos are optimized automatically. Animations and transparency are preserved.</small>
           </div>
         </div>
         <div className="setting">
@@ -341,6 +342,7 @@ export function AppearancePage() {
           <Toggle label={t("ap_enter")} checked={prefs.enterToSend} onChange={(v) => setPrefs({ enterToSend: v })} />
         </div>
       </div>
+      <AccessibilityCard />
       <VibesCard />
     </>
   );
@@ -349,24 +351,13 @@ export function AppearancePage() {
 export function AboutPage() {
   const server = useOrbit((s) => s.server);
   const me = useOrbit((s) => s.me);
-  const [intro, setIntro] = useState(false);
   return (
     <>
       <h1>About</h1>
-      {intro && <IntroPages onDone={() => setIntro(false)} />}
       <p className="faint" style={{ margin: "0 0 12px" }}>
         Meldiq Web by GriipBuddy · version {APP_VERSION}
       </p>
       <div className="card">
-        <div className="setting">
-          <div className="lines">
-            <strong>Introduction</strong>
-            <small>The short tour of what Meldiq does, shown before you first signed in.</small>
-          </div>
-          <button className="btn btn-secondary btn-sm" onClick={() => setIntro(true)}>
-            Show
-          </button>
-        </div>
         <InstallSetting />
         <div className="setting">
           <div className="lines">

@@ -1,0 +1,492 @@
+/* Community parity D: official bots on Settings › Bots and their windows. */
+
+.obot-icon {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  border-radius: 50%;
+  object-fit: cover;
+  line-height: 1;
+  color: #fff;
+}
+
+.obot-list .obot-row {
+  gap: 10px;
+}
+.obot-row-open {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+  padding: 2px 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+.obot-row-open:hover .ellipsis:first-child {
+  text-decoration: underline;
+}
+.obot-status {
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--text-3);
+}
+.obot-status.on {
+  color: var(--accent-text);
+}
+
+.obot-plus-chip {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 6px;
+  padding: 1px 6px;
+  border-radius: var(--r-pill);
+  font: 800 10px/1.45 var(--font);
+  letter-spacing: 0.06em;
+  vertical-align: 0.12em;
+  color: #3b2a00;
+  background: linear-gradient(90deg, #fcd34d, #f59e0b);
+  white-space: nowrap;
+}
+
+.obot-perks {
+  display: grid;
+  gap: 4px;
+  margin: 8px 0 12px;
+  padding-inline-start: 18px;
+  color: var(--text-2);
+  font-size: var(--fs-sm);
+}
+.obot-plus-on {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--accent-text);
+  font-weight: 600;
+}
+.obot-get-plus {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ───────────── The bot's window ───────────── */
+.obot-window {
+  padding: 0;
+  overflow: hidden;
+}
+.obot-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 16px 18px 20px;
+  color: #fff;
+  background: linear-gradient(135deg, var(--obot), color-mix(in srgb, var(--obot) 55%, #000));
+}
+.obot-head h2 {
+  margin: 0;
+  font-size: var(--fs-2xl);
+  overflow-wrap: anywhere;
+}
+.obot-head small {
+  color: rgb(255 255 255 / 85%);
+}
+.obot-head .icon-btn {
+  color: #fff;
+}
+.obot-head .obot-icon {
+  box-shadow: 0 0 0 3px rgb(255 255 255 / 35%);
+}
+.obot-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+}
+.obot-body {
+  display: grid;
+  gap: 14px;
+  padding: 16px 20px 20px;
+}
+.obot-body > p {
+  margin: 0;
+  color: var(--text-2);
+}
+.obot-chips,
+.obot-chiplist,
+.obot-placeholders {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+.obot-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: var(--r-pill);
+  background: var(--surface-sunken);
+  color: var(--text-2);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+}
+.obot-chip-btn {
+  border: 1px solid var(--border);
+  font-family: var(--mono);
+  cursor: pointer;
+}
+.obot-chip-btn:hover {
+  background: var(--surface-hover);
+}
+
+.obot-sample {
+  display: flex;
+  gap: 10px;
+  padding: 12px;
+  border-radius: var(--r-md);
+  background: var(--surface-sunken);
+}
+.obot-sample-text {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.obot-section {
+  display: grid;
+  gap: 10px;
+}
+.obot-section h4 {
+  margin: 0;
+  font-size: var(--fs-xs);
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+.obot-commands {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+}
+.obot-commands div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+}
+.obot-commands dd {
+  margin: 0;
+  color: var(--text-2);
+}
+.obot-commands code {
+  padding: 2px 6px;
+  border-radius: 6px;
+  background: var(--surface-sunken);
+  font-size: 12.5px;
+}
+
+.obot-look {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.obot-look-edit {
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+}
+
+.obot-settings {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.obot-settings:disabled {
+  opacity: 0.7;
+}
+.obot-field {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.obot-field.locked {
+  opacity: 0.6;
+}
+.obot-field-label {
+  padding: 0;
+  font-size: var(--fs-sm);
+  font-weight: 700;
+}
+.obot-paused,
+.obot-warn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--fs-xs);
+  color: var(--warn, #b45309);
+}
+.obot-line,
+.obot-command {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+}
+.obot-line textarea,
+.obot-command textarea {
+  flex: 1;
+  min-width: 0;
+}
+.obot-bang {
+  padding-top: 8px;
+  font-weight: 800;
+  color: var(--text-3);
+}
+.obot-command-name {
+  width: 9rem;
+}
+.obot-level {
+  width: 5rem;
+}
+.obot-inline-label {
+  padding-top: 8px;
+  font-size: var(--fs-sm);
+  color: var(--text-2);
+}
+.obot-row-wrap {
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.obot-preview {
+  padding: 10px 12px;
+  border-inline-start: 3px solid var(--accent);
+  border-radius: var(--r-sm);
+  background: var(--surface-sunken);
+}
+.obot-preview p {
+  margin: 2px 0 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.obot-feed-add {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr auto;
+  gap: 6px;
+}
+
+.obot-upsell {
+  display: grid;
+  gap: 6px;
+  padding: 14px;
+  border: 1px solid color-mix(in srgb, #f59e0b 45%, var(--border));
+  border-radius: var(--r-md);
+  background: color-mix(in srgb, #f59e0b 8%, var(--surface));
+}
+.obot-upsell .obot-perks {
+  margin: 0;
+}
+
+.obot-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--fs-sm);
+}
+.obot-table th,
+.obot-table td {
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--border);
+  text-align: start;
+  vertical-align: top;
+}
+.obot-table thead th {
+  font-size: var(--fs-xs);
+  color: var(--text-3);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.obot-table tbody th {
+  font-weight: 600;
+}
+
+@media (max-width: 600px) {
+  .obot-feed-add {
+    grid-template-columns: 1fr;
+  }
+  .obot-head {
+    flex-wrap: wrap;
+  }
+  .obot-command {
+    flex-wrap: wrap;
+  }
+}
+
+/* Stacked name and line under it (the sample message, the look here). */
+.obot-sample .lines,
+.obot-look .lines,
+.obot-row-open .lines,
+.obot-head .lines {
+  display: grid;
+  gap: 2px;
+}
+
+/* ───────────── A giveaway card's countdown and winners ───────────── */
+.giveaway-status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+  max-width: min(520px, 100%);
+  margin: 2px 0 4px;
+  padding: 8px 12px;
+  border-radius: var(--r-sm);
+  background: color-mix(in srgb, #ec4899 12%, var(--surface-sunken));
+  color: var(--text);
+  font-size: var(--fs-sm);
+}
+.giveaway-status.ended {
+  background: var(--surface-sunken);
+}
+.giveaway-status small {
+  margin-inline-start: auto;
+}
+
+/* ───────────── Wordy, played privately ───────────── */
+.wordy {
+  display: grid;
+  justify-items: center;
+  gap: 14px;
+  padding: 4px 0 8px;
+}
+.wordy-grid {
+  display: grid;
+  gap: 6px;
+}
+.wordy-row {
+  display: grid;
+  grid-template-columns: repeat(5, 48px);
+  gap: 6px;
+}
+.wordy-tile {
+  display: grid;
+  place-items: center;
+  height: 48px;
+  border: 2px solid var(--border);
+  border-radius: var(--r-xs);
+  font: 800 24px/1 var(--font);
+  text-transform: uppercase;
+  color: var(--text);
+}
+.wordy-tile.filled {
+  border-color: var(--border-strong);
+}
+.wordy-tile.right,
+.wordy-key.right {
+  border-color: transparent;
+  background: #16a34a;
+  color: #fff;
+}
+.wordy-tile.close,
+.wordy-key.close {
+  border-color: transparent;
+  background: #ca8a04;
+  color: #fff;
+}
+.wordy-tile.absent,
+.wordy-key.absent {
+  border-color: transparent;
+  background: #4b5563;
+  color: #fff;
+}
+.wordy-keys {
+  display: grid;
+  gap: 6px;
+  width: min(100%, 480px);
+}
+.wordy-key-row {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+}
+.wordy-key {
+  flex: 1;
+  min-width: 0;
+  max-width: 42px;
+  height: 46px;
+  border: 0;
+  border-radius: var(--r-xs);
+  background: var(--surface-sunken);
+  color: var(--text);
+  font: 700 14px/1 var(--font);
+  cursor: pointer;
+}
+.wordy-key.wide {
+  flex: 1.6;
+  max-width: 66px;
+  font-size: 12px;
+}
+.wordy-key:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+.wordy-result {
+  margin: 0;
+  font-weight: 700;
+}
+.wordy-stats {
+  display: grid;
+  gap: 10px;
+  width: min(100%, 360px);
+}
+.wordy-numbers {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--fs-xs);
+  color: var(--text-2);
+}
+.wordy-numbers strong {
+  display: block;
+  font-size: var(--fs-xl);
+  color: var(--text);
+}
+.wordy-bars {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--fs-xs);
+}
+.wordy-bars li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.wordy-bar {
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: var(--accent);
+  color: var(--on-accent);
+  text-align: end;
+}
+@media (max-width: 420px) {
+  .wordy-row {
+    grid-template-columns: repeat(5, 44px);
+  }
+  .wordy-tile {
+    height: 44px;
+    font-size: 20px;
+  }
+}

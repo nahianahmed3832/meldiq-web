@@ -1,5 +1,6 @@
 import type { Call } from "../api/schemas";
 import type { AppState } from "../state/store";
+import type { BotReply } from "./bots";
 
 /**
  * How realtime frames that only change what's shown update the state (server hub.ts frames). Pure, so the engine's frame
@@ -33,4 +34,21 @@ export function callFrame(s: AppState, call: Call): AppState {
   if (call.state === "ENDED") delete calls[call.conversationId];
   else calls[call.conversationId] = call;
   return { ...s, calls };
+}
+
+/** At most this many bot answers are kept per conversation (oldest go first). */
+const BOT_REPLIES_KEPT = 20;
+
+/** A bot answered a command only for you (API 0.65.0 batch B): kept with its conversation, once per interaction. */
+export function botReplyFrame(s: AppState, reply: BotReply): AppState {
+  const cur = s.botReplies[reply.conversationId] ?? [];
+  if (cur.some((r) => r.interactionId === reply.interactionId)) return s;
+  return { ...s, botReplies: { ...s.botReplies, [reply.conversationId]: [...cur, reply].slice(-BOT_REPLIES_KEPT) } };
+}
+
+/** Dismissed from the conversation. */
+export function dismissBotReply(s: AppState, conversationId: string, interactionId: string): AppState {
+  const cur = s.botReplies[conversationId];
+  if (!cur) return s;
+  return { ...s, botReplies: { ...s.botReplies, [conversationId]: cur.filter((r) => r.interactionId !== interactionId) } };
 }

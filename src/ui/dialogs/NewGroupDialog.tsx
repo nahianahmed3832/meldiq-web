@@ -6,6 +6,7 @@ import { useEngine } from "../../application/orbit";
 import { navigate } from "../../application/router";
 import { searchPeople } from "../../sync/account";
 import { createGroup } from "../../sync/workspaces";
+import { groupAddProblem } from "../../sync/groupAdd";
 import { Dialog } from "../components/Overlay";
 import { UserAvatar } from "../components/OrgAvatar";
 
@@ -50,7 +51,9 @@ export function NewGroupDialog({ onClose, initial = [] }: { onClose: () => void;
       onClose();
       navigate({ section: "dms", conversationId: c.id });
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : "Couldn't create the group.");
+      // API 0.65.0: someone's choice refuses being added to groups; name them so they can be taken out.
+      const refused = groupAddProblem(err, (id) => picked.find((m) => m.id === id)?.displayName);
+      setError(refused ? `${refused} Take them out to make the group.` : err instanceof ApiError ? err.message : "Couldn't create the group.");
     } finally {
       setBusy(false);
     }

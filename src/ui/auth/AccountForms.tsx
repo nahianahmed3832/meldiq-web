@@ -1,4 +1,5 @@
-import { ArrowLeft, ChevronRight, KeyRound, LockKeyhole, MailX, Smartphone } from "lucide-react";
+import { SocialSignIn } from "./SocialSignIn";
+import { ArrowLeft, ChevronRight, KeyRound, LockKeyhole, Mail, MailX, Smartphone } from "lucide-react";
 import { type FormEvent, type ReactNode, useState } from "react";
 import type { AccountSessionGrant } from "../../api/accountSchemas";
 import { ApiError } from "../../api/client";
@@ -25,10 +26,10 @@ export function Field({ id, label, hint, children }: { id: string; label: string
   );
 }
 
-export function Back({ onClick, label }: { onClick: () => void; label?: string }) {
+export function Back({ onClick, label, disabled = false }: { onClick: () => void; label?: string; disabled?: boolean }) {
   const t = useT();
   return (
-    <button type="button" className="btn btn-ghost btn-sm auth-back" onClick={onClick}>
+    <button type="button" className="btn btn-ghost btn-sm auth-back" disabled={disabled} onClick={onClick}>
       <ArrowLeft size={14} /> {label ?? t("common_back")}
     </button>
   );
@@ -62,6 +63,8 @@ export function SignInForm(props: {
   const [email, setEmail] = useState(props.initialEmail ?? "");
   const [password, setPassword] = useState("");
   const [help, setHelp] = useState(false);
+  const [step, setStep] = useState<"options" | "email">("options");
+  const [socialActive, setSocialActive] = useState(false);
   const { busy, error, setError, run } = useSubmit();
   const [withPasskey, setWithPasskey] = useState(false);
   // API 0.46.0: two-step sign-in asks for the authenticator app's code (or a backup code) after the password.
@@ -109,44 +112,100 @@ export function SignInForm(props: {
     );
   }
 
+  if (step === "options") {
+    return (
+      <div className="auth-form" data-auth-step={socialActive ? "social" : "methods"}>
+        {!socialActive && <AuthHeading title={t("signin_title")} sub={t("signin_sub")} />}
+        {!socialActive && <FormNotice text={props.notice ?? null} />}
+        <SocialSignIn api={props.ctx.accounts.api} onSignedIn={props.onSignedIn} onStepChange={setSocialActive} disabled={busy} />
+        {!socialActive && (
+          <>
+            <div className="auth-divider" aria-hidden="true">
+              <span>{t("signin_or")}</span>
+            </div>
+            <FormError text={error} />
+            <button
+              type="button"
+              className="btn btn-secondary btn-lg"
+              disabled={busy}
+              onClick={() => {
+                setError(null);
+                setStep("email");
+              }}
+            >
+              <Mail size={18} /> {t("signin_email_method")}
+            </button>
+            {props.passkeyRpId && (
+              <button type="button" className="btn btn-secondary btn-lg" disabled={busy} onClick={() => passkey(props.passkeyRpId!)}>
+                <KeyRound size={18} /> {withPasskey ? t("signin_passkey_busy") : t("signin_passkey")}
+              </button>
+            )}
+            <div className="auth-links">
+              <LinkButton onClick={() => setHelp(true)}>{t("signin_trouble")}</LinkButton>
+              {props.canSignUp && <LinkButton onClick={props.onSignUp}>{t("signin_create")}</LinkButton>}
+            </div>
+          </>
+        )}
+      </div>
+    );
+  }
+
   return (
-    <form className="auth-form" onSubmit={submitHandler(submit)} noValidate>
-      <AuthHeading title={t("signin_title")} sub={t("signin_sub")} />
+    <form className="auth-form" data-auth-step={needsCode ? "verification" : "email"} onSubmit={submitHandler(submit)} noValidate>
+      <Back
+        disabled={busy}
+        onClick={() => {
+          setError(null);
+          setCode("");
+          if (needsCode) setNeedsCode(false);
+          else {
+            setPassword("");
+            setStep("options");
+          }
+        }}
+      />
+      <AuthHeading title={t(needsCode ? "signin_verify_title" : "signin_email_title")} sub={t(needsCode ? "signin_verify_sub" : "signin_email_sub")} />
       <FormNotice text={props.notice ?? null} />
       <FormError text={error} />
-      <Field id="si-email" label={t("common_email")}>
-        <input id="si-email" className="input" type="email" autoComplete="username" value={email} onChange={(e) => setEmail(e.target.value)} autoFocus />
-      </Field>
-      <Field id="si-password" label={t("common_password")}>
-        <input id="si-password" className="input" type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} />
-      </Field>
-      {needsCode && (
-        <Field id="si-code" label="Code from your authenticator app">
-          <input
-            id="si-code"
-            className="input mono"
-            inputMode="numeric"
-            autoComplete="one-time-code"
-            placeholder="123456 or a backup code"
-            value={code}
-            maxLength={20}
-            onChange={(e) => setCode(e.target.value)}
-            autoFocus
-          />
+      {!needsCode ? (
+        <>
+          <Field id="si-email" label={t("common_email")}>
+            <input
+              id="si-email"
+              className="input"
+              type="email"
+              autoComplete="username"
+              value={email}
+              onInput={(e) => setEmail(e.currentTarget.value)}
+              onChange={(e) => setEmail(e.target.value)}
+              autoFocus
+            />
+          </Field>
+          <Field id="si-password" label={t("common_password")}>
+            <input
+              id="si-password"
+              className="input"
+              type="password"
+              autoComplete="current-password"
+              value={password}
+              onInput={(e) => setPassword(e.currentTarget.value)}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </Field>
+        </>
+      ) : (
+        <Field id="si-code" label={t("signin_code_label")}>
+          <input id="si-code" className="input mono" autoComplete="one-time-code" value={code} maxLength={20} onChange={(e) => setCode(e.target.value)} autoFocus />
         </Field>
       )}
       <button className="btn btn-primary btn-lg" disabled={busy}>
-        {busy && !withPasskey ? t("signin_busy") : t("signin_button")}
+        {busy ? t("signin_busy") : t(needsCode ? "signin_verify_button" : "signin_button")}
       </button>
-      {props.passkeyRpId && (
-        <button type="button" className="btn btn-secondary btn-lg" disabled={busy} onClick={() => passkey(props.passkeyRpId!)}>
-          <KeyRound size={16} /> {withPasskey ? t("signin_passkey_busy") : t("signin_passkey")}
-        </button>
+      {!needsCode && (
+        <div className="auth-links">
+          <LinkButton onClick={() => setHelp(true)}>{t("signin_trouble")}</LinkButton>
+        </div>
       )}
-      <div className="auth-links">
-        <LinkButton onClick={() => setHelp(true)}>{t("signin_trouble")}</LinkButton>
-        {props.canSignUp && <LinkButton onClick={props.onSignUp}>{t("signin_create")}</LinkButton>}
-      </div>
     </form>
   );
 }

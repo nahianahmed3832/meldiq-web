@@ -1,6 +1,7 @@
 import type { CSSProperties } from "react";
 import type { MojoMark } from "../../api/profileSchemas";
 import { MojoBadgeMark } from "../mojo/MojoBadge";
+import { NameBadgeMark, nameBadge } from "./NameBadge";
 import type { NameEffect, NameFont, ProfileStyle, WornTag } from "../../api/schemas";
 import { useOrbit } from "../../application/orbit";
 import type { UserLite } from "../../state/store";
@@ -44,17 +45,24 @@ interface StyledNameProps {
   tag?: WornTag | null;
   /** API 0.54.0: their Mojo badge (GO / PLUS with Meldiq Check), after the tag. */
   mojo?: MojoMark | null;
+  /** The profile card: the Mojo badge whatever badge they chose to show (the card lists the others itself). */
+  everyBadge?: boolean;
   /** A role's colour, used when the person picked no colour of their own. */
   roleColor?: string | null;
+  /** Community parity A1: the role colour's second colour, which it fades into. */
+  roleColor2?: string | null;
   /** The tone class names fall back to (the avatar colour's). */
   toneClass?: string;
   className?: string;
+  /** API 0.65.0 batch B: a bot's account, tagged BOT after the name. */
+  bot?: boolean;
 }
 
 /** A display name with its style, then the worn tag. Screen readers hear the name, then "tag MC". */
-export function StyledName({ name, style, tag, mojo, roleColor, toneClass, className }: StyledNameProps) {
-  const colors = style?.nameColors ?? null;
-  const paint = namePaint(colors) ?? (roleColor ? { color: roleColor } : undefined);
+export function StyledName({ name, style, tag, mojo, everyBadge, roleColor, roleColor2, toneClass, className, bot }: StyledNameProps) {
+  const own = style?.nameColors?.length ? style.nameColors : null;
+  const colors = own ?? (roleColor ? (roleColor2 ? [roleColor, roleColor2] : [roleColor]) : null);
+  const paint = namePaint(colors);
   const classes = [
     "sname",
     style?.nameFont ? `nf-${style.nameFont}` : "",
@@ -65,14 +73,26 @@ export function StyledName({ name, style, tag, mojo, roleColor, toneClass, class
   ]
     .filter(Boolean)
     .join(" ");
+  const badge = everyBadge ? (mojo ? "mojo" : null) : nameBadge(style?.shownBadge, mojo);
   return (
-    <>
+    <span className="identity-name">
       <span className={classes} style={paint}>
         {name}
       </span>
+      {bot && <BotTag />}
       {tag && <WornTagChip tag={tag} />}
-      {mojo && <MojoBadgeMark badge={mojo.badge} check={mojo.check} />}
-    </>
+      {badge === "mojo" && mojo && <MojoBadgeMark badge={mojo.badge} check={mojo.check} />}
+      {(badge === "bug-hunter" || badge === "artist") && <NameBadgeMark badge={badge} />}
+    </span>
+  );
+}
+
+/** The tag after a bot's name (API 0.65.0 batch B): bots are accounts of their own that people make in Developer settings. */
+export function BotTag() {
+  return (
+    <span className="bot-tag" title="A bot: an app someone made, not a person">
+      BOT
+    </span>
   );
 }
 
@@ -86,14 +106,33 @@ export function WornTagChip({ tag }: { tag: WornTag }) {
 }
 
 /** What this browser knows of a person's look (from member lists and profiles). */
-export function useUserLook(userId: string): Pick<UserLite, "avatarMedia" | "profileStyle" | "tag" | "mojo"> {
+export function useUserLook(userId: string): Pick<UserLite, "avatarMedia" | "profileStyle" | "tag" | "mojo" | "bot"> {
   return useOrbit(
     (s) => {
       const u = s.users[userId];
-      return { avatarMedia: u?.avatarMedia ?? null, profileStyle: u?.profileStyle ?? null, tag: u?.tag ?? null, mojo: u?.mojo ?? null };
+      return { avatarMedia: u?.avatarMedia ?? null, profileStyle: u?.profileStyle ?? null, tag: u?.tag ?? null, mojo: u?.mojo ?? null, bot: u?.bot === true };
     },
-    (a, b) => a.avatarMedia === b.avatarMedia && a.profileStyle === b.profileStyle && a.tag === b.tag && a.mojo === b.mojo,
+    (a, b) => a.avatarMedia === b.avatarMedia && a.profileStyle === b.profileStyle && a.tag === b.tag && a.mojo === b.mojo && a.bot === b.bot,
   );
+}
+
+interface LookNameProps {
+  userId: string;
+  name: string;
+  /** With their community tag and badge (messages, profiles); without, only the font and colours (lists, headers). */
+  withMarks?: boolean;
+  /** Compact membership mark in conversation rows and headers. */
+  withSubscription?: boolean;
+  toneClass?: string;
+  className?: string;
+}
+
+/** A name as its owner styled it (API 0.46.0), wherever this browser shows it: messages, lists, headers and panels. */
+export function LookName({ userId, name, withMarks = false, withSubscription = false, toneClass, className = "ellipsis" }: LookNameProps) {
+  const look = useUserLook(userId);
+  if (withSubscription) return <StyledName name={name} style={look.profileStyle} mojo={look.mojo} everyBadge toneClass={toneClass} className={className} />;
+  if (!withMarks) return <StyledName name={name} style={look.profileStyle} toneClass={toneClass} className={className} />;
+  return <StyledName name={name} style={look.profileStyle} tag={look.tag} mojo={look.mojo} bot={look.bot} toneClass={toneClass} className={className} />;
 }
 
 interface LookAvatarProps {
@@ -117,6 +156,7 @@ export function LookAvatar(p: LookAvatarProps) {
       photoRev={p.photoRev ?? null}
       media={look.avatarMedia ?? null}
       decoration={look.profileStyle?.decoration ?? null}
+      collectibles={look.profileStyle?.collectibles}
       size={p.size}
       online={p.online}
       presence={p.presence}

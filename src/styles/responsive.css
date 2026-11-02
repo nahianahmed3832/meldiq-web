@@ -73,7 +73,6 @@
     font-size: 14px;
   }
   .hero-points,
-  .hero-preview,
   .hero-foot {
     display: none !important;
   }
@@ -100,7 +99,7 @@
     display: none;
   }
 }
-@media (max-width: 640px) {
+@media (max-width: 640px), (max-width: 960px) and (max-height: 500px) and (pointer: coarse) {
   /* Phones: one screen at a time, edge to edge; the panels lose their float but keep the frame's colours. */
   .app {
     grid-template-columns: minmax(0, 1fr);
@@ -114,8 +113,8 @@
     box-shadow: none;
     background: transparent;
   }
-  .workspace {
-    grid-template-rows: 56px minmax(0, 1fr);
+  .topbar {
+    height: 56px;
   }
   .body {
     gap: 0;
@@ -295,10 +294,7 @@
 
 /* Phones, after the Android app (brief v4 §18): Home is the community rail beside the channel panel; the lists and a
    conversation carry their own headers, so the top bar steps aside there. */
-@media (max-width: 640px) {
-  .app.phone-bare .workspace {
-    grid-template-rows: minmax(0, 1fr);
-  }
+@media (max-width: 640px), (max-width: 960px) and (max-height: 500px) and (pointer: coarse) {
   .app.phone-bare .topbar,
   .topbar .me-btn {
     display: none;
@@ -339,7 +335,7 @@
 .side-head-phone {
   display: none;
 }
-@media (max-width: 640px) {
+@media (max-width: 640px), (max-width: 960px) and (max-height: 500px) and (pointer: coarse) {
   .side-head-phone {
     display: inline-flex;
     flex-shrink: 0;

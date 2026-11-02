@@ -1,0 +1,86 @@
+/* Keep identity marks in the name's line, with room for scripts, tags and truncation. */
+.identity-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 100%;
+  min-width: 0;
+  vertical-align: middle;
+  line-height: 1.35;
+}
+.identity-name > .sname {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.identity-name > .badge-mark,
+.identity-name > .wtag,
+.identity-name > .bot-tag {
+  flex-shrink: 0;
+  margin: 0;
+}
+.identity-name .badge-mark.mojo-badge {
+  width: 19px;
+  height: 21px;
+  padding: 0;
+  border-radius: 0;
+  background: none;
+  color: var(--accent-text);
+  box-shadow: none;
+  line-height: 1;
+  letter-spacing: 0;
+}
+.identity-name .mojo-badge-go {
+  color: var(--text-2);
+}
+.identity-name .mojo-badge svg {
+  display: block;
+  width: 16px;
+  height: 18px;
+  flex-shrink: 0;
+}
+.side-row .identity-name {
+  display: flex;
+  width: 100%;
+  gap: 5px;
+}
+.side-row .identity-name .mojo-badge {
+  width: 16px;
+  height: 18px;
+}
+.side-row .identity-name .mojo-badge svg {
+  width: 14px;
+  height: 16px;
+}
+.msg-head strong {
+  min-width: 0;
+}
+.msg-head .identity-name {
+  gap: 6px;
+}
+.profile-panel-body .profile-panel-name {
+  display: flex;
+  min-width: 0;
+  margin: 20px 0 8px;
+  line-height: 1.4;
+}
+.profile-panel-name .identity-name {
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.profile-panel-name .identity-name > .sname {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+.profile-panel-name .identity-name .mojo-badge {
+  width: 23px;
+  height: 25px;
+}
+.profile-panel-name .identity-name .mojo-badge svg {
+  width: 20px;
+  height: 22px;
+}
+.profile-panel-name + .profile-handle {
+  margin-top: 0;
+}

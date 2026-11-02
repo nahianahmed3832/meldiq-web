@@ -1,0 +1,284 @@
+/* Settings parity, batch B (API 0.65.0, docs/MELDIQ_SETTINGS_PARITY.md): creator verification and the creator programme,
+   connections on profiles, the Developer page, the "Log in with Meldiq" consent page, and bots in conversations. */
+
+/* ── secrets shown once, the BOT tag ── */
+.secret-box {
+  display: grid;
+  gap: 8px;
+  padding: 14px 16px;
+  border-radius: var(--r-md);
+  border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--border));
+  background: var(--accent-soft);
+}
+.secret-box small {
+  color: var(--text-2);
+}
+.secret-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.secret-row code,
+.dev-actions code,
+.creator-code code {
+  overflow-wrap: anywhere;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: var(--surface-sunken);
+  font-size: 12.5px;
+}
+.bot-tag {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 6px;
+  padding: 1px 5px;
+  border-radius: 5px;
+  font: 800 10px/1.45 var(--font);
+  letter-spacing: 0.05em;
+  vertical-align: 0.12em;
+  /* The accent's own text colour, so the tag reads on a light accent (the floating redesign's lime) too. */
+  color: var(--on-accent);
+  background: var(--accent);
+  flex: none;
+  white-space: nowrap;
+}
+
+/* ── creators ── */
+.creator-code {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: var(--r-md);
+  background: var(--surface-sunken);
+}
+.creator-code code {
+  background: var(--surface);
+  font-size: 14px;
+  font-weight: 700;
+  justify-self: start;
+}
+.creator-rules {
+  margin: 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 4px;
+  color: var(--text-2);
+  font-size: 13px;
+}
+.creator-steps {
+  list-style: none;
+  margin: 0 0 16px;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 10px;
+}
+.creator-steps li {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 14px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--border);
+  background: var(--surface);
+}
+.creator-steps li.done {
+  border-color: color-mix(in srgb, var(--accent) 50%, var(--border));
+}
+.creator-step-mark {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  flex: none;
+  color: var(--text-3);
+  background: var(--surface-sunken);
+}
+.creator-steps li.done .creator-step-mark {
+  color: #fff;
+  background: var(--accent);
+}
+
+/* ── connections ── */
+.connection-row.off {
+  opacity: 0.6;
+}
+.connection-mark {
+  display: inline-grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  flex: none;
+  color: #fff;
+  font-weight: 800;
+  font-size: 14px;
+  background: var(--text-3);
+}
+.cm-steam {
+  background: #1b2838;
+}
+.cm-anilist {
+  background: #02a9ff;
+}
+.cm-lastfm {
+  background: #d51007;
+}
+.cm-trakt {
+  background: #9f42c6;
+}
+.profile-connections {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 12px;
+}
+.profile-connection-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.profile-connection-head .connection-mark {
+  width: 22px;
+  height: 22px;
+  font-size: 11px;
+  border-radius: 6px;
+}
+.profile-connection-items {
+  margin: 4px 0 0;
+  padding-left: 30px;
+  display: grid;
+  gap: 2px;
+  font-size: 13px;
+}
+
+/* ── developer ── */
+.dev-list {
+  margin-top: 4px;
+}
+.dev-item {
+  display: grid;
+  gap: 8px;
+  padding: 12px 0;
+  border-top: 1px solid var(--border);
+}
+.dev-item:first-child {
+  border-top: 0;
+}
+.dev-actions {
+  flex-wrap: wrap;
+  gap: 8px;
+  min-width: 0;
+}
+.dev-uris {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 4px;
+  font-size: 12.5px;
+}
+.dev-how {
+  margin-top: 8px;
+  font-size: 13px;
+  color: var(--text-2);
+}
+.dev-how summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--text);
+}
+.dev-how ol {
+  display: grid;
+  gap: 6px;
+  padding-left: 18px;
+}
+.bot-found {
+  padding: 12px;
+  border-radius: var(--r-md);
+  background: var(--surface-sunken);
+}
+
+/* ── the consent page ── */
+.consent {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: 24px 16px;
+  background: var(--bg);
+}
+.consent-card {
+  width: min(460px, 100%);
+  padding: 28px 24px;
+  display: grid;
+  gap: 12px;
+  text-align: left;
+}
+.consent-card h1 {
+  margin: 0;
+  font-size: var(--fs-xl);
+  line-height: 1.3;
+}
+.consent-card p {
+  margin: 0;
+}
+.consent-mark {
+  color: var(--accent);
+}
+.consent-scopes {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+.consent-scopes li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.consent-small {
+  font-size: 12.5px;
+}
+.consent-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+/* ── bots in conversations ── */
+.slash-list {
+  width: min(460px, calc(100% - 36px));
+}
+.bot-replies {
+  list-style: none;
+  margin: 0;
+  padding: 0 18px 6px;
+  display: grid;
+  gap: 6px;
+}
+.bot-reply {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: var(--r-md);
+  border: 1px dashed color-mix(in srgb, var(--accent) 45%, var(--border));
+  background: var(--accent-soft);
+}
+.bot-reply-head {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+.bot-reply-text {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}

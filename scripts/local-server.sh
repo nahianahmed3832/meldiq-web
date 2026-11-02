@@ -14,12 +14,12 @@ set -euo pipefail
 here="$(cd "$(dirname "$0")/.." && pwd)"
 dir="${ORBIT_SERVER_DIR:-}"
 if [ -z "$dir" ]; then
-  for c in "$here/../griip-mesage/server" "$here/../griip_message/server" "$here/../server"; do
+  for c in "$here/../meldiq_android/server" "$here/../griip-mesage/server" "$here/../griip_message/server" "$here/../server"; do
     if [ -f "$c/src/index.ts" ]; then dir="$c"; break; fi
   done
 fi
 if [ -z "$dir" ] || [ ! -f "$dir/src/index.ts" ]; then
-  echo "Orbit server not found: clone github.com/nahianahmed3832/griip-mesage next to this repository and run npm ci in its server/ folder, or set ORBIT_SERVER_DIR." >&2
+  echo "Meldiq server not found: install the neighboring meldiq_android/server checkout, or set ORBIT_SERVER_DIR to the matching release source." >&2
   exit 1
 fi
 cd "$dir"

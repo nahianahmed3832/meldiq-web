@@ -32,10 +32,11 @@ async function removeSetupSessionElsewhere(email: string): Promise<void> {
 
 async function signIn(page: Page, email: string): Promise<void> {
   await expectSignedOut(page);
-  await page.getByLabel("Email").fill(email);
+  if (await page.getByRole("button", { name: "Continue with email", exact: true }).isVisible()) await page.getByRole("button", { name: "Continue with email", exact: true }).click();
+  await page.getByLabel("Email", { exact: true }).fill(email);
   await page.getByLabel("Password", { exact: true }).fill(PASSWORD);
   // The form reads what React holds: make sure the typing landed before sending.
-  await expect(page.getByLabel("Email")).toHaveValue(email);
+  await expect(page.getByLabel("Email", { exact: true })).toHaveValue(email);
   await page.getByRole("button", { name: "Sign in", exact: true }).click();
 }
 
@@ -45,14 +46,14 @@ test("sign up, set up encryption, come back after a reload, and add a second bro
   await expectSignedOut(page);
   await page.getByRole("button", { name: "Create an account" }).click();
   await page.getByLabel("Your name").fill("Nadia Rahman");
-  await page.getByLabel("Email").fill(email);
+  await page.getByLabel("Email", { exact: true }).fill(email);
   await page.getByLabel("Password").fill(PASSWORD);
   await page.getByRole("button", { name: "Create account" }).click();
   await expect(page.getByRole("heading", { name: "Check your email" })).toBeVisible();
   await page.getByLabel("Code").fill(await emailedCode(email, "verify"));
   await page.getByRole("button", { name: "Confirm" }).click();
 
-  await expect(page.getByRole("heading", { name: "Set up end-to-end encryption" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Set up your security keys" })).toBeVisible();
   await page.getByRole("button", { name: "Set up encryption" }).click();
   await expect(page.getByRole("heading", { name: "Save your recovery key" })).toBeVisible();
   const recovery = ((await page.getByLabel("Recovery key", { exact: true }).innerText()) ?? "").replace(/\s+/g, "-");
@@ -78,12 +79,33 @@ test("sign up, set up encryption, come back after a reload, and add a second bro
   await page.reload();
   await expect(page.locator(":is(.app[data-connection=online])").first()).toBeVisible({ timeout: 15_000 });
   // Back to the conversations, where a new direct message shows.
-  // Desktop: the settings list's way back; phones: the Messages tab.
-  if (isMobile) await page.getByRole("navigation", { name: "Sections" }).getByRole("button", { name: "Messages" }).click();
-  else await page.getByRole("button", { name: "Back to conversations" }).click();
+  // Desktop: the settings list's way back; phones: back to You, then the Messages tab.
+  if (isMobile) {
+    await page.getByRole("button", { name: "Back to settings", exact: true }).click();
+    await page.getByRole("navigation", { name: "Sections" }).getByRole("button", { name: "Messages" }).click();
+  } else await page.getByRole("button", { name: "Back to conversations" }).click();
 
   // Someone writes to the new account from their phone.
-  const me = await page.evaluate(() => (window as unknown as { __orbit: { device: { userId: string } } }).__orbit.device.userId);
+  // Release bundles don't expose the development engine hook. Read the signed-in device's public user ID.
+  const me = await page.evaluate(
+    () =>
+      new Promise<string>((resolve, reject) => {
+        const open = indexedDB.open("orbit-web");
+        open.onerror = () => reject(open.error);
+        open.onsuccess = () => {
+          const db = open.result;
+          const req = db.transaction("kv").objectStore("kv").get("device");
+          req.onsuccess = () => {
+            db.close();
+            resolve(req.result.userId);
+          };
+          req.onerror = () => {
+            db.close();
+            reject(req.error);
+          };
+        };
+      }),
+  );
   const bob = await newPhone("bob", "Bob Chen");
   const dm = (await bob.req("POST", "/v1/conversations/dm", { userId: me })).conversation.id as string;
   await bob.send(dm, { type: "text", text: "Welcome to Meldiq, Nadia" });
@@ -92,7 +114,7 @@ test("sign up, set up encryption, come back after a reload, and add a second bro
   // A second browser: sign in, set it up with the recovery key, and it reads the same conversation.
   const other = await browser.newContext({ extraHTTPHeaders: { "x-orbit-test-ip": testAddress() } });
   const second = await other.newPage();
-  await second.goto("/");
+  await second.goto("/", { waitUntil: "domcontentloaded" });
   await signIn(second, email);
   await expect(second.getByRole("heading", { name: "Set up this browser" })).toBeVisible();
 
@@ -104,7 +126,8 @@ test("sign up, set up encryption, come back after a reload, and add a second bro
   await second.getByLabel("Recovery key", { exact: true }).fill(recovery);
   await second.getByRole("button", { name: "Set up this browser" }).click();
   await expect(second.getByText(/This sign-in was ended before the browser was set up/)).toBeVisible();
-  await expect(second.getByLabel("Email")).toHaveValue(email);
+  await second.getByRole("button", { name: "Continue with email", exact: true }).click();
+  await expect(second.getByLabel("Email", { exact: true })).toHaveValue(email);
 
   // Signing in again sets it up with the same recovery key.
   await signIn(second, email);
@@ -128,7 +151,7 @@ test("sign up, set up encryption, come back after a reload, and add a second bro
   // for the code; no "Email me a code" step, and no server line.
   const third = await browser.newContext({ extraHTTPHeaders: { "x-orbit-test-ip": testAddress() } });
   const t = await third.newPage();
-  await t.goto("/");
+  await t.goto("/", { waitUntil: "domcontentloaded" });
   await signIn(t, email);
   await expect(t.getByRole("heading", { name: "Set up this browser" })).toBeVisible();
   await expect(t.getByText(/Enter the 6-digit code we sent to/)).toBeVisible();

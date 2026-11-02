@@ -4,26 +4,25 @@ import type { Conversation, Member } from "../../api/schemas";
 import { useEngine, useOrbit } from "../../application/orbit";
 import { setPrefs, usePrefs } from "../../application/prefs";
 import { navigate, type Route } from "../../application/router";
-import type { Engine } from "../../sync/engine";
 import { startDirect, userProfile } from "../../sync/account";
 import { presenceWords } from "../../sync/social";
-import { directory } from "../../sync/workspaces";
+import { shownName } from "../../sync/communityParity";
+import { useCommunityMembers } from "../community/useCommunityMembers";
 import { nameTone, toneOf } from "../components/Avatar";
-import { UserAvatar } from "../components/OrgAvatar";
 import { contextMenuProps, Menu, type MenuEntry, useMenu } from "../components/Overlay";
-import { StyledName } from "../people/NameStyle";
+import { LookAvatar, LookName, StyledName } from "../people/NameStyle";
 import { StyledAvatar } from "../people/ProfileStyle";
+import { themeBackground, themeColorsOf } from "../people/profileTheme";
 import { dmPeer, relative } from "../format";
 import { openProfile } from "../people/ProfileDialog";
 import { useMembers } from "./ConversationDetails";
-import { isHere, type ListedRole, memberListGroups, nameColor } from "./memberListRules";
+import { isHere, memberListGroups, roleNameColors } from "./memberListRules";
 import { useT } from "../../i18n";
+import { CommunityOwnerBadge } from "../components/CommunityOwnerBadge";
+import { ProfilePins } from "../people/ProfilePins";
 
 /** Wide enough to keep a member list or profile beside the messages; narrower screens open them over the messages. */
 const WIDE = "(min-width: 1241px)";
-/** How long a community's roles are reused while moving between its channels. */
-const ROLES_TTL_MS = 60_000;
-
 export function useWideLayout(): boolean {
   return useSyncExternalStore(
     (l) => {
@@ -48,47 +47,27 @@ export function usePeopleShown(c: Pick<Conversation, "type" | "voice">, route: R
   return !route.panel && wide && (c.type === "DM" ? prefs.dmProfile : prefs.memberList);
 }
 
-const rolesCache = new Map<string, { at: number; roles: Map<string, ListedRole[]> }>();
-
-/** The community's custom roles per person, where this account may see the member directory; empty otherwise. */
-function useCommunityRoles(engine: Engine, orgId: string | null): Map<string, ListedRole[]> {
-  const cached = orgId ? rolesCache.get(orgId) : undefined;
-  const [roles, setRoles] = useState(cached?.roles ?? new Map<string, ListedRole[]>());
-  useEffect(() => {
-    if (!orgId) return;
-    const hit = rolesCache.get(orgId);
-    if (hit && Date.now() - hit.at < ROLES_TTL_MS) return setRoles(hit.roles);
-    let alive = true;
-    directory(engine, orgId)
-      .then((people) => {
-        const next = new Map(people.map((p) => [p.id, p.customRoles]));
-        rolesCache.set(orgId, { at: Date.now(), roles: next });
-        if (alive) setRoles(next);
-      })
-      // Guests and roles without the member directory see the list without role groups.
-      .catch(() => undefined);
-    return () => {
-      alive = false;
-    };
-  }, [engine, orgId]);
-  return roles;
-}
-
 /** A channel's or group's members beside the messages, as Discord lists them: by role while here, then offline. */
 export function MemberListPanel({ c, onClose }: { c: Conversation; onClose: () => void }) {
-  const engine = useEngine();
   const t = useT();
   const users = useOrbit((s) => s.users);
   const { members, error } = useMembers(c.id, c.memberCount);
-  const roles = useCommunityRoles(engine, c.type === "CHANNEL" ? c.orgId : null);
+  // Guests and roles without the member directory see the list without role groups and nicknames.
+  const { roles, nicknames } = useCommunityMembers(c.type === "CHANNEL" ? c.orgId : null);
   // The store has the latest presence, names and photos (live updates); the member list has everyone.
   const people = useMemo(
     () =>
       (members ?? []).map((m) => {
         const u = users[m.id];
-        return { ...m, displayName: u?.displayName ?? m.displayName, presence: u?.presence ?? m.presence, online: u?.online ?? m.online, photoRev: u?.photoRev ?? m.photoRev };
+        return {
+          ...m,
+          displayName: shownName(u?.displayName ?? m.displayName, nicknames.get(m.id)),
+          presence: u?.presence ?? m.presence,
+          online: u?.online ?? m.online,
+          photoRev: u?.photoRev ?? m.photoRev,
+        };
       }),
-    [members, users],
+    [members, users, nicknames],
   );
   const groups = useMemo(() => memberListGroups(people, (id) => roles.get(id)), [people, roles]);
 
@@ -109,7 +88,7 @@ export function MemberListPanel({ c, onClose }: { c: Conversation; onClose: () =
               {g.key === "online" ? t("people_online") : g.key === "offline" ? t("people_offline") : g.label} — {g.members.length}
             </h3>
             {g.members.map((m) => (
-              <MemberRow key={m.id} m={m} away={!isHere(m)} color={nameColor(roles.get(m.id))} orgId={c.type === "CHANNEL" ? c.orgId : null} />
+              <MemberRow key={m.id} m={m} away={!m.bot && !isHere(m)} colors={roleNameColors(roles.get(m.id))} orgId={c.type === "CHANNEL" ? c.orgId : null} />
             ))}
           </section>
         ))}
@@ -119,12 +98,13 @@ export function MemberListPanel({ c, onClose }: { c: Conversation; onClose: () =
 }
 
 /** One person in the member list: their profile on click; a right-click (or the Menu key) opens their menu. */
-function MemberRow({ m, away, color, orgId }: { m: Member; away: boolean; color: string | null; orgId: string | null }) {
+function MemberRow({ m, away, colors, orgId }: { m: Member; away: boolean; colors: string[] | null; orgId: string | null }) {
   const engine = useEngine();
   const me = useOrbit((s) => s.me?.userId);
   const builder = usePrefs().builderMode;
   const menu = useMenu();
   const status = [m.statusEmoji, m.statusText].filter(Boolean).join(" ");
+  const owner = !!orgId && m.orgRole === "OWNER";
   const entries: MenuEntry[] = [
     { label: "View profile", icon: <UserRound size={16} />, onSelect: () => openProfile(m.id, m.displayName, { orgId, anchor: menu.anchor }) },
     ...(m.id !== me
@@ -161,14 +141,14 @@ function MemberRow({ m, away, color, orgId }: { m: Member; away: boolean; color:
       : []),
   ];
   // A nameplate (2026-10-28, the reference's lively member list): the person's own name colours, faint, behind the row.
-  const plate = m.profileStyle?.nameColors?.length ? m.profileStyle.nameColors : m.profileStyle?.accent ? [m.profileStyle.accent] : null;
+  const plate = m.profileStyle?.nameColors?.length ? m.profileStyle.nameColors : themeColorsOf(m.profileStyle);
   return (
     <>
       <button
         className={`member-row${away ? " away" : ""}${plate ? " has-plate" : ""}`}
         style={plate ? ({ "--plate-a": plate[0], "--plate-b": plate[plate.length - 1] } as React.CSSProperties) : undefined}
         onClick={(e) => openProfile(m.id, m.displayName, { orgId, anchor: e.currentTarget })}
-        aria-label={`${m.displayName}${away ? ", offline" : ""}: profile`}
+        aria-label={`${m.displayName}${owner ? ", community owner" : ""}${away ? ", offline" : ""}: profile`}
         aria-haspopup="menu"
         {...contextMenuProps(menu.openAt)}
       >
@@ -179,13 +159,25 @@ function MemberRow({ m, away, color, orgId }: { m: Member; away: boolean; color:
           photoRev={m.photoRev}
           media={m.avatarMedia}
           decoration={m.profileStyle?.decoration ?? null}
+          collectibles={m.profileStyle?.collectibles}
           size={40}
           online={away ? null : true}
           presence={away ? null : m.presence}
         />
         <span className="lines">
           <span className="member-name">
-            <StyledName name={m.displayName} style={m.profileStyle} tag={m.tag} mojo={m.mojo} roleColor={color} toneClass={nameTone(m.avatarColor)} className="ellipsis" />
+            <StyledName
+              name={m.displayName}
+              style={m.profileStyle}
+              tag={m.tag}
+              mojo={m.mojo}
+              bot={m.bot}
+              roleColor={colors?.[0] ?? null}
+              roleColor2={colors?.[1] ?? null}
+              toneClass={nameTone(m.avatarColor)}
+              className="ellipsis"
+            />
+            {owner && <CommunityOwnerBadge />}
           </span>
           {status && <small className="ellipsis">{status}</small>}
         </span>
@@ -226,25 +218,30 @@ export function ProfilePanel({ c, onClose }: { c: Conversation; onClose: () => v
   const status = [known?.statusEmoji ?? profile?.statusEmoji, known?.statusText ?? profile?.statusText].filter(Boolean).join(" ");
   const pronouns = known?.pronouns ?? profile?.pronouns;
   const color = known?.avatarColor ?? peer.avatarColor;
+  const theme = themeColorsOf(known?.profileStyle ?? profile?.profileStyle ?? null);
 
   return (
     <aside className="panel profile-panel" aria-label={`${name}'s profile`}>
       <div className="profile-panel-scroll scroll">
-        <div className="profile-banner" style={{ background: toneOf(color) }}>
+        <div className="profile-banner" style={{ background: theme ? themeBackground(theme) : toneOf(color) }}>
           <button className="icon-btn" onClick={onClose} aria-label={t("people_hide_profile")}>
             <X size={16} />
           </button>
         </div>
         <div className="profile-panel-body">
           <div className="profile-panel-avatar">
-            <UserAvatar userId={peer.id} name={name} colorIndex={color} photoRev={known?.photoRev ?? profile?.photoRev} size={84} online={online} presence={presence} decorative />
+            <LookAvatar userId={peer.id} name={name} colorIndex={color} photoRev={known?.photoRev ?? profile?.photoRev} size={84} online={online} presence={presence} />
           </div>
-          <h2 className="ellipsis">{name}</h2>
+          <h2 className="profile-panel-name">
+            <LookName userId={peer.id} name={name} withMarks />
+          </h2>
           <p className="profile-handle">
             @{known?.username ?? peer.username}
             {pronouns ? ` · ${pronouns}` : ""}
           </p>
           {status && <p className="profile-status">{status}</p>}
+          {/* API 0.64.0: their pins (server docs/PROFILE_PINS.md). */}
+          {profile && <ProfilePins pins={profile.pins} />}
           <div className="panel-card">
             <div>
               <dt>{words ? t("people_now") : t("people_last_seen")}</dt>

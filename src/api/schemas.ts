@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { openEnum } from "./enums";
-import { zAboutMe, zAccent, zAvatarMedia, zBadges, zMojoMark, zProfileBanner, zProfileLinks, zProfileStyle, zWornTag } from "./profileSchemas";
+import { zAboutMe, zAccent, zAvatarMedia, zBadges, zMojoMark, zProfileBanner, zProfileConnections, zProfileLinks, zProfilePins, zProfileStyle, zWornTag } from "./profileSchemas";
 
 export * from "./profileSchemas";
 
@@ -51,11 +51,29 @@ export const zMember = z.object({
   tag: zWornTag,
   /** API 0.54.0: the Mojo badge they show (server docs/MOJO.md). */
   mojo: zMojoMark.optional(),
+  /** API 0.65.0 batch B: a bot's account (absent for people), shown with a BOT tag by its name. */
+  bot: z
+    .boolean()
+    .nullish()
+    .transform((v) => v === true || undefined)
+    .optional(),
 });
 export type Member = z.infer<typeof zMember>;
 
 export const zConversationType = z.enum(["DM", "GROUP", "CHANNEL"]);
 export type ConversationType = z.infer<typeof zConversationType>;
+
+/** Community parity A1: a channel's options (absent on older servers and while the feature is off). */
+export const zChannelOptions = z.object({
+  textOnly: z.boolean().default(false),
+  noGifs: z.boolean().default(false),
+  stage: z.boolean().default(false),
+  readOnly: z.boolean().default(false),
+  posterRoleIds: z.array(z.string()).max(50).default([]),
+  /** Stages, for their moderators: who may speak. */
+  speakerIds: z.array(z.string()).max(500).optional(),
+});
+export type ChannelOptions = z.infer<typeof zChannelOptions>;
 
 export const zConversation = z.object({
   id: z.string(),
@@ -133,6 +151,8 @@ export const zConversation = z.object({
   /** Voice channels: whether this person may join the call, and speak in it (listen-only otherwise). */
   canConnect: z.boolean().optional(),
   canSpeak: z.boolean().optional(),
+  /** Community parity A1 (feature community-permissions): text only, no GIFs, stage, read-only and who may post. */
+  options: zChannelOptions.nullish().catch(undefined),
   /** Batch B6: a message request (DMs): waiting for you ([incoming]), or yours waiting for them with how many you sent. */
   request: z
     .object({ state: z.string(), incoming: z.boolean(), sent: z.number().int().optional(), limit: z.number().int().default(3) })
@@ -140,6 +160,44 @@ export const zConversation = z.object({
     .transform((v) => v ?? null),
 });
 export type Conversation = z.infer<typeof zConversation>;
+
+const nullableTime = z
+  .number()
+  .nullish()
+  .transform((v) => v ?? null);
+
+/** Community parity A2 (feature community-safety): a community's safety settings, for people who can edit it or ban. */
+export const zSafetySettings = z.object({
+  verificationLevel: openEnum(["none", "low", "medium", "high"]).default("none"),
+  newAccountGate: openEnum(["off", "10m", "1h", "1d", "7d"]).default("off"),
+  raidProtection: z.boolean().default(true),
+  lockedUntil: nullableTime,
+  lockReason: nullableString,
+});
+export type SafetySettings = z.infer<typeof zSafetySettings>;
+
+/** Community parity A3: one of a community's links. */
+export const zCommunityLink = z.object({ label: z.string(), url: z.string() });
+export type CommunityLink = z.infer<typeof zCommunityLink>;
+
+/** The fields community parity A2 and A3 add to a community; older servers (and the features off) leave them out. */
+const communityParityOrgFields = {
+  /** A2: until when it's locked (nobody new joins, only moderators post), null when not. */
+  lockedUntil: z.number().nullish().catch(undefined),
+  safety: zSafetySettings.nullish().catch(undefined),
+  /** A3: the background tint ("#rrggbb"), links, custom invite link and the onboarding gate (members). */
+  background: z
+    .string()
+    .regex(/^#[0-9a-fA-F]{6}$/)
+    .nullish()
+    .catch(undefined),
+  links: z.array(zCommunityLink).max(10).optional().catch(undefined),
+  inviteSlug: z.string().nullish().catch(undefined),
+  onboardingRequired: z.boolean().optional().catch(undefined),
+  onboardingDone: z.boolean().optional().catch(undefined),
+  startChannelId: z.string().nullish().catch(undefined),
+  mustFinishOnboarding: z.boolean().optional().catch(undefined),
+};
 
 export const zOrg = z.object({
   id: z.string(),
@@ -213,6 +271,46 @@ export const zOrg = z.object({
     .catch(null)
     .transform((v) => v ?? null),
   onboarding: z.boolean().default(false),
+  /**
+   * API 0.65.0 (feature rules-channel): the rules channel, how many rules there are, and whether this account still has
+   * to agree to them before posting or reacting. Absent (null) without a rules channel or rules, and on older servers.
+   */
+  rulesChannel: z
+    .object({
+      channelId: nullableString,
+      required: z.boolean().default(false),
+      count: z.number().int().nonnegative().default(0),
+      agreedAt: z
+        .number()
+        .nullish()
+        .transform((v) => v ?? null),
+      mustAgree: z.boolean().default(false),
+    })
+    .nullish()
+    .transform((v) => v ?? null),
+  /**
+   * Community parity B (feature community-lobby): whether the lobby is shown to members and whether this account has
+   * opened it; the app opens it first while it's on and unseen. Null for non-members and on servers without the lobby.
+   */
+  lobby: z
+    .object({ enabled: z.boolean(), seen: z.boolean() })
+    .nullish()
+    .catch(null)
+    .transform((v) => v ?? null),
+  /**
+   * Community parity C (feature community-tickets): while tickets are on, the panels to open one from, how many each
+   * person may have open, and how many the viewer has; the menu shows "Open a Ticket" then. Null while off.
+   */
+  tickets: z
+    .object({
+      panels: z.array(z.object({ id: z.string(), name: z.string() })).max(10),
+      maxOpenPerPerson: z.number().int(),
+      openByMe: z.number().int().nonnegative(),
+    })
+    .nullish()
+    .catch(null)
+    .transform((v) => v ?? null),
+  ...communityParityOrgFields,
 });
 export type Org = z.infer<typeof zOrg>;
 export type OrgKind = Org["kind"];
@@ -301,6 +399,29 @@ export const zProfile = z.object({
     .max(200)
     .nullish()
     .transform((v) => v ?? []),
+  /** API 0.60.0: they have a profile decoration approved (the Artist badge). */
+  decorationArtist: z
+    .boolean()
+    .nullish()
+    .transform((v) => v === true),
+  /** API 0.64.0: their pins (server docs/PROFILE_PINS.md). */
+  pins: zProfilePins,
+  /** API 0.65.0: the account level bought with points (1 until the first level-up); null on older servers. */
+  level: z
+    .number()
+    .int()
+    .min(1)
+    .nullish()
+    .catch(null)
+    .transform((v) => v ?? null),
+  /** API 0.65.0 batch B: the Steam, AniList, Last.fm and Trakt accounts they show (none for someone they blocked). */
+  connections: zProfileConnections,
+  /** API 0.65.0 batch B: a bot's account (absent for people), shown with a BOT tag by its name. */
+  bot: z
+    .boolean()
+    .nullish()
+    .transform((v) => v === true || undefined)
+    .optional(),
 });
 export type Profile = z.infer<typeof zProfile>;
 
@@ -361,7 +482,12 @@ export const zStoredEvent = z.object({
 });
 export type StoredEvent = z.infer<typeof zStoredEvent>;
 
-export const zServerHistoryPage = z.object({ messages: z.array(zStoredEvent), changes: z.array(zStoredEvent), more: z.boolean() });
+export const zServerHistoryPage = z.object({
+  messages: z.array(zStoredEvent),
+  changes: z.array(zStoredEvent),
+  more: z.boolean(),
+  nextCursor: z.object({ serverTs: z.number().int().positive(), id: z.string() }).nullable().optional(),
+});
 export type ServerHistoryPage = z.infer<typeof zServerHistoryPage>;
 
 /** One delivery-queue item (server hub.ts queueItemToWire). */

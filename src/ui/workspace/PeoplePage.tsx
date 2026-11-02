@@ -7,6 +7,7 @@ import { changeMember, directory, removeMember } from "../../sync/workspaces";
 import { setGuestExpiry } from "../../sync/workspaceC5";
 import { assignableRoles, memberGroups, removalAllowed, roleName, titleChangeAllowed } from "../../sync/workspaceRules";
 import { ban, setTimeout_ } from "../../sync/community";
+import { type MemberParityDialog, MemberParityDialogs, memberParityEntries } from "./MemberParityActions";
 import { running, TIMEOUT_CHOICES } from "../../sync/reports";
 import { ReportDialog } from "../chat/ReportDialog";
 import { untilWhen } from "../format";
@@ -90,7 +91,7 @@ function MemberRow(props: { member: DirectoryMember; detail: OrgAdminDetail; myR
   const engine = useEngine();
   const menu = useMenu();
   const act = useAction();
-  const [editing, setEditing] = useState<"title" | "remove" | "expiry" | "timeout" | "ban" | "report" | null>(null);
+  const [editing, setEditing] = useState<"title" | "remove" | "expiry" | "timeout" | "ban" | "report" | MemberParityDialog | null>(null);
   const guestExpiry = useOrbit((st) => st.server?.features.includes("guest-expiry") ?? false);
   const features = useOrbit((st) => st.server?.features ?? []);
   const p = detail.permissions;
@@ -115,6 +116,7 @@ function MemberRow(props: { member: DirectoryMember; detail: OrgAdminDetail; myR
       onSelect: () => void act.act(() => changeMember(engine, orgId, m.id, { role: r }).then(onChanged)),
     })),
     ...(canTitle ? [{ label: "Edit title…", onSelect: () => setEditing("title") }] : []),
+    ...memberParityEntries({ self, lower, permissions: p, features, open: setEditing }),
     // Android B1: from least to most severe, so Report comes before timeout, removing and banning.
     ...(!self && features.includes("reports") ? [{ label: "Report…", onSelect: () => setEditing("report") }] : []),
     ...(canTimeout
@@ -135,7 +137,9 @@ function MemberRow(props: { member: DirectoryMember; detail: OrgAdminDetail; myR
       <UserAvatar userId={m.id} name={m.displayName} colorIndex={m.avatarColor} photoRev={m.photoRev} size={36} online={m.online} decorative />
       <span className="lines grow">
         <span className="ellipsis">
-          {m.displayName}
+          {m.nickname?.trim() ? m.nickname : m.displayName}
+          {m.nickname?.trim() && <span className="faint"> ({m.displayName})</span>}
+          {m.bot && <span className="bot-tag">BOT</span>}
           {self && <span className="faint"> (you)</span>}
         </span>
         <small className="ellipsis">
@@ -167,6 +171,7 @@ function MemberRow(props: { member: DirectoryMember; detail: OrgAdminDetail; myR
       {editing === "expiry" && <ExpiryDialog member={m} orgId={orgId} onClose={() => setEditing(null)} onSaved={onChanged} />}
       {editing === "timeout" && <TimeoutDialog member={m} orgId={orgId} onClose={() => setEditing(null)} onSaved={onChanged} />}
       {editing === "ban" && <BanDialog member={m} orgId={orgId} onClose={() => setEditing(null)} onSaved={onChanged} />}
+      <MemberParityDialogs which={editing === "nickname" || editing === "voiceBan" ? editing : null} orgId={orgId} member={m} onClose={() => setEditing(null)} onSaved={onChanged} />
       {editing === "report" && (
         <ReportDialog target={{ kind: "person", userId: m.id, name: m.displayName, communities: [{ id: orgId, name: detail.org.name }], orgId }} onClose={() => setEditing(null)} />
       )}

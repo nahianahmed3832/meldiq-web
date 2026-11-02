@@ -1,0 +1,151 @@
+{
+  "botsPlus": false,
+  "botsPlusUntil": null,
+  "canEdit": false,
+  "bots": [
+    {
+      "key": "welcomer",
+      "name": "Welcomer",
+      "available": true,
+      "unavailableReason": null,
+      "enabled": false,
+      "userId": null,
+      "look": {
+        "name": null,
+        "displayName": "Welcomer",
+        "photoRev": null
+      },
+      "settings": null,
+      "plusPaused": [],
+      "updatedAt": null
+    },
+    {
+      "key": "helper",
+      "name": "Helper",
+      "available": true,
+      "unavailableReason": null,
+      "enabled": false,
+      "userId": null,
+      "look": {
+        "name": null,
+        "displayName": "Helper",
+        "photoRev": null
+      },
+      "settings": null,
+      "plusPaused": [],
+      "updatedAt": null
+    },
+    {
+      "key": "levels",
+      "name": "Levels",
+      "available": true,
+      "unavailableReason": null,
+      "enabled": false,
+      "userId": null,
+      "look": {
+        "name": null,
+        "displayName": "Levels",
+        "photoRev": null
+      },
+      "settings": null,
+      "plusPaused": [],
+      "updatedAt": null
+    },
+    {
+      "key": "logger",
+      "name": "Logger",
+      "available": true,
+      "unavailableReason": null,
+      "enabled": false,
+      "userId": null,
+      "look": {
+        "name": null,
+        "displayName": "Logger",
+        "photoRev": null
+      },
+      "settings": null,
+      "plusPaused": [],
+      "updatedAt": null
+    },
+    {
+      "key": "starboard",
+      "name": "Starboard",
+      "available": true,
+      "unavailableReason": null,
+      "enabled": false,
+      "userId": null,
+      "look": {
+        "name": null,
+        "displayName": "Starboard",
+        "photoRev": null
+      },
+      "settings": null,
+      "plusPaused": [],
+      "updatedAt": null
+    },
+    {
+      "key": "giveaways",
+      "name": "Giveaways",
+      "available": true,
+      "unavailableReason": null,
+      "enabled": false,
+      "userId": null,
+      "look": {
+        "name": null,
+        "displayName": "Giveaways",
+        "photoRev": null
+      },
+      "settings": null,
+      "plusPaused": [],
+      "updatedAt": null
+    },
+    {
+      "key": "tickets",
+      "name": "Tickets",
+      "available": true,
+      "unavailableReason": null,
+      "enabled": false,
+      "userId": null,
+      "look": {
+        "name": null,
+        "displayName": "Tickets",
+        "photoRev": null
+      },
+      "settings": null,
+      "plusPaused": [],
+      "updatedAt": null
+    },
+    {
+      "key": "alerts",
+      "name": "Alerts",
+      "available": false,
+      "unavailableReason": "Needs a YouTube API key on this server",
+      "enabled": false,
+      "userId": null,
+      "look": {
+        "name": null,
+        "displayName": "Alerts",
+        "photoRev": null
+      },
+      "settings": null,
+      "plusPaused": [],
+      "updatedAt": null
+    },
+    {
+      "key": "wordy",
+      "name": "Wordy",
+      "available": true,
+      "unavailableReason": null,
+      "enabled": false,
+      "userId": null,
+      "look": {
+        "name": null,
+        "displayName": "Wordy",
+        "photoRev": null
+      },
+      "settings": null,
+      "plusPaused": [],
+      "updatedAt": null
+    }
+  ]
+}

@@ -179,11 +179,15 @@
 }
 
 .workspace {
-  display: grid;
-  grid-template-rows: var(--topbar-h) minmax(0, 1fr);
+  /* Headers use their own height; the work area gets the rest, including when an optional service bar appears. */
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
   min-width: 0;
 }
 .topbar {
+  height: var(--topbar-h);
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   gap: 12px;
@@ -342,6 +346,7 @@
    the frame showing between them. Flex rather than grid, so the gap appears only between the panels that are there. */
 .body {
   display: flex;
+  flex: 1 1 0;
   gap: var(--frame-gap);
   min-height: 0;
   min-width: 0;
@@ -662,9 +667,6 @@
   .app > .rail,
   .app > .workspace {
     grid-row: 2;
-  }
-  .workspace {
-    grid-template-rows: minmax(0, 1fr);
   }
   .workspace > .topbar {
     display: none;
@@ -1130,4 +1132,18 @@
   opacity: 0.9;
   filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.45));
   list-style: none;
+}
+
+.community-welcome {
+  display: grid;
+  place-items: center;
+  padding: 28px;
+  overflow: auto;
+}
+.community-welcome > .empty {
+  max-width: 560px;
+}
+.community-welcome h1 {
+  font-size: clamp(22px, 3vw, 32px);
+  margin: 16px 0 8px;
 }

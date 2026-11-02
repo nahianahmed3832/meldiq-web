@@ -1,0 +1,179 @@
+/*
+ * Profile decorations (API 0.60.0, server docs/PROFILE_DECORATIONS.md): the picker in Settings › Profile style, the
+ * "Make a decoration" dialog, and an artist's decorations on their profile.
+ */
+.deco-picker {
+  display: grid;
+  gap: 12px;
+}
+.deco-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+.deco-tab {
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-2);
+  font: inherit;
+  font-size: var(--fs-sm);
+  cursor: pointer;
+}
+.deco-tab.active {
+  border-color: var(--accent);
+  color: var(--text);
+  box-shadow: 0 0 0 2px var(--accent-soft);
+}
+.deco-make {
+  margin-left: auto;
+}
+.deco-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+}
+.deco-choice {
+  min-width: 0;
+  padding: 14px 6px 10px;
+}
+.deco-choice > span,
+.deco-choice > small {
+  max-width: 100%;
+}
+.deco-skeleton {
+  height: 96px;
+  grid-column: 1 / -1;
+}
+.deco-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--surface);
+  color: var(--text-3);
+}
+.deco-search input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+}
+.deco-mine {
+  display: grid;
+  gap: 10px;
+}
+.deco-submissions {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.deco-submission {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--surface);
+}
+.deco-submission-preview {
+  position: relative;
+  display: inline-block;
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  margin: 6px;
+}
+.deco-submission-text {
+  display: grid;
+  flex: 1;
+  min-width: 0;
+  gap: 2px;
+}
+.deco-status {
+  justify-self: start;
+  padding: 1px 8px;
+  border-radius: 999px;
+  font-size: var(--fs-xs);
+  background: var(--accent-soft);
+  color: var(--accent-text);
+}
+.deco-status.approved {
+  background: color-mix(in srgb, #2dbb6b 18%, transparent);
+  color: #1f8a4c;
+}
+.deco-status.rejected,
+.deco-status.removed {
+  background: color-mix(in srgb, #e5484d 16%, transparent);
+  color: #c4363b;
+}
+.deco-rules {
+  display: grid;
+  gap: 6px;
+  margin: 0 0 12px;
+  padding-left: 20px;
+}
+.deco-perks {
+  margin-bottom: 16px;
+}
+.deco-make-body {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 20px;
+  align-items: center;
+}
+.deco-make-preview {
+  display: grid;
+  place-items: center;
+  width: 210px;
+  height: 210px;
+  border-radius: var(--r-lg);
+  background: var(--surface-2, var(--surface));
+}
+.deco-make-form {
+  display: grid;
+  gap: 12px;
+}
+.deco-make-form .field input {
+  width: 100%;
+}
+.deco-check {
+  align-items: flex-start;
+  gap: 8px;
+  font-size: var(--fs-sm);
+}
+.artist-decorations {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+  gap: 10px;
+}
+.artist-decoration {
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  padding: 14px 6px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  font-size: var(--fs-xs);
+}
+.artist-decoration > span {
+  max-width: 100%;
+}
+@media (max-width: 560px) {
+  .deco-make-body {
+    grid-template-columns: 1fr;
+    justify-items: center;
+  }
+  .deco-make {
+    margin-left: 0;
+  }
+}

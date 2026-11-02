@@ -57,11 +57,14 @@ const METHODS = ["get", "post", "put", "patch", "delete"];
 const CONTRACT_PATHS = ["shared/contracts/fixtures", "docs/api/openapi.json", "docs/api/realtime.schema.json"];
 
 /**
- * The contract files as committed (MELDIQ_CONTRACTS_REF, default HEAD), so another session's uncommitted work in that
+ * The contract files as committed (MELDIQ_CONTRACTS_REF, default test/contract-source.txt or HEAD), so another session's uncommitted work in that
  * checkout never changes the copy; a folder that isn't a git checkout is read as it is.
  */
 function committed(repo: string): string {
-  const ref = process.env.MELDIQ_CONTRACTS_REF ?? "HEAD";
+  // Pin the contract shipped with this web release; a neighboring checkout may be on an older branch.
+  const pin = path.join(WEB_ROOT, "test", "contract-source.txt");
+  const recorded = fs.existsSync(pin) ? fs.readFileSync(pin, "utf8").trim() : "HEAD";
+  const ref = process.env.MELDIQ_CONTRACTS_REF ?? recorded;
   let tar: Buffer;
   try {
     tar = execFileSync("git", ["-C", repo, "archive", "--format=tar", ref, ...CONTRACT_PATHS], { maxBuffer: 64 * 1024 * 1024 });

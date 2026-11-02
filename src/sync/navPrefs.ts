@@ -58,6 +58,10 @@ export const zNavPrefs = z.object({
   categoryNotify: z.record(z.string(), z.enum(NOTIFY_LEVELS)).optional(),
   /** Batch B3, community documents: channels hidden from the channel list (they stay joined). */
   hidden: z.array(z.string()).optional(),
+  /** Community parity A3, personal document: show communities' accent and background tint (false: Meldiq's own). */
+  communityThemes: z.boolean().optional(),
+  expressionFavorites: z.array(z.string()).max(100).optional(),
+  expressionRecents: z.array(z.string()).max(40).optional(),
 });
 export type NavPrefs = z.infer<typeof zNavPrefs>;
 export type NavSection = NavPrefs["sections"][number];
@@ -89,7 +93,10 @@ export type NavOp =
   | { op: "railLayout"; orgIds: string[]; folders: { id: string; name: string; color: string | null; orgIds: string[] }[] }
   | { op: "muteUntil"; conversationId: string; until: number | null }
   | { op: "categoryNotify"; categoryId: string; level: NotifyLevel | null }
-  | { op: "hide"; conversationId: string; hidden: boolean };
+  | { op: "hide"; conversationId: string; hidden: boolean }
+  | { op: "communityThemes"; on: boolean }
+  | { op: "expressionFavorite"; id: string; on: boolean }
+  | { op: "expressionUsed"; id: string };
 
 export type NavPlace = { k: "default" } | { k: "starred" } | { k: "section"; id: string };
 
@@ -198,6 +205,10 @@ function place(p: NavPrefs, id: string, sectionId: string | null, star: boolean)
 
 export function applyOp(p: NavPrefs, o: NavOp): NavPrefs {
   switch (o.op) {
+    case "expressionFavorite":
+      return { ...p, expressionFavorites: o.on ? [...new Set([...(p.expressionFavorites ?? []), o.id])].slice(-100) : (p.expressionFavorites ?? []).filter((id) => id !== o.id) };
+    case "expressionUsed":
+      return { ...p, expressionRecents: [o.id, ...(p.expressionRecents ?? []).filter((id) => id !== o.id)].slice(0, 40) };
     case "place":
       return place(p, o.conversationId, o.sectionId, o.starred);
     case "move":
@@ -229,6 +240,8 @@ export function applyOp(p: NavPrefs, o: NavOp): NavPrefs {
       return { ...p, categoryNotify: o.level === null ? omit(p.categoryNotify ?? {}, o.categoryId) : { ...(p.categoryNotify ?? {}), [o.categoryId]: o.level } };
     case "hide":
       return { ...p, hidden: o.hidden ? [...without(p.hidden ?? [], o.conversationId), o.conversationId] : without(p.hidden ?? [], o.conversationId) };
+    case "communityThemes":
+      return { ...p, communityThemes: o.on };
     case "addSection": {
       const name = o.name.trim().slice(0, SECTION_NAME_MAX);
       if (!name || p.sections.length >= MAX_SECTIONS || p.sections.some((s) => s.id === o.id)) return p;

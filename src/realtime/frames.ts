@@ -1,4 +1,6 @@
 import { type Call, zCall } from "../api/schemas";
+import { withinJsonBudget } from "../api/jsonBudget";
+import type { BotReply } from "../sync/bots";
 
 /**
  * The realtime protocol on /v1/ws (server docs/api/realtime.schema.json), in one place: frames are read from the
@@ -64,7 +66,9 @@ export type ServerFrame =
   /** API 0.28: someone's profile or settings changed (name, status, photo, privacy; for yourself also blocks and more). */
   | { t: "user.updated"; userId: string }
   | { t: "call"; call: Call; event: string | null; extra: { from?: { displayName?: unknown }; reason?: unknown; action?: unknown } }
-  | { t: "queue.drained" };
+  | { t: "queue.drained" }
+  /** API 0.65.0 batch B: a bot's answer to a command you ran, for you only (never stored). */
+  | { t: "interaction.reply"; reply: BotReply };
 
 /** Frame names the engine handles. Others (pong, which the socket answers, org.alert, frames of retired modules such as inbox.* and integration.event, …) are ignored, as the contract asks. */
 export const HANDLED_FRAMES: ReadonlySet<string> = new Set<ServerFrame["t"]>([
@@ -89,6 +93,7 @@ export const HANDLED_FRAMES: ReadonlySet<string> = new Set<ServerFrame["t"]>([
   "user.updated",
   "call",
   "queue.drained",
+  "interaction.reply",
 ]);
 
 /** An id-like string field: present, non-empty and short. */
@@ -98,6 +103,7 @@ export function str(v: unknown): string | null {
 
 /** The frame as the engine acts on it, or null when it's one to ignore: unknown, or missing what it needs. */
 export function parseFrame(f: Frame): ServerFrame | null {
+  if (!withinJsonBudget(f)) return null;
   const t = f.t;
   switch (t) {
     case "hello":
@@ -147,6 +153,15 @@ export function parseFrame(f: Frame): ServerFrame | null {
       return parsed.success
         ? { t, call: parsed.data, event: typeof f.event === "string" ? f.event : null, extra: f as { from?: { displayName?: unknown }; reason?: unknown; action?: unknown } }
         : null;
+    }
+    case "interaction.reply": {
+      const interactionId = str(f.interactionId);
+      const conversationId = str(f.conversationId);
+      const botId = str(f.botId);
+      const command = str(f.command);
+      const content = typeof f.content === "string" ? f.content.slice(0, 4000) : null;
+      if (!interactionId || !conversationId || !botId || !command || !content) return null;
+      return { t, reply: { interactionId, conversationId, botId, command, content, at: typeof f.at === "number" ? f.at : Date.now() } };
     }
     default:
       return null;

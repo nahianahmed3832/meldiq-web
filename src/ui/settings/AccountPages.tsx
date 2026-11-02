@@ -4,6 +4,8 @@ import type { Device } from "../../api/schemas";
 import { useEngine, useOrbit } from "../../application/orbit";
 import { listDevices, revokeDevice, signOut, SignOutUnconfirmed } from "../../sync/account";
 import { BlockedPeople, MessagingSettings, PrivacySettings } from "./PrivacyPage";
+import { LeaveManyCard } from "./PrivacyExtras";
+import { AuthorizedAppsCard } from "./AuthorizedAppsCard";
 import { Dialog } from "../components/Overlay";
 import { relative } from "../format";
 
@@ -126,8 +128,10 @@ export function SecurityPage({ onSignedOut }: { onSignedOut: () => void }) {
         </div>
       </div>
       <MessagingSettings />
+      <LeaveManyCard />
       <PrivacySettings />
       <BlockedPeople />
+      <AuthorizedAppsCard />
       <div className="card" style={{ padding: "16px 18px", display: "grid", gap: 10 }}>
         <strong>Where your data lives</strong>
         <ul className="muted" style={{ margin: 0, paddingLeft: 18, display: "grid", gap: 6, fontSize: 13.5 }}>

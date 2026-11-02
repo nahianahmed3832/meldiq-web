@@ -1,3 +1,7 @@
+import { useMemo } from "react";
+import { ApiClient } from "../../api/client";
+import { socialDeviceProof } from "../../auth/accountApi";
+import { SocialSignIn } from "./SocialSignIn";
 import { type FormEvent, useState } from "react";
 import type { Engine } from "../../sync/engine";
 import { AuthFrame, AuthHeading, FormError, LinkButton } from "./AuthFrame";
@@ -11,6 +15,7 @@ import { ApiError } from "../../api/client";
  * with this browser's device key, starts a new one; messages and keys kept here stay as they are.
  */
 export function ReauthScreen({ engine, onSignOut }: { engine: Engine; onSignOut: () => void }) {
+  const socialApi = useMemo(() => new ApiClient(engine.api.base), [engine]);
   const [password, setPassword] = useState("");
   const { busy, error, setError, run } = useSubmit();
   const t = useT();
@@ -37,6 +42,7 @@ export function ReauthScreen({ engine, onSignOut }: { engine: Engine; onSignOut:
       <form className="auth-form" onSubmit={submit} noValidate>
         <AuthHeading title={t("reauth_title")} sub={t("reauth_sub", { email })} />
         <FormError text={error} />
+        <SocialSignIn api={socialApi} deviceProof={() => socialDeviceProof(engine.api.base, engine.device)} onSignedIn={(g) => engine.signInAgainWithProvider(g)} />
         {otherEmail === null ? (
           <input type="email" autoComplete="username" value={email} readOnly hidden />
         ) : (

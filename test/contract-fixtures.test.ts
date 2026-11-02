@@ -1,9 +1,9 @@
 import fs from "node:fs";
 import path from "node:path";
-import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { describe, expect, it } from "vitest";
 import { z } from "zod";
 import { ApiClient, ApiError } from "../src/api/client";
-import { zQueueItem } from "../src/api/schemas";
+import { zCall, zQueueItem } from "../src/api/schemas";
 import type { Frame } from "../src/realtime/frames";
 import { HANDLED_FRAMES, parseFrame } from "../src/realtime/frames";
 import { type ApiCall, apiCalls, schemaOf } from "./support/apiCalls";
@@ -56,41 +56,57 @@ function routeFor(method: string, template: string): Route | null {
 
 // ───────────────────────── strict: where a .catch() fired ─────────────────────────
 
-type ParseInput = { data: unknown; path: (string | number)[] };
-type CatchDef = { catchValue: (ctx: { error: unknown; input: unknown }) => unknown };
-const caught: string[] = [];
-const catchProto = z.ZodCatch.prototype as unknown as { _parse(input: ParseInput): unknown; _def: CatchDef };
-const original = catchProto._parse;
-
 function pathText(p: (string | number)[]): string {
   return p.map((k) => (typeof k === "number" ? "[]" : `.${k}`)).join("") || "(root)";
 }
 
-/** Runs fn and returns the paths where a .catch() replaced an unexpected value. */
-function catches(fn: () => void): string[] {
-  caught.length = 0;
-  fn();
-  return [...new Set(caught)];
+/** Clone definitions per position, so a reused catch schema still reports the actual property. */
+function traceCatches(schema: z.ZodType, path: (string | number)[], caught: string[]): z.ZodType {
+  const def = schema.def as unknown as Record<string, unknown>;
+  const next = Object.create(Object.getPrototypeOf(def), Object.getOwnPropertyDescriptors(def)) as Record<string, unknown>;
+  const set = (key: string, value: unknown) => Object.defineProperty(next, key, { value, enumerable: true, configurable: true, writable: true });
+  for (const [key, value] of Object.entries(def)) {
+    if (key === "shape") {
+      set(key, Object.fromEntries(Object.entries(value as Record<string, z.ZodType>).map(([name, child]) => [name, traceCatches(child, [...path, name], caught)])));
+    } else if (value instanceof z.ZodType) {
+      const childPath = (def.type === "array" && key === "element") || (def.type === "record" && key === "valueType") ? [...path, 0] : path;
+      set(key, traceCatches(value, childPath, caught));
+    } else if (Array.isArray(value)) {
+      set(
+        key,
+        value.map((child) => (child instanceof z.ZodType ? traceCatches(child, def.type === "tuple" ? [...path, 0] : path, caught) : child)),
+      );
+    }
+  }
+  if (def.type === "catch") {
+    const original = def.catchValue as (ctx: { input: unknown }) => unknown;
+    set("catchValue", (ctx: { input: unknown }) => {
+      caught.push(`${pathText(path)} = ${JSON.stringify(ctx.input)?.slice(0, 40)}`);
+      return original(ctx);
+    });
+  }
+  return schema.clone(next as unknown as typeof schema.def);
 }
 
-beforeAll(() => {
-  catchProto._parse = function (this: { _def: CatchDef }, input: ParseInput) {
-    const def = this._def;
-    const value = def.catchValue;
-    def.catchValue = (ctx) => {
-      caught.push(`${pathText(input.path)} = ${JSON.stringify(ctx.input)?.slice(0, 40)}`);
-      return value(ctx);
-    };
-    try {
-      return original.call(this, input);
-    } finally {
-      def.catchValue = value;
+/** Observe fallback execution without changing the schemas or their acceptance rules. */
+function catches(schemas: z.ZodType | z.ZodType[], fn: () => void): string[] {
+  const caught: string[] = [];
+  const roots = [...new Set(Array.isArray(schemas) ? schemas : [schemas])];
+  const saved = roots.map((schema) => ({ schema, parse: schema.parse, safeParse: schema.safeParse, traced: traceCatches(schema, [], caught) }));
+  try {
+    for (const { schema, traced } of saved) {
+      schema.parse = traced.parse;
+      schema.safeParse = traced.safeParse;
     }
-  };
-});
-afterAll(() => {
-  catchProto._parse = original;
-});
+    fn();
+    return [...new Set(caught)];
+  } finally {
+    for (const { schema, parse, safeParse } of saved) {
+      schema.parse = parse;
+      schema.safeParse = safeParse;
+    }
+  }
+}
 
 // ───────────────────────── the web's calls ─────────────────────────
 
@@ -154,7 +170,16 @@ describe("server contract fixtures (meldiq_android shared/contracts, API " + tab
 
   it("the strict pass notices a value a .catch() replaced", () => {
     const schema = z.object({ items: z.array(z.object({ kind: z.enum(["team", "community"]).catch("team") })) });
-    expect(catches(() => schema.parse({ items: [{ kind: "team" }, { kind: "guild" }] }))).toEqual(['.items[].kind = "guild"']);
+    expect(catches(schema, () => schema.parse({ items: [{ kind: "team" }, { kind: "guild" }] }))).toEqual(['.items[].kind = "guild"']);
+  });
+
+  it("tracks shared fallback schemas independently and restores their parsers", () => {
+    const shared = z.enum(["ok"]).catch("ok");
+    const schema = z.object({ left: shared, right: shared });
+    const original = schema.safeParse;
+    expect(catches(schema, () => schema.parse({ left: "ok", right: "new" }))).toEqual(['.right = "new"']);
+    expect(schema.safeParse).toBe(original);
+    expect(schema.parse({ left: "new", right: "ok" })).toEqual({ left: "ok", right: "ok" });
   });
 
   it("decodes every answer the web reads, frame and error, with the strict findings only where already known", async () => {
@@ -165,7 +190,7 @@ describe("server contract fixtures (meldiq_android shared/contracts, API " + tab
     for (const d of list) {
       const body = readCopy<unknown>(`http/${d.fixture}.json`);
       let ok = true;
-      const found = catches(() => {
+      const found = catches(d.schema, () => {
         const r = d.schema.safeParse(body);
         if (!r.success) {
           ok = false;
@@ -178,7 +203,7 @@ describe("server contract fixtures (meldiq_android shared/contracts, API " + tab
     const ignored: string[] = [];
     for (const name of listCopy("realtime")) {
       const raw = readCopy<Frame>(`realtime/${name}.json`);
-      const found = catches(() => {
+      const found = catches([zCall, zQueueItem], () => {
         const f = parseFrame(raw);
         if (!HANDLED_FRAMES.has(raw.t)) {
           if (f) failures.push(`realtime/${name}: parsed although the engine doesn't handle ${raw.t}`);

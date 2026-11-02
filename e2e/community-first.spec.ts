@@ -27,7 +27,8 @@ test("the mascot, the top bar, Create and Discover replace the old rail entries"
 
   // Activity and Saved for later are in the profile menu (2026-10-28: the user panel keeps microphone, headphones and
   // Settings, as in the reference). Desktop has no top bar to repeat them (the floating redesign's brand strip).
-  const profileButton = page.getByRole("complementary", { name: "Conversations" }).getByRole("button", { name: /Your profile and settings/ });
+  // The floating user panel belongs to the app shell, outside the conversation list.
+  const profileButton = page.getByRole("button", { name: /Your profile and settings/ });
   await expect(page.locator(".topbar")).toBeHidden();
   await profileButton.click();
   await page.getByRole("menuitem", { name: /^Activity/ }).click();

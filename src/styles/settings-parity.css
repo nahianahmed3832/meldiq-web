@@ -1,0 +1,346 @@
+/* Settings parity, batch A (API 0.65.0, docs/MELDIQ_SETTINGS_PARITY.md): the profile theme and the card it tints, the
+   badge by a name, account levels, decoration favourites, leaving several communities, and the points page. */
+
+/* ── profile theme ── */
+.theme-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+.theme-none {
+  height: 36px;
+  padding: 0 14px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-2);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  cursor: pointer;
+}
+.theme-none[aria-pressed="true"],
+.theme-preset[aria-pressed="true"] {
+  border-color: var(--accent);
+  color: var(--text);
+  box-shadow: 0 0 0 2px var(--accent-soft);
+}
+.theme-color {
+  display: inline-grid;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 1px solid var(--border-strong);
+  cursor: pointer;
+}
+.theme-color input {
+  width: 56px;
+  height: 56px;
+  margin: -10px;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+.theme-sample {
+  width: 72px;
+  height: 28px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--border);
+}
+.theme-presets {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(92px, 1fr));
+  gap: 8px;
+}
+.theme-preset {
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  padding: 8px 6px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-2);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  cursor: pointer;
+}
+.theme-preset:hover,
+.theme-none:hover {
+  background: var(--surface-hover);
+}
+.theme-preset-swatch {
+  width: 100%;
+  height: 26px;
+  border-radius: var(--r-sm);
+}
+
+/* A themed profile card: its colours, soft, behind the whole card (the banner shows them in full). */
+.profile-pop.themed {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--theme-a) 26%, var(--surface-sunken)) 0%, color-mix(in srgb, var(--theme-b) 16%, var(--surface-sunken)) 100%);
+}
+
+/* ── the badge by a name, and levels ── */
+.name-badge {
+  display: inline-grid;
+  place-items: center;
+  margin-left: 4px;
+  font-size: 0.85em;
+  line-height: 1;
+  flex: none;
+}
+.level-ring {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+}
+.level-ring svg {
+  position: absolute;
+  inset: 0;
+}
+.level-ring-number {
+  position: relative;
+  font-weight: 800;
+  line-height: 1;
+}
+.profile-level {
+  margin-left: 8px;
+}
+
+/* ── decoration favourites ── */
+.deco-tile {
+  position: relative;
+  display: grid;
+  min-width: 0;
+}
+.deco-tile > .deco-choice {
+  width: 100%;
+}
+.deco-star {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 0;
+  background: var(--surface-raised);
+  color: var(--text-3);
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 120ms var(--ease);
+}
+.deco-tile:hover .deco-star,
+.deco-star:focus-visible,
+.deco-star[aria-pressed="true"] {
+  opacity: 1;
+}
+.deco-star[aria-pressed="true"] {
+  color: var(--warning);
+}
+@media (hover: none) {
+  .deco-star {
+    opacity: 1;
+  }
+}
+
+/* ── leave several communities ── */
+.leave-many-list {
+  display: grid;
+  gap: 2px;
+  max-height: min(50vh, 420px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  overflow-y: auto;
+}
+.leave-many-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px;
+  border-radius: var(--r-md);
+  cursor: pointer;
+  min-width: 0;
+}
+.leave-many-row:hover {
+  background: var(--surface-hover);
+}
+.leave-many-row.owned {
+  cursor: default;
+  opacity: 0.7;
+}
+.leave-many-confirm {
+  margin: 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 4px;
+}
+
+/* ── points ── */
+.points {
+  display: grid;
+  gap: 16px;
+}
+.points-top {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+  gap: 16px;
+}
+.points-card {
+  display: grid;
+  gap: 10px;
+  padding: 18px 20px;
+  align-content: start;
+}
+.points-card-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.points-card-head h3 {
+  margin: 0;
+  font-size: var(--fs-md);
+}
+.points-balance .settings-label {
+  margin: 0;
+}
+.points-number {
+  font-size: var(--fs-3xl);
+  font-weight: 800;
+  line-height: 1.1;
+}
+.points-level {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.points-level .lines {
+  display: grid;
+  gap: 2px;
+  min-width: 160px;
+}
+.quests,
+.earn-ways,
+.points-history {
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.quest {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+}
+.quest .lines {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+.quest-reward {
+  min-width: 44px;
+  padding: 4px 8px;
+  border-radius: var(--r-pill);
+  background: var(--accent-soft);
+  color: var(--accent-text);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  text-align: center;
+}
+.quest-bar {
+  display: block;
+  height: 6px;
+  border-radius: var(--r-pill);
+  background: var(--surface-sunken);
+  overflow: hidden;
+}
+.quest-bar > span {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+}
+.quest-state {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 56px;
+  justify-content: flex-end;
+  color: var(--text-2);
+  font-size: var(--fs-sm);
+}
+.quest.done .quest-state {
+  color: var(--success);
+}
+.quest.done .quest-bar > span {
+  background: var(--success);
+}
+.earn-way {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 8px 0;
+}
+.earn-way .lines {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+.earn-icon {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--r-md);
+  background: var(--accent-soft);
+  color: var(--accent-text);
+  flex: none;
+}
+.streak-track {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.streak-day {
+  width: 14px;
+  height: 6px;
+  border-radius: var(--r-pill);
+  background: var(--surface-sunken);
+}
+.streak-day.on {
+  background: var(--warning);
+}
+.streak-track > span:last-child {
+  margin-left: 6px;
+}
+.points-history li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 0;
+  border-top: 1px solid var(--hairline);
+  min-width: 0;
+}
+.points-history li:first-child {
+  border-top: 0;
+}
+.points-history .earned {
+  color: var(--success);
+}
+.points-history .spent {
+  color: var(--text-2);
+}
+@media (max-width: 760px) {
+  .points-top {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

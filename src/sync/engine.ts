@@ -1,4 +1,7 @@
 import { z } from "zod";
+import { zMessageCollection, type CollectionCursor, type CollectionKind } from "../api/messageCollections";
+import type { MessageCollectionPage } from "./messageCollections";
+import { clearExpressionCache } from "./expressions";
 import { ApiClient, ApiError } from "../api/client";
 import type { AccountSessionGrant } from "../api/accountSchemas";
 import {
@@ -7,6 +10,7 @@ import {
   type Member,
   type Org,
   type ServerInfo,
+  type ServerHistoryPage,
   type SessionGrant,
   zConversation,
   zMember,
@@ -31,6 +35,7 @@ import { encodePayload, type Payload } from "../protocol/payload";
 import { RealtimeClient } from "../realtime/socket";
 import type { CallPrefs } from "../call/manager";
 import { type AppState, initialState, Store, type UserLite, upsertLoaded, withMessages } from "../state/store";
+import { SnapshotKeeper, SnapshotVault, withSnapshot } from "./snapshot";
 import type { LocalStore } from "../store/db";
 import type { EngineContext } from "./context";
 import { Directory } from "./directory";
@@ -43,7 +48,8 @@ import type { HistoryBackupState } from "../state/store";
 import { Outbox, sealAndPost } from "./outbox";
 import { levelOf, type NavOp, NavSync, PERSONAL, shouldNotify, workspaceOf } from "./navPrefs";
 import { firstShowing, ReminderSync } from "./reminders";
-import { callFrame, orgDeletedFrame, presenceFrame, typingFrame } from "./frameReducers";
+import { botReplyFrame, callFrame, dismissBotReply, orgDeletedFrame, presenceFrame, typingFrame } from "./frameReducers";
+import { pointsCheckin } from "./points";
 import { type Frame, parseFrame } from "../realtime/frames";
 import { meetingSoon } from "./workspaceC5";
 import type { Reminder } from "./reminderRules";
@@ -80,6 +86,8 @@ export interface EngineOptions {
   ringtone?: { start(): void; stop(): void };
   /** A system notification for a ringing call while the tab isn't looked at. */
   ringAlert?: (title: string, video: boolean, conversationId: string) => void;
+  /** How long an action on a snapshot message waits for the server's page (LIVE_WAIT_MS; shorter in tests). */
+  liveWaitMs?: number;
   /** Call timing for tests. */
   callTiming?: { keyWaitMs?: number; peerWindowMs?: number; rejoinWindowMs?: number };
   /** Settings › Calls (batches B10, B11): noise reduction, and how this browser shares its screen. */
@@ -87,6 +95,12 @@ export interface EngineOptions {
 }
 
 const PAGE = 60;
+/** How long an action on a snapshot message waits for its conversation's first server page (live()). */
+export const LIVE_WAIT_MS = 5000;
+/** Waits shorter than this show nothing; longer ones mark the message as waiting. */
+export const PENDING_AFTER_MS = 300;
+export const MESSAGE_CHANGED = "That message changed, try again.";
+export const UNREACHABLE = "Couldn't reach Meldiq. Try again in a moment.";
 /** GET /v2/messages/search (API 0.57.0). */
 const zSearchRes = z.object({ messages: z.array(zStoredEvent) });
 /** GET /v2/messages/summary (API 0.57.0). */
@@ -100,7 +114,7 @@ const CACHE_KEY = "cache.meta";
 
 /**
  * One linked browser's connection to its account: realtime delivery, the outbox, history restore and the state the
- * interface draws. The server stays the source of truth for everything except message content, which only devices can read.
+ * interface draws. Current message history, membership and entitlements are server-owned; private device keys stay here.
  *
  * Size (about 870 lines, over the usual 800): this is the composition root that wires every sync piece to one state
  * tree. The pieces themselves live beside it (compose, locals, callLog, navPrefs, reminders, frameReducers, receiver,
@@ -137,7 +151,15 @@ export class Engine implements EngineContext {
   private uploader: HistoryUploader | null = null;
   private readTimers = new Map<string, ReturnType<typeof setTimeout>>();
   /** Per conversation: the oldest server time loaded from its history, and whether older messages remain. */
-  private readonly serverPages = new Map<string, { oldest: number | null; more: boolean }>();
+  private readonly serverPages = new Map<string, { oldest: number | null; more: boolean; nextCursor?: ServerHistoryPage["nextCursor"] }>();
+  private readonly olderLoads = new Map<string, Promise<void>>();
+  private readonly windowVersions = new Map<string, number>();
+  private openVersion = 0;
+  private readingLatest = false;
+  private viewReady = false;
+  private summariesLoaded = false;
+  private summaryLoad: Promise<void> | null = null;
+  private readonly threadCountLoads = new Map<string, Promise<void>>();
   private lastReadSent = new Map<string, number>();
   private convFetches = new Map<string, Promise<Conversation | null>>();
   private userFetches = new Map<string, Promise<void>>();
@@ -163,6 +185,7 @@ export class Engine implements EngineContext {
       ? new AccountSession(opts.base, new TokenVault(store), (why) => this.accountSessionEnded(why))
       : new SessionManager(opts.base, device, (reason) => this.revoked(reason));
     this.api = new ApiClient(opts.base, this.session);
+    this.snapshots = new SnapshotKeeper(new SnapshotVault(store, device.userId), this.state);
     this.directory = new Directory(this.api, store, device, (pin) => this.identityChanged(pin));
     this.receiver = new Receiver(this);
     this.outbox = new Outbox(
@@ -268,31 +291,39 @@ export class Engine implements EngineContext {
 
   // ───────────────────────── lifecycle ─────────────────────────
 
+  /** Set by open(), taken by start(). */
+  private opened: Promise<void> | null = null;
+  /** The app as it was last time, kept sealed on this computer (sync/snapshot.ts). */
+  readonly snapshots: SnapshotKeeper;
+
+  /**
+   * This browser's device and what this page already holds, before any network: the app's frame is drawn on it at once
+   * (skeletons where the server's data goes), so a reload or a return opens like an app rather than a website loading.
+   * Nothing else is shown until start() signs in and the server answers.
+   */
+  open(): Promise<void> {
+    this.opened ??= this.openLocal();
+    return this.opened;
+  }
+
   /**
    * Starts with a session just granted (linking, signing in), or else signs in again by itself: the stored account session,
    * or the device key. Works offline from local data.
    */
   async start(grant?: SessionGrant | AccountSessionGrant): Promise<void> {
     this.stopped = false;
+    this.checkedIn = false;
     if (grant) await this.adopt(grant);
-    const me = {
-      userId: this.device.userId,
-      deviceId: this.device.deviceId,
-      username: this.device.username,
-      displayName: this.device.username,
-      identityKey: this.device.identityKey,
-      avatarColor: 0,
-      statusText: null,
-      deviceFingerprint: await fingerprint(this.device.keys.signingPublic),
-      deviceName: this.device.deviceName,
-    };
-    await this.loadLocal();
-    this.set((s) => ({ ...s, phase: "ready", me: { ...me, ...(s.me ?? {}) } }));
+    // Opened already (App draws the frame on local data first): not read twice.
+    const opened = this.opened;
+    this.opened = null;
+    await (opened ?? this.openLocal());
     if (!grant && !(await this.session.reauthenticate())) {
       const phase = this.state.get().phase;
       if (phase === "revoked" || phase === "reauth") return;
     }
     this.realtime.start();
+    this.snapshots.start();
     void this.refreshAll().then(async () => {
       void this.mojo.refresh();
       await this.signals.refresh();
@@ -306,12 +337,128 @@ export class Engine implements EngineContext {
       .catch(() => undefined);
   }
 
+  private async openLocal(): Promise<void> {
+    const me = {
+      userId: this.device.userId,
+      deviceId: this.device.deviceId,
+      username: this.device.username,
+      displayName: this.device.username,
+      identityKey: this.device.identityKey,
+      avatarColor: 0,
+      statusText: null,
+      deviceFingerprint: await fingerprint(this.device.keys.signingPublic),
+      deviceName: this.device.deviceName,
+    };
+    await this.loadLocal();
+    await this.drawSnapshot();
+    this.set((s) => ({ ...s, phase: "ready", me: { ...me, ...(s.me ?? {}) } }));
+  }
+
+  /**
+   * The app as it was last time (sync/snapshot.ts), drawn before any network; the server's answers replace it as they
+   * come. Only while this browser's session can carry on by itself: one that needs the password draws nothing.
+   */
+  private async drawSnapshot(): Promise<void> {
+    try {
+      if (this.session instanceof AccountSession && !(await this.session.restorable())) return;
+      const d = await this.snapshots.restore();
+      if (!d) return;
+      for (const l of d.local) if (!(await this.store.conversation(l.id))) await this.store.putConversation(l);
+      const drawn = Object.keys(d.messages).filter((id) => !this.state.get().messages[id]);
+      this.set((s) => withSnapshot(s, d));
+      for (const id of drawn) this.fromSnapshot.add(id);
+    } catch {
+      /* nothing kept, or unreadable: the server's answers draw everything, as on a first visit */
+    }
+  }
+
+  /** Whether this session counted today's visit for points (API 0.65.0). */
+  private checkedIn = false;
+
+  /** Conversations whose messages on screen are still the snapshot's: their first server page hasn't replaced them. */
+  private readonly fromSnapshot = new Set<string>();
+  /** Each conversation's first server page while it loads (one load, however many ask). */
+  private readonly firstPages = new Map<string, Promise<ServerHistoryPage | null>>();
+
+  /**
+   * The conversation's newest page from the server; null if unavailable. A conversation drawn from the snapshot then shows
+   * the server's messages instead, and actions on its messages run against them (live()).
+   */
+  private firstPage(id: string): Promise<ServerHistoryPage | null> {
+    const key = `${id}:${this.windowVersions.get(id) ?? 0}`;
+    let p = this.firstPages.get(key);
+    if (!p) {
+      const version = this.windowVersions.get(id);
+      p = this.fetchHistory(id, null)
+        .then(async (page) => {
+          if (version === this.windowVersions.get(id) && this.fromSnapshot.has(id)) {
+            const items = await this.store.latestMessages(id, PAGE);
+            if (version !== this.windowVersions.get(id)) return page;
+            this.set((s) => withMessages(s, id, items, this.serverPages.get(id)?.more ?? items.length === PAGE));
+            this.fromSnapshot.delete(id);
+          }
+          return page;
+        })
+        .catch(() => null)
+        .finally(() => this.firstPages.delete(key));
+      this.firstPages.set(key, p);
+    }
+    return p;
+  }
+
+  /** Whether [m] is one of the snapshot's, waiting for its conversation's first server page (sync check, for the UI). */
+  waitsForServer(m: Pick<StoredMessage, "conversationId">): boolean {
+    return this.fromSnapshot.has(m.conversationId);
+  }
+
+  /**
+   * The message an action runs against (2026-10-30, the owner: actions on snapshot messages must never fail without a
+   * word): at once for one the server has sent; for one drawn from the snapshot, once its conversation's first page is
+   * in (at most LIVE_WAIT_MS), as the server has it. After PENDING_AFTER_MS the message shows as waiting. Throws, with
+   * what to tell the person, when it can't run: the message is gone from the server's page, or the server can't be reached.
+   */
+  async live(m: StoredMessage): Promise<StoredMessage> {
+    if (!this.fromSnapshot.has(m.conversationId)) return m;
+    const pending = setTimeout(() => this.set((s) => ({ ...s, waiting: { ...s.waiting, [m.id]: true } })), PENDING_AFTER_MS);
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    try {
+      const timeout = new Promise<false>((r) => (timer = setTimeout(() => r(false), this.opts.liveWaitMs ?? LIVE_WAIT_MS)));
+      const arrived = await Promise.race([this.firstPage(m.conversationId), timeout]);
+      if (!arrived) throw new Error(UNREACHABLE);
+      const fresh = await this.store.message(m.id);
+      if (!fresh) throw new Error(MESSAGE_CHANGED);
+      return fresh;
+    } finally {
+      clearTimeout(pending);
+      clearTimeout(timer);
+      if (this.state.get().waiting[m.id]) this.set((s) => ({ ...s, waiting: Object.fromEntries(Object.entries(s.waiting).filter(([k]) => k !== m.id)) }));
+    }
+  }
+
+  /** live(), saying why when it can't (a notice), for actions the UI runs itself: null then. */
+  async whenLive(m: StoredMessage): Promise<StoredMessage | null> {
+    try {
+      return await this.live(m);
+    } catch (e) {
+      this.notice("error", e instanceof Error ? e.message : UNREACHABLE);
+      return null;
+    }
+  }
+
+  /** Runs [action] on the message as the server has it (whenLive). */
+  private async onLive(m: StoredMessage, action: (live: StoredMessage) => Promise<void>): Promise<void> {
+    const live = await this.whenLive(m);
+    if (live) await action(live);
+  }
+
   private readonly flushSignalsWhenHidden = () => {
     if (document.visibilityState === "hidden") void this.signals.flush();
   };
 
   stop(): void {
+    clearExpressionCache(this);
     this.stopped = true;
+    this.snapshots.stop();
     this.uploader?.stop();
     if (typeof document !== "undefined") document.removeEventListener("visibilitychange", this.flushSignalsWhenHidden);
     this.calls.stop();
@@ -339,6 +486,10 @@ export class Engine implements EngineContext {
   /** Arranges a conversation on Home (starred, a section, its notification level) in its workspace's synced document. */
   arrange(conversationId: string, op: NavOp): Promise<void> {
     return this.nav.change(workspaceOf(this.state.get().conversations[conversationId]?.orgId ?? null), op);
+  }
+
+  expressionPreference(op: Extract<NavOp, { op: "expressionFavorite" | "expressionUsed" }>): Promise<void> {
+    return this.nav.change(PERSONAL, op);
   }
 
   /** Saved for later (android Home › Later): kept in the personal document, so every device of the person shows it. */
@@ -423,6 +574,19 @@ export class Engine implements EngineContext {
     this.outbox.kick();
   }
 
+  /** A verified provider session must prove this exact account and device before unlocking its local messages. */
+  async signInAgainWithProvider(grant: AccountSessionGrant): Promise<void> {
+    if (!(this.session instanceof AccountSession) || grant.account.id !== this.record.account?.id || grant.session.deviceId !== this.record.deviceId)
+      throw new Error("Sign in with the Meldiq account that owns this browser's messages.");
+    await this.session.adopt(grant);
+    await this.accountEmailChanged(grant.account.email);
+    this.set((s) => ({ ...s, phase: "ready", phaseReason: null }));
+    this.stopped = false;
+    this.realtime.start();
+    void this.refreshAll();
+    this.outbox.kick();
+  }
+
   /** The account's email changed here (Settings › My Account, API 0.46.0): sign-ins from now on use the new address. */
   async accountEmailChanged(email: string): Promise<void> {
     const account = this.record.account;
@@ -439,12 +603,12 @@ export class Engine implements EngineContext {
   }
 
   private async loadLocal(): Promise<void> {
-    const locals = await this.store.conversations();
-    // The server's last known features come back with the rest (brief v4 §15): the first paint lays communities out as
-    // the server does (categories, saved order), not in the older workspace layout until server-info answers.
-    const cache = await this.store.getValue<{ orgs: Org[]; conversations: Conversation[]; users: UserLite[]; server?: ServerInfo | null }>(CACHE_KEY);
-    const pins = await this.store.changedPins();
-    const callLog = await this.callLog.load();
+    const [locals, cache, pins, callLog] = await Promise.all([
+      this.store.conversations(),
+      this.store.getValue<{ orgs: Org[]; conversations: Conversation[]; users: UserLite[]; server?: ServerInfo | null }>(CACHE_KEY),
+      this.store.changedPins(),
+      this.callLog.load(),
+    ]);
     this.set((s) => ({
       ...s,
       callLog,
@@ -480,8 +644,18 @@ export class Engine implements EngineContext {
     this.set((s) => ({ ...s, profilesRev: s.profilesRev + 1 }));
   }
 
+  private refreshLoad: Promise<void> | null = null;
+
+  /** Startup and the socket's hello share one metadata refresh instead of fetching every list twice. */
+  refreshAll(): Promise<void> {
+    this.refreshLoad ??= this.refreshMetadata().finally(() => {
+      this.refreshLoad = null;
+    });
+    return this.refreshLoad;
+  }
+
   /** Server info, profile, workspaces and conversations: on start and after every reconnect (what changed while away). */
-  async refreshAll(): Promise<void> {
+  private async refreshMetadata(): Promise<void> {
     try {
       const [server, meRes, orgs, convs] = await Promise.all([
         this.api.json("GET", "/v1/server-info", zServerInfo, { auth: false }),
@@ -490,6 +664,8 @@ export class Engine implements EngineContext {
         this.api.json("GET", "/v1/conversations", zConversations),
       ]);
       const u = meRes.user;
+      const memberships = new Set(orgs.orgs.map((o) => o.id));
+      if (this.state.get().orgs.some((o) => !memberships.has(o.id))) clearExpressionCache(this);
       this.set((s) => {
         const users = { ...s.users };
         for (const c of convs.conversations) for (const m of c.members ?? []) users[m.id] = toUser(m, users[m.id]);
@@ -552,6 +728,12 @@ export class Engine implements EngineContext {
       void this.nav.refresh([PERSONAL, ...orgs.orgs.map((o) => o.id)]);
       void this.reminders.refresh();
       void this.syncSummaries();
+      // API 0.65.0: today's visit counts for points once a session opens (after the first load that gets through, so a
+      // session that signs in again first still counts); a failure never stands in the way of anything.
+      if (!this.checkedIn && server.features.includes("points")) {
+        this.checkedIn = true;
+        void pointsCheckin(this).catch(() => undefined);
+      }
     } catch (e) {
       if (!(e instanceof ApiError && e.isNetwork)) this.notice("error", e instanceof ApiError ? e.message : "Couldn't load your conversations.");
     }
@@ -675,6 +857,7 @@ export class Engine implements EngineContext {
         await this.nav.refresh([f.workspaceId]);
         return;
       case "org.deleted":
+        clearExpressionCache(this);
         this.set((s) => orgDeletedFrame(s, f.orgId));
         this.community.forget(f.orgId);
         return;
@@ -695,13 +878,21 @@ export class Engine implements EngineContext {
         // The backlog, and with it any call key, has arrived: look for calls that rang while this browser was away.
         void this.calls.recoverRinging();
         return;
+      case "interaction.reply":
+        this.set((s) => botReplyFrame(s, f.reply));
+        return;
     }
+  }
+
+  /** Takes a bot's answer that only you saw off its conversation (API 0.65.0 batch B). */
+  dismissBotReply(conversationId: string, interactionId: string): void {
+    this.set((s) => dismissBotReply(s, conversationId, interactionId));
   }
 
   // ───────────────────────── EngineContext ─────────────────────────
 
   viewing(): string | null {
-    return this.focused ? this.viewingId : null;
+    return this.focused && this.readingLatest ? this.viewingId : null;
   }
 
   async ensureConversation(id: string): Promise<Conversation | null> {
@@ -760,6 +951,8 @@ export class Engine implements EngineContext {
                 photoRev: u.photoRev,
                 presence: u.presence,
                 pronouns: u.pronouns,
+                // A bot that isn't in any list this browser loaded (an official bot posting in a channel) keeps its BOT tag.
+                bot: u.bot,
               },
             },
           })),
@@ -825,15 +1018,20 @@ export class Engine implements EngineContext {
   }
 
   /** A conversation's unsent text, kept with this browser's other local data (never in localStorage). */
-  saveDraft(conversationId: string, text: string): Promise<void> {
-    return this.locals.saveDraft(conversationId, text);
+  async saveDraft(conversationId: string, text: string): Promise<void> {
+    await this.locals.saveDraft(conversationId, text);
+    // Locals are an in-memory working set. Drafts must reach the existing sealed snapshot before a reload.
+    await this.snapshots.flush();
   }
 
   markReadSoon(conversationId: string): void {
     clearTimeout(this.readTimers.get(conversationId));
     this.readTimers.set(
       conversationId,
-      setTimeout(() => void this.markRead(conversationId), 400),
+      setTimeout(() => {
+        this.readTimers.delete(conversationId);
+        if (this.viewing() === conversationId) void this.markRead(conversationId);
+      }, 400),
     );
   }
 
@@ -843,7 +1041,7 @@ export class Engine implements EngineContext {
    * "none" (muted) only a mention of them by name.
    */
   notifyIncoming(m: StoredMessage, conversation: Conversation | null, mention: "me" | "all" | null): void {
-    if (!this.opts.notify) return;
+    if (!this.opts.notify || (this.focused && this.viewingId === m.conversationId)) return;
     // Batch B6: a message request arrives without a notification (it waits under DMs › Message requests).
     if (conversation?.request?.incoming) return;
     const st = this.state.get();
@@ -895,53 +1093,189 @@ export class Engine implements EngineContext {
    * Each conversation's newest message, read position and unread counts, from the server (API 0.57.0): the list after a
    * page load or a reconnect, when this browser keeps nothing between visits.
    */
-  async syncSummaries(): Promise<void> {
+  syncSummaries(): Promise<void> {
+    this.summaryLoad ??= this.fetchSummaries().finally(() => {
+      this.summaryLoad = null;
+    });
+    return this.summaryLoad;
+  }
+
+  private async fetchSummaries(): Promise<void> {
     const res = await this.api.json("GET", "/v2/messages/summary", zSummary).catch(() => null);
-    if (!res) return;
+    if (!res) {
+      this.summariesLoaded = true;
+      return;
+    }
     for (const c of res.conversations) {
       if (c.last) await this.receiver.ingest(c.last, 0, { history: true });
       await this.locals.update(c.conversationId, (l) => ({
         ...l,
         readUpTo: Math.max(l.readUpTo, c.readUpTo),
-        unread: this.viewingId === c.conversationId ? 0 : c.unread,
-        mentions: this.viewingId === c.conversationId ? 0 : c.mentions,
+        unread: this.viewing() === c.conversationId ? 0 : c.unread,
+        mentions: this.viewing() === c.conversationId ? 0 : c.mentions,
       }));
       await this.refreshPreview(c.conversationId);
     }
+    this.summariesLoaded = true;
   }
 
   /**
    * One page of a conversation's history from the server, older than [before] (null: the newest): its messages oldest
    * first, then the changes to them, applied as live ones are. Remembers whether older ones remain.
    */
-  private async fetchHistory(id: string, before: number | null, around?: string): Promise<void> {
+  private async fetchHistory(id: string, before: number | null, around?: string, beforeId?: string): Promise<ServerHistoryPage> {
+    const version = this.windowVersions.get(id);
     const q = new URLSearchParams({ limit: String(PAGE) });
-    if (before) q.set("before", String(before));
+    if (before !== null) q.set("before", String(before));
+    if (beforeId) q.set("beforeId", beforeId);
     if (around) q.set("around", around);
-    const page = await this.api.json("GET", `/v2/conversations/${encodeURIComponent(id)}/messages?${q}`, zServerHistoryPage);
+    const main = !around && this.state.get().server?.features.includes("message-collections");
+    if (main) q.set("kind", "main");
+    // Older around-window responses can omit nextCursor; collection requests still require a paired boundary.
+    if (main && before !== null && !beforeId) q.set("beforeId", this.state.get().messages[id]?.items[0]?.id ?? "");
+    // Thread traffic must not consume the main timeline's page. Around windows retain legacy message-link context.
+    const page = main
+      ? await this.api.json("GET", `/v2/conversations/${encodeURIComponent(id)}/message-collections?${q}`, zMessageCollection)
+      : await this.api.json("GET", `/v2/conversations/${encodeURIComponent(id)}/messages?${q}`, zServerHistoryPage);
+    if (around && !page.messages.some((m) => m.id === around)) throw new Error("That message is no longer available.");
     for (const e of [...page.messages].reverse()) await this.receiver.ingest(e, 0, { history: true });
     for (const e of page.changes) await this.receiver.ingest(e, 0, { history: true });
-    const oldest = page.messages.at(-1)?.serverTs ?? null;
-    const prev = this.serverPages.get(id);
-    this.serverPages.set(id, { oldest: prev?.oldest != null && oldest != null ? Math.min(prev.oldest, oldest) : (oldest ?? prev?.oldest ?? null), more: around ? (prev?.more ?? true) : page.more });
+    if (version === this.windowVersions.get(id)) {
+      const prev = before !== null ? this.serverPages.get(id) : undefined;
+      this.serverPages.set(id, { oldest: page.messages.at(-1)?.serverTs ?? prev?.oldest ?? null, more: page.more, nextCursor: page.nextCursor });
+    }
+    // Hydrate visible history authors together; text rendering never waits on a profile waterfall.
+    void Promise.all([...new Set(page.messages.map((m) => m.senderUserId))].map((userId) => this.ensureUser(userId).catch(() => undefined)));
+    return page;
   }
 
-  /** The conversation now on screen (null: none). Loads its newest messages from the server and marks it read. */
+  /** Loads the selected conversation. Read receipts wait until its latest messages are actually in view. */
   async openConversation(id: string | null): Promise<void> {
+    const opening = ++this.openVersion;
     this.viewingId = id;
+    this.readingLatest = false;
+    this.viewReady = false;
     if (!id) return;
-    if (!this.serverPages.has(id)) await this.fetchHistory(id, null).catch(() => undefined);
-    const items = await this.store.latestMessages(id, PAGE);
-    this.set((s) => withMessages(s, id, items, this.serverPages.get(id)?.more ?? items.length === PAGE));
-    await this.markRead(id);
+    const version = (this.windowVersions.get(id) ?? 0) + 1;
+    this.windowVersions.set(id, version);
+    this.snapshots.opened(id);
+    // Each entry owns a fresh newest window. Cached/search windows cannot initialize its viewport.
+    this.set((s) => ({
+      ...s,
+      messages: {
+        ...s.messages,
+        [id]: {
+          ...s.messages[id],
+          items: s.messages[id]?.items ?? [],
+          hasMore: false,
+          opening,
+          historyReady: false,
+          preview: this.fromSnapshot.has(id) && !!s.messages[id]?.items.length,
+          detached: false,
+        },
+      },
+    }));
+    // Fetch the selected chat alongside summaries, not after every sidebar preview is populated.
+    const newestPage = this.firstPage(id);
+    // Read markers must arrive before the fresh rendered window can be acknowledged.
+    if (!this.summariesLoaded) await this.syncSummaries();
+    if (opening !== this.openVersion || version !== this.windowVersions.get(id)) return;
+    const boundary = this.state.get().local[id];
+    const unreadAfter = boundary?.unread ? boundary.readUpTo : null;
+    const page = await newestPage;
+    if (opening !== this.openVersion || version !== this.windowVersions.get(id)) return;
+    // Offline returns keep their saved messages and server-confirmation guard until a page actually arrives.
+    if (!page && this.fromSnapshot.has(id)) return;
+    const cached = await this.store.latestMessages(id, PAGE);
+    const received = page ? await Promise.all(page.messages.map((m) => this.store.message(m.id))) : [];
+    if (opening !== this.openVersion || version !== this.windowVersions.get(id)) return;
+    const newest = page?.messages[0];
+    const newer = (m: StoredMessage) => !newest || m.sortTs > newest.serverTs || (m.sortTs === newest.serverTs && m.id > newest.id);
+    const items = page ? [...received.filter((m): m is StoredMessage => !!m), ...cached.filter(newer)] : cached;
+    this.fromSnapshot.delete(id);
+    this.viewReady = true;
+    this.set((s) => {
+      const known = new Set(items.map((m) => m.id));
+      const arrivals = page ? (s.messages[id]?.items.filter((m) => newer(m) && !known.has(m.id)) ?? []) : [];
+      const next = withMessages(s, id, [...items, ...arrivals], page?.more ?? items.length === PAGE);
+      return {
+        ...next,
+        messages: {
+          ...next.messages,
+          [id]: {
+            ...next.messages[id]!,
+            opening,
+            unreadAfter,
+            detached: false,
+            historyReady: true,
+            preview: false,
+          },
+        },
+      };
+    });
     void this.syncCalls(id);
   }
 
-  /** Loads the messages around [messageId] from the server (a link or a search result in history not loaded yet). */
+  /** Wait for a fresh page before deciding a snapshot's saved anchor needs a distant history window. */
+  async restoreReadingAnchor(id: string, messageId: string): Promise<void> {
+    await this.firstPage(id);
+    if (this.viewingId !== id) return;
+    if (this.state.get().messages[id]?.items.some((m) => m.id === messageId)) return;
+    const latest = await this.store.latestMessages(id, PAGE);
+    if (this.viewingId !== id) return;
+    if (latest.some((m) => m.id === messageId)) {
+      this.set((s) => withMessages(s, id, latest, this.serverPages.get(id)?.more ?? true));
+      return;
+    }
+    await this.loadAround(id, messageId);
+  }
+
+  /** A distant result replaces the active window; unrelated cached history never fills its middle with a gap. */
   async loadAround(id: string, messageId: string): Promise<void> {
-    await this.fetchHistory(id, null, messageId);
-    const items = await this.store.latestMessages(id, Number.MAX_SAFE_INTEGER);
-    this.set((s) => withMessages(s, id, items, this.serverPages.get(id)?.more ?? false));
+    const version = (this.windowVersions.get(id) ?? 0) + 1;
+    this.windowVersions.set(id, version);
+    this.readingLatest = false;
+    const page = await this.fetchHistory(id, null, messageId);
+    if (version !== this.windowVersions.get(id)) return;
+    const messages = await Promise.all(page.messages.map((m) => this.store.message(m.id)));
+    if (version !== this.windowVersions.get(id)) return;
+    const items = messages.filter((m): m is StoredMessage => !!m);
+    if (!items.some((m) => m.id === messageId)) throw new Error("That message is no longer available.");
+    this.fromSnapshot.delete(id);
+    this.set((s) => {
+      const next = withMessages(s, id, items, page.more);
+      return { ...next, messages: { ...next.messages, [id]: { ...next.messages[id]!, detached: true, historyReady: true } } };
+    });
+  }
+
+  /** Explicitly returns from a search/older window to the server's newest contiguous page. */
+  async loadLatest(id: string): Promise<void> {
+    const version = (this.windowVersions.get(id) ?? 0) + 1;
+    this.windowVersions.set(id, version);
+    const page = await this.fetchHistory(id, null);
+    if (version !== this.windowVersions.get(id)) return;
+    const messages = await Promise.all(page.messages.map((m) => this.store.message(m.id)));
+    if (version !== this.windowVersions.get(id)) return;
+    const items = messages.filter((m): m is StoredMessage => !!m);
+    // Keep messages delivered while the request was in flight, too.
+    const latest = await this.store.latestMessages(id, PAGE);
+    if (version !== this.windowVersions.get(id)) return;
+    this.fromSnapshot.delete(id);
+    if (this.viewingId === id) this.viewReady = true;
+    const newest = page.messages[0];
+    const newer = (m: StoredMessage) => !newest || m.sortTs > newest.serverTs || (m.sortTs === newest.serverTs && m.id > newest.id);
+    this.set((s) => {
+      const known = new Set(items.map((m) => m.id));
+      const arrivals = s.messages[id]?.items.filter((m) => newer(m) && !known.has(m.id)) ?? [];
+      const next = withMessages(s, id, [...items, ...latest.filter(newer), ...arrivals], page.more);
+      return { ...next, messages: { ...next.messages, [id]: { ...next.messages[id]!, detached: false, historyReady: true } } };
+    });
+  }
+
+  setReadingLatest(id: string, latest: boolean): void {
+    if (this.viewingId !== id || !this.viewReady) return;
+    this.readingLatest = latest && !this.state.get().messages[id]?.detached;
+    if (this.viewing() === id && !this.waitsForServer({ conversationId: id })) this.markReadSoon(id);
   }
 
   /** The conversation's calls from the server's record (catches up calls that ended while this browser was away). */
@@ -951,18 +1285,36 @@ export class Engine implements EngineContext {
 
   setFocused(focused: boolean): void {
     this.focused = focused;
-    if (focused && this.viewingId) this.markReadSoon(this.viewingId);
+    if (focused && this.viewing()) this.markReadSoon(this.viewingId!);
   }
 
-  async loadOlder(id: string): Promise<void> {
+  loadOlder(id: string): Promise<void> {
+    const version = this.windowVersions.get(id);
+    const key = `${id}:${version ?? 0}`;
+    const pending = this.olderLoads.get(key);
+    if (pending) return pending;
+    const request = this.loadOlderPage(id, version).finally(() => this.olderLoads.delete(key));
+    this.olderLoads.set(key, request);
+    return request;
+  }
+
+  private async loadOlderPage(id: string, version: number | undefined): Promise<void> {
     const loaded = this.state.get().messages[id];
     if (!loaded?.hasMore || loaded.items.length === 0) return;
-    const first = loaded.items[0];
-    // Older messages come from the server, one page at a time.
-    const page = this.serverPages.get(id);
-    if (page?.more) await this.fetchHistory(id, Math.min(page.oldest ?? Number.MAX_SAFE_INTEGER, first.serverTs ?? first.sortTs)).catch(() => undefined);
-    const older = await this.store.latestMessages(id, PAGE, first.sortTs);
-    this.set((s) => withMessages(s, id, [...older, ...(s.messages[id]?.items ?? [])], older.length > 0 && ((this.serverPages.get(id)?.more ?? false) || older.length === PAGE)));
+    const first = loaded.items[0]!;
+    const cursor = this.serverPages.get(id);
+    try {
+      const page = cursor?.more
+        ? await this.fetchHistory(id, cursor.nextCursor?.serverTs ?? Math.min(cursor.oldest ?? Number.MAX_SAFE_INTEGER, first.serverTs ?? first.sortTs), undefined, cursor.nextCursor?.id)
+        : null;
+      if (version !== this.windowVersions.get(id)) return;
+      const older = page ? (await Promise.all(page.messages.map((m) => this.store.message(m.id)))).filter((m): m is StoredMessage => !!m) : await this.store.latestMessages(id, PAGE, first);
+      if (version !== this.windowVersions.get(id)) return;
+      this.set((s) => withMessages(s, id, [...older, ...(s.messages[id]?.items ?? [])], page ? page.more : older.length === PAGE));
+    } catch (e) {
+      // Keep the cursor and retry control available after a transient failure.
+      if (version === this.windowVersions.get(id)) this.notice("error", e instanceof ApiError ? e.message : "Couldn't load earlier messages. Try again.");
+    }
   }
 
   /** Clears unread on this device and, where the phone would, tells the others with an encrypted read receipt. */
@@ -1024,9 +1376,16 @@ export class Engine implements EngineContext {
   sendText(
     conversationId: string,
     text: string,
-    opts: { replyTo?: string; threadRoot?: string; attachments?: Payload["attachments"]; presetId?: string; rich?: RichContent | null; forwarded?: boolean } = {},
+    opts: { replyTo?: string; threadRoot?: string; attachments?: Payload["attachments"]; presetId?: string; rich?: RichContent | null; forwarded?: boolean; roleMentions?: string[] } = {},
   ): Promise<string> {
-    const sent = this.compose.sendText(conversationId, text, opts);
+    // A reply to a message drawn from the snapshot goes once the server's page has it (a new message never waits).
+    const target = opts.replyTo && this.fromSnapshot.has(conversationId) ? this.store.message(opts.replyTo) : null;
+    const sent = target
+      ? target.then(async (known) => {
+          if (!known) await this.live({ id: opts.replyTo!, conversationId } as StoredMessage);
+          return this.compose.sendText(conversationId, text, opts);
+        })
+      : this.compose.sendText(conversationId, text, opts);
     void sent.then(
       () => this.signals.track("message.sent", { surface: opts.threadRoot ? "thread" : "channel" }),
       () => undefined,
@@ -1039,27 +1398,28 @@ export class Engine implements EngineContext {
   }
 
   react(m: StoredMessage, emoji: string): Promise<void> {
-    return this.compose.react(m, emoji);
+    return this.onLive(m, (x) => this.compose.react(x, emoji));
   }
 
   edit(m: StoredMessage, text: string): Promise<void> {
-    return this.compose.edit(m, text);
+    return this.onLive(m, (x) => this.compose.edit(x, text));
   }
 
-  deleteForEveryone(m: StoredMessage): Promise<void> {
-    return this.compose.deleteForEveryone(m);
+  /** [asModerator]: someone else's message, by a moderator of a community channel (community parity A1). */
+  deleteForEveryone(m: StoredMessage, asModerator = false): Promise<void> {
+    return this.onLive(m, (x) => this.compose.deleteForEveryone(x, asModerator));
   }
 
   vote(m: StoredMessage, choices: string[]): Promise<void> {
-    return this.compose.vote(m, choices);
+    return this.onLive(m, (x) => this.compose.vote(x, choices));
   }
 
   closePoll(m: StoredMessage): Promise<void> {
-    return this.compose.closePoll(m);
+    return this.onLive(m, (x) => this.compose.closePoll(x));
   }
 
-  setPinned(m: StoredMessage, pinned: boolean): Promise<void> {
-    return this.compose.setPinned(m, pinned);
+  setPinned(m: StoredMessage, pinned: boolean, asModerator = false): Promise<void> {
+    return this.onLive(m, (x) => this.compose.setPinned(x, pinned, asModerator));
   }
 
   setTyping(conversationId: string, on: boolean): void {
@@ -1167,7 +1527,49 @@ export class Engine implements EngineContext {
     return this.store.findMessages((m) => matchesSearch(m, q, sender), conversationId ? 100 : 50, conversationId);
   }
 
-  /** Up to [limit] newest messages of a conversation, for threads, pins and files. */
+  /** Recent root badges use server counts even when their replies aren't in the main timeline window. */
+  refreshThreadCounts(conversationId: string): Promise<void> {
+    if (!this.state.get().server?.features.includes("message-collections")) return Promise.resolve();
+    const pending = this.threadCountLoads.get(conversationId);
+    if (pending) return pending;
+    // Preserve badges when the independent main timeline no longer contains its replies.
+    // The full, paged Threads panel remains authoritative for older threads beyond this recent index.
+    const request = this.api
+      .json("GET", `/v2/conversations/${encodeURIComponent(conversationId)}/message-collections?kind=threads&limit=100`, zMessageCollection)
+      .then((page) =>
+        this.set((s) => {
+          const previous = s.serverThreadCounts[conversationId] ?? {};
+          const counts = page.more ? { ...previous } : Object.fromEntries(Object.keys(previous).map((id) => [id, 0]));
+          for (const thread of page.threads) counts[thread.rootId] = thread.replyCount;
+          return { ...s, serverThreadCounts: { ...s.serverThreadCounts, [conversationId]: counts } };
+        }),
+      )
+      .catch(() => undefined)
+      .finally(() => this.threadCountLoads.delete(conversationId));
+    this.threadCountLoads.set(conversationId, request);
+    return request;
+  }
+
+  /** A separate collection cursor never changes the main timeline or acknowledges messages as read. */
+  async messageCollection(conversationId: string, kind: CollectionKind, cursor: CollectionCursor | null = null, root?: string): Promise<MessageCollectionPage> {
+    const q = new URLSearchParams({ kind, limit: "50" });
+    if (cursor) {
+      q.set("before", String(cursor.serverTs));
+      q.set("beforeId", cursor.id);
+    }
+    if (root) q.set("root", root);
+    const page = await this.api.json("GET", `/v2/conversations/${encodeURIComponent(conversationId)}/message-collections?${q}`, zMessageCollection);
+    const events = [...page.context, ...page.messages, ...page.changes];
+    if (events.some((e) => e.conversationId !== conversationId)) throw new Error("This collection contains a message from another conversation.");
+    for (const e of [...page.context, ...page.messages].reverse()) await this.receiver.ingest(e, 0, { history: true });
+    for (const e of page.changes) await this.receiver.ingest(e, 0, { history: true });
+    const read = async (events: typeof page.messages) => (await Promise.all(events.map((e) => this.store.message(e.id)))).filter((m): m is StoredMessage => !!m);
+    const [messages, context] = await Promise.all([read(page.messages), read(page.context)]);
+    void Promise.all([...new Set([...messages, ...context].map((m) => m.senderUserId))].map((id) => this.ensureUser(id)));
+    return { messages: messages.sort((a, b) => a.sortTs - b.sortTs || a.id.localeCompare(b.id)), context, threads: page.threads, more: page.more, nextCursor: page.nextCursor };
+  }
+
+  /** Up to [limit] newest cached messages; older servers retain this explicitly limited fallback. */
   conversationMessages(conversationId: string, limit = 1000): Promise<StoredMessage[]> {
     return this.store.latestMessages(conversationId, limit);
   }
@@ -1202,5 +1604,6 @@ function toUser(m: Member, prev?: UserLite): UserLite {
     tag: m.tag ?? prev?.tag ?? null,
     // API 0.54.0: no badge in the list means none (hidden or no plan): never kept from before.
     mojo: m.mojo ?? null,
+    bot: m.bot,
   };
 }

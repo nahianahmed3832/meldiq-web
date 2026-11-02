@@ -17,6 +17,7 @@ import {
   zOrgOut,
 } from "../api/workspaceSchemas";
 import type { Engine } from "./engine";
+import { imageMime } from "../model/imageMime";
 
 /**
  * Workspace actions (server/src/routes/orgs.ts, docs/WORKSPACE_ADMINISTRATION.md). Every one is authorised by the
@@ -70,7 +71,8 @@ export async function updateWorkspace(engine: Engine, orgId: string, change: { n
 export async function workspacePhoto(engine: Engine, orgId: string): Promise<string | null> {
   try {
     const bytes = await engine.api.bytes(`/v1/orgs/${enc(orgId)}/photo`);
-    return URL.createObjectURL(new Blob([new Uint8Array(bytes)], { type: "image/jpeg" }));
+    const b = new Uint8Array(bytes);
+    return URL.createObjectURL(new Blob([b], { type: imageMime(b) }));
   } catch {
     return null;
   }
@@ -112,6 +114,24 @@ export async function removeCommunityBanner(engine: Engine, orgId: string): Prom
 export async function leaveWorkspace(engine: Engine, orgId: string): Promise<void> {
   await engine.api.call("DELETE", `/v1/orgs/${enc(orgId)}/members/${enc(engine.device.userId)}`);
   await engine.refreshAll();
+}
+
+/** The most communities one leave-many request takes (the server's limit). */
+export const LEAVE_MANY_MAX = 100;
+
+export interface LeaveManyResult {
+  left: string[];
+  /** Communities you own stay (even with another owner). */
+  skippedOwned: string[];
+  notMember: string[];
+}
+
+/** API 0.65.0: leaves up to 100 communities at once, each the same as leaving one; ones you own are skipped. */
+export async function leaveWorkspaces(engine: Engine, orgIds: string[]): Promise<LeaveManyResult> {
+  const body = { orgIds: [...new Set(orgIds)].slice(0, LEAVE_MANY_MAX) };
+  const result = await engine.api.json("POST", "/v2/orgs/leave", z.object({ left: z.array(z.string()), skippedOwned: z.array(z.string()), notMember: z.array(z.string()) }), { body });
+  await engine.refreshAll();
+  return result;
 }
 
 /** Owners only, after typing the workspace's exact name (server/src/routes/orgs.ts › Deleting an organization). */

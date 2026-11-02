@@ -9,10 +9,11 @@ import path from "node:path";
  * Browser tests: the real app in real engines (Chromium, Firefox, WebKit, and a phone-sized Chromium) against a throwaway
  * server started from this checkout, with the server's reference client playing the phone. Not a physical-device test.
  */
-const API_PORT = 8091;
-const WEB_PORT = 5181;
+/** Ports can be moved (ORBIT_E2E_API_PORT, ORBIT_E2E_WEB_PORT) when another checkout is running its own servers. */
+const API_PORT = Number(process.env.ORBIT_E2E_API_PORT ?? 8091);
+const WEB_PORT = Number(process.env.ORBIT_E2E_WEB_PORT ?? 5181);
 /** `next dev` behind the web server in development mode (scripts/web-server.ts proxies to it). */
-const NEXT_DEV_PORT = 5182;
+const NEXT_DEV_PORT = Number(process.env.ORBIT_E2E_NEXT_PORT ?? WEB_PORT + 1);
 process.env.ORBIT_E2E_API ??= `http://127.0.0.1:${API_PORT}`;
 process.env.ORBIT_E2E_DATA ??= fs.mkdtempSync(path.join(os.tmpdir(), "orbit-e2e-"));
 
@@ -20,7 +21,7 @@ process.env.ORBIT_E2E_DATA ??= fs.mkdtempSync(path.join(os.tmpdir(), "orbit-e2e-
  * Calls (e2e/calls.spec.ts) need a LiveKit media server: started for the run when `livekit-server` is installed
  * (Homebrew: `brew install livekit`; or LIVEKIT_SERVER_BIN). Without it the call tests are skipped and say why.
  */
-const LIVEKIT_PORT = 7895;
+const LIVEKIT_PORT = Number(process.env.ORBIT_E2E_LIVEKIT_PORT ?? 7895);
 const LIVEKIT_KEY = "orbit-e2e";
 const LIVEKIT_SECRET = "orbit-e2e-secret-for-local-testing-only-00001";
 const livekitBin = process.env.LIVEKIT_SERVER_BIN ?? (spawnSync("which", ["livekit-server"], { encoding: "utf8" }).stdout.trim() || null);
@@ -55,6 +56,7 @@ export default defineConfig({
     { name: "firefox", use: { ...devices["Desktop Firefox"], viewport: { width: 1440, height: 900 }, ...firefoxMedia } },
     { name: "webkit", use: { ...devices["Desktop Safari"], viewport: { width: 1440, height: 900 }, permissions: media } },
     { name: "phone-width", use: { ...devices["Pixel 7"], ...chromiumMedia } },
+    { name: "iphone-width", use: { ...devices["iPhone 13"], permissions: media } },
   ],
   webServer: [
     {
@@ -97,8 +99,8 @@ export default defineConfig({
               LIVEKIT_DEV: "0",
               LIVEKIT_LOG_LEVEL: "warn",
               LIVEKIT_PORT: String(LIVEKIT_PORT),
-              LIVEKIT_TCP_PORT: "7896",
-              LIVEKIT_UDP_PORT: "7897",
+              LIVEKIT_TCP_PORT: String(LIVEKIT_PORT + 1),
+              LIVEKIT_UDP_PORT: String(LIVEKIT_PORT + 2),
               LIVEKIT_API_KEY: LIVEKIT_KEY,
               LIVEKIT_API_SECRET: LIVEKIT_SECRET,
               ORBIT_API_URL: `http://127.0.0.1:${API_PORT}`,
@@ -123,7 +125,7 @@ export default defineConfig({
           {
             command: `npm run -s sw:dev && npx next dev --hostname 127.0.0.1 --port ${NEXT_DEV_PORT}`,
             url: `http://127.0.0.1:${NEXT_DEV_PORT}`,
-            reuseExistingServer: false,
+            reuseExistingServer: process.env.ORBIT_E2E_REUSE_NEXT === "1",
             timeout: 120_000,
             env: { ORBIT_API_URL: `http://127.0.0.1:${API_PORT}` },
           },

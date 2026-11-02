@@ -28,7 +28,13 @@ const zRecoveryStatus = z.object({ remaining: z.number(), total: z.number(), cre
 const zRecoveryCodes = z.object({ codes: z.array(z.string()), createdAt: z.number() });
 const zKeyBackupStatus = z.object({ exists: z.boolean(), updatedAt: z.number().nullable() });
 const zKeyBackup = z.object({ version: z.number(), iterations: z.number(), salt: z.string(), nonce: z.string(), ciphertext: z.string(), identityKey: z.string() });
-const zKeyUnlockStarted = z.object({ email: z.string(), expiresAt: z.number() });
+/**
+ * How the unlock code reaches the person (API 0.63.0, server docs/ADMIN_ACCOUNTS.md): emailed, a tester's fixed code
+ * from the admin console (nothing emailed), or no code at all. An older server says nothing: emailed.
+ */
+const zUnlockDelivery = z.enum(["email", "fixed_code", "none"]);
+const zKeyUnlockStarted = z.object({ email: z.string(), expiresAt: z.number(), delivery: zUnlockDelivery.optional() });
+export type UnlockDelivery = z.infer<typeof zUnlockDelivery>;
 export type RecoveryStatus = z.infer<typeof zRecoveryStatus>;
 /** Options for the browser's passkey prompt (WebAuthn JSON), and this ceremony's id to send back with the answer. */
 const zPasskeyOptions = z.object({ challengeId: z.string(), options: z.record(z.string(), z.unknown()) });
@@ -160,14 +166,14 @@ export class AccountApi {
     return this.api.json("DELETE", "/v2/account/key-backup", zOk);
   }
 
-  /** Emails a code for unlocking the backup in this session; says where it went (masked). */
+  /** Emails a code for unlocking the backup in this session; says where it went (masked) and how it reaches the person. */
   startKeyUnlock() {
     return this.api.json("POST", "/v2/account/key-backup/unlock/start", zKeyUnlockStarted, { body: {} });
   }
 
-  /** The emailed code gets the sealed keys back (single use). */
-  keyUnlock(code: string): Promise<KeyBackup> {
-    return this.api.json("POST", "/v2/account/key-backup/unlock", zKeyBackup, { body: { code } });
+  /** The code gets the sealed keys back (single use); null when the unlock step said it needs none. */
+  keyUnlock(code: string | null): Promise<KeyBackup> {
+    return this.api.json("POST", "/v2/account/key-backup/unlock", zKeyBackup, { body: code === null ? {} : { code } });
   }
 
   /** The account's passkeys (made here and in the apps), and whether this server offers them. */
@@ -222,4 +228,10 @@ export async function signInWithDevice(base: string, device: DeviceRecord, passw
   const nonce = await accounts.challenge();
   const signature = await sign(device.keys.signing.privateKey, canonical.authProof("login", nonce, device.keys.signingPublic));
   return accounts.login(email ?? device.account.email, password, device.deviceName, { deviceId: device.deviceId, nonce, signature }, totpCode);
+}
+
+/** Fresh device proof for external sign-in; provider proof never substitutes for possession of encryption keys. */
+export async function socialDeviceProof(base: string, device: DeviceRecord): Promise<DeviceProof> {
+  const nonce = await AccountApi.anonymous(base).challenge();
+  return { deviceId: device.deviceId, nonce, signature: await sign(device.keys.signing.privateKey, canonical.authProof("login", nonce, device.keys.signingPublic)) };
 }

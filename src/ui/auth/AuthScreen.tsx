@@ -1,3 +1,6 @@
+import { AppealAccess } from "../operations/AppealAccess";
+import type { SavedAccount } from "../../auth/savedAccounts";
+import { GiftSignInNotice } from "../billing/GiftSignInNotice";
 import { apiBase } from "../../application/config";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { AccountSessionGrant, AccountView } from "../../api/accountSchemas";
@@ -14,7 +17,6 @@ import { ForgotPasswordForm, type FormContext, ResetPasswordForm, SignInForm, Si
 import { TEST_DEVICE_LINKING } from "../../auth/testLinking";
 import { AddDeviceView, CreateIdentityView, RecoveryKeyReveal } from "./DeviceSetupViews";
 import { authErrorText } from "./useSubmit";
-import { IntroPages, introSeen } from "./IntroPages";
 import { useT } from "../../i18n";
 
 type Step =
@@ -45,14 +47,16 @@ const SETUP_ENDED: Record<SetupSessionEnd, string> = {
 
 export function AuthScreen(props: {
   base?: string;
+  savedAccounts?: SavedAccount[];
+  onUseSavedAccount?: (database: string) => void;
   /** Keeps the new device and its session, before the recovery key is shown (so a reload then doesn't lose the device). */
   onSave: (device: DeviceRecord, grant: AccountSessionGrant) => Promise<void>;
   onReady: (device: DeviceRecord, grant: AccountSessionGrant) => void;
   onLinkWithPhone: () => void;
 }) {
   const base = props.base ?? apiBase();
+  const { savedAccounts, onUseSavedAccount } = props;
   const [step, setStep] = useState<Step>({ k: "signIn" });
-  const [intro, setIntro] = useState(() => !introSeen());
   const [server, setServer] = useState<ServerInfo | null>(null);
   const t = useT();
   const ctx: FormContext = useMemo(() => ({ accounts: AccountApi.anonymous(base), deviceName: browserDeviceName() }), [base]);
@@ -72,10 +76,19 @@ export function AuthScreen(props: {
     (grant: AccountSessionGrant, password?: string) => {
       // Ended from elsewhere before setup finished (e.g. removed in the phone's session list): sign in again, email kept.
       const creds = new SetupCredentials(base, grant, (why) => setStep({ k: "signIn", notice: SETUP_ENDED[why], email: grant.account.email }));
+      const existing = savedAccounts?.find((a) => a.accountId === grant.account.id);
+      if (existing && onUseSavedAccount) {
+        // This login only created a setup session. Keep the saved device/session and discard the extra setup session.
+        void new AccountApi(new ApiClient(base, creds))
+          .logout()
+          .catch(() => undefined)
+          .then(() => onUseSavedAccount?.(existing.database));
+        return;
+      }
       const account = grant.account;
       setStep(account.identity ? { k: "addDevice", creds, account, password } : { k: "create", creds, account, password });
     },
-    [base],
+    [base, savedAccounts, onUseSavedAccount],
   );
 
   const accounts = server?.accounts;
@@ -182,8 +195,9 @@ export function AuthScreen(props: {
 
   return (
     <AuthFrame>
-      {intro && <IntroPages onDone={() => setIntro(false)} />}
+      <GiftSignInNotice />
       {body}
+      {step.k === "signIn" && server?.features.includes("platform-operations") && <AppealAccess base={base} />}
     </AuthFrame>
   );
 }

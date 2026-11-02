@@ -18,6 +18,20 @@ export async function bannerJpeg(file: File): Promise<Uint8Array> {
   return croppedJpeg(file, BANNER.width, BANNER.height, BANNER.maxBytes, "That image is too detailed to fit 1 MB. Try another one.");
 }
 
+/** Animated community icons and banners (API 0.64.0, server COMMUNITY_IMAGE_LIMITS), in MB. */
+const ANIMATED_MB = { icon: 4, banner: 6 } as const;
+
+/**
+ * A picked animated GIF or WebP, sent as it is (API 0.64.0) when the server takes animated community images; null for
+ * anything else, which is cropped and re-encoded as before.
+ */
+export async function animatedUpload(file: File, which: keyof typeof ANIMATED_MB, supported: boolean): Promise<Uint8Array | null> {
+  if (!supported || (file.type !== "image/gif" && file.type !== "image/webp")) return null;
+  const mb = ANIMATED_MB[which];
+  if (file.size > mb * 1024 * 1024) throw new Error(`Animated ${which === "icon" ? "icons" : "banners"} can be up to ${mb} MB.`);
+  return new Uint8Array(await file.arrayBuffer());
+}
+
 async function croppedJpeg(file: File, width: number, height: number, maxBytes: number, tooBig: string): Promise<Uint8Array> {
   if (!file.type.startsWith("image/")) throw new Error("Choose an image file.");
   const bitmap = await createImageBitmap(file).catch(() => {

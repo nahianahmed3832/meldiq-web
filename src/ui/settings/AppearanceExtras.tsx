@@ -2,6 +2,7 @@ import { Plus, X } from "lucide-react";
 import { setPrefs, usePrefs } from "../../application/prefs";
 import { VIBES, vibeColors } from "../../application/vibes";
 import { Toggle } from "../components/Toggle";
+import { useCommunityThemes } from "../community/useCommunityThemes";
 
 const DEFAULT_CUSTOM = ["#ff6b4a", "#a855f7"];
 
@@ -12,6 +13,7 @@ const DEFAULT_CUSTOM = ["#ff6b4a", "#a855f7"];
  */
 export function VibesCard() {
   const prefs = usePrefs();
+  const themes = useCommunityThemes();
   const custom = prefs.vibeCustom ?? DEFAULT_CUSTOM;
   const active = vibeColors(prefs.vibe, prefs.vibeCustom);
   const setCustom = (colors: string[]) => setPrefs({ vibe: "custom", vibeCustom: colors });
@@ -66,10 +68,10 @@ export function VibesCard() {
       <div className="card">
         <div className="setting">
           <div className="lines">
-            <strong>Use a community's own colours</strong>
-            <small>Show a community's accent and banner while you're in it. Turn off to always keep yours.</small>
+            <strong>Show community themes</strong>
+            <small>Show a community's accent, background tint and banner while you're in it. Turn off to always keep yours.</small>
           </div>
-          <Toggle label="Use a community's own colours" checked={prefs.communityColors} onChange={(v) => setPrefs({ communityColors: v })} />
+          <Toggle label="Show community themes" checked={themes.on} onChange={themes.set} />
         </div>
         <div className="setting">
           <div className="lines">
@@ -78,6 +80,50 @@ export function VibesCard() {
           </div>
           <Toggle label="Message bubbles on the rail" checked={prefs.railDmBubbles} onChange={(v) => setPrefs({ railDmBubbles: v })} />
         </div>
+      </div>
+    </>
+  );
+}
+
+export function AccessibilityCard() {
+  const p = usePrefs();
+  return (
+    <>
+      <h2 className="settings-group">Comfort & accessibility</h2>
+      <div className="card setting-card">
+        <p className="hint">Free controls saved in this browser. Your choices take precedence over community styling.</p>
+        <label className="field">
+          <span>Message density</span>
+          <select className="input" aria-label="Message density" value={p.density} onChange={(e) => setPrefs({ density: e.target.value as typeof p.density })}>
+            <option value="comfortable">Comfortable</option>
+            <option value="compact">Compact</option>
+          </select>
+        </label>
+        <label className="field">
+          <span>Line spacing</span>
+          <select className="input" aria-label="Line spacing" value={p.lineSpacing} onChange={(e) => setPrefs({ lineSpacing: e.target.value as typeof p.lineSpacing })}>
+            <option value="normal">Normal</option>
+            <option value="relaxed">Relaxed</option>
+          </select>
+        </label>
+        <label className="field">
+          <span>Reduce motion</span>
+          <select className="input" aria-label="Reduce motion" value={p.reducedMotion} onChange={(e) => setPrefs({ reducedMotion: e.target.value as typeof p.reducedMotion })}>
+            <option value="system">Follow device</option>
+            <option value="on">Always</option>
+            <option value="off">Never</option>
+          </select>
+        </label>
+        <div className="setting">
+          <span className="lines">
+            <strong>Higher contrast</strong>
+            <small>Stronger text and visible borders.</small>
+          </span>
+          <Toggle label="Higher contrast" checked={p.highContrast} onChange={(highContrast) => setPrefs({ highContrast })} />
+        </div>
+        <button className="btn btn-secondary" onClick={() => setPrefs({ density: "comfortable", lineSpacing: "normal", reducedMotion: "system", highContrast: false })}>
+          Reset comfort controls
+        </button>
       </div>
     </>
   );

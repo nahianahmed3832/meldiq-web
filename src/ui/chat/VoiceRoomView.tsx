@@ -30,6 +30,17 @@ export function VoiceRoomView({ c }: { c: Conversation }) {
 
   return (
     <div className="voice-room-page scroll" aria-label="Voice room">
+      {/* Community parity A1: a stage, where listeners raise a hand and a moderator lets them speak. */}
+      {c.options?.stage && (
+        <div className="banner info" role="status">
+          <Headphones size={16} aria-hidden />
+          <span className="grow">
+            {c.canSpeak === false
+              ? "This is a stage: you listen until a moderator lets you speak. Raise your hand in the call to ask."
+              : "This is a stage: listeners raise a hand, and moderators let them speak from the call's people list."}
+          </span>
+        </div>
+      )}
       {room.notice && (
         <div className="banner info" role="status">
           <Headphones size={16} aria-hidden />

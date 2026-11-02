@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { zMojoCatalog, zMojoMe } from "../src/api/mojoSchemas";
 import { allowedShareQualities, clampShareQuality, SHARE_QUALITIES } from "../src/call/shareQuality";
 import { overCharLimit } from "../src/ui/mojo/CharLimit";
-import { countChars, money, planPrice, size } from "../src/ui/mojo/mojoFormat";
+import { countChars, money, planPrice, screenLabel, size } from "../src/ui/mojo/mojoFormat";
 
 /**
  * Meldiq Mojo on the web (server docs/MOJO.md): characters counted as people count them, sizes in the server's decimal
@@ -83,6 +83,7 @@ describe("Meldiq Mojo on the web", () => {
   it("shows sizes in the server's decimal units and prices from what's on sale", () => {
     expect(size(50_000_000)).toBe("50 MB");
     expect(size(2_000_000_000)).toBe("2 GB");
+    expect(size(1_024_000_000)).toBe("1,024 MB");
     expect(money(399, "USD")).toMatch(/3\.99/);
     expect(planPrice(catalog, "go")).toEqual({ label: expect.stringMatching(/0\.99/), onSale: true });
     // Plus isn't on sale on this server: its list price, marked so.
@@ -94,6 +95,12 @@ describe("Meldiq Mojo on the web", () => {
     expect(allowedShareQualities([preset(1280, 720, 30)])).toEqual(["standard"]);
     expect(allowedShareQualities([preset(1280, 720, 60), preset(1920, 1080, 30)])).toEqual(["standard", "smooth", "sharp"]);
     expect(allowedShareQualities([preset(1920, 1080, 60), preset(2560, 1440, 30)])).toEqual(["standard", "smooth", "sharp", "high", "max"]);
+    // The plans of 2026-10-30: one ceiling each, covering every smaller share.
+    expect(allowedShareQualities([preset(1280, 720, 60)])).toEqual(["standard", "smooth"]);
+    expect(allowedShareQualities([preset(1920, 1080, 60)])).toEqual(["standard", "smooth", "sharp", "high"]);
+    expect(allowedShareQualities([preset(2560, 1440, 60)])).toEqual(["standard", "smooth", "sharp", "high", "max", "max60"]);
+    expect(clampShareQuality("max60", ["standard", "smooth", "sharp", "high"])).toBe("high");
+    expect(SHARE_QUALITIES.max60).toMatchObject({ width: 2560, height: 1440, frameRate: 60 });
     expect(clampShareQuality("high", ["standard", "smooth", "sharp"])).toBe("sharp");
     expect(clampShareQuality("max", ["standard"])).toBe("standard");
     expect(SHARE_QUALITIES.max).toMatchObject({ width: 2560, height: 1440, frameRate: 30 });
@@ -108,5 +115,20 @@ describe("Meldiq Mojo on the web", () => {
       gifts: { received: [], sent: [] },
     });
     expect(me.sparks.assignments[0]?.orgName).toBe("Lab");
+  });
+});
+
+describe("screen labels", () => {
+  it('says a single ceiling as "Up to", and several as alternatives', () => {
+    const catalog = {
+      screenPresets: [
+        { id: "1440p60", label: "2K (1440p) 60 fps" },
+        { id: "720p30", label: "720p 30 fps" },
+        { id: "1080p60", label: "1080p 60 fps" },
+      ],
+    };
+    expect(screenLabel(catalog as never, ["1440p60"])).toBe("Up to 2K (1440p) 60 fps");
+    expect(screenLabel(catalog as never, ["720p30", "1080p60"])).toBe("720p 30 fps or 1080p 60 fps");
+    expect(screenLabel(catalog as never, [])).toBe("Your own plan's");
   });
 });

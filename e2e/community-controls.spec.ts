@@ -59,6 +59,10 @@ test("channel bell, Basic permissions and a three-step event", async ({ page }) 
   const of = (s: string) => ow.overwrites.find((o: { subject: string }) => o.subject === s);
   expect(of("everyone").deny).toContain("channels.view");
   expect(of(role.id).allow).toContain("channels.view");
+  await dialog.getByRole("button", { name: "View as", exact: true }).click();
+  await dialog.getByLabel("Preview permissions for").selectOption(`role:${role.id}`);
+  await expect(dialog.getByLabel("Effective permission preview")).toContainText("Base role: MEMBER");
+  await expect(dialog.getByLabel("Effective permission preview").getByText("Allowed", { exact: true }).first()).toBeVisible();
   await page.keyboard.press("Escape");
 
   // An event in three steps: where, what and when, then the preview.

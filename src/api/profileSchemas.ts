@@ -1,4 +1,6 @@
+import { zCollectibleLook } from "./collectibleSchemas";
 import { z } from "zod";
+import { openEnum } from "./enums";
 
 /**
  * A person's and a community's look as the server sends it (API 0.44.0–0.46.0): accent colours, animated avatars,
@@ -19,6 +21,12 @@ export const zAccent = z
 /** Profile style ids the web draws (API 0.45.0, server PROFILE_DECORATIONS / PROFILE_EFFECTS); unknown ones are dropped. */
 export const PROFILE_DECORATIONS = ["aurora", "ember", "frost", "neon", "sakura", "pixel"] as const;
 export const PROFILE_EFFECTS = ["sparkles", "glow", "stars", "bubbles"] as const;
+/**
+ * A worn decoration (API 0.60.0, server docs/PROFILE_DECORATIONS.md): one of the classic frames above, which the web
+ * draws, or an image by id (Meldiq's own, or an approved community one: "c_" and 16 letters or digits).
+ */
+export const DECORATION_ID = /^(?:[a-z0-9-]{2,32}|c_[a-z0-9]{16})$/;
+export const isClassicDecoration = (id: string): boolean => (PROFILE_DECORATIONS as readonly string[]).includes(id);
 export const zAvatarMedia = z
   .object({ kind: z.enum(["gif", "webp", "video"]), rev: z.number().int() })
   .nullish()
@@ -41,9 +49,20 @@ const zHexList = z
   .nullish()
   .catch(null)
   .transform((v) => v ?? null);
+/** API 0.65.0 (server SHOWABLE_BADGES): the badges someone can choose to show by their name, and "none". */
+export const SHOWN_BADGES = ["mojo", "bug-hunter", "artist", "none"] as const;
+export type ShownBadge = (typeof SHOWN_BADGES)[number];
+const zThemeColors = z
+  .array(z.string().regex(/^#[0-9a-fA-F]{6}$/))
+  .min(1)
+  .max(2)
+  .nullish()
+  .catch(null)
+  .transform((v) => (v ? v.map((c) => c.toLowerCase()) : null));
 export const zProfileStyle = z
   .object({
-    decoration: z.enum(PROFILE_DECORATIONS).nullable().catch(null),
+    collectibles: z.array(zCollectibleLook).max(8).optional().catch(undefined),
+    decoration: z.string().regex(DECORATION_ID).nullable().catch(null),
     effect: z.enum(PROFILE_EFFECTS).nullable().catch(null),
     accent: zAccent,
     nameFont: z
@@ -58,6 +77,14 @@ export const zProfileStyle = z
       .catch(null)
       .transform((v) => v ?? null),
     tagOrgId: nullableString,
+    /** API 0.65.0: the profile theme, one colour or two for a gradient (older servers: only [accent]). */
+    themeColors: zThemeColors,
+    /** API 0.65.0: the badge shown next to the name; "none" shows none, null is the apps' default (the Mojo badge). */
+    shownBadge: z
+      .enum(SHOWN_BADGES)
+      .nullish()
+      .catch(null)
+      .transform((v) => v ?? null),
   })
   .nullish()
   .catch(null)
@@ -85,6 +112,35 @@ export const zBadges = z
   .catch(null)
   .transform((v) => (v ?? []).filter((b): b is "bug-hunter" => b === "bug-hunter"));
 
+/** API 0.64.0: pins on a profile (server docs/PROFILE_PINS.md), Meldiq's for milestones, then communities' own. */
+export const zProfilePins = z
+  .array(
+    z.object({
+      id: z.string().regex(/^(?:[a-z0-9-]{2,32}|p_[a-z0-9]{16})$/),
+      kind: z.enum(["meldiq", "community"]).catch("community"),
+      name: z.string().max(64),
+      description: z
+        .string()
+        .max(200)
+        .nullish()
+        .transform((v) => v ?? null),
+      animated: z.boolean().catch(false),
+      community: z
+        .object({ id: z.string(), name: z.string() })
+        .nullish()
+        .transform((v) => v ?? null),
+      since: z
+        .number()
+        .nullish()
+        .transform((v) => v ?? null),
+    }),
+  )
+  .max(100)
+  .nullish()
+  .catch(null)
+  .transform((v) => v ?? []);
+export type ProfilePin = z.infer<typeof zProfilePins>[number];
+
 /** API 0.54.0: the Mojo badge someone shows (server docs/MOJO.md); "check" is Meldiq Check, a Plus perk, not verification. */
 export const zMojoMark = z
   .object({ badge: z.enum(["go", "plus"]), check: z.boolean() })
@@ -92,3 +148,28 @@ export const zMojoMark = z
   .catch(null)
   .transform((v) => v ?? null);
 export type MojoMark = NonNullable<z.infer<typeof zMojoMark>>;
+
+/** API 0.65.0 batch B (connections-v2): the linked accounts a profile shows (sync/linkedAccounts.ts). */
+export const PROVIDERS = ["steam", "anilist", "lastfm", "trakt"] as const;
+export type Provider = (typeof PROVIDERS)[number];
+
+const zItem = z.object({ title: z.string(), subtitle: z.string().nullable(), url: z.string().nullable() });
+
+/** A connection as profiles show it; unknown providers or kinds (a newer server) are kept out by [visibleConnections]. */
+export const zProfileConnection = z.object({
+  provider: openEnum(PROVIDERS),
+  name: z.string(),
+  url: z.string(),
+  itemsKind: z.string(),
+  items: z.array(zItem).max(10),
+  updatedAt: z.number(),
+});
+export type ProfileConnection = z.infer<typeof zProfileConnection>;
+
+/** On profiles: absent when there are none (and for someone who blocked you). */
+export const zProfileConnections = z
+  .array(zProfileConnection)
+  .max(20)
+  .nullish()
+  .catch(null)
+  .transform((v) => v ?? []);

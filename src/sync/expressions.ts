@@ -16,7 +16,7 @@ const TOKEN = /:([a-z0-9_]{2,32}):/g;
 const REACTION = /^:[a-z0-9_]{2,32}:$/;
 export const MAX_REFS = 20;
 export const EXPRESSION_MAX_BYTES = 256 * 1024;
-/** Pictures that aren't PNG, GIF or WebP, or are too big, are shrunk to a PNG this wide (android ExpressionsScreen). */
+/** Static pictures that need conversion are shrunk to a PNG this wide. Animated originals are preserved. */
 export const SHRINK_TO = { emoji: 128, sticker: 320 } as const;
 
 export function cleanRef(r: CustomEmojiRef | null | undefined): CustomEmojiRef | null {
@@ -105,10 +105,19 @@ const enc = encodeURIComponent;
 
 export const refOf = (e: Expression): CustomEmojiRef => ({ id: e.id, orgId: e.orgId, name: e.name, sha256: e.sha256, animated: e.animated });
 
-const lists = new Map<string, Promise<ExpressionList>>();
+const listCaches = new WeakMap<Engine, Map<string, Promise<ExpressionList>>>();
+function listsFor(engine: Engine): Map<string, Promise<ExpressionList>> {
+  let lists = listCaches.get(engine);
+  if (!lists) {
+    lists = new Map();
+    listCaches.set(engine, lists);
+  }
+  return lists;
+}
 
 /** A community's emoji and stickers (members only), kept for the page's life and loaded again when [fresh]. */
 export function expressions(engine: Engine, orgId: string, fresh = false): Promise<ExpressionList> {
+  const lists = listsFor(engine);
   let p = lists.get(orgId);
   if (!p || fresh) {
     p = engine.api.json("GET", `/v1/orgs/${enc(orgId)}/expressions`, zList);
@@ -135,13 +144,19 @@ export async function removeExpression(engine: Engine, orgId: string, id: string
   await expressions(engine, orgId, true);
 }
 
-const images = new Map<string, Promise<string | null>>();
+const imageCaches = new WeakMap<Engine, Map<string, Promise<string | null>>>();
 
 /**
  * The image of [ref] as an object URL, or null: not a member, gone, or (when [sha256] is given) not the image the
  * message meant. Kept for the page's life; a failed download isn't kept.
  */
 export function expressionImage(engine: Engine, id: string, sha256: string | null): Promise<string | null> {
+  let images = imageCaches.get(engine);
+  if (!images) {
+    images = new Map();
+    imageCaches.set(engine, images);
+  }
+  const cache = images;
   const key = `${id}:${sha256 ?? ""}`;
   let p = images.get(key);
   if (!p) {
@@ -150,14 +165,26 @@ export function expressionImage(engine: Engine, id: string, sha256: string | nul
       .then(async (b) => {
         const bytes = new Uint8Array(b);
         if (sha256 && (await sha256Hex(bytes)) !== sha256) return null;
+        if (imageCaches.get(engine) !== cache) return null;
         return URL.createObjectURL(new Blob([bytes]));
       })
       .catch(() => {
         // Offline or a server error: the next render tries again (a wrong hash above stays refused).
-        images.delete(key);
+        cache.delete(key);
         return null;
       });
     images.set(key, p);
   }
   return p;
+}
+
+/** Release private asset URLs when this account's engine stops, including downloads still in flight. */
+export function clearExpressionCache(engine: Engine): void {
+  listCaches.delete(engine);
+  const images = imageCaches.get(engine);
+  imageCaches.delete(engine);
+  for (const promise of images?.values() ?? [])
+    void promise.then((url) => {
+      if (url) URL.revokeObjectURL(url);
+    });
 }

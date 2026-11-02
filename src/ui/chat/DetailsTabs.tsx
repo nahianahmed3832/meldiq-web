@@ -5,9 +5,9 @@ import { isInlineImage } from "../../sync/attachments";
 import { dayLabel, shortWhen } from "../format";
 import { FileAttachment, ImageAttachment, MediaAttachment } from "./Attachments";
 import type { DetailsTab } from "./detailsRules";
-import { filterFiles, type Gallery, type GalleryItem, type LinkItem } from "./gallery";
+import { filterFiles, galleryOf, type Gallery, type GalleryItem, type LinkItem } from "./gallery";
 import { jumpTo } from "./jump";
-import { usePinned } from "./PinnedPanel";
+import { CollectionControls, useMessageCollection } from "./useMessageCollection";
 import { SafeLink } from "./SafeLink";
 import { MediaGalleryDialog } from "./MediaGalleryDialog";
 
@@ -78,12 +78,15 @@ function SaveSeveral({ gallery, nameOf }: { gallery: Gallery; nameOf: (i: Galler
   );
 }
 
-export function MediaTab({ conversationId, gallery, nameOf }: ItemsTabProps) {
+export function MediaTab({ conversationId, gallery: cached, nameOf }: ItemsTabProps) {
+  const collection = useMessageCollection(conversationId, "media");
+  const gallery = collection.supported ? galleryOf(collection.page?.messages ?? []) : cached;
   const [shown, setShown] = useState(PAGE);
   const [missing, setMissing] = useState(false);
-  if (gallery.media.length === 0) return <Empty text="No photos or videos in this conversation yet." />;
   return (
     <>
+      <CollectionControls collection={collection} />
+      {!collection.loading && !collection.error && gallery.media.length === 0 && <Empty text="No photos or videos on this page." />}
       {missing && <Missing />}
       <div className="gallery-grid details-grid" role="tabpanel" aria-label="Photos and videos">
         {gallery.media.slice(0, shown).map((i) => (
@@ -108,20 +111,22 @@ export function MediaTab({ conversationId, gallery, nameOf }: ItemsTabProps) {
   );
 }
 
-export function FilesTab({ conversationId, gallery, nameOf }: ItemsTabProps) {
+export function FilesTab({ conversationId, gallery: cached, nameOf }: ItemsTabProps) {
+  const collection = useMessageCollection(conversationId, "files");
+  const gallery = collection.supported ? galleryOf(collection.page?.messages ?? []) : cached;
   const [q, setQ] = useState("");
   const [missing, setMissing] = useState(false);
-  if (gallery.files.length === 0) return <Empty text="No files in this conversation yet." />;
   const items = filterFiles(gallery.files, q);
   return (
     <div role="tabpanel" aria-label="Files" style={{ display: "grid", gap: 8 }}>
+      <CollectionControls collection={collection} />
       <label className="forum-search">
         <Search size={15} aria-hidden />
-        <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search files" aria-label="Search files" />
+        <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Filter this page" aria-label="Search files" />
       </label>
       {missing && <Missing />}
       {items.length === 0 ? (
-        <Empty text="No files match." />
+        !collection.loading && !collection.error && <Empty text={q ? "No files match on this page." : "No files on this page."} />
       ) : (
         <div className="gallery-files">
           {items.map((i) => (
@@ -144,12 +149,17 @@ export function FilesTab({ conversationId, gallery, nameOf }: ItemsTabProps) {
 
 export function PinsTab({ conversationId }: { conversationId: string }) {
   const engine = useEngine();
-  const pinned = usePinned(conversationId);
+  const collection = useMessageCollection(conversationId, "pins");
+  const pinned = (collection.page?.messages ?? [])
+    .filter((m) => !m.deleted && m.pinned)
+    .slice()
+    .reverse();
   const users = useOrbit((s) => s.users);
   const [missing, setMissing] = useState(false);
-  if (pinned.length === 0) return <Empty text="Nothing is pinned here. Pin a message from its menu so everyone in the conversation can find it." />;
   return (
     <>
+      <CollectionControls collection={collection} />
+      {collection.page && pinned.length === 0 && <Empty text="Nothing is pinned on this page. Pin a message from its menu so everyone in the conversation can find it." />}
       {missing && <Missing />}
       <ul className="search-results" role="tabpanel" aria-label="Pinned messages">
         {pinned.map((m) => (
@@ -171,7 +181,7 @@ export function PinsTab({ conversationId }: { conversationId: string }) {
 
 export function LinksTab({ conversationId, links, nameOf }: { conversationId: string; links: LinkItem[]; nameOf: (l: LinkItem) => string }) {
   const [missing, setMissing] = useState(false);
-  if (links.length === 0) return <Empty text="No links in this conversation yet." />;
+  if (links.length === 0) return <Empty text="No links in the messages loaded on this browser." />;
   return (
     <>
       {missing && <Missing />}
@@ -198,7 +208,7 @@ export function LinksTab({ conversationId, links, nameOf }: { conversationId: st
 }
 
 /** The top of the page: the photo, the name, then @username or the member count, and presence (android DetailsHeader). */
-export function DetailsHero({ avatar, title, sub, presence }: { avatar: ReactNode; title: string; sub: string | null; presence: string | null }) {
+export function DetailsHero({ avatar, title, sub, presence }: { avatar: ReactNode; title: ReactNode; sub: string | null; presence: string | null }) {
   return (
     <div className="details-hero">
       {avatar}

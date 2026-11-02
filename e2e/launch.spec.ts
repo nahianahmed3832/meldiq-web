@@ -18,11 +18,11 @@ test("Meldling shows at once and makes way for sign-in", async ({ page }) => {
   await expect(page.getByRole("button", { name: "Sign in" })).toBeEnabled();
 });
 
-test("with reduced motion, Meldling stays still", async ({ browser }) => {
-  const context = await browser.newContext({ reducedMotion: "reduce", baseURL: "http://127.0.0.1:5181", extraHTTPHeaders: { "x-orbit-test-ip": testAddress() } });
+test("with reduced motion, Meldling stays still", async ({ browser, baseURL }) => {
+  const context = await browser.newContext({ reducedMotion: "reduce", baseURL, extraHTTPHeaders: { "x-orbit-test-ip": testAddress() } });
   const page = await context.newPage();
   await page.goto("/", { waitUntil: "commit" });
-  const img = page.locator("#splash img");
+  const img = page.locator("#splash > img");
   await expect(img).toBeAttached();
   expect(await img.evaluate((el) => getComputedStyle(el).animationName)).toBe("none");
   await expectSignedOut(page);

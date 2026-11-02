@@ -1,0 +1,29 @@
+# Live Plus checkout
+
+The owner authorized live production testing on 2026-11-01. This release adds the branded PayPal checkout to the current production web source, preserving its chat fixes.
+
+Plus costs USD 3.99/month. The checkout displays live payment language and loads the official production PayPal v6 SDK. Existing free Plus time with more than two days remaining postpones the first charge; the review shows zero due today and the server-provided first payment date. Approval alone never creates paid entitlements. Billing includes cancellation and provider-verified purchase history.
+
+Go is closed. Live gifts and Spark purchases remain unavailable. Advanced cards were ineligible in the real SDK probe and are not advertised. PayPal controls eligible funding choices during buyer approval.
+
+Validation: 811 unit tests passed, one skipped; eight browser tests passed across desktop and phone using explicit provider/SDK doubles under production CSP; TypeScript, lint and production build passed. Real live SDK 6.71.0 loaded with subscription and one-time session APIs, PayPal eligible, advanced cards ineligible, and zero CSP violations. These checks do not constitute a paid capture or refund.
+
+API release: 0.69.0, backend branch codex/paypal-live, commit 0bcd0a6. Existing billing/MongoDB records, grants, price validation, signed webhook verification and refund audit are reused. Backend operator setup and deployment notes: docs/PAYPAL_LIVE_RELEASE.md in the backend checkout.
+
+Production: https://web.meldiq.app/settings/mojo and /settings/checkout. Previous web release 0.5.0-beta-dfd65d0 and API 0.68.0 are retained for rollback; private backups reside at /opt/griip-internal-messaging/backups/paypal-live-20261101. No credentials are included in this release. The user must approve their own PayPal payment to complete a real purchase test.
+
+Deployment completed 1 November 2026: web release 0.5.0-beta-2e90e08; API image 0.69.0-paypal-live (runtime source 0bcd0a6); admin release 1.4.0-20261101T082955Z. API healthy with zero restarts, live catalog public, unauthenticated billing configuration restricted, original runtime web configuration retained. The real live SDK ran on the public checkout origin with zero page/CSP errors. Live subscription creation and genuine signed webhook verification passed; the controlled unapproved probe produced no customer subscription or paid invoice and was marked ignored with an operator audit. Paid capture, renewal and refund still require buyer-approved testing.
+
+Atlas schema cutover: the first API attempt was rolled back after collMod was denied to its readWrite user. With the API stopped and both affected collections verified empty, the originals were preserved under _pre_paypal_20261101 names and release collections created with strict validators/indexes. No records were deleted or permissions expanded. The healthy retry uses the existing versioned billing catalog and original grants. See backend docs/PAYPAL_LIVE_RELEASE.md (operator notes e78af50) for the corresponding older-API rollback prerequisites.
+
+## Spark and Bots+ web checkout follow-up — 1 November 2026
+
+Implemented after API 0.71.1 completed the live product rollout. Personal Plus remains USD 3.99/month, community Bots+ is a separate USD 3.99/month subscription, and each purchased Spark costs USD 0.99 once. This web follow-up builds on the completed auth/loading/photo/commerce release and changes no backend settings, resource IDs, prices or financial records.
+
+Spark and Bots+ now share the branded two-column checkout review used by Plus, with the order summary first on phones, explicit quantity/total and renewal disclosures, correct legal links and the official PayPal control. Only server-confirmed payment completes checkout. Product, currency, amount, interval, quantity and community are checked against the reviewed order before authorization. Status polling is bounded to six checks over thirty seconds, within the API's ten-per-minute limit, with manual recovery still available. SDK retries remount the payment control, allowing initialization failures to recover. Billing shows community names, payment-attention links and independent Bots+ cancellation without changing personal Plus.
+
+Validation: 818 web unit tests passed (one existing skip), TypeScript and lint passed. Twenty payment browser checks passed on Chromium desktop/phone; four Safari/WebKit checks passed for Spark/Bots+ review, SDK recovery and independent Bots+ cancellation; two additional Chromium desktop/phone cancellation checks passed. The payment API and SDK are explicit browser-test doubles, with service workers blocked so the mock boundary is consistent across engines. Production debug hooks are not exposed. Desktop/phone visual reviews use the existing checkout styles. No buyer-approved live payment was charged by these tests; real capture/renewal/refund testing still needs a consenting buyer.
+
+The backend remains API 0.71.1. This release changes only the static web application. Keep the prior web release 0.5.0-beta-c793335 and copy its runtime config unchanged when installing. Rollback switches only the web symlink; the API, merchant resources and verified purchase records remain in place.
+
+Deployment verified: web release `0.5.0-beta-1559456` is live at https://web.meldiq.app. API 0.71.1, MongoDB and LiveKit are healthy; the live catalog advertises Spark USD 0.99 once, Bots+ USD 3.99/month, and personal Plus USD 3.99/month. Runtime configuration is byte-identical to the previous web release. On the actual public origin, PayPal SDK 6.71.0 exposes one-time/subscription sessions, reports PayPal eligible, and produces no CSP violations or page errors. No buyer approval or payment was performed by that smoke check. Previous web release `0.5.0-beta-c793335` remains available for rollback.

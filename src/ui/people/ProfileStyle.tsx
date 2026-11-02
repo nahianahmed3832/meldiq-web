@@ -1,5 +1,9 @@
+import type { CollectibleLook } from "../../api/collectibleSchemas";
+import { collectionAsset } from "../../sync/collectibles";
+import { usePrefs } from "../../application/prefs";
 import { useEffect, useState } from "react";
-import type { ProfileStyle } from "../../api/schemas";
+import { isClassicDecoration, type ProfileStyle } from "../../api/schemas";
+import { decorationImage } from "../../sync/decorations";
 import { UserAvatar } from "../components/OrgAvatar";
 import { usePhoto } from "../components/photos";
 
@@ -7,13 +11,16 @@ import { usePhoto } from "../components/photos";
  * Profile customisation as people see it (continuation brief v3 §10, API 0.45.0): an animated avatar (a GIF, WebP or a
  * silent looping clip), a decoration frame around it, and an effect over the banner. Meldiq's own frames and effects,
  * drawn in CSS (styles/profile.css). With reduced motion asked for, everything is still: the photo (or a clip's poster)
- * and no effect. Effects stay inside the banner, so they never cover the name, status or avatar.
+ * and no effect. Effects stay inside the banner, so they never cover the name, status or avatar. Since API 0.60.0 a
+ * decoration can also be an image (Meldiq's own or a community one, server docs/PROFILE_DECORATIONS.md), drawn over
+ * the avatar at 1.2 times its size; the presence dot stays on top.
  */
 
 export const DECORATION_LABEL: Record<string, string> = { aurora: "Aurora", ember: "Ember", frost: "Frost", neon: "Neon", sakura: "Sakura", pixel: "Pixel" };
 export const EFFECT_LABEL: Record<string, string> = { sparkles: "Sparkles", glow: "Glow", stars: "Stars", bubbles: "Bubbles" };
 
 export function useReducedMotion(): boolean {
+  const { reducedMotion } = usePrefs();
   const query = typeof window !== "undefined" && window.matchMedia ? window.matchMedia("(prefers-reduced-motion: reduce)") : null;
   const [reduced, setReduced] = useState(!!query?.matches);
   useEffect(() => {
@@ -22,7 +29,7 @@ export function useReducedMotion(): boolean {
     query.addEventListener("change", on);
     return () => query.removeEventListener("change", on);
   }, [query]);
-  return reduced;
+  return reducedMotion === "on" || (reducedMotion === "system" && reduced);
 }
 
 /** How thick a frame is around an avatar of [size]: thin on list rows, up to 6 px on a profile. It sits wholly outside the face. */
@@ -31,6 +38,7 @@ export function decorationWidth(size: number): number {
 }
 
 interface StyledAvatarProps {
+  collectibles?: CollectibleLook[];
   userId: string;
   name: string;
   colorIndex: number;
@@ -54,10 +62,17 @@ export function StyledAvatar(p: StyledAvatarProps) {
   const url = p.previewUrl?.url ?? stored;
   const video = p.previewUrl ? p.previewUrl.video : kind === "video";
   const animate = !!url && !reduced;
+  const aura = p.collectibles?.find((x) => x.category === "avatar-effect");
+  const frame = p.collectibles?.find((x) => x.category === "avatar-frame" && x.recipe.assetId);
   return (
-    <span className="styled-avatar" style={{ width: p.size, height: p.size }}>
+    <span
+      className={`styled-avatar${aura ? " collectible-aura" : ""}`}
+      style={{ width: p.size, height: p.size, ...(aura ? { "--collectible-a": aura.recipe.colors[0], "--collectible-b": aura.recipe.colors[1] } : {}) } as React.CSSProperties}
+    >
       {/* First, so the avatar and its presence dot are drawn over the frame (2026-10-28: the frame cut through the dot). */}
-      {p.decoration && <span className={`deco deco-${p.decoration}`} style={{ "--deco-w": `${decorationWidth(p.size)}px` } as React.CSSProperties} aria-hidden="true" />}
+      {p.decoration && isClassicDecoration(p.decoration) && (
+        <span className={`deco deco-${p.decoration}`} style={{ "--deco-w": `${decorationWidth(p.size)}px` } as React.CSSProperties} aria-hidden="true" />
+      )}
       {animate ? (
         <span className="avatar-media" style={{ width: p.size, height: p.size }}>
           {video ? <video src={url} poster={poster ?? undefined} muted loop autoPlay playsInline disablePictureInPicture aria-hidden="true" /> : <img src={url} alt="" draggable={false} />}
@@ -69,7 +84,42 @@ export function StyledAvatar(p: StyledAvatarProps) {
       ) : (
         <UserAvatar userId={p.userId} name={p.name} colorIndex={p.colorIndex} photoRev={p.photoRev} size={p.size} online={p.online} presence={p.presence} decorative />
       )}
+      {frame?.recipe.assetId && (
+        <img
+          className="deco-img"
+          src={collectionAsset(frame.recipe.assetId, p.size < 64 ? "thumbnail" : reduced ? "poster" : "full")}
+          alt=""
+          aria-hidden="true"
+          width={p.size * 1.2}
+          height={p.size * 1.2}
+          style={{ left: -p.size * 0.1, top: -p.size * 0.1 }}
+        />
+      )}
+      {p.decoration && !isClassicDecoration(p.decoration) && <DecorationImage id={p.decoration} size={p.size} />}
     </span>
+  );
+}
+
+/** An image decoration over an avatar of [size]: 1.2 times as large, centred, gone if it can't be loaded. */
+export function DecorationImage({ id, size }: { id: string; size: number }) {
+  const [failed, setFailed] = useState(false);
+  useEffect(() => setFailed(false), [id]);
+  if (failed) return null;
+  const side = Math.round(size * 1.2);
+  const offset = Math.round((size - side) / 2);
+  return (
+    <img
+      className="deco-img"
+      src={decorationImage(id)}
+      width={side}
+      height={side}
+      style={{ left: offset, top: offset }}
+      alt=""
+      aria-hidden="true"
+      draggable={false}
+      loading="lazy"
+      onError={() => setFailed(true)}
+    />
   );
 }
 

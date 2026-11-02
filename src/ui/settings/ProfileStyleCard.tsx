@@ -1,29 +1,51 @@
-import { Clapperboard, ImagePlus, Trash2 } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { CollectionStudio } from "./CollectionStudio";
+import { ChevronRight, Clapperboard, ImagePlus, Sparkles, Trash2 } from "lucide-react";
+import { type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ApiError } from "../../api/client";
-import { PROFILE_DECORATIONS, PROFILE_EFFECTS } from "../../api/schemas";
-import { useEngine, useOrbit } from "../../application/orbit";
-import { removeAvatarMedia, removeProfileBanner, setAvatarMedia, setProfileBanner, setProfileStyle, userProfile } from "../../sync/account";
+import { PROFILE_EFFECTS } from "../../api/schemas";
+import { shallowEqual, useEngine, useOrbit } from "../../application/orbit";
+import { removeAvatarMedia, removeProfileBanner, setAvatarMedia, setProfileBanner, userProfile } from "../../sync/account";
 import { ACCENT_PRESETS } from "../community/accent";
-import { usePhoto } from "../components/photos";
-import { DECORATION_LABEL, EFFECT_LABEL, ProfileEffect, StyledAvatar } from "../people/ProfileStyle";
+import { StyledName, WornTagChip } from "../people/NameStyle";
+import { EFFECT_LABEL, ProfileEffect, StyledAvatar } from "../people/ProfileStyle";
 import { bannerJpeg } from "../workspace/photo";
 import { useLoad } from "../workspace/useLoad";
+import { DecorationWindow, useDecorationName } from "./DecorationWindow";
+import { describeNameLook, NameStyleWindow } from "./NameStyleWindow";
+import { NO_STYLE } from "./noStyle";
+import { useProfileDraft } from "./profileDraft";
+import { useStyleDraft } from "./useStyleDraft";
+import { ProfileThemePicker } from "./ProfileThemePicker";
+import { ShownBadgePicker } from "./ShownBadgePicker";
+import type { NameBadgeKind } from "../people/NameBadge";
+import type { MojoMark } from "../../api/profileSchemas";
+
+type StyleWindow = "decoration" | "name" | null;
 
 /** What the server accepts (server PROFILE_MEDIA_LIMITS): said before upload, and checked again there. */
 const LIMITS = { avatarImageMb: 4, clipMb: 12, clipSeconds: 6, bannerAnimatedMb: 6 };
 
 /**
- * Settings › Profile › Profile style (continuation brief v3 §10, API 0.45.0): an animated avatar (GIF, WebP, or a short
- * video clip the server turns into a 3 s silent loop), a banner (still or animated), a decoration, an effect and an
- * accent, with a live preview. Each change saves at once; uploads say what's happening and what went wrong. Who sees
- * the avatar and banner follows the photo's setting under Privacy.
+ * Settings › Profile › Look (continuation brief v3 §10, API 0.45.0; laid out as the reference, 2026-10-29): an animated
+ * avatar (GIF, WebP, or a short video clip the server turns into a 3 s silent loop), a banner (still or animated), the
+ * community tag by your name, the badge you show (API 0.65.0), rows opening the decoration and name style windows, a
+ * banner effect, and the profile theme (API 0.65.0; one banner colour on older servers). The
+ * preview is My Profile's right column. Each change saves at once; uploads say what's happening and what went wrong.
+ * Who sees the avatar and banner follows the photo's setting under Privacy.
  */
-export function ProfileStyleCard() {
+export function ProfileStyleCard({ nameStyles, pictureControls }: { nameStyles: boolean; pictureControls?: ReactNode }) {
   const engine = useEngine();
   const me = useOrbit((s) => s.me);
   const photoRev = useOrbit((s) => (s.me ? (s.users[s.me.userId]?.photoRev ?? null) : null));
   const profilesRev = useOrbit((s) => s.profilesRev);
+  const tagged = useOrbit(
+    (s) => s.orgs.filter((o) => !!o.tag).map((o) => ({ id: o.id, name: o.name, tag: o.tag as string, accent: o.accent })),
+    (a, b) => a.length === b.length && a.every((x, i) => shallowEqual(x, b[i])),
+  );
+  const themeOn = useOrbit((s) => s.server?.features.includes("profile-theme") ?? false);
+  const badgeOn = useOrbit((s) => s.server?.features.includes("shown-badge") ?? false);
+  const mojoBadge = useOrbit((s) => s.mojo.me?.badge ?? null);
+  const [open, setOpen] = useState<StyleWindow>(null);
   const [version, setVersion] = useState(0);
   const profile = useLoad(() => (me ? userProfile(engine, me.userId) : Promise.resolve(null)), [engine, me?.userId, version, profilesRev]);
   const [busy, setBusy] = useState<string | null>(null);
@@ -31,9 +53,17 @@ export function ProfileStyleCard() {
   const avatarInput = useRef<HTMLInputElement>(null);
   const bannerInput = useRef<HTMLInputElement>(null);
   const p = profile.data;
-  const style = p?.profileStyle ?? { decoration: null, effect: null, accent: null, nameFont: null, nameColors: null, nameEffect: null, tagOrgId: null };
-  const bannerKind = p?.profileBanner?.kind;
-  const bannerUrl = usePhoto("profileBanner", me?.userId ?? "", p?.profileBanner?.rev, bannerKind === "gif" ? "image/gif" : bannerKind === "webp" ? "image/webp" : "image/jpeg");
+  const reload = useCallback(() => setVersion((v) => v + 1), []);
+  const saver = useStyleDraft(
+    engine,
+    useMemo(() => p?.profileStyle ?? NO_STYLE, [p]),
+    reload,
+  );
+  const style = saver.style;
+  const decorationName = useDecorationName(style.decoration);
+  const draft = useProfileDraft();
+  const updateDraft = draft?.update;
+  useEffect(() => updateDraft?.({ style }), [style, updateDraft]);
 
   const run = async (label: string, fn: () => Promise<unknown>) => {
     setBusy(label);
@@ -62,7 +92,10 @@ export function ProfileStyleCard() {
     // A still picture is cropped to the banner's shape and re-encoded here (no camera metadata leaves the browser).
     void run("Uploading…", async () => setProfileBanner(engine, animated ? new Uint8Array(await f.arrayBuffer()) : await bannerJpeg(f)));
   };
-  const setStyle = (change: { decoration?: string | null; effect?: string | null; accent?: string | null }) => void run("Saving…", () => setProfileStyle(engine, change));
+  const setStyle = saver.save;
+  // The badges you hold now (API 0.65.0): from your own profile, and your Mojo plan's badge.
+  const mojoMark: MojoMark | null = p?.mojo ?? (mojoBadge?.kind ? { badge: mojoBadge.kind, check: mojoBadge.check } : null);
+  const held: NameBadgeKind[] = [...(mojoMark ? ["mojo" as const] : []), ...(p?.badges.includes("bug-hunter") ? ["bug-hunter" as const] : []), ...(p?.decorationArtist ? ["artist" as const] : [])];
 
   useEffect(() => {
     if (avatarInput.current) avatarInput.current.value = "";
@@ -71,32 +104,39 @@ export function ProfileStyleCard() {
 
   if (!me) return null;
   return (
-    <div className="card" style={{ padding: 20, display: "grid", gap: 18 }} aria-label="Profile style">
-      <div>
-        <h2 style={{ margin: 0, fontSize: 17 }}>Profile style</h2>
-        <p className="muted" style={{ margin: "4px 0 0" }}>
-          An animated avatar, a banner, a frame and an effect for your profile card. The avatar and banner are shown to whoever may see your photo (Privacy).
-        </p>
+    <div className="profile-look" aria-label="Look">
+      <CollectionStudio />
+      <div className="profile-customize-banner">
+        <div className="profile-customize-art" aria-hidden="true">
+          <StyledAvatar
+            userId={me.userId}
+            name={me.displayName}
+            colorIndex={me.avatarColor}
+            photoRev={photoRev}
+            media={null}
+            decoration={style.decoration}
+            collectibles={style.collectibles}
+            size={48}
+          />
+          <Sparkles size={20} />
+        </div>
+        <div className="lines grow">
+          <strong>Make your profile feel like you</strong>
+          <p>Find a frame that fits your personality.</p>
+        </div>
+        <button className="btn btn-primary" onClick={() => setOpen("decoration")}>
+          Browse frames <ChevronRight size={16} />
+        </button>
       </div>
-
-      <div className="profile-pop style-preview card" aria-label="Preview">
-        <div className="profile-pop-banner" style={bannerUrl ? { backgroundImage: `url(${bannerUrl})` } : { background: style.accent ?? "var(--brand-gradient)" }}>
-          <ProfileEffect effect={style.effect} />
-        </div>
-        <div className="profile-pop-avatar">
-          <StyledAvatar userId={me.userId} name={me.displayName} colorIndex={me.avatarColor} photoRev={photoRev} media={p?.avatarMedia ?? null} decoration={style.decoration} size={84} />
-        </div>
-        <div className="profile-pop-body">
-          <h3 className="profile-pop-name ellipsis" style={{ fontSize: 19 }}>
-            {me.displayName}
-          </h3>
-          <p className="profile-pop-handle">@{me.username}</p>
-        </div>
+      <div className="profile-look-heading">
+        <h2>Look</h2>
+        <small className="faint">Preview your style before applying it.</small>
       </div>
+      {pictureControls}
 
-      {error && (
+      {(error ?? saver.error) && (
         <div className="banner danger" role="alert">
-          {error}
+          {error ?? saver.error}
         </div>
       )}
       {busy && (
@@ -144,19 +184,63 @@ export function ProfileStyleCard() {
         <small className="faint">A picture (cropped to 1200 × 480), or an animated GIF or WebP up to {LIMITS.bannerAnimatedMb} MB. Video banners aren't supported.</small>
       </section>
 
-      <section className="setting-group" aria-labelledby="ps-deco">
-        <h3 id="ps-deco" className="invite-or-title">
-          Avatar frame
-        </h3>
-        <div className="style-grid" role="group" aria-labelledby="ps-deco">
-          {[null, ...PROFILE_DECORATIONS].map((d) => (
-            <button key={d ?? "none"} type="button" className="style-choice" aria-pressed={style.decoration === d} disabled={!!busy} onClick={() => setStyle({ decoration: d })}>
-              <StyledAvatar userId={me.userId} name={me.displayName} colorIndex={me.avatarColor} photoRev={photoRev} media={null} decoration={d} size={40} />
-              {d ? DECORATION_LABEL[d] : "None"}
-            </button>
-          ))}
-        </div>
-      </section>
+      {nameStyles && (
+        <section className="setting-group" aria-labelledby="ps-tag">
+          <h3 id="ps-tag" className="invite-or-title">
+            Community tag
+          </h3>
+          {tagged.length === 0 ? (
+            <small className="faint">None of your communities has a tag yet. Owners and admins add one in the community's settings › Appearance.</small>
+          ) : (
+            <div className="tag-tiles" role="group" aria-labelledby="ps-tag">
+              <button type="button" className="tag-tile" aria-pressed={!style.tagOrgId} onClick={() => setStyle({ tagOrgId: null })}>
+                None
+              </button>
+              {tagged.map((o) => (
+                <button key={o.id} type="button" className="tag-tile" aria-pressed={style.tagOrgId === o.id} onClick={() => setStyle({ tagOrgId: o.id })}>
+                  <WornTagChip tag={{ orgId: o.id, text: o.tag, color: o.accent }} />
+                  <span className="ellipsis">{o.name}</span>
+                </button>
+              ))}
+            </div>
+          )}
+          {tagged.length > 0 && <small className="faint">Shown beside your name in messages and member lists.</small>}
+        </section>
+      )}
+
+      {badgeOn && p && <ShownBadgePicker style={style} held={held} mojo={mojoMark} onSave={setStyle} />}
+
+      <div className="style-rows">
+        <button type="button" className="style-row" onClick={() => setOpen("decoration")}>
+          <StyledAvatar
+            userId={me.userId}
+            name={me.displayName}
+            colorIndex={me.avatarColor}
+            photoRev={photoRev}
+            media={null}
+            decoration={style.decoration}
+            collectibles={style.collectibles}
+            size={36}
+          />
+          <span className="lines grow">
+            <strong>Avatar decoration</strong>
+            <small className="faint">{decorationName}</small>
+          </span>
+          <ChevronRight size={16} className="faint" aria-hidden="true" />
+        </button>
+        {nameStyles && (
+          <button type="button" className="style-row" onClick={() => setOpen("name")}>
+            <span className="style-row-name">
+              <StyledName name={me.displayName} style={style} className="ellipsis" />
+            </span>
+            <span className="lines grow">
+              <strong>Name style</strong>
+              <small className="faint">{describeNameLook(style)}</small>
+            </span>
+            <ChevronRight size={16} className="faint" aria-hidden="true" />
+          </button>
+        )}
+      </div>
 
       <section className="setting-group" aria-labelledby="ps-fx">
         <h3 id="ps-fx" className="invite-or-title">
@@ -164,7 +248,7 @@ export function ProfileStyleCard() {
         </h3>
         <div className="style-grid" role="group" aria-labelledby="ps-fx">
           {[null, ...PROFILE_EFFECTS].map((f) => (
-            <button key={f ?? "none"} type="button" className="style-choice" aria-pressed={style.effect === f} disabled={!!busy} onClick={() => setStyle({ effect: f })}>
+            <button key={f ?? "none"} type="button" className="style-choice" aria-pressed={style.effect === f} onClick={() => setStyle({ effect: f })}>
               <span className="swatch-fx">
                 <ProfileEffect effect={f} />
               </span>
@@ -174,21 +258,69 @@ export function ProfileStyleCard() {
         </div>
       </section>
 
-      <section className="setting-group" aria-labelledby="ps-accent">
-        <h3 id="ps-accent" className="invite-or-title">
-          Banner colour
-        </h3>
-        <fieldset className="brand-swatches" aria-labelledby="ps-accent">
-          <button type="button" className="brand-swatch meldiq" aria-pressed={style.accent === null} onClick={() => setStyle({ accent: null })} title="Your avatar's colour">
-            <span className="sr-only">Your avatar's colour</span>
-          </button>
-          {ACCENT_PRESETS.map((a) => (
-            <button key={a.hex} type="button" className="brand-swatch" style={{ background: a.hex }} aria-pressed={style.accent === a.hex} onClick={() => setStyle({ accent: a.hex })} title={a.name}>
-              <span className="sr-only">{a.name}</span>
+      {themeOn && <ProfileThemePicker style={style} onSave={setStyle} />}
+      <div className="row" style={{ gap: 8, flexWrap: "wrap" }}>
+        <button className="btn btn-secondary" disabled={saver.busy || !saver.dirty} onClick={saver.undo}>
+          Undo look change
+        </button>
+        <button
+          className="btn btn-secondary"
+          disabled={saver.busy || !saver.dirty}
+          onClick={() => {
+            saver.reset();
+            reload();
+          }}
+        >
+          Reset look
+        </button>
+        <button className="btn btn-primary" disabled={saver.busy || !saver.dirty} onClick={() => void saver.apply()}>
+          {saver.busy ? "Applying…" : "Apply look"}
+        </button>
+        {saver.dirty && <small role="status">Unsaved look preview</small>}
+      </div>
+
+      {!themeOn && (
+        <section className="setting-group" aria-labelledby="ps-accent">
+          <h3 id="ps-accent" className="invite-or-title">
+            Banner colour
+          </h3>
+          <fieldset className="brand-swatches" aria-labelledby="ps-accent">
+            <button type="button" className="brand-swatch meldiq" aria-pressed={style.accent === null} onClick={() => setStyle({ accent: null })} title="Your avatar's colour">
+              <span className="sr-only">Your avatar's colour</span>
             </button>
-          ))}
-        </fieldset>
-      </section>
+            {ACCENT_PRESETS.map((a) => (
+              <button key={a.hex} type="button" className="brand-swatch" style={{ background: a.hex }} aria-pressed={style.accent === a.hex} onClick={() => setStyle({ accent: a.hex })} title={a.name}>
+                <span className="sr-only">{a.name}</span>
+              </button>
+            ))}
+          </fieldset>
+        </section>
+      )}
+
+      {open === "decoration" && (
+        <DecorationWindow
+          me={me}
+          photoRev={photoRev}
+          current={style.decoration}
+          onClose={() => setOpen(null)}
+          onApply={(d) => {
+            setStyle({ decoration: d });
+            setOpen(null);
+          }}
+        />
+      )}
+      {open === "name" && (
+        <NameStyleWindow
+          me={me}
+          photoRev={photoRev}
+          style={style}
+          onClose={() => setOpen(null)}
+          onApply={(change) => {
+            setStyle(change);
+            setOpen(null);
+          }}
+        />
+      )}
     </div>
   );
 }

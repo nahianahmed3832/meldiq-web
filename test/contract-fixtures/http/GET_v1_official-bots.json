@@ -1,0 +1,364 @@
+{
+  "bots": [
+    {
+      "key": "welcomer",
+      "name": "Welcomer",
+      "tagline": "Greets every newcomer by name",
+      "description": "Welcomer says hello to each person who joins, in the channel you pick, so nobody arrives to silence. Write the greeting yourself and drop in their name, the community's name or how many people are here now.",
+      "color": "#22c55e",
+      "icon": "👋",
+      "features": [
+        "Greets newcomers",
+        "Your own words",
+        "Name, community and count",
+        "Try it on yourself"
+      ],
+      "sample": "Hey @ana, welcome to Night Owls! You're member number 42. 🎉",
+      "commands": [],
+      "limits": [
+        {
+          "what": "Greetings",
+          "free": "1",
+          "plus": "Up to 10, one picked at random"
+        },
+        {
+          "what": "Goodbye when someone leaves",
+          "free": "—",
+          "plus": "Yes"
+        }
+      ],
+      "available": true,
+      "unavailableReason": null
+    },
+    {
+      "key": "helper",
+      "name": "Helper",
+      "tagline": "Game-night tricks and away notes",
+      "description": "Helper keeps a few party tricks ready in every channel it can post in: dice, a coin, a fortune ball and a picker for when nobody can decide. People can leave an away note too, and Helper answers for them while they're gone. Nothing to set up.",
+      "color": "#0ea5e9",
+      "icon": "🎲",
+      "features": [
+        "Dice and coins",
+        "Fortune ball",
+        "Picker",
+        "Away notes",
+        "No setup"
+      ],
+      "sample": "🎲 Ana rolled 2d6: 4 + 6 = 10",
+      "commands": [
+        {
+          "usage": "!8ball question",
+          "description": "A yes-or-no question for the fortune ball"
+        },
+        {
+          "usage": "!roll or !roll 2d6",
+          "description": "Roll dice (a d6 unless you say otherwise)"
+        },
+        {
+          "usage": "!flip",
+          "description": "Heads or tails"
+        },
+        {
+          "usage": "!choose a | b | c",
+          "description": "Let Helper decide"
+        },
+        {
+          "usage": "!afk reason",
+          "description": "Leave an away note until you're back"
+        },
+        {
+          "usage": "!help",
+          "description": "Every command the bots here know"
+        }
+      ],
+      "limits": [
+        {
+          "what": "Your own commands (like !rules)",
+          "free": "—",
+          "plus": "Up to 25"
+        }
+      ],
+      "available": true,
+      "unavailableReason": null
+    },
+    {
+      "key": "levels",
+      "name": "Levels",
+      "tagline": "XP for chatting, levels for regulars",
+      "description": "Levels hands out a little XP when people chat (once a minute at most, so spamming gets nowhere) and cheers when someone goes up a level. !rank shows where you stand and !top the ten most active. Its leaderboard can go on your lobby too.",
+      "color": "#f59e0b",
+      "icon": "📈",
+      "features": [
+        "XP for chatting",
+        "Level-up cheers",
+        "!rank and !top",
+        "Lobby leaderboard"
+      ],
+      "sample": "🎉 @ana just reached level 5!",
+      "commands": [
+        {
+          "usage": "!rank",
+          "description": "Your level, XP and place"
+        },
+        {
+          "usage": "!top",
+          "description": "The ten most active people"
+        }
+      ],
+      "limits": [
+        {
+          "what": "XP boost",
+          "free": "—",
+          "plus": "1.5× or 2×"
+        },
+        {
+          "what": "Roles for reaching a level",
+          "free": "—",
+          "plus": "Up to 20 levels"
+        },
+        {
+          "what": "Your own level-up message",
+          "free": "—",
+          "plus": "Yes"
+        }
+      ],
+      "available": true,
+      "unavailableReason": null
+    },
+    {
+      "key": "logger",
+      "name": "Logger",
+      "tagline": "A quiet record of what changed",
+      "description": "Logger writes one short line into the channel you choose for every edit, deletion, join, leave, kick, ban, timeout and role change, and never pings anyone. It stays quiet until you pick its channel: a private one is best, so only your team reads it.",
+      "color": "#64748b",
+      "icon": "📜",
+      "features": [
+        "Edits and deletions",
+        "Joins and leaves",
+        "Kicks, bans and timeouts",
+        "Role changes",
+        "Never pings"
+      ],
+      "sample": "✏️ Ana edited a message in #general: “see you at 8” → “see you at 9”",
+      "commands": [],
+      "limits": [
+        {
+          "what": "Member events in their own channel",
+          "free": "—",
+          "plus": "Yes"
+        },
+        {
+          "what": "Channels left out",
+          "free": "—",
+          "plus": "Up to 25"
+        }
+      ],
+      "available": true,
+      "unavailableReason": null
+    },
+    {
+      "key": "starboard",
+      "name": "Starboard",
+      "tagline": "The best messages, picked by everyone",
+      "description": "When enough people react to a message with ⭐ or 🌟, Starboard copies it to your starboard channel with a link back and keeps its star count up to date. Your own stars don't count, private channels are skipped, and no message goes up twice.",
+      "color": "#eab308",
+      "icon": "⭐",
+      "features": [
+        "Stars from everyone",
+        "Pictures come along",
+        "Link back",
+        "Never twice"
+      ],
+      "sample": "⭐ 6 · Ana in #memes\nthis is the one",
+      "commands": [],
+      "limits": [
+        {
+          "what": "Star emoji",
+          "free": "⭐ and 🌟",
+          "plus": "Any emoji"
+        },
+        {
+          "what": "Star your own messages",
+          "free": "—",
+          "plus": "Yes"
+        },
+        {
+          "what": "Channels left out",
+          "free": "—",
+          "plus": "Up to 25"
+        }
+      ],
+      "available": true,
+      "unavailableReason": null
+    },
+    {
+      "key": "giveaways",
+      "name": "Giveaways",
+      "tagline": "Prize draws with one command",
+      "description": "Giveaways runs a prize draw from a single message. Anyone who manages messages in a channel can start one there: people react 🎉 to enter, and when time's up the bot draws the winners from people still in the community and calls them out. Bots never win, and running draws show on your lobby.",
+      "color": "#ec4899",
+      "icon": "🎉",
+      "features": [
+        "React to enter",
+        "Several winners",
+        "End early or reroll",
+        "Shows on your lobby"
+      ],
+      "sample": "🎉 Giveaway: a game key\nReact with 🎉 to enter · 1 winner · ends in 1 day · hosted by Ana",
+      "commands": [
+        {
+          "usage": "!giveaway 1d Prize",
+          "description": "Start a draw here (s, m, h, d or w)"
+        },
+        {
+          "usage": "!giveaway 2h 3w Prize",
+          "description": "Three winners, drawn in two hours"
+        },
+        {
+          "usage": "!gend",
+          "description": "Draw this channel's giveaway now"
+        },
+        {
+          "usage": "!greroll",
+          "description": "Draw someone else for the last one"
+        }
+      ],
+      "limits": [
+        {
+          "what": "Winners per draw",
+          "free": "Up to 3",
+          "plus": "Up to 20"
+        },
+        {
+          "what": "Longest draw",
+          "free": "7 days",
+          "plus": "30 days"
+        },
+        {
+          "what": "Only members with a role can win",
+          "free": "—",
+          "plus": "Yes"
+        }
+      ],
+      "available": true,
+      "unavailableReason": null
+    },
+    {
+      "key": "tickets",
+      "name": "Tickets",
+      "tagline": "Private help desks for your members",
+      "description": "Tickets posts a panel with an \"Open a ticket\" button. Each ticket is a private channel between the person who opened it and your moderators, and either side closes it once it's sorted. Turning Tickets on here is the same switch as Settings › Tickets.",
+      "color": "#8b5cf6",
+      "icon": "🎫",
+      "features": [
+        "Panels with a button",
+        "Private channels",
+        "Close from either side",
+        "Logged"
+      ],
+      "sample": "🎫 Ticket #12 · Support opened by Ana",
+      "commands": [],
+      "limits": [
+        {
+          "what": "Panels",
+          "free": "2",
+          "plus": "10"
+        },
+        {
+          "what": "Open tickets per person",
+          "free": "Up to 3",
+          "plus": "Up to 10"
+        },
+        {
+          "what": "A support role that sees tickets and is pinged",
+          "free": "—",
+          "plus": "Per panel"
+        },
+        {
+          "what": "Welcome line in each new ticket",
+          "free": "—",
+          "plus": "Per panel"
+        },
+        {
+          "what": "Transcript in the log when closed",
+          "free": "—",
+          "plus": "Yes"
+        }
+      ],
+      "available": true,
+      "unavailableReason": null
+    },
+    {
+      "key": "alerts",
+      "name": "Alerts",
+      "tagline": "New videos, posted for you",
+      "description": "Alerts follows the YouTube channels you add and posts each new upload in the channel you pick, with a ping for a role if you like. It looks every ten minutes and only ever posts videos that came out after you added the channel.",
+      "color": "#ef4444",
+      "icon": "📣",
+      "features": [
+        "New uploads only",
+        "Your channel",
+        "Optional role ping",
+        "Your own line"
+      ],
+      "sample": "📣 Ana just posted a new video: Speedrun night recap\nhttps://youtu.be/…",
+      "commands": [],
+      "limits": [
+        {
+          "what": "YouTube channels followed",
+          "free": "3",
+          "plus": "25"
+        }
+      ],
+      "available": false,
+      "unavailableReason": "Needs a YouTube API key on this server"
+    },
+    {
+      "key": "wordy",
+      "name": "Wordy",
+      "tagline": "One five-letter word a day",
+      "description": "Wordy picks the same five-letter word for everyone here each day (new at 00:00 UTC). You get six tries, the board shows colours but never letters, and Wordy keeps streaks, the best solvers and a recap of yesterday in its channel.",
+      "color": "#14b8a6",
+      "icon": "🔤",
+      "features": [
+        "Daily word",
+        "Six tries",
+        "No spoilers",
+        "Streaks",
+        "Daily recap"
+      ],
+      "sample": "🔤 Ana solved Wordy #304 in 3/6\n🟨⬛⬛🟩⬛\n🟩🟩⬛🟩🟨\n🟩🟩🟩🟩🟩",
+      "commands": [
+        {
+          "usage": "!wordy or /wordy",
+          "description": "Start or show your game of the day"
+        },
+        {
+          "usage": "!wordy word",
+          "description": "Guess (or just type a five-letter word in Wordy's channel)"
+        },
+        {
+          "usage": "!wordy stats",
+          "description": "Your streak and the best solvers here"
+        }
+      ],
+      "limits": [],
+      "available": true,
+      "unavailableReason": null
+    }
+  ],
+  "botsPlus": {
+    "name": "Bots+",
+    "description": "Every official bot's Plus extras, for this whole community.",
+    "perks": [
+      "Up to 10 greetings and a goodbye",
+      "Your own Helper commands",
+      "XP boosts and level roles",
+      "A separate member log",
+      "Any star emoji",
+      "Bigger, longer giveaways for a role",
+      "10 ticket panels with support roles and transcripts",
+      "Follow up to 25 YouTube channels"
+    ]
+  }
+}

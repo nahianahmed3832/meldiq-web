@@ -34,7 +34,9 @@ export function TabBar({ section, hidden }: { section: Section; hidden: boolean 
       {tabs.map((t) => (
         <button
           key={t.key}
-          aria-current={section === t.key || (t.key === "settings" && section === "later") || (t.key === "dms" && section === "friends") ? "page" : undefined}
+          aria-current={
+            section === t.key || (t.key === "home" && section === "lobby") || (t.key === "settings" && section === "later") || (t.key === "dms" && section === "friends") ? "page" : undefined
+          }
           onClick={() => navigate(t.key === "settings" ? { section: "settings", settingsPage: "you" } : { section: t.key })}
         >
           {t.icon}

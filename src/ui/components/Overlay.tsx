@@ -1,36 +1,57 @@
-import { Check, ChevronRight, X } from "lucide-react";
-import { type KeyboardEvent as ReactKeyboardEvent, type MouseEvent as ReactMouseEvent, type ReactNode, type RefObject, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { ArrowLeft, Check, ChevronRight, X } from "lucide-react";
+import { PHONE_LAYOUT, visibleViewport } from "../../application/viewport";
+import { ROUTE_EVENT } from "../../application/router";
+import { type CSSProperties, type KeyboardEvent as ReactKeyboardEvent, type MouseEvent as ReactMouseEvent, type ReactNode, type RefObject, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
-const FOCUSABLE = 'button:not([disabled]), [href], input:not([disabled]), textarea:not([disabled]), select, [tabindex]:not([tabindex="-1"])';
+const FOCUSABLE = 'button:not([disabled]), [href], input:not([disabled]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
+// Portalled children aren't DOM descendants of their parent dialog. Only the top trap answers Tab.
+const focusTraps: HTMLElement[] = [];
 
 /** Keeps Tab inside [ref] and returns focus to where it was when the overlay closes. */
-export function useFocusTrap(ref: RefObject<HTMLElement | null>, active: boolean): void {
+export function useFocusTrap(ref: RefObject<HTMLElement | null>, active: boolean, cycle = false): void {
   useEffect(() => {
     if (!active) return;
     const before = document.activeElement as HTMLElement | null;
     const el = ref.current;
-    const first = el?.querySelector<HTMLElement>("[data-autofocus]") ?? el?.querySelector<HTMLElement>(FOCUSABLE);
-    first?.focus();
+    if (!el) return;
+    focusTraps.push(el);
+    const items = () => [...el.querySelectorAll<HTMLElement>(FOCUSABLE)].filter((item) => item.tabIndex >= 0 && item.getClientRects().length && !item.closest("[inert]"));
+    const first = items().find((item) => item.hasAttribute("data-autofocus")) ?? items()[0] ?? el;
+    first?.focus({ preventScroll: true });
     const onKey = (e: KeyboardEvent) => {
-      if (e.key !== "Tab" || !el) return;
-      const items = [...el.querySelectorAll<HTMLElement>(FOCUSABLE)];
-      if (!items.length) return;
-      const [a, b] = [items[0], items[items.length - 1]];
-      if (e.shiftKey && document.activeElement === a) {
+      if (e.key !== "Tab" || focusTraps.at(-1) !== el) return;
+      // Desktop menus own Tab dismissal even when portalled out of a parent dialog.
+      const focused = document.activeElement as HTMLElement | null;
+      if (!el.contains(focused) && focused?.closest(".menu")) return;
+      const list = items();
+      if (!list.length) return e.preventDefault();
+      if (cycle) {
+        // Safari can skip buttons in native Tab order. Context sheets explicitly expose every action.
         e.preventDefault();
-        b.focus();
-      } else if (!e.shiftKey && document.activeElement === b) {
-        e.preventDefault();
-        a.focus();
+        const index = list.indexOf(focused!);
+        const next = index < 0 ? (e.shiftKey ? list.length - 1 : 0) : (index + (e.shiftKey ? -1 : 1) + list.length) % list.length;
+        list[next].focus();
+      } else {
+        const [first, last] = [list[0], list[list.length - 1]];
+        if (e.shiftKey && (focused === first || !el.contains(focused))) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && (focused === last || !el.contains(focused))) {
+          e.preventDefault();
+          first.focus();
+        }
       }
     };
     document.addEventListener("keydown", onKey);
     return () => {
       document.removeEventListener("keydown", onKey);
-      before?.focus?.();
+      const top = focusTraps.at(-1) === el;
+      const index = focusTraps.lastIndexOf(el);
+      if (index >= 0) focusTraps.splice(index, 1);
+      if (top && before?.isConnected) before.focus({ preventScroll: true });
     };
-  }, [ref, active]);
+  }, [ref, active, cycle]);
 }
 
 interface DialogProps {
@@ -47,6 +68,8 @@ interface DialogProps {
   subtitle?: ReactNode;
   /** Extra class on the dialog (a card's own look). */
   className?: string;
+  /** CSS variables for that look (a profile card's theme colours). */
+  vars?: CSSProperties;
   /**
    * On wide screens, shown as a card beside this point (the left edge of what opened it) instead of centred, over a clear
    * backdrop: a profile from the member list (the reference's popover). Narrow screens keep the centred dialog.
@@ -58,7 +81,7 @@ interface DialogProps {
 const NEAR_MIN_WIDTH = 961;
 const NEAR_GAP = 12;
 
-export function Dialog({ title, onClose, children, footer, wide, width, header, subtitle, className, near }: DialogProps) {
+export function Dialog({ title, onClose, children, footer, wide, width, header, subtitle, className, vars, near }: DialogProps) {
   const ref = useRef<HTMLDivElement>(null);
   const [placed, setPlaced] = useState<{ top: number; left: number } | null>(null);
   const anchored = !!near && typeof window !== "undefined" && window.innerWidth >= NEAR_MIN_WIDTH;
@@ -71,9 +94,17 @@ export function Dialog({ title, onClose, children, footer, wide, width, header, 
   }, [anchored, near]);
   useFocusTrap(ref, true);
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && !e.defaultPrevented && focusTraps.at(-1) === ref.current && !document.querySelector(".menu")) onClose();
+    };
     document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
+    window.addEventListener("popstate", onClose);
+    window.addEventListener(ROUTE_EVENT, onClose);
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      window.removeEventListener("popstate", onClose);
+      window.removeEventListener(ROUTE_EVENT, onClose);
+    };
   }, [onClose]);
   return createPortal(
     <div className={`scrim${anchored ? " scrim-clear" : ""}`} onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
@@ -81,9 +112,11 @@ export function Dialog({ title, onClose, children, footer, wide, width, header, 
         ref={ref}
         className={`dialog${className ? ` ${className}` : ""}${anchored ? " dialog-near" : ""}`}
         role="dialog"
+        tabIndex={-1}
         aria-modal="true"
         aria-label={title}
         style={{
+          ...vars,
           ...(width ? { width } : wide ? { width: "min(680px, 100%)" } : {}),
           ...(anchored ? (placed ? { position: "fixed", top: placed.top, left: placed.left } : { visibility: "hidden" }) : {}),
         }}
@@ -148,25 +181,25 @@ export function Menu({ anchor, entries, onClose, align = "start", label, point =
 
 /** Where a menu goes: at the pointer, beside its item (a submenu), or below its button, kept inside the window. */
 function menuPosition(anchor: HTMLElement, el: HTMLElement | null, align: "start" | "end", point: { x: number; y: number } | null, beside: boolean) {
+  const v = visibleViewport();
   const w = el?.offsetWidth ?? 240;
   const h = el?.offsetHeight ?? 200;
-  const fit = (top: number) => Math.max(8, Math.min(top, window.innerHeight - h - 8));
+  const fit = (top: number) => Math.max(v.top + 8, Math.min(top, v.bottom - h - 8));
+  const fitLeft = (left: number) => Math.max(v.left + 8, Math.min(left, v.right - w - 8));
   if (point) {
-    const left = point.x + w > window.innerWidth - 8 ? Math.max(8, point.x - w) : point.x;
-    const top = point.y + h > window.innerHeight - 8 ? Math.max(8, point.y - h) : point.y;
-    return { top, left };
+    return { top: fit(point.y + h > v.bottom - 8 ? point.y - h : point.y), left: fitLeft(point.x + w > v.right - 8 ? point.x - w : point.x) };
   }
   const r = anchor.getBoundingClientRect();
   if (beside) {
     // Beside the item, flipped to the left where the window ends; level with the item, moved up to fit.
-    const left = r.right + 4 + w > window.innerWidth - 8 ? Math.max(8, r.left - w - 4) : r.right + 4;
+    const left = fitLeft(r.right + 4 + w > v.right - 8 ? r.left - w - 4 : r.right + 4);
     return { top: fit(r.top - 6), left };
   }
   let left = align === "end" ? r.right - w : r.left;
-  left = Math.max(8, Math.min(left, window.innerWidth - w - 8));
+  left = fitLeft(left);
   let top = r.bottom + 6;
-  if (top + h > window.innerHeight - 8) top = Math.max(8, r.top - h - 6);
-  return { top, left };
+  if (top + h > v.bottom - 8) top = r.top - h - 6;
+  return { top: fit(top), left };
 }
 
 interface MenuLevelProps extends Required<Omit<MenuProps, "point">> {
@@ -181,18 +214,34 @@ function MenuLevel({ anchor, entries, onClose, onDone, align, label, point, besi
   const [pos, setPos] = useState<{ top: number; left: number } | null>(null);
   const [open, setOpen] = useState<{ index: number; el: HTMLElement } | null>(null);
   const hoverTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  useLayoutEffect(() => setPos(menuPosition(anchor, ref.current, align, point, beside)), [anchor, align, point, beside]);
-  // A menu belongs to where it was opened: leaving the page or resizing the window closes it.
+  const phone = window.matchMedia(PHONE_LAYOUT).matches;
+  useFocusTrap(ref, phone && !open, true);
+  useLayoutEffect(() => {
+    const place = () => setPos(menuPosition(anchor, ref.current, align, point, beside));
+    place();
+    window.visualViewport?.addEventListener("resize", place);
+    window.visualViewport?.addEventListener("scroll", place);
+    return () => {
+      window.visualViewport?.removeEventListener("resize", place);
+      window.visualViewport?.removeEventListener("scroll", place);
+    };
+  }, [anchor, align, point, beside]);
+  // Desktop popovers close on resize; phone sheets stay open when the keyboard resizes Chrome's window.
   useEffect(() => {
     if (beside) return;
     const close = () => onDone();
-    window.addEventListener("resize", close);
-    window.addEventListener("popstate", close);
-    return () => {
-      window.removeEventListener("resize", close);
-      window.removeEventListener("popstate", close);
+    const resize = () => {
+      if (!phone || !window.matchMedia(PHONE_LAYOUT).matches) close();
     };
-  }, [onDone, beside]);
+    window.addEventListener("resize", resize);
+    window.addEventListener("popstate", close);
+    window.addEventListener(ROUTE_EVENT, close);
+    return () => {
+      window.removeEventListener("resize", resize);
+      window.removeEventListener("popstate", close);
+      window.removeEventListener(ROUTE_EVENT, close);
+    };
+  }, [onDone, beside, phone]);
   useEffect(() => () => void (hoverTimer.current && clearTimeout(hoverTimer.current)), []);
   useEffect(() => {
     const items = () => [...(ref.current?.querySelectorAll<HTMLElement>(':scope > [role^="menuitem"]:not([disabled])') ?? [])];
@@ -211,7 +260,7 @@ function MenuLevel({ anchor, entries, onClose, onDone, align, label, point, besi
       } else if (e.key === "ArrowUp") {
         e.preventDefault();
         list[(i - 1 + list.length) % list.length]?.focus();
-      } else if (e.key === "Tab") onDone();
+      } else if (e.key === "Tab" && !phone) onDone();
     };
     const onDown = (e: MouseEvent) => {
       const t = e.target as HTMLElement;
@@ -225,7 +274,7 @@ function MenuLevel({ anchor, entries, onClose, onDone, align, label, point, besi
       document.removeEventListener("keydown", onKey);
       document.removeEventListener("mousedown", onDown);
     };
-  }, [anchor, onClose, onDone, beside]);
+  }, [anchor, onClose, onDone, beside, phone]);
   // The first item takes the focus once the menu is placed (a hidden element can't take it), so the keyboard and
   // Escape work at once however it was opened.
   const placed = pos !== null;
@@ -236,62 +285,84 @@ function MenuLevel({ anchor, entries, onClose, onDone, align, label, point, besi
   const openSub = (index: number, el: HTMLElement) => setOpen((o) => (o?.index === index ? o : { index, el }));
   const sub = open ? entries[open.index] : null;
   return createPortal(
-    <div ref={ref} className="menu" role="menu" aria-label={label} style={pos ? { top: pos.top, left: pos.left } : { visibility: "hidden", top: 0, left: 0 }}>
-      {entries.map((e, i) => {
-        if (e === "separator") return <hr key={i} />;
-        if ("heading" in e)
-          return (
-            <div key={i} className="menu-label">
-              {e.heading}
-            </div>
-          );
-        if ("custom" in e) return <div key={i}>{e.custom}</div>;
-        const hasSub = !!e.submenu?.length;
-        const role = e.toggle ? "menuitemcheckbox" : e.checked === undefined ? "menuitem" : "menuitemradio";
-        return (
-          <button
-            key={i}
-            role={role}
-            aria-checked={e.checked}
-            aria-haspopup={hasSub ? "menu" : undefined}
-            aria-expanded={hasSub ? open?.index === i : undefined}
-            className={`${e.danger ? "danger" : ""}${hasSub && open?.index === i ? " open" : ""}`.trim() || undefined}
-            disabled={e.disabled}
-            onMouseEnter={(ev) => {
-              const el = ev.currentTarget;
-              if (hoverTimer.current) clearTimeout(hoverTimer.current);
-              // A short pause, so moving the pointer down the list doesn't flash every submenu.
-              hoverTimer.current = setTimeout(() => (hasSub ? openSub(i, el) : setOpen(null)), hasSub ? 120 : 200);
-            }}
-            onKeyDown={(ev) => {
-              if (hasSub && (ev.key === "ArrowRight" || ev.key === "Enter" || ev.key === " ")) {
-                ev.preventDefault();
-                ev.stopPropagation();
-                openSub(i, ev.currentTarget);
-              }
-            }}
-            onClick={(ev) => {
-              if (hasSub) return openSub(i, ev.currentTarget);
-              if (e.toggle) return e.onSelect?.();
-              onDone();
-              e.onSelect?.();
-            }}
-          >
-            {e.icon}
-            <span className="grow menu-text">
-              <span>{e.label}</span>
-              {e.hint && <small className="menu-hint">{e.hint}</small>}
-            </span>
-            {e.toggle && <span className="menu-box" aria-hidden="true" />}
-            {!e.toggle && e.checked && <Check size={15} className="menu-check" aria-hidden="true" />}
-            {hasSub && <ChevronRight size={15} className="menu-chevron" aria-hidden="true" />}
+    <>
+      {!beside && <div className="menu-scrim" aria-hidden="true" onPointerDown={() => onDone()} />}
+      <div
+        ref={ref}
+        className={`menu${beside ? " menu-submenu" : ""}`}
+        role="menu"
+        tabIndex={-1}
+        inert={phone && !!open}
+        aria-label={label}
+        style={pos ? { top: pos.top, left: pos.left } : { visibility: "hidden", top: 0, left: 0 }}
+      >
+        <div className="menu-phone-head">
+          {beside && (
+            <button className="icon-btn" aria-label="Back to previous menu" onClick={onClose}>
+              <ArrowLeft size={20} />
+            </button>
+          )}
+          <strong className="grow">{label}</strong>
+          <button className="icon-btn" aria-label={`Close ${label} menu`} onClick={onDone}>
+            <X size={20} />
           </button>
-        );
-      })}
-      {open && sub && sub !== "separator" && "submenu" in sub && sub.submenu && (
-        <MenuLevel anchor={open.el} entries={sub.submenu} onClose={() => setOpen(null)} onDone={onDone} align="start" label={sub.label} point={null} beside />
-      )}
-    </div>,
+        </div>
+        {entries.map((e, i) => {
+          if (e === "separator") return <hr key={i} />;
+          if ("heading" in e)
+            return (
+              <div key={i} className="menu-label">
+                {e.heading}
+              </div>
+            );
+          if ("custom" in e) return <div key={i}>{e.custom}</div>;
+          const hasSub = !!e.submenu?.length;
+          const role = e.toggle ? "menuitemcheckbox" : e.checked === undefined ? "menuitem" : "menuitemradio";
+          return (
+            <button
+              key={i}
+              role={role}
+              aria-checked={e.checked}
+              aria-haspopup={hasSub ? "menu" : undefined}
+              aria-expanded={hasSub ? open?.index === i : undefined}
+              className={`${e.danger ? "danger" : ""}${hasSub && open?.index === i ? " open" : ""}`.trim() || undefined}
+              disabled={e.disabled}
+              onMouseEnter={(ev) => {
+                const el = ev.currentTarget;
+                if (hoverTimer.current) clearTimeout(hoverTimer.current);
+                // A short pause, so moving the pointer down the list doesn't flash every submenu.
+                hoverTimer.current = setTimeout(() => (hasSub ? openSub(i, el) : setOpen(null)), hasSub ? 120 : 200);
+              }}
+              onKeyDown={(ev) => {
+                if (hasSub && (ev.key === "ArrowRight" || ev.key === "Enter" || ev.key === " ")) {
+                  ev.preventDefault();
+                  ev.stopPropagation();
+                  openSub(i, ev.currentTarget);
+                }
+              }}
+              onClick={(ev) => {
+                if (hasSub) return openSub(i, ev.currentTarget);
+                if (e.toggle) return e.onSelect?.();
+                onDone();
+                e.onSelect?.();
+              }}
+            >
+              {e.icon}
+              <span className="grow menu-text">
+                <span>{e.label}</span>
+                {e.hint && <small className="menu-hint">{e.hint}</small>}
+              </span>
+              {e.toggle && <span className="menu-box" aria-hidden="true" />}
+              {!e.toggle && e.checked && <Check size={15} className="menu-check" aria-hidden="true" />}
+              {hasSub && <ChevronRight size={15} className="menu-chevron" aria-hidden="true" />}
+            </button>
+          );
+        })}
+        {open && sub && sub !== "separator" && "submenu" in sub && sub.submenu && (
+          <MenuLevel anchor={open.el} entries={sub.submenu} onClose={() => setOpen(null)} onDone={onDone} align="start" label={sub.label} point={null} beside />
+        )}
+      </div>
+    </>,
     document.body,
   );
 }

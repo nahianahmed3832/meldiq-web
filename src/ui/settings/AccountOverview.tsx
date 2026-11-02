@@ -22,6 +22,7 @@ export function AccountOverview({ email, onEmailChanged }: { email: string; onEm
   const me = useOrbit((s) => s.me);
   const photoRev = useOrbit((s) => (s.me ? s.users[s.me.userId]?.photoRev : null));
   const emailChange = useOrbit((s) => s.server?.features.includes("email-change") ?? false);
+  const usernameHolds = useOrbit((s) => s.server?.features.includes("username-holds") ?? false);
   const profilesRev = useOrbit((s) => s.profilesRev);
   const profile = useLoad(() => myProfile(engine), [engine, profilesRev]);
   const look = useUserLook(me?.userId ?? "");
@@ -30,7 +31,8 @@ export function AccountOverview({ email, onEmailChanged }: { email: string; onEm
   const banner = me?.profileBanner ?? null;
   const bannerUrl = usePhoto("profileBanner", me?.userId ?? "", banner?.rev ?? null, banner?.kind === "gif" ? "image/gif" : banner?.kind === "webp" ? "image/webp" : "image/jpeg");
   if (!me) return null;
-  const colors = look.profileStyle?.nameColors ?? (look.profileStyle?.accent ? [look.profileStyle.accent] : null);
+  // API 0.65.0: the profile theme first, then the name's colours (older servers: the accent).
+  const colors = look.profileStyle?.themeColors ?? look.profileStyle?.nameColors ?? (look.profileStyle?.accent ? [look.profileStyle.accent] : null);
   const bannerStyle = bannerUrl
     ? { backgroundImage: `url(${bannerUrl})` }
     : { background: colors ? (colors.length > 1 ? `linear-gradient(120deg, ${colors.join(", ")})` : colors[0]) : "var(--brand-gradient)" };
@@ -85,7 +87,11 @@ export function AccountOverview({ email, onEmailChanged }: { email: string; onEm
           label="Username"
           initial={me.username}
           max={32}
-          hint="Letters, digits, dots and underscores. You can change it once an hour; your old one is free for others again."
+          hint={
+            usernameHolds
+              ? "Letters, digits, dots and underscores. You can change it once an hour; your old one stays yours for 7 days."
+              : "Letters, digits, dots and underscores. You can change it once an hour; your old one is free for others again."
+          }
           onSave={(v) => updateMyProfile(engine, { username: v.replace(/^@/, "") })}
           onClose={() => setEditing(null)}
         />

@@ -21,8 +21,8 @@ export function SparkGoal({ orgId, name }: { orgId: string; name: string }) {
   if (!enabled || !here) return null;
   const top = levels?.at(-1)?.sparks ?? here.active;
   const goal = here.next ? here.active + here.next.needs : top;
-  const from = levels?.find((l) => l.level === here.level)?.sparks ?? 0;
-  const fill = here.next ? Math.round(((here.active - from) / Math.max(1, goal - from)) * 100) : 100;
+  // The bar shows the count it's drawn next to: 2/5 fills 40% (the owner, 2026-10-29), not the share of this level's step.
+  const fill = here.next ? Math.round((here.active / Math.max(1, goal)) * 100) : 100;
   const label = here.next ? `Spark goal: ${here.active}/${goal} Sparks for Level ${here.next.level}` : `Spark Level ${here.level}: the highest`;
   return (
     <>
@@ -34,7 +34,7 @@ export function SparkGoal({ orgId, name }: { orgId: string; name: string }) {
           <ChevronRight size={15} aria-hidden="true" />
         </span>
         <span className="spark-goal-bar" aria-hidden="true">
-          <span style={{ width: `${Math.max(4, Math.min(100, fill))}%` }} />
+          <span style={{ width: `${Math.min(100, fill)}%` }} />
         </span>
         <small>{here.next ? `${here.next.needs} more for Level ${here.next.level}` : "Every level unlocked for everyone here"}</small>
       </button>

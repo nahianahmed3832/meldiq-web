@@ -8,6 +8,7 @@ import {
   ArrowUp,
   Bell,
   BellDot,
+  BookText,
   BellOff,
   Eye,
   EyeOff,
@@ -29,7 +30,7 @@ import { navigate, useRoute } from "../../application/router";
 import type { ConversationLocal } from "../../model/types";
 import { levelOf, newSectionId, type NotifyLevel, placeOf, workspaceOf } from "../../sync/navPrefs";
 import { GroupAvatar } from "../components/OrgAvatar";
-import { LookAvatar } from "../people/NameStyle";
+import { LookAvatar, LookName } from "../people/NameStyle";
 import { Dialog, Menu, type MenuEntry, useMenu } from "../components/Overlay";
 import { conversationTitle, dmPeer, members, shortWhen } from "../format";
 import { isMuted, isPeople } from "../selectors";
@@ -87,6 +88,11 @@ export const ConversationRow = memo(function ConversationRow({ id, twoLine, hide
       a.peerPhoto === b.peerPhoto,
   );
   // Settings › Appearance › Message previews (android chat-list previews): all, unread ones only, or none.
+  // API 0.65.0: a community's rules channel shows a book.
+  const isRules = useOrbit((s) => {
+    const conv = s.conversations[id];
+    return conv?.type === "CHANNEL" && !!conv.orgId && s.orgs.find((o) => o.id === conv.orgId)?.rulesChannel?.channelId === id;
+  });
   const { listPreview } = usePrefs();
   const t = useT();
   if (!data) return null;
@@ -99,7 +105,9 @@ export const ConversationRow = memo(function ConversationRow({ id, twoLine, hide
   const section = route.section === "dms" || route.section === "discover" ? "dms" : route.section === "activity" ? "activity" : "home";
   const glyph =
     c.type === "CHANNEL" ? (
-      c.kind === "PRIVATE" ? (
+      isRules ? (
+        <BookText size={15} aria-label="Rules" />
+      ) : c.kind === "PRIVATE" ? (
         <Lock size={15} />
       ) : c.kind === "ANNOUNCEMENT" ? (
         <Megaphone size={15} />
@@ -136,7 +144,13 @@ export const ConversationRow = memo(function ConversationRow({ id, twoLine, hide
       </span>
       <span className="lines">
         <span className="row">
-          <span className="grow ellipsis">{title}</span>
+          {c.type === "DM" && peerId ? (
+            <span className="grow ellipsis">
+              <LookName userId={peerId} name={title} withSubscription />
+            </span>
+          ) : (
+            <span className="grow ellipsis">{title}</span>
+          )}
           <span className="time">{shortWhen(local?.lastActivityAt ?? 0)}</span>
         </span>
         <span className="row">

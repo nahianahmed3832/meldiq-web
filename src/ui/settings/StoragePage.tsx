@@ -9,8 +9,9 @@ interface StorageState {
 }
 
 /**
- * What this browser keeps (android StorageScreen). Since API 0.57.0 only its sign-in: messages, files and settings are
- * on Meldiq's servers (docs/SERVER_MESSAGES.md), so there's nothing to keep safe here or to back up.
+ * What this browser keeps (android StorageScreen). Since API 0.57.0 messages, files and settings are on Meldiq's servers
+ * (docs/SERVER_MESSAGES.md), so there's nothing to keep safe here or to back up. This browser keeps its sign-in and,
+ * since 2026-10-30 (the owner), an encrypted snapshot of the last view so reloads open at once (sync/snapshot.ts).
  */
 export function StoragePage() {
   const [state, setState] = useState<StorageState>({ usage: null, quota: null, persisted: null });
@@ -45,7 +46,8 @@ export function StoragePage() {
         </div>
       </div>
       <p className="faint" style={{ margin: 0, fontSize: 12.5 }}>
-        Your messages, files and settings are kept on Meldiq's servers, not on this computer: this browser keeps only what signs it in. Files you open are fetched each time and not kept.
+        Your messages, files and settings are kept on Meldiq's servers. This browser keeps what signs it in and an encrypted copy of your lists and recent messages, so Meldiq opens at once; signing
+        out erases it. Files you open are fetched each time and not kept.
       </p>
     </>
   );

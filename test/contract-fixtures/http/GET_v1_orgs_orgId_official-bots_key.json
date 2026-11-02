@@ -1,0 +1,22 @@
+{
+  "bot": {
+    "key": "tickets",
+    "name": "Tickets",
+    "available": true,
+    "unavailableReason": null,
+    "enabled": false,
+    "userId": "u_YZxzQSADrQBAtQmB7NphjQ",
+    "look": {
+      "name": "Desk",
+      "displayName": "Desk",
+      "photoRev": null
+    },
+    "settings": {
+      "maxOpenPerPerson": 2,
+      "panels": [],
+      "transcripts": false
+    },
+    "plusPaused": [],
+    "updatedAt": 1793325654415
+  }
+}

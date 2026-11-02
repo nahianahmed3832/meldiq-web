@@ -12,6 +12,7 @@ import { PanelHead } from "./PanelHead";
 import { SearchPanel } from "./SearchPanel";
 import { PinnedPanel } from "./PinnedPanel";
 import { hasPeoplePanel, PeoplePanel } from "./PeoplePanels";
+import { CollectionControls, useMessageCollection } from "./useMessageCollection";
 
 export function SidePanel({ route }: { route: Route }) {
   const close = () => navigate({ section: route.section, conversationId: route.conversationId });
@@ -38,22 +39,24 @@ function ThreadPanel({ conversationId, root, onClose }: { conversationId: string
   const loaded = useOrbit((s) => s.messages[conversationId]?.items);
   const me = useOrbit((s) => s.me);
   const users = useOrbit((s) => s.users);
+  const collection = useMessageCollection(conversationId, "thread", root);
   // An older post or thread (beyond the conversation's loaded page) comes from this browser's store.
   const [older, setOlder] = useState<StoredMessage[]>([]);
   const inLoaded = !!loaded?.some((m) => m.id === root);
   useEffect(() => {
-    if (inLoaded) return setOlder([]);
+    if (collection.supported || inLoaded) return setOlder([]);
     let alive = true;
     void engine.conversationMessages(conversationId, 5000).then((list) => alive && setOlder(list.filter((m) => m.id === root || m.threadRootId === root)));
     return () => {
       alive = false;
     };
-  }, [engine, conversationId, root, inLoaded]);
+  }, [engine, conversationId, root, inLoaded, collection.supported]);
   const items = useMemo(() => {
+    if (collection.supported) return [...(collection.page?.context ?? []), ...(collection.page?.messages ?? [])].sort((a, b) => a.sortTs - b.sortTs || a.id.localeCompare(b.id));
     const byId = new Map(older.map((m) => [m.id, m]));
     for (const m of loaded ?? []) byId.set(m.id, m);
     return [...byId.values()].sort((a, b) => a.sortTs - b.sortTs);
-  }, [loaded, older]);
+  }, [loaded, older, collection.supported, collection.page]);
   const rootMsg: StoredMessage | undefined = items.find((m) => m.id === root);
   const replies = items.filter((m) => m.threadRootId === root).length;
   const [following, setFollowing] = useState<boolean | null>(null);
@@ -81,9 +84,16 @@ function ThreadPanel({ conversationId, root, onClose }: { conversationId: string
           )
         }
       />
-      {rootMsg ? (
+      <CollectionControls collection={collection} />
+      {rootMsg || (collection.supported && collection.page) ? (
         <>
+          {!rootMsg && (
+            <p className="faint" role="status">
+              The first message is outside your available history. You can still read the available replies.
+            </p>
+          )}
           <MessageList
+            key={`${conversationId}:${root}`}
             conversationId={conversationId}
             items={items}
             hasMore={false}
@@ -98,7 +108,13 @@ function ThreadPanel({ conversationId, root, onClose }: { conversationId: string
         </>
       ) : (
         <div className="empty">
-          <p>This thread's first message is still loading.</p>
+          <p>
+            {collection.loading
+              ? "Loading this thread…"
+              : collection.error
+                ? "This thread couldn't be loaded. Use Refresh to try again."
+                : "This thread isn't available in this browser's cached history."}
+          </p>
         </div>
       )}
     </aside>

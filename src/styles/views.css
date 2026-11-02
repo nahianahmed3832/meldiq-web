@@ -783,77 +783,6 @@
   gap: 8px;
   font-size: 13px !important;
 }
-/* The brand banner in place of the drawn community. */
-.hero-banner {
-  width: min(600px, 100%) !important;
-  padding: 0 !important;
-  overflow: hidden;
-  display: block !important;
-}
-.hero-banner img {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-/* The illustration: a rail of community icons and a channel list with a banner, in Meldiq's own shapes. */
-.hero-preview {
-  align-self: center;
-  display: flex;
-  gap: 10px;
-  width: min(440px, 100%);
-  margin: 0;
-  padding: 12px;
-  border-radius: 20px;
-  background: rgba(8, 12, 28, 0.55);
-  border: 1px solid rgba(160, 190, 255, 0.16);
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
-}
-.hero-preview-rail {
-  display: grid;
-  align-content: start;
-  gap: 10px;
-}
-.hero-preview-rail img,
-.hero-preview-rail i {
-  width: 38px;
-  height: 38px;
-  border-radius: 12px;
-  display: block;
-}
-.hero-preview-panel {
-  flex: 1;
-  display: grid;
-  gap: 6px;
-  align-content: start;
-  padding-bottom: 6px;
-  border-radius: 14px;
-  background: rgba(16, 23, 43, 0.9);
-  overflow: hidden;
-}
-.hero-preview-banner {
-  height: 62px;
-  background: linear-gradient(120deg, #22d3ee, #6366f1 55%, #ec4899);
-}
-.hero-preview-cat {
-  margin: 4px 12px 0;
-  font-size: 10.5px;
-  font-weight: 800;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: rgba(200, 210, 240, 0.6);
-}
-.hero-preview-ch {
-  margin: 0 8px;
-  padding: 5px 8px;
-  border-radius: 8px;
-  font-size: 13px;
-  color: rgba(225, 232, 255, 0.78);
-}
-.hero-preview-ch.on {
-  background: color-mix(in srgb, var(--brand-highlight) 18%, transparent);
-  color: #fff;
-  font-weight: 700;
-}
 .link-main {
   position: relative;
   display: grid;
@@ -959,7 +888,8 @@
   align-items: center;
   gap: 16px;
 }
-.ws-hero h1 {
+.ws-hero h1,
+.ws-hero h2 {
   margin: 0;
   font-size: 24px;
   letter-spacing: -0.02em;
@@ -1269,73 +1199,6 @@ select.input {
 }
 .start-step.done svg {
   color: var(--success);
-}
-
-/* The first-run introduction (android IntroScreen). */
-.intro {
-  position: fixed;
-  inset: 0;
-  z-index: 60;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 16px;
-  background: var(--bg);
-  color: var(--text);
-}
-.intro-head {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  justify-content: space-between;
-  width: min(560px, 100%);
-}
-.intro-page {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 14px;
-  width: min(520px, 100%);
-  text-align: center;
-}
-.intro-page h1 {
-  margin: 8px 0 0;
-  font-size: 24px;
-}
-.intro-page p {
-  margin: 0;
-  color: var(--text-2);
-  line-height: 1.5;
-}
-.intro-art {
-  display: grid;
-  place-items: center;
-}
-.intro-art .meldling-art {
-  max-width: min(200px, 56vw);
-}
-.intro-dots {
-  display: flex;
-  gap: 6px;
-  margin: 12px 0;
-}
-.intro-dots span {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--border-strong);
-}
-.intro-dots span.on {
-  width: 20px;
-  border-radius: 4px;
-  background: var(--accent);
-}
-.intro-foot {
-  display: flex;
-  gap: 10px;
-  width: min(520px, 100%);
 }
 
 /* A text-like button (a channel name that joins and opens). */
@@ -2342,52 +2205,6 @@ select.input {
 .invite-landing.c-accent .invite-landing-go {
   background: var(--c-accent);
   color: var(--c-on-accent);
-}
-/* Wide screens: the introduction uses the width, Meldling and the page's picture on the brand's ground at the left. */
-.intro-visual {
-  display: none;
-}
-.intro-main {
-  display: contents;
-}
-@media (min-width: 961px) {
-  .intro {
-    display: grid;
-    grid-template-columns: minmax(380px, 1fr) minmax(460px, 1fr);
-    align-items: stretch;
-    padding: 0;
-  }
-  .intro-visual {
-    display: grid;
-    place-items: center;
-    align-content: center;
-    gap: 28px;
-    background:
-      radial-gradient(700px 480px at 20% 0%, var(--brand-glow-1) 0%, transparent 62%), radial-gradient(640px 460px at 100% 100%, var(--brand-glow-2) 0%, transparent 60%),
-      linear-gradient(180deg, var(--brand-ground-2) 0%, var(--brand-ground) 70%);
-  }
-  .intro-visual img {
-    border-radius: 36px;
-    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
-  }
-  .intro-visual .meldling-art {
-    max-width: min(360px, 80%);
-  }
-  .intro-main {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 24px clamp(24px, 5vw, 64px);
-  }
-  .intro-page .intro-art {
-    display: none;
-  }
-  .intro-page h1 {
-    font-size: 32px;
-  }
-  .intro-page p {
-    font-size: 16px;
-  }
 }
 .profile-pop-banner {
   position: relative;

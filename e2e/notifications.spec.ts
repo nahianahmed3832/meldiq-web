@@ -16,7 +16,7 @@ test.beforeEach(async ({ context }) => {
 });
 
 /** The app under test (playwright.config.ts WEB_PORT). */
-const origin = () => "http://127.0.0.1:5181";
+const origin = () => `http://127.0.0.1:${process.env.ORBIT_E2E_WEB_PORT ?? "5181"}`;
 
 /** Delivers one push to this site's service worker, as the browser's push service would. */
 async function deliverPush(context: BrowserContext, page: Page): Promise<void> {
@@ -50,6 +50,11 @@ async function setUp(page: Page): Promise<{ alice: Phone; bob: Phone; dm: string
   return { alice, bob, dm };
 }
 
+async function muteConversation(phone: Phone, id: string): Promise<void> {
+  const doc = await phone.req("GET", "/v1/me/preferences/personal");
+  await phone.req("PUT", "/v1/me/preferences/personal", { baseRev: doc.rev, prefs: { ...doc.prefs, notify: { ...doc.prefs.notify, [id]: "none" } } });
+}
+
 test("with Meldiq closed, a wake-up shows who wrote and their newest message, and opens that conversation", async ({ page, context }) => {
   const { bob, dm } = await setUp(page);
   // Notifications were allowed for this site in the browser (never chosen in Meldiq): they're on.
@@ -60,7 +65,7 @@ test("with Meldiq closed, a wake-up shows who wrote and their newest message, an
   await deliverPush(context, page);
   const viewer = await context.newPage();
   await viewer.goto(origin() + "/#/settings/notifications");
-  await expect.poll(() => shown(viewer), { timeout: 15_000 }).toContainEqual({ title: "Bob Chen", body: "2 new messages: call me", tag: dm, url: `/dms/c/${dm}` });
+  await expect.poll(() => shown(viewer), { timeout: 15_000 }).toContainEqual({ title: "Bob Chen", body: "2 new messages: call me", tag: `orbit-web:${dm}`, url: `/dms/c/${dm}` });
   // A click (the service worker tells the open page where to go): the conversation opens, once the app is running.
   await expect(viewer.locator(":is(.app[data-connection=online])").first()).toBeVisible({ timeout: 15_000 });
   await viewer.waitForTimeout(500);
@@ -69,12 +74,8 @@ test("with Meldiq closed, a wake-up shows who wrote and their newest message, an
 });
 
 test("a muted conversation's messages wake nothing; with Meldiq open, the page shows them itself", async ({ page, context }) => {
-  test.skip(process.env.ORBIT_E2E_BUILD === "1", "mutes through the development build's engine hook");
-  const { bob, dm } = await setUp(page);
-  await page.evaluate(async (id) => {
-    const engine = (window as unknown as { __orbit: { arrange(id: string, op: unknown): Promise<void> } }).__orbit;
-    await engine.arrange(id, { op: "notify", conversationId: id, level: "none" });
-  }, dm);
+  const { alice, bob, dm } = await setUp(page);
+  await muteConversation(alice, dm);
   await page.goto("about:blank");
   await bob.send(dm, { type: "text", text: "quiet please" });
   await new Promise((r) => setTimeout(r, 1000));
@@ -100,6 +101,18 @@ test("with Meldiq closed, a ringing call shows as an incoming call that opens it
   await deliverPush(context, page);
   const viewer = await context.newPage();
   await viewer.goto(origin() + "/#/settings/notifications");
-  await expect.poll(() => shown(viewer), { timeout: 15_000 }).toContainEqual({ title: "Bob Chen", body: "Incoming voice call", tag: `call-${dm}`, url: `/dms/c/${dm}` });
+  await expect.poll(() => shown(viewer), { timeout: 15_000 }).toContainEqual({ title: "Bob Chen", body: "Incoming voice call", tag: `orbit-web:call-${dm}`, url: `/dms/c/${dm}` });
   await bob.req("POST", `/v1/calls/${res.call.id}/end`).catch(() => undefined);
+});
+
+test("a direct mention still notifies from a muted conversation while ordinary messages stay quiet", async ({ page, context }) => {
+  const { alice, bob, dm } = await setUp(page);
+  await muteConversation(alice, dm);
+  await page.goto("about:blank");
+  await bob.send(dm, { type: "text", text: "An ordinary quiet message" });
+  await bob.send(dm, { type: "text", text: "Direct mention for you", mentions: [alice.userId] });
+  await deliverPush(context, page);
+  const viewer = await context.newPage();
+  await viewer.goto(origin() + "/settings/notifications");
+  await expect.poll(() => shown(viewer), { timeout: 15000 }).toContainEqual({ title: "Bob Chen", body: "Direct mention for you", tag: `orbit-web:${dm}`, url: `/dms/c/${dm}` });
 });

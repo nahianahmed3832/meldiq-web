@@ -27,6 +27,7 @@ export function tokensOf(grant: AccountSessionGrant): AccountTokens {
 export class AccountSession implements Credentials {
   private tokens: AccountTokens | null = null;
   private inflight: Promise<boolean> | null = null;
+  private suspended = false;
   private readonly accounts: AccountApi;
 
   constructor(
@@ -57,24 +58,54 @@ export class AccountSession implements Credentials {
     await this.vault.clear();
   }
 
+  /**
+   * Whether this browser still holds a session it could renew without the person (tokens whose refresh token hasn't run
+   * out): until then nothing kept on this computer is drawn (sync/snapshot.ts), as a locked app shows nothing.
+   */
+  async restorable(): Promise<boolean> {
+    const tokens = this.tokens ?? (await this.vault.load());
+    return !!tokens && tokens.refreshTokenExpiresAt > Date.now();
+  }
+
   reauthenticate(): Promise<boolean> {
+    if (this.suspended) return Promise.resolve(false);
     this.inflight ??= this.refresh().finally(() => (this.inflight = null));
     return this.inflight;
   }
 
+  /** Finish a rotating refresh before leaving this page, and prevent later responses starting another one. */
+  async suspend(): Promise<void> {
+    this.suspended = true;
+    await this.inflight;
+  }
+
+  resume(): void {
+    this.suspended = false;
+  }
+
   private async refresh(): Promise<boolean> {
-    let current = this.tokens;
-    if (!current) {
-      // First use after a page load: the stored access token, if it still has a while to run, saves a swap.
-      current = await this.vault.load();
-      if (current && current.accessTokenExpiresAt - Date.now() > STORED_TOKEN_MARGIN_MS) {
-        this.tokens = current;
-        return true;
-      }
-    }
-    if (!current) {
+    const before = this.tokens ?? (await this.vault.load());
+    if (!before) {
       this.onEnded("session_ended");
       return false;
+    }
+    const renew = () => this.refreshStored(before);
+    // The same account may be open in several tabs. Serialize rotations across those tabs as well as this instance.
+    return typeof navigator !== "undefined" && navigator.locks ? navigator.locks.request(`meldiq-session-refresh:${before.sessionId}`, renew) : renew();
+  }
+
+  private async refreshStored(before: AccountTokens): Promise<boolean> {
+    const current = await this.vault.load();
+    if (!current) {
+      this.tokens = null;
+      this.onEnded("session_ended");
+      return false;
+    }
+    // A tab that rotated while we waited already persisted the new pair; reuse it instead of replaying our old token.
+    const updated = !this.tokens || current.refreshToken !== before.refreshToken;
+    if (updated && current.accessTokenExpiresAt - Date.now() > STORED_TOKEN_MARGIN_MS) {
+      this.tokens = current;
+      return true;
     }
     try {
       const grant = await this.accounts.refresh(current.refreshToken);

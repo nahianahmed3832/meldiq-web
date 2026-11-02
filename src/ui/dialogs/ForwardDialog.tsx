@@ -53,7 +53,8 @@ export function ForwardDialog({ message, onClose }: { message: StoredMessage; on
     setBusy(true);
     setError(null);
     try {
-      const done = await forwardMessage(engine, message, to, note);
+      // A message drawn from the snapshot goes as the server has it, once its page is in (engine.live; it says why if it can't).
+      const done = await forwardMessage(engine, await engine.live(message), to, note);
       const missed = to.length - done.length;
       engine.notice(
         missed ? "error" : "info",
@@ -67,8 +68,13 @@ export function ForwardDialog({ message, onClose }: { message: StoredMessage; on
     }
   };
   const copyLink = () => {
-    void navigator.clipboard?.writeText(messageLink(message.conversationId, message.id)).catch(() => undefined);
-    engine.notice("info", t("msg_link_copied"));
+    const copy = () =>
+      void navigator.clipboard?.writeText(messageLink(message.conversationId, message.id)).then(
+        () => engine.notice("info", t("msg_link_copied")),
+        () => engine.notice("error", "Couldn't copy the link."),
+      );
+    if (!engine.waitsForServer(message)) copy();
+    else void engine.whenLive(message).then((x) => x && copy());
   };
   const files = message.attachments.length;
   return (

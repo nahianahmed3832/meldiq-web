@@ -26,7 +26,10 @@ const origin = `127.0.0.1:${port}`;
 
 /** The production headers, for plain http on this machine: ws:// instead of wss://, no upgrade-insecure-requests or HSTS. */
 function headers(): [string, string][] {
-  const text = fs.readFileSync(path.join(here, "deploy/nginx/meldiq-web-headers.conf.template"), "utf8");
+  const text = fs.readFileSync(
+    path.join(here, process.env.MELDIQ_PAYPAL_SANDBOX === "1" ? "deploy/nginx/meldiq-web-paypal-sandbox-headers.conf.template" : "deploy/nginx/meldiq-web-headers.conf.template"),
+    "utf8",
+  );
   const extra = [`ws://${origin}`, process.env.ORBIT_E2E_LIVEKIT, process.env.ORBIT_E2E_LIVEKIT?.replace(/^ws/, "http")].filter(Boolean).join(" ");
   return [...text.matchAll(/^add_header ([A-Za-z-]+) "(.*)" always;$/gm)]
     .filter((m) => m[1] !== "Strict-Transport-Security")

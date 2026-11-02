@@ -1,13 +1,17 @@
+import { PlatformInbox } from "../operations/PlatformInbox";
 import { byActivity, markAllReadTargets, unreadOf } from "../selectors";
 import { actionFor, comboOf } from "../../application/shortcuts";
 import { ShortcutsDialog } from "../dialogs/ShortcutsDialog";
 import { usePushToTalk } from "../call/usePushToTalk";
 import { quietContextMenu } from "../components/Overlay";
-import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
+import { lazy, Suspense, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { shallowEqual, useEngine, useOrbit } from "../../application/orbit";
 import { getPrefs, setPrefs, usePrefs } from "../../application/prefs";
-import { isFullPage, navigate, type Route, useRoute } from "../../application/router";
-import { ConversationView } from "../chat/ConversationView";
+import { ConsentPage } from "../oauth/ConsentPage";
+import { isFullPage, navigate, type Route, routeHref, useRoute } from "../../application/router";
+import { rememberPlace } from "../../application/lastPlace";
+import { rememberReturning } from "../../application/splash";
+import { ConversationView, MessagesSkeleton } from "../chat/ConversationView";
 import { SidePanel } from "../chat/SidePanel";
 import { DockedPeoplePanel } from "../chat/PeoplePanels";
 import { CallLayer } from "../call/CallLayer";
@@ -19,7 +23,8 @@ import { NewMessageDialog } from "../dialogs/NewMessageDialog";
 import { CreateWorkspaceDialog, JoinWorkspaceDialog } from "../dialogs/WorkspaceDialogs";
 import { SearchDialog } from "../dialogs/SearchDialog";
 import { CreateCommunityDialog } from "../community/CreateCommunityDialog";
-import { JOIN_INVITE_EVENT, openInApp } from "../chat/inAppLinks";
+import { JOIN_INVITE_EVENT, OPEN_TEMPLATE_EVENT, openInApp } from "../chat/inAppLinks";
+import { TemplatePreviewDialog } from "../community/TemplatePreviewDialog";
 import { noteGuideVisit } from "../../sync/guide";
 import { GUIDE_EVENT } from "../community/GuideOnboarding";
 import { OPEN_PROFILE_EVENT, ProfileDialog, type ProfileRequest } from "../people/ProfileDialog";
@@ -40,22 +45,27 @@ import { TopBar } from "./TopBar";
 import { ConnectionBanner } from "./ConnectionBanner";
 import { TabIndicators } from "./TabIndicators";
 import { AddMembersDialog } from "../workspace/AddMembersDialog";
-import { takePendingInvite, takePendingMessage, takeReferral } from "../../application/pendingInvite";
+import { takePendingInvite, takePendingMessage, takePendingTemplate, takeReferral } from "../../application/pendingInvite";
 import { type DiscordReturn, takeDiscordReturn } from "../../application/discordReturn";
 import { accountSelection, rememberSelection } from "../../sync/workspaceSelection";
+import { LOBBY_FEATURE } from "../../sync/lobby";
+import { useLobbyLanding } from "../lobby/useLobbyLanding";
+import { PHONE_LAYOUT } from "../../application/viewport";
+import { PlusSupportNotice } from "../mojo/PlusSupportNotice";
+import { UserPanel } from "./UserPanel";
 
 const SettingsView = lazy(() => import("../settings/SettingsView").then((m) => ({ default: m.SettingsView })));
 const WorkspaceView = lazy(() => import("../workspace/WorkspaceView").then((m) => ({ default: m.WorkspaceView })));
+const LobbyPage = lazy(() => import("../lobby/LobbyPage").then((m) => ({ default: m.LobbyPage })));
 
 /** What shows behind settings opened straight from a link: Home. */
 const HOME_ROUTE: Route = { section: "home", conversationId: null, panel: null, threadRoot: null, settingsPage: "profile", workspacePage: "overview" };
-const PHONE = "(max-width: 640px)";
 
 /** Whether the phone layout applies (one screen at a time), following the window as it's resized. */
 function usePhoneLayout(): boolean {
-  const [phone, setPhone] = useState(() => typeof window !== "undefined" && window.matchMedia(PHONE).matches);
+  const [phone, setPhone] = useState(() => typeof window !== "undefined" && window.matchMedia(PHONE_LAYOUT).matches);
   useEffect(() => {
-    const q = window.matchMedia(PHONE);
+    const q = window.matchMedia(PHONE_LAYOUT);
     const on = () => setPhone(q.matches);
     q.addEventListener("change", on);
     return () => q.removeEventListener("change", on);
@@ -71,6 +81,8 @@ export type ShellDialog =
   | { kind: "identity"; userId: string }
   | { kind: "createWorkspace"; discord?: DiscordReturn | null }
   | { kind: "joinWorkspace"; code?: string }
+  // Community parity E: a template link's preview ("Create a community from this template").
+  | { kind: "template"; code: string }
   | { kind: "connections" }
   | { kind: "requests" }
   | { kind: "addMembers"; orgId?: string }
@@ -98,6 +110,7 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
   const backdrop = windowed ? (behind ?? HOME_ROUTE) : route;
   const knownView = useOrbit((s) => (backdrop.conversationId ? !!s.conversations[backdrop.conversationId] : true));
   const synced = useOrbit((s) => s.synced);
+  const lobbies = useOrbit((s) => s.server?.features.includes(LOBBY_FEATURE) ?? false);
   const [drawer, setDrawer] = useState(false);
   const [dialog, setDialog] = useState<ShellDialog>(null);
   usePushToTalk();
@@ -108,6 +121,7 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
   useEffect(() => {
     if (orgId !== prefs.orgId && synced) setPrefs({ orgId });
   }, [orgId, prefs.orgId, synced]);
+  useLobbyLanding(orgId, route, phone);
 
   // The account's selected workspace, shared with the phone (PUT /v2/account/preferences): adopted once when the app
   // opens, then every switch made here is saved for the other devices. Best effort: if either call fails, this browser
@@ -133,15 +147,28 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
     rememberSelection(engine, orgId).catch(() => undefined);
   }, [orgId, synced, engine]);
 
-  // The conversation on screen (marks it read; new messages there don't count as unread while the window has focus).
-  useEffect(() => {
-    void engine.openConversation(isFullPage(route.section) ? null : route.conversationId);
+  // Invalidate the previous window before paint; position only after the new page renders.
+  useLayoutEffect(() => {
+    const selected = isFullPage(route.section) ? null : route.conversationId;
+    void engine.openConversation(selected);
+    const restored = (event: PageTransitionEvent) => {
+      if (event.persisted) void engine.openConversation(selected);
+    };
+    window.addEventListener("pageshow", restored);
     setDrawer(false);
     // Batch B8b: opening a channel ticks the community guide's tasks that point to it (kept on this browser).
     const c = route.conversationId ? engine.state.get().conversations[route.conversationId] : null;
     const guide = c?.orgId ? (engine.state.get().orgs.find((o) => o.id === c.orgId)?.guide ?? null) : null;
     if (c?.orgId && guide) void noteGuideVisit(engine.store, c.orgId, guide, c.id).then((changed) => changed && window.dispatchEvent(new Event(GUIDE_EVENT)));
+    return () => window.removeEventListener("pageshow", restored);
   }, [engine, route.conversationId, route.section]);
+
+  // Where the person is, for the next time Meldiq opens (application/lastPlace.ts); settings windows aren't places.
+  useEffect(() => {
+    if (!isFullPage(route.section) && route.section !== "oauth" && (route.conversationId || route.section === "lobby")) rememberPlace(engine.device.userId, routeHref(route));
+  }, [engine, route]);
+  // From now on this browser opens straight into the app's frame, not the launch screen (application/splash.ts).
+  useEffect(() => rememberReturning(true), []);
 
   // A conversation this account can no longer see (removed, or another workspace's link) closes.
   useEffect(() => {
@@ -170,6 +197,9 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
     if (referral) void engine.api.call("POST", "/v2/billing/referral/claim", { body: { code: referral } }).catch(() => undefined);
     const code = takePendingInvite();
     if (code) return setDialog({ kind: "joinWorkspace", code });
+    // A template link opened in this tab (/template/<code>): its preview, once.
+    const template = takePendingTemplate();
+    if (template) return setDialog({ kind: "template", code: template });
     // A message link opened in this tab (/m/<conversation>/<message>): that conversation, at that message.
     const message = takePendingMessage();
     if (message) openInApp(engine, `${location.origin}${message}`);
@@ -190,6 +220,13 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
     const onInvite = (e: Event) => setDialog({ kind: "joinWorkspace", code: String((e as CustomEvent).detail ?? "") });
     window.addEventListener(JOIN_INVITE_EVENT, onInvite);
     return () => window.removeEventListener(JOIN_INVITE_EVENT, onInvite);
+  }, []);
+
+  // A template link clicked inside a chat opens its preview (community parity E).
+  useEffect(() => {
+    const onTemplate = (e: Event) => setDialog({ kind: "template", code: String((e as CustomEvent).detail ?? "") });
+    window.addEventListener(OPEN_TEMPLATE_EVENT, onTemplate);
+    return () => window.removeEventListener(OPEN_TEMPLATE_EVENT, onTemplate);
   }, []);
 
   useEffect(() => {
@@ -262,6 +299,9 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
   const phoneFrame = `${phoneList && section === "home" ? " phone-home" : ""}${phoneList || section === "settings" || (view.conversationId && !settings) ? " phone-bare" : ""}`;
   const ctx = useMemo(() => ({ open: (d: ShellDialog) => setDialog(d) }), []);
 
+  // "Log in with Meldiq" (API 0.65.0 batch B): the consent page stands alone, without the app around it.
+  if (route.section === "oauth") return <ConsentPage />;
+
   let full = null;
   if (route.section === "settings") full = <SettingsView page={route.settingsPage} onSignedOut={onSignedOut} />;
   else if (route.section === "workspace") full = <WorkspaceView orgId={orgId} page={route.workspacePage} onDialog={ctx.open} />;
@@ -271,9 +311,22 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
   let main;
   if (settings) main = full;
   else if (view.conversationId && knownView) main = <ConversationView key={view.conversationId} id={view.conversationId} route={view} onDialog={ctx.open} />;
+  // Opening (a reload, a return) on a conversation the first sync hasn't brought yet: its skeleton, not Home for a moment.
+  else if (view.conversationId && !synced)
+    main = (
+      <section className="main conversation" aria-busy="true">
+        <MessagesSkeleton />
+      </section>
+    );
   else if (section === "activity") main = <ActivityView orgId={orgId} />;
   else if (section === "later") main = <LaterView />;
   else if (section === "discover") main = <DiscoverView />;
+  else if (section === "lobby" && orgId && lobbies)
+    main = (
+      <Suspense fallback={<section className="main" aria-busy="true" />}>
+        <LobbyPage key={orgId} orgId={orgId} />
+      </Suspense>
+    );
   // The Messages home is Friends (2026-10-28, after the owner's reference), as is /friends.
   else if (section === "friends" || section === "dms") main = <FriendsView />;
   else main = <HomeView orgId={orgId} section={section} onDialog={ctx.open} />;
@@ -289,8 +342,9 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
       <div className={`workspace${settings ? "" : " with-sidebar"}`}>
         <TopBar onMenu={() => setDrawer((d) => !d)} onSearch={() => setDialog({ kind: "search" })} section={section} orgId={orgId} />
         <ConnectionBanner />
+        <PlatformInbox />
         <div className={`body${view.conversationId ? " has-conversation" : ""}${phoneList ? " phone-list" : " phone-main"}${settings ? " settings-mode" : ""}`}>
-          {!settings && <Sidebar orgId={orgId} section={section === "discover" || section === "friends" ? "dms" : section} open={drawer} onDialog={ctx.open} />}
+          {!settings && <Sidebar orgId={orgId} section={section === "friends" ? "dms" : section} open={drawer} onDialog={ctx.open} />}
           {drawer && !settings && <div className="sidebar-scrim" onClick={() => setDrawer(false)} aria-hidden="true" />}
           {main}
           {!settings && view.conversationId && knownView && view.panel && <SidePanel route={view} />}
@@ -302,8 +356,10 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
           {full}
         </SettingsWindow>
       )}
-      <TabBar section={route.section} hidden={!!route.conversationId && !isFullPage(route.section)} />
+      <TabBar section={route.section} hidden={!!route.conversationId || route.section === "workspace" || (route.section === "settings" && route.settingsPage !== "you")} />
       <Notices />
+      {!phone && !settings && <UserPanel />}
+      <PlusSupportNotice blocked={!!dialog || !!profile || drawer} />
       <TabIndicators />
       <ConnectionRequestWatcher />
       <CallLayer />
@@ -314,7 +370,11 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
       {dialog?.kind === "identity" && <IdentityReview userId={dialog.userId} onClose={() => setDialog(null)} />}
       {dialog?.kind === "newGroup" && <NewGroupDialog onClose={() => setDialog(null)} />}
       {dialog?.kind === "createWorkspace" &&
-        (communities ? <CreateCommunityDialog discord={dialog.discord ?? null} onClose={() => setDialog(null)} /> : <CreateWorkspaceDialog onClose={() => setDialog(null)} />)}
+        (communities ? (
+          <CreateCommunityDialog discord={dialog.discord ?? null} onClose={() => setDialog(null)} onTemplate={(code) => setDialog({ kind: "template", code })} />
+        ) : (
+          <CreateWorkspaceDialog onClose={() => setDialog(null)} />
+        ))}
       {dialog?.kind === "connections" && <ConnectionsDialog onClose={() => setDialog(null)} />}
       {dialog?.kind === "requests" && <MessageRequestsDialog onClose={() => setDialog(null)} />}
       {dialog?.kind === "addMembers" && (dialog.orgId ?? orgId) && (
@@ -330,6 +390,7 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
           onClose={() => setProfile(null)}
         />
       )}
+      {dialog?.kind === "template" && dialog.code && <TemplatePreviewDialog code={dialog.code} onClose={() => setDialog(null)} />}
       {dialog?.kind === "joinWorkspace" && <JoinWorkspaceDialog initialCode={dialog.code} onClose={() => setDialog(null)} />}
     </div>
   );

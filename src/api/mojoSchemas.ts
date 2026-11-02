@@ -7,7 +7,7 @@ import { z } from "zod";
  */
 export const zPlanKey = z.enum(["free", "go", "plus"]);
 export type PlanKey = z.infer<typeof zPlanKey>;
-export const zPresetId = z.enum(["720p30", "720p60", "1080p30", "1080p60", "1440p30"]);
+export const zPresetId = z.enum(["720p30", "720p60", "1080p30", "1080p60", "1440p30", "1440p60"]);
 export type ScreenPresetId = z.infer<typeof zPresetId>;
 
 export const zPlanPerks = z.object({
@@ -48,7 +48,7 @@ export const zMojoCatalog = z.object({
   gifts: z.object({ months: z.array(z.number()), noteMax: z.number() }),
   /** Whether plan limits apply on this server now; false: the server's own limits, as before plans. */
   enforced: z.boolean().default(false),
-  onSale: z.object({ mode: z.enum(["test", "live"]).nullable(), go: zPrice, plus: zPrice, spark: zPrice, gifts: z.boolean() }),
+  onSale: z.object({ mode: z.enum(["test", "live"]).nullable(), go: zPrice, plus: zPrice, spark: zPrice, botsPlus: zPrice.optional().default(null), gifts: z.boolean() }),
 });
 export type MojoCatalog = z.infer<typeof zMojoCatalog>;
 
@@ -96,6 +96,8 @@ export const zCheckoutStarted = z.object({ checkoutId: z.string().optional(), gi
 
 /** The account's own billing page (docs/BILLING.md): its plan subscription, for renewal and cancellation wording. */
 export const zOwnerBilling = z.object({
+  provider: z.string().nullable().optional(),
+  mode: z.enum(["test", "live"]).nullable().optional(),
   available: z.boolean(),
   subscription: z
     .object({
@@ -103,12 +105,15 @@ export const zOwnerBilling = z.object({
       status: z.string(),
       standing: z.string(),
       currentPeriodEnd: z.number().nullable(),
+      trialEnd: z.number().nullable().optional(),
       cancelAtPeriodEnd: z.boolean(),
+      approvalPending: z.boolean().optional(),
       currency: z.string(),
       amountMinor: z.number(),
     })
     .nullable(),
   portal: z.boolean(),
+  freePeriod: z.object({ source: z.string(), planKey: z.string(), endsAt: z.number() }).nullable().optional(),
 });
 export type OwnerBilling = z.infer<typeof zOwnerBilling>;
 

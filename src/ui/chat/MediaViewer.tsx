@@ -3,11 +3,11 @@ import { createContext, useCallback, useContext, useEffect, useRef, useState } f
 import { createPortal } from "react-dom";
 import { useEngine } from "../../application/orbit";
 import type { AttachmentRef } from "../../protocol/payload";
-import { isInlineImage, safeMime } from "../../sync/attachments";
+import { isInlineImage, safeMime, saveAttachment } from "../../sync/attachments";
 import { dayLabel, clock as timeOfDay } from "../format";
 import { Menu, useMenu } from "../components/Overlay";
 import { useBlobUrl } from "./blobUrl";
-import { copyImage, downloadUrl } from "./contextTarget";
+import { copyImage } from "./contextTarget";
 
 /**
  * The media viewer (2026-10-28, after the reference the owner sent): photos and videos of a message, full screen. Who
@@ -64,7 +64,7 @@ export function MediaViewer({ items, at, onMove, onClose }: { items: AttachmentR
   const what = video ? "video" : "photo";
   const moreEntries = url
     ? [
-        { label: `Download ${what}`, icon: <Download size={16} />, onSelect: () => downloadUrl(url, r.name) },
+        { label: `Download ${what}`, icon: <Download size={16} />, onSelect: () => void saveAttachment(engine, r).catch(() => engine.notice("error", "Couldn’t save this file. Try again.")) },
         ...(video
           ? []
           : [
@@ -107,7 +107,13 @@ export function MediaViewer({ items, at, onMove, onClose }: { items: AttachmentR
       )}
       <div className="viewer-actions" role="toolbar" aria-label={`${what} actions`}>
         <div className="viewer-group">
-          <button className="icon-btn" disabled={!url} onClick={() => url && downloadUrl(url, r.name)} aria-label={`Download ${what}`} title="Download">
+          <button
+            className="icon-btn"
+            disabled={!url}
+            onClick={() => url && void saveAttachment(engine, r).catch(() => engine.notice("error", "Couldn’t save this file. Try again."))}
+            aria-label={`Download ${what}`}
+            title="Download"
+          >
             <Download size={18} />
           </button>
           <button className="icon-btn" disabled={!url} onClick={() => url && window.open(url, "_blank", "noopener")} aria-label="Open in a new tab" title="Open in a new tab">

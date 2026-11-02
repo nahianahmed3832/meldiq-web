@@ -4,17 +4,42 @@ import { useSyncExternalStore } from "react";
 /**
  * The app's routes, as paths (Next.js serves the one client-side page for every path; docs/MELDIQ_WEB_NEXTJS.md):
  *   /home  /dms  /activity  /later  /discover    the sections (Later: saved messages and reminders; Discover: public communities)
+ *   /lobby                                     the selected community's lobby (community parity B)
  *   /<section>/c/<id>[/details|/search|/pinned|/members|/thread/<root>]   a conversation (and its side panel)
  *   /settings/<page>
  *   /workspace/<page>                          the current workspace's settings and administration
+ *   /oauth/authorize?client_id=…               "Log in with Meldiq": an app asks to know who you are (API 0.65.0 batch B)
  * Links from before (hash routes, "/#/dms/c/<id>": old notifications, bookmarks, links in messages) still work: the
  * page moves them to their path on load. Moving around is the History API, so Back and Forward work and nothing reloads.
  */
 /** "friends" (2026-10-28): the Friends page, the Messages home on its own route (phones open it from the list). */
-export type Section = "home" | "dms" | "friends" | "activity" | "later" | "discover" | "settings" | "workspace";
+/** "lobby" (community parity B): the selected community's lobby, its front page. */
+export type Section = "home" | "dms" | "friends" | "activity" | "later" | "discover" | "settings" | "workspace" | "oauth" | "lobby";
 /** "you": the phone's You tab, a list of the pages under your account card (desktop shows the profile page there). */
 export type SettingsPage =
-  "you" | "profile" | "account" | "devices" | "notifications" | "calls" | "appearance" | "storage" | "security" | "about" | "advanced" | "shortcuts" | "health" | "usage" | "mojo" | "spark";
+  | "you"
+  | "profile"
+  | "account"
+  | "devices"
+  | "notifications"
+  | "calls"
+  | "appearance"
+  | "storage"
+  | "security"
+  | "about"
+  | "advanced"
+  | "shortcuts"
+  | "health"
+  | "usage"
+  | "checkout"
+  | "gifts"
+  | "billing"
+  | "mojo"
+  | "spark"
+  | "leaderboards"
+  | "points"
+  | "creators"
+  | "developer";
 export type WorkspacePage =
   | "overview"
   | "people"
@@ -24,6 +49,8 @@ export type WorkspacePage =
   | "audit"
   | "usage"
   | "meetings"
+  // API 0.64.0: the community's own profile pins.
+  | "pins"
   // Communities (batches B4–B9).
   | "applications"
   | "reports"
@@ -31,7 +58,17 @@ export type WorkspacePage =
   | "bans"
   | "guide"
   | "onboarding"
-  | "expressions";
+  | "expressions"
+  // API 0.65.0 batch B: bots added to the community.
+  | "bots"
+  // API 0.65.0: the rules channel and the community's rules.
+  | "rules"
+  // Community parity batch A (docs/MELDIQ_COMMUNITY_PARITY.md): the settings window's Theme, Sparks and Promote.
+  | "theme"
+  | "sparks"
+  | "promote"
+  // Community parity batch B: the lobby's settings (community-lobby).
+  | "lobby";
 
 export interface Route {
   section: Section;
@@ -45,7 +82,7 @@ export interface Route {
 /** Sections that take the whole page (no conversation list). */
 export const isFullPage = (s: Section): boolean => s === "settings" || s === "workspace";
 
-const SECTIONS: Section[] = ["home", "dms", "friends", "activity", "later", "discover", "settings", "workspace"];
+const SECTIONS: Section[] = ["home", "dms", "friends", "activity", "later", "discover", "settings", "workspace", "oauth", "lobby"];
 const PAGES: SettingsPage[] = [
   "you",
   "profile",
@@ -61,10 +98,20 @@ const PAGES: SettingsPage[] = [
   "shortcuts",
   "health",
   "usage",
+  "checkout",
+  "gifts",
+  "billing",
   "mojo",
   "spark",
+  // API 0.65.0: points, quests and levels.
+  "points",
+  "leaderboards",
+  // API 0.65.0 batch B: the creator programme; bots and "Log in with Meldiq" apps.
+  "creators",
+  "developer",
 ];
 const WORKSPACE_PAGES: WorkspacePage[] = [
+  "pins",
   "overview",
   "people",
   "invitations",
@@ -80,6 +127,12 @@ const WORKSPACE_PAGES: WorkspacePage[] = [
   "guide",
   "onboarding",
   "expressions",
+  "bots",
+  "rules",
+  "theme",
+  "sparks",
+  "promote",
+  "lobby",
 ];
 const ID = /^[A-Za-z0-9_-]{1,128}$/;
 
@@ -114,6 +167,7 @@ export function parseRoute(where: string): Route {
 export function routeHref(r: Partial<Route> & { section: Section }): string {
   if (r.section === "settings") return `/settings/${r.settingsPage ?? "profile"}`;
   if (r.section === "workspace") return `/workspace/${r.workspacePage ?? "overview"}`;
+  if (r.section === "oauth") return "/oauth/authorize";
   let h = `/${r.section}`;
   if (r.conversationId) {
     h += `/c/${encodeURIComponent(r.conversationId)}`;
@@ -127,7 +181,7 @@ export function routeHref(r: Partial<Route> & { section: Section }): string {
   return h;
 }
 
-const ROUTE_EVENT = "meldiq:route";
+export const ROUTE_EVENT = "meldiq:route";
 /** History entries this app made (Next.js's own router leaves entries without its marker alone). */
 const STATE = { meldiq: 1 };
 
@@ -156,6 +210,9 @@ export function appHref(raw: string, origin = location.origin): string | null {
   const where = legacy ? u.hash.slice(1) : u.pathname;
   if (!/^\/[A-Za-z0-9/_%-]{0,300}$/.test(where)) return null;
   const section = where.split("/")[1];
+  // The consent page carries its request in the query, which an in-page move would drop: the browser loads it.
+  if (section === "oauth") return null;
+  if (where === "/settings/gifts" && /^#gift=[A-Za-z0-9_-]{43}$/.test(u.hash)) return where + u.hash;
   return SECTIONS.includes(section as Section) ? routeHref(parseRoute(where)) : null;
 }
 
@@ -164,6 +221,9 @@ export function appHref(raw: string, origin = location.origin): string | null {
  * app's paths move within the page instead of loading it again (modifier keys, other targets and downloads keep the browser's own behaviour).
  */
 export function startRouting(): () => void {
+  // The message viewport owns its position after data renders, including Back/Forward and reload.
+  const scrollRestoration = history.scrollRestoration;
+  history.scrollRestoration = "manual";
   const legacy = () => {
     if (location.hash.startsWith("#/")) go(appHref(location.hash) ?? "/home", true);
   };
@@ -188,6 +248,7 @@ export function startRouting(): () => void {
   Router.events.on("routeChangeComplete", afterNext);
   Router.events.on("hashChangeComplete", afterNext); // what it reports when only the "#…" part differs
   return () => {
+    history.scrollRestoration = scrollRestoration;
     document.removeEventListener("click", onClick);
     window.removeEventListener("hashchange", legacy);
     Router.events.off("routeChangeComplete", afterNext);

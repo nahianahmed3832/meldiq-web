@@ -1,21 +1,29 @@
+import { CollectibleBanner, CollectibleBadge, collectibleCardVars } from "./CollectibleLayers";
 import { Check, Copy, Flag, MoreHorizontal, SendHorizontal, ShieldBan, ShieldCheck, Ticket, UserCheck, UserPlus, UserX, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { ApiError } from "../../api/client";
 import { shallowEqual, useEngine, useOrbit } from "../../application/orbit";
 import { navigate } from "../../application/router";
 import { startDirect, userProfile } from "../../sync/account";
+import { NO_STYLE } from "../settings/noStyle";
+import { communityProfile } from "../../sync/communityProfile";
 import { block, blockedIds, unblock } from "../../sync/profile";
 import { acceptConnection, connect, connections, connectionState, invitableCommunities, inviteFromProfile, presenceWords, removeConnection } from "../../sync/social";
 import { ReportDialog } from "../chat/ReportDialog";
 import { usePhoto } from "../components/photos";
 import { StyledName } from "./NameStyle";
 import { SafeLink } from "../chat/SafeLink";
-import { ProfileEffect, StyledAvatar } from "./ProfileStyle";
+import { ProfileEffect, StyledAvatar, useReducedMotion } from "./ProfileStyle";
+import { ArtistDecorations } from "./ArtistDecorations";
+import { ProfilePins } from "./ProfilePins";
+import { LevelRing } from "./LevelRing";
+import { themeBackground, themeColorsOf, themeVars } from "./profileTheme";
 import { Dialog, Menu, type MenuEntry, useMenu } from "../components/Overlay";
 import { toneOf } from "../components/Avatar";
 import { OrgAvatar } from "../components/OrgAvatar";
 import { directory } from "../../sync/workspaces";
 import { relative } from "../format";
+import { ProfileConnections } from "./ProfileConnections";
 
 type Profile = Awaited<ReturnType<typeof userProfile>>;
 
@@ -55,13 +63,18 @@ interface ProfileDialogProps {
 
 export function ProfileDialog({ userId, fallbackName, orgId = null, near = null, onClose }: ProfileDialogProps) {
   const engine = useEngine();
+  const reducedMotion = useReducedMotion();
   const me = useOrbit((s) => s.me?.userId);
   const features = useOrbit((s) => s.server?.features ?? [], shallowEqual);
+  const pinsOn = features.includes("profile-pins");
+  const levelsOn = features.includes("points");
   const rev = useOrbit((s) => s.connectionsRev);
   // Their profile changed elsewhere (API 0.28 user.updated): loaded again.
   const profilesRev = useOrbit((s) => s.profilesRev);
   const orgs = useOrbit((s) => invitableCommunities(s.orgs), shallowEqual);
-  const [profile, setProfile] = useState<Profile | null>(null);
+  const scope = `${userId}:${orgId ?? "global"}`;
+  const [profileResult, setProfileResult] = useState<{ scope: string; profile: Profile } | null>(null);
+  const profile = profileResult?.scope === scope ? profileResult.profile : null;
   const [state, setState] = useState<ReturnType<typeof connectionState> | null>(null);
   const [blocked, setBlocked] = useState<boolean | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -87,7 +100,17 @@ export function ProfileDialog({ userId, fallbackName, orgId = null, near = null,
   useEffect(() => {
     let alive = true;
     userProfile(engine, userId)
-      .then((p) => alive && setProfile(p))
+      .then(async (p) => {
+        if (orgId && features.includes("community-profiles")) {
+          const local = await communityProfile(engine, orgId, userId).catch(() => null);
+          if (local) {
+            if (local.profile.aboutMe != null) p = { ...p, aboutMe: local.profile.aboutMe };
+            if (local.profile.pronouns != null) p = { ...p, pronouns: local.profile.pronouns };
+            if (local.profile.theme) p = { ...p, profileStyle: { ...(p.profileStyle ?? NO_STYLE), themeColors: local.profile.theme } };
+          }
+        }
+        if (alive) setProfileResult({ scope, profile: p });
+      })
       .catch(
         (e: unknown) =>
           alive && setError(e instanceof ApiError && (e.status === 404 || e.status === 403) ? "This profile isn't available to you." : e instanceof Error ? e.message : "Couldn't load this profile."),
@@ -98,7 +121,7 @@ export function ProfileDialog({ userId, fallbackName, orgId = null, near = null,
     return () => {
       alive = false;
     };
-  }, [engine, userId, profilesRev]);
+  }, [engine, userId, orgId, scope, features, profilesRev]);
   useEffect(() => {
     if (!hasConnections || self) return;
     let alive = true;
@@ -180,15 +203,18 @@ export function ProfileDialog({ userId, fallbackName, orgId = null, near = null,
       : []),
     ...(profile ? [{ label: "Copy username", icon: <Copy size={16} />, onSelect: () => void navigator.clipboard?.writeText(`@${profile.username}`).catch(() => undefined) }] : []),
   ];
+  const theme = themeColorsOf(profile?.profileStyle);
   return (
     <Dialog
       title={name}
       onClose={onClose}
-      className="profile-pop"
+      className={`profile-pop${theme ? " themed" : ""}`}
+      vars={{ ...themeVars(theme), ...collectibleCardVars(profile?.profileStyle, !reducedMotion) }}
       near={near}
       header={
         <>
-          <div className="profile-pop-banner" style={bannerUrl ? { backgroundImage: `url(${bannerUrl})` } : { background: profile?.profileStyle?.accent ?? toneOf(profile?.avatarColor ?? 0) }}>
+          <div className="profile-pop-banner" style={bannerUrl ? { backgroundImage: `url(${bannerUrl})` } : { background: theme ? themeBackground(theme) : toneOf(profile?.avatarColor ?? 0) }}>
+            <CollectibleBanner style={profile?.profileStyle} />
             <ProfileEffect effect={profile?.profileStyle?.effect} />
             {!self && more.length > 0 && (
               <button className="icon-btn profile-pop-btn" onClick={(e) => moreMenu.open(e.currentTarget)} aria-label={`More for ${name}`} aria-haspopup="menu" aria-expanded={!!moreMenu.anchor}>
@@ -208,6 +234,7 @@ export function ProfileDialog({ userId, fallbackName, orgId = null, near = null,
                 photoRev={profile.photoRev}
                 media={profile.avatarMedia}
                 decoration={profile.profileStyle?.decoration ?? null}
+                collectibles={profile.profileStyle?.collectibles}
                 size={92}
                 online={profile.online}
                 presence={profile.presence}
@@ -240,17 +267,33 @@ export function ProfileDialog({ userId, fallbackName, orgId = null, near = null,
         ) : (
           <>
             <h2 className="profile-pop-name">
-              <StyledName name={profile.displayName} style={profile.profileStyle} tag={profile.tag} mojo={profile.mojo} className="ellipsis" />
+              <StyledName name={profile.displayName} style={profile.profileStyle} tag={profile.tag} mojo={profile.mojo} bot={profile.bot} everyBadge className="ellipsis" />
+              {levelsOn && profile.level !== null && <LevelRing level={profile.level} size={24} className="profile-level" />}
             </h2>
             <p className="profile-pop-handle">
               @{profile.username}
               {profile.pronouns && <span className="tag">{profile.pronouns}</span>}
             </p>
             {(profile.statusEmoji || profile.statusText) && <p className="profile-pop-status">{[profile.statusEmoji, profile.statusText].filter(Boolean).join(" ")}</p>}
-            {profile.badges.includes("bug-hunter") && (
-              <span className="badge-pill" title="Found a bug Meldiq confirmed">
-                🐞 Bug Hunter
-              </span>
+            {/* API 0.64.0: pins replace the Bug Hunter and Artist pills (both are Meldiq pins now). */}
+            <CollectibleBadge style={profile?.profileStyle} />
+            {pinsOn ? (
+              <>
+                <ProfilePins pins={profile.pins} />
+              </>
+            ) : (
+              <>
+                {profile.badges.includes("bug-hunter") && (
+                  <span className="badge-pill" title="Found a bug Meldiq confirmed">
+                    🐞 Bug Hunter
+                  </span>
+                )}
+                {profile.decorationArtist && (
+                  <span className="badge-pill" title="Made a profile decoration Meldiq approved">
+                    🎨 Artist
+                  </span>
+                )}
+              </>
             )}
             {profile.aboutMe && (
               <section className="profile-box" aria-label="About me">
@@ -270,6 +313,7 @@ export function ProfileDialog({ userId, fallbackName, orgId = null, near = null,
                 </ul>
               </section>
             )}
+            {features.includes("connections-v2") && <ProfileConnections list={profile.connections} />}
             {error && (
               <div className="banner danger" role="alert">
                 {error}
@@ -287,6 +331,7 @@ export function ProfileDialog({ userId, fallbackName, orgId = null, near = null,
               )}
             </section>
             <MemberSince profile={profile} orgId={orgId} />
+            {profile.decorationArtist && <ArtistDecorations userId={profile.id} name={profile.displayName} />}
             {roles && roles.length > 0 && (
               <section className="profile-box" aria-label="Roles">
                 <h3>Roles</h3>

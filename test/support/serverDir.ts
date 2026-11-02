@@ -15,7 +15,13 @@ export const WEB_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)
  */
 export function serverDir(): string {
   const fromEnv = process.env.ORBIT_SERVER_DIR;
-  const candidates = [fromEnv, path.join(WEB_ROOT, "../griip-mesage/server"), path.join(WEB_ROOT, "../griip_message/server"), path.join(WEB_ROOT, "../server")].filter((c): c is string => !!c);
+  const candidates = [
+    fromEnv,
+    path.join(WEB_ROOT, "../meldiq_android/server"),
+    path.join(WEB_ROOT, "../griip-mesage/server"),
+    path.join(WEB_ROOT, "../griip_message/server"),
+    path.join(WEB_ROOT, "../server"),
+  ].filter((c): c is string => !!c);
   const found = candidates.find((c) => fs.existsSync(path.join(c, "test/support/griipClient.ts")));
   if (!found) {
     throw new Error(

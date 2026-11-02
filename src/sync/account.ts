@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { ApiError } from "../api/client";
 import { type Activity, type Conversation, type Device, type Member, type OrgDetail, zActivity, zConversation, zDevice, zMember, zOrgDetail, zProfile } from "../api/schemas";
+import type { ProfileStyle, ShownBadge } from "../api/profileSchemas";
 import { AccountApi } from "../auth/accountApi";
 import { normalizeEmail } from "../auth/rules";
 import { forgetPush } from "../application/webPush";
@@ -80,14 +81,18 @@ export async function removeProfileBanner(engine: Engine): Promise<void> {
 }
 
 export interface ProfileStyleChange {
+  baseStyleRevision?: string;
   decoration?: string | null;
-  effect?: string | null;
+  effect?: ProfileStyle["effect"];
   accent?: string | null;
   /** API 0.46.0: name styles and the community tag worn by your name. */
-  nameFont?: string | null;
+  nameFont?: ProfileStyle["nameFont"];
   nameColors?: string[] | null;
-  nameEffect?: string | null;
+  nameEffect?: ProfileStyle["nameEffect"];
   tagOrgId?: string | null;
+  /** API 0.65.0: one or two theme colours (the server sets accent to the first), and the badge shown by your name. */
+  themeColors?: string[] | null;
+  shownBadge?: ShownBadge | null;
 }
 
 export async function setProfileStyle(engine: Engine, change: ProfileStyleChange): Promise<void> {
@@ -156,7 +161,7 @@ export async function signOut(engine: Engine, force = false, skipBackup = false)
     }
   }
   engine.stop();
-  engine.session.forget();
+  await engine.session.forget();
   await LocalStore.erase(engine.store);
   // Then this browser stops receiving background notifications (the server removed its token with the device).
   forgetPush();
@@ -170,7 +175,7 @@ export async function deleteAccount(engine: Engine, password: string, typedEmail
   await new AccountApi(engine.api).deleteAccount(password, normalizeEmail(typedEmail));
   engine.setSigningOut(true);
   engine.stop();
-  engine.session.forget();
+  await engine.session.forget();
   await LocalStore.erase(engine.store);
   // Then this browser stops receiving background notifications (the server removed its token with the device).
   forgetPush();

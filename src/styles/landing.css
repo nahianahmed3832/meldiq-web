@@ -1,0 +1,311 @@
+/* ───────────────────────── the landing page (signed out) ───────────────────────── */
+/* Drawn with the app's own tokens (tokens.css), so it is the app's design: the frame's ground, floating panels with
+   their ring, the palette's accent and call-to-action, light or dark as the app is (owner, 2026-10-30: "it should match
+   the web app, its own brand design"). Phones: one column. Tablets: one column, larger picture. Desktop (≥1024px): the
+   hero beside the sign-in card. Opened from the Home Screen, it keeps clear of the notch and the home indicator. */
+.landing {
+  min-height: 100dvh;
+  color: var(--text);
+  background: radial-gradient(900px 520px at 12% -10%, var(--brand-glow-1, transparent), transparent 62%), linear-gradient(180deg, var(--rail) 0%, var(--rail-2) 100%);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: "nav" "auth" "hero" "foot";
+  padding: env(safe-area-inset-top, 0px) calc(16px + env(safe-area-inset-right, 0px)) env(safe-area-inset-bottom, 0px) calc(16px + env(safe-area-inset-left, 0px));
+  overflow-x: clip;
+}
+
+.landing-nav {
+  grid-area: nav;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 0;
+}
+.landing-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 18px;
+  letter-spacing: -0.01em;
+}
+
+/* ── the picture of the app ── */
+.landing-hero {
+  grid-area: hero;
+  display: grid;
+  align-content: center;
+  padding: 4px 0 28px;
+  min-width: 0;
+}
+
+/* A small picture of the app: the frame's floating panels, as in layout.css. */
+.landing-preview {
+  display: grid;
+  grid-template-columns: 48px 0.9fr 1.4fr;
+  gap: 8px;
+  height: 230px;
+  padding: 8px;
+  border-radius: var(--r-panel);
+  background: linear-gradient(180deg, var(--rail) 0%, var(--rail-2) 100%);
+  box-shadow:
+    0 0 0 1px var(--panel-ring),
+    var(--shadow-lg);
+  overflow: hidden;
+}
+.lp-rail,
+.lp-side,
+.lp-main {
+  border-radius: 18px;
+  background: var(--rail-panel, var(--surface));
+  box-shadow: 0 0 0 1px var(--panel-ring);
+  min-width: 0;
+}
+.lp-rail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+}
+.lp-rail img {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  box-shadow: 0 0 0 2px var(--accent);
+}
+.lp-rail i {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--surface-hover);
+}
+.lp-rail i:nth-of-type(1) {
+  background: color-mix(in srgb, var(--accent) 55%, var(--surface-hover));
+}
+.lp-sep {
+  width: 22px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--border);
+}
+.lp-add {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px dashed var(--border-strong);
+  color: var(--text-3);
+  font-size: 16px;
+}
+.lp-side {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px 8px;
+  overflow: hidden;
+}
+.lp-title {
+  height: 12px;
+  width: 60%;
+  margin: 2px 4px 6px;
+  border-radius: 6px;
+  background: var(--surface-hover);
+}
+.lp-cat {
+  margin: 4px 6px 0;
+  font-size: 9.5px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  white-space: nowrap;
+}
+.lp-ch {
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-size: 12px;
+  color: var(--text-2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.lp-ch.on {
+  background: var(--accent-soft);
+  color: var(--accent-text);
+  font-weight: 700;
+}
+.lp-main {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+}
+.lp-head {
+  padding: 2px 4px 8px;
+  border-bottom: 1px solid var(--border);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text);
+}
+.lp-msg {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+.lp-msg i {
+  flex: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--surface-hover);
+}
+.lp-msg div {
+  display: grid;
+  gap: 5px;
+  flex: 1;
+}
+.lp-msg span {
+  height: 8px;
+  border-radius: 4px;
+  background: var(--surface-hover);
+}
+.lp-msg span:first-child {
+  background: color-mix(in srgb, var(--accent-text) 45%, var(--surface-hover));
+}
+.lp-composer {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 6px 6px 12px;
+  border-radius: var(--r-pill);
+  box-shadow: 0 0 0 1px var(--border-strong);
+}
+.lp-composer span {
+  flex: 1;
+  height: 8px;
+  border-radius: 4px;
+  background: var(--surface-hover);
+}
+.lp-composer b {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--cta, var(--accent));
+}
+
+/* ── the sign-in card ── */
+.landing-auth {
+  grid-area: auth;
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  padding: 4px 0 28px;
+  scroll-margin-top: calc(16px + env(safe-area-inset-top, 0px));
+}
+.landing .landing-card {
+  width: min(460px, 100%);
+  padding: 22px 18px;
+  border-radius: var(--r-panel);
+  background: var(--rail-panel, var(--surface-raised));
+  border-color: var(--border);
+  box-shadow:
+    0 0 0 1px var(--panel-ring),
+    var(--shadow-lg);
+}
+
+.landing-foot {
+  grid-area: foot;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  padding: 18px 0 28px;
+  border-top: 1px solid var(--border);
+  font-size: 13px;
+  color: var(--text-3);
+}
+.landing-foot a {
+  color: var(--text-2);
+}
+
+/* Tablets: more room and a larger picture. */
+@media (min-width: 600px) {
+  .landing {
+    padding-left: calc(32px + env(safe-area-inset-left, 0px));
+    padding-right: calc(32px + env(safe-area-inset-right, 0px));
+  }
+  .landing-hero {
+    padding: 24px 0 32px;
+  }
+  .landing-preview {
+    height: 260px;
+  }
+  .landing .landing-card {
+    padding: 30px;
+  }
+}
+
+/* Desktop: the picture of the app on the left, the sign-in card on the right, filling the screen between the logo and the footer. */
+@media (min-width: 1024px) {
+  .landing {
+    grid-template-columns: minmax(0, 1.15fr) minmax(400px, 0.85fr);
+    grid-template-areas: "nav nav" "hero auth" "foot foot";
+    grid-template-rows: auto 1fr auto;
+    column-gap: clamp(32px, 5vw, 80px);
+    padding-left: calc(clamp(32px, 5vw, 80px) + env(safe-area-inset-left, 0px));
+    padding-right: calc(clamp(32px, 5vw, 80px) + env(safe-area-inset-right, 0px));
+  }
+  .landing-nav {
+    padding: 22px 0;
+  }
+  .landing-hero {
+    padding: 24px 0 56px;
+  }
+  .landing-preview {
+    height: clamp(360px, 52vh, 520px);
+    grid-template-columns: 64px 0.8fr 1.6fr;
+    gap: 10px;
+    padding: 10px;
+  }
+  .landing-auth {
+    align-content: center;
+    padding: 24px 0 56px;
+  }
+  .landing .landing-card {
+    padding: 36px;
+  }
+}
+
+/* Very narrow phones: the picture keeps its rail and conversation; the channel list goes. */
+@media (max-width: 360px) {
+  .landing-preview {
+    grid-template-columns: 48px 1fr;
+  }
+  .lp-side {
+    display: none;
+  }
+}
+
+/* Below desktop the picture is shorter: three messages, so the composer stays in view. */
+@media (max-width: 1023px) {
+  .lp-msg:nth-child(n + 5) {
+    display: none;
+  }
+}
+
+.auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--text-2);
+  font-size: 12px;
+}
+.auth-divider::before,
+.auth-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}

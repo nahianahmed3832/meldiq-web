@@ -63,9 +63,12 @@ export async function backUpKeysIfMissing(accounts: AccountApi, accountId: strin
   }
 }
 
-/** The emailed [code] gets the sealed keys back and [password] opens them. The caller wipes the seed it gets. */
-export async function openKeyBackupWithCode(accounts: AccountApi, accountId: string, code: string, password: string): Promise<Uint8Array> {
-  const backup = await accounts.keyUnlock(code.replace(/\D/g, ""));
+/**
+ * The emailed [code] (null when the unlock step said it needs none) gets the sealed keys back and [password] opens them.
+ * The caller wipes the seed it gets.
+ */
+export async function openKeyBackupWithCode(accounts: AccountApi, accountId: string, code: string | null, password: string): Promise<Uint8Array> {
+  const backup = await accounts.keyUnlock(code === null ? null : code.replace(/\D/g, ""));
   try {
     return await openKeyBackup(password, accountId, backup);
   } catch (e) {
@@ -78,7 +81,7 @@ export async function openKeyBackupWithCode(accounts: AccountApi, accountId: str
  * The emailed [code] gets the sealed keys back and [password] opens them; this browser is then added like with the
  * recovery key. The seed is wiped before this returns.
  */
-export async function enrollWithEmailCode(accounts: AccountApi, account: AccountView, code: string, password: string, deviceName: string): Promise<Enrolled> {
+export async function enrollWithEmailCode(accounts: AccountApi, account: AccountView, code: string | null, password: string, deviceName: string): Promise<Enrolled> {
   const seed = await openKeyBackupWithCode(accounts, account.id, code, password);
   try {
     return await enrollWithSeed(accounts, account, seed, deviceName);

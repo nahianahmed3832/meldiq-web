@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { withinJsonBudget } from "../api/jsonBudget";
 
 /**
  * The plaintext inside griip-envelope-v1 (android data/model/Models.kt `Payload`). It comes from other people's devices, so
@@ -7,7 +8,11 @@ import { z } from "zod";
  */
 
 const id = z.string().min(1).max(128);
-const opt = <T extends z.ZodTypeAny>(t: T) => t.nullish().transform((v) => v ?? undefined);
+const opt = <T extends z.ZodTypeAny>(t: T) =>
+  t
+    .nullish()
+    .transform((v) => v ?? undefined)
+    .optional();
 
 export const zAttachmentRef = z.object({
   id,
@@ -86,6 +91,8 @@ export const zPayload = z.object({
   threadRoot: opt(id),
   mentions: opt(z.array(id).max(500)),
   mentionAll: opt(z.boolean()),
+  /** Community parity A1: the community roles this message @mentions (the server checks who may mention them). */
+  roleMentions: opt(z.array(id).max(20)),
   attachments: opt(z.array(zAttachmentRef).max(100)),
   target: opt(id),
   emoji: opt(z.string().min(1).max(64)),
@@ -113,9 +120,30 @@ export const zPayload = z.object({
   /** Batch B9: community emoji used in [text] as `:name:`, and a community sticker (text: its `:name:`). */
   customEmoji: opt(z.array(zCustomEmoji).max(50)),
   customSticker: opt(zCustomEmoji),
+  /**
+   * Community parity C (server docs/COMMUNITY_PARITY_API.md › Posting tools): a webhook's or the Tickets sender's boxes,
+   * buttons and name. Only the server's own senders may post them, so they're read from server-stored messages only
+   * (sync/receiver.ts); each item is cleaned on its own by sync/posting/embeds.ts, a bad one dropped, never the message.
+   */
+  embeds: opt(z.array(z.unknown()).max(50)),
+  buttons: opt(z.array(z.unknown()).max(50)),
+  webhook: opt(z.unknown()),
+  /** [text] was made from the boxes for older apps: not shown beside them. */
+  textFromEmbeds: opt(z.boolean()),
+  /**
+   * Community parity D: the Giveaways bot's card, `{ id, endsAt, winners, ended, winnerIds? }` (cleaned by sync/rules.ts
+   * cleanGiveaway). A server sender's field like the boxes: never read from an end-to-end envelope.
+   */
+  giveaway: opt(z.unknown()),
 });
 export type CustomEmojiRef = z.infer<typeof zCustomEmoji>;
 export type Payload = z.infer<typeof zPayload>;
+
+/** Fields only the server's own senders may put in a payload: never read from an end-to-end envelope. */
+export function withoutServerFields(p: Payload): Payload {
+  const { embeds: _e, buttons: _b, webhook: _w, textFromEmbeds: _t, giveaway: _g, ...rest } = p;
+  return rest;
+}
 export type ForwardOrigin = z.infer<typeof zOrigin>;
 export type Poll = z.infer<typeof zPoll>;
 export type StickerRef = z.infer<typeof zSticker>;
@@ -136,6 +164,7 @@ export function parsePayload(json: string): Payload | null {
   } catch {
     return null;
   }
+  if (!withinJsonBudget(raw)) return null;
   const r = zPayload.safeParse(raw);
   return r.success ? r.data : null;
 }

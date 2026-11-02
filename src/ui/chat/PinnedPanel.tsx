@@ -4,8 +4,9 @@ import { useEngine, useOrbit } from "../../application/orbit";
 import type { StoredMessage } from "../../model/types";
 import { shortWhen } from "../format";
 import { jumpTo } from "./jump";
+import { CollectionControls, useMessageCollection } from "./useMessageCollection";
 
-/** This conversation's pinned messages on this browser, kept current as pins arrive (they're encrypted control messages). */
+/** Cached pins for optional badges on older servers; the panels themselves use authoritative collection pages. */
 export function usePinned(conversationId: string): StoredMessage[] {
   const engine = useEngine();
   const loaded = useOrbit((s) => s.messages[conversationId]);
@@ -29,7 +30,11 @@ export function usePinned(conversationId: string): StoredMessage[] {
  */
 export function PinnedPanel({ conversationId, onClose }: { conversationId: string; onClose: () => void }) {
   const engine = useEngine();
-  const pinned = usePinned(conversationId);
+  const collection = useMessageCollection(conversationId, "pins");
+  const pinned = (collection.page?.messages ?? [])
+    .filter((m) => !m.deleted && m.pinned)
+    .slice()
+    .reverse();
   const users = useOrbit((s) => s.users);
   const canPost = useOrbit((s) => s.conversations[conversationId]?.canPost ?? false);
   const [missing, setMissing] = useState(false);
@@ -38,19 +43,22 @@ export function PinnedPanel({ conversationId, onClose }: { conversationId: strin
       <div className="panel-head">
         <div className="grow" style={{ minWidth: 0 }}>
           <h2>Pinned</h2>
-          <small>{pinned.length === 1 ? "1 message" : `${pinned.length} messages`}</small>
+          <small>
+            {pinned.length} {pinned.length === 1 ? "message" : "messages"} on this page
+          </small>
         </div>
         <button className="icon-btn" onClick={onClose} aria-label="Close panel">
           <X size={18} />
         </button>
       </div>
       <div className="panel-body scroll">
+        <CollectionControls collection={collection} />
         {missing && (
           <p className="banner warn" role="status">
             That message isn't loaded in this conversation any more.
           </p>
         )}
-        {pinned.length === 0 ? (
+        {collection.page && pinned.length === 0 ? (
           <p className="faint" style={{ padding: "8px 4px" }}>
             Nothing is pinned here. Pin a message from its menu so everyone in the conversation can find it.
           </p>

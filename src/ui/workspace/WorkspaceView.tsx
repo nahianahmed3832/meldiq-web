@@ -1,9 +1,17 @@
 import { MeldlingArt } from "../components/MeldlingArt";
-import { BookOpen, HelpCircle, Smile, Ban, CalendarDays, Flag, Gauge, Hash, Laptop, LayoutGrid, ScrollText, Shield, ShieldCheck, Ticket, UserCheck, UsersRound } from "lucide-react";
+import { ArrowLeft, CalendarDays, Gauge, Hash, Laptop, LayoutGrid, ScrollText, ShieldCheck, Ticket, UsersRound } from "lucide-react";
 import { ApplicationsPage, BansPage, SecurityPage } from "./ModerationPages";
+import { COMMUNITY_RAIL_GROUPS, communityPageTitle, communityRailKey, visibleCommunityRail } from "./communityRail";
+import { ThemePage } from "./ThemePage";
+import { CommunitySparksPage } from "./SparksPromotePages";
+import { PromotePage } from "./promote/PromotePage";
 import { ReportsPage } from "./ReportsPage";
 import { GuidePage, OnboardingPage } from "./GuidePages";
 import { ExpressionsPage } from "./ExpressionsPage";
+import { PinsPage } from "./PinsPage";
+import { BotsPage } from "./BotsPage";
+import { RulesPage } from "./RulesPage";
+import { LobbySettingsPage } from "./LobbySettingsPage";
 import type { ReactNode } from "react";
 import { useEngine, useOrbit } from "../../application/orbit";
 import { navigate, type WorkspacePage } from "../../application/router";
@@ -29,36 +37,6 @@ const GROUPS: { key: PageGroup; label: string }[] = [
   { key: "admin", label: "Administration" },
 ];
 
-/**
- * Community servers (API 0.12+): Community settings in Android's groups (android CommunitySettingsScreen): Community,
- * People, Channels, Moderation, More. Each page shows only for people allowed to use it, on servers that have it.
- */
-type CommunityGroup = "community" | "people" | "channels" | "moderation" | "more";
-const COMMUNITY_GROUPS: { key: CommunityGroup; label: string }[] = [
-  { key: "community", label: "Community" },
-  { key: "people", label: "People" },
-  { key: "channels", label: "Channels" },
-  { key: "moderation", label: "Moderation" },
-  { key: "more", label: "More" },
-];
-const can = (p: OrgPermissions, perm: string) => p.isOwner || p.effective.includes(perm);
-const COMMUNITY_PAGES: { key: WorkspacePage; label: string; icon: ReactNode; group: CommunityGroup; shown?: (p: OrgPermissions) => boolean; feature?: string }[] = [
-  { key: "overview", label: "Overview", icon: <LayoutGrid size={17} />, group: "community" },
-  { key: "guide", label: "Community guide", icon: <BookOpen size={17} />, group: "community", feature: "community-guide", shown: (p) => p.canManageOrg },
-  { key: "onboarding", label: "Onboarding questions", icon: <HelpCircle size={17} />, group: "community", feature: "onboarding" },
-  { key: "expressions", label: "Emoji & stickers", icon: <Smile size={17} />, group: "community", feature: "community-expressions", shown: (p) => can(p, "expressions.manage") },
-  { key: "people", label: "Members", icon: <UsersRound size={17} />, group: "people", shown: (p) => p.canViewDirectory },
-  { key: "roles", label: "Roles", icon: <ShieldCheck size={17} />, group: "people", shown: (p) => p.canViewRoles },
-  { key: "invitations", label: "Invitations", icon: <Ticket size={17} />, group: "people", shown: (p) => p.canInvite },
-  { key: "channels", label: "Channels & categories", icon: <Hash size={17} />, group: "channels" },
-  { key: "applications", label: "Applications", icon: <UserCheck size={17} />, group: "moderation", feature: "join-applications", shown: (p) => can(p, "members.approve") },
-  { key: "reports", label: "Reports", icon: <Flag size={17} />, group: "moderation", feature: "reports", shown: (p) => can(p, "reports.view") },
-  { key: "security", label: "Security actions", icon: <Shield size={17} />, group: "moderation", feature: "security-actions", shown: (p) => p.canManageOrg || p.canBan },
-  { key: "bans", label: "Bans", icon: <Ban size={17} />, group: "moderation", feature: "community-moderation", shown: (p) => p.canBan },
-  { key: "audit", label: "Audit log", icon: <ScrollText size={17} />, group: "moderation", shown: (p) => p.canViewAudit },
-  { key: "meetings", label: "Events", icon: <CalendarDays size={17} />, group: "more", feature: "meetings" },
-  { key: "usage", label: "Usage", icon: <Gauge size={17} />, group: "more", shown: (p) => p.canViewUsage },
-];
 const PAGES: { key: WorkspacePage; label: string; icon: ReactNode; group: PageGroup; shown?: (p: OrgPermissions, d: OrgAdminDetail) => boolean; feature?: string }[] = [
   { key: "overview", label: "Overview", icon: <LayoutGrid size={17} />, group: "workspace" },
   { key: "people", label: "People", icon: <UsersRound size={17} />, group: "workspace" },
@@ -103,32 +81,48 @@ export function WorkspaceView({ orgId, page, onDialog }: { orgId: string | null;
 
   const d = detail.data;
   const community = features.includes("community-channels");
+  const workspacePages = PAGES.filter((p) => (!p.shown || (d && p.shown(d.permissions, d))) && (!p.feature || features.includes(p.feature)));
+  const mobilePages = community ? visibleCommunityRail(features, d?.permissions ?? null) : workspacePages;
+  const mobileGroups = community ? COMMUNITY_RAIL_GROUPS : GROUPS;
+  const currentPage = community ? communityRailKey(page) : page;
   return (
     <section className="main main-split" aria-label={`${org.name} settings`} style={{ display: "flex", flexDirection: "column" }}>
-      <div className="settings">
+      <div className={`settings workspace-settings${community ? " community-settings" : ""}`}>
         <nav className="settings-nav" aria-label={community ? "Community settings" : "Community pages"}>
-          <h2 className="ellipsis">{org.name}</h2>
-          {community &&
-            COMMUNITY_GROUPS.map((g) => {
-              const pages = COMMUNITY_PAGES.filter((p) => p.group === g.key && (!p.shown || (d && p.shown(d.permissions))) && (!p.feature || features.includes(p.feature)));
-              if (pages.length === 0) return null;
-              return (
-                <div key={g.key} role="group" aria-labelledby={`ws-group-${g.key}`} className="settings-nav-group">
-                  <h3 id={`ws-group-${g.key}`} className="ws-subhead">
-                    {g.label}
-                  </h3>
-                  {pages.map((p) => (
-                    <button key={p.key} className="side-item" aria-current={page === p.key ? "page" : undefined} onClick={() => navigate({ section: "workspace", workspacePage: p.key })}>
-                      <span className="glyph">{p.icon}</span>
-                      <span className="grow">{p.label}</span>
-                    </button>
-                  ))}
-                </div>
-              );
-            })}
+          <div className="mobile-workspace-nav">
+            <button className="icon-btn" aria-label="Back to community" onClick={() => navigate({ section: "home" })}>
+              <ArrowLeft size={20} />
+            </button>
+            <label className="grow">
+              <span className="sr-only">Community settings page</span>
+              <select
+                className="input"
+                value={mobilePages.some((p) => p.key === currentPage) ? currentPage : ""}
+                onChange={(e) => navigate({ section: "workspace", workspacePage: e.target.value as WorkspacePage })}
+              >
+                <option value="" disabled>
+                  Choose a settings page
+                </option>
+                {mobileGroups.map((group) => {
+                  const pages = mobilePages.filter((p) => p.group === group.key);
+                  return pages.length ? (
+                    <optgroup key={group.key} label={group.label ?? org.name}>
+                      {pages.map((p) => (
+                        <option key={p.key} value={p.key}>
+                          {p.label}
+                        </option>
+                      ))}
+                    </optgroup>
+                  ) : null;
+                })}
+              </select>
+            </label>
+          </div>
+          {!community && <h2 className="ellipsis">{org.name}</h2>}
+          {community && <CommunityRail name={org.name} page={page} features={features} permissions={d?.permissions ?? null} />}
           {!community &&
             GROUPS.map((g) => {
-              const pages = PAGES.filter((p) => p.group === g.key && (!p.shown || (d && p.shown(d.permissions, d))) && (!p.feature || features.includes(p.feature)));
+              const pages = workspacePages.filter((p) => p.group === g.key);
               if (pages.length === 0) return null;
               return (
                 <div key={g.key} role="group" aria-labelledby={`ws-group-${g.key}`} className="settings-nav-group">
@@ -153,6 +147,7 @@ export function WorkspaceView({ orgId, page, onDialog }: { orgId: string | null;
         </nav>
         <div className="settings-page scroll">
           <div className="inner">
+            {community && <h1>{communityPageTitle(page, features)}</h1>}
             {detail.error && !d ? (
               <div className="banner danger" role="alert">
                 <span className="grow">{detail.error}</span>
@@ -176,27 +171,75 @@ export function WorkspaceView({ orgId, page, onDialog }: { orgId: string | null;
               <UsagePage detail={d} />
             ) : page === "meetings" ? (
               <MeetingsPage detail={d} />
+            ) : page === "pins" ? (
+              <PinsPage detail={d} />
+            ) : page === "bots" ? (
+              <BotsPage detail={d} />
             ) : page === "expressions" ? (
               <ExpressionsPage detail={d} />
             ) : page === "guide" ? (
               <GuidePage detail={d} />
+            ) : page === "lobby" ? (
+              <LobbySettingsPage detail={d} />
+            ) : page === "rules" ? (
+              <RulesPage detail={d} />
             ) : page === "onboarding" ? (
               <OnboardingPage detail={d} />
             ) : page === "applications" ? (
               <ApplicationsPage detail={d} />
             ) : page === "reports" ? (
               <ReportsPage detail={d} />
-            ) : page === "security" ? (
+            ) : page === "security" && !community ? (
               <SecurityPage detail={d} />
+            ) : page === "theme" ? (
+              <ThemePage detail={d} onChanged={detail.reload} />
+            ) : page === "sparks" ? (
+              <CommunitySparksPage detail={d} />
+            ) : page === "promote" ? (
+              <PromotePage detail={d} />
             ) : page === "bans" ? (
               <BansPage detail={d} />
             ) : (
-              <OverviewPage detail={d} onChanged={detail.reload} />
+              <OverviewPage detail={d} onChanged={detail.reload} focusSafety={page === "security"} />
             )}
           </div>
         </div>
       </div>
     </section>
+  );
+}
+
+interface CommunityRailProps {
+  name: string;
+  page: WorkspacePage;
+  features: readonly string[];
+  permissions: OrgPermissions | null;
+}
+
+/** Community settings' left rail: the community's own group under its name, then small uppercase group titles. */
+function CommunityRail({ name, page, features, permissions }: CommunityRailProps) {
+  const visible = visibleCommunityRail(features, permissions);
+  const current = communityRailKey(page);
+  return (
+    <>
+      {COMMUNITY_RAIL_GROUPS.map((g) => {
+        const pages = visible.filter((p) => p.group === g.key);
+        if (pages.length === 0) return null;
+        return (
+          <div key={g.key} role="group" aria-labelledby={`ws-group-${g.key}`} className="settings-nav-group">
+            <div id={`ws-group-${g.key}`} className="settings-nav-title ellipsis">
+              {g.label ?? name}
+            </div>
+            {pages.map((p) => (
+              <button key={p.key} className="side-item" aria-current={current === p.key ? "page" : undefined} onClick={() => navigate({ section: "workspace", workspacePage: p.key })}>
+                <span className="glyph">{p.icon}</span>
+                <span className="grow">{p.label}</span>
+              </button>
+            ))}
+          </div>
+        );
+      })}
+    </>
   );
 }
 

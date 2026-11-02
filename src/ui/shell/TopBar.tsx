@@ -22,7 +22,7 @@ interface TopBarProps {
 export function TopBar({ onMenu, onSearch, section, orgId }: TopBarProps) {
   const t = useT();
   const orgName = useOrbit((s) => (orgId ? (s.orgs.find((o) => o.id === orgId)?.name ?? null) : null));
-  const inCommunity = (section === "home" || section === "workspace") && !!orgName;
+  const inCommunity = (section === "home" || section === "workspace" || section === "lobby") && !!orgName;
   const title = inCommunity ? orgName : pageTitle(section, t);
   const searchLabel = inCommunity ? t("conv_search_in", { name: orgName }) : t("search_placeholder");
   const me = useOrbit((s) => s.me);

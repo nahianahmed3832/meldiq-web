@@ -35,12 +35,20 @@ export function ActivityView({ orgId }: { orgId: string | null }) {
   const [logError, setLogError] = useState<string | null>(null);
 
   useEffect(() => {
+    let alive = true;
     setLog(null);
     setLogError(null);
     if (!orgId) return;
     orgActivity(engine, orgId)
-      .then(setLog)
-      .catch((e: unknown) => setLogError(e instanceof ApiError && e.status === 403 ? "Guests can't see the community's activity." : e instanceof Error ? e.message : "Couldn't load activity."));
+      .then((value) => {
+        if (alive) setLog(value);
+      })
+      .catch(
+        (e: unknown) => alive && setLogError(e instanceof ApiError && e.status === 403 ? "Guests can't see the community's activity." : e instanceof Error ? e.message : "Couldn't load activity."),
+      );
+    return () => {
+      alive = false;
+    };
   }, [engine, orgId]);
 
   return (
@@ -49,6 +57,9 @@ export function ActivityView({ orgId }: { orgId: string | null }) {
         <div className="view-inner">
           <div>
             <h1>Activity</h1>
+            <button className="btn btn-secondary btn-sm" onClick={() => navigate({ section: "settings", settingsPage: "notifications" })}>
+              Notification settings
+            </button>
             <p className="view-sub">Mentions of you, and what changed in {org?.name ?? "your community"}.</p>
           </div>
           <div className="search-filters" role="tablist" aria-label="Show">

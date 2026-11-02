@@ -3,7 +3,7 @@ import { countsEveryone } from "./navPrefs";
 import { type Call, type Conversation, type QueueItem, type StoredEvent, zCallRes, zQueueItem, zQueueItemIdentity } from "../api/schemas";
 import { EnvelopeError, openEnvelope } from "../crypto/envelope";
 import type { StoredMessage } from "../model/types";
-import { parsePayload, type Payload } from "../protocol/payload";
+import { parsePayload, type Payload, withoutServerFields } from "../protocol/payload";
 import type { EngineContext } from "./context";
 import { applyDelete, applyDelivered, applyEdit, applyPin, applyReaction, applyRead, callEntry, receivedMentions, textMessage, undecryptable, unsupported } from "./rules";
 import { applyClose, applyVote } from "./polls";
@@ -91,6 +91,7 @@ export class Receiver {
     if (!payload) return this.recordUnsupported(item, "unreadable payload");
     const conversation = await this.ctx.ensureConversation(e.conversationId);
     await this.apply(payload, item, conversation, e.senderUserId === this.ctx.device.userId, e.serverTs, existing?.kind === "undecryptable", opts.history === true);
+    if (!opts.history && ["text", "edit", "delete", "pin", "reaction", "vote", "poll_close"].includes(payload.type)) this.ctx.state.update((s) => ({ ...s, collectionRev: s.collectionRev + 1 }));
   }
 
   private async handle(item: QueueItem): Promise<void> {
@@ -134,8 +135,10 @@ export class Receiver {
       if (e instanceof EnvelopeError) return this.recordUndecryptable(item, e.message);
       throw e;
     }
-    const payload = parsePayload(json);
-    if (!payload) return this.recordUnsupported(item, "unreadable payload");
+    const parsed = parsePayload(json);
+    if (!parsed) return this.recordUnsupported(item, "unreadable payload");
+    // Boxes, buttons and webhook names come only from the server's own senders, never from another person's device.
+    const payload = withoutServerFields(parsed);
     const conversation = await this.ctx.ensureConversation(item.conversationId);
     await this.apply(payload, item, conversation, item.senderUserId === device.userId, p.serverTs ?? item.createdAt, placeholder);
   }
@@ -149,8 +152,9 @@ export class Receiver {
         const m = textMessage(pl, item, mine, serverTs, mentions);
         if (replacesPlaceholder) await store.putMessage(m);
         else if (!(await store.insertMessageIfAbsent(m))) return;
-        if (!mine) await this.ctx.ensureUser(item.senderUserId);
-        this.ctx.show(m);
+        if (!mine && !history) await this.ctx.ensureUser(item.senderUserId);
+        // History pages are published atomically by the engine, keeping distant windows separate.
+        if (!history) this.ctx.show(m);
         await this.replayPending(item.conversationId, item.messageId);
         if (history) return;
         const viewing = this.ctx.viewing() === item.conversationId;
@@ -165,7 +169,7 @@ export class Receiver {
       case "edit":
         return this.change(pl, item, serverTs, (t) => applyEdit(t, item.senderUserId, pl, serverTs));
       case "delete":
-        return this.change(pl, item, serverTs, (t) => applyDelete(t, item.senderUserId));
+        return this.change(pl, item, serverTs, (t) => applyDelete(t, item.senderUserId, this.communityChannel(conv, item.conversationId)));
       case "reaction":
         // One emoji, not text: anything else from a modified client is dropped (meldiq docs/EMOJI.md). In a community's
         // channels a community emoji's :name: is a reaction too (batch B12).
@@ -204,6 +208,12 @@ export class Receiver {
     }
   }
 
+  /** Whether a conversation is a community channel (a replayed control has none at hand: the store's copy then). */
+  private communityChannel(conv: Pick<Conversation, "type" | "orgId"> | null, conversationId: string): boolean {
+    const c = conv ?? this.ctx.state.get().conversations[conversationId];
+    return c?.type === "CHANNEL" && !!c.orgId;
+  }
+
   /** Edits, deletions, reactions and pins: only for a message in the control's own conversation (T3.4). */
   private async change(pl: Payload, item: QueueItem, serverTs: number, fn: (t: StoredMessage) => StoredMessage | null): Promise<void> {
     if (!pl.target) return;
@@ -225,7 +235,8 @@ export class Receiver {
     const next = fn(t);
     if (!next) return;
     await this.ctx.store.putMessage(next);
-    this.ctx.show(next);
+    // A control for an older collection result must not insert it into the active timeline window.
+    if (this.ctx.state.get().messages[next.conversationId]?.items.some((m) => m.id === next.id)) this.ctx.show(next);
     if (pl.type === "edit" || pl.type === "delete") await this.ctx.refreshPreview(t.conversationId);
   }
 

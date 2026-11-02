@@ -1,3 +1,4 @@
+import { CommunityOwnerBadge } from "../components/CommunityOwnerBadge";
 import { Bell, BellOff, Hash, Lock, MessageSquare, Search, Shield, ShieldCheck, User, UserPlus, UsersRound } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { Conversation, Member } from "../../api/schemas";
@@ -7,6 +8,7 @@ import { conversationMembers, startDirect } from "../../sync/account";
 import { levelOf, muteToggle, workspaceOf } from "../../sync/navPrefs";
 import { presenceWords } from "../../sync/social";
 import { GroupAvatar, UserAvatar } from "../components/OrgAvatar";
+import { LookAvatar, LookName } from "../people/NameStyle";
 import { NewGroupDialog } from "../dialogs/NewGroupDialog";
 import { conversationTitle, dayLabel, dmPeer, members as membersText } from "../format";
 import { GroupPhotoCard } from "../people/GroupPhotoCard";
@@ -76,6 +78,7 @@ function ChatDetails({ c, me, onClose }: { c: Conversation; me: string; onClose:
   const { gallery, links } = useShared(c.id);
   const nameOf = useSenderName();
   const pinned = usePinned(c.id).length;
+  const paged = useOrbit((s) => s.server?.features.includes("message-collections") ?? false);
   const tabs = detailsTabs(c.type);
   const [tab, setTab] = useState<DetailsTab>(tabs[0]);
   const [sheet, setSheet] = useState<"security" | "add" | "newGroup" | null>(null);
@@ -98,20 +101,20 @@ function ChatDetails({ c, me, onClose }: { c: Conversation; me: string; onClose:
   ];
   const avatar =
     c.type === "DM" && peer ? (
-      <UserAvatar userId={peer.id} name={title} colorIndex={peer.avatarColor} photoRev={users[peer.id]?.photoRev} size={72} decorative />
+      <LookAvatar userId={peer.id} name={title} colorIndex={peer.avatarColor} photoRev={users[peer.id]?.photoRev} size={72} />
     ) : (
       <GroupAvatar conversationId={c.id} name={title} photoRev={c.photoRev} size={72} />
     );
   const sub = peerMember ? [`@${peerMember.username}`, peerMember.pronouns].filter(Boolean).join(" · ") : c.type === "GROUP" ? membersText(c.memberCount) : null;
   const presence = peerMember ? presenceWords(peerMember.presence, peerMember.online) : null;
-  const counts = { members: c.memberCount, media: gallery.media.length, pins: pinned, links: links.length, files: gallery.files.length };
+  const counts = { members: c.memberCount, media: paged ? undefined : gallery.media.length, pins: paged ? undefined : pinned, links: links.length, files: paged ? undefined : gallery.files.length };
   const memberIds = new Set((members ?? []).map((m) => m.id));
 
   return (
     <aside className="panel" aria-label="Details">
       <PanelHead title="Details" sub={title} onClose={onClose} />
       <div className="panel-body scroll">
-        <DetailsHero avatar={avatar} title={title} sub={sub} presence={presence} />
+        <DetailsHero avatar={avatar} title={c.type === "DM" && peer ? <LookName userId={peer.id} name={title} withMarks /> : title} sub={sub} presence={presence} />
         <DetailsActions actions={actions} />
         {peerMember && (
           <button className="panel-action-row" onClick={() => setSheet("newGroup")}>
@@ -214,7 +217,7 @@ export function MembersList({ c, members, error, onAdded, showAdd }: MembersList
   const me = useOrbit((s) => s.me?.userId);
   const memberIds = useMemo(() => new Set((members ?? []).map((m) => m.id)), [members]);
   return (
-    <div style={{ display: "grid", gap: 4 }} role="tabpanel" aria-label="Members">
+    <div style={{ display: "grid", gap: 12 }} role="tabpanel" aria-label="Members">
       <div className="panel-section-title">
         <span>Members</span>
         <span>{c.memberCount}</span>
@@ -230,6 +233,7 @@ export function MembersList({ c, members, error, onAdded, showAdd }: MembersList
               {m.displayName}
               {m.id === me ? " (you)" : ""}
             </button>
+            {c.orgId && m.orgRole === "OWNER" && <CommunityOwnerBadge />}
             <small className="ellipsis">
               @{m.username}
               {m.role === "ADMIN" ? " · admin" : ""}

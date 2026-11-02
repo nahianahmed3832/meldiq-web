@@ -1,4 +1,6 @@
+import "../application/validationPolicy";
 import type { z } from "zod";
+import { withinJsonBudget } from "./jsonBudget";
 
 /** A refusal or failure from the server, or a network failure (status 0). Never carries request bodies or tokens. */
 export class ApiError extends Error {
@@ -44,6 +46,11 @@ interface RequestOptions {
 /**
  * Typed client for the Orbit API. Same origin in the browser (base ""), an absolute base in tests. Bearer token only:
  * cookies are never sent. A 401 triggers one re-authentication and one retry.
+ *
+ * After a page load the session is restored while the app already asks for things (2026-10-29: a reload swapped the
+ * refresh token five times before the first messages came): a request with no token yet waits for that rather
+ * than going out to be refused, and a refused one whose token another request has already replaced is simply sent
+ * again with the new one, never swapping the token once more.
  */
 export class ApiClient {
   constructor(
@@ -56,6 +63,7 @@ export class ApiClient {
     const data: unknown = await res.json().catch(() => {
       throw new ApiError(res.status, "decode", "The server's answer couldn't be read");
     });
+    if (!withinJsonBudget(data)) throw new ApiError(res.status, "decode", "The server's answer is too complex to read safely. Try a smaller page.");
     const parsed = schema.safeParse(data);
     if (!parsed.success) throw new ApiError(res.status, "decode", "The server's answer wasn't what this app expects");
     return parsed.data;
@@ -87,7 +95,12 @@ export class ApiClient {
   private async send(method: string, path: string, opts: RequestOptions, retried = false): Promise<Response> {
     const auth = opts.auth ?? true;
     const headers: Record<string, string> = { ...opts.headers, accept: "application/json" };
-    const token = auth ? this.credentials?.token() : null;
+    let token = auth ? (this.credentials?.token() ?? null) : null;
+    let noSession = false;
+    if (auth && !token && !retried && this.credentials) {
+      noSession = !(await this.credentials.reauthenticate());
+      token = this.credentials.token();
+    }
     if (auth && token) headers.authorization = `Bearer ${token}`;
     let body: BodyInit | undefined;
     if (opts.raw) {
@@ -104,13 +117,19 @@ export class ApiClient {
       if (opts.signal?.aborted) throw e;
       throw new ApiError(0, "network", "Can't reach the server. Check your connection.");
     }
-    if (res.status === 401 && auth && !retried && this.credentials && (await this.credentials.reauthenticate())) {
+    if (res.status === 401 && auth && !retried && !noSession && this.credentials && (renewed(this.credentials, token) || (await this.credentials.reauthenticate()))) {
       await res.body?.cancel().catch(() => undefined);
       return this.send(method, path, opts, true);
     }
     if (!res.ok) throw await toApiError(res);
     return res;
   }
+}
+
+/** Whether the session's token changed since [sent] went out with a request (another request renewed it meanwhile). */
+function renewed(credentials: Credentials, sent: string | null): boolean {
+  const now = credentials.token();
+  return !!now && now !== sent;
 }
 
 async function toApiError(res: Response): Promise<ApiError> {

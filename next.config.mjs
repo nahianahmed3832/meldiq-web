@@ -21,7 +21,8 @@ export default function config(phase) {
     output: "export",
     reactStrictMode: false, // the client root has its own <StrictMode> (src/client/Root.tsx)
     poweredByHeader: false,
-    productionBrowserSourceMaps: true,
+    // No source maps in releases (the owner, 2026-10-29): browsers only get the minified code, not the readable source.
+    productionBrowserSourceMaps: false,
     images: { unoptimized: true },
     env: { MELDIQ_APP_VERSION: version },
     // Types are checked by `tsc -b` (npm run typecheck), with the project's own settings.

@@ -5,6 +5,7 @@ import { useEngine } from "../../application/orbit";
 import { searchPeople } from "../../sync/account";
 import { block, blockedIds, unblock } from "../../sync/profile";
 import { addConversationMember, directory, updateConversation } from "../../sync/workspaces";
+import { groupAddProblem } from "../../sync/groupAdd";
 import { Dialog } from "../components/Overlay";
 import { UserAvatar } from "../components/OrgAvatar";
 
@@ -150,7 +151,7 @@ export function AddMembersDialog({ c, memberIds, onAdded, onClose }: { c: Conver
       setAdded((s) => new Set([...s, m.id]));
       onAdded();
     } catch (e) {
-      setError(messageOf(e, `Couldn't add ${m.displayName}.`));
+      setError(groupAddProblem(e, () => m.displayName) ?? messageOf(e, `Couldn't add ${m.displayName}.`));
     } finally {
       setBusy(null);
     }

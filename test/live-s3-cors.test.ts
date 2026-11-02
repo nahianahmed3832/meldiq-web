@@ -1,6 +1,6 @@
 import nodeCrypto from "node:crypto";
 import path from "node:path";
-import { afterAll, afterEach, beforeAll, describe, expect, it } from "vitest";
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it } from "vitest";
 import { decryptFile, encryptFile } from "../src/crypto/attachment";
 import type { Engine } from "../src/sync/engine";
 import { openAttachment, resetAttachmentRoute, streamAttachment } from "../src/sync/attachments";
@@ -106,6 +106,9 @@ beforeAll(async () => {
   web = (await linkBrowser(server, alice)).engine;
   globalThis.fetch = fetchAsBrowser;
 });
+beforeEach(() => {
+  web.state.update((s) => ({ ...s, server: s.server ? { ...s.server, features: s.server.features.filter((f) => f !== "attachment-proxy") } : s.server }));
+});
 afterEach(() => {
   resetAttachmentRoute();
   resetUploadRoute();
@@ -119,6 +122,16 @@ afterAll(async () => {
 });
 
 describe("files kept in S3 without a CORS rule for the web app", () => {
+  it("a capable API streams an authorized S3 file without a redirect or web-server fallback", async () => {
+    web.state.update((s) => ({ ...s, server: s.server ? { ...s.server, features: [...s.server.features, "attachment-proxy"] } : s.server }));
+    mediaRoute = false;
+    const plain = nodeCrypto.randomBytes(300000);
+    const ref = await phoneFile(plain);
+    const blob = await asBrowser(() => openAttachment(web, ref));
+    expect(Buffer.from(await blob.arrayBuffer())).toEqual(plain);
+    expect(seen).toEqual({ direct: 1, bucketRefused: 0, media: 0 });
+  });
+
   it("a photo from the phone opens: the refused bucket link is fetched again through the web server, and later files go there at once", async () => {
     const plain = nodeCrypto.randomBytes(300_000);
     const ref = await phoneFile(plain);

@@ -50,7 +50,7 @@ import { mergeHandlers, useMessageGestures } from "./gestures";
 import { clock, dayLabel, fullTime } from "../format";
 import { openInApp } from "./inAppLinks";
 import { useT } from "../../i18n";
-import { LookAvatar, StyledName, useUserLook } from "../people/NameStyle";
+import { LookAvatar, LookName } from "../people/NameStyle";
 import { isWebUrl } from "../../protocol/payload";
 import { Attachments } from "./Attachments";
 import { isEmojiOnly, RichText } from "./RichText";
@@ -68,6 +68,9 @@ import { EmojiPicker } from "./EmojiPicker";
 import { ReportDialog } from "./ReportDialog";
 import { openProfile } from "../people/ProfileDialog";
 import { canLink, messageLink } from "../../sync/messageLinks";
+import { PostedContent } from "./PostedContent";
+import { WebhookAvatar, WebhookName } from "./WebhookSender";
+import { useReactionRolesItem } from "../community/reactionRoles/useReactionRolesItem";
 
 export const QUICK_EMOJI = ["👍", "❤️", "😂", "🎉", "🙏", "👀"];
 /** The hover toolbar's icon size, as large as Discord's so each action is easy to hit. */
@@ -87,6 +90,12 @@ export interface MessageItemProps {
   replyTo: { name: string; text: string; id: string } | null;
   threadCount: number;
   canPost: boolean;
+  /** Reactions and votes; differs from posting in a community's rules channel (API 0.65.0). Defaults to canPost. */
+  canReact?: boolean;
+  /** Community parity A1: reacting with an emoji not yet on a message (joining one stays open). Defaults to true. */
+  newReactions?: boolean;
+  /** Community parity A1: pinning and deleting anyone's message (messages.manage). Defaults to canPost for pins only. */
+  moderate?: boolean;
   highlighted: boolean;
   onReply: (m: StoredMessage) => void;
   onThread: ((m: StoredMessage) => void) | null;
@@ -96,6 +105,9 @@ export interface MessageItemProps {
 
 export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
   const engine = useEngine();
+  const canReact = p.canReact ?? p.canPost;
+  const canAddReaction = canReact && (p.newReactions ?? true);
+  const canPin = p.moderate ?? p.canPost;
   const t = useT();
   const { m } = p;
   const [editing, setEditing] = useState(false);
@@ -108,6 +120,8 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
   const [reporting, setReporting] = useState(false);
   const [showReactions, setShowReactions] = useState(false);
   const reportable = useOrbit((st) => st.server?.features.includes("reports") ?? false);
+  // An action on it waits for the server's copy (a snapshot's message, engine.live()): shown after a moment.
+  const waiting = useOrbit((st) => st.waiting[m.id] === true);
   const inCommunity = useOrbit((st) => {
     const c = st.conversations[m.conversationId];
     return c?.type === "CHANNEL" && c.orgId ? c.orgId : null;
@@ -128,6 +142,11 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
   const mine = m.outgoing;
   const mentioned = !mine && (m.mentions.includes(p.myUserId) || m.mentionAll);
   const live = m.kind === "text" && !m.deleted;
+  // Community parity C: a webhook's post shows the webhook, and text made from its boxes only where there are none.
+  const webhook = m.rich?.webhook ?? null;
+  const posted = !!(m.rich?.embeds?.length || m.rich?.buttons?.length || m.rich?.giveaway);
+  const shownText = m.rich?.textFromEmbeds ? "" : m.text;
+  const reactionRoles = useReactionRolesItem(m, inCommunity, !!more.anchor);
 
   const body = () => {
     if (m.kind === "call") {
@@ -169,7 +188,7 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
         {m.forwarded && <ForwardedLine origin={m.rich?.origin} />}
         {m.rich?.poll ? (
           <div>
-            <PollView m={m} myUserId={p.myUserId} canPost={p.canPost} />
+            <PollView m={m} myUserId={p.myUserId} canPost={canReact} />
             {mine && <Status m={m} onRetry={() => void engine.retry(m.id)} onReview={p.onReview} />}
           </div>
         ) : m.rich?.gif ? (
@@ -211,9 +230,9 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
           >
             <MapPin size={16} /> {m.rich.location.label ?? "Shared location"} · open map
           </a>
-        ) : m.text ? (
-          <div className={`msg-text${isEmojiOnly(m.text) ? " big-emoji" : ""}`}>
-            <RichText text={m.text} mentionNames={p.mentionNames} myUsername={p.myUsername} customEmoji={m.rich?.customEmoji} />
+        ) : shownText ? (
+          <div className={`msg-text${isEmojiOnly(shownText) ? " big-emoji" : ""}`}>
+            <RichText text={shownText} mentionNames={p.mentionNames} myUsername={p.myUsername} customEmoji={m.rich?.customEmoji} />
             {m.editedAt && <span className="msg-meta">(edited)</span>}
             {translation && <TranslationView text={translation} onHide={() => setTranslation(null)} />}
             {mine && <Status m={m} onRetry={() => void engine.retry(m.id)} onReview={p.onReview} />}
@@ -225,6 +244,7 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
             </div>
           )
         )}
+        {posted && m.rich && <PostedContent rich={m.rich} orgId={inCommunity} channelId={m.conversationId} />}
         <Attachments
           refs={m.attachments}
           viewer={{
@@ -235,7 +255,7 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
             reacted: Object.entries(m.reactions)
               .filter(([, who]) => who.includes(p.myUserId))
               .map(([e]) => e),
-            onReact: live && p.canPost ? (e) => void engine.react(m, e) : null,
+            onReact: live && canAddReaction ? (e) => void engine.react(m, e) : null,
           }}
         />
         {mediaLink ? (
@@ -271,9 +291,9 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
   );
   // Swipe left to reply (touch), double-tap or double-click to react (Settings › Appearance › Gestures).
   const canAct = live && p.canPost && !editing;
-  const gestures = useMessageGestures(canAct && swipeToReply ? () => p.onReply(m) : null, canAct && doubleTapReact ? () => void engine.react(m, quickReaction) : null);
+  const gestures = useMessageGestures(canAct && swipeToReply ? () => p.onReply(m) : null, live && canAddReaction && !editing && doubleTapReact ? () => void engine.react(m, quickReaction) : null);
   const quickRow: MenuEntry[] =
-    pressed && live && p.canPost
+    pressed && live && canAddReaction
       ? [
           {
             custom: (
@@ -332,14 +352,16 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
         more.openAt(e.currentTarget, null);
       }}
       style={gestures.offset ? { transform: `translateX(${gestures.offset}px)` } : undefined}
-      className={`msg${gestures.offset ? " swiping" : ""}${mine ? " mine" : ""}${p.first ? " first" : ""}${mentioned ? " mentioned" : ""}${p.highlighted ? " highlight" : ""}${more.anchor || picker.anchor ? " menu-open" : ""}`}
+      className={`msg${waiting ? " waiting" : ""}${gestures.offset ? " swiping" : ""}${mine ? " mine" : ""}${p.first ? " first" : ""}${mentioned ? " mentioned" : ""}${p.highlighted ? " highlight" : ""}${more.anchor || picker.anchor ? " menu-open" : ""}`}
       id={`msg-${m.id}`}
       role="article"
-      aria-label={`${p.senderName}, ${fullTime(m.sortTs)}`}
+      aria-label={`${webhook?.name ?? p.senderName}, ${fullTime(m.sortTs)}`}
       tabIndex={-1}
     >
       <div className="msg-gutter">
-        {p.first ? (
+        {p.first && webhook ? (
+          <WebhookAvatar id={webhook.id} name={webhook.name} avatarRev={webhook.avatarRev} />
+        ) : p.first ? (
           <button className="msg-avatar-btn" onClick={() => openProfile(m.senderUserId, p.senderName)} aria-label={`${p.senderName}'s profile`} tabIndex={-1}>
             <LookAvatar userId={m.senderUserId} name={p.senderName} colorIndex={p.senderColor} photoRev={p.senderPhotoRev} size={38} />
           </button>
@@ -350,9 +372,13 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
       <div className="msg-main">
         {p.first && (
           <div className="msg-head">
-            <button className="msg-name" onClick={() => openProfile(m.senderUserId, p.senderName)}>
-              <SenderName userId={m.senderUserId} name={p.senderName} toneClass={nameTone(p.senderColor)} />
-            </button>
+            {webhook ? (
+              <WebhookName webhook={webhook} />
+            ) : (
+              <button className="msg-name" onClick={() => openProfile(m.senderUserId, p.senderName)}>
+                <SenderName userId={m.senderUserId} name={p.senderName} toneClass={nameTone(p.senderColor)} />
+              </button>
+            )}
             <time dateTime={new Date(m.sortTs).toISOString()} title={fullTime(m.sortTs)}>
               {clock(m.sortTs)}
             </time>
@@ -364,7 +390,7 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
           </div>
         )}
         {body()}
-        <ReactionList message={m} myUserId={p.myUserId} canPost={p.canPost} communityEmoji={communityEmoji} />
+        <ReactionList message={m} myUserId={p.myUserId} canPost={canReact} communityEmoji={communityEmoji} />
         {p.threadCount > 0 && p.onThread && (
           <button className="thread-link" onClick={() => p.onThread?.(m)}>
             <MessagesSquare size={15} /> {p.threadCount} {p.threadCount === 1 ? "reply" : "replies"}
@@ -374,13 +400,13 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
 
       {live && !editing && (
         <div className="msg-actions" role="toolbar" aria-label={t("msg_actions")}>
-          {p.canPost &&
+          {canAddReaction &&
             QUICK_EMOJI.slice(0, 3).map((e) => (
               <button key={e} className="icon-btn quick-emoji" onClick={() => void engine.react(m, e)} aria-label={`React ${e}`}>
                 {e}
               </button>
             ))}
-          {p.canPost && (
+          {canAddReaction && (
             <button className="icon-btn" onClick={(e) => picker.open(e.currentTarget)} aria-label={t("msg_add_reaction")} title={t("msg_add_reaction")} aria-haspopup="menu">
               <SmilePlus size={TOOL_ICON} />
             </button>
@@ -445,7 +471,16 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
             ...quickRow,
             ...(reactions.length > 0 ? [{ label: t("react_dialog_title"), icon: <SmilePlus size={16} />, onSelect: () => setShowReactions(true) }] : []),
             ...(mine && p.canPost ? [{ label: t("msg_edit"), icon: <Pencil size={16} />, onSelect: () => setEditing(true) }] : []),
-            ...(p.canPost ? [{ label: m.pinned ? t("msg_unpin") : t("msg_pin"), icon: m.pinned ? <PinOff size={16} /> : <Pin size={16} />, onSelect: () => void engine.setPinned(m, !m.pinned) }] : []),
+            ...reactionRoles.entries,
+            ...(canPin
+              ? [
+                  {
+                    label: m.pinned ? t("msg_unpin") : t("msg_pin"),
+                    icon: m.pinned ? <PinOff size={16} /> : <Pin size={16} />,
+                    onSelect: () => void engine.setPinned(m, !m.pinned, p.moderate === true),
+                  },
+                ]
+              : []),
             ...(live && savable
               ? [
                   saved
@@ -468,8 +503,14 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
                     label: t("msg_copy_link"),
                     icon: <Link2 size={16} />,
                     onSelect: () => {
-                      void navigator.clipboard?.writeText(messageLink(m.conversationId, m.id)).catch(() => undefined);
-                      engine.notice("info", t("msg_link_copied"));
+                      const copy = () =>
+                        void navigator.clipboard?.writeText(messageLink(m.conversationId, m.id)).then(
+                          () => engine.notice("info", t("msg_link_copied")),
+                          () => engine.notice("error", "Couldn't copy the link."),
+                        );
+                      // A message drawn from the snapshot: copied once the server's page shows it's still there.
+                      if (!engine.waitsForServer(m)) copy();
+                      else void engine.whenLive(m).then((x) => x && copy());
                     },
                   },
                 ]
@@ -488,10 +529,13 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
                 ]
               : []),
             ...(!mine && live && reportable && conv ? ["separator" as const, { label: t("msg_report"), icon: <Flag size={16} />, danger: true, onSelect: () => setReporting(true) }] : []),
-            ...(mine && p.canPost ? ["separator" as const, { label: t("msg_delete_all"), icon: <Trash2 size={16} />, danger: true, onSelect: () => setConfirmDelete(true) }] : []),
+            ...((mine && p.canPost) || (!mine && live && p.moderate === true && !!inCommunity)
+              ? ["separator" as const, { label: t("msg_delete_all"), icon: <Trash2 size={16} />, danger: true, onSelect: () => setConfirmDelete(true) }]
+              : []),
           ]}
         />
       )}
+      {reactionRoles.dialog}
       {showReactions && <ReactionsDialog message={m} initial={null} myUserId={p.myUserId} communityEmoji={communityEmoji} onClose={() => setShowReactions(false)} />}
       {forwarding && <ForwardDialog message={m} onClose={() => setForwarding(false)} />}
       {reporting && conv && <ReportDialog target={{ kind: "message", message: m, conversationId: m.conversationId, conversationType: conv.type, orgName }} onClose={() => setReporting(false)} />}
@@ -532,7 +576,7 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
                 data-autofocus
                 onClick={() => {
                   setConfirmDelete(false);
-                  void engine.deleteForEveryone(m);
+                  void engine.deleteForEveryone(m, !mine);
                 }}
               >
                 Delete
@@ -675,6 +719,5 @@ function ForwardedLine({ origin }: { origin: RichContent["origin"] }) {
 
 /** The author's name with their name style and tag (API 0.46.0), as this browser knows them. */
 function SenderName({ userId, name, toneClass }: { userId: string; name: string; toneClass: string }) {
-  const look = useUserLook(userId);
-  return <StyledName name={name} style={look.profileStyle} tag={look.tag} mojo={look.mojo} toneClass={toneClass} className="ellipsis" />;
+  return <LookName userId={userId} name={name} withMarks toneClass={toneClass} />;
 }

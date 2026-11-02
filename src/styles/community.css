@@ -697,3 +697,57 @@ img.custom-sticker {
 .member-row.has-plate.away {
   background: none;
 }
+/* A community's rules (RulesViews.tsx, API 0.65.0): numbered, each title with its description under it. */
+.rules-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 12px;
+  max-width: 640px;
+}
+.rules-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.rules-num {
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--surface-sunken);
+  border: 1px solid var(--border);
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-2);
+}
+.rules-item p {
+  margin: 2px 0 0;
+  color: var(--text-2);
+  white-space: pre-wrap;
+}
+.rules-plain {
+  margin: 0;
+  white-space: pre-wrap;
+  max-width: 640px;
+}
+.rules-start {
+  justify-items: start;
+}
+.rules-agree-bar {
+  border-style: solid;
+  color: var(--text);
+}
+.rules-editor-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 8px;
+  align-items: start;
+}
+.rules-editor-row .lines {
+  display: grid;
+  gap: 6px;
+}

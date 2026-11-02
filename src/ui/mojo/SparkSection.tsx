@@ -1,4 +1,4 @@
-import { Minus, Plus, Sparkles } from "lucide-react";
+import { Gem, Minus, Plus, Sparkles } from "lucide-react";
 import { useState } from "react";
 import { useEngine, useOrbit } from "../../application/orbit";
 import { money } from "./mojoFormat";
@@ -34,13 +34,15 @@ export function SparkSection({ onBuy, busy, offline }: { onBuy: (quantity: numbe
   return (
     <section className="mojo-sparks" aria-labelledby="mojo-sparks-title">
       <div className="spark-hero">
-        <img className="mojo-poster" src="/meldling/spark.webp" alt="Meldiq Spark" width={1200} height={675} loading="lazy" />
+        <span className="mojo-banner-icon" aria-hidden="true">
+          <Gem size={26} />
+        </span>
         <h2 className="mojo-h2" id="mojo-sparks-title">
-          <Sparkles size={20} aria-hidden="true" /> Meldiq Spark
+          Meldiq Spark
         </h2>
         <p>
           Give a Spark to a server you love. Every Spark helps unlock more emoji slots, bigger uploads, and better voice and screen sharing for everyone in it. Mojo Go includes one Spark, Mojo Plus
-          two, and anyone can add more for {money(catalog.spark.listPriceMinor, "USD")} per Spark per month.
+          two, and anyone can add more for {money(catalog.spark.listPriceMinor, "USD")} per Spark as a one-time purchase.
         </p>
         <SparkTrack levels={levels} level={null} active={null} />
       </div>
@@ -119,11 +121,11 @@ export function SparkSection({ onBuy, busy, offline }: { onBuy: (quantity: numbe
           <span className="grow">
             <strong>Get more Sparks</strong>
             <small className="muted" style={{ display: "block" }}>
-              {price ? `${money(price.amountMinor, price.currency)} per Spark per month, renewing until you cancel.` : "Sparks go on sale with Mojo."}
-              {sparks.subscription ? ` You buy ${sparks.subscription.quantity} now: change it from Manage subscription.` : ""}
+              {price ? `${money(price.amountMinor, price.currency)} per Spark, paid once. No Mojo subscription or automatic renewal.` : "Sparks are purchased separately from Mojo Plus."}
+              {sparks.subscription ? ` Existing subscription: ${sparks.subscription.quantity} Sparks. Manage it in Billing.` : ""}
             </small>
           </span>
-          {!sparks.subscription && (
+          {
             <>
               <div className="stepper" role="group" aria-label="How many Sparks">
                 <button className="icon-btn" aria-label="One fewer" disabled={quantity <= 1} onClick={() => setQuantity((q) => Math.max(1, q - 1))}>
@@ -135,10 +137,10 @@ export function SparkSection({ onBuy, busy, offline }: { onBuy: (quantity: numbe
                 </button>
               </div>
               <button className="btn btn-mojo" disabled={!price || busy || offline} onClick={() => onBuy(quantity)}>
-                {busy ? "Opening…" : price ? `Buy for ${money(price.amountMinor * quantity, price.currency)}/month` : "Not on sale yet"}
+                {busy ? "Opening…" : price ? `Buy for ${money(price.amountMinor * quantity, price.currency)} once` : "Not on sale yet"}
               </button>
             </>
-          )}
+          }
         </div>
       </div>
     </section>

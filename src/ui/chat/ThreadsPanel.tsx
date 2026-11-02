@@ -1,17 +1,16 @@
 import { MeldlingArt } from "../components/MeldlingArt";
 import { Search, X } from "lucide-react";
-import { useEffect, useState } from "react";
-import { useEngine, useOrbit } from "../../application/orbit";
+import { useState } from "react";
+import { useOrbit } from "../../application/orbit";
 import { navigate, type Section } from "../../application/router";
-import { filterThreads, threadRows, type ThreadRow } from "../../sync/threads";
+import { filterThreads } from "../../sync/threads";
+import { collectionThreads } from "../../sync/messageCollections";
+import { CollectionControls, useMessageCollection } from "./useMessageCollection";
 import { relative } from "../format";
 
-/** Messages a channel's thread list reads from this browser's store. */
-const WINDOW = 5000;
-
 /**
- * A channel's Threads (batch B5, android ThreadsSheet): every thread this browser has, latest reply first, with who
- * started it, its replies and when; searchable by name. Built here, because messages are end-to-end encrypted.
+ * A channel's Threads: server pages with authoritative counts, latest reply first, and a clearly labeled cached
+ * fallback for older servers. Titles can be filtered within each page.
  */
 export function ThreadsPanel({ conversationId, section, onClose }: { conversationId: string; section: Section; onClose: () => void }) {
   return (
@@ -33,26 +32,19 @@ export function ThreadsPanel({ conversationId, section, onClose }: { conversatio
 
 /** The thread rows themselves, with their search (also the Threads tab of a channel's details, batch B14b). */
 export function ThreadList({ conversationId, section }: { conversationId: string; section: Section }) {
-  const engine = useEngine();
   const users = useOrbit((s) => s.users);
-  const rev = useOrbit((s) => s.threadRev);
-  const [rows, setRows] = useState<ThreadRow[] | null>(null);
+  const collection = useMessageCollection(conversationId, "threads");
   const [q, setQ] = useState("");
-  useEffect(() => {
-    let alive = true;
-    void engine.conversationMessages(conversationId, WINDOW).then((m) => alive && setRows(threadRows(m)));
-    return () => {
-      alive = false;
-    };
-  }, [engine, conversationId, rev]);
+  const rows = collection.page ? collectionThreads(collection.page) : null;
   const shown = rows ? filterThreads(rows, q) : null;
   return (
     <>
+      <CollectionControls collection={collection} />
       <label className="forum-search">
         <Search size={15} aria-hidden />
-        <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search threads" aria-label="Search threads" />
+        <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Filter this page" aria-label="Search threads" />
       </label>
-      {!shown && <span className="skeleton" style={{ height: 80 }} />}
+      {!shown && collection.loading && <span className="skeleton" style={{ height: 80 }} />}
       {shown?.length === 0 && (
         <div className="empty" style={{ padding: 16 }}>
           <MeldlingArt pose="loading" />

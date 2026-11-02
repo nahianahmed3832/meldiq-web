@@ -7,6 +7,7 @@ import type { CallLogItem, ConversationLocal, PinnedIdentity, StoredMessage } fr
 import type { ConnectionState } from "../realtime/socket";
 import type { NavPrefs } from "../sync/navPrefs";
 import type { CommunityData } from "../sync/community";
+import type { BotReply } from "../sync/bots";
 
 export type Phase =
   /** Opening local data and signing in. */
@@ -70,12 +71,24 @@ export interface UserLite {
   tag?: WornTag | null;
   /** API 0.54.0: the Mojo badge they show (server docs/MOJO.md). */
   mojo?: MojoMark | null;
+  /** API 0.65.0 batch B: a bot's account. */
+  bot?: boolean;
 }
 type AvatarMedia = NonNullable<z.infer<typeof zAvatarMedia>>;
 
 export interface ConversationMessages {
   items: StoredMessage[];
   hasMore: boolean;
+  /** Fresh history and the opening read boundary are ready; saved previews cannot acknowledge reads. */
+  historyReady?: boolean;
+  /** A restored newest window can be drawn while its fresh page and read boundary are loading. */
+  preview?: boolean;
+  /** A new ordinary entry resets the viewport even when the conversation component stays mounted. */
+  opening?: number;
+  /** A search/history window is separate from the newest messages. */
+  detached?: boolean;
+  /** Read boundary captured before opening; retained while the person reads this visit. */
+  unreadAfter?: number | null;
 }
 
 export interface HistoryState {
@@ -130,6 +143,9 @@ export interface AppState {
   nav: Record<string, NavPrefs>;
   /** Bumped when a thread reply arrives or a thread is seen: Activity › Thread replies reloads. */
   threadRev: number;
+  /** Live stored events invalidate paged collections without replayed history invalidating itself. */
+  collectionRev: number;
+  serverThreadCounts: Record<string, Record<string, number>>;
   /** Recent calls on this browser, newest first (Activity › Missed calls). */
   callLog: CallLogItem[];
   /** Reminders kept by the server (Later › Reminders). */
@@ -144,6 +160,10 @@ export interface AppState {
   connectionsRev: number;
   /** Bumped on `user.updated` (API 0.28): open profiles load again, so a change shows without a refresh. */
   profilesRev: number;
+  /** API 0.65.0 batch B: bots' answers only you see, by conversation, until dismissed or the page reloads. */
+  botReplies: Record<string, BotReply[]>;
+  /** Messages an action waits on (a snapshot's, until its conversation's first server page is in: engine.live()). */
+  waiting: Record<string, true>;
 }
 
 export const initialState: AppState = {
@@ -164,6 +184,8 @@ export const initialState: AppState = {
   identityAlerts: [],
   nav: {},
   threadRev: 0,
+  collectionRev: 0,
+  serverThreadCounts: {},
   callLog: [],
   reminders: NO_REMINDERS,
   meetingsRev: 0,
@@ -171,6 +193,8 @@ export const initialState: AppState = {
   moderationRev: 0,
   connectionsRev: 0,
   profilesRev: 0,
+  botReplies: {},
+  waiting: {},
   history: { status: "idle", restored: 0, unreadable: 0, error: null, backup: { mode: "off", pending: 0, lastUploadAt: null, error: null } },
   mojo: initialMojo,
   notices: [],
@@ -205,14 +229,15 @@ export class Store {
 /** Returns [s] with one conversation's loaded messages replaced, kept in display order. */
 export function withMessages(s: AppState, conversationId: string, items: StoredMessage[], hasMore?: boolean): AppState {
   const prev = s.messages[conversationId];
-  const sorted = [...items].sort(byDisplayOrder);
-  return { ...s, messages: { ...s.messages, [conversationId]: { items: sorted, hasMore: hasMore ?? prev?.hasMore ?? false } } };
+  const sorted = [...new Map(items.map((m) => [m.id, m])).values()].sort(byDisplayOrder);
+  return { ...s, messages: { ...s.messages, [conversationId]: { ...prev, items: sorted, hasMore: hasMore ?? prev?.hasMore ?? false } } };
 }
 
 /** Inserts or replaces one message in a loaded conversation (no-op when that conversation isn't loaded). */
 export function upsertLoaded(s: AppState, m: StoredMessage): AppState {
   const prev = s.messages[m.conversationId];
   if (!prev) return s;
+  if (prev.detached && !prev.items.some((x) => x.id === m.id)) return s;
   const items = prev.items.some((x) => x.id === m.id) ? prev.items.map((x) => (x.id === m.id ? m : x)) : [...prev.items, m];
   return withMessages(s, m.conversationId, items);
 }

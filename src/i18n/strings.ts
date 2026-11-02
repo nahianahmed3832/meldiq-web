@@ -4,6 +4,18 @@
  * রিকভারি কী for the recovery key, 登录 / সাইন ইন for signing in.
  */
 export const STRINGS = {
+  // Conversation history pages share the same controls on desktop and phones.
+  collection_pages: ["Collection pages", "消息分页", "বার্তার পৃষ্ঠা"],
+  collection_previous: ["Previous page", "上一页", "পূর্ববর্তী পৃষ্ঠা"],
+  collection_next: ["Next page", "下一页", "পরবর্তী পৃষ্ঠা"],
+  collection_page: ["Page {page}", "第 {page} 页", "পৃষ্ঠা {page}"],
+  collection_refresh: ["Refresh", "刷新", "রিফ্রেশ"],
+  collection_loading: ["Loading…", "正在加载…", "লোড হচ্ছে…"],
+  collection_cached: [
+    "Showing cached messages on this browser. This server does not support browsing all history.",
+    "显示此浏览器缓存的消息。此服务器不支持浏览全部历史记录。",
+    "এই ব্রাউজারে ক্যাশে রাখা বার্তাগুলো দেখানো হচ্ছে। এই সার্ভারে পুরো ইতিহাস দেখা যায় না।",
+  ],
   // ── language ──
   lang_label: ["Language", "语言", "ভাষা"],
   lang_system: ["Same as this browser", "跟随浏览器", "এই ব্রাউজারের মতো"],
@@ -14,30 +26,14 @@ export const STRINGS = {
   ],
 
   // ── the signed-out frame ──
-  hero_about: ["About Meldiq Web", "关于 Meldiq 网页版", "Meldiq ওয়েব সম্পর্কে"],
   hero_c_title_1: ["Your communities,", "你的社区，", "আপনার কমিউনিটি,"],
   hero_c_title_2: ["all in one place.", "尽在一处。", "সব এক জায়গায়।"],
-  hero_c_body: [
-    "Chat with friends, join communities you love, and build your own. Your chats follow you to every device.",
-    "与好友聊天，加入你喜爱的社区，创建属于你的社区。你的聊天在每台设备上都在。",
-    "বন্ধুদের সঙ্গে চ্যাট করুন, পছন্দের কমিউনিটিতে যোগ দিন, নিজের কমিউনিটি গড়ুন। আপনার চ্যাট প্রতিটি ডিভাইসে থাকে।",
-  ],
-  hero_c_join: ["Join your friends with one invite link", "一个邀请链接即可加入好友", "একটি আমন্ত্রণ লিংকে বন্ধুদের সঙ্গে যোগ দিন"],
-  hero_c_discover: ["Discover public communities", "发现公开社区", "পাবলিক কমিউনিটি খুঁজুন"],
-  hero_c_talk: ["Text, voice, video and screen sharing", "文字、语音、视频和屏幕共享", "টেক্সট, ভয়েস, ভিডিও ও স্ক্রিন শেয়ার"],
-  hero_c_create: ["Create a community and make it yours", "创建社区，打造你的专属空间", "কমিউনিটি তৈরি করে নিজের মতো সাজান"],
-  hero_c_preview: ["A Meldiq community", "一个 Meldiq 社区", "একটি Meldiq কমিউনিটি"],
   hero_title_1: ["Your people,", "你的人，", "আপনার মানুষেরা,"],
   hero_title_2: ["on every screen.", "在每块屏幕上。", "প্রতিটি স্ক্রিনে।"],
   hero_body: [
     "Meldiq Web is another device of your Meldiq account. Your messages are kept on Meldiq's servers, so your phone and this computer always show the same chats.",
     "Meldiq 网页版是你 Meldiq 账户的另一台设备。你的消息保存在 Meldiq 的服务器上，所以手机和这台电脑显示的聊天始终一致。",
     "Meldiq ওয়েব আপনার Meldiq অ্যাকাউন্টের আরেকটি ডিভাইস। আপনার মেসেজ Meldiq-এর সার্ভারে রাখা থাকে, তাই আপনার ফোন ও এই কম্পিউটারে সবসময় একই চ্যাট দেখায়।",
-  ],
-  hero_point_encrypted: [
-    "Your chats are stored safely on Meldiq's servers and sent over encrypted connections.",
-    "你的聊天安全地保存在 Meldiq 的服务器上，并通过加密连接传输。",
-    "আপনার চ্যাট Meldiq-এর সার্ভারে নিরাপদে রাখা থাকে এবং এনক্রিপ্ট করা সংযোগে আসা-যাওয়া করে।",
   ],
   hero_point_keys: [
     "Your password signs you in. Add a passkey or two-step sign-in for extra protection.",
@@ -48,6 +44,29 @@ export const STRINGS = {
     "Remove this browser from any of your devices at any time; it signs out at once.",
     "你可以随时从任何一台设备上移除此浏览器，它会立即退出登录。",
     "যেকোনো সময় আপনার যেকোনো ডিভাইস থেকে এই ব্রাউজারটি সরাতে পারেন; সঙ্গে সঙ্গে সাইন আউট হয়ে যায়।",
+  ],
+
+  // ── the landing page (2026-10-30) ──
+  landing_terms: ["Terms", "条款", "শর্তাবলি"],
+  landing_privacy: ["Privacy", "隐私", "গোপনীয়তা"],
+
+  signin_or: ["or", "或", "অথবা"],
+  signin_email_method: ["Continue with email", "使用邮箱继续", "ইমেইল দিয়ে চালিয়ে যান"],
+  signin_email_title: ["Sign in with email", "使用邮箱登录", "ইমেইল দিয়ে সাইন ইন করুন"],
+  signin_email_sub: ["Use your Meldiq email and password.", "输入你的 Meldiq 邮箱和密码。", "আপনার Meldiq ইমেইল ও পাসওয়ার্ড দিন।"],
+  signin_verify_title: ["Verify it’s you", "验证身份", "পরিচয় যাচাই করুন"],
+  signin_verify_sub: ["Enter a code from your authenticator app, or use a backup code.", "输入验证器应用中的验证码，或使用备用码。", "আপনার অথেনটিকেটর অ্যাপের কোড অথবা ব্যাকআপ কোড দিন।"],
+  signin_code_label: ["Authenticator or backup code", "验证器验证码或备用码", "অথেনটিকেটর বা ব্যাকআপ কোড"],
+  signin_verify_button: ["Verify and sign in", "验证并登录", "যাচাই করে সাইন ইন করুন"],
+  signin_invite_title: ["Enter your invitation", "输入邀请码", "আমন্ত্রণ কোড দিন"],
+  signin_invite_sub: ["This server requires an invitation to create an account.", "此服务器需要邀请码才能创建账户。", "এই সার্ভারে অ্যাকাউন্ট খুলতে আমন্ত্রণ প্রয়োজন।"],
+  signin_invite_label: ["Invitation code", "邀请码", "আমন্ত্রণ কোড"],
+  signin_options_back: ["Back to sign-in options", "返回登录选项", "সাইন ইন পদ্ধতিতে ফিরে যান"],
+  signin_provider_title: ["Continue with {provider}", "使用 {provider} 继续", "{provider} দিয়ে চালিয়ে যান"],
+  signin_provider_sub: [
+    "Finish signing in in the {provider} window. You’ll continue here automatically.",
+    "在 {provider} 窗口中完成登录后，此页面将自动继续。",
+    "{provider} উইন্ডোতে সাইন ইন শেষ করুন। এখানে স্বয়ংক্রিয়ভাবে এগিয়ে যাবে।",
   ],
 
   // ── common ──
@@ -69,7 +88,7 @@ export const STRINGS = {
 
   // ── sign in ──
   signin_title: ["Sign in to Meldiq", "登录 Meldiq", "Meldiq-এ সাইন ইন করুন"],
-  signin_sub: ["Use the email and password of your Meldiq account.", "使用你 Meldiq 账户的邮箱和密码。", "আপনার Meldiq অ্যাকাউন্টের ইমেইল ও পাসওয়ার্ড দিন।"],
+  signin_sub: ["Choose how to sign in to your account.", "选择账户登录方式。", "কীভাবে আপনার অ্যাকাউন্টে সাইন ইন করবেন তা বেছে নিন।"],
   signin_button: ["Sign in", "登录", "সাইন ইন"],
   signin_busy: ["Signing in…", "正在登录…", "সাইন ইন হচ্ছে…"],
   signin_passkey: ["Sign in with a passkey", "使用通行密钥登录", "পাসকি দিয়ে সাইন ইন করুন"],
@@ -147,7 +166,7 @@ export const STRINGS = {
   ],
 
   // ── setting up this browser ──
-  create_title: ["Set up end-to-end encryption", "设置端到端加密", "এন্ড-টু-এন্ড এনক্রিপশন চালু করুন"],
+  create_title: ["Set up your security keys", "设置安全密钥", "আপনার নিরাপত্তা কী সেট আপ করুন"],
   create_signed_in: ["Signed in as {email}.", "已登录为 {email}。", "{email} হিসেবে সাইন ইন করেছেন।"],
   create_body: [
     "This browser will make your account's encryption keys. They're backed up locked with your password, so a new device needs your password and a code sent to your email. You'll also get a recovery key for when the email can't work, for example after a password reset.",
@@ -181,6 +200,12 @@ export const STRINGS = {
   setup_code_sending: ["Sending a code to {email}…", "正在向 {email} 发送验证码…", "{email}-এ কোড পাঠানো হচ্ছে…"],
   setup_code_will_send: ["We'll send a code to {email}.", "我们会向 {email} 发送验证码。", "আমরা {email}-এ একটি কোড পাঠাব।"],
   setup_code_label: ["Verification code", "验证码", "যাচাইকরণ কোড"],
+  setup_fixed_code: [
+    "Enter the 6-digit tester code you were given. No email is sent for this account.",
+    "请输入你收到的 6 位测试验证码。此账户不会发送邮件。",
+    "আপনাকে দেওয়া ৬ সংখ্যার টেস্টার কোডটি দিন। এই অ্যাকাউন্টে কোনো ইমেইল পাঠানো হয় না।",
+  ],
+  setup_no_code: ["This account needs no code: your password unlocks your messages.", "此账户无需验证码：你的密码即可解锁消息。", "এই অ্যাকাউন্টে কোনো কোড লাগে না: আপনার পাসওয়ার্ডই মেসেজ আনলক করে।"],
   setup_password_hint: ["Your password opens the backup in this browser.", "你的密码会在此浏览器中打开备份。", "আপনার পাসওয়ার্ড এই ব্রাউজারে ব্যাকআপ খোলে।"],
   setup_unlock: ["Unlock", "解锁", "আনলক করুন"],
   setup_unlocking: ["Unlocking…", "正在解锁…", "আনলক হচ্ছে…"],
@@ -243,43 +268,6 @@ export const STRINGS = {
   reauth_email_now: ["Your account's email now", "你账户现在的邮箱", "আপনার অ্যাকাউন্টের বর্তমান ইমেইল"],
   reauth_sign_out: ["Sign out", "退出登录", "সাইন আউট"],
 
-  // ── first-run introduction ──
-  intro_label: ["Introduction to Meldiq", "Meldiq 简介", "Meldiq পরিচিতি"],
-  intro_skip: ["Skip", "跳过", "এড়িয়ে যান"],
-  intro_next: ["Next", "下一步", "পরবর্তী"],
-  intro_start: ["Get started", "开始使用", "শুরু করুন"],
-  intro_page: ["Page {n} of {total}", "第 {n} 页，共 {total} 页", "{total}টির মধ্যে {n} নম্বর পাতা"],
-  intro_1_title: ["Talk in one place", "在一个地方交流", "এক জায়গায় কথা বলুন"],
-  intro_1_body: [
-    "Channels, groups and direct messages with threads, polls and files, on every device you sign in to.",
-    "频道、群组和私信，支持话题串、投票和文件，在你登录的每台设备上都在。",
-    "থ্রেড, পোল ও ফাইলসহ চ্যানেল, গ্রুপ আর সরাসরি মেসেজ, আপনি যে ডিভাইসেই সাইন ইন করুন।",
-  ],
-  intro_2_title: ["Never lose track", "不再遗漏", "কিছুই হারাবে না"],
-  intro_2_body: [
-    "Save messages for later and set reminders. They reach every device you're signed in on, even after a restart.",
-    "保存消息稍后查看并设置提醒。它们会同步到你登录的每台设备，重启后也不会丢失。",
-    "মেসেজ পরে দেখার জন্য রাখুন আর রিমাইন্ডার দিন। আপনার সাইন ইন করা সব ডিভাইসে পৌঁছায়, রিস্টার্টের পরেও।",
-  ],
-  intro_3_title: ["Talk it through", "畅所欲言", "কথা বলে মিটিয়ে নিন"],
-  intro_3_body: [
-    "Voice and video calls with screen sharing, and voice channels anyone can drop into any time.",
-    "支持屏幕共享的语音和视频通话，以及任何人随时可以加入的语音频道。",
-    "স্ক্রিন শেয়ারসহ ভয়েস ও ভিডিও কল, আর যেকোনো সময় যে কেউ ঢুকতে পারে এমন ভয়েস চ্যানেল।",
-  ],
-  intro_4_title: ["Find your communities", "找到你的社区", "আপনার কমিউনিটি খুঁজুন"],
-  intro_4_body: [
-    "Join public communities or start your own, with channels in categories, forums for organised topics and announcements.",
-    "加入公开社区或创建自己的社区，频道按分类整理，还有用于整理话题的论坛和公告。",
-    "পাবলিক কমিউনিটিতে যোগ দিন বা নিজেরটা শুরু করুন: ক্যাটাগরিতে সাজানো চ্যানেল, গোছানো আলোচনার ফোরাম আর ঘোষণা।",
-  ],
-  intro_5_title: ["Roles you control", "由你掌控的角色", "আপনার নিয়ন্ত্রণে রোল"],
-  intro_5_body: [
-    "Give people roles, decide who sees and posts in each channel, and keep the community safe with bans.",
-    "为成员分配角色，决定谁能查看和发言于每个频道，并通过封禁维护社区安全。",
-    "মানুষকে রোল দিন, কোন চ্যানেলে কে দেখবে ও লিখবে ঠিক করুন, আর ব্যান দিয়ে কমিউনিটি নিরাপদ রাখুন।",
-  ],
-
   // ── times ──
   time_today: ["Today", "今天", "আজ"],
   time_yesterday: ["Yesterday", "昨天", "গতকাল"],
@@ -322,9 +310,9 @@ export const STRINGS = {
   discover_error: ["Couldn't load communities.", "无法加载社区。", "কমিউনিটি লোড করা যায়নি।"],
   discover_retry: ["Try again", "重试", "আবার চেষ্টা করুন"],
   discover_none: [
-    "No public communities yet. Owners can list theirs in Community settings › Overview.",
-    "还没有公开社区。所有者可以在 社区设置 › 概览 中公开自己的社区。",
-    "এখনও কোনো পাবলিক কমিউনিটি নেই। মালিকরা কমিউনিটি সেটিংস › ওভারভিউ থেকে তাদেরটি তালিকায় দিতে পারেন।",
+    "No communities are available to discover right now. Owners can review their listing in Community settings › Discovery.",
+    "暂时没有可发现的社区。所有者可在 社区设置 › 发现 中查看公开展示设置。",
+    "এখন কোনো কমিউনিটি খুঁজে পাওয়া যাচ্ছে না। মালিকরা কমিউনিটি সেটিংস › ডিসকভারি থেকে তালিকাভুক্তির অবস্থা দেখতে পারেন।",
   ],
   discover_none_match: ["No public community matches.", "没有匹配的公开社区。", "কোনো পাবলিক কমিউনিটি মেলেনি।"],
   discover_more: ["Show more", "显示更多", "আরও দেখুন"],
@@ -337,6 +325,22 @@ export const STRINGS = {
   discover_joining: ["Joining…", "正在加入…", "যোগ দিচ্ছেন…"],
   discover_view: ["View", "查看", "দেখুন"],
   discover_join_failed: ["Couldn't join. Try again.", "无法加入，请重试。", "যোগ দেওয়া যায়নি। আবার চেষ্টা করুন।"],
+  // Community parity E (discovery-listing): the Promoted row, tags, labels and who's online.
+  discover_sub_tags: [
+    "Public communities on Meldiq. Search by name, description or tag.",
+    "Meldiq 上的公开社区。按名称、简介或标签搜索。",
+    "Meldiq-এর পাবলিক কমিউনিটি। নাম, বিবরণ বা ট্যাগ দিয়ে খুঁজুন।",
+  ],
+  discover_promoted: ["Promoted", "推广", "প্রচারিত"],
+  discover_tagged: ["Tagged “{tag}”", "标签“{tag}”", "ট্যাগ “{tag}”"],
+  discover_clear_tag: ["Show every community", "显示全部社区", "সব কমিউনিটি দেখুন"],
+  discover_tag_filter: ["Show communities tagged {tag}", "显示标签为 {tag} 的社区", "{tag} ট্যাগের কমিউনিটি দেখুন"],
+  discover_online: ["{n} online", "{n} 人在线", "{n} জন অনলাইনে"],
+  discover_official: ["Official", "官方", "অফিসিয়াল"],
+  discover_label_promoted: ["PROMOTED", "推广", "প্রচারিত"],
+  discover_label_mega: ["MEGA BOOSTED", "超级加速", "মেগা বুস্টেড"],
+  discover_label_super: ["SUPER BOOSTED", "高级加速", "সুপার বুস্টেড"],
+  discover_label_boost: ["BOOSTED", "已加速", "বুস্টেড"],
   rail_discover: ["Discover communities", "发现社区", "কমিউনিটি খুঁজুন"],
   top_activity: ["Activity", "动态", "অ্যাক্টিভিটি"],
   top_activity_count: ["Activity, {n} mentions of you", "动态，{n} 条提及你", "অ্যাক্টিভিটি, আপনাকে {n}টি উল্লেখ"],
@@ -737,10 +741,59 @@ export const STRINGS = {
   settings_appearance: ["Appearance", "外观", "চেহারা"],
   settings_storage: ["Storage", "存储", "স্টোরেজ"],
   settings_security: ["Privacy & security", "隐私与安全", "গোপনীয়তা ও নিরাপত্তা"],
+  settings_gifts: ["Gifts", "উপহার", "礼物"],
   settings_mojo: ["Meldiq Mojo", "Meldiq Mojo", "Meldiq Mojo"],
   settings_spark: ["Meldiq Spark", "Meldiq Spark", "Meldiq Spark"],
+  settings_leaderboards: ["Leaderboards", "排行榜", "লিডারবোর্ড"],
+  settings_points: ["Embers", "余烬", "এম্বার্স"],
+  settings_creators: ["Creators", "创作者", "ক্রিয়েটর"],
+  settings_developer: ["Developer", "开发者", "ডেভেলপার"],
   settings_about: ["About", "关于", "সম্পর্কে"],
   settings_advanced: ["Advanced", "高级", "উন্নত"],
+
+  // ── a community's rules channel (API 0.65.0) ──
+  rules_title: ["Rules", "规则", "নিয়ম"],
+  rules_channel_label: ["Rules channel", "规则频道", "নিয়মের চ্যানেল"],
+  rules_agree_prompt: [
+    "This community asks you to agree to its rules before you post or react.",
+    "此社区要求你在发言或回应之前同意其规则。",
+    "পোস্ট বা রিঅ্যাক্ট করার আগে এই কমিউনিটি আপনাকে এর নিয়মে সম্মত হতে বলে।",
+  ],
+  rules_read: ["Read the rules", "阅读规则", "নিয়ম পড়ুন"],
+  rules_agree: ["I agree", "我同意", "আমি সম্মত"],
+  rules_agreeing: ["Agreeing…", "正在提交…", "সম্মতি দেওয়া হচ্ছে…"],
+  rules_agreed: ["You agreed to these rules.", "你已同意这些规则。", "আপনি এই নিয়মগুলোতে সম্মত হয়েছেন।"],
+  rules_channel_locked: [
+    "Only people who can edit the community post in the rules channel. You can still read and react.",
+    "只有能编辑社区的人可以在规则频道发言。你仍然可以阅读和回应。",
+    "শুধু যাঁরা কমিউনিটি সম্পাদনা করতে পারেন তাঁরাই নিয়মের চ্যানেলে পোস্ট করেন। আপনি পড়তে ও রিঅ্যাক্ট করতে পারবেন।",
+  ],
+  rules_loading: ["Loading the rules…", "正在加载规则…", "নিয়ম লোড হচ্ছে…"],
+  rules_none: ["This community hasn't written its rules yet.", "此社区还没有写规则。", "এই কমিউনিটি এখনো নিয়ম লেখেনি।"],
+  rules_open_channel: ["Open the rules channel", "打开规则频道", "নিয়মের চ্যানেল খুলুন"],
+  rules_failed: ["Couldn't load the rules. Try again.", "无法加载规则，请重试。", "নিয়ম লোড করা যায়নি। আবার চেষ্টা করুন।"],
+  rules_settings_sub: ["Members read the rules in the rules channel and before they join.", "成员可以在规则频道里以及加入之前阅读规则。", "সদস্যরা নিয়মের চ্যানেলে এবং যোগ দেওয়ার আগে নিয়ম পড়েন।"],
+  rules_settings_no_channel: ["No rules channel", "不设规则频道", "কোনো নিয়মের চ্যানেল নেই"],
+  rules_settings_channel_hint: [
+    "Gets a book icon. Everyone reads it and reacts; only people who can edit the community post there.",
+    "会显示书本图标。所有人都能阅读和回应，只有能编辑社区的人可以在那里发言。",
+    "বইয়ের আইকন পায়। সবাই পড়তে ও রিঅ্যাক্ট করতে পারেন; শুধু যাঁরা কমিউনিটি সম্পাদনা করতে পারেন তাঁরাই সেখানে পোস্ট করেন।",
+  ],
+  rules_settings_rule: ["Rule {n}", "规则 {n}", "নিয়ম {n}"],
+  rules_settings_title_ph: ["Be kind", "友善待人", "সদয় থাকুন"],
+  rules_settings_desc_ph: ["What it means, in a sentence or two (optional)", "用一两句话说明（可选）", "এক-দুই বাক্যে এর মানে (ঐচ্ছিক)"],
+  rules_settings_add: ["Add a rule", "添加规则", "নিয়ম যোগ করুন"],
+  rules_settings_up: ["Move rule {n} up", "上移规则 {n}", "নিয়ম {n} উপরে নিন"],
+  rules_settings_down: ["Move rule {n} down", "下移规则 {n}", "নিয়ম {n} নিচে নিন"],
+  rules_settings_remove: ["Remove rule {n}", "删除规则 {n}", "নিয়ম {n} সরান"],
+  rules_settings_require: ["Members agree before they post or react", "成员需同意后才能发言或回应", "পোস্ট বা রিঅ্যাক্ট করার আগে সদস্যরা সম্মত হন"],
+  rules_settings_require_hint: [
+    "Everyone who hasn't agreed yet sees the rules with an I agree button, members from before included. People who can edit the community don't have to.",
+    "所有尚未同意的人都会看到规则和“我同意”按钮，包括现有成员。能编辑社区的人无需同意。",
+    'যাঁরা এখনো সম্মত হননি, আগের সদস্যসহ, সবাই নিয়ম ও "আমি সম্মত" বোতাম দেখবেন। যাঁরা কমিউনিটি সম্পাদনা করতে পারেন তাঁদের লাগবে না।',
+  ],
+  rules_settings_save: ["Save", "保存", "সংরক্ষণ করুন"],
+  rules_settings_saved: ["Rules saved.", "规则已保存。", "নিয়ম সংরক্ষিত হয়েছে।"],
 } as const satisfies Record<string, readonly [string, string, string]>;
 
 export type StringKey = keyof typeof STRINGS;

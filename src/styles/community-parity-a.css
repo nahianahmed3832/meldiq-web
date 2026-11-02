@@ -1,0 +1,156 @@
+/* Community parity, batch A (docs/MELDIQ_COMMUNITY_PARITY.md): theme tint preview, role editor tabs and order,
+   channel type tiles and options, 3-state permission rows, composer notes. */
+
+.tint-preview {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  min-height: 110px;
+  border: 1px solid var(--outline);
+  border-radius: var(--r-md);
+  overflow: hidden;
+  background-color: var(--surface);
+}
+.tint-preview-rail {
+  display: grid;
+  align-content: start;
+  gap: 4px;
+  padding: 10px;
+  border-right: 1px solid var(--outline);
+  font-size: 12.5px;
+  color: var(--muted);
+}
+.tint-preview-chat {
+  display: grid;
+  align-content: center;
+  justify-items: start;
+  gap: 8px;
+  padding: 12px;
+  font-size: 13.5px;
+}
+.tint-preview-chat p {
+  margin: 0;
+}
+.tint-preview-link {
+  color: var(--c-accent-text-l, var(--accent-text));
+  text-decoration: underline;
+}
+
+.composer-note {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Roles: tabs, the order arrows and drag, the @everyone row, a gradient name preview. */
+.role-tabs {
+  display: flex;
+  gap: 4px;
+  border-bottom: 1px solid var(--outline);
+  margin-bottom: 4px;
+}
+.role-tabs button {
+  padding: 8px 12px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: none;
+  color: var(--muted);
+  font-weight: 600;
+  cursor: pointer;
+}
+.role-tabs button[aria-selected="true"] {
+  color: var(--text);
+  border-bottom-color: var(--action);
+}
+.role-name-preview {
+  display: inline-block;
+  justify-self: start;
+  margin: 0;
+  font-size: 18px;
+  font-weight: 750;
+}
+.role-name-preview.grad {
+  background: var(--name-paint);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+.everyone-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--outline);
+  border-radius: var(--r-md);
+  background: var(--surface);
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.everyone-row:hover {
+  background: var(--surface-hover, var(--surface-selected));
+}
+.ws-row[draggable="true"] {
+  cursor: grab;
+}
+.ws-row.drop-target {
+  box-shadow: inset 0 2px 0 var(--action);
+}
+.role-order {
+  display: inline-flex;
+  flex-direction: column;
+}
+.role-order .icon-btn {
+  width: 22px;
+  height: 16px;
+}
+
+/* Permission rows over the reference's groups, with a search box. */
+.perm-search {
+  margin: 4px 0 8px;
+}
+.perm-group-title {
+  margin: 12px 0 4px;
+  font-size: 11.5px;
+  font-weight: 750;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* Create channel: the poster and access role chips. */
+.role-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.role-chips .chip[aria-pressed="true"] {
+  background: var(--surface-selected);
+  border-color: var(--action);
+}
+.channel-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+/* Stage: who speaks, and hands. */
+.stage-label {
+  margin: 8px 0 2px;
+  font-size: 11.5px;
+  font-weight: 750;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
+@media (max-width: 600px) {
+  .tint-preview {
+    grid-template-columns: 1fr;
+  }
+  .tint-preview-rail {
+    border-right: 0;
+    border-bottom: 1px solid var(--outline);
+  }
+}

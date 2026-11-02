@@ -1,4 +1,5 @@
-import { AtSign, BellOff, Bookmark, CircleDot, LogOut, Monitor, Moon, Settings, Smartphone, Smile, Sun, UserRound, Sparkles } from "lucide-react";
+import { useAccountActions } from "./AccountActions";
+import { ArrowRightLeft, AtSign, BellOff, Bookmark, CircleDot, LogOut, Monitor, Moon, Settings, Smartphone, Smile, Sun, UserRound, Sparkles } from "lucide-react";
 import { useState } from "react";
 import { useOrbit } from "../../application/orbit";
 import { setPrefs, usePrefs } from "../../application/prefs";
@@ -18,6 +19,7 @@ import { mentionCount } from "../selectors";
  * sidebar (desktop) or the avatar in the phone's top bar.
  */
 export function useProfileMenu(): { open: (anchor: HTMLElement) => void; expanded: boolean; ui: React.ReactNode } {
+  const accountAction = useAccountActions();
   const t = useT();
   const mojoOffered = useOrbit((s) => s.server?.features.includes("mojo") ?? false);
   const me = useOrbit((s) => s.me);
@@ -55,6 +57,8 @@ export function useProfileMenu(): { open: (anchor: HTMLElement) => void; expande
                 </div>
               ),
             },
+            { label: "Switch account", icon: <ArrowRightLeft size={16} />, onSelect: () => accountAction("switch") },
+            { label: "Log out", icon: <LogOut size={16} />, danger: true, onSelect: () => accountAction("logout") },
             "separator",
             ...(presenceOffered
               ? [
@@ -91,8 +95,6 @@ export function useProfileMenu(): { open: (anchor: HTMLElement) => void; expande
             { label: "Light", icon: <Sun size={16} />, checked: prefs.theme === "light", onSelect: () => setPrefs({ theme: "light", themeChosen: true }) },
             { label: "Dark", icon: <Moon size={16} />, checked: prefs.theme === "dark", onSelect: () => setPrefs({ theme: "dark", themeChosen: true }) },
             { label: "Black", icon: <Moon size={16} fill="currentColor" />, checked: prefs.theme === "black", onSelect: () => setPrefs({ theme: "black", themeChosen: true }) },
-            "separator",
-            { label: "Sign out…", icon: <LogOut size={16} />, danger: true, onSelect: () => navigate({ section: "settings", settingsPage: "security" }) },
           ]}
         />
       )}

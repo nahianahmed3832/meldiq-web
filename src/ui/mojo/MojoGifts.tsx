@@ -6,6 +6,8 @@ import { connections } from "../../sync/social";
 import { Dialog } from "../components/Overlay";
 import { relative } from "../format";
 import { useLoad } from "../workspace/useLoad";
+import type { GiftRecipient } from "../billing/checkoutDraft";
+import { zGiftRedemption } from "../../api/giftSchemas";
 import { money } from "./mojoFormat";
 
 const PLAN_NAME = { go: "Mojo Go", plus: "Mojo Plus" } as const;
@@ -19,21 +21,25 @@ export function GiftDialog({
   onClose,
   onPay,
   busy,
+  flexible = false,
 }: {
   catalog: MojoCatalog;
   onClose: () => void;
-  onPay: (input: { recipientUserId: string; planKey: "go" | "plus"; months: number; note: string }) => Promise<void>;
+  onPay: (input: { recipientUserId: string; recipient?: GiftRecipient; planKey: "go" | "plus"; months: number; note: string }) => Promise<void>;
   busy: boolean;
+  flexible?: boolean;
 }) {
   const engine = useEngine();
   const friends = useLoad(() => connections(engine), [engine]);
+  const [kind, setKind] = useState<"user" | "email" | "link">("user");
+  const [email, setEmail] = useState("");
   const [to, setTo] = useState("");
   const [planKey, setPlanKey] = useState<"go" | "plus">("plus");
   const [months, setMonths] = useState(catalog.gifts.months[0] ?? 1);
   const [note, setNote] = useState("");
   const monthly = catalog.onSale[planKey];
   const list = friends.data?.connected ?? [];
-  const ready = !!to && !!monthly && note.length <= catalog.gifts.noteMax;
+  const ready = (kind === "link" || (kind === "email" && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) || (kind === "user" && !!to)) && !!monthly && note.length <= catalog.gifts.noteMax;
   return (
     <Dialog
       title="Gift Mojo to a friend"
@@ -43,34 +49,68 @@ export function GiftDialog({
           <button className="btn btn-secondary" onClick={onClose}>
             Cancel
           </button>
-          <button className="btn btn-mojo" disabled={!ready || busy} onClick={() => void onPay({ recipientUserId: to, planKey, months, note })}>
+          <button
+            className="btn btn-mojo"
+            disabled={!ready || busy}
+            onClick={() =>
+              void onPay({
+                recipientUserId: to,
+                ...(flexible ? { recipient: kind === "user" ? { kind, userId: to } : kind === "email" ? { kind, email: email.trim() } : { kind } } : {}),
+                planKey,
+                months,
+                note,
+              })
+            }
+          >
             {busy ? "Opening…" : monthly ? `Pay ${money(monthly.amountMinor * months, monthly.currency)}` : "Not on sale yet"}
           </button>
         </>
       }
     >
       <div className="dialog-body">
-        <label className="field">
-          <span>Friend</span>
-          {friends.loading ? (
-            <span className="muted">Loading your friends…</span>
-          ) : list.length === 0 ? (
-            <span className="muted">Gifts go to friends. Add someone from Friends first.</span>
-          ) : (
-            <select className="input" value={to} onChange={(e) => setTo(e.target.value)} data-autofocus>
-              <option value="">Choose a friend…</option>
-              {list.map((f) => (
-                <option key={f.id} value={f.id}>
-                  {f.displayName} (@{f.username})
-                </option>
+        {flexible && (
+          <div className="field">
+            <span>Delivery</span>
+            <div className="segmented" role="radiogroup" aria-label="Gift delivery">
+              {(["user", "email", "link"] as const).map((k) => (
+                <button key={k} type="button" role="radio" aria-checked={kind === k} onClick={() => setKind(k)}>
+                  {k === "user" ? "Friend" : k === "email" ? "Email" : "Gift link"}
+                </button>
               ))}
-            </select>
-          )}
-        </label>
+            </div>
+          </div>
+        )}
+        {kind === "email" && (
+          <label className="field">
+            <span>Recipient email</span>
+            <input className="input" type="email" autoComplete="off" value={email} maxLength={254} onChange={(e) => setEmail(e.target.value)} />
+            <small className="muted">They sign in with this verified email to claim it.</small>
+          </label>
+        )}
+        {kind === "link" && <p className="muted">After payment, create a private link in Gifts. The first recipient to claim it gets the gift. Share it only with your intended recipient.</p>}
+        {kind === "user" && (
+          <label className="field">
+            <span>Friend</span>
+            {friends.loading ? (
+              <span className="muted">Loading your friends…</span>
+            ) : list.length === 0 ? (
+              <span className="muted">Gifts go to friends. Add someone from Friends first.</span>
+            ) : (
+              <select className="input" value={to} onChange={(e) => setTo(e.target.value)} data-autofocus>
+                <option value="">Choose a friend…</option>
+                {list.map((f) => (
+                  <option key={f.id} value={f.id}>
+                    {f.displayName} (@{f.username})
+                  </option>
+                ))}
+              </select>
+            )}
+          </label>
+        )}
         <div className="field">
           <span>Plan</span>
           <div className="segmented" role="radiogroup" aria-label="Plan">
-            {(["go", "plus"] as const).map((k) => (
+            {(["plus"] as const).map((k) => (
               <button key={k} type="button" role="radio" aria-checked={planKey === k} onClick={() => setPlanKey(k)}>
                 {PLAN_NAME[k]}
               </button>
@@ -90,10 +130,10 @@ export function GiftDialog({
         <label className="field">
           <span>A note (optional)</span>
           <textarea className="textarea" rows={2} maxLength={catalog.gifts.noteMax} value={note} onChange={(e) => setNote(e.target.value)} placeholder="Happy birthday!" />
-          <small className="muted">The note is sent with the gift. It isn't end-to-end encrypted like your messages.</small>
+          <small className="muted">The note is stored with the gift and is visible to its recipient.</small>
         </label>
         <p className="muted" style={{ margin: 0, fontSize: 13 }}>
-          One payment, nothing renews. Your friend starts it when they like. If they already have free Mojo time, the gift follows on after it.
+          One payment, nothing renews. Your recipient chooses when to redeem it. Gift time follows existing free or paid time. With an ongoing renewal, it is kept as credit until that renewal ends.
         </p>
       </div>
     </Dialog>
@@ -113,8 +153,9 @@ export function GiftsReceived({ me }: { me: MojoMe }) {
     setStarting(id);
     setError(null);
     try {
-      await engine.mojo.redeemGift(id);
-      engine.notice("info", "Your gift has started.");
+      const result = await engine.api.json("POST", `/v2/billing/gifts/${encodeURIComponent(id)}/redeem`, zGiftRedemption, { body: {} });
+      await engine.mojo.refresh();
+      engine.notice("info", result.credited ? "Gift credit saved. Your current renewal stays unchanged." : "Your gift time is ready.");
     } catch (e) {
       setError(e instanceof Error ? e.message : "Couldn't start the gift.");
     } finally {
@@ -136,7 +177,7 @@ export function GiftsReceived({ me }: { me: MojoMe }) {
               {PLAN_NAME[g.planKey]} for {g.months === 12 ? "a year" : `${g.months} month${g.months === 1 ? "" : "s"}`}, from {g.person.name ?? "a friend"}
             </strong>
             {g.note && <small>“{g.note}”</small>}
-            {me.plan !== "free" && <small className="muted">You already have {me.perks.name}: starting it now runs at the same time as what you pay for.</small>}
+            {me.plan !== "free" && <small className="muted">Gift time follows your existing time. An ongoing renewal keeps the gift as credit until that renewal ends.</small>}
           </span>
           <button className="btn btn-mojo btn-sm" disabled={starting !== null || !online} onClick={() => void start(g.id)}>
             {starting === g.id ? "Starting…" : "Start it"}
