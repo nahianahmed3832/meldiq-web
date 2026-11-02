@@ -14,10 +14,7 @@ test("community messages omit receipts while DMs retain them; expressions share 
   await alice.req("POST", `/v1/orgs/${org.id}/expressions?kind=emoji&name=brand_wave`, undefined, png);
   await alice.req("POST", `/v1/orgs/${org.id}/expressions?kind=sticker&name=brand_hello`, undefined, png);
   await link(page, alice);
-  await page
-    .locator(".sidebar")
-    .getByRole("link", { name: /expression-room/ })
-    .click();
+  await page.goto(`/home/c/${channel.id}`);
   const composer = page.getByRole("textbox", { name: /Message/ });
   await composer.fill("Community status check");
   await composer.press("Enter");
@@ -33,6 +30,12 @@ test("community messages omit receipts while DMs retain them; expressions share 
   const group = picker.getByRole("region", { name: "Meldiq Design Lab", exact: true });
   await expect(group.getByRole("button", { name: ":brand_wave:", exact: true })).toBeVisible();
   await expect(group.getByRole("button", { name: "Send sticker :brand_hello:", exact: true })).toBeVisible();
+  const bounds = await picker.boundingBox();
+  const viewport = page.viewportSize()!;
+  expect(bounds!.x).toBeGreaterThanOrEqual(0);
+  expect(bounds!.y).toBeGreaterThanOrEqual(0);
+  expect(bounds!.x + bounds!.width).toBeLessThanOrEqual(viewport.width);
+  expect(bounds!.y + bounds!.height).toBeLessThanOrEqual(viewport.height);
   await page.screenshot({ path: `/tmp/meldiq-unified-expressions-${info.project.name}.png` });
   await picker.getByRole("searchbox").fill("brand wave");
   await group.getByRole("button", { name: ":brand_wave:", exact: true }).click();

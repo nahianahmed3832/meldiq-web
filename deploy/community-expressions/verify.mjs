@@ -50,7 +50,7 @@ for (const [name, engine] of [
     }, bare);
     const geometry = await page.locator("#layout-probe .workspace").evaluate((workspace) => {
       const [topbar, body] = [...workspace.children].map((el) => el.getBoundingClientRect());
-      return { workspace: workspace.clientHeight, topbar: topbar.height, body: body.height, gap: body.y - topbar.bottom };
+      return { workspace: workspace.clientHeight, topbar: topbar.height, body: body.height, gap: body.y - workspace.getBoundingClientRect().y - topbar.height };
     });
     assert(geometry.body > geometry.workspace * 0.7);
     assert(Math.abs(geometry.gap) <= 1);

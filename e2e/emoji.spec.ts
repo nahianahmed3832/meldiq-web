@@ -40,14 +40,15 @@ test("search, skin tone and categories, into the composer and as a reaction", as
   await page.getByRole("button", { name: "Close expression picker" }).click();
 
   // A reaction from the picker: the Flags tab jumps to its section; recent emoji come first next time.
-  // With a mouse: the message's toolbar on hover. On a touch screen: a long press opens its menu (longPress.ts).
+  // Keyboard and touch both open the message menu without depending on hover timing.
   const message = page.getByRole("article").filter({ hasText: "Pick an emoji" });
   if (hasTouch) {
     await hold(page, message, 650);
     await page.getByRole("menu", { name: "Message" }).getByRole("button", { name: "Add reaction" }).click();
   } else {
-    await message.hover();
-    await page.getByRole("button", { name: "Add reaction" }).click();
+    await message.focus();
+    await page.keyboard.press("Shift+F10");
+    await page.getByRole("menu", { name: "Message", exact: true }).getByRole("button", { name: "Add reaction" }).click();
   }
   await expect(page.getByRole("heading", { name: "Recently used" })).toBeVisible();
   await page.getByRole("tab", { name: "Flags" }).click();
