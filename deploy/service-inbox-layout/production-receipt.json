@@ -1,0 +1,29 @@
+{
+  "sourceFixCommit": "90ef729",
+  "method": "CSS-only overlay preserving the exact current production JavaScript",
+  "expectedWeb": "/opt/meldiq-web/releases/0.5.0-beta-platform-sync-a5da62bd3b08",
+  "newWeb": "/opt/meldiq-web/releases/0.5.0-beta-service-inbox-layout-90ef729",
+  "expectedApiImage": "griip-internal-messaging-api:0.76.0-platform-sync-56b1522778d5",
+  "baselineBuildId": "Cm1LuVQ3dmigQlh4GBA22",
+  "buildId": "service-inbox-layout-90ef729",
+  "css": "/_next/static/css/3cca649e5b38197c77e6.css",
+  "baselineFiles": {
+    "index.html": "4d55b039a5a2fe078d386505d8a829c164a63d02edf05b4a47e254f7efde311a",
+    "404.html": "1599363ef34ec949b12ce8589c1d6f5253d53ca26eead9edc579852194e7eea3",
+    "_next/static/css/0c00a4d4545cb11b.css": "d95b269a9d934eadea3f88280a58c184143ec24d37d48c9f9cb5f65c0f737de0"
+  },
+  "files": {
+    "404.html": "66e41e0014e98a124bd5728e321143a96a2e20441f9e9fb97db6aeb75d765381",
+    "_next/static/css/3cca649e5b38197c77e6.css": "3cca649e5b38197c77e6be64c8cc6e4f474f10d8e5b774e62024de874a4a2038",
+    "_next/static/service-inbox-layout-90ef729/_buildManifest.js": "82ff1e6888639e7bd2d3711224cf7ab798d5aee170586507ac95855412bb4aa7",
+    "_next/static/service-inbox-layout-90ef729/_ssgManifest.js": "6f5b4aa00d2f8d6aed9935b471806bf7acef464d0c1d390260e5fe27f800c67e",
+    "index.html": "d9e2b10f3b9ea9d3f9d9179475b7bbb7fe7aaaeb8bb90df08b75f554882fb32b"
+  },
+  "archiveSha256": "acde782a5fafe40a007f6f2c709906cdeb09854681b08963093e2d344ba97dfa",
+  "status": "deployed-and-verified",
+  "deployedAt": "2026-11-02T08:36:53.727639+00:00",
+  "previousReleaseRetained": true,
+  "configurationPreserved": true,
+  "applicationJavaScriptPreserved": true,
+  "apiContainerUnchanged": true
+}
