@@ -1,0 +1,86 @@
+{
+  "ok": true,
+  "buildId": "-FovEWAQ5GP2ACtXp725a",
+  "results": [
+    {
+      "browser": "chromium",
+      "width": 1440,
+      "height": 900,
+      "bare": false,
+      "workspace": 856,
+      "topbar": 0,
+      "body": 856,
+      "gap": 0
+    },
+    {
+      "browser": "chromium",
+      "width": 820,
+      "height": 900,
+      "bare": false,
+      "workspace": 880,
+      "topbar": 64,
+      "body": 816,
+      "gap": 0
+    },
+    {
+      "browser": "chromium",
+      "width": 390,
+      "height": 844,
+      "bare": false,
+      "workspace": 844,
+      "topbar": 56,
+      "body": 788,
+      "gap": 0
+    },
+    {
+      "browser": "chromium",
+      "width": 390,
+      "height": 844,
+      "bare": true,
+      "workspace": 844,
+      "topbar": 0,
+      "body": 844,
+      "gap": 0
+    },
+    {
+      "browser": "webkit",
+      "width": 1440,
+      "height": 900,
+      "bare": false,
+      "workspace": 856,
+      "topbar": 0,
+      "body": 856,
+      "gap": 0
+    },
+    {
+      "browser": "webkit",
+      "width": 820,
+      "height": 900,
+      "bare": false,
+      "workspace": 880,
+      "topbar": 64,
+      "body": 816,
+      "gap": 0
+    },
+    {
+      "browser": "webkit",
+      "width": 390,
+      "height": 844,
+      "bare": false,
+      "workspace": 844,
+      "topbar": 56,
+      "body": 788,
+      "gap": 0
+    },
+    {
+      "browser": "webkit",
+      "width": 390,
+      "height": 844,
+      "bare": true,
+      "workspace": 844,
+      "topbar": 0,
+      "body": 844,
+      "gap": 0
+    }
+  ]
+}

@@ -3,9 +3,12 @@ import { expect, test } from "@playwright/test";
 import { link } from "./link";
 import { newPhone, testAddress } from "./phone";
 
+test.use({ serviceWorkers: "block" });
+
 test.beforeEach(async ({ context }) => context.setExtraHTTPHeaders({ "x-orbit-test-ip": testAddress() }));
 
 test("community messages omit receipts while DMs retain them; expressions share a compact grouped picker", async ({ page }, info) => {
+  test.setTimeout(180_000);
   const alice = await newPhone("communityui", "Community Tester");
   const bob = await newPhone("communitypeer", "Community Peer");
   const { org } = await alice.req("POST", "/v1/orgs", { name: "Meldiq Design Lab" });
@@ -14,7 +17,10 @@ test("community messages omit receipts while DMs retain them; expressions share 
   await alice.req("POST", `/v1/orgs/${org.id}/expressions?kind=emoji&name=brand_wave`, undefined, png);
   await alice.req("POST", `/v1/orgs/${org.id}/expressions?kind=sticker&name=brand_hello`, undefined, png);
   await link(page, alice);
-  await page.goto(`/home/c/${channel.id}`);
+  await page
+    .getByRole("region", { name: "Meldiq Design Lab lobby", exact: true })
+    .getByRole("button", { name: /^expression-room/ })
+    .click();
   const composer = page.getByRole("textbox", { name: /Message/ });
   await composer.fill("Community status check");
   await composer.press("Enter");

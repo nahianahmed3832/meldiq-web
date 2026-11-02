@@ -1,0 +1,12 @@
+{
+  "ok": true,
+  "health": {
+    "ok": true,
+    "version": "0.76.0",
+    "time": 1793616502807,
+    "livekit": true,
+    "mongodb": true,
+    "redis": true
+  },
+  "compiledCommunityRoutesSha256": "9d4e82ab4960fe587d6e3329c8833048b9b781bf0c179a46afca75a3865e443b"
+}

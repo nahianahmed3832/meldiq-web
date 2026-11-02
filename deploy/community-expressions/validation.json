@@ -1,0 +1,28 @@
+{
+  "webUnit": {
+    "passed": 875,
+    "skipped": 1
+  },
+  "apiBranding": {
+    "passed": 9,
+    "build": "passed"
+  },
+  "ci": {
+    "conclusion": "success",
+    "status": "completed",
+    "url": "https://github.com/nahianahmed3832/meldiq-web/actions/runs/41430681307"
+  },
+  "browserChecks": [
+    "Service inbox notices, warning appeal and promotion redemption from Account standing in WebKit and phone Chromium",
+    "Discover nonmember icon loading, name/description/tag search and private community exclusion in WebKit and phone Chromium",
+    "Repeated default emoji insertion and multiple persisted reactions in WebKit and phone Chromium",
+    "Custom upload preview, original format/animation validation, favorites sync and left-community asset removal in WebKit and phone Chromium",
+    "Community receipts hidden, DM receipts retained, shared search, repeated custom emoji and compact grouping in WebKit, desktop Chromium and phone Chromium",
+    "Unified picker sticker sending in desktop Chromium"
+  ],
+  "preflightChecks": 8,
+  "livePublicChecks": 8,
+  "sourceMapsPublished": false,
+  "testDeviceLinkingPublished": false,
+  "distinctFeatureBrowserCasesPassed": 16
+}
