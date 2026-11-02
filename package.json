@@ -14,7 +14,7 @@
   },
   "scripts": {
     "dev": "npm run -s sw:dev && next dev --hostname 127.0.0.1 --port 5173",
-    "build": "tsc -b && rm -rf out && next build && node scripts/finish-export.mjs && vite build --config vite.sw.config.ts",
+    "build": "tsc -b && rm -rf out && next build --webpack && node scripts/finish-export.mjs && vite build --config vite.sw.config.ts",
     "sw:dev": "vite build --config vite.sw.config.ts --outDir public --mode development",
     "preview": "node scripts/web-server.ts dist 4173",
     "typecheck": "tsc -b",
