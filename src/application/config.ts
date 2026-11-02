@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { zSupabasePreview } from "../auth/supabasePreviewConfig";
 
 /**
  * Runtime configuration, read from /config.json when the page loads, so moving Orbit Web to another domain or pointing
@@ -51,13 +52,18 @@ const zFirebase = z.object({
 });
 export type FirebaseWebConfig = z.infer<typeof zFirebase>;
 
-const zConfig = z.object({
-  apiBase: zOrigin.default("").transform((v) => v.replace(/\/$/, "")),
-  wsUrl: zWs.nullable().default(null),
-  publicUrl: z.string().max(200).nullable().default(null),
-  environment: z.enum(["development", "staging", "production"]).default("production"),
-  firebase: zFirebase.nullable().default(null),
-});
+const zConfig = z
+  .object({
+    apiBase: zOrigin.default("").transform((v) => v.replace(/\/$/, "")),
+    wsUrl: zWs.nullable().default(null),
+    publicUrl: z.string().max(200).nullable().default(null),
+    environment: z.enum(["development", "staging", "production"]).default("production"),
+    firebase: zFirebase.nullable().default(null),
+    supabaseMigration: z.union([z.literal(false), zSupabasePreview]).default(false),
+  })
+  .superRefine((value, ctx) => {
+    if (value.supabaseMigration && value.environment !== "staging") ctx.addIssue({ code: "custom", message: "Supabase preview requires a staging environment", path: ["supabaseMigration"] });
+  });
 export type RuntimeConfig = z.infer<typeof zConfig>;
 
 let current: RuntimeConfig = zConfig.parse({});
@@ -112,6 +118,12 @@ function keepConfig(c: RuntimeConfig | null): void {
 export async function startConfig(fetcher: typeof fetch = fetch): Promise<RuntimeConfig> {
   const kept = keptConfig();
   if (!kept) {
+    const c = await loadConfig(fetcher);
+    keepConfig(c);
+    return c;
+  }
+  // A cached staging opt-in must never survive an operator disabling the preview or changing environments.
+  if (kept.supabaseMigration) {
     const c = await loadConfig(fetcher);
     keepConfig(c);
     return c;

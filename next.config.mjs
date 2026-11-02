@@ -37,6 +37,7 @@ export default function config(phase) {
               beforeFiles: [
                 { source: "/v1/:path*", destination: `${api}/v1/:path*` },
                 { source: "/v2/:path*", destination: `${api}/v2/:path*` },
+                { source: "/v3/:path*", destination: `${api}/v3/:path*` },
               ],
               afterFiles: [],
               fallback: [{ source: "/:path*", destination: "/" }],
