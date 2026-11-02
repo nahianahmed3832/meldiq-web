@@ -1,4 +1,5 @@
 import { CollectibleBanner, CollectibleBadge, collectibleCardVars } from "./CollectibleLayers";
+import { IdentityGlyph } from "../components/IdentityGlyph";
 import { Check, Copy, Flag, MoreHorizontal, SendHorizontal, ShieldBan, ShieldCheck, Ticket, UserCheck, UserPlus, UserX, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { ApiError } from "../../api/client";
@@ -285,12 +286,12 @@ export function ProfileDialog({ userId, fallbackName, orgId = null, near = null,
               <>
                 {profile.badges.includes("bug-hunter") && (
                   <span className="badge-pill" title="Found a bug Meldiq confirmed">
-                    🐞 Bug Hunter
+                    <IdentityGlyph kind="bug-hunter" size={18} /> Bug Hunter
                   </span>
                 )}
                 {profile.decorationArtist && (
                   <span className="badge-pill" title="Made a profile decoration Meldiq approved">
-                    🎨 Artist
+                    <IdentityGlyph kind="artist" size={18} /> Artist
                   </span>
                 )}
               </>

@@ -54,13 +54,13 @@ test("community photos in the rail, a member list in channels and a profile in D
   expect(await page.evaluate(() => document.documentElement.dataset.theme)).toBe("dark");
   expect(await page.locator(".app").evaluate((el) => getComputedStyle(el).backgroundImage)).toContain("rgb(4, 4, 4)");
 
-  // A channel: the member list beside the messages, Staff first, then Online, then Offline.
+  // The active owner leads in Admin, followed by hoisted roles and Offline.
   await page.goto(`/home/c/${channel.id}`);
   const list = page.locator("aside.member-list");
   await expect(list).toBeVisible();
-  await expect(list.locator(".member-group")).toHaveText([/^Staff — 1$/i, /^Online — 1$/i, /^Offline — 1$/i]);
-  await expect(list.locator("section").nth(0)).toContainText("Bob Chen");
-  await expect(list.locator("section").nth(1)).toContainText("Alice Rahman");
+  await expect(list.locator(".member-group")).toHaveText([/^Admin — 1$/i, /^Staff — 1$/i, /^Offline — 1$/i]);
+  await expect(list.locator("section").nth(0)).toContainText("Alice Rahman");
+  await expect(list.locator("section").nth(1)).toContainText("Bob Chen");
   await expect(list.locator("section").nth(2)).toContainText("Carol Diaz");
   await expect(list.locator(".member-row").filter({ hasText: "Bob Chen" }).locator(".member-name .sname")).toHaveCSS("color", "rgb(230, 126, 34)");
   const offlineRow = list.locator(".member-row").filter({ hasText: "Carol Diaz" });

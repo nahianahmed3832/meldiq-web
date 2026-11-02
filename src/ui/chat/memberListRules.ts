@@ -16,11 +16,13 @@ export interface ListedMember {
   online: boolean | null;
   /** A bot (people's bots and Meldiq's official ones): listed under Bots, whatever its presence. */
   bot?: boolean;
+  /** The community's protected base role, independent of custom role ordering. */
+  orgRole?: string | null;
 }
 
 export interface MemberListGroup<T> {
   key: string;
-  /** "Owner", a role's name, "Online" or "Offline". */
+  /** "Admin", a custom role's name, "Online", "Bots" or "Offline". */
   label: string;
   /** The role's colour for its heading, when it has one. */
   color: string | null;
@@ -48,13 +50,14 @@ export function roleNameColors(roles: readonly ListedRole[] | undefined): string
 }
 
 /**
- * A channel's or group's member list, as Discord shows it: people who are here, each under their highest role that's
- * shown separately (in role order) or else under Online; then everyone else under Offline. Names sort alphabetically
- * in each group; empty groups are left out. Bots (community parity D: official bots with the community's name for them)
- * have a group of their own before Offline, since a bot is never "away".
+ * Active owners lead the list, under their highest separately displayed custom role or Admin by default.
+ * Their group leads regardless of custom role position, and owners lead that group's members. Other active people
+ * follow their role order, then Online. Bots always have their own group; offline people stay under Offline.
  */
 export function memberListGroups<T extends ListedMember>(members: readonly T[], rolesOf: (userId: string) => readonly ListedRole[] | undefined): MemberListGroup<T>[] {
   const alpha = (a: T, b: T) => a.displayName.localeCompare(b.displayName, undefined, { sensitivity: "base" });
+  const ownerFirst = (a: T, b: T) => Number(b.orgRole === "OWNER") - Number(a.orgRole === "OWNER") || alpha(a, b);
+  const isAdmin = (m: T) => m.orgRole === "OWNER" || m.orgRole === "ADMIN";
   const topHoisted = (m: T) => [...(rolesOf(m.id) ?? [])].filter((r) => r.hoist).sort(byPosition)[0] ?? null;
   const people = members.filter((m) => !m.bot);
   const bots = members.filter((m) => m.bot);
@@ -70,11 +73,16 @@ export function memberListGroups<T extends ListedMember>(members: readonly T[], 
     key: `role:${r.id}`,
     label: r.name,
     color: r.color,
-    members: here.filter((m) => topHoisted(m)?.id === r.id).sort(alpha),
+    members: here.filter((m) => topHoisted(m)?.id === r.id).sort(ownerFirst),
   }));
-  const groups: MemberListGroup<T>[] = [
+  const activeGroups: MemberListGroup<T>[] = [
+    { key: "admin", label: "Admin", color: null, members: here.filter((m) => isAdmin(m) && topHoisted(m) === null).sort(ownerFirst) },
     ...roleGroups,
-    { key: "online", label: "Online", color: null, members: here.filter((m) => topHoisted(m) === null).sort(alpha) },
+    { key: "online", label: "Online", color: null, members: here.filter((m) => !isAdmin(m) && topHoisted(m) === null).sort(alpha) },
+  ];
+  activeGroups.sort((a, b) => Number(b.members.some((m) => m.orgRole === "OWNER")) - Number(a.members.some((m) => m.orgRole === "OWNER")));
+  const groups: MemberListGroup<T>[] = [
+    ...activeGroups,
     { key: "bots", label: "Bots", color: null, members: [...bots].sort(alpha) },
     { key: "offline", label: "Offline", color: null, members: [...away].sort(alpha) },
   ];

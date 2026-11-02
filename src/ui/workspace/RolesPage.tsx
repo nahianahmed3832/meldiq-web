@@ -2,6 +2,7 @@ import { Archive, ArchiveRestore, ChevronDown, ChevronRight, ChevronUp, Plus, Tr
 import { type DragEvent, useState } from "react";
 import type { OrgAdminDetail } from "../../api/workspaceSchemas";
 import { useEngine, useOrbit } from "../../application/orbit";
+import { forgetCommunityMembers } from "../community/useCommunityMembers";
 import { PARITY_FEATURES } from "../../sync/communityParity";
 import { dropBefore, moveInOrder } from "../../sync/permissionGroups";
 import { deleteRole, reorderRoles, type Role, rolesOverview, updateRole } from "../../sync/roles";
@@ -38,7 +39,10 @@ export function RolesPage({ detail }: { detail: OrgAdminDetail }) {
   const [dragged, setDragged] = useState<string | null>(null);
   const newMenu = useMenu();
   const act = useAction();
-  const reload = () => setVersion((v) => v + 1);
+  const reload = () => {
+    forgetCommunityMembers(orgId);
+    setVersion((v) => v + 1);
+  };
   const o = data.data;
   if (!o) return data.error ? <ErrorLine text={data.error} /> : <div className="skeleton" style={{ height: 160 }} />;
   const active = orderedRoles(o.roles.filter((r) => !r.archived));

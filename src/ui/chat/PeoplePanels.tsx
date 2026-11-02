@@ -19,6 +19,7 @@ import { useMembers } from "./ConversationDetails";
 import { isHere, memberListGroups, roleNameColors } from "./memberListRules";
 import { useT } from "../../i18n";
 import { CommunityOwnerBadge } from "../components/CommunityOwnerBadge";
+import { IdentityGlyph } from "../components/IdentityGlyph";
 import { ProfilePins } from "../people/ProfilePins";
 
 /** Wide enough to keep a member list or profile beside the messages; narrower screens open them over the messages. */
@@ -65,6 +66,7 @@ export function MemberListPanel({ c, onClose }: { c: Conversation; onClose: () =
           presence: u?.presence ?? m.presence,
           online: u?.online ?? m.online,
           photoRev: u?.photoRev ?? m.photoRev,
+          bot: m.bot || u?.bot === true,
         };
       }),
     [members, users, nicknames],
@@ -85,7 +87,11 @@ export function MemberListPanel({ c, onClose }: { c: Conversation; onClose: () =
         {groups.map((g) => (
           <section key={g.key} aria-label={`${g.label}, ${g.members.length}`}>
             <h3 className="member-group" style={g.color ? { color: g.color } : undefined}>
-              {g.key === "online" ? t("people_online") : g.key === "offline" ? t("people_offline") : g.label} — {g.members.length}
+              {(g.key === "admin" || g.key === "bots" || g.key.startsWith("role:")) && (
+                <IdentityGlyph kind={g.key === "bots" ? "bot" : g.members.some((m) => m.orgRole === "OWNER") ? "owner" : "role"} size={13} />
+              )}
+              {g.key === "online" ? t("people_online") : g.key === "offline" ? t("people_offline") : g.key === "admin" ? t("people_admin") : g.key === "bots" ? t("people_bots") : g.label} —{" "}
+              {g.members.length}
             </h3>
             {g.members.map((m) => (
               <MemberRow key={m.id} m={m} away={!m.bot && !isHere(m)} colors={roleNameColors(roles.get(m.id))} orgId={c.type === "CHANNEL" ? c.orgId : null} />
@@ -145,7 +151,7 @@ function MemberRow({ m, away, colors, orgId }: { m: Member; away: boolean; color
       <button
         className={`member-row${away ? " away" : ""}`}
         onClick={(e) => openProfile(m.id, m.displayName, { orgId, anchor: e.currentTarget })}
-        aria-label={`${m.displayName}${owner ? ", community owner" : ""}${away ? ", offline" : ""}: profile`}
+        aria-label={`${m.displayName}${owner ? ", community owner" : ""}${m.bot ? ", bot" : ""}${!isHere(m) ? ", offline" : ""}: profile`}
         aria-haspopup="menu"
         {...contextMenuProps(menu.openAt)}
       >
@@ -158,8 +164,8 @@ function MemberRow({ m, away, colors, orgId }: { m: Member; away: boolean; color
           decoration={m.profileStyle?.decoration ?? null}
           collectibles={m.profileStyle?.collectibles}
           size={40}
-          online={away ? null : true}
-          presence={away ? null : m.presence}
+          online={m.bot ? isHere(m) : away ? null : true}
+          presence={m.presence}
         />
         <span className="lines">
           <span className="member-name">

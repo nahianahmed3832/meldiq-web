@@ -428,6 +428,8 @@ export const STRINGS = {
   people_members: ["Members", "成员", "সদস্য"],
   people_online: ["Online", "在线", "অনলাইন"],
   people_offline: ["Offline", "离线", "অফলাইন"],
+  people_admin: ["Admin", "管理员", "অ্যাডমিন"],
+  people_bots: ["Bots", "机器人", "বট"],
   people_now: ["Now", "现在", "এখন"],
   people_last_seen: ["Last seen", "最后在线", "শেষ দেখা"],
   people_not_shared: ["Not shared", "未公开", "শেয়ার করা নেই"],

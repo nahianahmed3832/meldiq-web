@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import type { DirectoryMember } from "../../api/workspaceSchemas";
 import { useEngine } from "../../application/orbit";
 import type { Engine } from "../../sync/engine";
@@ -19,6 +19,13 @@ const TTL_MS = 60_000;
 const EMPTY: CommunityMembers = { roles: new Map(), nicknames: new Map() };
 const cache = new Map<string, { at: number; members: CommunityMembers }>();
 const loading = new Map<string, Promise<CommunityMembers>>();
+const listeners = new Set<() => void>();
+let directoryRevision = 0;
+const subscribe = (listener: () => void) => {
+  listeners.add(listener);
+  return () => listeners.delete(listener);
+};
+const revision = () => directoryRevision;
 
 export function membersFrom(people: readonly DirectoryMember[]): CommunityMembers {
   return {
@@ -43,13 +50,16 @@ function load(engine: Engine, orgId: string): Promise<CommunityMembers> {
   return p;
 }
 
-/** Forgets a community's directory (after changing a nickname), so the next view loads it again. */
+/** Refreshes open member lists after editing role names, assignments or community nicknames. */
 export function forgetCommunityMembers(orgId: string): void {
   cache.delete(orgId);
+  directoryRevision++;
+  listeners.forEach((listener) => listener());
 }
 
 export function useCommunityMembers(orgId: string | null, version = 0): CommunityMembers {
   const engine = useEngine();
+  const changed = useSyncExternalStore(subscribe, revision, () => 0);
   const [members, setMembers] = useState<CommunityMembers>((orgId && cache.get(orgId)?.members) || EMPTY);
   useEffect(() => {
     if (!orgId) return setMembers(EMPTY);
@@ -60,6 +70,6 @@ export function useCommunityMembers(orgId: string | null, version = 0): Communit
     return () => {
       alive = false;
     };
-  }, [engine, orgId, version]);
+  }, [engine, orgId, version, changed]);
   return members;
 }

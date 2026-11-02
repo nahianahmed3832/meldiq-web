@@ -81,7 +81,7 @@ export function RoleDisplayTab({ draft, patch, readOnly, nameMax, descriptionMax
         <div className="setting">
           <span className="lines">
             <strong>Show members separately</strong>
-            <small>People with this role are listed under its name in the member list, in role order.</small>
+            <small>Lists people under this role's name. An active owner's group always appears first; otherwise, roles follow their order.</small>
           </span>
           <Toggle checked={draft.hoist} disabled={readOnly} onChange={(hoist) => patch({ hoist })} label="Show members separately" />
         </div>

@@ -48,4 +48,44 @@ describe("member list", () => {
     expect(nameColor([role("a", 1, false, null)])).toBeNull();
     expect(nameColor(undefined)).toBeNull();
   });
+
+  it("keeps an active owner first in Admin without a custom role, ahead of other admins and hoisted roles", () => {
+    const members = [
+      { ...person("admin", "Amber", "online"), orgRole: "ADMIN" },
+      { ...person("owner", "Zoe", "idle"), orgRole: "OWNER" },
+      person("mod", "Moderator", "online"),
+      person("member", "Member", "online"),
+    ];
+    const groups = memberListGroups(members, (id) => (id === "mod" ? [role("mod", 0, true)] : []));
+    expect(groups.map((g) => [g.label, g.members.map((m) => m.id)])).toEqual([
+      ["Admin", ["owner", "admin"]],
+      ["MOD", ["mod"]],
+      ["Online", ["member"]],
+    ]);
+  });
+
+  it("pins the owner's custom group above a higher-positioned role and keeps the owner first within it", () => {
+    const members = [{ ...person("owner", "Zoe", "dnd"), orgRole: "OWNER" }, person("peer", "Amber", "online"), person("staff", "Staff", "online")];
+    const roles = { owner: [role("founders", 99, true)], peer: [role("founders", 99, true)], staff: [role("staff", 0, true)] };
+    expect(memberListGroups(members, (id) => roles[id as keyof typeof roles]).map((g) => [g.label, g.members.map((m) => m.id)])).toEqual([
+      ["FOUNDERS", ["owner", "peer"]],
+      ["STAFF", ["staff"]],
+    ]);
+  });
+
+  it("keeps offline owners offline, and bots separate from every human role and presence group", () => {
+    const members = [
+      { ...person("owner", "Owner", "offline"), orgRole: "OWNER" },
+      { ...person("bot1", "Helper", "offline"), bot: true, orgRole: "ADMIN" },
+      { ...person("bot2", "Guide", "online"), bot: true },
+      person("human", "Human", "online"),
+    ];
+    const groups = memberListGroups(members, () => [role("staff", 0, true)]);
+    expect(groups.map((g) => [g.label, g.members.map((m) => m.id)])).toEqual([
+      ["STAFF", ["human"]],
+      ["Bots", ["bot2", "bot1"]],
+      ["Offline", ["owner"]],
+    ]);
+    expect(groups.flatMap((g) => g.members).length).toBe(members.length);
+  });
 });

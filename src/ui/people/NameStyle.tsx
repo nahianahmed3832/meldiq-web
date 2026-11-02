@@ -6,7 +6,7 @@ import type { NameEffect, NameFont, ProfileStyle, WornTag } from "../../api/sche
 import { useOrbit } from "../../application/orbit";
 import type { UserLite } from "../../state/store";
 import { StyledAvatar } from "./ProfileStyle";
-import { Hash } from "lucide-react";
+import { IdentityGlyph } from "../components/IdentityGlyph";
 
 /**
  * Name styles (API 0.46.0): a display name in one of Meldiq's fonts, in a colour or a gradient of two or three, with an
@@ -92,6 +92,7 @@ export function StyledName({ name, style, tag, mojo, everyBadge, roleColor, role
 export function BotTag() {
   return (
     <span className="bot-tag" title="A bot: an app someone made, not a person">
+      <IdentityGlyph kind="bot" size={11} />
       BOT
     </span>
   );
@@ -101,7 +102,7 @@ export function WornTagChip({ tag }: { tag: WornTag }) {
   return (
     <span className="wtag" style={tag.color ? ({ "--tag": tag.color } as CSSProperties) : undefined} title={`Community tag ${tag.text}`}>
       <span className="sr-only">tag </span>
-      <Hash size={10} aria-hidden="true" />
+      <IdentityGlyph kind="community" size={11} />
       {tag.text}
     </span>
   );
@@ -132,8 +133,8 @@ interface LookNameProps {
 /** A name as its owner styled it (API 0.46.0), wherever this browser shows it: messages, lists, headers and panels. */
 export function LookName({ userId, name, withMarks = false, withSubscription = false, toneClass, className = "ellipsis" }: LookNameProps) {
   const look = useUserLook(userId);
-  if (withSubscription) return <StyledName name={name} style={look.profileStyle} mojo={look.mojo} everyBadge toneClass={toneClass} className={className} />;
-  if (!withMarks) return <StyledName name={name} style={look.profileStyle} toneClass={toneClass} className={className} />;
+  if (withSubscription) return <StyledName name={name} style={look.profileStyle} mojo={look.mojo} bot={look.bot} everyBadge toneClass={toneClass} className={className} />;
+  if (!withMarks) return <StyledName name={name} style={look.profileStyle} bot={look.bot} toneClass={toneClass} className={className} />;
   return <StyledName name={name} style={look.profileStyle} tag={look.tag} mojo={look.mojo} bot={look.bot} toneClass={toneClass} className={className} />;
 }
 
