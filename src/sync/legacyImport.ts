@@ -67,7 +67,7 @@ export function importItemsOf(m: StoredMessage): ImportItem[] {
     items.push({ ...base, id: `${m.id.slice(0, 40)}-${suffix}`.slice(0, 64), senderUserId, cls: "control", payload: { ...payload, target: m.id } });
   let n = 0;
   for (const [emoji, users] of Object.entries(m.reactions)) for (const u of users) change(`r${n++}`, u, { type: "reaction", emoji, add: true });
-  for (const [voter, choices] of Object.entries(m.rich?.votes ?? {})) change(`v${n++}`, voter, { type: "vote", choices });
+  for (const [voter, choices] of Object.entries(m.rich?.votes ?? {})) change(`v${n++}`, voter, { type: "vote", choices, ...(m.rich?.votePrivacy?.[voter] ? { anonymous: true } : {}) });
   if (m.rich?.pollClosed) change("c", m.senderUserId, { type: "poll_close" });
   if (m.pinned) change("p", m.senderUserId, { type: "pin", pinned: true });
   return items.filter((i) => /^[A-Za-z0-9_-]{8,64}$/.test(i.id));

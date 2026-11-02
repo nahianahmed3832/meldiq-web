@@ -113,6 +113,8 @@ export const zPayload = z.object({
   gif: opt(zGif),
   /** A "vote" control: the chosen option ids of the poll in [target] (empty takes the vote back). */
   choices: opt(z.array(z.string().max(32)).max(20)),
+  /** A vote's display privacy: updated clients hide this voter's identity in poll results. */
+  anonymous: opt(z.boolean()),
   /** A forum post's title (communities); [text] then starts with the title and a blank line. Omitted elsewhere. */
   title: opt(z.string().max(1000)),
   /** A forum post's tag ids, from the forum's tag list. */

@@ -1,8 +1,10 @@
 import { Download, FileText, Film, Image as ImageIcon, Mic, Pause, Play, TriangleAlert } from "lucide-react";
-import { useContext, useEffect, useId, useState } from "react";
-import { useEngine } from "../../application/orbit";
+import { useContext, useEffect, useId, useMemo, useState } from "react";
+import { useEngine, useOrbit } from "../../application/orbit";
 import { usePrefs } from "../../application/prefs";
 import { useVoicePlayback, voicePlayback } from "../../application/voicePlayback";
+import type { StoredMessage } from "../../model/types";
+import { galleryOf } from "./gallery";
 import type { AttachmentRef } from "../../protocol/payload";
 import { isInlineImage, safeMime, saveAttachment } from "../../sync/attachments";
 import { clock, isVoice, shownDuration } from "../../sync/voice";
@@ -18,24 +20,41 @@ export type { ViewerInfo };
  * Decrypts on demand. Images show inline once scrolled near; voice messages play in place (android VoiceViews); audio and video play inline
  * once opened (a click, so nothing large downloads unasked); anything else is a file card that downloads.
  */
-export function Attachments({ refs, viewer }: { refs: AttachmentRef[]; viewer?: ViewerInfo }) {
-  // The message's photos and videos, stepped through in one viewer (MediaViewer.tsx).
-  const media = refs.filter((r) => !isVoice(r) && isViewable(r));
-  const [viewing, setViewing] = useState<number | null>(null);
+export function Attachments({ refs, viewer, message }: { refs: AttachmentRef[]; viewer?: ViewerInfo; message?: StoredMessage }) {
+  const engine = useEngine();
+  const [viewing, setViewing] = useState<string | null>(null);
+  // Only subscribe to conversation history while open. Keep the selected attachment stable as new messages arrive.
+  const messages = useOrbit((s) => (viewing && message ? s.messages[message.conversationId]?.items : undefined));
+  const users = useOrbit((s) => (viewing ? s.users : undefined));
+  const me = useOrbit((s) => (viewing ? s.me : undefined));
+  const gallery = useMemo(
+    () => galleryOf(messages?.some((m) => m.id === message?.id) ? messages : [...(messages ?? []), ...(message ? [message] : [])]).media.sort((a, b) => a.at - b.at),
+    [messages, message],
+  );
+  const media = gallery.length ? gallery.map((i) => i.ref) : refs.filter((r) => !isVoice(r) && isViewable(r));
+  const at = media.findIndex((r) => r.id === viewing);
+  const source = messages?.find((m) => m.id === gallery[at]?.messageId);
+  const info: ViewerInfo | null =
+    source && source.id !== message?.id
+      ? {
+          sender: source.senderUserId === me?.userId ? me.displayName : (users?.[source.senderUserId]?.displayName ?? "Member"),
+          at: source.sortTs,
+          text: source.text,
+          quick: viewer?.quick ?? [],
+          reacted: Object.entries(source.reactions)
+            .filter(([, who]) => me && who.includes(me.userId))
+            .map(([emoji]) => emoji),
+          onReact: viewer?.onReact ? (emoji) => void engine.react(source, emoji) : null,
+        }
+      : (viewer ?? null);
   if (!refs.length) return null;
   // Several photos sent together are an album (android AlbumGrid); everything else is listed under it.
   const images = refs.filter((r) => !isVoice(r) && isInlineImage(r));
   const album = images.length >= 2 ? images : [];
   const rest = album.length ? refs.filter((r) => !album.includes(r)) : refs;
-  const open = (r: AttachmentRef) =>
-    setViewing(
-      Math.max(
-        0,
-        media.findIndex((m) => m.id === r.id),
-      ),
-    );
+  const open = (r: AttachmentRef) => setViewing(r.id);
   return (
-    <ViewerInfoContext.Provider value={viewer ?? null}>
+    <ViewerInfoContext.Provider value={info}>
       <OpenViewerContext.Provider value={open}>
         <div className="attachments">
           {album.length > 0 && <AlbumGrid items={album} />}
@@ -51,7 +70,7 @@ export function Attachments({ refs, viewer }: { refs: AttachmentRef[]; viewer?: 
             ),
           )}
         </div>
-        {viewing !== null && media[viewing] && <MediaViewer items={media} at={viewing} onMove={setViewing} onClose={() => setViewing(null)} />}
+        {viewing !== null && at >= 0 && <MediaViewer items={media} at={at} onMove={(i) => setViewing(media[i].id)} onClose={() => setViewing(null)} />}
       </OpenViewerContext.Provider>
     </ViewerInfoContext.Provider>
   );

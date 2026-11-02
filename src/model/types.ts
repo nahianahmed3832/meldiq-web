@@ -15,6 +15,8 @@ export interface RichContent {
   poll?: Poll;
   /** voter user id → their chosen option ids (polls; android RichContent.votes). */
   votes?: Record<string, string[]>;
+  /** Voters who chose to hide their names in poll results; identity is still retained by the messaging protocol. */
+  votePrivacy?: Record<string, boolean>;
   pollClosed?: boolean;
   sticker?: StickerRef;
   /** API 0.45.0: a GIF from GIF search (sync/gifs.ts). */

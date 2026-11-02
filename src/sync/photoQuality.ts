@@ -69,6 +69,8 @@ export async function optimizePhoto(file: File): Promise<File> {
     if (expressionFormat(new Uint8Array(await file.arrayBuffer()))?.animated) return file;
     const bitmap = await createImageBitmap(file, { imageOrientation: "from-image" });
     try {
+      // A longest-edge resize turns a long screenshot into unreadable, narrow text. Preserve these originals.
+      if (Math.max(bitmap.width, bitmap.height) / Math.max(1, Math.min(bitmap.width, bitmap.height)) >= 3) return file;
       const size = fitWithin(bitmap.width, bitmap.height, 2560);
       const canvas = document.createElement("canvas");
       canvas.width = size.width;

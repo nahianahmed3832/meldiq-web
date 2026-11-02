@@ -42,7 +42,7 @@ export async function forwardMessage(engine: Engine, m: StoredMessage, targets: 
   const source = st.conversations[m.conversationId];
   const origin = originOf(m, source, st.orgs.find((o) => o.id === source?.orgId)?.name ?? null);
   // A forwarded poll starts fresh: its votes and closing belong to the conversation it came from.
-  const base: RichContent | null = m.rich?.poll ? { ...m.rich, votes: undefined, pollClosed: undefined } : m.rich;
+  const base: RichContent | null = m.rich?.poll ? { ...m.rich, votes: undefined, votePrivacy: undefined, pollClosed: undefined } : m.rich;
   const rich: RichContent | null = origin ? { ...(base ?? {}), origin } : base ? { ...base, origin: undefined } : null;
   const text = note.trim().slice(0, MAX_FORWARD_NOTE);
   const done: { conversationId: string; messageId: string }[] = [];

@@ -246,6 +246,7 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
         )}
         {posted && m.rich && <PostedContent rich={m.rich} orgId={inCommunity} channelId={m.conversationId} />}
         <Attachments
+          message={m}
           refs={m.attachments}
           viewer={{
             sender: p.senderName,

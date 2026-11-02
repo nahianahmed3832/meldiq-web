@@ -53,6 +53,11 @@ describe("uploading a browser's earlier history", () => {
     for (const i of items) expect(i.id).toMatch(/^[A-Za-z0-9_-]{8,64}$/);
   });
 
+  it("preserves hidden-name ballots in imported vote controls", () => {
+    const imported = importItemsOf({ ...base, rich: { ...base.rich, votePrivacy: { u_alice: true } } });
+    expect(imported.find((i) => i.payload.type === "vote")?.payload).toMatchObject({ anonymous: true, choices: ["a"] });
+  });
+
   it("uploads nothing for deleted messages and call lines", () => {
     expect(importItemsOf({ ...base, deleted: true })).toEqual([]);
     expect(importItemsOf({ ...base, kind: "call" })).toEqual([]);

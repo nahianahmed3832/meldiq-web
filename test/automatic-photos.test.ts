@@ -22,6 +22,17 @@ describe("automatic photo upload and export", () => {
     expect([file.name, file.type]).toEqual(["camera.webp", "image/webp"]);
     expect(close).toHaveBeenCalledOnce();
   });
+  it.each([
+    [600, 12000],
+    [12000, 600],
+  ])("preserves a %i by %i screenshot without downscaling its text", async (width, height) => {
+    const { close, result } = canvas();
+    vi.stubGlobal("createImageBitmap", vi.fn().mockResolvedValue({ width, height, close }));
+    const file = new File(["long screenshot"], "long.png", { type: "image/png" });
+    expect(await optimizePhoto(file)).toBe(file);
+    expect(result.width).toBe(0);
+    expect(close).toHaveBeenCalledOnce();
+  });
   it("falls back to the original when encoding or decoding is unavailable", async () => {
     canvas(255, false);
     const file = new File(["jpeg"], "camera.jpg", { type: "image/jpeg" });

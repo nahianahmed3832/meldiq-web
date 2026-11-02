@@ -9,6 +9,7 @@ import { filterFiles, galleryOf, type Gallery, type GalleryItem, type LinkItem }
 import { jumpTo } from "./jump";
 import { CollectionControls, useMessageCollection } from "./useMessageCollection";
 import { SafeLink } from "./SafeLink";
+import { GalleryMediaViewer } from "./GalleryMediaViewer";
 import { MediaGalleryDialog } from "./MediaGalleryDialog";
 
 const TAB_LABEL: Record<DetailsTab, string> = { members: "Members", media: "Media", pins: "Pins", threads: "Threads", links: "Links", files: "Files" };
@@ -84,7 +85,7 @@ export function MediaTab({ conversationId, gallery: cached, nameOf }: ItemsTabPr
   const [shown, setShown] = useState(PAGE);
   const [missing, setMissing] = useState(false);
   return (
-    <>
+    <GalleryMediaViewer items={gallery.media} nameOf={nameOf}>
       <CollectionControls collection={collection} />
       {!collection.loading && !collection.error && gallery.media.length === 0 && <Empty text="No photos or videos on this page." />}
       {missing && <Missing />}
@@ -107,7 +108,7 @@ export function MediaTab({ conversationId, gallery: cached, nameOf }: ItemsTabPr
         </button>
       )}
       <SaveSeveral gallery={gallery} nameOf={nameOf} />
-    </>
+    </GalleryMediaViewer>
   );
 }
 

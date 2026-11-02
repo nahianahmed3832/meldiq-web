@@ -5,9 +5,11 @@ import { useEngine } from "../../application/orbit";
 import type { AttachmentRef } from "../../protocol/payload";
 import { isInlineImage, safeMime, saveAttachment } from "../../sync/attachments";
 import { dayLabel, clock as timeOfDay } from "../format";
-import { Menu, useMenu } from "../components/Overlay";
+import { Menu, useFocusTrap, useMenu } from "../components/Overlay";
 import { useBlobUrl } from "./blobUrl";
 import { copyImage } from "./contextTarget";
+import { ZoomableImage } from "./ZoomableImage";
+import { usePrefs } from "../../application/prefs";
 
 /**
  * The media viewer (2026-10-28, after the reference the owner sent): photos and videos of a message, full screen. Who
@@ -47,15 +49,27 @@ export function MediaViewer({ items, at, onMove, onClose }: { items: AttachmentR
   const info = useContext(ViewerInfoContext);
   const engine = useEngine();
   const menu = useMenu();
-  const { url, error } = useBlobUrl(r, true);
+  const dialog = useRef<HTMLDivElement>(null);
+  useFocusTrap(dialog, true, true);
+  useEffect(() => {
+    const before = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = before;
+    };
+  }, []);
+  const { url, error, retry } = useBlobUrl(r, true);
   const video = isVideo(r);
   const prev = at > 0 ? () => onMove(at - 1) : null;
   const next = at < items.length - 1 ? () => onMove(at + 1) : null;
   const count = items.length;
   useEffect(() => {
     const k = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-      else if (e.key === "ArrowLeft" && at > 0) onMove(at - 1);
+      if (e.defaultPrevented || (e.target as HTMLElement)?.closest("input,textarea,select,[role=menu]")) return;
+      if (e.key === "Escape") {
+        e.preventDefault();
+        onClose();
+      } else if (e.key === "ArrowLeft" && at > 0) onMove(at - 1);
       else if (e.key === "ArrowRight" && at < count - 1) onMove(at + 1);
     };
     document.addEventListener("keydown", k);
@@ -79,6 +93,7 @@ export function MediaViewer({ items, at, onMove, onClose }: { items: AttachmentR
     : [];
   return createPortal(
     <div
+      ref={dialog}
       className="lightbox media-viewer"
       role="dialog"
       aria-modal="true"
@@ -123,38 +138,47 @@ export function MediaViewer({ items, at, onMove, onClose }: { items: AttachmentR
             <MoreHorizontal size={18} />
           </button>
         </div>
-        <button className="icon-btn viewer-close" onClick={onClose} aria-label="Close" autoFocus>
+        <button className="icon-btn viewer-close" onClick={onClose} aria-label="Close" data-autofocus>
           <X size={18} />
         </button>
       </div>
-      {prev && (
-        <button className="icon-btn viewer-arrow left" onClick={prev} aria-label={`Previous (${at} of ${items.length})`}>
+      {count > 1 && (
+        <button className="icon-btn viewer-arrow left" onClick={prev ?? undefined} disabled={!prev} aria-label={`Previous (${at} of ${items.length})`}>
           <ChevronLeft size={22} />
         </button>
       )}
-      {next && (
-        <button className="icon-btn viewer-arrow right" onClick={next} aria-label={`Next (${at + 2} of ${items.length})`}>
+      {count > 1 && (
+        <button className="icon-btn viewer-arrow right" onClick={next ?? undefined} disabled={!next} aria-label={`Next (${at + 2} of ${items.length})`}>
           <ChevronRight size={22} />
         </button>
       )}
       <div className="viewer-stage">
         {error ? (
-          <p className="viewer-error">{error}</p>
+          <div className="viewer-error" role="alert">
+            <p>{error}</p>
+            <button className="btn btn-secondary" onClick={retry}>
+              Try again
+            </button>
+          </div>
         ) : !url ? (
           <span className="spinner" aria-label={`Decrypting ${r.name}`} />
         ) : video ? (
           <VideoPlayer key={url} url={url} name={r.name} />
         ) : (
-          <img src={url} alt={r.name} />
+          <ZoomableImage key={url} url={url} name={r.name} retry={retry} />
         )}
       </div>
       <div className="viewer-foot">
+        <span className="viewer-position" aria-live="polite">
+          {at + 1} / {count} <span aria-hidden="true">·</span> {r.name}
+        </span>
         {info && <ViewerCaption info={info} />}
         {items.length > 1 && (
           <div className="viewer-strip" role="group" aria-label={`${items.length} photos and videos`}>
-            {items.map((it, i) => (
-              <StripThumb key={it.id} r={it} current={i === at} onPick={() => onMove(i)} />
-            ))}
+            {items.slice(Math.max(0, at - 3), Math.min(count, at + 4)).map((it, offset) => {
+              const i = Math.max(0, at - 3) + offset;
+              return <StripThumb key={it.id} r={it} current={i === at} onPick={() => onMove(i)} />;
+            })}
           </div>
         )}
       </div>
@@ -166,7 +190,8 @@ export function MediaViewer({ items, at, onMove, onClose }: { items: AttachmentR
 
 function StripThumb({ r, current, onPick }: { r: AttachmentRef; current: boolean; onPick: () => void }) {
   const image = isInlineImage(r);
-  const { url } = useBlobUrl(r, image);
+  const { autoLoadPhotos } = usePrefs();
+  const { url } = useBlobUrl(r, image && (current || autoLoadPhotos));
   return (
     <button className="viewer-thumb" aria-current={current} onClick={onPick} aria-label={`${image ? "Photo" : "Video"}: ${r.name}`}>
       {image && url ? <img src={url} alt="" /> : <Film size={18} aria-hidden="true" />}

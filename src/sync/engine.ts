@@ -1410,8 +1410,8 @@ export class Engine implements EngineContext {
     return this.onLive(m, (x) => this.compose.deleteForEveryone(x, asModerator));
   }
 
-  vote(m: StoredMessage, choices: string[]): Promise<void> {
-    return this.onLive(m, (x) => this.compose.vote(x, choices));
+  vote(m: StoredMessage, choices: string[], anonymous?: boolean): Promise<void> {
+    return this.onLive(m, (x) => this.compose.vote(x, choices, anonymous));
   }
 
   closePoll(m: StoredMessage): Promise<void> {

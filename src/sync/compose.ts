@@ -6,7 +6,7 @@ import type { LocalStore } from "../store/db";
 import type { Member } from "../api/schemas";
 import { resolveMentions } from "./mentions";
 import { applyPin, applyReaction } from "./rules";
-import { applyClose, applyVote } from "./polls";
+import { applyClose, applyVote, pollClosed } from "./polls";
 import { reactionAllowed } from "./expressions";
 import { contactWire } from "./rich";
 import { type PostingState, postingState } from "./rulesChannel";
@@ -172,21 +172,23 @@ export class Compose {
   }
 
   /** This person's vote on a poll (empty takes it back): shown at once, then sent as an encrypted "vote" control. */
-  async vote(m: StoredMessage, choices: string[]): Promise<void> {
+  async vote(m: StoredMessage, choices: string[], anonymous?: boolean): Promise<void> {
     if (!this.canReact(m.conversationId)) return;
     const fresh = (await this.host.store.message(m.id)) ?? m;
-    if (!fresh.rich?.poll || fresh.rich.pollClosed) return;
-    const rich = applyVote(fresh.rich, this.host.device.userId, choices);
+    if (!fresh.rich?.poll || pollClosed(fresh.rich, Date.now())) return;
+    const rich = applyVote(fresh.rich, this.host.device.userId, choices, Date.now(), anonymous);
     const next = { ...fresh, rich };
     await this.host.store.putMessage(next);
     this.host.show(next);
-    await this.enqueueControl(m.conversationId, { type: "vote", target: m.id, choices: rich.votes?.[this.host.device.userId] ?? [] });
+    await this.enqueueControl(m.conversationId, { type: "vote", target: m.id, choices: rich.votes?.[this.host.device.userId] ?? [], anonymous: rich.votePrivacy?.[this.host.device.userId] === true });
   }
 
   /** Closes this person's own poll: no more votes from anyone. */
   async closePoll(m: StoredMessage): Promise<void> {
     if (!m.outgoing || !m.rich?.poll || !this.canPost(m.conversationId)) return;
-    const next = { ...m, rich: applyClose(m.rich, m.senderUserId, this.host.device.userId) };
+    const fresh = (await this.host.store.message(m.id)) ?? m;
+    if (!fresh.rich?.poll) return;
+    const next = { ...fresh, rich: applyClose(fresh.rich, fresh.senderUserId, this.host.device.userId) };
     await this.host.store.putMessage(next);
     this.host.show(next);
     await this.enqueueControl(m.conversationId, { type: "poll_close", target: m.id });
