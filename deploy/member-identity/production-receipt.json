@@ -1,0 +1,21 @@
+{
+  "status": "deployed-and-verified",
+  "sourceCommit": "f37240b63a3e0376d6da4600412ecfeaa0de34c4",
+  "buildId": "UpPvbbALV8iUCquO-NtNA",
+  "archiveSha256": "9d7418fbbf377118478fc73910cb608af7939f18b8b5ecadfc5cb8c02847e397",
+  "previousWeb": "/opt/meldiq-web/releases/0.5.0-beta-discovery-checkout-cdc8ac76",
+  "newWeb": "/opt/meldiq-web/releases/0.5.0-beta-member-identity-f37240b6",
+  "deployedAt": "2026-11-02T10:05:36.526299+00:00",
+  "runtimeConfigPreserved": true,
+  "previousStaticAssetsRetained": true,
+  "apiContainerUnchanged": true,
+  "nginxUnchanged": true,
+  "sourceMapsPublished": false,
+  "validation": {
+    "typecheck": "passed",
+    "unitPassed": 874,
+    "unitSkipped": 1,
+    "browserPassed": 2,
+    "productionBuild": "passed-webpack"
+  }
+}

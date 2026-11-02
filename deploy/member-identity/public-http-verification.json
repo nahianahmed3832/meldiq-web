@@ -1,0 +1,19 @@
+{
+  "ok": true,
+  "buildId": "UpPvbbALV8iUCquO-NtNA",
+  "assets": {
+    "index.html": {
+      "sha256Matches": true
+    },
+    "sw.js": {
+      "sha256Matches": true
+    },
+    "_next/static/css/7407205476ba697d.css": {
+      "sha256Matches": true
+    }
+  },
+  "apiInfo": {
+    "version": "0.76.0",
+    "responding": true
+  }
+}
