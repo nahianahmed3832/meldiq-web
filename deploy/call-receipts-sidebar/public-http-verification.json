@@ -1,0 +1,16 @@
+{
+  "ok": true,
+  "buildId": "xVmZPqYTpRM-vmVd8YpNp",
+  "at": "2026-11-02T14:44:00.640324+00:00",
+  "assets": {
+    "index.html": {
+      "sha256Matches": true
+    },
+    "sw.js": {
+      "sha256Matches": true
+    },
+    "_next/static/css/fbd6c54ff4452c53.css": {
+      "sha256Matches": true
+    }
+  }
+}

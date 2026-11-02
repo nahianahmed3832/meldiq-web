@@ -1,13 +1,14 @@
 {
-  "status": "verified-awaiting-release-lock",
+  "status": "deployed-and-verified",
+  "deployedAt": "2026-11-02T14:43:31.483728+00:00",
   "buildId": "xVmZPqYTpRM-vmVd8YpNp",
-  "webSource": "35001a44999aa6a8d52b71d735443cbfd2f35403",
-  "apiSource": "0f77a9d8",
-  "webTestsPassed": 903,
-  "webTestsSkipped": 2,
-  "serverTestsPassed": 18,
-  "browserWorkflowsPassed": 6,
-  "lockOwner": "plus-release-20261102",
-  "previousAttempt": "Rolled back after an environment-array-order comparison; semantic configuration values were verified equal.",
-  "productionPredecessorRecheckedBeforePublication": true
+  "newWeb": "/opt/meldiq-web/releases/0.5.0-beta-call-fixes-35001a4",
+  "newApiImage": "griip-internal-messaging-api:0.76.1-read-receipts-0f77a9d8",
+  "publicBrowserChecksPassed": 8,
+  "publicAssetHashesMatch": true,
+  "apiModulesMatchCheckedBuild": true,
+  "webUnitTestsPassed": 903,
+  "apiTestsPassed": 18,
+  "localBrowserWorkflowsPassed": 6,
+  "billingReleaseCoordination": "Published during an approved shared-lock handover; the billing chat was notified of the verified predecessor."
 }
