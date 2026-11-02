@@ -137,6 +137,29 @@ test("poll percentages, named and hidden ballots survive reload, change, remove 
   await expect(poll).toContainText("Voting closed");
   await runtime.navigate(() => page.reload());
   await expect(poll).toContainText("Voting closed");
+  await owner.req("POST", "/v2/messages", {
+    conversationId: channel.id,
+    messageId: crypto.randomUUID(),
+    cls: "message",
+    sentAt: Date.now(),
+    payload: {
+      type: "text",
+      text: "Timed poll",
+      poll: {
+        question: "Quick decision",
+        options: [
+          { id: "a", text: "Yes" },
+          { id: "b", text: "No" },
+        ],
+        multi: false,
+        endsAt: Date.now() + 2500,
+      },
+    },
+  });
+  const timed = page.getByRole("group", { name: "Poll: Quick decision", exact: true });
+  await expect(timed).toBeVisible();
+  await expect(timed.getByRole("radio").first()).toBeDisabled();
+  await expect(timed).toContainText("Voting closed");
   expect(runtime.unexpected()).toEqual([]);
 });
 
@@ -239,5 +262,16 @@ test("long originals fit completely, zoom and pan, and navigate across separate 
   await page.keyboard.press("Escape");
   await expect(viewer).toHaveCount(0);
   await expect(opener).toBeFocused();
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await runtime.navigate(() => page.goto(`/dms/c/${dm}/details`));
+  const details = page.getByRole("complementary", { name: "Details", exact: true });
+  await details.getByRole("tab", { name: /^Media/ }).click();
+  await expect(details.locator(".gallery-cell")).toHaveCount(2);
+  await details.getByRole("button", { name: "Open image long-original.png", exact: true }).click();
+  await expect(viewer.locator(".viewer-position")).toContainText("2 / 2");
+  await viewer.getByRole("button", { name: "Previous image", exact: true }).click();
+  await expect(viewer.locator(".viewer-position")).toContainText("1 / 2");
+  await page.keyboard.press("Escape");
+  await expect(viewer).toHaveCount(0);
   expect(runtime.unexpected()).toEqual([]);
 });

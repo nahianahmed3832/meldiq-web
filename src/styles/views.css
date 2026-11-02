@@ -2829,7 +2829,7 @@ body:has(> .lightbox) > .menu {
   display: grid;
   place-items: center;
 }
-.media-viewer .viewer-original {
+.lightbox.media-viewer .viewer-original {
   display: block;
   max-width: none;
   max-height: none;

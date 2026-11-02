@@ -240,10 +240,10 @@
     height: var(--app-height, 100dvh);
     padding: calc(env(safe-area-inset-top, 0px) + 60px) calc(env(safe-area-inset-right, 0px) + 8px) calc(var(--mobile-bottom) + 16px) calc(env(safe-area-inset-left, 0px) + 8px);
   }
-  .lightbox img {
+  .lightbox > img {
     max-height: calc(var(--app-height, 100dvh) - 100px - env(safe-area-inset-top, 0px) - var(--mobile-bottom));
   }
-  .lightbox:has(.lightbox-caption) img {
+  .lightbox:has(.lightbox-caption) > img {
     max-height: calc(var(--app-height, 100dvh) - 220px - env(safe-area-inset-top, 0px) - var(--mobile-bottom));
   }
   .lightbox .bar {

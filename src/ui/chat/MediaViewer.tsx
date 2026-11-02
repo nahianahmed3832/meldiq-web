@@ -143,12 +143,12 @@ export function MediaViewer({ items, at, onMove, onClose }: { items: AttachmentR
         </button>
       </div>
       {count > 1 && (
-        <button className="icon-btn viewer-arrow left" onClick={prev ?? undefined} disabled={!prev} aria-label={`Previous (${at} of ${items.length})`}>
+        <button className="icon-btn viewer-arrow left" onClick={prev ?? undefined} disabled={!prev} aria-label="Previous image">
           <ChevronLeft size={22} />
         </button>
       )}
       {count > 1 && (
-        <button className="icon-btn viewer-arrow right" onClick={next ?? undefined} disabled={!next} aria-label={`Next (${at + 2} of ${items.length})`}>
+        <button className="icon-btn viewer-arrow right" onClick={next ?? undefined} disabled={!next} aria-label="Next image">
           <ChevronRight size={22} />
         </button>
       )}
