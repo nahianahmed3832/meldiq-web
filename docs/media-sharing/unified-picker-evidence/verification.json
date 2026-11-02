@@ -15,5 +15,9 @@
   "formatPassed": true,
   "singlePicker": true,
   "noCameraOrVideoCaptureInputs": true,
-  "signatureDetectionBeforePreview": true
+  "signatureDetectionBeforePreview": true,
+  "productionDeployed": true,
+  "sourceCommit": "e456c93faa1e28c366d4e8ac36eeb8a1a31b9701",
+  "githubCiPassed": true,
+  "publicHashesVerified": 5
 }

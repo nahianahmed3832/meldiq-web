@@ -1,0 +1,28 @@
+{
+  "status": "verified",
+  "sourceCommit": "e456c93faa1e28c366d4e8ac36eeb8a1a31b9701",
+  "checkedAt": "2026-11-02T16:08:19.177531+00:00",
+  "checks": [
+    {
+      "path": "index.html",
+      "sha256Matches": true
+    },
+    {
+      "path": "sw.js",
+      "sha256Matches": true
+    },
+    {
+      "path": "_next/static/chunks/pages/_app-f3a79d88260120ee.js",
+      "sha256Matches": true
+    },
+    {
+      "path": "_next/static/css/0525c506d7ff2a74.css",
+      "sha256Matches": true
+    },
+    {
+      "path": "_next/static/chunks/460.6d70bcef40ecdbf6.js",
+      "sha256Matches": true,
+      "containsUnifiedPickerImplementation": true
+    }
+  ]
+}
