@@ -27,7 +27,7 @@ import { CallFailure } from "../../call/rules";
 import { shareShortfall } from "../../call/shareQuality";
 import { ScreenView, ShareDialog, SharePill, StreamTray } from "./ShareViews";
 import type { CallParticipantView, CallUiState, DeviceKind, MediaDeviceChoice } from "../../call/types";
-import { Avatar } from "../components/Avatar";
+import { CallAvatar, CallTargetAvatar } from "./CallAvatar";
 import { Menu, useMenu } from "../components/Overlay";
 import { screenShareSupport, INVITE_EVENT } from "./callShared";
 import { useNow } from "./useNow";
@@ -168,7 +168,7 @@ function CallNotes({ call }: { call: CallUiState }) {
 }
 
 function Tiles({ call, ended }: { call: CallUiState; ended: boolean }) {
-  const { participants, hands, title, colorIndex } = call;
+  const { participants, hands, title } = call;
   // The watched share takes the stage, everyone in a strip under it (android GROUP_CALL_TILES.md); the other shares wait
   // in the tray beside the call's pills (StreamTray). Your own share isn't shown back to you (it would show itself), only listed.
   const watched = call.shares.find((s) => s.key === call.watching && !s.isLocal);
@@ -189,7 +189,7 @@ function Tiles({ call, ended }: { call: CallUiState; ended: boolean }) {
     return (
       <div className="call-tiles">
         <div className="call-tile">
-          <Avatar name={title} colorIndex={colorIndex} size={96} decorative />
+          <CallTargetAvatar call={call} />
           {!ended && <span className="who">{title}</span>}
         </div>
       </div>
@@ -207,7 +207,6 @@ function Tile({ p, hand, compact = false }: { p: CallParticipantView; hand: bool
   const engine = useEngine();
   const video = useRef<HTMLVideoElement>(null);
   const epoch = useOrbit((s) => s.call.mediaEpoch);
-  const color = useOrbit((s) => s.users[p.userId]?.avatarColor ?? 0);
   // Attached again whenever the camera turns on or the media connection is replaced (a rejoin).
   useEffect(() => {
     const el = video.current;
@@ -221,7 +220,7 @@ function Tile({ p, hand, compact = false }: { p: CallParticipantView; hand: bool
       {p.cameraOn ? (
         <video ref={video} className={p.mirrored ? "mirrored" : undefined} autoPlay playsInline muted aria-hidden="true" />
       ) : (
-        <Avatar name={p.name} colorIndex={color} size={compact ? 40 : 88} decorative />
+        <CallAvatar userId={p.userId} name={p.name} size={compact ? 40 : 88} />
       )}
       <figcaption className={`who${p.e2eeProblem ? " problem" : ""}`}>
         {hand && <Hand size={13} aria-hidden="true" className="hand" />}

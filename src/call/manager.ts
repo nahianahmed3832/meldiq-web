@@ -294,7 +294,8 @@ export class CallManager {
       changed: () => live() && this.refresh(),
       security: (security) => live() && this.patch({ security }),
       flow: (media, path) => live() && this.patch({ media, path: path ?? this.state.path }),
-      reconnecting: () => live() && this.patch({ phase: "reconnecting" }),
+      latency: (latencyMs) => live() && this.patch({ latencyMs }),
+      reconnecting: () => live() && this.patch({ phase: "reconnecting", latencyMs: null }),
       reconnected: () => live() && this.patch({ phase: this.settledPhase() }),
       disconnected: (reason) => live() && this.onDisconnected(gen, reason),
       remoteJoined: () => live() && this.onRemoteJoined(),
@@ -726,7 +727,7 @@ export class CallManager {
     if (s.callId) this.keys.drop(s.callId);
     this.teardown();
     const gen = ++this.gen;
-    this.set({ ...s, phase: "ended", endReason: reason, participants: [], askingPermission: false, waitingForKey: false, peerReconnecting: false });
+    this.set({ ...s, phase: "ended", endReason: reason, participants: [], latencyMs: null, askingPermission: false, waitingForKey: false, peerReconnecting: false });
     this.scheduleReset(gen, ENDED_SHOWN_MS);
   }
 
@@ -741,7 +742,7 @@ export class CallManager {
     this.markHandled(s.callId);
     this.teardown();
     const next = ++this.gen;
-    this.set({ ...s, phase: "ended", error: message, endReason: "error", participants: [], askingPermission: false, waitingForKey: false });
+    this.set({ ...s, phase: "ended", error: message, endReason: "error", participants: [], latencyMs: null, askingPermission: false, waitingForKey: false });
     this.scheduleReset(next, ERROR_SHOWN_MS);
   }
 

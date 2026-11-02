@@ -8,7 +8,7 @@ import { SparkDialog } from "./SparkDialog";
  * its level, its active Sparks, how many more the next level needs (2, 5 and 8 in total, from the server's catalog),
  * and a bar towards it. Opens the community's Sparks, where anyone can give one.
  */
-export function SparkGoal({ orgId, name }: { orgId: string; name: string }) {
+export function SparkGoal({ orgId, name, compact = false }: { orgId: string; name: string; compact?: boolean }) {
   const engine = useEngine();
   const enabled = useOrbit((s) => s.server?.features.includes("mojo") ?? false);
   const here = useOrbit((s) => s.mojo.orgs[orgId] ?? null);
@@ -26,17 +26,22 @@ export function SparkGoal({ orgId, name }: { orgId: string; name: string }) {
   const label = here.next ? `Spark goal: ${here.active}/${goal} Sparks for Level ${here.next.level}` : `Spark Level ${here.level}: the highest`;
   return (
     <>
-      <button className={`spark-goal${here.level > 0 ? " leveled" : ""}`} onClick={() => setOpen(true)} aria-label={`${label}. Open Sparks for ${name}`}>
+      <button
+        title={`${label}${here.next ? ` · ${here.next.needs} more for Level ${here.next.level}` : ""}`}
+        className={`spark-goal${compact ? " compact" : ""}${here.level > 0 ? " leveled" : ""}`}
+        onClick={() => setOpen(true)}
+        aria-label={`${label}. Open Sparks for ${name}`}
+      >
         <span className="spark-goal-head">
           <Gem size={15} aria-hidden="true" />
-          <strong className="grow">{here.level > 0 ? `Level ${here.level}` : "Spark goal"}</strong>
-          <span className="spark-goal-count">{here.next ? `${here.active}/${goal}` : `${here.active} Sparks`}</span>
-          <ChevronRight size={15} aria-hidden="true" />
+          <strong className="grow">{compact ? here.active : here.level > 0 ? `Level ${here.level}` : "Spark goal"}</strong>
+          <span className={compact ? "sr-only" : "spark-goal-count"}>{here.next ? `${here.active}/${goal}` : `${here.active} Sparks`}</span>
+          {!compact && <ChevronRight size={15} aria-hidden="true" />}
         </span>
         <span className="spark-goal-bar" aria-hidden="true">
           <span style={{ width: `${Math.min(100, fill)}%` }} />
         </span>
-        <small>{here.next ? `${here.next.needs} more for Level ${here.next.level}` : "Every level unlocked for everyone here"}</small>
+        <small className={compact ? "sr-only" : undefined}>{here.next ? `${here.next.needs} more for Level ${here.next.level}` : "Every level unlocked for everyone here"}</small>
       </button>
       {open && <SparkDialog orgId={orgId} name={name} onClose={() => setOpen(false)} />}
     </>

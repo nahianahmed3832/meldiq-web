@@ -1,6 +1,7 @@
-import { Maximize2, MonitorOff, MonitorUp, PhoneOff, Signal, UserPlus, Video, VideoOff } from "lucide-react";
+import { Maximize2, MonitorOff, MonitorUp, PhoneOff, UserPlus, Video, VideoOff } from "lucide-react";
 import { useState } from "react";
 import { useEngine, useOrbit } from "../../application/orbit";
+import { CallConnection } from "./CallConnection";
 import { ShareDialog } from "./ShareViews";
 import { screenShareSupport, INVITE_EVENT } from "./callShared";
 import { useNow } from "./useNow";
@@ -31,8 +32,8 @@ export function ConnectedCallPanel() {
   return (
     <section className="call-panel" aria-label="Your call">
       <div className="call-panel-top">
+        <CallConnection call={call} />
         <button className="call-panel-where" onClick={() => engine.calls.setMinimized(false)} aria-label={`Show the call: ${call.title}`}>
-          <Signal size={16} aria-hidden="true" className={connecting ? "connecting" : undefined} />
           <span className="lines">
             <strong>{connecting ? "Connecting…" : video ? "Video Connected" : "Voice Connected"}</strong>
             <small className="ellipsis">

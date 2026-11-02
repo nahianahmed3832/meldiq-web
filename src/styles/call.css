@@ -838,3 +838,57 @@ button.call-pill:hover {
     width: 58px;
   }
 }
+
+.call-connection {
+  position: relative;
+  display: inline-flex;
+  flex-shrink: 0;
+  color: var(--success);
+}
+.call-connection.weak {
+  color: var(--warning, #e7b75c);
+}
+.call-connection .call-signal {
+  width: 30px;
+  height: 36px;
+  padding: 0;
+  color: inherit;
+  background: transparent;
+}
+.call-connection-detail {
+  display: none;
+  position: absolute;
+  left: 0;
+  bottom: calc(100% + 10px);
+  width: 228px;
+  padding: 14px;
+  gap: 6px;
+  border: 1px solid var(--border-strong);
+  border-radius: 12px;
+  color: var(--text);
+  background: var(--surface-raised);
+  box-shadow: 0 8px 30px #0005;
+  z-index: 100;
+  pointer-events: none;
+}
+.call-connection:hover .call-connection-detail,
+.call-connection:focus-within .call-connection-detail,
+.call-connection.pinned .call-connection-detail {
+  display: grid;
+}
+.call-connection-detail strong {
+  font-size: 12px;
+}
+.call-connection-detail small {
+  font-size: 11px;
+  color: var(--text-3);
+}
+.call-ping {
+  font-size: 23px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--accent-text);
+}
+.call-panel-top .call-panel-where {
+  min-width: 0;
+}
