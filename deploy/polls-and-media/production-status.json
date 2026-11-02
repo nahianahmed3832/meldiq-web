@@ -1,0 +1,8 @@
+{
+  "status": "not-deployed",
+  "reason": "SSH connection to the known production endpoint times out during banner exchange, before authentication.",
+  "checkedAt": "2026-11-02T12:40:54.458692+00:00",
+  "releaseBuildId": "f-otm9QqHC_AazXAtKGtI",
+  "archiveSha256": "d88f73efeba8b87a70630f9df91db7e330b69effb4509d121a20b24dc69a920b",
+  "productionMutated": false
+}
