@@ -66,7 +66,7 @@ export function MemberListPanel({ c, onClose }: { c: Conversation; onClose: () =
           presence: u?.presence ?? m.presence,
           online: u?.online ?? m.online,
           photoRev: u?.photoRev ?? m.photoRev,
-          bot: m.bot || u?.bot === true,
+          bot: m.bot ?? (u?.bot === true ? (true as const) : undefined),
         };
       }),
     [members, users, nicknames],
