@@ -1,0 +1,27 @@
+{
+  "status": "deployed-and-verified",
+  "deployedAt": "2026-11-02T14:16:57.437231+00:00",
+  "apiSourceCommit": "b34d3ee82eeb82cdcce8d2e5af0ad06ead17398d",
+  "webSourceCommit": "28304ceef22b8515a9b5b0feac45cd590e3da09e",
+  "apiImageId": "sha256:49834b39ef68c90fcf308d865d8608655bde9789cbcd7effd2cce92e1ae98141",
+  "apiVersion": "0.76.1",
+  "schema": 8,
+  "atlasDomains": 16,
+  "fileMaxBytes": 1000000000,
+  "webRelease": "/opt/meldiq-web/releases/0.5.0-beta-media-production-20261102",
+  "webArchiveSha256": "2e10adb11584e5e12e845b0d0225631d4e0f620b05a944a05ba51706b05a86ba",
+  "backupManifest": "/var/backups/meldiq/20261102T132938Z/manifest.json",
+  "existingAccountsPreserved": 27,
+  "environmentPortsMountsPreserved": true,
+  "nginxPreserved": true,
+  "publicConfigPreserved": true,
+  "restartCount": 0,
+  "health": {
+    "ok": true,
+    "version": "0.76.1",
+    "time": 1793629017273,
+    "livekit": true,
+    "mongodb": true,
+    "redis": true
+  }
+}
