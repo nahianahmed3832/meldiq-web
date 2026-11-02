@@ -1,7 +1,7 @@
 import { GripVertical, Maximize2, Phone, PhoneOff, Video } from "lucide-react";
 import { type KeyboardEvent, type PointerEvent, useCallback, useEffect, useRef, useState } from "react";
 import { useEngine, useOrbit } from "../../application/orbit";
-import { Avatar } from "../components/Avatar";
+import { CallTargetAvatar } from "./CallAvatar";
 import { CallStage } from "./CallStage";
 import { callStatus } from "./callText";
 import { clampToViewport, loadPosition, nudge, type Point, savePosition } from "./miniPosition";
@@ -38,7 +38,7 @@ function IncomingCall() {
   return (
     <section className="call-incoming" role="alertdialog" aria-label={label} aria-describedby="call-incoming-status">
       <div className="who">
-        <Avatar name={call.title} colorIndex={call.colorIndex} size={48} decorative />
+        <CallTargetAvatar call={call} size={48} />
         <div className="grow">
           <h2 className="ellipsis">{call.title}</h2>
           <p id="call-incoming-status">{callStatus(call, Date.now())}</p>

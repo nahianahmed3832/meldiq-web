@@ -82,19 +82,21 @@ export function Sidebar({ orgId, section, open, onDialog }: SidebarProps) {
 
   return (
     <aside
-      className={`sidebar${open ? " open" : ""}${branded && org?.accent ? ` ${ACCENT_CLASS}` : ""}`}
+      className={`sidebar${communities && !messages && !discover ? " community-sidebar" : ""}${open ? " open" : ""}${branded && org?.accent ? ` ${ACCENT_CLASS}` : ""}`}
       style={branded ? { ...accentStyle(org?.accent), ...tintStyle(org?.background) } : undefined}
       aria-label="Conversations"
     >
-      {/* With a banner, the community's name sits on it (2026-10-28, after the owner's reference). */}
-      <div className={`side-head${branded && !messages && bannerUrl ? " on-banner" : ""}`} style={branded && !messages && bannerUrl ? { backgroundImage: `url(${bannerUrl})` } : undefined}>
+      <div className="side-head">
         {discover ? (
           <h2 className="side-title grow">{t("discover_title")}</h2>
         ) : messages ? (
           // Direct messages aren't part of a community: their own heading, not the community's.
           <h2 className="side-title grow">{t("side_direct_messages")}</h2>
         ) : communities ? (
-          <CommunityHeader orgId={orgId} perms={perms} onDialog={onDialog} />
+          <>
+            <CommunityHeader orgId={orgId} perms={perms} onDialog={onDialog} />
+            {org && <SparkGoal orgId={org.id} name={org.name} compact />}
+          </>
         ) : (
           <button
             className="org-switch"
@@ -130,7 +132,7 @@ export function Sidebar({ orgId, section, open, onDialog }: SidebarProps) {
           )}
         </span>
       </div>
-      {branded && !messages && org && <SparkGoal orgId={org.id} name={org.name} />}
+      {branded && !messages && bannerUrl && <div className="community-cover" role="img" aria-label={`${org?.name ?? "Community"} banner`} style={{ backgroundImage: `url(${bannerUrl})` }} />}
       {communities && !messages && !discover && org && <LobbyRow orgId={org.id} canEdit={perms.canManageOrg} current={section === "lobby"} />}
       {branded && !messages && perms.canInvite && (
         <div className="community-top">

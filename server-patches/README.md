@@ -31,3 +31,5 @@ This adds optional expression preferences, authenticated attachment streaming, r
 ## Profile customization
 
 `0010-profile-collectibles.patch` applies candidate `70eb0272` over authentication/Atlas/Redis baseline `207c3958`; the cached-index apply check passed. Preserve migration085, apply additive086, and keep the schema5/API0.75 rollout behind the migration chat's all16/schema4 handoff. See `docs/profile-customization/DEPLOYMENT.md` and `deploy/profile-customization` for the authorized release, source provenance, tests and incomplete deployment state.
+
+`0012-call-read-receipts.patch` restores public read markers to main-history and collection pages on SQLite and MongoDB. It is published in the API repository as `0f77a9d8`; the production overlay replaces only the three messaging modules on the current media API image. No schema migration is required.

@@ -20,7 +20,7 @@ import {
   VideoQuality,
 } from "livekit-client";
 import { isAuditMessage } from "./frameAudit";
-import { audioProcessing, describePath, deviceIssueOf, MediaFlowMonitor, mirrorPreview } from "./rules";
+import { audioProcessing, describePath, roundTripMs, deviceIssueOf, MediaFlowMonitor, mirrorPreview } from "./rules";
 import { MediaSecurityTracker } from "./security";
 import { receivedVideo, type ShareQuality } from "./shareQuality";
 import { type CallShareView, shareKey } from "./shares";
@@ -453,6 +453,7 @@ export class LiveKitSession implements MediaSession {
     if (!room) return;
     let bytes: number | null = null;
     let path: string | null = null;
+    let latency: number | null = null;
     const watched = this.watched;
     for (const p of room.remoteParticipants.values()) {
       for (const pub of p.trackPublications.values()) {
@@ -461,10 +462,23 @@ export class LiveKitSession implements MediaSession {
         const stats = [...report.values()] as { id: string; type: string; bytesReceived?: number }[];
         bytes = (bytes ?? 0) + stats.filter((s) => s.type === "inbound-rtp").reduce((n, s) => n + (s.bytesReceived ?? 0), 0);
         path ??= describePath(stats);
+        const rtt = roundTripMs(stats);
+        if (rtt !== null) latency = Math.max(latency ?? 0, rtt);
         if (watched && pub.trackSid && shareKey(p.identity, pub.trackSid) === watched) this.events.watchStats?.(receivedVideo(stats));
       }
     }
+    // Sender stats can supply RTT when remote audio is muted, or receiver stats omit the ICE pair.
+    if (latency === null)
+      for (const pub of room.localParticipant.trackPublications.values()) {
+        const report = await pub.track?.getRTCStatsReport().catch(() => undefined);
+        if (!report) continue;
+        const stats = [...report.values()] as { id: string; type: string }[];
+        latency = roundTripMs(stats);
+        path ??= describePath(stats);
+        if (latency !== null) break;
+      }
     if (this.room !== room) return;
+    this.events.latency?.(latency);
     this.events.flow(this.monitor.sample(bytes), path);
     await this.share.sample(Date.now());
   }

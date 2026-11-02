@@ -23,7 +23,11 @@ for lock in locks:
     fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
 
 def command(args, **kwargs):
-    return subprocess.check_output(args, stderr=subprocess.PIPE, **kwargs)
+    try:
+        return subprocess.check_output(args, stderr=subprocess.PIPE, **kwargs)
+    except subprocess.CalledProcessError as error:
+        (run / "command-error.private.log").write_bytes(error.stderr or b"No stderr")
+        raise
 
 def digest(data):
     return hashlib.sha256(data).hexdigest()

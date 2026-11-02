@@ -751,3 +751,86 @@ img.custom-sticker {
   display: grid;
   gap: 6px;
 }
+
+/* Compact community navigation: name and Sparks share one row; a shorter cover preserves channel space. */
+.community-sidebar .side-head {
+  min-height: 48px;
+  padding: 5px 10px;
+  gap: 6px;
+  border-bottom: 1px solid var(--hairline);
+  flex-shrink: 0;
+}
+.community-sidebar .community-switch {
+  min-width: 0;
+  padding: 7px 4px;
+  gap: 6px;
+  font-size: 14px;
+}
+.community-cover {
+  height: 72px;
+  flex-shrink: 0;
+  background-size: cover;
+  background-position: center;
+  border-bottom: 1px solid var(--hairline);
+}
+.community-sidebar .spark-goal.compact {
+  position: relative;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  min-width: 45px;
+  min-height: 32px;
+  padding: 6px 9px;
+  margin: 0;
+  border-radius: 9px;
+  overflow: hidden;
+}
+.spark-goal.compact .spark-goal-head {
+  gap: 4px;
+  font-size: 12px;
+}
+.spark-goal.compact .spark-goal-head svg {
+  width: 13px;
+  height: 13px;
+}
+.spark-goal.compact .spark-goal-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  border-radius: 0;
+}
+.community-sidebar .community-top,
+.community-sidebar .community-top:not(:has(.community-banner)) {
+  padding: 3px 0 8px;
+  gap: 0;
+}
+.community-sidebar .community-invite {
+  min-height: 34px;
+  margin-inline: 9px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.community-sidebar .lobby-entry {
+  padding-block: 5px 2px;
+}
+.community-sidebar .lobby-row {
+  min-height: 34px;
+  font-size: 14px;
+}
+@media (min-width: 961px) and (pointer: fine) {
+  .community-sidebar .side-item.channel-item {
+    min-height: 32px;
+    padding-block: 5px;
+    font-size: 13px;
+  }
+}
+@media (pointer: coarse) {
+  .community-sidebar .community-switch,
+  .community-sidebar .spark-goal.compact,
+  .community-sidebar .community-invite,
+  .community-sidebar .lobby-row {
+    min-height: 44px;
+  }
+}

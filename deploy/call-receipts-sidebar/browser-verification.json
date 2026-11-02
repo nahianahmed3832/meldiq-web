@@ -1,0 +1,22 @@
+{
+  "status": "passed",
+  "buildId": "xVmZPqYTpRM-vmVd8YpNp",
+  "webCiRun": 41461469422,
+  "apiCiRun": 41461658491,
+  "workflowsPassed": 6,
+  "engines": [
+    "chromium",
+    "webkit"
+  ],
+  "viewports": [
+    "1440x900",
+    "390x844"
+  ],
+  "checks": [
+    "Named self and remote profile photos decoded during a real encrypted voice call and in incoming call UI",
+    "Media-server RTT appears on hover and keyboard focus; Escape dismisses it",
+    "Real read receipts persist through main collection reload; newer unacknowledged messages keep sent/delivered status",
+    "Compact community name/Sparks row, 72px cover, working Sparks dialog and no phone overflow"
+  ],
+  "testServices": "Disposable local services with normal email signup; no production accounts, calls or messages created by verification"
+}

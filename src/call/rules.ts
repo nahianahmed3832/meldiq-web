@@ -235,3 +235,12 @@ export function frameShape(width: number, height: number): "portrait" | "landsca
   if (!width || !height) return null;
   return height > width ? "portrait" : "landscape";
 }
+
+/** Selected ICE transport RTT, with sender RTCP RTT as a fallback. Seconds in WebRTC become milliseconds here. */
+export function roundTripMs(stats: Iterable<Stat>): number | null {
+  const all = [...stats];
+  const selected = all.find((s) => s.type === "transport" && typeof s.selectedCandidatePairId === "string")?.selectedCandidatePairId;
+  const pair = all.find((s) => s.type === "candidate-pair" && (s.id === selected || (!selected && s.state === "succeeded" && (s.nominated === true || s.selected === true))));
+  const value = pair?.currentRoundTripTime ?? all.find((s) => s.type === "remote-inbound-rtp" && typeof s.roundTripTime === "number")?.roundTripTime;
+  return typeof value === "number" && Number.isFinite(value) && value >= 0 && value <= 60 ? Math.round(value * 1000) : null;
+}

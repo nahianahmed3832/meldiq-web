@@ -143,8 +143,33 @@
     "staging S3 and lifecycle verification",
     "near-1 GB full transfer and multiuser load",
     "physical Android and iOS camera, permissions, background and share/save validation",
-    "production release and rollback rehearsal",
-    "unrelated billing contract drift"
+    "physical rollout/rollback rehearsal and monitoring/load measurements"
   ],
-  "temporaryQaAvdRemoved": true
+  "temporaryQaAvdRemoved": true,
+  "productionRelease": {
+    "status": "deployed-and-verified",
+    "apiSourceCommit": "b34d3ee82eeb82cdcce8d2e5af0ad06ead17398d",
+    "webSourceCommit": "28304ceef22b8515a9b5b0feac45cd590e3da09e",
+    "migration": "092_attachment_publication.sql",
+    "mongoSchemaVersion": 8,
+    "productionDeployed": true,
+    "apiTests": 113,
+    "atlasTests": 28,
+    "webTests": 901,
+    "webSkipped": 1,
+    "productionExportBrowserTests": 8,
+    "permissionsRestored": true,
+    "receipt": "production-evidence/production-receipt.json",
+    "publicVerification": "production-evidence/public-verification.json",
+    "githubCi": "https://github.com/nahianahmed3832/meldiq-web/actions/runs/41455802482",
+    "androidSourceCommit": "5d9621f6214ed3af5dfe539f69862b05c7bc8280",
+    "androidFocusedTests": 58,
+    "androidApkAssemblyPassed": true,
+    "androidPlayPublished": false,
+    "androidFullUnitRun": {
+      "passed": 783,
+      "total": 787,
+      "existingRealtimeContractFailures": 4
+    }
+  }
 }

@@ -65,6 +65,8 @@ export interface CallUiState {
   media: MediaFlow;
   /** Redacted network path, e.g. "udp · direct"; never addresses. */
   path: string | null;
+  /** Current media-server round-trip latency from WebRTC, in milliseconds; null until measured. */
+  latencyMs: number | null;
   /** 1:1: the other person's connection dropped; waiting for them. */
   peerReconnecting: boolean;
   devices: DeviceIssues;
@@ -127,6 +129,7 @@ export const idleCall: CallUiState = {
   alerted: false,
   media: "none",
   path: null,
+  latencyMs: null,
   peerReconnecting: false,
   devices: { microphone: null, camera: null },
   askingPermission: false,
@@ -211,6 +214,7 @@ export interface MediaEvents {
   changed(): void;
   security(s: MediaSecurity): void;
   flow(flow: MediaFlow, path: string | null): void;
+  latency?(milliseconds: number | null): void;
   reconnecting(): void;
   reconnected(): void;
   /** The media connection ended without this browser asking; [reason] is LiveKit's DisconnectReason name. */
