@@ -1,0 +1,15 @@
+{
+  "schema": 8,
+  "domains": 16,
+  "checkedCollections": 244,
+  "validatorMismatches": 0,
+  "canCollMod": false,
+  "roles": [
+    {
+      "role": "readWrite",
+      "db": "meldiq"
+    }
+  ],
+  "startupRequiresCollMod": false,
+  "checkMode": "read-only validator comparison against exact release schema"
+}

@@ -1,0 +1,15 @@
+{
+  "verifiedAt": "2026-11-02T14:27:32.494529+00:00",
+  "databaseUser": "meldiq_api",
+  "database": "meldiq",
+  "roles": [
+    {
+      "role": "readWrite",
+      "db": "meldiq"
+    }
+  ],
+  "canCollMod": false,
+  "schema": 8,
+  "atlasUiOnlyReadWriteVerified": true,
+  "clusterRestrictionPreserved": true
+}
