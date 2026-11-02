@@ -1,0 +1,1629 @@
+diff --git a/deploy/supabase-preparation/README.md b/deploy/supabase-preparation/README.md
+new file mode 100644
+index 0000000..5abd17e
+--- /dev/null
++++ b/deploy/supabase-preparation/README.md
+@@ -0,0 +1,15 @@
++# Web preparation for Supabase migration
++
++This static web release is based on the verified live `e456c93` export. Production keeps its existing API, Atlas authority, login, S3/attachment volume, LiveKit, Redis and public configuration. It does not transfer customer records or enable the Supabase backend. The known already-connected Realtime revocation gap still blocks database cutover.
++
++The new Settings account check is hidden by default. It requires a fresh opt-in staging configuration, the separate Frankfurt project, an approved local/staging hostname and a synthetic `example.test` or `example.invalid` account. A cached staging opt-in is rechecked before use. Production configuration cannot enable this preview. Its SDK bundle is loaded lazily only when the gated card renders.
++
++The check signs into an existing synthetic provider account, uses the protected browser device key and legacy reauthentication to verify exact account ownership, and ends both test sessions. It never adopts a new API bearer, connects Realtime, changes the existing token vault, erases keys or touches pending sends. Each attempt has a unique SDK storage/broadcast namespace with encrypted IndexedDB storage and bounded, redirect-refusing requests. Failure and cancellation clean up the isolated session; unsuccessful cleanup is not reported as a pass.
++
++For a separate staging web origin only, configure `environment: "staging"` and `supabaseMigration` with `mode: "staging-check"`, projectRef `bkvlxbsnzqkhbifawcww`, its matching HTTPS URL and a publishable key. Never put the secret key in browser configuration. The staging server must run the separately reviewed PostgreSQL/Auth bridge and proxy `/v3` as well as `/v1` and `/v2`; its CSP must allow the staging project. No production nginx or CSP expansion is included here.
++
++Local browser validation uses the production export and an isolated local legacy API, with the provider and bridge network responses mocked. It verifies normal email onboarding, a real device signature, original-session continuity, provider cleanup, and hiding the preview after returning to production configuration in Chromium and WebKit at phone width. This does not certify the real hosted UI or physical Android behavior. See validation.json for executed checks and the corrected mock failure.
++
++Publish only this clean candidate's verified static artifact under the shared production release and web locks. Compare the exact expected live release/configuration/API image before switching. Retain old static chunks for active sessions, preserve config.json byte-for-byte, and switch the symlink atomically with rollback on verification failure. No database, API container, S3 object or nginx change is part of this release.
++
++After web verification, prepare the Android compatibility update separately. Real customer migration/final sync and database cutover remain a later approval and acceptance milestone.
+diff --git a/deploy/supabase-preparation/validation.json b/deploy/supabase-preparation/validation.json
+new file mode 100644
+index 0000000..e38ca24
+--- /dev/null
++++ b/deploy/supabase-preparation/validation.json
+@@ -0,0 +1,27 @@
++{
++  "observedAt": "2026-11-02T16:17:14.289066+00:00",
++  "baseline": "e456c93",
++  "unitTestsPassed": 943,
++  "unitTestsSkipped": 1,
++  "unitTestsFailed": 0,
++  "productionBuildPassed": true,
++  "typecheckPassed": true,
++  "lintPassed": true,
++  "formatPassed": true,
++  "browserChecks": {
++    "startTime": "2026-11-02T16:15:41.331Z",
++    "duration": 23288.066000000003,
++    "expected": 4,
++    "skipped": 0,
++    "unexpected": 0,
++    "flaky": 0
++  },
++  "browserEngines": ["chromium", "webkit"],
++  "browserViewportWidth": 390,
++  "browserScope": "Production artifact; real isolated local legacy API/email/device flow, mocked Supabase Auth/bridge transport, real protected-device signature verification; not real hosted Supabase UI acceptance",
++  "sourceMapsPublished": false,
++  "productionDatabaseChanges": false,
++  "supabaseActivation": false,
++  "failedAttemptRetained": "Initial browser mock asserted an exact password body; the actual SDK also sends gotrue_meta_security. The mock now verifies required fields. Both engines pass.",
++  "revalidation": "Candidate rebased after the concurrent unified-file-picker rollout; final checks are recorded in the deployment receipt."
++}
+diff --git a/e2e/supabase-preparation.spec.ts b/e2e/supabase-preparation.spec.ts
+new file mode 100644
+index 0000000..3ae9c14
+--- /dev/null
++++ b/e2e/supabase-preparation.spec.ts
+@@ -0,0 +1,148 @@
++import crypto from "node:crypto";
++import { expect, test } from "@playwright/test";
++import { emailedCode } from "./mail";
++import { expectSignedOut } from "./link";
++import { testAddress } from "./phone";
++
++const project = "bkvlxbsnzqkhbifawcww",
++  authUserId = "10000000-0000-4000-8000-000000000001",
++  sessionId = "20000000-0000-4000-8000-000000000001";
++const token = `eyJhbGciOiJFUzI1NiJ9.${Buffer.from(JSON.stringify({ sub: authUserId, session_id: sessionId, exp: Math.floor(Date.now() / 1000) + 3600 })).toString("base64url")}.signature`;
++test.use({ viewport: { width: 390, height: 844 } });
++
++test("staging test sign-in preserves the browser and legacy session, and production rollback hides the preview", async ({ page, context }) => {
++  await context.setExtraHTTPHeaders({ "x-orbit-test-ip": testAddress() });
++  let staging = true,
++    providerCalls = 0,
++    logoutCalls = 0,
++    linked = false;
++  let accountId = "",
++    userId = "",
++    deviceId = "",
++    signingKey = "",
++    legacyBearer = "";
++  const email = `migration.${crypto.randomBytes(5).toString("hex")}@example.test`,
++    password = "long synthetic test password";
++  await context.route("**/config.json", (route) =>
++    route.fulfill({
++      json: {
++        environment: staging ? "staging" : "production",
++        apiBase: "",
++        ...(staging
++          ? {
++              supabaseMigration: {
++                mode: "staging-check",
++                projectRef: project,
++                url: `https://${project}.supabase.co`,
++                publishableKey: "sb_publishable_synthetic_test_key",
++              },
++            }
++          : {}),
++      },
++    }),
++  );
++  await context.route(`https://${project}.supabase.co/auth/v1/**`, async (route) => {
++    providerCalls++;
++    const url = new URL(route.request().url());
++    if (url.pathname.endsWith("/token")) {
++      expect(route.request().postDataJSON()).toMatchObject({ email, password });
++      return route.fulfill({
++        json: {
++          access_token: token,
++          refresh_token: "synthetic_browser_refresh_token",
++          expires_in: 3600,
++          token_type: "bearer",
++          user: { id: authUserId, aud: "authenticated", app_metadata: {}, user_metadata: {}, created_at: new Date().toISOString() },
++        },
++      });
++    }
++    expect(url.pathname.endsWith("/logout")).toBe(true);
++    expect(url.searchParams.get("scope")).toBe("local");
++    logoutCalls++;
++    return route.fulfill({ status: 204, body: "" });
++  });
++  page.on("request", (request) => {
++    if (request.url().includes("/v2/account/identities")) legacyBearer = request.headers().authorization ?? "";
++  });
++  await context.route("**/v3/auth/**", async (route) => {
++    const request = route.request(),
++      url = new URL(request.url());
++    expect(request.headers().authorization).toBe(`Bearer ${token}`);
++    if (url.pathname.endsWith("/legacy-link")) {
++      const body = request.postDataJSON();
++      expect(body.deviceId).toBe(deviceId);
++      expect(`Bearer ${body.legacyAccessToken}`).toBe(legacyBearer);
++      const key = crypto.createPublicKey({ key: Buffer.concat([Buffer.from("302a300506032b6570032100", "hex"), Buffer.from(signingKey, "base64")]), format: "der", type: "spki" });
++      expect(crypto.verify(null, Buffer.from(`meldiq-supabase-device-v1\n${authUserId}\n${sessionId}\n${deviceId}\n${body.nonce}`), key, Buffer.from(body.signature, "base64"))).toBe(true);
++      linked = true;
++      return route.fulfill({ json: { ok: true } });
++    }
++    if (url.pathname.endsWith("/me")) {
++      expect(linked).toBe(true);
++      return route.fulfill({ json: { authUserId, accountId, userId } });
++    }
++    expect(request.method()).toBe("DELETE");
++    return route.fulfill({ json: { ok: true } });
++  });
++  await page.goto("/");
++  await expectSignedOut(page);
++  await page.getByRole("button", { name: "Create an account" }).click();
++  await page.getByLabel("Your name").fill("Synthetic migration check");
++  await page.getByLabel("Email", { exact: true }).fill(email);
++  await page.getByLabel("Password", { exact: true }).fill(password);
++  await page.getByRole("button", { name: "Create account", exact: true }).click();
++  await expect(page.getByRole("heading", { name: "Check your email" })).toBeVisible();
++  await page.getByLabel("Code", { exact: true }).fill(await emailedCode(email, "verify"));
++  await page.getByRole("button", { name: "Confirm", exact: true }).click();
++  await page.getByRole("button", { name: "Set up encryption", exact: true }).click();
++  await expect(page.getByRole("heading", { name: "Save your recovery key" })).toBeVisible();
++  await page.getByLabel("I've stored my recovery key somewhere safe.").check();
++  await page.getByRole("button", { name: "Open Meldiq", exact: true }).click();
++  await expect(page.locator(".app[data-connection=online]").first()).toBeVisible({ timeout: 20000 });
++  const before = await page.evaluate(
++    () =>
++      new Promise<{ accountId: string; userId: string; deviceId: string; signingKey: string }>((resolve, reject) => {
++        const open = indexedDB.open("orbit-web");
++        open.onerror = () => reject(open.error);
++        open.onsuccess = () => {
++          const db = open.result;
++          const get = db.transaction("kv").objectStore("kv").get("device");
++          get.onsuccess = () => {
++            const value = get.result;
++            db.close();
++            resolve({ accountId: value.account.id, userId: value.userId, deviceId: value.deviceId, signingKey: value.keys.signingPublic });
++          };
++        };
++      }),
++  );
++  ({ accountId, userId, deviceId, signingKey } = before);
++  await page.goto("/settings/account");
++  const card = page.getByRole("region", { name: "Staging sign-in check" });
++  await expect(card).toBeVisible();
++  await card.getByLabel("Test sign-in password").fill(password);
++  await card.getByRole("button", { name: "Check test sign-in", exact: true }).click();
++  await expect(card.getByRole("status")).toHaveText("Test sign-in verified and closed. Your current Meldiq session stays active.");
++  expect(linked).toBe(true);
++  expect(logoutCalls).toBe(1);
++  expect(providerCalls).toBe(2);
++  await expect(card.getByLabel("Test sign-in password")).toHaveValue("");
++  const callsBefore = providerCalls;
++  staging = false;
++  await page.reload();
++  await expect(page.getByRole("heading", { name: "My Account", exact: true })).toBeVisible();
++  await expect(card).toHaveCount(0);
++  await expect(page.locator(".app[data-connection=online]").first()).toBeVisible({ timeout: 20000 });
++  expect(providerCalls).toBe(callsBefore);
++});
++
++test("normal production sign-in starts without a Supabase connection or migration control", async ({ page, context }) => {
++  let providerRequests = 0;
++  page.on("request", (request) => {
++    if (request.url().includes("supabase.co")) providerRequests++;
++  });
++  await context.route("**/config.json", (route) => route.fulfill({ json: { apiBase: "", environment: "production" } }));
++  await page.goto("/");
++  await expectSignedOut(page);
++  await expect(page.getByRole("region", { name: "Staging sign-in check" })).toHaveCount(0);
++  expect(providerRequests).toBe(0);
++});
+diff --git a/next.config.mjs b/next.config.mjs
+index 8541448..a056221 100644
+--- a/next.config.mjs
++++ b/next.config.mjs
+@@ -37,6 +37,7 @@ export default function config(phase) {
+               beforeFiles: [
+                 { source: "/v1/:path*", destination: `${api}/v1/:path*` },
+                 { source: "/v2/:path*", destination: `${api}/v2/:path*` },
++                { source: "/v3/:path*", destination: `${api}/v3/:path*` },
+               ],
+               afterFiles: [],
+               fallback: [{ source: "/:path*", destination: "/" }],
+diff --git a/package-lock.json b/package-lock.json
+index da151eb..63b9138 100644
+--- a/package-lock.json
++++ b/package-lock.json
+@@ -12,6 +12,7 @@
+         "@noble/curves": "1.9.7",
+         "@noble/hashes": "1.8.0",
+         "@paypal/paypal-js": "11.3.0",
++        "@supabase/supabase-js": "2.118.0",
+         "firebase": "12.19.0",
+         "idb": "8.0.4",
+         "livekit-client": "2.22.3",
+@@ -3012,6 +3013,98 @@
+       "dev": true,
+       "license": "MIT"
+     },
++    "node_modules/@supabase/auth-js": {
++      "version": "2.118.0",
++      "resolved": "https://registry.npmjs.org/@supabase/auth-js/-/auth-js-2.118.0.tgz",
++      "integrity": "sha512-xWfPXyhS2KDSfAneMtI6p/tBnbdiz/5vaRKXEqUfzfC9WCniKr2Ds5o5G7RIGig0bom4z6wUY9zaV07WDVTfnQ==",
++      "license": "MIT",
++      "dependencies": {
++        "tslib": "2.8.1"
++      },
++      "engines": {
++        "node": ">=22.0.0"
++      }
++    },
++    "node_modules/@supabase/functions-js": {
++      "version": "2.118.0",
++      "resolved": "https://registry.npmjs.org/@supabase/functions-js/-/functions-js-2.118.0.tgz",
++      "integrity": "sha512-4ofletPa/noKAU6KHeqsd3FztGzRPUEJRey1MKY0o+PIHaVePqRPShIXtl37gcVyIWaFM+zNg6r9zh0uUSFOSA==",
++      "license": "MIT",
++      "dependencies": {
++        "tslib": "2.8.1"
++      },
++      "engines": {
++        "node": ">=22.0.0"
++      }
++    },
++    "node_modules/@supabase/phoenix": {
++      "version": "0.4.5",
++      "resolved": "https://registry.npmjs.org/@supabase/phoenix/-/phoenix-0.4.5.tgz",
++      "integrity": "sha512-aAn9H9ovVyeApKy11OWOrrOGq8DV68yWeH4ud2lN9fzn4aO8Zb5GLL9m1pUg9nLqIcT+ZDfAcsZe0E/nqdv2lw==",
++      "license": "MIT"
++    },
++    "node_modules/@supabase/postgrest-js": {
++      "version": "2.118.0",
++      "resolved": "https://registry.npmjs.org/@supabase/postgrest-js/-/postgrest-js-2.118.0.tgz",
++      "integrity": "sha512-JXy+37KPApHsyotaQACovv/Jy9E22rfiWLRuT+2UjoEAcAIelDFIrsF/FY47Dy19mO7lI0Tq+zDCX8oJ2Ozfiw==",
++      "license": "MIT",
++      "dependencies": {
++        "tslib": "2.8.1"
++      },
++      "engines": {
++        "node": ">=22.0.0"
++      }
++    },
++    "node_modules/@supabase/realtime-js": {
++      "version": "2.118.0",
++      "resolved": "https://registry.npmjs.org/@supabase/realtime-js/-/realtime-js-2.118.0.tgz",
++      "integrity": "sha512-pzCIEWjqD5/xqEZQerpt+q9rsgYkcrkgCJgf0W2ULqC4fYUeB/p9CFa3t9vn+IVh6dMN9r4ZCE262lZvUC+Bfw==",
++      "license": "MIT",
++      "dependencies": {
++        "@supabase/phoenix": "0.4.5",
++        "tslib": "2.8.1"
++      },
++      "engines": {
++        "node": ">=22.0.0"
++      }
++    },
++    "node_modules/@supabase/storage-js": {
++      "version": "2.118.0",
++      "resolved": "https://registry.npmjs.org/@supabase/storage-js/-/storage-js-2.118.0.tgz",
++      "integrity": "sha512-5MNkKt2Moy7Jud/sPX7/28BwdDxZMCVHGJT00b8op3KRa9LKSjOAYU5IcfGWIstaasAqY8GkbA6oI3IRDgB1YQ==",
++      "license": "MIT",
++      "dependencies": {
++        "iceberg-js": "^0.8.1",
++        "tslib": "2.8.1"
++      },
++      "engines": {
++        "node": ">=22.0.0"
++      }
++    },
++    "node_modules/@supabase/supabase-js": {
++      "version": "2.118.0",
++      "resolved": "https://registry.npmjs.org/@supabase/supabase-js/-/supabase-js-2.118.0.tgz",
++      "integrity": "sha512-FxI8UXMVC2UG7IkeiI8fuQZqq2oI3JeSuN8MPIC2RLVaoEAxKS0nqE6kii9Ewpq8f9gNPM6git1Y8f0vN/QLFw==",
++      "license": "MIT",
++      "dependencies": {
++        "@supabase/auth-js": "2.118.0",
++        "@supabase/functions-js": "2.118.0",
++        "@supabase/postgrest-js": "2.118.0",
++        "@supabase/realtime-js": "2.118.0",
++        "@supabase/storage-js": "2.118.0"
++      },
++      "engines": {
++        "node": ">=22.0.0"
++      },
++      "peerDependencies": {
++        "@opentelemetry/api": ">=1.0.0"
++      },
++      "peerDependenciesMeta": {
++        "@opentelemetry/api": {
++          "optional": true
++        }
++      }
++    },
+     "node_modules/@swc/helpers": {
+       "version": "0.5.23",
+       "resolved": "https://registry.npmjs.org/@swc/helpers/-/helpers-0.5.23.tgz",
+@@ -4342,6 +4435,15 @@
+       "integrity": "sha512-Pysuw9XpUq5dVc/2SMHpuTY01RFl8fttgcyunjL7eEMhGM3cI4eOmiCycJDVCo/7O7ClfQD3SaI6ftDzqOXYMA==",
+       "license": "MIT"
+     },
++    "node_modules/iceberg-js": {
++      "version": "0.8.1",
++      "resolved": "https://registry.npmjs.org/iceberg-js/-/iceberg-js-0.8.1.tgz",
++      "integrity": "sha512-1dhVQZXhcHje7798IVM+xoo/1ZdVfzOMIc8/rgVSijRK38EDqOJoGula9N/8ZI5RD8QTxNQtK/Gozpr+qUqRRA==",
++      "license": "MIT",
++      "engines": {
++        "node": ">=20.0.0"
++      }
++    },
+     "node_modules/idb": {
+       "version": "8.0.4",
+       "resolved": "https://registry.npmjs.org/idb/-/idb-8.0.4.tgz",
+diff --git a/package.json b/package.json
+index e7458f9..ece5c9f 100644
+--- a/package.json
++++ b/package.json
+@@ -33,6 +33,7 @@
+     "@noble/curves": "1.9.7",
+     "@noble/hashes": "1.8.0",
+     "@paypal/paypal-js": "11.3.0",
++    "@supabase/supabase-js": "2.118.0",
+     "firebase": "12.19.0",
+     "idb": "8.0.4",
+     "livekit-client": "2.22.3",
+diff --git a/playwright.supabase-preparation.config.ts b/playwright.supabase-preparation.config.ts
+new file mode 100644
+index 0000000..aa9b035
+--- /dev/null
++++ b/playwright.supabase-preparation.config.ts
+@@ -0,0 +1,9 @@
++import { defineConfig } from "@playwright/test";
++import base from "./playwright.identity.config";
++const servers = Array.isArray(base.webServer) ? base.webServer : [];
++export default defineConfig({
++  ...base,
++  testMatch: "supabase-preparation.spec.ts",
++  use: { ...base.use, serviceWorkers: "block" },
++  webServer: [servers[0], { ...servers[1], env: { ...servers[1].env, MELDIQ_SUPABASE_PREVIEW: "1" } }],
++});
+diff --git a/scripts/web-server.ts b/scripts/web-server.ts
+index 1d4ed4f..51856f8 100644
+--- a/scripts/web-server.ts
++++ b/scripts/web-server.ts
+@@ -30,7 +30,14 @@ function headers(): [string, string][] {
+     path.join(here, process.env.MELDIQ_PAYPAL_SANDBOX === "1" ? "deploy/nginx/meldiq-web-paypal-sandbox-headers.conf.template" : "deploy/nginx/meldiq-web-headers.conf.template"),
+     "utf8",
+   );
+-  const extra = [`ws://${origin}`, process.env.ORBIT_E2E_LIVEKIT, process.env.ORBIT_E2E_LIVEKIT?.replace(/^ws/, "http")].filter(Boolean).join(" ");
++  const extra = [
++    `ws://${origin}`,
++    process.env.ORBIT_E2E_LIVEKIT,
++    process.env.ORBIT_E2E_LIVEKIT?.replace(/^ws/, "http"),
++    process.env.MELDIQ_SUPABASE_PREVIEW === "1" ? "https://bkvlxbsnzqkhbifawcww.supabase.co" : undefined,
++  ]
++    .filter(Boolean)
++    .join(" ");
+   return [...text.matchAll(/^add_header ([A-Za-z-]+) "(.*)" always;$/gm)]
+     .filter((m) => m[1] !== "Strict-Transport-Security")
+     .map((m) => [m[1], m[2].replaceAll("wss://${WEB_HOST}", `ws://${origin}`).replaceAll("${WEB_HOST}", origin).replaceAll("${CONNECT_EXTRA}", extra).replace("; upgrade-insecure-requests", "")]);
+@@ -90,7 +97,7 @@ function resolve(urlPath: string): { file: string; cache: string } | null {
+ 
+ const server = http.createServer((req, res) => {
+   const url = new URL(req.url ?? "/", `http://${origin}`);
+-  if (/^\/v[12]\//.test(url.pathname)) return proxy(req, res, api);
++  if (/^\/v[123]\//.test(url.pathname)) return proxy(req, res, api);
+   // Invitation links get the small invitation page, as nginx answers them, in development too.
+   if (app && url.pathname.startsWith("/invite/")) {
+     res.writeHead(200, { ...Object.fromEntries(SECURITY), "content-type": "text/html; charset=utf-8", "cache-control": "no-cache" });
+diff --git a/src/application/config.ts b/src/application/config.ts
+index b4aa74e..4a212d1 100644
+--- a/src/application/config.ts
++++ b/src/application/config.ts
+@@ -1,4 +1,5 @@
+ import { z } from "zod";
++import { zSupabasePreview } from "../auth/supabasePreviewConfig";
+ 
+ /**
+  * Runtime configuration, read from /config.json when the page loads, so moving Orbit Web to another domain or pointing
+@@ -51,13 +52,18 @@ const zFirebase = z.object({
+ });
+ export type FirebaseWebConfig = z.infer<typeof zFirebase>;
+ 
+-const zConfig = z.object({
+-  apiBase: zOrigin.default("").transform((v) => v.replace(/\/$/, "")),
+-  wsUrl: zWs.nullable().default(null),
+-  publicUrl: z.string().max(200).nullable().default(null),
+-  environment: z.enum(["development", "staging", "production"]).default("production"),
+-  firebase: zFirebase.nullable().default(null),
+-});
++const zConfig = z
++  .object({
++    apiBase: zOrigin.default("").transform((v) => v.replace(/\/$/, "")),
++    wsUrl: zWs.nullable().default(null),
++    publicUrl: z.string().max(200).nullable().default(null),
++    environment: z.enum(["development", "staging", "production"]).default("production"),
++    firebase: zFirebase.nullable().default(null),
++    supabaseMigration: z.union([z.literal(false), zSupabasePreview]).default(false),
++  })
++  .superRefine((value, ctx) => {
++    if (value.supabaseMigration && value.environment !== "staging") ctx.addIssue({ code: "custom", message: "Supabase preview requires a staging environment", path: ["supabaseMigration"] });
++  });
+ export type RuntimeConfig = z.infer<typeof zConfig>;
+ 
+ let current: RuntimeConfig = zConfig.parse({});
+@@ -116,6 +122,12 @@ export async function startConfig(fetcher: typeof fetch = fetch): Promise<Runtim
+     keepConfig(c);
+     return c;
+   }
++  // A cached staging opt-in must never survive an operator disabling the preview or changing environments.
++  if (kept.supabaseMigration) {
++    const c = await loadConfig(fetcher);
++    keepConfig(c);
++    return c;
++  }
+   current = kept;
+   void readConfig(fetcher).then(keepConfig, () => keepConfig(null));
+   return current;
+diff --git a/src/auth/supabaseClient.ts b/src/auth/supabaseClient.ts
+new file mode 100644
+index 0000000..36f08d1
+--- /dev/null
++++ b/src/auth/supabaseClient.ts
+@@ -0,0 +1,91 @@
++import { createClient, type SupabaseClient } from "@supabase/supabase-js";
++import type { LocalStore } from "../store/db";
++import { copy, utf8, fromUtf8, randomBytes } from "../crypto/bytes";
++
++const WRAPPING_KEY = "supabase:wrapping-key:v1";
++const entry = (key: string) => `supabase:sealed:${key}`;
++interface SealedValue {
++  version: 1;
++  iv: Uint8Array;
++  ciphertext: Uint8Array;
++}
++
++/** Supabase's storage adapter uses the existing device IndexedDB, never plaintext localStorage. */
++export class EncryptedSupabaseStorage {
++  private wrappingKey: Promise<CryptoKey> | undefined;
++  constructor(private readonly store: LocalStore) {}
++
++  private key(): Promise<CryptoKey> {
++    this.wrappingKey ??= this.loadOrCreateKey().catch((error: unknown) => {
++      this.wrappingKey = undefined;
++      throw error;
++    });
++    return this.wrappingKey;
++  }
++  private async loadOrCreateKey(): Promise<CryptoKey> {
++    const existing = await this.store.legacy.get("kv", WRAPPING_KEY);
++    if (existing instanceof CryptoKey) return existing;
++    // Generate before opening IDB's transaction. The transaction then serializes creation across tabs.
++    const candidate = await crypto.subtle.generateKey({ name: "AES-GCM", length: 256 }, false, ["encrypt", "decrypt"]);
++    const transaction = this.store.legacy.transaction("kv", "readwrite");
++    const winner = await transaction.store.get(WRAPPING_KEY);
++    const key = winner instanceof CryptoKey ? winner : candidate;
++    if (!(winner instanceof CryptoKey)) await transaction.store.put(key, WRAPPING_KEY);
++    await transaction.done;
++    return key;
++  }
++  async getItem(key: string): Promise<string | null> {
++    const value = (await this.store.legacy.get("kv", entry(key))) as SealedValue | undefined;
++    if (!value) return null;
++    try {
++      if (value.version !== 1) return null;
++      return fromUtf8(new Uint8Array(await crypto.subtle.decrypt({ name: "AES-GCM", iv: copy(value.iv), additionalData: utf8(key) }, await this.key(), copy(value.ciphertext))));
++    } catch {
++      await this.removeItem(key);
++      return null;
++    }
++  }
++  async setItem(key: string, value: string): Promise<void> {
++    const iv = randomBytes(12);
++    const ciphertext = new Uint8Array(await crypto.subtle.encrypt({ name: "AES-GCM", iv, additionalData: utf8(key) }, await this.key(), utf8(value)));
++    await this.store.legacy.put("kv", { version: 1, iv, ciphertext } satisfies SealedValue, entry(key));
++  }
++  async removeItem(key: string): Promise<void> {
++    await this.store.legacy.delete("kv", entry(key));
++  }
++}
++
++export interface SupabasePublicConfig {
++  url: string;
++  publishableKey: string;
++  projectRef: string;
++}
++
++/** Construct only after staged account migration is enabled. Existing production auth stays on its released path. */
++export function createMeldiqSupabase(config: SupabasePublicConfig, store: LocalStore, options: { storageKey?: string; autoRefreshToken?: boolean } = {}): SupabaseClient {
++  const url = new URL(config.url);
++  if (url.protocol !== "https:" || url.hostname !== `${config.projectRef}.supabase.co` || url.pathname !== "/" || url.username || url.password || url.search || url.hash)
++    throw new Error("Invalid Supabase project origin");
++  if (!/^sb_publishable_[A-Za-z0-9_-]+$/.test(config.publishableKey)) throw new Error("Only a Supabase publishable key belongs in the client");
++  return createClient(url.origin, config.publishableKey, {
++    auth: {
++      storage: new EncryptedSupabaseStorage(store),
++      storageKey: options.storageKey ?? `meldiq-supabase:${config.projectRef}:${store.name}`,
++      persistSession: true,
++      autoRefreshToken: options.autoRefreshToken ?? true,
++      flowType: "pkce",
++      detectSessionInUrl: false,
++    },
++    global: {
++      fetch: (input, init) =>
++        fetch(input, {
++          ...init,
++          redirect: "error",
++          credentials: "omit",
++          cache: "no-store",
++          signal: init?.signal ? AbortSignal.any([init.signal, AbortSignal.timeout(20_000)]) : AbortSignal.timeout(20_000),
++        }),
++    },
++    realtime: { params: { eventsPerSecond: 10 } },
++  });
++}
+diff --git a/src/auth/supabaseMigration.ts b/src/auth/supabaseMigration.ts
+new file mode 100644
+index 0000000..927d99a
+--- /dev/null
++++ b/src/auth/supabaseMigration.ts
+@@ -0,0 +1,164 @@
++/** Opt-in migration transport. It never changes device keys, offline state, stored legacy sessions or active UI auth. */
++export interface ProviderSession {
++  access_token: string;
++  user: { id: string };
++}
++export interface ExistingOwner {
++  accountId: string;
++  userId: string;
++  deviceId: string;
++}
++export interface PreparedAuthBinding extends ExistingOwner {
++  authUserId: string;
++  providerSessionId: string;
++}
++interface Options {
++  apiOrigin: string;
++  providerSession: ProviderSession;
++  expectedOwner: ExistingOwner;
++  /** Sign using the existing protected device key; never export or upload the key itself. */
++  signDeviceProof(message: string): Promise<string>;
++  totpCode?: string;
++  signal?: AbortSignal;
++  fetch?: typeof fetch;
++}
++const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
++const id = /^[A-Za-z0-9_-]{1,64}$/;
++const publicFailureCodes = new Set([
++  "unauthorized",
++  "invalid_credentials",
++  "fresh_auth_required",
++  "totp_required",
++  "totp_invalid",
++  "totp_locked",
++  "invalid_code",
++  "invalid_proof",
++  "device_revoked",
++  "account_disabled",
++  "session_expired",
++  "session_revoked",
++  "conflict",
++  "rate_limited",
++  "bad_request",
++  "unavailable",
++  "internal",
++  "device_required",
++]);
++export class AuthMigrationError extends Error {
++  constructor(
++    readonly code: string,
++    readonly status?: number,
++  ) {
++    super("Account migration could not be completed");
++    this.name = "AuthMigrationError";
++  }
++}
++
++function providerIdentity(provider: ProviderSession) {
++  try {
++    if (!uuid.test(provider.user.id) || provider.access_token.length > 16384) throw new Error();
++    const parts = provider.access_token.split(".");
++    if (parts.length !== 3) throw new Error();
++    const payload = parts[1].replace(/-/g, "+").replace(/_/g, "/");
++    const claims: unknown = JSON.parse(new TextDecoder().decode(Uint8Array.from(atob(payload + "=".repeat((4 - (payload.length % 4)) % 4)), (c) => c.charCodeAt(0))));
++    if (
++      !claims ||
++      typeof claims !== "object" ||
++      !("sub" in claims) ||
++      claims.sub !== provider.user.id ||
++      !("session_id" in claims) ||
++      typeof claims.session_id !== "string" ||
++      !uuid.test(claims.session_id)
++    )
++      throw new Error();
++    // Parsing supplies signature context only. The API verifies JWT signature, issuer, ownership and live state.
++    return { authUserId: provider.user.id, sessionId: claims.session_id };
++  } catch {
++    throw new AuthMigrationError("invalid_provider_session");
++  }
++}
++function transport(options: Options) {
++  let origin: URL;
++  try {
++    origin = new URL(options.apiOrigin);
++  } catch {
++    throw new AuthMigrationError("invalid_api_origin");
++  }
++  const loopback = ["localhost", "127.0.0.1", "[::1]"].includes(origin.hostname);
++  if ((origin.protocol !== "https:" && !(loopback && origin.protocol === "http:")) || origin.username || origin.password || origin.pathname !== "/" || origin.search || origin.hash)
++    throw new AuthMigrationError("invalid_api_origin");
++  const request = options.fetch ?? globalThis.fetch;
++  return async (method: "GET" | "POST" | "DELETE", route: string, body?: unknown): Promise<unknown> => {
++    const response = await request(`${origin.origin}${route}`, {
++      method,
++      redirect: "error",
++      credentials: "omit",
++      cache: "no-store",
++      signal: options.signal,
++      headers: { authorization: `Bearer ${options.providerSession.access_token}`, ...(body === undefined ? {} : { "content-type": "application/json" }) },
++      ...(body === undefined ? {} : { body: JSON.stringify(body) }),
++    });
++    if (!response.ok) {
++      let code = "migration_request_failed";
++      try {
++        const failure = (await response.json()) as { error?: { code?: unknown } };
++        if (typeof failure.error?.code === "string" && publicFailureCodes.has(failure.error.code)) code = failure.error.code;
++      } catch {
++        /* Never include server response bodies or credentials in error messages. */
++      }
++      throw new AuthMigrationError(code, response.status);
++    }
++    try {
++      return await response.json();
++    } catch {
++      throw new AuthMigrationError("invalid_server_response");
++    }
++  };
++}
++async function prepare(options: Options, legacy?: { accessToken: string; password?: string }): Promise<PreparedAuthBinding> {
++  const session = { access_token: options.providerSession.access_token, user: { id: options.providerSession.user.id } };
++  const identity = providerIdentity(session);
++  if (![options.expectedOwner.accountId, options.expectedOwner.userId, options.expectedOwner.deviceId].every((value) => typeof value === "string" && id.test(value)))
++    throw new AuthMigrationError("invalid_existing_owner");
++  if (legacy && (legacy.accessToken.length < 20 || legacy.accessToken.length > 200)) throw new AuthMigrationError("invalid_legacy_session");
++  const request = transport({ ...options, providerSession: session });
++  const challenge = (await request("POST", "/v1/auth/challenge")) as { nonce?: unknown; expiresAt?: unknown };
++  if (
++    !challenge ||
++    typeof challenge.nonce !== "string" ||
++    !/^[A-Za-z0-9_-]{16,128}$/.test(challenge.nonce) ||
++    typeof challenge.expiresAt !== "number" ||
++    !Number.isSafeInteger(challenge.expiresAt) ||
++    challenge.expiresAt <= Date.now()
++  )
++    throw new AuthMigrationError("invalid_device_challenge");
++  const signature = await options.signDeviceProof(`meldiq-supabase-device-v1\n${identity.authUserId}\n${identity.sessionId}\n${options.expectedOwner.deviceId}\n${challenge.nonce}`);
++  if (!/^[A-Za-z0-9+/]{86}==$/.test(signature)) throw new AuthMigrationError("invalid_device_signature");
++  const bound = (await request("POST", legacy ? "/v3/auth/legacy-link" : "/v3/auth/device", {
++    deviceId: options.expectedOwner.deviceId,
++    nonce: challenge.nonce,
++    signature,
++    ...(options.totpCode ? { totpCode: options.totpCode } : {}),
++    ...(legacy ? { legacyAccessToken: legacy.accessToken, ...(legacy.password ? { password: legacy.password } : {}) } : {}),
++  })) as { ok?: unknown };
++  if (!bound || bound.ok !== true) throw new AuthMigrationError("invalid_server_response");
++  const owner = (await request("GET", "/v3/auth/me")) as { authUserId?: unknown; accountId?: unknown; userId?: unknown };
++  if (!owner || owner.authUserId !== identity.authUserId || owner.accountId !== options.expectedOwner.accountId || owner.userId !== options.expectedOwner.userId)
++    throw new AuthMigrationError("identity_mismatch");
++  return {
++    accountId: options.expectedOwner.accountId,
++    userId: options.expectedOwner.userId,
++    deviceId: options.expectedOwner.deviceId,
++    authUserId: identity.authUserId,
++    providerSessionId: identity.sessionId,
++  };
++}
++
++/** Return a verified binding receipt. The caller must fence the current SDK session before switching API auth. */
++export function prepareLegacySupabaseLink(options: Options & { legacyAccessToken: string; password?: string }): Promise<PreparedAuthBinding> {
++  return prepare(options, { accessToken: options.legacyAccessToken, password: options.password });
++}
++/** A later provider login can authorize only an already-certified device of its explicitly mapped owner. */
++export function prepareSupabaseDevice(options: Options): Promise<PreparedAuthBinding> {
++  return prepare(options);
++}
+diff --git a/src/auth/supabasePreview.ts b/src/auth/supabasePreview.ts
+new file mode 100644
+index 0000000..665c150
+--- /dev/null
++++ b/src/auth/supabasePreview.ts
+@@ -0,0 +1,122 @@
++import type { SupabaseClient } from "@supabase/supabase-js";
++import type { LocalStore } from "../store/db";
++import { createMeldiqSupabase, EncryptedSupabaseStorage } from "./supabaseClient";
++import { AuthMigrationError, prepareLegacySupabaseLink, type ExistingOwner, type PreparedAuthBinding } from "./supabaseMigration";
++import type { SupabasePreviewConfig } from "./supabasePreviewConfig";
++
++interface PreviewOptions {
++  provider: SupabasePreviewConfig;
++  store: LocalStore;
++  apiOrigin: string;
++  owner: ExistingOwner;
++  legacyAccessToken: string;
++  email: string;
++  password: string;
++  legacyPassword?: string;
++  totpCode?: string;
++  signal?: AbortSignal;
++  isCurrentOwner(): boolean;
++  signDeviceProof(message: string): Promise<string>;
++}
++interface PreviewDependencies {
++  client?: (key: string) => SupabaseClient;
++  fetch?: typeof fetch;
++}
++
++/** A staging-only rehearsal. It never adopts a new API bearer, starts Realtime or touches legacy/offline data. */
++export async function checkSupabaseSignIn(options: PreviewOptions, dependencies: PreviewDependencies = {}): Promise<PreparedAuthBinding> {
++  if (!/^[^\s@]+@example\.(?:test|invalid)$/i.test(options.email)) throw new AuthMigrationError("synthetic_account_required");
++  const guard = () => {
++    if (options.signal?.aborted || !options.isCurrentOwner()) throw new AuthMigrationError("preview_cancelled");
++  };
++  guard();
++  const origin = new URL(options.apiOrigin);
++  if (
++    origin.username ||
++    origin.password ||
++    origin.pathname !== "/" ||
++    origin.search ||
++    origin.hash ||
++    (origin.protocol !== "https:" && !(origin.protocol === "http:" && ["localhost", "127.0.0.1", "[::1]"].includes(origin.hostname)))
++  )
++    throw new AuthMigrationError("invalid_api_origin");
++  const key = `meldiq-supabase-preview:${crypto.randomUUID()}`;
++  const storage = new EncryptedSupabaseStorage(options.store);
++  const client = dependencies.client?.(key) ?? createMeldiqSupabase(options.provider, options.store, { storageKey: key, autoRefreshToken: false });
++  const request = dependencies.fetch ?? globalThis.fetch;
++  let token: string | undefined,
++    linked = false;
++  const revoke = async () => {
++    if (!token || !linked) return;
++    const response = await request(`${origin.origin}/v3/auth/session`, {
++      method: "DELETE",
++      headers: { authorization: `Bearer ${token}` },
++      credentials: "omit",
++      cache: "no-store",
++      redirect: "error",
++      signal: AbortSignal.timeout(10_000),
++    });
++    if (!response.ok && response.status !== 401) throw new AuthMigrationError("preview_cleanup_failed");
++  };
++  let result: PreparedAuthBinding | undefined;
++  let failure: unknown;
++  try {
++    const signedIn = await client.auth.signInWithPassword({ email: options.email, password: options.password });
++    if (signedIn.error || !signedIn.data.session) throw new AuthMigrationError("provider_sign_in_failed");
++    const session = signedIn.data.session;
++    token = session.access_token;
++    guard();
++    const receipt = await prepareLegacySupabaseLink({
++      apiOrigin: origin.origin,
++      providerSession: session,
++      expectedOwner: { ...options.owner },
++      legacyAccessToken: options.legacyAccessToken,
++      password: options.legacyPassword,
++      totpCode: options.totpCode,
++      signal: options.signal,
++      fetch: request,
++      signDeviceProof: async (message) => {
++        guard();
++        const signed = await options.signDeviceProof(message);
++        guard();
++        return signed;
++      },
++    });
++    linked = true;
++    guard();
++    const current = await client.auth.getSession();
++    if (current.error || current.data.session?.access_token !== token || current.data.session.user.id !== receipt.authUserId) throw new AuthMigrationError("provider_session_changed");
++    result = receipt;
++  } catch (error) {
++    failure = error instanceof AuthMigrationError ? error : new AuthMigrationError("preview_failed");
++  }
++  // Even after cancellation, end this isolated test session. Cleanup uses its own bounded signal.
++  let cleanupFailed = false;
++  try {
++    await revoke();
++  } catch {
++    cleanupFailed = true;
++  }
++  try {
++    if ((await client.auth.signOut({ scope: "local" })).error) cleanupFailed = true;
++  } catch {
++    cleanupFailed = true;
++  }
++  try {
++    await client.auth.dispose();
++    client.realtime.disconnect();
++  } catch {
++    cleanupFailed = true;
++  }
++  for (const entry of [key, `${key}-user`, `${key}-code-verifier`]) {
++    try {
++      await storage.removeItem(entry);
++    } catch {
++      cleanupFailed = true;
++    }
++  }
++  if (cleanupFailed) throw new AuthMigrationError("preview_cleanup_failed");
++  if (failure) throw failure;
++  guard();
++  return result!;
++}
+diff --git a/src/auth/supabasePreviewConfig.ts b/src/auth/supabasePreviewConfig.ts
+new file mode 100644
+index 0000000..33fca85
+--- /dev/null
++++ b/src/auth/supabasePreviewConfig.ts
+@@ -0,0 +1,15 @@
++import { z } from "zod";
++
++const projectRef = "bkvlxbsnzqkhbifawcww";
++export const zSupabasePreview = z.strictObject({
++  mode: z.literal("staging-check"),
++  projectRef: z.literal(projectRef),
++  url: z.literal(`https://${projectRef}.supabase.co`),
++  publishableKey: z.string().regex(/^sb_publishable_[A-Za-z0-9_-]{8,200}$/),
++});
++export type SupabasePreviewConfig = z.infer<typeof zSupabasePreview>;
++
++/** An explicit deployment setting plus a dedicated test origin; production never exposes the preview. */
++export function allowedSupabasePreview(environment: string, value: false | SupabasePreviewConfig, hostname: string): SupabasePreviewConfig | null {
++  return environment === "staging" && value && ["localhost", "127.0.0.1", "[::1]", "staging-web.meldiq.app"].includes(hostname) ? value : null;
++}
+diff --git a/src/realtime/supabaseEvents.ts b/src/realtime/supabaseEvents.ts
+new file mode 100644
+index 0000000..0792e38
+--- /dev/null
++++ b/src/realtime/supabaseEvents.ts
+@@ -0,0 +1,73 @@
++import type { SupabaseClient, RealtimeChannel } from "@supabase/supabase-js";
++import { z } from "zod";
++
++export const SupabaseInvalidation = z.strictObject({
++  eventId: z.uuid(),
++  messageId: z.string().min(1).max(64),
++  conversationId: z.string().min(1).max(64),
++});
++export type SupabaseInvalidation = z.infer<typeof SupabaseInvalidation>;
++
++/** Broadcasts invalidate server-authorized data; they never supply trusted messages or entitlements.
++ * Call recover on every reconnect to page durable history, because Broadcast is not a replay log.
++ */
++export class SupabaseEventSubscription {
++  private readonly seen = new Set<string>();
++  private channel: RealtimeChannel | null = null;
++  private generation = 0;
++  private chain = Promise.resolve();
++  constructor(
++    private readonly client: SupabaseClient,
++    private readonly onInvalidation: (event: SupabaseInvalidation) => Promise<void>,
++    private readonly recover: () => Promise<void>,
++    private readonly onError: () => void,
++  ) {}
++
++  async start(topic: string, accessToken: string): Promise<void> {
++    if (!/^(?:user|conversation):[A-Za-z0-9_-]{1,64}$/.test(topic)) throw new Error("Invalid private topic");
++    const generation = ++this.generation;
++    const previous = this.channel;
++    this.channel = null;
++    if (previous) await this.client.removeChannel(previous);
++    await this.chain;
++    if (generation !== this.generation) return;
++    this.seen.clear();
++    await this.client.realtime.setAuth(accessToken);
++    if (generation !== this.generation) return;
++    const channel = this.client.channel(topic, { config: { private: true, broadcast: { self: false } } });
++    this.channel = channel;
++    channel
++      .on("broadcast", { event: "message.changed" }, ({ payload }: { payload: unknown }) => {
++        this.chain = this.chain
++          .then(async () => {
++            if (generation !== this.generation) return;
++            const parsed = SupabaseInvalidation.safeParse(payload);
++            if (!parsed.success || this.seen.has(parsed.data.eventId)) return;
++            await this.onInvalidation(parsed.data);
++            this.seen.add(parsed.data.eventId);
++            if (this.seen.size > 2048) this.seen.delete(this.seen.values().next().value!);
++          })
++          .catch(() => {
++            this.onError();
++          });
++      })
++      .subscribe((status) => {
++        if (generation !== this.generation) return;
++        if (status === "SUBSCRIBED")
++          this.chain = this.chain
++            .then(() => this.recover())
++            .catch(() => {
++              this.onError();
++            });
++        if (status === "CHANNEL_ERROR" || status === "TIMED_OUT") this.onError();
++      });
++  }
++  async stop(): Promise<void> {
++    const generation = ++this.generation;
++    const channel = this.channel;
++    this.channel = null;
++    if (channel) await this.client.removeChannel(channel);
++    await this.chain;
++    if (generation === this.generation) this.seen.clear();
++  }
++}
+diff --git a/src/ui/settings/AccountSettingsPage.tsx b/src/ui/settings/AccountSettingsPage.tsx
+index a6694cb..e5feb1a 100644
+--- a/src/ui/settings/AccountSettingsPage.tsx
++++ b/src/ui/settings/AccountSettingsPage.tsx
+@@ -1,4 +1,5 @@
+ import { ConnectedAccountsCard } from "./ConnectedAccountsCard";
++import { MigrationPreviewCard } from "./MigrationPreviewCard";
+ import { KeyRound, Laptop, LogOut, Trash2 } from "lucide-react";
+ import { type FormEvent, useState } from "react";
+ import { useEngine, useOrbit } from "../../application/orbit";
+@@ -60,6 +61,7 @@ function MyAccount({ email: initialEmail, onSignedOut }: { email: string; onSign
+       />
+       <h2 className="settings-group">Password and authentication</h2>
+       <ConnectedAccountsCard />
++      <MigrationPreviewCard />
+       <ChangePassword email={email} />
+       {twoStep && <TwoStepCard />}
+       <PasskeysCard />
+diff --git a/src/ui/settings/MigrationPreviewCard.tsx b/src/ui/settings/MigrationPreviewCard.tsx
+new file mode 100644
+index 0000000..4b900fe
+--- /dev/null
++++ b/src/ui/settings/MigrationPreviewCard.tsx
+@@ -0,0 +1,19 @@
++import { lazy, Suspense } from "react";
++import { config } from "../../application/config";
++import { useEngine } from "../../application/orbit";
++import { allowedSupabasePreview } from "../../auth/supabasePreviewConfig";
++
++const StagedSignInCheck = lazy(() => import("./StagedSignInCheck"));
++
++/** No SDK initialization or new sign-in UI on production, including after a cached staging deployment. */
++export function MigrationPreviewCard() {
++  const engine = useEngine();
++  const current = config();
++  const preview = allowedSupabasePreview(current.environment, current.supabaseMigration, typeof location === "undefined" ? "" : location.hostname);
++  if (!preview || !engine.device.account || !/@example\.(?:test|invalid)$/i.test(engine.device.account.email)) return null;
++  return (
++    <Suspense fallback={null}>
++      <StagedSignInCheck provider={preview} />
++    </Suspense>
++  );
++}
+diff --git a/src/ui/settings/StagedSignInCheck.tsx b/src/ui/settings/StagedSignInCheck.tsx
+new file mode 100644
+index 0000000..87e6ca0
+--- /dev/null
++++ b/src/ui/settings/StagedSignInCheck.tsx
+@@ -0,0 +1,104 @@
++import { useEffect, useRef, useState, type FormEvent } from "react";
++import { useEngine } from "../../application/orbit";
++import { checkSupabaseSignIn } from "../../auth/supabasePreview";
++import type { SupabasePreviewConfig } from "../../auth/supabasePreviewConfig";
++import { sign } from "../../crypto/ed25519";
++
++export default function StagedSignInCheck({ provider }: { provider: SupabasePreviewConfig }) {
++  const engine = useEngine();
++  const [password, setPassword] = useState("");
++  const [legacyPassword, setLegacyPassword] = useState("");
++  const [code, setCode] = useState("");
++  const [busy, setBusy] = useState(false);
++  const [message, setMessage] = useState<string | null>(null);
++  const [failed, setFailed] = useState(false);
++  const abort = useRef<AbortController | null>(null);
++  const alive = useRef(true);
++  useEffect(() => {
++    alive.current = true;
++    return () => {
++      alive.current = false;
++      abort.current?.abort();
++    };
++  }, []);
++  const submit = async (event: FormEvent) => {
++    event.preventDefault();
++    if (busy || !password) return;
++    const device = engine.device;
++    if (!device.account) return;
++    const owner = { accountId: device.account.id, userId: device.userId, deviceId: device.deviceId };
++    const controller = new AbortController();
++    abort.current = controller;
++    setBusy(true);
++    setMessage(null);
++    setFailed(false);
++    try {
++      if (!engine.session.token() && !(await engine.session.reauthenticate())) throw new Error("Session unavailable");
++      const legacyAccessToken = engine.session.token();
++      if (!legacyAccessToken) throw new Error("Session unavailable");
++      await checkSupabaseSignIn({
++        provider,
++        store: engine.store,
++        apiOrigin: engine.api.base || location.origin,
++        owner,
++        legacyAccessToken,
++        email: device.account.email,
++        password,
++        legacyPassword: legacyPassword || password,
++        totpCode: code || undefined,
++        signal: controller.signal,
++        isCurrentOwner: () => alive.current && engine.device.account?.id === owner.accountId && engine.device.userId === owner.userId && engine.device.deviceId === owner.deviceId,
++        signDeviceProof: (message) => sign(device.keys.signing.privateKey, message),
++      });
++      if (alive.current) setMessage("Test sign-in verified and closed. Your current Meldiq session stays active.");
++    } catch {
++      if (alive.current) {
++        setFailed(true);
++        setMessage("The check could not finish. Check your test passwords and authenticator code, or try again.");
++      }
++    } finally {
++      if (alive.current) {
++        setBusy(false);
++        setPassword("");
++        setLegacyPassword("");
++        setCode("");
++      }
++      if (abort.current === controller) abort.current = null;
++    }
++  };
++  return (
++    <section className="card" style={{ padding: 20, display: "grid", gap: 12 }} aria-label="Staging sign-in check">
++      <h3 style={{ margin: 0 }}>Sign-in migration check</h3>
++      <p className="muted">For staging test accounts only. Check that the updated sign-in matches your existing account and this browser. Your keys, chats and pending messages stay here.</p>
++      <form onSubmit={(event) => void submit(event)} className="ws-form">
++        <label className="field">
++          <span>Test sign-in password</span>
++          <input className="input" type="password" autoComplete="off" value={password} onChange={(event) => setPassword(event.target.value)} required disabled={busy} />
++        </label>
++        <label className="field">
++          <span>Current Meldiq password, if different</span>
++          <input className="input" type="password" autoComplete="off" value={legacyPassword} onChange={(event) => setLegacyPassword(event.target.value)} disabled={busy} />
++        </label>
++        <label className="field">
++          <span>Authenticator or backup code, if enabled</span>
++          <input className="input" autoComplete="one-time-code" value={code} onChange={(event) => setCode(event.target.value)} disabled={busy} />
++        </label>
++        <div className="ws-row">
++          <button className="btn btn-secondary" type="submit" disabled={busy || !password}>
++            {busy ? "Checking…" : "Check test sign-in"}
++          </button>
++          {busy && (
++            <button className="btn btn-ghost" type="button" onClick={() => abort.current?.abort()}>
++              Cancel
++            </button>
++          )}
++        </div>
++      </form>
++      {message && (
++        <p className={failed ? "banner danger" : "banner ok"} role={failed ? "alert" : "status"}>
++          {message}
++        </p>
++      )}
++    </section>
++  );
++}
+diff --git a/test/supabase-client.test.ts b/test/supabase-client.test.ts
+new file mode 100644
+index 0000000..b739bde
+--- /dev/null
++++ b/test/supabase-client.test.ts
+@@ -0,0 +1,49 @@
++import "fake-indexeddb/auto";
++import { afterEach, describe, expect, it } from "vitest";
++import { LocalStore } from "../src/store/db";
++import { EncryptedSupabaseStorage, createMeldiqSupabase } from "../src/auth/supabaseClient";
++import { SupabaseInvalidation } from "../src/realtime/supabaseEvents";
++
++let store: LocalStore | undefined;
++afterEach(() => {
++  store?.close();
++});
++describe("staged Supabase client security", () => {
++  it("seals tokens at rest and reads them after reopening", async () => {
++    const name = `supabase-vault-${crypto.randomUUID()}`;
++    store = await LocalStore.open(name);
++    await new EncryptedSupabaseStorage(store).setItem("session", "synthetic-refresh-token");
++    const sealed = await store.legacy.get("kv", "supabase:sealed:session");
++    expect(JSON.stringify(sealed)).not.toContain("synthetic-refresh-token");
++    store.close();
++    store = await LocalStore.open(name);
++    expect(await new EncryptedSupabaseStorage(store).getItem("session")).toBe("synthetic-refresh-token");
++  });
++  it("serializes concurrent wrapping-key creation", async () => {
++    store = await LocalStore.open(`supabase-concurrent-${crypto.randomUUID()}`);
++    await Promise.all([new EncryptedSupabaseStorage(store).setItem("first", "one"), new EncryptedSupabaseStorage(store).setItem("second", "two")]);
++    const storage = new EncryptedSupabaseStorage(store);
++    expect(await storage.getItem("first")).toBe("one");
++    expect(await storage.getItem("second")).toBe("two");
++  });
++  it("rejects a ciphertext moved to another session key and removes only the corrupt entry", async () => {
++    store = await LocalStore.open(`supabase-tamper-${crypto.randomUUID()}`);
++    const storage = new EncryptedSupabaseStorage(store);
++    await storage.setItem("first", "one");
++    await store.legacy.put("kv", await store.legacy.get("kv", "supabase:sealed:first"), "supabase:sealed:second");
++    expect(await storage.getItem("second")).toBeNull();
++    expect(await storage.getItem("first")).toBe("one");
++    await storage.removeItem("first");
++    expect(await storage.getItem("first")).toBeNull();
++  });
++  it("rejects privileged keys and mismatched project origins before constructing a client", async () => {
++    store = await LocalStore.open(`supabase-config-${crypto.randomUUID()}`);
++    expect(() => createMeldiqSupabase({ url: "https://stage.supabase.co", projectRef: "stage", publishableKey: "sb_secret_never-public" }, store!)).toThrow("publishable");
++    expect(() => createMeldiqSupabase({ url: "https://other.supabase.co", projectRef: "stage", publishableKey: "sb_publishable_test" }, store!)).toThrow("origin");
++  });
++  it("validates invalidation IDs and refuses message content/entitlement injection", () => {
++    const event = { eventId: crypto.randomUUID(), messageId: "message001", conversationId: "conversation001" };
++    expect(SupabaseInvalidation.safeParse(event).success).toBe(true);
++    expect(SupabaseInvalidation.safeParse({ ...event, text: "forged", subscription: "plus" }).success).toBe(false);
++  });
++});
+diff --git a/test/supabase-events.test.ts b/test/supabase-events.test.ts
+new file mode 100644
+index 0000000..ed2581e
+--- /dev/null
++++ b/test/supabase-events.test.ts
+@@ -0,0 +1,120 @@
++import { describe, expect, it, vi } from "vitest";
++import type { SupabaseClient, RealtimeChannel } from "@supabase/supabase-js";
++import { SupabaseEventSubscription } from "../src/realtime/supabaseEvents";
++
++function fixture() {
++  const channels: { topic: string; emit: (payload: unknown) => void; status: (value: string) => void }[] = [];
++  const remove = vi.fn(async (_channel: unknown) => "ok");
++  const auth = vi.fn(async (_token: string) => undefined);
++  const client = {
++    realtime: { setAuth: auth },
++    removeChannel: remove,
++    channel: (topic: string, options: unknown) => {
++      expect(options).toMatchObject({ config: { private: true } });
++      const item = { topic, emit: (_payload: unknown) => {}, status: (_status: string) => {} };
++      channels.push(item);
++      const channel = {
++        on: (_kind: string, _filter: unknown, handler: (event: { payload: unknown }) => void) => {
++          item.emit = (payload) => {
++            handler({ payload });
++          };
++          return channel;
++        },
++        subscribe: (handler: (value: string) => void) => {
++          item.status = handler;
++          handler("SUBSCRIBED");
++          return channel;
++        },
++      };
++      return channel as unknown as RealtimeChannel;
++    },
++  } as unknown as SupabaseClient;
++  return { client, channels, remove, auth };
++}
++const payload = () => ({ eventId: crypto.randomUUID(), messageId: "message001", conversationId: "conversation001" });
++
++describe("private Supabase invalidation lifecycle", () => {
++  it("deduplicates delivery and recovers durable history after each reconnect", async () => {
++    const f = fixture(),
++      apply = vi.fn(async () => {}),
++      recover = vi.fn(async () => {});
++    const subscription = new SupabaseEventSubscription(f.client, apply, recover, () => {});
++    await subscription.start("user:fixture", "synthetic-access-token");
++    const event = payload();
++    f.channels[0].emit(event);
++    f.channels[0].emit(event);
++    await vi.waitFor(() => {
++      expect(apply).toHaveBeenCalledTimes(1);
++    });
++    f.channels[0].status("SUBSCRIBED");
++    await vi.waitFor(() => {
++      expect(recover).toHaveBeenCalledTimes(2);
++    });
++    await subscription.stop();
++  });
++  it("serializes events and allows a failed invalidation to be retried", async () => {
++    const f = fixture(),
++      errors = vi.fn();
++    let first = true;
++    const apply = vi.fn(async () => {
++      if (first) {
++        first = false;
++        throw new Error("synthetic temporary failure");
++      }
++    });
++    const subscription = new SupabaseEventSubscription(f.client, apply, async () => {}, errors);
++    await subscription.start("conversation:fixture", "synthetic-token");
++    const event = payload();
++    f.channels[0].emit(event);
++    await vi.waitFor(() => {
++      expect(errors).toHaveBeenCalledOnce();
++    });
++    f.channels[0].emit(event);
++    await vi.waitFor(() => {
++      expect(apply).toHaveBeenCalledTimes(2);
++    });
++    await subscription.stop();
++  });
++  it("refuses malformed events and callbacks from a stopped account", async () => {
++    const f = fixture(),
++      apply = vi.fn(async () => {});
++    const subscription = new SupabaseEventSubscription(
++      f.client,
++      apply,
++      async () => {},
++      () => {},
++    );
++    await subscription.start("user:fixture", "synthetic-token");
++    f.channels[0].emit({ ...payload(), entitlement: "plus" });
++    await subscription.stop();
++    f.channels[0].emit(payload());
++    await Promise.resolve();
++    expect(apply).not.toHaveBeenCalled();
++  });
++  it("does not let an older account switch replace a newer subscription", async () => {
++    const f = fixture();
++    let release: (() => void) | undefined;
++    const subscription = new SupabaseEventSubscription(
++      f.client,
++      async () => {},
++      async () => {},
++      () => {},
++    );
++    await subscription.start("user:first", "first-token");
++    f.remove.mockImplementationOnce(
++      async () =>
++        new Promise<string>((resolve) => {
++          release = () => {
++            resolve("ok");
++          };
++        }),
++    );
++    const older = subscription.start("user:older", "older-token");
++    await Promise.resolve();
++    await subscription.start("user:latest", "latest-token");
++    release!();
++    await older;
++    expect(f.channels.map((channel) => channel.topic)).toEqual(["user:first", "user:latest"]);
++    await subscription.stop();
++  });
++});
+diff --git a/test/supabase-migration.test.ts b/test/supabase-migration.test.ts
+new file mode 100644
+index 0000000..41982ca
+--- /dev/null
++++ b/test/supabase-migration.test.ts
+@@ -0,0 +1,113 @@
++import { describe, expect, it, vi } from "vitest";
++import { AuthMigrationError, prepareLegacySupabaseLink, prepareSupabaseDevice } from "../src/auth/supabaseMigration";
++
++const authUserId = "10000000-0000-4000-8000-000000000001",
++  sessionId = "20000000-0000-4000-8000-000000000001";
++const token = `eyJhbGciOiJFUzI1NiJ9.${btoa(JSON.stringify({ sub: authUserId, session_id: sessionId, user_metadata: { userId: "forged" } })).replace(/=/g, "")}.signature`;
++const owner = Object.freeze({ accountId: "account_original", userId: "user_original", deviceId: "device_original" });
++const signature = btoa("s".repeat(64)),
++  nonce = "synthetic_one_use_nonce_12345678";
++function fixture() {
++  const responses: unknown[] = [{ nonce, expiresAt: Date.now() + 120000 }, { ok: true }, { authUserId, accountId: owner.accountId, userId: owner.userId }];
++  const request = vi.fn<typeof fetch>().mockImplementation(async () => new Response(JSON.stringify(responses.shift()), { status: 200, headers: { "content-type": "application/json" } }));
++  const signDeviceProof = vi.fn(async (_message: string) => signature);
++  const options = {
++    apiOrigin: "https://api.example.test",
++    providerSession: { access_token: token, user: { id: authUserId } },
++    expectedOwner: owner,
++    signDeviceProof,
++    legacyAccessToken: "synthetic_legacy_access_token_123456",
++    password: "synthetic old password",
++    totpCode: "123456",
++    fetch: request,
++  };
++  return { options, request, signDeviceProof, responses };
++}
++describe("staged web account migration transport", () => {
++  it("signs the exact provider/session/device/nonce context and confirms original ownership before returning a receipt", async () => {
++    const f = fixture();
++    expect(await prepareLegacySupabaseLink(f.options)).toEqual({ ...owner, authUserId, providerSessionId: sessionId });
++    expect(f.signDeviceProof).toHaveBeenCalledWith(`meldiq-supabase-device-v1\n${authUserId}\n${sessionId}\n${owner.deviceId}\n${nonce}`);
++    const [url, init] = f.request.mock.calls[1];
++    expect(url).toBe("https://api.example.test/v3/auth/legacy-link");
++    expect(JSON.parse(String(init?.body))).toEqual({ deviceId: owner.deviceId, nonce, signature, legacyAccessToken: f.options.legacyAccessToken, password: f.options.password, totpCode: "123456" });
++    expect(f.options.expectedOwner).toBe(owner);
++  });
++  it("prevents credential redirects, shared caching and incidental cookie transmission", async () => {
++    const f = fixture();
++    await prepareLegacySupabaseLink(f.options);
++    for (const [url, init] of f.request.mock.calls) {
++      expect(String(url)).not.toContain(f.options.legacyAccessToken);
++      expect(String(url)).not.toContain(f.options.password);
++      expect(init).toMatchObject({ redirect: "error", cache: "no-store", credentials: "omit", headers: { authorization: `Bearer ${token}` } });
++    }
++  });
++  it("rejects mismatched ownership without changing the existing identity or SDK session", async () => {
++    const f = fixture();
++    f.responses[2] = { authUserId, accountId: owner.accountId, userId: "someone_else" };
++    const before = structuredClone(f.options.providerSession);
++    await expect(prepareLegacySupabaseLink(f.options)).rejects.toMatchObject({ code: "identity_mismatch" });
++    expect(f.options.expectedOwner).toEqual(owner);
++    expect(f.options.providerSession).toEqual(before);
++  });
++  it("does not infer ownership from JWT metadata or an unrelated provider session", async () => {
++    const f = fixture();
++    f.options.providerSession.user.id = "10000000-0000-4000-8000-000000000002";
++    await expect(prepareLegacySupabaseLink(f.options)).rejects.toMatchObject({ code: "invalid_provider_session" });
++    expect(f.request).not.toHaveBeenCalled();
++    expect(f.signDeviceProof).not.toHaveBeenCalled();
++  });
++  it("refuses insecure nonlocal or credential-bearing API origins before sending secrets", async () => {
++    for (const apiOrigin of ["http://api.example.test", "https://user:password@api.example.test", "https://api.example.test/?redirect=evil", "https://api.example.test/path"]) {
++      const f = fixture();
++      await expect(prepareLegacySupabaseLink({ ...f.options, apiOrigin })).rejects.toMatchObject({ code: "invalid_api_origin" });
++      expect(f.request).not.toHaveBeenCalled();
++    }
++  });
++  it("supports a later certified-device binding without resending legacy credentials", async () => {
++    const f = fixture();
++    await prepareSupabaseDevice(f.options);
++    expect(f.request.mock.calls[1][0]).toBe("https://api.example.test/v3/auth/device");
++    expect(JSON.parse(String(f.request.mock.calls[1][1]?.body))).not.toHaveProperty("legacyAccessToken");
++    expect(JSON.parse(String(f.request.mock.calls[1][1]?.body))).not.toHaveProperty("password");
++  });
++  it("keeps failure messages free of server text, tokens and passwords", async () => {
++    const f = fixture();
++    f.request.mockResolvedValueOnce(new Response(JSON.stringify({ error: { code: "unauthorized", message: `${token} ${f.options.password}` } }), { status: 401 }));
++    try {
++      await prepareLegacySupabaseLink(f.options);
++      throw new Error("expected refusal");
++    } catch (error) {
++      expect(error).toBeInstanceOf(AuthMigrationError);
++      expect(error).toMatchObject({ code: "unauthorized", status: 401 });
++      expect(String(error)).not.toContain(f.options.password);
++      expect(String(error)).not.toContain(token);
++    }
++    expect(f.signDeviceProof).not.toHaveBeenCalled();
++  });
++  it("refuses expired challenges before signing or linking", async () => {
++    const f = fixture();
++    f.responses[0] = { nonce, expiresAt: Date.now() - 1 };
++    await expect(prepareLegacySupabaseLink(f.options)).rejects.toMatchObject({ code: "invalid_device_challenge" });
++    expect(f.signDeviceProof).not.toHaveBeenCalled();
++    expect(f.request).toHaveBeenCalledTimes(1);
++  });
++  it("keeps one provider token throughout an in-flight proof when the caller's SDK state changes", async () => {
++    const f = fixture();
++    f.request.mockImplementationOnce(async () => {
++      f.options.providerSession.access_token = "a_different_sdk_session";
++      f.responses.shift();
++      return new Response(JSON.stringify({ nonce, expiresAt: Date.now() + 120000 }), { status: 200 });
++    });
++    await prepareLegacySupabaseLink(f.options);
++    for (const [, init] of f.request.mock.calls) expect(init?.headers).toMatchObject({ authorization: `Bearer ${token}` });
++  });
++  it("returns only owner identifiers and rejects a malformed server challenge", async () => {
++    const f = fixture();
++    const result = await prepareLegacySupabaseLink({ ...f.options, expectedOwner: { ...owner, privateKey: "must-not-copy" } } as typeof f.options);
++    expect(result).not.toHaveProperty("privateKey");
++    const broken = fixture();
++    broken.responses[0] = null;
++    await expect(prepareLegacySupabaseLink(broken.options)).rejects.toMatchObject({ code: "invalid_device_challenge" });
++  });
++});
+diff --git a/test/supabase-preview-config.test.ts b/test/supabase-preview-config.test.ts
+new file mode 100644
+index 0000000..147b815
+--- /dev/null
++++ b/test/supabase-preview-config.test.ts
+@@ -0,0 +1,55 @@
++import { afterEach, describe, expect, it, vi } from "vitest";
++import { allowedSupabasePreview, zSupabasePreview } from "../src/auth/supabasePreviewConfig";
++import { loadConfig, startConfig } from "../src/application/config";
++
++const preview = {
++  mode: "staging-check" as const,
++  projectRef: "bkvlxbsnzqkhbifawcww" as const,
++  url: "https://bkvlxbsnzqkhbifawcww.supabase.co" as const,
++  publishableKey: "sb_publishable_synthetic_test_key",
++};
++const serve = (body: unknown) => vi.fn(async () => new Response(JSON.stringify(body), { headers: { "content-type": "application/json" } }));
++afterEach(() => vi.unstubAllGlobals());
++describe("web migration deployment gate", () => {
++  it("keeps the existing production configuration on its released auth path", async () => {
++    expect((await loadConfig(serve({ environment: "production", apiBase: "" }))).supabaseMigration).toBe(false);
++    expect(allowedSupabasePreview("production", preview, "web.meldiq.app")).toBeNull();
++  });
++  it("refuses enabling the preview through a production config", async () => {
++    await expect(loadConfig(serve({ environment: "production", supabaseMigration: preview }))).rejects.toThrow("staging environment");
++  });
++  it("pins the separate staging project and only accepts publishable keys", () => {
++    expect(zSupabasePreview.safeParse(preview).success).toBe(true);
++    for (const value of [
++      { ...preview, projectRef: "sgowwdmnavcsofzlgggm" },
++      { ...preview, url: "https://other.supabase.co" },
++      { ...preview, publishableKey: "sb_secret_must_never_be_public" },
++      { ...preview, enabled: true },
++    ])
++      expect(zSupabasePreview.safeParse(value).success).toBe(false);
++  });
++  it("requires a dedicated staging host even when a config declares staging", () => {
++    for (const host of ["web.meldiq.app", "evil.example", "localhost.evil.example"]) expect(allowedSupabasePreview("staging", preview, host)).toBeNull();
++    for (const host of ["localhost", "127.0.0.1", "staging-web.meldiq.app"]) expect(allowedSupabasePreview("staging", preview, host)).toEqual(preview);
++  });
++  it("rechecks cached staging opt-in before showing it after a deployment rollback", async () => {
++    const saved = JSON.stringify({ environment: "staging", supabaseMigration: preview });
++    const storage = { getItem: () => saved, setItem: vi.fn(), removeItem: vi.fn() };
++    vi.stubGlobal("localStorage", storage);
++    const fresh = serve({ environment: "production" });
++    const config = await startConfig(fresh);
++    expect(fresh).toHaveBeenCalledOnce();
++    expect(config.environment).toBe("production");
++    expect(config.supabaseMigration).toBe(false);
++    expect(storage.setItem).toHaveBeenCalledWith("meldiq.config.v1", expect.not.stringContaining("sb_publishable"));
++  });
++  it("does not activate cached staging credentials when fresh config is unavailable", async () => {
++    vi.stubGlobal("localStorage", { getItem: () => JSON.stringify({ environment: "staging", supabaseMigration: preview }), setItem: vi.fn(), removeItem: vi.fn() });
++    const config = await startConfig(
++      vi.fn(async () => {
++        throw new Error("offline");
++      }),
++    );
++    expect(config.supabaseMigration).toBe(false);
++  });
++});
+diff --git a/test/supabase-preview.test.ts b/test/supabase-preview.test.ts
+new file mode 100644
+index 0000000..fd7b44d
+--- /dev/null
++++ b/test/supabase-preview.test.ts
+@@ -0,0 +1,162 @@
++import "fake-indexeddb/auto";
++import { afterEach, describe, expect, it, vi } from "vitest";
++import type { SupabaseClient } from "@supabase/supabase-js";
++import { checkSupabaseSignIn } from "../src/auth/supabasePreview";
++import { EncryptedSupabaseStorage } from "../src/auth/supabaseClient";
++import { LocalStore } from "../src/store/db";
++
++const authUserId = "10000000-0000-4000-8000-000000000001",
++  sessionId = "20000000-0000-4000-8000-000000000001";
++const token = `eyJhbGciOiJFUzI1NiJ9.${btoa(JSON.stringify({ sub: authUserId, session_id: sessionId, exp: Math.floor(Date.now() / 1000) + 3600 })).replace(/=/g, "")}.signature`;
++const provider = {
++  mode: "staging-check" as const,
++  projectRef: "bkvlxbsnzqkhbifawcww" as const,
++  url: "https://bkvlxbsnzqkhbifawcww.supabase.co" as const,
++  publishableKey: "sb_publishable_synthetic_test_key",
++};
++const owner = { accountId: "original_account", userId: "original_user", deviceId: "original_device" };
++let store: LocalStore;
++afterEach(() => {
++  store?.close();
++  vi.unstubAllGlobals();
++});
++async function fixture() {
++  store = await LocalStore.open(`preview-${crypto.randomUUID()}`);
++  await store.legacy.put("kv", { keys: "protected-original-device" }, "device");
++  await store.legacy.put("kv", "original-legacy-session", "legacy-token");
++  await store.legacy.put("outbox", {
++    messageId: "pending-message",
++    conversationId: "original-conversation",
++    cls: "message",
++    payloadJson: "original-pending-send",
++    createdAt: 1000,
++    attempts: 0,
++    nextAttemptAt: 0,
++    lastError: null,
++    visible: true,
++    held: false,
++  });
++  const session = { access_token: token, user: { id: authUserId } };
++  let key = "";
++  const auth = {
++    signInWithPassword: vi.fn(async () => {
++      await new EncryptedSupabaseStorage(store).setItem(key, JSON.stringify(session));
++      return { data: { session }, error: null };
++    }),
++    getSession: vi.fn(async () => ({ data: { session }, error: null })),
++    signOut: vi.fn(async () => ({ error: null })),
++    dispose: vi.fn(async () => {}),
++  };
++  const responses: unknown[] = [
++    { nonce: "synthetic_one_use_nonce_12345678", expiresAt: Date.now() + 120000 },
++    { ok: true },
++    { authUserId, accountId: owner.accountId, userId: owner.userId },
++    { ok: true },
++  ];
++  const request = vi.fn<typeof fetch>().mockImplementation(async () => new Response(JSON.stringify(responses.shift()), { status: 200 }));
++  const client = vi.fn((value: string) => {
++    key = value;
++    return { auth, realtime: { disconnect: vi.fn() } } as unknown as SupabaseClient;
++  });
++  const options = {
++    provider,
++    store,
++    apiOrigin: "https://api.example.test",
++    owner,
++    legacyAccessToken: "synthetic_legacy_access_token_123456",
++    email: "synthetic@example.invalid",
++    password: "synthetic provider password",
++    legacyPassword: "synthetic legacy password",
++    isCurrentOwner: vi.fn(() => true),
++    signDeviceProof: vi.fn(async () => btoa("s".repeat(64))),
++  };
++  return { options, auth, responses, request, client, getKey: () => key };
++}
++describe("staging web sign-in rehearsal", () => {
++  it("runs the actual SDK with sealed storage, bounded credential requests and local-scope logout", async () => {
++    const f = await fixture();
++    const sdkFetch = vi.fn<typeof fetch>().mockImplementation(async (input) => {
++      const url = new URL(String(input));
++      expect(url.origin).toBe(provider.url);
++      if (url.pathname.endsWith("/token"))
++        return new Response(
++          JSON.stringify({
++            access_token: token,
++            refresh_token: "synthetic_sdk_refresh_token",
++            token_type: "bearer",
++            expires_in: 3600,
++            user: { id: authUserId, aud: "authenticated", app_metadata: { provider: "email" }, user_metadata: {}, created_at: new Date().toISOString() },
++          }),
++          { status: 200, headers: { "content-type": "application/json" } },
++        );
++      expect(url.pathname.endsWith("/logout")).toBe(true);
++      expect(url.searchParams.get("scope")).toBe("local");
++      return new Response(null, { status: 204 });
++    });
++    vi.stubGlobal("fetch", sdkFetch);
++    expect(await checkSupabaseSignIn(f.options, { fetch: f.request })).toMatchObject({ ...owner, authUserId });
++    expect(sdkFetch).toHaveBeenCalledTimes(2);
++    for (const [, init] of sdkFetch.mock.calls) expect(init).toMatchObject({ credentials: "omit", redirect: "error", cache: "no-store" });
++    const keys = await store.legacy.getAllKeys("kv");
++    expect(keys.some((key) => String(key).includes("meldiq-supabase-preview:"))).toBe(false);
++    expect(await store.legacy.get("kv", "legacy-token")).toBe("original-legacy-session");
++  });
++  it("verifies exact ownership then revokes both test sessions without changing keys, legacy auth or the offline outbox", async () => {
++    const f = await fixture();
++    expect(await checkSupabaseSignIn(f.options, { client: f.client, fetch: f.request })).toEqual({ ...owner, authUserId, providerSessionId: sessionId });
++    expect(f.request.mock.calls[3]).toMatchObject([
++      "https://api.example.test/v3/auth/session",
++      { method: "DELETE", redirect: "error", credentials: "omit", cache: "no-store", headers: { authorization: `Bearer ${token}` } },
++    ]);
++    expect(f.auth.signOut).toHaveBeenCalledWith({ scope: "local" });
++    expect(f.auth.dispose).toHaveBeenCalledOnce();
++    expect(await new EncryptedSupabaseStorage(store).getItem(f.getKey())).toBeNull();
++    expect(await store.legacy.get("kv", "device")).toEqual({ keys: "protected-original-device" });
++    expect(await store.legacy.get("kv", "legacy-token")).toBe("original-legacy-session");
++    expect(await store.legacy.get("outbox", "pending-message")).toMatchObject({ messageId: "pending-message", payloadJson: "original-pending-send", attempts: 0 });
++  });
++  it("rejects a real-user address before opening an SDK session", async () => {
++    const f = await fixture();
++    await expect(checkSupabaseSignIn({ ...f.options, email: "person@real.example" }, { client: f.client, fetch: f.request })).rejects.toMatchObject({ code: "synthetic_account_required" });
++    expect(f.client).not.toHaveBeenCalled();
++    expect(f.request).not.toHaveBeenCalled();
++  });
++  it("does not create a new session for an account that has already switched", async () => {
++    const f = await fixture();
++    f.options.isCurrentOwner.mockReturnValue(false);
++    await expect(checkSupabaseSignIn(f.options, { client: f.client, fetch: f.request })).rejects.toMatchObject({ code: "preview_cancelled" });
++    expect(f.client).not.toHaveBeenCalled();
++  });
++  it("fences cancellation during provider sign-in and still ends and removes the SDK session", async () => {
++    const f = await fixture(),
++      abort = new AbortController();
++    f.auth.signInWithPassword.mockImplementationOnce(async () => {
++      abort.abort();
++      return { data: { session: { access_token: token, user: { id: authUserId } } }, error: null };
++    });
++    await expect(checkSupabaseSignIn({ ...f.options, signal: abort.signal }, { client: f.client, fetch: f.request })).rejects.toMatchObject({ code: "preview_cancelled" });
++    expect(f.request).not.toHaveBeenCalled();
++    expect(f.auth.signOut).toHaveBeenCalledOnce();
++    expect(f.auth.dispose).toHaveBeenCalledOnce();
++  });
++  it("rejects mismatched ownership and cleans up without revoking an unverified application binding", async () => {
++    const f = await fixture();
++    f.responses[2] = { authUserId, accountId: "other-account", userId: owner.userId };
++    await expect(checkSupabaseSignIn(f.options, { client: f.client, fetch: f.request })).rejects.toMatchObject({ code: "identity_mismatch" });
++    expect(f.request).toHaveBeenCalledTimes(3);
++    expect(f.auth.signOut).toHaveBeenCalledOnce();
++  });
++  it("refuses a stale result if SDK state changes after the device proof", async () => {
++    const f = await fixture();
++    f.auth.getSession.mockResolvedValueOnce({ data: { session: { access_token: "changed-token", user: { id: authUserId } } }, error: null });
++    await expect(checkSupabaseSignIn(f.options, { client: f.client, fetch: f.request })).rejects.toMatchObject({ code: "provider_session_changed" });
++    expect(f.request.mock.calls.at(-1)?.[1]?.method).toBe("DELETE");
++  });
++  it("does not call a test passed when session cleanup fails", async () => {
++    const f = await fixture();
++    f.request.mockImplementationOnce(async () => new Response(JSON.stringify(f.responses.shift()), { status: 200 }));
++    f.auth.signOut.mockRejectedValueOnce(new Error(`private ${token} ${f.options.password}`));
++    await expect(checkSupabaseSignIn(f.options, { client: f.client, fetch: f.request })).rejects.toMatchObject({ code: "preview_cleanup_failed" });
++    expect(await new EncryptedSupabaseStorage(store).getItem(f.getKey())).toBeNull();
++  });
++});
