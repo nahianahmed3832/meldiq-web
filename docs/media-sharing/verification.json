@@ -161,6 +161,15 @@
     "permissionsRestored": true,
     "receipt": "production-evidence/production-receipt.json",
     "publicVerification": "production-evidence/public-verification.json",
-    "githubCi": "https://github.com/nahianahmed3832/meldiq-web/actions/runs/41455802482"
+    "githubCi": "https://github.com/nahianahmed3832/meldiq-web/actions/runs/41455802482",
+    "androidSourceCommit": "5d9621f6214ed3af5dfe539f69862b05c7bc8280",
+    "androidFocusedTests": 58,
+    "androidApkAssemblyPassed": true,
+    "androidPlayPublished": false,
+    "androidFullUnitRun": {
+      "passed": 783,
+      "total": 787,
+      "existingRealtimeContractFailures": 4
+    }
   }
 }
