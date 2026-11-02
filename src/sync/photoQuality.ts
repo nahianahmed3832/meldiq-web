@@ -34,7 +34,7 @@ export function encodedName(name: string, type: string): string {
 export class PhotoPrepareError extends Error {}
 
 /** Re-encodes [file] at [quality] (browser only: needs createImageBitmap and a canvas). */
-export async function preparePhoto(file: File, quality: PhotoQuality | "auto" = "original"): Promise<File> {
+export async function preparePhoto(file: File, quality: PhotoQuality | "auto" = "auto"): Promise<File> {
   if (quality === "auto") return optimizePhoto(file);
   if (quality === "original" || !reencodable(file.type)) return file;
   if (file.size > 32 * 1024 * 1024) return file;

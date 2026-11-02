@@ -1,0 +1,26 @@
+{
+  "verifiedAt": "2026-11-02T15:27:03.138679+00:00",
+  "unitPassed": 910,
+  "unitSkipped": 1,
+  "browserPassed": 12,
+  "browserProjects": [
+    "chromium",
+    "webkit",
+    "phone-width",
+    "iphone-width"
+  ],
+  "lintPassed": true,
+  "formatPassed": true,
+  "productionBuildPassed": true,
+  "videoChecks": [
+    "smaller output than 1080p input",
+    "at most 1280x720 for 16:9 input",
+    "non-silent retained audio",
+    "playable download"
+  ],
+  "originalChecks": [
+    "unchecked default",
+    "single optional checkbox",
+    "unchanged photo download bytes"
+  ]
+}

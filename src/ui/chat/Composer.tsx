@@ -15,6 +15,7 @@ import type { RichContent } from "../../model/types";
 import { fileLimit, MAX_FILES_PER_MESSAGE, sendFiles } from "../../sync/attachments";
 import { AttachmentDrafts } from "./AttachmentDrafts";
 import { inspectFile } from "../../sync/attachmentPolicy";
+import { optimizeVideo } from "../../sync/videoQuality";
 import { preparePhoto } from "../../sync/photoQuality";
 import { UploadCancelled } from "../../sync/largeUpload";
 import { transfersOf } from "../../sync/transfers";
@@ -71,7 +72,9 @@ export function Composer(props: ComposerProps) {
   const pickedRoles = useRef<MentionRole[]>([]);
   const [text, setText] = useState("");
   const [files, setFiles] = useState<File[]>([]);
-  const [photoQuality, setPhotoQuality] = useState<"original" | "auto">("original");
+  const [photoQuality, setPhotoQuality] = useState<"original" | "auto">("auto");
+  const preparing = useRef<AbortController | null>(null);
+  useEffect(() => () => preparing.current?.abort(), []);
   const mediaInput = useRef<HTMLInputElement>(null);
   const videoInput = useRef<HTMLInputElement>(null);
   const cameraInput = useRef<HTMLInputElement>(null);
@@ -204,6 +207,7 @@ export function Composer(props: ComposerProps) {
             : `"${tooBig.name}" is larger than this server accepts (${Math.floor(limit / (1024 * 1024))} MB per file).`,
         );
       }
+      if (!files.length) setPhotoQuality("auto");
       setFiles((cur) => [...cur, ...list.filter((f) => f.size <= limit && f.size > 0)].slice(0, MAX_FILES_PER_MESSAGE));
     },
     [engine, planUploadLimit, can.attach, files.length],
@@ -279,7 +283,17 @@ export function Composer(props: ComposerProps) {
         setBusy("Preparing uploads…");
         // One at a time: decoding several large photos at once can run a phone's browser out of memory.
         const prepared: File[] = [];
-        for (const f of files) prepared.push(await preparePhoto(await inspectFile(f), photoQuality));
+        preparing.current = new AbortController();
+        for (const f of files) {
+          const inspected = await inspectFile(f);
+          const optimized =
+            photoQuality !== "original" && inspected.type.startsWith("video/")
+              ? await optimizeVideo(inspected, preparing.current.signal, (percent) => setBusy(`Optimizing video… ${percent}%`))
+              : await preparePhoto(inspected, photoQuality);
+          if (preparing.current.signal.aborted) throw new UploadCancelled();
+          prepared.push(optimized);
+        }
+        preparing.current = null;
         // The transfer belongs to the app (sync/transfers.ts): it keeps going, with its progress shown above this box,
         // if this conversation is left; the same send while it runs joins it rather than starting another.
         await transfersOf(engine).start(
@@ -297,6 +311,7 @@ export function Composer(props: ComposerProps) {
       }
       if (slowed && !props.threadRoot) setLastSent(Date.now());
       setFiles([]);
+      setPhotoQuality("auto");
       props.onCancelReply();
       engine.setTyping(c.id, false);
     } catch (e) {
@@ -304,8 +319,9 @@ export function Composer(props: ComposerProps) {
       const restored = input.current?.value || body;
       setText(restored);
       if (!props.threadRoot) void engine.saveDraft(c.id, restored);
-      if (!(e instanceof UploadCancelled)) engine.notice("error", e instanceof Error ? e.message : "Couldn't send.");
+      if (!(e instanceof UploadCancelled) && !(e instanceof DOMException && e.name === "AbortError")) engine.notice("error", e instanceof Error ? e.message : "Couldn't send.");
     } finally {
+      preparing.current = null;
       setBusy(null);
       input.current?.focus();
     }
@@ -449,15 +465,18 @@ export function Composer(props: ComposerProps) {
         {files.length > 0 && (
           <>
             <AttachmentDrafts files={files} disabled={!!busy} onRemove={(index) => setFiles((cur) => cur.filter((_, i) => i !== index))} />
-            {files.some((f) => f.type.startsWith("image/")) && (
-              <label className="attachment-quality">
-                Photo quality
-                <select value={photoQuality} disabled={!!busy} onChange={(e) => setPhotoQuality(e.target.value as "original" | "auto")}>
-                  <option value="original">Original · unchanged file</option>
-                  <option value="auto">Optimized · smaller photos</option>
-                </select>
-                <small>{photoQuality === "original" ? "Full quality. Original files may include location metadata." : "Static photos may be resized. Choose Original to keep every detail."}</small>
-              </label>
+            {files.some((f) => f.type.startsWith("image/") || f.type.startsWith("video/")) && (
+              <div className="attachment-quality">
+                <label>
+                  <input type="checkbox" checked={photoQuality === "original"} disabled={!!busy} onChange={(e) => setPhotoQuality(e.target.checked ? "original" : "auto")} />
+                  Original file
+                </label>
+                <small>
+                  {photoQuality === "original"
+                    ? "Send unchanged files, including any saved location metadata."
+                    : "Photos and videos are optimized automatically. Animations and already efficient files keep their quality."}
+                </small>
+              </div>
             )}
           </>
         )}
@@ -588,6 +607,11 @@ export function Composer(props: ComposerProps) {
             {busy && (
               <div className="composer-status" id={`composer-status-${c.id}`} aria-live="polite">
                 <span className="grow">{busy}</span>
+                {preparing.current && (
+                  <button type="button" className="text-btn" onClick={() => preparing.current?.abort()}>
+                    Cancel
+                  </button>
+                )}
               </div>
             )}
           </>

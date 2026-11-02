@@ -1,0 +1,21 @@
+[WebServer] (node:90436) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:90436) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+[WebServer] (node:90436) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+[WebServer] (node:90440) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 6 tests using 1 worker
+
+(node:90442) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 [chromium] › e2e/media-sharing.spec.ts:54:1 › a photo album and a document share one caption, retain original bytes and support zoom (13.9s)
+  ✓  2 [chromium] › e2e/media-sharing.spec.ts:89:1 › a selected video previews, uploads and plays inline and in the viewer (6.2s)
+  ✓  3 [chromium] › e2e/media-sharing.spec.ts:112:1 › media is optimized by default and Original file is the only optional choice (13.9s)
+(node:90571) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  4 [webkit] › e2e/media-sharing.spec.ts:54:1 › a photo album and a document share one caption, retain original bytes and support zoom (9.6s)
+  ✓  5 [webkit] › e2e/media-sharing.spec.ts:89:1 › a selected video previews, uploads and plays inline and in the viewer (17.2s)
+  ✓  6 [webkit] › e2e/media-sharing.spec.ts:112:1 › media is optimized by default and Original file is the only optional choice (32.3s)
+
+  6 passed (1.8m)
