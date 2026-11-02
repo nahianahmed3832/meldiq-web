@@ -1,10 +1,19 @@
 import { describe, expect, it } from "vitest";
-import { isHere, type ListedRole, memberListGroups, nameColor } from "../src/ui/chat/memberListRules";
+import { isHere, type ListedRole, type ListedMember, memberListGroups, nameColor, withCommunityBots } from "../src/ui/chat/memberListRules";
 
 const person = (id: string, displayName: string, presence: "online" | "idle" | "dnd" | "offline" | null, online: boolean | null = null) => ({ id, displayName, presence, online });
 const role = (id: string, position: number, hoist: boolean, color: string | null = null): ListedRole => ({ id, name: id.toUpperCase(), color, hoist, position });
 
 describe("member list", () => {
+  it("adds directory bots omitted by the channel API without adding unrelated people or duplicating accounts", () => {
+    const human = person("human", "Human", "online");
+    const bot = { ...person("bot", "Channel bot name", "offline"), bot: true };
+    const directory = [person("other", "Another person", "online"), { ...bot, displayName: "Directory bot name" }, { ...bot, id: "bot2" }];
+    const result = withCommunityBots<ListedMember>([human, bot], directory);
+    expect(result.map((m) => m.id)).toEqual(["human", "bot", "bot2"]);
+    expect(result[1]).toBe(bot);
+    expect(withCommunityBots([human], [])).toEqual([human]);
+  });
   it("counts online, idle and do not disturb as here, and hidden presence by the online flag", () => {
     expect(isHere({ presence: "online", online: true })).toBe(true);
     expect(isHere({ presence: "idle", online: true })).toBe(true);

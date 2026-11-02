@@ -16,7 +16,7 @@ import { themeBackground, themeColorsOf } from "../people/profileTheme";
 import { dmPeer, relative } from "../format";
 import { openProfile } from "../people/ProfileDialog";
 import { useMembers } from "./ConversationDetails";
-import { isHere, memberListGroups, roleNameColors } from "./memberListRules";
+import { isHere, memberListGroups, roleNameColors, withCommunityBots } from "./memberListRules";
 import { useT } from "../../i18n";
 import { CommunityOwnerBadge } from "../components/CommunityOwnerBadge";
 import { IdentityGlyph } from "../components/IdentityGlyph";
@@ -54,11 +54,11 @@ export function MemberListPanel({ c, onClose }: { c: Conversation; onClose: () =
   const users = useOrbit((s) => s.users);
   const { members, error } = useMembers(c.id, c.memberCount);
   // Guests and roles without the member directory see the list without role groups and nicknames.
-  const { roles, nicknames } = useCommunityMembers(c.type === "CHANNEL" ? c.orgId : null);
+  const { roles, nicknames, bots } = useCommunityMembers(c.type === "CHANNEL" ? c.orgId : null);
   // The store has the latest presence, names and photos (live updates); the member list has everyone.
   const people = useMemo(
     () =>
-      (members ?? []).map((m) => {
+      (members ? withCommunityBots<Member>(members, bots) : []).map((m) => {
         const u = users[m.id];
         return {
           ...m,
@@ -69,7 +69,7 @@ export function MemberListPanel({ c, onClose }: { c: Conversation; onClose: () =
           bot: m.bot ?? (u?.bot === true ? (true as const) : undefined),
         };
       }),
-    [members, users, nicknames],
+    [members, users, nicknames, bots],
   );
   const groups = useMemo(() => memberListGroups(people, (id) => roles.get(id)), [people, roles]);
 

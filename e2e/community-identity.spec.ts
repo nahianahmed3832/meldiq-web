@@ -64,13 +64,14 @@ test("owner priority, editable role heading, themed PLUS and persistent bot labe
   const list = page.locator("aside.member-list");
   await expect(list.locator(".member-group").first()).toHaveText("Admin — 1");
   await expect(list.locator(".member-row").first()).toContainText("Zoya Rahman");
-  // The server adds the installed helper to a channel when it participates there.
+  // Installed bots are visible through the community directory, even when the channel endpoint omits them.
+  const botSection = list.locator("section").filter({ has: page.locator(".member-group", { hasText: /^Bots/ }) });
+  await expect(botSection.locator(".bot-tag")).toHaveText("BOT");
   const composer = page.getByRole("textbox", { name: /^Message/ });
   await composer.fill("!roll 1d6");
   await composer.press("Enter");
   await expect(page.locator(".msg .bot-tag").first()).toBeVisible();
   await page.reload();
-  const botSection = list.locator("section").filter({ has: page.locator(".member-group", { hasText: /^Bots/ }) });
   await expect(botSection.locator(".bot-tag")).toHaveText("BOT");
   await expect(list.locator(".mojo-badge")).toHaveText("PLUS");
   await expect(list.locator(".mojo-badge svg")).toHaveCount(0);
@@ -115,7 +116,7 @@ test("owner priority, editable role heading, themed PLUS and persistent bot labe
   await expect(list.locator(".member-row").first()).toContainText("Zoya Rahman");
   await expect(botSection.locator(".bot-tag")).toHaveText("BOT");
   await list.screenshot({ path: info.outputPath("owner-custom-heading.png") });
-  const bot = (await owner.req("GET", `/v1/conversations/${channel.id}/members`)).members.find((m: { bot?: boolean }) => m.bot);
+  const bot = (await owner.req("GET", `/v1/orgs/${org.id}/members`)).members.find((m: { bot?: boolean }) => m.bot);
   const { conversation } = await owner.req("POST", "/v1/conversations/dm", { userId: bot.id });
   await page.goto(`/dms/c/${conversation.id}`);
   await expect(page.locator(".conv-head .bot-tag")).toHaveText("BOT");

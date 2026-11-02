@@ -37,6 +37,15 @@ export function isHere(m: Pick<ListedMember, "presence" | "online">): boolean {
 
 const byPosition = (a: ListedRole, b: ListedRole) => a.position - b.position || a.name.localeCompare(b.name);
 
+/** The conversation endpoint can omit bots. Add only bots from the permission-checked community directory. */
+export function withCommunityBots<T extends ListedMember>(members: readonly T[], directory: readonly T[]): T[] {
+  const listed = new Map(members.map((m) => [m.id, m]));
+  for (const bot of directory) {
+    if (bot.bot && !listed.has(bot.id)) listed.set(bot.id, bot);
+  }
+  return [...listed.values()];
+}
+
 /** The colour a person's name takes in the member list: their highest role that has one. */
 export function nameColor(roles: readonly ListedRole[] | undefined): string | null {
   return [...(roles ?? [])].sort(byPosition).find((r) => r.color)?.color ?? null;

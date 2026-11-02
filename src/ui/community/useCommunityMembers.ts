@@ -13,10 +13,11 @@ import type { ListedRole } from "../chat/memberListRules";
 export interface CommunityMembers {
   roles: Map<string, ListedRole[]>;
   nicknames: Map<string, string>;
+  bots: DirectoryMember[];
 }
 
 const TTL_MS = 60_000;
-const EMPTY: CommunityMembers = { roles: new Map(), nicknames: new Map() };
+const EMPTY: CommunityMembers = { roles: new Map(), nicknames: new Map(), bots: [] };
 const cache = new Map<string, { at: number; members: CommunityMembers }>();
 const loading = new Map<string, Promise<CommunityMembers>>();
 const listeners = new Set<() => void>();
@@ -31,6 +32,7 @@ export function membersFrom(people: readonly DirectoryMember[]): CommunityMember
   return {
     roles: new Map(people.map((p) => [p.id, p.customRoles.map((r) => ({ ...r, color2: r.color2 ?? null }))])),
     nicknames: new Map(people.flatMap((p) => (p.nickname?.trim() ? [[p.id, p.nickname] as const] : []))),
+    bots: people.filter((p) => p.bot),
   };
 }
 
@@ -60,8 +62,9 @@ export function forgetCommunityMembers(orgId: string): void {
 export function useCommunityMembers(orgId: string | null, version = 0): CommunityMembers {
   const engine = useEngine();
   const changed = useSyncExternalStore(subscribe, revision, () => 0);
-  const [members, setMembers] = useState<CommunityMembers>((orgId && cache.get(orgId)?.members) || EMPTY);
+  const [loaded, setLoaded] = useState(() => ({ orgId, members: (orgId && cache.get(orgId)?.members) || EMPTY }));
   useEffect(() => {
+    const setMembers = (members: CommunityMembers) => setLoaded({ orgId, members });
     if (!orgId) return setMembers(EMPTY);
     const hit = cache.get(orgId);
     if (hit && Date.now() - hit.at < TTL_MS) return setMembers(hit.members);
@@ -71,5 +74,5 @@ export function useCommunityMembers(orgId: string | null, version = 0): Communit
       alive = false;
     };
   }, [engine, orgId, version, changed]);
-  return members;
+  return loaded.orgId === orgId ? loaded.members : EMPTY;
 }
