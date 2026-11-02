@@ -1,3 +1,4 @@
+import { BotTag } from "../components/BotTag";
 import { Bot, Search, Trash2 } from "lucide-react";
 import { type FormEvent, useState } from "react";
 import type { OrgAdminDetail } from "../../api/workspaceSchemas";
@@ -56,7 +57,7 @@ function InstalledBots({ detail }: { detail: OrgAdminDetail }) {
               <Bot size={18} className="faint" />
               <span className="lines grow">
                 <span className="ellipsis">
-                  {b.displayName} <span className="bot-tag">BOT</span>
+                  {b.displayName} <BotTag />
                 </span>
                 <small>@{b.username}</small>
               </span>
@@ -109,7 +110,7 @@ function AddBot({ orgId, onAdded }: { orgId: string; onAdded: () => void }) {
           <Bot size={22} className="faint" />
           <span className="lines grow">
             <span className="ellipsis">
-              {found.displayName} <span className="bot-tag">BOT</span>
+              {found.displayName} <BotTag />
             </span>
             <small>
               @{found.username}

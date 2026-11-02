@@ -85,6 +85,7 @@
   vertical-align: -3px;
   opacity: 0.85;
 }
+.bot-tag,
 .identity-name .bot-tag {
   gap: 3px;
   height: 18px;

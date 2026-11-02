@@ -1,3 +1,4 @@
+import { BotTag } from "../components/BotTag";
 import { MoreHorizontal, Search, UserPlus } from "lucide-react";
 import { AddMembersDialog } from "./AddMembersDialog";
 import { useState } from "react";
@@ -139,7 +140,7 @@ function MemberRow(props: { member: DirectoryMember; detail: OrgAdminDetail; myR
         <span className="ellipsis">
           {m.nickname?.trim() ? m.nickname : m.displayName}
           {m.nickname?.trim() && <span className="faint"> ({m.displayName})</span>}
-          {m.bot && <span className="bot-tag">BOT</span>}
+          {m.bot && <BotTag />}
           {self && <span className="faint"> (you)</span>}
         </span>
         <small className="ellipsis">

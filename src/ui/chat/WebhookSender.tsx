@@ -1,3 +1,4 @@
+import { BotTag } from "../components/BotTag";
 import { Avatar, colorIndexOf } from "../components/Avatar";
 import { usePhoto } from "../components/photos";
 import type { PostWebhook } from "../../sync/posting/embeds";
@@ -12,10 +13,7 @@ export function WebhookAvatar({ id, name, avatarRev, size = 38 }: { id: string; 
 export function WebhookName({ webhook }: { webhook: PostWebhook }) {
   return (
     <span className="msg-name webhook-name">
-      {webhook.name}{" "}
-      <span className="bot-tag" title="Posted through a webhook, not by a member">
-        BOT
-      </span>
+      {webhook.name} <BotTag title="Posted through a webhook" />
     </span>
   );
 }

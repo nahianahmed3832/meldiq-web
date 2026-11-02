@@ -1,3 +1,4 @@
+import { BotTag } from "../../components/BotTag";
 import { ChevronRight, Code2, SmilePlus, Sparkles } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { OrgAdminDetail } from "../../../api/workspaceSchemas";
@@ -78,7 +79,7 @@ export function OfficialBotsSection({ detail }: { detail: OrgAdminDetail }) {
                     <BotIcon bot={bot} catalog={c} size={40} />
                     <span className="lines grow">
                       <span className="ellipsis">
-                        {bot?.look.displayName ?? c.name} <span className="bot-tag">BOT</span>
+                        {bot?.look.displayName ?? c.name} <BotTag />
                       </span>
                       <small className="ellipsis">{c.tagline}</small>
                       <small className={`obot-status${bot?.enabled ? " on" : ""}`}>

@@ -1,3 +1,4 @@
+import { BotTag } from "../../components/BotTag";
 import { ImagePlus, Trash2 } from "lucide-react";
 import { useRef, useState } from "react";
 import { useEngine } from "../../../application/orbit";
@@ -54,7 +55,7 @@ export function BotLook({ orgId, bot, catalog, canEdit, onChanged }: BotLookProp
         <BotIcon bot={bot} catalog={catalog} size={44} />
         <span className="lines grow">
           <span className="ellipsis">
-            {bot.look.displayName} <span className="bot-tag">BOT</span>
+            {bot.look.displayName} <BotTag />
           </span>
           <small>{bot.look.name ? `Named by this community · Meldiq's ${catalog.name}` : "Its standard name and picture"}</small>
         </span>

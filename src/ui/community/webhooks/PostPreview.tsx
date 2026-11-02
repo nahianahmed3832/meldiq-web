@@ -1,3 +1,4 @@
+import { BotTag } from "../../components/BotTag";
 import { draftPreview, type PostDraft } from "../../../sync/posting/draft";
 import { avatarRevOf } from "../../../sync/posting/embeds";
 import type { Webhook } from "../../../sync/posting/api";
@@ -18,7 +19,7 @@ export function PostPreview({ draft, webhook, orgId, channelId }: { draft: PostD
         <div className="msg-main">
           <div className="msg-head">
             <span className="msg-name webhook-name">
-              {name} <span className="bot-tag">BOT</span>
+              {name} <BotTag />
             </span>
           </div>
           {draft.threadName.trim() && <strong className="preview-title">{draft.threadName.trim()}</strong>}

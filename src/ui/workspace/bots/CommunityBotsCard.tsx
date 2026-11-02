@@ -1,3 +1,4 @@
+import { BotTag } from "../../components/BotTag";
 import { Bot, Search } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { DirectoryBot } from "../../../api/discoverySchemas";
@@ -114,7 +115,7 @@ function DirectoryRow({ bot: b, added, busy, onAdd }: DirectoryRowProps) {
       <Bot size={20} className="faint" aria-hidden="true" />
       <span className="lines grow">
         <span className="ellipsis">
-          {b.displayName} <span className="bot-tag">BOT</span>
+          {b.displayName} <BotTag />
           {category && <span className="chip bot-dir-cat">{category}</span>}
         </span>
         {b.description && <span className="bot-dir-desc">{b.description}</span>}

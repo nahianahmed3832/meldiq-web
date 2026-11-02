@@ -1,14 +1,45 @@
 import { expect, test } from "@playwright/test";
-import { link } from "./link";
+import crypto from "node:crypto";
+import { emailedCode } from "./mail";
 import { newPhone, testAddress } from "./phone";
 
 test.use({ serviceWorkers: "block" });
-test.skip(({ browserName, isMobile }) => browserName !== "chromium" || isMobile, "includes its own desktop and phone viewport checks");
+test.skip(({ isMobile }) => isMobile, "includes its own desktop and phone viewport checks");
 test.setTimeout(300_000);
 
 test("owner priority, editable role heading, themed PLUS and persistent bot labels", async ({ page, context }, info) => {
   await context.setExtraHTTPHeaders({ "x-orbit-test-ip": testAddress() });
-  const owner = await newPhone("identityowner", "Zoya Rahman");
+  // Use normal email onboarding against the exact production export, without development device linking.
+  let authorization = "";
+  page.on("request", (request) => {
+    authorization = request.headers()["authorization"] || authorization;
+  });
+  const email = `identity.${crypto.randomBytes(6).toString("hex")}@example.test`;
+  await page.goto("/");
+  await expect(page.getByRole("button", { name: "Create an account", exact: true })).toBeVisible({ timeout: 30_000 });
+  await page.getByRole("button", { name: "Create an account", exact: true }).click();
+  await page.getByLabel("Your name", { exact: true }).fill("Zoya Rahman");
+  await page.getByLabel("Email", { exact: true }).fill(email);
+  await page.getByLabel("Password", { exact: true }).fill("a long enough password for identity verification");
+  await page.getByRole("button", { name: "Create account", exact: true }).click();
+  await expect(page.getByRole("heading", { name: "Check your email" })).toBeVisible();
+  await page.getByLabel("Code", { exact: true }).fill(await emailedCode(email, "verify"));
+  await page.getByRole("button", { name: "Confirm", exact: true }).click();
+  await page.getByRole("button", { name: "Set up encryption", exact: true }).click();
+  await page.getByLabel("I've stored my recovery key somewhere safe.").check();
+  await page.getByRole("button", { name: "Open Meldiq", exact: true }).click();
+  await expect(page.locator('.app[data-connection="online"]').first()).toBeVisible();
+  const req = async (method: string, path: string, data?: Record<string, unknown>) => {
+    expect(authorization).toMatch(/^Bearer /);
+    const response = await page.request.fetch(`${process.env.ORBIT_E2E_API}${path}`, {
+      method,
+      headers: { authorization, "x-forwarded-for": testAddress() },
+      ...(data ? { data } : {}),
+    });
+    expect(response.ok(), `${method} ${path}: ${response.status()}`).toBe(true);
+    return response.json();
+  };
+  const owner = { userId: (await req("GET", "/v1/users/me")).user.id as string, req };
   const mod = await newPhone("identitymod", "Mina Ahmed");
   const { org } = await owner.req("POST", "/v1/orgs", { name: "The Makers Club" });
   const { invite } = await owner.req("POST", `/v1/orgs/${org.id}/invites`, { role: "MEMBER", maxUses: 1 });
@@ -21,7 +52,6 @@ test("owner priority, editable role heading, themed PLUS and persistent bot labe
   const channels = (await owner.req("GET", "/v1/conversations")).conversations as { id: string; orgId: string; name: string }[];
   const channel = channels.find((c) => c.orgId === org.id && c.name === "general")!;
   await mod.req("POST", `/v1/conversations/${channel.id}/join`).catch(() => undefined);
-  await owner.connect();
   await mod.connect();
   // Subscription display fixture only; no entitlement or subscription is granted to a test account.
   await page.route(`**/v1/conversations/${channel.id}/members`, async (route) => {
@@ -30,11 +60,16 @@ test("owner priority, editable role heading, themed PLUS and persistent bot labe
     body.members = body.members.map((m: { id: string }) => (m.id === owner.userId ? { ...m, mojo: { badge: "plus", check: true } } : m));
     await route.fulfill({ response, json: body });
   });
-  await link(page, owner);
   await page.goto(`/home/c/${channel.id}`);
   const list = page.locator("aside.member-list");
   await expect(list.locator(".member-group").first()).toHaveText("Admin — 1");
   await expect(list.locator(".member-row").first()).toContainText("Zoya Rahman");
+  // The server adds the installed helper to a channel when it participates there.
+  const composer = page.getByRole("textbox", { name: /^Message/ });
+  await composer.fill("!roll 1d6");
+  await composer.press("Enter");
+  await expect(page.locator(".msg .bot-tag").first()).toBeVisible();
+  await page.reload();
   const botSection = list.locator("section").filter({ has: page.locator(".member-group", { hasText: /^Bots/ }) });
   await expect(botSection.locator(".bot-tag")).toHaveText("BOT");
   await expect(list.locator(".mojo-badge")).toHaveText("PLUS");

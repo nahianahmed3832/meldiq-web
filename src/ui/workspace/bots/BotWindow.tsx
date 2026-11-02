@@ -1,3 +1,4 @@
+import { BotTag } from "../../components/BotTag";
 import { BotDiagnostics } from "./BotDiagnostics";
 import { Check, Clock, X } from "lucide-react";
 import { type CSSProperties, useMemo, useState } from "react";
@@ -97,7 +98,7 @@ export function BotWindow({ orgId, orgName, memberCount, catalog, bot, botsPlus,
       <BotIcon bot={bot} catalog={catalog} size={56} />
       <span className="lines grow">
         <h2>
-          {bot?.look.displayName ?? catalog.name} <span className="bot-tag">BOT</span>
+          {bot?.look.displayName ?? catalog.name} <BotTag />
         </h2>
         <small>{catalog.tagline}</small>
       </span>
@@ -210,7 +211,7 @@ function SampleMessage({ bot, catalog }: { bot: OfficialBot | null; catalog: Cat
       <BotIcon bot={bot} catalog={catalog} size={36} />
       <span className="lines grow">
         <span>
-          <strong>{bot?.look.displayName ?? catalog.name}</strong> <span className="bot-tag">BOT</span> <small className="faint">Today</small>
+          <strong>{bot?.look.displayName ?? catalog.name}</strong> <BotTag /> <small className="faint">Today</small>
         </span>
         <span className="obot-sample-text">{catalog.sample}</span>
       </span>

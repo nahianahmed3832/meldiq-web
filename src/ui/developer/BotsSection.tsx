@@ -1,3 +1,4 @@
+import { BotTag } from "../components/BotTag";
 import { Bot, KeyRound, Pencil, Plus, Trash2 } from "lucide-react";
 import { type FormEvent, useState } from "react";
 import { ApiError } from "../../api/client";
@@ -112,7 +113,7 @@ function BotRow({ bot, onChanged, onSecret }: { bot: DeveloperBot; onChanged: ()
         <Bot size={18} className="faint" />
         <span className="lines grow">
           <span className="ellipsis">
-            {bot.displayName} <span className="bot-tag">BOT</span>
+            {bot.displayName} <BotTag />
           </span>
           <small>
             @{bot.username} · {bot.commands} {bot.commands === 1 ? "command" : "commands"} · in {bot.communities} {bot.communities === 1 ? "community" : "communities"} · token from{" "}

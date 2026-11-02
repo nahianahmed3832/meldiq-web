@@ -7,6 +7,8 @@ import { useOrbit } from "../../application/orbit";
 import type { UserLite } from "../../state/store";
 import { StyledAvatar } from "./ProfileStyle";
 import { IdentityGlyph } from "../components/IdentityGlyph";
+import { BotTag } from "../components/BotTag";
+export { BotTag } from "../components/BotTag";
 
 /**
  * Name styles (API 0.46.0): a display name in one of Meldiq's fonts, in a colour or a gradient of two or three, with an
@@ -84,16 +86,6 @@ export function StyledName({ name, style, tag, mojo, everyBadge, roleColor, role
       {tag && <WornTagChip tag={tag} />}
       {badge === "mojo" && mojo && <MojoBadgeMark badge={mojo.badge} check={mojo.check} />}
       {(badge === "bug-hunter" || badge === "artist") && <NameBadgeMark badge={badge} />}
-    </span>
-  );
-}
-
-/** The tag after a bot's name (API 0.65.0 batch B): bots are accounts of their own that people make in Developer settings. */
-export function BotTag() {
-  return (
-    <span className="bot-tag" title="A bot: an app someone made, not a person">
-      <IdentityGlyph kind="bot" size={11} />
-      BOT
     </span>
   );
 }
