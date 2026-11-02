@@ -35,7 +35,8 @@ function PlusCheckoutPage({ initial }: { initial: ReturnType<typeof readCheckout
   const draft = saved.draft;
   const gift = draft.product === "gift";
   const cards = usePayPalCardSdk(config, !gift, attempt);
-  const recipient = useOrbit((s) => (gift ? (s.users[draft.recipientUserId]?.displayName ?? draft.recipientUserId) : null));
+  const recipientId = gift ? (draft.recipient?.kind === "user" ? draft.recipient.userId : draft.recipientUserId) : undefined;
+  const recipient = useOrbit((s) => (recipientId ? (s.users[recipientId]?.displayName ?? recipientId) : gift && draft.recipient?.kind === "email" ? draft.recipient.email : "a gift link"));
   const price = catalog?.onSale.plus;
   const amount = (price?.amountMinor ?? 399) * (gift ? draft.months : 1);
   const currency = price?.currency ?? "USD";
@@ -139,7 +140,7 @@ function PlusCheckoutPage({ initial }: { initial: ReturnType<typeof readCheckout
           <h1 id="checkout-success-title">{gift ? "A little more Mojo, gifted." : deferred && !purchase?.confirmed ? "Your Plus renewal is scheduled." : "Welcome to Plus."}</h1>
           <p>
             {gift
-              ? "Your gift payment is confirmed. Your friend can start their Plus time from Meldiq Mojo."
+              ? "Your gift payment is confirmed. Open Gifts to deliver it or check its status."
               : deferred && !purchase?.confirmed
                 ? `PayPal has confirmed your approval. Your first payment is ${startDate}; your existing Plus time stays available until then.`
                 : "Your subscription is confirmed. Your Plus benefits are now available across your Meldiq devices."}
@@ -149,8 +150,8 @@ function PlusCheckoutPage({ initial }: { initial: ReturnType<typeof readCheckout
             <br />
             PayPal reference: <code>{purchase?.providerRef}</code>
           </p>
-          <button className="btn btn-mojo" onClick={billing}>
-            View billing <ArrowRight size={16} aria-hidden="true" />
+          <button className="btn btn-mojo" onClick={gift ? () => navigate({ section: "settings", settingsPage: "gifts" }) : billing}>
+            {gift ? "View gifts" : "View billing"} <ArrowRight size={16} aria-hidden="true" />
           </button>
         </section>
       ) : (

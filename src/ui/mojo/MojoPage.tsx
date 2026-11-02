@@ -266,10 +266,16 @@ export function MojoPage() {
       {gifting && (
         <GiftDialog
           catalog={catalog}
+          flexible={billing?.provider === "paypal"}
           onClose={() => setGifting(false)}
           onPay={async (input) => {
             if (billing?.provider === "paypal") {
-              selectCheckout(engine.device.userId, { product: "gift", recipientUserId: input.recipientUserId, months: input.months as 1 | 3 | 12, note: input.note });
+              selectCheckout(engine.device.userId, {
+                product: "gift",
+                ...(input.recipient ? { recipient: input.recipient } : { recipientUserId: input.recipientUserId }),
+                months: input.months as 1 | 3 | 12,
+                note: input.note,
+              });
               setGifting(false);
               navigate({ section: "settings", settingsPage: "checkout" });
             } else await open("gift", () => engine.mojo.gift(input));

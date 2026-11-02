@@ -1,6 +1,9 @@
+import { Orders } from "./Orders";
+import { CardSubscriptionManagement } from "./CardSubscriptions";
 import { ArrowLeft, ArrowUpRight, CheckCircle2, Clock3, CreditCard, RefreshCw, TriangleAlert } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { z } from "zod";
+import { SavedCards } from "./SavedCards";
 import { type PayPalHistory, zPayPalCancellation, zPayPalHistory } from "../../api/paypalSchemas";
 import { useEngine, useOrbit } from "../../application/orbit";
 import { navigate } from "../../application/router";
@@ -213,6 +216,9 @@ export function BillingPage() {
           PayPal handles your payment method. Cancellation stops future renewal; your verified paid period remains available.
         </p>
       )}
+      <Orders />
+      <CardSubscriptionManagement />
+      {paypal && <SavedCards />}
       <section className="checkout-card" aria-labelledby="purchase-history-title">
         <h2 id="purchase-history-title">Purchase history</h2>
         {busy && !history && <p role="status">Loading purchases…</p>}

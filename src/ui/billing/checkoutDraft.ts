@@ -1,11 +1,24 @@
 import type { PayPalPurchase } from "../../api/paypalSchemas";
 import { z } from "zod";
 
+export const giftRecipientSchema = z.discriminatedUnion("kind", [
+  z.object({ kind: z.literal("user"), userId: z.string().min(1).max(128) }),
+  z.object({ kind: z.literal("email"), email: z.string().email().max(254) }),
+  z.object({ kind: z.literal("link") }),
+]);
+export type GiftRecipient = z.infer<typeof giftRecipientSchema>;
+
 const draftSchema = z.discriminatedUnion("product", [
   z.object({ product: z.literal("plus") }),
   z.object({ product: z.literal("spark"), quantity: z.number().int().min(1).max(20) }),
   z.object({ product: z.literal("bots_plus"), orgId: z.string().min(1).max(150) }),
-  z.object({ product: z.literal("gift"), recipientUserId: z.string().min(1).max(128), months: z.union([z.literal(1), z.literal(3), z.literal(12)]), note: z.string().max(500) }),
+  z.object({
+    product: z.literal("gift"),
+    recipientUserId: z.string().min(1).max(128).optional(),
+    recipient: giftRecipientSchema.optional(),
+    months: z.union([z.literal(1), z.literal(3), z.literal(12)]),
+    note: z.string().max(500),
+  }),
 ]);
 export type CheckoutDraft = z.infer<typeof draftSchema>;
 export const CHECKOUT_DRAFT_EVENT = "meldiq:checkout-draft";

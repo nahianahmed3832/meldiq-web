@@ -32,6 +32,7 @@ export type SettingsPage =
   | "health"
   | "usage"
   | "checkout"
+  | "gifts"
   | "billing"
   | "mojo"
   | "spark"
@@ -98,6 +99,7 @@ const PAGES: SettingsPage[] = [
   "health",
   "usage",
   "checkout",
+  "gifts",
   "billing",
   "mojo",
   "spark",
@@ -210,6 +212,7 @@ export function appHref(raw: string, origin = location.origin): string | null {
   const section = where.split("/")[1];
   // The consent page carries its request in the query, which an in-page move would drop: the browser loads it.
   if (section === "oauth") return null;
+  if (where === "/settings/gifts" && /^#gift=[A-Za-z0-9_-]{43}$/.test(u.hash)) return where + u.hash;
   return SECTIONS.includes(section as Section) ? routeHref(parseRoute(where)) : null;
 }
 

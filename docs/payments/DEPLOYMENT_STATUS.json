@@ -1,0 +1,15 @@
+{
+  "status": "blocked_by_existing_deployment",
+  "checkedAt": "2026-11-01T20:45:07.290356+00:00",
+  "productionChangedByThisAttempt": false,
+  "reason": "Existing Atlas migration holds shared production release lock; guarded activation waited 600 seconds and exited without mutation.",
+  "stagedApiSourceCommit": "46f236462af164ee6442763ab3d4c6a6f8d7429a",
+  "stagedWebRelease": "0.5.0-beta-payments-42f4e7ae",
+  "stagedAdminRelease": "1.5.0-payments-f87c5396e041",
+  "activeApiImage": "griip-internal-messaging-api:0.74.0-social-8078f2bede40",
+  "activeWebRelease": "0.5.0-beta-426ad2b-social-bcb80255c39b",
+  "activeAdminRelease": "1.5.0-20261101T092631Z",
+  "newGiftSalesEnabled": false,
+  "newLiveCardsEnabled": false,
+  "activationProcessStillRunning": false
+}

@@ -74,6 +74,90 @@
       "path": "/admin/v1/profile-collectibles/uploads/{id}/complete"
     },
     {
+      "method": "GET",
+      "path": "/v2/billing/payment-methods"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/billing/payment-methods/setups"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/billing/payment-methods/setups/{id}/complete"
+    },
+    {
+      "method": "DELETE",
+      "path": "/v2/billing/payment-methods/{id}"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/billing/orders"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/billing/orders/{id}/receipt"
+    },
+    {
+      "method": "GET",
+      "path": "/admin/v1/billing/orders"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/billing/card-subscriptions"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/billing/card-subscriptions"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/billing/card-subscriptions/quote"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/billing/card-subscriptions/{id}/cancel"
+    },
+    {
+      "method": "PUT",
+      "path": "/v2/billing/card-subscriptions/{id}/payment-method"
+    },
+    {
+      "method": "GET",
+      "path": "/admin/v1/billing/gift-deliveries"
+    },
+    {
+      "method": "POST",
+      "path": "/admin/v1/billing/gifts/{id}/resend"
+    },
+    {
+      "method": "POST",
+      "path": "/admin/v1/billing/gifts/{id}/revoke"
+    },
+    {
+      "method": "GET",
+      "path": "/v2/billing/gifts"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/billing/gifts/preview"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/billing/gifts/redeem"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/billing/gifts/{id}/redeem"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/billing/gifts/{id}/link"
+    },
+    {
+      "method": "POST",
+      "path": "/v2/billing/gifts/{id}/resend"
+    },
+    {
       "method": "DELETE",
       "path": "/admin/v1/orgs/{orgId}"
     },

@@ -710,6 +710,7 @@ export const STRINGS = {
   settings_appearance: ["Appearance", "外观", "চেহারা"],
   settings_storage: ["Storage", "存储", "স্টোরেজ"],
   settings_security: ["Privacy & security", "隐私与安全", "গোপনীয়তা ও নিরাপত্তা"],
+  settings_gifts: ["Gifts", "উপহার", "礼物"],
   settings_mojo: ["Meldiq Mojo", "Meldiq Mojo", "Meldiq Mojo"],
   settings_spark: ["Meldiq Spark", "Meldiq Spark", "Meldiq Spark"],
   settings_leaderboards: ["Leaderboards", "排行榜", "লিডারবোর্ড"],

@@ -1,0 +1,19 @@
+{
+  "environment": "sandbox",
+  "realMoneyTransactions": false,
+  "hostedCardCaptureVerified": true,
+  "hostedCardVaultVerified": true,
+  "offSessionCardCaptureVerified": true,
+  "idempotentOrderRetryVerified": true,
+  "idempotentRefundRetryVerified": true,
+  "fullRefundVerified": true,
+  "signedCaptureWebhookVerified": true,
+  "signedRefundWebhookVerified": true,
+  "meldiqGiftCaptureAndAtomicRedemptionVerified": true,
+  "giftReplayGrantCount": 1,
+  "testVaultRemoved": true,
+  "testWebhookRemoved": true,
+  "testCapturesRefunded": true,
+  "realThreeDSChallengeVerified": false,
+  "liveCardsEnabled": false
+}

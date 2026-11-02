@@ -218,7 +218,7 @@ export function App() {
         return (
           <AuthScreen
             savedAccounts={directory?.accounts ?? []}
-            onUseSavedAccount={(database) => void selectAccount(database).then(() => location.replace("/"))}
+            onUseSavedAccount={(database) => void selectAccount(database).then(() => location.replace(location.pathname === "/settings/gifts" ? location.pathname + location.hash : "/"))}
             onSave={(d, g) => saveAccountDevice(boot.store, d, g)}
             onReady={(d, g) => void linked(boot.store, d, g)}
             onLinkWithPhone={() => TEST_DEVICE_LINKING && setBoot({ s: "phoneLink", store: boot.store })}

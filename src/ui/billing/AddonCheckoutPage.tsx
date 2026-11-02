@@ -263,6 +263,8 @@ export function AddonCheckoutPage({ draft, initial }: { draft: Addon; initial: R
                     cardSdk={cards.sdk}
                     cardStatus={cards.status}
                     subscription={!spark}
+                    cardProduct="bots_plus"
+                    cardOrgId={orgId ?? undefined}
                     create={create}
                     approve={async () => {
                       setAwaiting(true);

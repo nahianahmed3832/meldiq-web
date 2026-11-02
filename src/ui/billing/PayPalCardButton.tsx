@@ -13,6 +13,11 @@ export function usePayPalCardSdk(config: PayPalConfig | null, subscription: bool
   const [result, setResult] = useState<{ key: string; sdk: PayPalNamespace | null; status: CardAvailability } | null>(null);
   useEffect(() => {
     if (!config) return;
+    if ((!subscription && config.advancedCards?.oneTime) || (subscription && config.advancedCards?.recurring)) {
+      // The embedded v6 control performs its own advanced_cards eligibility check before rendering fields.
+      setResult({ key, sdk: null, status: "ready" });
+      return;
+    }
     let disposed = false;
     let script = scripts.get(scriptKey);
     if (!script) {

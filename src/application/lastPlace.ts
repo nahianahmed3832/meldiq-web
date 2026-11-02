@@ -16,7 +16,7 @@ interface Place {
 
 /** Remembers [path] as where [userId] is now. */
 export function rememberPlace(userId: string, path: string): void {
-  const href = appHref(path);
+  const href = appHref(path.split("#")[0]);
   if (!href) return;
   try {
     localStorage.setItem(KEY, JSON.stringify({ u: userId, p: href } satisfies Place));

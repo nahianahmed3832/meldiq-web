@@ -12,6 +12,7 @@ customElements.define('paypal-button', class extends HTMLElement {
 });
 window.paypal = { version:'6.0.0', createInstance: async () => ({
   findEligibleMethods: async () => ({ isEligible: () => true }),
+  createCardFieldsOneTimePaymentSession: () => ({ createCardFieldsComponent: ({ type }) => { const input = document.createElement('input'); input.placeholder = type; input.destroy = () => input.remove(); return input; }, submit: async orderId => { window.embeddedOrderId = orderId; return { state: 'succeeded', data: { orderId: 'UNTRUSTED-EMBEDDED-ORDER' } }; }, destroy() {} }),
   createPayPalSubscriptionPaymentSession: (callbacks) => ({ start: async (_, purchase) => { await purchase; if (window.paypalCancel) callbacks.onCancel({}); else await callbacks.onApprove({ subscriptionId: 'I-UNTRUSTED-BROWSER' }); }, destroy() {} }),
   createPayPalOneTimePaymentSession: (callbacks) => ({ start: async (_, purchase) => { await purchase; await callbacks.onApprove({ orderId: 'UNTRUSTED-BROWSER' }); }, destroy() {} })
 }) };
@@ -360,4 +361,149 @@ test("an expired Plus attempt can start a new owned checkout instead of reusing 
   await page.locator("paypal-button").click();
   await expect.poll(() => keys.length).toBe(2);
   expect(keys[1]).not.toBe(keys[0]);
+});
+
+test("gift history creates private links only on request and shows queued credit honestly", async ({ page }) => {
+  const phone = await newPhone("gifthistory", "Gift Tester");
+  await phone.connect();
+  await link(page, phone);
+  const gift = {
+    id: "gft_sent",
+    product: "plus",
+    months: 3,
+    note: "Happy birthday",
+    status: "awaiting_recipient",
+    currency: "USD",
+    amountMinor: 1197,
+    sender: "Checkout Tester",
+    recipientUserId: null,
+    recipientKind: "link",
+    recipientEmail: null,
+    createdAt: Date.now(),
+    paidAt: Date.now(),
+    redeemedAt: null,
+    expiresAt: Date.now() + 86400000,
+    credited: false,
+  };
+  let shares = 0;
+  await page.route("**/v2/billing/gifts", (route) => route.fulfill({ json: { sent: [gift], received: [{ ...gift, id: "gft_received", status: "redeemed", credited: true }] } }));
+  await page.route("**/v2/billing/gifts/gft_sent/link", (route) => {
+    shares++;
+    return route.fulfill({ json: { giftId: gift.id, url: "https://web.meldiq.app/settings/gifts#gift=" + "a".repeat(43), expiresAt: gift.expiresAt } });
+  });
+  await page.goto("/settings/gifts");
+  await expect(page.getByRole("heading", { name: "Gifts", exact: true })).toBeVisible();
+  await expect(page.getByText("Credit saved · waiting for your current renewal to end")).toBeVisible();
+  expect(shares).toBe(0);
+  await page.getByRole("button", { name: "Create gift link", exact: true }).click();
+  await expect(page.getByLabel("Private gift link")).toHaveValue(/#gift=/);
+  expect(shares).toBe(1);
+});
+
+test("gift fragment previews without redeeming and explicitly redeems once", async ({ page }) => {
+  const phone = await newPhone("giftclaim", "Gift Tester");
+  await phone.connect();
+  await link(page, phone);
+  const token = "a".repeat(43);
+  let claims = 0;
+  await page.route("**/v2/billing/gifts", (route) => route.fulfill({ json: { sent: [], received: [] } }));
+  await page.route("**/v2/billing/gifts/preview", (route) => {
+    expect(route.request().postDataJSON()).toEqual({ token });
+    return route.fulfill({ json: { id: "gft_link", product: "plus", months: 1, note: "Enjoy!", sender: "A friend", status: "paid", requiresVerifiedEmail: false, expiresAt: Date.now() + 86400000 } });
+  });
+  await page.route("**/v2/billing/gifts/redeem", (route) => {
+    claims++;
+    expect(route.request().postDataJSON()).toEqual({ token });
+    return route.fulfill({ json: { credited: true, startsAt: null, endsAt: null } });
+  });
+  await page.goto(`/settings/gifts#gift=${token}`);
+  await expect(page.getByRole("heading", { name: "A gift for you" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Redeem gift", exact: true })).toBeVisible();
+  expect(claims).toBe(0);
+  await page.getByRole("button", { name: "Redeem gift", exact: true }).click();
+  await expect(page.getByText("Gift credit saved.", { exact: false })).toBeVisible();
+  expect(claims).toBe(1);
+  expect(new URL(page.url()).hash).toBe("");
+});
+
+test("embedded one-time fields keep confirmation on the stored server purchase", async ({ page }) => {
+  const p = await addonCheckout(page, "spark");
+  await page.route("**/v2/billing/paypal/config", (route) =>
+    route.fulfill({
+      json: {
+        provider: "paypal",
+        environment: "live",
+        clientId: "public-live-test",
+        subscriptions: true,
+        sparks: true,
+        cards: false,
+        advancedCards: { oneTime: true, vault: false, recurring: false, merchantCountry: "CN", productionApproved: true, reason: null },
+      },
+    }),
+  );
+  let confirmations = 0;
+  await page.route(`**/v2/billing/paypal/checkouts/${p.id}/confirm`, (route) => {
+    confirmations++;
+    return route.fulfill({ json: { ...p, confirmed: true, status: "paid" } });
+  });
+  await page.reload();
+  await page.getByRole("radio", { name: /Debit or credit card/ }).check();
+  await page.locator(".checkout-agreement input").check();
+  await page.getByLabel("Billing country").selectOption("US");
+  await page.getByRole("button", { name: "Complete purchase", exact: true }).click();
+  await expect.poll(() => confirmations).toBe(1);
+  expect(await page.evaluate(() => (window as unknown as { embeddedOrderId: string }).embeddedOrderId)).toBe(p.providerRef);
+});
+
+test("saved-card subscription requires separate recurring consent and an owned method", async ({ page }) => {
+  await checkout(page);
+  await page.route("**/v2/billing/paypal/config", (route) =>
+    route.fulfill({
+      json: {
+        provider: "paypal",
+        environment: "live",
+        clientId: "public-live-test",
+        subscriptions: true,
+        cards: false,
+        advancedCards: { oneTime: true, vault: true, recurring: true, merchantCountry: "CN", productionApproved: true, reason: null },
+      },
+    }),
+  );
+  await page.route("**/v2/billing/payment-methods", (route) =>
+    route.fulfill({ json: { available: true, methods: [{ id: "pm_owned", brand: "VISA", lastFour: "1111", expiry: "2030-12", createdAt: Date.now() }] } }),
+  );
+  await page.route("**/v2/billing/card-subscriptions/quote?product=plus", (route) =>
+    route.fulfill({ json: { consentVersion: "consent-v1", amountMinor: 399, currency: "USD", firstBillingAt: Date.now() } }),
+  );
+  let starts = 0;
+  await page.route("**/v2/billing/card-subscriptions", (route) => {
+    starts++;
+    expect(route.request().postDataJSON()).toMatchObject({ product: "plus", paymentMethodId: "pm_owned", consentVersion: "consent-v1", acceptRecurring: true });
+    expect(route.request().postDataJSON()).not.toHaveProperty("amountMinor");
+    return route.fulfill({
+      json: {
+        id: "cm_owned",
+        orgId: null,
+        product: "plus",
+        paymentMethodId: "pm_owned",
+        status: "active",
+        currency: "USD",
+        amountMinor: 399,
+        nextBillingAt: Date.now() + 2592000000,
+        paidThrough: Date.now() + 2592000000,
+        cancelAt: null,
+        processing: false,
+      },
+    });
+  });
+  await page.reload();
+  await page.getByRole("radio", { name: /Debit or credit card/ }).check();
+  await page.locator(".checkout-agreement input").check();
+  await page.getByLabel("Choose your saved card").selectOption("pm_owned");
+  await expect(page.getByRole("button", { name: "Subscribe with card", exact: true })).toBeDisabled();
+  expect(starts).toBe(0);
+  await page.getByRole("checkbox", { name: /I authorize Meldiq/ }).check();
+  await page.getByRole("button", { name: "Subscribe with card", exact: true }).click();
+  await expect(page.getByRole("heading", { name: "Payment confirmed", exact: true })).toBeVisible();
+  expect(starts).toBe(1);
 });

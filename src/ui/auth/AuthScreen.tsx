@@ -1,4 +1,5 @@
 import type { SavedAccount } from "../../auth/savedAccounts";
+import { GiftSignInNotice } from "../billing/GiftSignInNotice";
 import { apiBase } from "../../application/config";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { AccountSessionGrant, AccountView } from "../../api/accountSchemas";
@@ -191,5 +192,10 @@ export function AuthScreen(props: {
       break;
   }
 
-  return <AuthFrame>{body}</AuthFrame>;
+  return (
+    <AuthFrame>
+      <GiftSignInNotice />
+      {body}
+    </AuthFrame>
+  );
 }
