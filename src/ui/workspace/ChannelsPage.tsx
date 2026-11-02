@@ -6,6 +6,7 @@ import { useEngine, useOrbit } from "../../application/orbit";
 import { navigate } from "../../application/router";
 import { joinChannel } from "../../sync/account";
 import { type ChannelKind, type ChannelScope, createChannel, updateConversation, workspaceChannels } from "../../sync/workspaces";
+import { ChannelGlyph } from "../community/ChannelDialogs";
 import { useAction, useLoad } from "./useLoad";
 import { Card, ErrorLine } from "./WorkspaceView";
 
@@ -57,11 +58,12 @@ export function ChannelsPage({ detail }: { detail: OrgAdminDetail }) {
 function ChannelRow({ c, onChanged }: { c: Conversation; onChanged: () => void }) {
   const engine = useEngine();
   const act = useAction();
+  const isRules = useOrbit((s) => !!c.orgId && s.orgs.find((o) => o.id === c.orgId)?.rulesChannel?.channelId === c.id);
   const kind = (c.kind ?? "PUBLIC") as ChannelKind;
   return (
     <li className="ws-row">
       <span className="faint">
-        <KindIcon kind={c.kind} />
+        <ChannelGlyph kind={c.kind} voice={c.voice} format={c.format} rules={isRules} />
       </span>
       <span className="lines grow">
         {c.joined && !c.archived ? (
@@ -91,7 +93,9 @@ function ChannelRow({ c, onChanged }: { c: Conversation; onChanged: () => void }
           {c.topic ? ` · ${c.topic}` : ""}
         </small>
       </span>
-      {c.canManageAccess && !c.archived ? (
+      {isRules ? (
+        <span className="status-badge">Rules</span>
+      ) : c.canManageAccess && !c.archived ? (
         <select
           className="input input-sm"
           aria-label={`Access for ${c.name}`}

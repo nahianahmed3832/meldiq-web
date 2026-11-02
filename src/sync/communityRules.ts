@@ -8,9 +8,10 @@ import type { Category, Overwrite } from "../api/communitySchemas";
  * every change again.
  */
 
-export type ChannelType = "text" | "announcement" | "forum" | "voice";
+export type ChannelType = "text" | "announcement" | "rules" | "forum" | "voice";
 
-export function channelTypeOf(kind: string | null, voice: boolean, format: string | null): ChannelType {
+export function channelTypeOf(kind: string | null, voice: boolean, format: string | null, rules = false): ChannelType {
+  if (rules) return "rules";
   if (voice) return "voice";
   if (format === "forum") return "forum";
   if (kind === "ANNOUNCEMENT") return "announcement";
@@ -21,6 +22,8 @@ export function channelTypeOf(kind: string | null, voice: boolean, format: strin
 export function channelRequest(type: ChannelType, isPrivate: boolean): { kind: "PUBLIC" | "PRIVATE" | "ANNOUNCEMENT"; voice: boolean; format: "text" | "forum" } {
   const open = isPrivate ? "PRIVATE" : "PUBLIC";
   switch (type) {
+    case "rules":
+      return { kind: "PUBLIC", voice: false, format: "text" };
     case "announcement":
       return { kind: "ANNOUNCEMENT", voice: false, format: "text" };
     case "voice":

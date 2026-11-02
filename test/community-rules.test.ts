@@ -91,6 +91,9 @@ describe("channel tree", () => {
     expect(channelTypeOf("PRIVATE", true, "text")).toBe("voice");
     expect(channelTypeOf("PUBLIC", false, "forum")).toBe("forum");
     expect(channelTypeOf("ANNOUNCEMENT", false, "text")).toBe("announcement");
+    expect(channelTypeOf("ANNOUNCEMENT", false, "text", true)).toBe("rules");
+    expect(channelTypeOf("PUBLIC", false, "text", true)).toBe("rules");
+    expect(channelRequest("rules", true)).toEqual({ kind: "PUBLIC", voice: false, format: "text" });
     expect(channelTypeOf(null, false, null)).toBe("text");
     expect(channelRequest("forum", true)).toEqual({ kind: "PRIVATE", voice: false, format: "forum" });
     // Announcements are never private.

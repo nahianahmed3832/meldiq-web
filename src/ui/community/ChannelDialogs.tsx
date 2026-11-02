@@ -20,8 +20,8 @@ const errorText = (e: unknown, fallback: string) => (e instanceof ApiError ? e.m
 
 /** A channel's icon; [rules]: the community's rules channel, a book (API 0.65.0). */
 export function ChannelGlyph({ kind, voice, format, rules = false, size = 16 }: { kind: string | null; voice: boolean; format: string; rules?: boolean; size?: number }) {
-  if (rules) return <BookText size={size} aria-label="Rules" />;
-  const t = channelTypeOf(kind, voice, format);
+  const t = channelTypeOf(kind, voice, format, rules);
+  if (t === "rules") return <BookText size={size} aria-label="Rules" />;
   if (t === "voice") return <Volume2 size={size} />;
   if (t === "forum") return <MessagesSquare size={size} />;
   if (t === "announcement") return <Megaphone size={size} />;
