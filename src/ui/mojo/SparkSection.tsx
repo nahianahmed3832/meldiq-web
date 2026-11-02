@@ -41,8 +41,8 @@ export function SparkSection({ onBuy, busy, offline }: { onBuy: (quantity: numbe
           Meldiq Spark
         </h2>
         <p>
-          Give a Spark to a server you love. Every Spark helps unlock more emoji slots, bigger uploads, and better voice and screen sharing for everyone in it. Legacy Go includes one Spark, Meldiq Plus
-          two, and anyone can add more for {money(catalog.spark.listPriceMinor, "USD")} per Spark as a one-time purchase.
+          Give a Spark to a server you love. Every Spark helps unlock more emoji slots, bigger uploads, and better voice and screen sharing for everyone in it. Legacy Go includes one Spark, Meldiq
+          Plus two, and anyone can add more for {money(catalog.spark.listPriceMinor, "USD")} per Spark as a one-time purchase.
         </p>
         <SparkTrack levels={levels} level={null} active={null} />
       </div>

@@ -27,7 +27,7 @@ describe("reference-style Plus promotion", () => {
     expect(html).toContain("Not now");
     expect(html).toContain("Profile customization stays free");
     expect(html).not.toContain("100 MB uploads");
-    expect(html).not.toContain("Meldiq Plus");
+    expect(html).not.toContain("Mojo Plus");
     expect(html).not.toContain("No investors");
   });
 });
