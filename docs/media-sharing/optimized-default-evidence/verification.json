@@ -22,5 +22,10 @@
     "unchecked default",
     "single optional checkbox",
     "unchanged photo download bytes"
-  ]
+  ],
+  "productionDeployed": true,
+  "sourceCommit": "c7faea3e2b336b17efdce41861b2cc81dc5a5939",
+  "productionReceipt": "../../../deploy/media-optimized-default/production-receipt.json",
+  "publicHashesVerified": 4,
+  "githubCiPassed": true
 }

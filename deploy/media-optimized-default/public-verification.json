@@ -1,0 +1,23 @@
+{
+  "status": "verified",
+  "checkedAt": "2026-11-02T15:37:19.805908+00:00",
+  "sourceCommit": "c7faea3e2b336b17efdce41861b2cc81dc5a5939",
+  "checks": [
+    {
+      "path": "index.html",
+      "sha256Matches": true
+    },
+    {
+      "path": "sw.js",
+      "sha256Matches": true
+    },
+    {
+      "path": "_next/static/chunks/pages/_app-f3a79d88260120ee.js",
+      "sha256Matches": true
+    },
+    {
+      "path": "_next/static/css/adc074645d81cacf.css",
+      "sha256Matches": true
+    }
+  ]
+}

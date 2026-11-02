@@ -9,3 +9,5 @@ Validation: 910 unit tests pass (one skipped), lint/format/typecheck/build pass,
 The synthetic two-second 1080p video fixture includes a 440 Hz tone, generated with ffmpeg testsrc2/sine, libx264 CRF 10 and AAC. It contains no user media. Browser APIs follow the vendor MediaRecorder documentation: https://webkit.org/blog/11353/mediarecorder-api/ .
 
 Production publication swaps only the static Web release under both production locks, preserves the current public configuration and old chunks for active tabs, and restores the previous symlink if verification fails. API, database and Nginx configuration are preserved. See deploy/media-optimized-default/production-receipt.json after publication.
+
+Published Web source: `c7faea3e2b336b17efdce41861b2cc81dc5a5939`. Public HTML, service worker, application JavaScript and stylesheet hashes match the tested export. The existing API container, public config and Nginx were preserved. GitHub CI passed: https://github.com/nahianahmed3832/meldiq-web/actions/runs/41471722466 .

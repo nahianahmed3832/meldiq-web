@@ -50,4 +50,3 @@
       Tests  910 passed | 1 skipped (911)
    Start at  23:24:50
    Duration  19.95s (transform 10.90s, setup 11.15s, import 41.34s, tests 18.52s, environment 66ms)
-

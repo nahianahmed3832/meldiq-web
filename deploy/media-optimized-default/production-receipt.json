@@ -1,0 +1,20 @@
+{
+  "status": "deployed-and-verified",
+  "deployedAt": "2026-11-02T15:36:13.116629+00:00",
+  "sourceCommit": "c7faea3e2b336b17efdce41861b2cc81dc5a5939",
+  "previousWeb": "/opt/meldiq-web/releases/0.5.0-beta-plus-ef16f73",
+  "webRelease": "/opt/meldiq-web/releases/0.5.0-beta-media-optimized-c7faea3",
+  "archiveSha256": "d7a238e5821cbef1ee808266b6384991b10a38e1609c67a7f07c20bcd9b319bc",
+  "apiPreserved": true,
+  "apiImageId": "sha256:d3eb8ae81b8332444d25fdeb5d01e57c08da36f135788334657e363b70e73f47",
+  "publicConfigPreserved": true,
+  "nginxPreserved": true,
+  "health": {
+    "ok": true,
+    "version": "0.76.1",
+    "time": 1793633773115,
+    "livekit": true,
+    "mongodb": true,
+    "redis": true
+  }
+}
