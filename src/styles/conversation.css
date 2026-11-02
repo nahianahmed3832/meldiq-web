@@ -3349,3 +3349,10 @@ button.media-card {
   display: grid;
   grid-template-rows: 112px auto;
 }
+
+.attachment-quality > label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}

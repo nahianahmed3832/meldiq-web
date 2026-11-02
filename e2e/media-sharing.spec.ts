@@ -62,7 +62,8 @@ test("a photo album and a document share one caption, retain original bytes and 
   await expect(page.locator(".attachment-draft")).toHaveCount(3);
   await expect(page.locator(".attachment-draft figcaption strong")).toHaveText(["first.jpg", "second.jpg", "note.txt"]);
   await expect(page.locator(".attachment-draft figcaption strong").first()).toBeInViewport({ ratio: 1 });
-  await expect(page.getByLabel("Photo quality")).toHaveValue("original");
+  await expect(page.getByRole("checkbox", { name: "Original file", exact: true })).not.toBeChecked();
+  await page.getByRole("checkbox", { name: "Original file", exact: true }).check();
   await page.screenshot({ path: info.outputPath("media-composer.png"), fullPage: true });
   await page.getByRole("textbox", { name: /^Message / }).fill("Album and document");
   await page.getByRole("button", { name: "Send", exact: true }).click();
@@ -106,4 +107,61 @@ test("a selected video previews, uploads and plays inline and in the viewer", as
   await message.getByRole("button", { name: /^Play video / }).click();
   await expect(page.locator(".lightbox video")).toBeVisible();
   await page.screenshot({ path: info.outputPath("media-video.png"), fullPage: true });
+});
+
+test("media is optimized by default and Original file is the only optional choice", async ({ page }, info) => {
+  await conversation(page);
+  const image = await page.evaluate(async () => {
+    const canvas = document.createElement("canvas");
+    canvas.width = 4000;
+    canvas.height = 3000;
+    const context = canvas.getContext("2d")!;
+    context.fillStyle = "#3475ba";
+    context.fillRect(0, 0, canvas.width, canvas.height);
+    const blob = await new Promise<Blob>((resolve) => canvas.toBlob((b) => resolve(b!), "image/jpeg", 0.99));
+    return Array.from(new Uint8Array(await blob.arrayBuffer()));
+  });
+  const sourceVideo = fs.readFileSync(path.join(import.meta.dirname, "fixtures/media-optimize-input.mp4"));
+  await page.locator(".composer input[type=file]").setInputFiles([
+    { name: "camera.jpg", mimeType: "image/jpeg", buffer: Buffer.from(image) },
+    { name: "clip.mp4", mimeType: "video/mp4", buffer: sourceVideo },
+  ]);
+  const original = page.getByRole("checkbox", { name: "Original file", exact: true });
+  await expect(original).not.toBeChecked();
+  await expect(page.locator(".attachment-quality select")).toHaveCount(0);
+  await page.screenshot({ path: info.outputPath("optimized-default.png"), fullPage: true });
+  await page.getByRole("textbox", { name: /^Message / }).fill("Optimized media");
+  await page.getByRole("button", { name: "Send", exact: true }).click();
+  const message = page.locator(".msg").filter({ hasText: "Optimized media" });
+  await expect(message).toHaveCount(1, { timeout: 60_000 });
+  await message.getByRole("button", { name: /^Play .* inline$/ }).click();
+  const video = message.locator("video");
+  await expect(video).toBeVisible();
+  await expect.poll(() => video.evaluate((v: HTMLVideoElement) => v.readyState)).toBeGreaterThanOrEqual(2);
+  const metadata = await video.evaluate((v: HTMLVideoElement) => ({ width: v.videoWidth, height: v.videoHeight, duration: v.duration }));
+  expect(metadata.width).toBeLessThanOrEqual(1280);
+  expect(metadata.height).toBeLessThanOrEqual(720);
+  expect(metadata.duration).toBeGreaterThan(1.5);
+  await message.getByRole("button", { name: /^Play video / }).click();
+  const downloading = page.waitForEvent("download");
+  await page
+    .locator(".lightbox")
+    .getByRole("button", { name: /Download video/, exact: true })
+    .click();
+  const download = await downloading;
+  const bytes = fs.readFileSync((await download.path())!);
+  expect(bytes.length).toBeLessThan(sourceVideo.length);
+  const audible = await page.evaluate(async (bytes) => {
+    const audio = new AudioContext();
+    try {
+      const decoded = await audio.decodeAudioData(new Uint8Array(bytes).buffer);
+      return decoded.getChannelData(0).some((sample) => Math.abs(sample) > 0.01);
+    } finally {
+      await audio.close();
+    }
+  }, Array.from(bytes));
+  expect(audible).toBe(true);
+  await page.getByRole("button", { name: "Close", exact: true }).last().click();
+  await page.locator(".composer input[type=file]").setInputFiles({ name: "next.jpg", mimeType: "image/jpeg", buffer: Buffer.from(image) });
+  await expect(original).not.toBeChecked();
 });

@@ -60,3 +60,13 @@ describe("automatic photo upload and export", () => {
     expect(createImageBitmap).not.toHaveBeenCalled();
   });
 });
+
+describe("per-upload quality choice", () => {
+  it("optimizes a photo by default and preserves exact bytes only when Original is selected", async () => {
+    const { preparePhoto } = await import("../src/sync/photoQuality");
+    canvas();
+    const source = new File([new Uint8Array(100)], "camera.jpg", { type: "image/jpeg" });
+    expect((await preparePhoto(source)).type).toBe("image/webp");
+    expect(await preparePhoto(source, "original")).toBe(source);
+  });
+});
