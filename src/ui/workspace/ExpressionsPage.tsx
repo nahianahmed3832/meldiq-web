@@ -1,3 +1,7 @@
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
+import { Localized } from "../../i18n/Localized";
+import { useT as useLocalization } from "../../i18n";
 import { Pencil, Trash2, Upload } from "lucide-react";
 import { type ReactNode, useEffect, useRef, useState } from "react";
 import type { OrgAdminDetail } from "../../api/workspaceSchemas";
@@ -9,18 +13,22 @@ import { Dialog } from "../components/Overlay";
 import { bytes, shortWhen } from "../format";
 import { useAction, useLoad } from "./useLoad";
 import { Card, ErrorLine } from "./WorkspaceView";
-
 /**
  * Emoji & stickers (batch B9, android ExpressionsScreen): Emoji · n/50 and Stickers · n/20, each with Upload (a picture
  * named `:like_this:`), rename and remove. For people who can manage emoji and stickers; every member can use them.
  */
 export function ExpressionsPage({ detail }: { detail: OrgAdminDetail }) {
+  useLocaleRender();
+  const l10n = useLocalization();
   const engine = useEngine();
   const orgId = detail.org.id;
   const [rev, setRev] = useState(0);
   const list = useLoad(() => expressions(engine, orgId, true), [engine, orgId, rev]);
   const canManage = detail.permissions.isOwner || detail.permissions.effective.includes("expressions.manage");
-  const [uploading, setUploading] = useState<{ kind: "emoji" | "sticker"; file: File } | null>(null);
+  const [uploading, setUploading] = useState<{
+    kind: "emoji" | "sticker";
+    file: File;
+  } | null>(null);
   const [renaming, setRenaming] = useState<Expression | null>(null);
   const act = useAction();
   const file = useRef<HTMLInputElement>(null);
@@ -30,8 +38,14 @@ export function ExpressionsPage({ detail }: { detail: OrgAdminDetail }) {
     const limit = list.data?.limits[k] ?? (k === "emoji" ? 50 : 20);
     return (
       <Card
-        title={`${k === "emoji" ? "Emoji" : "Stickers"} · ${items.length}/${limit}`}
-        sub={k === "emoji" ? "Members use them in this community's channels, in messages and as reactions." : "Sent on their own, shown large."}
+        title={uiText("workspace.interface.value0_value1_value2_1518b4b", {
+          value0: k === "emoji" ? uiText("messaging.interface.emoji_61ad897") : uiText("messaging.interface.stickers_dbf9cbb"),
+          value1: items.length,
+          value2: limit,
+        })}
+        sub={
+          k === "emoji" ? uiText("workspace.interface.members_use_them_in_this_community_s_channels_in_messages_and_as_f18720c") : uiText("workspace.interface.sent_on_their_own_shown_large_3a50ed7")
+        }
         actions={
           canManage && (
             <button
@@ -42,7 +56,7 @@ export function ExpressionsPage({ detail }: { detail: OrgAdminDetail }) {
                 file.current?.click();
               }}
             >
-              <Upload size={14} /> Upload
+              <Upload size={14} /> {l10n("common.actions.upload")}
             </button>
           )
         }
@@ -54,19 +68,24 @@ export function ExpressionsPage({ detail }: { detail: OrgAdminDetail }) {
               <span className="lines grow">
                 <span>:{e.name}:</span>
                 <small>
-                  Added {e.createdBy ? `by ${e.createdBy} ` : ""}
-                  {shortWhen(e.createdAt)}
-                  {e.animated ? " · animated" : ""}
+                  <Localized
+                    k="workspace.interface.added_a835dab"
+                    slots={[
+                      e.createdBy ? uiText("workspace.interface.by_value0_2c918de", { value0: e.createdBy }) : "",
+                      shortWhen(e.createdAt),
+                      e.animated ? uiText("workspace.interface.animated_97952c1") : "",
+                    ]}
+                  />
                 </small>
               </span>
               {canManage && (
                 <>
-                  <button className="icon-btn" aria-label={`Rename :${e.name}:`} onClick={() => setRenaming(e)}>
+                  <button className="icon-btn" aria-label={uiText("workspace.interface.rename_value0_7f3d9e0", { value0: e.name })} onClick={() => setRenaming(e)}>
                     <Pencil size={15} />
                   </button>
                   <button
                     className="icon-btn"
-                    aria-label={`Remove :${e.name}:`}
+                    aria-label={uiText("workspace.interface.remove_value0_36f7418", { value0: e.name })}
                     disabled={act.busy}
                     onClick={() => void act.act(() => removeExpression(engine, orgId, e.id).then(() => setRev((r) => r + 1)))}
                   >
@@ -76,7 +95,11 @@ export function ExpressionsPage({ detail }: { detail: OrgAdminDetail }) {
               )}
             </li>
           ))}
-          {list.data && items.length === 0 && <li className="faint">None yet.</li>}
+          {list.data && items.length === 0 && (
+            <li className="faint">
+              <Localized k="workspace.interface.none_yet_bd3ce63" />
+            </li>
+          )}
         </ul>
       </Card>
     );
@@ -101,7 +124,9 @@ export function ExpressionsPage({ detail }: { detail: OrgAdminDetail }) {
         <UploadDialog
           file={uploading.file}
           kind={uploading.kind}
-          title={`Upload ${uploading.kind === "emoji" ? "an emoji" : "a sticker"}`}
+          title={uiText("workspace.interface.upload_value0_d0166fa", {
+            value0: uploading.kind === "emoji" ? uiText("workspace.interface.an_emoji_399e94c") : uiText("workspace.interface.a_sticker_7f2123d"),
+          })}
           initial={suggestName(uploading.file.name)}
           onClose={() => setUploading(null)}
           onSave={async (name, prepared) => {
@@ -112,7 +137,7 @@ export function ExpressionsPage({ detail }: { detail: OrgAdminDetail }) {
       )}
       {renaming && (
         <NameDialog
-          title={`Rename :${renaming.name}:`}
+          title={uiText("workspace.interface.rename_value0_7f3d9e0", { value0: renaming.name })}
           initial={renaming.name}
           onClose={() => setRenaming(null)}
           onSave={async (name) => {
@@ -124,7 +149,6 @@ export function ExpressionsPage({ detail }: { detail: OrgAdminDetail }) {
     </div>
   );
 }
-
 function NameDialog({
   title,
   initial,
@@ -140,6 +164,8 @@ function NameDialog({
   preview?: ReactNode;
   ready?: boolean;
 }) {
+  useLocaleRender();
+  const l10n = useLocalization();
   const [name, setName] = useState(initial);
   const act = useAction();
   const clean = name.trim().toLowerCase().replace(/^:|:$/g, "");
@@ -158,24 +184,27 @@ function NameDialog({
       >
         {preview}
         <div className="field">
-          <label htmlFor="ex-name">Name</label>
-          <input id="ex-name" className="input mono" data-autofocus value={name} maxLength={34} onChange={(e) => setName(e.target.value)} placeholder="party_parrot" />
-          <span className="hint">2–32 lowercase letters, digits or _. Used as :{clean || "name"}: in messages.</span>
+          <label htmlFor="ex-name">
+            <Localized k="messaging.interface.name_dcd1d52" />
+          </label>
+          <input id="ex-name" className="input mono" data-autofocus value={name} maxLength={34} onChange={(e) => setName(e.target.value)} placeholder={"party_parrot"} />
+          <span className="hint">
+            <Localized k="workspace.interface.2_32_lowercase_letters_digits_or_used_as_in_messages_48ed796" slots={[clean || uiText("workspace.interface.name_82a3537")]} />
+          </span>
         </div>
         <ErrorLine text={act.error} />
         <div className="row" style={{ justifyContent: "flex-end", gap: 8 }}>
           <button type="button" className="btn btn-secondary" onClick={onClose}>
-            Cancel
+            {l10n("common.actions.cancel")}
           </button>
           <button className="btn btn-primary" disabled={!ready || act.busy || !EXPRESSION_NAME.test(clean)}>
-            {act.busy ? "Saving…" : "Save"}
+            {act.busy ? l10n("common.common_saving") : l10n("common.actions.save")}
           </button>
         </div>
       </form>
     </Dialog>
   );
 }
-
 /** Preview the exact bytes that will be uploaded, and surface local preparation failures before saving. */
 export function UploadDialog({
   file,
@@ -189,7 +218,13 @@ export function UploadDialog({
   onSave: (name: string, bytes: Uint8Array) => Promise<void>;
   onClose: () => void;
 }) {
-  const [prepared, setPrepared] = useState<(PreparedExpression & { url: string }) | null>(null);
+  useLocaleRender();
+  const [prepared, setPrepared] = useState<
+    | (PreparedExpression & {
+        url: string;
+      })
+    | null
+  >(null);
   const [error, setError] = useState<string | null>(null);
   useEffect(() => {
     let live = true;
@@ -201,7 +236,7 @@ export function UploadDialog({
         setPrepared({ ...p, url });
       })
       .catch((e: unknown) => {
-        if (live) setError(e instanceof Error ? e.message : "Couldn't prepare this picture.");
+        if (live) setError(e instanceof Error ? e.message : uiText("workspace.interface.couldn_t_prepare_this_picture_1ca53ef"));
       });
     return () => {
       live = false;
@@ -215,12 +250,28 @@ export function UploadDialog({
       onSave={(name) => (prepared ? props.onSave(name, prepared.bytes) : Promise.resolve())}
       preview={
         <div className="expression-upload-preview">
-          {prepared && <img src={prepared.url} alt="Upload preview" style={{ width: kind === "emoji" ? 64 : 128, height: kind === "emoji" ? 64 : 128, objectFit: "contain" }} />}
+          {prepared && (
+            <img
+              src={prepared.url}
+              alt={uiText("workspace.interface.upload_preview_6f777ab")}
+              style={{ width: kind === "emoji" ? 64 : 128, height: kind === "emoji" ? 64 : 128, objectFit: "contain" }}
+            />
+          )}
           <p className="hint">
-            {file.name} · {bytes(prepared?.bytes.length ?? file.size)} · 256 KB maximum
+            <Localized k="workspace.interface.256_kb_maximum_8751644" slots={[file.name, bytes(prepared?.bytes.length ?? file.size)]} />
           </p>
-          {prepared && <p className="hint">{prepared.converted ? "Resized and converted to PNG. The preview shows what members will see." : "Original image kept, including any animation."}</p>}
-          {!prepared && !error && <p role="status">Preparing preview…</p>}
+          {prepared && (
+            <p className="hint">
+              {prepared.converted
+                ? uiText("workspace.interface.resized_and_converted_to_png_the_preview_shows_what_members_will_4790279")
+                : uiText("workspace.interface.original_image_kept_including_any_animation_f104c1f")}
+            </p>
+          )}
+          {!prepared && !error && (
+            <p role="status">
+              <Localized k="workspace.interface.preparing_preview_11e66e1" />
+            </p>
+          )}
           <ErrorLine text={error} />
         </div>
       }

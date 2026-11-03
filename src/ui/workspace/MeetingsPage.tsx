@@ -1,3 +1,7 @@
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
+import { Localized } from "../../i18n/Localized";
+import { useT as useLocalization } from "../../i18n";
 import { CalendarPlus, Headphones, Pencil, Plus, X } from "lucide-react";
 import { UNKNOWN } from "../../api/enums";
 import { EVENT_REPEATS, type EventRepeatChoice, repeatLabel } from "../../sync/workspaceC5";
@@ -28,15 +32,14 @@ import { voiceRooms } from "../selectors";
 import { Dialog } from "../components/Overlay";
 import { useAction, useLoad } from "./useLoad";
 import { Card, ErrorLine } from "./WorkspaceView";
-
 const zone = () => Intl.DateTimeFormat().resolvedOptions().timeZone;
-
 /**
  * Workspace › Meetings (android round 7 C5 MeetingsScreen): scheduled meetings in the workspace's voice rooms. Joining
  * one joins its room's call. Invitees answer; the organizer or the room's managers change or cancel it; everyone
  * involved hears about changes live and gets a "starting soon" notification ten minutes before.
  */
 export function MeetingsPage({ detail }: { detail: OrgAdminDetail }) {
+  useLocaleRender();
   const engine = useEngine();
   const orgId = detail.org.id;
   const rev = useOrbit((s) => s.meetingsRev);
@@ -55,39 +58,57 @@ export function MeetingsPage({ detail }: { detail: OrgAdminDetail }) {
     a.href = url;
     a.download = `${m.title.replace(/[^\p{L}\p{N} ._-]+/gu, "").trim() || "meeting"}.ics`;
     a.click();
-    setTimeout(() => URL.revokeObjectURL(url), 30_000);
+    setTimeout(() => URL.revokeObjectURL(url), 30000);
   };
   return (
     <div className="ws-page">
       <Card
-        title={community ? "Events" : "Meetings"}
-        sub={`${community ? "Events happen in the community's" : "Meetings happen in the community's"} voice rooms: joining one joins its room. Titles and times are readable by the server, like a channel's name.`}
+        title={community ? uiText("workspace.interface.events_8d14f6e") : uiText("workspace.interface.meetings_bca705b")}
+        sub={uiText("workspace.interface.value0_voice_rooms_joining_one_joins_its_room_titles_and_times_ar_45cbbf2", {
+          value0: community ? uiText("workspace.interface.events_happen_in_the_community_s_3c7342e") : uiText("workspace.interface.meetings_happen_in_the_community_s_a82460e"),
+        })}
         actions={
           !guest && (
             <button className="btn btn-primary btn-sm" onClick={() => setEditing("new")}>
-              <Plus size={14} /> Schedule
+              <Localized k="workspace.interface.schedule_970ceab" slots={[<Plus size={14} />]} />
             </button>
           )
         }
       >
         <ErrorLine text={meetings.error ?? act.error} />
-        {meetings.data && upcoming.length === 0 && <p className="faint">No {community ? "events" : "meetings"} in the next 30 days.</p>}
+        {meetings.data && upcoming.length === 0 && (
+          <p className="faint">
+            <Localized k="workspace.interface.no_in_the_next_30_days_d54dc26" slots={[community ? uiText("workspace.interface.events_862417b") : uiText("workspace.interface.meetings_f7f1aed")]} />
+          </p>
+        )}
         <ul className="ws-list">
           {upcoming.map((m) => (
             <li key={m.id} className="ws-row" style={{ alignItems: "flex-start" }}>
               <span className="lines grow">
                 <strong>{m.title}</strong>
                 <small>
-                  {whenText(m.startsAt, m.endsAt, zone())}
-                  {m.repeat === UNKNOWN ? " · repeats (set in a newer app)" : m.repeat ? ` · ${repeatLabel(m.repeat, m.startsAt, m.timeZone)}` : ""} · {m.room?.name ? `#${m.room.name}` : "room gone"}{" "}
-                  · organized by {m.organizer.name ?? "someone"}
+                  <Localized
+                    k="workspace.interface.organized_by_5848390"
+                    slots={[
+                      whenText(m.startsAt, m.endsAt, zone()),
+                      m.repeat === UNKNOWN
+                        ? uiText("workspace.interface.repeats_set_in_a_newer_app_cc0c9cf")
+                        : m.repeat
+                          ? uiText("calls.interface.value0_9402340", { value0: repeatLabel(m.repeat, m.startsAt, m.timeZone) })
+                          : "",
+                      m.room?.name ? uiText("messaging.interface.value0_dbac6f0", { value0: m.room.name }) : uiText("workspace.interface.room_gone_25cbd16"),
+                      m.organizer.name ?? uiText("workspace.interface.someone_2a59d59"),
+                    ]}
+                  />
                 </small>
                 {m.description && <small className="faint">{m.description}</small>}
                 <small className="faint">
-                  {m.participants.length === 0 ? "Open to the room" : m.participants.map((p) => `${p.name ?? "someone"} (${RESPONSE_LABEL[p.response]?.toLowerCase() ?? p.response})`).join(", ")}
+                  {m.participants.length === 0
+                    ? uiText("workspace.interface.open_to_the_room_54eadbf")
+                    : m.participants.map((p) => `${p.name ?? "someone"} (${RESPONSE_LABEL[p.response]?.toLowerCase() ?? p.response})`).join(", ")}
                 </small>
                 {m.myResponse && (
-                  <span className="segmented" role="group" aria-label="Your answer" style={{ marginTop: 4 }}>
+                  <span className="segmented" role="group" aria-label={uiText("workspace.interface.your_answer_d0e869b")} style={{ marginTop: 4 }}>
                     {RESPONSES.map((r) => (
                       <button key={r} aria-pressed={m.myResponse === r} disabled={act.busy} onClick={() => void act.act(() => respondToMeeting(engine, m.id, r).then(reload))}>
                         {RESPONSE_LABEL[r]}
@@ -97,19 +118,33 @@ export function MeetingsPage({ detail }: { detail: OrgAdminDetail }) {
                 )}
               </span>
               {m.room && (
-                <button className="btn btn-secondary btn-sm" onClick={() => navigate({ section: "home", conversationId: m.room!.id })} title="Open the voice room">
-                  <Headphones size={14} /> Room
+                <button
+                  className="btn btn-secondary btn-sm"
+                  onClick={() => navigate({ section: "home", conversationId: m.room!.id })}
+                  title={uiText("workspace.interface.open_the_voice_room_1d483cf")}
+                >
+                  <Localized k="workspace.interface.room_ffbb624" slots={[<Headphones size={14} />]} />
                 </button>
               )}
-              <button className="icon-btn" aria-label="Add to my calendar" title="Add to my calendar (.ics)" onClick={() => calendar(m)}>
+              <button
+                className="icon-btn"
+                aria-label={uiText("workspace.interface.add_to_my_calendar_9d60f91")}
+                title={uiText("workspace.interface.add_to_my_calendar_ics_b25f764")}
+                onClick={() => calendar(m)}
+              >
                 <CalendarPlus size={16} />
               </button>
               {m.canEdit && (
                 <>
-                  <button className="icon-btn" aria-label={`Edit ${m.title}`} onClick={() => setEditing(m)}>
+                  <button className="icon-btn" aria-label={uiText("settings.interface.edit_value0_44b87fe", { value0: m.title })} onClick={() => setEditing(m)}>
                     <Pencil size={15} />
                   </button>
-                  <button className="icon-btn" aria-label={`Cancel ${m.title}`} disabled={act.busy} onClick={() => void act.act(() => cancelMeeting(engine, m.id).then(reload))}>
+                  <button
+                    className="icon-btn"
+                    aria-label={uiText("workspace.interface.cancel_value0_e3e84f0", { value0: m.title })}
+                    disabled={act.busy}
+                    onClick={() => void act.act(() => cancelMeeting(engine, m.id).then(reload))}
+                  >
                     <X size={16} />
                   </button>
                 </>
@@ -117,7 +152,16 @@ export function MeetingsPage({ detail }: { detail: OrgAdminDetail }) {
             </li>
           ))}
         </ul>
-        {cancelled.length > 0 && <small className="faint">{cancelled.length === 1 ? "1 cancelled meeting" : `${cancelled.length} cancelled meetings`} not shown.</small>}
+        {cancelled.length > 0 && (
+          <small className="faint">
+            <Localized
+              k="workspace.interface.not_shown_38301bd"
+              slots={[
+                cancelled.length === 1 ? uiText("workspace.interface.1_cancelled_meeting_ed2402b") : uiText("workspace.interface.value0_cancelled_meetings_3e18cc5", { value0: cancelled.length }),
+              ]}
+            />
+          </small>
+        )}
       </Card>
       {editing && (
         <MeetingDialog
@@ -133,8 +177,9 @@ export function MeetingsPage({ detail }: { detail: OrgAdminDetail }) {
     </div>
   );
 }
-
 function MeetingDialog({ orgId, meeting, onClose, onSaved }: { orgId: string; meeting: Meeting | null; onClose: () => void; onSaved: () => void }) {
+  useLocaleRender();
+  const l10n = useLocalization();
   const engine = useEngine();
   const rooms = useOrbit((s) => voiceRooms(s, orgId), shallowEqual);
   const community = useCommunityServer();
@@ -149,7 +194,12 @@ function MeetingDialog({ orgId, meeting, onClose, onSaved }: { orgId: string; me
   const repeats = useOrbit((s) => s.server?.features.includes("event-repeat") ?? false);
   // null: a repeat this version can't read (a newer app's), kept as it is unless the person picks another.
   const [repeat, setRepeat] = useState<EventRepeatChoice | null>(meeting?.repeat === UNKNOWN ? null : (meeting?.repeat ?? "none"));
-  const [people, setPeople] = useState<{ id: string; name: string }[]>(meeting?.participants.map((p) => ({ id: p.id, name: p.name ?? "someone" })) ?? []);
+  const [people, setPeople] = useState<
+    {
+      id: string;
+      name: string;
+    }[]
+  >(meeting?.participants.map((p) => ({ id: p.id, name: p.name ?? "someone" })) ?? []);
   const [q, setQ] = useState("");
   const found = useLoad(() => (q.trim().length >= 2 ? directory(engine, orgId, q) : Promise.resolve([])), [engine, orgId, q]);
   const act = useAction();
@@ -163,7 +213,7 @@ function MeetingDialog({ orgId, meeting, onClose, onSaved }: { orgId: string; me
         title: title.trim(),
         description: description.trim() || null,
         startsAt: start,
-        endsAt: start + minutes * 60_000,
+        endsAt: start + minutes * 60000,
         timeZone: tz,
         participantIds: people.map((p) => p.id),
         ...(repeats && repeat !== null ? { repeat: repeat === "none" ? null : repeat } : {}),
@@ -178,9 +228,15 @@ function MeetingDialog({ orgId, meeting, onClose, onSaved }: { orgId: string; me
   const where = (
     <>
       <label className="field">
-        <span>Voice room</span>
+        <span>
+          <Localized k="calls.interface.voice_room_aa0cfa3" />
+        </span>
         <select className="input" value={roomId ?? ""} onChange={(e) => setRoomId(e.target.value || null)}>
-          {rooms.length === 0 && <option value="">No voice rooms: make one in Channels</option>}
+          {rooms.length === 0 && (
+            <option value="">
+              <Localized k="workspace.interface.no_voice_rooms_make_one_in_channels_b2b178b" />
+            </option>
+          )}
           {rooms.map((r) => (
             <option key={r.id} value={r.id}>
               #{r.name}
@@ -193,28 +249,34 @@ function MeetingDialog({ orgId, meeting, onClose, onSaved }: { orgId: string; me
   const what = (
     <>
       <label className="field">
-        <span>Title</span>
-        <input className="input" value={title} maxLength={120} onChange={(e) => setTitle(e.target.value)} placeholder="e.g. Weekly sync" />
+        <span>
+          <Localized k="messaging.interface.title_7e8cd20" />
+        </span>
+        <input className="input" value={title} maxLength={120} onChange={(e) => setTitle(e.target.value)} placeholder={uiText("workspace.interface.e_g_weekly_sync_e1380f5")} />
       </label>
       <div className="wf-row">
-        <input className="input" type="date" value={date} onChange={(e) => setDate(e.target.value)} aria-label="Date" />
-        <input className="input" type="time" value={time} onChange={(e) => setTime(e.target.value)} aria-label="Time" />
-        <select className="input" value={minutes} onChange={(e) => setMinutes(Number(e.target.value))} aria-label="Length">
+        <input className="input" type="date" value={date} onChange={(e) => setDate(e.target.value)} aria-label={uiText("workspace.interface.date_99c40ab")} />
+        <input className="input" type="time" value={time} onChange={(e) => setTime(e.target.value)} aria-label={uiText("workspace.interface.time_33b9347")} />
+        <select className="input" value={minutes} onChange={(e) => setMinutes(Number(e.target.value))} aria-label={uiText("workspace.interface.length_adc9560")}>
           {DURATIONS.map((m) => (
             <option key={m} value={m}>
-              {m} min
+              <Localized k="workspace.interface.min_6a0d62a" slots={[m]} />
             </option>
           ))}
         </select>
       </div>
-      <small className="faint">Times are in {tz}.</small>
+      <small className="faint">
+        <Localized k="workspace.interface.times_are_in_b37c033" slots={[tz]} />
+      </small>
       {repeats && (
         <label className="field">
-          <span>Repeats</span>
+          <span>
+            <Localized k="workspace.interface.repeats_92ee023" />
+          </span>
           <select className="input" value={repeat ?? UNKNOWN} onChange={(e) => setRepeat(e.target.value as EventRepeatChoice)}>
             {repeat === null && (
               <option value={UNKNOWN} disabled>
-                As set in a newer app
+                <Localized k="workspace.interface.as_set_in_a_newer_app_431a150" />
               </option>
             )}
             {EVENT_REPEATS.map((r) => (
@@ -226,22 +288,37 @@ function MeetingDialog({ orgId, meeting, onClose, onSaved }: { orgId: string; me
         </label>
       )}
       <label className="field">
-        <span>Notes (optional)</span>
+        <span>
+          <Localized k="settings.interface.notes_optional_6239b93" />
+        </span>
         <textarea className="input" rows={2} maxLength={2000} value={description} onChange={(e) => setDescription(e.target.value)} />
       </label>
       <div className="field">
-        <span>Invite</span>
+        <span>
+          <Localized k="workspace.interface.invite_1fd9ae1" />
+        </span>
         <div className="wf-channels">
           {people.map((p) => (
             <span key={p.id} className="chip">
               {p.name}
-              <button className="icon-btn" style={{ width: 18, height: 18 }} aria-label={`Remove ${p.name}`} onClick={() => setPeople(people.filter((x) => x.id !== p.id))}>
+              <button
+                className="icon-btn"
+                style={{ width: 18, height: 18 }}
+                aria-label={uiText("messaging.interface.remove_value0_3028bf7", { value0: p.name })}
+                onClick={() => setPeople(people.filter((x) => x.id !== p.id))}
+              >
                 <X size={11} />
               </button>
             </span>
           ))}
         </div>
-        <input className="input" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Add people (they must be able to open the room)" aria-label="Find someone to invite" />
+        <input
+          className="input"
+          value={q}
+          onChange={(e) => setQ(e.target.value)}
+          placeholder={uiText("workspace.interface.add_people_they_must_be_able_to_open_the_room_bfff733")}
+          aria-label={uiText("workspace.interface.find_someone_to_invite_55e8f2d")}
+        />
         <ul className="ws-list">
           {(found.data ?? [])
             .filter((p) => !people.some((x) => x.id === p.id))
@@ -264,12 +341,14 @@ function MeetingDialog({ orgId, meeting, onClose, onSaved }: { orgId: string; me
     </>
   );
   const preview = (
-    <div className="event-preview card" aria-label="Preview">
-      <small className="faint">{community ? "Event" : "Meeting"} preview</small>
-      <strong className="event-preview-title">{title.trim() || "Untitled"}</strong>
-      <span>{start !== null ? whenText(start, start + minutes * 60_000, tz) : ""}</span>
+    <div className="event-preview card" aria-label={uiText("organization.interface.preview_324b134")}>
+      <small className="faint">
+        <Localized k="workspace.interface.preview_7f7f280" slots={[community ? uiText("workspace.interface.event_4e1f49a") : uiText("workspace.interface.meeting_8b8b887")]} />
+      </small>
+      <strong className="event-preview-title">{title.trim() || uiText("workspace.interface.untitled_f59ab8d")}</strong>
+      <span>{start !== null ? whenText(start, start + minutes * 60000, tz) : ""}</span>
       <span className="row" style={{ gap: 6 }}>
-        <Headphones size={14} /> #{rooms.find((r) => r.id === roomId)?.name ?? "room"}
+        <Headphones size={14} /> #{rooms.find((r) => r.id === roomId)?.name ?? uiText("workspace.interface.room_1f1c5b2")}
       </span>
       {repeat && repeat !== "none" && start !== null && <span>{repeatLabel(repeat, start, tz)}</span>}
       {description.trim() && (
@@ -277,35 +356,53 @@ function MeetingDialog({ orgId, meeting, onClose, onSaved }: { orgId: string; me
           {description.trim()}
         </p>
       )}
-      {people.length > 0 && <span className="faint">Invited: {people.map((p) => p.name).join(", ")}</span>}
+      {people.length > 0 && (
+        <span className="faint">
+          <Localized k="workspace.interface.invited_d384544" slots={[people.map((p) => p.name).join(", ")]} />
+        </span>
+      )}
     </div>
   );
-  const STEP_TITLES = ["Where", "What and when", "Preview"];
+  const STEP_TITLES = [uiText("workspace.interface.where_1daaa38"), uiText("workspace.interface.what_and_when_a3ab27c"), uiText("organization.interface.preview_324b134")];
   return (
     <Dialog
-      title={community ? (meeting ? "Edit event" : "Schedule an event") : meeting ? "Edit meeting" : "Schedule a meeting"}
+      title={
+        community
+          ? meeting
+            ? uiText("workspace.interface.edit_event_a5eca6b")
+            : uiText("workspace.interface.schedule_an_event_5c4c0b2")
+          : meeting
+            ? uiText("workspace.interface.edit_meeting_fa4d803")
+            : uiText("workspace.interface.schedule_a_meeting_b566179")
+      }
       onClose={onClose}
       footer={
         stepped && step < 2 ? (
           <>
             {step > 0 && (
               <button className="btn btn-secondary" onClick={() => setStep(step - 1)}>
-                Back
+                {l10n("common.actions.back")}
               </button>
             )}
             <button className="btn btn-primary" disabled={!ready} onClick={() => setStep(step + 1)}>
-              Next
+              {l10n("common.actions.next")}
             </button>
           </>
         ) : (
           <>
             {stepped && (
               <button className="btn btn-secondary" onClick={() => setStep(1)}>
-                Back
+                {l10n("common.actions.back")}
               </button>
             )}
             <button className="btn btn-primary" disabled={problems.length > 0 || act.busy} onClick={save}>
-              {act.busy ? "Saving…" : stepped ? (community ? "Create event" : "Create meeting") : "Save"}
+              {act.busy
+                ? l10n("common.common_saving")
+                : stepped
+                  ? community
+                    ? uiText("organization.interface.create_event_946cbe2")
+                    : uiText("workspace.interface.create_meeting_68e8ab7")
+                  : l10n("common.actions.save")}
             </button>
           </>
         )
@@ -313,7 +410,7 @@ function MeetingDialog({ orgId, meeting, onClose, onSaved }: { orgId: string; me
     >
       <div className="dialog-body">
         {stepped && (
-          <ol className="event-steps" aria-label="Steps">
+          <ol className="event-steps" aria-label={uiText("workspace.interface.steps_1de3df7")}>
             {STEP_TITLES.map((t, i) => (
               <li key={t} aria-current={i === step ? "step" : undefined} className={i < step ? "done" : undefined}>
                 {t}

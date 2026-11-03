@@ -1,3 +1,4 @@
+import { text as uiText } from "../i18n";
 import { ApiError } from "../api/client";
 import type { DeviceRecord, OutboxItem, RichContent, StoredMessage } from "../model/types";
 import { encodePayload, type ForwardOrigin, type Payload } from "../protocol/payload";
@@ -10,7 +11,6 @@ import { applyClose, applyVote, pollClosed } from "./polls";
 import { reactionAllowed } from "./expressions";
 import { contactWire } from "./rich";
 import { type PostingState, postingState } from "./rulesChannel";
-
 /** What sending needs from the engine. */
 export interface ComposeHost {
   store: LocalStore;
@@ -18,11 +18,16 @@ export interface ComposeHost {
   state(): AppState;
   membersOf(conversationId: string): Promise<Member[]>;
   show(m: StoredMessage): void;
-  bump(m: StoredMessage, counts: { unread: boolean; mention: boolean }): Promise<void>;
+  bump(
+    m: StoredMessage,
+    counts: {
+      unread: boolean;
+      mention: boolean;
+    },
+  ): Promise<void>;
   refreshPreview(conversationId: string): Promise<void>;
   queue(o: OutboxItem): Promise<void>;
 }
-
 /**
  * What this browser sends into conversations: messages (shown at once, sent by the outbox), retries, and the controls
  * that change messages for everyone: reactions, edits, deletions and pins (android MessageRepository).
@@ -30,23 +35,19 @@ export interface ComposeHost {
 export class Compose {
   private readonly reactionWrites = new Map<string, Promise<void>>();
   constructor(private readonly host: ComposeHost) {}
-
   /** Posting and reacting as the server allows them, with the community's rules applied (API 0.65.0). */
   private posting(conversationId: string): PostingState | null {
     const s = this.host.state();
     const c = s.conversations[conversationId];
     return c ? postingState(c, c.orgId ? s.orgs.find((o) => o.id === c.orgId) : null) : null;
   }
-
   private canPost(conversationId: string): boolean {
     return this.posting(conversationId)?.post === true;
   }
-
   /** Reactions and votes: also in the rules channel, for everyone who reads it. */
   private canReact(conversationId: string): boolean {
     return this.posting(conversationId)?.react === true;
   }
-
   /**
    * Sends a message. [rich]: a contact card, location or animated emoji, whose readable form goes in [text] for apps that
    * don't show them (android RichRules.fallbackText). [forwarded]: marked "Forwarded"; mentions aren't carried over.
@@ -54,39 +55,23 @@ export class Compose {
   async sendText(
     conversationId: string,
     text: string,
-    opts: { replyTo?: string; threadRoot?: string; attachments?: Payload["attachments"]; presetId?: string; rich?: RichContent | null; forwarded?: boolean; roleMentions?: string[] } = {},
+    opts: {
+      replyTo?: string;
+      threadRoot?: string;
+      attachments?: Payload["attachments"];
+      presetId?: string;
+      rich?: RichContent | null;
+      forwarded?: boolean;
+      roleMentions?: string[];
+    } = {},
   ): Promise<string> {
     const conv = this.host.state().conversations[conversationId];
-    if (!conv?.canPost) throw new ApiError(403, "forbidden", conv?.archived ? "This channel is archived" : "You can't post in this conversation");
-    if (this.posting(conversationId)?.mustAgree) throw new ApiError(403, "rules_not_agreed", "Agree to this community's rules before you post or react", { orgId: conv.orgId });
+    if (!conv?.canPost)
+      throw new ApiError(403, "forbidden", conv?.archived ? uiText("workspace.interface.this_channel_is_archived_e078852") : uiText("workspace.interface.you_can_t_post_in_this_conversation_343c10f"));
+    if (this.posting(conversationId)?.mustAgree)
+      throw new ApiError(403, "rules_not_agreed", uiText("workspace.interface.agree_to_this_community_s_rules_before_you_post_or_react_6364914"), { orgId: conv.orgId });
     const body = text.trim();
-    const mentions =
-      conv.type === "DM" || opts.forwarded || structured(opts.rich)
-        ? { ids: [], all: false }
-        : resolveMentions(body, await this.host.membersOf(conversationId).catch(() => []), conv.canMentionAll, this.host.device.userId);
-    const payload: Payload = {
-      type: "text",
-      text: body,
-      replyTo: opts.replyTo,
-      threadRoot: opts.threadRoot,
-      mentions: mentions.ids.length ? mentions.ids : undefined,
-      mentionAll: mentions.all ? true : undefined,
-      roleMentions: conv.type === "CHANNEL" && opts.roleMentions?.length ? opts.roleMentions : undefined,
-      attachments: opts.attachments?.length ? opts.attachments : undefined,
-      contact: opts.rich?.contact ? contactWire(opts.rich.contact) : undefined,
-      location: opts.rich?.location,
-      animoji: opts.rich?.animoji,
-      link: opts.rich?.link,
-      poll: opts.rich?.poll,
-      sticker: opts.rich?.sticker,
-      gif: opts.rich?.gif,
-      title: opts.rich?.title,
-      tags: opts.rich?.tags?.length ? opts.rich.tags : undefined,
-      customEmoji: opts.rich?.customEmoji?.length ? opts.rich.customEmoji : undefined,
-      customSticker: opts.rich?.customSticker,
-      forwarded: opts.forwarded ? true : undefined,
-      origin: opts.forwarded && opts.rich?.origin ? originWire(opts.rich.origin) : undefined,
-    };
+    let mentions = { ids: [] as string[], all: false };
     const id = opts.presetId ?? crypto.randomUUID();
     const now = Date.now();
     const existing = await this.host.store.message(id);
@@ -119,23 +104,60 @@ export class Compose {
       forwarded: opts.forwarded === true,
     };
     await this.host.store.putMessage(m);
-    await this.host.queue({
-      messageId: id,
-      conversationId,
-      cls: "message",
-      payloadJson: encodePayload(payload),
-      createdAt: now,
-      attempts: 0,
-      nextAttemptAt: 0,
-      lastError: null,
-      visible: true,
-      held: false,
-    });
     this.host.show(m);
+    try {
+      mentions =
+        conv.type === "DM" || opts.forwarded || structured(opts.rich) || !body.includes("@")
+          ? { ids: [], all: false }
+          : resolveMentions(body, await this.host.membersOf(conversationId).catch(() => []), conv.canMentionAll, this.host.device.userId);
+      const payload: Payload = {
+        type: "text",
+        text: body,
+        replyTo: opts.replyTo,
+        threadRoot: opts.threadRoot,
+        mentions: mentions.ids.length ? mentions.ids : undefined,
+        mentionAll: mentions.all ? true : undefined,
+        roleMentions: conv.type === "CHANNEL" && opts.roleMentions?.length ? opts.roleMentions : undefined,
+        attachments: opts.attachments?.length ? opts.attachments : undefined,
+        contact: opts.rich?.contact ? contactWire(opts.rich.contact) : undefined,
+        location: opts.rich?.location,
+        animoji: opts.rich?.animoji,
+        link: opts.rich?.link,
+        poll: opts.rich?.poll,
+        sticker: opts.rich?.sticker,
+        gif: opts.rich?.gif,
+        title: opts.rich?.title,
+        tags: opts.rich?.tags?.length ? opts.rich.tags : undefined,
+        customEmoji: opts.rich?.customEmoji?.length ? opts.rich.customEmoji : undefined,
+        customSticker: opts.rich?.customSticker,
+        forwarded: opts.forwarded ? true : undefined,
+        origin: opts.forwarded && opts.rich?.origin ? originWire(opts.rich.origin) : undefined,
+      };
+      m.mentions = mentions.ids;
+      m.mentionAll = mentions.all;
+      await this.host.store.putMessage(m);
+      this.host.show(m);
+      await this.host.queue({
+        messageId: id,
+        conversationId,
+        cls: "message",
+        payloadJson: encodePayload(payload),
+        createdAt: now,
+        attempts: 0,
+        nextAttemptAt: 0,
+        lastError: null,
+        visible: true,
+        held: false,
+      });
+    } catch (error) {
+      const failed: StoredMessage = { ...m, status: "FAILED", errorText: uiText("workspace.interface.couldn_t_send_this_message_392d75f") };
+      this.host.show(failed);
+      await this.host.store.putMessage(failed).catch(() => undefined);
+      throw error;
+    }
     await this.host.bump(m, { unread: false, mention: false });
     return id;
   }
-
   async retry(messageId: string): Promise<void> {
     const m = await this.host.store.message(messageId);
     if (!m || m.status !== "FAILED") return;
@@ -148,7 +170,6 @@ export class Compose {
       forwarded: m.forwarded,
     });
   }
-
   react(m: StoredMessage, emoji: string): Promise<void> {
     // Multiple quick picks must not overwrite each other's read-modify-write of the same message.
     const task = (this.reactionWrites.get(m.id) ?? Promise.resolve()).catch(() => undefined).then(() => this.toggleReaction(m, emoji));
@@ -159,7 +180,6 @@ export class Compose {
     void task.then(clear, clear);
     return task;
   }
-
   private async toggleReaction(m: StoredMessage, emoji: string): Promise<void> {
     const conv = this.host.state().conversations[m.conversationId];
     if (!this.canReact(m.conversationId) || !reactionAllowed(emoji, conv?.type === "CHANNEL" && !!conv.orgId)) return;
@@ -170,7 +190,6 @@ export class Compose {
     this.host.show(next);
     await this.enqueueControl(m.conversationId, { type: "reaction", target: m.id, emoji, add });
   }
-
   /** This person's vote on a poll (empty takes it back): shown at once, then sent as an encrypted "vote" control. */
   async vote(m: StoredMessage, choices: string[], anonymous?: boolean): Promise<void> {
     if (!this.canReact(m.conversationId)) return;
@@ -182,7 +201,6 @@ export class Compose {
     this.host.show(next);
     await this.enqueueControl(m.conversationId, { type: "vote", target: m.id, choices: rich.votes?.[this.host.device.userId] ?? [], anonymous: rich.votePrivacy?.[this.host.device.userId] === true });
   }
-
   /** Closes this person's own poll: no more votes from anyone. */
   async closePoll(m: StoredMessage): Promise<void> {
     if (!m.outgoing || !m.rich?.poll || !this.canPost(m.conversationId)) return;
@@ -193,7 +211,6 @@ export class Compose {
     this.host.show(next);
     await this.enqueueControl(m.conversationId, { type: "poll_close", target: m.id });
   }
-
   async edit(m: StoredMessage, text: string): Promise<void> {
     if (!m.outgoing || m.deleted || !this.canPost(m.conversationId)) return;
     const body = text.trim();
@@ -206,7 +223,6 @@ export class Compose {
     await this.host.refreshPreview(m.conversationId);
     await this.enqueueControl(m.conversationId, { type: "edit", target: m.id, text: body, mentions: ids });
   }
-
   async deleteForEveryone(m: StoredMessage, asModerator = false): Promise<void> {
     if (!m.outgoing && !asModerator) return;
     if (m.outgoing && !this.canPost(m.conversationId)) return;
@@ -216,7 +232,6 @@ export class Compose {
     await this.host.refreshPreview(m.conversationId);
     await this.enqueueControl(m.conversationId, { type: "delete", target: m.id });
   }
-
   async setPinned(m: StoredMessage, pinned: boolean, asModerator = false): Promise<void> {
     if (!asModerator && !this.canPost(m.conversationId)) return;
     const next = applyPin(m, pinned);
@@ -224,7 +239,6 @@ export class Compose {
     this.host.show(next);
     await this.enqueueControl(m.conversationId, { type: "pin", target: m.id, pinned });
   }
-
   async enqueueControl(conversationId: string, payload: Payload): Promise<void> {
     await this.host.queue({
       messageId: crypto.randomUUID(),
@@ -240,12 +254,10 @@ export class Compose {
     });
   }
 }
-
 /** A card, place, poll, sticker or animated emoji replaces the text (no mentions); a forum title or emoji doesn't. */
 function structured(r: RichContent | null | undefined): boolean {
   return !!(r && (r.contact || r.location || r.animoji || r.poll || r.sticker || r.customSticker || r.gif));
 }
-
 /** A forward's origin as it's sent: fields without a value are left out (android ForwardOrigin's nulls). */
 function originWire(o: NonNullable<RichContent["origin"]>): ForwardOrigin {
   return { place: o.place, ...(o.at !== null ? { at: o.at } : {}), ...(o.conversationId && o.messageId ? { conversationId: o.conversationId, messageId: o.messageId } : {}) };

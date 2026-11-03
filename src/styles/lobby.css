@@ -192,7 +192,7 @@
 .lobby-customize {
   position: absolute;
   top: 14px;
-  right: 14px;
+  inset-inline-end: 14px;
   background: color-mix(in srgb, var(--surface) 88%, transparent);
   backdrop-filter: blur(8px);
 }
@@ -361,11 +361,11 @@
 }
 .lobby-md ul,
 .lobby-md ol {
-  padding-left: 20px;
+  padding-inline-start: 20px;
 }
 .lobby-md blockquote {
-  padding-left: 12px;
-  border-left: 3px solid var(--lobby-accent);
+  padding-inline-start: 12px;
+  border-inline-start: 3px solid var(--lobby-accent);
   color: var(--text-2);
 }
 .lobby-md code,
@@ -409,7 +409,7 @@
   min-width: 0;
   padding: 8px 10px;
   border-radius: var(--r-md);
-  text-align: left;
+  text-align: start;
   color: inherit;
   text-decoration: none;
 }
@@ -462,7 +462,7 @@
   display: flex;
 }
 .lobby-faces > * + * {
-  margin-left: -6px;
+  margin-inline-start: -6px;
 }
 .lobby-badge {
   display: inline-flex;
@@ -718,7 +718,7 @@
   .main.lobby-main.with-editor .lobby-editor {
     flex: 1 1 55%;
     width: 100%;
-    border-left: 0;
+    border-inline-start: 0;
     border-top: 1px solid var(--border);
   }
   .lobby-editor .seg-label {

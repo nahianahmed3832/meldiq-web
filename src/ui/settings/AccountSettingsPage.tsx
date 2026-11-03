@@ -1,3 +1,7 @@
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
+import { Localized } from "../../i18n/Localized";
+import { useT as useLocalization } from "../../i18n";
 import { ConnectedAccountsCard } from "./ConnectedAccountsCard";
 import { MigrationPreviewCard } from "./MigrationPreviewCard";
 import { KeyRound, Laptop, LogOut, Trash2 } from "lucide-react";
@@ -16,22 +20,26 @@ import { AccountOverview } from "./AccountOverview";
 import { StandingCard, TwoStepCard } from "./AccountSafetyCards";
 import { BugReportsCard, DataExportCard, LogOutEverywhereCard } from "./AccountExtrasCards";
 import { CreatorVerificationCard } from "./CreatorVerificationCard";
-
+import { LanguagePreferenceCard } from "../components/LanguagePicker";
 /**
  * The Orbit 2.0 account (docs/ORBIT_2_ARCHITECTURE §2): its email, the password, and where it's signed in. A browser
  * linked before 2.0 has no account here and is told how to get one.
  */
 export function AccountSettingsPage({ onSignedOut }: { onSignedOut: () => void }) {
+  useLocaleRender();
+  const l10n = useLocalization();
   const engine = useEngine();
   const account = engine.device.account;
   if (!account) {
     return (
       <>
-        <h1>Account</h1>
+        <h1>{l10n("settings.account")}</h1>
         <div className="card" style={{ padding: 20, display: "grid", gap: 10 }}>
-          <p style={{ margin: 0 }}>This browser was linked to your account with your phone, before email sign-in existed. It has no email or password here.</p>
+          <p style={{ margin: 0 }}>
+            <Localized k="settings.interface.this_browser_was_linked_to_your_account_with_your_phone_before_em_bb40d77" />
+          </p>
           <p className="muted" style={{ margin: 0 }}>
-            On your phone, move your account to email sign-in (Meldiq asks when you update). Then sign out here and sign in with your email to manage your account from this browser.
+            <Localized k="settings.interface.on_your_phone_move_your_account_to_email_sign_in_meldiq_asks_when_70a3300" />
           </p>
         </div>
       </>
@@ -39,19 +47,21 @@ export function AccountSettingsPage({ onSignedOut }: { onSignedOut: () => void }
   }
   return <MyAccount email={account.email} onSignedOut={onSignedOut} />;
 }
-
 /**
  * Settings › My Account (the reference's page, 2026-10-28): your card with name, username and email; password, two-step
  * sign-in, passkeys and keys; account standing; bug hunting; your data; then signing out everywhere and deleting the
  * account.
  */
 function MyAccount({ email: initialEmail, onSignedOut }: { email: string; onSignedOut: () => void }) {
+  useLocaleRender();
+  const l10n = useLocalization();
   const engine = useEngine();
   const [email, setEmail] = useState(initialEmail);
   const twoStep = useOrbit((s) => s.server?.features.includes("two-step") ?? false);
   return (
     <>
-      <h1>My Account</h1>
+      <h1>{l10n("settings.settings_account")}</h1>
+      <LanguagePreferenceCard />
       <AccountOverview
         email={email}
         onEmailChanged={(next) => {
@@ -59,7 +69,9 @@ function MyAccount({ email: initialEmail, onSignedOut }: { email: string; onSign
           void engine.accountEmailChanged(next);
         }}
       />
-      <h2 className="settings-group">Password and authentication</h2>
+      <h2 className="settings-group">
+        <Localized k="settings.interface.password_and_authentication_7f183b0" />
+      </h2>
       <ConnectedAccountsCard />
       <MigrationPreviewCard />
       <ChangePassword email={email} />
@@ -70,18 +82,20 @@ function MyAccount({ email: initialEmail, onSignedOut }: { email: string; onSign
       <StandingCard />
       <BugReportsCard />
       <CreatorVerificationCard />
-      <h2 className="settings-group">Your data</h2>
+      <h2 className="settings-group">
+        <Localized k="settings.interface.your_data_ee5ef73" />
+      </h2>
       <DataExportCard />
-      <h2 className="settings-group">Account</h2>
+      <h2 className="settings-group">{l10n("settings.account")}</h2>
       <Sessions accounts={new AccountApi(engine.api)} />
       <LogOutEverywhereCard onSignedOut={onSignedOut} />
       <DeleteAccount email={email} onDeleted={onSignedOut} />
     </>
   );
 }
-
 /** Deleting the account for good (server docs/ACCOUNT_DELETION.md); this browser erases its copy once the server confirms. */
 function DeleteAccount({ email, onDeleted }: { email: string; onDeleted: () => void }) {
+  useLocaleRender();
   const engine = useEngine();
   const available = engine.state.get().server?.features.includes("account-delete") ?? false;
   const [open, setOpen] = useState(false);
@@ -102,34 +116,38 @@ function DeleteAccount({ email, onDeleted }: { email: string; onDeleted: () => v
   return (
     <div className="card" style={{ padding: 20, display: "grid", gap: 12 }}>
       <h3 style={{ margin: 0 }}>
-        <Trash2 size={16} style={{ verticalAlign: "-3px" }} /> Delete account
+        <Localized k="settings.interface.delete_account_cff0651" slots={[<Trash2 size={16} style={{ verticalAlign: "-3px" }} />]} />
       </h3>
       <p className="muted" style={{ margin: 0, fontSize: 13 }}>
-        Deletes the Meldiq account {email} for good. You leave every community, group and channel, every device is signed out and your profile is erased. It can't be undone.
+        <Localized k="settings.interface.deletes_the_meldiq_account_for_good_you_leave_every_community_gro_dfd49f8" slots={[email]} />
       </p>
       <p className="faint" style={{ margin: 0, fontSize: 12.5 }}>
-        People you messaged keep the conversation, shown as "Deleted account". Messages already delivered stay on their devices. Once the server confirms, this browser erases its copy too.
+        <Localized k="settings.interface.people_you_messaged_keep_the_conversation_shown_as_deleted_accoun_ffcc0b2" />
       </p>
       {!available && (
         <div className="banner" role="status">
-          This server can't delete accounts yet.
+          <Localized k="settings.interface.this_server_can_t_delete_accounts_yet_0930b77" />
         </div>
       )}
       {available && !open && (
         <div>
           <button className="btn btn-danger-quiet btn-sm" onClick={() => setOpen(true)}>
-            Delete my account…
+            <Localized k="settings.interface.delete_my_account_28a415f" />
           </button>
         </div>
       )}
       {available && open && (
         <form onSubmit={submit} className="ws-form" noValidate>
           <label className="field">
-            <span>Type your email to confirm</span>
+            <span>
+              <Localized k="settings.interface.type_your_email_to_confirm_552d00d" />
+            </span>
             <input className="input" type="email" autoComplete="off" placeholder={email} value={typed} onChange={(e) => setTyped(e.target.value)} disabled={busy} />
           </label>
           <label className="field">
-            <span>Current password</span>
+            <span>
+              <Localized k="settings.interface.current_password_72ed2bd" />
+            </span>
             <input className="input" type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} disabled={busy} />
           </label>
           {problem && (
@@ -139,10 +157,10 @@ function DeleteAccount({ email, onDeleted }: { email: string; onDeleted: () => v
           )}
           <div className="ws-form-actions">
             <button type="button" className="btn btn-ghost btn-sm" disabled={busy} onClick={() => setOpen(false)}>
-              Keep my account
+              <Localized k="settings.interface.keep_my_account_d62ce03" />
             </button>
             <button className="btn btn-danger btn-sm" disabled={busy || !canDeleteAccount(typed, email, password)}>
-              {busy ? "Deleting…" : "Delete my account"}
+              {busy ? uiText("organization.interface.deleting_43b5894") : uiText("settings.interface.delete_my_account_21d5294")}
             </button>
           </div>
         </form>
@@ -150,8 +168,9 @@ function DeleteAccount({ email, onDeleted }: { email: string; onDeleted: () => v
     </div>
   );
 }
-
 function ChangePassword({ email }: { email: string }) {
+  useLocaleRender();
+  const l10n = useLocalization();
   const engine = useEngine();
   const [current, setCurrent] = useState("");
   const [next, setNext] = useState("");
@@ -171,24 +190,25 @@ function ChangePassword({ email }: { email: string }) {
   return (
     <div className="card" style={{ padding: 20, display: "grid", gap: 12 }}>
       <h3 style={{ margin: 0 }}>
-        <KeyRound size={16} style={{ verticalAlign: "-3px" }} /> Password
+        <KeyRound size={16} style={{ verticalAlign: "-3px" }} /> {l10n("auth.password")}
       </h3>
       <p className="muted" style={{ margin: 0, fontSize: 13 }}>
-        Changing it signs out every other session of your account. This browser stays signed in. This browser doesn't keep your account's keys, so your key backup turns off until your phone signs in
-        with the new password, which backs the keys up again.
+        <Localized k="settings.interface.changing_it_signs_out_every_other_session_of_your_account_this_br_aa7368b" />
       </p>
       <form onSubmit={submit} className="ws-form" noValidate>
         <input type="email" autoComplete="username" value={email} readOnly hidden />
         <label className="field">
-          <span>Current password</span>
+          <span>
+            <Localized k="settings.interface.current_password_72ed2bd" />
+          </span>
           <input className="input" type="password" autoComplete="current-password" value={current} onChange={(e) => setCurrent(e.target.value)} />
         </label>
         <label className="field">
-          <span>New password</span>
+          <span>{l10n("auth.reset_new_password")}</span>
           <input className="input" type="password" autoComplete="new-password" value={next} onChange={(e) => setNext(e.target.value)} />
         </label>
         <p className="faint ws-wide" style={{ margin: 0, fontSize: 12.5 }}>
-          At least {PASSWORD_MIN_LENGTH} characters.
+          <Localized k="settings.interface.at_least_characters_04a49b7" slots={[PASSWORD_MIN_LENGTH]} />
         </p>
         {(act.error || problem) && (
           <div className="banner danger ws-wide" role="alert">
@@ -197,50 +217,57 @@ function ChangePassword({ email }: { email: string }) {
         )}
         {done && (
           <div className="banner ok ws-wide" role="status">
-            Password changed. Your other sessions were signed out.
+            <Localized k="settings.interface.password_changed_your_other_sessions_were_signed_out_2804304" />
           </div>
         )}
         <div className="ws-form-actions">
           <button className="btn btn-primary btn-sm" disabled={!current || !next || !!problem || act.busy}>
-            {act.busy ? "Saving…" : "Change password"}
+            {act.busy ? l10n("common.common_saving") : uiText("settings.interface.change_password_3f9c991")}
           </button>
         </div>
       </form>
     </div>
   );
 }
-
 function Sessions({ accounts }: { accounts: AccountApi }) {
+  useLocaleRender();
+  const l10n = useLocalization();
   const [version, setVersion] = useState(0);
   const list = useLoad(() => accounts.sessions(), [version]);
   const act = useAction();
   return (
     <div className="card" style={{ padding: 20, display: "grid", gap: 10 }}>
-      <h3 style={{ margin: 0 }}>Where you're signed in</h3>
+      <h3 style={{ margin: 0 }}>
+        <Localized k="settings.interface.where_you_re_signed_in_4f81119" />
+      </h3>
       <p className="muted" style={{ margin: 0, fontSize: 13 }}>
-        Sessions of your account. Signing one out keeps that device's keys; it needs your password to come back. To remove a device and its keys, use Devices.
+        <Localized k="settings.interface.sessions_of_your_account_signing_one_out_keeps_that_device_s_keys_28a967f" />
       </p>
       {(list.error || act.error) && (
         <div className="banner danger" role="alert">
           {list.error ?? act.error}
         </div>
       )}
-      <ul className="ws-list" aria-label="Sessions" aria-busy={list.loading}>
+      <ul className="ws-list" aria-label={uiText("settings.interface.sessions_6fa3cbf")} aria-busy={list.loading}>
         {(list.data ?? []).map((s) => (
           <li key={s.id} className="ws-row">
             <Laptop size={18} className="faint" />
             <span className="lines grow">
-              <span className="ellipsis">{s.label ?? "Unnamed device"}</span>
+              <span className="ellipsis">{s.label ?? uiText("settings.interface.unnamed_device_6aba593")}</span>
               <small>
-                Signed in {relative(s.createdAt)}
-                {s.lastUsedAt ? ` · last used ${relative(s.lastUsedAt)}` : ""}
+                <Localized
+                  k="settings.interface.signed_in_0623e9f"
+                  slots={[relative(s.createdAt), s.lastUsedAt ? uiText("settings.interface.last_used_value0_2556352", { value0: relative(s.lastUsedAt) }) : ""]}
+                />
               </small>
             </span>
             {s.current ? (
-              <span className="status-badge status-active">This browser</span>
+              <span className="status-badge status-active">
+                <Localized k="settings.interface.this_browser_101f4d9" />
+              </span>
             ) : (
               <button className="btn btn-ghost btn-sm" disabled={act.busy} onClick={() => void act.act(() => accounts.endSession(s.id).then(() => setVersion((v) => v + 1)))}>
-                <LogOut size={14} /> Sign out
+                <LogOut size={14} /> {l10n("auth.signOut")}
               </button>
             )}
           </li>

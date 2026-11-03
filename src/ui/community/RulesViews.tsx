@@ -1,3 +1,5 @@
+import { useLocaleRender } from "../../i18n/Localized";
+import { formatUiNumber } from "../../i18n/format";
 import { BookText, CheckCircle2 } from "lucide-react";
 import { useState } from "react";
 import { useEngine, useOrbit } from "../../application/orbit";
@@ -19,12 +21,13 @@ export function useRulesSummary(orgId: string | null | undefined): RulesSummary 
 
 /** The numbered rules, each title with its description under it. */
 export function RulesList({ rules }: { rules: readonly Rule[] }) {
+  useLocaleRender();
   return (
     <ol className="rules-list">
       {rules.map((r, i) => (
         <li key={r.id} className="rules-item">
           <span className="rules-num" aria-hidden>
-            {i + 1}
+            {formatUiNumber(i + 1)}
           </span>
           <div className="lines">
             <strong>{r.title}</strong>

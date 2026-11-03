@@ -148,7 +148,7 @@ describe("the lobby's draft", () => {
     expect(draftProblem({ ...d, buttons: [{ label: "Go", url: "http://a.example", channelId: null }] })).toMatch(/https/);
     expect(draftProblem({ ...d, buttons: [{ label: "Go", url: null, channelId: null }] })).toMatch(/link or a channel/);
     expect(draftProblem({ ...d, faq: [{ id: "a", question: "Q", answer: "" }] })).toMatch(/answer/);
-    expect(draftProblem({ ...d, about: "x".repeat(2001) })).toMatch(/2000/);
+    expect(draftProblem({ ...d, about: "x".repeat(2001) })).toContain(new Intl.NumberFormat("en").format(2000));
     expect(draftProblem({ ...d, leaderboards: [] })).toMatch(/leaderboard/);
   });
 

@@ -141,7 +141,7 @@ describe("actions on messages drawn from the snapshot", () => {
     page().resolve();
     await done;
     expect(deleted).not.toHaveBeenCalled();
-    expect(engine.state.get().notices.map((n) => n.text)).toEqual([MESSAGE_CHANGED]);
+    expect(engine.state.get().notices.map((n) => n.text)).toEqual([MESSAGE_CHANGED()]);
     await LocalStore.erase(store);
   });
 
@@ -150,14 +150,14 @@ describe("actions on messages drawn from the snapshot", () => {
     const done = failing.engine.vote(failing.engine.state.get().messages[CONV]!.items[0]!, ["a"]);
     failing.page().fail();
     await done;
-    expect(failing.engine.state.get().notices.map((n) => n.text)).toEqual([UNREACHABLE]);
+    expect(failing.engine.state.get().notices.map((n) => n.text)).toEqual([UNREACHABLE()]);
     await LocalStore.erase(failing.store);
 
     const slow = await openOnSnapshot([msg("m1", "old")], [msg("m1", "new")], { liveWaitMs: 200 });
     const edited = vi.spyOn((slow.engine as unknown as { compose: { edit(m: StoredMessage, t: string): Promise<void> } }).compose, "edit").mockResolvedValue();
     await slow.engine.edit(slow.engine.state.get().messages[CONV]!.items[0]!, "changed"); // the page never comes
     expect(edited).not.toHaveBeenCalled();
-    expect(slow.engine.state.get().notices.map((n) => n.text)).toEqual([UNREACHABLE]);
+    expect(slow.engine.state.get().notices.map((n) => n.text)).toEqual([UNREACHABLE()]);
     expect(slow.engine.state.get().waiting.m1).toBeUndefined();
     // The messages drawn from the snapshot stay on screen rather than emptying.
     expect(slow.engine.state.get().messages[CONV]?.items.map((m) => m.text)).toEqual(["old"]);
@@ -183,7 +183,7 @@ describe("actions on messages drawn from the snapshot", () => {
     vi.spyOn((engine as unknown as { compose: { sendText(c: string, t: string, o: object): Promise<string> } }).compose, "sendText").mockResolvedValue("x");
     const reply = engine.sendText(CONV, "re", { replyTo: "m1" });
     page().resolve();
-    await expect(reply).rejects.toThrow(MESSAGE_CHANGED);
+    await expect(reply).rejects.toThrow(MESSAGE_CHANGED());
     await LocalStore.erase(store);
   });
 });

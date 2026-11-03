@@ -1,28 +1,44 @@
+import { text as uiText } from "../i18n";
 import { expressionFormat } from "./prepareExpression";
-
 /** Automatic uploads use efficient, upright static photos. Explicit quality modes remain for stored legacy preferences. */
 export type PhotoQuality = "standard" | "hd" | "original";
-
-export const QUALITY_LABEL: Record<PhotoQuality, string> = { standard: "Standard", hd: "HD", original: "Original" };
-
-const SETTINGS: Record<Exclude<PhotoQuality, "original">, { edge: number; jpeg: number }> = {
+export const QUALITY_LABEL: Record<PhotoQuality, string> = {
+  get standard() {
+    return uiText("settings.ap_standard");
+  },
+  hd: "HD",
+  get original() {
+    return uiText("settings.ap_original");
+  },
+};
+const SETTINGS: Record<
+  Exclude<PhotoQuality, "original">,
+  {
+    edge: number;
+    jpeg: number;
+  }
+> = {
   standard: { edge: 1600, jpeg: 0.82 },
   hd: { edge: 4096, jpeg: 0.92 },
 };
-
 /** Photos this browser can decode and re-encode; anything else goes as it is. */
 export function reencodable(type: string): boolean {
   return type === "image/jpeg" || type === "image/png" || type === "image/webp";
 }
-
 /** The size a photo is drawn at: scaled down to fit [edge] on its longest side, never up. */
-export function fitWithin(width: number, height: number, edge: number): { width: number; height: number } {
+export function fitWithin(
+  width: number,
+  height: number,
+  edge: number,
+): {
+  width: number;
+  height: number;
+} {
   const longest = Math.max(width, height);
   if (longest <= edge) return { width, height };
   const k = edge / longest;
   return { width: Math.max(1, Math.round(width * k)), height: Math.max(1, Math.round(height * k)) };
 }
-
 /** The sent file's name: a re-encoded JPEG ends in .jpg. */
 export function encodedName(name: string, type: string): string {
   const extension = ({ "image/jpeg": "jpg", "image/webp": "webp", "image/png": "png" } as Record<string, string>)[type];
@@ -30,9 +46,7 @@ export function encodedName(name: string, type: string): string {
   const base = name.replace(/\.[A-Za-z0-9]{1,5}$/, "");
   return `${base || "photo"}.${extension}`;
 }
-
 export class PhotoPrepareError extends Error {}
-
 /** Re-encodes [file] at [quality] (browser only: needs createImageBitmap and a canvas). */
 export async function preparePhoto(file: File, quality: PhotoQuality | "auto" = "auto"): Promise<File> {
   if (quality === "auto") return optimizePhoto(file);
@@ -63,7 +77,6 @@ export async function preparePhoto(file: File, quality: PhotoQuality | "auto" = 
     bitmap.close();
   }
 }
-
 /** Automatic sending is best effort: preserve animations, and keep files the browser cannot decode. */
 export async function optimizePhoto(file: File): Promise<File> {
   if (!reencodable(file.type) || file.size > 32 * 1024 * 1024) return file;
@@ -91,8 +104,13 @@ export async function optimizePhoto(file: File): Promise<File> {
     return file;
   }
 }
-
 /** Downloads return the exact verified file. Format conversion is an explicit export operation, never a download side effect. */
-export async function photoDownload(blob: Blob, name: string): Promise<{ blob: Blob; name: string }> {
+export async function photoDownload(
+  blob: Blob,
+  name: string,
+): Promise<{
+  blob: Blob;
+  name: string;
+}> {
   return { blob, name };
 }

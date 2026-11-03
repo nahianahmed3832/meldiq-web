@@ -1,3 +1,6 @@
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
+import { Localized } from "../../i18n/Localized";
 import { HelpCircle, Info, Lock, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { Conversation, Org } from "../../api/schemas";
@@ -11,7 +14,6 @@ import { rolesOverview } from "../../sync/roles";
 import { useCommunityAccess, useFeature } from "../community/useCommunityAccess";
 import { OnboardingFlow } from "../community/OnboardingFinish";
 import { untilWhen } from "../format";
-
 export interface ComposerGates {
   abilities: ChannelAbilities;
   hold: ComposerHold | null;
@@ -19,9 +21,7 @@ export interface ComposerGates {
   /** Roles the mention list may offer (already filtered to what this person may mention). */
   roles: MentionRole[];
 }
-
 const rolesCache = new Map<string, Promise<MentionRole[]>>();
-
 function mentionRoles(engine: Engine, orgId: string): Promise<MentionRole[]> {
   let p = rolesCache.get(orgId);
   if (!p) {
@@ -33,7 +33,6 @@ function mentionRoles(engine: Engine, orgId: string): Promise<MentionRole[]> {
   }
   return p;
 }
-
 /** What the composer offers in [c] and why it's held back (community parity A1–A3). */
 export function useComposerGates(c: Conversation): ComposerGates {
   const engine = useEngine();
@@ -55,18 +54,20 @@ export function useComposerGates(c: Conversation): ComposerGates {
   const hold = orgId ? communityHold(org, abilities) : null;
   return { abilities, hold, note, roles: roles.filter((r) => abilities.mentionAnyRole || r.mentionable) };
 }
-
 /** In place of the composer: finish onboarding, the community is locked, or the channel is read-only. */
 export function ComposerHoldBar({ hold, org }: { hold: ComposerHold; org: Pick<Org, "id"> }) {
+  useLocaleRender();
   const [flow, setFlow] = useState(false);
   if (hold.kind === "onboarding") {
     return (
       <div className="composer-wrap">
         <div className="composer-locked" role="note">
           <HelpCircle size={16} />
-          <span className="grow">Finish this community's onboarding to start chatting. You can read everything meanwhile.</span>
+          <span className="grow">
+            <Localized k="messaging.interface.finish_this_community_s_onboarding_to_start_chatting_you_can_read_d4affae" />
+          </span>
           <button className="btn btn-primary btn-sm" onClick={() => setFlow(true)}>
-            Finish onboarding
+            <Localized k="messaging.interface.finish_onboarding_33c8bb8" />
           </button>
         </div>
         {flow && <OnboardingFlow orgId={org.id} onClose={() => setFlow(false)} />}
@@ -78,20 +79,20 @@ export function ComposerHoldBar({ hold, org }: { hold: ComposerHold; org: Pick<O
       <div className="composer-locked" role="note">
         <Lock size={16} />
         {hold.kind === "locked"
-          ? `This community is locked and unlocks ${untilWhen(hold.until)}. Only moderators can post right now.`
-          : "This channel is read-only. Everyone can read and react; only some roles can post."}
+          ? uiText("messaging.interface.this_community_is_locked_and_unlocks_value0_only_moderators_can_p_f12ca0a", { value0: untilWhen(hold.until) })
+          : uiText("messaging.interface.this_channel_is_read_only_everyone_can_read_and_react_only_some_r_bcc12fe")}
       </div>
     </div>
   );
 }
-
 /** The latest refusal, explained above the composer until closed. */
 export function ComposerNoteLine({ conversationId, note }: { conversationId: string; note: ComposerNote }) {
+  useLocaleRender();
   return (
     <div className="composer-slowmode composer-note" role="status" aria-live="polite">
       <Info size={14} aria-hidden="true" />
       <span className="grow">{note.text}</span>
-      <button className="icon-btn icon-btn-xs" aria-label="Close the note" onClick={() => clearComposerNote(conversationId)}>
+      <button className="icon-btn icon-btn-xs" aria-label={uiText("messaging.interface.close_the_note_a3bce9d")} onClick={() => clearComposerNote(conversationId)}>
         <X size={12} />
       </button>
     </div>

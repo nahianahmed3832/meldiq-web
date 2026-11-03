@@ -1,3 +1,7 @@
+import { roleName } from "../../sync/workspaceRules";
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
+import { Localized } from "../../i18n/Localized";
 import { CheckCheck, ChevronDown, Compass, Link2, LogIn, PenSquare, Plus, Search, Settings2, Ticket, UsersRound } from "lucide-react";
 import { type MouseEvent, useLayoutEffect, useRef } from "react";
 import { shallowEqual, useEngine, useOrbit } from "../../application/orbit";
@@ -22,15 +26,14 @@ import { useCommunityDetail } from "../community/useCommunityPermissions";
 import { useT } from "../../i18n";
 import { ConnectedCallPanel } from "../call/ConnectedCallPanel";
 import { LobbyRow } from "../lobby/LobbyRow";
-
 interface SidebarProps {
   orgId: string | null;
   section: Section;
   open: boolean;
   onDialog: (d: ShellDialog) => void;
 }
-
 export function Sidebar({ orgId, section, open, onDialog }: SidebarProps) {
+  useLocaleRender();
   const org = useOrbit((s) => s.orgs.find((o) => o.id === orgId) ?? null);
   const orgs = useOrbit((s) => s.orgs);
   const synced = useOrbit((s) => s.synced);
@@ -69,7 +72,13 @@ export function Sidebar({ orgId, section, open, onDialog }: SidebarProps) {
       ? community.entries
       : [
           { label: t("side_new_message"), icon: <Plus size={16} />, onSelect: () => onDialog({ kind: "new" }) },
-          { label: "New group", icon: <UsersRound size={16} />, onSelect: () => onDialog({ kind: "newGroup" }) },
+          {
+            get label() {
+              return uiText("messaging.interface.new_group_df796c6");
+            },
+            icon: <UsersRound size={16} />,
+            onSelect: () => onDialog({ kind: "newGroup" }),
+          },
         ];
   const onBlankMenu = (e: MouseEvent<HTMLDivElement>) => {
     if (keepsNativeMenu(e.target) || (e.target as HTMLElement).closest("button, a, [role='button'], .side-row, .side-item, .side-section-row, summary")) return;
@@ -79,12 +88,11 @@ export function Sidebar({ orgId, section, open, onDialog }: SidebarProps) {
   useLayoutEffect(() => {
     if (list.current) list.current.scrollTop = scrollMemory.get(listKey) ?? 0;
   }, [listKey]);
-
   return (
     <aside
       className={`sidebar${communities && !messages && !discover ? " community-sidebar" : ""}${open ? " open" : ""}${branded && org?.accent ? ` ${ACCENT_CLASS}` : ""}`}
       style={branded ? { ...accentStyle(org?.accent), ...tintStyle(org?.background) } : undefined}
-      aria-label="Conversations"
+      aria-label={t("settings.nt_conversations")}
     >
       <div className="side-head">
         {discover ? (
@@ -103,14 +111,18 @@ export function Sidebar({ orgId, section, open, onDialog }: SidebarProps) {
             onClick={(e) => switcher.open(e.currentTarget)}
             aria-haspopup="menu"
             aria-expanded={!!switcher.anchor}
-            aria-label={`Community: ${org?.name ?? "none"}. Switch community`}
+            aria-label={uiText("workspace.interface.community_value0_switch_community_fc63d75", { value0: org?.name ?? "none" })}
           >
             {org ? <OrgAvatar orgId={org.id} name={org.name} photoRev={org.photoRev} size={34} /> : <Avatar name="Meldiq" colorIndex={7} size={34} square decorative />}
             <span className="grow">
               <strong className="ellipsis" style={{ display: "block" }}>
                 {org?.name ?? "Meldiq"}
               </strong>
-              <small>{org ? `${members(org.memberCount)} · ${roleLabel(org.myRole)}` : "No community yet"}</small>
+              <small>
+                {org
+                  ? uiText("messaging.interface.value0_value1_75414c2", { value0: members(org.memberCount), value1: roleLabel(org.myRole) })
+                  : uiText("workspace.interface.no_community_yet_183b3a6")}
+              </small>
             </span>
             <ChevronDown size={16} className="faint" />
           </button>
@@ -122,7 +134,7 @@ export function Sidebar({ orgId, section, open, onDialog }: SidebarProps) {
         )}
         {/* Phones have no top bar on the lists (brief v4 §18): search, and in Messages a new message, sit here. */}
         <span className="side-head-phone">
-          <button className="icon-btn" onClick={() => onDialog({ kind: "search" })} aria-label="Search Meldiq" title="Search">
+          <button className="icon-btn" onClick={() => onDialog({ kind: "search" })} aria-label={uiText("workspace.interface.search_meldiq_7c5a6e1")} title={t("common.actions.search")}>
             <Search size={18} />
           </button>
           {messages && (
@@ -132,13 +144,20 @@ export function Sidebar({ orgId, section, open, onDialog }: SidebarProps) {
           )}
         </span>
       </div>
-      {branded && !messages && bannerUrl && <div className="community-cover" role="img" aria-label={`${org?.name ?? "Community"} banner`} style={{ backgroundImage: `url(${bannerUrl})` }} />}
+      {branded && !messages && bannerUrl && (
+        <div
+          className="community-cover"
+          role="img"
+          aria-label={uiText("workspace.interface.value0_banner_bb1766c", { value0: org?.name ?? t("organization.community") })}
+          style={{ backgroundImage: `url(${bannerUrl})` }}
+        />
+      )}
       {communities && !messages && !discover && org && <LobbyRow orgId={org.id} canEdit={perms.canManageOrg} current={section === "lobby"} />}
       {branded && !messages && perms.canInvite && (
         <div className="community-top">
           {perms.canInvite && (
             <button className="community-invite" onClick={() => onDialog({ kind: "addMembers" })}>
-              <Link2 size={17} aria-hidden="true" /> Invite people
+              <Localized k="workspace.interface.invite_people_9e39ec6" slots={[<Link2 size={17} aria-hidden="true" />]} />
             </button>
           )}
         </div>
@@ -146,30 +165,68 @@ export function Sidebar({ orgId, section, open, onDialog }: SidebarProps) {
       {!communities && section !== "dms" && switcher.anchor && (
         <Menu
           anchor={switcher.anchor}
-          label="Workspaces"
+          label={uiText("workspace.interface.workspaces_1377264")}
           onClose={switcher.close}
           entries={[
-            { heading: "Your communities" },
+            { heading: t("workspace.rail_communities") },
             ...orgs.map((o) => ({
               label: o.name,
               icon: <OrgAvatar orgId={o.id} name={o.name} photoRev={o.photoRev} size={22} />,
               checked: o.id === orgId,
               onSelect: () => setPrefs({ orgId: o.id }),
             })),
-            ...(orgs.length === 0 ? [{ custom: <div className="side-quiet">You're not in a community yet.</div> }] : []),
+            ...(orgs.length === 0
+              ? [
+                  {
+                    custom: (
+                      <div className="side-quiet">
+                        <Localized k="organization.interface.you_re_not_in_a_community_yet_2b220f6" />
+                      </div>
+                    ),
+                  },
+                ]
+              : []),
             "separator" as const,
             ...(org
               ? [
-                  { label: "Community settings", icon: <Settings2 size={16} />, onSelect: () => navigate({ section: "workspace", workspacePage: "overview" }) },
-                  { label: "Invite people", icon: <Ticket size={16} />, onSelect: () => navigate({ section: "workspace", workspacePage: "invitations" }) },
-                  { label: "Browse channels", icon: <Compass size={16} />, onSelect: () => onDialog({ kind: "channels" }) },
+                  {
+                    get label() {
+                      return uiText("organization.interface.community_settings_7a81b1f");
+                    },
+                    icon: <Settings2 size={16} />,
+                    onSelect: () => navigate({ section: "workspace", workspacePage: "overview" }),
+                  },
+                  {
+                    get label() {
+                      return uiText("calls.interface.invite_people_27bf0f2");
+                    },
+                    icon: <Ticket size={16} />,
+                    onSelect: () => navigate({ section: "workspace", workspacePage: "invitations" }),
+                  },
+                  {
+                    get label() {
+                      return uiText("organization.interface.browse_channels_79d490f");
+                    },
+                    icon: <Compass size={16} />,
+                    onSelect: () => onDialog({ kind: "channels" }),
+                  },
                   // Round 3 (the reference's server menu "Mark As Read"): this workspace's unread channels.
-                  ...(readTargets.length > 0 ? [{ label: "Mark all as read", icon: <CheckCheck size={16} />, onSelect: () => void Promise.all(readTargets.map((cid) => engine.markRead(cid))) }] : []),
+                  ...(readTargets.length > 0
+                    ? [
+                        {
+                          get label() {
+                            return uiText("workspace.interface.mark_all_as_read_d759265");
+                          },
+                          icon: <CheckCheck size={16} />,
+                          onSelect: () => void Promise.all(readTargets.map((cid) => engine.markRead(cid))),
+                        },
+                      ]
+                    : []),
                   "separator" as const,
                 ]
               : []),
-            { label: "Create a community", icon: <Plus size={16} />, onSelect: () => onDialog({ kind: "createWorkspace" }) },
-            { label: "Join with a code", icon: <LogIn size={16} />, onSelect: () => onDialog({ kind: "joinWorkspace" }) },
+            { label: t("workspace.rail_create"), icon: <Plus size={16} />, onSelect: () => onDialog({ kind: "createWorkspace" }) },
+            { label: t("workspace.home_join_code"), icon: <LogIn size={16} />, onSelect: () => onDialog({ kind: "joinWorkspace" }) },
           ]}
         />
       )}
@@ -211,7 +268,9 @@ export function Sidebar({ orgId, section, open, onDialog }: SidebarProps) {
                   <span className="glyph">
                     <UsersRound size={16} />
                   </span>
-                  <span className="grow">New group</span>
+                  <span className="grow">
+                    <Localized k="messaging.interface.new_group_df796c6" />
+                  </span>
                 </button>
               </Collapsible>
             )}
@@ -224,9 +283,9 @@ export function Sidebar({ orgId, section, open, onDialog }: SidebarProps) {
     </aside>
   );
 }
-
 /** Discover's side list: where you are, and the other ways into a community. */
 function DiscoverSide({ onDialog }: { onDialog: (d: ShellDialog) => void }) {
+  useLocaleRender();
   const t = useT();
   return (
     <nav className="discover-side" aria-label={t("discover_title")}>
@@ -240,22 +299,20 @@ function DiscoverSide({ onDialog }: { onDialog: (d: ShellDialog) => void }) {
         <span className="glyph">
           <LogIn size={16} />
         </span>
-        <span className="grow">Join with a code</span>
+        <span className="grow">{t("workspace.home_join_code")}</span>
       </button>
       <button className="side-item" onClick={() => onDialog({ kind: "createWorkspace" })}>
         <span className="glyph">
           <Plus size={16} />
         </span>
-        <span className="grow">Start a community</span>
+        <span className="grow">{t("workspace.home_start_community")}</span>
       </button>
     </nav>
   );
 }
-
 /** Scroll positions of the channel lists, per community: kept for this tab, so a reload opens each list where it was. */
 const SCROLL_KEY = "meldiq.sideScroll";
 const scrollMemory = new Map<string, number>(keptScroll());
-
 function keptScroll(): [string, number][] {
   try {
     const kept: unknown = JSON.parse(sessionStorage.getItem(SCROLL_KEY) ?? "[]");
@@ -264,7 +321,6 @@ function keptScroll(): [string, number][] {
     return [];
   }
 }
-
 if (typeof window !== "undefined")
   window.addEventListener("pagehide", () => {
     try {
@@ -273,7 +329,6 @@ if (typeof window !== "undefined")
       /* storage unavailable: lists open at the top after a reload, as before */
     }
   });
-
 function roleLabel(role: string | null): string {
-  return role ? role.charAt(0) + role.slice(1).toLowerCase() : "Member";
+  return roleName(role);
 }

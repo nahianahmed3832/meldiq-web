@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { type Conversation, type QueueItem, zConversation } from "../src/api/schemas";
 import { applyOp, EMPTY_PREFS, type NavPrefs } from "../src/sync/navPrefs";
-import { type WakeInput, wakeNotices } from "../src/sw/wakeRules";
+import { DEFAULT_WAKE_COPY, type WakeInput, wakeNotices } from "../src/sw/wakeRules";
 
 const ME = "u_me";
 const NOW = 1_000_000;
@@ -58,10 +58,22 @@ function input(over: Partial<WakeInput> = {}): WakeInput {
 }
 
 describe("what a background wake-up shows (service worker, no Meldiq tab open)", () => {
+  it("uses the mirrored locale without changing names, content or notification privacy", () => {
+    const prefs = {
+      notifications: true,
+      groupNotifications: true,
+      notificationText: true,
+      locale: "ar",
+      copy: { ...DEFAULT_WAKE_COPY, newMessage: "رسالة جديدة", newMessages: "رسائل جديدة: {count}" },
+    };
+    const args = input({ items: [item("c_dm"), item("c_dm")], prefs });
+    expect(wakeNotices(args)[0]).toMatchObject({ title: "Bob Chen", body: `رسائل جديدة: ${new Intl.NumberFormat("ar").format(2)}` });
+    expect(wakeNotices({ ...args, prefs: { ...prefs, notificationText: false } })[0]).toMatchObject({ title: "Meldiq", body: "رسالة جديدة" });
+  });
   it("one notification per conversation with new messages from others, titled like the app's own", () => {
     const notices = wakeNotices(input({ items: [item("c_dm"), item("c_dm"), item("c_ch"), item("c_dm", { senderUserId: ME })] }));
     expect(notices).toEqual([
-      { tag: "c_dm", title: "Bob Chen", body: "2 new messages", url: "/dms/c/c_dm", call: false },
+      { tag: "c_dm", title: "Bob Chen", body: "New messages: 2", url: "/dms/c/c_dm", call: false },
       { tag: "c_ch", title: "#general", body: "New message", url: "/home/c/c_ch", call: false },
     ]);
   });
@@ -89,7 +101,7 @@ describe("what a background wake-up shows (service worker, no Meldiq tab open)",
       };
     };
     expect(wakeNotices(input({ items: [stored("c_dm", "  see you at   6 ")] }))).toEqual([{ tag: "c_dm", title: "Bob Chen", body: "see you at 6", url: "/dms/c/c_dm", call: false }]);
-    expect(wakeNotices(input({ items: [stored("c_dm", "one"), stored("c_dm", "two")] }))[0]?.body).toBe("2 new messages: two");
+    expect(wakeNotices(input({ items: [stored("c_dm", "one"), stored("c_dm", "two")] }))[0]?.body).toBe("New messages: 2: two");
     // A change (a reaction) wakes nobody; with message text off, nothing of it shows.
     expect(wakeNotices(input({ items: [stored("c_dm", "x", "control")] }))).toEqual([]);
     const quiet = wakeNotices(input({ items: [stored("c_dm", "secret")], prefs: { notifications: true, groupNotifications: true, notificationText: false } }));

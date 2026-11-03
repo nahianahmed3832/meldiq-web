@@ -1,3 +1,7 @@
+import { countLabel } from "../../../i18n/counts";
+import { useLocaleRender } from "../../../i18n/Localized";
+import { text as uiText } from "../../../i18n";
+import { Localized } from "../../../i18n/Localized";
 import { Clock, Eye, TrendingUp } from "lucide-react";
 import type { PromoteView } from "../../../api/discoverySchemas";
 import type { OrgAdminDetail } from "../../../api/workspaceSchemas";
@@ -11,7 +15,6 @@ import { Card, ErrorLine } from "../WorkspaceView";
 import { BoostCards } from "./BoostCards";
 import { PromotedRowCard } from "./PromotedRowCard";
 import { type PromoteBuy, usePromoteBuy } from "./usePromoteBuy";
-
 /**
  * Community settings › Promote (community parity E, feature discovery-promote; the reference's Promote page): the
  * community's Discovery rank, the three boosts by the week (Boost, Super Boost, Mega Boost with its gold label and
@@ -19,6 +22,7 @@ import { type PromoteBuy, usePromoteBuy } from "./usePromoteBuy";
  * through the server's checkout; while Meldiq takes none, the buttons say payments are being set up.
  */
 export function PromotePage({ detail }: { detail: OrgAdminDetail }) {
+  useLocaleRender();
   const engine = useEngine();
   const orgId = detail.org.id;
   const view = useLoad(() => promoteView(engine, orgId), [engine, orgId]);
@@ -36,45 +40,55 @@ export function PromotePage({ detail }: { detail: OrgAdminDetail }) {
     </div>
   );
 }
-
 function RankCard({ view, memberCount }: { view: PromoteView; memberCount: number }) {
+  useLocaleRender();
   const why = view.listed ? null : unlistedText(view.reason, memberCount, DISCOVERY_LIMITS.minMembers);
   const boost = view.boost;
   return (
-    <Card title="Discovery rank" sub="Where this community shows in Discover's list. Boosted communities come first (the biggest boost wins), then the biggest communities.">
+    <Card title={uiText("workspace.interface.discovery_rank_cee844a")} sub={uiText("workspace.interface.where_this_community_shows_in_discover_s_list_boosted_communities_3729cad")}>
       <div className="promote-rank">
-        <div className="promote-rank-number" aria-label={`Discovery rank ${rankText(view.rank, view.listed)}`}>
+        <div className="promote-rank-number" aria-label={uiText("workspace.interface.discovery_rank_value0_7a76444", { value0: rankText(view.rank, view.listed) })}>
           <TrendingUp size={18} aria-hidden="true" />
           <strong>{rankText(view.rank, view.listed)}</strong>
         </div>
         <div className="lines grow">
-          {why ? <span>{why}</span> : <span>{view.rank === 1 ? "First in Discover." : "In Discover's list right now."}</span>}
+          {why ? <span>{why}</span> : <span>{view.rank === 1 ? uiText("workspace.interface.first_in_discover_406872f") : uiText("workspace.interface.in_discover_s_list_right_now_78d3ea3")}</span>}
           {boost && (
             <small className="faint">
-              <Clock size={12} aria-hidden="true" /> {TIER_TEXT[boost.tier as keyof typeof TIER_TEXT]?.name ?? "A boost"} running until {dayText(boost.endsAt)}
+              <Localized
+                k="workspace.interface.running_until_dc71978"
+                slots={[<Clock size={12} aria-hidden="true" />, TIER_TEXT[boost.tier as keyof typeof TIER_TEXT]?.name ?? uiText("workspace.interface.a_boost_e42e5bd"), dayText(boost.endsAt)]}
+              />
             </small>
           )}
           <small className="faint">
-            <Eye size={12} aria-hidden="true" /> {view.visitors.weekly} {view.visitors.weekly === 1 ? "person" : "people"} opened Discover in the last 7 days
+            <Localized k="workspace.interface.native_count_33e091bbd" slots={[<Eye size={12} aria-hidden="true" />, countLabel(view.visitors.weekly, "people"), ""]} />
           </small>
         </div>
         {!view.listed && view.reason !== "removed" && (
           <button className="btn btn-secondary btn-sm" onClick={() => navigate({ section: "workspace", workspacePage: "overview" })}>
-            Discovery settings
+            <Localized k="workspace.interface.discovery_settings_97d4805" />
           </button>
         )}
       </div>
     </Card>
   );
 }
-
 /** "Coming soon" once the server says it takes no payments yet; other refusals as errors. */
 function BuyNotes({ buyer, billingReason }: { buyer: PromoteBuy; billingReason: string | null }) {
+  useLocaleRender();
   if (buyer.comingSoon) {
     return (
       <div className="banner info promote-soon" role="status">
-        <strong>Coming soon</strong> · Payments are being set up. Boosts and Promoted spots can be bought here once they are.
-        {billingReason && <small className="faint"> {billingReason}</small>}
+        <Localized
+          k="workspace.interface.payments_are_being_set_up_boosts_and_promoted_spots_can_be_bought_6ceca16"
+          slots={[
+            <strong>
+              <Localized k="workspace.interface.coming_soon_4f7d640" />
+            </strong>,
+            billingReason && <small className="faint"> {billingReason}</small>,
+          ]}
+        />
       </div>
     );
   }

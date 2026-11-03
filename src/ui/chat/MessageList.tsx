@@ -1,3 +1,7 @@
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
+import { Localized } from "../../i18n/Localized";
+import { useT as useLocalization } from "../../i18n";
 import { ArrowDown, Hash, Lock, Megaphone, Pencil, UserPlus } from "lucide-react";
 import { Fragment, type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useEngine, useOrbit } from "../../application/orbit";
@@ -11,9 +15,7 @@ import { useT } from "../../i18n";
 import { shownName } from "../../sync/communityParity";
 import { useCommunityMembers } from "../community/useCommunityMembers";
 import { useReadingPosition } from "./useReadingPosition";
-
-const GROUP_MS = 5 * 60_000;
-
+const GROUP_MS = 5 * 60000;
 interface MessageListProps {
   conversationId: string;
   items: StoredMessage[];
@@ -44,7 +46,6 @@ interface MessageListProps {
    */
   extras?: TimelineExtra[];
 }
-
 export interface TimelineExtra {
   id: string;
   at: number;
@@ -52,10 +53,22 @@ export interface TimelineExtra {
   mine: boolean;
   node: ReactNode;
 }
-
-type Entry = { kind: "msg"; id: string; at: number; m: StoredMessage } | { kind: "extra"; id: string; at: number; e: TimelineExtra };
-
+type Entry =
+  | {
+      kind: "msg";
+      id: string;
+      at: number;
+      m: StoredMessage;
+    }
+  | {
+      kind: "extra";
+      id: string;
+      at: number;
+      e: TimelineExtra;
+    };
 export function MessageList(props: MessageListProps) {
+  useLocaleRender();
+  const l10n = useLocalization();
   const engine = useEngine();
   const threadRev = useOrbit((s) => s.threadRev);
   const serverCounts = useOrbit((s) => s.serverThreadCounts[props.conversationId]);
@@ -78,7 +91,6 @@ export function MessageList(props: MessageListProps) {
   const [loadingLatest, setLoadingLatest] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [, tick] = useState(0);
-
   const visible = useMemo(() => (threadRoot ? items.filter((m) => m.id === threadRoot || m.threadRootId === threadRoot) : items.filter((m) => !m.threadRootId)), [items, threadRoot]);
   const threadCounts = useMemo(() => {
     const counts = new Map<string, number>();
@@ -94,7 +106,6 @@ export function MessageList(props: MessageListProps) {
     for (const e of extras) out.push({ kind: "extra", id: `x-${e.id}`, at: e.at, e });
     return out.sort((a, b) => a.at - b.at);
   }, [visible, extras, threadRoot]);
-
   const unreadId = props.unreadAfter != null ? visible.find((m) => !m.outgoing && (m.serverTs ?? m.sortTs) > props.unreadAfter!)?.id : undefined;
   const positionEntries = useMemo(() => timeline.map((entry) => ({ id: entry.id, mine: entry.kind === "msg" ? entry.m.outgoing : entry.e.mine })), [timeline]);
   const position = useReadingPosition({
@@ -127,19 +138,17 @@ export function MessageList(props: MessageListProps) {
       if (props.detached) await props.onLoadLatest?.();
       position.latest();
     } catch {
-      setLoadError("Couldn't load the latest messages. Try again.");
+      setLoadError(uiText("messaging.interface.couldn_t_load_the_latest_messages_try_again_26e0bb7"));
     } finally {
       setLoadingLatest(false);
     }
   };
-
   // Typing indicators expire on their own.
   useEffect(() => {
     if (!typing) return;
     const t = setInterval(() => tick((n) => n + 1), 2000);
     return () => clearInterval(t);
   }, [typing]);
-
   const jump = useCallback(
     (id: string) => {
       const el = Array.from(scroller.current?.querySelectorAll<HTMLElement>("[id^='msg-']") ?? []).find((node) => node.id === `msg-${id}`);
@@ -157,20 +166,27 @@ export function MessageList(props: MessageListProps) {
     window.addEventListener(JUMP_EVENT, onJump);
     return () => window.removeEventListener(JUMP_EVENT, onJump);
   }, [jump]);
-
   if (!me) return null;
-  const nameOf = (id: string) => shownName(id === me.userId ? me.displayName : (users[id]?.displayName ?? "Unknown"), nicknames.get(id));
+  const nameOf = (id: string) => shownName(id === me.userId ? me.displayName : (users[id]?.displayName ?? uiText("messaging.interface.unknown_b764cdc")), nicknames.get(id));
   const typers = Object.entries(typing ?? {})
     .filter(([u, until]) => until > Date.now() && u !== me.userId)
-    .map(([u]) => users[u]?.displayName ?? "Someone");
-
+    .map(([u]) => users[u]?.displayName ?? uiText("messaging.react_someone"));
   return (
     <div style={{ position: "relative", flex: 1, minHeight: 0, display: "flex", flexDirection: "column" }}>
-      <div ref={scroller} className="messages scroll" onScroll={onScroll} role="log" aria-busy={props.historyReady === false} aria-live="polite" aria-relevant="additions" aria-label="Messages">
+      <div
+        ref={scroller}
+        className="messages scroll"
+        onScroll={onScroll}
+        role="log"
+        aria-busy={props.historyReady === false}
+        aria-live="polite"
+        aria-relevant="additions"
+        aria-label={l10n("workspace.nav_messages")}
+      >
         {props.hasMore ? (
           <div className="load-older">
             <button className="btn btn-ghost btn-sm" disabled={loadingOlder} onClick={() => void loadOlder()}>
-              {loadingOlder ? "Loading earlier messages…" : "Load earlier messages"}
+              {loadingOlder ? l10n("messaging.conv_restoring") : uiText("messaging.interface.load_earlier_messages_33fd46b")}
             </button>
           </div>
         ) : (
@@ -219,8 +235,10 @@ export function MessageList(props: MessageListProps) {
                 </div>
               )}
               {m.id === unreadId && (
-                <div className="day unread-divider" role="separator" aria-label="New messages">
-                  <span>New messages</span>
+                <div className="day unread-divider" role="separator" aria-label={uiText("messaging.interface.new_messages_ef5df7e")}>
+                  <span>
+                    <Localized k="messaging.interface.new_messages_ef5df7e" />
+                  </span>
                 </div>
               )}
               <MessageItem
@@ -232,7 +250,9 @@ export function MessageList(props: MessageListProps) {
                 myUserId={me.userId}
                 myUsername={me.username}
                 mentionNames={mentionNames}
-                replyTo={reply ? { id: reply.id, name: reply.outgoing ? "You" : nameOf(reply.senderUserId), text: reply.deleted ? "Deleted message" : reply.text } : null}
+                replyTo={
+                  reply ? { id: reply.id, name: reply.outgoing ? "You" : nameOf(reply.senderUserId), text: reply.deleted ? uiText("messaging.interface.deleted_message_0a8438e") : reply.text } : null
+                }
                 threadCount={threadRoot ? 0 : (serverCounts?.[m.id] ?? threadCounts.get(m.id) ?? 0)}
                 canPost={props.canPost}
                 canReact={props.canReact ?? props.canPost}
@@ -256,13 +276,20 @@ export function MessageList(props: MessageListProps) {
       )}
       {(position.away || position.unseen > 0 || props.detached) && (
         <button className="btn btn-primary btn-sm jump-latest" disabled={loadingLatest} onClick={() => void toLatest()}>
-          <ArrowDown size={14} /> {loadingLatest ? "Loading latest…" : position.unseen > 0 ? `${position.unseen} new ${position.unseen === 1 ? "message" : "messages"}` : "Jump to latest"}
+          <ArrowDown size={14} />{" "}
+          {loadingLatest
+            ? uiText("messaging.interface.loading_latest_f47e41b")
+            : position.unseen > 0
+              ? uiText("messaging.interface.value0_new_value1_5f8b789", {
+                  value0: position.unseen,
+                  value1: position.unseen === 1 ? uiText("messaging.interface.message_ab530a1") : uiText("messaging.interface.messages_f5cccfb"),
+                })
+              : uiText("messaging.interface.jump_to_latest_8675245")}
         </button>
       )}
     </div>
   );
 }
-
 /** "This is the beginning of …": shown above the oldest message once there's nothing earlier. */
 export function ConversationStart({
   type,
@@ -283,6 +310,7 @@ export function ConversationStart({
   /** Round 3 (the reference's "Add description" / "Add people"): opens the channel's details, for its managers. */
   onManage?: () => void;
 }) {
+  useLocaleRender();
   const t = useT();
   return (
     <div className="conv-start">

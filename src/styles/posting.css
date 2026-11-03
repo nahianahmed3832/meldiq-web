@@ -163,7 +163,7 @@
 }
 .webhook-avatar-badge {
   position: absolute;
-  right: -2px;
+  inset-inline-end: -2px;
   bottom: -2px;
   display: grid;
   place-items: center;

@@ -1,15 +1,32 @@
+import { formatUiNumber } from "../../i18n/format";
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
+import { Localized } from "../../i18n/Localized";
+import { useT as useLocalization } from "../../i18n";
 import { Maximize2, ScanLine, ZoomIn, ZoomOut } from "lucide-react";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
-
 /** A bounded scrolling canvas: tall originals keep their entire image and can be read at full width. */
 export function ZoomableImage({ url, name, retry }: { url: string; name: string; retry: () => void }) {
+  useLocaleRender();
+  const l10n = useLocalization();
   const viewport = useRef<HTMLDivElement>(null);
   const [box, setBox] = useState({ width: 1, height: 1 });
   const [natural, setNatural] = useState({ width: 0, height: 0 });
   const [failed, setFailed] = useState(false);
-  const [view, setView] = useState<{ mode: "fit" | "width" | "custom"; scale: number }>({ mode: "fit", scale: 1 });
-  const drag = useRef<{ x: number; y: number; left: number; top: number } | null>(null);
-  const anchor = useRef<{ x: number; y: number } | null>(null);
+  const [view, setView] = useState<{
+    mode: "fit" | "width" | "custom";
+    scale: number;
+  }>({ mode: "fit", scale: 1 });
+  const drag = useRef<{
+    x: number;
+    y: number;
+    left: number;
+    top: number;
+  } | null>(null);
+  const anchor = useRef<{
+    x: number;
+    y: number;
+  } | null>(null);
   const [panning, setPanning] = useState(false);
   const fit = natural.width && natural.height ? Math.min(1, box.width / natural.width, box.height / natural.height) : 1;
   const scale = view.mode === "fit" ? fit : view.mode === "width" ? Math.min(1, box.width / Math.max(1, natural.width)) : view.scale;
@@ -85,11 +102,15 @@ export function ZoomableImage({ url, name, retry }: { url: string; name: string;
   if (failed)
     return (
       <div className="viewer-error" role="alert">
-        <p>This image couldn't be displayed.</p>
+        <p>
+          <Localized k="messaging.interface.this_image_couldn_t_be_displayed_8152e16" />
+        </p>
         <button className="btn btn-secondary" onClick={retry}>
-          Try again
+          {l10n("common.actions.retry")}
         </button>
-        <p>You can also download the original from the toolbar.</p>
+        <p>
+          <Localized k="messaging.interface.you_can_also_download_the_original_from_the_toolbar_45bdaf6" />
+        </p>
       </div>
     );
   return (
@@ -98,7 +119,7 @@ export function ZoomableImage({ url, name, retry }: { url: string; name: string;
         ref={viewport}
         className={`viewer-image-viewport${panning ? " panning" : ""}`}
         tabIndex={0}
-        aria-label={`Image canvas: ${name}`}
+        aria-label={uiText("messaging.interface.image_canvas_value0_3aca137", { value0: name })}
         onPointerDown={(e) => {
           if (e.pointerType === "touch" || e.button !== 0) return;
           e.preventDefault();
@@ -135,25 +156,47 @@ export function ZoomableImage({ url, name, retry }: { url: string; name: string;
           />
         </div>
       </div>
-      {!natural.width && <span className="viewer-image-loading spinner" aria-label="Decoding image" />}
-      <div className="viewer-zoom" role="toolbar" aria-label="Image zoom">
-        <button className="icon-btn" disabled={!natural.width || scale <= Math.min(fit, 0.05)} onClick={() => zoom(scale / 1.5)} aria-label="Zoom out" title="Zoom out (−)">
+      {!natural.width && <span className="viewer-image-loading spinner" aria-label={uiText("messaging.interface.decoding_image_5b54bc9")} />}
+      <div className="viewer-zoom" role="toolbar" aria-label={uiText("messaging.interface.image_zoom_a04420f")}>
+        <button
+          className="icon-btn"
+          disabled={!natural.width || scale <= Math.min(fit, 0.05)}
+          onClick={() => zoom(scale / 1.5)}
+          aria-label={uiText("messaging.interface.zoom_out_bc7b631")}
+          title={uiText("messaging.interface.zoom_out_0b9aa91")}
+        >
           <ZoomOut size={17} />
         </button>
-        <output aria-live="polite" aria-label="Zoom level">
-          {Math.max(1, Math.round(scale * 100))}%
+        <output aria-live="polite" aria-label={uiText("messaging.interface.zoom_level_3926ced")}>
+          {formatUiNumber(Math.max(1, Math.round(scale * 100)))}%
         </output>
-        <button className="icon-btn" disabled={!natural.width || scale >= 4} onClick={() => zoom(scale * 1.5)} aria-label="Zoom in" title="Zoom in (+)">
+        <button
+          className="icon-btn"
+          disabled={!natural.width || scale >= 4}
+          onClick={() => zoom(scale * 1.5)}
+          aria-label={uiText("messaging.interface.zoom_in_0e47f09")}
+          title={uiText("messaging.interface.zoom_in_4949ad2")}
+        >
           <ZoomIn size={17} />
         </button>
         <span className="viewer-zoom-divider" />
-        <button className="icon-btn" onClick={() => setView({ mode: "fit", scale: 1 })} aria-label="Fit image" title="Fit image (0)">
+        <button
+          className="icon-btn"
+          onClick={() => setView({ mode: "fit", scale: 1 })}
+          aria-label={uiText("messaging.interface.fit_image_2947361")}
+          title={uiText("messaging.interface.fit_image_0_2ac6147")}
+        >
           <Maximize2 size={16} />
         </button>
-        <button className="icon-btn" onClick={() => setView({ mode: "width", scale: 1 })} aria-label="Fit image width" title="Fit width · scroll to read long images">
+        <button
+          className="icon-btn"
+          onClick={() => setView({ mode: "width", scale: 1 })}
+          aria-label={uiText("messaging.interface.fit_image_width_03861c3")}
+          title={uiText("messaging.interface.fit_width_scroll_to_read_long_images_1b07d5d")}
+        >
           <ScanLine size={17} />
         </button>
-        <button className="viewer-actual" onClick={() => zoom(1)} aria-label="Actual image size" title="Actual size (1)">
+        <button className="viewer-actual" onClick={() => zoom(1)} aria-label={uiText("messaging.interface.actual_image_size_9924003")} title={uiText("messaging.interface.actual_size_1_3a1a39a")}>
           1:1
         </button>
       </div>

@@ -1,3 +1,8 @@
+import { countLabel } from "../../i18n/counts";
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
+import { Localized } from "../../i18n/Localized";
+import { useT as useLocalization } from "../../i18n";
 import { BookText, Hash, Lock, Megaphone, MessagesSquare, Plus, Trash2, Volume2, X } from "lucide-react";
 import { type FormEvent, useState } from "react";
 import { ApiError } from "../../api/client";
@@ -15,23 +20,22 @@ import { useWebhooksAllowed } from "./webhooks/useWebhooksAllowed";
 import { WebhooksTab } from "./webhooks/WebhooksTab";
 import { ChannelOptionsFields, type ChannelOptionsDraft, NO_OPTIONS, useRoleChoices } from "./ChannelOptionsFields";
 import { PermissionsBody } from "./PermissionsDialog";
-
 const errorText = (e: unknown, fallback: string) => (e instanceof ApiError ? e.message : fallback);
-
 /** A channel's icon; [rules]: the community's rules channel, a book (API 0.65.0). */
 export function ChannelGlyph({ kind, voice, format, rules = false, size = 16 }: { kind: string | null; voice: boolean; format: string; rules?: boolean; size?: number }) {
+  useLocaleRender();
   const t = channelTypeOf(kind, voice, format, rules);
-  if (t === "rules") return <BookText size={size} aria-label="Rules" />;
+  if (t === "rules") return <BookText size={size} aria-label={uiText("organization.rules_title")} />;
   if (t === "voice") return <Volume2 size={size} />;
   if (t === "forum") return <MessagesSquare size={size} />;
   if (t === "announcement") return <Megaphone size={size} />;
   return kind === "PRIVATE" ? <Lock size={size - 1} /> : <Hash size={size} />;
 }
-
 export { CreateChannelDialog } from "./CreateChannelDialog";
-
 /** Edit channel: name, topic, slowmode (text), forum on or off with its tags and post guidelines (B8). */
 export function EditChannelDialog({ channel, onClose }: { channel: Conversation; onClose: () => void }) {
+  useLocaleRender();
+  const l10n = useLocalization();
   const engine = useEngine();
   const features = useOrbit((s) => s.server?.features ?? []);
   // Community parity A1: the reference's Overview options and a Permissions tab beside it.
@@ -51,10 +55,9 @@ export function EditChannelDialog({ channel, onClose }: { channel: Conversation;
   // Community parity C: Webhooks next to the channel's settings, for people who manage them.
   const webhooks = useWebhooksAllowed(channel);
   const [tab, setTab] = useState<ChannelDialogTab>("overview");
-
   const submit = async (e: FormEvent) => {
     e.preventDefault();
-    if (!name.trim()) return setError("A channel needs a name.");
+    if (!name.trim()) return setError(uiText("organization.interface.a_channel_needs_a_name_8f7d314"));
     setBusy(true);
     setError(null);
     try {
@@ -73,22 +76,20 @@ export function EditChannelDialog({ channel, onClose }: { channel: Conversation;
       });
       onClose();
     } catch (err) {
-      setError(errorText(err, "Couldn't save the channel."));
+      setError(errorText(err, uiText("organization.interface.couldn_t_save_the_channel_9afc549")));
     } finally {
       setBusy(false);
     }
   };
-
   const addTag = () => {
     const t = newTag.trim().slice(0, 20);
     if (t && !tags.some((x) => x.name.toLowerCase() === t.toLowerCase())) setTags([...tags, { id: undefined, name: t }]);
     setNewTag("");
   };
-
   // The reference's Overview | Permissions | Webhooks, each where it applies (community parity A1 and C).
   const tabList: ChannelDialogTab[] = ["overview", ...(parity ? (["permissions"] as const) : []), ...(webhooks ? (["webhooks"] as const) : [])];
   return (
-    <Dialog title={`Edit #${channel.name ?? "channel"}`} onClose={onClose} wide>
+    <Dialog title={uiText("organization.interface.edit_value0_ba63e4b", { value0: channel.name ?? uiText("messaging.interface.channel_69e3656") })} onClose={onClose} wide>
       {tabList.length > 1 && <ChannelDialogTabs tabs={tabList} tab={tab} onTab={setTab} />}
       {tab === "permissions" && channel.orgId && (
         <div className="dialog-body">
@@ -103,16 +104,22 @@ export function EditChannelDialog({ channel, onClose }: { channel: Conversation;
           </div>
         )}
         <div className="field">
-          <label htmlFor="ec-name">Name</label>
+          <label htmlFor="ec-name">
+            <Localized k="messaging.interface.name_dcd1d52" />
+          </label>
           <input id="ec-name" className="input" data-autofocus value={name} maxLength={60} onChange={(e) => setName(e.target.value)} />
         </div>
         <div className="field">
-          <label htmlFor="ec-topic">Topic</label>
+          <label htmlFor="ec-topic">
+            <Localized k="messaging.interface.topic_7e61847" />
+          </label>
           <textarea id="ec-topic" className="textarea" rows={2} value={topic} maxLength={500} onChange={(e) => setTopic(e.target.value)} />
         </div>
         {textChannel && features.includes("slowmode") && (
           <div className="field">
-            <label htmlFor="ec-slow">Slowmode</label>
+            <label htmlFor="ec-slow">
+              <Localized k="organization.interface.slowmode_b529fb9" />
+            </label>
             <select id="ec-slow" className="input" value={slowmode} onChange={(e) => setSlowmode(Number(e.target.value))}>
               {SLOWMODE_CHOICES.map((c) => (
                 <option key={c.sec} value={c.sec}>
@@ -120,7 +127,9 @@ export function EditChannelDialog({ channel, onClose }: { channel: Conversation;
                 </option>
               ))}
             </select>
-            <span className="hint">How long each member waits between messages. People who manage the channel aren't slowed down.</span>
+            <span className="hint">
+              <Localized k="organization.interface.how_long_each_member_waits_between_messages_people_who_manage_the_7594037" />
+            </span>
           </div>
         )}
         {parity && (textChannel ? !forum && channel.kind !== "ANNOUNCEMENT" : true) && (
@@ -129,20 +138,31 @@ export function EditChannelDialog({ channel, onClose }: { channel: Conversation;
         {textChannel && features.includes("community-channels") && (
           <div className="setting">
             <span className="lines">
-              <strong>Forum</strong>
-              <small>Posts with a title, each with its own replies. Messages already here stay.</small>
+              <strong>
+                <Localized k="organization.interface.forum_4da7bd4" />
+              </strong>
+              <small>
+                <Localized k="organization.interface.posts_with_a_title_each_with_its_own_replies_messages_already_her_847b59d" />
+              </small>
             </span>
-            <Toggle checked={forum} onChange={setForum} label="Forum" />
+            <Toggle checked={forum} onChange={setForum} label={uiText("organization.interface.forum_4da7bd4")} />
           </div>
         )}
         {forum && features.includes("forum-tags") && (
           <div className="field">
-            <label htmlFor="ec-tag">Tags</label>
+            <label htmlFor="ec-tag">
+              <Localized k="organization.interface.tags_1331275" />
+            </label>
             <div className="chips">
               {tags.map((t) => (
                 <span key={t.name} className="chip">
                   {t.name}
-                  <button type="button" className="icon-btn icon-btn-xs" aria-label={`Remove tag ${t.name}`} onClick={() => setTags(tags.filter((x) => x !== t))}>
+                  <button
+                    type="button"
+                    className="icon-btn icon-btn-xs"
+                    aria-label={uiText("organization.interface.remove_tag_value0_35cbc9c", { value0: t.name })}
+                    onClick={() => setTags(tags.filter((x) => x !== t))}
+                  >
                     <X size={12} />
                   </button>
                 </span>
@@ -154,7 +174,7 @@ export function EditChannelDialog({ channel, onClose }: { channel: Conversation;
                 className="input"
                 value={newTag}
                 maxLength={20}
-                placeholder="Add a tag"
+                placeholder={uiText("organization.interface.add_a_tag_acfd447")}
                 onChange={(e) => setNewTag(e.target.value)}
                 onKeyDown={(e) => {
                   if (e.key === "Enter") {
@@ -164,33 +184,38 @@ export function EditChannelDialog({ channel, onClose }: { channel: Conversation;
                 }}
               />
               <button type="button" className="btn btn-secondary" onClick={addTag} disabled={!newTag.trim() || tags.length >= 20}>
-                <Plus size={15} /> Add
+                <Plus size={15} /> {l10n("common.actions.add")}
               </button>
             </div>
           </div>
         )}
         {forum && features.includes("forum-guidelines") && (
           <div className="field">
-            <label htmlFor="ec-guide">Post guidelines</label>
+            <label htmlFor="ec-guide">
+              <Localized k="messaging.interface.post_guidelines_a4c1d0e" />
+            </label>
             <textarea id="ec-guide" className="textarea" rows={4} value={guidelines} maxLength={2000} onChange={(e) => setGuidelines(e.target.value)} />
-            <span className="hint">Shown at the top of the forum and to everyone writing a post.</span>
+            <span className="hint">
+              <Localized k="organization.interface.shown_at_the_top_of_the_forum_and_to_everyone_writing_a_post_edaa1b7" />
+            </span>
           </div>
         )}
         <div className="row" style={{ justifyContent: "flex-end", gap: 8 }}>
           <button type="button" className="btn btn-secondary" onClick={onClose}>
-            Cancel
+            {l10n("common.actions.cancel")}
           </button>
           <button className="btn btn-primary" disabled={busy}>
-            {busy ? "Saving…" : "Save"}
+            {busy ? l10n("common.common_saving") : l10n("common.actions.save")}
           </button>
         </div>
       </form>
     </Dialog>
   );
 }
-
 /** Delete a channel for everyone: its name must be typed (android ChannelEditSheets, server confirmName). */
 export function DeleteChannelDialog({ orgId, channel, onClose }: { orgId: string; channel: Conversation; onClose: () => void }) {
+  useLocaleRender();
+  const l10n = useLocalization();
   const engine = useEngine();
   const [typed, setTyped] = useState("");
   const [busy, setBusy] = useState(false);
@@ -205,16 +230,16 @@ export function DeleteChannelDialog({ orgId, channel, onClose }: { orgId: string
       onClose();
       navigate({ section: "home" }, true);
     } catch (e) {
-      setError(errorText(e, "Couldn't delete the channel."));
+      setError(errorText(e, uiText("organization.interface.couldn_t_delete_the_channel_37afddd")));
     } finally {
       setBusy(false);
     }
   };
   return (
-    <Dialog title={`Delete #${name}?`} onClose={onClose}>
+    <Dialog title={uiText("organization.interface.delete_value0_34f825d", { value0: name })} onClose={onClose}>
       <div className="dialog-body">
         <p style={{ margin: 0 }}>
-          This deletes the channel for everyone, with the server's copies of its messages and files. People keep the messages already on their own devices. It can't be undone.
+          <Localized k="organization.interface.this_deletes_the_channel_for_everyone_with_the_server_s_copies_of_c0f5b63" />
         </p>
         {error && (
           <div className="banner danger" role="alert">
@@ -222,22 +247,23 @@ export function DeleteChannelDialog({ orgId, channel, onClose }: { orgId: string
           </div>
         )}
         <div className="field">
-          <label htmlFor="dc-name">Type the channel's name to confirm</label>
+          <label htmlFor="dc-name">
+            <Localized k="organization.interface.type_the_channel_s_name_to_confirm_d850863" />
+          </label>
           <input id="dc-name" className="input" data-autofocus value={typed} onChange={(e) => setTyped(e.target.value)} placeholder={name} autoComplete="off" />
         </div>
         <div className="row" style={{ justifyContent: "flex-end", gap: 8 }}>
           <button className="btn btn-secondary" onClick={onClose}>
-            Cancel
+            {l10n("common.actions.cancel")}
           </button>
           <button className="btn btn-danger" disabled={!ok || busy} onClick={() => void run()}>
-            <Trash2 size={15} /> {busy ? "Deleting…" : "Delete channel"}
+            <Trash2 size={15} /> {busy ? uiText("organization.interface.deleting_43b5894") : uiText("organization.interface.delete_channel_2bbb809")}
           </button>
         </div>
       </div>
     </Dialog>
   );
 }
-
 /** Move to: another category (it goes last there), or out of every category. Taking a category's permissions with it. */
 export function MoveChannelDialog({
   orgId,
@@ -252,6 +278,7 @@ export function MoveChannelDialog({
   siblingsOf: (categoryId: string | null) => string[];
   onClose: () => void;
 }) {
+  useLocaleRender();
   const engine = useEngine();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -260,20 +287,28 @@ export function MoveChannelDialog({
     setError(null);
     try {
       const { removed } = await saveLayout(engine, orgId, { channels: moveToCategory(channel.id, to, siblingsOf(to)) });
-      if (removed > 0) engine.notice("info", `Moved. ${removed === 1 ? "1 person" : `${removed} people`} lost access with the new category's permissions.`);
+      if (removed > 0) engine.notice("info", uiText("organization.interface.moved_value0_lost_access_with_the_new_category_s_permissions_6c3f61f", { value0: countLabel(removed, "people") }));
       onClose();
     } catch (e) {
-      setError(errorText(e, "Couldn't move the channel."));
+      setError(errorText(e, uiText("organization.interface.couldn_t_move_the_channel_59d766c")));
     } finally {
       setBusy(false);
     }
   };
-  const places = [{ id: null as string | null, name: "No category" }, ...categories.map((c) => ({ id: c.id as string | null, name: c.name }))];
+  const places = [
+    {
+      id: null as string | null,
+      get name() {
+        return uiText("organization.interface.no_category_b91b9ca");
+      },
+    },
+    ...categories.map((c) => ({ id: c.id as string | null, name: c.name })),
+  ];
   return (
-    <Dialog title={`Move #${channel.name ?? "channel"}`} onClose={onClose}>
+    <Dialog title={uiText("organization.interface.move_value0_1951c05", { value0: channel.name ?? uiText("messaging.interface.channel_69e3656") })} onClose={onClose}>
       <div className="dialog-body">
         <p className="muted" style={{ margin: 0 }}>
-          The channel takes the new category's permissions, so who can see it may change. Private channels keep their members.
+          <Localized k="organization.interface.the_channel_takes_the_new_category_s_permissions_so_who_can_see_i_270f55f" />
         </p>
         {error && (
           <div className="banner danger" role="alert">
@@ -291,7 +326,11 @@ export function MoveChannelDialog({
             >
               <span className="lines">
                 <span className="ellipsis">{p.name}</span>
-                {p.id === channel.categoryId && <small>Here now</small>}
+                {p.id === channel.categoryId && (
+                  <small>
+                    <Localized k="organization.interface.here_now_ccf67ff" />
+                  </small>
+                )}
               </span>
             </button>
           ))}

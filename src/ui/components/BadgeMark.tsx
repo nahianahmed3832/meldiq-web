@@ -1,10 +1,15 @@
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
 import { type ReactNode, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-
 /** Small identity marks: the icon stays in the name row; its meaning opens on hover or activation. */
 export function BadgeMark({ name, description, className = "", children }: { name: string; description: string; className?: string; children: ReactNode }) {
+  useLocaleRender();
   const ref = useRef<HTMLSpanElement>(null);
-  const [at, setAt] = useState<{ left: number; top: number } | null>(null);
+  const [at, setAt] = useState<{
+    left: number;
+    top: number;
+  } | null>(null);
   const open = () => {
     if (at) return setAt(null);
     const box = ref.current?.getBoundingClientRect();
@@ -38,7 +43,7 @@ export function BadgeMark({ name, description, className = "", children }: { nam
         className={`badge-mark ${className}`}
         title={name}
         role="img"
-        aria-label={`${name}: ${description}`}
+        aria-label={uiText("billing.interface.value0_value1_6a77681", { value0: name, value1: description })}
         tabIndex={0}
         onBlur={() => setAt(null)}
         onClick={(e) => {

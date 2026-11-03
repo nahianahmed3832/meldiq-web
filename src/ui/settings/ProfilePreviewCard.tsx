@@ -1,3 +1,6 @@
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
+import { Localized } from "../../i18n/Localized";
 import { CollectibleBanner, CollectibleBadge, collectibleCardVars } from "../people/CollectibleLayers";
 import { useEngine, useOrbit } from "../../application/orbit";
 import { userProfile } from "../../sync/account";
@@ -10,12 +13,12 @@ import { useLoad } from "../workspace/useLoad";
 import { NO_STYLE } from "./noStyle";
 import { useProfileDraft } from "./profileDraft";
 import { ProfilePins } from "../people/ProfilePins";
-
 /**
  * Settings › My Profile's right column (the reference, 2026-10-29): your profile card as others see it, following what
  * you type and pick before it's saved. Sticky, so it stays in view while the editor scrolls.
  */
 export function ProfilePreviewCard() {
+  useLocaleRender();
   const engine = useEngine();
   const reducedMotion = useReducedMotion();
   const me = useOrbit((s) => s.me);
@@ -34,11 +37,12 @@ export function ProfilePreviewCard() {
   const about = draft?.aboutMe ?? "";
   const theme = themeColorsOf(style);
   const level = levelsOn ? (p?.level ?? null) : null;
-
   return (
-    <aside className="profile-preview" aria-label="Preview">
+    <aside className="profile-preview" aria-label={uiText("organization.interface.preview_324b134")}>
       <div className="profile-preview-label">
-        <span className="settings-label">Live preview</span>
+        <span className="settings-label">
+          <Localized k="settings.interface.live_preview_f65ddc1" />
+        </span>
         <span className="profile-preview-dot" aria-hidden="true" />
       </div>
       <div className={`profile-pop style-preview card${theme ? " themed" : ""}`} style={{ ...themeVars(theme), ...collectibleCardVars(style, !reducedMotion) }}>
@@ -72,7 +76,9 @@ export function ProfilePreviewCard() {
           <ProfilePins pins={p?.pins ?? []} />
         </div>
       </div>
-      <p className="profile-preview-hint">A preview of how you’ll appear to others.</p>
+      <p className="profile-preview-hint">
+        <Localized k="settings.interface.a_preview_of_how_you_ll_appear_to_others_189e845" />
+      </p>
     </aside>
   );
 }

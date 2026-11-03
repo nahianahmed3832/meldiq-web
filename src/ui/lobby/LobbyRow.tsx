@@ -1,8 +1,8 @@
+import { Localized } from "../../i18n/Localized";
 import { House } from "lucide-react";
 import { shallowEqual, useOrbit } from "../../application/orbit";
 import { navigate } from "../../application/router";
 import { offersLobby } from "../../sync/lobby";
-
 /**
  * The first row of a community's channel list (above Invite people): its lobby. Members see it while the lobby is
  * shown to them; people who can edit it always do, with a note while it's hidden.
@@ -17,8 +17,14 @@ export function LobbyRow({ orgId, canEdit, current }: { orgId: string; canEdit: 
         <span className="glyph">
           <House size={17} />
         </span>
-        <span className="grow">Lobby</span>
-        {!lobby?.enabled && <small className="lobby-row-note">Hidden</small>}
+        <span className="grow">
+          <Localized k="workspace.interface.lobby_4c97a9e" />
+        </span>
+        {!lobby?.enabled && (
+          <small className="lobby-row-note">
+            <Localized k="workspace.interface.hidden_7e6feff" />
+          </small>
+        )}
       </button>
     </div>
   );

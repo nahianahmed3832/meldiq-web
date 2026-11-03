@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { ApiError } from "../api/client";
+import { LANGUAGES, type LanguageChoice } from "../i18n/languages";
 
 /**
  * Personal navigation preferences (docs/WORKSPACE_ADMINISTRATION.md › Personal sections; android NavPrefsRules.kt):
@@ -32,6 +33,11 @@ const zSavedItem = z.object({
 });
 export type SavedItem = z.infer<typeof zSavedItem>;
 export const zNavPrefs = z.object({
+  /** Personal document only. Explicit null advertises server support without establishing a choice. */
+  locale: z
+    .enum(["system", ...LANGUAGES])
+    .nullable()
+    .optional(),
   starred: z.array(z.string()).default([]),
   sections: z.array(zSection).default([]),
   collapsed: z.array(z.string()).default([]),
@@ -72,6 +78,7 @@ export const EMPTY_PREFS: NavPrefs = { starred: [], sections: [], collapsed: [],
 
 /** One change, kept until the server has it and replayed onto its latest copy (so devices merge, not overwrite). */
 export type NavOp =
+  | { op: "locale"; locale: LanguageChoice }
   | { op: "place"; conversationId: string; sectionId: string | null; starred: boolean }
   | { op: "move"; conversationId: string; delta: number }
   | { op: "addSection"; id: string; name: string }
@@ -240,6 +247,8 @@ export function applyOp(p: NavPrefs, o: NavOp): NavPrefs {
       return { ...p, categoryNotify: o.level === null ? omit(p.categoryNotify ?? {}, o.categoryId) : { ...(p.categoryNotify ?? {}), [o.categoryId]: o.level } };
     case "hide":
       return { ...p, hidden: o.hidden ? [...without(p.hidden ?? [], o.conversationId), o.conversationId] : without(p.hidden ?? [], o.conversationId) };
+    case "locale":
+      return { ...p, locale: o.locale };
     case "communityThemes":
       return { ...p, communityThemes: o.on };
     case "addSection": {
@@ -316,6 +325,17 @@ export class NavSync {
 
   constructor(private readonly host: NavSyncHost) {}
 
+  /** Locale writes are enabled only after the server explicitly advertises this optional field. */
+  localeState(): { supported: boolean; locale: LanguageChoice | null; pending: boolean; revision: number } {
+    const doc = this.docs.get(PERSONAL);
+    return {
+      supported: doc?.prefs.locale !== undefined,
+      locale: doc?.prefs.locale ?? null,
+      pending: (this.pending[PERSONAL] ?? []).some((op) => op.op === "locale"),
+      revision: doc?.rev ?? 0,
+    };
+  }
+
   private async loadPending(): Promise<void> {
     if (this.loaded) return;
     this.loaded = true;
@@ -330,6 +350,18 @@ export class NavSync {
     this.host.publish(out);
   }
 
+  /** A rolled-back server may not understand locale. Keep every unrelated unsent navigation change. */
+  private async removeUnsupportedLocale(workspaceId: string, prefs: NavPrefs): Promise<boolean> {
+    if (workspaceId !== PERSONAL || prefs.locale !== undefined || !(this.pending[workspaceId] ?? []).some((op) => op.op === "locale")) return false;
+    const rest = this.pending[workspaceId].filter((op) => op.op !== "locale");
+    const next = { ...this.pending };
+    if (rest.length) next[workspaceId] = rest;
+    else delete next[workspaceId];
+    this.pending = next;
+    await this.host.save(PENDING_KEY, this.pending);
+    return true;
+  }
+
   /** Fetches the documents of [workspaceIds] (start, reconnect, or a prefs.updated frame), then sends what's unsent. */
   async refresh(workspaceIds: readonly string[]): Promise<void> {
     await this.loadPending();
@@ -338,6 +370,7 @@ export class NavSync {
         try {
           const doc = zNavDoc.parse(await this.host.get(`/v1/me/preferences/${encodeURIComponent(id)}`));
           this.docs.set(id, { rev: doc.rev, prefs: doc.prefs });
+          await this.removeUnsupportedLocale(id, doc.prefs);
         } catch {
           /* an older server without preferences, or offline: keep what we have */
         }
@@ -348,6 +381,7 @@ export class NavSync {
   }
 
   async change(workspaceId: string, op: NavOp): Promise<void> {
+    if (op.op === "locale" && (workspaceId !== PERSONAL || !this.localeState().supported)) return;
     await this.loadPending();
     this.pending = { ...this.pending, [workspaceId]: [...(this.pending[workspaceId] ?? []), op] };
     this.publish();
@@ -369,6 +403,7 @@ export class NavSync {
     for (let attempt = 0; attempt <= MAX_CONFLICT_RETRIES; attempt++) {
       const ops = this.pending[workspaceId] ?? [];
       if (ops.length === 0) return;
+      if (ops.some((op) => op.op === "locale") && !this.localeState().supported) return;
       const base = this.docs.get(workspaceId) ?? { rev: 0, prefs: EMPTY_PREFS };
       try {
         const doc = zNavDoc.parse(await this.host.put(`/v1/me/preferences/${encodeURIComponent(workspaceId)}`, { baseRev: base.rev, prefs: replay(base.prefs, ops) }));
@@ -383,6 +418,18 @@ export class NavSync {
         this.publish();
         return;
       } catch (e) {
+        if (e instanceof ApiError && e.status === 400 && ops.some((op) => op.op === "locale")) {
+          try {
+            const current = zNavDoc.parse(await this.host.get(`/v1/me/preferences/${encodeURIComponent(workspaceId)}`));
+            this.docs.set(workspaceId, { rev: current.rev, prefs: current.prefs });
+            if (await this.removeUnsupportedLocale(workspaceId, current.prefs)) {
+              this.publish();
+              continue;
+            }
+          } catch {
+            return;
+          }
+        }
         if (e instanceof ApiError && e.status === 409) {
           const current = zNavDoc.safeParse((e.details as { current?: unknown } | undefined)?.current);
           if (current.success) this.docs.set(workspaceId, { rev: current.data.rev, prefs: current.data.prefs });

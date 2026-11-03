@@ -1,6 +1,7 @@
+import { formatMeasure } from "../i18n/format";
+import { text as uiText } from "../i18n";
 import type { Call } from "../api/schemas";
 import type { CallInfo } from "../model/types";
-
 /**
  * Call history lines in conversations (docs/CALL_HISTORY.md; android CallHistory.kt, tested against its cases). The
  * outcome comes only from the server's record: who started the call, whether and when it was answered, when and why it
@@ -42,50 +43,59 @@ export function summarize(call: Call, me: string, declinedHere = false): CallInf
   }
   return { ...base, outcome: reason === "declined" || declinedHere ? "declined" : "missed" };
 }
-
 export interface CallLine {
   title: string;
   detail: string | null;
   missed: boolean;
 }
-
 const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
-
 /** "45 s", "2 min 5 s", "1 h 2 min". */
 export function callDuration(sec: number): string {
   const s = Math.max(0, Math.trunc(sec));
-  if (s < 60) return `${s} s`;
-  if (s < 3600) return s % 60 === 0 ? `${s / 60} min` : `${Math.floor(s / 60)} min ${s % 60} s`;
+  if (s < 60) return formatMeasure(s, "second");
+  if (s < 3600) return [formatMeasure(Math.floor(s / 60), "minute"), s % 60 ? formatMeasure(s % 60, "second") : ""].filter(Boolean).join(" ");
   const min = Math.floor((s % 3600) / 60);
-  return min === 0 ? `${Math.floor(s / 3600)} h` : `${Math.floor(s / 3600)} h ${min} min`;
+  return [formatMeasure(Math.floor(s / 3600), "hour"), min ? formatMeasure(min, "minute") : ""].filter(Boolean).join(" ");
 }
-
 /** What the conversation shows for a call. [outgoing]: this account started it; [starter]: their name (groups). */
 export function callLine(info: CallInfo | undefined, video: boolean, outgoing: boolean, starter: string | null): CallLine {
-  const kind = video ? "video call" : "voice call";
-  if (!info) return { title: `${outgoing ? "Outgoing" : "Incoming"} ${kind}`, detail: null, missed: false };
-  const groupKind = info.group ? `group ${kind}` : kind;
+  const kind = video ? uiText("calls.interface.video_call_89e4267") : uiText("calls.interface.voice_call_3cb651f");
+  if (!info) return { title: `${outgoing ? uiText("calls.interface.outgoing_3619cf0") : uiText("calls.interface.incoming_e301820")} ${kind}`, detail: null, missed: false };
+  const groupKind = info.group ? uiText("calls.interface.group_value0_26ac745", { value0: kind }) : kind;
   const duration = info.durationSec !== undefined ? callDuration(info.durationSec) : null;
-  const joined = info.group && info.joined ? (info.joined === 1 ? "1 person joined" : `${info.joined} people joined`) : null;
-  const by = info.group && !outgoing && starter ? `Started by ${starter}` : null;
+  const joined =
+    info.group && info.joined ? (info.joined === 1 ? uiText("calls.interface.1_person_joined_9bb3a07") : uiText("calls.interface.value0_people_joined_26b0e3b", { value0: info.joined })) : null;
+  const by = info.group && !outgoing && starter ? uiText("calls.interface.started_by_value0_2f9bd66", { value0: starter }) : null;
   switch (info.outcome) {
     case "completed":
-      return { title: info.group ? cap(groupKind) : `${outgoing ? "Outgoing" : "Incoming"} ${kind}`, detail: [duration, joined, by].filter(Boolean).join(" · ") || null, missed: false };
+      return {
+        title: info.group ? cap(groupKind) : `${outgoing ? uiText("calls.interface.outgoing_3619cf0") : uiText("calls.interface.incoming_e301820")} ${kind}`,
+        detail: [duration, joined, by].filter(Boolean).join(" · ") || null,
+        missed: false,
+      };
     case "missed":
-      return { title: `Missed ${groupKind}`, detail: by, missed: true };
+      return { title: uiText("calls.interface.missed_value0_03858e1", { value0: groupKind }), detail: by, missed: true };
     case "declined":
-      return { title: outgoing ? `${cap(kind)} declined` : `You declined a ${groupKind}`, detail: by, missed: false };
+      return {
+        title: outgoing ? uiText("calls.interface.value0_declined_ad88d6d", { value0: cap(kind) }) : uiText("calls.interface.you_declined_a_value0_4e43e38", { value0: groupKind }),
+        detail: by,
+        missed: false,
+      };
     case "busy":
-      return { title: `${cap(kind)} not answered`, detail: "They were on another call", missed: false };
+      return { title: uiText("calls.interface.value0_not_answered_fd375d8", { value0: cap(kind) }), detail: uiText("calls.interface.they_were_on_another_call_7350533"), missed: false };
     case "no_answer":
-      return { title: info.group ? `${cap(groupKind)} · no one joined` : `${cap(kind)} · no answer`, detail: by, missed: false };
+      return {
+        title: info.group ? uiText("calls.interface.value0_no_one_joined_2c73f97", { value0: cap(groupKind) }) : uiText("calls.interface.value0_no_answer_08abf93", { value0: cap(kind) }),
+        detail: by,
+        missed: false,
+      };
     case "cancelled":
-      return { title: `Cancelled ${groupKind}`, detail: by, missed: false };
+      return { title: uiText("calls.interface.cancelled_value0_34b29c7", { value0: groupKind }), detail: by, missed: false };
     case "failed":
-      return { title: `${cap(groupKind)} failed`, detail: "The call couldn't be connected", missed: false };
+      return { title: uiText("calls.interface.value0_failed_afc8311", { value0: cap(groupKind) }), detail: uiText("calls.interface.the_call_couldn_t_be_connected_d4fc30c"), missed: false };
     case "ongoing":
-      return { title: `${cap(groupKind)} in progress`, detail: by, missed: false };
+      return { title: uiText("calls.interface.value0_in_progress_08b8d36", { value0: cap(groupKind) }), detail: by, missed: false };
     case "ended":
-      return { title: `${cap(groupKind)} ended`, detail: by, missed: false };
+      return { title: uiText("calls.interface.value0_ended_939c65c", { value0: cap(groupKind) }), detail: by, missed: false };
   }
 }

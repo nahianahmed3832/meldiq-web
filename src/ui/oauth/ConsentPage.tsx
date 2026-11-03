@@ -1,3 +1,7 @@
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
+import { Localized } from "../../i18n/Localized";
+import { useT as useLocalization } from "../../i18n";
 import { Check, ShieldCheck } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useEngine, useOrbit } from "../../application/orbit";
@@ -5,7 +9,6 @@ import { navigate } from "../../application/router";
 import { authorize, authorizeInfo, parseAuthorizeQuery, safeRedirect, SCOPE_WORDS } from "../../sync/oauth";
 import { MeldlingArt } from "../components/MeldlingArt";
 import { useLoad } from "../workspace/useLoad";
-
 /** The host people are sent back to, for "You'll go back to example.com". */
 export function redirectHost(uri: string): string {
   try {
@@ -14,13 +17,14 @@ export function redirectHost(uri: string): string {
     return uri;
   }
 }
-
 /**
  * /oauth/authorize (API 0.65.0 batch B): an app asks to know who you are. The request comes from the address; the
  * server checks the app and its redirect URI first (an unknown one is never sent anywhere), then Allow or Cancel sends
  * the browser back to the app. Signed out, the app shows the sign-in screen first and this page after, at the same address.
  */
 export function ConsentPage() {
+  useLocaleRender();
+  const l10n = useLocalization();
   const engine = useEngine();
   const me = useOrbit((s) => s.me);
   const offered = useOrbit((s) => s.server?.features.includes("oauth-apps") ?? true);
@@ -30,33 +34,33 @@ export function ConsentPage() {
   const info = useLoad(() => (request ? authorizeInfo(engine, request) : Promise.resolve(null)), [engine, request]);
   const [busy, setBusy] = useState<"allow" | "cancel" | null>(null);
   const [problem, setProblem] = useState<string | null>(null);
-
   const answer = async (approve: boolean) => {
     if (!request || busy) return;
     setBusy(approve ? "allow" : "cancel");
     setProblem(null);
     try {
       const to = safeRedirect(await authorize(engine, request, approve));
-      if (!to) throw new Error("The app's address back isn't one Meldiq can open.");
+      if (!to) throw new Error(uiText("auth.interface.the_app_s_address_back_isn_t_one_meldiq_can_open_f3ea4c6"));
       window.location.assign(to);
     } catch (e) {
-      setProblem(e instanceof Error ? e.message : "That didn't work. Try again.");
+      setProblem(e instanceof Error ? e.message : uiText("workspace.interface.that_didn_t_work_try_again_5da2573"));
       setBusy(null);
     }
   };
-
-  const failure = "problem" in parsed ? parsed.problem : !offered ? "This server doesn't offer “Log in with Meldiq” yet." : info.error;
+  const failure = "problem" in parsed ? parsed.problem : !offered ? uiText("auth.interface.this_server_doesn_t_offer_log_in_with_meldiq_yet_890890b") : info.error;
   const i = info.data;
   return (
-    <main className="consent" aria-label="Log in with Meldiq">
+    <main className="consent" aria-label={uiText("auth.interface.log_in_with_meldiq_4fd2351")}>
       <div className="card consent-card">
         {failure ? (
           <>
             <MeldlingArt pose="hello" />
-            <h1>Can't sign in to this app</h1>
+            <h1>
+              <Localized k="auth.interface.can_t_sign_in_to_this_app_4fcf6af" />
+            </h1>
             <p className="muted">{failure}</p>
             <button className="btn btn-secondary" onClick={() => navigate({ section: "home" })}>
-              Back to Meldiq
+              <Localized k="auth.interface.back_to_meldiq_f59db13" />
             </button>
           </>
         ) : !i ? (
@@ -65,15 +69,21 @@ export function ConsentPage() {
           <>
             <ShieldCheck size={32} className="consent-mark" aria-hidden="true" />
             <h1>
-              <strong>{i.app.name}</strong> wants to use your Meldiq account
+              <Localized k="auth.interface.wants_to_use_your_meldiq_account_f5a3054" slots={[<strong>{i.app.name}</strong>]} />
             </h1>
-            <p className="muted">{i.app.ownerUsername ? `Made by @${i.app.ownerUsername}, not by Meldiq.` : "Made by someone on Meldiq, not by Meldiq."}</p>
+            <p className="muted">
+              {i.app.ownerUsername
+                ? uiText("auth.interface.made_by_value0_not_by_meldiq_e6a3715", { value0: i.app.ownerUsername })
+                : uiText("auth.interface.made_by_someone_on_meldiq_not_by_meldiq_8dc124a")}
+            </p>
             {me && (
               <p className="consent-who">
-                Signed in as <strong>{me.displayName}</strong> <span className="faint">@{me.username}</span>
+                <Localized k="auth.interface.signed_in_as_9678cb4" slots={[<strong>{me.displayName}</strong>, <span className="faint">@{me.username}</span>]} />
               </p>
             )}
-            <h2 className="settings-group">It will be able to</h2>
+            <h2 className="settings-group">
+              <Localized k="auth.interface.it_will_be_able_to_5b8d75f" />
+            </h2>
             <ul className="consent-scopes">
               {i.scopes.map((s) => (
                 <li key={s.id}>
@@ -82,8 +92,10 @@ export function ConsentPage() {
               ))}
             </ul>
             <p className="faint consent-small">
-              It can't read your messages or post as you. You'll go back to {redirectHost(i.redirectUri)}. You can remove its access any time in Privacy & security › Authorised apps.
-              {i.alreadyAuthorized ? " You've allowed this app before." : ""}
+              <Localized
+                k="auth.interface.it_can_t_read_your_messages_or_post_as_you_you_ll_go_back_to_you_7be91d5"
+                slots={[redirectHost(i.redirectUri), i.alreadyAuthorized ? uiText("auth.interface.you_ve_allowed_this_app_before_26b8607") : ""]}
+              />
             </p>
             {problem && (
               <div className="banner danger" role="alert">
@@ -92,10 +104,10 @@ export function ConsentPage() {
             )}
             <div className="consent-actions">
               <button className="btn btn-ghost" disabled={!!busy} onClick={() => void answer(false)}>
-                {busy === "cancel" ? "Cancelling…" : "Cancel"}
+                {busy === "cancel" ? uiText("auth.interface.cancelling_91b104d") : l10n("common.actions.cancel")}
               </button>
               <button className="btn btn-primary" disabled={!!busy} onClick={() => void answer(true)}>
-                {busy === "allow" ? "Allowing…" : "Allow"}
+                {busy === "allow" ? uiText("auth.interface.allowing_ff49ba8") : uiText("organization.interface.allow_e213c16")}
               </button>
             </div>
           </>

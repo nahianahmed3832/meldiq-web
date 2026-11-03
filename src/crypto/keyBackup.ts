@@ -1,3 +1,4 @@
+import { text as uiText } from "../i18n";
 import { aesGcmDecrypt, aesGcmEncrypt } from "./aead";
 import { type Bytes, copy, fromB64, randomBytes, toB64, utf8 } from "./bytes";
 import { publicKeyFromSeed } from "./ed25519";
@@ -28,7 +29,7 @@ export interface KeyBackup {
 /** The password didn't open the backup, or the backup isn't this account's keys. */
 export class WrongBackupPassword extends Error {
   constructor() {
-    super("That password doesn't open the key backup.");
+    super(uiText("errors.crypto.wrongBackupPassword"));
   }
 }
 
@@ -50,7 +51,7 @@ export async function sealKeyBackup(password: string, accountId: string, seed: U
 
 /** The seed in [b], checked against the identity key it names; [WrongBackupPassword] when it doesn't open or match. */
 export async function openKeyBackup(password: string, accountId: string, b: KeyBackup): Promise<Bytes> {
-  if (b.version !== KEY_BACKUP_VERSION) throw new Error("This key backup was made by a newer Meldiq. Reload the page.");
+  if (b.version !== KEY_BACKUP_VERSION) throw new Error(uiText("errors.crypto.newerBackup"));
   let seed: Bytes;
   try {
     seed = await aesGcmDecrypt(await deriveBackupKey(password, fromB64(b.salt), b.iterations), fromB64(b.nonce), fromB64(b.ciphertext), aad(accountId, b.identityKey));

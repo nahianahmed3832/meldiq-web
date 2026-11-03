@@ -81,7 +81,7 @@
 }
 .member-group > .identity-glyph {
   display: inline-block;
-  margin-right: 5px;
+  margin-inline-end: 5px;
   vertical-align: -3px;
   opacity: 0.85;
 }

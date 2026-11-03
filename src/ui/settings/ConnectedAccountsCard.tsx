@@ -1,11 +1,17 @@
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
+import { Localized } from "../../i18n/Localized";
+import { interfaceLocale } from "../../i18n/format";
+import { useT as useLocalization } from "../../i18n";
 import { useState } from "react";
 import { useEngine } from "../../application/orbit";
 import { zConnections, socialError, socialProviderName, type SocialProvider } from "../../auth/socialAuth";
 import { Dialog } from "../components/Overlay";
 import { useLoad } from "../workspace/useLoad";
 import { SocialSignIn } from "../auth/SocialSignIn";
-
 export function ConnectedAccountsCard() {
+  useLocaleRender();
+  const l10n = useLocalization();
   const engine = useEngine();
   const list = useLoad(() => engine.api.json("GET", "/v2/account/identities", zConnections), [engine]);
   const [action, setAction] = useState<"connect" | SocialProvider | null>(null);
@@ -27,7 +33,7 @@ export function ConnectedAccountsCard() {
     try {
       await engine.api.call("DELETE", `/v2/account/identities/${action}`, { body: { password: password || undefined, totpCode: code || undefined } });
       close();
-      setNotice("Provider disconnected. Other sessions were signed out.");
+      setNotice(uiText("settings.interface.provider_disconnected_other_sessions_were_signed_out_1336232"));
       list.reload();
     } catch (e) {
       setError(socialError(e));
@@ -39,8 +45,12 @@ export function ConnectedAccountsCard() {
   if (!list.data) return null;
   return (
     <div className="card" style={{ padding: 20, display: "grid", gap: 12 }}>
-      <h3 style={{ margin: 0 }}>Connected Accounts</h3>
-      <p className="muted">Connect Google, Apple or Discord to sign in to this same Meldiq account.</p>
+      <h3 style={{ margin: 0 }}>
+        <Localized k="settings.interface.connected_accounts_6a376da" />
+      </h3>
+      <p className="muted">
+        <Localized k="settings.interface.connect_google_apple_or_discord_to_sign_in_to_this_same_meldiq_ac_dc476dd" />
+      </p>
       {notice && (
         <p role="status" className="banner ok">
           {notice}
@@ -54,40 +64,54 @@ export function ConnectedAccountsCard() {
             <span className="grow">
               <strong>{socialProviderName(provider)}</strong>
               <br />
-              <small>{identity ? `${identity.email ?? "Connected"} · Connected ${new Date(identity.connectedAt).toLocaleDateString()}` : "Not connected"}</small>
+              <small>
+                {identity
+                  ? uiText("settings.interface.value0_connected_value1_2fea3e0", {
+                      value0: identity.email ?? l10n("calls.connected"),
+                      value1: new Date(identity.connectedAt).toLocaleDateString(interfaceLocale()),
+                    })
+                  : uiText("settings.interface.not_connected_0303e18")}
+              </small>
             </span>
             {identity ? (
               <button
                 type="button"
                 className="btn btn-danger-quiet btn-sm"
                 disabled={last}
-                title={last ? "Connect another provider or use Forgot password to set a password first." : undefined}
+                title={last ? uiText("settings.interface.connect_another_provider_or_use_forgot_password_to_set_a_password_e8c3620") : undefined}
                 onClick={() => setAction(provider)}
               >
-                Disconnect
+                <Localized k="calls.interface.disconnect_acfc5be" />
               </button>
             ) : (
               <button type="button" className="btn btn-secondary btn-sm" disabled={!list.data!.providers.includes(provider)} onClick={() => setAction("connect")}>
-                Connect
+                <Localized k="files.interface.connect_1a2303e" />
               </button>
             )}
           </div>
         );
       })}
-      {!list.data.password && <p className="muted">To add an email password, sign out and choose Forgot password with your account email. Keep a connected provider until the password is set.</p>}
+      {!list.data.password && (
+        <p className="muted">
+          <Localized k="settings.interface.to_add_an_email_password_sign_out_and_choose_forgot_password_with_2d877ed" />
+        </p>
+      )}
       {action && (
-        <Dialog title={action === "connect" ? "Connect a sign-in method" : `Disconnect ${socialProviderName(action)}?`} onClose={close}>
+        <Dialog
+          title={action === "connect" ? uiText("settings.interface.connect_a_sign_in_method_ea8c5f1") : uiText("settings.interface.disconnect_value0_51710a5", { value0: socialProviderName(action) })}
+          onClose={close}
+        >
           <p>
             {action === "connect"
-              ? "Confirm your password, or use a session you signed in to in the last five minutes."
-              : "Another login method must remain. Disconnecting also signs out your other sessions."}
+              ? uiText("settings.interface.confirm_your_password_or_use_a_session_you_signed_in_to_in_the_la_6aee094")
+              : uiText("settings.interface.another_login_method_must_remain_disconnecting_also_signs_out_you_ed9170b")}
           </p>
           <label className="field">
-            Current password (if you have one)
+            <Localized k="settings.interface.current_password_if_you_have_one_dd4d105" />
             <input className="input" type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} />
           </label>
           <label className="field">
-            Authenticator code (if enabled)
+            <Localized k="settings.interface.authenticator_code_if_enabled_23e2232" />
             <input className="input" autoComplete="one-time-code" value={code} onChange={(e) => setCode(e.target.value)} />
           </label>
           {error && (
@@ -103,17 +127,17 @@ export function ConnectedAccountsCard() {
               totpCode={code}
               onLinked={() => {
                 close();
-                setNotice("Sign-in method connected to your Meldiq account.");
+                setNotice(uiText("settings.interface.sign_in_method_connected_to_your_meldiq_account_f98eaae"));
                 list.reload();
               }}
             />
           ) : (
             <button type="button" className="btn btn-danger" disabled={busy} onClick={() => void disconnect()}>
-              {busy ? "Disconnecting…" : "Disconnect provider"}
+              {busy ? uiText("settings.interface.disconnecting_cb2b6a5") : uiText("settings.interface.disconnect_provider_5941d42")}
             </button>
           )}
           <button type="button" className="btn btn-ghost" disabled={busy} onClick={close}>
-            Cancel
+            {l10n("common.actions.cancel")}
           </button>
         </Dialog>
       )}

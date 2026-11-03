@@ -1,3 +1,8 @@
+import { formatUiNumber } from "../../i18n/format";
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
+import { Localized } from "../../i18n/Localized";
+import { useT as useLocalization } from "../../i18n";
 import { Camera, Mic } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { setPrefs, usePrefs } from "../../application/prefs";
@@ -5,13 +10,14 @@ import { useEngine } from "../../application/orbit";
 import { audioProcessing, micLevel } from "../../call/rules";
 import { SHARE_QUALITIES } from "../../call/shareQuality";
 import { Toggle } from "../components/Toggle";
-
 /**
  * Settings › Calls (batches B10, B11; android Settings › Calls): noise reduction for the next call, how a screen is shared
  * by default, and a check of the microphone and camera. The check records and sends nothing, and releases the devices
  * when it stops or the page closes.
  */
 export function CallsPage() {
+  useLocaleRender();
+  const l10n = useLocalization();
   const prefs = usePrefs();
   const engine = useEngine();
   const [mics, setMics] = useState<MediaDeviceInfo[]>([]);
@@ -44,25 +50,34 @@ export function CallsPage() {
     return () => window.removeEventListener("keydown", pick, true);
   }, [recording]);
   const label = (d: MediaDeviceInfo, i: number, kind: string) => d.label || `${kind} ${i + 1}`;
-  const speakerChoice = typeof (HTMLMediaElement.prototype as { setSinkId?: unknown }).setSinkId === "function";
+  const speakerChoice =
+    typeof (
+      HTMLMediaElement.prototype as {
+        setSinkId?: unknown;
+      }
+    ).setSinkId === "function";
   return (
     <>
-      <h1>Voice & Audio</h1>
+      <h1>{l10n("settings.settings_calls")}</h1>
       <div className="card setting-card">
         <div className="voice-devices">
           <label className="field">
-            <span>Microphone</span>
+            <span>
+              <Localized k="calls.microphone" />
+            </span>
             <select className="input" value={prefs.microphoneId ?? ""} onChange={(e) => setPrefs({ microphoneId: e.target.value || null })}>
-              <option value="">Default</option>
+              <option value="">{l10n("settings.ap_default")}</option>
               {mics.map((d, i) => (
                 <option key={d.deviceId} value={d.deviceId}>
-                  {label(d, i, "Microphone")}
+                  {label(d, i, uiText("calls.microphone"))}
                 </option>
               ))}
             </select>
           </label>
           <label className="field">
-            <span>Speakers</span>
+            <span>
+              <Localized k="calls.interface.speakers_c92a723" />
+            </span>
             <select
               className="input"
               value={prefs.speakerId ?? ""}
@@ -72,19 +87,29 @@ export function CallsPage() {
                 engine.calls.applyOutput();
               }}
             >
-              <option value="">Default</option>
+              <option value="">{l10n("settings.ap_default")}</option>
               {speakers.map((d, i) => (
                 <option key={d.deviceId} value={d.deviceId}>
-                  {label(d, i, "Speaker")}
+                  {label(d, i, uiText("calls.interface.speaker_a9e0c70"))}
                 </option>
               ))}
             </select>
           </label>
         </div>
-        {!speakerChoice && <small className="faint">This browser always plays calls on the system's default speaker.</small>}
-        {mics.length > 0 && !mics[0].label && <small className="faint">Device names show once you've allowed the microphone (try the mic test below).</small>}
+        {!speakerChoice && (
+          <small className="faint">
+            <Localized k="calls.interface.this_browser_always_plays_calls_on_the_system_s_default_speaker_75584b1" />
+          </small>
+        )}
+        {mics.length > 0 && !mics[0].label && (
+          <small className="faint">
+            <Localized k="calls.interface.device_names_show_once_you_ve_allowed_the_microphone_try_the_mic_7dced95" />
+          </small>
+        )}
         <label className="range-row">
-          <span>Output volume</span>
+          <span>
+            <Localized k="calls.interface.output_volume_735bacc" />
+          </span>
           <input
             type="range"
             min={0}
@@ -96,81 +121,128 @@ export function CallsPage() {
               engine.calls.applyOutput();
             }}
           />
-          <strong style={{ width: 44, textAlign: "end" }}>{prefs.outputVolume}%</strong>
+          <strong style={{ width: 44, textAlign: "end" }}>{formatUiNumber(prefs.outputVolume)}%</strong>
         </label>
       </div>
 
       <PreCallCheck noiseReduction={prefs.noiseReduction} />
 
-      <h2 className="settings-group">Input mode</h2>
-      <div className="input-modes" role="radiogroup" aria-label="Input mode">
+      <h2 className="settings-group">
+        <Localized k="calls.interface.input_mode_3fa818f" />
+      </h2>
+      <div className="input-modes" role="radiogroup" aria-label={uiText("calls.interface.input_mode_3fa818f")}>
         <button type="button" role="radio" aria-checked={!prefs.pushToTalk} className="kind-option" onClick={() => setPrefs({ pushToTalk: false })}>
-          <strong>Voice activity</strong>
-          <small>Your mic is on while you're not muted.</small>
+          <strong>
+            <Localized k="calls.interface.voice_activity_5a16bda" />
+          </strong>
+          <small>
+            <Localized k="calls.interface.your_mic_is_on_while_you_re_not_muted_e007a21" />
+          </small>
         </button>
         <button type="button" role="radio" aria-checked={prefs.pushToTalk} className="kind-option" onClick={() => (prefs.pttKey ? setPrefs({ pushToTalk: true }) : setRecording(true))}>
-          <strong>Push to talk</strong>
-          <small>Hold a key to talk.</small>
+          <strong>
+            <Localized k="calls.interface.push_to_talk_03fc694" />
+          </strong>
+          <small>
+            <Localized k="calls.interface.hold_a_key_to_talk_90d0042" />
+          </small>
         </button>
       </div>
       {(prefs.pushToTalk || recording) && (
         <div className="card setting-card">
           <div className="setting-card-head">
             <span className="lines grow">
-              <strong>Push to talk key</strong>
-              <small>{recording ? "Press the key you want (Escape cancels)." : prefs.pttKey ? `Hold ${keyName(prefs.pttKey)} to talk in calls.` : "No key yet."}</small>
+              <strong>
+                <Localized k="calls.interface.push_to_talk_key_5c54f6d" />
+              </strong>
+              <small>
+                {recording
+                  ? uiText("calls.interface.press_the_key_you_want_escape_cancels_a17e82e")
+                  : prefs.pttKey
+                    ? uiText("calls.interface.hold_value0_to_talk_in_calls_f7ee8fb", { value0: keyName(prefs.pttKey) })
+                    : uiText("calls.interface.no_key_yet_9fb323b")}
+              </small>
             </span>
             <button className="btn btn-secondary btn-sm" onClick={() => setRecording(true)} aria-pressed={recording}>
-              {recording ? "Listening…" : prefs.pttKey ? "Change key" : "Choose key"}
+              {recording ? uiText("calls.interface.listening_bbb4106") : prefs.pttKey ? uiText("calls.interface.change_key_1bc0f4d") : uiText("calls.interface.choose_key_a2bc5ee")}
             </button>
           </div>
         </div>
       )}
 
-      <h2 className="settings-group">Voice processing</h2>
+      <h2 className="settings-group">
+        <Localized k="calls.interface.voice_processing_cb63f47" />
+      </h2>
       <div className="card" style={{ padding: "4px 20px" }}>
         <div className="setting">
           <span className="lines">
-            <strong>Noise suppression</strong>
-            <small>Cuts fans, keyboards and background noise.</small>
+            <strong>
+              <Localized k="calls.interface.noise_suppression_a5c124c" />
+            </strong>
+            <small>
+              <Localized k="calls.interface.cuts_fans_keyboards_and_background_noise_63fa7f0" />
+            </small>
           </span>
-          <Toggle checked={prefs.noiseReduction} onChange={(noiseReduction) => setPrefs({ noiseReduction })} label="Noise suppression" />
+          <Toggle checked={prefs.noiseReduction} onChange={(noiseReduction) => setPrefs({ noiseReduction })} label={uiText("calls.interface.noise_suppression_a5c124c")} />
         </div>
         <div className="setting">
           <span className="lines">
-            <strong>Echo cancellation</strong>
-            <small>Stops others hearing themselves through your speakers.</small>
+            <strong>
+              <Localized k="calls.interface.echo_cancellation_311baa5" />
+            </strong>
+            <small>
+              <Localized k="calls.interface.stops_others_hearing_themselves_through_your_speakers_69d88af" />
+            </small>
           </span>
-          <Toggle checked={prefs.echoCancellation} onChange={(echoCancellation) => setPrefs({ echoCancellation })} label="Echo cancellation" />
+          <Toggle checked={prefs.echoCancellation} onChange={(echoCancellation) => setPrefs({ echoCancellation })} label={uiText("calls.interface.echo_cancellation_311baa5")} />
         </div>
         <div className="setting">
           <span className="lines">
-            <strong>Automatic gain</strong>
-            <small>Keeps your volume even. Turn off for music or a good mic.</small>
+            <strong>
+              <Localized k="calls.interface.automatic_gain_e076a1d" />
+            </strong>
+            <small>
+              <Localized k="calls.interface.keeps_your_volume_even_turn_off_for_music_or_a_good_mic_52a18ad" />
+            </small>
           </span>
-          <Toggle checked={prefs.autoGain} onChange={(autoGain) => setPrefs({ autoGain })} label="Automatic gain" />
+          <Toggle checked={prefs.autoGain} onChange={(autoGain) => setPrefs({ autoGain })} label={uiText("calls.interface.automatic_gain_e076a1d")} />
         </div>
         <small className="faint" style={{ display: "block", padding: "8px 0 12px" }}>
-          These apply from the next call.
+          <Localized k="calls.interface.these_apply_from_the_next_call_49431f3" />
         </small>
       </div>
 
-      <h2 className="settings-group">Joining calls</h2>
+      <h2 className="settings-group">
+        <Localized k="calls.interface.joining_calls_49363c0" />
+      </h2>
       <div className="card" style={{ padding: "4px 20px" }}>
         <div className="setting">
           <span className="lines">
-            <strong>Join muted</strong>
-            <small>Your microphone starts off; unmute when you're ready. Also on the microphone button under your name.</small>
+            <strong>
+              <Localized k="calls.interface.join_muted_10b220f" />
+            </strong>
+            <small>
+              <Localized k="calls.interface.your_microphone_starts_off_unmute_when_you_re_ready_also_on_the_m_8e5780e" />
+            </small>
           </span>
-          <Toggle checked={prefs.joinMuted} onChange={(joinMuted) => setPrefs({ joinMuted })} label="Join muted" />
+          <Toggle checked={prefs.joinMuted} onChange={(joinMuted) => setPrefs({ joinMuted })} label={uiText("calls.interface.join_muted_10b220f")} />
         </div>
         <div className="setting">
           <span className="lines">
-            <strong>Screen sharing</strong>
+            <strong>
+              <Localized k="billing.interface.screen_sharing_74dc20e" />
+            </strong>
             <small>
-              {SHARE_QUALITIES[prefs.shareQuality].label} ({SHARE_QUALITIES[prefs.shareQuality].width}×{SHARE_QUALITIES[prefs.shareQuality].height} at {SHARE_QUALITIES[prefs.shareQuality].frameRate}{" "}
-              fps)
-              {prefs.shareAudio ? ", with sound" : ""}. You choose each time you share; this is the last choice.
+              <Localized
+                k="calls.interface.at_fps_you_choose_each_time_you_share_this_is_the_last_choice_2cbdeef"
+                slots={[
+                  SHARE_QUALITIES[prefs.shareQuality].label,
+                  SHARE_QUALITIES[prefs.shareQuality].width,
+                  SHARE_QUALITIES[prefs.shareQuality].height,
+                  SHARE_QUALITIES[prefs.shareQuality].frameRate,
+                  prefs.shareAudio ? uiText("calls.interface.with_sound_df75f29") : "",
+                ]}
+              />
             </small>
           </span>
         </div>
@@ -178,7 +250,6 @@ export function CallsPage() {
     </>
   );
 }
-
 /** "Backquote" → "`", "KeyV" → "V", "F13" stays: how a KeyboardEvent.code reads to people. */
 export function keyName(code: string): string {
   if (code.startsWith("Key")) return code.slice(3);
@@ -186,24 +257,28 @@ export function keyName(code: string): string {
   const named: Record<string, string> = {
     Backquote: "`",
     Space: "Space",
-    CapsLock: "Caps Lock",
-    ControlLeft: "Left Ctrl",
-    ControlRight: "Right Ctrl",
-    AltLeft: "Left Alt",
-    AltRight: "Right Alt",
-    ShiftLeft: "Left Shift",
-    ShiftRight: "Right Shift",
-    MetaLeft: "Left ⌘",
-    MetaRight: "Right ⌘",
+    CapsLock: uiText("calls.interface.caps_lock_71c8e9d"),
+    ControlLeft: uiText("calls.interface.left_ctrl_5395988"),
+    ControlRight: uiText("calls.interface.right_ctrl_cca1910"),
+    AltLeft: uiText("calls.interface.left_alt_c975c1d"),
+    AltRight: uiText("calls.interface.right_alt_473cbe0"),
+    ShiftLeft: uiText("calls.interface.left_shift_f75aa1d"),
+    ShiftRight: uiText("calls.interface.right_shift_b0ea7ae"),
+    MetaLeft: uiText("calls.interface.left_00055c5"),
+    MetaRight: uiText("calls.interface.right_415296c"),
   };
   return named[code] ?? code;
 }
-
 /** No camera, or it's busy or gone: the microphone can still be checked on its own. */
 const CAMERA_MISSING = ["NotFoundError", "NotReadableError", "OverconstrainedError"];
-
 /** The microphone and camera for the check; without a usable camera, the microphone alone (cameraMissing). */
-async function openForCheck(audio: MediaTrackConstraints, cam: string): Promise<{ stream: MediaStream; cameraMissing: boolean }> {
+async function openForCheck(
+  audio: MediaTrackConstraints,
+  cam: string,
+): Promise<{
+  stream: MediaStream;
+  cameraMissing: boolean;
+}> {
   try {
     return { stream: await navigator.mediaDevices.getUserMedia({ audio, video: cam ? { deviceId: { exact: cam } } : true }), cameraMissing: false };
   } catch (e) {
@@ -211,9 +286,10 @@ async function openForCheck(audio: MediaTrackConstraints, cam: string): Promise<
     return { stream: await navigator.mediaDevices.getUserMedia({ audio, video: false }), cameraMissing: true };
   }
 }
-
 /** Check microphone and camera (android PreCallCheckSheet): a level bar that moves when you speak, and your picture. */
 function PreCallCheck({ noiseReduction }: { noiseReduction: boolean }) {
+  useLocaleRender();
+  const l10n = useLocalization();
   const [on, setOn] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [level, setLevel] = useState(0);
@@ -222,7 +298,6 @@ function PreCallCheck({ noiseReduction }: { noiseReduction: boolean }) {
   const [cam, setCam] = useState("");
   const [cameraMissing, setCameraMissing] = useState(false);
   const video = useRef<HTMLVideoElement>(null);
-
   useEffect(() => {
     if (!on) return;
     let stream: MediaStream | null = null;
@@ -258,8 +333,8 @@ function PreCallCheck({ noiseReduction }: { noiseReduction: boolean }) {
         if (!alive) return;
         setError(
           e instanceof DOMException && e.name === "NotAllowedError"
-            ? "This browser isn't allowed to use your microphone or camera. Allow them in the address bar, then try again."
-            : "Your microphone or camera couldn't be started.",
+            ? uiText("calls.interface.this_browser_isn_t_allowed_to_use_your_microphone_or_camera_allow_00525df")
+            : uiText("calls.interface.your_microphone_or_camera_couldn_t_be_started_e2b68f8"),
         );
         setOn(false);
       }
@@ -273,14 +348,15 @@ function PreCallCheck({ noiseReduction }: { noiseReduction: boolean }) {
       setLevel(0);
     };
   }, [on, mic, cam, noiseReduction]);
-
   const mics = devices.filter((d) => d.kind === "audioinput");
   const cams = devices.filter((d) => d.kind === "videoinput");
   return (
     <div className="card" style={{ padding: 20, display: "grid", gap: 12 }}>
-      <h3 style={{ margin: 0 }}>Check microphone and camera</h3>
+      <h3 style={{ margin: 0 }}>
+        <Localized k="calls.interface.check_microphone_and_camera_5d722e0" />
+      </h3>
       <p className="muted" style={{ margin: 0 }}>
-        Nothing is recorded or sent. The devices are released when you stop.
+        <Localized k="calls.interface.nothing_is_recorded_or_sent_the_devices_are_released_when_you_sto_9b63a3a" />
       </p>
       {error && (
         <div className="banner danger" role="alert">
@@ -289,7 +365,7 @@ function PreCallCheck({ noiseReduction }: { noiseReduction: boolean }) {
       )}
       {on && cameraMissing && (
         <div className="banner info" role="status">
-          No camera could be started, so only your microphone is being checked.
+          <Localized k="calls.interface.no_camera_could_be_started_so_only_your_microphone_is_being_check_4f2ad87" />
         </div>
       )}
       {on && (
@@ -299,29 +375,29 @@ function PreCallCheck({ noiseReduction }: { noiseReduction: boolean }) {
             <div className="precall-side">
               <label className="field">
                 <span>
-                  <Mic size={14} aria-hidden /> Microphone
+                  <Localized k="calls.interface.microphone_0113b92" slots={[<Mic size={14} aria-hidden />]} />
                 </span>
                 <select className="input" value={mic} onChange={(e) => setMic(e.target.value)}>
-                  <option value="">Default</option>
+                  <option value="">{l10n("settings.ap_default")}</option>
                   {mics.map((d, i) => (
                     <option key={d.deviceId || i} value={d.deviceId}>
-                      {d.label || `Microphone ${i + 1}`}
+                      {d.label || uiText("calls.interface.microphone_value0_f994910", { value0: i + 1 })}
                     </option>
                   ))}
                 </select>
               </label>
-              <div className="meter" role="meter" aria-label="Microphone level" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(level * 100)}>
+              <div className="meter" role="meter" aria-label={uiText("calls.interface.microphone_level_351d1a3")} aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(level * 100)}>
                 <span style={{ width: `${Math.round(level * 100)}%` }} />
               </div>
               <label className="field">
                 <span>
-                  <Camera size={14} aria-hidden /> Camera
+                  <Localized k="calls.interface.camera_1130c74" slots={[<Camera size={14} aria-hidden />]} />
                 </span>
                 <select className="input" value={cam} onChange={(e) => setCam(e.target.value)}>
-                  <option value="">Default</option>
+                  <option value="">{l10n("settings.ap_default")}</option>
                   {cams.map((d, i) => (
                     <option key={d.deviceId || i} value={d.deviceId}>
-                      {d.label || `Camera ${i + 1}`}
+                      {d.label || uiText("calls.interface.camera_value0_9eb5f9a", { value0: i + 1 })}
                     </option>
                   ))}
                 </select>
@@ -332,7 +408,7 @@ function PreCallCheck({ noiseReduction }: { noiseReduction: boolean }) {
       )}
       <div>
         <button className={`btn ${on ? "btn-secondary" : "btn-primary"}`} onClick={() => setOn(!on)}>
-          {on ? "Stop" : "Start the check"}
+          {on ? uiText("calls.interface.stop_cae7d57") : uiText("calls.interface.start_the_check_232c55a")}
         </button>
       </div>
     </div>

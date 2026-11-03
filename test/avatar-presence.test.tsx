@@ -2,7 +2,10 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
 import { StyledAvatar } from "../src/ui/people/ProfileStyle";
 
-vi.mock("../src/application/prefs", () => ({ usePrefs: () => ({ reducedMotion: "off" }) }));
+vi.mock("../src/application/prefs", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("../src/application/prefs")>()),
+  usePrefs: () => ({ reducedMotion: "off", language: "en" }),
+}));
 vi.mock("../src/ui/components/photos", () => ({ usePhoto: () => null }));
 
 const avatar = { userId: "test", name: "Explorer", colorIndex: 0, photoRev: null, media: null, decoration: "sakura", size: 40 };

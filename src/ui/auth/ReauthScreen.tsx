@@ -1,3 +1,6 @@
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
+import { Localized } from "../../i18n/Localized";
 import { useMemo } from "react";
 import { ApiClient } from "../../api/client";
 import { socialDeviceProof } from "../../auth/accountApi";
@@ -9,12 +12,12 @@ import { emailProblem, normalizeEmail } from "../../auth/rules";
 import { useSubmit } from "./useSubmit";
 import { useT } from "../../i18n";
 import { ApiError } from "../../api/client";
-
 /**
  * The account session ended (it expired, was signed out from another device, or the password changed). The password,
  * with this browser's device key, starts a new one; messages and keys kept here stay as they are.
  */
 export function ReauthScreen({ engine, onSignOut }: { engine: Engine; onSignOut: () => void }) {
+  useLocaleRender();
   const socialApi = useMemo(() => new ApiClient(engine.api.base), [engine]);
   const [password, setPassword] = useState("");
   const { busy, error, setError, run } = useSubmit();
@@ -49,7 +52,9 @@ export function ReauthScreen({ engine, onSignOut }: { engine: Engine; onSignOut:
           <div className="field">
             <label htmlFor="ra-email">{t("reauth_email_now")}</label>
             <input id="ra-email" className="input" type="email" autoComplete="username" value={otherEmail} onChange={(e) => setOtherEmail(e.target.value)} autoFocus />
-            <span className="hint">This browser still proves it's one of your account's devices, so only your own account can continue here.</span>
+            <span className="hint">
+              <Localized k="auth.interface.this_browser_still_proves_it_s_one_of_your_account_s_devices_so_o_8f46333" />
+            </span>
           </div>
         )}
         <div className="field">
@@ -58,13 +63,15 @@ export function ReauthScreen({ engine, onSignOut }: { engine: Engine; onSignOut:
         </div>
         {code !== null && (
           <div className="field">
-            <label htmlFor="ra-code">Code from your authenticator app</label>
+            <label htmlFor="ra-code">
+              <Localized k="auth.interface.code_from_your_authenticator_app_a7aa567" />
+            </label>
             <input
               id="ra-code"
               className="input mono"
               inputMode="numeric"
               autoComplete="one-time-code"
-              placeholder="123456 or a backup code"
+              placeholder={uiText("auth.interface.123456_or_a_backup_code_1c78f69")}
               maxLength={20}
               value={code}
               onChange={(e) => setCode(e.target.value)}

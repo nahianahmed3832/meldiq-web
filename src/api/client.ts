@@ -1,7 +1,8 @@
+import { text as uiText } from "../i18n";
 import "../application/validationPolicy";
 import type { z } from "zod";
 import { withinJsonBudget } from "./jsonBudget";
-
+import { apiErrorMessage } from "../i18n/api-errors";
 /** A refusal or failure from the server, or a network failure (status 0). Never carries request bodies or tokens. */
 export class ApiError extends Error {
   constructor(
@@ -14,24 +15,20 @@ export class ApiError extends Error {
     super(message);
     this.name = "ApiError";
   }
-
   get isNetwork(): boolean {
     return this.status === 0;
   }
-
   /** Worth retrying later: offline, overloaded or rate-limited. */
   get isTransient(): boolean {
     return this.status === 0 || this.status === 429 || this.status >= 500;
   }
 }
-
 /** Where the bearer token comes from, and how to get a new one when the server says it's no longer valid. */
 export interface Credentials {
   token(): string | null;
   /** Signs a fresh challenge with the device key. Resolves false when that's impossible (signed out, device removed). */
   reauthenticate(): Promise<boolean>;
 }
-
 interface RequestOptions {
   body?: unknown;
   raw?: Uint8Array;
@@ -42,7 +39,6 @@ interface RequestOptions {
   /** Extra request headers (e.g. what this app supports). */
   headers?: Record<string, string>;
 }
-
 /**
  * Typed client for the Orbit API. Same origin in the browser (base ""), an absolute base in tests. Bearer token only:
  * cookies are never sent. A 401 triggers one re-authentication and one retry.
@@ -57,41 +53,35 @@ export class ApiClient {
     readonly base: string,
     private readonly credentials?: Credentials,
   ) {}
-
   async json<S extends z.ZodTypeAny>(method: string, path: string, schema: S, opts: RequestOptions = {}): Promise<z.infer<S>> {
     const res = await this.send(method, path, opts);
     const data: unknown = await res.json().catch(() => {
-      throw new ApiError(res.status, "decode", "The server's answer couldn't be read");
+      throw new ApiError(res.status, "decode", uiText("workspace.interface.the_server_s_answer_couldn_t_be_read_753c118"));
     });
-    if (!withinJsonBudget(data)) throw new ApiError(res.status, "decode", "The server's answer is too complex to read safely. Try a smaller page.");
+    if (!withinJsonBudget(data)) throw new ApiError(res.status, "decode", uiText("workspace.interface.the_server_s_answer_is_too_complex_to_read_safely_try_a_smal_99c2f93"));
     const parsed = schema.safeParse(data);
-    if (!parsed.success) throw new ApiError(res.status, "decode", "The server's answer wasn't what this app expects");
+    if (!parsed.success) throw new ApiError(res.status, "decode", uiText("workspace.interface.the_server_s_answer_wasn_t_what_this_app_expects_af487a1"));
     return parsed.data;
   }
-
   /** For endpoints whose answer this client doesn't need. */
   async call(method: string, path: string, opts: RequestOptions = {}): Promise<void> {
     const res = await this.send(method, path, opts);
     await res.body?.cancel().catch(() => undefined);
   }
-
   /** The answer's body as a stream (large downloads, decrypted as they arrive). The caller reads or cancels it. */
   async stream(path: string, opts: RequestOptions = {}): Promise<ReadableStream<Uint8Array>> {
     const res = await this.send("GET", path, opts);
-    if (!res.body) throw new ApiError(res.status, "decode", "The server's answer had no body");
+    if (!res.body) throw new ApiError(res.status, "decode", uiText("workspace.interface.the_server_s_answer_had_no_body_4ba2ac8"));
     return res.body;
   }
-
   /** The answer itself, for callers that need its headers or body as they choose (a failed status still throws). */
   async response(path: string, opts: RequestOptions = {}): Promise<Response> {
     return this.send("GET", path, opts);
   }
-
   async bytes(path: string, opts: RequestOptions = {}): Promise<Uint8Array> {
     const res = await this.send("GET", path, opts);
     return new Uint8Array(await res.arrayBuffer());
   }
-
   private async send(method: string, path: string, opts: RequestOptions, retried = false): Promise<Response> {
     const auth = opts.auth ?? true;
     const headers: Record<string, string> = { ...opts.headers, accept: "application/json" };
@@ -115,7 +105,7 @@ export class ApiClient {
       res = await fetch(this.base + path, { method, headers, body, credentials: "omit", cache: "no-store", signal: opts.signal, keepalive: opts.keepalive });
     } catch (e) {
       if (opts.signal?.aborted) throw e;
-      throw new ApiError(0, "network", "Can't reach the server. Check your connection.");
+      throw new ApiError(0, "network", uiText("workspace.interface.can_t_reach_the_server_check_your_connection_9b9c241"));
     }
     if (res.status === 401 && auth && !retried && !noSession && this.credentials && (renewed(this.credentials, token) || (await this.credentials.reauthenticate()))) {
       await res.body?.cancel().catch(() => undefined);
@@ -125,27 +115,37 @@ export class ApiClient {
     return res;
   }
 }
-
 /** Whether the session's token changed since [sent] went out with a request (another request renewed it meanwhile). */
 function renewed(credentials: Credentials, sent: string | null): boolean {
   const now = credentials.token();
   return !!now && now !== sent;
 }
-
 async function toApiError(res: Response): Promise<ApiError> {
   const retryAfter = Number(res.headers.get("retry-after"));
   const retryAfterMs = Number.isFinite(retryAfter) && retryAfter > 0 ? retryAfter * 1000 : undefined;
   try {
-    const data = (await res.json()) as { error?: { code?: unknown; message?: unknown; details?: unknown } };
+    const data = (await res.json()) as {
+      error?: {
+        code?: unknown;
+        message?: unknown;
+        details?: unknown;
+      };
+    };
     const e = data?.error;
-    if (e && typeof e.code === "string" && typeof e.message === "string") return new ApiError(res.status, e.code, e.message, e.details, retryAfterMs);
+    if (e && typeof e.code === "string" && typeof e.message === "string") {
+      const code = e.code;
+      const original = e.message;
+      const error = new ApiError(res.status, code, original, e.details, retryAfterMs);
+      Object.defineProperty(error, "message", { configurable: true, get: () => apiErrorMessage(code, res.status, original) });
+      return error;
+    }
   } catch {
     /* not JSON: a proxy's error page */
   }
   return new ApiError(
     res.status,
     res.status >= 500 ? "server" : "http",
-    res.status >= 500 ? "The server had a problem. Try again in a moment." : `Request failed (${res.status})`,
+    res.status >= 500 ? uiText("errors.transport.serverFailure") : uiText("errors.transport.requestFailed", { status: res.status }),
     undefined,
     retryAfterMs,
   );

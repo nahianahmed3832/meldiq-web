@@ -1,3 +1,5 @@
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
 import { useEffect, useState } from "react";
 import { ApiError } from "../../api/client";
 import { useEngine } from "../../application/orbit";
@@ -5,17 +7,16 @@ import { navigate } from "../../application/router";
 import { finishOnboarding } from "../../sync/communitySettings";
 import { onboarding, type Onboarding } from "../../sync/guide";
 import { OnboardingDialog } from "./GuideOnboarding";
-
 interface OnboardingFlowProps {
   orgId: string;
   onClose: () => void;
 }
-
 /**
  * Finishing (or redoing) a community's onboarding (community parity A3): its questions first, then the server records
  * it (after the rules, which the composer asks for on its own), and the person lands in the community's starting channel.
  */
 export function OnboardingFlow({ orgId, onClose }: OnboardingFlowProps) {
+  useLocaleRender();
   const engine = useEngine();
   const [data, setData] = useState<Onboarding | null>(null);
   const finish = async () => {
@@ -25,7 +26,11 @@ export function OnboardingFlow({ orgId, onClose }: OnboardingFlowProps) {
     } catch (e) {
       engine.notice(
         "error",
-        e instanceof ApiError && e.code === "rules_not_agreed" ? "Agree to this community's rules first, then finish." : e instanceof Error ? e.message : "Couldn't finish onboarding.",
+        e instanceof ApiError && e.code === "rules_not_agreed"
+          ? uiText("organization.interface.agree_to_this_community_s_rules_first_then_finish_78260c3")
+          : e instanceof Error
+            ? e.message
+            : uiText("organization.interface.couldn_t_finish_onboarding_0d1eb79"),
       );
     } finally {
       onClose();

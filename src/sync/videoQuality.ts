@@ -1,23 +1,26 @@
+import { text as uiText } from "../i18n";
 import { fitWithin } from "./photoQuality";
 import { checkUploadSignal } from "./largeUpload";
-
 const MAX_ENCODED_BYTES = 64 * 1024 * 1024;
-const VIDEO_BITRATE = 1_800_000;
-const AUDIO_BITRATE = 96_000;
-
+const VIDEO_BITRATE = 1800000;
+const AUDIO_BITRATE = 96000;
 export function videoMime(supported: (type: string) => boolean = (type) => typeof MediaRecorder !== "undefined" && MediaRecorder.isTypeSupported(type)): string | null {
   return ["video/mp4;codecs=avc1,mp4a.40.2", "video/mp4", "video/webm;codecs=vp8,opus"].find(supported) ?? null;
 }
-
-export function videoDimensions(width: number, height: number): { width: number; height: number } {
+export function videoDimensions(
+  width: number,
+  height: number,
+): {
+  width: number;
+  height: number;
+} {
   const size = fitWithin(width, height, 1280);
   return { width: Math.max(2, Math.floor(size.width / 2) * 2), height: Math.max(2, Math.floor(size.height / 2) * 2) };
 }
-
 /** Re-encode to at most 720p/30fps, retaining audio. Already efficient videos need no further quality loss. */
 export async function optimizeVideo(file: File, signal?: AbortSignal, onProgress: (percent: number) => void = () => {}): Promise<File> {
   checkUploadSignal(signal);
-  const failure = () => new Error(`"${file.name}" couldn't be optimized here. Select Original file to send it unchanged.`);
+  const failure = () => new Error(uiText("calls.interface.value0_couldn_t_be_optimized_here_select_original_file_to_send_it_8a4d9bf", { value0: file.name }));
   const url = URL.createObjectURL(file);
   const video = document.createElement("video");
   video.playsInline = true;
@@ -42,7 +45,7 @@ export async function optimizeVideo(file: File, signal?: AbortSignal, onProgress
       signal?.addEventListener("abort", aborted, { once: true });
       video.onloadeddata = () => done();
       video.onerror = () => done(failure());
-      deadline = setTimeout(() => done(failure()), 15_000);
+      deadline = setTimeout(() => done(failure()), 15000);
       video.src = url;
       video.load();
     });
@@ -103,7 +106,7 @@ export async function optimizeVideo(file: File, signal?: AbortSignal, onProgress
         context.drawImage(video, 0, 0, canvas.width, canvas.height);
         onProgress(Math.min(99, Math.round((video.currentTime / duration) * 100)));
       }, 1000 / 30);
-      deadline = setTimeout(() => finish(failure()), duration * 1000 + 30_000);
+      deadline = setTimeout(() => finish(failure()), duration * 1000 + 30000);
       recorder!.start(1000);
       void video.play().catch(() => finish(failure()));
     });

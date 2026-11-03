@@ -1,9 +1,7 @@
 import type { ConversationLocal, StoredMessage } from "../model/types";
 import type { LocalStore } from "../store/db";
-import { preview } from "./rules";
-
+import { preview, previewLabel } from "./rules";
 const empty = (id: string): ConversationLocal => ({ id, unread: 0, mentions: 0, lastMessageId: null, lastPreview: null, lastSenderName: null, lastActivityAt: 0, readUpTo: 0, draft: "" });
-
 /**
  * What only this browser knows about each conversation (android ConversationEntity's local columns): unread and mention
  * counts, the last message shown in the list, the read position, the draft and archiving. Kept in IndexedDB and
@@ -12,21 +10,20 @@ const empty = (id: string): ConversationLocal => ({ id, unread: 0, mentions: 0, 
 export class ConversationLocals {
   /** The latest change queued for each conversation; the next one starts when it has finished. */
   private chains = new Map<string, Promise<unknown>>();
-
   constructor(
     private readonly store: LocalStore,
-    private readonly host: { senderName(userId: string): string | null; publish(l: ConversationLocal): void },
+    private readonly host: {
+      senderName(userId: string): string | null;
+      publish(l: ConversationLocal): void;
+    },
   ) {}
-
   async get(id: string): Promise<ConversationLocal> {
     return (await this.store.conversation(id)) ?? empty(id);
   }
-
   async save(l: ConversationLocal): Promise<void> {
     await this.store.putConversation(l);
     this.host.publish(l);
   }
-
   /**
    * Changes one conversation's row: [change] gets the current row and returns the new one, or null to leave it. Changes
    * to the same conversation run one at a time in the order they were asked for, so none writes back a row it read
@@ -47,28 +44,39 @@ export class ConversationLocals {
     });
     return next;
   }
-
-  bump(m: StoredMessage, counts: { unread: boolean; mention: boolean }): Promise<void> {
+  bump(
+    m: StoredMessage,
+    counts: {
+      unread: boolean;
+      mention: boolean;
+    },
+  ): Promise<void> {
     return this.update(m.conversationId, (l) => {
       const isLatest = m.threadRootId === null && m.sortTs >= l.lastActivityAt;
       const sender = m.outgoing ? "You" : this.host.senderName(m.senderUserId);
       return {
         ...l,
-        ...(isLatest ? { lastMessageId: m.id, lastPreview: preview(m), lastSenderName: sender, lastActivityAt: m.sortTs } : {}),
+        ...(isLatest ? { lastMessageId: m.id, lastPreview: preview(m), lastPreviewLabel: previewLabel(m), lastSenderOwn: m.outgoing, lastSenderName: sender, lastActivityAt: m.sortTs } : {}),
         unread: l.unread + (counts.unread ? 1 : 0),
         mentions: l.mentions + (counts.mention ? 1 : 0),
       };
     });
   }
-
   refreshPreview(conversationId: string): Promise<void> {
     return this.update(conversationId, async (l) => {
       const last = await this.store.newestMessage(conversationId, (m) => m.threadRootId === null);
       const sender = last ? (last.outgoing ? "You" : this.host.senderName(last.senderUserId)) : null;
-      return { ...l, lastMessageId: last?.id ?? null, lastPreview: last ? preview(last) : null, lastSenderName: sender, lastActivityAt: Math.max(l.lastActivityAt, last?.sortTs ?? 0) };
+      return {
+        ...l,
+        lastMessageId: last?.id ?? null,
+        lastPreview: last ? preview(last) : null,
+        lastPreviewLabel: last ? previewLabel(last) : undefined,
+        lastSenderOwn: last?.outgoing,
+        lastSenderName: sender,
+        lastActivityAt: Math.max(l.lastActivityAt, last?.sortTs ?? 0),
+      };
     });
   }
-
   /**
    * Another device of this account read the conversation up to [upTo]. Cleared here too, unless something newer arrived
    * after that point: then it stays unread (what's newer hasn't been read anywhere).
@@ -80,15 +88,12 @@ export class ConversationLocals {
       return newer ? { ...l, readUpTo } : { ...l, unread: 0, mentions: 0, readUpTo };
     });
   }
-
   setUnread(id: string, unread: boolean): Promise<void> {
     return this.update(id, (l) => (unread ? { ...l, unread: Math.max(1, l.unread) } : { ...l, unread: 0, mentions: 0 }));
   }
-
   setArchived(id: string, archived: boolean): Promise<void> {
     return this.update(id, (l) => ({ ...l, archivedAt: archived ? Date.now() : null }));
   }
-
   /** Runs in order with every other change to the conversation, so the last call wins (a late keystroke can't undo "sent"). */
   saveDraft(conversationId: string, text: string): Promise<void> {
     return this.update(conversationId, (l) => (l.draft !== text ? { ...l, draft: text } : null));

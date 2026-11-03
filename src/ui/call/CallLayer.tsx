@@ -1,3 +1,7 @@
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
+import { Localized } from "../../i18n/Localized";
+import { useT as useLocalization } from "../../i18n";
 import { GripVertical, Maximize2, Phone, PhoneOff, Video } from "lucide-react";
 import { type KeyboardEvent, type PointerEvent, useCallback, useEffect, useRef, useState } from "react";
 import { useEngine, useOrbit } from "../../application/orbit";
@@ -8,33 +12,34 @@ import { clampToViewport, loadPosition, nudge, type Point, savePosition } from "
 import { useNow } from "./useNow";
 import { holdUpdates } from "../../application/updates";
 import { visibleViewport } from "../../application/viewport";
-
 /** Whatever this browser's call needs on screen: the ringing card, the call stage, or the minimised bar. */
 export function CallLayer() {
+  useLocaleRender();
   const engine = useEngine();
   const phase = useOrbit((s) => s.call.phase);
   const minimized = useOrbit((s) => s.call.minimized);
-
   // A new release waits for the call to end before the tab reloads by itself (src/application/updates.ts).
   const inCall = phase !== "idle";
   useEffect(() => (inCall ? holdUpdates() : undefined), [inCall]);
-
   // Closing the tab mid-call tells the server at once, so the other side isn't left waiting for a reconnect.
   useEffect(() => {
     const leave = () => engine.calls.leaveOnUnload();
     window.addEventListener("pagehide", leave);
     return () => window.removeEventListener("pagehide", leave);
   }, [engine]);
-
   if (phase === "idle") return null;
   if (phase === "incoming") return <IncomingCall />;
   return minimized ? <MiniCall /> : <CallStage />;
 }
-
 function IncomingCall() {
+  useLocaleRender();
+  const l10n = useLocalization();
   const engine = useEngine();
   const call = useOrbit((s) => s.call);
-  const label = `${call.video ? "Incoming video call" : "Incoming voice call"} from ${call.title}`;
+  const label = uiText("calls.interface.value0_from_value1_385f939", {
+    value0: call.video ? uiText("notifications.background.incomingVideo") : uiText("notifications.background.incomingVoice"),
+    value1: call.title,
+  });
   return (
     <section className="call-incoming" role="alertdialog" aria-label={label} aria-describedby="call-incoming-status">
       <div className="who">
@@ -51,44 +56,55 @@ function IncomingCall() {
       ) : (
         <div className="actions">
           <figure>
-            <button className="call-btn end" onClick={() => engine.calls.decline()} aria-label="Decline">
+            <button className="call-btn end" onClick={() => engine.calls.decline()} aria-label={l10n("calls.decline")}>
               <PhoneOff size={22} />
             </button>
-            <figcaption>Decline</figcaption>
+            <figcaption>{l10n("calls.decline")}</figcaption>
           </figure>
           {call.video && (
             <figure>
-              <button className="call-btn accept" onClick={() => void engine.calls.accept(false)} aria-label="Answer without video">
+              <button className="call-btn accept" onClick={() => void engine.calls.accept(false)} aria-label={uiText("calls.interface.answer_without_video_369b7c9")}>
                 <Phone size={22} />
               </button>
-              <figcaption>Voice only</figcaption>
+              <figcaption>
+                <Localized k="calls.interface.voice_only_ac49b46" />
+              </figcaption>
             </figure>
           )}
           <figure>
-            <button className="call-btn accept" onClick={() => void engine.calls.accept(call.video)} aria-label={call.video ? "Answer with video" : "Answer"}>
+            <button
+              className="call-btn accept"
+              onClick={() => void engine.calls.accept(call.video)}
+              aria-label={call.video ? uiText("calls.interface.answer_with_video_1d458a1") : uiText("calls.interface.answer_b2a3aa6")}
+            >
               {call.video ? <Video size={22} /> : <Phone size={22} />}
             </button>
-            <figcaption>Answer</figcaption>
+            <figcaption>
+              <Localized k="calls.interface.answer_b2a3aa6" />
+            </figcaption>
           </figure>
         </div>
       )}
     </section>
   );
 }
-
 /**
  * The minimised call: a small window that can be dragged anywhere by its grip or its text (pointer or touch), or moved
  * with the arrow keys from the grip; it stays fully on screen and this browser remembers where it was left. It starts
  * at the top right, clear of the message box and its Send button (reported: it covered them and couldn't be moved).
  */
 function MiniCall() {
+  useLocaleRender();
   const engine = useEngine();
   const call = useOrbit((s) => s.call);
   const now = useNow(call.phase === "connected");
   const ref = useRef<HTMLElement>(null);
-  const drag = useRef<{ id: number; dx: number; dy: number } | null>(null);
+  const drag = useRef<{
+    id: number;
+    dx: number;
+    dy: number;
+  } | null>(null);
   const [pos, setPos] = useState<Point | null>(loadPosition);
-
   const fit = useCallback((p: Point): Point => {
     const box = ref.current?.getBoundingClientRect();
     const v = visibleViewport();
@@ -108,7 +124,6 @@ function MiniCall() {
       window.visualViewport?.removeEventListener("scroll", refit);
     };
   }, [fit]);
-
   const start = (e: PointerEvent<HTMLElement>) => {
     if (e.button !== 0 || !ref.current) return;
     const box = ref.current.getBoundingClientRect();
@@ -139,20 +154,24 @@ function MiniCall() {
     savePosition(p);
   };
   const handlers = { onPointerDown: start, onPointerMove: move, onPointerUp: end, onPointerCancel: end };
-
   return (
-    <section ref={ref} className={`call-mini${pos ? " placed" : ""}`} style={pos ? { left: pos.x, top: pos.y } : undefined} aria-label={`Call with ${call.title}`}>
-      <span className="call-mini-grip" role="button" tabIndex={0} aria-label="Move the call window (arrow keys)" onKeyDown={keys} {...handlers}>
+    <section
+      ref={ref}
+      className={`call-mini${pos ? " placed" : ""}`}
+      style={pos ? { left: pos.x, top: pos.y } : undefined}
+      aria-label={uiText("calls.interface.call_with_value0_5a389c7", { value0: call.title })}
+    >
+      <span className="call-mini-grip" role="button" tabIndex={0} aria-label={uiText("calls.interface.move_the_call_window_arrow_keys_fa894a1")} onKeyDown={keys} {...handlers}>
         <GripVertical size={16} />
       </span>
       <div className="text" {...handlers}>
         <strong className="ellipsis">{call.title}</strong>
         <span>{callStatus(call, now)}</span>
       </div>
-      <button className="call-btn" onClick={() => engine.calls.setMinimized(false)} aria-label="Show the call">
+      <button className="call-btn" onClick={() => engine.calls.setMinimized(false)} aria-label={uiText("calls.interface.show_the_call_b1c171a")}>
         <Maximize2 size={18} />
       </button>
-      <button className="call-btn end" onClick={() => engine.calls.hangup()} aria-label="Hang up" disabled={call.phase === "ended"}>
+      <button className="call-btn end" onClick={() => engine.calls.hangup()} aria-label={uiText("calls.hangUp")} disabled={call.phase === "ended"}>
         <PhoneOff size={18} />
       </button>
     </section>

@@ -1,3 +1,4 @@
+import { text as uiText } from "../i18n";
 import { z } from "zod";
 import { ApiClient, ApiError } from "../api/client";
 import { zAccountSession } from "../api/accountSchemas";
@@ -31,7 +32,11 @@ export async function startSocial(
   api: ApiClient,
   popup: Window,
   provider: SocialProvider,
-  options: { mode?: "login" | "link"; password?: string; totpCode?: string },
+  options: {
+    mode?: "login" | "link";
+    password?: string;
+    totpCode?: string;
+  },
   signal: AbortSignal,
 ): Promise<SocialReceipt> {
   const verifier = random();
@@ -42,7 +47,7 @@ export async function startSocial(
   });
   const authorize = new URL(started.authorizeUrl);
   if (![new URL(api.base || location.origin).origin, location.origin].includes(authorize.origin) || authorize.pathname !== `/v2/auth/social/authorize/${started.id}`)
-    throw new Error("The server returned an unexpected sign-in address.");
+    throw new Error(uiText("auth.interface.the_server_returned_an_unexpected_sign_in_address_af8a646"));
   if (signal.aborted) throw new DOMException("Cancelled", "AbortError");
   return new Promise((resolve, reject) => {
     let settled = false;
@@ -71,14 +76,21 @@ export async function startSocial(
       cleanup();
       reject(new Error(message));
     };
-    const abort = () => fail("Sign-in cancelled. You can try again.");
+    const abort = () => fail(uiText("auth.interface.sign_in_cancelled_you_can_try_again_97a6c7a"));
     const accept = (data: unknown) => {
       if (settled || !data || typeof data !== "object") return;
-      const message = data as { type?: unknown; id?: unknown; receipt?: unknown; error?: unknown };
+      const message = data as {
+        type?: unknown;
+        id?: unknown;
+        receipt?: unknown;
+        error?: unknown;
+      };
       if (message.type !== "meldiq-social" || message.id !== started.id) return;
       if (message.error) {
         acknowledge();
-        return fail(message.error === "cancelled" ? "Sign-in cancelled. You can try again." : "The provider couldn't verify this sign-in. Try again.");
+        return fail(
+          message.error === "cancelled" ? uiText("auth.interface.sign_in_cancelled_you_can_try_again_97a6c7a") : uiText("auth.interface.the_provider_couldn_t_verify_this_sign_in_try_again_2427fe8"),
+        );
       }
       if (typeof message.receipt !== "string" || !/^[A-Za-z0-9_-]{43}$/.test(message.receipt)) return;
       acknowledge();
@@ -94,7 +106,7 @@ export async function startSocial(
     const timer = setInterval(() => {
       // A detached popup reports closed=true while the provider is still visibly open.
       // Cancellation is explicit; a verified return or the flow deadline ends the wait.
-      if (Date.now() >= started.expiresAt) fail("Sign-in expired. Please try again.");
+      if (Date.now() >= started.expiresAt) fail(uiText("auth.interface.sign_in_expired_please_try_again_1d52123"));
     }, 500);
     popup.location.href = authorize.href;
   });
@@ -102,13 +114,22 @@ export async function startSocial(
 export async function completeSocial(
   api: ApiClient,
   receipt: SocialReceipt,
-  details: { name?: string; inviteCode?: string; totpCode?: string; deviceName: string; device?: { deviceId: string; nonce: string; signature: string } },
+  details: {
+    name?: string;
+    inviteCode?: string;
+    totpCode?: string;
+    deviceName: string;
+    device?: {
+      deviceId: string;
+      nonce: string;
+      signature: string;
+    };
+  },
   link = false,
 ) {
   return api.json("POST", "/v2/auth/social/complete", zCompleted, { body: { ...receipt, ...details }, auth: link });
 }
 export function socialError(e: unknown): string {
-  return e instanceof ApiError || e instanceof Error ? e.message : "Couldn't sign in. Please try again.";
+  return e instanceof ApiError || e instanceof Error ? e.message : uiText("auth.interface.couldn_t_sign_in_please_try_again_31e18bd");
 }
-
 export const socialProviderName = (provider: SocialProvider) => ({ google: "Google", apple: "Apple", discord: "Discord" })[provider];

@@ -1,3 +1,6 @@
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
+import { Localized } from "../../i18n/Localized";
 import { MotionImage } from "../components/MotionImage";
 import { Search, Smile, Upload, X } from "lucide-react";
 import { PHONE_LAYOUT, visibleViewport } from "../../application/viewport";
@@ -16,7 +19,6 @@ import { useFocusTrap } from "../components/Overlay";
 import { ExpressionLibrary } from "./ExpressionLibrary";
 import { EmojiPicker } from "./EmojiPicker";
 import { StickerArt } from "./StickerView";
-
 /** Permissions still distinguish media types; the interface uses one searchable collection. */
 export type PickerTab = "emoji" | "gifs" | "stickers";
 interface ExpressionPickerProps {
@@ -27,14 +29,22 @@ interface ExpressionPickerProps {
   onEmoji: (emoji: string) => void;
   canSend: boolean;
   allowedTabs?: readonly PickerTab[];
-  library?: { currentOrgId: string | null; externalAllowed: boolean };
-  community?: { list: ExpressionList; onEmoji: (e: Expression) => void; onSticker: (e: Expression) => void };
+  library?: {
+    currentOrgId: string | null;
+    externalAllowed: boolean;
+  };
+  community?: {
+    list: ExpressionList;
+    onEmoji: (e: Expression) => void;
+    onSticker: (e: Expression) => void;
+  };
   onSticker: (pack: string, id: string) => void;
   onAnimoji: (emoji: string) => void;
   onGif: (gif: GifResult, provider: "tenor" | "giphy") => void;
 }
-
 export function ExpressionPicker(p: ExpressionPickerProps) {
+  useLocaleRender();
+
   const engine = useEngine();
   const orgs = useOrbit((state) => state.orgs);
   const expressionsOn = useOrbit((state) => state.server?.features.includes("community-expressions") ?? false);
@@ -52,10 +62,18 @@ export function ExpressionPicker(p: ExpressionPickerProps) {
   const canManage = !!source && !!access && (access.isOwner || access.effective.includes("expressions.manage"));
   const stickers = p.canSend && (!p.allowedTabs || p.allowedTabs.includes("stickers"));
   const gifs = p.canSend && (!p.allowedTabs || p.allowedTabs.includes("gifs"));
-  const [uploading, setUploading] = useState<{ file: File; kind: "emoji" | "sticker"; orgId: string } | null>(null);
+  const [uploading, setUploading] = useState<{
+    file: File;
+    kind: "emoji" | "sticker";
+    orgId: string;
+  } | null>(null);
   const fileInput = useRef<HTMLInputElement>(null);
   const ref = useRef<HTMLDivElement>(null);
-  const [pos, setPos] = useState<{ left: number; top: number; height: number } | null>(null);
+  const [pos, setPos] = useState<{
+    left: number;
+    top: number;
+    height: number;
+  } | null>(null);
   useFocusTrap(ref, !uploading);
   useLayoutEffect(() => {
     const place = () => {
@@ -113,29 +131,42 @@ export function ExpressionPicker(p: ExpressionPickerProps) {
         ref={ref}
         className="expression-picker unified"
         role="dialog"
-        aria-label="Expressions"
+        aria-label={uiText("messaging.interface.expressions_6437317")}
         inert={!!uploading}
         style={{ ...(pos ? { left: pos.left, top: pos.top, height: pos.height } : { visibility: "hidden" as const }), ...(uploading ? { zIndex: 49 } : {}) }}
       >
         <header className="xp-unified-search">
           <label>
             <Search size={17} aria-hidden="true" />
-            <input type="search" aria-label="Search emoji and expressions" placeholder="Find the perfect emoji" value={query} maxLength={60} onChange={(event) => setQuery(event.target.value)} />
+            <input
+              type="search"
+              aria-label={uiText("messaging.interface.search_emoji_and_expressions_1dc7d29")}
+              placeholder={uiText("messaging.interface.find_the_perfect_emoji_d2057e6")}
+              value={query}
+              maxLength={60}
+              onChange={(event) => setQuery(event.target.value)}
+            />
           </label>
           {!!sources.length && (
-            <button className="icon-btn" aria-label="Upload expressions" aria-expanded={uploadOptions} title="Upload an expression" onClick={() => setUploadOptions((value) => !value)}>
+            <button
+              className="icon-btn"
+              aria-label={uiText("messaging.interface.upload_expressions_b3d38ca")}
+              aria-expanded={uploadOptions}
+              title={uiText("messaging.interface.upload_an_expression_68aacf1")}
+              onClick={() => setUploadOptions((value) => !value)}
+            >
               <Upload size={18} />
             </button>
           )}
-          <button className="icon-btn" aria-label="Close expression picker" onClick={p.onClose}>
+          <button className="icon-btn" aria-label={uiText("messaging.interface.close_expression_picker_616cb47")} onClick={p.onClose}>
             <X size={18} />
           </button>
         </header>
         {uploadOptions && (
           <div className="xp-upload-options">
             <label>
-              Upload to
-              <select className="input" aria-label="Upload community" value={source?.id ?? ""} onChange={(event) => setTarget(event.target.value)}>
+              <Localized k="messaging.interface.upload_to_e207721" />
+              <select className="input" aria-label={uiText("messaging.interface.upload_community_67ad634")} value={source?.id ?? ""} onChange={(event) => setTarget(event.target.value)}>
                 {sources.map((org) => (
                   <option value={org.id} key={org.id}>
                     {org.name}
@@ -144,16 +175,24 @@ export function ExpressionPicker(p: ExpressionPickerProps) {
               </select>
             </label>
             <label>
-              Use as
-              <select className="input" aria-label="Upload expression type" value={kind} onChange={(event) => setKind(event.target.value as "emoji" | "sticker")}>
-                <option value="emoji">Emoji</option>
-                <option value="sticker">Sticker</option>
+              <Localized k="messaging.interface.use_as_625438e" />
+              <select className="input" aria-label={uiText("messaging.interface.upload_expression_type_fe56b41")} value={kind} onChange={(event) => setKind(event.target.value as "emoji" | "sticker")}>
+                <option value="emoji">
+                  <Localized k="messaging.interface.emoji_61ad897" />
+                </option>
+                <option value="sticker">
+                  <Localized k="workspace.interface.sticker_7e2d81c" />
+                </option>
               </select>
             </label>
             <button className="btn btn-secondary btn-sm" disabled={!canManage} onClick={() => fileInput.current?.click()}>
-              Choose image
+              <Localized k="messaging.interface.choose_image_f7e6f67" />
             </button>
-            {!canManage && <small className="hint">You need Manage expressions permission to upload to this community.</small>}
+            {!canManage && (
+              <small className="hint">
+                <Localized k="messaging.interface.you_need_manage_expressions_permission_to_upload_to_this_communit_64cb77d" />
+              </small>
+            )}
           </div>
         )}
         <input
@@ -187,7 +226,14 @@ export function ExpressionPicker(p: ExpressionPickerProps) {
                     <h3 className="xp-group-heading">{pack.name}</h3>
                     <div className="xp-expression-grid">
                       {items.map((item) => (
-                        <button className="xp-builtin" key={item.id} type="button" aria-label={`Send sticker: ${item.caption}`} title={item.caption} onClick={() => p.onSticker(pack.id, item.id)}>
+                        <button
+                          className="xp-builtin"
+                          key={item.id}
+                          type="button"
+                          aria-label={uiText("messaging.interface.send_sticker_value0_4cca71a", { value0: item.caption })}
+                          title={item.caption}
+                          onClick={() => p.onSticker(pack.id, item.id)}
+                        >
                           <StickerArt spec={item} size={36} still />
                         </button>
                       ))}
@@ -197,11 +243,13 @@ export function ExpressionPicker(p: ExpressionPickerProps) {
               );
             })}
           {stickers && !query && (
-            <section className="xp-expression-group" aria-label="Animated emoji">
-              <h3 className="xp-group-heading">Animated emoji</h3>
+            <section className="xp-expression-group" aria-label={uiText("settings.ap_animoji")}>
+              <h3 className="xp-group-heading">
+                <Localized k="settings.ap_animoji" />
+              </h3>
               <div className="xp-expression-grid">
                 {ANIMOJI.map(([emoji]) => (
-                  <button className="xp-builtin" key={emoji} aria-label={`Send animated ${emoji}`} onClick={() => p.onAnimoji(emoji)}>
+                  <button className="xp-builtin" key={emoji} aria-label={uiText("messaging.interface.send_animated_value0_6035757", { value0: emoji })} onClick={() => p.onAnimoji(emoji)}>
                     {emoji}
                   </button>
                 ))}
@@ -210,13 +258,15 @@ export function ExpressionPicker(p: ExpressionPickerProps) {
           )}
           {gifs && <GifPicker query={query} onGif={p.onGif} />}
         </div>
-        <footer className="xp-unified-foot">Community expressions · right-click or hold to favorite</footer>
+        <footer className="xp-unified-foot">
+          <Localized k="messaging.interface.community_expressions_right_click_or_hold_to_favorite_9116af9" />
+        </footer>
       </div>
       {uploading && (
         <UploadDialog
           file={uploading.file}
           kind={uploading.kind}
-          title={uploading.kind === "emoji" ? "Upload an emoji" : "Upload a sticker"}
+          title={uploading.kind === "emoji" ? uiText("messaging.interface.upload_an_emoji_35eaaca") : uiText("messaging.interface.upload_a_sticker_60bad2c")}
           initial={suggestName(uploading.file.name)}
           onClose={() => setUploading(null)}
           onSave={async (name, bytes) => {
@@ -229,12 +279,22 @@ export function ExpressionPicker(p: ExpressionPickerProps) {
     document.body,
   );
 }
-
-export const PICKER_BUTTONS: { tab: PickerTab; label: string; icon: React.ReactNode }[] = [{ tab: "emoji", label: "Emoji", icon: <Smile size={18} /> }];
-
+export const PICKER_BUTTONS: {
+  tab: PickerTab;
+  label: string;
+  icon: React.ReactNode;
+}[] = [
+  {
+    tab: "emoji",
+    get label() {
+      return uiText("messaging.interface.emoji_61ad897");
+    },
+    icon: <Smile size={18} />,
+  },
+];
 const SEARCH_DELAY_MS = 350;
-
 function GifPicker({ onGif, query: sharedQuery }: { onGif: (g: GifResult, provider: "tenor" | "giphy") => void; query: string }) {
+  useLocaleRender();
   const engine = useEngine();
   const [status, setStatus] = useState<GifStatus | null>(null);
   const [query, setQuery] = useState("");
@@ -242,7 +302,6 @@ function GifPicker({ onGif, query: sharedQuery }: { onGif: (g: GifResult, provid
   const [next, setNext] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [attempt, setAttempt] = useState(0);
-
   useEffect(() => {
     let live = true;
     gifStatus(engine)
@@ -267,12 +326,11 @@ function GifPicker({ onGif, query: sharedQuery }: { onGif: (g: GifResult, provid
         setResults(page.results);
         setNext(page.next);
       })
-      .catch((e: unknown) => live && setError(e instanceof ApiError ? e.message : "Couldn't load GIFs."));
+      .catch((e: unknown) => live && setError(e instanceof ApiError ? e.message : uiText("messaging.interface.couldn_t_load_gifs_d3e4bf3")));
     return () => {
       live = false;
     };
   }, [engine, status, query, attempt]);
-
   const more = () => {
     if (!next) return;
     void gifPage(engine, query, next)
@@ -282,21 +340,26 @@ function GifPicker({ onGif, query: sharedQuery }: { onGif: (g: GifResult, provid
       })
       .catch(() => setNext(null));
   };
-
   if (!sharedQuery.trim() || !status?.configured) return null;
   return (
     <div className="gif-picker">
-      <h3 className="xp-group-heading">GIFs</h3>
+      <h3 className="xp-group-heading">
+        <Localized k="messaging.interface.gifs_c275c26" />
+      </h3>
       {error && (
         <div className="banner danger" role="alert">
           <span className="grow">{error}</span>
           <button className="btn btn-secondary btn-sm" onClick={() => setAttempt((n) => n + 1)}>
-            Retry
+            <Localized k="messaging.interface.retry_942087c" />
           </button>
         </div>
       )}
       {!results && !error && <div className="skeleton" style={{ height: 200 }} aria-busy="true" />}
-      {results && results.length === 0 && <p className="faint xp-empty">No GIFs found{query ? ` for "${query}"` : ""}.</p>}
+      {results && results.length === 0 && (
+        <p className="faint xp-empty">
+          <Localized k="messaging.interface.no_gifs_found_71d6043" slots={[query ? uiText("messaging.interface.for_value0_1dd623d", { value0: query }) : ""]} />
+        </p>
+      )}
       {results && results.length > 0 && (
         <div
           className="gif-grid"
@@ -313,15 +376,15 @@ function GifPicker({ onGif, query: sharedQuery }: { onGif: (g: GifResult, provid
       {status.attribution && <small className="faint xp-attribution">{status.attribution}</small>}
       {next && (
         <button className="btn btn-ghost btn-sm" onClick={more}>
-          More GIFs
+          <Localized k="messaging.interface.more_gifs_be46c39" />
         </button>
       )}
     </div>
   );
 }
-
 /** A preview tile: loaded through the server only when it's about to be seen. */
 function GifTile({ gif, onPick }: { gif: GifResult; onPick: () => void }) {
+  useLocaleRender();
   const engine = useEngine();
   const ref = useRef<HTMLButtonElement>(null);
   const [url, setUrl] = useState<string | null>(null);
@@ -349,7 +412,14 @@ function GifTile({ gif, onPick }: { gif: GifResult; onPick: () => void }) {
     };
   }, [engine, gif.preview.url]);
   return (
-    <button ref={ref} type="button" className="gif-tile" style={{ aspectRatio: `${gif.preview.width} / ${gif.preview.height}` }} onClick={onPick} aria-label={`Send GIF: ${gif.title || "GIF"}`}>
+    <button
+      ref={ref}
+      type="button"
+      className="gif-tile"
+      style={{ aspectRatio: `${gif.preview.width} / ${gif.preview.height}` }}
+      onClick={onPick}
+      aria-label={uiText("messaging.interface.send_gif_value0_ad59d12", { value0: gif.title || "GIF" })}
+    >
       {url ? <MotionImage src={url} alt="" /> : <span className="skeleton" />}
     </button>
   );

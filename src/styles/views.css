@@ -28,7 +28,7 @@
   padding: 16px;
   display: grid;
   gap: 4px;
-  text-align: left;
+  text-align: start;
 }
 .stat strong {
   font-size: 24px;
@@ -60,7 +60,7 @@
   width: 100%;
   padding: 10px 12px;
   border-radius: var(--r-md);
-  text-align: left;
+  text-align: start;
 }
 .list-row:hover {
   background: var(--surface-hover);
@@ -82,7 +82,7 @@
   flex: 1;
 }
 .settings-nav {
-  border-right: 1px solid var(--hairline);
+  border-inline-end: 1px solid var(--hairline);
   background: var(--sidebar);
   padding: 20px 10px;
   display: grid;
@@ -284,7 +284,10 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 16px 16px 12px 20px;
+  padding-block-start: 16px;
+  padding-inline-end: 16px;
+  padding-block-end: 12px;
+  padding-inline-start: 20px;
 }
 .dialog-head h2 {
   margin: 0;
@@ -340,7 +343,7 @@
   width: 100%;
   padding: 8px 10px;
   border-radius: var(--r-md);
-  text-align: left;
+  text-align: start;
 }
 .result:hover {
   background: var(--surface-hover);
@@ -376,7 +379,7 @@
   width: 100%;
   padding: 8px 10px;
   border-radius: var(--r-sm);
-  text-align: left;
+  text-align: start;
   font-size: 13.5px;
 }
 .menu [role="menuitem"]:hover,
@@ -490,7 +493,7 @@
 }
 .notices {
   position: fixed;
-  left: 88px;
+  inset-inline-start: 88px;
   bottom: 18px;
   z-index: 70;
   display: grid;
@@ -501,7 +504,10 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 10px 10px 10px 14px;
+  padding-block-start: 10px;
+  padding-inline-end: 10px;
+  padding-block-end: 10px;
+  padding-inline-start: 14px;
   border-radius: var(--r-md);
   background: var(--tooltip-bg);
   color: var(--tooltip-text);
@@ -534,7 +540,7 @@
 .lightbox .bar {
   position: absolute;
   top: 12px;
-  right: 12px;
+  inset-inline-end: 12px;
   display: flex;
   gap: 8px;
 }
@@ -597,7 +603,10 @@
 }
 .auth-back {
   justify-self: start;
-  margin: -8px 0 -4px -10px;
+  margin-block-start: -8px;
+  margin-inline-end: 0;
+  margin-block-end: -4px;
+  margin-inline-start: -10px;
 }
 .auth-links {
   display: flex;
@@ -637,7 +646,7 @@
   border-radius: var(--r-md);
   background: var(--surface-raised);
   color: var(--text);
-  text-align: left;
+  text-align: start;
 }
 .auth-choice:hover {
   background: var(--surface-hover);
@@ -1037,7 +1046,7 @@ select.input {
   display: flex;
   align-items: flex-start;
   gap: 10px;
-  text-align: left;
+  text-align: start;
   width: 100%;
   border-radius: var(--r-sm);
 }
@@ -1187,7 +1196,7 @@ select.input {
   width: 100%;
   padding: 8px;
   border-radius: var(--r-sm);
-  text-align: left;
+  text-align: start;
   color: var(--text);
 }
 .start-step:hover:not(:disabled) {
@@ -1204,7 +1213,7 @@ select.input {
 /* A text-like button (a channel name that joins and opens). */
 .link-btn {
   padding: 0;
-  text-align: left;
+  text-align: start;
   color: var(--accent-text);
   font: inherit;
 }
@@ -1251,7 +1260,7 @@ select.input {
 }
 .health-warnings {
   margin: 0;
-  padding-left: 18px;
+  padding-inline-start: 18px;
   color: var(--warning);
   font-weight: 600;
 }
@@ -1312,7 +1321,7 @@ select.input {
 }
 .wf-problems {
   margin: 0;
-  padding-left: 18px;
+  padding-inline-start: 18px;
   color: var(--warning);
   font-size: 13px;
 }
@@ -1423,7 +1432,7 @@ select.input {
 .link-main .lang-picker.auth-lang {
   position: absolute;
   top: 16px;
-  right: 16px;
+  inset-inline-end: 16px;
   z-index: 1;
 }
 
@@ -1807,12 +1816,12 @@ select.input {
   position: relative;
   display: grid;
   gap: 10px;
-  padding-left: 38px;
+  padding-inline-start: 38px;
 }
 .discord-steps > li::before {
   content: counter(step);
   position: absolute;
-  left: 0;
+  inset-inline-start: 0;
   top: -2px;
   width: 26px;
   height: 26px;
@@ -2239,7 +2248,7 @@ select.input {
   width: 100%;
   padding: 8px 10px;
   border-radius: var(--r-sm);
-  text-align: left;
+  text-align: start;
   font-size: 13.5px;
 }
 .menu [role="menuitemcheckbox"]:hover,
@@ -2312,7 +2321,7 @@ body:has(> .lightbox) > .menu {
 .viewer-who {
   position: absolute;
   top: 16px;
-  left: 20px;
+  inset-inline-start: 20px;
   display: grid;
   gap: 2px;
   color: var(--on-media);
@@ -2328,7 +2337,7 @@ body:has(> .lightbox) > .menu {
 .viewer-actions {
   position: absolute;
   top: 12px;
-  right: 16px;
+  inset-inline-end: 16px;
   display: flex;
   gap: 10px;
   z-index: 2;
@@ -2366,10 +2375,10 @@ body:has(> .lightbox) > .menu {
   box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08);
 }
 .viewer-arrow.left {
-  left: 20px;
+  inset-inline-start: 20px;
 }
 .viewer-arrow.right {
-  right: 20px;
+  inset-inline-end: 20px;
 }
 .viewer-stage {
   grid-row: 2;
@@ -2449,8 +2458,8 @@ body:has(> .lightbox) > .menu {
 }
 .video-controls {
   position: absolute;
-  left: 0;
-  right: 0;
+  inset-inline-start: 0;
+  inset-inline-end: 0;
   bottom: 0;
   display: flex;
   align-items: center;
@@ -2522,8 +2531,8 @@ body:has(> .lightbox) > .menu {
 }
 .att-video-name {
   position: absolute;
-  left: 12px;
-  right: 12px;
+  inset-inline-start: 12px;
+  inset-inline-end: 12px;
   bottom: 10px;
   display: flex;
   align-items: center;
@@ -2533,7 +2542,7 @@ body:has(> .lightbox) > .menu {
   min-width: 0;
 }
 .att-video-name small {
-  margin-left: auto;
+  margin-inline-start: auto;
   opacity: 0.75;
   font-weight: 500;
 }
@@ -2694,7 +2703,10 @@ body:has(> .lightbox) > .menu {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 6px 6px 6px 14px;
+  padding-block-start: 6px;
+  padding-inline-end: 6px;
+  padding-block-end: 6px;
+  padding-inline-start: 14px;
   border-radius: var(--r-lg);
   background: var(--surface-sunken);
   box-shadow: 0 0 0 1px var(--border);
@@ -2759,16 +2771,19 @@ body:has(> .lightbox) > .menu {
 }
 .settings-window .settings-nav {
   padding: 32px 14px 24px;
-  border-right: 1px solid var(--hairline);
+  border-inline-end: 1px solid var(--hairline);
   background: var(--surface-sunken);
 }
 .settings-window .settings-page {
-  padding: 40px 56px 56px 48px;
+  padding-block-start: 40px;
+  padding-inline-end: 56px;
+  padding-block-end: 56px;
+  padding-inline-start: 48px;
 }
 .settings-window-close {
   position: absolute;
   top: 18px;
-  right: 18px;
+  inset-inline-end: 18px;
   z-index: 2;
   width: 40px;
   height: 40px;
@@ -2784,9 +2799,12 @@ body:has(> .lightbox) > .menu {
     grid-template-columns: minmax(0, 1fr);
   }
   .settings-window .settings-nav {
-    border-right: 0;
+    border-inline-end: 0;
     border-bottom: 1px solid var(--hairline);
-    padding: 12px 60px 12px 12px;
+    padding-block-start: 12px;
+    padding-inline-end: 60px;
+    padding-block-end: 12px;
+    padding-inline-start: 12px;
   }
   .settings-window .settings-page {
     padding: 24px 24px 40px;
@@ -2908,7 +2926,7 @@ body:has(> .lightbox) > .menu {
     padding: 8px 8px calc(8px + env(safe-area-inset-bottom, 0px));
   }
   .viewer-who {
-    left: 12px;
+    inset-inline-start: 12px;
     max-width: calc(100% - 200px);
   }
   .viewer-who strong {
@@ -2917,7 +2935,7 @@ body:has(> .lightbox) > .menu {
     text-overflow: ellipsis;
   }
   .viewer-actions {
-    right: 8px;
+    inset-inline-end: 8px;
     gap: 6px;
   }
   .media-viewer .viewer-group .icon-btn {
@@ -2934,10 +2952,10 @@ body:has(> .lightbox) > .menu {
     transform: translateY(-50%);
   }
   .viewer-arrow.left {
-    left: 10px;
+    inset-inline-start: 10px;
   }
   .viewer-arrow.right {
-    right: 10px;
+    inset-inline-end: 10px;
   }
   .viewer-thumb {
     width: 38px;
@@ -2960,4 +2978,42 @@ body:has(> .lightbox) > .menu {
   .viewer-zoom {
     gap: 0;
   }
+}
+
+/* A dismissible public incident notice; no notice is shown without an active relevant incident. */
+.meldiq-service-notice {
+  position: fixed;
+  z-index: 2000;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: calc(100% - 28px);
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: var(--shadow-md);
+  font-size: 12px;
+  line-height: 1.5;
+}
+.meldiq-service-notice a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.meldiq-service-notice button {
+  flex-shrink: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 21px;
+  line-height: 1;
+  padding: 3px;
+  cursor: pointer;
 }

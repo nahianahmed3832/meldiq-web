@@ -1,3 +1,5 @@
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
 import type { CSSProperties } from "react";
 import type { ProfileStyle } from "../../api/profileSchemas";
 import type { CollectibleLook } from "../../api/collectibleSchemas";
@@ -29,6 +31,7 @@ export function collectibleCardVars(style: ProfileStyle | null | undefined, anim
   };
 }
 export function CollectibleBanner({ style }: { style: ProfileStyle | null | undefined }) {
+  useLocaleRender();
   const item = collectibleOf(style, "banner");
   const reduced = useReducedMotion();
   if (!item) return null;
@@ -39,10 +42,11 @@ export function CollectibleBanner({ style }: { style: ProfileStyle | null | unde
   );
 }
 export function CollectibleBadge({ style }: { style: ProfileStyle | null | undefined }) {
+  useLocaleRender();
   const item = collectibleOf(style, "badge");
   if (!item) return null;
   return (
-    <span className="collectible-badge" title={`Collectible: ${item.name}`} style={{ color: item.recipe.colors[0] }}>
+    <span className="collectible-badge" title={uiText("workspace.interface.collectible_value0_b814d7f", { value0: item.name })} style={{ color: item.recipe.colors[0] }}>
       <span aria-hidden="true">✦</span> {item.name}
     </span>
   );

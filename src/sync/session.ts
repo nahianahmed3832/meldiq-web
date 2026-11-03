@@ -1,3 +1,4 @@
+import { text as uiText } from "../i18n";
 import { ApiClient, ApiError, type Credentials } from "../api/client";
 import { type SessionGrant, zPairingPoll, zPairingStart, zSession } from "../api/schemas";
 import { canonical } from "../crypto/canonical";
@@ -7,16 +8,12 @@ import { deriveReminderKey } from "../crypto/reminderKeys";
 import { type DeviceKeys, generateDeviceKeys, generateTransferKeys, openSealedSeed, type TransferKeys } from "../crypto/identity";
 import type { DeviceRecord } from "../model/types";
 import { z } from "zod";
-
 const zChallenge = z.object({ nonce: z.string() });
-
 async function challenge(api: ApiClient): Promise<string> {
   return (await api.json("POST", "/v1/auth/challenge", zChallenge, { auth: false, body: {} })).nonce;
 }
-
 /** Why this browser can't sign in any more. */
 export type RevokedReason = "device_revoked" | "account_disabled" | "unknown_device";
-
 /**
  * The session token, held in memory only: never written to storage. Each page load, and each time the server refuses the
  * token, this browser signs a fresh challenge with its non-extractable device key (android SessionRepository.reauth).
@@ -25,7 +22,6 @@ export class SessionManager implements Credentials {
   private current: string | null = null;
   private inflight: Promise<boolean> | null = null;
   private readonly setup: ApiClient;
-
   constructor(
     base: string,
     readonly device: DeviceRecord,
@@ -33,25 +29,20 @@ export class SessionManager implements Credentials {
   ) {
     this.setup = new ApiClient(base);
   }
-
   token(): string | null {
     return this.current;
   }
-
   /** Adopts the token of a session the server just granted (linking). */
   adopt(grant: SessionGrant): void {
     this.current = grant.sessionToken;
   }
-
   forget(): void {
     this.current = null;
   }
-
   reauthenticate(): Promise<boolean> {
     this.inflight ??= this.login().finally(() => (this.inflight = null));
     return this.inflight;
   }
-
   private async login(): Promise<boolean> {
     try {
       const nonce = await challenge(this.setup);
@@ -69,7 +60,6 @@ export class SessionManager implements Credentials {
     }
   }
 }
-
 /** A link request this browser is waiting on: the phone approves its code in Settings › Devices. */
 export interface PendingLink {
   pairingId: string;
@@ -79,7 +69,6 @@ export interface PendingLink {
   keys: DeviceKeys;
   transfer: TransferKeys;
 }
-
 export async function startLink(base: string, deviceName: string): Promise<PendingLink> {
   const api = new ApiClient(base);
   const keys = await generateDeviceKeys();
@@ -90,14 +79,34 @@ export async function startLink(base: string, deviceName: string): Promise<Pendi
   });
   return { pairingId: r.pairingId, code: r.code, expiresAt: r.expiresAt, deviceName, keys, transfer };
 }
-
-export type LinkPoll = { status: "pending" } | { status: "expired" } | { status: "linked"; device: DeviceRecord; grant: SessionGrant };
-
+export type LinkPoll =
+  | {
+      status: "pending";
+    }
+  | {
+      status: "expired";
+    }
+  | {
+      status: "linked";
+      device: DeviceRecord;
+      grant: SessionGrant;
+    };
 export class LinkError extends Error {}
-
 /** The phone's approval, opened and checked: the account's identity seed (the caller wipes it) and its public key. */
-export type LinkApproval = { status: "pending" } | { status: "expired" } | { status: "approved"; seed: Uint8Array; identityKey: string; username: string; certificate: string };
-
+export type LinkApproval =
+  | {
+      status: "pending";
+    }
+  | {
+      status: "expired";
+    }
+  | {
+      status: "approved";
+      seed: Uint8Array;
+      identityKey: string;
+      username: string;
+      certificate: string;
+    };
 /**
  * Checks the request once. When the phone has approved it: opens the identity seed and checks it belongs to the identity
  * key the phone named and that the certificate binds this browser's keys.
@@ -107,19 +116,18 @@ export async function pollLinkApproval(base: string, link: PendingLink): Promise
   const r = await api.json("GET", `/v1/pairing/${encodeURIComponent(link.pairingId)}`, zPairingPoll, { auth: false });
   if (r.status !== "approved") return r;
   const seed = await openSealedSeed(link.transfer.pair, r.sealedEnc, r.sealedIdentity, link.keys.signingPublic).catch(() => {
-    throw new LinkError("The approval couldn't be opened. Start again.");
+    throw new LinkError(uiText("workspace.interface.the_approval_couldn_t_be_opened_start_again_196f910"));
   });
   try {
-    if (!(await seedMatchesPublicKey(seed, r.identityKey))) throw new LinkError("The account's identity didn't match. Linking was stopped.");
+    if (!(await seedMatchesPublicKey(seed, r.identityKey))) throw new LinkError(uiText("workspace.interface.the_account_s_identity_didn_t_match_linking_was_stopped_d21c793"));
     const cert = canonical.deviceCert(r.identityKey, link.keys.signingPublic, link.keys.encryptionPublic);
-    if (!(await verify(r.identityKey, cert, r.certificate))) throw new LinkError("The approval wasn't signed for this browser. Linking was stopped.");
+    if (!(await verify(r.identityKey, cert, r.certificate))) throw new LinkError(uiText("workspace.interface.the_approval_wasn_t_signed_for_this_browser_linking_was_stop_b098b2f"));
   } catch (e) {
     seed.fill(0);
     throw e;
   }
   return { status: "approved", seed, identityKey: r.identityKey, username: r.username, certificate: r.certificate };
 }
-
 /**
  * Linking without an Orbit 2.0 account (v1): once the phone approved, registers this browser as a device of the phone's
  * account, derives the history keys and drops the seed.
@@ -157,15 +165,23 @@ export async function pollLink(base: string, link: PendingLink): Promise<LinkPol
     r.seed.fill(0);
   }
 }
-
 /** "Chrome on macOS": how this browser appears in the account's device list. */
 export function browserDeviceName(ua: string = typeof navigator === "undefined" ? "" : navigator.userAgent): string {
-  return `Meldiq Web · ${browserLabel(ua)}`;
+  return uiText("workspace.interface.meldiq_web_value0_a95a971", { value0: browserLabel(ua) });
 }
-
 /** "Chrome on macOS": this browser and its system, as the person would name it (a passkey's name, for one). */
 export function browserLabel(ua: string = typeof navigator === "undefined" ? "" : navigator.userAgent): string {
-  const browser = /Edg\//.test(ua) ? "Edge" : /Firefox\//.test(ua) ? "Firefox" : /Chrome\//.test(ua) ? "Chrome" : /Safari\//.test(ua) ? "Safari" : "Browser";
-  const os = /Mac OS X|Macintosh/.test(ua) ? "macOS" : /Windows/.test(ua) ? "Windows" : /Android/.test(ua) ? "Android" : /iPhone|iPad/.test(ua) ? "iOS" : /Linux/.test(ua) ? "Linux" : "the web";
-  return `${browser} on ${os}`;
+  const browser = /Edg\//.test(ua) ? "Edge" : /Firefox\//.test(ua) ? "Firefox" : /Chrome\//.test(ua) ? "Chrome" : /Safari\//.test(ua) ? "Safari" : uiText("workspace.interface.browser_d31de1a");
+  const os = /Mac OS X|Macintosh/.test(ua)
+    ? "macOS"
+    : /Windows/.test(ua)
+      ? "Windows"
+      : /Android/.test(ua)
+        ? "Android"
+        : /iPhone|iPad/.test(ua)
+          ? "iOS"
+          : /Linux/.test(ua)
+            ? "Linux"
+            : uiText("workspace.interface.the_web_94e3798");
+  return uiText("workspace.interface.value0_on_value1_7ab3f67", { value0: browser, value1: os });
 }

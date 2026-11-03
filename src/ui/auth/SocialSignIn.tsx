@@ -1,3 +1,6 @@
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
+import { Localized } from "../../i18n/Localized";
 import { ArrowLeft } from "lucide-react";
 import { AuthHeading } from "./AuthFrame";
 import { useT } from "../../i18n";
@@ -6,7 +9,6 @@ import { ApiClient, ApiError } from "../../api/client";
 import type { AccountSessionGrant } from "../../api/accountSchemas";
 import { completeSocial, socialError, socialProviderName, startSocial, zSocialConfig, type SocialProvider, type SocialReceipt } from "../../auth/socialAuth";
 import { browserDeviceName } from "../../sync/session";
-
 export function SocialSignIn({
   api,
   mode = "login",
@@ -26,8 +28,13 @@ export function SocialSignIn({
   totpCode?: string;
   onSignedIn?: (grant: AccountSessionGrant) => void | Promise<void>;
   onLinked?: () => void;
-  deviceProof?: () => Promise<{ deviceId: string; nonce: string; signature: string }>;
+  deviceProof?: () => Promise<{
+    deviceId: string;
+    nonce: string;
+    signature: string;
+  }>;
 }) {
+  useLocaleRender();
   const [providers, setProviders] = useState<SocialProvider[]>([]);
   const [busy, setBusy] = useState<SocialProvider | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -99,7 +106,7 @@ export function SocialSignIn({
   const begin = async (provider: SocialProvider) => {
     // Open synchronously so Safari can allow the user-initiated popup.
     const popup = window.open("about:blank", "_blank", "popup,width=500,height=700");
-    if (!popup) return setError("Allow pop-ups for Meldiq, then try again.");
+    if (!popup) return setError(uiText("auth.interface.allow_pop_ups_for_meldiq_then_try_again_2e01f8b"));
     abort.current?.abort();
     const controller = new AbortController();
     abort.current = controller;
@@ -131,7 +138,7 @@ export function SocialSignIn({
   };
   if (!providers.length) return null;
   return (
-    <div style={{ display: "grid", gap: 10 }} aria-label="Connected sign-in methods" aria-busy={!!busy}>
+    <div style={{ display: "grid", gap: 10 }} aria-label={uiText("auth.interface.connected_sign_in_methods_feb3314")} aria-busy={!!busy}>
       {activeStep && (
         <>
           {pending && (
@@ -151,16 +158,23 @@ export function SocialSignIn({
             {(provider === "google" || provider === "discord") && (
               <img src={`/auth-provider-icons/${provider}.svg`} width={20} height={20} alt="" aria-hidden="true" style={{ flexShrink: 0, objectFit: "contain" }} />
             )}
-            <span>{busy === provider ? "Connecting…" : `${mode === "link" ? "Connect" : "Continue with"} ${socialProviderName(provider)}`}</span>
+            <span>
+              {busy === provider
+                ? t("calls.connecting")
+                : uiText("auth.interface.value0_value1_54ef3bb", {
+                    value0: mode === "link" ? uiText("files.interface.connect_1a2303e") : uiText("auth.interface.continue_with_6433fa5"),
+                    value1: socialProviderName(provider),
+                  })}
+            </span>
           </button>
         ))}
       {busy && !pending && (
         <div style={{ display: "grid", gap: 6 }}>
           <p className="muted" role="status">
-            Complete sign-in in the provider window, then return here.
+            <Localized k="auth.interface.complete_sign_in_in_the_provider_window_then_return_here_c3ee448" />
           </p>
           <button className="btn btn-ghost" type="button" onClick={reset}>
-            Cancel sign-in
+            <Localized k="auth.interface.cancel_sign_in_9effa0b" />
           </button>
         </div>
       )}
@@ -181,7 +195,7 @@ export function SocialSignIn({
         >
           {needsInvite && (
             <label>
-              Invitation code
+              {t("auth.signin_invite_label")}
               <input className="input" autoFocus={dedicated} value={invite} onChange={(e) => setInvite(e.target.value)} />
             </label>
           )}

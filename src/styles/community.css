@@ -18,12 +18,15 @@
   opacity: 0.6;
 }
 .side-section-row .row-more + .row-more {
-  margin-left: -2px;
+  margin-inline-start: -2px;
 }
 .voice-channel-people {
   display: grid;
   gap: 2px;
-  padding: 0 8px 4px 40px;
+  padding-block-start: 0;
+  padding-inline-end: 8px;
+  padding-block-end: 4px;
+  padding-inline-start: 40px;
 }
 .voice-person {
   display: flex;
@@ -71,8 +74,8 @@
   display: grid;
   align-content: start;
   gap: 1px;
-  border-right: 1px solid var(--border);
-  padding-right: var(--s-2);
+  border-inline-end: 1px solid var(--border);
+  padding-inline-end: var(--s-2);
   max-height: 420px;
   overflow-y: auto;
 }
@@ -123,7 +126,7 @@
     grid-template-columns: 1fr;
   }
   .perm-subjects {
-    border-right: 0;
+    border-inline-end: 0;
     border-bottom: 1px solid var(--border);
     max-height: 160px;
   }
@@ -138,7 +141,7 @@
 .report-message {
   margin: 0;
   padding: 8px 10px;
-  border-left: 3px solid var(--danger);
+  border-inline-start: 3px solid var(--danger);
   background: var(--surface-sunken);
   border-radius: var(--r-sm);
   white-space: pre-wrap;
@@ -206,7 +209,7 @@ button.chip[aria-pressed="true"] {
   font: inherit;
   font-weight: 700;
   color: var(--name, inherit);
-  text-align: left;
+  text-align: start;
   padding: 0;
   cursor: pointer;
 }
@@ -292,7 +295,7 @@ button.chip[aria-pressed="true"] {
 }
 .forum-post {
   width: 100%;
-  text-align: left;
+  text-align: start;
   display: grid;
   gap: 6px;
   padding: 12px 14px;
@@ -329,7 +332,7 @@ button.chip[aria-pressed="true"] {
   flex-wrap: wrap;
 }
 .forum-top-reaction {
-  margin-left: auto;
+  margin-inline-start: auto;
   padding: 1px 8px;
   border-radius: var(--r-pill);
   background: var(--surface-sunken);
@@ -412,7 +415,7 @@ img.custom-sticker {
   display: inline-flex;
   align-items: center;
   gap: 3px;
-  margin-left: auto;
+  margin-inline-start: auto;
   padding: 0 5px;
   border-radius: var(--r-pill);
   font-size: 10.5px;
@@ -540,7 +543,7 @@ img.custom-sticker {
   flex: 1;
   padding: 6px 10px;
   border-radius: var(--r-sm);
-  border-left: 3px solid var(--c-accent, var(--accent));
+  border-inline-start: 3px solid var(--c-accent, var(--accent));
   background: var(--c-accent-soft, var(--surface-selected));
   color: var(--c-accent-text, var(--accent-text));
   font-weight: 650;
@@ -645,7 +648,7 @@ img.custom-sticker {
 /* A community with a call on, on the rail: a small speaker at its corner (Rail.tsx). */
 .rail-live {
   position: absolute;
-  right: -3px;
+  inset-inline-end: -3px;
   bottom: -3px;
   display: grid;
   place-items: center;
@@ -796,8 +799,8 @@ img.custom-sticker {
 .spark-goal.compact .spark-goal-bar {
   position: absolute;
   bottom: 0;
-  left: 0;
-  right: 0;
+  inset-inline-start: 0;
+  inset-inline-end: 0;
   height: 2px;
   border-radius: 0;
 }

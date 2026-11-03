@@ -1,7 +1,7 @@
+import { text as uiText } from "../i18n";
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import type { LocalStore } from "../store/db";
 import { copy, utf8, fromUtf8, randomBytes } from "../crypto/bytes";
-
 const WRAPPING_KEY = "supabase:wrapping-key:v1";
 const entry = (key: string) => `supabase:sealed:${key}`;
 interface SealedValue {
@@ -9,12 +9,10 @@ interface SealedValue {
   iv: Uint8Array;
   ciphertext: Uint8Array;
 }
-
 /** Supabase's storage adapter uses the existing device IndexedDB, never plaintext localStorage. */
 export class EncryptedSupabaseStorage {
   private wrappingKey: Promise<CryptoKey> | undefined;
   constructor(private readonly store: LocalStore) {}
-
   private key(): Promise<CryptoKey> {
     this.wrappingKey ??= this.loadOrCreateKey().catch((error: unknown) => {
       this.wrappingKey = undefined;
@@ -54,19 +52,17 @@ export class EncryptedSupabaseStorage {
     await this.store.legacy.delete("kv", entry(key));
   }
 }
-
 export interface SupabasePublicConfig {
   url: string;
   publishableKey: string;
   projectRef: string;
 }
-
 /** Construct only after staged account migration is enabled. Existing production auth stays on its released path. */
 export function createMeldiqSupabase(config: SupabasePublicConfig, store: LocalStore, options: { storageKey?: string; autoRefreshToken?: boolean } = {}): SupabaseClient {
   const url = new URL(config.url);
   if (url.protocol !== "https:" || url.hostname !== `${config.projectRef}.supabase.co` || url.pathname !== "/" || url.username || url.password || url.search || url.hash)
-    throw new Error("Invalid Supabase project origin");
-  if (!/^sb_publishable_[A-Za-z0-9_-]+$/.test(config.publishableKey)) throw new Error("Only a Supabase publishable key belongs in the client");
+    throw new Error(uiText("auth.interface.invalid_supabase_project_origin_7e80ad1"));
+  if (!/^sb_publishable_[A-Za-z0-9_-]+$/.test(config.publishableKey)) throw new Error(uiText("auth.interface.only_a_supabase_publishable_key_belongs_in_the_client_eb9a687"));
   return createClient(url.origin, config.publishableKey, {
     auth: {
       storage: new EncryptedSupabaseStorage(store),

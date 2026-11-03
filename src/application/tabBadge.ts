@@ -1,3 +1,4 @@
+import { formatNumber } from "../i18n/format";
 import type { AppState } from "../state/store";
 import { isArchived, isMuted, isPeople, isRequest, unreadOf } from "../ui/selectors";
 
@@ -32,13 +33,13 @@ export function tabSignal(s: AppState): TabSignal {
 export const TAB_TITLE = "Meldiq";
 
 export function tabTitle(signal: TabSignal, base = TAB_TITLE): string {
-  if (signal.count > 0) return `(${signal.count > 99 ? "99+" : signal.count}) ${base}`;
+  if (signal.count > 0) return `(${signal.count > 99 ? `${formatNumber(99)}+` : formatNumber(signal.count)}) ${base}`;
   return signal.activity ? `• ${base}` : base;
 }
 
 /** The favicon badge's text: a number up to 9, then "9+"; a dot for activity alone; nothing otherwise. */
 export function badgeText(signal: TabSignal): string | null {
-  if (signal.count > 0) return signal.count > 9 ? "9+" : String(signal.count);
+  if (signal.count > 0) return signal.count > 9 ? `${formatNumber(9)}+` : formatNumber(signal.count);
   return signal.activity ? "" : null;
 }
 
@@ -97,6 +98,7 @@ async function paintOne(link: HTMLLinkElement, text: string | null): Promise<voi
       g.fillStyle = "#2a0517";
       g.font = `800 ${text.length > 1 ? 22 : 28}px system-ui, sans-serif`;
       g.textAlign = "center";
+      g.direction = "ltr";
       g.textBaseline = "middle";
       g.fillText(text, cx, cy + 1);
     }

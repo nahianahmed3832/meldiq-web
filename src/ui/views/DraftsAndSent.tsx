@@ -1,3 +1,6 @@
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
+import { Localized } from "../../i18n/Localized";
 import { PenLine, Send } from "lucide-react";
 import { useEffect, useState } from "react";
 import { shallowEqual, useEngine, useOrbit } from "../../application/orbit";
@@ -5,14 +8,13 @@ import { navigate } from "../../application/router";
 import type { StoredMessage } from "../../model/types";
 import { conversationTitle, shortWhen } from "../format";
 import { inWorkspace } from "../selectors";
-
 const SENT_SHOWN = 5;
-
 /**
  * Home › Drafts & sent (android WorkspaceHomeRules.drafts, MessageDao.observeRecentSent): conversations with an unsent
  * draft, and your latest sent messages, to pick up where you left off. Both come from this browser only.
  */
 export function DraftsAndSent({ orgId }: { orgId: string | null }) {
+  useLocaleRender();
   const engine = useEngine();
   const drafts = useOrbit(
     (s) =>
@@ -44,8 +46,10 @@ export function DraftsAndSent({ orgId }: { orgId: string | null }) {
     return c && me ? conversationTitle(c, me.userId, users) : "";
   };
   return (
-    <div className="card list-card" aria-label="Drafts and sent">
-      <h2>Drafts &amp; sent</h2>
+    <div className="card list-card" aria-label={uiText("workspace.interface.drafts_and_sent_1f085c1")}>
+      <h2>
+        <Localized k="workspace.interface.drafts_sent_96cbaec" />
+      </h2>
       {drafts.map((d) => (
         <button key={`d:${d.id}`} className="list-row" onClick={() => open(d.id, d.type)}>
           <span className="empty-orb" style={{ width: 36, height: 36 }}>
@@ -53,9 +57,11 @@ export function DraftsAndSent({ orgId }: { orgId: string | null }) {
           </span>
           <span className="lines">
             <span className="ellipsis" style={{ fontWeight: 700 }}>
-              {d.type === "CHANNEL" ? `#${d.title}` : d.title}
+              {d.type === "CHANNEL" ? uiText("messaging.interface.value0_dbac6f0", { value0: d.title }) : d.title}
             </span>
-            <small className="ellipsis">Draft: {d.draft}</small>
+            <small className="ellipsis">
+              <Localized k="workspace.interface.draft_b255caa" slots={[d.draft]} />
+            </small>
           </span>
         </button>
       ))}
@@ -68,9 +74,11 @@ export function DraftsAndSent({ orgId }: { orgId: string | null }) {
             </span>
             <span className="lines">
               <span className="ellipsis" style={{ fontWeight: 700 }}>
-                {c.type === "CHANNEL" ? `#${title(c.id)}` : title(c.id)}
+                {c.type === "CHANNEL" ? uiText("messaging.interface.value0_dbac6f0", { value0: title(c.id) }) : title(c.id)}
               </span>
-              <small className="ellipsis">You: {m.text}</small>
+              <small className="ellipsis">
+                <Localized k="workspace.interface.you_7c9047c" slots={[m.text]} />
+              </small>
             </span>
             <span className="faint" style={{ fontSize: 12 }}>
               {shortWhen(m.sortTs)}

@@ -1,3 +1,6 @@
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
+import { Localized } from "../../i18n/Localized";
 import { Check } from "lucide-react";
 import { useState } from "react";
 import { ApiError } from "../../api/client";
@@ -5,18 +8,18 @@ import { useEngine } from "../../application/orbit";
 import { answerOnboarding, onboarding } from "../../sync/guide";
 import { pickRolesAnswer, togglePick } from "../../sync/lobbyDraft";
 import { useLobby } from "./lobbyContext";
-
 /**
  * Pick your roles: the community's onboarding questions whose answers give roles. Saving sends every onboarding answer
  * (the server replaces them all), so answers to the other questions are kept as they were.
  */
 export function PickRolesCard() {
+  useLocaleRender();
   const { view } = useLobby();
   // A fresh form whenever the saved answers change (after saving, or on another device).
   return <PickRolesForm key={view.pickRoles.answered.join(",")} />;
 }
-
 function PickRolesForm() {
+  useLocaleRender();
   const engine = useEngine();
   const { view, orgId, reload } = useLobby();
   const { prompts, answered } = view.pickRoles;
@@ -25,22 +28,20 @@ function PickRolesForm() {
   const [error, setError] = useState<string | null>(null);
   const optionIds = prompts.flatMap((p) => p.options.map((o) => o.id));
   const dirty = optionIds.some((id) => chosen.has(id) !== answered.includes(id));
-
   const save = async () => {
     setBusy(true);
     setError(null);
     try {
       const before = await onboarding(engine, orgId);
       await answerOnboarding(engine, orgId, pickRolesAnswer(before.answered ?? [], optionIds, chosen));
-      engine.notice("info", "Your roles are updated.");
+      engine.notice("info", uiText("organization.interface.your_roles_are_updated_1f9e463"));
       reload();
     } catch (e) {
-      setError(e instanceof ApiError ? e.message : "Couldn't save your roles. Try again.");
+      setError(e instanceof ApiError ? e.message : uiText("organization.interface.couldn_t_save_your_roles_try_again_08cbfb8"));
     } finally {
       setBusy(false);
     }
   };
-
   return (
     <div className="lobby-pick">
       {prompts.map((p) => (
@@ -67,7 +68,7 @@ function PickRolesForm() {
       )}
       {dirty && (
         <button className="btn btn-primary btn-sm lobby-primary" disabled={busy} onClick={() => void save()}>
-          Save my roles
+          <Localized k="organization.interface.save_my_roles_cbb72c9" />
         </button>
       )}
     </div>

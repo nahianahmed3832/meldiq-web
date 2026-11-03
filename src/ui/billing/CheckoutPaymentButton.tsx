@@ -1,3 +1,4 @@
+import { Localized } from "../../i18n/Localized";
 import { CardSubscriptionCheckout } from "./CardSubscriptions";
 import { EmbeddedCardFields } from "./EmbeddedCardFields";
 import { useEffect, type ComponentProps } from "react";
@@ -6,7 +7,6 @@ import type { PayPalNamespace } from "@paypal/paypal-js";
 import { PayPalButton } from "./PayPalButton";
 import { PayPalCardButton, type CardAvailability } from "./PayPalCardButton";
 import type { PaymentMethod } from "./PaymentMethods";
-
 export function CheckoutPaymentButton({
   method,
   cardSdk,
@@ -14,7 +14,13 @@ export function CheckoutPaymentButton({
   cardProduct = "plus",
   cardOrgId,
   ...props
-}: ComponentProps<typeof PayPalButton> & { method: PaymentMethod; cardSdk: PayPalNamespace | null; cardStatus: CardAvailability; cardProduct?: "plus" | "bots_plus"; cardOrgId?: string }) {
+}: ComponentProps<typeof PayPalButton> & {
+  method: PaymentMethod;
+  cardSdk: PayPalNamespace | null;
+  cardStatus: CardAvailability;
+  cardProduct?: "plus" | "bots_plus";
+  cardOrgId?: string;
+}) {
   // Keep a background update from interrupting authorization in the provider's popup.
   useEffect(() => holdUpdates(), []);
   if (method === "paypal") return <PayPalButton {...props} />;
@@ -23,12 +29,14 @@ export function CheckoutPaymentButton({
   if (!cardSdk)
     return cardStatus === "loading" ? (
       <p className="muted" role="status">
-        Checking secure card checkout…
+        <Localized k="billing.interface.checking_secure_card_checkout_9249ca2" />
       </p>
     ) : null;
   return (
     <>
-      <p className="checkout-hint">To pay as a guest, turn off “Save info &amp; create your PayPal account” if PayPal shows that option.</p>
+      <p className="checkout-hint">
+        <Localized k="billing.interface.to_pay_as_a_guest_turn_off_save_info_create_your_paypal_account_i_f2ecc2a" />
+      </p>
       <PayPalCardButton sdk={cardSdk} {...props} />
     </>
   );

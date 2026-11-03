@@ -1,11 +1,18 @@
+import { useLanguage } from "../../i18n";
+import { updateHostedFieldLanguage } from "./localizedHostedFields";
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
+import { Localized } from "../../i18n/Localized";
 import { CardBillingAddress } from "./CardBillingAddress";
 import { cardFieldTheme } from "./cardFieldTheme";
 import { useEffect, useRef, useState, type ComponentProps } from "react";
 import { loadCoreSdkScript, type CardFieldsOneTimePaymentSession } from "@paypal/paypal-js/sdk-v6";
 import type { PayPalButton } from "./PayPalButton";
-
 /** All sensitive inputs are PayPal-hosted components. Meldiq only submits its server-owned order reference. */
 export function EmbeddedCardFields({ config, create, approve, cancel, fail }: ComponentProps<typeof PayPalButton>) {
+  useLocaleRender();
+  const language = useLanguage();
+  const hostedFields = useRef<HTMLElement[]>([]);
   const [country, setCountry] = useState("");
   const [postal, setPostal] = useState("");
   const name = useRef<HTMLDivElement>(null);
@@ -38,17 +45,19 @@ export function EmbeddedCardFields({ config, create, approve, cancel, fail }: Co
       const fields = instance.createCardFieldsOneTimePaymentSession();
       const style = cardFieldTheme();
       const inputs = [
-        fields.createCardFieldsComponent({ style, type: "name", ariaLabel: "Name on card", placeholder: "Name on card" }),
-        fields.createCardFieldsComponent({ style, type: "number", ariaLabel: "Card number", placeholder: "Card number" }),
-        fields.createCardFieldsComponent({ style, type: "expiry", ariaLabel: "Expiration date", placeholder: "MM/YY" }),
-        fields.createCardFieldsComponent({ style, type: "cvv", ariaLabel: "Security code", placeholder: "CVV" }),
+        fields.createCardFieldsComponent({ style, type: "name", ariaLabel: uiText("billing.interface.name_on_card_18bf091"), placeholder: uiText("billing.interface.name_on_card_18bf091") }),
+        fields.createCardFieldsComponent({ style, type: "number", ariaLabel: uiText("billing.interface.card_number_816fca1"), placeholder: uiText("billing.interface.card_number_816fca1") }),
+        fields.createCardFieldsComponent({ style, type: "expiry", ariaLabel: uiText("billing.interface.expiration_date_8ccc3fd"), placeholder: "MM/YY" }),
+        fields.createCardFieldsComponent({ style, type: "cvv", ariaLabel: uiText("billing.interface.security_code_1259260"), placeholder: "CVV" }),
       ];
       const containers = [name.current, number.current, expiry.current, cvv.current];
       inputs.forEach((input, i) => containers[i]?.replaceChildren(input));
+      hostedFields.current = inputs;
       session.current = fields;
       cleanup = () => {
         inputs.forEach((input) => input.destroy());
         fields.destroy();
+        hostedFields.current = [];
         session.current = null;
       };
       setStatus("ready");
@@ -56,7 +65,7 @@ export function EmbeddedCardFields({ config, create, approve, cancel, fail }: Co
     void initialize().catch(() => {
       if (!disposed) {
         setStatus("unavailable");
-        setError("Secure card fields could not load. Check your connection or content blocker, then retry.");
+        setError(uiText("billing.interface.secure_card_fields_could_not_load_check_your_connection_or_conten_444b78d"));
       }
     });
     return () => {
@@ -67,6 +76,9 @@ export function EmbeddedCardFields({ config, create, approve, cancel, fail }: Co
       cleanup();
     };
   }, [config.clientId, config.environment, attempt]);
+  useEffect(() => {
+    updateHostedFieldLanguage(hostedFields.current, language);
+  }, [language, status]);
   const pay = async () => {
     if (submitting.current || !session.current || status !== "ready" || !country) return;
     const current = session.current;
@@ -77,7 +89,7 @@ export function EmbeddedCardFields({ config, create, approve, cancel, fail }: Co
     try {
       const purchase = await create();
       if (generation.current !== epoch) return;
-      if (!purchase.providerRef || purchase.interval !== "one_time") throw new Error("Card checkout requires an owned one-time order.");
+      if (!purchase.providerRef || purchase.interval !== "one_time") throw new Error(uiText("billing.interface.card_checkout_requires_an_owned_one_time_order_6b77fa0"));
       const result = await current.submit(purchase.providerRef, { billingAddress: { countryCode: country, ...(postal.trim() ? { postalCode: postal.trim() } : {}) } });
       if (generation.current !== epoch) return;
       if (result.state === "canceled") {
@@ -85,51 +97,61 @@ export function EmbeddedCardFields({ config, create, approve, cancel, fail }: Co
         return;
       }
       if (result.state !== "succeeded") {
-        setError("Your card could not be authorized. Check your details or try another payment method.");
+        setError(uiText("billing.interface.your_card_could_not_be_authorized_check_your_details_or_try_anoth_9a7ef12"));
         return;
       }
       // The SDK's returned IDs, amounts and success claims never identify the purchase or grant an entitlement.
       await approve();
     } catch {
-      if (generation.current === epoch) fail("The card payment could not be verified. Check purchase status before retrying.");
+      if (generation.current === epoch) fail(uiText("billing.interface.the_card_payment_could_not_be_verified_check_purchase_status_before__8efb5e0"));
     } finally {
       submitting.current = false;
       if (generation.current === epoch) setBusy(false);
     }
   };
   return (
-    <section className="checkout-card-fields" aria-label="Secure debit or credit card payment">
-      {status === "loading" && <p role="status">Loading secure card fields…</p>}
-      {status === "unavailable" && <p role="status">Embedded cards are unavailable for this purchase. You can explicitly choose PayPal Wallet or check again.</p>}
+    <section className="checkout-card-fields" aria-label={uiText("billing.interface.secure_debit_or_credit_card_payment_932b7c3")}>
+      {status === "loading" && (
+        <p role="status">
+          <Localized k="billing.interface.loading_secure_card_fields_378a7cd" />
+        </p>
+      )}
+      {status === "unavailable" && (
+        <p role="status">
+          <Localized k="billing.interface.embedded_cards_are_unavailable_for_this_purchase_you_can_explicit_d5e807f" />
+        </p>
+      )}
       <div hidden={status !== "ready"}>
         <label>
-          Name on card
+          <Localized k="billing.interface.name_on_card_18bf091" />
           <div className="checkout-hosted-field" ref={name} />
         </label>
         <label>
-          Card number
+          <Localized k="billing.interface.card_number_816fca1" />
           <div className="checkout-hosted-field" ref={number} />
         </label>
         <div className="checkout-card-field-row">
           <label>
-            Expiration date
+            <Localized k="billing.interface.expiration_date_8ccc3fd" />
             <div className="checkout-hosted-field" ref={expiry} />
           </label>
           <label>
-            Security code
+            <Localized k="billing.interface.security_code_1259260" />
             <div className="checkout-hosted-field" ref={cvv} />
           </label>
         </div>
         <CardBillingAddress country={country} postal={postal} onCountry={setCountry} onPostal={setPostal} disabled={busy} />
-        <p className="muted">PayPal securely processes your card. Your bank may ask you to verify the payment.</p>
+        <p className="muted">
+          <Localized k="billing.interface.paypal_securely_processes_your_card_your_bank_may_ask_you_to_veri_1be5a0c" />
+        </p>
         <button className="btn btn-mojo checkout-check" type="button" disabled={busy || status !== "ready" || !country} onClick={() => void pay()}>
-          {busy ? "Verifying payment…" : "Complete purchase"}
+          {busy ? uiText("billing.interface.verifying_payment_52f2be6") : uiText("billing.interface.complete_purchase_e5e644c")}
         </button>
       </div>
       {error && <p role="alert">{error}</p>}
       {status === "unavailable" && (
         <button className="btn btn-secondary" type="button" onClick={() => setAttempt((value) => value + 1)}>
-          Retry secure card fields
+          <Localized k="billing.interface.retry_secure_card_fields_e4c0674" />
         </button>
       )}
     </section>

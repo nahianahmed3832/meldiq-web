@@ -12,7 +12,7 @@
   overscroll-behavior: contain;
 }
 .xp-tabs .xp-close {
-  margin-left: auto;
+  margin-inline-start: auto;
   flex-shrink: 0;
   padding: 0;
   border-bottom: 0;
@@ -150,7 +150,8 @@
   .scrim {
     inset: var(--app-top, 0px) 0 auto;
     height: var(--app-height, 100dvh);
-    padding: calc(env(safe-area-inset-top, 0px) + 8px) env(safe-area-inset-right, 0px) 0 env(safe-area-inset-left, 0px);
+    padding-block: calc(env(safe-area-inset-top, 0px) + 8px) 0;
+    padding-inline: env(safe-area-inset-left, 0px) env(safe-area-inset-right, 0px);
     place-items: end center;
   }
   .scrim .dialog {
@@ -160,7 +161,10 @@
     min-height: 0;
   }
   .dialog-head {
-    padding: 8px 8px 8px 16px;
+    padding-block-start: 8px;
+    padding-inline-end: 8px;
+    padding-block-end: 8px;
+    padding-inline-start: 16px;
   }
   .dialog-head h2 {
     min-width: 0;
@@ -197,7 +201,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    padding-left: 12px;
+    padding-inline-start: 12px;
     min-height: var(--mobile-touch);
   }
   .menu-phone-head strong {
@@ -238,7 +242,8 @@
   .lightbox {
     inset: var(--app-top, 0px) 0 auto;
     height: var(--app-height, 100dvh);
-    padding: calc(env(safe-area-inset-top, 0px) + 60px) calc(env(safe-area-inset-right, 0px) + 8px) calc(var(--mobile-bottom) + 16px) calc(env(safe-area-inset-left, 0px) + 8px);
+    padding-block: calc(env(safe-area-inset-top, 0px) + 60px) calc(var(--mobile-bottom) + 16px);
+    padding-inline: calc(env(safe-area-inset-left, 0px) + 8px) calc(env(safe-area-inset-right, 0px) + 8px);
   }
   .lightbox > img {
     max-height: calc(var(--app-height, 100dvh) - 100px - env(safe-area-inset-top, 0px) - var(--mobile-bottom));
@@ -248,12 +253,13 @@
   }
   .lightbox .bar {
     top: calc(env(safe-area-inset-top, 0px) + 8px);
-    right: calc(env(safe-area-inset-right, 0px) + 8px);
+    inset-inline-end: calc(var(--safe-inline-end) + 8px);
   }
   .call-stage {
     inset: var(--app-top, 0px) 0 auto;
     height: var(--app-height, 100dvh);
-    padding: calc(env(safe-area-inset-top, 0px) + 8px) calc(env(safe-area-inset-right, 0px) + 8px) 8px calc(env(safe-area-inset-left, 0px) + 8px);
+    padding-block: calc(env(safe-area-inset-top, 0px) + 8px) 8px;
+    padding-inline: calc(env(safe-area-inset-left, 0px) + 8px) calc(env(safe-area-inset-right, 0px) + 8px);
     gap: 8px;
   }
   .call-head {

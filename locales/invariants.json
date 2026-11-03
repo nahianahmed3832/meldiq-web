@@ -1,0 +1,2844 @@
+{
+  "brands": [
+    "Meldiq",
+    "Meldiq Plus",
+    "Meldling",
+    "Sparks",
+    "HD",
+    "Meldiq Spark",
+    "PayPal",
+    "Google",
+    "Apple",
+    "Microsoft",
+    "GitHub",
+    "Discord",
+    "Supabase",
+    "LiveKit",
+    "WebRTC",
+    "YouTube",
+    "YouTube Music",
+    "Spotify",
+    "Vimeo",
+    "Twitch",
+    "Instagram",
+    "Steam",
+    "AniList",
+    "Last.fm",
+    "Trakt",
+    "Firefox",
+    "Chrome",
+    "Safari",
+    "Edge",
+    "Windows",
+    "Android",
+    "Linux",
+    "GIF",
+    "Meldiq Web",
+    "Bots+",
+    "Wordy",
+    "Spark",
+    "macOS",
+    "iOS",
+    "Meldiq Bots+",
+    "MELDIQ PLUS",
+    "MELDIQ SPARK",
+    "PLUS",
+    "Plus",
+    "MongoDB",
+    "JavaScript",
+    "GriipBuddy",
+    "Google Authenticator",
+    "Google Play Store",
+    "Google Play",
+    "Google Drive",
+    "Google Photos",
+    "Google Calendar",
+    "Google Meet",
+    "Apple Music",
+    "Microsoft Edge",
+    "Microsoft Teams",
+    "iPhone",
+    "iPad",
+    "Plus Jakarta Sans",
+    "SIL Open Font License",
+    "Authy",
+    "1Password",
+    "meldiq.app"
+  ],
+  "identicalTranslations": {
+    "auth.email": [
+      "el",
+      "id",
+      "it",
+      "pt-BR",
+      "vi",
+      "nl",
+      "pl",
+      "ro",
+      "cs",
+      "pt-PT"
+    ],
+    "auth.password": [
+      "it"
+    ],
+    "billing.upgrade": [
+      "de"
+    ],
+    "common.actions.edit": [
+      "id"
+    ],
+    "files.file": [
+      "id",
+      "it"
+    ],
+    "files.image": [
+      "fr"
+    ],
+    "files.video": [
+      "cs",
+      "de",
+      "es-419",
+      "id",
+      "it",
+      "nl",
+      "ro",
+      "sv",
+      "tr",
+      "vi"
+    ],
+    "messaging.message": [
+      "fr"
+    ],
+    "messaging.counts.messages": [
+      "fr"
+    ],
+    "messaging.thread": [
+      "de",
+      "nl"
+    ],
+    "organization.community": [
+      "de",
+      "it",
+      "nl",
+      "sv"
+    ],
+    "organization.roles": [
+      "es-419",
+      "es-ES"
+    ],
+    "organization.permissions": [
+      "fr"
+    ],
+    "organization.invitations": [
+      "fr"
+    ],
+    "settings.account": [
+      "it",
+      "nl"
+    ],
+    "settings.privacy": [
+      "it",
+      "nl"
+    ],
+    "settings.notifications": [
+      "fr"
+    ],
+    "workspace.home": [
+      "it",
+      "nl"
+    ],
+    "workspace.online": [
+      "cs",
+      "de",
+      "id",
+      "it",
+      "nl",
+      "pl",
+      "pt-BR",
+      "pt-PT",
+      "ro",
+      "sv"
+    ],
+    "admin.title": [
+      "fr",
+      "sv"
+    ],
+    "calls.microphone": [
+      "fr"
+    ],
+    "calls.camera": [
+      "nl"
+    ],
+    "workspace.interface.acme_inc_ee60673": [
+      "ar",
+      "bn",
+      "cs",
+      "de",
+      "el",
+      "en",
+      "es-419",
+      "es-ES",
+      "fr",
+      "hi",
+      "id",
+      "it",
+      "ja",
+      "ko",
+      "nl",
+      "pl",
+      "pt-BR",
+      "pt-PT",
+      "ro",
+      "ru",
+      "sv",
+      "th",
+      "tr",
+      "uk",
+      "ur",
+      "vi",
+      "zh-CN",
+      "zh-TW"
+    ],
+    "organization.interface.dhaka_makers_8027676": [
+      "ar",
+      "bn",
+      "cs",
+      "de",
+      "el",
+      "en",
+      "es-419",
+      "es-ES",
+      "fr",
+      "hi",
+      "id",
+      "it",
+      "ja",
+      "ko",
+      "nl",
+      "pl",
+      "pt-BR",
+      "pt-PT",
+      "ro",
+      "ru",
+      "sv",
+      "th",
+      "tr",
+      "uk",
+      "ur",
+      "vi",
+      "zh-CN",
+      "zh-TW"
+    ],
+    "auth.interface.lounge_e601919": [
+      "ar",
+      "bn",
+      "cs",
+      "de",
+      "el",
+      "en",
+      "es-419",
+      "es-ES",
+      "fr",
+      "hi",
+      "id",
+      "it",
+      "ja",
+      "ko",
+      "nl",
+      "pl",
+      "pt-BR",
+      "pt-PT",
+      "ro",
+      "ru",
+      "sv",
+      "th",
+      "tr",
+      "uk",
+      "ur",
+      "vi",
+      "zh-CN",
+      "zh-TW"
+    ],
+    "workspace.interface.ada_99a563a": [
+      "ar",
+      "bn",
+      "cs",
+      "de",
+      "el",
+      "es-419",
+      "es-ES",
+      "fr",
+      "hi",
+      "id",
+      "it",
+      "ja",
+      "ko",
+      "nl",
+      "pl",
+      "pt-BR",
+      "pt-PT",
+      "ro",
+      "ru",
+      "sv",
+      "th",
+      "tr",
+      "uk",
+      "ur",
+      "vi",
+      "zh-CN",
+      "zh-TW"
+    ],
+    "workspace.interface.markdown_bold_italic_headings_lists_links_https_7d60377": [
+      "ar",
+      "bn",
+      "cs",
+      "de",
+      "el",
+      "es-419",
+      "es-ES",
+      "fr",
+      "hi",
+      "id",
+      "it",
+      "ja",
+      "ko",
+      "nl",
+      "pl",
+      "pt-BR",
+      "pt-PT",
+      "ro",
+      "ru",
+      "sv",
+      "th",
+      "tr",
+      "uk",
+      "ur",
+      "vi",
+      "zh-CN",
+      "zh-TW"
+    ],
+    "organization.interface.everyone_a68e2ca": [
+      "ar",
+      "bn",
+      "cs",
+      "de",
+      "el",
+      "es-419",
+      "es-ES",
+      "fr",
+      "hi",
+      "id",
+      "it",
+      "ja",
+      "ko",
+      "nl",
+      "pl",
+      "pt-BR",
+      "pt-PT",
+      "ro",
+      "ru",
+      "sv",
+      "th",
+      "tr",
+      "uk",
+      "ur",
+      "vi",
+      "zh-CN",
+      "zh-TW"
+    ],
+    "messaging.interface.value0_s_value1_ebab8d8": [
+      "ar",
+      "bn",
+      "cs",
+      "de",
+      "el",
+      "es-419",
+      "es-ES",
+      "fr",
+      "hi",
+      "id",
+      "it",
+      "ja",
+      "ko",
+      "nl",
+      "pl",
+      "pt-BR",
+      "pt-PT",
+      "ro",
+      "ru",
+      "sv",
+      "th",
+      "tr",
+      "uk",
+      "ur",
+      "vi",
+      "zh-CN",
+      "zh-TW"
+    ],
+    "billing.interface.usd_a26cdf3": [
+      "ar",
+      "bn",
+      "cs",
+      "de",
+      "el",
+      "es-419",
+      "es-ES",
+      "fr",
+      "hi",
+      "id",
+      "it",
+      "ja",
+      "ko",
+      "nl",
+      "pl",
+      "pt-BR",
+      "pt-PT",
+      "ro",
+      "ru",
+      "sv",
+      "th",
+      "tr",
+      "uk",
+      "ur",
+      "vi",
+      "zh-CN",
+      "zh-TW"
+    ],
+    "common.counts.videos": [
+      "de",
+      "es-419",
+      "id",
+      "it",
+      "nl",
+      "tr",
+      "vi"
+    ],
+    "common.counts.photos": [
+      "fr"
+    ],
+    "billing.interface.value0_meldiq_sparks_3830b49": [
+      "ar",
+      "bn",
+      "cs",
+      "de",
+      "el",
+      "es-419",
+      "es-ES",
+      "fr",
+      "hi",
+      "id",
+      "it",
+      "ja",
+      "ko",
+      "nl",
+      "pl",
+      "pt-BR",
+      "pt-PT",
+      "ro",
+      "ru",
+      "sv",
+      "th",
+      "tr",
+      "uk",
+      "ur",
+      "vi",
+      "zh-CN",
+      "zh-TW"
+    ],
+    "messaging.interface.gifs_c275c26": [
+      "ar",
+      "bn",
+      "cs",
+      "de",
+      "el",
+      "es-419",
+      "es-ES",
+      "fr",
+      "hi",
+      "id",
+      "it",
+      "ja",
+      "ko",
+      "nl",
+      "pl",
+      "pt-BR",
+      "pt-PT",
+      "ro",
+      "ru",
+      "sv",
+      "th",
+      "tr",
+      "uk",
+      "ur",
+      "vi",
+      "zh-CN",
+      "zh-TW"
+    ],
+    "common.counts.items": [
+      "id"
+    ],
+    "workspace.interface.bot_4020871": [
+      "de",
+      "es-419",
+      "es-ES",
+      "fr",
+      "id",
+      "tr",
+      "it",
+      "nl",
+      "pl",
+      "ro",
+      "cs"
+    ],
+    "workspace.interface.platform_c78ffe1": [
+      "id",
+      "tr",
+      "nl"
+    ],
+    "workspace.interface.desktop_9bd88f2": [
+      "de",
+      "id",
+      "it"
+    ],
+    "workspace.interface.moderator_6748ec8": [
+      "de",
+      "id",
+      "nl",
+      "pl",
+      "ro",
+      "sv"
+    ],
+    "workspace.interface.serif_1b5e747": [
+      "id",
+      "tr",
+      "vi"
+    ],
+    "workspace.interface.mono_6f00156": [
+      "id",
+      "pt-BR"
+    ],
+    "workspace.interface.normal_a7248ee": [
+      "de",
+      "es-419",
+      "es-ES",
+      "fr",
+      "id",
+      "pt-BR",
+      "tr",
+      "ro",
+      "sv",
+      "pt-PT"
+    ],
+    "workspace.interface.matcha_ba980d0": [
+      "de",
+      "es-419",
+      "es-ES",
+      "fr",
+      "id",
+      "pt-BR",
+      "tr",
+      "vi",
+      "it",
+      "nl",
+      "pl",
+      "ro",
+      "sv",
+      "cs",
+      "pt-PT"
+    ],
+    "workspace.interface.video_0cab1c9": [
+      "de",
+      "es-419",
+      "id",
+      "tr",
+      "vi",
+      "it",
+      "nl",
+      "ro",
+      "sv",
+      "cs"
+    ],
+    "workspace.interface.lavender_60707cf": [
+      "id"
+    ],
+    "workspace.interface.panel_value0_38c86da": [
+      "de",
+      "es-419",
+      "es-ES",
+      "id",
+      "tr",
+      "pl",
+      "sv",
+      "cs"
+    ],
+    "workspace.interface.spam_94a9eac": [
+      "de",
+      "es-419",
+      "es-ES",
+      "fr",
+      "id",
+      "pt-BR",
+      "tr",
+      "it",
+      "nl",
+      "pl",
+      "ro",
+      "pt-PT"
+    ],
+    "workspace.interface.minimal_057b5de": [
+      "de",
+      "id"
+    ],
+    "messaging.people_admin": [
+      "de",
+      "fr",
+      "id"
+    ],
+    "messaging.interface.admin_fdc0e04": [
+      "de",
+      "es-419",
+      "es-ES",
+      "fr",
+      "id",
+      "tr"
+    ],
+    "messaging.interface.emoji_61ad897": [
+      "de",
+      "es-419",
+      "es-ES",
+      "fr",
+      "id",
+      "pt-BR",
+      "tr",
+      "it",
+      "nl",
+      "ro",
+      "sv",
+      "pt-PT"
+    ],
+    "messaging.interface.media_d357175": [
+      "id",
+      "nl"
+    ],
+    "messaging.interface.bot_772026f": [
+      "de",
+      "es-419",
+      "es-ES",
+      "fr",
+      "id",
+      "pt-BR",
+      "vi",
+      "it",
+      "nl",
+      "pl",
+      "ro",
+      "cs",
+      "pt-PT"
+    ],
+    "messaging.interface.emoji_4030f0c": [
+      "de",
+      "es-419",
+      "es-ES",
+      "fr",
+      "id",
+      "pt-BR",
+      "tr",
+      "it",
+      "nl",
+      "ro",
+      "sv",
+      "pt-PT"
+    ],
+    "messaging.interface.file_b4915d3": [
+      "id",
+      "it"
+    ],
+    "messaging.media.video": [
+      "es-419",
+      "id",
+      "tr",
+      "vi",
+      "it",
+      "nl",
+      "ro",
+      "sv",
+      "cs"
+    ],
+    "messaging.media.audio": [
+      "de",
+      "es-419",
+      "es-ES",
+      "fr",
+      "id",
+      "it",
+      "nl",
+      "ro"
+    ],
+    "calls.interface.emoji_value0_9057e7c": [
+      "de",
+      "es-419",
+      "es-ES",
+      "fr",
+      "id",
+      "pt-BR",
+      "tr",
+      "it",
+      "nl",
+      "ro",
+      "sv",
+      "pt-PT"
+    ],
+    "calls.interface.caps_lock_71c8e9d": [
+      "id",
+      "pt-BR",
+      "tr",
+      "nl",
+      "pl",
+      "uk",
+      "ro",
+      "sv",
+      "cs",
+      "pt-PT"
+    ],
+    "files.interface.album_f05e840": [
+      "de",
+      "fr",
+      "id",
+      "it",
+      "nl",
+      "pl",
+      "ro",
+      "sv",
+      "cs"
+    ],
+    "files.interface.podcast_27a723d": [
+      "de",
+      "fr",
+      "id",
+      "pt-BR",
+      "tr",
+      "vi",
+      "it",
+      "nl",
+      "pl",
+      "ro",
+      "cs",
+      "pt-PT"
+    ],
+    "files.interface.sakura_95c0d6e": [
+      "de",
+      "es-419",
+      "es-ES",
+      "fr",
+      "id",
+      "pt-BR",
+      "tr",
+      "vi",
+      "it",
+      "nl",
+      "pl",
+      "ro",
+      "sv",
+      "cs",
+      "pt-PT"
+    ],
+    "organization.interface.panel_80d6546": [
+      "de",
+      "es-419",
+      "es-ES",
+      "id",
+      "tr",
+      "pl",
+      "sv",
+      "cs"
+    ],
+    "organization.interface.label_0e66373": [
+      "id",
+      "nl"
+    ],
+    "organization.interface.emoji_6a31b86": [
+      "de",
+      "fr",
+      "id",
+      "tr",
+      "sv"
+    ],
+    "organization.builtIn.roleTemplates.moderator.name": [
+      "de",
+      "id",
+      "nl",
+      "pl",
+      "ro",
+      "sv"
+    ],
+    "organization.builtIn.officialBots.tickets.limit_2_plus": [
+      "id"
+    ],
+    "organization.builtIn.officialBots.tickets.limit_3_plus": [
+      "id"
+    ],
+    "settings.nt_volume": [
+      "fr",
+      "id",
+      "pt-BR",
+      "it",
+      "nl",
+      "pt-PT"
+    ],
+    "settings.interface.mint_ced97cc": [
+      "id"
+    ],
+    "settings.interface.aurora_e9de098": [
+      "es-419",
+      "es-ES",
+      "id",
+      "pt-BR",
+      "it",
+      "pt-PT"
+    ],
+    "settings.interface.neon_618484e": [
+      "de",
+      "id",
+      "pt-BR",
+      "tr",
+      "vi",
+      "it",
+      "nl",
+      "pl",
+      "ro",
+      "sv",
+      "cs",
+      "pt-PT"
+    ],
+    "settings.interface.ok_565339b": [
+      "de",
+      "es-419",
+      "es-ES",
+      "fr",
+      "id",
+      "pt-BR",
+      "it",
+      "nl",
+      "pl",
+      "sv",
+      "cs",
+      "pt-PT"
+    ],
+    "settings.interface.server_aef7de2": [
+      "de",
+      "id",
+      "it",
+      "nl",
+      "ro",
+      "sv",
+      "cs"
+    ],
+    "settings.interface.bio_3933b18": [
+      "es-419",
+      "es-ES",
+      "fr",
+      "id",
+      "pt-BR"
+    ],
+    "settings.interface.web_2975104": [
+      "de",
+      "es-419",
+      "es-ES",
+      "fr",
+      "id",
+      "pt-BR",
+      "tr",
+      "it",
+      "nl",
+      "ro",
+      "cs",
+      "pt-PT"
+    ],
+    "billing.interface.status_920e413": [
+      "de",
+      "id",
+      "nl",
+      "pl",
+      "sv"
+    ],
+    "billing.interface.total_c9b3c38": [
+      "id",
+      "pt-BR",
+      "ro",
+      "pt-PT"
+    ],
+    "workspace.interface.video_0e4c296": [
+      "de",
+      "es-419",
+      "vi",
+      "it",
+      "nl",
+      "sv",
+      "cs"
+    ],
+    "workspace.interface.transfer_dde8bef": [
+      "tr"
+    ],
+    "messaging.interface.forum_732d18e": [
+      "de",
+      "fr",
+      "tr",
+      "it",
+      "nl",
+      "pl",
+      "ro",
+      "sv"
+    ],
+    "organization.interface.forum_4da7bd4": [
+      "de",
+      "fr",
+      "tr",
+      "it",
+      "nl",
+      "pl",
+      "ro",
+      "sv"
+    ],
+    "billing.interface.plan_fa8ed0b": [
+      "de",
+      "es-419",
+      "es-ES",
+      "fr",
+      "tr",
+      "pl",
+      "ro"
+    ],
+    "workspace.nav_dms": [
+      "de",
+      "es-419",
+      "es-ES",
+      "fr",
+      "pt-BR"
+    ],
+    "workspace.discover_online": [
+      "de",
+      "pt-BR",
+      "nl",
+      "pt-PT"
+    ],
+    "workspace.interface.layout_a511909": [
+      "de",
+      "pt-BR"
+    ],
+    "workspace.interface.editor_936a161": [
+      "de",
+      "es-419",
+      "es-ES",
+      "pt-BR",
+      "it",
+      "nl",
+      "ro",
+      "cs",
+      "pt-PT"
+    ],
+    "workspace.interface.online_1457740": [
+      "de",
+      "pt-BR",
+      "it",
+      "nl",
+      "pt-PT"
+    ],
+    "workspace.interface.tag_2a1073a": [
+      "pt-BR"
+    ],
+    "workspace.interface.value0_banner_bb1766c": [
+      "pt-BR"
+    ],
+    "workspace.interface.online_value0_e20063d": [
+      "de",
+      "pt-BR",
+      "nl",
+      "pl",
+      "pt-PT"
+    ],
+    "workspace.interface.min_6a0d62a": [
+      "de",
+      "es-419",
+      "es-ES",
+      "fr",
+      "pt-BR",
+      "it",
+      "nl",
+      "pl",
+      "ro",
+      "sv",
+      "cs",
+      "pt-PT"
+    ],
+    "workspace.interface.banners_5976815": [
+      "pt-BR",
+      "nl"
+    ],
+    "workspace.interface.coral_56ac628": [
+      "es-419",
+      "es-ES",
+      "pt-BR",
+      "ro",
+      "pt-PT"
+    ],
+    "workspace.interface.jade_9fbbe98": [
+      "de",
+      "es-419",
+      "es-ES",
+      "fr",
+      "pt-BR",
+      "nl",
+      "sv",
+      "pt-PT"
+    ],
+    "workspace.interface.social_f1b7505": [
+      "es-419",
+      "es-ES",
+      "fr",
+      "pt-BR",
+      "ro",
+      "pt-PT"
+    ],
+    "workspace.interface.script_102acc1": [
+      "pt-BR",
+      "it",
+      "nl",
+      "ro",
+      "pt-PT"
+    ],
+    "workspace.interface.banners_e75146c": [
+      "pt-BR",
+      "nl"
+    ],
+    "messaging.people_offline": [
+      "de",
+      "pt-BR",
+      "it",
+      "nl"
+    ],
+    "messaging.people_bots": [
+      "de",
+      "es-419",
+      "es-ES",
+      "fr",
+      "pt-BR",
+      "nl",
+      "pt-PT"
+    ],
+    "messaging.interface.links_9024c19": [
+      "de",
+      "pt-BR"
+    ],
+    "messaging.interface.link_b1b1bdb": [
+      "de",
+      "pt-BR"
+    ],
+    "organization.interface.webhooks_45808d7": [
+      "fr",
+      "pt-BR",
+      "it",
+      "nl",
+      "pt-PT"
+    ],
+    "organization.interface.15_min_8d616d3": [
+      "de",
+      "es-419",
+      "es-ES",
+      "fr",
+      "pt-BR",
+      "it",
+      "nl",
+      "pl",
+      "ro",
+      "sv",
+      "cs",
+      "pt-PT"
+    ],
+    "settings.ap_original": [
+      "de",
+      "es-419",
+      "es-ES",
+      "fr",
+      "pt-BR",
+      "ro",
+      "sv",
+      "pt-PT"
+    ],
+    "settings.interface.banner_b7f4d98": [
+      "de",
+      "es-419",
+      "es-ES",
+      "pt-BR",
+      "it",
+      "nl",
+      "cs"
+    ],
+    "billing.interface.subtotal_8c0f2cb": [
+      "pt-BR",
+      "ro",
+      "pt-PT"
+    ],
+    "workspace.interface.general_c910d47": [
+      "es-419",
+      "es-ES",
+      "ro"
+    ],
+    "workspace.interface.value0_videos_144b637": [
+      "de",
+      "es-419",
+      "nl"
+    ],
+    "workspace.interface.invisible_4ee447c": [
+      "es-419",
+      "es-ES",
+      "fr"
+    ],
+    "organization.interface.club_72e81fe": [
+      "de",
+      "es-419",
+      "es-ES",
+      "fr",
+      "it",
+      "nl",
+      "ro"
+    ],
+    "settings.interface.error_11f9578": [
+      "es-419",
+      "es-ES"
+    ],
+    "common.common_code": [
+      "de",
+      "fr",
+      "nl"
+    ],
+    "common.counts.messages": [
+      "fr"
+    ],
+    "common.counts.votes": [
+      "fr"
+    ],
+    "common.counts.questions": [
+      "fr"
+    ],
+    "auth.interface.value0_minutes_b6b1834": [
+      "fr"
+    ],
+    "workspace.nav_messages": [
+      "fr"
+    ],
+    "workspace.side_mentions": [
+      "fr"
+    ],
+    "workspace.interface.public_591935b": [
+      "fr",
+      "ro"
+    ],
+    "workspace.interface.note_d8da2c4": [
+      "fr"
+    ],
+    "workspace.interface.10_minutes_b075b6e": [
+      "fr"
+    ],
+    "workspace.interface.accent_a5c6fb1": [
+      "fr",
+      "nl"
+    ],
+    "workspace.interface.sections_9bae918": [
+      "fr"
+    ],
+    "workspace.interface.question_value0_74865a9": [
+      "fr"
+    ],
+    "workspace.interface.question_value0_823ae8a": [
+      "fr"
+    ],
+    "workspace.interface.faq_dbc468a": [
+      "de",
+      "fr"
+    ],
+    "workspace.interface.magazine_9042ee8": [
+      "fr"
+    ],
+    "workspace.interface.compact_9945264": [
+      "fr",
+      "nl",
+      "ro"
+    ],
+    "workspace.interface.glacier_eebc86a": [
+      "fr"
+    ],
+    "workspace.interface.royal_1c0f113": [
+      "fr"
+    ],
+    "workspace.interface.arcade_df79c0f": [
+      "de",
+      "fr"
+    ],
+    "workspace.interface.section_value0_33f5178": [
+      "fr"
+    ],
+    "workspace.interface.public_efa1f37": [
+      "fr",
+      "ro"
+    ],
+    "workspace.interface.256_kb_maximum_8751644": [
+      "fr"
+    ],
+    "workspace.interface.date_99c40ab": [
+      "fr"
+    ],
+    "workspace.interface.applications_98e33b0": [
+      "fr"
+    ],
+    "workspace.interface.description_526e008": [
+      "fr"
+    ],
+    "workspace.interface.structure_7203c2b": [
+      "fr"
+    ],
+    "workspace.interface.branches_2eee037": [
+      "fr"
+    ],
+    "workspace.interface.value0_photos_cbeee59": [
+      "fr"
+    ],
+    "workspace.interface.30_minutes_f01a042": [
+      "fr"
+    ],
+    "workspace.interface.documents_b4e929d": [
+      "fr"
+    ],
+    "workspace.interface.pixel_5817280": [
+      "de",
+      "fr",
+      "it",
+      "cs"
+    ],
+    "workspace.interface.mentions_64cc1b0": [
+      "fr"
+    ],
+    "workspace.interface.option_14eb14e": [
+      "fr"
+    ],
+    "workspace.interface.microphone_17d3960": [
+      "fr"
+    ],
+    "messaging.collection_page": [
+      "fr"
+    ],
+    "messaging.interface.position_6d031af": [
+      "de",
+      "fr",
+      "sv"
+    ],
+    "messaging.interface.photo_d84eeba": [
+      "fr"
+    ],
+    "messaging.interface.value0_photos_5e6e914": [
+      "fr"
+    ],
+    "messaging.interface.type_baaddf7": [
+      "fr",
+      "nl"
+    ],
+    "messaging.interface.conversation_ccca181": [
+      "fr"
+    ],
+    "messaging.interface.conversation_value0_3497fd3": [
+      "fr"
+    ],
+    "messaging.interface.photos_5e3147a": [
+      "fr"
+    ],
+    "messaging.interface.actions_ff8059d": [
+      "fr"
+    ],
+    "messaging.interface.value0_actions_d814e85": [
+      "fr"
+    ],
+    "messaging.interface.pause_858e4ba": [
+      "fr"
+    ],
+    "messaging.interface.message_ab530a1": [
+      "fr"
+    ],
+    "messaging.interface.messages_f5cccfb": [
+      "fr"
+    ],
+    "messaging.interface.question_289aff1": [
+      "fr"
+    ],
+    "messaging.interface.options_d0db8b5": [
+      "fr"
+    ],
+    "messaging.interface.option_value0_ce4bc00": [
+      "de",
+      "fr"
+    ],
+    "messaging.interface.expressions_6437317": [
+      "fr"
+    ],
+    "messaging.media.photo": [
+      "fr"
+    ],
+    "calls.interface.microphone_0113b92": [
+      "fr"
+    ],
+    "calls.interface.microphone_value0_f994910": [
+      "fr"
+    ],
+    "calls.interface.value0_direct_154e9c6": [
+      "fr",
+      "ro"
+    ],
+    "organization.interface.discussion_5eb6cf6": [
+      "fr"
+    ],
+    "organization.interface.notifications_value0_b8eb80a": [
+      "fr"
+    ],
+    "organization.interface.permissions_value0_b989527": [
+      "fr"
+    ],
+    "organization.interface.expression_c67415b": [
+      "fr"
+    ],
+    "organization.interface.15_minutes_2f18bc2": [
+      "fr"
+    ],
+    "organization.interface.5_minutes_3170543": [
+      "fr"
+    ],
+    "organization.interface.value0_mentions_939b7f1": [
+      "fr"
+    ],
+    "organization.interface.cyan_e95bb22": [
+      "de",
+      "fr",
+      "sv"
+    ],
+    "organization.interface.violet_2a36428": [
+      "fr",
+      "nl",
+      "ro"
+    ],
+    "organization.interface.orange_78e7771": [
+      "de",
+      "fr",
+      "sv"
+    ],
+    "organization.interface.public_5e24ecc": [
+      "fr",
+      "ro"
+    ],
+    "settings.ap_indigo": [
+      "de",
+      "fr",
+      "nl",
+      "ro",
+      "sv",
+      "cs"
+    ],
+    "settings.ap_standard": [
+      "de",
+      "fr",
+      "it",
+      "ro",
+      "sv"
+    ],
+    "settings.nt_conversations": [
+      "fr"
+    ],
+    "settings.interface.rose_e10d850": [
+      "fr"
+    ],
+    "settings.interface.code_5694d08": [
+      "fr",
+      "nl"
+    ],
+    "settings.interface.codes_64a7994": [
+      "fr",
+      "nl"
+    ],
+    "settings.interface.sessions_6fa3cbf": [
+      "fr"
+    ],
+    "settings.interface.badge_002474e": [
+      "fr"
+    ],
+    "common.time_in_min": [
+      "de",
+      "it"
+    ],
+    "workspace.interface.client_id_8726db0": [
+      "de",
+      "nl"
+    ],
+    "workspace.interface.bot_name_718ce8b": [
+      "de"
+    ],
+    "workspace.interface.community_f354ee9": [
+      "de"
+    ],
+    "workspace.interface.bot_id_d09dbb7": [
+      "de",
+      "nl"
+    ],
+    "workspace.interface.team_5985039": [
+      "de",
+      "nl"
+    ],
+    "workspace.interface.in_value0_e1b84d9": [
+      "de",
+      "it",
+      "nl"
+    ],
+    "workspace.interface.team_value0_57ff5e2": [
+      "de",
+      "nl"
+    ],
+    "workspace.interface.feed_396c3cb": [
+      "de",
+      "nl"
+    ],
+    "workspace.interface.gold_6249df4": [
+      "de"
+    ],
+    "workspace.interface.apps_89dd748": [
+      "de"
+    ],
+    "workspace.interface.teams_1e1a1c0": [
+      "de",
+      "nl"
+    ],
+    "workspace.interface.tools_ea93d6a": [
+      "de"
+    ],
+    "workspace.interface.sand_82855c1": [
+      "de",
+      "sv"
+    ],
+    "workspace.interface.browser_d31de1a": [
+      "de",
+      "it",
+      "nl"
+    ],
+    "workspace.interface.manager_8b2085f": [
+      "de"
+    ],
+    "workspace.interface.community_value0_d6d7785": [
+      "de"
+    ],
+    "workspace.interface.value0_in_value1_value2_95e3d8d": [
+      "de",
+      "it",
+      "nl"
+    ],
+    "workspace.interface.team_value0_96c9771": [
+      "de",
+      "nl"
+    ],
+    "workspace.interface.computer_c60266a": [
+      "de",
+      "it",
+      "nl"
+    ],
+    "messaging.interface.name_dcd1d52": [
+      "de"
+    ],
+    "messaging.interface.videos_c9a9639": [
+      "de",
+      "nl"
+    ],
+    "messaging.interface.youtube_video_4d78938": [
+      "de",
+      "nl",
+      "sv"
+    ],
+    "messaging.interface.box_512fd3c": [
+      "de"
+    ],
+    "messaging.interface.threads_3e42e38": [
+      "de"
+    ],
+    "files.interface.bot_details_83f995e": [
+      "de"
+    ],
+    "files.interface.live_stream_ac1ff70": [
+      "de"
+    ],
+    "organization.interface.value0_in_value1_8e5a603": [
+      "de",
+      "it",
+      "nl"
+    ],
+    "organization.interface.text_71988c4": [
+      "de",
+      "ro",
+      "sv",
+      "cs"
+    ],
+    "organization.interface.support_be91940": [
+      "de"
+    ],
+    "organization.interface.tickets_3d13136": [
+      "de",
+      "nl"
+    ],
+    "organization.interface.webhook_name_d28bddc": [
+      "de"
+    ],
+    "organization.interface.community_bots_7645810": [
+      "de"
+    ],
+    "organization.interface.1_minute_e67b6f6": [
+      "de"
+    ],
+    "organization.interface.gaming_lounge_6475cf7": [
+      "de"
+    ],
+    "organization.interface.community_id_bb74b67": [
+      "de"
+    ],
+    "settings.ap_system": [
+      "de",
+      "pl",
+      "sv"
+    ],
+    "settings.interface.value0_value1_client_api_value2_a31980c": [
+      "de",
+      "nl"
+    ],
+    "settings.interface.community_pause_14dd195": [
+      "de"
+    ],
+    "settings.interface.meldiq_community_0de29a7": [
+      "de",
+      "nl"
+    ],
+    "billing.interface.community_bots_aaae633": [
+      "de"
+    ],
+    "workspace.interface.in_f338e7a": [
+      "it",
+      "nl"
+    ],
+    "settings.interface.database_fa7fe67": [
+      "it",
+      "nl"
+    ],
+    "settings.interface.ok_7a85f47": [
+      "it",
+      "nl",
+      "pl",
+      "ro",
+      "sv",
+      "cs"
+    ],
+    "files.interface.playlist_7af36c5": [
+      "it"
+    ],
+    "organization.interface.native_count_60fd84c9c": [
+      "it",
+      "nl"
+    ],
+    "messaging.interface.value0_details_ffe0248": [
+      "nl"
+    ],
+    "messaging.interface.stickers_dbf9cbb": [
+      "nl"
+    ],
+    "messaging.interface.filters_546ebb8": [
+      "nl"
+    ],
+    "messaging.interface.sticker_value0_5410255": [
+      "nl"
+    ],
+    "messaging.interface.recent_690dbe9": [
+      "nl",
+      "ro"
+    ],
+    "messaging.interface.sticker_6581f65": [
+      "nl"
+    ],
+    "workspace.nav_later": [
+      "nl"
+    ],
+    "workspace.interface.lobby_4c97a9e": [
+      "nl",
+      "sv"
+    ],
+    "workspace.interface.tint_6a822da": [
+      "nl"
+    ],
+    "workspace.interface.week_19e9eb8": [
+      "nl"
+    ],
+    "workspace.interface.week_da66b59": [
+      "nl"
+    ],
+    "workspace.interface.1_week_c8cc522": [
+      "nl"
+    ],
+    "workspace.interface.sticker_7e2d81c": [
+      "nl"
+    ],
+    "workspace.interface.camera_251e382": [
+      "nl"
+    ],
+    "settings.ap_stream": [
+      "nl"
+    ],
+    "settings.interface.effect_2252d5c": [
+      "nl"
+    ],
+    "files.interface.website_b5a229a": [
+      "nl"
+    ],
+    "organization.interface.details_45989de": [
+      "nl"
+    ],
+    "organization.interface.emoji_stickers_e1e12f3": [
+      "nl"
+    ],
+    "organization.interface.team_value0_0c69424": [
+      "nl"
+    ],
+    "organization.builtIn.roleTemplates.helper.name": [
+      "nl"
+    ],
+    "calls.live_sharing_short": [
+      "nl"
+    ],
+    "calls.interface.live_d20cec7": [
+      "nl"
+    ],
+    "calls.interface.camera_value0_9eb5f9a": [
+      "nl"
+    ],
+    "messaging.interface.role_14736a2": [
+      "pl",
+      "cs"
+    ],
+    "settings.interface.ocean_fed1261": [
+      "pl",
+      "ro"
+    ],
+    "settings.interface.gradient_2523561": [
+      "pl"
+    ],
+    "settings.interface.status_30e9308": [
+      "pl",
+      "sv"
+    ],
+    "common.counts.files": [
+      "it"
+    ],
+    "files.counts.files": [
+      "it"
+    ],
+    "workspace.interface.feed_url_b623f8b": [
+      "nl"
+    ],
+    "workspace.interface.feed_url_793ae31": [
+      "nl"
+    ],
+    "messaging.interface.media_type_080d691": [
+      "nl"
+    ],
+    "organization.interface.webhook_url_84805a7": [
+      "nl"
+    ],
+    "settings.interface.backup_codes_a13fe23": [
+      "nl"
+    ],
+    "billing.interface.value0_uploads_3095593": [
+      "nl"
+    ],
+    "workspace.interface.toxic_bc2dfd1": [
+      "ro"
+    ],
+    "settings.interface.favorite_ea713ec": [
+      "ro"
+    ],
+    "settings.interface.artist_1d3981b": [
+      "ro"
+    ],
+    "files.interface.artist_d930bb8": [
+      "ro"
+    ],
+    "settings.interface.period_6e795d4": [
+      "sv"
+    ],
+    "files.interface.frost_17636dd": [
+      "sv"
+    ],
+    "organization.interface.person_38a81e8": [
+      "sv"
+    ],
+    "onboarding.public.invitation": [
+      "fr"
+    ]
+  },
+  "reason": "Reviewed spelling coincidences, loanwords, product names and technical notation may match English. This is not native-speaker approval. All other identical strings fail the strict check.",
+  "technicalSource": [
+    {
+      "file": "src/ui/auth/AuthFrame.tsx",
+      "text": "# welcome",
+      "reason": "Illustrative channel names; content names stay unchanged"
+    },
+    {
+      "file": "src/ui/auth/AuthFrame.tsx",
+      "text": "# general",
+      "reason": "Illustrative channel names; content names stay unchanged"
+    },
+    {
+      "file": "src/ui/auth/AuthFrame.tsx",
+      "text": "# clips",
+      "reason": "Illustrative channel names; content names stay unchanged"
+    },
+    {
+      "file": "src/ui/chat/ChannelBell.tsx",
+      "text": "bell_nothing",
+      "reason": "Typed legacy translation key, passed to the translator"
+    },
+    {
+      "file": "src/ui/lobby/EditorLook.tsx",
+      "text": "Aa",
+      "reason": "Literal glyph sample for comparing fonts"
+    },
+    {
+      "file": "src/ui/mojo/MojoBadge.tsx",
+      "text": "GO",
+      "reason": "Historical product badge identifier; no new Go offer is introduced"
+    },
+    {
+      "file": "src/ui/settings/NameStyleWindow.tsx",
+      "text": "Gg",
+      "reason": "Literal glyph sample for comparing fonts"
+    },
+    {
+      "file": "src/ui/settings/SettingsView.tsx",
+      "text": "settings_account",
+      "reason": "Typed legacy translation key, passed to the translator"
+    },
+    {
+      "file": "src/ui/settings/SettingsView.tsx",
+      "text": "settings_profile",
+      "reason": "Typed legacy translation key, passed to the translator"
+    },
+    {
+      "file": "src/ui/settings/SettingsView.tsx",
+      "text": "settings_security",
+      "reason": "Typed legacy translation key, passed to the translator"
+    },
+    {
+      "file": "src/ui/settings/SettingsView.tsx",
+      "text": "settings_devices",
+      "reason": "Typed legacy translation key, passed to the translator"
+    },
+    {
+      "file": "src/ui/settings/SettingsView.tsx",
+      "text": "settings_mojo",
+      "reason": "Typed legacy translation key, passed to the translator"
+    },
+    {
+      "file": "src/ui/settings/SettingsView.tsx",
+      "text": "settings_spark",
+      "reason": "Typed legacy translation key, passed to the translator"
+    },
+    {
+      "file": "src/ui/settings/SettingsView.tsx",
+      "text": "settings_appearance",
+      "reason": "Typed legacy translation key, passed to the translator"
+    },
+    {
+      "file": "src/ui/settings/SettingsView.tsx",
+      "text": "settings_calls",
+      "reason": "Typed legacy translation key, passed to the translator"
+    },
+    {
+      "file": "src/ui/settings/SettingsView.tsx",
+      "text": "settings_notifications",
+      "reason": "Typed legacy translation key, passed to the translator"
+    },
+    {
+      "file": "src/ui/settings/SettingsView.tsx",
+      "text": "settings_shortcuts",
+      "reason": "Typed legacy translation key, passed to the translator"
+    },
+    {
+      "file": "src/ui/settings/SettingsView.tsx",
+      "text": "settings_leaderboards",
+      "reason": "Typed legacy translation key, passed to the translator"
+    },
+    {
+      "file": "src/ui/settings/SettingsView.tsx",
+      "text": "settings_points",
+      "reason": "Typed legacy translation key, passed to the translator"
+    },
+    {
+      "file": "src/ui/settings/SettingsView.tsx",
+      "text": "settings_advanced",
+      "reason": "Typed legacy translation key, passed to the translator"
+    },
+    {
+      "file": "src/ui/settings/SettingsView.tsx",
+      "text": "settings_developer",
+      "reason": "Typed legacy translation key, passed to the translator"
+    },
+    {
+      "file": "src/ui/settings/SettingsView.tsx",
+      "text": "settings_creators",
+      "reason": "Typed legacy translation key, passed to the translator"
+    },
+    {
+      "file": "src/ui/shell/AccountActions.tsx",
+      "text": "Account controls must be inside AccountActionsProvider",
+      "reason": "Developer-only provider invariant; not displayed to users"
+    },
+    {
+      "file": "src/ui/workspace/AppearanceCard.tsx",
+      "text": "# general",
+      "reason": "Illustrative channel names; content names stay unchanged"
+    },
+    {
+      "file": "src/ui/workspace/AppearanceCard.tsx",
+      "text": "#22d3ee",
+      "reason": "Example hexadecimal colour value"
+    },
+    {
+      "file": "src/ui/workspace/ExpressionsPage.tsx",
+      "text": "party_parrot",
+      "reason": "Example custom emoji identifier"
+    },
+    {
+      "file": "src/ui/workspace/ProfileExtrasCards.tsx",
+      "text": "our-community",
+      "reason": "ASCII slug example"
+    },
+    {
+      "file": "src/ui/workspace/TagCard.tsx",
+      "text": "MC",
+      "reason": "Example community tag initials"
+    },
+    {
+      "file": "src/ui/workspace/ThemePage.tsx",
+      "text": "# general",
+      "reason": "Illustrative channel names; content names stay unchanged"
+    },
+    {
+      "file": "src/ui/workspace/ThemePage.tsx",
+      "text": "# clips",
+      "reason": "Illustrative channel names; content names stay unchanged"
+    },
+    {
+      "file": "src/ui/workspace/ThemePage.tsx",
+      "text": "#22d3ee",
+      "reason": "Example hexadecimal colour value"
+    },
+    {
+      "file": "src/ui/workspace/bots/AlertsWatches.tsx",
+      "text": "youtube.com/@channel",
+      "reason": "Example external URL"
+    },
+    {
+      "file": "src/crypto/aead.ts",
+      "text": "AES-256 key must be 32 bytes",
+      "reason": "Internal cryptographic, protocol, or developer invariant; public failure UI uses localized messages"
+    },
+    {
+      "file": "src/crypto/ed25519.ts",
+      "text": "Ed25519 seed must be 32 bytes",
+      "reason": "Internal cryptographic, protocol, or developer invariant; public failure UI uses localized messages"
+    },
+    {
+      "file": "src/crypto/hpke.ts",
+      "text": "X25519 public key must be 32 bytes",
+      "reason": "Internal cryptographic, protocol, or developer invariant; public failure UI uses localized messages"
+    },
+    {
+      "file": "src/i18n/runtime.ts",
+      "text": "Unsupported locale or namespace",
+      "reason": "Internal cryptographic, protocol, or developer invariant; public failure UI uses localized messages"
+    },
+    {
+      "file": "src/realtime/supabaseEvents.ts",
+      "text": "Invalid private topic",
+      "reason": "Internal cryptographic, protocol, or developer invariant; public failure UI uses localized messages"
+    },
+    {
+      "file": "src/ui/community/CommunityHeader.tsx",
+      "text": "none",
+      "reason": "Notification level enum passed to level lookup; not displayed."
+    },
+    {
+      "file": "src/ui/shell/Sidebar.tsx",
+      "text": "none",
+      "reason": "Notification level enum passed to level lookup; not displayed."
+    },
+    {
+      "file": "src/api/messageCollections.ts",
+      "text": "Incomplete message collection cursor",
+      "reason": "Internal response-schema invariant, not displayed to the user."
+    },
+    {
+      "file": "src/application/config.ts",
+      "text": "Supabase preview requires a staging environment",
+      "reason": "Internal configuration validation; not a visible interface label."
+    },
+    {
+      "file": "src/ui/settings/SettingsView.tsx",
+      "text": "settings_gifts",
+      "reason": "Typed translation key consumed by the settings navigation translator."
+    },
+    {
+      "file": "src/ui/billing/EmbeddedCardFields.tsx",
+      "text": "MM/YY",
+      "reason": "Payment input-format notation; preserve the provider format."
+    },
+    {
+      "file": "src/ui/billing/EmbeddedCardFields.tsx",
+      "text": "CVV",
+      "reason": "Payment input-format identifier."
+    },
+    {
+      "file": "src/ui/dialogs/WorkspaceDialogs.tsx",
+      "text": "ABCD-EFGH-JKLM",
+      "reason": "Illustrative recovery/invite code shape; not prose."
+    },
+    {
+      "file": "src/ui/workspace/bots/AlertsWatches.tsx",
+      "text": "{creator}",
+      "reason": "Literal bot-template insertion token; preserve exact syntax."
+    },
+    {
+      "file": "src/ui/workspace/bots/AlertsWatches.tsx",
+      "text": "{title}",
+      "reason": "Literal bot-template insertion token; preserve exact syntax."
+    },
+    {
+      "file": "src/ui/workspace/bots/AlertsWatches.tsx",
+      "text": "{url}",
+      "reason": "Literal bot-template insertion token; preserve exact syntax."
+    },
+    {
+      "file": "src/ui/workspace/bots/AlertsWatches.tsx",
+      "text": "{role}",
+      "reason": "Literal bot-template insertion token; preserve exact syntax."
+    },
+    {
+      "file": "src/ui/billing/CheckoutPage.tsx",
+      "text": "USD",
+      "reason": "ISO currency identifier; the underlying currency is unchanged."
+    },
+    {
+      "file": "src/ui/community/PermissionsDialog.tsx",
+      "text": "@everyone",
+      "reason": "Reserved role and mention identifier."
+    },
+    {
+      "file": "src/ui/community/CreateChannelDialog.tsx",
+      "text": "rules",
+      "reason": "Illustrative channel name, not interface prose."
+    },
+    {
+      "file": "src/ui/community/CreateChannelDialog.tsx",
+      "text": "Gaming Lounge",
+      "reason": "Illustrative channel name, preserved like actual channel names."
+    },
+    {
+      "file": "src/ui/community/CreateChannelDialog.tsx",
+      "text": "new-channel",
+      "reason": "Illustrative channel slug, not interface prose."
+    },
+    {
+      "file": "src/sync/rules.ts",
+      "text": "This message was sent from a newer version of Meldiq and can't be shown here.",
+      "reason": "Canonical stored unsupported-message marker. MessageItem localizes it at render time only for undecryptable system records; it is never user content."
+    },
+    {
+      "file": "src/ui/lobby/cardsPeople.tsx",
+      "text": "`${count.toLocaleString(interfaceLocale())} XP`",
+      "reason": "XP is the fixed experience-point unit; the count uses the interface locale."
+    }
+  ],
+  "identicalReasons": {
+    "workspace.interface.acme_inc_ee60673": "Fixed illustrative person, organization, or channel name; names retain their original spelling.",
+    "organization.interface.dhaka_makers_8027676": "Fixed illustrative person, organization, or channel name; names retain their original spelling.",
+    "auth.interface.lounge_e601919": "Fixed illustrative person, organization, or channel name; names retain their original spelling.",
+    "workspace.interface.ada_99a563a": "Fixed illustrative person, organization, or channel name; names retain their original spelling.",
+    "workspace.interface.markdown_bold_italic_headings_lists_links_https_7d60377": "Literal Markdown syntax example, including example English tokens and URL, is preserved as code.",
+    "organization.interface.everyone_a68e2ca": "Reserved built-in @everyone role identifier.",
+    "messaging.interface.value0_s_value1_ebab8d8": "Technical rate notation /s between dynamic values, not English prose.",
+    "billing.interface.usd_a26cdf3": "ISO currency code; switching interface language never changes currency.",
+    "common.counts.videos": "Reviewed Turkish shared term: local loanword, standard font/keyboard label, or cosmetic name; exception restricted to this key and locale.",
+    "common.counts.photos": "Photo/photos are French words and match the English noun.",
+    "billing.interface.value0_meldiq_sparks_3830b49": "Meldiq Sparks is the original product-unit name with a dynamic count; product names remain unchanged.",
+    "messaging.interface.gifs_c275c26": "GIFs is a standard image-format label, retained as a technical name in these interfaces.",
+    "common.counts.items": "Reviewed Indonesian shared term: accepted local loanword, typography label, or technical name; this exception applies only to this key and locale.",
+    "workspace.interface.bot_4020871": {
+      "previousReview": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+      "it": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "pl": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "ro": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "workspace.interface.platform_c78ffe1": {
+      "previousReview": "Reviewed Turkish shared term: local loanword, standard font/keyboard label, or cosmetic name; exception restricted to this key and locale.",
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "workspace.interface.desktop_9bd88f2": {
+      "previousReview": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+      "it": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "workspace.interface.moderator_6748ec8": {
+      "previousReview": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "pl": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "ro": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "sv": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "workspace.interface.serif_1b5e747": "Reviewed Turkish shared term: local loanword, standard font/keyboard label, or cosmetic name; exception restricted to this key and locale.",
+    "workspace.interface.mono_6f00156": "Reviewed Brazilian Portuguese shared term: local word or loanword, unit abbreviation, font term, or named cosmetic; exception restricted to this key and locale.",
+    "workspace.interface.normal_a7248ee": {
+      "previousReview": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+      "ro": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "sv": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "pt-PT": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "workspace.interface.matcha_ba980d0": {
+      "previousReview": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+      "it": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "pl": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "ro": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "sv": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "cs": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "pt-PT": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "workspace.interface.video_0cab1c9": {
+      "previousReview": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+      "it": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "ro": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "sv": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "cs": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "workspace.interface.lavender_60707cf": "Reviewed Indonesian shared term: accepted local loanword, typography label, or technical name; this exception applies only to this key and locale.",
+    "workspace.interface.panel_value0_38c86da": {
+      "previousReview": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+      "pl": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "sv": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "cs": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "workspace.interface.spam_94a9eac": {
+      "previousReview": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+      "it": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "pl": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "ro": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "pt-PT": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "workspace.interface.minimal_057b5de": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+    "messaging.people_admin": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+    "messaging.interface.admin_fdc0e04": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+    "messaging.interface.emoji_61ad897": {
+      "previousReview": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+      "it": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "ro": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "sv": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "pt-PT": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "messaging.interface.media_d357175": {
+      "previousReview": "Reviewed Indonesian shared term: accepted local loanword, typography label, or technical name; this exception applies only to this key and locale.",
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "messaging.interface.bot_772026f": {
+      "previousReview": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+      "it": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "pl": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "ro": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "cs": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "pt-PT": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "messaging.interface.emoji_4030f0c": {
+      "previousReview": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+      "it": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "ro": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "sv": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "pt-PT": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "messaging.interface.file_b4915d3": {
+      "previousReview": "Reviewed Indonesian shared term: accepted local loanword, typography label, or technical name; this exception applies only to this key and locale.",
+      "it": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "messaging.media.video": {
+      "previousReview": "Reviewed Spanish shared term: Spanish word, local loanword, standard unit/font term or named cosmetic; exception restricted to this key and locale.",
+      "it": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "ro": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "sv": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "cs": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "messaging.media.audio": "Audio is the established local word/loanword for this media type.",
+    "calls.interface.emoji_value0_9057e7c": {
+      "previousReview": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+      "it": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "ro": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "sv": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "pt-PT": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "calls.interface.caps_lock_71c8e9d": {
+      "previousReview": "Reviewed Brazilian Portuguese shared term: local word or loanword, unit abbreviation, font term, or named cosmetic; exception restricted to this key and locale.",
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "pl": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "uk": "Hardware key name preserved as printed on keyboards.",
+      "ro": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "sv": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "cs": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "pt-PT": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "files.interface.album_f05e840": {
+      "previousReview": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+      "it": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "pl": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "ro": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "sv": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "cs": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "files.interface.podcast_27a723d": {
+      "previousReview": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+      "it": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "pl": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "ro": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "cs": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "pt-PT": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "files.interface.sakura_95c0d6e": {
+      "previousReview": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+      "it": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "pl": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "ro": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "sv": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "cs": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "pt-PT": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "organization.interface.panel_80d6546": {
+      "previousReview": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+      "pl": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "sv": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "cs": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "organization.interface.label_0e66373": {
+      "previousReview": "Reviewed Indonesian shared term: accepted local loanword, typography label, or technical name; this exception applies only to this key and locale.",
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "organization.interface.emoji_6a31b86": {
+      "previousReview": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+      "sv": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "organization.builtIn.roleTemplates.moderator.name": {
+      "previousReview": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "pl": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "ro": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "sv": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "organization.builtIn.officialBots.tickets.limit_2_plus": "Reviewed Indonesian shared term: accepted local loanword, typography label, or technical name; this exception applies only to this key and locale.",
+    "organization.builtIn.officialBots.tickets.limit_3_plus": "Reviewed Indonesian shared term: accepted local loanword, typography label, or technical name; this exception applies only to this key and locale.",
+    "settings.nt_volume": {
+      "previousReview": "Reviewed French shared term: French word or phrase, local loanword, standard abbreviation/font term, or named cosmetic; exception restricted to this key and locale.",
+      "it": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "pt-PT": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "settings.interface.mint_ced97cc": "Reviewed Indonesian shared term: accepted local loanword, typography label, or technical name; this exception applies only to this key and locale.",
+    "settings.interface.aurora_e9de098": {
+      "previousReview": "Reviewed Spanish shared term: Spanish word, local loanword, standard unit/font term or named cosmetic; exception restricted to this key and locale.",
+      "it": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "pt-PT": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "settings.interface.neon_618484e": {
+      "previousReview": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+      "it": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "pl": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "ro": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "sv": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "cs": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "pt-PT": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "settings.interface.ok_565339b": {
+      "previousReview": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+      "it": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "pl": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "sv": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "cs": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "pt-PT": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "settings.interface.server_aef7de2": {
+      "previousReview": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+      "it": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "ro": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "sv": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "cs": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "settings.interface.bio_3933b18": "Reviewed French shared term: French word or phrase, local loanword, standard abbreviation/font term, or named cosmetic; exception restricted to this key and locale.",
+    "settings.interface.web_2975104": {
+      "previousReview": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+      "it": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "ro": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "cs": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "pt-PT": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "billing.interface.status_920e413": {
+      "previousReview": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "pl": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "sv": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "billing.interface.total_c9b3c38": {
+      "previousReview": "Reviewed Brazilian Portuguese shared term: local word or loanword, unit abbreviation, font term, or named cosmetic; exception restricted to this key and locale.",
+      "ro": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "pt-PT": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "workspace.interface.video_0e4c296": {
+      "previousReview": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+      "it": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "sv": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "cs": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "workspace.interface.transfer_dde8bef": "Reviewed Turkish shared term: local loanword, standard font/keyboard label, or cosmetic name; exception restricted to this key and locale.",
+    "messaging.interface.forum_732d18e": {
+      "previousReview": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+      "it": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "pl": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "ro": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "sv": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "organization.interface.forum_4da7bd4": {
+      "previousReview": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+      "it": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "pl": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "ro": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "sv": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "billing.interface.plan_fa8ed0b": {
+      "previousReview": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+      "pl": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "ro": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "auth.email": {
+      "previousReview": "Reviewed Brazilian Portuguese shared term: local word or loanword, unit abbreviation, font term, or named cosmetic; exception restricted to this key and locale.",
+      "nl": "Reviewed native spelling or loanword; punctuation and plural grammar differ where required.",
+      "pl": "Reviewed native spelling or loanword; punctuation and plural grammar differ where required.",
+      "pt-PT": "E-mail is the normal Portuguese technical spelling; punctuation differs from English."
+    },
+    "workspace.nav_dms": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+    "workspace.discover_online": {
+      "previousReview": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "pt-PT": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "workspace.interface.layout_a511909": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+    "workspace.interface.editor_936a161": {
+      "previousReview": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+      "it": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "ro": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "cs": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "pt-PT": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "workspace.interface.online_1457740": {
+      "previousReview": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+      "it": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "pt-PT": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "workspace.interface.tag_2a1073a": "Reviewed Brazilian Portuguese shared term: local word or loanword, unit abbreviation, font term, or named cosmetic; exception restricted to this key and locale.",
+    "workspace.interface.value0_banner_bb1766c": "Reviewed Brazilian Portuguese shared term: local word or loanword, unit abbreviation, font term, or named cosmetic; exception restricted to this key and locale.",
+    "workspace.interface.online_value0_e20063d": {
+      "previousReview": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "pl": "Reviewed native spelling or loanword; punctuation and plural grammar differ where required.",
+      "pt-PT": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "workspace.interface.min_6a0d62a": {
+      "previousReview": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+      "it": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "pl": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "ro": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "sv": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "cs": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "pt-PT": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "workspace.interface.banners_5976815": {
+      "previousReview": "Reviewed Brazilian Portuguese shared term: local word or loanword, unit abbreviation, font term, or named cosmetic; exception restricted to this key and locale.",
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "workspace.interface.coral_56ac628": {
+      "previousReview": "Reviewed Spanish shared term: Spanish word, local loanword, standard unit/font term or named cosmetic; exception restricted to this key and locale.",
+      "ro": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "pt-PT": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "workspace.interface.jade_9fbbe98": {
+      "previousReview": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "sv": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "pt-PT": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "workspace.interface.social_f1b7505": {
+      "previousReview": "Reviewed French shared term: French word or phrase, local loanword, standard abbreviation/font term, or named cosmetic; exception restricted to this key and locale.",
+      "ro": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "pt-PT": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "workspace.interface.script_102acc1": {
+      "previousReview": "Reviewed Brazilian Portuguese shared term: local word or loanword, unit abbreviation, font term, or named cosmetic; exception restricted to this key and locale.",
+      "it": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "ro": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "pt-PT": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "workspace.interface.banners_e75146c": {
+      "previousReview": "Reviewed Brazilian Portuguese shared term: local word or loanword, unit abbreviation, font term, or named cosmetic; exception restricted to this key and locale.",
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "messaging.people_offline": {
+      "previousReview": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+      "it": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "messaging.people_bots": {
+      "previousReview": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "pt-PT": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "messaging.interface.links_9024c19": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+    "messaging.interface.link_b1b1bdb": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+    "organization.interface.webhooks_45808d7": {
+      "previousReview": "Reviewed French shared term: French word or phrase, local loanword, standard abbreviation/font term, or named cosmetic; exception restricted to this key and locale.",
+      "it": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "pt-PT": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "organization.interface.15_min_8d616d3": {
+      "previousReview": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+      "it": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "pl": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "ro": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "sv": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "cs": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "pt-PT": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "settings.ap_original": {
+      "previousReview": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+      "ro": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "sv": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "pt-PT": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "settings.interface.banner_b7f4d98": {
+      "previousReview": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+      "it": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "cs": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "billing.interface.subtotal_8c0f2cb": {
+      "previousReview": "Reviewed Brazilian Portuguese shared term: local word or loanword, unit abbreviation, font term, or named cosmetic; exception restricted to this key and locale.",
+      "ro": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "pt-PT": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "workspace.interface.general_c910d47": {
+      "previousReview": "Reviewed Spanish shared term: Spanish word, local loanword, standard unit/font term or named cosmetic; exception restricted to this key and locale.",
+      "ro": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "workspace.interface.value0_videos_144b637": {
+      "previousReview": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+      "nl": "Reviewed native spelling or loanword; punctuation and plural grammar differ where required."
+    },
+    "workspace.interface.invisible_4ee447c": "Reviewed French shared term: French word or phrase, local loanword, standard abbreviation/font term, or named cosmetic; exception restricted to this key and locale.",
+    "organization.interface.club_72e81fe": {
+      "previousReview": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+      "it": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "ro": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "settings.interface.error_11f9578": "Reviewed Spanish shared term: Spanish word, local loanword, standard unit/font term or named cosmetic; exception restricted to this key and locale.",
+    "common.common_code": {
+      "previousReview": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+      "nl": "Reviewed native spelling or loanword; punctuation and plural grammar differ where required."
+    },
+    "common.counts.messages": "Reviewed French shared term: French word or phrase, local loanword, standard abbreviation/font term, or named cosmetic; exception restricted to this key and locale.",
+    "common.counts.votes": "Reviewed French shared term: French word or phrase, local loanword, standard abbreviation/font term, or named cosmetic; exception restricted to this key and locale.",
+    "common.counts.questions": "Reviewed French shared term: French word or phrase, local loanword, standard abbreviation/font term, or named cosmetic; exception restricted to this key and locale.",
+    "auth.interface.value0_minutes_b6b1834": "Reviewed French shared term: French word or phrase, local loanword, standard abbreviation/font term, or named cosmetic; exception restricted to this key and locale.",
+    "workspace.nav_messages": "Reviewed French shared term: French word or phrase, local loanword, standard abbreviation/font term, or named cosmetic; exception restricted to this key and locale.",
+    "workspace.side_mentions": "Reviewed French shared term: French word or phrase, local loanword, standard abbreviation/font term, or named cosmetic; exception restricted to this key and locale.",
+    "workspace.interface.public_591935b": {
+      "previousReview": "Reviewed French shared term: French word or phrase, local loanword, standard abbreviation/font term, or named cosmetic; exception restricted to this key and locale.",
+      "ro": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "workspace.interface.note_d8da2c4": "Reviewed French shared term: French word or phrase, local loanword, standard abbreviation/font term, or named cosmetic; exception restricted to this key and locale.",
+    "workspace.interface.10_minutes_b075b6e": "Reviewed French shared term: French word or phrase, local loanword, standard abbreviation/font term, or named cosmetic; exception restricted to this key and locale.",
+    "workspace.interface.accent_a5c6fb1": {
+      "previousReview": "Reviewed French shared term: French word or phrase, local loanword, standard abbreviation/font term, or named cosmetic; exception restricted to this key and locale.",
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "workspace.interface.sections_9bae918": "Reviewed French shared term: French word or phrase, local loanword, standard abbreviation/font term, or named cosmetic; exception restricted to this key and locale.",
+    "workspace.interface.question_value0_74865a9": "Reviewed French shared term: French word or phrase, local loanword, standard abbreviation/font term, or named cosmetic; exception restricted to this key and locale.",
+    "workspace.interface.question_value0_823ae8a": "Reviewed French shared term: French word or phrase, local loanword, standard abbreviation/font term, or named cosmetic; exception restricted to this key and locale.",
+    "workspace.interface.faq_dbc468a": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+    "workspace.interface.magazine_9042ee8": "Reviewed French shared term: French word or phrase, local loanword, standard abbreviation/font term, or named cosmetic; exception restricted to this key and locale.",
+    "workspace.interface.compact_9945264": {
+      "previousReview": "Reviewed French shared term: French word or phrase, local loanword, standard abbreviation/font term, or named cosmetic; exception restricted to this key and locale.",
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "ro": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "workspace.interface.glacier_eebc86a": "Reviewed French shared term: French word or phrase, local loanword, standard abbreviation/font term, or named cosmetic; exception restricted to this key and locale.",
+    "workspace.interface.royal_1c0f113": "Reviewed French shared term: French word or phrase, local loanword, standard abbreviation/font term, or named cosmetic; exception restricted to this key and locale.",
+    "workspace.interface.arcade_df79c0f": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+    "workspace.interface.section_value0_33f5178": "Reviewed French shared term: French word or phrase, local loanword, standard abbreviation/font term, or named cosmetic; exception restricted to this key and locale.",
+    "workspace.interface.public_efa1f37": {
+      "previousReview": "Reviewed French shared term: French word or phrase, local loanword, standard abbreviation/font term, or named cosmetic; exception restricted to this key and locale.",
+      "ro": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "workspace.interface.256_kb_maximum_8751644": "Reviewed French shared term: French word or phrase, local loanword, standard abbreviation/font term, or named cosmetic; exception restricted to this key and locale.",
+    "workspace.interface.date_99c40ab": "Reviewed French shared term: French word or phrase, local loanword, standard abbreviation/font term, or named cosmetic; exception restricted to this key and locale.",
+    "workspace.interface.applications_98e33b0": "Reviewed French shared term: French word or phrase, local loanword, standard abbreviation/font term, or named cosmetic; exception restricted to this key and locale.",
+    "workspace.interface.description_526e008": "Reviewed French shared term: French word or phrase, local loanword, standard abbreviation/font term, or named cosmetic; exception restricted to this key and locale.",
+    "workspace.interface.structure_7203c2b": "Reviewed French shared term: French word or phrase, local loanword, standard abbreviation/font term, or named cosmetic; exception restricted to this key and locale.",
+    "workspace.interface.branches_2eee037": "Reviewed French shared term: French word or phrase, local loanword, standard abbreviation/font term, or named cosmetic; exception restricted to this key and locale.",
+    "workspace.interface.value0_photos_cbeee59": "Reviewed French shared term: French word or phrase, local loanword, standard abbreviation/font term, or named cosmetic; exception restricted to this key and locale.",
+    "workspace.interface.30_minutes_f01a042": "Reviewed French shared term: French word or phrase, local loanword, standard abbreviation/font term, or named cosmetic; exception restricted to this key and locale.",
+    "workspace.interface.documents_b4e929d": "Reviewed French shared term: French word or phrase, local loanword, standard abbreviation/font term, or named cosmetic; exception restricted to this key and locale.",
+    "workspace.interface.pixel_5817280": {
+      "previousReview": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+      "it": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "cs": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "workspace.interface.mentions_64cc1b0": "Reviewed French shared term: French word or phrase, local loanword, standard abbreviation/font term, or named cosmetic; exception restricted to this key and locale.",
+    "workspace.interface.option_14eb14e": "Reviewed French shared term: French word or phrase, local loanword, standard abbreviation/font term, or named cosmetic; exception restricted to this key and locale.",
+    "workspace.interface.microphone_17d3960": "Reviewed French shared term: French word or phrase, local loanword, standard abbreviation/font term, or named cosmetic; exception restricted to this key and locale.",
+    "messaging.collection_page": "Reviewed French shared term: French word or phrase, local loanword, standard abbreviation/font term, or named cosmetic; exception restricted to this key and locale.",
+    "messaging.interface.position_6d031af": {
+      "previousReview": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+      "sv": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "messaging.interface.photo_d84eeba": "Reviewed French shared term: French word or phrase, local loanword, standard abbreviation/font term, or named cosmetic; exception restricted to this key and locale.",
+    "messaging.interface.value0_photos_5e6e914": "Reviewed French shared term: French word or phrase, local loanword, standard abbreviation/font term, or named cosmetic; exception restricted to this key and locale.",
+    "messaging.interface.type_baaddf7": {
+      "previousReview": "Reviewed French shared term: French word or phrase, local loanword, standard abbreviation/font term, or named cosmetic; exception restricted to this key and locale.",
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "messaging.interface.conversation_ccca181": "Reviewed French shared term: French word or phrase, local loanword, standard abbreviation/font term, or named cosmetic; exception restricted to this key and locale.",
+    "messaging.interface.conversation_value0_3497fd3": "Reviewed French shared term: French word or phrase, local loanword, standard abbreviation/font term, or named cosmetic; exception restricted to this key and locale.",
+    "messaging.interface.photos_5e3147a": "Reviewed French shared term: French word or phrase, local loanword, standard abbreviation/font term, or named cosmetic; exception restricted to this key and locale.",
+    "messaging.interface.actions_ff8059d": "Reviewed French shared term: French word or phrase, local loanword, standard abbreviation/font term, or named cosmetic; exception restricted to this key and locale.",
+    "messaging.interface.value0_actions_d814e85": "Reviewed French shared term: French word or phrase, local loanword, standard abbreviation/font term, or named cosmetic; exception restricted to this key and locale.",
+    "messaging.interface.pause_858e4ba": "Reviewed French shared term: French word or phrase, local loanword, standard abbreviation/font term, or named cosmetic; exception restricted to this key and locale.",
+    "messaging.interface.message_ab530a1": "Reviewed French shared term: French word or phrase, local loanword, standard abbreviation/font term, or named cosmetic; exception restricted to this key and locale.",
+    "messaging.interface.messages_f5cccfb": "Reviewed French shared term: French word or phrase, local loanword, standard abbreviation/font term, or named cosmetic; exception restricted to this key and locale.",
+    "messaging.interface.question_289aff1": "Reviewed French shared term: French word or phrase, local loanword, standard abbreviation/font term, or named cosmetic; exception restricted to this key and locale.",
+    "messaging.interface.options_d0db8b5": "Reviewed French shared term: French word or phrase, local loanword, standard abbreviation/font term, or named cosmetic; exception restricted to this key and locale.",
+    "messaging.interface.option_value0_ce4bc00": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+    "messaging.interface.expressions_6437317": "Reviewed French shared term: French word or phrase, local loanword, standard abbreviation/font term, or named cosmetic; exception restricted to this key and locale.",
+    "messaging.media.photo": "Reviewed French shared term: French word or phrase, local loanword, standard abbreviation/font term, or named cosmetic; exception restricted to this key and locale.",
+    "calls.interface.microphone_0113b92": "Reviewed French shared term: French word or phrase, local loanword, standard abbreviation/font term, or named cosmetic; exception restricted to this key and locale.",
+    "calls.interface.microphone_value0_f994910": "Reviewed French shared term: French word or phrase, local loanword, standard abbreviation/font term, or named cosmetic; exception restricted to this key and locale.",
+    "calls.interface.value0_direct_154e9c6": {
+      "previousReview": "Reviewed French shared term: French word or phrase, local loanword, standard abbreviation/font term, or named cosmetic; exception restricted to this key and locale.",
+      "ro": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "organization.interface.discussion_5eb6cf6": "Reviewed French shared term: French word or phrase, local loanword, standard abbreviation/font term, or named cosmetic; exception restricted to this key and locale.",
+    "organization.interface.notifications_value0_b8eb80a": "Reviewed French shared term: French word or phrase, local loanword, standard abbreviation/font term, or named cosmetic; exception restricted to this key and locale.",
+    "organization.interface.permissions_value0_b989527": "Reviewed French shared term: French word or phrase, local loanword, standard abbreviation/font term, or named cosmetic; exception restricted to this key and locale.",
+    "organization.interface.expression_c67415b": "Reviewed French shared term: French word or phrase, local loanword, standard abbreviation/font term, or named cosmetic; exception restricted to this key and locale.",
+    "organization.interface.15_minutes_2f18bc2": "Reviewed French shared term: French word or phrase, local loanword, standard abbreviation/font term, or named cosmetic; exception restricted to this key and locale.",
+    "organization.interface.5_minutes_3170543": "Reviewed French shared term: French word or phrase, local loanword, standard abbreviation/font term, or named cosmetic; exception restricted to this key and locale.",
+    "organization.interface.value0_mentions_939b7f1": "Reviewed French shared term: French word or phrase, local loanword, standard abbreviation/font term, or named cosmetic; exception restricted to this key and locale.",
+    "organization.interface.cyan_e95bb22": {
+      "previousReview": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+      "sv": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "organization.interface.violet_2a36428": {
+      "previousReview": "Reviewed French shared term: French word or phrase, local loanword, standard abbreviation/font term, or named cosmetic; exception restricted to this key and locale.",
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "ro": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "organization.interface.orange_78e7771": {
+      "previousReview": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+      "sv": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "organization.interface.public_5e24ecc": {
+      "previousReview": "Reviewed French shared term: French word or phrase, local loanword, standard abbreviation/font term, or named cosmetic; exception restricted to this key and locale.",
+      "ro": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "settings.ap_indigo": {
+      "previousReview": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "ro": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "sv": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "cs": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "settings.ap_standard": {
+      "previousReview": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+      "it": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "ro": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "sv": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "settings.nt_conversations": "Reviewed French shared term: French word or phrase, local loanword, standard abbreviation/font term, or named cosmetic; exception restricted to this key and locale.",
+    "settings.interface.rose_e10d850": "Reviewed French shared term: French word or phrase, local loanword, standard abbreviation/font term, or named cosmetic; exception restricted to this key and locale.",
+    "settings.interface.code_5694d08": {
+      "previousReview": "Reviewed French shared term: French word or phrase, local loanword, standard abbreviation/font term, or named cosmetic; exception restricted to this key and locale.",
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "settings.interface.codes_64a7994": {
+      "previousReview": "Reviewed French shared term: French word or phrase, local loanword, standard abbreviation/font term, or named cosmetic; exception restricted to this key and locale.",
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "settings.interface.sessions_6fa3cbf": "Reviewed French shared term: French word or phrase, local loanword, standard abbreviation/font term, or named cosmetic; exception restricted to this key and locale.",
+    "settings.interface.badge_002474e": "Reviewed French shared term: French word or phrase, local loanword, standard abbreviation/font term, or named cosmetic; exception restricted to this key and locale.",
+    "common.time_in_min": {
+      "previousReview": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+      "it": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "workspace.interface.client_id_8726db0": {
+      "previousReview": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+      "nl": "Reviewed native spelling or loanword; punctuation and plural grammar differ where required."
+    },
+    "workspace.interface.bot_name_718ce8b": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+    "workspace.interface.community_f354ee9": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+    "workspace.interface.bot_id_d09dbb7": {
+      "previousReview": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+      "nl": "Reviewed native spelling or loanword; punctuation and plural grammar differ where required."
+    },
+    "workspace.interface.team_5985039": {
+      "previousReview": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "workspace.interface.in_value0_e1b84d9": {
+      "previousReview": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+      "it": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "workspace.interface.team_value0_57ff5e2": {
+      "previousReview": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+      "nl": "Reviewed native spelling or loanword; punctuation and plural grammar differ where required."
+    },
+    "workspace.interface.feed_396c3cb": {
+      "previousReview": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "workspace.interface.gold_6249df4": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+    "workspace.interface.apps_89dd748": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+    "workspace.interface.teams_1e1a1c0": {
+      "previousReview": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "workspace.interface.tools_ea93d6a": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+    "workspace.interface.sand_82855c1": {
+      "previousReview": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+      "sv": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "workspace.interface.browser_d31de1a": {
+      "previousReview": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+      "it": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "workspace.interface.manager_8b2085f": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+    "workspace.interface.community_value0_d6d7785": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+    "workspace.interface.value0_in_value1_value2_95e3d8d": {
+      "previousReview": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+      "it": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "workspace.interface.team_value0_96c9771": {
+      "previousReview": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "workspace.interface.computer_c60266a": {
+      "previousReview": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+      "it": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "messaging.interface.name_dcd1d52": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+    "messaging.interface.videos_c9a9639": {
+      "previousReview": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+      "nl": "Reviewed native spelling or loanword; punctuation and plural grammar differ where required."
+    },
+    "messaging.interface.youtube_video_4d78938": {
+      "previousReview": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+      "nl": "Reviewed native spelling or loanword; punctuation and plural grammar differ where required."
+    },
+    "messaging.interface.box_512fd3c": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+    "messaging.interface.threads_3e42e38": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+    "files.interface.bot_details_83f995e": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+    "files.interface.live_stream_ac1ff70": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+    "organization.interface.value0_in_value1_8e5a603": {
+      "previousReview": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+      "it": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "organization.interface.text_71988c4": {
+      "previousReview": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+      "ro": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "sv": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "cs": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "organization.interface.support_be91940": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+    "organization.interface.tickets_3d13136": {
+      "previousReview": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "organization.interface.webhook_name_d28bddc": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+    "organization.interface.community_bots_7645810": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+    "organization.interface.1_minute_e67b6f6": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+    "organization.interface.gaming_lounge_6475cf7": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+    "organization.interface.community_id_bb74b67": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+    "settings.ap_system": {
+      "previousReview": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+      "pl": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "sv": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "settings.interface.value0_value1_client_api_value2_a31980c": {
+      "previousReview": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+      "nl": "Reviewed native spelling or loanword; punctuation and plural grammar differ where required."
+    },
+    "settings.interface.community_pause_14dd195": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+    "settings.interface.meldiq_community_0de29a7": {
+      "previousReview": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+      "nl": "Reviewed native spelling or loanword; punctuation and plural grammar differ where required."
+    },
+    "billing.interface.community_bots_aaae633": "Reviewed German shared term: German word, accepted loanword, native compound/hyphenation, standard abbreviation, font label or named cosmetic; exception restricted to this key and locale.",
+    "workspace.interface.in_f338e7a": {
+      "it": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "settings.interface.database_fa7fe67": {
+      "it": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "settings.interface.ok_7a85f47": {
+      "it": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "pl": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "ro": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "sv": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "cs": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "files.interface.playlist_7af36c5": {
+      "it": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "organization.interface.native_count_60fd84c9c": {
+      "it": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "messaging.interface.value0_details_ffe0248": {
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "messaging.interface.stickers_dbf9cbb": {
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "messaging.interface.filters_546ebb8": {
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "messaging.interface.sticker_value0_5410255": {
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "messaging.interface.recent_690dbe9": {
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "ro": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "messaging.interface.sticker_6581f65": {
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "workspace.nav_later": {
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "workspace.interface.lobby_4c97a9e": {
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "sv": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "workspace.interface.tint_6a822da": {
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "workspace.interface.week_19e9eb8": {
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "workspace.interface.week_da66b59": {
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "workspace.interface.1_week_c8cc522": {
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "workspace.interface.sticker_7e2d81c": {
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "workspace.interface.camera_251e382": {
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "settings.ap_stream": {
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "settings.interface.effect_2252d5c": {
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "files.interface.website_b5a229a": {
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "organization.interface.details_45989de": {
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "organization.interface.emoji_stickers_e1e12f3": {
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "organization.interface.team_value0_0c69424": {
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "organization.builtIn.roleTemplates.helper.name": {
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "calls.live_sharing_short": {
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "calls.interface.live_d20cec7": {
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "calls.interface.camera_value0_9eb5f9a": {
+      "nl": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "messaging.interface.role_14736a2": {
+      "pl": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "cs": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "settings.interface.ocean_fed1261": {
+      "pl": "Reviewed native homograph, established loanword, or fixed technical notation.",
+      "ro": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "settings.interface.gradient_2523561": {
+      "pl": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "settings.interface.status_30e9308": {
+      "pl": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "common.counts.files": {
+      "it": "Italian uses the invariant loanword file in both singular and plural; native plural branches are authored separately."
+    },
+    "files.counts.files": {
+      "it": "Italian uses the invariant loanword file in both singular and plural; native plural branches are authored separately."
+    },
+    "workspace.interface.feed_url_b623f8b": {
+      "nl": "Reviewed native spelling or loanword; punctuation and plural grammar differ where required."
+    },
+    "workspace.interface.feed_url_793ae31": {
+      "nl": "Reviewed native spelling or loanword; punctuation and plural grammar differ where required."
+    },
+    "messaging.interface.media_type_080d691": {
+      "nl": "Reviewed native spelling or loanword; punctuation and plural grammar differ where required."
+    },
+    "organization.interface.webhook_url_84805a7": {
+      "nl": "Reviewed native spelling or loanword; punctuation and plural grammar differ where required."
+    },
+    "settings.interface.backup_codes_a13fe23": {
+      "nl": "Reviewed native spelling or loanword; punctuation and plural grammar differ where required."
+    },
+    "billing.interface.value0_uploads_3095593": {
+      "nl": "Reviewed native spelling or loanword; punctuation and plural grammar differ where required."
+    },
+    "workspace.interface.toxic_bc2dfd1": {
+      "ro": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "settings.interface.favorite_ea713ec": {
+      "ro": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "settings.interface.artist_1d3981b": {
+      "ro": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "files.interface.artist_d930bb8": {
+      "ro": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "settings.interface.period_6e795d4": {
+      "sv": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "files.interface.frost_17636dd": {
+      "sv": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "organization.interface.person_38a81e8": {
+      "sv": "Reviewed native homograph, established loanword, or fixed technical notation."
+    },
+    "onboarding.public.invitation": {
+      "fr": "Invitation is the normal French noun."
+    }
+  },
+  "protectedNames": [
+    "Meldiq Plus",
+    "Meldiq Web",
+    "Meldiq Spark",
+    "Meldiq",
+    "Meldling",
+    "GriipBuddy",
+    "PayPal",
+    "Google Authenticator",
+    "Google Play Store",
+    "Google Play",
+    "Google Drive",
+    "Google Photos",
+    "Google Calendar",
+    "Google Meet",
+    "Google",
+    "Apple Music",
+    "Apple",
+    "Microsoft Edge",
+    "Microsoft Teams",
+    "Microsoft",
+    "GitHub",
+    "Discord",
+    "Supabase",
+    "LiveKit",
+    "WebRTC",
+    "YouTube Music",
+    "YouTube",
+    "Spotify",
+    "Vimeo",
+    "Twitch",
+    "Instagram",
+    "Steam",
+    "AniList",
+    "Last.fm",
+    "Trakt",
+    "Firefox",
+    "Chrome",
+    "Safari",
+    "Edge",
+    "Windows",
+    "Android",
+    "Linux",
+    "macOS",
+    "iOS",
+    "iPhone",
+    "iPad",
+    "Plus Jakarta Sans",
+    "SIL Open Font License",
+    "Authy",
+    "1Password",
+    "JavaScript",
+    "Wordy",
+    "Bots+",
+    "meldiq.app"
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "title": "管理",
+  "health": "服务状态",
+  "usage": "社区用量",
+  "states": {
+    "rejected": "已拒绝",
+    "escalated": "已升级处理",
+    "disputed": "有争议"
+  }
+}

@@ -1,3 +1,7 @@
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
+import { Localized } from "../../i18n/Localized";
+import { useT as useLocalization } from "../../i18n";
 import { ArrowLeft, Bell, BellOff, ChevronRight, KeyRound, Search, Settings, ShieldCheck, UsersRound } from "lucide-react";
 import { useState } from "react";
 import type { Conversation } from "../../api/schemas";
@@ -15,23 +19,21 @@ import { PanelHead } from "./PanelHead";
 import { usePinned } from "./PinnedPanel";
 import { SecuritySheet } from "./SecuritySheet";
 import { ThreadList } from "./ThreadsPanel";
-
 /** What kind of channel this is, in words. */
 function kindOf(c: Conversation, rules: boolean): string {
   const kind = rules
-    ? "Rules channel"
+    ? uiText("organization.rules_channel_label")
     : c.voice
-      ? "Voice channel"
+      ? uiText("organization.interface.voice_channel_5290966")
       : c.format === "forum"
-        ? "Forum"
+        ? uiText("organization.interface.forum_4da7bd4")
         : c.kind === "ANNOUNCEMENT"
-          ? "Announcement channel"
+          ? uiText("organization.interface.announcement_channel_c75895c")
           : c.kind === "PRIVATE"
-            ? "Private channel"
-            : "Channel";
-  return c.categoryName ? `${kind} in ${c.categoryName}` : kind;
+            ? uiText("organization.interface.private_channel_87f9f3b")
+            : uiText("settings.interface.channel_ce4683e");
+  return c.categoryName ? uiText("organization.interface.value0_in_value1_8e5a603", { value0: kind, value1: c.categoryName }) : kind;
 }
-
 /**
  * A channel's details (batch B14b, android DmDetails for channels): search, notifications and settings; the channel's
  * icon, name, kind and topic; tabs Members · Media · Pins · Threads · Links · Files (no Threads for a forum, whose posts are
@@ -40,6 +42,8 @@ function kindOf(c: Conversation, rules: boolean): string {
  * the community, not one of its channels (the server refuses it, API 0.26.0).
  */
 export function ChannelDetails({ c, onClose }: { c: Conversation; onClose: () => void }) {
+  useLocaleRender();
+  const l10n = useLocalization();
   const engine = useEngine();
   const isRules = useOrbit((s) => !!c.orgId && s.orgs.find((o) => o.id === c.orgId)?.rulesChannel?.channelId === c.id);
   const route = useRoute();
@@ -53,22 +57,25 @@ export function ChannelDetails({ c, onClose }: { c: Conversation; onClose: () =>
   const [tab, setTab] = useState<DetailsTab>(tabs[0]);
   const [view, setView] = useState<"details" | "settings">("details");
   const [sheet, setSheet] = useState<"security" | "access" | null>(null);
-  const name = `#${c.name ?? "channel"}`;
+  const name = `#${c.name ?? uiText("messaging.interface.channel_69e3656")}`;
   const muted = levelOf(nav, c.id, c.categoryId) === "none";
   const toggleMute = () =>
     void (async () => {
       for (const op of muteToggle(nav, c.id, c.categoryId)) await engine.arrange(c.id, op);
-    })().catch((e: unknown) => engine.notice("error", e instanceof Error ? e.message : "Couldn't change notifications"));
+    })().catch((e: unknown) => engine.notice("error", e instanceof Error ? e.message : uiText("organization.interface.couldn_t_change_notifications_9c82a42")));
   const canManageAccess = c.canManage && !!c.orgId;
-
   const accessRow = canManageAccess && (
     <button className="panel-action-row" onClick={() => setSheet("access")}>
       <span className="circle">
         <KeyRound size={16} />
       </span>
       <span className="lines grow">
-        <span>Manage channel access</span>
-        <small>Who can see and post here, by role or person</small>
+        <span>
+          <Localized k="organization.interface.manage_channel_access_712a23d" />
+        </span>
+        <small>
+          <Localized k="organization.interface.who_can_see_and_post_here_by_role_or_person_111f392" />
+        </small>
       </span>
       <ChevronRight size={16} className="faint" aria-hidden />
     </button>
@@ -79,16 +86,15 @@ export function ChannelDetails({ c, onClose }: { c: Conversation; onClose: () =>
       {sheet === "access" && c.orgId && <PermissionsDialog orgId={c.orgId} target={{ type: "channel", id: c.id }} title={name} onClose={() => setSheet(null)} />}
     </>
   );
-
   if (view === "settings")
     return (
-      <aside className="panel" aria-label="Channel settings">
+      <aside className="panel" aria-label={uiText("organization.interface.channel_settings_afc219f")}>
         <PanelHead
-          title="Channel settings"
+          title={uiText("organization.interface.channel_settings_afc219f")}
           sub={name}
           onClose={onClose}
           actions={
-            <button className="icon-btn" onClick={() => setView("details")} aria-label="Back to the channel's details">
+            <button className="icon-btn" onClick={() => setView("details")} aria-label={uiText("organization.interface.back_to_the_channel_s_details_65f7f8f")}>
               <ArrowLeft size={18} />
             </button>
           }
@@ -101,17 +107,24 @@ export function ChannelDetails({ c, onClose }: { c: Conversation; onClose: () =>
         {sheets}
       </aside>
     );
-
   const actions: DetailsAction[] = [
-    { key: "members", label: "Members", icon: <UsersRound size={20} />, onClick: () => navigate({ section: route.section, conversationId: c.id, panel: "members" }) },
-    ...(c.voice ? [] : [{ key: "search", label: "Search", icon: <Search size={20} />, onClick: () => navigate({ section: route.section, conversationId: c.id, panel: "search" }) }]),
-    { key: "mute", label: muted ? "Unmute" : "Mute", icon: muted ? <BellOff size={20} /> : <Bell size={20} />, onClick: toggleMute, active: muted },
-    { key: "settings", label: "Settings", icon: <Settings size={20} />, onClick: () => setView("settings") },
+    { key: "members", label: l10n("workspace.members"), icon: <UsersRound size={20} />, onClick: () => navigate({ section: route.section, conversationId: c.id, panel: "members" }) },
+    ...(c.voice
+      ? []
+      : [{ key: "search", label: l10n("common.actions.search"), icon: <Search size={20} />, onClick: () => navigate({ section: route.section, conversationId: c.id, panel: "search" }) }]),
+    {
+      key: "mute",
+      label: muted ? uiText("notifications.bell_unmute") : uiText("notifications.bell_mute"),
+      icon: muted ? <BellOff size={20} /> : <Bell size={20} />,
+      onClick: toggleMute,
+      active: muted,
+    },
+    { key: "settings", label: l10n("settings.title"), icon: <Settings size={20} />, onClick: () => setView("settings") },
   ];
   const counts = { members: c.memberCount, media: paged ? undefined : gallery.media.length, pins: paged ? undefined : pinned, links: links.length, files: paged ? undefined : gallery.files.length };
   return (
-    <aside className="panel" aria-label="Details">
-      <PanelHead title="Details" sub={name} onClose={onClose} />
+    <aside className="panel" aria-label={uiText("organization.interface.details_45989de")}>
+      <PanelHead title={uiText("organization.interface.details_45989de")} sub={name} onClose={onClose} />
       <div className="panel-body scroll">
         <DetailsHero
           avatar={
@@ -120,7 +133,7 @@ export function ChannelDetails({ c, onClose }: { c: Conversation; onClose: () =>
             </span>
           }
           title={name}
-          sub={`${kindOf(c, isRules)} · ${membersText(c.memberCount)}`}
+          sub={uiText("messaging.interface.value0_value1_75414c2", { value0: kindOf(c, isRules), value1: membersText(c.memberCount) })}
           presence={null}
         />
         {c.topic && <p className="details-topic">{c.topic}</p>}
@@ -144,8 +157,12 @@ export function ChannelDetails({ c, onClose }: { c: Conversation; onClose: () =>
             <ShieldCheck size={16} />
           </span>
           <span className="lines grow">
-            <span>Encryption and security</span>
-            <small>Messages here are kept on Meldiq's servers</small>
+            <span>
+              <Localized k="organization.interface.encryption_and_security_e75b9ce" />
+            </span>
+            <small>
+              <Localized k="organization.interface.messages_here_are_kept_on_meldiq_s_servers_e08d91b" />
+            </small>
           </span>
           <ChevronRight size={16} className="faint" aria-hidden />
         </button>

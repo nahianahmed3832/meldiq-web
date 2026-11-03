@@ -1,18 +1,40 @@
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
+import { Localized } from "../../i18n/Localized";
+import { useT as useLocalization } from "../../i18n";
 import { BellOff, LogOut } from "lucide-react";
 import { useState } from "react";
 import { useEngine, useOrbit } from "../../application/orbit";
 import { navigate } from "../../application/router";
 import { levelOf, type NotifyLevel, workspaceOf } from "../../sync/navPrefs";
 import { removeConversationMember } from "../../sync/workspaces";
-
-const LEVELS: { level: NotifyLevel; label: string }[] = [
-  { level: "all", label: "All new messages" },
-  { level: "mentions", label: "Mentions only" },
-  { level: "none", label: "Off" },
+const LEVELS: {
+  level: NotifyLevel;
+  label: string;
+}[] = [
+  {
+    level: "all",
+    get label() {
+      return uiText("messaging.interface.all_new_messages_0bd334d");
+    },
+  },
+  {
+    level: "mentions",
+    get label() {
+      return uiText("messaging.interface.mentions_only_78732e1");
+    },
+  },
+  {
+    level: "none",
+    get label() {
+      return uiText("messaging.interface.off_ca7981b");
+    },
+  },
 ];
-
 /** Notifications (synced to every device of the person) and leaving a group. */
 export function ConversationSettings({ conversationId }: { conversationId: string }) {
+  useLocaleRender();
+  const l10n = useLocalization();
   const engine = useEngine();
   const c = useOrbit((s) => s.conversations[conversationId]);
   const level = useOrbit((s) => levelOf(s.nav[workspaceOf(c?.orgId ?? null)], conversationId, c?.categoryId ?? null));
@@ -27,7 +49,7 @@ export function ConversationSettings({ conversationId }: { conversationId: strin
       await engine.refreshAll();
       navigate({ section: "dms" });
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Couldn't leave.");
+      setError(e instanceof Error ? e.message : uiText("messaging.interface.couldn_t_leave_33e0efa"));
     }
   };
   return (
@@ -35,7 +57,7 @@ export function ConversationSettings({ conversationId }: { conversationId: strin
       <label className="field">
         <span className="panel-section-title">
           <span className="row" style={{ gap: 6 }}>
-            <BellOff size={14} /> Notifications
+            <BellOff size={14} /> {l10n("settings.notifications")}
           </span>
         </span>
         <select className="input input-sm" value={level} onChange={(e) => void engine.arrange(conversationId, { op: "notify", conversationId, level: e.target.value as NotifyLevel })}>
@@ -45,7 +67,9 @@ export function ConversationSettings({ conversationId }: { conversationId: strin
             </option>
           ))}
         </select>
-        <span className="hint">Applies on all your devices. A mention of you still notifies when they're off.</span>
+        <span className="hint">
+          <Localized k="messaging.interface.applies_on_all_your_devices_a_mention_of_you_still_notifies_when_3cfafd7" />
+        </span>
       </label>
       {leavable && (
         <>
@@ -56,17 +80,19 @@ export function ConversationSettings({ conversationId }: { conversationId: strin
           )}
           {confirm ? (
             <div className="row" style={{ gap: 8 }}>
-              <span className="grow">Leave this group?</span>
+              <span className="grow">
+                <Localized k="messaging.interface.leave_this_group_4ed01b5" />
+              </span>
               <button className="btn btn-secondary btn-sm" onClick={() => setConfirm(false)}>
-                Cancel
+                {l10n("common.actions.cancel")}
               </button>
               <button className="btn btn-danger btn-sm" onClick={() => void leave()}>
-                Leave
+                <Localized k="messaging.interface.leave_fc6e4a4" />
               </button>
             </div>
           ) : (
             <button className="btn btn-danger-quiet btn-sm" style={{ justifySelf: "start" }} onClick={() => setConfirm(true)}>
-              <LogOut size={14} /> Leave group
+              <Localized k="messaging.interface.leave_group_4c26a32" slots={[<LogOut size={14} />]} />
             </button>
           )}
         </>

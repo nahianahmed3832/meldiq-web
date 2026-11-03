@@ -1,3 +1,6 @@
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
+import { Localized } from "../../i18n/Localized";
 import type { CSSProperties } from "react";
 import type { MojoMark } from "../../api/profileSchemas";
 import { MojoBadgeMark } from "../mojo/MojoBadge";
@@ -9,39 +12,136 @@ import { StyledAvatar } from "./ProfileStyle";
 import { IdentityGlyph } from "../components/IdentityGlyph";
 import { BotTag } from "../components/BotTag";
 export { BotTag } from "../components/BotTag";
-
 /**
  * Name styles (API 0.46.0): a display name in one of Meldiq's fonts, in a colour or a gradient of two or three, with an
  * optional glow or shimmer, and the community tag the person wears beside it. Fonts ship with the web app
  * (public/fonts/names, OFL); colours come from the person's choice, else a role's colour, else the name tone.
  */
-
-export const NAME_FONT_LABEL: Record<NameFont, string> = { pixel: "Pixel", arcade: "Arcade", script: "Script", block: "Block", tech: "Tech", mono: "Code" };
-export const NAME_EFFECT_LABEL: Record<NameEffect, string> = { glow: "Glow", shimmer: "Shimmer" };
-
+export const NAME_FONT_LABEL: Record<NameFont, string> = {
+  get pixel() {
+    return uiText("workspace.interface.pixel_5817280");
+  },
+  get arcade() {
+    return uiText("workspace.interface.arcade_df79c0f");
+  },
+  get script() {
+    return uiText("workspace.interface.script_102acc1");
+  },
+  get block() {
+    return uiText("messaging.interface.block_211d0bb");
+  },
+  get tech() {
+    return uiText("workspace.interface.tech_d0da7ab");
+  },
+  get mono() {
+    return uiText("common.common_code");
+  },
+};
+export const NAME_EFFECT_LABEL: Record<NameEffect, string> = {
+  get glow() {
+    return uiText("workspace.interface.glow_f534ed9");
+  },
+  get shimmer() {
+    return uiText("workspace.interface.shimmer_656b444");
+  },
+};
 /** Meldiq's colour presets for names, profiles and the app's tint: our own names, two or three stops each. */
-export const COLOR_PRESETS: { id: string; label: string; colors: string[] }[] = [
-  { id: "lagoon", label: "Lagoon", colors: ["#22d3ee", "#3b82f6"] },
-  { id: "blaze", label: "Blaze", colors: ["#f97316", "#ef4444"] },
-  { id: "orchid", label: "Orchid", colors: ["#c084fc", "#ec4899"] },
-  { id: "matcha", label: "Matcha", colors: ["#a3e635", "#22c55e"] },
-  { id: "sunrise", label: "Sunrise", colors: ["#fbbf24", "#f472b6"] },
-  { id: "glacier", label: "Glacier", colors: ["#a5f3fc", "#818cf8"] },
-  { id: "candy", label: "Candy", colors: ["#f9a8d4", "#a78bfa", "#67e8f9"] },
-  { id: "toxic", label: "Toxic", colors: ["#bef264", "#10b981", "#0ea5e9"] },
-  { id: "royal", label: "Royal", colors: ["#6366f1", "#a855f7"] },
-  { id: "ember", label: "Ember", colors: ["#fde047", "#f97316", "#dc2626"] },
-  { id: "gold", label: "Gold", colors: ["#fde68a", "#f59e0b"] },
-  { id: "arcade", label: "Arcade", colors: ["#f0abfc", "#22d3ee", "#a3e635"] },
+export const COLOR_PRESETS: {
+  id: string;
+  label: string;
+  colors: string[];
+}[] = [
+  {
+    id: "lagoon",
+    get label() {
+      return uiText("workspace.interface.lagoon_d24d90a");
+    },
+    colors: ["#22d3ee", "#3b82f6"],
+  },
+  {
+    id: "blaze",
+    get label() {
+      return uiText("workspace.interface.blaze_36f2a17");
+    },
+    colors: ["#f97316", "#ef4444"],
+  },
+  {
+    id: "orchid",
+    get label() {
+      return uiText("workspace.interface.orchid_baf5d82");
+    },
+    colors: ["#c084fc", "#ec4899"],
+  },
+  {
+    id: "matcha",
+    get label() {
+      return uiText("workspace.interface.matcha_ba980d0");
+    },
+    colors: ["#a3e635", "#22c55e"],
+  },
+  {
+    id: "sunrise",
+    get label() {
+      return uiText("workspace.interface.sunrise_9c7c53e");
+    },
+    colors: ["#fbbf24", "#f472b6"],
+  },
+  {
+    id: "glacier",
+    get label() {
+      return uiText("workspace.interface.glacier_eebc86a");
+    },
+    colors: ["#a5f3fc", "#818cf8"],
+  },
+  {
+    id: "candy",
+    get label() {
+      return uiText("workspace.interface.candy_c2d3bfa");
+    },
+    colors: ["#f9a8d4", "#a78bfa", "#67e8f9"],
+  },
+  {
+    id: "toxic",
+    get label() {
+      return uiText("workspace.interface.toxic_bc2dfd1");
+    },
+    colors: ["#bef264", "#10b981", "#0ea5e9"],
+  },
+  {
+    id: "royal",
+    get label() {
+      return uiText("workspace.interface.royal_1c0f113");
+    },
+    colors: ["#6366f1", "#a855f7"],
+  },
+  {
+    id: "ember",
+    get label() {
+      return uiText("workspace.interface.ember_cb1655d");
+    },
+    colors: ["#fde047", "#f97316", "#dc2626"],
+  },
+  {
+    id: "gold",
+    get label() {
+      return uiText("workspace.interface.gold_6249df4");
+    },
+    colors: ["#fde68a", "#f59e0b"],
+  },
+  {
+    id: "arcade",
+    get label() {
+      return uiText("workspace.interface.arcade_df79c0f");
+    },
+    colors: ["#f0abfc", "#22d3ee", "#a3e635"],
+  },
 ];
-
 /** The CSS paint for [colors]: a solid colour, or a gradient across the name. */
 export function namePaint(colors: string[] | null | undefined): CSSProperties | undefined {
   if (!colors?.length) return undefined;
   if (colors.length === 1) return { color: colors[0] };
   return { "--name-paint": `linear-gradient(90deg, ${colors.join(", ")})` } as CSSProperties;
 }
-
 interface StyledNameProps {
   name: string;
   style: ProfileStyle | null | undefined;
@@ -60,9 +160,9 @@ interface StyledNameProps {
   /** API 0.65.0 batch B: a bot's account, tagged BOT after the name. */
   bot?: boolean;
 }
-
 /** A display name with its style, then the worn tag. Screen readers hear the name, then "tag MC". */
 export function StyledName({ name, style, tag, mojo, everyBadge, roleColor, roleColor2, toneClass, className, bot }: StyledNameProps) {
+  useLocaleRender();
   const own = style?.nameColors?.length ? style.nameColors : null;
   const colors = own ?? (roleColor ? (roleColor2 ? [roleColor, roleColor2] : [roleColor]) : null);
   const paint = namePaint(colors);
@@ -89,17 +189,18 @@ export function StyledName({ name, style, tag, mojo, everyBadge, roleColor, role
     </span>
   );
 }
-
 export function WornTagChip({ tag }: { tag: WornTag }) {
+  useLocaleRender();
   return (
-    <span className="wtag" style={tag.color ? ({ "--tag": tag.color } as CSSProperties) : undefined} title={`Community tag ${tag.text}`}>
-      <span className="sr-only">tag </span>
+    <span className="wtag" style={tag.color ? ({ "--tag": tag.color } as CSSProperties) : undefined} title={uiText("workspace.interface.community_tag_value0_36c63c5", { value0: tag.text })}>
+      <span className="sr-only">
+        <Localized k="workspace.interface.tag_2a1073a" />
+      </span>
       <IdentityGlyph kind="community" size={11} />
       {tag.text}
     </span>
   );
 }
-
 /** What this browser knows of a person's look (from member lists and profiles). */
 export function useUserLook(userId: string): Pick<UserLite, "avatarMedia" | "profileStyle" | "tag" | "mojo" | "bot"> {
   return useOrbit(
@@ -110,7 +211,6 @@ export function useUserLook(userId: string): Pick<UserLite, "avatarMedia" | "pro
     (a, b) => a.avatarMedia === b.avatarMedia && a.profileStyle === b.profileStyle && a.tag === b.tag && a.mojo === b.mojo && a.bot === b.bot,
   );
 }
-
 interface LookNameProps {
   userId: string;
   name: string;
@@ -121,15 +221,14 @@ interface LookNameProps {
   toneClass?: string;
   className?: string;
 }
-
 /** A name as its owner styled it (API 0.46.0), wherever this browser shows it: messages, lists, headers and panels. */
 export function LookName({ userId, name, withMarks = false, withSubscription = false, toneClass, className = "ellipsis" }: LookNameProps) {
+  useLocaleRender();
   const look = useUserLook(userId);
   if (withSubscription) return <StyledName name={name} style={look.profileStyle} mojo={look.mojo} bot={look.bot} everyBadge toneClass={toneClass} className={className} />;
   if (!withMarks) return <StyledName name={name} style={look.profileStyle} bot={look.bot} toneClass={toneClass} className={className} />;
   return <StyledName name={name} style={look.profileStyle} tag={look.tag} mojo={look.mojo} bot={look.bot} toneClass={toneClass} className={className} />;
 }
-
 interface LookAvatarProps {
   userId: string;
   name: string;
@@ -139,9 +238,9 @@ interface LookAvatarProps {
   online?: boolean | null;
   presence?: "online" | "idle" | "dnd" | "offline" | null;
 }
-
 /** An avatar as everywhere in lists and messages (API 0.46.0): animated and framed when the person chose that. */
 export function LookAvatar(p: LookAvatarProps) {
+  useLocaleRender();
   const look = useUserLook(p.userId);
   return (
     <StyledAvatar

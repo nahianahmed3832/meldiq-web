@@ -1,0 +1,99 @@
+{
+  "policy": "All non-English translations require professional native-speaker review. No native-speaker approval has been obtained. Missing values must remain absent, never copied from English to inflate coverage.",
+  "locales": {
+    "en": {
+      "status": "source"
+    },
+    "bn": {
+      "status": "awaiting-native-review"
+    },
+    "hi": {
+      "status": "awaiting-native-review"
+    },
+    "ur": {
+      "status": "awaiting-native-review"
+    },
+    "zh-CN": {
+      "status": "awaiting-native-review"
+    },
+    "zh-TW": {
+      "status": "awaiting-native-review"
+    },
+    "ja": {
+      "status": "awaiting-native-review"
+    },
+    "ko": {
+      "status": "awaiting-native-review"
+    },
+    "id": {
+      "status": "awaiting-native-review"
+    },
+    "vi": {
+      "status": "awaiting-native-review"
+    },
+    "th": {
+      "status": "awaiting-native-review"
+    },
+    "ar": {
+      "status": "awaiting-native-review"
+    },
+    "tr": {
+      "status": "awaiting-native-review"
+    },
+    "pt-BR": {
+      "status": "awaiting-native-review"
+    },
+    "pt-PT": {
+      "status": "awaiting-native-review"
+    },
+    "es-419": {
+      "status": "awaiting-native-review"
+    },
+    "es-ES": {
+      "status": "awaiting-native-review"
+    },
+    "fr": {
+      "status": "awaiting-native-review"
+    },
+    "de": {
+      "status": "awaiting-native-review"
+    },
+    "it": {
+      "status": "awaiting-native-review"
+    },
+    "nl": {
+      "status": "awaiting-native-review"
+    },
+    "pl": {
+      "status": "awaiting-native-review"
+    },
+    "ru": {
+      "status": "awaiting-native-review"
+    },
+    "uk": {
+      "status": "awaiting-native-review"
+    },
+    "ro": {
+      "status": "awaiting-native-review"
+    },
+    "sv": {
+      "status": "awaiting-native-review"
+    },
+    "cs": {
+      "status": "awaiting-native-review"
+    },
+    "el": {
+      "status": "awaiting-native-review"
+    }
+  },
+  "engineeringChecks": {
+    "catalogKeys": 6179,
+    "coverage": "100% in all 28 locales",
+    "structuralValidation": "passed",
+    "sourceAudit": "passed",
+    "crossScriptContamination": "passed",
+    "protectedNamesAndExamples": "passed",
+    "nativeApprovalObtained": false
+  },
+  "provenance": "Static repository dictionaries with offline authoring and engineering review. No authoring model, API or service is shipped or required at runtime."
+}

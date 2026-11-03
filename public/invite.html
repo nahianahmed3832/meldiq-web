@@ -7,7 +7,8 @@
     <meta name="theme-color" content="#0b1126" />
     <meta name="referrer" content="no-referrer" />
     <meta name="robots" content="noindex" />
-    <title>Meldiq invitation</title>
+    <title data-public-text="onboarding.public.title"></title>
+    <script src="/public-locale.js" defer></script>
     <link rel="icon" href="/favicon-light-32.png" media="(prefers-color-scheme: light)" />
     <link rel="icon" href="/favicon-dark-32.png" media="(prefers-color-scheme: dark)" />
     <style>
@@ -45,32 +46,36 @@
       .banner { height: 132px; margin: -32px -28px 0; border-radius: 22px 22px 0 0; background: center / cover no-repeat; }
       .banner + .icon { margin-top: -48px; box-shadow: 0 0 0 6px var(--card); }
       [hidden] { display: none !important; }
+      .public-language {display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:8px;margin-block-start:18px;}
+      .public-language select {max-inline-size:100%;font:inherit;color:var(--text);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:6px;}
     </style>
   </head>
   <body>
     <main>
       <div class="banner" id="banner" hidden></div>
       <div class="icon brand" id="icon" aria-hidden="true"><img src="/meldling-192.webp" alt="" width="88" height="88" /></div>
-      <p id="lead">You've been invited to join</p>
-      <h1 id="name">Loading…</h1>
+      <p id="lead" data-public-text="workspace.interface.you_ve_been_invited_to_join_1c4ddf0"></p>
+      <h1 id="name" dir="auto" data-public-text="common.status.loading"></h1>
       <p id="members" hidden></p>
-      <p id="about" hidden></p>
+      <p id="about" dir="auto" hidden></p>
       <p id="problem" class="warn" hidden></p>
       <div id="join" hidden>
         <div class="actions">
-          <a class="button primary" id="open-web" href="/">Join in Meldiq Web</a>
-          <a class="button" id="open-app" href="#" hidden>Open in the Meldiq app</a>
+          <a class="button primary" id="open-web" href="/" data-public-text="onboarding.public.web"></a>
+          <a class="button" id="open-app" href="#" hidden data-public-text="onboarding.public.app"></a>
           <a class="button play" id="get-app" href="https://play.google.com/store/apps/details?id=com.meldiq.android" rel="noopener" target="_blank">
             <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M4 2.6v18.8c0 .5.5.8.9.6l10.3-10-10.3-10c-.4-.2-.9.1-.9.6Zm12.6 7.9-2.3-2.3-8-7.6 11.9 6.8-1.6 3.1Zm0 3-1.6 3.1-11.9 6.8 8-7.6 2.3-2.3Zm1.4-.7 2.6-1.5c.6-.4.6-1.2 0-1.6L18 8.2l-1.9 3.8 1.9 1.8Z"/></svg>
-            Get Meldiq for Android
+            <span data-public-text="onboarding.public.android"></span>
           </a>
-          <button type="button" id="copy">Copy the code</button>
+          <button type="button" id="copy" data-public-text="onboarding.public.copy"></button>
         </div>
-        <div class="code" id="code"></div>
-        <p style="margin-top: 12px; font-size: 0.9rem">Not signed in yet? Sign in or create an account first: you'll come back to this community.</p>
+        <div class="code" id="code" dir="ltr"></div>
+        <p style="margin-top: 12px; font-size: 0.9rem" data-public-text="onboarding.public.hint"></p>
       </div>
+      <label class="public-language"><span data-public-text="common.language.label"></span><select data-public-language disabled></select></label>
+      <p id="public-locale-error" class="warn" role="alert" data-public-text="common.language.failed" hidden></p>
       <div class="brandline"><img src="/meldling-96.webp" alt="" width="22" height="22" />Meldiq</div>
     </main>
-    <script src="/invite.js"></script>
+    <script src="/invite.js" defer></script>
   </body>
 </html>

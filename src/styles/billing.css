@@ -296,7 +296,7 @@
 }
 .checkout-art-spark {
   position: absolute;
-  right: 30px;
+  inset-inline-end: 30px;
   top: 35px;
   color: #bd9afc;
 }
@@ -331,7 +331,7 @@
   font-size: 26px;
   font-weight: 750;
   letter-spacing: -0.7px;
-  text-align: right;
+  text-align: end;
 }
 .checkout-total small {
   display: block;
@@ -377,7 +377,7 @@
   color: var(--text-2);
 }
 .checkout-footer a {
-  margin-left: auto;
+  margin-inline-start: auto;
   color: var(--text-2);
 }
 .checkout-success {
@@ -436,7 +436,7 @@
 .billing-table {
   width: 100%;
   border-collapse: collapse;
-  text-align: left;
+  text-align: start;
   font-size: 12px;
 }
 .billing-table th {
@@ -497,7 +497,8 @@
   }
   .checkout-plan-art > span:first-child {
     float: right;
-    margin: 0 0 0 14px;
+    margin-block: 0 0;
+    margin-inline: 14px 0;
   }
   .checkout-plan-art .checkout-art-spark {
     display: none;

@@ -1,5 +1,5 @@
 import "fake-indexeddb/auto";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import type { ConversationLocal, StoredMessage } from "../src/model/types";
 import { LocalStore } from "../src/store/db";
 import { ConversationLocals } from "../src/sync/locals";
@@ -87,4 +87,40 @@ describe("conversation counters in this browser", () => {
     await Promise.all([l.bump(message("a", 1), { unread: true, mention: false }), l.bump(message("b", 2), { unread: true, mention: false })]);
     expect(published.at(-1)?.unread).toBe(2);
   });
+});
+
+// Presentation metadata is durable, while its wording follows the current interface locale.
+import { prepareLocale, translate } from "../src/i18n";
+import { setPrefs } from "../src/application/prefs";
+import { conversationPreview } from "../src/sync/rules";
+
+it("relabels cached system previews without translating people, filenames, or message text", async () => {
+  await prepareLocale("bn", ["workspace", "common"]);
+  const store = await LocalStore.open("locals-locale-preview");
+  const l = new ConversationLocals(store, { senderName: () => "You", publish: () => {} });
+  const options = { unread: true, mention: false };
+  vi.stubGlobal("document", { documentElement: { setAttribute: vi.fn(), removeAttribute: vi.fn(), style: { setProperty: vi.fn(), removeProperty: vi.fn() } }, querySelector: () => null });
+  vi.stubGlobal("getComputedStyle", () => ({ getPropertyValue: () => "" }));
+  try {
+    setPrefs({ language: "en" });
+    await l.bump({ ...message("photo", 1), text: "", attachments: [{ mime: "image/png", name: "Save.png" }] as StoredMessage["attachments"] }, options);
+    const photo = await l.get("c-1");
+    expect(conversationPreview(photo)).toBe(translate("en", "workspace.interface.photo_1b13ff9"));
+    expect(photo.lastSenderOwn).toBe(false);
+    expect(photo.lastSenderName).toBe("You");
+    setPrefs({ language: "bn" });
+    expect(conversationPreview(photo)).toBe(translate("bn", "workspace.interface.photo_1b13ff9"));
+    for (const [index, text] of ["Photo", "Save"].entries()) {
+      await l.bump({ ...message("literal" + index, 2 + index), text }, options);
+      expect(conversationPreview(await l.get("c-1"))).toBe(text);
+    }
+    await l.bump({ ...message("file", 4), text: "", outgoing: true, attachments: [{ mime: "application/pdf", name: "Save.pdf" }] as StoredMessage["attachments"] }, options);
+    const file = await l.get("c-1");
+    expect(conversationPreview(file)).toBe("📎 Save.pdf");
+    expect(file.lastSenderOwn).toBe(true);
+  } finally {
+    setPrefs({ language: "en" });
+    store.close();
+    vi.unstubAllGlobals();
+  }
 });

@@ -1,0 +1,10 @@
+{
+  "title": "Beheer",
+  "health": "Servicestatus",
+  "usage": "Communitygebruik",
+  "states": {
+    "rejected": "Afgewezen",
+    "escalated": "Doorgestuurd naar een hoger niveau",
+    "disputed": "Betwist"
+  }
+}

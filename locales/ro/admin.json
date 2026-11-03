@@ -1,0 +1,10 @@
+{
+  "title": "Administrare",
+  "health": "Starea serviciului",
+  "usage": "Utilizarea comunității",
+  "states": {
+    "rejected": "Respins",
+    "escalated": "Trimis la un nivel superior",
+    "disputed": "Contestat"
+  }
+}

@@ -1,3 +1,8 @@
+import { roleName } from "../../sync/workspaceRules";
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
+import { Localized } from "../../i18n/Localized";
+import { useT as useLocalization } from "../../i18n";
 import { Building2, Hash, MessageSquareText, Paperclip, Pin, Search, UsersRound, X } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -14,7 +19,6 @@ import { jumpTo } from "../chat/jump";
 import { conversationTitle, members, shortWhen } from "../format";
 import { UserAvatar } from "../components/OrgAvatar";
 import { parseSearchQuery } from "../../sync/searchQuery";
-
 interface Result {
   key: string;
   section: Section;
@@ -23,31 +27,59 @@ interface Result {
   icon: React.ReactNode;
   go: () => void;
 }
-
 const LABEL: Record<Section, string> = {
-  conversations: "Conversations",
-  channels: "Channels",
-  workspaces: "Communities",
-  groups: "Groups",
-  people: "People",
-  messages: "Messages",
-  files: "Files loaded here",
-  pinned: "Pinned loaded here",
+  get conversations() {
+    return uiText("settings.nt_conversations");
+  },
+  get channels() {
+    return uiText("organization.channels");
+  },
+  get workspaces() {
+    return uiText("workspace.interface.communities_c864f32");
+  },
+  get groups() {
+    return uiText("workspace.interface.groups_39bbb71");
+  },
+  get people() {
+    return uiText("calls.interface.people_7db2089");
+  },
+  get messages() {
+    return uiText("workspace.nav_messages");
+  },
+  get files() {
+    return uiText("workspace.interface.files_loaded_here_8ea7c56");
+  },
+  get pinned() {
+    return uiText("workspace.interface.pinned_loaded_here_2f97eca");
+  },
 };
 const FILTER_LABEL: Record<Filter, string> = {
-  all: "All",
-  messages: "Messages",
-  files: "Files",
-  pinned: "Pinned",
-  people: "People",
-  channels: "Channels",
-  workspaces: "Communities",
+  get all() {
+    return uiText("settings.ap_all");
+  },
+  get messages() {
+    return uiText("workspace.nav_messages");
+  },
+  get files() {
+    return uiText("files.files");
+  },
+  get pinned() {
+    return uiText("messaging.interface.pinned_f20c879");
+  },
+  get people() {
+    return uiText("calls.interface.people_7db2089");
+  },
+  get channels() {
+    return uiText("organization.channels");
+  },
+  get workspaces() {
+    return uiText("workspace.interface.communities_c864f32");
+  },
 };
 /** How many results a single-kind filter shows at first, and adds on Show more. */
 const PAGE = 20;
 const LOCAL_LIMIT = 100;
 const RECENT_KEY = "meldiq.recentSearches";
-
 function loadRecent(): string[] {
   try {
     const v: unknown = JSON.parse(localStorage.getItem(RECENT_KEY) ?? "[]");
@@ -71,20 +103,23 @@ function saveRecent(list: string[]): void {
     /* kept for this page only */
   }
 }
-
 interface Local {
   messages: StoredMessage[];
-  files: { message: StoredMessage; ref: AttachmentRef }[];
+  files: {
+    message: StoredMessage;
+    ref: AttachmentRef;
+  }[];
   pinned: StoredMessage[];
 }
 const NO_LOCAL: Local = { messages: [], files: [], pinned: [] };
-
 /**
  * ⌘K search (android round 7 C2 search screen): conversations, messages, files and pinned messages on this browser,
  * and, where the server offers `search`, people, channels, workspaces and groups from the server, which
  * checks each one's own access. Filters, a page per kind with Show more, and recent searches kept on this browser.
  */
 export function SearchDialog({ orgId: _orgId, onClose }: { orgId: string | null; onClose: () => void }) {
+  useLocaleRender();
+  const l10n = useLocalization();
   const engine = useEngine();
   const conversations = useOrbit((s) => s.conversations);
   const users = useOrbit((s) => s.users);
@@ -101,14 +136,12 @@ export function SearchDialog({ orgId: _orgId, onClose }: { orgId: string | null;
   const [index, setIndex] = useState(0);
   const input = useRef<HTMLInputElement>(null);
   const term = usable(q);
-
   useEffect(() => {
     input.current?.focus();
     const k = (e: KeyboardEvent) => e.key === "Escape" && onClose();
     document.addEventListener("keydown", k);
     return () => document.removeEventListener("keydown", k);
   }, [onClose]);
-
   useEffect(() => {
     setShown(PAGE);
     if (!term) {
@@ -144,7 +177,6 @@ export function SearchDialog({ orgId: _orgId, onClose }: { orgId: string | null;
       clearTimeout(t);
     };
   }, [term, filter, universal, engine]);
-
   /** Show more: the next page of a server kind (its cursor), or more of what's already found on this browser. */
   const more = async (section: Section) => {
     setShown((n) => n + PAGE);
@@ -154,7 +186,6 @@ export function SearchDialog({ orgId: _orgId, onClose }: { orgId: string | null;
     const add = next?.[section as keyof SearchResults];
     if (add) setServer((cur) => ({ ...cur, [section]: { items: [...(cur[section as keyof SearchResults]?.items ?? []), ...add.items], next: add.next } }));
   };
-
   const open = (r: Result) => {
     if (term) {
       const list = remember(recent, term);
@@ -164,15 +195,14 @@ export function SearchDialog({ orgId: _orgId, onClose }: { orgId: string | null;
     onClose();
     r.go();
   };
-
-  const failed = (e: unknown) => engine.notice("error", e instanceof Error ? e.message : "Couldn't open that.");
+  const failed = (e: unknown) => engine.notice("error", e instanceof Error ? e.message : uiText("workspace.interface.couldn_t_open_that_ae9aee4"));
   const openMessage = (m: StoredMessage) => {
     navigate({ section: conversations[m.conversationId]?.type === "CHANNEL" ? "home" : "dms", conversationId: m.conversationId });
     setTimeout(() => void jumpTo(engine, m.conversationId, m.id), 300);
   };
-  const inConv = (m: StoredMessage) => (me && conversations[m.conversationId] ? conversationTitle(conversations[m.conversationId], me.userId, users) : "a conversation");
-  const who = (m: StoredMessage) => (m.outgoing ? "You" : (users[m.senderUserId]?.displayName ?? "Someone"));
-
+  const inConv = (m: StoredMessage) =>
+    me && conversations[m.conversationId] ? conversationTitle(conversations[m.conversationId], me.userId, users) : uiText("workspace.interface.a_conversation_3e95da5");
+  const who = (m: StoredMessage) => (m.outgoing ? uiText("workspace.nav_you") : (users[m.senderUserId]?.displayName ?? uiText("messaging.react_someone")));
   const all = useMemo<Record<Section, Result[]>>(() => {
     const out: Record<Section, Result[]> = { conversations: [], channels: [], workspaces: [], groups: [], people: [], messages: [], files: [], pinned: [] };
     if (!me) return out;
@@ -185,10 +215,10 @@ export function SearchDialog({ orgId: _orgId, onClose }: { orgId: string | null;
         title: c.type === "CHANNEL" ? `#${title}` : title,
         sub:
           c.type === "CHANNEL"
-            ? [orgName ?? c.scopeName ?? "Channel", c.joined ? null : "not joined: opens and joins"].filter(Boolean).join(" · ")
+            ? [orgName ?? c.scopeName ?? l10n("settings.interface.channel_ce4683e"), c.joined ? null : l10n("workspace.interface.not_joined_opens_and_joins_f207e31")].filter(Boolean).join(" · ")
             : c.type === "GROUP"
-              ? `Group · ${members(c.memberCount)}`
-              : "Direct message",
+              ? l10n("workspace.interface.group_value0_9af23fd", { value0: members(c.memberCount) })
+              : l10n("messaging.interface.direct_message_cd3e160"),
         icon: c.type === "CHANNEL" ? <Hash size={18} /> : <Avatar name={title} colorIndex={colorIndexOf(c.id)} size={28} decorative />,
         go: () =>
           c.joined || c.type !== "CHANNEL"
@@ -221,7 +251,7 @@ export function SearchDialog({ orgId: _orgId, onClose }: { orgId: string | null;
       key: `workspaces:${o.id}`,
       section: "workspaces",
       title: o.name,
-      sub: o.myRole ? `Community · ${o.myRole.toLowerCase()}` : "Community",
+      sub: o.myRole ? l10n("workspace.interface.community_value0_d6d7785", { value0: roleName(o.myRole) }) : l10n("organization.community"),
       icon: <Building2 size={18} />,
       go: () => {
         setPrefs({ orgId: o.id });
@@ -234,7 +264,7 @@ export function SearchDialog({ orgId: _orgId, onClose }: { orgId: string | null;
         key: `messages:${m.id}`,
         section: "messages",
         title: m.text.length > 90 ? `${m.text.slice(0, 90)}…` : m.text,
-        sub: `${who(m)} in ${inConv(m)} · ${shortWhen(m.sortTs)}`,
+        sub: l10n("workspace.interface.value0_in_value1_value2_95e3d8d", { value0: who(m), value1: inConv(m), value2: shortWhen(m.sortTs) }),
         icon: <MessageSquareText size={18} />,
         go: () => openMessage(m),
       }));
@@ -244,7 +274,7 @@ export function SearchDialog({ orgId: _orgId, onClose }: { orgId: string | null;
         key: `files:${f.message.id}:${f.ref.id}`,
         section: "files",
         title: f.ref.name,
-        sub: `${who(f.message)} in ${inConv(f.message)} · ${shortWhen(f.message.sortTs)}`,
+        sub: l10n("workspace.interface.value0_in_value1_value2_95e3d8d", { value0: who(f.message), value1: inConv(f.message), value2: shortWhen(f.message.sortTs) }),
         icon: <Paperclip size={18} />,
         go: () => openMessage(f.message),
       }));
@@ -254,14 +284,13 @@ export function SearchDialog({ orgId: _orgId, onClose }: { orgId: string | null;
         key: `pinned:${m.id}`,
         section: "pinned",
         title: m.text.length > 90 ? `${m.text.slice(0, 90)}…` : m.text,
-        sub: `Pinned in ${inConv(m)} · ${shortWhen(m.sortTs)}`,
+        sub: l10n("workspace.interface.pinned_in_value0_value1_72bd210", { value0: inConv(m), value1: shortWhen(m.sortTs) }),
         icon: <Pin size={18} />,
         go: () => openMessage(m),
       }));
     return out;
     // eslint-disable-next-line react-hooks/exhaustive-deps -- recomputed from what was found
-  }, [term, conversations, users, me, server, legacyPeople, local, orgs, universal, engine]);
-
+  }, [term, conversations, users, me, server, legacyPeople, local, orgs, universal, engine, l10n]);
   /** What's listed: under All a preview of each kind; under a filter its page so far. */
   const groups = useMemo(() => {
     const wanted = sections(filter).filter((s) => s !== "conversations" || filter === "all");
@@ -276,20 +305,18 @@ export function SearchDialog({ orgId: _orgId, onClose }: { orgId: string | null;
       .filter((g) => g.items.length > 0);
   }, [all, filter, shown, term, server]);
   const flat = groups.flatMap((g) => g.items);
-
   useEffect(() => setIndex(0), [q, filter]);
-
   return createPortal(
     <div className="scrim" onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
-      <div className="dialog" role="dialog" aria-modal="true" aria-label="Search" style={{ width: "min(680px, 100%)" }}>
+      <div className="dialog" role="dialog" aria-modal="true" aria-label={l10n("common.actions.search")} style={{ width: "min(680px, 100%)" }}>
         <div className="search-input">
           <Search size={18} className="faint" />
           <input
             ref={input}
             value={q}
             onChange={(e) => setQ(e.target.value)}
-            placeholder={universal ? "Search people, channels and messages" : "Search conversations, people and messages"}
-            aria-label="Search"
+            placeholder={universal ? uiText("workspace.interface.search_people_channels_and_messages_4c7d430") : l10n("messaging.search_placeholder")}
+            aria-label={l10n("common.actions.search")}
             role="combobox"
             aria-expanded="true"
             aria-controls="search-results"
@@ -307,11 +334,11 @@ export function SearchDialog({ orgId: _orgId, onClose }: { orgId: string | null;
               }
             }}
           />
-          <button className="icon-btn" onClick={onClose} aria-label="Close search">
+          <button className="icon-btn" onClick={onClose} aria-label={l10n("messaging.conv_close_search")}>
             <X size={18} />
           </button>
         </div>
-        <div className="search-filters" role="tablist" aria-label="Show">
+        <div className="search-filters" role="tablist" aria-label={uiText("messaging.interface.show_0df6f1c")}>
           {FILTERS.filter((f) => universal || (f !== "workspaces" && f !== "channels")).map((f) => (
             <button key={f} role="tab" aria-selected={filter === f} className="chip" onClick={() => setFilter(f)}>
               {FILTER_LABEL[f]}
@@ -321,7 +348,9 @@ export function SearchDialog({ orgId: _orgId, onClose }: { orgId: string | null;
         <div id="search-results" role="listbox" className="scroll" style={{ minHeight: 0, paddingBottom: 8 }}>
           {!term && recent.length > 0 && (
             <div className="result-group">
-              <h3>Recent searches</h3>
+              <h3>
+                <Localized k="workspace.interface.recent_searches_228c84b" />
+              </h3>
               <div className="recent-searches">
                 {recent.map((r) => (
                   <button key={r} className="chip" onClick={() => setQ(r)}>
@@ -333,7 +362,7 @@ export function SearchDialog({ orgId: _orgId, onClose }: { orgId: string | null;
           )}
           {flat.length === 0 && term && (
             <div className="empty" style={{ padding: 32 }}>
-              Nothing found.
+              <Localized k="workspace.interface.nothing_found_eb1fa11" />
             </div>
           )}
           {groups.map((g) => (
@@ -355,14 +384,14 @@ export function SearchDialog({ orgId: _orgId, onClose }: { orgId: string | null;
               })}
               {g.hasMore && (
                 <button className="btn btn-ghost btn-sm" style={{ margin: "2px 8px" }} onClick={() => void more(g.section)}>
-                  Show more
+                  {l10n("workspace.discover_more")}
                 </button>
               )}
             </div>
           ))}
           {term && universal && filter === "all" && (
             <p className="faint search-note">
-              <UsersRound size={12} /> Everything comes from the server, which only shows what you may see.
+              <Localized k="workspace.interface.everything_comes_from_the_server_which_only_shows_what_you_may_se_4d7c10b" slots={[<UsersRound size={12} />]} />
             </p>
           )}
         </div>

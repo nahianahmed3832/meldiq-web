@@ -10,7 +10,8 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   grid-template-areas: "nav" "auth" "hero" "foot";
-  padding: env(safe-area-inset-top, 0px) calc(16px + env(safe-area-inset-right, 0px)) env(safe-area-inset-bottom, 0px) calc(16px + env(safe-area-inset-left, 0px));
+  padding-block: env(safe-area-inset-top, 0px) env(safe-area-inset-bottom, 0px);
+  padding-inline: calc(16px + env(safe-area-inset-left, 0px)) calc(16px + env(safe-area-inset-right, 0px));
   overflow-x: clip;
 }
 
@@ -179,7 +180,10 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 6px 6px 6px 12px;
+  padding-block-start: 6px;
+  padding-inline-end: 6px;
+  padding-block-end: 6px;
+  padding-inline-start: 12px;
   border-radius: var(--r-pill);
   box-shadow: 0 0 0 1px var(--border-strong);
 }
@@ -233,8 +237,8 @@
 /* Tablets: more room and a larger picture. */
 @media (min-width: 600px) {
   .landing {
-    padding-left: calc(32px + env(safe-area-inset-left, 0px));
-    padding-right: calc(32px + env(safe-area-inset-right, 0px));
+    padding-inline-start: calc(32px + env(safe-area-inset-left, 0px));
+    padding-inline-end: calc(32px + env(safe-area-inset-right, 0px));
   }
   .landing-hero {
     padding: 24px 0 32px;
@@ -254,8 +258,8 @@
     grid-template-areas: "nav nav" "hero auth" "foot foot";
     grid-template-rows: auto 1fr auto;
     column-gap: clamp(32px, 5vw, 80px);
-    padding-left: calc(clamp(32px, 5vw, 80px) + env(safe-area-inset-left, 0px));
-    padding-right: calc(clamp(32px, 5vw, 80px) + env(safe-area-inset-right, 0px));
+    padding-inline-start: calc(clamp(32px, 5vw, 80px) + env(safe-area-inset-left, 0px));
+    padding-inline-end: calc(clamp(32px, 5vw, 80px) + env(safe-area-inset-right, 0px));
   }
   .landing-nav {
     padding: 22px 0;

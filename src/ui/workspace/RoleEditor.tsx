@@ -1,3 +1,7 @@
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
+import { Localized } from "../../i18n/Localized";
+import { useT as useLocalization } from "../../i18n";
 import { IdCard } from "lucide-react";
 import { useState } from "react";
 import { useEngine, useOrbit } from "../../application/orbit";
@@ -10,12 +14,9 @@ import { RoleMembersList } from "./RoleMembers";
 import { PermissionChecklist } from "./RolePermissionsTab";
 import { useAction } from "./useLoad";
 import { ErrorLine } from "./WorkspaceView";
-
 type Tab = "display" | "permissions" | "members";
-
 const dayInput = (ms: number | null | undefined) => (ms ? new Date(ms).toISOString().slice(0, 10) : "");
 const dayMs = (day: string) => (day ? Date.parse(`${day}T00:00:00Z`) : null);
-
 function startDraft(overview: RolesOverview, role: Role | null, template?: string): RoleDraft {
   const t = role ? null : (overview.templates.find((x) => x.key === template) ?? null);
   const from = role ?? t;
@@ -32,7 +33,6 @@ function startDraft(overview: RolesOverview, role: Role | null, template?: strin
     denies: new Set(from?.denies ?? []),
   };
 }
-
 /** What changed in the extras, or null when nothing did (only sent to servers with community-permissions). */
 function extrasChange(draft: RoleDraft, role: Role | null): RoleExtrasChange | null {
   const auto: AutoAssign = { mode: draft.autoMode, before: draft.autoMode === "joined_before" ? dayMs(draft.autoBefore) : null };
@@ -43,14 +43,12 @@ function extrasChange(draft: RoleDraft, role: Role | null): RoleExtrasChange | n
   if (auto.mode !== was.autoAssign.mode || auto.before !== was.autoAssign.before) change.autoAssign = auto;
   return Object.keys(change).length ? change : null;
 }
-
 const toggled = (set: ReadonlySet<string>, key: string, on: boolean): Set<string> => {
   const next = new Set(set);
   if (on) next.add(key);
   else next.delete(key);
   return next;
 };
-
 /**
  * Making or changing a custom role (the reference's role editor; server docs/WORKSPACE_ROLES.md and
  * COMMUNITY_PERMISSIONS.md): Display, Permissions and Manage Members tabs, "Edit role - NAME", Copy role ID. Only powers
@@ -71,6 +69,8 @@ export function RoleEditor({
   onSaved: () => void;
   onClose: () => void;
 }) {
+  useLocaleRender();
+  const l10n = useLocalization();
   const engine = useEngine();
   const features = useOrbit((s) => s.server?.features ?? []);
   const extras = features.includes(PARITY_FEATURES.permissions);
@@ -81,7 +81,6 @@ export function RoleEditor({
   const patch = (change: Partial<RoleDraft>) => setDraft((d) => ({ ...d, ...change }));
   const problem = extras ? autoRoleProblem(draft.autoMode, draft.grants.size, draft.denies.size) : null;
   const holds = (key: string) => overview.me.base === "OWNER" || overview.me.permissions.includes(key);
-
   const save = () =>
     void act.act(async () => {
       const fields = {
@@ -101,23 +100,26 @@ export function RoleEditor({
   const copyId = () => {
     if (!role) return;
     void navigator.clipboard?.writeText(role.id).catch(() => undefined);
-    engine.notice("info", "Role ID copied.");
+    engine.notice("info", uiText("workspace.interface.role_id_copied_55dc49a"));
   };
-
   return (
     <Dialog
-      title={role ? (readOnly ? role.name : `Edit role - ${role.name}`) : "New role"}
+      title={role ? (readOnly ? role.name : uiText("workspace.interface.edit_role_value0_972cc7d", { value0: role.name })) : uiText("workspace.interface.new_role_500f2f9")}
       onClose={onClose}
       wide
       footer={
         <>
-          {!readOnly && <span className="faint grow">Changes are saved when you press Save.</span>}
+          {!readOnly && (
+            <span className="faint grow">
+              <Localized k="workspace.interface.changes_are_saved_when_you_press_save_7348d70" />
+            </span>
+          )}
           <button className="btn btn-secondary" onClick={onClose}>
-            {readOnly ? "Close" : "Cancel"}
+            {readOnly ? l10n("common.actions.close") : l10n("common.actions.cancel")}
           </button>
           {!readOnly && (
             <button className="btn btn-primary" disabled={!draft.name.trim() || act.busy || !!problem} onClick={save}>
-              {act.busy ? "Saving…" : "Save"}
+              {act.busy ? l10n("common.common_saving") : l10n("common.actions.save")}
             </button>
           )}
         </>
@@ -125,18 +127,22 @@ export function RoleEditor({
     >
       <div className="dialog-body">
         <ErrorLine text={act.error} />
-        {readOnly && <div className="banner info">This role carries powers beyond yours, so you can see it but not change it.</div>}
+        {readOnly && (
+          <div className="banner info">
+            <Localized k="workspace.interface.this_role_carries_powers_beyond_yours_so_you_can_see_it_but_not_c_d98b54f" />
+          </div>
+        )}
         <div className="row" style={{ gap: 8, alignItems: "center" }}>
-          <div className="role-tabs grow" role="tablist" aria-label="Role">
+          <div className="role-tabs grow" role="tablist" aria-label={uiText("messaging.interface.role_14736a2")}>
             {(["display", "permissions", ...(role ? (["members"] as const) : [])] as Tab[]).map((t) => (
               <button key={t} role="tab" aria-selected={tab === t} onClick={() => setTab(t)}>
-                {t === "display" ? "Display" : t === "permissions" ? "Permissions" : "Manage Members"}
+                {t === "display" ? uiText("workspace.interface.display_34e108c") : t === "permissions" ? l10n("organization.permissions") : uiText("workspace.interface.manage_members_af812b0")}
               </button>
             ))}
           </div>
           {role && (
             <button className="btn btn-ghost btn-sm" onClick={copyId}>
-              <IdCard size={14} /> Copy role ID
+              <Localized k="workspace.interface.copy_role_id_931c027" slots={[<IdCard size={14} />]} />
             </button>
           )}
         </div>
@@ -163,7 +169,9 @@ export function RoleEditor({
               onDeny={(key, on) => patch({ denies: toggled(draft.denies, key, on) })}
               onClear={readOnly ? undefined : () => patch({ grants: new Set(), denies: new Set() })}
             />
-            <span className="hint">A role grants only what's ticked; restrictions win over grants. Owners always keep every power.</span>
+            <span className="hint">
+              <Localized k="workspace.interface.a_role_grants_only_what_s_ticked_restrictions_win_over_grants_own_19a3e7e" />
+            </span>
           </>
         )}
         {tab === "members" && role && <RoleMembersList orgId={orgId} role={role} canAssign={overview.me.canAssign && role.canAssign} onChanged={onSaved} />}

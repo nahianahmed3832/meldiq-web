@@ -1,3 +1,6 @@
+import { Localized } from "../../i18n/Localized";
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
 import { AppealAccess } from "../operations/AppealAccess";
 import type { SavedAccount } from "../../auth/savedAccounts";
 import { GiftSignInNotice } from "../billing/GiftSignInNotice";
@@ -18,20 +21,59 @@ import { TEST_DEVICE_LINKING } from "../../auth/testLinking";
 import { AddDeviceView, CreateIdentityView, RecoveryKeyReveal } from "./DeviceSetupViews";
 import { authErrorText } from "./useSubmit";
 import { useT } from "../../i18n";
-
 type Step =
-  | { k: "signIn"; notice?: string; email?: string }
-  | { k: "signUp" }
-  | { k: "verify"; email: string; password: string }
-  | { k: "forgot"; email: string }
-  | { k: "reset"; email: string }
-  | { k: "recover"; email: string }
-  | { k: "recoverConfirm"; ticket: string; newEmail: string }
-  | { k: "create"; creds: SetupCredentials; account: AccountView; password?: string }
-  | { k: "addDevice"; creds: SetupCredentials; account: AccountView; password?: string }
-  | { k: "recoveryKey"; device: DeviceRecord; grant: AccountSessionGrant; code: string }
-  | { k: "failed"; message: string };
-
+  | {
+      k: "signIn";
+      notice?: string;
+      email?: string;
+    }
+  | {
+      k: "signUp";
+    }
+  | {
+      k: "verify";
+      email: string;
+      password: string;
+    }
+  | {
+      k: "forgot";
+      email: string;
+    }
+  | {
+      k: "reset";
+      email: string;
+    }
+  | {
+      k: "recover";
+      email: string;
+    }
+  | {
+      k: "recoverConfirm";
+      ticket: string;
+      newEmail: string;
+    }
+  | {
+      k: "create";
+      creds: SetupCredentials;
+      account: AccountView;
+      password?: string;
+    }
+  | {
+      k: "addDevice";
+      creds: SetupCredentials;
+      account: AccountView;
+      password?: string;
+    }
+  | {
+      k: "recoveryKey";
+      device: DeviceRecord;
+      grant: AccountSessionGrant;
+      code: string;
+    }
+  | {
+      k: "failed";
+      message: string;
+    };
 /**
  * Signed out: Orbit 2.0 sign-in and sign-up, then this browser's encryption setup (docs/ORBIT_2_ARCHITECTURE §2–§5).
  * [onReady] gets the new device and its account session. The old account system's ways in (moving a pre-email account,
@@ -40,11 +82,13 @@ type Step =
  */
 /** What the sign-in screen says when the session setting this browser up was ended before it finished. */
 const SETUP_ENDED: Record<SetupSessionEnd, string> = {
-  session_ended:
-    "This sign-in was ended before the browser was set up: it was signed out from another device (for example removed from the session list on your phone), or it expired. Sign in again to continue.",
-  account_disabled: "This account is disabled.",
+  get session_ended() {
+    return uiText("auth.interface.this_sign_in_was_ended_before_the_browser_was_set_up_it_was_signe_eb451ac");
+  },
+  get account_disabled() {
+    return uiText("auth.interface.this_account_is_disabled_d1294d0");
+  },
 };
-
 export function AuthScreen(props: {
   base?: string;
   savedAccounts?: SavedAccount[];
@@ -54,20 +98,19 @@ export function AuthScreen(props: {
   onReady: (device: DeviceRecord, grant: AccountSessionGrant) => void;
   onLinkWithPhone: () => void;
 }) {
+  useLocaleRender();
   const base = props.base ?? apiBase();
   const { savedAccounts, onUseSavedAccount } = props;
   const [step, setStep] = useState<Step>({ k: "signIn" });
   const [server, setServer] = useState<ServerInfo | null>(null);
   const t = useT();
   const ctx: FormContext = useMemo(() => ({ accounts: AccountApi.anonymous(base), deviceName: browserDeviceName() }), [base]);
-
   useEffect(() => {
     new ApiClient(base)
       .json("GET", "/v1/server-info", zServerInfo, { auth: false })
       .then(setServer)
       .catch(() => setServer(null));
   }, [base]);
-
   /**
    * Signed in: set up encryption on this browser. [password] stays in memory for the key backup (unlocking it, or
    * making it once this browser has the keys).
@@ -90,10 +133,8 @@ export function AuthScreen(props: {
     },
     [base, savedAccounts, onUseSavedAccount],
   );
-
   const accounts = server?.accounts;
   const toSignIn = (notice?: string, email?: string) => setStep({ k: "signIn", notice, email });
-
   let body;
   switch (step.k) {
     case "signIn":
@@ -133,7 +174,10 @@ export function AuthScreen(props: {
           newEmail={step.newEmail}
           onDone={(email, left) =>
             toSignIn(
-              `Your account now uses ${email}. Sign in with your new password, then set up this browser with your encryption recovery key or your phone. ${left === 1 ? "1 recovery code is" : `${left} recovery codes are`} left; make a new set in Settings › Account when you can.`,
+              uiText("auth.interface.your_account_now_uses_value0_sign_in_with_your_new_password_then_1a4f02b", {
+                value0: email,
+                value1: left === 1 ? uiText("auth.interface.1_recovery_code_is_03db4f9") : uiText("auth.interface.recovery_codes_are_d18c093", { value0: left }),
+              }),
               email,
             )
           }
@@ -183,16 +227,15 @@ export function AuthScreen(props: {
     case "failed":
       body = (
         <div className="auth-form">
-          <AuthHeading title="This browser couldn't be set up" />
+          <AuthHeading title={uiText("auth.interface.this_browser_couldn_t_be_set_up_13bf4a3")} />
           <FormError text={step.message} />
           <button className="btn btn-primary" onClick={() => toSignIn()}>
-            Start again
+            <Localized k="auth.interface.start_again_962e64b" />
           </button>
         </div>
       );
       break;
   }
-
   return (
     <AuthFrame>
       <GiftSignInNotice />

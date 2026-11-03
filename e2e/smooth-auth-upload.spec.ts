@@ -18,7 +18,7 @@ test("authenticator sign-in unlocks the real encrypted backup without another em
   await expectSignedOut(page);
   await page.getByRole("button", { name: "Create an account" }).click();
   await page.getByLabel("Your name").fill("Linear Sign In");
-  await page.getByLabel("Email").fill(email);
+  await page.getByLabel("Email", { exact: true }).fill(email);
   await page.getByLabel("Password").fill(password);
   await page.getByRole("button", { name: "Create account" }).click();
   await page.getByRole("heading", { name: "Check your email" }).waitFor();
@@ -52,7 +52,7 @@ test("authenticator sign-in unlocks the real encrypted backup without another em
     await other.goto("/");
     await expectSignedOut(other);
     await other.getByRole("button", { name: "Continue with email", exact: true }).click();
-    await other.getByLabel("Email").fill(email);
+    await other.getByLabel("Email", { exact: true }).fill(email);
     await other.getByLabel("Password", { exact: true }).fill(password);
     await other.getByRole("button", { name: "Sign in", exact: true }).click();
     const field = other.locator('input[autocomplete="one-time-code"]');
@@ -77,7 +77,7 @@ test("original photo upload and exact download, with distinct owner rows", async
   await link(page, owner);
   await page.goto(`/home/c/${channel.id}`);
   await page.locator(".composer input[type=file]").setInputFiles(path.join(import.meta.dirname, "fixtures/photo.jpg"));
-  await expect(page.getByText("Photo quality", { exact: false })).toBeVisible();
+  await page.getByRole("checkbox", { name: "Original file", exact: true }).check();
   await page.getByPlaceholder(/^Message #/).fill("Automatic photo");
   await page.getByRole("button", { name: "Send", exact: true }).click();
   const message = page.locator(".msg").filter({ hasText: "Automatic photo" });

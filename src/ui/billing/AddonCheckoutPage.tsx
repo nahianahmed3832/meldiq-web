@@ -1,3 +1,8 @@
+import { LanguagePicker } from "../components/LanguagePicker";
+import { countLabel } from "../../i18n/counts";
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
+import { Localized } from "../../i18n/Localized";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ArrowLeft, Bot, CheckCircle2, LockKeyhole, ShieldCheck, Sparkles } from "lucide-react";
 import { useEngine, useOrbit } from "../../application/orbit";
@@ -10,14 +15,19 @@ import { type CheckoutDraft, readCheckout, selectCheckout, writeCheckout } from 
 import { usePayPalCardSdk } from "./PayPalCardButton";
 import { CheckoutPaymentButton } from "./CheckoutPaymentButton";
 import { PaymentMethods, type PaymentMethod } from "./PaymentMethods";
-
-type Addon = Extract<CheckoutDraft, { product: "spark" | "bots_plus" }>;
-
+type Addon = Extract<
+  CheckoutDraft,
+  {
+    product: "spark" | "bots_plus";
+  }
+>;
 export function AddonCheckoutPage({ draft, initial }: { draft: Addon; initial: ReturnType<typeof readCheckout> }) {
+  useLocaleRender();
+
   const engine = useEngine();
   const online = useOrbit((s) => s.connection === "online");
   const catalog = useOrbit((s) => s.mojo.catalog);
-  const community = useOrbit((s) => (draft.product === "bots_plus" ? (s.orgs.find((org) => org.id === draft.orgId)?.name ?? "this community") : null));
+  const community = useOrbit((s) => (draft.product === "bots_plus" ? (s.orgs.find((org) => org.id === draft.orgId)?.name ?? uiText("billing.interface.this_community_7a0984f")) : null));
   const saved = useRef(initial);
   const [config, setConfig] = useState<PayPalConfig | null>(null);
   const [purchase, setPurchase] = useState<PayPalPurchase | null>(null);
@@ -32,7 +42,7 @@ export function AddonCheckoutPage({ draft, initial }: { draft: Addon; initial: R
   const quantity = spark ? draft.quantity : 1;
   const price = spark ? catalog?.onSale.spark : catalog?.onSale.botsPlus;
   const amount = (price?.amountMinor ?? (spark ? 99 : 399)) * quantity;
-  const title = spark ? `${quantity} Meldiq Spark${quantity === 1 ? "" : "s"}` : "Meldiq Bots+";
+  const title = spark ? countLabel(quantity, "meldiqSparks") : "Meldiq Bots+";
   const product = draft.product;
   const orgId = draft.product === "bots_plus" ? draft.orgId : null;
   const remember = useCallback(
@@ -53,24 +63,22 @@ export function AddonCheckoutPage({ draft, initial }: { draft: Addon; initial: R
         (product === "spark" && p.quantity !== quantity) ||
         (product === "bots_plus" && p.orgId !== orgId)
       ) {
-        throw new Error("The order changed. Return to the product page and review a new checkout.");
+        throw new Error(uiText("billing.interface.the_order_changed_return_to_the_product_page_and_review_a_new_che_41eef4f"));
       }
       return p;
     },
     [product, amount, quantity, orgId],
   );
-
   useEffect(() => {
     let active = true;
     void engine.api
       .json("GET", "/v2/billing/paypal/config", zPayPalConfig)
       .then((value) => active && setConfig(value))
-      .catch(() => active && setError("Secure checkout could not load. Try again."));
+      .catch(() => active && setError(uiText("billing.interface.secure_checkout_could_not_load_try_again_9832920")));
     return () => {
       active = false;
     };
   }, [engine, attempt]);
-
   useEffect(() => {
     let active = true;
     if (saved.current.purchaseId)
@@ -79,12 +87,11 @@ export function AddonCheckoutPage({ draft, initial }: { draft: Addon; initial: R
         .then((value) => {
           if (active) remember(validate(value));
         })
-        .catch(() => active && setError("This checkout could not be resumed. Review its status in Billing."));
+        .catch(() => active && setError(uiText("billing.interface.this_checkout_could_not_be_resumed_review_its_status_in_billing_fe9d668")));
     return () => {
       active = false;
     };
   }, [engine, attempt, remember, validate]);
-
   const check = useCallback(
     async (capture: boolean) => {
       const id = saved.current.purchaseId;
@@ -99,7 +106,7 @@ export function AddonCheckoutPage({ draft, initial }: { draft: Addon; initial: R
           await engine.mojo.refresh();
         }
       } catch (e) {
-        setError(e instanceof Error ? e.message : "Payment confirmation could not be checked.");
+        setError(e instanceof Error ? e.message : uiText("billing.interface.payment_confirmation_could_not_be_checked_0f3db0f"));
       } finally {
         setChecking(false);
       }
@@ -124,10 +131,9 @@ export function AddonCheckoutPage({ draft, initial }: { draft: Addon; initial: R
       clearTimeout(timer);
     };
   }, [awaiting, purchase?.confirmed, check]);
-
   const create = async () => {
     setError(null);
-    if (!accepted || !online || !price || price.currency !== "USD") throw new Error("Review the order before paying.");
+    if (!accepted || !online || !price || price.currency !== "USD") throw new Error(uiText("billing.interface.review_the_order_before_paying_1787d31"));
     const current = saved.current;
     const result = validate(
       current.purchaseId
@@ -135,11 +141,11 @@ export function AddonCheckoutPage({ draft, initial }: { draft: Addon; initial: R
         : await engine.api.json("POST", "/v2/billing/paypal/checkouts", zPayPalCheckout, { body: { ...draft, requestKey: current.requestKey } }),
     );
     remember(result);
-    if (["expired", "failed", "refunded", "canceled", "incomplete_expired"].includes(result.status) && !result.confirmed) throw new Error("This checkout has ended. Start a new checkout to continue.");
-    if (result.confirmed) throw new Error("This purchase is already confirmed. Open Billing to view it.");
+    if (["expired", "failed", "refunded", "canceled", "incomplete_expired"].includes(result.status) && !result.confirmed)
+      throw new Error(uiText("billing.interface.this_checkout_has_ended_start_a_new_checkout_to_continue_4331837"));
+    if (result.confirmed) throw new Error(uiText("billing.interface.this_purchase_is_already_confirmed_open_billing_to_view_it_389c118"));
     return result;
   };
-
   const closed = purchase && !purchase.confirmed && ["expired", "failed", "refunded", "canceled", "incomplete_expired"].includes(purchase.status);
   const enabled = config && (spark ? config.sparks : config.botsPlus) && price?.currency === "USD";
   const back = () => {
@@ -156,53 +162,89 @@ export function AddonCheckoutPage({ draft, initial }: { draft: Addon; initial: R
           <strong>Meldiq</strong>
         </div>
         <span>
-          <LockKeyhole size={14} aria-hidden="true" /> Secure checkout
+          <Localized k="billing.interface.secure_checkout_074e5f6" slots={[<LockKeyhole size={14} aria-hidden="true" />]} />
         </span>
+        <LanguagePicker />
       </header>
       <button className="btn btn-ghost btn-sm checkout-back" onClick={back}>
-        <ArrowLeft size={15} aria-hidden="true" /> {spark ? "Back to Sparks" : "Back to community bots"}
+        <ArrowLeft size={15} aria-hidden="true" /> {spark ? uiText("billing.interface.back_to_sparks_f909467") : uiText("billing.interface.back_to_community_bots_2aedfb4")}
       </button>
       {purchase?.confirmed ? (
         <section className="checkout-success" role="status">
           <CheckCircle2 size={52} aria-hidden="true" />
-          <span className="checkout-kicker">ALL SET</span>
-          <h1>{spark ? "Your Sparks are ready." : "Bots+ is active."}</h1>
-          <p>{spark ? "Choose a community to boost. Your purchased Sparks do not renew or expire." : `Premium bot features are now available for ${community}.`}</p>
+          <span className="checkout-kicker">
+            <Localized k="billing.interface.all_set_78b4588" />
+          </span>
+          <h1>{spark ? uiText("billing.interface.your_sparks_are_ready_11373a3") : uiText("billing.interface.bots_is_active_a8ecf5e")}</h1>
+          <p>
+            {spark
+              ? uiText("billing.interface.choose_a_community_to_boost_your_purchased_sparks_do_not_renew_or_1c4d3fd")
+              : uiText("billing.interface.premium_bot_features_are_now_available_for_value0_4f08dda", { value0: community })}
+          </p>
           <p className="muted">
-            {money(purchase.amountMinor, purchase.currency)} {purchase.currency} · {spark ? "one-time payment" : "monthly"}
-            <br />
-            PayPal reference: <code>{purchase.providerRef}</code>
+            <Localized
+              k="billing.interface.paypal_reference_3ebc893"
+              slots={[
+                money(purchase.amountMinor, purchase.currency),
+                purchase.currency,
+                spark ? uiText("billing.interface.one_time_payment_784a8ce") : uiText("billing.interface.monthly_9169e3c"),
+                <br />,
+                <code>{purchase.providerRef}</code>,
+              ]}
+            />
           </p>
           <button className="btn btn-mojo" onClick={back}>
-            {spark ? "Use your Sparks" : "Open community bots"}
+            {spark ? uiText("billing.interface.use_your_sparks_4b04ce5") : uiText("billing.interface.open_community_bots_113cba2")}
           </button>
         </section>
       ) : (
         <>
           <div className="checkout-title">
             <span className="checkout-kicker">
-              <Sparkles size={14} aria-hidden="true" /> MORE FOR YOUR COMMUNITY
+              <Localized k="billing.interface.more_for_your_community_84c22c2" slots={[<Sparkles size={14} aria-hidden="true" />]} />
             </span>
             <h1>{title}</h1>
-            <p>{spark ? "Boost communities with a one-time purchase. No Meldiq Plus subscription is required." : `Premium community bots for ${community}, purchased separately from Meldiq Plus.`}</p>
+            <p>
+              {spark
+                ? uiText("billing.interface.boost_communities_with_a_one_time_purchase_no_meldiq_plus_subscri_09a3973")
+                : uiText("billing.interface.premium_community_bots_for_value0_purchased_separately_from_meldi_8088202", { value0: community })}
+            </p>
           </div>
           <div className="checkout-layout">
             <div className="checkout-payment">
               <section className="checkout-card" aria-labelledby="addon-payment-title">
                 <div className="checkout-card-heading">
                   <span className="checkout-step">1</span>
-                  <h2 id="addon-payment-title">Your payment</h2>
-                  {config?.environment === "sandbox" && <span className="checkout-sandbox">Sandbox</span>}
+                  <h2 id="addon-payment-title">
+                    <Localized k="billing.interface.your_payment_96cd398" />
+                  </h2>
+                  {config?.environment === "sandbox" && (
+                    <span className="checkout-sandbox">
+                      <Localized k="billing.interface.sandbox_67fc624" />
+                    </span>
+                  )}
                 </div>
-                {config?.environment === "sandbox" && <p className="muted">This is a test purchase. No real money is taken.</p>}
+                {config?.environment === "sandbox" && (
+                  <p className="muted">
+                    <Localized k="billing.interface.this_is_a_test_purchase_no_real_money_is_taken_3939868" />
+                  </p>
+                )}
                 <div className="checkout-account">
                   <ShieldCheck size={21} aria-hidden="true" />
                   <div>
-                    <strong>Your Meldiq account</strong>
-                    <p>{spark ? "Your purchased Sparks stay with your account." : `This subscription covers ${community}.`}</p>
+                    <strong>
+                      <Localized k="billing.interface.your_meldiq_account_c8c5e0c" />
+                    </strong>
+                    <p>
+                      {spark
+                        ? uiText("billing.interface.your_purchased_sparks_stay_with_your_account_5b573fd")
+                        : uiText("billing.interface.this_subscription_covers_value0_ef99aa2", { value0: community })}
+                    </p>
                   </div>
                 </div>
-                <h3>Payment method</h3>
+                <h3>
+                  <Localized k="billing.interface.payment_method_b948ac0" />
+                </h3>
                 <PaymentMethods
                   value={method}
                   cardStatus={cards.status}
@@ -214,24 +256,30 @@ export function AddonCheckoutPage({ draft, initial }: { draft: Addon; initial: R
                 />
                 <p className="checkout-security">
                   <LockKeyhole size={15} aria-hidden="true" />
-                  <span>PayPal handles your payment authorization. Meldiq never sees your card number or security code.</span>
+                  <span>
+                    <Localized k="billing.interface.paypal_handles_your_payment_authorization_meldiq_never_sees_your_753e77f" />
+                  </span>
                 </p>
                 <label className="checkout-agreement">
                   <input type="checkbox" checked={accepted} onChange={(event) => setAccepted(event.target.checked)} />
                   <span>
-                    {spark ? "I understand this is a one-time payment" : "I agree to the monthly subscription and cancellation terms"}, and agree to the{" "}
-                    <a href="https://meldiq.app/legal/terms" target="_blank" rel="noopener noreferrer">
-                      Terms of Service
-                    </a>{" "}
-                    and{" "}
-                    <a href="https://meldiq.app/legal/billing" target="_blank" rel="noopener noreferrer">
-                      payment terms
-                    </a>
-                    , and have read the{" "}
-                    <a href="https://meldiq.app/legal/privacy" target="_blank" rel="noopener noreferrer">
-                      Privacy Policy
-                    </a>
-                    .
+                    <Localized
+                      k="billing.interface.and_agree_to_the_and_and_have_read_the_ecba6c2"
+                      slots={[
+                        spark
+                          ? uiText("billing.interface.i_understand_this_is_a_one_time_payment_a3a3ad8")
+                          : uiText("billing.interface.i_agree_to_the_monthly_subscription_and_cancellation_terms_368d68d"),
+                        <a href="https://meldiq.app/legal/terms" target="_blank" rel="noopener noreferrer">
+                          <Localized k="billing.interface.terms_of_service_4afa55b" />
+                        </a>,
+                        <a href="https://meldiq.app/legal/billing" target="_blank" rel="noopener noreferrer">
+                          <Localized k="billing.interface.payment_terms_37281b4" />
+                        </a>,
+                        <a href="https://meldiq.app/legal/privacy" target="_blank" rel="noopener noreferrer">
+                          <Localized k="billing.interface.privacy_policy_506ff39" />
+                        </a>,
+                      ]}
+                    />
                   </span>
                 </label>
                 {error && (
@@ -241,20 +289,24 @@ export function AddonCheckoutPage({ draft, initial }: { draft: Addon; initial: R
                 )}
                 {!online && (
                   <p className="muted" role="status">
-                    Reconnect to continue checkout.
+                    <Localized k="billing.interface.reconnect_to_continue_checkout_54f308e" />
                   </p>
                 )}
                 {catalog && !price && (
                   <p className="muted" role="status">
-                    This product is not available for checkout yet.
+                    <Localized k="billing.interface.this_product_is_not_available_for_checkout_yet_446bcaa" />
                   </p>
                 )}
                 {config && price && !enabled && (
                   <p className="muted" role="status">
-                    PayPal is not available for this product yet.
+                    <Localized k="billing.interface.paypal_is_not_available_for_this_product_yet_a74cf6d" />
                   </p>
                 )}
-                {!accepted && <p className="checkout-hint">Agree to the terms to continue to payment.</p>}
+                {!accepted && (
+                  <p className="checkout-hint">
+                    <Localized k="billing.interface.agree_to_the_terms_to_continue_to_payment_4eaafb7" />
+                  </p>
+                )}
                 {enabled && accepted && online && !closed && (
                   <CheckoutPaymentButton
                     key={attempt}
@@ -270,23 +322,25 @@ export function AddonCheckoutPage({ draft, initial }: { draft: Addon; initial: R
                       setAwaiting(true);
                       await check(true);
                     }}
-                    cancel={() => setError("Checkout was canceled. Nothing is granted until payment is confirmed.")}
+                    cancel={() => setError(uiText("billing.interface.checkout_was_canceled_nothing_is_granted_until_payment_is_confirm_9dae3f7"))}
                     fail={setError}
                   />
                 )}
                 {purchase && !closed && (
                   <p role="status" className="muted">
-                    {awaiting ? "Waiting for payment confirmation…" : "Your payment is awaiting confirmation. You can safely check its status again."}
+                    {awaiting
+                      ? uiText("billing.interface.waiting_for_payment_confirmation_7442693")
+                      : uiText("billing.interface.your_payment_is_awaiting_confirmation_you_can_safely_check_its_st_0e79b87")}
                   </p>
                 )}
                 {saved.current.purchaseId && (
                   <button className="btn btn-secondary checkout-check" disabled={checking || !online} onClick={() => void check(false)}>
-                    {checking ? "Checking…" : "Check payment status"}
+                    {checking ? uiText("common.common_checking") : uiText("billing.interface.check_payment_status_ae1b6f5")}
                   </button>
                 )}
                 {closed && (
                   <button className="btn btn-secondary" onClick={() => selectCheckout(engine.device.userId, draft)}>
-                    Start a new checkout
+                    <Localized k="billing.interface.start_a_new_checkout_0b5e45e" />
                   </button>
                 )}
                 {error && !closed && (
@@ -298,64 +352,83 @@ export function AddonCheckoutPage({ draft, initial }: { draft: Addon; initial: R
                       setAttempt((value) => value + 1);
                     }}
                   >
-                    Retry checkout
+                    <Localized k="billing.interface.retry_checkout_432aaf4" />
                   </button>
                 )}
               </section>
               <div className="checkout-trust">
                 <ShieldCheck size={18} aria-hidden="true" />
                 <p>
-                  Securely processed by PayPal.
-                  <br />
-                  <span>Benefits begin after payment is verified.</span>
+                  <Localized
+                    k="billing.interface.securely_processed_by_paypal_f2f8fea"
+                    slots={[
+                      <br />,
+                      <span>
+                        <Localized k="billing.interface.benefits_begin_after_payment_is_verified_2b4861b" />
+                      </span>,
+                    ]}
+                  />
                 </p>
               </div>
             </div>
             <aside className="checkout-card checkout-summary" aria-labelledby="addon-summary-title">
               <div className="checkout-card-heading">
                 <span className="checkout-step">2</span>
-                <h2 id="addon-summary-title">Order summary</h2>
+                <h2 id="addon-summary-title">
+                  <Localized k="billing.interface.order_summary_6c200a8" />
+                </h2>
               </div>
               <div className="checkout-plan-art">
                 <span>{spark ? <Sparkles size={30} aria-hidden="true" /> : <Bot size={30} aria-hidden="true" />}</span>
-                <span className="checkout-kicker">{spark ? "MELDIQ SPARK" : "COMMUNITY BOTS"}</span>
-                <h3>{spark ? `${quantity} Spark${quantity === 1 ? "" : "s"}` : "Bots+"}</h3>
-                <p>{spark ? "More for the communities you love" : community}</p>
+                <span className="checkout-kicker">{spark ? uiText("billing.interface.meldiq_spark_ec1690b") : uiText("billing.interface.community_bots_aaae633")}</span>
+                <h3>{spark ? countLabel(quantity, "sparks") : uiText("billing.interface.bots_475bc2f")}</h3>
+                <p>{spark ? uiText("billing.interface.more_for_the_communities_you_love_1cec053") : community}</p>
               </div>
               <dl className="checkout-breakdown">
                 <div>
-                  <dt>{spark ? "Per Spark" : "Monthly subscription"}</dt>
-                  <dd>{price ? money(price.amountMinor, price.currency) : "Loading…"}</dd>
+                  <dt>{spark ? uiText("billing.interface.per_spark_33b63eb") : uiText("billing.interface.monthly_subscription_619b767")}</dt>
+                  <dd>{price ? money(price.amountMinor, price.currency) : uiText("common.status.loading")}</dd>
                 </div>
                 {spark && (
                   <div>
-                    <dt>Quantity</dt>
+                    <dt>
+                      <Localized k="billing.interface.quantity_822bab8" />
+                    </dt>
                     <dd>{quantity}</dd>
                   </div>
                 )}
                 <div className="checkout-total">
                   <dt>
-                    Total today<small>{spark ? "One-time purchase" : "Renews monthly"}</small>
+                    <Localized
+                      k="billing.interface.total_today_1606eb3"
+                      slots={[<small>{spark ? uiText("billing.interface.one_time_purchase_905ac4e") : uiText("billing.interface.renews_monthly_35088e2")}</small>]}
+                    />
                   </dt>
                   <dd>
                     {price ? money(amount, price.currency) : "—"}
-                    <small>USD</small>
+                    <small>
+                      <Localized k="billing.interface.usd_a26cdf3" />
+                    </small>
                   </dd>
                 </div>
               </dl>
               <p className="checkout-renewal">
                 {spark
-                  ? "$0.99 per Spark. No automatic renewal or expiry. Use a Spark in one community at a time, and move it with your account."
-                  : "$3.99 per month for this community. Renews until canceled. Manage renewal in Billing. Meldiq Plus is a separate subscription."}
+                  ? uiText("billing.interface.0_99_per_spark_no_automatic_renewal_or_expiry_use_a_spark_in_one_0bfba21")
+                  : uiText("billing.interface.3_99_per_month_for_this_community_renews_until_canceled_manage_re_54c148f")}
               </p>
-              <p className="checkout-fees">Billed in USD. Your payment provider may apply currency conversion fees.</p>
+              <p className="checkout-fees">
+                <Localized k="billing.interface.billed_in_usd_your_payment_provider_may_apply_currency_conversion_7756a7d" />
+              </p>
             </aside>
           </div>
           <footer className="checkout-footer">
             <BrandMark size={22} />
-            <span>More connection. More Meldiq.</span>
+            <span>
+              <Localized k="billing.interface.more_connection_more_meldiq_0b490cd" />
+            </span>
             <button className="btn btn-ghost btn-sm" onClick={() => navigate({ section: "settings", settingsPage: "billing" })}>
-              Billing
+              <Localized k="billing.interface.billing_3ac8bbc" />
             </button>
           </footer>
         </>

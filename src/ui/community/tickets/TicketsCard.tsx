@@ -1,3 +1,8 @@
+import { formatUiNumber } from "../../../i18n/format";
+import { useLocaleRender } from "../../../i18n/Localized";
+import { text as uiText } from "../../../i18n";
+import { Localized } from "../../../i18n/Localized";
+import { useT as useLocalization } from "../../../i18n";
 import { Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { OrgAdminDetail } from "../../../api/workspaceSchemas";
@@ -14,12 +19,12 @@ import { Card, ErrorLine } from "../../workspace/WorkspaceView";
 import { categoriesOf, panelChannels } from "../panelData";
 import { OpenTicketsList } from "./OpenTicketsList";
 import { PanelEditor } from "./PanelEditor";
-
 /**
  * Community settings › Profile › Tickets (the reference's "Let members open tickets" and its Tickets bot): the switch,
  * open tickets per person, the panels, and for moderators the open tickets. Shown on servers with tickets.
  */
 export function TicketsSection({ detail }: { detail: OrgAdminDetail }) {
+  useLocaleRender();
   const offered = useOrbit((s) => s.server?.features.includes(POSTING_FEATURES.tickets) ?? false);
   const p = detail.permissions;
   if (!offered) return null;
@@ -30,18 +35,18 @@ export function TicketsSection({ detail }: { detail: OrgAdminDetail }) {
     </>
   );
 }
-
 interface TicketsCardProps {
   orgId: string;
   /** In the Tickets bot's window, whose own switch is the tickets switch. */
   hideSwitch?: boolean;
 }
-
 /**
  * The tickets settings. With official bots they're the Tickets bot's: up to 10 panels and 10 per person, a support role
  * and welcome line per panel, and transcripts with Bots+ (PLUS, locked without it).
  */
 export function TicketsCard({ orgId, hideSwitch }: TicketsCardProps) {
+  useLocaleRender();
+  const l10n = useLocalization();
   const engine = useEngine();
   const viaBot = useOrbit((s) => s.server?.features.includes(OFFICIAL_BOTS_FEATURE) ?? false);
   const loaded = useLoad(() => loadTickets(engine, orgId, viaBot), [engine, orgId, viaBot]);
@@ -53,13 +58,11 @@ export function TicketsCard({ orgId, hideSwitch }: TicketsCardProps) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [note, setNote] = useState<string | null>(null);
-
   useEffect(() => {
     if (!loaded.data) return;
     setSaved(loaded.data);
     setDraft(loaded.data);
   }, [loaded.data]);
-
   const run = async (fn: () => Promise<void>) => {
     setBusy(true);
     setError(null);
@@ -82,41 +85,46 @@ export function TicketsCard({ orgId, hideSwitch }: TicketsCardProps) {
       const fresh = await saveTickets(engine, orgId, saved, next);
       setSaved(fresh);
       setDraft(fresh);
-      setNote("Saved.");
+      setNote(uiText("organization.interface.saved_fca046c"));
     });
   const post = (panelId: string) =>
     void run(async () => {
       await postTicketPanel(engine, orgId, panelId);
-      setNote("Panel posted.");
+      setNote(uiText("organization.interface.panel_posted_c79e777"));
     });
-
-  if (!saved || !draft) return <Card title="Tickets">{loaded.error ? <ErrorLine text={loaded.error} /> : <span className="skeleton" aria-busy="true" style={{ height: 40 }} />}</Card>;
+  if (!saved || !draft)
+    return (
+      <Card title={uiText("organization.interface.tickets_3d13136")}>{loaded.error ? <ErrorLine text={loaded.error} /> : <span className="skeleton" aria-busy="true" style={{ height: 40 }} />}</Card>
+    );
   const dirty = JSON.stringify(saved) !== JSON.stringify(draft);
   const setPanel = (i: number, next: PanelDraft) => setDraft({ ...draft, panels: draft.panels.map((x, j) => (j === i ? next : x)) });
   const givable = (roles.data?.roles ?? []).filter((r) => !r.archived);
-
   return (
-    <Card title="Tickets" sub="Members open a private channel with your moderators from the community menu or a panel's button. The opener or any moderator closes it.">
+    <Card title={uiText("organization.interface.tickets_3d13136")} sub={uiText("organization.interface.members_open_a_private_channel_with_your_moderators_from_the_comm_cc27435")}>
       <ErrorLine text={error} />
       {!hideSwitch && (
         <div className="setting">
           <span className="lines">
-            <strong>Let members open tickets</strong>
-            <small>Tickets land in a Tickets category. Closing one archives its channel.</small>
+            <strong>
+              <Localized k="organization.interface.let_members_open_tickets_3513281" />
+            </strong>
+            <small>
+              <Localized k="organization.interface.tickets_land_in_a_tickets_category_closing_one_archives_its_chann_0d4df74" />
+            </small>
           </span>
-          <Toggle checked={saved.enabled} disabled={busy} onChange={(v) => void save({ ...draft, enabled: v })} label="Let members open tickets" />
+          <Toggle checked={saved.enabled} disabled={busy} onChange={(v) => void save({ ...draft, enabled: v })} label={uiText("organization.interface.let_members_open_tickets_3513281")} />
         </div>
       )}
       <BotField
-        label="Open tickets per person"
+        label={uiText("organization.interface.open_tickets_per_person_60c1453")}
         botsPlus={draft.botsPlus}
         paused={draft.paused.includes("maxOpenPerPerson")}
-        hint={draft.viaBot && !draft.botsPlus ? "Up to 3; up to 10 with Bots+." : undefined}
+        hint={draft.viaBot && !draft.botsPlus ? uiText("organization.interface.up_to_3_up_to_10_with_bots_c28d366") : undefined}
       >
-        <div className="segmented" role="radiogroup" aria-label="Open tickets per person">
+        <div className="segmented" role="radiogroup" aria-label={uiText("organization.interface.open_tickets_per_person_60c1453")}>
           {maxOpenChoices(draft.maxOpenLimit).map((n) => (
             <button key={n} type="button" role="radio" aria-checked={draft.maxOpenPerPerson === n} onClick={() => setDraft({ ...draft, maxOpenPerPerson: n })}>
-              {n}
+              {formatUiNumber(n)}
             </button>
           ))}
         </div>
@@ -140,12 +148,14 @@ export function TicketsCard({ orgId, hideSwitch }: TicketsCardProps) {
         />
       ))}
       {draft.viaBot && (
-        <BotField label="Transcripts" plus botsPlus={draft.botsPlus} paused={draft.paused.includes("transcripts")}>
+        <BotField label={uiText("organization.interface.transcripts_f584049")} plus botsPlus={draft.botsPlus} paused={draft.paused.includes("transcripts")}>
           <div className="setting">
             <span className="lines">
-              <small>When a ticket closes, its messages go to the panel's log channel as text.</small>
+              <small>
+                <Localized k="organization.interface.when_a_ticket_closes_its_messages_go_to_the_panel_s_log_channel_a_170c4f5" />
+              </small>
             </span>
-            <Toggle checked={draft.transcripts} onChange={(v) => setDraft({ ...draft, transcripts: v })} label="Transcripts" />
+            <Toggle checked={draft.transcripts} onChange={(v) => setDraft({ ...draft, transcripts: v })} label={uiText("organization.interface.transcripts_f584049")} />
           </div>
         </BotField>
       )}
@@ -156,10 +166,13 @@ export function TicketsCard({ orgId, hideSwitch }: TicketsCardProps) {
           disabled={draft.panels.length >= draft.panelLimit}
           onClick={() => setDraft({ ...draft, panels: [...draft.panels, { name: "", postChannelId: "", categoryId: null, logChannelId: null, supportRoleId: null, welcomeMessage: null }] })}
         >
-          <Plus size={14} /> {draft.panels.length ? "Add another panel" : "Add a panel"}
+          <Plus size={14} /> {draft.panels.length ? uiText("organization.interface.add_another_panel_8d19420") : uiText("organization.interface.add_a_panel_a0aafce")}
         </button>
         <small className="faint">
-          {draft.panels.length} of {draft.panelLimit} panels{draft.viaBot && !draft.botsPlus ? " (10 with Bots+)" : ""}
+          <Localized
+            k="organization.interface.of_panels_0d8194a"
+            slots={[draft.panels.length, draft.panelLimit, draft.viaBot && !draft.botsPlus ? uiText("organization.interface.10_with_bots_2e38176") : ""]}
+          />
         </small>
         <span className="grow" />
         {note && (
@@ -168,7 +181,7 @@ export function TicketsCard({ orgId, hideSwitch }: TicketsCardProps) {
           </small>
         )}
         <button type="button" className="btn btn-primary btn-sm" disabled={busy || !dirty} onClick={() => void save(draft)}>
-          {busy ? "Saving…" : "Save"}
+          {busy ? l10n("common.common_saving") : l10n("common.actions.save")}
         </button>
       </div>
     </Card>

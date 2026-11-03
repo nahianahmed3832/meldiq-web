@@ -141,7 +141,7 @@
   border-radius: var(--r-lg);
   border: 1.5px dashed var(--mojo-line);
   background: var(--mojo-soft);
-  text-align: left;
+  text-align: start;
   cursor: pointer;
   transition:
     background var(--t-fast),
@@ -185,7 +185,7 @@
 }
 .mojo-sent {
   margin: 8px 0 0;
-  padding-left: 18px;
+  padding-inline-start: 18px;
   font-size: 13px;
   color: var(--text-2);
 }
@@ -219,7 +219,7 @@
 .mojo-plan-flag {
   position: absolute;
   top: -11px;
-  left: 20px;
+  inset-inline-start: 20px;
   padding: 3px 10px;
   border-radius: var(--r-pill);
   font-size: 11px;
@@ -337,7 +337,7 @@
 .mojo-table th,
 .mojo-table td {
   padding: 13px 18px;
-  text-align: left;
+  text-align: start;
   border-bottom: 1px solid var(--hairline);
 }
 .mojo-table tbody th {
@@ -400,13 +400,14 @@
 .spark-track {
   position: relative;
   height: 70px;
-  margin: 8px 28px 0 6px;
+  margin-block: 8px 0;
+  margin-inline: 6px 28px;
 }
 .spark-track-line {
   position: absolute;
   top: 16px;
-  left: 0;
-  right: 0;
+  inset-inline-start: 0;
+  inset-inline-end: 0;
   height: 6px;
   border-radius: var(--r-pill);
   background: color-mix(in srgb, var(--text) 12%, transparent);
@@ -547,7 +548,7 @@
   color: var(--accent-text);
 }
 .spark-list .tag {
-  margin-left: 8px;
+  margin-inline-start: 8px;
 }
 .spark-give,
 .spark-buy {
@@ -652,11 +653,11 @@
   padding: 2px 12px 6px;
   font-size: 12px;
   color: var(--text-2);
-  text-align: right;
+  text-align: end;
 }
 .char-limit.over {
   color: var(--danger);
-  text-align: left;
+  text-align: start;
 }
 .char-limit-link {
   padding: 0;
@@ -702,7 +703,7 @@
 .spark-dialog-close {
   position: absolute;
   top: 12px;
-  right: 12px;
+  inset-inline-end: 12px;
 }
 .spark-dialog-hero .spark-track {
   width: min(520px, 100%);
@@ -772,7 +773,8 @@
     padding: 20px 18px 24px;
   }
   .spark-track {
-    margin: 8px 22px 0 4px;
+    margin-block: 8px 0;
+    margin-inline: 4px 22px;
   }
   .spark-track-stops li span {
     font-size: 11px;
@@ -793,7 +795,7 @@
   margin: 10px 10px 2px;
   padding: 10px 12px;
   border-radius: var(--r-md);
-  text-align: left;
+  text-align: start;
   background: var(--mojo-soft);
   box-shadow: inset 0 0 0 1px var(--mojo-line);
   transition: box-shadow var(--t-fast);
@@ -842,7 +844,7 @@
   margin: 8px 2px 2px;
   padding: 10px 12px;
   border-radius: var(--r-lg);
-  text-align: left;
+  text-align: start;
   background: radial-gradient(120% 120% at 100% 0%, color-mix(in srgb, var(--mojo-a) 18%, transparent) 0%, transparent 60%), var(--surface-raised);
   box-shadow: inset 0 0 0 1px var(--mojo-line);
   transition: box-shadow var(--t-fast);
@@ -906,7 +908,7 @@
 /* A quiet support reminder on landing screens; conversations and calls suppress it. */
 .plus-support-notice {
   position: fixed;
-  right: 20px;
+  inset-inline-end: 20px;
   bottom: max(24px, env(safe-area-inset-bottom));
   z-index: 65;
   width: min(390px, calc(100vw - 32px));
@@ -953,7 +955,7 @@
 }
 @media (max-width: 760px) {
   .plus-support-notice {
-    right: 16px;
+    inset-inline-end: 16px;
     bottom: calc(80px + env(safe-area-inset-bottom));
   }
   .plus-support-actions .btn {
@@ -1001,7 +1003,7 @@
 .plus-promotion-header {
   position: relative;
   padding: 23px 26px;
-  padding-right: 76px;
+  padding-inline-end: 76px;
   background: linear-gradient(115deg, #6c3b31, #42285f);
   color: #fff;
 }
@@ -1026,7 +1028,7 @@
 .plus-promotion-close {
   position: absolute;
   top: 16px;
-  right: 16px;
+  inset-inline-end: 16px;
   color: #d8cfe1;
 }
 .plus-promotion-body {
@@ -1082,7 +1084,8 @@
   cursor: pointer;
 }
 .plus-promotion-banner .plus-promotion-header {
-  padding: 16px 76px 16px 18px;
+  padding-block: 16px 16px;
+  padding-inline: 18px 76px;
 }
 .plus-promotion-banner .plus-promotion-body {
   padding: 14px 18px;
@@ -1093,7 +1096,7 @@
 @media (max-width: 520px) {
   .plus-promotion-header {
     padding: 20px;
-    padding-right: 76px;
+    padding-inline-end: 76px;
   }
   .plus-promotion-body {
     padding: 20px;

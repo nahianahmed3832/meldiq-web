@@ -1,3 +1,6 @@
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
+import { formatUiNumber } from "../../i18n/format";
 import { useEffect, useId, useLayoutEffect, useRef, useState, type PointerEvent as ReactPointerEvent, type MouseEvent as ReactMouseEvent } from "react";
 import { createPortal } from "react-dom";
 import { useEngine, useOrbit } from "../../application/orbit";
@@ -9,10 +12,8 @@ import { Dialog } from "../components/Overlay";
 import { ReactionEmoji } from "../community/CustomEmoji";
 import { useLongPress } from "./longPress";
 import { previewOf, type Reactor, reactorsOf } from "./reactors";
-
 /** How long the pointer rests on a reaction before its hover card opens (a pass across the row opens nothing). */
 const HOVER_DELAY_MS = 250;
-
 interface ReactionListProps {
   message: StoredMessage;
   myUserId: string;
@@ -20,13 +21,13 @@ interface ReactionListProps {
   communityEmoji: ExpressionList | null;
   onAdd?: (anchor: HTMLElement) => void;
 }
-
 /**
  * A message's reactions. Click or tap toggles yours, as before. Resting the pointer on one, or focusing it with the
  * keyboard, shows who chose it; a long press (touch) or right-click opens the Reactions dialog with everyone, for every
  * reaction. The same component serves DMs, groups and community channels.
  */
 export function ReactionList({ message: m, myUserId, canPost, communityEmoji, onAdd }: ReactionListProps) {
+  useLocaleRender();
   const [dialogFor, setDialogFor] = useState<string | null>(null);
   const reactions = Object.entries(m.reactions).filter(([, users]) => users.length > 0);
   if (reactions.length === 0) return null;
@@ -36,7 +37,7 @@ export function ReactionList({ message: m, myUserId, canPost, communityEmoji, on
         <ReactionChip key={emoji} message={m} emoji={emoji} userIds={users} myUserId={myUserId} canPost={canPost} communityEmoji={communityEmoji} onShowAll={() => setDialogFor(emoji)} />
       ))}
       {onAdd && (
-        <button className="reaction reaction-add" aria-label="Add another reaction" onClick={(event) => onAdd(event.currentTarget)}>
+        <button className="reaction reaction-add" aria-label={uiText("messaging.interface.add_another_reaction_595ed8b")} onClick={(event) => onAdd(event.currentTarget)}>
           ＋
         </button>
       )}
@@ -44,7 +45,6 @@ export function ReactionList({ message: m, myUserId, canPost, communityEmoji, on
     </div>
   );
 }
-
 interface ReactionChipProps {
   message: StoredMessage;
   emoji: string;
@@ -54,8 +54,8 @@ interface ReactionChipProps {
   communityEmoji: ExpressionList | null;
   onShowAll: () => void;
 }
-
 function ReactionChip({ message, emoji, userIds, myUserId, canPost, communityEmoji, onShowAll }: ReactionChipProps) {
+  useLocaleRender();
   const engine = useEngine();
   const t = useT();
   const ref = useRef<HTMLButtonElement>(null);
@@ -75,7 +75,6 @@ function ReactionChip({ message, emoji, userIds, myUserId, canPost, communityEmo
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
   }, [card]);
-
   // The message's own long press and right-click menu don't also open from a reaction.
   const stop =
     <E extends ReactPointerEvent | ReactMouseEvent>(fn: ((e: E) => void) | undefined) =>
@@ -113,13 +112,12 @@ function ReactionChip({ message, emoji, userIds, myUserId, canPost, communityEmo
         onBlur={() => setCard(false)}
       >
         <span className="reaction-emoji">{reactionName(emoji) ? <ReactionEmoji name={reactionName(emoji)!} list={communityEmoji} /> : emoji}</span>
-        {userIds.length}
+        {formatUiNumber(userIds.length)}
       </button>
       {card && ref.current && <ReactorCard id={cardId} anchor={ref.current} emoji={emoji} communityEmoji={communityEmoji} reactors={reactors} />}
     </>
   );
 }
-
 /** The people behind [userIds], fetching any this browser hasn't loaded yet while [active]. */
 function useReactors(userIds: string[], myUserId: string, active: boolean): Reactor[] {
   const engine = useEngine();
@@ -131,7 +129,6 @@ function useReactors(userIds: string[], myUserId: string, active: boolean): Reac
   }, [active, userIds, users, engine]);
   return reactorsOf(userIds, users, myUserId, t("react_you"), t("react_someone"));
 }
-
 interface ReactorCardProps {
   id: string;
   anchor: HTMLElement;
@@ -139,12 +136,15 @@ interface ReactorCardProps {
   communityEmoji: ExpressionList | null;
   reactors: Reactor[];
 }
-
 /** The hover card above a reaction: its emoji, the first names and how many more. */
 function ReactorCard({ id, anchor, emoji, communityEmoji, reactors }: ReactorCardProps) {
+  useLocaleRender();
   const t = useT();
   const ref = useRef<HTMLDivElement>(null);
-  const [pos, setPos] = useState<{ top: number; left: number } | null>(null);
+  const [pos, setPos] = useState<{
+    top: number;
+    left: number;
+  } | null>(null);
   useLayoutEffect(() => {
     const r = anchor.getBoundingClientRect();
     const el = ref.current;
@@ -168,7 +168,6 @@ function ReactorCard({ id, anchor, emoji, communityEmoji, reactors }: ReactorCar
     document.body,
   );
 }
-
 interface ReactionsDialogProps {
   message: StoredMessage;
   initial: string | null;
@@ -176,9 +175,9 @@ interface ReactionsDialogProps {
   communityEmoji: ExpressionList | null;
   onClose: () => void;
 }
-
 /** Everyone who reacted, one tab per reaction, in a scrolling list: touch screens and long lists. */
 export function ReactionsDialog({ message, initial, myUserId, communityEmoji, onClose }: ReactionsDialogProps) {
+  useLocaleRender();
   const t = useT();
   const live = useOrbit((s) => s.messages[message.conversationId]?.items.find((x) => x.id === message.id) ?? message);
   const reactions = Object.entries(live.reactions).filter(([, users]) => users.length > 0);
@@ -196,7 +195,7 @@ export function ReactionsDialog({ message, initial, myUserId, communityEmoji, on
             {reactions.map(([emoji, ids]) => (
               <button key={emoji} role="tab" aria-selected={emoji === current[0]} className="reaction" onClick={() => setTab(emoji)}>
                 <span className="reaction-emoji">{reactionName(emoji) ? <ReactionEmoji name={reactionName(emoji)!} list={communityEmoji} /> : emoji}</span>
-                {ids.length}
+                {formatUiNumber(ids.length)}
               </button>
             ))}
           </div>

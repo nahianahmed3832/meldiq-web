@@ -1,13 +1,12 @@
+import { text as uiText } from "../../i18n";
 import type { PayPalPurchase } from "../../api/paypalSchemas";
 import { z } from "zod";
-
 export const giftRecipientSchema = z.discriminatedUnion("kind", [
   z.object({ kind: z.literal("user"), userId: z.string().min(1).max(128) }),
   z.object({ kind: z.literal("email"), email: z.string().email().max(254) }),
   z.object({ kind: z.literal("link") }),
 ]);
 export type GiftRecipient = z.infer<typeof giftRecipientSchema>;
-
 const draftSchema = z.discriminatedUnion("product", [
   z.object({ product: z.literal("plus"), term: z.enum(["monthly", "quarterly", "yearly"]).optional() }),
   z.object({ product: z.literal("spark"), quantity: z.number().int().min(1).max(20) }),
@@ -23,9 +22,13 @@ const draftSchema = z.discriminatedUnion("product", [
 export type CheckoutDraft = z.infer<typeof draftSchema>;
 export const CHECKOUT_DRAFT_EVENT = "meldiq:checkout-draft";
 const key = (userId: string) => `meldiq.paypal.sandbox.${userId}`;
-
 /** This tab stores an opaque purchase reference and retry key; no authorization or entitlement is stored here. */
-export function readCheckout(userId: string): { draft: CheckoutDraft; requestKey: string; purchaseId: string | null; completed: boolean } {
+export function readCheckout(userId: string): {
+  draft: CheckoutDraft;
+  requestKey: string;
+  purchaseId: string | null;
+  completed: boolean;
+} {
   try {
     const result = z
       .object({ draft: draftSchema, requestKey: z.string().uuid(), purchaseId: z.string().nullable(), completed: z.boolean().default(false) })
@@ -53,14 +56,13 @@ export function selectCheckout(userId: string, draft: CheckoutDraft): void {
   }
   writeCheckout(userId, { draft, requestKey: crypto.randomUUID(), purchaseId: null, completed: false });
 }
-
 /** Reopen only a server-returned, account-owned quote; approval still requires server verification. */
 export function restoreCheckout(userId: string, purchase: PayPalPurchase): void {
   let draft: CheckoutDraft;
   if (purchase.product === "spark" && purchase.quantity) draft = { product: "spark", quantity: purchase.quantity };
   else if (purchase.product === "bots_plus" && purchase.orgId) draft = { product: "bots_plus", orgId: purchase.orgId };
   else if (purchase.product === "plus") draft = { product: "plus", term: purchase.interval === "year" ? "yearly" : purchase.billingFrequency === 3 ? "quarterly" : "monthly" };
-  else throw new Error("Open this purchase from its original checkout.");
+  else throw new Error(uiText("billing.interface.open_this_purchase_from_its_original_checkout_d3675fd"));
   writeCheckout(userId, {
     draft,
     purchaseId: purchase.id,

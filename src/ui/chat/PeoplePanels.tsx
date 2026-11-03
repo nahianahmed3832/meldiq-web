@@ -1,3 +1,6 @@
+import { formatUiNumber } from "../../i18n/format";
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
 import { CircleUserRound, Copy, IdCard, MessageSquare, UserRound, UsersRound, X } from "lucide-react";
 import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import type { Conversation, Member } from "../../api/schemas";
@@ -22,7 +25,6 @@ import { useT } from "../../i18n";
 import { CommunityOwnerBadge } from "../components/CommunityOwnerBadge";
 import { IdentityGlyph } from "../components/IdentityGlyph";
 import { ProfilePins } from "../people/ProfilePins";
-
 /** Wide enough to keep a member list or profile beside the messages; narrower screens open them over the messages. */
 const WIDE = "(min-width: 1241px)";
 export function useWideLayout(): boolean {
@@ -36,10 +38,8 @@ export function useWideLayout(): boolean {
     () => false,
   );
 }
-
 /** Whether a conversation can show people beside it: not a voice room, whose page already shows who's in it. */
 export const hasPeoplePanel = (c: Pick<Conversation, "voice">): boolean => !c.voice;
-
 /** Whether the member list (channels, groups) or profile (DMs) is beside this conversation now. */
 export function usePeopleShown(c: Pick<Conversation, "type" | "voice">, route: Route): boolean {
   const prefs = usePrefs();
@@ -48,9 +48,9 @@ export function usePeopleShown(c: Pick<Conversation, "type" | "voice">, route: R
   if (route.panel === "members") return true;
   return !route.panel && wide && (c.type === "DM" ? prefs.dmProfile : prefs.memberList);
 }
-
 /** A channel's or group's members beside the messages, as Discord lists them: by role while here, then offline. */
 export function MemberListPanel({ c, onClose }: { c: Conversation; onClose: () => void }) {
+  useLocaleRender();
   const t = useT();
   const users = useOrbit((s) => s.users);
   const { members, error } = useMembers(c.id, c.memberCount);
@@ -73,9 +73,8 @@ export function MemberListPanel({ c, onClose }: { c: Conversation; onClose: () =
     [members, users, nicknames, bots],
   );
   const groups = useMemo(() => memberListGroups(people, (id) => roles.get(id)), [people, roles]);
-
   return (
-    <aside className="panel member-list" aria-label="Members">
+    <aside className="panel member-list" aria-label={t("workspace.members")}>
       <div className="member-list-head">
         <span className="grow">{t("people_members")}</span>
         <button className="icon-btn" onClick={onClose} aria-label={t("people_hide_members")}>
@@ -86,13 +85,13 @@ export function MemberListPanel({ c, onClose }: { c: Conversation; onClose: () =
         {error && <p className="faint member-list-note">{error}</p>}
         {!members && !error && <div className="skeleton" style={{ height: 40, margin: "8px 12px" }} aria-busy="true" />}
         {groups.map((g) => (
-          <section key={g.key} aria-label={`${g.label}, ${g.members.length}`}>
+          <section key={g.key} aria-label={uiText("messaging.interface.value0_value1_c55f6a8", { value0: g.label, value1: g.members.length })}>
             <h3 className="member-group" style={g.color ? { color: g.color } : undefined}>
               {(g.key === "admin" || g.key === "bots" || g.key.startsWith("role:")) && (
                 <IdentityGlyph kind={g.key === "bots" ? "bot" : g.members.some((m) => m.orgRole === "OWNER") ? "owner" : "role"} size={13} />
               )}
               {g.key === "online" ? t("people_online") : g.key === "offline" ? t("people_offline") : g.key === "admin" ? t("people_admin") : g.key === "bots" ? t("people_bots") : g.label} —{" "}
-              {g.members.length}
+              {formatUiNumber(g.members.length)}
             </h3>
             {g.members.map((m) => (
               <MemberRow key={m.id} m={m} away={!m.bot && !isHere(m)} colors={roleNameColors(roles.get(m.id))} orgId={c.type === "CHANNEL" ? c.orgId : null} />
@@ -103,9 +102,9 @@ export function MemberListPanel({ c, onClose }: { c: Conversation; onClose: () =
     </aside>
   );
 }
-
 /** One person in the member list: their profile on click; a right-click (or the Menu key) opens their menu. */
 function MemberRow({ m, away, colors, orgId }: { m: Member; away: boolean; colors: string[] | null; orgId: string | null }) {
+  useLocaleRender();
   const engine = useEngine();
   const me = useOrbit((s) => s.me?.userId);
   const builder = usePrefs().builderMode;
@@ -115,38 +114,42 @@ function MemberRow({ m, away, colors, orgId }: { m: Member; away: boolean; color
   const owner = !!orgId && m.orgRole === "OWNER";
   const entries: MenuEntry[] = [
     {
-      label: m.bot ? "View bot details" : "View profile",
+      label: m.bot ? uiText("messaging.interface.view_bot_details_44a6dd1") : uiText("messaging.interface.view_profile_d4788f2"),
       icon: <UserRound size={16} />,
       onSelect: () => (m.bot ? setBotOpen(true) : openProfile(m.id, m.displayName, { orgId, anchor: menu.anchor })),
     },
     ...(m.id !== me && !m.bot
       ? [
           {
-            label: `Message ${m.displayName}`,
+            label: uiText("messaging.interface.message_value0_ddd26fd", { value0: m.displayName }),
             icon: <MessageSquare size={16} />,
             onSelect: () =>
               void startDirect(engine, m.id)
                 .then((id) => navigate({ section: "dms", conversationId: id }))
-                .catch(() => engine.notice("error", "Couldn't open the conversation.")),
+                .catch(() => engine.notice("error", uiText("messaging.interface.couldn_t_open_the_conversation_8fb416b"))),
           },
         ]
       : []),
     {
-      label: "Copy username",
+      get label() {
+        return uiText("messaging.interface.copy_username_7ba3cda");
+      },
       icon: <Copy size={16} />,
       onSelect: () => {
         void navigator.clipboard?.writeText(`@${m.username}`).catch(() => undefined);
-        engine.notice("info", "Username copied.");
+        engine.notice("info", uiText("messaging.interface.username_copied_00b0103"));
       },
     },
     ...(builder
       ? [
           {
-            label: "Copy user ID",
+            get label() {
+              return uiText("messaging.interface.copy_user_id_a43cb32");
+            },
             icon: <IdCard size={16} />,
             onSelect: () => {
               void navigator.clipboard?.writeText(m.id).catch(() => undefined);
-              engine.notice("info", "User ID copied.");
+              engine.notice("info", uiText("messaging.interface.user_id_copied_4aed8df"));
             },
           },
         ]
@@ -157,7 +160,13 @@ function MemberRow({ m, away, colors, orgId }: { m: Member; away: boolean; color
       <button
         className={`member-row${away ? " away" : ""}`}
         onClick={(e) => (m.bot ? setBotOpen(true) : openProfile(m.id, m.displayName, { orgId, anchor: e.currentTarget }))}
-        aria-label={`${m.displayName}${owner ? ", community owner" : ""}${m.bot ? ", bot" : ""}${!isHere(m) ? ", offline" : ""}: ${m.bot ? "bot details" : "profile"}`}
+        aria-label={uiText("messaging.interface.value0_value1_value2_value3_value4_d3f5947", {
+          value0: m.displayName,
+          value1: owner ? uiText("messaging.interface.community_owner_fc19c23") : "",
+          value2: m.bot ? uiText("messaging.interface.bot_772026f") : "",
+          value3: !isHere(m) ? uiText("messaging.interface.offline_faa5e04") : "",
+          value4: m.bot ? uiText("messaging.interface.bot_details_c6028a0") : uiText("messaging.interface.profile_5d45a00"),
+        })}
         aria-haspopup="menu"
         {...contextMenuProps(menu.openAt)}
       >
@@ -196,11 +205,10 @@ function MemberRow({ m, away, colors, orgId }: { m: Member; away: boolean; color
     </>
   );
 }
-
 type Profile = Awaited<ReturnType<typeof userProfile>>;
-
 /** The other person in a direct message beside the messages (Discord's user profile): photo, names, status, presence. */
 export function ProfilePanel({ c, onClose }: { c: Conversation; onClose: () => void }) {
+  useLocaleRender();
   const engine = useEngine();
   const t = useT();
   const me = useOrbit((s) => s.me?.userId ?? "");
@@ -229,9 +237,8 @@ export function ProfilePanel({ c, onClose }: { c: Conversation; onClose: () => v
   const pronouns = known?.pronouns ?? profile?.pronouns;
   const color = known?.avatarColor ?? peer.avatarColor;
   const theme = themeColorsOf(known?.profileStyle ?? profile?.profileStyle ?? null);
-
   return (
-    <aside className="panel profile-panel" aria-label={`${name}'s profile`}>
+    <aside className="panel profile-panel" aria-label={uiText("messaging.interface.value0_s_profile_facc1bc", { value0: name })}>
       <div className="profile-panel-scroll scroll">
         <div className="profile-banner" style={{ background: theme ? themeBackground(theme) : toneOf(color) }}>
           <button className="icon-btn" onClick={onClose} aria-label={t("people_hide_profile")}>
@@ -247,7 +254,7 @@ export function ProfilePanel({ c, onClose }: { c: Conversation; onClose: () => v
           </h2>
           <p className="profile-handle">
             @{known?.username ?? peer.username}
-            {pronouns ? ` · ${pronouns}` : ""}
+            {pronouns ? uiText("calls.interface.value0_9402340", { value0: pronouns }) : ""}
           </p>
           {status && <p className="profile-status">{status}</p>}
           {/* API 0.64.0: their pins (server docs/PROFILE_PINS.md). */}
@@ -277,27 +284,26 @@ export function ProfilePanel({ c, onClose }: { c: Conversation; onClose: () => v
     </aside>
   );
 }
-
 /** The member list for channels and groups, the profile for direct messages. */
 export function PeoplePanel({ c, onClose }: { c: Conversation; onClose: () => void }) {
+  useLocaleRender();
   return c.type === "DM" ? <ProfilePanel c={c} onClose={onClose} /> : <MemberListPanel c={c} onClose={onClose} />;
 }
-
 const prefKey = (c: Pick<Conversation, "type">): "dmProfile" | "memberList" => (c.type === "DM" ? "dmProfile" : "memberList");
-
 /** The member list or profile kept beside the messages on wide screens, when no other side panel is open. */
 export function DockedPeoplePanel({ conversationId, route }: { conversationId: string; route: Route }) {
+  useLocaleRender();
   const c = useOrbit((s) => s.conversations[conversationId]);
   const shown = usePeopleShown(c ?? { type: "DM", voice: true }, route);
   if (!c || !shown || route.panel) return null;
   return <PeoplePanel key={c.id} c={c} onClose={() => setPrefs({ [prefKey(c)]: false })} />;
 }
-
 /**
  * The header button that shows or hides the member list (channels, groups) or the profile (DMs). On wide screens the
  * choice is remembered for every conversation of that kind; on narrower ones it opens the panel over the messages.
  */
 export function PeopleToggle({ c, route }: { c: Conversation; route: Route }) {
+  useLocaleRender();
   const wide = useWideLayout();
   const shown = usePeopleShown(c, route);
   const t = useT();

@@ -1,3 +1,7 @@
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
+import { Localized } from "../../i18n/Localized";
+import { useT as useLocalization } from "../../i18n";
 import { MeldlingArt } from "../components/MeldlingArt";
 import { ArrowLeft, CalendarDays, Gauge, Hash, Laptop, LayoutGrid, ScrollText, ShieldCheck, Ticket, UsersRound } from "lucide-react";
 import { ApplicationsPage, BansPage, SecurityPage } from "./ModerationPages";
@@ -27,58 +31,144 @@ import { AuditPage } from "./AuditPage";
 import { UsagePage } from "./UsagePage";
 import { MeetingsPage } from "./MeetingsPage";
 import type { OrgAdminDetail, OrgPermissions } from "../../api/workspaceSchemas";
-
 /** Pages, with the permission flag that shows them (the server decides; older servers don't send the newer flags). */
 /** Meldiq 2.0: the pages in three groups (people and channels; tools; administration) instead of one long list. */
 type PageGroup = "workspace" | "tools" | "admin";
-const GROUPS: { key: PageGroup; label: string }[] = [
-  { key: "workspace", label: "Workspace" },
-  { key: "tools", label: "Tools" },
-  { key: "admin", label: "Administration" },
+const GROUPS: {
+  key: PageGroup;
+  label: string;
+}[] = [
+  {
+    key: "workspace",
+    get label() {
+      return uiText("workspace.interface.workspace_87bb59b");
+    },
+  },
+  {
+    key: "tools",
+    get label() {
+      return uiText("workspace.interface.tools_ea93d6a");
+    },
+  },
+  {
+    key: "admin",
+    get label() {
+      return uiText("admin.title");
+    },
+  },
 ];
-
-const PAGES: { key: WorkspacePage; label: string; icon: ReactNode; group: PageGroup; shown?: (p: OrgPermissions, d: OrgAdminDetail) => boolean; feature?: string }[] = [
-  { key: "overview", label: "Overview", icon: <LayoutGrid size={17} />, group: "workspace" },
-  { key: "people", label: "People", icon: <UsersRound size={17} />, group: "workspace" },
-  { key: "invitations", label: "Invitations", icon: <Ticket size={17} />, group: "workspace" },
-  { key: "channels", label: "Channels", icon: <Hash size={17} />, group: "workspace" },
-  { key: "meetings", label: "Meetings", icon: <CalendarDays size={17} />, group: "tools", feature: "meetings" },
-  { key: "roles", label: "Roles", icon: <ShieldCheck size={17} />, group: "admin", shown: (p) => p.canViewRoles },
-  { key: "audit", label: "Audit log", icon: <ScrollText size={17} />, group: "admin", shown: (p) => p.canViewAudit },
-  { key: "usage", label: "Usage", icon: <Gauge size={17} />, group: "admin", shown: (p) => p.canViewUsage },
+const PAGES: {
+  key: WorkspacePage;
+  label: string;
+  icon: ReactNode;
+  group: PageGroup;
+  shown?: (p: OrgPermissions, d: OrgAdminDetail) => boolean;
+  feature?: string;
+}[] = [
+  {
+    key: "overview",
+    get label() {
+      return uiText("workspace.interface.overview_d4b1ea5");
+    },
+    icon: <LayoutGrid size={17} />,
+    group: "workspace",
+  },
+  {
+    key: "people",
+    get label() {
+      return uiText("calls.interface.people_7db2089");
+    },
+    icon: <UsersRound size={17} />,
+    group: "workspace",
+  },
+  {
+    key: "invitations",
+    get label() {
+      return uiText("organization.invitations");
+    },
+    icon: <Ticket size={17} />,
+    group: "workspace",
+  },
+  {
+    key: "channels",
+    get label() {
+      return uiText("organization.channels");
+    },
+    icon: <Hash size={17} />,
+    group: "workspace",
+  },
+  {
+    key: "meetings",
+    get label() {
+      return uiText("workspace.interface.meetings_bca705b");
+    },
+    icon: <CalendarDays size={17} />,
+    group: "tools",
+    feature: "meetings",
+  },
+  {
+    key: "roles",
+    get label() {
+      return uiText("organization.roles");
+    },
+    icon: <ShieldCheck size={17} />,
+    group: "admin",
+    shown: (p) => p.canViewRoles,
+  },
+  {
+    key: "audit",
+    get label() {
+      return uiText("workspace.interface.audit_log_e4d36f9");
+    },
+    icon: <ScrollText size={17} />,
+    group: "admin",
+    shown: (p) => p.canViewAudit,
+  },
+  {
+    key: "usage",
+    get label() {
+      return uiText("workspace.interface.usage_8d59829");
+    },
+    icon: <Gauge size={17} />,
+    group: "admin",
+    shown: (p) => p.canViewUsage,
+  },
 ];
-
 /**
  * The current workspace's settings and administration (docs/WORKSPACE_ADMINISTRATION.md). What each page offers follows
  * the permissions the server sends; the server decides every change.
  */
 export function WorkspaceView({ orgId, page, onDialog }: { orgId: string | null; page: WorkspacePage; onDialog: (d: ShellDialog) => void }) {
+  useLocaleRender();
+  const l10n = useLocalization();
   const engine = useEngine();
   const features = useOrbit((s) => s.server?.features ?? []);
   // Any change to the workspace (here, on another device, by an admin) refreshes the org list; that reloads the detail.
   const org = useOrbit((s) => s.orgs.find((o) => o.id === orgId) ?? null);
   const detail = useLoad(() => (orgId ? workspaceDetail(engine, orgId) : Promise.resolve(null)), [engine, orgId, org]);
-
   if (!orgId || !org) {
     return (
-      <section className="main" aria-label="Workspace">
+      <section className="main" aria-label={uiText("workspace.interface.workspace_87bb59b")}>
         <div className="empty" style={{ margin: "auto" }}>
           <MeldlingArt pose="hello" />
-          <h2>No community yet</h2>
-          <p className="muted">Create one for your organisation, start a community, or join one with an invitation code.</p>
+          <h2>
+            <Localized k="workspace.interface.no_community_yet_183b3a6" />
+          </h2>
+          <p className="muted">
+            <Localized k="workspace.interface.create_one_for_your_organisation_start_a_community_or_join_one_wi_2ea734b" />
+          </p>
           <div className="row" style={{ gap: 8, justifyContent: "center" }}>
             <button className="btn btn-primary" onClick={() => onDialog({ kind: "createWorkspace" })}>
-              Create a community
+              {l10n("workspace.rail_create")}
             </button>
             <button className="btn btn-secondary" onClick={() => onDialog({ kind: "joinWorkspace" })}>
-              Join with a code
+              {l10n("workspace.home_join_code")}
             </button>
           </div>
         </div>
       </section>
     );
   }
-
   const d = detail.data;
   const community = features.includes("community-channels");
   const workspacePages = PAGES.filter((p) => (!p.shown || (d && p.shown(d.permissions, d))) && (!p.feature || features.includes(p.feature)));
@@ -86,22 +176,24 @@ export function WorkspaceView({ orgId, page, onDialog }: { orgId: string | null;
   const mobileGroups = community ? COMMUNITY_RAIL_GROUPS : GROUPS;
   const currentPage = community ? communityRailKey(page) : page;
   return (
-    <section className="main main-split" aria-label={`${org.name} settings`} style={{ display: "flex", flexDirection: "column" }}>
+    <section className="main main-split" aria-label={uiText("workspace.interface.value0_settings_5f9bb7e", { value0: org.name })} style={{ display: "flex", flexDirection: "column" }}>
       <div className={`settings workspace-settings${community ? " community-settings" : ""}`}>
-        <nav className="settings-nav" aria-label={community ? "Community settings" : "Community pages"}>
+        <nav className="settings-nav" aria-label={community ? uiText("organization.interface.community_settings_7a81b1f") : uiText("workspace.interface.community_pages_e931537")}>
           <div className="mobile-workspace-nav">
-            <button className="icon-btn" aria-label="Back to community" onClick={() => navigate({ section: "home" })}>
+            <button className="icon-btn" aria-label={uiText("workspace.interface.back_to_community_a901f2b")} onClick={() => navigate({ section: "home" })}>
               <ArrowLeft size={20} />
             </button>
             <label className="grow">
-              <span className="sr-only">Community settings page</span>
+              <span className="sr-only">
+                <Localized k="workspace.interface.community_settings_page_f82064e" />
+              </span>
               <select
                 className="input"
                 value={mobilePages.some((p) => p.key === currentPage) ? currentPage : ""}
                 onChange={(e) => navigate({ section: "workspace", workspacePage: e.target.value as WorkspacePage })}
               >
                 <option value="" disabled>
-                  Choose a settings page
+                  <Localized k="workspace.interface.choose_a_settings_page_c5f66ba" />
                 </option>
                 {mobileGroups.map((group) => {
                   const pages = mobilePages.filter((p) => p.group === group.key);
@@ -142,7 +234,7 @@ export function WorkspaceView({ orgId, page, onDialog }: { orgId: string | null;
             <span className="glyph">
               <Laptop size={17} />
             </span>
-            <span className="grow">Back to conversations</span>
+            <span className="grow">{l10n("messaging.conv_back")}</span>
           </button>
         </nav>
         <div className="settings-page scroll">
@@ -152,7 +244,7 @@ export function WorkspaceView({ orgId, page, onDialog }: { orgId: string | null;
               <div className="banner danger" role="alert">
                 <span className="grow">{detail.error}</span>
                 <button className="btn btn-secondary btn-sm" onClick={detail.reload}>
-                  Try again
+                  {l10n("common.actions.retry")}
                 </button>
               </div>
             ) : !d ? (
@@ -208,16 +300,15 @@ export function WorkspaceView({ orgId, page, onDialog }: { orgId: string | null;
     </section>
   );
 }
-
 interface CommunityRailProps {
   name: string;
   page: WorkspacePage;
   features: readonly string[];
   permissions: OrgPermissions | null;
 }
-
 /** Community settings' left rail: the community's own group under its name, then small uppercase group titles. */
 function CommunityRail({ name, page, features, permissions }: CommunityRailProps) {
+  useLocaleRender();
   const visible = visibleCommunityRail(features, permissions);
   const current = communityRailKey(page);
   return (
@@ -242,9 +333,9 @@ function CommunityRail({ name, page, features, permissions }: CommunityRailProps
     </>
   );
 }
-
 /** A settings card with a title, used by every workspace page. */
 export function Card({ title, sub, children, actions }: { title: string; sub?: ReactNode; children?: ReactNode; actions?: ReactNode }) {
+  useLocaleRender();
   return (
     <section className="card ws-card" aria-label={title}>
       <header className="ws-card-head">
@@ -258,8 +349,8 @@ export function Card({ title, sub, children, actions }: { title: string; sub?: R
     </section>
   );
 }
-
 export function ErrorLine({ text }: { text: string | null }) {
+  useLocaleRender();
   return text ? (
     <div className="banner danger" role="alert">
       {text}

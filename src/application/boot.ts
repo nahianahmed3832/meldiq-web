@@ -1,3 +1,4 @@
+import { text as uiText } from "../i18n";
 import { apiBase, wsUrl } from "./config";
 import { DEV } from "./env";
 import { liveKitMedia } from "../call/media";
@@ -10,7 +11,6 @@ import { getPrefs } from "./prefs";
 import { refreshPush, startServiceWorker, systemNotify } from "./webPush";
 import { armChimeOnInteraction, chimeState, playChime } from "./messageChime";
 import { transfersOf } from "../sync/transfers";
-
 /**
  * What this browser needs: a secure context, WebCrypto with Ed25519 and X25519 (natively, or the fallback that main.tsx
  * installs for Safari before 17), IndexedDB and WebSockets. Colours no longer need light-dark(): older browsers get the
@@ -18,28 +18,26 @@ import { transfersOf } from "../sync/transfers";
  */
 export async function missingCapabilities(): Promise<string[]> {
   const missing: string[] = [];
-  if (!window.isSecureContext) missing.push("a secure connection (HTTPS)");
-  if (!window.crypto?.subtle) missing.push("the Web Crypto API");
-  if (typeof indexedDB === "undefined") missing.push("IndexedDB storage");
+  if (!window.isSecureContext) missing.push(uiText("workspace.interface.a_secure_connection_https_2dd44a3"));
+  if (!window.crypto?.subtle) missing.push(uiText("workspace.interface.the_web_crypto_api_c38bd5f"));
+  if (typeof indexedDB === "undefined") missing.push(uiText("workspace.interface.indexeddb_storage_bf96b80"));
   if (typeof WebSocket === "undefined") missing.push("WebSockets");
   if (missing.length) return missing;
   try {
     await crypto.subtle.generateKey({ name: "Ed25519" }, false, ["sign", "verify"]);
   } catch {
-    missing.push("Ed25519 signatures in Web Crypto");
+    missing.push(uiText("workspace.interface.ed25519_signatures_in_web_crypto_6155b5b"));
   }
   try {
     await crypto.subtle.generateKey({ name: "X25519" }, false, ["deriveBits"]);
   } catch {
-    missing.push("X25519 key agreement in Web Crypto");
+    missing.push(uiText("workspace.interface.x25519_key_agreement_in_web_crypto_6d7e957"));
   }
   return missing;
 }
-
 const allowed = (): boolean => getPrefs().notifications && typeof Notification !== "undefined" && Notification.permission === "granted";
 const lookedAt = (): boolean => document.visibilityState === "visible" && document.hasFocus();
 const room = (id: string | null): string | null => (id ? `/home/c/${encodeURIComponent(id)}` : null);
-
 /**
  * A message the notification pipeline let through (engine.notifyIncoming): a system notification while this tab isn't
  * looked at (src/application/webPush.ts shows it), and otherwise the in-app chime. Never both: a system notification
@@ -55,7 +53,7 @@ function notify(title: string, body: string, conversationId: string, database: s
     systemNotify({
       database,
       title: p.notificationText ? title : "Meldiq",
-      body: p.notificationText ? body : "New message",
+      body: p.notificationText ? body : uiText("workspace.side_new_message"),
       tag: conversationId,
       href: room(conversationId),
       silent: chime || !p.messageSound,
@@ -68,7 +66,6 @@ function notify(title: string, body: string, conversationId: string, database: s
     }
   });
 }
-
 /** Once per page: sound couldn't play (no click in this tab yet), said once rather than at every message. */
 let soundHinted = false;
 let onSoundBlocked: (() => void) | null = null;
@@ -76,7 +73,6 @@ let onSoundBlocked: (() => void) | null = null;
 export function onChimeBlocked(fn: () => void): void {
   onSoundBlocked = fn;
 }
-
 /** A reminder that went off (Later): a system notification (when allowed) that opens Later or the saved message. */
 function notifyReminder(title: string, body: string, conversationId: string | null, database: string): void {
   if (!allowed()) return;
@@ -84,27 +80,25 @@ function notifyReminder(title: string, body: string, conversationId: string | nu
   // Reminders are private by default: with message text hidden, the notification doesn't say what it's about.
   systemNotify({
     database,
-    title: p.notificationText ? title : "Meldiq reminder",
-    body: p.notificationText ? body : "You have a reminder",
+    title: p.notificationText ? title : uiText("workspace.interface.meldiq_reminder_08cb2c9"),
+    body: p.notificationText ? body : uiText("workspace.interface.you_have_a_reminder_ac22261"),
     tag: `reminder:${title}`,
     href: room(conversationId) ?? "/later",
   });
 }
-
 /** A scheduled meeting starting in ten minutes (round 7): opens its voice room. */
 function notifyMeeting(title: string, body: string, roomId: string | null, database: string): void {
   if (!allowed()) return;
   const p = getPrefs();
   systemNotify({
     database,
-    title: p.notificationText ? title : "Meldiq meeting",
-    body: p.notificationText ? body : "A meeting starts soon",
+    title: p.notificationText ? title : uiText("workspace.interface.meldiq_meeting_930f345"),
+    body: p.notificationText ? body : uiText("workspace.interface.a_meeting_starts_soon_834f70f"),
     tag: `meeting:${title}`,
     href: room(roomId),
     silent: !p.messageSound,
   });
 }
-
 /** A ringing call while this tab isn't looked at: a system notification that brings the tab forward to its conversation. */
 function ringAlert(title: string, video: boolean, conversationId: string, database: string): void {
   if (!allowed() || lookedAt()) return;
@@ -112,13 +106,12 @@ function ringAlert(title: string, video: boolean, conversationId: string, databa
   systemNotify({
     database,
     title: p.notificationText ? title : "Meldiq",
-    body: video ? "Incoming video call" : "Incoming voice call",
+    body: video ? uiText("calls.incomingVideo") : uiText("calls.incomingVoice"),
     tag: `call-${conversationId}`,
     href: room(conversationId),
     requireInteraction: true,
   });
 }
-
 export function createEngine(device: DeviceRecord, store: LocalStore): Engine {
   // Sound is prepared on the person's first click or key press here, as browsers require; never at load.
   armChimeOnInteraction();
@@ -153,28 +146,29 @@ export function createEngine(device: DeviceRecord, store: LocalStore): Engine {
     },
   });
   // Development builds only (removed from production bundles): lets the browser tests and a developer inspect state.
-  if (DEV) (window as unknown as { __orbit?: Engine }).__orbit = engine;
+  if (DEV)
+    (
+      window as unknown as {
+        __orbit?: Engine;
+      }
+    ).__orbit = engine;
   return engine;
 }
-
 export async function startEngine(device: DeviceRecord, store: LocalStore, grant?: SessionGrant): Promise<Engine> {
   const engine = createEngine(device, store);
   await engine.start(grant);
   startNotifications(engine);
   return engine;
 }
-
 /** After the engine started: notifications through the service worker, and the background-notification token kept current. */
 export function startNotifications(engine: Engine): void {
   void startServiceWorker(engine).then(() => refreshPush(engine));
-  onChimeBlocked(() => engine.notice("info", "Message sounds start after you click anywhere in Meldiq (a browser rule). Settings › Notifications has a test."));
+  onChimeBlocked(() => engine.notice("info", uiText("workspace.interface.message_sounds_start_after_you_click_anywhere_in_meldiq_a_browser_d21537d")));
   // Files whose sending a reload interrupted come back in their conversations, ready to resume.
   void transfersOf(engine).load();
 }
-
 const LOCK = "orbit-web-device";
 let held: Promise<boolean> | null = null;
-
 /**
  * One tab per browser holds this device's connection (two would acknowledge the same deliveries twice). Resolves true
  * while this tab holds it; [onLost] runs if another tab takes over with "Use here". Idempotent within a tab: asking again
@@ -189,11 +183,9 @@ export function holdDeviceLock(steal: boolean, onLost: () => void): Promise<bool
   }
   return request(steal, onLost);
 }
-
 /** A page being reloaded can still hold the lock for a moment: ask again a few times before deciding it's another tab. */
 const LOCK_ATTEMPTS = 6;
 const LOCK_RETRY_MS = 250;
-
 function request(steal: boolean, onLost: () => void): Promise<boolean> {
   held = (async () => {
     for (let attempt = 0; attempt < LOCK_ATTEMPTS; attempt++) {
@@ -205,7 +197,6 @@ function request(steal: boolean, onLost: () => void): Promise<boolean> {
   })();
   return held;
 }
-
 function tryLock(steal: boolean, onLost: () => void): Promise<boolean> {
   return new Promise((resolve) => {
     navigator.locks

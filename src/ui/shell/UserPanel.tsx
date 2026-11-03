@@ -1,3 +1,7 @@
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
+import { Localized } from "../../i18n/Localized";
+import { useT as useLocalization } from "../../i18n";
 import { Avatar } from "../components/Avatar";
 import { useAccountActions, useAccountSwitcher } from "./AccountActions";
 import { ArrowRightLeft, Plus, ChevronDown, Headphones, HeadphoneOff, Mic, MicOff, LogOut, RotateCw, Settings } from "lucide-react";
@@ -13,15 +17,13 @@ import { contextMenuProps, Menu, type MenuEntry, useMenu } from "../components/O
 import { LookAvatar, StyledName, useUserLook } from "../people/NameStyle";
 import { useProfileMenu } from "./ProfileMenu";
 import { CONN_LABEL } from "./ConnectionBanner";
-
 /** The browser's microphones or speakers, with their names once the person has allowed the microphone once. */
 async function devices(kind: "audioinput" | "audiooutput"): Promise<MediaDeviceChoice[]> {
   const all = await navigator.mediaDevices?.enumerateDevices().catch(() => [] as MediaDeviceInfo[]);
   return (all ?? [])
     .filter((d) => d.kind === kind && d.deviceId && d.deviceId !== "default" && d.deviceId !== "communications")
-    .map((d, i) => ({ deviceId: d.deviceId, label: d.label || `${kind === "audioinput" ? "Microphone" : "Speaker"} ${i + 1}` }));
+    .map((d, i) => ({ deviceId: d.deviceId, label: d.label || `${kind === "audioinput" ? uiText("calls.microphone") : uiText("calls.interface.speaker_a9e0c70")} ${i + 1}` }));
 }
-
 /**
  * The bottom of the sidebar (the reference's user panel, 2026-10-28): you on your profile banner, with your presence or
  * the connection's state; then your microphone and headphones, each with a menu of devices, and Settings. In a call
@@ -29,6 +31,8 @@ async function devices(kind: "audioinput" | "audiooutput"): Promise<MediaDeviceC
  * Activity, Saved, theme, sign out); a right-click on the panel opens it too. Desktop only: phones keep the top bar.
  */
 export function UserPanel() {
+  useLocaleRender();
+  const l10n = useLocalization();
   const engine = useEngine();
   const me = useOrbit((s) => s.me);
   const myPhoto = useOrbit((s) => (s.me ? s.users[s.me.userId]?.photoRev : null));
@@ -41,7 +45,10 @@ export function UserPanel() {
   const accounts = useMenu();
   const accountAction = useAccountActions();
   const switcher = useAccountSwitcher();
-  const [which, setWhich] = useState<{ kind: "audioinput" | "audiooutput"; list: MediaDeviceChoice[] } | null>(null);
+  const [which, setWhich] = useState<{
+    kind: "audioinput" | "audiooutput";
+    list: MediaDeviceChoice[];
+  } | null>(null);
   const banner = me?.profileBanner ?? null;
   const bannerUrl = usePhoto("profileBanner", me?.userId ?? "", banner?.rev ?? null, banner?.kind === "gif" ? "image/gif" : banner?.kind === "webp" ? "image/webp" : "image/jpeg");
   if (!me) return null;
@@ -55,7 +62,6 @@ export function UserPanel() {
   // API 0.65.0: the profile theme first, then the name's colours (older servers: the accent).
   const colors = look.profileStyle?.themeColors ?? look.profileStyle?.nameColors ?? (look.profileStyle?.accent ? [look.profileStyle.accent] : null);
   const backdrop = bannerUrl ? { backgroundImage: `url(${bannerUrl})` } : colors ? { background: colors.length > 1 ? `linear-gradient(120deg, ${colors.join(", ")})` : colors[0] } : undefined;
-
   const toggleMic = () => {
     if (inCall) return void engine.calls.toggleMicrophone();
     // Unmuting while deafened brings the sound back too, as in a call.
@@ -75,7 +81,7 @@ export function UserPanel() {
   const pick = (id: string | null) => {
     if (which?.kind === "audioinput") {
       setPrefs({ microphoneId: id });
-      if (inCall && id) void engine.calls.useDevice("audioinput", id).catch(() => engine.notice("error", "Couldn't switch to that microphone."));
+      if (inCall && id) void engine.calls.useDevice("audioinput", id).catch(() => engine.notice("error", uiText("workspace.interface.couldn_t_switch_to_that_microphone_c8ef80e")));
     } else {
       setPrefs({ speakerId: id });
       engine.calls.applyOutput();
@@ -83,15 +89,36 @@ export function UserPanel() {
   };
   const deviceEntries: MenuEntry[] = which
     ? [
-        { heading: which.kind === "audioinput" ? "Input device" : "Output device" },
-        { label: "System default", checked: chosen === null, onSelect: () => pick(null) },
+        { heading: which.kind === "audioinput" ? uiText("workspace.interface.input_device_42b6a9e") : uiText("workspace.interface.output_device_b2fad20") },
+        {
+          get label() {
+            return uiText("workspace.interface.system_default_b045921");
+          },
+          checked: chosen === null,
+          onSelect: () => pick(null),
+        },
         ...which.list.map((d) => ({ label: d.label, checked: chosen === d.deviceId, onSelect: () => pick(d.deviceId) })),
-        ...(which.list.length === 0 ? [{ custom: <div className="side-quiet">Allow the microphone once (Voice & Audio › Mic test) to see device names.</div> }] : []),
+        ...(which.list.length === 0
+          ? [
+              {
+                custom: (
+                  <div className="side-quiet">
+                    <Localized k="workspace.interface.allow_the_microphone_once_voice_audio_mic_test_to_see_device_name_ce04bfa" />
+                  </div>
+                ),
+              },
+            ]
+          : []),
         "separator" as const,
-        { label: "Voice & Audio settings", icon: <Settings size={16} />, onSelect: () => navigate({ section: "settings", settingsPage: "calls" }) },
+        {
+          get label() {
+            return uiText("workspace.interface.voice_audio_settings_7a79b6b");
+          },
+          icon: <Settings size={16} />,
+          onSelect: () => navigate({ section: "settings", settingsPage: "calls" }),
+        },
       ]
     : [];
-
   return (
     <div className={`user-panel${backdrop ? " has-banner" : ""}`} data-connection={connection} {...contextMenuProps((el) => profile.open(el))}>
       {backdrop && <div className="user-panel-banner" style={backdrop} aria-hidden="true" />}
@@ -100,7 +127,7 @@ export function UserPanel() {
         onClick={(e) => profile.open(e.currentTarget)}
         aria-haspopup="menu"
         aria-expanded={profile.expanded}
-        aria-label={`${me.displayName}: ${line}. Your profile and settings`}
+        aria-label={uiText("workspace.interface.value0_value1_your_profile_and_settings_2beb222", { value0: me.displayName, value1: line })}
       >
         <LookAvatar userId={me.userId} name={me.displayName} colorIndex={me.avatarColor} photoRev={myPhoto} size={36} online={online} />
         <span className="lines">
@@ -114,8 +141,8 @@ export function UserPanel() {
         <button
           className="icon-btn user-panel-btn"
           onClick={() => engine.reconnect()}
-          aria-label="Reconnect now"
-          title="Not connected. Messages you send wait and go out when the connection is back. Click to reconnect now."
+          aria-label={uiText("workspace.interface.reconnect_now_f786f0e")}
+          title={uiText("workspace.interface.not_connected_messages_you_send_wait_and_go_out_when_the_connecti_0b88160")}
         >
           <RotateCw size={17} />
         </button>
@@ -125,12 +152,20 @@ export function UserPanel() {
           className="icon-btn user-panel-btn"
           onClick={toggleMic}
           aria-pressed={micOff}
-          aria-label={micOff ? "Unmute" : "Mute"}
-          title={inCall ? (micOff ? "Unmute" : "Mute") : micOff ? "You'll join calls muted. Click to join unmuted" : "Join calls muted"}
+          aria-label={micOff ? l10n("notifications.bell_unmute") : l10n("notifications.bell_mute")}
+          title={
+            inCall
+              ? micOff
+                ? l10n("notifications.bell_unmute")
+                : l10n("notifications.bell_mute")
+              : micOff
+                ? uiText("workspace.interface.you_ll_join_calls_muted_click_to_join_unmuted_6d9382b")
+                : uiText("workspace.interface.join_calls_muted_100d935")
+          }
         >
           {micOff ? <MicOff size={19} /> : <Mic size={19} />}
         </button>
-        <button className="icon-btn user-panel-caret" onClick={(e) => openDevices("audioinput", e.currentTarget)} aria-haspopup="menu" aria-label="Input device">
+        <button className="icon-btn user-panel-caret" onClick={(e) => openDevices("audioinput", e.currentTarget)} aria-haspopup="menu" aria-label={uiText("workspace.interface.input_device_42b6a9e")}>
           <ChevronDown size={14} />
         </button>
       </div>
@@ -139,22 +174,35 @@ export function UserPanel() {
           className="icon-btn user-panel-btn"
           onClick={toggleDeafen}
           aria-pressed={deafened}
-          aria-label={deafened ? "Undeafen" : "Deafen"}
-          title={inCall ? (deafened ? "Undeafen" : "Deafen") : deafened ? "You'll join calls deafened. Click to hear again" : "Join calls deafened"}
+          aria-label={deafened ? uiText("workspace.interface.undeafen_1e4529c") : uiText("calls.interface.deafen_97081eb")}
+          title={
+            inCall
+              ? deafened
+                ? uiText("workspace.interface.undeafen_1e4529c")
+                : uiText("calls.interface.deafen_97081eb")
+              : deafened
+                ? uiText("workspace.interface.you_ll_join_calls_deafened_click_to_hear_again_ec6c84e")
+                : uiText("workspace.interface.join_calls_deafened_acbdfd8")
+          }
         >
           {deafened ? <HeadphoneOff size={19} /> : <Headphones size={19} />}
         </button>
-        <button className="icon-btn user-panel-caret" onClick={(e) => openDevices("audiooutput", e.currentTarget)} aria-haspopup="menu" aria-label="Output device">
+        <button
+          className="icon-btn user-panel-caret"
+          onClick={(e) => openDevices("audiooutput", e.currentTarget)}
+          aria-haspopup="menu"
+          aria-label={uiText("workspace.interface.output_device_b2fad20")}
+        >
           <ChevronDown size={14} />
         </button>
       </div>
-      <button className="icon-btn user-panel-btn" onClick={() => navigate({ section: "settings", settingsPage: "account" })} aria-label="Settings" title="Settings">
+      <button className="icon-btn user-panel-btn" onClick={() => navigate({ section: "settings", settingsPage: "account" })} aria-label={l10n("settings.title")} title={l10n("settings.title")}>
         <Settings size={19} />
       </button>
       <button
         className="icon-btn user-panel-btn user-panel-account"
-        aria-label="Account options"
-        title="Switch account or log out"
+        aria-label={uiText("workspace.interface.account_options_fb15613")}
+        title={uiText("workspace.interface.switch_account_or_log_out_7558dd8")}
         aria-haspopup="menu"
         aria-expanded={!!accounts.anchor}
         onClick={(e) => accounts.open(e.currentTarget)}
@@ -165,10 +213,14 @@ export function UserPanel() {
         <Menu
           anchor={accounts.anchor}
           align="end"
-          label="Account options"
+          label={uiText("workspace.interface.account_options_fb15613")}
           onClose={accounts.close}
           entries={[
-            { heading: "Your accounts" },
+            {
+              get heading() {
+                return uiText("workspace.interface.your_accounts_fdd5abe");
+              },
+            },
             ...switcher.accounts.map((a) => ({
               label: a.displayName,
               hint: `@${a.username}`,
@@ -178,15 +230,41 @@ export function UserPanel() {
               onSelect: () => switcher.switchTo(a.database),
             })),
             "separator",
-            { label: "Add account", icon: <Plus size={16} />, disabled: switcher.busy, onSelect: switcher.add },
-            { label: "Switch account", icon: <ArrowRightLeft size={16} />, onSelect: () => accountAction("switch") },
+            {
+              get label() {
+                return uiText("workspace.interface.add_account_ee7ee58");
+              },
+              icon: <Plus size={16} />,
+              disabled: switcher.busy,
+              onSelect: switcher.add,
+            },
+            {
+              get label() {
+                return uiText("settings.interface.switch_account_fedce01");
+              },
+              icon: <ArrowRightLeft size={16} />,
+              onSelect: () => accountAction("switch"),
+            },
             "separator",
-            { label: "Log out", icon: <LogOut size={16} />, danger: true, onSelect: () => accountAction("logout") },
+            {
+              get label() {
+                return uiText("settings.interface.log_out_4961614");
+              },
+              icon: <LogOut size={16} />,
+              danger: true,
+              onSelect: () => accountAction("logout"),
+            },
           ]}
         />
       )}
       {deviceMenu.anchor && which && (
-        <Menu anchor={deviceMenu.anchor} align="end" label={which.kind === "audioinput" ? "Input device" : "Output device"} onClose={deviceMenu.close} entries={deviceEntries} />
+        <Menu
+          anchor={deviceMenu.anchor}
+          align="end"
+          label={which.kind === "audioinput" ? uiText("workspace.interface.input_device_42b6a9e") : uiText("workspace.interface.output_device_b2fad20")}
+          onClose={deviceMenu.close}
+          entries={deviceEntries}
+        />
       )}
       {profile.ui}
     </div>

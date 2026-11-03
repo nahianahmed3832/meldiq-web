@@ -1,3 +1,10 @@
+import { formatUnit } from "../../i18n/format";
+import { formatUiNumber } from "../../i18n/format";
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
+import { Localized } from "../../i18n/Localized";
+import { interfaceLocale } from "../../i18n/format";
+import { useT as useLocalization } from "../../i18n";
 import { RefreshCw } from "lucide-react";
 import { useRef, useState } from "react";
 import { useEngine, useOrbit } from "../../application/orbit";
@@ -7,58 +14,98 @@ import { SettingsIcon, RankMedal } from "../components/SettingsIcon";
 import { StyledAvatar } from "../people/ProfileStyle";
 import { OPEN_PROFILE_EVENT } from "../people/ProfileDialog";
 import { useLoad } from "../workspace/useLoad";
-
-export const BOARD_INFO: Record<LeaderboardMetric, { label: string; description: string; unit: string; empty: string }> = {
+export const BOARD_INFO: Record<
+  LeaderboardMetric,
+  {
+    label: string;
+    description: string;
+    empty: string;
+  }
+> = {
   level: {
-    label: "Level",
-    description: "The next chapter starts with you. Meet Meldiq’s highest account levels.",
-    unit: "level",
-    empty: "A new chapter is waiting. Spend earned Embers on your first level to join the board.",
+    get label() {
+      return uiText("workspace.interface.level_1709305");
+    },
+    get description() {
+      return uiText("workspace.interface.the_next_chapter_starts_with_you_meet_meldiq_s_highest_account_le_45943b2");
+    },
+    get empty() {
+      return uiText("workspace.interface.a_new_chapter_is_waiting_spend_earned_embers_on_your_first_level_030af31");
+    },
   },
   messages: {
-    label: "Messages",
-    description: "Keeping the conversation going, one message at a time.",
-    unit: "messages",
-    empty: "No messages this week yet. Start a conversation in one of your community channels.",
+    get label() {
+      return uiText("workspace.nav_messages");
+    },
+    get description() {
+      return uiText("workspace.interface.keeping_the_conversation_going_one_message_at_a_time_4fd7f24");
+    },
+    get empty() {
+      return uiText("workspace.interface.no_messages_this_week_yet_start_a_conversation_in_one_of_your_com_2ae51ca");
+    },
   },
   voice: {
-    label: "Voice",
-    description: "Good company, great conversations. Recorded voice room time this week.",
-    unit: "minutes",
-    empty: "It’s quiet around the campfire. Spend a minute in a community voice room to get started.",
+    get label() {
+      return uiText("auth.interface.voice_87bf2bc");
+    },
+    get description() {
+      return uiText("workspace.interface.good_company_great_conversations_recorded_voice_room_time_this_we_8e698c7");
+    },
+    get empty() {
+      return uiText("workspace.interface.it_s_quiet_around_the_campfire_spend_a_minute_in_a_community_voic_eb0b412");
+    },
   },
   embers: {
-    label: "Embers",
-    description: "A little warmth goes a long way. The most Embers earned, ever.",
-    unit: "Embers",
-    empty: "The first sparks are still ahead. Complete quests and check in to earn Embers.",
+    get label() {
+      return uiText("settings.settings_points");
+    },
+    get description() {
+      return uiText("workspace.interface.a_little_warmth_goes_a_long_way_the_most_embers_earned_ever_796bf51");
+    },
+    get empty() {
+      return uiText("workspace.interface.the_first_sparks_are_still_ahead_complete_quests_and_check_in_to_4677b32");
+    },
   },
   gifts: {
-    label: "Gifts",
-    description: "For the people who brighten someone else’s day. Verified Meldiq Plus gifts sent.",
-    unit: "gifts",
-    empty: "The first gift is yet to arrive. Paid Meldiq Plus gifts appear here after payment is verified.",
+    get label() {
+      return uiText("workspace.interface.gifts_67a025d");
+    },
+    get description() {
+      return uiText("workspace.interface.for_the_people_who_brighten_someone_else_s_day_verified_meldiq_pl_003b7d6");
+    },
+    get empty() {
+      return uiText("workspace.interface.the_first_gift_is_yet_to_arrive_paid_meldiq_plus_gifts_appear_her_a526aa0");
+    },
   },
   invites: {
-    label: "Invites",
-    description: "Making room for more. Invitations that became lasting connections.",
-    unit: "invites",
-    empty: "Your people are out there. Invite credits count after a friend stays for seven days.",
+    get label() {
+      return uiText("workspace.interface.invites_f212a98");
+    },
+    get description() {
+      return uiText("workspace.interface.making_room_for_more_invitations_that_became_lasting_connections_88efbc6");
+    },
+    get empty() {
+      return uiText("workspace.interface.your_people_are_out_there_invite_credits_count_after_a_friend_sta_6286d9a");
+    },
   },
 };
 function score(metric: LeaderboardMetric, value: number) {
-  if (metric === "level") return `Level ${value.toLocaleString()}`;
-  const unit = BOARD_INFO[metric].unit;
-  return `${value.toLocaleString()} ${value === 1 && metric !== "embers" ? unit.slice(0, -1) : unit}`;
+  if (metric === "level") return uiText("billing.interface.level_value0_6095a3d", { value0: value.toLocaleString(interfaceLocale()) });
+  if (metric === "messages") return uiText("common.counts.messages", { count: value });
+  if (metric === "voice") return formatUnit(value, "minute");
+  return `${BOARD_INFO[metric].label}: ${value.toLocaleString(interfaceLocale())}`;
 }
 function openPerson(e: LeaderboardEntry) {
   window.dispatchEvent(new CustomEvent(OPEN_PROFILE_EVENT, { detail: { userId: e.user.id, name: e.user.displayName } }));
 }
 function Face({ entry, size }: { entry: LeaderboardEntry; size: number }) {
+  useLocaleRender();
   const u = entry.user;
   return <StyledAvatar userId={u.id} name={u.displayName} colorIndex={u.avatarColor} photoRev={u.photoRev} media={u.avatarMedia} decoration={u.decoration} size={size} />;
 }
 export function LeaderboardsPage() {
+  useLocaleRender();
+  const l10n = useLocalization();
   const engine = useEngine();
   const self = useOrbit((s) => s.me?.userId);
   const [metric, setMetric] = useState<LeaderboardMetric>("level");
@@ -76,15 +123,19 @@ export function LeaderboardsPage() {
           <SettingsIcon name="leaderboards" size={34} />
         </span>
         <div>
-          <span className="rankings-eyebrow">THE MELDIQ COMMUNITY</span>
-          <h1>Leaderboards</h1>
-          <p>Every connection leaves a little glow.</p>
+          <span className="rankings-eyebrow">
+            <Localized k="workspace.interface.the_meldiq_community_685de36" />
+          </span>
+          <h1>{l10n("settings.settings_leaderboards")}</h1>
+          <p>
+            <Localized k="workspace.interface.every_connection_leaves_a_little_glow_81282da" />
+          </p>
         </div>
-        <button className="icon-btn rankings-refresh" aria-label="Refresh rankings" disabled={loaded.loading} onClick={loaded.reload}>
+        <button className="icon-btn rankings-refresh" aria-label={uiText("workspace.interface.refresh_rankings_cfaf82a")} disabled={loaded.loading} onClick={loaded.reload}>
           <RefreshCw size={18} className={loaded.loading ? "rankings-refreshing" : ""} />
         </button>
       </header>
-      <div className="rankings-tabs" role="tablist" aria-label="Leaderboard categories">
+      <div className="rankings-tabs" role="tablist" aria-label={uiText("workspace.interface.leaderboard_categories_ec64ce3")}>
         {LEADERBOARD_METRICS.map((key, index) => (
           <button
             key={key}
@@ -115,40 +166,51 @@ export function LeaderboardsPage() {
       <section id="ranking-panel" role="tabpanel" aria-labelledby={`ranking-tab-${metric}`} aria-busy={loaded.loading} tabIndex={0}>
         <div className="rankings-caption">
           <p>{info.description}</p>
-          <span className="rankings-period">{weekly ? "LAST 7 DAYS" : "ALL TIME"}</span>
+          <span className="rankings-period">{weekly ? uiText("workspace.interface.last_7_days_5eb7caf") : uiText("workspace.interface.all_time_848198c")}</span>
         </div>
         {loaded.error ? (
           <div className="rankings-error" role="alert">
             <p>{loaded.error}</p>
             <button className="btn btn-secondary" onClick={loaded.reload}>
-              Try again
+              {l10n("common.actions.retry")}
             </button>
           </div>
         ) : loaded.loading ? (
           <div className="rankings-loading" role="status">
             <div className="skeleton" />
-            <p>Gathering the glow…</p>
+            <p>
+              <Localized k="workspace.interface.gathering_the_glow_11339b4" />
+            </p>
           </div>
         ) : (
           board && (
             <>
-              <div className="rankings-your-place" aria-label="Your ranking">
+              <div className="rankings-your-place" aria-label={uiText("workspace.interface.your_ranking_5c18d9b")}>
                 <SettingsIcon name={metric} size={28} />
                 <div>
-                  <strong>Your place</strong>
-                  <span>{board.me ? `#${board.me.rank.toLocaleString()} of ${board.total.toLocaleString()} ranked people` : "Your next milestone is ahead"}</span>
+                  <strong>
+                    <Localized k="workspace.interface.your_place_cc9cdfb" />
+                  </strong>
+                  <span>
+                    {board.me
+                      ? uiText("workspace.interface.value0_of_value1_ranked_people_e2453f5", {
+                          value0: board.me.rank.toLocaleString(interfaceLocale()),
+                          value1: board.total.toLocaleString(interfaceLocale()),
+                        })
+                      : uiText("workspace.interface.your_next_milestone_is_ahead_6e81f78")}
+                  </span>
                 </div>
-                <b>{board.me ? score(metric, board.me.value) : "Unranked"}</b>
+                <b>{board.me ? score(metric, board.me.value) : uiText("workspace.interface.unranked_88b0e98")}</b>
               </div>
               {board.entries.length ? (
                 <div className="rankings-arena">
-                  <div className={`rankings-podium podium-count-${podium.length}`} aria-label="Top three people">
+                  <div className={`rankings-podium podium-count-${podium.length}`} aria-label={uiText("workspace.interface.top_three_people_6b64f49")}>
                     {podium.map((entry, index) => (
                       <button
                         key={entry.user.id}
                         className={`podium-person podium-position-${index + 1}${entry.user.id === self ? " is-you" : ""}`}
                         onClick={() => openPerson(entry)}
-                        aria-label={`Rank ${entry.rank}, ${entry.user.displayName}, ${score(metric, entry.value)}`}
+                        aria-label={uiText("workspace.interface.rank_value0_value1_value2_8bc5adb", { value0: entry.rank, value1: entry.user.displayName, value2: score(metric, entry.value) })}
                       >
                         <RankMedal rank={entry.rank} />
                         <span className="podium-avatar">
@@ -157,12 +219,12 @@ export function LeaderboardsPage() {
                         <strong className="podium-name">{entry.user.displayName}</strong>
                         <span className="podium-handle">
                           @{entry.user.username}
-                          {entry.user.id === self ? " · You" : ""}
+                          {entry.user.id === self ? uiText("workspace.interface.you_ad008d8") : ""}
                         </span>
                         <span className="podium-value">{score(metric, entry.value)}</span>
                         <span className="podium-plinth" aria-hidden="true">
                           <SettingsIcon name={metric} size={24} />
-                          <b>{entry.rank}</b>
+                          <b>{formatUiNumber(entry.rank)}</b>
                         </span>
                       </button>
                     ))}
@@ -170,19 +232,21 @@ export function LeaderboardsPage() {
                   {board.entries.length > 3 && (
                     <div className="rankings-table">
                       <div className="rankings-table-heading">
-                        <span>RANK / PERSON</span>
+                        <span>
+                          <Localized k="workspace.interface.rank_person_3ab4bae" />
+                        </span>
                         <span>{info.label.toUpperCase()}</span>
                       </div>
-                      <ol start={4} aria-label="Ranked people">
+                      <ol start={4} aria-label={uiText("workspace.interface.ranked_people_db64386")}>
                         {board.entries.slice(3).map((entry) => (
                           <li key={entry.user.id} value={entry.rank}>
                             <button className={`rankings-row${entry.user.id === self ? " is-you" : ""}`} onClick={() => openPerson(entry)}>
-                              <span className="rankings-place">{entry.rank}</span>
+                              <span className="rankings-place">{formatUiNumber(entry.rank)}</span>
                               <Face entry={entry} size={38} />
                               <span className="rankings-person">
                                 <strong>
                                   {entry.user.displayName}
-                                  {entry.user.id === self && <small>You</small>}
+                                  {entry.user.id === self && <small>{l10n("workspace.nav_you")}</small>}
                                 </strong>
                                 <span>@{entry.user.username}</span>
                               </span>
@@ -197,11 +261,13 @@ export function LeaderboardsPage() {
               ) : (
                 <div className="rankings-empty">
                   <SettingsIcon name={metric} size={48} />
-                  <h2>Be part of the first glow</h2>
+                  <h2>
+                    <Localized k="workspace.interface.be_part_of_the_first_glow_7258a23" />
+                  </h2>
                   <p>{info.empty}</p>
                   {(metric === "level" || metric === "embers") && (
                     <button className="btn btn-primary" onClick={() => navigate({ section: "settings", settingsPage: "points" })}>
-                      Explore Embers
+                      <Localized k="workspace.interface.explore_embers_6d062b6" />
                     </button>
                   )}
                 </div>
@@ -209,16 +275,21 @@ export function LeaderboardsPage() {
               <footer className="rankings-footnote">
                 <p>
                   {weekly
-                    ? "Only community channels you can view count here. Direct messages and private calls never count. Voice time uses retained participation records; overlapping devices count once."
+                    ? uiText("workspace.interface.only_community_channels_you_can_view_count_here_direct_messages_a_a8b0f5b")
                     : metric === "embers"
-                      ? "Lifetime earnings count here. Spending Embers on levels never lowers this score."
+                      ? uiText("workspace.interface.lifetime_earnings_count_here_spending_embers_on_levels_never_lowe_a846e27")
                       : metric === "gifts"
-                        ? "Only verified paid gifts count. Pending, refunded and disputed gifts are excluded; recipients and payment details stay private."
+                        ? uiText("workspace.interface.only_verified_paid_gifts_count_pending_refunded_and_disputed_gift_9d5dd99")
                         : metric === "invites"
-                          ? "Only credited invitations count: a friend must stay for seven days, within the monthly reward limit."
-                          : "Account levels start ranking at level 2. Earn Embers through quests, visits and conversations, then spend them to level up."}
+                          ? uiText("workspace.interface.only_credited_invitations_count_a_friend_must_stay_for_seven_days_3cf1ecd")
+                          : uiText("workspace.interface.account_levels_start_ranking_at_level_2_earn_embers_through_quest_ff8e21c")}
                 </p>
-                <p>Top 100 · Equal scores share a rank · Updated {new Date(board.generatedAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</p>
+                <p>
+                  <Localized
+                    k="workspace.interface.top_100_equal_scores_share_a_rank_updated_9b163ce"
+                    slots={[new Date(board.generatedAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })]}
+                  />
+                </p>
               </footer>
             </>
           )

@@ -1,67 +1,69 @@
+import { text as uiText } from "../../i18n";
 import type { CallUiState } from "../../call/types";
-
+import { formatDuration } from "../../i18n/format";
+import { text } from "../../i18n";
 /** What the call screen says about where the call is (android CallOverlay status lines). */
 export function callStatus(s: CallUiState, now: number): string {
   switch (s.phase) {
     case "incoming":
-      return s.isGroup ? (s.subtitle ?? "Incoming call") : s.video ? "Incoming video call" : "Incoming voice call";
+      return s.isGroup ? (s.subtitle ?? text("calls.incoming")) : text(s.video ? "calls.incomingVideo" : "calls.incomingVoice");
     case "outgoing":
       if (s.askingPermission) return permissionPrompt(s.video);
-      return s.alerted ? "Ringing…" : "Calling…";
+      return s.alerted ? uiText("calls.interface.ringing_7398751") : text("calls.calling");
     case "connecting":
       if (s.askingPermission) return permissionPrompt(s.cameraOn);
-      if (s.waitingForKey) return "Getting the call's encryption key…";
-      return "Connecting…";
+      if (s.waitingForKey) return uiText("calls.interface.getting_the_call_s_encryption_key_88db815");
+      return text("calls.connecting");
     case "reconnecting":
-      return "Reconnecting…";
+      return text("calls.reconnecting");
     case "connected":
-      if (s.media === "stalled") return "Reconnecting media…";
-      return s.connectedAt ? duration(now - s.connectedAt) : "Connected";
+      if (s.media === "stalled") return uiText("calls.interface.reconnecting_media_bf0034e");
+      return s.connectedAt ? duration(now - s.connectedAt) : text("calls.connected");
     case "ended":
       return s.error ?? endedText(s.endReason);
     default:
       return "";
   }
 }
-
 function permissionPrompt(video: boolean): string {
-  return `Allow ${video ? "your microphone and camera" : "your microphone"} in the browser's prompt…`;
+  return uiText("calls.interface.allow_value0_in_the_browser_s_prompt_dd6b3ab", {
+    value0: video ? uiText("workspace.interface.your_microphone_and_camera_039df3e") : uiText("workspace.interface.your_microphone_9573f0e"),
+  });
 }
-
 export function endedText(reason: string | null): string {
   switch (reason) {
     case "declined":
-      return "Declined";
+      return uiText("calls.interface.declined_dce083a");
     case "busy":
-      return "Busy on another call";
+      return uiText("calls.interface.busy_on_another_call_aa2fdc1");
     case "missed":
-      return "No answer";
+      return uiText("calls.interface.no_answer_7e49c68");
     case "lost":
-      return "The connection was lost";
+      return uiText("calls.interface.the_connection_was_lost_9be4746");
     case "answered elsewhere":
-      return "Answered on another device";
+      return uiText("calls.interface.answered_on_another_device_6f798ea");
     case "removed":
-      return "You're no longer in this call";
+      return uiText("calls.interface.you_re_no_longer_in_this_call_412816b");
     case "joined_elsewhere":
-      return "You joined this call on another device";
+      return uiText("calls.interface.you_joined_this_call_on_another_device_30b199c");
     case "disconnected":
-      return "Disconnected";
+      return uiText("calls.interface.disconnected_04dfac3");
     default:
-      return "Call ended";
+      return text("calls.ended");
   }
 }
-
 /** m:ss, or h:mm:ss after an hour. */
 export function duration(ms: number): string {
-  const total = Math.max(0, Math.floor(ms / 1000));
-  const h = Math.floor(total / 3600);
-  const m = Math.floor((total % 3600) / 60);
-  const sec = String(total % 60).padStart(2, "0");
-  return h > 0 ? `${h}:${String(m).padStart(2, "0")}:${sec}` : `${m}:${sec}`;
+  return formatDuration(ms);
 }
-
 export const SECURITY_LABEL = {
-  encrypted: "Encrypted call",
-  verifying: "Checking encryption…",
-  problem: "Encryption problem",
+  get encrypted() {
+    return uiText("calls.interface.encrypted_call_0ce130c");
+  },
+  get verifying() {
+    return uiText("calls.interface.checking_encryption_8767b45");
+  },
+  get problem() {
+    return uiText("calls.interface.encryption_problem_77d205f");
+  },
 } as const;

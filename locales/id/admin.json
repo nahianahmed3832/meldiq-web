@@ -1,0 +1,10 @@
+{
+  "title": "Administrasi",
+  "health": "Status layanan",
+  "usage": "Penggunaan komunitas",
+  "states": {
+    "rejected": "Ditolak",
+    "escalated": "Diteruskan ke tingkat lebih tinggi",
+    "disputed": "Disengketakan"
+  }
+}

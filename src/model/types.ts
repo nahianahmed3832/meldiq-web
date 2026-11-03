@@ -113,6 +113,12 @@ export interface StoredMessage {
   forwarded: boolean;
 }
 
+/** The small presentation facts needed to re-label a cached preview; never message text or attachment keys. */
+export type PreviewLabel =
+  | { kind: "deleted" | "undecryptable" | "location" | "voice" | "photo" | "video" }
+  | { kind: "photos" | "videos" | "attachments"; count: number }
+  | { kind: "call"; video: boolean; outgoing: boolean; info?: CallInfo };
+
 /** Per-conversation state that exists only on this device (unread counts, like the phone's). */
 export interface ConversationLocal {
   id: string;
@@ -121,6 +127,9 @@ export interface ConversationLocal {
   lastMessageId: string | null;
   lastPreview: string | null;
   lastSenderName: string | null;
+  /** Optional on older snapshots; identity is independent of the translated word for You. */
+  lastSenderOwn?: boolean;
+  lastPreviewLabel?: PreviewLabel;
   lastActivityAt: number;
   /** Newest server time this device has read up to. */
   readUpTo: number;

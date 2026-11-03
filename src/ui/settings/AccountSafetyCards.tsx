@@ -1,3 +1,7 @@
+import { useT as useLocalization } from "../../i18n";
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
+import { Localized } from "../../i18n/Localized";
 import { PlatformInbox } from "../operations/PlatformInbox";
 import { Copy, ShieldCheck, ShieldAlert } from "lucide-react";
 import { type FormEvent, useState } from "react";
@@ -7,13 +11,14 @@ import { AccountSafetyApi, STANDING_LEVELS, type StandingLevel } from "../../syn
 import { relative, untilWhen } from "../format";
 import { QrCode } from "../components/QrCode";
 import { useLoad } from "../workspace/useLoad";
-
 /**
  * Settings › My Account › Two-step sign-in (API 0.46.0): a code from an authenticator app at every password sign-in.
  * Set up with the password, a QR code (or the key typed in) and the app's first code; ten backup codes are shown once.
  * Turning it off needs the password and a code. Before it's turned on, the card says what it means for the Android app.
  */
 export function TwoStepCard() {
+  useLocaleRender();
+  const l10n = useLocalization();
   const engine = useEngine();
   const api = new AccountSafetyApi(engine.api);
   const [version, setVersion] = useState(0);
@@ -21,7 +26,10 @@ export function TwoStepCard() {
   const [step, setStep] = useState<"idle" | "password" | "scan" | "codes" | "off">("idle");
   const [password, setPassword] = useState("");
   const [code, setCode] = useState("");
-  const [secret, setSecret] = useState<{ secret: string; uri: string } | null>(null);
+  const [secret, setSecret] = useState<{
+    secret: string;
+    uri: string;
+  } | null>(null);
   const [backup, setBackup] = useState<string[]>([]);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -30,7 +38,7 @@ export function TwoStepCard() {
     setBusy(true);
     setError(null);
     fn()
-      .catch((e: unknown) => setError(e instanceof ApiError ? e.message : "That didn't work. Try again."))
+      .catch((e: unknown) => setError(e instanceof ApiError ? e.message : uiText("workspace.interface.that_didn_t_work_try_again_5da2573")))
       .finally(() => setBusy(false));
   };
   const reset = () => {
@@ -42,7 +50,7 @@ export function TwoStepCard() {
   };
   const begin = (e: FormEvent) => {
     e.preventDefault();
-    if (!password) return setError("Enter your password.");
+    if (!password) return setError(uiText("auth.signin_enter_password"));
     run(async () => {
       setSecret(await api.totpSetup(password));
       setPassword("");
@@ -51,7 +59,7 @@ export function TwoStepCard() {
   };
   const confirm = (e: FormEvent) => {
     e.preventDefault();
-    if (!/^\d{6}$/.test(code.replace(/\s/g, ""))) return setError("Enter the 6-digit code your app shows.");
+    if (!/^\d{6}$/.test(code.replace(/\s/g, ""))) return setError(uiText("settings.interface.enter_the_6_digit_code_your_app_shows_e306451"));
     run(async () => {
       setBackup((await api.totpEnable(code.replace(/\s/g, ""))).backupCodes);
       setCode("");
@@ -61,37 +69,51 @@ export function TwoStepCard() {
   };
   const turnOff = (e: FormEvent) => {
     e.preventDefault();
-    if (!password || !code.trim()) return setError("Enter your password and a code.");
+    if (!password || !code.trim()) return setError(uiText("settings.interface.enter_your_password_and_a_code_0a660ec"));
     run(async () => {
       await api.totpDisable(password, code.trim());
       reset();
       setVersion((v) => v + 1);
-      engine.notice("info", "Two-step sign-in is off.");
+      engine.notice("info", uiText("settings.interface.two_step_sign_in_is_off_723d6be"));
     });
   };
-
   return (
     <div className="card setting-card">
       <div className="setting-card-head">
         <span className="lines grow">
-          <strong>Two-step sign-in · {s?.enabled ? "On" : "Off"}</strong>
-          <small>Add a code from an authenticator app (Google Authenticator, Authy, 1Password and others) to every sign-in with your password.</small>
+          <strong>
+            <Localized k="settings.interface.two_step_sign_in_5c4b3bf" slots={[s?.enabled ? uiText("settings.interface.on_1300117") : uiText("messaging.interface.off_ca7981b")]} />
+          </strong>
+          <small>
+            <Localized k="settings.interface.add_a_code_from_an_authenticator_app_google_authenticator_authy_1_3e69d19" />
+          </small>
         </span>
         {s && !s.enabled && step === "idle" && (
           <button className="btn btn-primary btn-sm" disabled={!s.available} onClick={() => setStep("password")}>
-            Turn on
+            <Localized k="settings.interface.turn_on_5a1f096" />
           </button>
         )}
         {s?.enabled && step === "idle" && (
           <button className="btn btn-secondary btn-sm" onClick={() => setStep("off")}>
-            Turn off
+            <Localized k="settings.interface.turn_off_06f0e21" />
           </button>
         )}
       </div>
-      {s && !s.available && <small className="faint">This server can't turn on two-step sign-in yet (it has no key to protect the secret).</small>}
+      {s && !s.available && (
+        <small className="faint">
+          <Localized k="settings.interface.this_server_can_t_turn_on_two_step_sign_in_yet_it_has_no_key_to_p_98ccd05" />
+        </small>
+      )}
       {s?.enabled && step === "idle" && (
         <small className="faint">
-          On since {s.enabledAt ? relative(s.enabledAt) : "earlier"}. {s.backupCodesLeft} backup {s.backupCodesLeft === 1 ? "code" : "codes"} left.
+          <Localized
+            k="settings.interface.on_since_backup_left_ec7cf0e"
+            slots={[
+              s.enabledAt ? relative(s.enabledAt) : uiText("settings.interface.earlier_2a51d35"),
+              s.backupCodesLeft,
+              s.backupCodesLeft === 1 ? uiText("settings.interface.code_5694d08") : uiText("settings.interface.codes_64a7994"),
+            ]}
+          />
         </small>
       )}
       {error && (
@@ -102,40 +124,47 @@ export function TwoStepCard() {
       {step === "password" && (
         <form className="ws-form" onSubmit={begin} noValidate>
           <div className="banner warn ws-wide" role="note">
-            The Meldiq Android app can't ask for these codes yet. While two-step sign-in is on, signing in on Android with your password won't work (devices already signed in stay signed in, and
-            passkeys still work).
+            <Localized k="settings.interface.the_meldiq_android_app_can_t_ask_for_these_codes_yet_while_two_st_51cd30d" />
           </div>
           <label className="field">
-            <span>Current password</span>
+            <span>
+              <Localized k="settings.interface.current_password_72ed2bd" />
+            </span>
             <input className="input" type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} disabled={busy} autoFocus />
           </label>
           <div className="ws-form-actions">
             <button type="button" className="btn btn-ghost btn-sm" onClick={reset}>
-              Cancel
+              {l10n("common.actions.cancel")}
             </button>
             <button className="btn btn-primary btn-sm" disabled={busy}>
-              {busy ? "Checking…" : "Continue"}
+              {busy ? l10n("common.common_checking") : l10n("common.actions.continue")}
             </button>
           </div>
         </form>
       )}
       {step === "scan" && secret && (
         <form className="two-step-scan" onSubmit={confirm} noValidate>
-          <QrCode text={secret.uri} size={168} label="QR code for your authenticator app" />
+          <QrCode text={secret.uri} size={168} label={uiText("settings.interface.qr_code_for_your_authenticator_app_def58af")} />
           <div className="lines">
-            <strong>Scan this with your authenticator app</strong>
-            <small className="faint">Or type this key into it:</small>
+            <strong>
+              <Localized k="settings.interface.scan_this_with_your_authenticator_app_c5fcfbb" />
+            </strong>
+            <small className="faint">
+              <Localized k="settings.interface.or_type_this_key_into_it_c841da9" />
+            </small>
             <code className="two-step-key">{secret.secret.match(/.{1,4}/g)?.join(" ")}</code>
             <label className="field">
-              <span>Then enter the 6-digit code it shows</span>
+              <span>
+                <Localized k="settings.interface.then_enter_the_6_digit_code_it_shows_463dda6" />
+              </span>
               <input className="input mono" inputMode="numeric" autoComplete="one-time-code" maxLength={7} value={code} onChange={(e) => setCode(e.target.value)} disabled={busy} autoFocus />
             </label>
             <div className="row" style={{ gap: 8 }}>
               <button type="button" className="btn btn-ghost btn-sm" onClick={reset}>
-                Cancel
+                {l10n("common.actions.cancel")}
               </button>
               <button className="btn btn-primary btn-sm" disabled={busy}>
-                {busy ? "Turning on…" : "Turn on"}
+                {busy ? uiText("settings.interface.turning_on_63fd4df") : uiText("settings.interface.turn_on_5a1f096")}
               </button>
             </div>
           </div>
@@ -143,9 +172,13 @@ export function TwoStepCard() {
       )}
       {step === "codes" && (
         <div className="two-step-codes">
-          <strong>Two-step sign-in is on. Save these backup codes now.</strong>
-          <small className="faint">Each works once, if you lose your phone. They won't be shown again.</small>
-          <ul className="recovery-codes" aria-label="Backup codes">
+          <strong>
+            <Localized k="settings.interface.two_step_sign_in_is_on_save_these_backup_codes_now_dea2b4e" />
+          </strong>
+          <small className="faint">
+            <Localized k="settings.interface.each_works_once_if_you_lose_your_phone_they_won_t_be_shown_again_7132df6" />
+          </small>
+          <ul className="recovery-codes" aria-label={uiText("settings.interface.backup_codes_a13fe23")}>
             {backup.map((c) => (
               <li key={c} className="mono">
                 {c}
@@ -157,13 +190,13 @@ export function TwoStepCard() {
               className="btn btn-secondary btn-sm"
               onClick={() => {
                 void navigator.clipboard?.writeText(backup.join("\n")).catch(() => undefined);
-                engine.notice("info", "Backup codes copied.");
+                engine.notice("info", uiText("settings.interface.backup_codes_copied_bd40e3b"));
               }}
             >
-              <Copy size={14} /> Copy
+              <Copy size={14} /> {l10n("common.actions.copy")}
             </button>
             <button className="btn btn-primary btn-sm" onClick={reset}>
-              I've saved them
+              <Localized k="settings.interface.i_ve_saved_them_578d17a" />
             </button>
           </div>
         </div>
@@ -171,19 +204,23 @@ export function TwoStepCard() {
       {step === "off" && (
         <form className="ws-form" onSubmit={turnOff} noValidate>
           <label className="field">
-            <span>Current password</span>
+            <span>
+              <Localized k="settings.interface.current_password_72ed2bd" />
+            </span>
             <input className="input" type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} disabled={busy} autoFocus />
           </label>
           <label className="field">
-            <span>Code from your app, or a backup code</span>
+            <span>
+              <Localized k="settings.interface.code_from_your_app_or_a_backup_code_cf106d4" />
+            </span>
             <input className="input mono" autoComplete="one-time-code" maxLength={20} value={code} onChange={(e) => setCode(e.target.value)} disabled={busy} />
           </label>
           <div className="ws-form-actions">
             <button type="button" className="btn btn-ghost btn-sm" onClick={reset}>
-              Keep it on
+              <Localized k="settings.interface.keep_it_on_cbfff78" />
             </button>
             <button className="btn btn-danger btn-sm" disabled={busy}>
-              {busy ? "Turning off…" : "Turn off"}
+              {busy ? uiText("settings.interface.turning_off_c62412a") : uiText("settings.interface.turn_off_06f0e21")}
             </button>
           </div>
         </form>
@@ -191,17 +228,63 @@ export function TwoStepCard() {
     </div>
   );
 }
-
-const LEVEL_TEXT: Record<StandingLevel, { title: string; sub: string }> = {
-  good: { title: "Your account is all good", sub: "Everything works normally." },
-  limited: { title: "Your account is limited", sub: "You can't start communities or make invitations until the warning ends." },
-  very_limited: { title: "Your account is very limited", sub: "You also can't start new conversations or join communities until a warning ends." },
-  suspended: { title: "Your account is suspended", sub: "You can read, but you can't send messages until a warning ends." },
+const LEVEL_TEXT: Record<
+  StandingLevel,
+  {
+    title: string;
+    sub: string;
+  }
+> = {
+  good: {
+    get title() {
+      return uiText("settings.interface.your_account_is_all_good_f4cd5d8");
+    },
+    get sub() {
+      return uiText("settings.interface.everything_works_normally_7390443");
+    },
+  },
+  limited: {
+    get title() {
+      return uiText("settings.interface.your_account_is_limited_8111b8f");
+    },
+    get sub() {
+      return uiText("settings.interface.you_can_t_start_communities_or_make_invitations_until_the_warning_00bd404");
+    },
+  },
+  very_limited: {
+    get title() {
+      return uiText("settings.interface.your_account_is_very_limited_fb6ffa4");
+    },
+    get sub() {
+      return uiText("settings.interface.you_also_can_t_start_new_conversations_or_join_communities_until_5833581");
+    },
+  },
+  suspended: {
+    get title() {
+      return uiText("settings.interface.your_account_is_suspended_355a68d");
+    },
+    get sub() {
+      return uiText("settings.interface.you_can_read_but_you_can_t_send_messages_until_a_warning_ends_61fe117");
+    },
+  },
 };
-const LEVEL_SHORT: Record<StandingLevel, string> = { good: "All good", limited: "Limited", very_limited: "Very limited", suspended: "Suspended" };
-
+const LEVEL_SHORT: Record<StandingLevel, string> = {
+  get good() {
+    return uiText("settings.interface.all_good_9ca4e31");
+  },
+  get limited() {
+    return uiText("settings.interface.limited_e5125d9");
+  },
+  get very_limited() {
+    return uiText("settings.interface.very_limited_20f48a7");
+  },
+  get suspended() {
+    return uiText("settings.interface.suspended_e392a38");
+  },
+};
 /** Settings › My Account › Account standing (API 0.46.0): where the account is on the scale, and why. */
 export function StandingCard() {
+  useLocaleRender();
   const engine = useEngine();
   const offered = useOrbit((s) => s.server?.features.includes("account-standing") ?? false);
   const standing = useLoad(() => (offered ? new AccountSafetyApi(engine.api).standing() : Promise.resolve(null)), [engine, offered]);
@@ -210,8 +293,10 @@ export function StandingCard() {
   const level = st?.level ?? "good";
   const at = STANDING_LEVELS.indexOf(level);
   return (
-    <section className="card setting-card" aria-label="Account standing">
-      <strong>Account standing</strong>
+    <section className="card setting-card" aria-label={uiText("settings.interface.account_standing_be12fbd")}>
+      <strong>
+        <Localized k="settings.interface.account_standing_be12fbd" />
+      </strong>
       <div className="standing-head">
         <span className={`standing-icon ${level}`} aria-hidden="true">
           {level === "good" ? <ShieldCheck size={22} /> : <ShieldAlert size={22} />}
@@ -221,7 +306,7 @@ export function StandingCard() {
           <small className="faint">{LEVEL_TEXT[level].sub}</small>
         </span>
       </div>
-      <ol className="standing-scale" aria-label={`Standing: ${LEVEL_SHORT[level]}`}>
+      <ol className="standing-scale" aria-label={uiText("settings.interface.standing_value0_9620107", { value0: LEVEL_SHORT[level] })}>
         {STANDING_LEVELS.map((l, i) => (
           <li key={l} className={`${i <= at ? "reached" : ""}${i === at ? " current" : ""}`} aria-current={i === at ? "step" : undefined}>
             <span className="standing-dot" aria-hidden="true" />
@@ -230,18 +315,24 @@ export function StandingCard() {
         ))}
       </ol>
       {st && st.warnings.length > 0 && (
-        <ul className="standing-warnings" aria-label="Active warnings">
+        <ul className="standing-warnings" aria-label={uiText("settings.interface.active_warnings_5579c54")}>
           {st.warnings.map((w) => (
             <li key={w.id}>
               <strong>{w.reason}</strong>
-              <small className="faint">Ends {untilWhen(w.expiresAt)}</small>
+              <small className="faint">
+                <Localized k="settings.interface.ends_492e049" slots={[untilWhen(w.expiresAt)]} />
+              </small>
             </li>
           ))}
         </ul>
       )}
       <ul className="standing-rules faint">
-        <li>Warnings from Meldiq's staff count for a set number of days, then stop counting by themselves.</li>
-        <li>One warning limits your account, two limit it more, three suspend it.</li>
+        <li>
+          <Localized k="settings.interface.warnings_from_meldiq_s_staff_count_for_a_set_number_of_days_then_64bb483" />
+        </li>
+        <li>
+          <Localized k="settings.interface.one_warning_limits_your_account_two_limit_it_more_three_suspend_i_b21cc68" />
+        </li>
       </ul>
       <PlatformInbox />
     </section>

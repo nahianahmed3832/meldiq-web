@@ -1,0 +1,19 @@
+diff --git a/server/src/modules/accounts/preferences/routes.ts b/server/src/modules/accounts/preferences/routes.ts
+index 546c108..8e52e72 100644
+--- a/server/src/modules/accounts/preferences/routes.ts
++++ b/server/src/modules/accounts/preferences/routes.ts
+@@ -9,11 +9,13 @@ import { PreferencesBody, WorkspaceParams } from "../../../shared/contracts/http
+ import { EMPTY_PREFS, type NavPrefs, normalizePrefs, type StoredPrefs } from "./schema.js";
+ 
+ function view(workspaceId: string, s: StoredPrefs | null) {
++  const {locale: storedLocale, ...visiblePrefs} = s?.prefs ?? EMPTY_PREFS;
++  void storedLocale;
+   return {
+     workspaceId,
+     rev: s?.rev ?? 0,
+     updatedAt: s?.updatedAt ?? null,
+-    prefs: { ...(s?.prefs ?? EMPTY_PREFS), ...(workspaceId === PERSONAL_WORKSPACE_ID ? { locale: s?.prefs.locale ?? null } : {}) },
++    prefs: visiblePrefs,
+   };
+ }
+ 

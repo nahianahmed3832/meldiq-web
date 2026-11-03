@@ -2,7 +2,7 @@ import { applyVibe, HEX } from "./vibes";
 import { useSyncExternalStore } from "react";
 import { type ShareQuality, shareQualityOf } from "../call/shareQuality";
 import { TRANSLATE_TARGETS, type TranslateTarget } from "../sync/translate";
-import { LANGUAGES, type LanguageChoice, resolveLanguage } from "../i18n/languages";
+import { isLanguageChoice, type LanguageChoice, resolveLanguage, directionOf } from "../i18n/languages";
 
 /**
  * Per-browser preferences. They hold no account data, so they live in localStorage, and every read and write tolerates
@@ -206,8 +206,15 @@ const defaults: Prefs = {
 
 function load(): Prefs {
   try {
+    let guest: unknown;
+    try {
+      guest = JSON.parse(localStorage.getItem("meldiq.locale.guest") ?? "null");
+    } catch {
+      /* Ignore only the invalid language entry. */
+    }
+    const language = isLanguageChoice(guest) ? guest : undefined;
     const raw = localStorage.getItem(KEY);
-    if (!raw) return { ...defaults, ...notificationChoice(defaults) };
+    if (!raw) return { ...defaults, ...(language ? { language } : {}), ...notificationChoice(defaults) };
     const stored = { ...defaults, ...(JSON.parse(raw) as Partial<Prefs>) };
     // Anything unknown (an older or tampered value) falls back to the default rather than reaching the page's attributes.
     return {
@@ -215,7 +222,7 @@ function load(): Prefs {
       // Dark is the default since 2026-10-28: "system" stored as the old default (never picked) becomes dark; a theme the
       // person picked (light, dark, or system chosen on purpose since) stays.
       theme: !THEMES.includes(stored.theme) || (stored.theme === "system" && !stored.themeChosen) ? defaults.theme : stored.theme,
-      language: stored.language === "system" || LANGUAGES.some((l) => l === stored.language) ? stored.language : defaults.language,
+      language: language ?? (isLanguageChoice(stored.language) ? stored.language : defaults.language),
       palette: paletteOf(stored),
       density: stored.density === "compact" ? "compact" : "comfortable",
       reducedMotion: ["on", "off"].includes(stored.reducedMotion) ? stored.reducedMotion : "system",
@@ -331,6 +338,7 @@ export function usePrefs(): Prefs {
       return () => listeners.delete(l);
     },
     () => current,
+    () => defaults,
   );
 }
 
@@ -356,6 +364,7 @@ export function applyTheme({
   const root = document.documentElement;
   // The page's language follows the interface's (screen readers, fonts, spelling).
   root.setAttribute("lang", resolveLanguage(language ?? "system"));
+  root.setAttribute("dir", directionOf(resolveLanguage(language ?? "system")));
   root.setAttribute("data-density", density);
   root.setAttribute("data-motion", reducedMotion);
   root.setAttribute("data-contrast", highContrast ? "high" : "normal");
@@ -370,19 +379,21 @@ export function applyTheme({
   if (frame) document.querySelector('meta[name="theme-color"]')?.setAttribute("content", frame);
   // For the next load's first paint (public/boot.js): the same look before any of the app's scripts run.
   try {
-    localStorage.setItem(LOOK_KEY, JSON.stringify({ theme, palette }));
+    localStorage.setItem(LOOK_KEY, JSON.stringify({ theme, palette, language: resolveLanguage(language ?? "system") }));
   } catch {
     /* storage unavailable: the next load starts in the default look until this runs */
   }
 }
 
 export function resetPrefs(): void {
+  const language = current.language;
   try {
     localStorage.removeItem(KEY);
   } catch {
     /* nothing stored */
   }
-  current = defaults;
+  // The interface language survives sign-out, independently of private account data.
+  current = { ...defaults, language };
   applyTheme(current);
   for (const l of [...listeners]) l();
 }

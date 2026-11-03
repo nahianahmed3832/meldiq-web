@@ -85,7 +85,7 @@
 .name-badge {
   display: inline-grid;
   place-items: center;
-  margin-left: 4px;
+  margin-inline-start: 4px;
   font-size: 0.85em;
   line-height: 1;
   flex: none;
@@ -106,7 +106,7 @@
   line-height: 1;
 }
 .profile-level {
-  margin-left: 8px;
+  margin-inline-start: 8px;
 }
 
 /* ── decoration favourites ── */
@@ -121,7 +121,7 @@
 .deco-star {
   position: absolute;
   top: 4px;
-  right: 4px;
+  inset-inline-end: 4px;
   display: grid;
   place-items: center;
   width: 24px;
@@ -176,7 +176,7 @@
 }
 .leave-many-confirm {
   margin: 0;
-  padding-left: 18px;
+  padding-inline-start: 18px;
   display: grid;
   gap: 4px;
 }
@@ -320,7 +320,7 @@
   background: var(--warning);
 }
 .streak-track > span:last-child {
-  margin-left: 6px;
+  margin-inline-start: 6px;
 }
 .points-history li {
   display: flex;

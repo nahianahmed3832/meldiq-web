@@ -1,3 +1,8 @@
+import { formatUiNumber } from "../../i18n/format";
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
+import { Localized } from "../../i18n/Localized";
+import { useT as useLocalization } from "../../i18n";
 import { Check, Search, UserPlus, UsersRound, X } from "lucide-react";
 import { type FormEvent, useMemo, useState } from "react";
 import type { Member } from "../../api/schemas";
@@ -10,9 +15,7 @@ import { acceptConnection, cleanUsername, connect, connections, removeConnection
 import { FriendRow, Group } from "./FriendRows";
 import { SuggestedPeople } from "./SuggestedPeople";
 import { useLoad } from "../workspace/useLoad";
-
 type Tab = "online" | "all" | "pending" | "blocked" | "suggested" | "add";
-
 interface Person {
   id: string;
   username: string;
@@ -20,7 +23,6 @@ interface Person {
   avatarColor: number;
   statusText: string | null;
 }
-
 /**
  * Friends (2026-10-28, after the owner's reference): the Messages home on a wide window and its own page on phones.
  * Online, All, Pending (requests to and from you), Blocked, Suggested (the server's list from shared communities since
@@ -28,6 +30,8 @@ interface Person {
  * Friend by username. Every row can open a conversation; the server decides every request.
  */
 export function FriendsView() {
+  useLocaleRender();
+  const l10n = useLocalization();
   const engine = useEngine();
   const rev = useOrbit((s) => s.connectionsRev);
   const [tick, setTick] = useState(0);
@@ -42,7 +46,7 @@ export function FriendsView() {
         (await blockedIds(engine)).map((id) =>
           userProfile(engine, id).then(
             (u): Person => ({ id, username: u.username, displayName: u.displayName, avatarColor: u.avatarColor, statusText: null }),
-            (): Person => ({ id, username: "", displayName: "Someone", avatarColor: 0, statusText: null }),
+            (): Person => ({ id, username: "", displayName: uiText("messaging.react_someone"), avatarColor: 0, statusText: null }),
           ),
         ),
       ),
@@ -55,7 +59,10 @@ export function FriendsView() {
     (a, b) => a.length === b.length && a.every((x, i) => x.id === b[i].id && x.displayName === b[i].displayName),
   );
   const [busy, setBusy] = useState(false);
-  const [note, setNote] = useState<{ ok: boolean; text: string } | null>(null);
+  const [note, setNote] = useState<{
+    ok: boolean;
+    text: string;
+  } | null>(null);
   const run = async (fn: () => Promise<unknown>, ok?: string) => {
     setBusy(true);
     setNote(null);
@@ -64,7 +71,7 @@ export function FriendsView() {
       setTick((t) => t + 1);
       if (ok) setNote({ ok: true, text: ok });
     } catch (e) {
-      setNote({ ok: false, text: e instanceof ApiError ? e.message : "That didn't work. Try again." });
+      setNote({ ok: false, text: e instanceof ApiError ? e.message : uiText("workspace.interface.that_didn_t_work_try_again_5da2573") });
     } finally {
       setBusy(false);
     }
@@ -72,8 +79,7 @@ export function FriendsView() {
   const message = (id: string) =>
     void startDirect(engine, id)
       .then((cid) => navigate({ section: "dms", conversationId: cid }))
-      .catch(() => engine.notice("error", "Couldn't open that conversation."));
-
+      .catch(() => engine.notice("error", uiText("workspace.interface.couldn_t_open_that_conversation_90c6906")));
   const friends = useMemo(() => list.data?.connected ?? [], [list.data]);
   const incoming = useMemo(() => list.data?.incoming ?? [], [list.data]);
   const outgoing = useMemo(() => list.data?.outgoing ?? [], [list.data]);
@@ -82,33 +88,51 @@ export function FriendsView() {
     return known.filter((p) => !taken.has(p.id) && p.username);
   }, [known, friends, incoming, outgoing, blocked.data, me]);
   const match = (p: { displayName: string; username: string }) => !q.trim() || `${p.displayName} ${p.username}`.toLowerCase().includes(q.trim().toLowerCase());
-
-  const tabs: { key: Tab; label: string; count?: number }[] = [
-    { key: "online", label: "Online" },
-    { key: "all", label: "All" },
-    { key: "pending", label: "Pending", count: incoming.length },
-    { key: "blocked", label: "Blocked" },
-    { key: "suggested", label: "Suggested" },
+  const tabs: {
+    key: Tab;
+    label: string;
+    count?: number;
+  }[] = [
+    { key: "online", label: l10n("workspace.online") },
+    { key: "all", label: l10n("settings.ap_all") },
+    {
+      key: "pending",
+      get label() {
+        return uiText("workspace.interface.pending_331551b");
+      },
+      count: incoming.length,
+    },
+    {
+      key: "blocked",
+      get label() {
+        return uiText("workspace.interface.blocked_18f2a09");
+      },
+    },
+    {
+      key: "suggested",
+      get label() {
+        return uiText("workspace.interface.suggested_93b63ba");
+      },
+    },
   ];
   const rows = (people: Member[] | Person[]) => people.filter(match);
   const shownOnline = rows(friends).filter((f) => online[f.id]);
-
   return (
-    <section className="main friends" aria-label="Friends">
+    <section className="main friends" aria-label={l10n("workspace.friends")}>
       <header className="friends-head">
         <span className="friends-title">
-          <UsersRound size={19} aria-hidden="true" /> Friends
+          <UsersRound size={19} aria-hidden="true" /> {l10n("workspace.friends")}
         </span>
         <span className="friends-sep" aria-hidden="true" />
-        <div className="friends-tabs" role="tablist" aria-label="Friends">
+        <div className="friends-tabs" role="tablist" aria-label={l10n("workspace.friends")}>
           {tabs.map((t) => (
             <button key={t.key} role="tab" aria-selected={tab === t.key} className="friends-tab" onClick={() => setTab(t.key)}>
               {t.label}
-              {t.count ? <span className="count mention-count">{t.count}</span> : null}
+              {t.count ? <span className="count mention-count">{formatUiNumber(t.count)}</span> : null}
             </button>
           ))}
           <button role="tab" aria-selected={tab === "add"} className="friends-tab add" onClick={() => setTab("add")}>
-            Add Friend
+            <Localized k="workspace.interface.add_friend_0967ca7" />
           </button>
         </div>
       </header>
@@ -119,36 +143,67 @@ export function FriendsView() {
           </div>
         )}
         {tab === "add" ? (
-          <AddFriend busy={busy} onAdd={(u) => run(() => connect(engine, { username: u }), `Friend request sent to @${u}. You'll be connected when they accept.`)} />
+          <AddFriend
+            busy={busy}
+            onAdd={(u) => run(() => connect(engine, { username: u }), uiText("workspace.interface.friend_request_sent_to_value0_you_ll_be_connected_when_they_accep_ca3915a", { value0: u }))}
+          />
         ) : (
           <>
             <label className="friends-search input">
-              <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search" aria-label="Search friends" />
+              <input value={q} onChange={(e) => setQ(e.target.value)} placeholder={l10n("common.actions.search")} aria-label={uiText("workspace.interface.search_friends_9d92d9f")} />
               <Search size={17} className="faint" aria-hidden="true" />
             </label>
             {list.loading && !list.data ? (
-              <p className="faint">Loading…</p>
+              <p className="faint">{l10n("common.status.loading")}</p>
             ) : tab === "online" ? (
-              <Group title={`Online — ${shownOnline.length}`} empty="Nobody's online right now.">
+              <Group title={uiText("workspace.interface.online_value0_e20063d", { value0: shownOnline.length })} empty={uiText("workspace.interface.nobody_s_online_right_now_41da499")}>
                 {shownOnline.map((p) => (
-                  <FriendRow key={p.id} p={p} online onMessage={() => message(p.id)} more={[{ label: "Remove friend", danger: true, run: () => run(() => removeConnection(engine, p.id)) }]} />
+                  <FriendRow
+                    key={p.id}
+                    p={p}
+                    online
+                    onMessage={() => message(p.id)}
+                    more={[
+                      {
+                        get label() {
+                          return uiText("workspace.interface.remove_friend_f2c4fc8");
+                        },
+                        danger: true,
+                        run: () => run(() => removeConnection(engine, p.id)),
+                      },
+                    ]}
+                  />
                 ))}
               </Group>
             ) : tab === "all" ? (
-              <Group title={`All friends — ${rows(friends).length}`} empty="No friends yet. Add one by their username, or connect from a profile.">
+              <Group
+                title={uiText("workspace.interface.all_friends_value0_57432ef", { value0: rows(friends).length })}
+                empty={uiText("workspace.interface.no_friends_yet_add_one_by_their_username_or_connect_from_a_p_1743cef")}
+              >
                 {rows(friends).map((p) => (
                   <FriendRow
                     key={p.id}
                     p={p}
                     online={!!online[p.id]}
                     onMessage={() => message(p.id)}
-                    more={[{ label: "Remove friend", danger: true, run: () => run(() => removeConnection(engine, p.id)) }]}
+                    more={[
+                      {
+                        get label() {
+                          return uiText("workspace.interface.remove_friend_f2c4fc8");
+                        },
+                        danger: true,
+                        run: () => run(() => removeConnection(engine, p.id)),
+                      },
+                    ]}
                   />
                 ))}
               </Group>
             ) : tab === "pending" ? (
               <>
-                <Group title={`Waiting for you — ${incoming.filter((r) => match(r.user)).length}`} empty="No requests waiting for you.">
+                <Group
+                  title={uiText("workspace.interface.waiting_for_you_value0_1525280", { value0: incoming.filter((r) => match(r.user)).length })}
+                  empty={uiText("workspace.interface.no_requests_waiting_for_you_d8a4a16")}
+                >
                   {incoming
                     .filter((r) => match(r.user))
                     .map((r) => (
@@ -156,15 +211,15 @@ export function FriendsView() {
                         key={r.user.id}
                         p={r.user}
                         online={!!online[r.user.id]}
-                        sub="Wants to connect"
+                        sub={uiText("workspace.interface.wants_to_connect_469da2b")}
                         actions={
                           <>
                             <button
                               className="icon-btn friend-accept"
                               disabled={busy}
-                              onClick={() => run(() => acceptConnection(engine, r.user.id), `You're connected with ${r.user.displayName}.`)}
-                              aria-label={`Accept ${r.user.displayName}`}
-                              title="Accept"
+                              onClick={() => run(() => acceptConnection(engine, r.user.id), uiText("workspace.interface.you_re_connected_with_value0_d8f9185", { value0: r.user.displayName }))}
+                              aria-label={uiText("workspace.interface.accept_value0_e142e73", { value0: r.user.displayName })}
+                              title={l10n("calls.accept")}
                             >
                               <Check size={18} />
                             </button>
@@ -172,8 +227,8 @@ export function FriendsView() {
                               className="icon-btn friend-decline"
                               disabled={busy}
                               onClick={() => run(() => removeConnection(engine, r.user.id))}
-                              aria-label={`Decline ${r.user.displayName}`}
-                              title="Decline"
+                              aria-label={uiText("workspace.interface.decline_value0_8f5768c", { value0: r.user.displayName })}
+                              title={l10n("calls.decline")}
                             >
                               <X size={18} />
                             </button>
@@ -182,7 +237,10 @@ export function FriendsView() {
                       />
                     ))}
                 </Group>
-                <Group title={`Sent — ${outgoing.filter((r) => match(r.user)).length}`} empty="No requests sent.">
+                <Group
+                  title={uiText("workspace.interface.sent_value0_68876a8", { value0: outgoing.filter((r) => match(r.user)).length })}
+                  empty={uiText("workspace.interface.no_requests_sent_42b0701")}
+                >
                   {outgoing
                     .filter((r) => match(r.user))
                     .map((r) => (
@@ -190,14 +248,14 @@ export function FriendsView() {
                         key={r.user.id}
                         p={r.user}
                         online={!!online[r.user.id]}
-                        sub="Request sent"
+                        sub={uiText("workspace.interface.request_sent_a73f99f")}
                         actions={
                           <button
                             className="icon-btn friend-decline"
                             disabled={busy}
                             onClick={() => run(() => removeConnection(engine, r.user.id))}
-                            aria-label={`Cancel the request to ${r.user.displayName}`}
-                            title="Cancel"
+                            aria-label={uiText("workspace.interface.cancel_the_request_to_value0_43e1299", { value0: r.user.displayName })}
+                            title={l10n("common.actions.cancel")}
                           >
                             <X size={18} />
                           </button>
@@ -207,16 +265,20 @@ export function FriendsView() {
                 </Group>
               </>
             ) : tab === "blocked" ? (
-              <Group title={`Blocked — ${rows(blocked.data ?? []).length}`} empty="You haven't blocked anyone.">
+              <Group title={uiText("workspace.interface.blocked_value0_ca1bc72", { value0: rows(blocked.data ?? []).length })} empty={uiText("workspace.interface.you_haven_t_blocked_anyone_5c43a28")}>
                 {rows(blocked.data ?? []).map((p) => (
                   <FriendRow
                     key={p.id}
                     p={p}
                     online={false}
-                    sub="Blocked"
+                    sub={uiText("workspace.interface.blocked_18f2a09")}
                     actions={
-                      <button className="btn btn-secondary btn-sm" disabled={busy} onClick={() => run(() => unblock(engine, p.id), `${p.displayName} is unblocked.`)}>
-                        Unblock
+                      <button
+                        className="btn btn-secondary btn-sm"
+                        disabled={busy}
+                        onClick={() => run(() => unblock(engine, p.id), uiText("workspace.interface.value0_is_unblocked_240083d", { value0: p.displayName }))}
+                      >
+                        <Localized k="messaging.interface.unblock_712da63" />
                       </button>
                     }
                   />
@@ -225,7 +287,10 @@ export function FriendsView() {
             ) : serverSuggests ? (
               <SuggestedPeople engine={engine} rev={rev + tick} busy={busy} online={online} match={match} run={(fn, ok) => void run(fn, ok)} onMessage={message} />
             ) : (
-              <Group title={`From your communities — ${rows(suggested).length}`} empty="No one to suggest yet. People you share communities and groups with show here.">
+              <Group
+                title={uiText("workspace.interface.from_your_communities_value0_2e19b50", { value0: rows(suggested).length })}
+                empty={uiText("workspace.interface.no_one_to_suggest_yet_people_you_share_communities_and_group_9f06974")}
+              >
                 {rows(suggested)
                   .slice(0, 100)
                   .map((p) => (
@@ -235,11 +300,23 @@ export function FriendsView() {
                       online={!!online[p.id]}
                       onMessage={() => message(p.id)}
                       actions={
-                        <button className="btn btn-secondary btn-sm" disabled={busy} onClick={() => run(() => connect(engine, { userId: p.id }), `Friend request sent to ${p.displayName}.`)}>
-                          <UserPlus size={14} aria-hidden="true" /> Add
+                        <button
+                          className="btn btn-secondary btn-sm"
+                          disabled={busy}
+                          onClick={() => run(() => connect(engine, { userId: p.id }), uiText("workspace.interface.friend_request_sent_to_value0_65eed36", { value0: p.displayName }))}
+                        >
+                          <UserPlus size={14} aria-hidden="true" /> {l10n("common.actions.add")}
                         </button>
                       }
-                      more={[{ label: "Block", danger: true, run: () => run(() => block(engine, p.id), `${p.displayName} is blocked.`) }]}
+                      more={[
+                        {
+                          get label() {
+                            return uiText("messaging.interface.block_211d0bb");
+                          },
+                          danger: true,
+                          run: () => run(() => block(engine, p.id), uiText("workspace.interface.value0_is_blocked_37959f6", { value0: p.displayName })),
+                        },
+                      ]}
                     />
                   ))}
               </Group>
@@ -250,26 +327,37 @@ export function FriendsView() {
     </section>
   );
 }
-
 function AddFriend({ busy, onAdd }: { busy: boolean; onAdd: (username: string) => void }) {
+  useLocaleRender();
+  const l10n = useLocalization();
   const [name, setName] = useState("");
   const [error, setError] = useState<string | null>(null);
   const submit = (e: FormEvent) => {
     e.preventDefault();
     const u = cleanUsername(name);
-    if (!u) return setError("Type their username, like @nahian.");
+    if (!u) return setError(uiText("workspace.interface.type_their_username_like_nahian_98f2338"));
     setError(null);
     onAdd(u);
     setName("");
   };
   return (
     <form className="add-friend" onSubmit={submit}>
-      <h2>Add Friend</h2>
-      <p className="faint">You can add friends with their Meldiq username.</p>
+      <h2>
+        <Localized k="workspace.interface.add_friend_0967ca7" />
+      </h2>
+      <p className="faint">
+        <Localized k="workspace.interface.you_can_add_friends_with_their_meldiq_username_2ca8817" />
+      </p>
       <div className="add-friend-box">
-        <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Their username, like @nahian" aria-label="Username" data-autofocus />
+        <input
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder={uiText("workspace.interface.their_username_like_nahian_3ee28fa")}
+          aria-label={l10n("auth.username")}
+          data-autofocus
+        />
         <button className="btn btn-primary" disabled={busy || !name.trim()}>
-          Send Friend Request
+          <Localized k="workspace.interface.send_friend_request_dd1d3d4" />
         </button>
       </div>
       {error && (

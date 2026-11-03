@@ -1,3 +1,4 @@
+import { text as uiText } from "../i18n";
 import { CancelledError, decryptBlob, encryptOnce, type Progress } from "./cipherJobs";
 import { EnvelopeError } from "./envelope";
 import type { ChunkKey } from "./fileStream";
@@ -35,7 +36,7 @@ function getWorker(): Worker | null {
   });
   worker?.addEventListener("error", () => {
     // A worker that fails to load: later jobs run on the page; the ones waiting are failed so they can be retried.
-    for (const [, p] of pending) p.reject(new Error("The encryption worker stopped. Try again."));
+    for (const [, p] of pending) p.reject(new Error(uiText("errors.crypto.workerStopped")));
     pending.clear();
     worker = null;
   });

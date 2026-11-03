@@ -1,3 +1,7 @@
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
+import { Localized } from "../../i18n/Localized";
+import { useT as useLocalization } from "../../i18n";
 import { Copy, Link2, Plus, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { OrgAdminDetail } from "../../api/workspaceSchemas";
@@ -6,17 +10,16 @@ import { communitySettings, linkProblem, saveCommunitySettings, SETTINGS_LIMITS,
 import { inviteLink } from "../../sync/inviteCodes";
 import { useAction, useLoad } from "./useLoad";
 import { Card, ErrorLine } from "./WorkspaceView";
-
 interface ProfileExtrasProps {
   detail: OrgAdminDetail;
   onChanged: () => void;
 }
-
 /**
  * Profile's custom invite link and links (community parity A3, feature community-settings): a link of the community's
  * own once it has 5 members, and up to five links shown on its profile. Only for people who edit the community.
  */
 export function ProfileExtrasCards({ detail, onChanged }: ProfileExtrasProps) {
+  useLocaleRender();
   const engine = useEngine();
   const orgId = detail.org.id;
   const settings = useLoad(() => communitySettings(engine, orgId), [engine, orgId, detail.org]);
@@ -29,8 +32,9 @@ export function ProfileExtrasCards({ detail, onChanged }: ProfileExtrasProps) {
     </>
   );
 }
-
 function InviteSlugCard({ orgId, slug, locked, onChanged }: { orgId: string; slug: string | null; locked: string | null; onChanged: () => void }) {
+  useLocaleRender();
+  const l10n = useLocalization();
   const engine = useEngine();
   const [text, setText] = useState(slug ?? "");
   const save = useAction();
@@ -38,7 +42,7 @@ function InviteSlugCard({ orgId, slug, locked, onChanged }: { orgId: string; slu
   const problem = slugProblem(text);
   const clean = text.trim().toLowerCase() || null;
   return (
-    <Card title="Custom invite link" sub={locked ?? "A link of the community's own that never expires. Anyone who has it can join."}>
+    <Card title={uiText("files.interface.custom_invite_link_6c09fd6")} sub={locked ?? uiText("files.interface.a_link_of_the_community_s_own_that_never_expires_anyone_who_has_i_a5adc41")}>
       <ErrorLine text={save.error} />
       <div className="row" style={{ gap: 6, alignItems: "center", flexWrap: "wrap" }}>
         <span className="faint mono">{inviteLink("")}</span>
@@ -48,13 +52,17 @@ function InviteSlugCard({ orgId, slug, locked, onChanged }: { orgId: string; slu
           value={text}
           maxLength={SETTINGS_LIMITS.slugMax}
           disabled={!!locked && !slug}
-          placeholder="our-community"
-          aria-label="Custom invite link"
+          placeholder={"our-community"}
+          aria-label={uiText("files.interface.custom_invite_link_6c09fd6")}
           aria-invalid={!!problem}
           onChange={(e) => setText(e.target.value)}
         />
         {slug && (
-          <button className="icon-btn" aria-label="Copy the custom invite link" onClick={() => void navigator.clipboard?.writeText(inviteLink(slug)).then(() => engine.notice("info", "Link copied."))}>
+          <button
+            className="icon-btn"
+            aria-label={uiText("files.interface.copy_the_custom_invite_link_27738b5")}
+            onClick={() => void navigator.clipboard?.writeText(inviteLink(slug)).then(() => engine.notice("info", uiText("messaging.interface.link_copied_71af38a")))}
+          >
             <Copy size={15} />
           </button>
         )}
@@ -70,21 +78,24 @@ function InviteSlugCard({ orgId, slug, locked, onChanged }: { orgId: string; slu
           disabled={save.busy || !!problem || clean === slug || (!!locked && clean !== null)}
           onClick={() => void save.act(() => saveCommunitySettings(engine, orgId, { inviteSlug: clean }).then(onChanged))}
         >
-          {save.busy ? "Saving…" : "Save link"}
+          {save.busy ? l10n("common.common_saving") : uiText("files.interface.save_link_72145d7")}
         </button>
         {slug && (
           <button className="btn btn-ghost btn-sm" disabled={save.busy} onClick={() => void save.act(() => saveCommunitySettings(engine, orgId, { inviteSlug: null }).then(onChanged))}>
-            Remove
+            {l10n("common.actions.remove")}
           </button>
         )}
       </div>
     </Card>
   );
 }
-
-type Link = { label: string; url: string };
-
+type Link = {
+  label: string;
+  url: string;
+};
 function LinksCard({ orgId, links, onChanged }: { orgId: string; links: Link[]; onChanged: () => void }) {
+  useLocaleRender();
+  const l10n = useLocalization();
   const engine = useEngine();
   const [rows, setRows] = useState<Link[]>(links);
   const save = useAction();
@@ -93,7 +104,10 @@ function LinksCard({ orgId, links, onChanged }: { orgId: string; links: Link[]; 
   const dirty = JSON.stringify(rows) !== JSON.stringify(links);
   const set = (i: number, change: Partial<Link>) => setRows(rows.map((r, j) => (j === i ? { ...r, ...change } : r)));
   return (
-    <Card title="Links" sub={`Up to ${SETTINGS_LIMITS.links} links on the community's profile: a website, socials, a store.`}>
+    <Card
+      title={uiText("messaging.interface.links_9024c19")}
+      sub={uiText("files.interface.up_to_value0_links_on_the_community_s_profile_a_website_socials_a_250f43b", { value0: SETTINGS_LIMITS.links })}
+    >
       <ErrorLine text={save.error} />
       {rows.map((r, i) => (
         <div key={i} className="row" style={{ gap: 6, flexWrap: "wrap", alignItems: "center" }}>
@@ -103,8 +117,8 @@ function LinksCard({ orgId, links, onChanged }: { orgId: string; links: Link[]; 
             style={{ flex: "1 1 120px" }}
             value={r.label}
             maxLength={SETTINGS_LIMITS.linkLabel}
-            placeholder="Website"
-            aria-label={`Link ${i + 1} name`}
+            placeholder={uiText("files.interface.website_b5a229a")}
+            aria-label={uiText("settings.interface.link_value0_name_0bf81ea", { value0: i + 1 })}
             onChange={(e) => set(i, { label: e.target.value })}
           />
           <input
@@ -113,11 +127,11 @@ function LinksCard({ orgId, links, onChanged }: { orgId: string; links: Link[]; 
             value={r.url}
             maxLength={SETTINGS_LIMITS.linkUrl}
             placeholder="https://"
-            aria-label={`Link ${i + 1} address`}
+            aria-label={uiText("settings.interface.link_value0_address_d32166e", { value0: i + 1 })}
             aria-invalid={!!problems[i]}
             onChange={(e) => set(i, { url: e.target.value })}
           />
-          <button className="icon-btn" aria-label={`Remove link ${i + 1}`} onClick={() => setRows(rows.filter((_, j) => j !== i))}>
+          <button className="icon-btn" aria-label={uiText("settings.interface.remove_link_value0_b78eb82", { value0: i + 1 })} onClick={() => setRows(rows.filter((_, j) => j !== i))}>
             <X size={15} />
           </button>
           {problems[i] && (r.label || r.url) && <small className="field-error">{problems[i]}</small>}
@@ -126,7 +140,7 @@ function LinksCard({ orgId, links, onChanged }: { orgId: string; links: Link[]; 
       <div className="row" style={{ gap: 8 }}>
         {rows.length < SETTINGS_LIMITS.links && (
           <button className="btn btn-secondary btn-sm" onClick={() => setRows([...rows, { label: "", url: "" }])}>
-            <Plus size={14} /> Add link
+            <Localized k="files.interface.add_link_ad83ea9" slots={[<Plus size={14} />]} />
           </button>
         )}
         <button
@@ -134,7 +148,7 @@ function LinksCard({ orgId, links, onChanged }: { orgId: string; links: Link[]; 
           disabled={!dirty || save.busy || problems.some(Boolean)}
           onClick={() => void save.act(() => saveCommunitySettings(engine, orgId, { links: rows.map((r) => ({ label: r.label.trim(), url: r.url.trim() })) }).then(onChanged))}
         >
-          {save.busy ? "Saving…" : "Save links"}
+          {save.busy ? l10n("common.common_saving") : uiText("files.interface.save_links_6de66bf")}
         </button>
       </div>
     </Card>

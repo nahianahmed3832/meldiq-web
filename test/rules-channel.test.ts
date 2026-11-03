@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { ApiError } from "../src/api/client";
 import { type Conversation, type Org, zOrg } from "../src/api/schemas";
-import { translate } from "../src/i18n";
+import { translate, prepareLocale } from "../src/i18n";
 import { isRulesChannel, moveRule, postingState, RULES_LIMITS, rulesBody, rulesProblem, rulesRefusalOrg, withMustAgree, zRulesView } from "../src/sync/rulesChannel";
 
 /** A community's rules channel (API 0.65.0, feature rules-channel): what the web decides on top of the server's answers. */
@@ -97,7 +97,8 @@ describe("the Rules settings page", () => {
     expect(moveRule(["a", "b"], 1, 1)).toEqual(["a", "b"]);
   });
 
-  it("has its words in every language", () => {
+  it("has its words in every language", async () => {
+    await Promise.all([prepareLocale("zh-CN", ["organization"]), prepareLocale("bn", ["organization"])]);
     expect(translate("en", "rules_settings_rule", { n: 2 })).toBe("Rule 2");
     expect(translate("zh-CN", "rules_settings_rule", { n: 2 })).toBe("规则 2");
     expect(translate("bn", "rules_agree")).toBe("আমি সম্মত");

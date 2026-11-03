@@ -1,3 +1,6 @@
+import { useLocaleRender } from "../i18n/Localized";
+import { text as uiText } from "../i18n";
+import { Localized } from "../i18n/Localized";
 import { accountStoreForBoot, accountDirectory, rememberAccount, forgetAccount, cancelAddingAccount, selectAccount, type AccountDirectory } from "../auth/savedAccounts";
 import { AccountActionsProvider } from "./shell/AccountActions";
 import { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
@@ -8,6 +11,7 @@ import { forgetPlace, placeToRestore } from "../application/lastPlace";
 import { go } from "../application/router";
 import { EngineProvider } from "../application/orbit";
 import { resetPrefs } from "../application/prefs";
+import { bindLocaleAccount } from "../i18n/preferences";
 import { forgetRecentSearches } from "./dialogs/SearchDialog";
 import type { AccountSessionGrant } from "../api/accountSchemas";
 import type { SessionGrant } from "../api/schemas";
@@ -25,18 +29,39 @@ import { ElsewhereScreen, LoadingScreen, RevokedScreen, UnsupportedScreen } from
 import { watchForUpdates } from "../application/updates";
 import { UpdateNotice } from "./UpdateNotice";
 import { voicePlayback } from "../application/voicePlayback";
-
 type Boot =
-  | { s: "loading" }
-  | { s: "unsupported"; missing: string[] }
-  | { s: "elsewhere" }
-  | { s: "signedOut"; store: LocalStore }
+  | {
+      s: "loading";
+    }
+  | {
+      s: "unsupported";
+      missing: string[];
+    }
+  | {
+      s: "elsewhere";
+    }
+  | {
+      s: "signedOut";
+      store: LocalStore;
+    }
   /** Linking with the phone alone (no Orbit 2.0 account), while the server still allows device-key sign-in. */
-  | { s: "phoneLink"; store: LocalStore }
-  | { s: "ready"; engine: Engine; reauth: boolean }
-  | { s: "revoked"; reason: string | null }
-  | { s: "error"; message: string };
-
+  | {
+      s: "phoneLink";
+      store: LocalStore;
+    }
+  | {
+      s: "ready";
+      engine: Engine;
+      reauth: boolean;
+    }
+  | {
+      s: "revoked";
+      reason: string | null;
+    }
+  | {
+      s: "error";
+      message: string;
+    };
 /**
  * Boot: capability check, one tab per browser, then this browser's device record. No record: sign in (Orbit 2.0 account)
  * or link with the phone. A record: renew the session (account) or sign in with the device key (linked before 2.0), and
@@ -45,12 +70,9 @@ type Boot =
 // The pre-email phone link (auth/testLinking.ts): its own chunk, loaded only where the flag is on, never in a release.
 const loadShell = () => import("./shell/Shell");
 const Shell = lazy(() => loadShell().then((m) => ({ default: m.Shell })));
-
 const LinkScreen = lazy(() => import("./LinkScreen").then((m) => ({ default: m.LinkScreen })));
-
 // The browser may offer installing as soon as the page loads: listen before anything renders (brief v4 §17).
 watchInstall();
-
 /**
  * Opened at the bare address (a return, the installed app's start): the conversation or section left last. One that's
  * gone since closes after the first sync, as any link to it would (Shell).
@@ -59,8 +81,8 @@ function reopenLastPlace(engine: Engine): void {
   const href = placeToRestore(engine.device.userId, location);
   if (href) go(href, true);
 }
-
 export function App() {
+  useLocaleRender();
   const activeEngineRef = useRef<Engine | null>(null);
   const [directory, setDirectory] = useState<AccountDirectory | null>(null);
   const [boot, setBoot] = useState<Boot>({ s: "loading" });
@@ -68,7 +90,6 @@ export function App() {
   useEffect(() => {
     if (boot.s !== "loading") hideSplash();
   }, [boot.s]);
-
   const begin = useCallback(async (steal = false) => {
     setBoot({ s: "loading" });
     try {
@@ -96,13 +117,11 @@ export function App() {
       await engine.start();
       startNotifications(engine);
     } catch (e) {
-      setBoot({ s: "error", message: e instanceof Error ? e.message : "Meldiq couldn't start." });
+      setBoot({ s: "error", message: e instanceof Error ? e.message : uiText("workspace.interface.meldiq_couldn_t_start_7f5c1fd") });
     }
   }, []);
-
   // New releases reach this tab without a manual refresh (src/application/updates.ts).
   useEffect(() => watchForUpdates(), []);
-
   // Once per page: React's development mode runs effects twice, and two boots would start two engines.
   const booted = useRef(false);
   useEffect(() => {
@@ -110,10 +129,18 @@ export function App() {
     booted.current = true;
     void begin();
   }, [begin]);
-
   // A browser removed from the account (from the phone) erases what it kept, then says so. An ended account session asks
   // for the password again.
   const engine = boot.s === "ready" ? boot.engine : null;
+  useEffect(() => {
+    if (!engine) return;
+    return bindLocaleAccount({
+      id: engine.device.account?.id ?? engine.device.userId,
+      read: () => engine.nav.localeState(),
+      write: (locale) => engine.nav.change("personal", { op: "locale", locale }),
+      subscribe: engine.state.subscribe,
+    });
+  }, [engine]);
   useEffect(() => {
     if (!engine) return;
     return engine.state.subscribe(() => {
@@ -134,7 +161,6 @@ export function App() {
       setBoot((b) => (b.s === "ready" && b.engine === engine && b.reauth !== reauth ? { ...b, reauth } : b));
     });
   }, [engine]);
-
   const linked = useCallback(async (store: LocalStore, device: DeviceRecord, grant: SessionGrant | AccountSessionGrant) => {
     await store.saveDevice(device);
     await rememberAccount(store.name, device);
@@ -145,14 +171,12 @@ export function App() {
     await engine.start(grant);
     startNotifications(engine);
   }, []);
-
   const saveAccountDevice = useCallback(async (store: LocalStore, device: DeviceRecord, grant: AccountSessionGrant) => {
     await store.saveDevice(device);
     await new TokenVault(store).save(tokensOf(grant));
     await rememberAccount(store.name, device, grant.account.name);
     setDirectory(await accountDirectory());
   }, []);
-
   const signedOut = useCallback(async () => {
     voicePlayback.reset();
     forgetPlace();
@@ -164,7 +188,6 @@ export function App() {
     // Reload into the remaining saved account, or the ordinary sign-in screen.
     location.replace("/");
   }, [engine]);
-
   /** From "Sign in again": signs this browser out without a session (it can't remove itself from the account first). */
   const eraseAndSignOut = useCallback(
     async (engine: Engine) => {
@@ -174,25 +197,28 @@ export function App() {
     },
     [signedOut],
   );
-
   return (
     <>
       {directory?.pending && (boot.s === "signedOut" || boot.s === "phoneLink") && (
         <div className="adding-account-bar">
-          <span>Add another account · your other accounts stay signed in</span>
+          <span>
+            <Localized k="workspace.interface.add_another_account_your_other_accounts_stay_signed_in_c9f8dc2" />
+          </span>
           <button className="btn btn-secondary btn-sm" onClick={() => void cancelAddingAccount().then(() => location.replace("/"))}>
-            Cancel adding account
+            <Localized k="workspace.interface.cancel_adding_account_e8aca5b" />
           </button>
         </div>
       )}
       {boot.s === "ready" && boot.reauth && directory && directory.accounts.length > 1 && (
         <div className="adding-account-bar">
-          <span>This account needs you to sign in again.</span>
+          <span>
+            <Localized k="workspace.interface.this_account_needs_you_to_sign_in_again_1f17427" />
+          </span>
           {directory.accounts
             .filter((a) => a.database !== boot.engine.store.name)
             .map((a) => (
               <button key={a.database} className="btn btn-secondary btn-sm" onClick={() => void selectAccount(a.database).then(() => location.replace("/"))}>
-                Use {a.displayName}
+                <Localized k="workspace.interface.use_584a880" slots={[a.displayName]} />
               </button>
             ))}
         </div>
@@ -201,7 +227,6 @@ export function App() {
       <UpdateNotice />
     </>
   );
-
   function screenFor() {
     switch (boot.s) {
       case "loading":

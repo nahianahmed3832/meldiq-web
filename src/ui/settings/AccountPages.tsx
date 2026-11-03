@@ -1,3 +1,7 @@
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
+import { Localized } from "../../i18n/Localized";
+import { useT as useLocalization } from "../../i18n";
 import { KeyRound, Laptop, LogOut, Smartphone, Trash2 } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import type { Device } from "../../api/schemas";
@@ -8,8 +12,9 @@ import { LeaveManyCard } from "./PrivacyExtras";
 import { AuthorizedAppsCard } from "./AuthorizedAppsCard";
 import { Dialog } from "../components/Overlay";
 import { relative } from "../format";
-
 export function DevicesPage() {
+  useLocaleRender();
+  const l10n = useLocalization();
   const engine = useEngine();
   const [devices, setDevices] = useState<Device[] | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -20,16 +25,16 @@ export function DevicesPage() {
         setDevices(d);
         setError(null);
       })
-      .catch((e: unknown) => setError(e instanceof Error ? e.message : "Couldn't load devices"));
+      .catch((e: unknown) => setError(e instanceof Error ? e.message : uiText("settings.interface.couldn_t_load_devices_d19d986")));
   }, [engine]);
   useEffect(load, [load]);
   const active = (devices ?? []).filter((d) => !d.revokedAt);
   return (
     <>
       <div>
-        <h1>Devices</h1>
+        <h1>{l10n("settings.devices")}</h1>
         <p className="muted" style={{ margin: "6px 0 0" }}>
-          Every phone and browser signed in to your account. Each shows the same chats: they're kept on Meldiq's servers. Remove one to sign it out at once.
+          <Localized k="settings.interface.every_phone_and_browser_signed_in_to_your_account_each_shows_the_42d5ec0" />
         </p>
       </div>
       {error && <div className="banner danger">{error}</div>}
@@ -43,14 +48,26 @@ export function DevicesPage() {
             <div className="lines">
               <strong className="ellipsis">{d.name}</strong>
               <small>
-                {d.current ? "This browser" : d.lastSeenAt ? `Last active ${relative(d.lastSeenAt)}` : "Never connected"} · linked {relative(d.createdAt)}
+                <Localized
+                  k="settings.interface.linked_64ad510"
+                  slots={[
+                    d.current
+                      ? uiText("settings.interface.this_browser_101f4d9")
+                      : d.lastSeenAt
+                        ? uiText("settings.interface.last_active_value0_a385902", { value0: relative(d.lastSeenAt) })
+                        : uiText("settings.interface.never_connected_0dac373"),
+                    relative(d.createdAt),
+                  ]}
+                />
               </small>
             </div>
             {d.current ? (
-              <span className="tag ok">This browser</span>
+              <span className="tag ok">
+                <Localized k="settings.interface.this_browser_101f4d9" />
+              </span>
             ) : (
               <button className="btn btn-danger-quiet btn-sm" onClick={() => setRemove(d)}>
-                <Trash2 size={14} /> Remove
+                <Trash2 size={14} /> {l10n("common.actions.remove")}
               </button>
             )}
           </div>
@@ -58,12 +75,12 @@ export function DevicesPage() {
       </div>
       {remove && (
         <Dialog
-          title={`Remove ${remove.name}?`}
+          title={uiText("settings.interface.remove_value0_bc43ab8", { value0: remove.name })}
           onClose={() => setRemove(null)}
           footer={
             <>
               <button className="btn btn-secondary" onClick={() => setRemove(null)}>
-                Cancel
+                {l10n("common.actions.cancel")}
               </button>
               <button
                 className="btn btn-danger"
@@ -72,24 +89,27 @@ export function DevicesPage() {
                   setRemove(null);
                   revokeDevice(engine, d.id)
                     .then(load)
-                    .catch((e: unknown) => setError(e instanceof Error ? e.message : "Couldn't remove the device"));
+                    .catch((e: unknown) => setError(e instanceof Error ? e.message : uiText("settings.interface.couldn_t_remove_the_device_0c87487")));
                 }}
               >
-                Remove device
+                <Localized k="settings.interface.remove_device_b6083ca" />
               </button>
             </>
           }
         >
           <div className="dialog-body">
-            <p style={{ margin: 0 }}>It's signed out at once and can't open your chats any more. Sign in there again to use it.</p>
+            <p style={{ margin: 0 }}>
+              <Localized k="settings.interface.it_s_signed_out_at_once_and_can_t_open_your_chats_any_more_sign_i_42c2cba" />
+            </p>
           </div>
         </Dialog>
       )}
     </>
   );
 }
-
 export function SecurityPage({ onSignedOut }: { onSignedOut: () => void }) {
+  useLocaleRender();
+  const l10n = useLocalization();
   const engine = useEngine();
   const me = useOrbit((s) => s.me);
   const [confirm, setConfirm] = useState<"ask" | "unconfirmed" | null>(null);
@@ -108,19 +128,23 @@ export function SecurityPage({ onSignedOut }: { onSignedOut: () => void }) {
         if (e instanceof SignOutUnconfirmed) {
           setReason(e.message);
           setConfirm("unconfirmed");
-        } else engine.notice("error", e instanceof Error ? e.message : "Couldn't sign out");
+        } else engine.notice("error", e instanceof Error ? e.message : uiText("settings.interface.couldn_t_sign_out_f3c366a"));
       })
       .finally(() => setBusy(false));
   };
   return (
     <>
-      <h1>Privacy & security</h1>
+      <h1>{l10n("settings.settings_security")}</h1>
       <div className="card">
         <div className="setting">
           <KeyRound size={20} className="faint" />
           <div className="lines">
-            <strong>This browser's device key</strong>
-            <small>What your other device showed when it approved this browser.</small>
+            <strong>
+              <Localized k="settings.interface.this_browser_s_device_key_2a973ce" />
+            </strong>
+            <small>
+              <Localized k="settings.interface.what_your_other_device_showed_when_it_approved_this_browser_6d6b6c7" />
+            </small>
             <span className="fingerprint" style={{ fontSize: 13 }}>
               {me.deviceFingerprint}
             </span>
@@ -133,61 +157,71 @@ export function SecurityPage({ onSignedOut }: { onSignedOut: () => void }) {
       <BlockedPeople />
       <AuthorizedAppsCard />
       <div className="card" style={{ padding: "16px 18px", display: "grid", gap: 10 }}>
-        <strong>Where your data lives</strong>
-        <ul className="muted" style={{ margin: 0, paddingLeft: 18, display: "grid", gap: 6, fontSize: 13.5 }}>
-          <li>Your messages, files and settings are stored on Meldiq's servers, so every device you sign in to shows the same chats. They travel over encrypted connections.</li>
-          <li>This browser keeps only what signs it in. Nothing to back up, and nothing lost if this computer is.</li>
+        <strong>
+          <Localized k="settings.interface.where_your_data_lives_594b837" />
+        </strong>
+        <ul className="muted" style={{ margin: 0, paddingInlineStart: 18, display: "grid", gap: 6, fontSize: 13.5 }}>
+          <li>
+            <Localized k="settings.interface.your_messages_files_and_settings_are_stored_on_meldiq_s_servers_s_85736bf" />
+          </li>
+          <li>
+            <Localized k="settings.interface.this_browser_keeps_only_what_signs_it_in_nothing_to_back_up_and_n_3396ca5" />
+          </li>
           <li>
             {engine.device.account
-              ? "Your session is kept encrypted under a key this page can use but not read; if it ends, Meldiq asks for your password again. Your password itself is never stored."
-              : "The session token is held in memory only; each visit signs in again with the device key."}
+              ? uiText("settings.interface.your_session_is_kept_encrypted_under_a_key_this_page_can_use_but_7e1a365")
+              : uiText("settings.interface.the_session_token_is_held_in_memory_only_each_visit_signs_in_agai_5f644f9")}
           </li>
         </ul>
       </div>
       <div className="card" style={{ padding: "16px 18px", display: "grid", gap: 12 }}>
         <div>
-          <strong>Sign out of this browser</strong>
+          <strong>
+            <Localized k="settings.interface.sign_out_of_this_browser_e6e2e83" />
+          </strong>
           <p className="muted" style={{ margin: "4px 0 0", fontSize: 13.5 }}>
-            This browser leaves your account and forgets its sign-in. Your chats stay on Meldiq's servers and are all there when you sign in again.
+            <Localized k="settings.interface.this_browser_leaves_your_account_and_forgets_its_sign_in_your_cha_0412bce" />
           </p>
         </div>
         <div>
           <button className="btn btn-secondary" onClick={() => setConfirm("ask")} disabled={busy}>
-            <LogOut size={16} /> Sign out
+            <LogOut size={16} /> {l10n("auth.signOut")}
           </button>
         </div>
       </div>
       {confirm === "ask" && (
         <Dialog
-          title="Sign out of this browser?"
+          title={uiText("settings.interface.sign_out_of_this_browser_123427e")}
           onClose={() => setConfirm(null)}
           footer={
             <>
               <button className="btn btn-secondary" onClick={() => setConfirm(null)}>
-                Cancel
+                {l10n("common.actions.cancel")}
               </button>
               <button className="btn btn-primary" disabled={busy} onClick={() => doSignOut(false)}>
-                {busy ? "Signing out…" : "Sign out"}
+                {busy ? uiText("settings.interface.signing_out_08c6bd3") : l10n("auth.signOut")}
               </button>
             </>
           }
         >
           <div className="dialog-body">
-            <p style={{ margin: 0 }}>Your chats stay on Meldiq's servers and are all there when you sign in again.</p>
+            <p style={{ margin: 0 }}>
+              <Localized k="settings.interface.your_chats_stay_on_meldiq_s_servers_and_are_all_there_when_you_si_2871532" />
+            </p>
           </div>
         </Dialog>
       )}
       {confirm === "unconfirmed" && (
         <Dialog
-          title="The server couldn't confirm"
+          title={uiText("settings.interface.the_server_couldn_t_confirm_255c134")}
           onClose={() => setConfirm(null)}
           footer={
             <>
               <button className="btn btn-secondary" onClick={() => setConfirm(null)}>
-                Stay signed in
+                <Localized k="settings.interface.stay_signed_in_b0a1ca8" />
               </button>
               <button className="btn btn-danger" disabled={busy} onClick={() => doSignOut(true)}>
-                Sign out anyway
+                <Localized k="settings.interface.sign_out_anyway_bb14a8b" />
               </button>
             </>
           }
@@ -195,7 +229,7 @@ export function SecurityPage({ onSignedOut }: { onSignedOut: () => void }) {
           <div className="dialog-body">
             <p style={{ margin: 0 }}>{reason}.</p>
             <p className="muted" style={{ margin: 0 }}>
-              If you sign out now, the server still lists this browser as a device until you remove it in Settings › Devices on another of your devices.
+              <Localized k="settings.interface.if_you_sign_out_now_the_server_still_lists_this_browser_as_a_devi_22be59f" />
             </p>
           </div>
         </Dialog>

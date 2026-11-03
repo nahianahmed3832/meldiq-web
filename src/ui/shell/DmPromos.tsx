@@ -1,23 +1,26 @@
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
+import { Localized } from "../../i18n/Localized";
+import { useT as useLocalization } from "../../i18n";
 import { Check, Copy, Sparkles, UserRoundPlus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { z } from "zod";
 import { useEngine, useOrbit } from "../../application/orbit";
 import { navigate } from "../../application/router";
-
 const zReferral = z.object({ available: z.boolean(), code: z.string(), invited: z.number(), daysEach: z.number() });
 type Referral = z.infer<typeof zReferral>;
-
 /** Your invite link to Meldiq itself: the web app's sign-up with your invite code (server docs/BILLING.md › invite links). */
 export function inviteLink(origin: string, code: string | null): string {
   return code ? `${origin}/?ref=${encodeURIComponent(code)}` : `${origin}/`;
 }
-
 /**
  * Invite friends to Meldiq (the owner's request, 2026-10-28): on Home and messages, an invitation to the platform with
  * your own invite link; a community's invitations stay inside that community. Where the server runs trials, both of
  * you get the invite's free Meldiq Plus days, and the card says so.
  */
 export function InviteToMeldiqCard() {
+  useLocaleRender();
+  const l10n = useLocalization();
   const engine = useEngine();
   const account = !!engine.device.account;
   const [referral, setReferral] = useState<Referral | null>(null);
@@ -35,7 +38,7 @@ export function InviteToMeldiqCard() {
   }, [engine, account]);
   const link = inviteLink(window.location.origin, referral?.code ?? null);
   const share = async () => {
-    const text = "Join me on Meldiq";
+    const text = uiText("workspace.interface.join_me_on_meldiq_4414540");
     try {
       if (navigator.share) {
         await navigator.share({ title: "Meldiq", text, url: link });
@@ -49,28 +52,35 @@ export function InviteToMeldiqCard() {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
-      engine.notice("error", "Couldn't copy the link. Copy it from the address bar instead.");
+      engine.notice("error", uiText("workspace.interface.couldn_t_copy_the_link_copy_it_from_the_address_bar_instead_e5ceaf5"));
     }
   };
-  const bonus = referral?.available && referral.daysEach > 0 ? `You both get ${referral.daysEach} days of Meldiq Plus free.` : null;
+  const bonus = referral?.available && referral.daysEach > 0 ? uiText("workspace.interface.you_both_get_value0_days_of_meldiq_plus_free_5104535", { value0: referral.daysEach }) : null;
   return (
     <section className="invite-card" aria-labelledby="invite-card-title">
       <span className="invite-card-icon" aria-hidden="true">
         <UserRoundPlus size={18} />
       </span>
       <div className="invite-card-text">
-        <strong id="invite-card-title">Invite friends to Meldiq</strong>
-        <small>{bonus ?? (referral?.invited ? `${referral.invited} joined with your link` : "Share your link to get them chatting")}</small>
+        <strong id="invite-card-title">
+          <Localized k="workspace.interface.invite_friends_to_meldiq_3f12646" />
+        </strong>
+        <small>
+          {bonus ??
+            (referral?.invited
+              ? uiText("workspace.interface.value0_joined_with_your_link_09857cd", { value0: referral.invited })
+              : uiText("workspace.interface.share_your_link_to_get_them_chatting_92cbfba"))}
+        </small>
       </div>
-      <button className="btn btn-primary btn-sm" onClick={() => void share()} aria-label="Share your Meldiq invite link">
-        {copied ? <Check size={14} aria-hidden="true" /> : <Copy size={14} aria-hidden="true" />} {copied ? "Copied" : "Invite"}
+      <button className="btn btn-primary btn-sm" onClick={() => void share()} aria-label={uiText("workspace.interface.share_your_meldiq_invite_link_fa7fe2f")}>
+        {copied ? <Check size={14} aria-hidden="true" /> : <Copy size={14} aria-hidden="true" />} {copied ? l10n("common.common_copied") : uiText("workspace.interface.invite_1fd9ae1")}
       </button>
     </section>
   );
 }
-
 /** Meldiq Plus in the messages list: what it adds, for the Free plan; your plan, for subscribers. */
 export function MojoPromoCard() {
+  useLocaleRender();
   const plan = useOrbit((s) => s.mojo.me?.plan ?? null);
   const name = useOrbit((s) => s.mojo.me?.perks.name ?? null);
   const enabled = useOrbit((s) => s.server?.features.includes("mojo") ?? false);
@@ -81,8 +91,10 @@ export function MojoPromoCard() {
         <Sparkles size={18} />
       </span>
       <span className="lines grow">
-        <strong>{`You have ${name ?? "Meldiq Plus"}`}</strong>
-        <small>Thanks for keeping Meldiq going. See your perks.</small>
+        <strong>{uiText("workspace.interface.you_have_value0_d65c988", { value0: name ?? "Meldiq Plus" })}</strong>
+        <small>
+          <Localized k="workspace.interface.thanks_for_keeping_meldiq_going_see_your_perks_69581ab" />
+        </small>
       </span>
     </button>
   );

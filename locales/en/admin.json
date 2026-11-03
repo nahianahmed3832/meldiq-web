@@ -1,0 +1,10 @@
+{
+  "title": "Administration",
+  "health": "Service health",
+  "usage": "Community usage",
+  "states": {
+    "rejected": "Rejected",
+    "escalated": "Escalated",
+    "disputed": "Disputed"
+  }
+}

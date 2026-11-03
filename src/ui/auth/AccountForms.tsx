@@ -1,3 +1,5 @@
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
 import { SocialSignIn } from "./SocialSignIn";
 import { ArrowLeft, ChevronRight, KeyRound, LockKeyhole, Mail, MailX, Smartphone } from "lucide-react";
 import { type FormEvent, type ReactNode, useState } from "react";
@@ -9,14 +11,13 @@ import { cleanVerifyCode, emailProblem, nameProblem, normalizeEmail, PASSWORD_MI
 import { AuthHeading, FormError, FormNotice, LinkButton } from "./AuthFrame";
 import { useSubmit } from "./useSubmit";
 import { useT } from "../../i18n";
-
 /** Shared by every form: the server's account API and this browser's name in the account's session list. */
 export interface FormContext {
   accounts: AccountApi;
   deviceName: string;
 }
-
 export function Field({ id, label, hint, children }: { id: string; label: string; hint?: ReactNode; children: ReactNode }) {
+  useLocaleRender();
   return (
     <div className="field">
       <label htmlFor={id}>{label}</label>
@@ -25,8 +26,8 @@ export function Field({ id, label, hint, children }: { id: string; label: string
     </div>
   );
 }
-
 export function Back({ onClick, label, disabled = false }: { onClick: () => void; label?: string; disabled?: boolean }) {
+  useLocaleRender();
   const t = useT();
   return (
     <button type="button" className="btn btn-ghost btn-sm auth-back" disabled={disabled} onClick={onClick}>
@@ -34,14 +35,11 @@ export function Back({ onClick, label, disabled = false }: { onClick: () => void
     </button>
   );
 }
-
 export const submitHandler = (fn: () => void) => (e: FormEvent) => {
   e.preventDefault();
   fn();
 };
-
 // ───────────────────────── sign in ─────────────────────────
-
 export function SignInForm(props: {
   ctx: FormContext;
   notice?: string | null;
@@ -60,6 +58,7 @@ export function SignInForm(props: {
   onRecover?: (email: string) => void;
   onLinkWithPhone: () => void;
 }) {
+  useLocaleRender();
   const [email, setEmail] = useState(props.initialEmail ?? "");
   const [password, setPassword] = useState("");
   const [help, setHelp] = useState(false);
@@ -71,7 +70,6 @@ export function SignInForm(props: {
   const [needsCode, setNeedsCode] = useState(false);
   const [code, setCode] = useState("");
   const t = useT();
-
   const passkey = (rpId: string) => {
     setWithPasskey(true);
     void run(async () => {
@@ -82,11 +80,10 @@ export function SignInForm(props: {
       }
     }).finally(() => setWithPasskey(false));
   };
-
   const submit = () => {
     const problem = emailProblem(email) ?? (password ? null : t("signin_enter_password"));
     if (problem) return setError(problem);
-    if (needsCode && code.replace(/[\s-]/g, "").length < 6) return setError("Enter the 6-digit code from your authenticator app, or a backup code.");
+    if (needsCode && code.replace(/[\s-]/g, "").length < 6) return setError(uiText("auth.interface.enter_the_6_digit_code_from_your_authenticator_app_or_a_backup_co_42c0053"));
     void run(async () => {
       try {
         props.onSignedIn(await props.ctx.accounts.login(normalizeEmail(email), password, props.ctx.deviceName, undefined, needsCode ? code.trim() : undefined), password);
@@ -100,7 +97,6 @@ export function SignInForm(props: {
       }
     });
   };
-
   if (help) {
     return (
       <SignInHelp
@@ -111,7 +107,6 @@ export function SignInForm(props: {
       />
     );
   }
-
   if (step === "options") {
     return (
       <div className="auth-form" data-auth-step={socialActive ? "social" : "methods"}>
@@ -149,7 +144,6 @@ export function SignInForm(props: {
       </div>
     );
   }
-
   return (
     <form className="auth-form" data-auth-step={needsCode ? "verification" : "email"} onSubmit={submitHandler(submit)} noValidate>
       <Back
@@ -209,12 +203,12 @@ export function SignInForm(props: {
     </form>
   );
 }
-
 /**
  * The ways back in, shown only after "Having trouble signing in?" (Meldiq Android does the same; meldiq
  * docs/product/MELDIQ_AUTH_FLOW_AUDIT.md). A way is offered only when this server and this browser allow it.
  */
 function SignInHelp(props: { onForgot: () => void; onRecover?: () => void; onLinkWithPhone?: () => void; onBack: () => void }) {
+  useLocaleRender();
   const t = useT();
   return (
     <div className="auth-form">
@@ -228,9 +222,9 @@ function SignInHelp(props: { onForgot: () => void; onRecover?: () => void; onLin
     </div>
   );
 }
-
 /** One way to choose, as a large button: icon, title and a line about it. */
 export function ChoiceButton({ icon, title, sub, onClick }: { icon: ReactNode; title: string; sub: string; onClick: () => void }) {
+  useLocaleRender();
   return (
     <button type="button" className="auth-choice" onClick={onClick}>
       <span className="auth-choice-icon" aria-hidden="true">
@@ -244,17 +238,15 @@ export function ChoiceButton({ icon, title, sub, onClick }: { icon: ReactNode; t
     </button>
   );
 }
-
 // ───────────────────────── sign up ─────────────────────────
-
 export function SignUpForm(props: { ctx: FormContext; inviteRequired: boolean; onSent: (email: string, password: string) => void; onBack: () => void }) {
+  useLocaleRender();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [invite, setInvite] = useState("");
   const { busy, error, setError, run } = useSubmit();
   const t = useT();
-
   const submit = () => {
     const problem = nameProblem(name) ?? emailProblem(email) ?? passwordProblem(password, email) ?? (props.inviteRequired && !invite.trim() ? t("signup_invite_missing") : null);
     if (problem) return setError(problem);
@@ -263,7 +255,6 @@ export function SignUpForm(props: { ctx: FormContext; inviteRequired: boolean; o
       props.onSent(normalizeEmail(email), password);
     });
   };
-
   return (
     <form className="auth-form" onSubmit={submitHandler(submit)} noValidate>
       <Back onClick={props.onBack} label={t("signup_back")} />
@@ -289,15 +280,13 @@ export function SignUpForm(props: { ctx: FormContext; inviteRequired: boolean; o
     </form>
   );
 }
-
 // ───────────────────────── email code ─────────────────────────
-
 export function VerifyEmailForm(props: { ctx: FormContext; email: string; password: string; onVerified: (grant: AccountSessionGrant) => void; onBack: () => void }) {
+  useLocaleRender();
   const t = useT();
   const [code, setCode] = useState("");
   const [notice, setNotice] = useState<string | null>(() => t("verify_sent", { email: props.email }));
   const { busy, error, setError, run } = useSubmit();
-
   const submit = () => {
     const c = cleanVerifyCode(code);
     if (c.length !== 6) return setError(t("verify_enter"));
@@ -306,13 +295,11 @@ export function VerifyEmailForm(props: { ctx: FormContext; email: string; passwo
       props.onVerified(await props.ctx.accounts.login(props.email, props.password, props.ctx.deviceName));
     });
   };
-
   const resend = () =>
     void run(async () => {
       await props.ctx.accounts.resendVerification(props.email);
       setNotice(t("verify_resent", { email: props.email }));
     });
-
   return (
     <form className="auth-form" onSubmit={submitHandler(submit)} noValidate>
       <Back onClick={props.onBack} />
@@ -331,10 +318,9 @@ export function VerifyEmailForm(props: { ctx: FormContext; email: string; passwo
     </form>
   );
 }
-
 // ───────────────────────── forgotten password ─────────────────────────
-
 export function ForgotPasswordForm(props: { ctx: FormContext; initialEmail: string; onSent: (email: string) => void; onBack: () => void }) {
+  useLocaleRender();
   const [email, setEmail] = useState(props.initialEmail);
   const { busy, error, setError, run } = useSubmit();
   const t = useT();
@@ -360,8 +346,8 @@ export function ForgotPasswordForm(props: { ctx: FormContext; initialEmail: stri
     </form>
   );
 }
-
 export function ResetPasswordForm(props: { ctx: FormContext; email: string; onDone: () => void; onBack: () => void }) {
+  useLocaleRender();
   const [code, setCode] = useState("");
   const [password, setPassword] = useState("");
   const { busy, error, setError, run } = useSubmit();

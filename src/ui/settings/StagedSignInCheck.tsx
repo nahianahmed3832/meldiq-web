@@ -1,10 +1,13 @@
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
+import { Localized } from "../../i18n/Localized";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { useEngine } from "../../application/orbit";
 import { checkSupabaseSignIn } from "../../auth/supabasePreview";
 import type { SupabasePreviewConfig } from "../../auth/supabasePreviewConfig";
 import { sign } from "../../crypto/ed25519";
-
 export default function StagedSignInCheck({ provider }: { provider: SupabasePreviewConfig }) {
+  useLocaleRender();
   const engine = useEngine();
   const [password, setPassword] = useState("");
   const [legacyPassword, setLegacyPassword] = useState("");
@@ -33,9 +36,9 @@ export default function StagedSignInCheck({ provider }: { provider: SupabasePrev
     setMessage(null);
     setFailed(false);
     try {
-      if (!engine.session.token() && !(await engine.session.reauthenticate())) throw new Error("Session unavailable");
+      if (!engine.session.token() && !(await engine.session.reauthenticate())) throw new Error(uiText("settings.interface.session_unavailable_b4bc9ad"));
       const legacyAccessToken = engine.session.token();
-      if (!legacyAccessToken) throw new Error("Session unavailable");
+      if (!legacyAccessToken) throw new Error(uiText("settings.interface.session_unavailable_b4bc9ad"));
       await checkSupabaseSignIn({
         provider,
         store: engine.store,
@@ -50,11 +53,11 @@ export default function StagedSignInCheck({ provider }: { provider: SupabasePrev
         isCurrentOwner: () => alive.current && engine.device.account?.id === owner.accountId && engine.device.userId === owner.userId && engine.device.deviceId === owner.deviceId,
         signDeviceProof: (message) => sign(device.keys.signing.privateKey, message),
       });
-      if (alive.current) setMessage("Test sign-in verified and closed. Your current Meldiq session stays active.");
+      if (alive.current) setMessage(uiText("settings.interface.test_sign_in_verified_and_closed_your_current_meldiq_session_stays_a_8997e2f"));
     } catch {
       if (alive.current) {
         setFailed(true);
-        setMessage("The check could not finish. Check your test passwords and authenticator code, or try again.");
+        setMessage(uiText("settings.interface.the_check_could_not_finish_check_your_test_passwords_and_authenticat_c02fbdd"));
       }
     } finally {
       if (alive.current) {
@@ -67,29 +70,39 @@ export default function StagedSignInCheck({ provider }: { provider: SupabasePrev
     }
   };
   return (
-    <section className="card" style={{ padding: 20, display: "grid", gap: 12 }} aria-label="Staging sign-in check">
-      <h3 style={{ margin: 0 }}>Sign-in migration check</h3>
-      <p className="muted">For staging test accounts only. Check that the updated sign-in matches your existing account and this browser. Your keys, chats and pending messages stay here.</p>
+    <section className="card" style={{ padding: 20, display: "grid", gap: 12 }} aria-label={uiText("settings.interface.staging_sign_in_check_cf30e56")}>
+      <h3 style={{ margin: 0 }}>
+        <Localized k="settings.interface.sign_in_migration_check_1c59446" />
+      </h3>
+      <p className="muted">
+        <Localized k="settings.interface.for_staging_test_accounts_only_check_that_the_updated_sign_in_mat_30e2a48" />
+      </p>
       <form onSubmit={(event) => void submit(event)} className="ws-form">
         <label className="field">
-          <span>Test sign-in password</span>
+          <span>
+            <Localized k="settings.interface.test_sign_in_password_848704d" />
+          </span>
           <input className="input" type="password" autoComplete="off" value={password} onChange={(event) => setPassword(event.target.value)} required disabled={busy} />
         </label>
         <label className="field">
-          <span>Current Meldiq password, if different</span>
+          <span>
+            <Localized k="settings.interface.current_meldiq_password_if_different_cc4a74c" />
+          </span>
           <input className="input" type="password" autoComplete="off" value={legacyPassword} onChange={(event) => setLegacyPassword(event.target.value)} disabled={busy} />
         </label>
         <label className="field">
-          <span>Authenticator or backup code, if enabled</span>
+          <span>
+            <Localized k="settings.interface.authenticator_or_backup_code_if_enabled_929147e" />
+          </span>
           <input className="input" autoComplete="one-time-code" value={code} onChange={(event) => setCode(event.target.value)} disabled={busy} />
         </label>
         <div className="ws-row">
           <button className="btn btn-secondary" type="submit" disabled={busy || !password}>
-            {busy ? "Checking…" : "Check test sign-in"}
+            {busy ? uiText("common.common_checking") : uiText("settings.interface.check_test_sign_in_8648231")}
           </button>
           {busy && (
             <button className="btn btn-ghost" type="button" onClick={() => abort.current?.abort()}>
-              Cancel
+              <Localized k="common.actions.cancel" />
             </button>
           )}
         </div>

@@ -43,7 +43,7 @@
 .obot-plus-chip {
   display: inline-flex;
   align-items: center;
-  margin-left: 6px;
+  margin-inline-start: 6px;
   padding: 1px 6px;
   border-radius: var(--r-pill);
   font: 800 10px/1.45 var(--font);
@@ -85,7 +85,8 @@
   display: flex;
   align-items: center;
   gap: 14px;
-  padding: 18px 16px 18px 20px;
+  padding-block: 18px 18px;
+  padding-inline: 20px 16px;
   color: #fff;
   background: linear-gradient(135deg, var(--obot), color-mix(in srgb, var(--obot) 55%, #000));
 }

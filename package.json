@@ -15,7 +15,7 @@
   "scripts": {
     "dev": "npm run -s sw:dev && next dev --hostname 127.0.0.1 --port 5173",
     "build": "tsc -b && rm -rf out && next build --webpack && node scripts/finish-export.mjs && vite build --config vite.sw.config.ts",
-    "sw:dev": "vite build --config vite.sw.config.ts --outDir public --mode development",
+    "sw:dev": "node scripts/i18n/public-assets.mjs public && vite build --config vite.sw.config.ts --outDir public --mode development",
     "preview": "node scripts/web-server.ts dist 4173",
     "typecheck": "tsc -b",
     "lint": "eslint .",
@@ -26,7 +26,10 @@
     "e2e": "playwright test",
     "test:integration": "vitest run test/live",
     "test:all": "vitest run",
-    "test:social-browser": "node scripts/test-social-auth-browser.mjs"
+    "test:social-browser": "node scripts/test-social-auth-browser.mjs",
+    "i18n:audit": "node scripts/i18n/audit.mjs",
+    "i18n:check": "node scripts/i18n/check.mjs",
+    "i18n:validate": "node scripts/i18n/check.mjs --structure-only"
   },
   "dependencies": {
     "@hpke/core": "1.9.0",
@@ -42,7 +45,8 @@
     "qrcode-generator": "2.0.4",
     "react": "19.3.1",
     "react-dom": "19.3.1",
-    "zod": "4.6.7"
+    "zod": "4.6.7",
+    "next-intl": "4.14.9"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",
@@ -61,7 +65,8 @@
     "typescript-eslint": "8.71.2",
     "vite": "7.3.7",
     "vitest": "4.1.12",
-    "ws": "8.22.0"
+    "ws": "8.22.0",
+    "@formatjs/icu-messageformat-parser": "3.5.22"
   },
   "browserslist": [
     "safari >= 16.4",

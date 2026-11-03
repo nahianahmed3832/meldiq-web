@@ -1,0 +1,10 @@
+{
+  "title": "管理",
+  "health": "サービスの状態",
+  "usage": "コミュニティの使用状況",
+  "states": {
+    "rejected": "却下済み",
+    "escalated": "上位担当者へ引き継ぎ済み",
+    "disputed": "異議申し立て中"
+  }
+}

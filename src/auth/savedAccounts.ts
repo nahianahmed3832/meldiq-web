@@ -1,7 +1,7 @@
+import { text as uiText } from "../i18n";
 import { openDB } from "idb";
 import type { DeviceRecord } from "../model/types";
 import { DB_NAME, LocalStore } from "../store/db";
-
 /** Only account labels and database pointers live here; keys and tokens stay in each account's own database. */
 export interface SavedAccount {
   database: string;
@@ -14,12 +14,14 @@ export interface SavedAccount {
 export interface AccountDirectory {
   active: string | null;
   accounts: SavedAccount[];
-  pending: { database: string; returnTo: string | null } | null;
+  pending: {
+    database: string;
+    returnTo: string | null;
+  } | null;
 }
 const DIRECTORY_DB = "meldiq-accounts";
 const EMPTY: AccountDirectory = { active: null, accounts: [], pending: null };
 const open = () => openDB(DIRECTORY_DB, 1, { upgrade: (db) => db.createObjectStore("kv") });
-
 export async function accountDirectory(): Promise<AccountDirectory> {
   const db = await open();
   try {
@@ -28,7 +30,6 @@ export async function accountDirectory(): Promise<AccountDirectory> {
     db.close();
   }
 }
-
 async function change(fn: (directory: AccountDirectory) => void): Promise<AccountDirectory> {
   const db = await open();
   try {
@@ -42,9 +43,11 @@ async function change(fn: (directory: AccountDirectory) => void): Promise<Accoun
     db.close();
   }
 }
-
 /** Adopt the pre-multiple-account database in place; no credentials are copied or replaced. */
-export async function accountStoreForBoot(): Promise<{ directory: AccountDirectory; store: LocalStore }> {
+export async function accountStoreForBoot(): Promise<{
+  directory: AccountDirectory;
+  store: LocalStore;
+}> {
   const directory = await accountDirectory();
   const store = await LocalStore.open(directory.pending?.database ?? directory.active ?? DB_NAME);
   const device = await store.device();
@@ -53,11 +56,10 @@ export async function accountStoreForBoot(): Promise<{ directory: AccountDirecto
   }
   return { directory, store };
 }
-
 export async function rememberAccount(database: string, device: DeviceRecord, displayName = device.username, avatarColor = 0): Promise<AccountDirectory> {
   return change((d) => {
     const duplicate = d.accounts.find((a) => a.userId === device.userId && a.database !== database);
-    if (duplicate) throw new Error("This account is already added. Choose it from Switch account.");
+    if (duplicate) throw new Error(uiText("auth.interface.this_account_is_already_added_choose_it_from_switch_account_de21a94"));
     const account: SavedAccount = { database, userId: device.userId, accountId: device.account?.id ?? null, username: device.username, displayName, avatarColor };
     const index = d.accounts.findIndex((a) => a.database === database);
     if (index < 0) d.accounts.push(account);
@@ -68,35 +70,32 @@ export async function rememberAccount(database: string, device: DeviceRecord, di
     }
   });
 }
-
 export async function selectAccount(database: string): Promise<void> {
   const before = await accountDirectory();
-  if (!before.accounts.some((a) => a.database === database)) throw new Error("That account is no longer saved on this browser.");
+  if (!before.accounts.some((a) => a.database === database)) throw new Error(uiText("auth.interface.that_account_is_no_longer_saved_on_this_browser_6cb0209"));
   const store = await LocalStore.open(database);
   try {
     const device = await store.device();
     const account = before.accounts.find((a) => a.database === database)!;
     if (!device || device.userId !== account.userId) {
       await forgetAccount(database);
-      throw new Error("This account was removed from this browser. Add it again to sign in.");
+      throw new Error(uiText("auth.interface.this_account_was_removed_from_this_browser_add_it_again_to_sign_i_0bf0ce1"));
     }
   } finally {
     store.close();
   }
   await change((d) => {
-    if (!d.accounts.some((a) => a.database === database)) throw new Error("That account is no longer saved on this browser.");
+    if (!d.accounts.some((a) => a.database === database)) throw new Error(uiText("auth.interface.that_account_is_no_longer_saved_on_this_browser_6cb0209"));
     d.active = database;
     d.pending = null;
   });
   if (before.pending && before.pending.database !== database) await LocalStore.erase(null, before.pending.database);
 }
-
 export async function startAddingAccount(): Promise<void> {
   await change((d) => {
     if (!d.pending) d.pending = { database: `orbit-web-account-${crypto.randomUUID()}`, returnTo: d.active };
   });
 }
-
 export async function cancelAddingAccount(): Promise<void> {
   const before = await accountDirectory();
   await change((d) => {
@@ -104,7 +103,6 @@ export async function cancelAddingAccount(): Promise<void> {
   });
   if (before.pending) await LocalStore.erase(null, before.pending.database);
 }
-
 /** Removing one account never erases another account's database or tokens. */
 export async function forgetAccount(database: string): Promise<AccountDirectory> {
   return change((d) => {
