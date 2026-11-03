@@ -1,0 +1,13 @@
+{
+  "observedAt": "2026-11-03T07:04:36.649Z",
+  "completedAt": "2026-11-03T07:04:41.327Z",
+  "sourceRecords": 525,
+  "sourceCountStart": 525,
+  "sourceCountEnd": 525,
+  "exactByteLengthMatches": 490,
+  "localFallbackReadableMatches": 35,
+  "currentStorageAvailabilityPassed": true,
+  "objectBytesDownloaded": 0,
+  "contentHashVerified": false,
+  "keysOrBucketsChanged": false
+}

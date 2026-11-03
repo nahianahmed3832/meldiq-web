@@ -1,5 +1,7 @@
 # Migration test report
 
+> Current database authority: Frankfurt Supabase PostgreSQL, active since November3 at07:58 UTC. The [final cutover report](../migrations/production-database-cutover-20261103.md) supersedes historical staging checkpoints below. Native Auth/Realtime remain a separate unfinished phase.
+
 November 2, 2026. **Production readiness is blocked. All new hosted records are synthetic; no customer data was imported and no production cutover occurred.**
 
 ## Executed verification

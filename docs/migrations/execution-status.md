@@ -1,5 +1,7 @@
 # Supabase consolidation execution status
 
+> Current database authority: Frankfurt Supabase PostgreSQL, active since November3 at07:58 UTC. The [final cutover report](../migrations/production-database-cutover-20261103.md) supersedes historical staging checkpoints below. Native Auth/Realtime remain a separate unfinished phase.
+
 Updated November 3, 2026 (Asia/Shanghai). **Production readiness: BLOCKED. Production remains Atlas-authoritative.**
 
 ## Completed evidence
@@ -102,3 +104,26 @@ Remaining before traffic cutover: the exact Node22 image and restricted-role VPS
 
 
 November 3, 04:55 UTC checkpoint: the owner authorized promoting the existing Frankfurt database and preserving legacy client protocols. PostgreSQL-only deployment is being prepared; Atlas is still live. All 15 schema migrations are applied, 119 dedicated PostgreSQL assertions and 10 hosted RLS assertions pass. A backed delta refreshed 678,701 application rows across 282 tables, after both directions were verified locally. The newest owned VPS message/rollback canary passed20 messages, retained sessions and committed data, and accepted another message after switching to the compatible older PostgreSQL image. The measured p95 was2.594 seconds at concurrency4 with a simulated168 ms database round trip; this is not a capacity certification. The current candidate2097e601 bootstrapped the hosted restricted-role repositories on the VPS in11.175 seconds without data writes. S3/local fallback availability passed for all521 current references. Final source freeze, final reconciliation, private production acceptance, activation and public verification are still outstanding. Unified Supabase Auth/Realtime remain a separate blocked phase.
+
+
+## November 3, 06:54 UTC: pre-activation recovery and corrected release
+
+The first cutover window froze Atlas at 05:41 UTC and completed the final immutable capture, owned local validation, atomic hosted delta and encrypted PostgreSQL restore. Production startup then hit a legacy social-sign-in guard that required MongoDB. PostgreSQL was never activated and never accepted customer writes. The retained Atlas configuration and API were restored, with public health verified at 06:20 UTC. The first freeze lasted approximately 38 minutes. All source and destination backups are retained.
+
+Candidate f2f7c6c3 permits social sign-in only for the explicitly accepted production PostgreSQL composition. Its full backend CI passed, as did 121 dedicated PostgreSQL tests. The retained-data rollback image is 29cd7618. Both images passed isolated production-settings preflight with the real social/FCM configuration, separate writable identity/configuration copies and read-only actual media. Health, private operator access and activation holds passed; all 289 protected table fingerprints remained unchanged. The public API metadata matches the retained Atlas contract except the expected hold maintenance flag. The updated owned two-client canary passed message delivery, idempotency, session retention and retained-data application rollback.
+
+Atlas is live and has newer writes than the first final capture. A fresh encrypted destination backup and independent off-host restore are being completed before a new freeze/capture/delta. The new preactivation-resume mode requires the exact prepared source marker, all original row hashes, a fresh independently restored backup and the live source freeze. It refuses a serving database and any durable PostgreSQL authority. No native Auth/Realtime activation or legacy database deletion has occurred.
+
+
+## November 3, 07:24 UTC: second window returned to Atlas
+
+The second freeze began at07:03:45 UTC. Its new encrypted Atlas capture contains693,432 documents and678,936 normalized application records. All282 local source tables passed import/resume and complete row/timestamp/financial/counter validation; all525 attachment references remained accessible. Remote full-row transfer during the pre-delta comparison was too slow on the operator connection. The process was stopped before the atomic delta began. The Frankfurt prepared marker still identifies the first snapshot; PostgreSQL was never activated. Atlas and public ingress were restored and verified healthy by07:23:57 UTC. The second window lasted about20 minutes. The final capture is retained locally; its additional VPS copy was incomplete and is not claimed as verified.
+
+The verification pipeline now compares all rows against an independently restored encrypted destination backup locally, then binds that proof to live protected-table fingerprints under the same writer/table locks. Both the VPS off-host mirror and the saved Mac archive restored all317 tables/680,600 rows and matched every row of the679,592-record prepared baseline locally. The prepare-only mode cannot produce final acceptance; a fresh post-delta backup, full local source comparison and live all289-table fingerprint check must complete before activation. Atlas remains live during implementation and tests.
+
+
+## November3 final database milestone
+
+Frankfurt PostgreSQL is authoritative and publicly healthy; Atlas is retained. The source-bound durable receipt was written at07:58:37 UTC and ingress verified at07:58:50 UTC. The final 675,918 application records across282 tables reconcile completely. All289 protected fingerprints matched before activation. The later pool fix preserves the concurrent media release, keeps the same authority receipt, and caps the pool at six with a15-second queue wait/five-second socket bound. The initial request pool timeouts were corrected; a single subsequent Redis timeout burst is retained in the detailed report.
+
+Production encrypted recovery and independent off-host restore passed for317 tables/677,180 rows and14 payloads. Both source-archive copies are verified. Daily backup dispatch and hourly reachable-Mac mirroring remain in place; synthetic staging mutation helpers are fenced. The API-only rollback remains on PostgreSQL and preserves the latest media capabilities. No Atlas deletion, database reverse cutover or native Supabase Auth/Realtime activation occurred. The full platform consolidation remains unfinished.

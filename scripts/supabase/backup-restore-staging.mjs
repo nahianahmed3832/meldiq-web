@@ -3,6 +3,7 @@ import path from "node:path";
 import os from "node:os";
 import crypto from "node:crypto";
 import { createRequire } from "node:module";
+import { pathToFileURL } from "node:url";
 import { spawn, spawnSync } from "node:child_process";
 import { pipeline } from "node:stream/promises";
 import net from "node:net";
@@ -49,6 +50,9 @@ const remote = new Client({
   ssl: { rejectUnauthorized: true, ca: fs.readFileSync(settings.SUPABASE_DB_CA_FILE, "utf8") },
   connectionTimeoutMillis: 10_000,
   statement_timeout: 30_000,
+  query_timeout: 45_000,
+  keepAlive: true,
+  keepAliveInitialDelayMillis: 10_000,
   application_name: "meldiq-staging-backup-readonly",
 });
 const localConfig = { host: "127.0.0.1", port: 55432, database: "postgres", user: "postgres", connectionTimeoutMillis: 5_000 };
@@ -64,7 +68,8 @@ const keyFile = path.join(keysDirectory, "staging-age-identity.txt");
 const archive = path.join(directory, "database.dump.age");
 const schemas = ["auth", "meldiq", "meldiq_private", "supabase_migrations"];
 const testAuth = process.argv.includes("--test-auth");
-if (process.argv.slice(2).some((arg) => arg !== "--test-auth" && !arg.startsWith("--resume=")) || (resumeDirectory && testAuth))
+const reconcileSource = process.argv.find((arg) => arg.startsWith("--reconcile-source="))?.slice("--reconcile-source=".length);
+if (process.argv.slice(2).some((arg) => arg !== "--test-auth" && !arg.startsWith("--resume=") && !arg.startsWith("--reconcile-source=")) || (resumeDirectory && testAuth))
   throw new Error("Use --test-auth for a fresh Auth test or --resume for stored-row recovery");
 const authRuntime = path.join(privateRoot, "auth-runtime-v2.197.0");
 const authArchiveSha256 = "3fb7998e7061e2c14f3f9555b1d94d447358c965395728e0d81eac82e0e5868b";
@@ -331,9 +336,20 @@ try {
     dump.process.stdin.end();
     const encryption = child("age", ["-r", recipient.stdout.trim()]);
     const destination = fs.createWriteStream(archive, { flags: "wx", mode: 0o600 });
+    // Keep the exported snapshot's otherwise idle connection alive while libpq copies the dump.
+    // SELECT 1 stays in the same read-only snapshot and cannot alter the source.
+    let heartbeatError;
+    const heartbeat = setInterval(() => {
+      remote.query("SELECT 1").catch((error) => {
+        heartbeatError = error;
+      });
+    }, 15_000);
     try {
       await Promise.all([pipeline(dump.process.stdout, encryption.process.stdin), pipeline(encryption.process.stdout, destination), dump.done, encryption.done]);
+      await remote.query("SELECT 1");
+      if (heartbeatError) throw heartbeatError;
     } finally {
+      clearInterval(heartbeat);
       dump.process.kill();
       encryption.process.kill();
     }
@@ -410,7 +426,10 @@ try {
   report.phase = "restored-row-reconciliation";
   await restore.query("SET timezone='UTC'; SET extra_float_digits=3");
   const actual = await tableManifest(restore);
-  fs.writeFileSync(path.join(directory, "restored-manifest.json"), JSON.stringify({ tables: actual }, null, 2) + "\n", { flag: "wx", mode: 0o600 });
+  const restoredManifest = path.join(directory, "restored-manifest.json");
+  const restoredText = JSON.stringify({ tables: actual }, null, 2) + "\n";
+  if (resumeDirectory && fs.existsSync(restoredManifest)) assert(fs.readFileSync(restoredManifest, "utf8") === restoredText);
+  else fs.writeFileSync(restoredManifest, restoredText, { flag: "wx", mode: 0o600 });
   assert(JSON.stringify(expected) === JSON.stringify(actual));
   report.reconciledTables = actual.length;
   report.reconciledRows = actual.reduce((total, table) => total + Number(table.count), 0);
@@ -418,6 +437,18 @@ try {
   report.authUsers = Number(actual.find((table) => table.schema === "auth" && table.name === "users").count);
   report.passwordHashesAndIdentitiesIncludedInExactRowChecks = true;
   report.policyScope = "Stored Auth/application/migration rows and definitions only; no Auth/Realtime service or production role grants restored";
+  if (reconcileSource) {
+    report.phase = "full-restored-source-comparison";
+    const { reconcileRestoredSource } = await import(pathToFileURL(path.resolve(server, "../deploy/database-migration/reconcile-restored-source.mjs")).href);
+    report.sourceManifestSha256 = crypto.createHash("sha256").update(JSON.stringify(expected)).digest("hex");
+    report.sourceReconciliation = await reconcileRestoredSource({
+      snapshot: reconcileSource,
+      database: restoreName,
+      directory,
+      sourceManifestSha256: report.sourceManifestSha256,
+      ciphertextSha256: report.ciphertextSha256,
+    });
+  }
   if (testAuth) {
     report.phase = "restored-auth-startup";
     await testRestoredAuth();
