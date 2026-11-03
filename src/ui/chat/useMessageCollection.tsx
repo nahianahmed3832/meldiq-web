@@ -1,10 +1,11 @@
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
 import { useEffect, useRef, useState } from "react";
 import type { CollectionCursor, CollectionKind } from "../../api/messageCollections";
 import { useEngine, useOrbit } from "../../application/orbit";
 import type { MessageCollectionPage } from "../../sync/messageCollections";
 import { threadRows } from "../../sync/threads";
 import { useT } from "../../i18n";
-
 /** One bounded page and lightweight cursor history; stale requests cannot replace another conversation's page. */
 export function useMessageCollection(conversationId: string, kind: CollectionKind, root?: string) {
   const engine = useEngine();
@@ -49,7 +50,7 @@ export function useMessageCollection(conversationId: string, kind: CollectionKin
       .catch((e: unknown) => {
         if (alive && mine === gen.current) {
           setPage(null);
-          setError(e instanceof Error ? e.message : "Couldn't load messages. Try again.");
+          setError(e instanceof Error ? e.message : uiText("messaging.interface.couldn_t_load_messages_try_again_9068b8c"));
         }
       })
       .finally(() => {
@@ -81,8 +82,8 @@ export function useMessageCollection(conversationId: string, kind: CollectionKin
       : null,
   };
 }
-
 export function CollectionControls({ collection }: { collection: ReturnType<typeof useMessageCollection> }) {
+  useLocaleRender();
   const t = useT();
   const { error, loading, supported, pageNumber, previous, next, refresh } = collection;
   return (

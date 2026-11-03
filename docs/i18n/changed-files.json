@@ -1,0 +1,3638 @@
+{
+  "scope": "Isolated release based on main plus the existing live public-status revision. Unrelated dirty shared-workspace changes are excluded.",
+  "files": [
+    {
+      "file": ".github/workflows/ci.yml",
+      "status": "M"
+    },
+    {
+      "file": ".gitignore",
+      "status": "M"
+    },
+    {
+      "file": "deploy/localization/compatible-reader.patch",
+      "status": "A"
+    },
+    {
+      "file": "deploy/localization/package.mjs",
+      "status": "A"
+    },
+    {
+      "file": "deploy/localization/publish.py",
+      "status": "A"
+    },
+    {
+      "file": "deploy/localization/rollback.py",
+      "status": "A"
+    },
+    {
+      "file": "deploy/scripts/build-release.sh",
+      "status": "M"
+    },
+    {
+      "file": "docs/i18n/architecture.json",
+      "status": "A"
+    },
+    {
+      "file": "docs/i18n/baseline-source-inventory.json",
+      "status": "A"
+    },
+    {
+      "file": "docs/i18n/changed-files.json",
+      "status": "A"
+    },
+    {
+      "file": "docs/i18n/coverage.json",
+      "status": "A"
+    },
+    {
+      "file": "docs/i18n/integration.json",
+      "status": "A"
+    },
+    {
+      "file": "docs/i18n/README.md",
+      "status": "A"
+    },
+    {
+      "file": "docs/i18n/source-inventory.json",
+      "status": "A"
+    },
+    {
+      "file": "docs/i18n/validation.json",
+      "status": "A"
+    },
+    {
+      "file": "e2e/languages.spec.ts",
+      "status": "M"
+    },
+    {
+      "file": "e2e/localization-call.spec.ts",
+      "status": "A"
+    },
+    {
+      "file": "e2e/localization-public.spec.ts",
+      "status": "A"
+    },
+    {
+      "file": "e2e/localization.spec.ts",
+      "status": "A"
+    },
+    {
+      "file": "e2e/paypal-existing-regression.spec.ts",
+      "status": "M"
+    },
+    {
+      "file": "e2e/smooth-auth-upload.spec.ts",
+      "status": "M"
+    },
+    {
+      "file": "locales/ar/admin.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/ar/auth.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/ar/billing.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/ar/calls.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/ar/common.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/ar/errors.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/ar/files.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/ar/messaging.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/ar/notifications.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/ar/onboarding.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/ar/organization.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/ar/settings.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/ar/workspace.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/bn/admin.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/bn/auth.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/bn/billing.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/bn/calls.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/bn/common.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/bn/errors.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/bn/files.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/bn/messaging.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/bn/notifications.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/bn/onboarding.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/bn/organization.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/bn/settings.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/bn/workspace.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/cs/admin.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/cs/auth.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/cs/billing.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/cs/calls.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/cs/common.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/cs/errors.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/cs/files.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/cs/messaging.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/cs/notifications.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/cs/onboarding.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/cs/organization.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/cs/settings.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/cs/workspace.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/de/admin.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/de/auth.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/de/billing.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/de/calls.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/de/common.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/de/errors.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/de/files.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/de/messaging.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/de/notifications.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/de/onboarding.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/de/organization.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/de/settings.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/de/workspace.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/el/admin.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/el/auth.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/el/billing.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/el/calls.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/el/common.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/el/errors.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/el/files.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/el/messaging.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/el/notifications.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/el/onboarding.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/el/organization.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/el/settings.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/el/workspace.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/en/admin.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/en/auth.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/en/billing.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/en/calls.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/en/common.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/en/errors.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/en/files.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/en/messaging.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/en/notifications.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/en/onboarding.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/en/organization.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/en/settings.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/en/workspace.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/es-419/admin.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/es-419/auth.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/es-419/billing.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/es-419/calls.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/es-419/common.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/es-419/errors.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/es-419/files.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/es-419/messaging.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/es-419/notifications.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/es-419/onboarding.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/es-419/organization.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/es-419/settings.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/es-419/workspace.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/es-ES/admin.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/es-ES/auth.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/es-ES/billing.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/es-ES/calls.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/es-ES/common.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/es-ES/errors.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/es-ES/files.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/es-ES/messaging.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/es-ES/notifications.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/es-ES/onboarding.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/es-ES/organization.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/es-ES/settings.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/es-ES/workspace.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/fr/admin.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/fr/auth.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/fr/billing.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/fr/calls.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/fr/common.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/fr/errors.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/fr/files.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/fr/messaging.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/fr/notifications.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/fr/onboarding.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/fr/organization.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/fr/settings.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/fr/workspace.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/hi/admin.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/hi/auth.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/hi/billing.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/hi/calls.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/hi/common.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/hi/errors.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/hi/files.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/hi/messaging.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/hi/notifications.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/hi/onboarding.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/hi/organization.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/hi/settings.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/hi/workspace.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/id/admin.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/id/auth.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/id/billing.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/id/calls.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/id/common.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/id/errors.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/id/files.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/id/messaging.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/id/notifications.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/id/onboarding.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/id/organization.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/id/settings.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/id/workspace.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/invariants.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/it/admin.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/it/auth.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/it/billing.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/it/calls.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/it/common.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/it/errors.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/it/files.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/it/messaging.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/it/notifications.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/it/onboarding.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/it/organization.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/it/settings.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/it/workspace.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/ja/admin.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/ja/auth.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/ja/billing.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/ja/calls.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/ja/common.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/ja/errors.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/ja/files.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/ja/messaging.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/ja/notifications.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/ja/onboarding.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/ja/organization.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/ja/settings.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/ja/workspace.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/ko/admin.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/ko/auth.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/ko/billing.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/ko/calls.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/ko/common.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/ko/errors.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/ko/files.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/ko/messaging.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/ko/notifications.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/ko/onboarding.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/ko/organization.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/ko/settings.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/ko/workspace.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/nl/admin.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/nl/auth.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/nl/billing.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/nl/calls.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/nl/common.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/nl/errors.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/nl/files.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/nl/messaging.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/nl/notifications.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/nl/onboarding.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/nl/organization.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/nl/settings.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/nl/workspace.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/pl/admin.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/pl/auth.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/pl/billing.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/pl/calls.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/pl/common.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/pl/errors.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/pl/files.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/pl/messaging.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/pl/notifications.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/pl/onboarding.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/pl/organization.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/pl/settings.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/pl/workspace.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/pt-BR/admin.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/pt-BR/auth.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/pt-BR/billing.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/pt-BR/calls.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/pt-BR/common.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/pt-BR/errors.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/pt-BR/files.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/pt-BR/messaging.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/pt-BR/notifications.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/pt-BR/onboarding.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/pt-BR/organization.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/pt-BR/settings.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/pt-BR/workspace.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/pt-PT/admin.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/pt-PT/auth.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/pt-PT/billing.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/pt-PT/calls.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/pt-PT/common.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/pt-PT/errors.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/pt-PT/files.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/pt-PT/messaging.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/pt-PT/notifications.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/pt-PT/onboarding.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/pt-PT/organization.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/pt-PT/settings.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/pt-PT/workspace.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/review.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/ro/admin.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/ro/auth.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/ro/billing.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/ro/calls.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/ro/common.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/ro/errors.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/ro/files.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/ro/messaging.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/ro/notifications.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/ro/onboarding.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/ro/organization.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/ro/settings.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/ro/workspace.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/ru/admin.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/ru/auth.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/ru/billing.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/ru/calls.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/ru/common.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/ru/errors.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/ru/files.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/ru/messaging.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/ru/notifications.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/ru/onboarding.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/ru/organization.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/ru/settings.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/ru/workspace.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/sv/admin.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/sv/auth.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/sv/billing.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/sv/calls.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/sv/common.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/sv/errors.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/sv/files.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/sv/messaging.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/sv/notifications.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/sv/onboarding.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/sv/organization.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/sv/settings.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/sv/workspace.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/th/admin.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/th/auth.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/th/billing.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/th/calls.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/th/common.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/th/errors.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/th/files.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/th/messaging.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/th/notifications.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/th/onboarding.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/th/organization.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/th/settings.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/th/workspace.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/tr/admin.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/tr/auth.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/tr/billing.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/tr/calls.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/tr/common.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/tr/errors.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/tr/files.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/tr/messaging.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/tr/notifications.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/tr/onboarding.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/tr/organization.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/tr/settings.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/tr/workspace.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/uk/admin.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/uk/auth.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/uk/billing.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/uk/calls.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/uk/common.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/uk/errors.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/uk/files.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/uk/messaging.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/uk/notifications.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/uk/onboarding.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/uk/organization.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/uk/settings.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/uk/workspace.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/ur/admin.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/ur/auth.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/ur/billing.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/ur/calls.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/ur/common.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/ur/errors.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/ur/files.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/ur/messaging.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/ur/notifications.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/ur/onboarding.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/ur/organization.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/ur/settings.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/ur/workspace.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/vi/admin.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/vi/auth.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/vi/billing.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/vi/calls.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/vi/common.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/vi/errors.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/vi/files.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/vi/messaging.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/vi/notifications.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/vi/onboarding.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/vi/organization.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/vi/settings.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/vi/workspace.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/zh-CN/admin.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/zh-CN/auth.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/zh-CN/billing.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/zh-CN/calls.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/zh-CN/common.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/zh-CN/errors.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/zh-CN/files.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/zh-CN/messaging.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/zh-CN/notifications.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/zh-CN/onboarding.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/zh-CN/organization.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/zh-CN/settings.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/zh-CN/workspace.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/zh-TW/admin.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/zh-TW/auth.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/zh-TW/billing.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/zh-TW/calls.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/zh-TW/common.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/zh-TW/errors.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/zh-TW/files.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/zh-TW/messaging.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/zh-TW/notifications.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/zh-TW/onboarding.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/zh-TW/organization.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/zh-TW/settings.json",
+      "status": "A"
+    },
+    {
+      "file": "locales/zh-TW/workspace.json",
+      "status": "A"
+    },
+    {
+      "file": "package-lock.json",
+      "status": "M"
+    },
+    {
+      "file": "package.json",
+      "status": "M"
+    },
+    {
+      "file": "playwright.localization.config.ts",
+      "status": "A"
+    },
+    {
+      "file": "public/boot.js",
+      "status": "M"
+    },
+    {
+      "file": "public/invite.html",
+      "status": "M"
+    },
+    {
+      "file": "public/invite.js",
+      "status": "M"
+    },
+    {
+      "file": "public/social-auth-callback.html",
+      "status": "M"
+    },
+    {
+      "file": "public/social-auth-callback.js",
+      "status": "M"
+    },
+    {
+      "file": "scripts/finish-export.mjs",
+      "status": "M"
+    },
+    {
+      "file": "scripts/i18n/audit.mjs",
+      "status": "A"
+    },
+    {
+      "file": "scripts/i18n/check.mjs",
+      "status": "A"
+    },
+    {
+      "file": "scripts/i18n/phrases.mjs",
+      "status": "A"
+    },
+    {
+      "file": "scripts/i18n/public-assets.mjs",
+      "status": "A"
+    },
+    {
+      "file": "scripts/i18n/public-audit.mjs",
+      "status": "A"
+    },
+    {
+      "file": "scripts/i18n/public-runtime.mjs",
+      "status": "A"
+    },
+    {
+      "file": "scripts/i18n/scripts.mjs",
+      "status": "A"
+    },
+    {
+      "file": "server-patches/0014-interface-locales.patch",
+      "status": "A"
+    },
+    {
+      "file": "src/api/client.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/api/collectibleSchemas.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/application/accountSwitch.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/application/boot.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/application/prefs.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/application/shortcuts.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/application/tabBadge.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/application/vibes.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/application/voicePlayback.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/application/webPush.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/auth/accountApi.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/auth/deleteAccount.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/auth/deviceSetup.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/auth/passkeys.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/auth/rules.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/auth/savedAccounts.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/auth/socialAuth.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/auth/supabaseClient.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/auth/supabaseMigration.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/call/livekitSession.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/call/manager.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/call/rules.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/call/screenShareSupport.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/call/shareQuality.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/call/support.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/client/Root.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/crypto/cipherClient.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/crypto/keyBackup.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/i18n/api-errors.ts",
+      "status": "A"
+    },
+    {
+      "file": "src/i18n/billing.ts",
+      "status": "A"
+    },
+    {
+      "file": "src/i18n/catalog.ts",
+      "status": "A"
+    },
+    {
+      "file": "src/i18n/counts.ts",
+      "status": "A"
+    },
+    {
+      "file": "src/i18n/english.ts",
+      "status": "A"
+    },
+    {
+      "file": "src/i18n/errors.ts",
+      "status": "A"
+    },
+    {
+      "file": "src/i18n/format.ts",
+      "status": "A"
+    },
+    {
+      "file": "src/i18n/index.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/i18n/languages.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/i18n/legacy-keys.json",
+      "status": "A"
+    },
+    {
+      "file": "src/i18n/Localized.tsx",
+      "status": "A"
+    },
+    {
+      "file": "src/i18n/namespaces.ts",
+      "status": "A"
+    },
+    {
+      "file": "src/i18n/preferences.ts",
+      "status": "A"
+    },
+    {
+      "file": "src/i18n/Provider.tsx",
+      "status": "A"
+    },
+    {
+      "file": "src/i18n/runtime.ts",
+      "status": "A"
+    },
+    {
+      "file": "src/i18n/strings.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/i18n/syntax.ts",
+      "status": "A"
+    },
+    {
+      "file": "src/model/types.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/pages/_app.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/pages/_document.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/styles/base.css",
+      "status": "M"
+    },
+    {
+      "file": "src/styles/billing.css",
+      "status": "M"
+    },
+    {
+      "file": "src/styles/call.css",
+      "status": "M"
+    },
+    {
+      "file": "src/styles/collection.css",
+      "status": "M"
+    },
+    {
+      "file": "src/styles/community-parity-a.css",
+      "status": "M"
+    },
+    {
+      "file": "src/styles/community.css",
+      "status": "M"
+    },
+    {
+      "file": "src/styles/conversation.css",
+      "status": "M"
+    },
+    {
+      "file": "src/styles/decorations.css",
+      "status": "M"
+    },
+    {
+      "file": "src/styles/discovery.css",
+      "status": "M"
+    },
+    {
+      "file": "src/styles/embers.css",
+      "status": "M"
+    },
+    {
+      "file": "src/styles/identity-marks.css",
+      "status": "M"
+    },
+    {
+      "file": "src/styles/landing.css",
+      "status": "M"
+    },
+    {
+      "file": "src/styles/layout.css",
+      "status": "M"
+    },
+    {
+      "file": "src/styles/leaderboards.css",
+      "status": "M"
+    },
+    {
+      "file": "src/styles/lobby-editor.css",
+      "status": "M"
+    },
+    {
+      "file": "src/styles/lobby.css",
+      "status": "M"
+    },
+    {
+      "file": "src/styles/localization.css",
+      "status": "A"
+    },
+    {
+      "file": "src/styles/mobile.css",
+      "status": "M"
+    },
+    {
+      "file": "src/styles/mojo.css",
+      "status": "M"
+    },
+    {
+      "file": "src/styles/official-bots.css",
+      "status": "M"
+    },
+    {
+      "file": "src/styles/posting.css",
+      "status": "M"
+    },
+    {
+      "file": "src/styles/profile.css",
+      "status": "M"
+    },
+    {
+      "file": "src/styles/responsive.css",
+      "status": "M"
+    },
+    {
+      "file": "src/styles/settings-parity-b.css",
+      "status": "M"
+    },
+    {
+      "file": "src/styles/settings-parity.css",
+      "status": "M"
+    },
+    {
+      "file": "src/styles/settings-profile.css",
+      "status": "M"
+    },
+    {
+      "file": "src/styles/settings-redesign.css",
+      "status": "M"
+    },
+    {
+      "file": "src/styles/settings.css",
+      "status": "M"
+    },
+    {
+      "file": "src/styles/views.css",
+      "status": "M"
+    },
+    {
+      "file": "src/sw/internalLocale.ts",
+      "status": "A"
+    },
+    {
+      "file": "src/sw/sw.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/sw/wakeRules.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/sync/account.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/sync/accountSafety.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/sync/attachments.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/sync/bots.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/sync/bulkSaver.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/sync/callHistory.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/sync/channelGates.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/sync/community.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/sync/communityParity.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/sync/communityRules.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/sync/communitySettings.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/sync/compose.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/sync/creators.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/sync/decorations.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/sync/developer.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/sync/discovery/promote.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/sync/discovery/rules.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/sync/engine.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/sync/forward.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/sync/giveaways.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/sync/groupAdd.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/sync/historyUpload.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/sync/inviteCodes.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/sync/largeUpload.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/sync/linkedAccounts.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/sync/linkRules.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/sync/lobby.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/sync/lobbyDraft.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/sync/locals.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/sync/mediaLinks.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/sync/mediaPreview.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/sync/messageCollections.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/sync/mojo.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/sync/navPrefs.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/sync/oauth.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/sync/officialBotRules.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/sync/officialBots.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/sync/ops.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/sync/outbox.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/sync/permissionGroups.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/sync/photoQuality.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/sync/pins.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/sync/posting/draft.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/sync/posting/embeds.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/sync/posting/reactionRoles.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/sync/posting/tickets.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/sync/prepareExpression.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/sync/profile.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/sync/reminders.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/sync/reports.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/sync/rich.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/sync/rules.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/sync/rulesChannel.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/sync/session.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/sync/signals.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/sync/social.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/sync/status.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/sync/threads.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/sync/transfers.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/sync/translate.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/sync/universalSearch.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/sync/usage.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/sync/videoQuality.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/sync/voice.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/sync/workspaceC5.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/sync/workspaceRules.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/sync/workspaces.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/App.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/auth/AccountForms.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/auth/AuthFrame.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/auth/AuthScreen.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/auth/DeviceSetupViews.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/auth/ReauthScreen.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/auth/RecoverForms.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/auth/SocialSignIn.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/auth/useSubmit.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/billing/AddonCheckoutPage.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/billing/BillingPage.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/billing/CardBillingAddress.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/billing/CardSubscriptions.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/billing/checkoutDraft.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/billing/CheckoutPage.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/billing/CheckoutPaymentButton.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/billing/EmbeddedCardFields.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/billing/GiftSignInNotice.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/billing/GiftsPage.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/billing/localizedHostedFields.ts",
+      "status": "A"
+    },
+    {
+      "file": "src/ui/billing/Orders.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/billing/PaymentMethods.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/billing/PayPalButton.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/billing/PayPalCardButton.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/billing/SavedCards.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/call/CallConnection.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/call/CallLayer.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/call/CallStage.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/call/callText.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/call/ConnectedCallPanel.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/call/RoomControls.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/call/ShareViews.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/call/voiceModeration.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/chat/AnimojiView.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/chat/AttachmentDrafts.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/chat/Attachments.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/chat/blobUrl.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/chat/BulkSaveBar.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/chat/ChannelDetails.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/chat/Composer.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/chat/ComposerGates.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/chat/contextTarget.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/chat/ConversationDetails.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/chat/ConversationManage.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/chat/ConversationMenu.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/chat/ConversationSettings.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/chat/ConversationView.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/chat/DetailsTabs.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/chat/EmojiPicker.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/chat/ExpressionLibrary.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/chat/ExpressionPicker.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/chat/ForumView.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/chat/GifView.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/chat/GiveawayStatus.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/chat/inAppLinks.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/chat/MediaGalleryDialog.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/chat/MediaLinkCard.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/chat/MediaViewer.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/chat/memberListRules.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/chat/MessageInfo.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/chat/MessageItem.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/chat/MessageList.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/chat/PanelHead.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/chat/PeoplePanels.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/chat/PinnedPanel.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/chat/PollDialog.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/chat/PollResultsDialog.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/chat/PollView.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/chat/PostedContent.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/chat/ProfileCards.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/chat/Reactions.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/chat/ReportDialog.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/chat/RichDialogs.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/chat/SafeLink.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/chat/SearchPanel.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/chat/SecuritySheet.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/chat/SidePanel.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/chat/SlashCommands.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/chat/StickerView.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/chat/ThreadsPanel.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/chat/TransferList.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/chat/useMessageCollection.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/chat/VoiceBar.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/chat/voiceRoomRules.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/chat/VoiceRoomView.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/chat/WebhookSender.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/chat/WordyGameDialog.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/chat/WordyHeaderAction.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/chat/ZoomableImage.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/community/accent.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/community/CategoryDialogs.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/community/ChannelDialogs.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/community/ChannelOptionsFields.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/community/CommunityHeader.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/community/communityMenu.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/community/CommunityPanel.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/community/CommunityPreviewDialog.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/community/CreateChannelDialog.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/community/CreateCommunityDialog.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/community/CustomEmoji.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/community/DeleteCommunityDialog.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/community/DiscordImport.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/community/GuideOnboarding.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/community/LeaveDialog.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/community/LockedBanner.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/community/lockMenu.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/community/menuLabels.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/community/NicknameDialog.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/community/NotifyDialogs.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/community/OnboardingFinish.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/community/PermissionPreview.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/community/PermissionsDialog.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/community/reactionRoles/ReactionRolesDialog.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/community/reactionRoles/useReactionRolesItem.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/community/RulesViews.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/community/TemplatePreviewDialog.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/community/tickets/OpenTicketsList.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/community/tickets/PanelEditor.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/community/tickets/TicketDialogs.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/community/tickets/TicketHeaderActions.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/community/tickets/TicketsCard.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/community/webhooks/BoxEditor.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/community/webhooks/ButtonsEditor.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/community/webhooks/ChannelDialogTabs.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/community/webhooks/ImportJsonDialog.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/community/webhooks/PostBuilder.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/community/webhooks/PostPreview.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/community/webhooks/WebhookRow.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/community/webhooks/WebhooksTab.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/components/Avatar.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/components/BadgeMark.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/components/BotTag.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/components/CommunityOwnerBadge.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/components/CopyButton.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/components/LanguagePicker.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/components/LiveCallBadge.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/components/Overlay.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/components/ServiceStatusNotice.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/components/SettingsIcon.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/creators/CreatorsPage.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/developer/AppsSection.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/developer/BotListingCard.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/developer/BotsSection.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/developer/DeveloperPage.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/dialogs/ChannelBrowser.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/dialogs/ForwardDialog.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/dialogs/IdentityReview.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/dialogs/NewGroupDialog.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/dialogs/NewMessageDialog.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/dialogs/SearchDialog.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/dialogs/ShortcutsDialog.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/dialogs/StatusDialogs.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/dialogs/WorkspaceDialogs.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/format.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/later/LaterView.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/later/ReminderEditor.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/later/RemindersList.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/later/RemindMeDialog.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/later/SavedList.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/later/when.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/leaderboards/LeaderboardsPage.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/LinkScreen.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/lobby/CardEditor.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/lobby/cardsChannels.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/lobby/cardsInfo.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/lobby/cardsPeople.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/lobby/EditorLook.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/lobby/EditorSections.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/lobby/EditorTemplates.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/lobby/FeedUrl.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/lobby/fieldEditors.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/lobby/lobbyContext.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/lobby/LobbyEditorPanel.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/lobby/LobbyHeader.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/lobby/lobbyInfo.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/lobby/LobbyPage.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/lobby/LobbyRow.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/lobby/LobbySurface.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/lobby/PickRolesCard.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/lobby/useLobbyEditor.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/mojo/CharLimit.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/mojo/MojoBadge.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/mojo/mojoFormat.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/mojo/MojoGifts.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/mojo/MojoPage.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/mojo/MojoPlans.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/mojo/PlusPromotion.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/mojo/PlusRenewalNotice.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/mojo/PlusSupportNotice.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/mojo/SparkDialog.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/mojo/SparkGoal.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/mojo/SparkPage.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/mojo/SparkSection.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/mojo/SparkTrack.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/oauth/ConsentPage.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/operations/AppealAccess.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/operations/PlatformInbox.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/people/ArtistDecorations.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/people/BotProfileDialog.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/people/CollectibleLayers.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/people/ConnectionRequestViews.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/people/ConnectionsDialog.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/people/GroupPhotoCard.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/people/LevelRing.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/people/NameBadge.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/people/NameStyle.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/people/ProfileConnections.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/people/ProfileDialog.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/people/ProfilePins.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/people/ProfileStyle.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/people/profileTheme.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/people/RequestBar.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/points/AchievementGallery.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/points/PointsEarn.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/points/PointsPage.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/points/PointsQuests.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/points/pointsWords.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/selectors.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/settings/AccountExtrasCards.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/settings/AccountOverview.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/settings/AccountPages.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/settings/AccountSafetyCards.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/settings/AccountSettingsPage.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/settings/AdminUsagePage.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/settings/AdvancedPage.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/settings/AppearanceExtras.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/settings/AuthorizedAppsCard.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/settings/BackgroundNotifications.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/settings/CallsPage.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/settings/CollectionStudio.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/settings/CommunityProfileCard.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/settings/ConnectedAccountsCard.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/settings/ConnectionsCard.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/settings/CreatorVerificationCard.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/settings/DecorationPicker.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/settings/DecorationWindow.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/settings/InstallButton.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/settings/KeyBackupCard.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/settings/LeaveManyDialog.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/settings/NameStyleWindow.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/settings/NotificationOverview.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/settings/PasskeysCard.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/settings/PreferencePages.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/settings/PrivacyExtras.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/settings/PrivacyPage.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/settings/ProfilePage.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/settings/ProfilePreviewCard.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/settings/ProfileStyleCard.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/settings/ProfileThemePicker.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/settings/RecoveryCodesCard.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/settings/ServiceHealthPage.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/settings/settingsSearch.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/settings/SettingsView.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/settings/ShortcutsPage.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/settings/ShownBadgePicker.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/settings/StagedSignInCheck.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/settings/StoragePage.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/settings/SubmitDecorationDialog.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/settings/useDecorationFavorites.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/settings/useStyleDraft.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/settings/useStyleSaver.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/settings/YouCard.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/shell/AccountActions.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/shell/ConnectionBanner.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/shell/ConversationRow.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/shell/DmPromos.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/shell/Notices.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/shell/ProfileMenu.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/shell/Rail.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/shell/RailCommunity.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/shell/RailFolder.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/shell/SettingsWindow.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/shell/Shell.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/shell/Sidebar.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/shell/SidebarSections.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/shell/TabBar.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/shell/TabIndicators.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/shell/TopBar.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/shell/UserPanel.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/shell/VoiceRooms.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/StatusScreens.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/views/ActivityView.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/views/DiscoverCard.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/views/DraftsAndSent.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/views/FriendRows.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/views/FriendsView.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/views/HomeView.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/views/StartChecklist.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/views/SuggestedPeople.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/workspace/AddMembersDialog.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/workspace/AppearanceCard.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/workspace/AuditPage.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/workspace/bots/AlertsWatches.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/workspace/bots/BotDiagnostics.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/workspace/bots/BotLook.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/workspace/bots/BotParts.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/workspace/bots/BotWindow.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/workspace/bots/CommunityBotsCard.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/workspace/bots/HelperLevelsForms.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/workspace/bots/LoggerStarboardForms.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/workspace/bots/OfficialBotsSection.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/workspace/bots/PartTwoForms.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/workspace/bots/WelcomerForm.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/workspace/BotsPage.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/workspace/ChannelsPage.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/workspace/communityRail.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/workspace/discovery/DiscoveryCard.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/workspace/discovery/TemplateCard.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/workspace/EveryoneDialog.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/workspace/ExpressionsPage.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/workspace/GuidePages.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/workspace/InvitationsPage.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/workspace/InviteLink.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/workspace/LobbySettingsPage.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/workspace/MeetingsPage.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/workspace/MemberParityActions.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/workspace/ModerationPages.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/workspace/OnboardingGateCard.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/workspace/OverviewPage.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/workspace/PeoplePage.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/workspace/photo.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/workspace/PinsPage.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/workspace/ProfileExtrasCards.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/workspace/ProfileSafety.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/workspace/promote/BoostCards.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/workspace/promote/PromotedRowCard.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/workspace/promote/PromotePage.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/workspace/promote/usePromoteBuy.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/workspace/ReportsPage.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/workspace/RoleDisplayTab.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/workspace/RoleEditor.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/workspace/RoleMembers.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/workspace/RolePermissionsTab.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/workspace/RolesPage.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/workspace/RulesPage.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/workspace/SparksPromotePages.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/workspace/StandardInvite.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/workspace/TagCard.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/workspace/ThemePage.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/workspace/TransferOwnership.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/workspace/UsagePage.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/workspace/useLoad.ts",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/workspace/VoiceBansCard.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/workspace/WorkspaceSetupCards.tsx",
+      "status": "M"
+    },
+    {
+      "file": "src/ui/workspace/WorkspaceView.tsx",
+      "status": "M"
+    },
+    {
+      "file": "test/avatar-presence.test.tsx",
+      "status": "M"
+    },
+    {
+      "file": "test/conversation-locals.test.ts",
+      "status": "M"
+    },
+    {
+      "file": "test/i18n-preferences.test.ts",
+      "status": "A"
+    },
+    {
+      "file": "test/i18n-public.test.ts",
+      "status": "A"
+    },
+    {
+      "file": "test/i18n-quality.test.ts",
+      "status": "A"
+    },
+    {
+      "file": "test/i18n-rich.test.tsx",
+      "status": "A"
+    },
+    {
+      "file": "test/i18n.test.ts",
+      "status": "M"
+    },
+    {
+      "file": "test/lobby.test.ts",
+      "status": "M"
+    },
+    {
+      "file": "test/rules-channel.test.ts",
+      "status": "M"
+    },
+    {
+      "file": "test/snapshot-actions.test.ts",
+      "status": "M"
+    },
+    {
+      "file": "test/wake-rules.test.ts",
+      "status": "M"
+    },
+    {
+      "file": "vite.sw.config.ts",
+      "status": "M"
+    }
+  ],
+  "deletedSourceFiles": []
+}

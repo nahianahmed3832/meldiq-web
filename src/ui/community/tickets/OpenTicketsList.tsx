@@ -1,3 +1,7 @@
+import { useLocaleRender } from "../../../i18n/Localized";
+import { text as uiText } from "../../../i18n";
+import { Localized } from "../../../i18n/Localized";
+import { useT as useLocalization } from "../../../i18n";
 import { useState } from "react";
 import { useEngine } from "../../../application/orbit";
 import { navigate } from "../../../application/router";
@@ -7,9 +11,10 @@ import { relative } from "../../format";
 import { useLoad } from "../../workspace/useLoad";
 import { Card, ErrorLine } from "../../workspace/WorkspaceView";
 import { CloseTicketDialog } from "./TicketDialogs";
-
 /** Moderators' list of open tickets: who opened each, what about, and Open, Join or Close. */
 export function OpenTicketsList({ orgId }: { orgId: string }) {
+  useLocaleRender();
+  const l10n = useLocalization();
   const engine = useEngine();
   const [tick, setTick] = useState(0);
   const list = useLoad(() => openTickets(engine, orgId), [engine, orgId, tick]);
@@ -30,33 +35,40 @@ export function OpenTicketsList({ orgId }: { orgId: string }) {
   };
   const tickets = list.data ?? [];
   return (
-    <Card title="Open tickets" sub="Every open ticket in this community. Moderators who weren't one yet when a ticket opened can join it.">
+    <Card title={uiText("organization.interface.open_tickets_f8f5bc2")} sub={uiText("organization.interface.every_open_ticket_in_this_community_moderators_who_weren_t_one_ye_25ae886")}>
       <ErrorLine text={error ?? list.error} />
-      {list.data && tickets.length === 0 && <small className="faint">No open tickets.</small>}
+      {list.data && tickets.length === 0 && (
+        <small className="faint">
+          <Localized k="organization.interface.no_open_tickets_4df2aa3" />
+        </small>
+      )}
       {tickets.length > 0 && (
-        <ul className="ws-list" aria-label="Open tickets">
+        <ul className="ws-list" aria-label={uiText("organization.interface.open_tickets_f8f5bc2")}>
           {tickets.map((t) => (
             <li key={t.channelId} className="ws-row">
               <span className="lines grow">
                 <span className="ellipsis">
                   #{t.name}
-                  {t.panelName ? ` · ${t.panelName}` : ""}
+                  {t.panelName ? uiText("calls.interface.value0_9402340", { value0: t.panelName }) : ""}
                 </span>
                 <small className="ellipsis">
-                  {t.opener ? `${t.opener.displayName} (@${t.opener.username})` : "Someone who left"} · {relative(t.openedAt)} · {t.about}
+                  {t.opener
+                    ? uiText("organization.interface.value0_value1_fa6dfa2", { value0: t.opener.displayName, value1: t.opener.username })
+                    : uiText("organization.interface.someone_who_left_9d5f4f0")}{" "}
+                  · {relative(t.openedAt)} · {t.about}
                 </small>
               </span>
               {t.joined ? (
                 <button className="btn btn-secondary btn-sm" onClick={() => navigate({ section: "home", conversationId: t.channelId })}>
-                  Open
+                  {l10n("workspace.discover_open_btn")}
                 </button>
               ) : (
                 <button className="btn btn-secondary btn-sm" disabled={busy} onClick={() => void join(t.channelId)}>
-                  Join
+                  {l10n("workspace.discover_join")}
                 </button>
               )}
               <button className="btn btn-ghost btn-sm" onClick={() => setClosing(t.channelId)}>
-                Close
+                {l10n("common.actions.close")}
               </button>
             </li>
           ))}

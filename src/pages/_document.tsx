@@ -1,3 +1,4 @@
+import errors from "../../locales/en/errors.json";
 import { Head, Html, Main, NextScript } from "next/document";
 
 /**
@@ -33,6 +34,7 @@ export default function Document() {
         <meta name="color-scheme" content="light dark" />
         <meta name="theme-color" content="#1e1f22" />
         <meta name="referrer" content="no-referrer" />
+        <meta name="robots" content="noindex, nofollow" />
         <meta name="application-name" content="Meldiq" />
         <meta name="apple-mobile-web-app-title" content="Meldiq" />
         {/* Added to the Home Screen (Safari › Share), Meldiq opens as an app: no Safari toolbar, and the page runs under
@@ -66,7 +68,7 @@ export default function Document() {
         <script src="/boot.js" />
       </Head>
       <body>
-        <noscript>Meldiq needs JavaScript to run in this browser.</noscript>
+        <noscript lang="en">{errors.javascriptRequired}</noscript>
         <div id="splash" aria-hidden="true" dangerouslySetInnerHTML={{ __html: SPLASH }} />
         <Main />
         <NextScript />

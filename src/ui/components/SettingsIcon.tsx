@@ -1,5 +1,7 @@
+import { formatUiNumber } from "../../i18n/format";
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
 import { EmberIcon } from "./EmberIcon";
-
 /** Meldiq's rounded, two-tone settings symbols. Each mark shares a 24px drawing grid. */
 const paths = {
   account: "M8 20v-2a4 4 0 0 1 8 0v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8M4 20h16",
@@ -23,6 +25,7 @@ const paths = {
 } as const;
 export type SettingsSymbol = keyof typeof paths | "embers";
 export function SettingsIcon({ name, size = 22 }: { name: SettingsSymbol; size?: number }) {
+  useLocaleRender();
   if (name === "embers") return <EmberIcon size={size} />;
   return (
     <svg
@@ -42,17 +45,17 @@ export function SettingsIcon({ name, size = 22 }: { name: SettingsSymbol; size?:
     </svg>
   );
 }
-
 /** A faceted Meldiq medal, with a rank that also makes tied podium places explicit. */
 export function RankMedal({ rank }: { rank: number }) {
+  useLocaleRender();
   return (
-    <span className={`rank-medal medal-${Math.min(rank, 3)}`} aria-label={`Rank ${rank}`}>
+    <span className={`rank-medal medal-${Math.min(rank, 3)}`} aria-label={uiText("workspace.interface.rank_value0_f67e8ab", { value0: rank })}>
       <svg width="36" height="42" viewBox="0 0 36 42" aria-hidden="true">
         <path d="m8 1 6 1 4 13-7 3L8 1Zm20 0-6 1-4 13 7 3 3-17Z" fill="currentColor" opacity=".55" />
         <path d="m18 10 13 7v15l-13 8-13-8V17l13-7Z" fill="currentColor" />
         <path d="m18 14 9 5v11l-9 6-9-6V19l9-5Z" fill="none" stroke="currentColor" className="medal-inset" />
       </svg>
-      <b aria-hidden="true">{rank}</b>
+      <b aria-hidden="true">{formatUiNumber(rank)}</b>
     </span>
   );
 }

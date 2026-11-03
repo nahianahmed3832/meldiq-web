@@ -1,3 +1,5 @@
+import { useLocaleRender } from "../i18n/Localized";
+import { text as uiText } from "../i18n";
 import "../application/validationPolicy";
 import { captureDiscordReturn } from "../application/discordReturn";
 import { useRouter } from "next/router";
@@ -13,9 +15,19 @@ import { installLegacyCurves } from "../crypto/legacyCurves";
 import { App } from "../ui/App";
 import { ServiceStatusNotice } from "../ui/components/ServiceStatusNotice";
 import { ConfigError } from "../ui/StatusScreens";
-
-type Start = { s: "starting" } | { s: "ready" } | { s: "failed"; message: string };
-
+import { LocalizationProvider } from "../i18n/Provider";
+import { prepareLocale, resolveLanguage } from "../i18n";
+type Start =
+  | {
+      s: "starting";
+    }
+  | {
+      s: "ready";
+    }
+  | {
+      s: "failed";
+      message: string;
+    };
 /**
  * The app's start in the browser (formerly src/main.tsx): theme, viewport, launch screen and routing (old hash links
  * become paths; links within the app don't reload the page) at once; then, before anything
@@ -24,9 +36,9 @@ type Start = { s: "starting" } | { s: "ready" } | { s: "failed"; message: string
  * does the app itself render.
  */
 export default function Root() {
+  useLocaleRender();
   const router = useRouter();
   const [start, setStart] = useState<Start>({ s: "starting" });
-
   useEffect(() => {
     // Next may normalize its initial rewrite once. Start our path/hash router after that address is stable.
     if (!router.isReady) return;
@@ -43,13 +55,13 @@ export default function Root() {
     const stopRouting = startRouting();
     let alive = true;
     void (async () => {
-      await Promise.all([installLegacyCurves().catch(() => []), startConfig()]);
+      await Promise.all([installLegacyCurves().catch(() => []), startConfig(), prepareLocale(resolveLanguage(getPrefs().language)).catch(() => undefined)]);
     })().then(
       () => alive && setStart({ s: "ready" }),
       (e: unknown) => {
         // A deployment mistake (an unreadable config.json): say so rather than talking to the wrong server.
         if (!alive) return;
-        setStart({ s: "failed", message: e instanceof Error ? e.message : "Meldiq Web isn't configured correctly." });
+        setStart({ s: "failed", message: e instanceof Error ? e.message : uiText("workspace.interface.meldiq_web_isn_t_configured_correctly_af4e034") });
         hideSplash();
       },
     );
@@ -59,15 +71,16 @@ export default function Root() {
       stopViewport();
     };
   }, [router.isReady]);
-
   if (start.s === "starting") return null;
   if (start.s === "failed") return <ConfigError message={start.message} />;
   return (
     <StrictMode>
-      <div id="root">
-        <ServiceStatusNotice />
-        <App />
-      </div>
+      <LocalizationProvider>
+        <div id="root">
+          <ServiceStatusNotice />
+          <App />
+        </div>
+      </LocalizationProvider>
     </StrictMode>
   );
 }

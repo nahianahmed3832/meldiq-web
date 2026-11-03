@@ -1,3 +1,4 @@
+import { text as uiText } from "../../i18n";
 import { navigate } from "../../application/router";
 import type { Engine } from "../../sync/engine";
 import { TEMPLATE_PATH } from "../../sync/discovery/rules";
@@ -5,13 +6,10 @@ import { inviteFromScan } from "../../sync/inviteCodes";
 import { parseMessageLink } from "../../sync/messageLinks";
 import { meldiqPath } from "../../sync/webOrigin";
 import { jumpTo } from "./jump";
-
 /** Asks the shell to open a template link's preview (community parity E). */
 export const OPEN_TEMPLATE_EVENT = "meldiq:open-template";
-
 /** Asks the shell to open Join with this invitation code (an invite link clicked inside a chat, batch B4b). */
 export const JOIN_INVITE_EVENT = "meldiq:join-invite";
-
 /**
  * Meldiq's own links clicked in a message open here instead of a new tab (android MessageLinkOpener, InviteScan):
  * a message link opens the conversation at that message, an invite link opens Join. True when the link was handled.
@@ -21,14 +19,14 @@ export function openInApp(engine: Engine, href: string): boolean {
   if (target) {
     const c = engine.state.get().conversations[target.conversationId];
     if (!c) {
-      engine.notice("info", "You can't open this message: you're not in that conversation.");
+      engine.notice("info", uiText("messaging.interface.you_can_t_open_this_message_you_re_not_in_that_conversation_f918804"));
       return true;
     }
     navigate({ section: c.type === "CHANNEL" ? "home" : "dms", conversationId: c.id });
     // The list mounts after navigation; then the message is found (older pages load if needed) and highlighted.
     setTimeout(() => {
       void jumpTo(engine, c.id, target.messageId).then((found) => {
-        if (!found) engine.notice("info", "That message is gone, so the conversation opened without it.");
+        if (!found) engine.notice("info", uiText("messaging.interface.that_message_is_gone_so_the_conversation_opened_without_it_ab6d27f"));
       });
     }, 150);
     return true;

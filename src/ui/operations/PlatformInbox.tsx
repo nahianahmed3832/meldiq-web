@@ -1,3 +1,8 @@
+import { operationState } from "../../i18n/billing";
+import { formatCurrency, formatNumber, interfaceLocale } from "../../i18n/format";
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
+import { Localized } from "../../i18n/Localized";
 import { useEffect, useState } from "react";
 import { z } from "zod";
 import { useEngine, useOrbit } from "../../application/orbit";
@@ -14,6 +19,7 @@ const lists = {
   purchases: z.object({ items: z.array(Purchase) }),
 };
 export function PlatformInbox() {
+  useLocaleRender();
   const engine = useEngine(),
     enabled = useOrbit((s) => s.server?.features.includes("platform-operations") ?? false),
     [open, setOpen] = useState(false),
@@ -40,7 +46,7 @@ export function PlatformInbox() {
     <>
       <div className="standing-inbox">
         <button className="btn btn-secondary btn-sm" onClick={() => setOpen(true)}>
-          Service inbox{count ? ` (${count})` : ""}
+          <Localized k="workspace.interface.service_inbox_5ba678b" slots={[count ? uiText("workspace.interface.value0_c9bd7bc", { value0: count }) : ""]} />
         </button>
       </div>
       {open && <Inbox onClose={() => setOpen(false)} onRead={() => setCount((n) => Math.max(0, n - 1))} />}
@@ -48,12 +54,18 @@ export function PlatformInbox() {
   );
 }
 function Inbox({ onClose, onRead }: { onClose: () => void; onRead: () => void }) {
+  useLocaleRender();
   const engine = useEngine(),
     [notices, setNotices] = useState<z.infer<typeof Notice>[]>([]),
     [appeals, setAppeals] = useState<z.infer<typeof Appeal>[]>([]),
     [ownership, setOwnership] = useState<z.infer<typeof Ownership>[]>([]),
     [purchases, setPurchases] = useState<z.infer<typeof Purchase>[]>([]),
-    [warnings, setWarnings] = useState<{ id: string; reason: string }[]>([]),
+    [warnings, setWarnings] = useState<
+      {
+        id: string;
+        reason: string;
+      }[]
+    >([]),
     [error, setError] = useState<string | null>(null),
     [busy, setBusy] = useState(false),
     [version, setVersion] = useState(0),
@@ -91,13 +103,13 @@ function Inbox({ onClose, onRead }: { onClose: () => void; onRead: () => void })
       await fn();
       setVersion((v) => v + 1);
     } catch (e) {
-      setError(e instanceof Error ? e.message : "This request failed");
+      setError(e instanceof Error ? e.message : uiText("workspace.interface.this_request_failed_1e9a931"));
     } finally {
       setBusy(false);
     }
   };
   return (
-    <Dialog title="Service inbox" onClose={onClose} wide>
+    <Dialog title={uiText("workspace.interface.service_inbox_08b3625")} onClose={onClose} wide>
       <div className="dialog-body" style={{ display: "grid", gap: 20 }}>
         {error && (
           <p role="alert" className="error">
@@ -105,8 +117,14 @@ function Inbox({ onClose, onRead }: { onClose: () => void; onRead: () => void })
           </p>
         )}
         <section>
-          <h3>Announcements</h3>
-          {!notices.length && <p className="faint">No active announcements.</p>}
+          <h3>
+            <Localized k="workspace.interface.announcements_fe02680" />
+          </h3>
+          {!notices.length && (
+            <p className="faint">
+              <Localized k="workspace.interface.no_active_announcements_0f483ba" />
+            </p>
+          )}
           {notices.map((n) => (
             <article key={n.id}>
               <h4>{n.title}</h4>
@@ -122,19 +140,21 @@ function Inbox({ onClose, onRead }: { onClose: () => void; onRead: () => void })
                     })
                   }
                 >
-                  Mark read
+                  <Localized k="workspace.interface.mark_read_b49c9b6" />
                 </button>
               )}
             </article>
           ))}
         </section>
         <section>
-          <h3>Warnings & appeals</h3>
+          <h3>
+            <Localized k="workspace.interface.warnings_appeals_38b4e6b" />
+          </h3>
           {warnings.map((w) => (
             <p key={w.id}>
               {w.reason}{" "}
               <button className="btn btn-ghost btn-sm" onClick={() => setForm({ ...form, noticeId: w.id, subject: "Appeal account warning" })}>
-                Appeal warning
+                <Localized k="workspace.interface.appeal_warning_81676a8" />
               </button>
             </p>
           ))}
@@ -144,56 +164,64 @@ function Inbox({ onClose, onRead }: { onClose: () => void; onRead: () => void })
               e.preventDefault();
               void run(async () => {
                 await engine.api.json("POST", "/v2/platform/appeals", z.unknown(), { body: { ...form, noticeId: form.noticeId || null } });
-                setMessage("Your appeal was submitted. Its decision will appear here.");
+                setMessage(uiText("workspace.interface.your_appeal_was_submitted_its_decision_will_appear_here_7e0ca63"));
                 setForm({ subject: "", body: "", noticeId: "" });
               });
             }}
           >
             <label>
-              Appeal subject
+              <Localized k="workspace.interface.appeal_subject_d44c7b4" />
               <input className="input" required minLength={3} maxLength={120} value={form.subject} onChange={(e) => setForm({ ...form, subject: e.target.value })} />
             </label>
             <label>
-              Context for your appeal
+              <Localized k="workspace.interface.context_for_your_appeal_36f4af2" />
               <textarea className="textarea" required minLength={10} maxLength={4000} value={form.body} onChange={(e) => setForm({ ...form, body: e.target.value })} />
             </label>
             <button className="btn btn-secondary" disabled={busy} type="submit">
-              Submit appeal
+              <Localized k="workspace.interface.submit_appeal_86efa24" />
             </button>
           </form>
           {appeals.map((a) => (
             <article key={a.id}>
               <h4>
-                {a.subject} · {a.status}
+                {a.subject} · {operationState(a.status)}
               </h4>
-              <p>{a.decision ?? "Waiting for review"}</p>
+              <p>{a.decision ?? uiText("settings.interface.waiting_for_review_a61935d")}</p>
             </article>
           ))}
         </section>
         <section>
-          <h3>Redeem Plus promotion</h3>
+          <h3>
+            <Localized k="workspace.interface.redeem_plus_promotion_542bdb6" />
+          </h3>
           <form
             style={{ display: "flex", gap: 10, flexWrap: "wrap" }}
             onSubmit={(e) => {
               e.preventDefault();
               void run(async () => {
                 await engine.api.json("POST", "/v2/platform/promotions/redeem", z.unknown(), { body: { code } });
-                setMessage("Plus promotion redeemed. Your account entitlements have been updated.");
+                setMessage(uiText("workspace.interface.plus_promotion_redeemed_your_account_entitlements_have_been_updated_6f0caf9"));
               });
             }}
           >
             <label>
-              Promotion code
+              <Localized k="workspace.interface.promotion_code_a697d39" />
               <input className="input" required minLength={4} maxLength={32} value={code} onChange={(e) => setCode(e.target.value)} />
             </label>
             <button className="btn btn-secondary" type="submit" disabled={busy}>
-              Redeem code
+              <Localized k="workspace.interface.redeem_code_9dc3882" />
             </button>
           </form>
         </section>
         <section>
-          <h3>Ownership approvals</h3>
-          {!ownership.length && <p className="faint">No pending ownership requests.</p>}
+          <h3>
+            <Localized k="workspace.interface.ownership_approvals_ba271b1" />
+          </h3>
+          {!ownership.length && (
+            <p className="faint">
+              <Localized k="workspace.interface.no_pending_ownership_requests_ef1f439" />
+            </p>
+          )}
           {ownership.map((o) => (
             <OwnerApproval
               key={o.id}
@@ -201,7 +229,7 @@ function Inbox({ onClose, onRead }: { onClose: () => void; onRead: () => void })
               approve={(name) =>
                 run(async () => {
                   await engine.api.json("POST", `/v2/platform/ownership/${o.id}/approve`, z.unknown(), { body: { confirmName: name } });
-                  setMessage("Ownership transferred to the approved member.");
+                  setMessage(uiText("workspace.interface.ownership_transferred_to_the_approved_member_df1781f"));
                 })
               }
               busy={busy}
@@ -209,12 +237,18 @@ function Inbox({ onClose, onRead }: { onClose: () => void; onRead: () => void })
           ))}
         </section>
         <section>
-          <h3>Collectible purchases</h3>
-          {!purchases.length && <p className="faint">No collectible purchases.</p>}
+          <h3>
+            <Localized k="workspace.interface.collectible_purchases_a0a4e15" />
+          </h3>
+          {!purchases.length && (
+            <p className="faint">
+              <Localized k="workspace.interface.no_collectible_purchases_7fb610e" />
+            </p>
+          )}
           {purchases.map((p) => (
             <article key={p.id}>
               <p>
-                {p.itemId} · {(p.amountMinor / 100).toFixed(2)} {p.currency} · {p.status} · {p.fulfillment}
+                {p.itemId} · {formatCurrency(p.amountMinor / 100, p.currency)} · {operationState(p.status)} · {operationState(p.fulfillment)}
               </p>
               {p.status === "pending" && (
                 <>
@@ -228,7 +262,7 @@ function Inbox({ onClose, onRead }: { onClose: () => void; onRead: () => void })
                       })
                     }
                   >
-                    Check payment
+                    <Localized k="workspace.interface.check_payment_1b4c88a" />
                   </button>
                 </>
               )}
@@ -241,6 +275,7 @@ function Inbox({ onClose, onRead }: { onClose: () => void; onRead: () => void })
   );
 }
 function OwnerApproval({ request, approve, busy }: { request: z.infer<typeof Ownership>; approve: (name: string) => Promise<void>; busy: boolean }) {
+  useLocaleRender();
   const [name, setName] = useState("");
   return (
     <form
@@ -251,19 +286,23 @@ function OwnerApproval({ request, approve, busy }: { request: z.infer<typeof Own
       }}
     >
       <p>
-        Transfer {request.org_id} to {request.target_user_id}. Your owner role will become administrator. This request expires {new Date(request.expires_at).toLocaleString()}.
+        <Localized
+          k="workspace.interface.transfer_to_your_owner_role_will_become_administrator_this_reques_afb89e6"
+          slots={[request.org_id, request.target_user_id, new Date(request.expires_at).toLocaleString(interfaceLocale())]}
+        />
       </p>
       <label>
-        Exact community name
+        <Localized k="workspace.interface.exact_community_name_9ea414b" />
         <input className="input" required value={name} onChange={(e) => setName(e.target.value)} />
       </label>
       <button className="btn btn-danger" disabled={busy} type="submit">
-        Approve ownership transfer
+        <Localized k="workspace.interface.approve_ownership_transfer_3534d7f" />
       </button>
     </form>
   );
 }
 export function CheckoutLink({ url }: { url: string | null }) {
+  useLocaleRender();
   if (!url) return null;
   let safe = false;
   try {
@@ -274,11 +313,12 @@ export function CheckoutLink({ url }: { url: string | null }) {
   }
   return safe ? (
     <a className="btn btn-primary" href={url} target="_blank" rel="noopener noreferrer">
-      Continue hosted payment
+      <Localized k="workspace.interface.continue_hosted_payment_1ff4ed5" />
     </a>
   ) : null;
 }
 export function PurchaseCollectible({ itemId, price, onOwned }: { itemId: string; price: number; onOwned: () => void }) {
+  useLocaleRender();
   const engine = useEngine(),
     [purchase, setPurchase] = useState<z.infer<typeof Purchase> | null>(null),
     [error, setError] = useState<string | null>(null),
@@ -312,7 +352,7 @@ export function PurchaseCollectible({ itemId, price, onOwned }: { itemId: string
       setPurchase(r);
       if (r.status === "paid" && r.fulfillment === "complete") onOwned();
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Checkout failed");
+      setError(e instanceof Error ? e.message : uiText("workspace.interface.checkout_failed_40fd8ea"));
     } finally {
       setBusy(false);
     }
@@ -323,25 +363,29 @@ export function PurchaseCollectible({ itemId, price, onOwned }: { itemId: string
       {!purchase ? (
         <>
           <label>
-            Optional collectible discount code
+            <Localized k="workspace.interface.optional_collectible_discount_code_72d522b" />
             <input className="input" maxLength={32} value={discountCode} onChange={(e) => setDiscountCode(e.target.value)} />
           </label>
           <button className="btn btn-primary" disabled={busy || !capable} onClick={() => void run()}>
-            Checkout · list price ${(price / 100).toFixed(2)} USD
+            <Localized k="workspace.interface.checkout_list_price_usd_ca28d3b" slots={[formatNumber(price / 100, { minimumFractionDigits: 2, maximumFractionDigits: 2 })]} />
           </button>
         </>
       ) : (
         <>
           <CheckoutLink url={purchase.url} />
           <button className="btn btn-secondary" disabled={busy} onClick={() => void run(true)}>
-            Check payment
+            <Localized k="workspace.interface.check_payment_1b4c88a" />
           </button>
           <small>
-            {purchase.status} · {purchase.fulfillment}
+            {operationState(purchase.status)} · {operationState(purchase.fulfillment)}
           </small>
         </>
       )}
-      {!capable && <small>Hosted checkout is unavailable with the current payment provider.</small>}
+      {!capable && (
+        <small>
+          <Localized k="workspace.interface.hosted_checkout_is_unavailable_with_the_current_payment_provider_77cd08c" />
+        </small>
+      )}
     </div>
   );
 }

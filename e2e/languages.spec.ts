@@ -5,9 +5,15 @@ import { newPhone, testAddress } from "./phone";
 
 /**
  * The interface language (2026-10-23): picked on the sign-in screens before signing in or up, kept in this browser, and
- * changed again in Settings › Appearance. English, 简体中文 and বাংলা, as on Meldiq Android.
+ * changed again in Settings › Appearance. The 28 web interface locales include English, 简体中文 and বাংলা.
  */
 test.skip(({ browserName }) => browserName !== "chromium", "one engine is enough for the interface language");
+async function pick(page: Page, name: string) {
+  await page.locator("button.lang-picker").first().click();
+  await page.getByRole("option", { name, exact: true }).click();
+  await expect(page.locator(".language-dialog")).toHaveCount(0);
+}
+
 const SHOTS = process.env.ORBIT_E2E_SHOTS;
 const shot = async (page: Page, name: string) => {
   if (SHOTS) await page.screenshot({ path: path.join(SHOTS, `${name}.png`) });
@@ -21,9 +27,9 @@ test("the language is chosen before signing in, kept after a reload, and changed
   await page.goto("/");
   await expect(page.getByRole("heading", { name: "Sign in to Meldiq" })).toBeVisible({ timeout: 25_000 });
 
-  await page.getByLabel("Language").selectOption("zh-CN");
+  await pick(page, "简体中文");
   await expect(page.getByRole("heading", { name: "登录 Meldiq" })).toBeVisible();
-  await expect(page.getByRole("button", { name: "登录", exact: true })).toBeVisible();
+  await expect(page.getByRole("button", { name: "使用邮箱继续", exact: true })).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.lang)).toBe("zh-CN");
   await shot(page, `sign-in-zh${isMobile ? "-phone" : ""}`);
 
@@ -33,20 +39,21 @@ test("the language is chosen before signing in, kept after a reload, and changed
   await page.reload();
   await expect(page.getByRole("heading", { name: "登录 Meldiq" })).toBeVisible({ timeout: 25_000 });
 
-  await page.getByLabel("语言").selectOption("bn");
+  await pick(page, "বাংলা");
   await expect(page.getByRole("heading", { name: "Meldiq-এ সাইন ইন করুন" })).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.lang)).toBe("bn");
   await shot(page, `sign-in-bn${isMobile ? "-phone" : ""}`);
 
   // Inside Meldiq: the navigation follows, and Settings › Appearance changes it back.
   const alice = await newPhone("alice", "Alice Rahman");
-  await page.getByLabel("ভাষা").selectOption("en");
+  await pick(page, "English");
   await link(page, alice);
   await page.goto("/settings/appearance");
-  await page.getByLabel("Language").selectOption("bn");
+  await pick(page, "বাংলা");
   await expect(page.getByRole("heading", { name: "চেহারা" })).toBeVisible();
-  if (!isMobile) await expect(page.getByRole("navigation", { name: "Settings pages" })).toContainText("নোটিফিকেশন");
-  await page.getByLabel("ভাষা").selectOption("system");
+  if (!isMobile) await expect(page.locator(".settings-nav")).toContainText("বিজ্ঞপ্তি");
+  await page.locator("button.lang-picker").first().click();
+  await page.locator(".language-list").getByRole("option").first().click();
   await expect(page.getByRole("heading", { name: "Appearance" })).toBeVisible();
 
   // A conversation in Chinese (round 2): the day, the message box and the message menu.
@@ -54,7 +61,7 @@ test("the language is chosen before signing in, kept after a reload, and changed
   const dm = (await alice.req("POST", "/v1/conversations/dm", { userId: bob.userId })).conversation.id as string;
   await bob.connect();
   await bob.send(dm, { type: "text", text: "你好" });
-  await page.getByLabel("Language").selectOption("zh-CN");
+  await pick(page, "简体中文");
   await page.goto(`/dms/c/${dm}`);
   await expect(page.getByPlaceholder("发消息给 Bob Chen")).toBeVisible();
   await expect(page.locator(".day").filter({ hasText: "今天" }).first()).toBeVisible();

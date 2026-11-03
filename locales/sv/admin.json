@@ -1,0 +1,10 @@
+{
+  "title": "Administration",
+  "health": "Tjänststatus",
+  "usage": "Communityanvändning",
+  "states": {
+    "rejected": "Avvisad",
+    "escalated": "Vidarebefordrad till högre nivå",
+    "disputed": "Bestridd"
+  }
+}

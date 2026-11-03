@@ -1,3 +1,5 @@
+import { formatUiNumber } from "../../i18n/format";
+import { formatDuration } from "../../i18n/format";
 import { MonitorUp, Video, Volume2 } from "lucide-react";
 import { shallowEqual, useOrbit } from "../../application/orbit";
 import { useT } from "../../i18n";
@@ -22,12 +24,7 @@ export function LiveCallBadge({ conversationId }: { conversationId: string }) {
   const kind = live.video ? t("live_video") : t("live_voice");
   const label = [n > 0 ? t("live_people", { kind, n }) : kind, names.length ? t("live_sharing", { names: names.join(", ") }) : ""].filter(Boolean).join(" · ");
   const secs = live.since ? Math.max(0, Math.floor((now - live.since) / 1000)) : null;
-  const time =
-    secs === null
-      ? null
-      : secs >= 3600
-        ? `${Math.floor(secs / 3600)}:${String(Math.floor((secs % 3600) / 60)).padStart(2, "0")}:${String(secs % 60).padStart(2, "0")}`
-        : `${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, "0")}`;
+  const time = secs === null ? null : formatDuration(secs * 1000);
   return (
     <>
       {time && (
@@ -37,7 +34,7 @@ export function LiveCallBadge({ conversationId }: { conversationId: string }) {
       )}
       <span className={`live-call${names.length ? " sharing" : ""}`} role="img" aria-label={label} title={label}>
         {names.length ? <MonitorUp size={13} aria-hidden="true" /> : live.video ? <Video size={13} aria-hidden="true" /> : <Volume2 size={13} aria-hidden="true" />}
-        {n > 0 && <span aria-hidden="true">{n}</span>}
+        {n > 0 && <span aria-hidden="true">{formatUiNumber(n)}</span>}
       </span>
     </>
   );

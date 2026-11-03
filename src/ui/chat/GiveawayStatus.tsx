@@ -1,9 +1,12 @@
+import { countLabel } from "../../i18n/counts";
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
+import { Localized } from "../../i18n/Localized";
 import { Gift, Trophy } from "lucide-react";
 import { useEffect, useState } from "react";
 import { shallowEqual, useEngine, useOrbit } from "../../application/orbit";
 import type { GiveawayState } from "../../model/types";
 import { countdown, countdownStep } from "../../sync/giveaways";
-
 /** Now, redrawn as often as the countdown needs while the giveaway runs. */
 function useNow(endsAt: number, running: boolean): number {
   const [now, setNow] = useState(() => Date.now());
@@ -14,12 +17,12 @@ function useNow(endsAt: number, running: boolean): number {
   }, [endsAt, running, now]);
   return now;
 }
-
 /**
  * Under a Giveaways bot card (community parity D): a live countdown while it runs, then "Ended" with the winners. The
  * card's text and boxes come from the bot; this only keeps the time and the outcome current.
  */
 export function GiveawayStatus({ giveaway: g }: { giveaway: GiveawayState }) {
+  useLocaleRender();
   const engine = useEngine();
   const now = useNow(g.endsAt, !g.ended);
   const names = useOrbit((s) => g.winnerIds.map((id) => s.users[id]?.displayName ?? "someone"), shallowEqual);
@@ -34,7 +37,7 @@ export function GiveawayStatus({ giveaway: g }: { giveaway: GiveawayState }) {
       <div className="giveaway-status" role="status" aria-live="off">
         <Gift size={15} aria-hidden="true" />
         <span>
-          Ends in <strong>{countdown(g.endsAt, now)}</strong> · {g.winners} {g.winners === 1 ? "winner" : "winners"} · react 🎉 to enter
+          <Localized k="messaging.interface.native_count_c7f1ac590" slots={[<strong>{countdown(g.endsAt, now)}</strong>, countLabel(g.winners, "winners"), ""]} />
         </span>
         <small className="faint">{when}</small>
       </div>
@@ -46,10 +49,13 @@ export function GiveawayStatus({ giveaway: g }: { giveaway: GiveawayState }) {
       <span>
         {names.length ? (
           <>
-            Ended · {names.length === 1 ? "Winner" : "Winners"}: <strong>{names.join(", ")}</strong>
+            <Localized
+              k="messaging.interface.ended_209e902"
+              slots={[names.length === 1 ? uiText("messaging.interface.winner_105dc74") : uiText("messaging.interface.winners_5904798"), <strong>{names.join(", ")}</strong>]}
+            />
           </>
         ) : (
-          "Ended · nobody entered"
+          uiText("messaging.interface.ended_nobody_entered_fa77e3e")
         )}
       </span>
       <small className="faint">{when}</small>

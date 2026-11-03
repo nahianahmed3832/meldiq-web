@@ -1,0 +1,10 @@
+{
+  "title": "관리",
+  "health": "서비스 상태",
+  "usage": "커뮤니티 사용량",
+  "states": {
+    "rejected": "거부됨",
+    "escalated": "상위 담당자에게 이관됨",
+    "disputed": "이의 제기됨"
+  }
+}

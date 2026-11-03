@@ -1,12 +1,13 @@
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
+import { Localized } from "../../i18n/Localized";
 import { Bot, X } from "lucide-react";
 import { type KeyboardEvent, useEffect, useState } from "react";
 import type { Conversation, Member } from "../../api/schemas";
 import { useEngine, useOrbit } from "../../application/orbit";
 import { channelCommands, commandTemplate, matchingCommands, type OrgCommand, parseCommand, runCommand } from "../../sync/bots";
 import { BotTag } from "../people/NameStyle";
-
 const NO_REPLIES: never[] = [];
-
 export interface SlashCommands {
   /** The commands matching what's typed, while a "/name" is being typed. */
   items: OrgCommand[];
@@ -20,7 +21,6 @@ export interface SlashCommands {
    */
   run: (body: string) => Promise<"sent" | "kept" | "message">;
 }
-
 /**
  * The composer's slash commands (API 0.65.0 batch B): typing "/" in a community channel lists the commands of the bots
  * that can post there (loaded each time a "/" starts the box), picking one fills in its required options, and sending
@@ -35,7 +35,6 @@ export function useSlashCommands(c: Conversation, text: string, setText: (t: str
   const [closedAt, setClosedAt] = useState<string | null>(null);
   const [prefer, setPrefer] = useState<string | null>(null);
   const started = !!orgId && text.startsWith("/");
-
   useEffect(() => {
     if (!started || !orgId) return;
     let live = true;
@@ -46,16 +45,13 @@ export function useSlashCommands(c: Conversation, text: string, setText: (t: str
       live = false;
     };
   }, [started, orgId, c.id, engine]);
-
   const items = started && closedAt !== text ? matchingCommands(commands, text) : [];
   const at = Math.min(index, Math.max(items.length - 1, 0));
-
   const pick = (cmd: OrgCommand) => {
     setPrefer(cmd.botId);
     setIndex(0);
     setText(commandTemplate(cmd));
   };
-
   const onKey = (e: KeyboardEvent<HTMLTextAreaElement>): boolean => {
     if (!items.length) return false;
     if (e.key === "ArrowDown" || e.key === "ArrowUp") {
@@ -74,7 +70,6 @@ export function useSlashCommands(c: Conversation, text: string, setText: (t: str
     }
     return false;
   };
-
   const run = async (body: string): Promise<"sent" | "kept" | "message"> => {
     if (!orgId || !body.startsWith("/")) return "message";
     const list = commands.length ? commands : await channelCommands(engine, orgId, c.id).catch(() => []);
@@ -89,19 +84,18 @@ export function useSlashCommands(c: Conversation, text: string, setText: (t: str
       await runCommand(engine, { channelId: c.id, botId: parsed.command.botId, command: parsed.command.name, options: parsed.options });
       return "sent";
     } catch (e) {
-      engine.notice("error", e instanceof Error ? e.message : `Couldn't run /${parsed.command.name}.`);
+      engine.notice("error", e instanceof Error ? e.message : uiText("messaging.interface.couldn_t_run_value0_4954aff", { value0: parsed.command.name }));
       return "kept";
     }
   };
-
   return { items, index: at, pick, onKey, run };
 }
-
 /** The list over the composer while "/name" is typed. */
 export function SlashCommandList({ slash }: { slash: SlashCommands }) {
+  useLocaleRender();
   if (!slash.items.length) return null;
   return (
-    <div className="suggest card slash-list" role="listbox" aria-label="Bot commands">
+    <div className="suggest card slash-list" role="listbox" aria-label={uiText("messaging.interface.bot_commands_cd2ff1d")}>
       {slash.items.map((cmd, i) => (
         <button key={`${cmd.botId}/${cmd.name}`} role="option" aria-selected={i === slash.index} onMouseDown={(e) => e.preventDefault()} onClick={() => slash.pick(cmd)}>
           <Bot size={18} className="faint" />
@@ -118,25 +112,30 @@ export function SlashCommandList({ slash }: { slash: SlashCommands }) {
     </div>
   );
 }
-
 /** Bots' answers only you can see in this conversation (the `interaction.reply` frame), each dismissable. */
 export function BotReplies({ conversationId }: { conversationId: string }) {
+  useLocaleRender();
   const engine = useEngine();
   const replies = useOrbit((s) => s.botReplies[conversationId] ?? NO_REPLIES);
   const users = useOrbit((s) => s.users);
   if (!replies.length) return null;
   return (
-    <ul className="bot-replies" aria-label="Answers only you can see" aria-live="polite">
+    <ul className="bot-replies" aria-label={uiText("messaging.interface.answers_only_you_can_see_8402bcd")} aria-live="polite">
       {replies.map((r) => (
         <li key={r.interactionId} className="bot-reply">
           <span className="lines grow">
             <span className="bot-reply-head">
-              <strong>{users[r.botId]?.displayName ?? "A bot"}</strong> <BotTag /> <span className="faint">answered /{r.command}</span>
+              <strong>{users[r.botId]?.displayName ?? uiText("messaging.interface.a_bot_7bcedea")}</strong> <BotTag />{" "}
+              <span className="faint">
+                <Localized k="messaging.interface.answered_f5447c2" slots={[r.command]} />
+              </span>
             </span>
             <span className="bot-reply-text">{r.content}</span>
-            <small className="faint">Only you can see this.</small>
+            <small className="faint">
+              <Localized k="messaging.interface.only_you_can_see_this_84032e8" />
+            </small>
           </span>
-          <button className="icon-btn" aria-label="Dismiss" onClick={() => engine.dismissBotReply(conversationId, r.interactionId)}>
+          <button className="icon-btn" aria-label={uiText("calls.interface.dismiss_48845bf")} onClick={() => engine.dismissBotReply(conversationId, r.interactionId)}>
             <X size={14} />
           </button>
         </li>

@@ -1,0 +1,10 @@
+{
+  "title": "Správa",
+  "health": "Stav služby",
+  "usage": "Využití komunity",
+  "states": {
+    "rejected": "Zamítnuto",
+    "escalated": "Předáno na vyšší úroveň",
+    "disputed": "Platba ve sporu"
+  }
+}

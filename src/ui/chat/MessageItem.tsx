@@ -1,3 +1,9 @@
+import { UNSUPPORTED_TEXT } from "../../sync/rules";
+import { countLabel } from "../../i18n/counts";
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
+import { Localized } from "../../i18n/Localized";
+import { useT as useLocalization } from "../../i18n";
 import { CharLimitNote, overCharLimit } from "../mojo/CharLimit";
 import { useMojoLimits } from "../mojo/useMojoLimits";
 import {
@@ -71,11 +77,9 @@ import { canLink, messageLink } from "../../sync/messageLinks";
 import { PostedContent } from "./PostedContent";
 import { WebhookAvatar, WebhookName } from "./WebhookSender";
 import { useReactionRolesItem } from "../community/reactionRoles/useReactionRolesItem";
-
 export const QUICK_EMOJI = ["👍", "❤️", "😂", "🎉", "🙏", "👀"];
 /** The hover toolbar's icon size, as large as Discord's so each action is easy to hit. */
 const TOOL_ICON = 20;
-
 export interface MessageItemProps {
   m: StoredMessage;
   first: boolean;
@@ -87,7 +91,11 @@ export interface MessageItemProps {
   myUsername: string;
   /** Usernames of the people this message mentions (for highlighting). */
   mentionNames: Set<string>;
-  replyTo: { name: string; text: string; id: string } | null;
+  replyTo: {
+    name: string;
+    text: string;
+    id: string;
+  } | null;
   threadCount: number;
   canPost: boolean;
   /** Reactions and votes; differs from posting in a community's rules channel (API 0.65.0). Defaults to canPost. */
@@ -102,7 +110,6 @@ export interface MessageItemProps {
   onJump: (id: string) => void;
   onReview: () => void;
 }
-
 export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
   const engine = useEngine();
   const canReact = p.canReact ?? p.canPost;
@@ -147,7 +154,6 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
   const posted = !!(m.rich?.embeds?.length || m.rich?.buttons?.length || m.rich?.giveaway);
   const shownText = m.rich?.textFromEmbeds ? "" : m.text;
   const reactionRoles = useReactionRolesItem(m, inCommunity, !!more.anchor);
-
   const body = () => {
     if (m.kind === "call") {
       // A call card (android, 2026-10-23): the outcome, its details, when it was, and who called; missed in red.
@@ -169,7 +175,8 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
     if (m.kind === "undecryptable")
       return (
         <span className="msg-undecryptable" title={m.errorText ?? undefined}>
-          <ShieldAlert size={15} /> {m.text}
+          <ShieldAlert size={15} />{" "}
+          {m.text === UNSUPPORTED_TEXT ? uiText("errors.unsupportedMessage") : uiText("workspace.interface.this_message_couldn_t_be_verified_or_decrypted_and_was_discarded_7c51036")}
         </span>
       );
     if (m.deleted) return <span className="msg-deleted">{t("msg_deleted")}</span>;
@@ -180,9 +187,13 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
     return (
       <>
         {p.replyTo && (
-          <button className="msg-quote" onClick={() => p.onJump(p.replyTo!.id)} aria-label={`Reply to ${p.replyTo.name}: ${p.replyTo.text}`}>
+          <button
+            className="msg-quote"
+            onClick={() => p.onJump(p.replyTo!.id)}
+            aria-label={uiText("messaging.interface.reply_to_value0_value1_a83fb3e", { value0: p.replyTo.name, value1: p.replyTo.text })}
+          >
             <strong>{p.replyTo.name}</strong>
-            <span className="ellipsis">{p.replyTo.text || "Attachment"}</span>
+            <span className="ellipsis">{p.replyTo.text || uiText("messaging.interface.attachment_040d2b3")}</span>
           </button>
         )}
         {m.forwarded && <ForwardedLine origin={m.rich?.origin} />}
@@ -219,7 +230,7 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
         ) : m.rich?.contact ? (
           <span className="msg-call">
             <UserRound size={16} /> {m.rich.contact.name}
-            {m.rich.contact.phones.length ? ` · ${m.rich.contact.phones.join(", ")}` : ""}
+            {m.rich.contact.phones.length ? uiText("calls.interface.value0_9402340", { value0: m.rich.contact.phones.join(", ") }) : ""}
           </span>
         ) : m.rich?.location ? (
           <a
@@ -228,12 +239,16 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
             target="_blank"
             rel="noopener noreferrer"
           >
-            <MapPin size={16} /> {m.rich.location.label ?? "Shared location"} · open map
+            <Localized k="messaging.interface.open_map_31608b9" slots={[<MapPin size={16} />, m.rich.location.label ?? uiText("messaging.interface.shared_location_32da1fa")]} />
           </a>
         ) : shownText ? (
-          <div className={`msg-text${isEmojiOnly(shownText) ? " big-emoji" : ""}`}>
+          <div dir="auto" className={`msg-text${isEmojiOnly(shownText) ? " big-emoji" : ""}`}>
             <RichText text={shownText} mentionNames={p.mentionNames} myUsername={p.myUsername} customEmoji={m.rich?.customEmoji} />
-            {m.editedAt && <span className="msg-meta">(edited)</span>}
+            {m.editedAt && (
+              <span className="msg-meta">
+                <Localized k="messaging.interface.edited_de44feb" />
+              </span>
+            )}
             {translation && <TranslationView text={translation} onHide={() => setTranslation(null)} />}
             {mine && <Status receipts={conv?.type === "DM"} m={m} onRetry={() => void engine.retry(m.id)} onReview={p.onReview} />}
           </div>
@@ -277,7 +292,6 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
       </>
     );
   };
-
   const reactions = Object.entries(m.reactions);
   // What the menu was opened on (a photo, a link, selected text): its own items come first (chat/contextTarget.tsx).
   const [target, setTarget] = useState<ContextTarget | null>(null);
@@ -303,7 +317,7 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
                   <button
                     key={e}
                     className="icon-btn quick-emoji"
-                    aria-label={`React ${e}`}
+                    aria-label={uiText("messaging.interface.react_value0_e09da0a", { value0: e })}
                     onClick={() => {
                       more.close();
                       void engine.react(m, e);
@@ -356,14 +370,19 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
       className={`msg${waiting ? " waiting" : ""}${gestures.offset ? " swiping" : ""}${mine ? " mine" : ""}${p.first ? " first" : ""}${mentioned ? " mentioned" : ""}${p.highlighted ? " highlight" : ""}${more.anchor || picker.anchor ? " menu-open" : ""}`}
       id={`msg-${m.id}`}
       role="article"
-      aria-label={`${webhook?.name ?? p.senderName}, ${fullTime(m.sortTs)}`}
+      aria-label={uiText("messaging.interface.value0_value1_c55f6a8", { value0: webhook?.name ?? p.senderName, value1: fullTime(m.sortTs) })}
       tabIndex={-1}
     >
       <div className="msg-gutter">
         {p.first && webhook ? (
           <WebhookAvatar id={webhook.id} name={webhook.name} avatarRev={webhook.avatarRev} />
         ) : p.first ? (
-          <button className="msg-avatar-btn" onClick={() => openProfile(m.senderUserId, p.senderName)} aria-label={`${p.senderName}'s profile`} tabIndex={-1}>
+          <button
+            className="msg-avatar-btn"
+            onClick={() => openProfile(m.senderUserId, p.senderName)}
+            aria-label={uiText("messaging.interface.value0_s_profile_facc1bc", { value0: p.senderName })}
+            tabIndex={-1}
+          >
             <LookAvatar userId={m.senderUserId} name={p.senderName} colorIndex={p.senderColor} photoRev={p.senderPhotoRev} size={38} />
           </button>
         ) : (
@@ -385,7 +404,7 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
             </time>
             {m.pinned && (
               <span className="tag">
-                <Pin size={11} /> Pinned
+                <Localized k="messaging.interface.pinned_409745c" slots={[<Pin size={11} />]} />
               </span>
             )}
           </div>
@@ -394,7 +413,7 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
         <ReactionList message={m} myUserId={p.myUserId} canPost={canReact} communityEmoji={communityEmoji} onAdd={canAddReaction ? (anchor) => picker.open(anchor) : undefined} />
         {p.threadCount > 0 && p.onThread && (
           <button className="thread-link" onClick={() => p.onThread?.(m)}>
-            <MessagesSquare size={15} /> {p.threadCount} {p.threadCount === 1 ? "reply" : "replies"}
+            <MessagesSquare size={15} /> {countLabel(p.threadCount, "replies")}
           </button>
         )}
       </div>
@@ -403,7 +422,7 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
         <div className="msg-actions" role="toolbar" aria-label={t("msg_actions")}>
           {canAddReaction &&
             QUICK_EMOJI.slice(0, 3).map((e) => (
-              <button key={e} className="icon-btn quick-emoji" onClick={() => void engine.react(m, e)} aria-label={`React ${e}`}>
+              <button key={e} className="icon-btn quick-emoji" onClick={() => void engine.react(m, e)} aria-label={uiText("messaging.interface.react_value0_e09da0a", { value0: e })}>
                 {e}
               </button>
             ))}
@@ -439,7 +458,7 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
         <Menu
           anchor={picker.anchor}
           align="end"
-          label="Reactions"
+          label={t("messaging.reactions")}
           onClose={picker.close}
           entries={[
             {
@@ -460,7 +479,7 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
           anchor={more.anchor}
           point={more.point}
           align="end"
-          label="Message"
+          label={t("messaging.message")}
           onClose={() => {
             more.close();
             setPressed(false);
@@ -506,7 +525,7 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
                       const copy = () =>
                         void navigator.clipboard?.writeText(messageLink(m.conversationId, m.id)).then(
                           () => engine.notice("info", t("msg_link_copied")),
-                          () => engine.notice("error", "Couldn't copy the link."),
+                          () => engine.notice("error", uiText("messaging.interface.couldn_t_copy_the_link_c4fe74d")),
                         );
                       // A message drawn from the snapshot: copied once the server's page shows it's still there.
                       if (!engine.waitsForServer(m)) copy();
@@ -519,11 +538,13 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
             ...(builder
               ? [
                   {
-                    label: "Copy message ID",
+                    get label() {
+                      return uiText("messaging.interface.copy_message_id_39aa2ab");
+                    },
                     icon: <IdCard size={16} />,
                     onSelect: () => {
                       void navigator.clipboard?.writeText(m.id).catch(() => undefined);
-                      engine.notice("info", "Message ID copied.");
+                      engine.notice("info", uiText("messaging.interface.message_id_copied_cb652b0"));
                     },
                   },
                 ]
@@ -552,7 +573,7 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
       )}
       {reminding && (
         <RemindMeDialog
-          title="Remind me about this message"
+          title={uiText("messaging.interface.remind_me_about_this_message_e8c7aaa")}
           current={saved?.remindAt ?? null}
           onPick={(at) => {
             setReminding(false);
@@ -564,12 +585,12 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
       )}
       {confirmDelete && (
         <Dialog
-          title="Delete this message for everyone?"
+          title={uiText("messaging.interface.delete_this_message_for_everyone_fc9f597")}
           onClose={() => setConfirmDelete(false)}
           footer={
             <>
               <button className="btn btn-secondary" onClick={() => setConfirmDelete(false)}>
-                Cancel
+                {t("common.actions.cancel")}
               </button>
               <button
                 className="btn btn-danger"
@@ -579,14 +600,14 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
                   void engine.deleteForEveryone(m, !mine);
                 }}
               >
-                Delete
+                {t("common.actions.delete")}
               </button>
             </>
           }
         >
           <div className="dialog-body">
             <p className="muted" style={{ margin: 0 }}>
-              It's removed for everyone in the conversation, on every device.
+              <Localized k="messaging.interface.it_s_removed_for_everyone_in_the_conversation_on_every_device_ff48f7f" />
             </p>
           </div>
         </Dialog>
@@ -594,49 +615,53 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
     </div>
   );
 });
-
 function Status({ m, onRetry, onReview, receipts }: { m: StoredMessage; onRetry: () => void; onReview: () => void; receipts: boolean }) {
+  const l10n = useLocalization();
+
   if (!receipts && ["SENT", "DELIVERED", "READ"].includes(m.status)) return null;
   switch (m.status) {
     case "SENDING":
       return (
-        <span className="msg-meta" title="Sending">
-          <Clock size={12} aria-label="Sending" />
+        <span className="msg-meta" title={uiText("messaging.interface.sending_e595f17")}>
+          <Clock size={12} aria-label={uiText("messaging.interface.sending_e595f17")} />
         </span>
       );
     case "SENT":
       return (
-        <span className="msg-meta" title="Sent">
-          <Check size={13} aria-label="Sent" />
+        <span className="msg-meta" title={uiText("messaging.interface.sent_c16bc82")}>
+          <Check size={13} aria-label={uiText("messaging.interface.sent_c16bc82")} />
         </span>
       );
     case "DELIVERED":
       return (
-        <span className="msg-meta" title="Delivered">
-          <CheckCheck size={13} aria-label="Delivered" />
+        <span className="msg-meta" title={uiText("messaging.interface.delivered_9061156")}>
+          <CheckCheck size={13} aria-label={uiText("messaging.interface.delivered_9061156")} />
         </span>
       );
     case "READ":
       return (
-        <span className="msg-meta read" title={`Read${m.readBy.length ? ` by ${m.readBy.length}` : ""}`}>
-          <CheckCheck size={13} aria-label="Read" />
+        <span
+          className="msg-meta read"
+          title={uiText("messaging.interface.read_value0_be73150", { value0: m.readBy.length ? uiText("workspace.interface.by_value0_943cd46", { value0: m.readBy.length }) : "" })}
+        >
+          <CheckCheck size={13} aria-label={uiText("messaging.interface.read_9b9a8d0")} />
         </span>
       );
     case "FAILED":
       return (
         <span className="msg-meta failed">
-          <CircleAlert size={13} /> {m.errorText ?? "Not sent"} ·{" "}
+          <CircleAlert size={13} /> {m.errorText ?? uiText("messaging.interface.not_sent_cd5f943")} ·{" "}
           <button className="msg-retry" onClick={onRetry}>
-            Retry
+            <Localized k="messaging.interface.retry_942087c" />
           </button>
         </span>
       );
     case "HELD":
       return (
         <span className="msg-meta failed">
-          <ShieldAlert size={13} /> Paused: a security key changed ·{" "}
+          <Localized k="messaging.interface.paused_a_security_key_changed_d2187cb" slots={[<ShieldAlert size={13} />]} />
           <button className="msg-retry" onClick={onReview}>
-            Review
+            {l10n("messaging.conv_review")}
           </button>
         </span>
       );
@@ -644,8 +669,9 @@ function Status({ m, onRetry, onReview, receipts }: { m: StoredMessage; onRetry:
       return null;
   }
 }
-
 function EditBox({ m, onDone }: { m: StoredMessage; onDone: () => void }) {
+  useLocaleRender();
+  const l10n = useLocalization();
   const engine = useEngine();
   const [text, setText] = useState(m.text);
   // Edits get the same room as new messages (server docs/MOJO.md).
@@ -663,7 +689,7 @@ function EditBox({ m, onDone }: { m: StoredMessage; onDone: () => void }) {
         value={text}
         autoFocus
         rows={Math.min(8, text.split("\n").length + 1)}
-        aria-label="Edit message"
+        aria-label={uiText("messaging.interface.edit_message_9757ccd")}
         onChange={(e) => setText(e.target.value)}
         onKeyDown={(e) => {
           if (e.key === "Enter" && !e.shiftKey) {
@@ -675,25 +701,25 @@ function EditBox({ m, onDone }: { m: StoredMessage; onDone: () => void }) {
       <CharLimitNote text={text} limit={limit} />
       <div className="row">
         <span className="faint" style={{ fontSize: 12 }}>
-          Enter to save · Esc to cancel
+          <Localized k="messaging.interface.enter_to_save_esc_to_cancel_f9ddecc" />
         </span>
         <span className="grow" />
         <button className="btn btn-secondary btn-sm" onClick={onDone}>
-          Cancel
+          {l10n("common.actions.cancel")}
         </button>
         <button className="btn btn-primary btn-sm" onClick={save} disabled={!text.trim() || tooLong}>
-          Save
+          {l10n("common.actions.save")}
         </button>
       </div>
     </div>
   );
 }
-
 /**
  * "Forwarded", and for a message forwarded out of a community channel where it came from (android, 2026-10-23):
  * "Forwarded · Community • time ›", which opens the original for people in that channel.
  */
 function ForwardedLine({ origin }: { origin: RichContent["origin"] }) {
+  useLocaleRender();
   const engine = useEngine();
   const t = useT();
   if (!origin)
@@ -708,7 +734,7 @@ function ForwardedLine({ origin }: { origin: RichContent["origin"] }) {
     <div className="msg-forwarded">
       <Forward size={12} aria-hidden="true" /> {t("msg_forwarded")} ·{" "}
       {link ? (
-        <button className="msg-forwarded-origin" onClick={() => openInApp(engine, link)} aria-label={`Open the original in ${origin.place}`}>
+        <button className="msg-forwarded-origin" onClick={() => openInApp(engine, link)} aria-label={uiText("messaging.interface.open_the_original_in_value0_9d0c43f", { value0: origin.place })}>
           {where} ›
         </button>
       ) : (
@@ -717,8 +743,8 @@ function ForwardedLine({ origin }: { origin: RichContent["origin"] }) {
     </div>
   );
 }
-
 /** The author's name with their name style and tag (API 0.46.0), as this browser knows them. */
 function SenderName({ userId, name, toneClass }: { userId: string; name: string; toneClass: string }) {
+  useLocaleRender();
   return <LookName userId={userId} name={name} withMarks toneClass={toneClass} />;
 }

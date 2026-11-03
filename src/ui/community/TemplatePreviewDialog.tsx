@@ -1,3 +1,8 @@
+import { countLabel } from "../../i18n/counts";
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
+import { Localized } from "../../i18n/Localized";
+import { useT as useLocalization } from "../../i18n";
 import { LayoutTemplate, Users } from "lucide-react";
 import { type FormEvent, useMemo, useState } from "react";
 import { ApiError } from "../../api/client";
@@ -12,21 +17,25 @@ import { Dialog } from "../components/Overlay";
 import { OrgAvatar } from "../components/OrgAvatar";
 import { useLoad } from "../workspace/useLoad";
 import { ChannelGlyph } from "./ChannelDialogs";
-
 const NAME_MAX = 100;
-
-const loadError = (e: string | null) => (e ? `${e} Ask whoever shared the link for a new one.` : null);
-
+const loadError = (e: string | null) => (e ? uiText("organization.interface.value0_ask_whoever_shared_the_link_for_a_new_one_0dcdb9b", { value0: e }) : null);
 /**
  * A template link opened (community parity E, feature template-links; /template/<code>, a link in a chat, or pasted in
  * Start a community): the channels and roles a new community would start with, then a name and Create. The server
  * copies the template; you own the new community and are in every channel.
  */
 export function TemplatePreviewDialog({ code, onClose }: { code: string; onClose: () => void }) {
+  useLocaleRender();
   const engine = useEngine();
   const preview = useLoad(() => templatePreview(engine, code), [engine, code]);
   return (
-    <Dialog title="Create a community from this template" subtitle="Its channels, categories, roles and permissions. Never messages or members." onClose={onClose} wide className="create-dialog">
+    <Dialog
+      title={uiText("organization.interface.create_a_community_from_this_template_81ee2f3")}
+      subtitle={uiText("organization.interface.its_channels_categories_roles_and_permissions_never_messages_or_m_b1bf4fd")}
+      onClose={onClose}
+      wide
+      className="create-dialog"
+    >
       <div className="dialog-body">
         {preview.error && (
           <div className="banner danger" role="alert">
@@ -39,18 +48,18 @@ export function TemplatePreviewDialog({ code, onClose }: { code: string; onClose
     </Dialog>
   );
 }
-
 function TemplateBody({ template, onClose }: { template: TemplatePreview; onClose: () => void }) {
+  useLocaleRender();
+  const l10n = useLocalization();
   const engine = useEngine();
   const reqId = useMemo(requestId, []);
   const [name, setName] = useState(template.name.slice(0, NAME_MAX));
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { counts } = template;
-
   const submit = async (e: FormEvent) => {
     e.preventDefault();
-    if (!name.trim()) return setError("Give the community a name.");
+    if (!name.trim()) return setError(uiText("organization.interface.give_the_community_a_name_789d631"));
     setBusy(true);
     setError(null);
     try {
@@ -59,12 +68,11 @@ function TemplateBody({ template, onClose }: { template: TemplatePreview; onClos
       onClose();
       navigate({ section: "home" });
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : "Couldn't create the community.");
+      setError(err instanceof ApiError ? err.message : uiText("organization.interface.couldn_t_create_the_community_1d96bd2"));
     } finally {
       setBusy(false);
     }
   };
-
   return (
     <form className="template-preview" onSubmit={(e) => void submit(e)} noValidate>
       <div className="row" style={{ gap: 12, alignItems: "center" }}>
@@ -78,13 +86,23 @@ function TemplateBody({ template, onClose }: { template: TemplatePreview; onClos
         <div className="grow">
           <strong className="template-name">{template.name}</strong>
           <div className="muted" style={{ fontSize: 13 }}>
-            {template.source ? `From ${template.source.name} · ` : ""}
-            {counts.channels} {counts.channels === 1 ? "channel" : "channels"} · {counts.roles} {counts.roles === 1 ? "role" : "roles"} · <Users size={12} aria-hidden="true" /> used {template.uses}{" "}
-            {template.uses === 1 ? "time" : "times"}
+            <Localized
+              k="organization.interface.native_count_aaf3cc61c"
+              slots={[
+                template.source ? uiText("organization.interface.from_value0_d1f594c", { value0: template.source.name }) : "",
+                countLabel(counts.channels, "channels"),
+                "",
+                countLabel(counts.roles, "roles"),
+                "",
+                <Users size={12} aria-hidden="true" />,
+                template.uses,
+                template.uses === 1 ? uiText("organization.interface.time_3360748") : uiText("organization.interface.times_2bf61a3"),
+              ]}
+            />
           </div>
         </div>
       </div>
-      <section className="template-channels" aria-label="Channels">
+      <section className="template-channels" aria-label={l10n("organization.channels")}>
         {template.categories.map((cat, i) => (
           <div key={`${cat.name ?? ""}-${i}`} className="template-category">
             {cat.name && <h4>{cat.name}</h4>}
@@ -99,8 +117,8 @@ function TemplateBody({ template, onClose }: { template: TemplatePreview; onClos
         ))}
       </section>
       {template.roles.length > 0 && (
-        <section aria-label="Roles">
-          <h4 className="ws-subhead">Roles</h4>
+        <section aria-label={l10n("organization.roles")}>
+          <h4 className="ws-subhead">{l10n("organization.roles")}</h4>
           <div className="chips">
             {template.roles.map((r, i) => (
               <span key={`${r.name}-${i}`} className="chip">
@@ -116,15 +134,17 @@ function TemplateBody({ template, onClose }: { template: TemplatePreview; onClos
         </div>
       )}
       <div className="field">
-        <label htmlFor="tpl-name">Community name</label>
+        <label htmlFor="tpl-name">
+          <Localized k="organization.interface.community_name_0565934" />
+        </label>
         <input id="tpl-name" className="input" data-autofocus value={name} maxLength={NAME_MAX} onChange={(e) => setName(e.target.value)} />
       </div>
       <div className="row" style={{ justifyContent: "flex-end", gap: 8 }}>
         <button type="button" className="btn btn-secondary" onClick={onClose}>
-          Cancel
+          {l10n("common.actions.cancel")}
         </button>
         <button className="btn btn-primary" disabled={busy || !name.trim()}>
-          {busy ? "Creating…" : "Create community"}
+          {busy ? l10n("auth.signup_busy") : uiText("organization.interface.create_community_5d6da55")}
         </button>
       </div>
     </form>

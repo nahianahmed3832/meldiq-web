@@ -1,3 +1,7 @@
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
+import { Localized } from "../../i18n/Localized";
+import { useT as useLocalization } from "../../i18n";
 import { Lock, LockOpen } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import type { SafetySettings } from "../../api/schemas";
@@ -11,18 +15,17 @@ import { untilWhen } from "../format";
 import { SecurityPage } from "./ModerationPages";
 import { useAction, useLoad } from "./useLoad";
 import { Card, ErrorLine } from "./WorkspaceView";
-
 interface ProfileSafetyProps {
   detail: OrgAdminDetail;
   /** Opened from an old Security actions link: scroll here. */
   focused: boolean;
 }
-
 /**
  * Profile's safety section (the reference keeps raid protection and verification on its server profile): the lock and
  * raid protection, the verification level and the new-account gate (community-safety), then Security actions.
  */
 export function ProfileSafety({ detail, focused }: ProfileSafetyProps) {
+  useLocaleRender();
   const features = useOrbit((s) => s.server?.features ?? []);
   const ref = useRef<HTMLElement>(null);
   const { permissions: can } = detail;
@@ -36,15 +39,15 @@ export function ProfileSafety({ detail, focused }: ProfileSafetyProps) {
   return (
     <section ref={ref} className="ws-page" aria-labelledby="ws-safety-title">
       <h2 id="ws-safety-title" className="ws-subhead">
-        Safety
+        <Localized k="files.interface.safety_726d11b" />
       </h2>
       {safety && <SafetyCards detail={detail} />}
       {security && <SecurityPage detail={detail} />}
     </section>
   );
 }
-
 function SafetyCards({ detail }: { detail: OrgAdminDetail }) {
+  useLocaleRender();
   const engine = useEngine();
   const orgId = detail.org.id;
   const loaded = useLoad(() => (detail.org.safety ? Promise.resolve(detail.org.safety) : safetySettings(engine, orgId)), [engine, orgId, detail.org.safety]);
@@ -58,10 +61,12 @@ function SafetyCards({ detail }: { detail: OrgAdminDetail }) {
     <>
       <RaidCard orgId={orgId} settings={current} editable={editable} onRaid={(on) => change({ raidProtection: on })} onLocked={(lockedUntil) => setS({ ...current, lockedUntil })} />
       {editable && (
-        <Card title="Who can post" sub="Moderators, people with a role and bots skip these checks.">
+        <Card title={uiText("organization.interface.who_can_post_cabffe4")} sub={uiText("files.interface.moderators_people_with_a_role_and_bots_skip_these_checks_1b68751")}>
           <ErrorLine text={save.error} />
           <label className="field">
-            <span>Verification level</span>
+            <span>
+              <Localized k="files.interface.verification_level_8cbdf32" />
+            </span>
             <select className="input" value={current.verificationLevel} disabled={save.busy} onChange={(e) => change({ verificationLevel: e.target.value as VerificationLevel })}>
               {VERIFICATION_LEVELS.map((v) => (
                 <option key={v.level} value={v.level}>
@@ -72,7 +77,9 @@ function SafetyCards({ detail }: { detail: OrgAdminDetail }) {
             <small className="faint">{VERIFICATION_LEVELS.find((v) => v.level === current.verificationLevel)?.hint}</small>
           </label>
           <label className="field">
-            <span>New accounts</span>
+            <span>
+              <Localized k="files.interface.new_accounts_38586d6" />
+            </span>
             <select className="input" value={current.newAccountGate} disabled={save.busy} onChange={(e) => change({ newAccountGate: e.target.value as AccountAgeGate })}>
               {ACCOUNT_AGE_CHOICES.map((c) => (
                 <option key={c.gate} value={c.gate}>
@@ -80,14 +87,15 @@ function SafetyCards({ detail }: { detail: OrgAdminDetail }) {
                 </option>
               ))}
             </select>
-            <small className="faint">Accounts this new can't join. Moderators and Meldiq staff are never held back.</small>
+            <small className="faint">
+              <Localized k="files.interface.accounts_this_new_can_t_join_moderators_and_meldiq_staff_are_neve_02648dd" />
+            </small>
           </label>
         </Card>
       )}
     </>
   );
 }
-
 interface RaidCardProps {
   orgId: string;
   settings: SafetySettings;
@@ -95,27 +103,31 @@ interface RaidCardProps {
   onRaid: (on: boolean) => void;
   onLocked: (until: number | null) => void;
 }
-
 /** Raid protection: lock for a while (nobody new joins, only moderators post), and the automatic lock and slowmode. */
 function RaidCard({ orgId, settings, editable, onRaid, onLocked }: RaidCardProps) {
+  useLocaleRender();
+  const l10n = useLocalization();
   const engine = useEngine();
   const lockedUntil = useOrbit((s) => s.orgs.find((o) => o.id === orgId)?.lockedUntil ?? null) ?? settings.lockedUntil;
   const lock = useAction();
   const locked = running(lockedUntil);
   return (
     <Card
-      title="Raid protection"
+      title={uiText("files.interface.raid_protection_675bdb8")}
       sub={
         locked
-          ? `Locked: unlocks ${untilWhen(lockedUntil!)}${settings.lockReason === "raid" ? " (raid protection did it)" : ""}. Nobody new can join and only moderators can post.`
-          : "Lock the community for a while: nobody new can join and only moderators can post."
+          ? uiText("files.interface.locked_unlocks_value0_value1_nobody_new_can_join_and_only_moderat_3be3f52", {
+              value0: untilWhen(lockedUntil!),
+              value1: settings.lockReason === "raid" ? uiText("workspace.interface.raid_protection_did_it_b52eb45") : "",
+            })
+          : uiText("files.interface.lock_the_community_for_a_while_nobody_new_can_join_and_only_moder_5c2424b")
       }
     >
       <ErrorLine text={lock.error} />
       <div className="row" style={{ gap: 8, flexWrap: "wrap" }}>
         {locked ? (
           <button className="btn btn-secondary btn-sm" disabled={lock.busy} onClick={() => void lock.act(() => lockCommunity(engine, orgId, null, true).then(() => onLocked(null)))}>
-            <LockOpen size={14} /> Unlock
+            <LockOpen size={14} /> {l10n("onboarding.setup_unlock")}
           </button>
         ) : (
           PROFILE_LOCK_CHOICES.map((c) => (
@@ -125,17 +137,21 @@ function RaidCard({ orgId, settings, editable, onRaid, onLocked }: RaidCardProps
               disabled={lock.busy}
               onClick={() => void lock.act(() => lockCommunity(engine, orgId, c, true).then(() => onLocked(Date.now() + c.ms)))}
             >
-              <Lock size={14} /> Lock for {c.label.toLowerCase()}
+              <Localized k="files.interface.lock_for_5c051c5" slots={[<Lock size={14} />, c.label.toLowerCase()]} />
             </button>
           ))
         )}
       </div>
       <div className="setting">
         <span className="lines">
-          <strong>Automatic raid protection</strong>
-          <small>Locks for 15 minutes after 60 joins in a minute, and slows a channel to one message every 5 seconds when 6 people send 30 messages in 10 seconds.</small>
+          <strong>
+            <Localized k="files.interface.automatic_raid_protection_ba2a1f9" />
+          </strong>
+          <small>
+            <Localized k="files.interface.locks_for_15_minutes_after_60_joins_in_a_minute_and_slows_a_chann_1c67890" />
+          </small>
         </span>
-        <Toggle checked={settings.raidProtection} disabled={!editable} onChange={onRaid} label="Automatic raid protection" />
+        <Toggle checked={settings.raidProtection} disabled={!editable} onChange={onRaid} label={uiText("files.interface.automatic_raid_protection_ba2a1f9")} />
       </div>
     </Card>
   );

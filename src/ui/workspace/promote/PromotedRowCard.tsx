@@ -1,3 +1,8 @@
+import { formatUiNumber } from "../../../i18n/format";
+import { useLocaleRender } from "../../../i18n/Localized";
+import { text as uiText } from "../../../i18n";
+import { Localized } from "../../../i18n/Localized";
+import { useT as useLocalization } from "../../../i18n";
 import { CalendarPlus, Eye, MousePointerClick, UserPlus } from "lucide-react";
 import type { PromotedBooking, PromoteView } from "../../../api/discoverySchemas";
 import { useEngine } from "../../../application/orbit";
@@ -6,7 +11,6 @@ import { PHASE_TEXT, price, recordPhase, weekText } from "../../../sync/discover
 import { OrgAvatar } from "../../components/OrgAvatar";
 import { Card } from "../WorkspaceView";
 import type { PromoteBuy } from "./usePromoteBuy";
-
 interface PromotedRowCardProps {
   orgId: string;
   name: string;
@@ -14,24 +18,25 @@ interface PromotedRowCardProps {
   view: PromoteView;
   buyer: PromoteBuy;
 }
-
 /**
  * The Promoted row (the reference's top row of Discover): what it looks like with this community in it, how many people
  * open Discover a week, the 4 spots and the weekly price, the next free week to book (or "All taken"), and this
  * community's bookings with their live views, clicks and joins.
  */
 export function PromotedRowCard({ orgId, name, photoRev, view, buyer }: PromotedRowCardProps) {
+  useLocaleRender();
+  const l10n = useLocalization();
   const engine = useEngine();
   const p = view.promoted;
   const next = p.nextSpot;
   const full = p.allTaken || !next;
   return (
-    <Card title="Promoted row" sub="The first thing everyone sees in Discover: a row of communities with a PROMOTED tag, above the whole list.">
+    <Card title={uiText("workspace.interface.promoted_row_e3ba790")} sub={uiText("workspace.interface.the_first_thing_everyone_sees_in_discover_a_row_of_communities_wi_3675953")}>
       <div className="promoted-preview" aria-hidden="true">
         <span className="promoted-slot promoted-slot-own">
           <OrgAvatar orgId={orgId} name={name} photoRev={photoRev} size={28} />
           <span className="ellipsis">{name}</span>
-          <span className="discover-label discover-label-promoted">PROMOTED</span>
+          <span className="discover-label discover-label-promoted">{l10n("workspace.discover_label_promoted")}</span>
         </span>
         {Array.from({ length: Math.max(p.spotsPerWeek - 1, 0) }, (_, i) => (
           <span key={i} className="promoted-slot" />
@@ -39,49 +44,58 @@ export function PromotedRowCard({ orgId, name, photoRev, view, buyer }: Promoted
       </div>
       <div className="promoted-facts">
         <span>
-          <strong>{view.visitors.weekly}</strong> {view.visitors.weekly === 1 ? "person" : "people"} opened Discover this week
+          <Localized
+            k="workspace.interface.opened_discover_this_week_3a661ff"
+            slots={[
+              <strong>{formatUiNumber(view.visitors.weekly)}</strong>,
+              view.visitors.weekly === 1 ? uiText("organization.interface.person_38a81e8") : uiText("organization.interface.people_c902268"),
+            ]}
+          />
         </span>
         <span>
-          <strong>{p.spotsPerWeek}</strong> spots a week
+          <Localized k="workspace.interface.spots_a_week_cb642df" slots={[<strong>{formatUiNumber(p.spotsPerWeek)}</strong>]} />
         </span>
         <span>
-          <strong>{price(p.weeklyCents, view.currency)}</strong> / week
+          <Localized k="workspace.interface.week_da66b59" slots={[<strong>{price(p.weeklyCents, view.currency)}</strong>]} />
         </span>
       </div>
       <div className="ws-row promoted-next">
         <CalendarPlus size={18} className="faint" aria-hidden="true" />
         <span className="lines grow">
           {full ? (
-            <span>All taken for the next 8 weeks.</span>
+            <span>
+              <Localized k="workspace.interface.all_taken_for_the_next_8_weeks_b057858" />
+            </span>
           ) : (
             <>
-              <span>Next free week: {weekText(next.startsAt, next.endsAt)}</span>
+              <span>
+                <Localized k="workspace.interface.next_free_week_580b962" slots={[weekText(next.startsAt, next.endsAt)]} />
+              </span>
               <small className="faint">
-                {next.spotsLeft} of {p.spotsPerWeek} spots left
+                <Localized k="workspace.interface.of_spots_left_3789ae4" slots={[next.spotsLeft, p.spotsPerWeek]} />
               </small>
             </>
           )}
         </span>
         <button className="btn btn-primary btn-sm" disabled={full || buyer.busy !== null} onClick={() => next && void buyer.buy("promoted", () => bookPromoted(engine, orgId, next.startsAt))}>
-          {full ? "All taken" : buyer.busy === "promoted" ? "Opening…" : "Book next spot"}
+          {full ? uiText("workspace.interface.all_taken_adb49c8") : buyer.busy === "promoted" ? uiText("organization.interface.opening_c926c2c") : uiText("workspace.interface.book_next_spot_56d44d5")}
         </button>
       </div>
       {p.bookings.length > 0 && (
-        <ul className="ws-list promoted-bookings" aria-label="Your Promoted weeks">
+        <ul className="ws-list promoted-bookings" aria-label={uiText("workspace.interface.your_promoted_weeks_34306cc")}>
           {p.bookings.map((b) => (
             <BookingRow key={b.id} booking={b} />
           ))}
         </ul>
       )}
       <p className="faint promote-note">
-        A week runs from Monday 00:00 UTC to the next Monday, and you can book up to 8 weeks ahead. Views, clicks and joins count while your week runs. A community that's locked, made private or taken
-        out of Discover stops showing, and nothing is refunded.
+        <Localized k="workspace.interface.a_week_runs_from_monday_00_00_utc_to_the_next_monday_and_you_can_c74336c" />
       </p>
     </Card>
   );
 }
-
 function BookingRow({ booking: b }: { booking: PromotedBooking }) {
+  useLocaleRender();
   const phase = recordPhase(b);
   return (
     <li className="ws-row promoted-booking">
@@ -89,18 +103,27 @@ function BookingRow({ booking: b }: { booking: PromotedBooking }) {
         <span>{weekText(b.startsAt, b.endsAt)}</span>
         <small className={phase === "running" ? "promoted-live" : "faint"}>
           {PHASE_TEXT[phase]}
-          {b.source === "grant" ? " · from Meldiq" : ""}
+          {b.source === "grant" ? uiText("workspace.interface.from_meldiq_6cc9fb4") : ""}
         </small>
       </span>
       <span className="promoted-stats">
-        <span title="Views">
-          <Eye size={13} aria-hidden="true" /> {b.views} <span className="sr-only">views</span>
+        <span title={uiText("workspace.interface.views_69c4045")}>
+          <Eye size={13} aria-hidden="true" /> {formatUiNumber(b.views)}{" "}
+          <span className="sr-only">
+            <Localized k="workspace.interface.views_7488361" />
+          </span>
         </span>
-        <span title="Clicks">
-          <MousePointerClick size={13} aria-hidden="true" /> {b.clicks} <span className="sr-only">clicks</span>
+        <span title={uiText("workspace.interface.clicks_921fc98")}>
+          <MousePointerClick size={13} aria-hidden="true" /> {formatUiNumber(b.clicks)}{" "}
+          <span className="sr-only">
+            <Localized k="workspace.interface.clicks_72b40fb" />
+          </span>
         </span>
-        <span title="Joins">
-          <UserPlus size={13} aria-hidden="true" /> {b.joins} <span className="sr-only">joins</span>
+        <span title={uiText("workspace.interface.joins_49da3b2")}>
+          <UserPlus size={13} aria-hidden="true" /> {formatUiNumber(b.joins)}{" "}
+          <span className="sr-only">
+            <Localized k="workspace.interface.joins_8bd0c8c" />
+          </span>
         </span>
       </span>
     </li>

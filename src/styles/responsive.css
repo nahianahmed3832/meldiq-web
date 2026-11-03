@@ -8,7 +8,7 @@
   .panel {
     position: absolute;
     top: 0;
-    right: 0;
+    inset-inline-end: 0;
     bottom: 0;
     z-index: 30;
     box-shadow:
@@ -21,7 +21,7 @@
     position: absolute;
     top: 0;
     bottom: 0;
-    left: 0;
+    inset-inline-start: 0;
     width: 300px;
     z-index: 40;
     box-shadow: var(--shadow-lg);
@@ -88,7 +88,7 @@
     grid-template-columns: 1fr;
   }
   .settings-nav {
-    border-right: 0;
+    border-inline-end: 0;
     border-bottom: 1px solid var(--border);
     grid-auto-flow: column;
     overflow-x: auto;
@@ -104,7 +104,8 @@
   .app {
     grid-template-columns: minmax(0, 1fr);
     grid-template-rows: minmax(0, 1fr) auto;
-    padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) 0 env(safe-area-inset-left, 0px);
+    padding-block: env(safe-area-inset-top, 0px) 0;
+    padding-inline: env(safe-area-inset-left, 0px) env(safe-area-inset-right, 0px);
     column-gap: 0;
   }
   .rail {
@@ -131,7 +132,10 @@
     width: auto;
   }
   .topbar {
-    padding: 0 8px 0 12px;
+    padding-block-start: 0;
+    padding-inline-end: 8px;
+    padding-block-end: 0;
+    padding-inline-start: 12px;
     gap: 6px;
   }
   .topbar-title {
@@ -161,7 +165,10 @@
     height: 40px;
     padding: 0;
     justify-content: center;
-    margin: 0 0 0 auto;
+    margin-block-start: 0;
+    margin-inline-end: 0;
+    margin-block-end: 0;
+    margin-inline-start: auto;
   }
   .topbar-right .hide-sm,
   .composer-row .hide-sm,
@@ -174,7 +181,7 @@
     width: auto;
     transform: none;
     box-shadow: none;
-    border-right: 0;
+    border-inline-end: 0;
   }
   .sidebar-scrim,
   .topbar .menu-toggle {
@@ -190,7 +197,10 @@
     display: inline-grid;
   }
   .conv-head {
-    padding: 8px 8px 8px 6px;
+    padding-block-start: 8px;
+    padding-inline-end: 8px;
+    padding-block-end: 8px;
+    padding-inline-start: 6px;
   }
   .msg {
     grid-template-columns: 34px minmax(0, 1fr);
@@ -198,7 +208,7 @@
     column-gap: 10px;
   }
   .msg-actions {
-    right: 8px;
+    inset-inline-end: 8px;
   }
   .composer-wrap {
     padding: 0 10px 10px;
@@ -207,7 +217,7 @@
     display: none;
   }
   .composer-tools > :last-child {
-    margin-left: auto;
+    margin-inline-start: auto;
   }
   .panel {
     width: 100%;
@@ -281,7 +291,7 @@
     display: none;
   }
   .notices {
-    left: 16px;
+    inset-inline-start: 16px;
     bottom: 80px;
   }
   .link-card {
@@ -322,7 +332,7 @@
   }
   /* Unread markers sit inside the row on phones, not on the screen's edge. */
   .side-item.unread:not([aria-current="page"])::before {
-    left: 2px;
+    inset-inline-start: 2px;
   }
 }
 .tab-mascot {

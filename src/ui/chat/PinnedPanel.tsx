@@ -1,3 +1,8 @@
+import { countLabel } from "../../i18n/counts";
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
+import { Localized } from "../../i18n/Localized";
+import { useT as useLocalization } from "../../i18n";
 import { PinOff, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useEngine, useOrbit } from "../../application/orbit";
@@ -5,7 +10,6 @@ import type { StoredMessage } from "../../model/types";
 import { shortWhen } from "../format";
 import { jumpTo } from "./jump";
 import { CollectionControls, useMessageCollection } from "./useMessageCollection";
-
 /** Cached pins for optional badges on older servers; the panels themselves use authoritative collection pages. */
 export function usePinned(conversationId: string): StoredMessage[] {
   const engine = useEngine();
@@ -23,12 +27,13 @@ export function usePinned(conversationId: string): StoredMessage[] {
   }, [engine, conversationId, loaded]);
   return pinned;
 }
-
 /**
  * Pinned messages (android round 7 PinnedMessagesSheet), newest first. Choosing one shows it in the conversation,
  * loading older messages if needed; people who may post here can unpin it for everyone.
  */
 export function PinnedPanel({ conversationId, onClose }: { conversationId: string; onClose: () => void }) {
+  useLocaleRender();
+  const l10n = useLocalization();
   const engine = useEngine();
   const collection = useMessageCollection(conversationId, "pins");
   const pinned = (collection.page?.messages ?? [])
@@ -39,15 +44,17 @@ export function PinnedPanel({ conversationId, onClose }: { conversationId: strin
   const canPost = useOrbit((s) => s.conversations[conversationId]?.canPost ?? false);
   const [missing, setMissing] = useState(false);
   return (
-    <aside className="panel" aria-label="Pinned messages">
+    <aside className="panel" aria-label={l10n("messaging.conv_pins")}>
       <div className="panel-head">
         <div className="grow" style={{ minWidth: 0 }}>
-          <h2>Pinned</h2>
+          <h2>
+            <Localized k="messaging.interface.pinned_f20c879" />
+          </h2>
           <small>
-            {pinned.length} {pinned.length === 1 ? "message" : "messages"} on this page
+            <Localized k="messaging.interface.native_count_5b1ba916a" slots={[countLabel(pinned.length, "messages"), ""]} />
           </small>
         </div>
-        <button className="icon-btn" onClick={onClose} aria-label="Close panel">
+        <button className="icon-btn" onClick={onClose} aria-label={uiText("messaging.interface.close_panel_a600b90")}>
           <X size={18} />
         </button>
       </div>
@@ -55,12 +62,12 @@ export function PinnedPanel({ conversationId, onClose }: { conversationId: strin
         <CollectionControls collection={collection} />
         {missing && (
           <p className="banner warn" role="status">
-            That message isn't loaded in this conversation any more.
+            <Localized k="messaging.interface.that_message_isn_t_loaded_in_this_conversation_any_more_d58914f" />
           </p>
         )}
         {collection.page && pinned.length === 0 ? (
           <p className="faint" style={{ padding: "8px 4px" }}>
-            Nothing is pinned here. Pin a message from its menu so everyone in the conversation can find it.
+            <Localized k="messaging.interface.nothing_is_pinned_here_pin_a_message_from_its_menu_so_everyone_in_c22dc50" />
           </p>
         ) : (
           <ul className="search-results">
@@ -75,13 +82,18 @@ export function PinnedPanel({ conversationId, onClose }: { conversationId: strin
                 >
                   <span className="lines">
                     <small>
-                      {m.outgoing ? "You" : (users[m.senderUserId]?.displayName ?? "Someone")} · {shortWhen(m.sortTs)}
+                      {m.outgoing ? l10n("workspace.nav_you") : (users[m.senderUserId]?.displayName ?? l10n("messaging.react_someone"))} · {shortWhen(m.sortTs)}
                     </small>
-                    <span className="clamp-2">{m.text || (m.attachments.length ? "Attachment" : "Message")}</span>
+                    <span className="clamp-2">{m.text || (m.attachments.length ? uiText("messaging.interface.attachment_040d2b3") : l10n("messaging.message"))}</span>
                   </span>
                 </button>
                 {canPost && (
-                  <button className="icon-btn" onClick={() => void engine.setPinned(m, false)} aria-label="Unpin" title="Unpin for everyone">
+                  <button
+                    className="icon-btn"
+                    onClick={() => void engine.setPinned(m, false)}
+                    aria-label={l10n("messaging.msg_unpin")}
+                    title={uiText("messaging.interface.unpin_for_everyone_fb2fcac")}
+                  >
                     <PinOff size={16} />
                   </button>
                 )}

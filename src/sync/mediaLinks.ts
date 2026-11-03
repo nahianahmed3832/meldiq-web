@@ -1,3 +1,4 @@
+import { text as uiText } from "../i18n";
 /**
  * Music and video links (android MediaLinks, server docs/MEDIA.md): recognised from the address alone, so a card can say
  * what the link is ("YouTube video", "Spotify playlist") and open it on the provider's own site, without the browser
@@ -5,7 +6,6 @@
  */
 export type MediaProvider = "YouTube" | "YouTube Music" | "Spotify" | "SoundCloud" | "Vimeo";
 export type MediaKind = "video" | "short" | "track" | "album" | "playlist" | "artist" | "episode" | "show" | "live";
-
 export interface MediaLink {
   provider: MediaProvider;
   kind: MediaKind;
@@ -13,7 +13,6 @@ export interface MediaLink {
   /** A YouTube video, Short or live stream, which plays inside Meldiq when chosen (android, 2026-10-23). */
   videoId?: string;
 }
-
 /**
  * The privacy-enhanced YouTube player for [videoId] (youtube-nocookie.com: no cookies until playback). Only built for
  * ids of the 11-character pattern, so nothing else can be loaded through it (android MediaLinks.embedUrl).
@@ -21,26 +20,41 @@ export interface MediaLink {
 export function embedUrl(videoId: string): string | null {
   return YOUTUBE_ID.test(videoId) ? `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&playsinline=1&rel=0` : null;
 }
-
 export const KIND_LABEL: Record<MediaKind, string> = {
-  video: "Video",
-  short: "Short",
-  track: "Track",
-  album: "Album",
-  playlist: "Playlist",
-  artist: "Artist",
-  episode: "Podcast episode",
-  show: "Podcast",
-  live: "Live stream",
+  get video() {
+    return uiText("files.video");
+  },
+  get short() {
+    return uiText("workspace.interface.short_f5d61ea");
+  },
+  get track() {
+    return uiText("files.interface.track_051f01f");
+  },
+  get album() {
+    return uiText("files.interface.album_f05e840");
+  },
+  get playlist() {
+    return uiText("files.interface.playlist_7af36c5");
+  },
+  get artist() {
+    return uiText("settings.interface.artist_1d3981b");
+  },
+  get episode() {
+    return uiText("files.interface.podcast_episode_5051710");
+  },
+  get show() {
+    return uiText("files.interface.podcast_27a723d");
+  },
+  get live() {
+    return uiText("files.interface.live_stream_ac1ff70");
+  },
 };
-
 const YOUTUBE_ID = /^[A-Za-z0-9_-]{11}$/;
 const SPOTIFY_ID = /^[A-Za-z0-9]{22}$/;
 const SPOTIFY_KINDS: Record<string, MediaKind> = { track: "track", album: "album", playlist: "playlist", artist: "artist", episode: "episode", show: "show" };
 const SOUNDCLOUD_NOT_TRACKS = new Set(["sets", "tracks", "likes", "followers", "following"]);
 /** The same links the message text makes tappable (RichText), https only. */
 const LINK = /https:\/\/[^\s<>"']+[^\s<>"'.,;:!?)\]]/g;
-
 /** The first music or video link in [text], or null. */
 export function findMediaLink(text: string): MediaLink | null {
   for (const m of text.matchAll(LINK)) {
@@ -49,7 +63,6 @@ export function findMediaLink(text: string): MediaLink | null {
   }
   return null;
 }
-
 export function detectMediaLink(url: string): MediaLink | null {
   if (!url.startsWith("https://")) return null;
   let u: URL;
@@ -88,7 +101,6 @@ export function detectMediaLink(url: string): MediaLink | null {
       return null;
   }
 }
-
 function youtube(path: string[], q: URLSearchParams, provider: MediaProvider, link: (p: MediaProvider, k: MediaKind) => MediaLink): MediaLink | null {
   const v = q.get("v");
   // YouTube Music opens in its own app: only YouTube's videos, Shorts and live streams play inside Meldiq.

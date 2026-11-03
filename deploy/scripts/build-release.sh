@@ -12,8 +12,10 @@ version="$(node -p "require('./package.json').version")"
 commit="$(git rev-parse --short HEAD)"
 name="meldiq-web-${version}-${commit}"
 npm ci --no-audit --no-fund
+npm run i18n:check
 npm run typecheck
 npm run lint
+npm run format:check
 npm test
 npm run build
 # The build never contains a config.json: each server writes its own at install time.

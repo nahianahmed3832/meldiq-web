@@ -1,6 +1,6 @@
+import { text as uiText } from "../i18n";
 import type { StoredMessage } from "../model/types";
 import type { LocalStore } from "../store/db";
-
 /** A thread the person takes part in, for Activity › Thread replies (android ThreadActivityRules). */
 export interface ThreadActivity {
   rootId: string;
@@ -12,9 +12,7 @@ export interface ThreadActivity {
   lastReplyAt: number;
   lastReplierId: string;
 }
-
 export const THREADS_SHOWN = 30;
-
 /**
  * Threads the person started, replied in or follows ([followed], batch B8), with replies from others they haven't seen:
  * unseen first, then the most recently active. "Seen" is the later of opening the thread here ([seen]) and their own last
@@ -52,9 +50,7 @@ export function threadActivity(
   }
   return out.sort((a, b) => Number(b.unseen > 0) - Number(a.unseen > 0) || b.lastReplyAt - a.lastReplyAt).slice(0, THREADS_SHOWN);
 }
-
 const THREAD_SEEN_KEY = "threads.seen";
-
 /** Threads this account takes part in, with replies not yet seen here (Activity › Thread replies). */
 export async function loadThreadActivity(store: LocalStore): Promise<ThreadActivity[]> {
   const replies = await store.threadReplies();
@@ -63,21 +59,17 @@ export async function loadThreadActivity(store: LocalStore): Promise<ThreadActiv
   const seen = (await store.getValue<Record<string, number>>(THREAD_SEEN_KEY)) ?? {};
   return threadActivity(replies, roots, seen, await followedThreads(store));
 }
-
 const FOLLOWED_KEY = "threads.followed";
 /** At most this many followed threads are kept; the oldest go first. */
 const MAX_FOLLOWED = 500;
-
 /** Threads and forum posts followed on this browser (batch B8, android FollowedThreads: kept on the device). */
 export async function followedThreads(store: LocalStore): Promise<Set<string>> {
   return new Set((await store.getValue<string[]>(FOLLOWED_KEY)) ?? []);
 }
-
 export async function setFollowed(store: LocalStore, rootId: string, on: boolean): Promise<void> {
   const list = ((await store.getValue<string[]>(FOLLOWED_KEY)) ?? []).filter((id) => id !== rootId);
   await store.setValue(FOLLOWED_KEY, on ? [...list, rootId].slice(-MAX_FOLLOWED) : list);
 }
-
 /** The thread was opened here: its replies so far are seen. True when that changed anything. */
 export async function markThreadSeen(store: LocalStore, rootId: string): Promise<boolean> {
   const seen = (await store.getValue<Record<string, number>>(THREAD_SEEN_KEY)) ?? {};
@@ -87,11 +79,9 @@ export async function markThreadSeen(store: LocalStore, rootId: string): Promise
   await store.setValue(THREAD_SEEN_KEY, { ...seen, [rootId]: newest });
   return true;
 }
-
 /** Batch B5 (android ThreadListRules): a channel's Threads list, from this browser's own history (encrypted). */
 export const THREAD_LIST_SHOWN = 200;
 const THREAD_TITLE_MAX = 120;
-
 export interface ThreadRow {
   rootId: string;
   title: string;
@@ -100,7 +90,6 @@ export interface ThreadRow {
   replies: number;
   lastReplyTs: number;
 }
-
 /** A thread's name: the root's own title (forum posts), else its first non-blank line, else [fallback] (a file). */
 export function threadTitle(richTitle: string | null | undefined, text: string, fallback: string): string {
   const own = richTitle?.trim();
@@ -111,11 +100,16 @@ export function threadTitle(richTitle: string | null | undefined, text: string, 
     .find((l) => l);
   return line ? line.slice(0, THREAD_TITLE_MAX) : fallback;
 }
-
 /** Every thread in [messages] (roots this browser has), latest reply first. */
 export function threadRows(messages: readonly StoredMessage[]): ThreadRow[] {
   const byId = new Map(messages.map((m) => [m.id, m]));
-  const replies = new Map<string, { count: number; last: number }>();
+  const replies = new Map<
+    string,
+    {
+      count: number;
+      last: number;
+    }
+  >();
   for (const m of messages) {
     if (!m.threadRootId || m.deleted) continue;
     const r = replies.get(m.threadRootId) ?? { count: 0, last: 0 };
@@ -127,7 +121,7 @@ export function threadRows(messages: readonly StoredMessage[]): ThreadRow[] {
     if (!root || root.deleted) continue;
     rows.push({
       rootId,
-      title: threadTitle(root.rich?.title, root.text, root.attachments[0]?.name ?? "Attachment"),
+      title: threadTitle(root.rich?.title, root.text, root.attachments[0]?.name ?? uiText("messaging.interface.attachment_040d2b3")),
       senderId: root.senderUserId,
       outgoing: root.outgoing,
       replies: r.count,
@@ -136,7 +130,6 @@ export function threadRows(messages: readonly StoredMessage[]): ThreadRow[] {
   }
   return rows.sort((a, b) => b.lastReplyTs - a.lastReplyTs).slice(0, THREAD_LIST_SHOWN);
 }
-
 /** The rows whose name contains [query] (any case); all of them for a blank query. */
 export function filterThreads(rows: readonly ThreadRow[], query: string): ThreadRow[] {
   const q = query.trim().toLowerCase();

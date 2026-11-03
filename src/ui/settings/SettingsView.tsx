@@ -1,3 +1,6 @@
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
+import { Localized } from "../../i18n/Localized";
 import { useAccountActions } from "../shell/AccountActions";
 import { ArrowRightLeft, LogOut, Activity, BarChart3, Bookmark, ChevronLeft, ChevronRight, Laptop, Search, Gift, X } from "lucide-react";
 import { useState } from "react";
@@ -28,11 +31,14 @@ import { SettingsIcon } from "../components/SettingsIcon";
 import { LeaderboardsPage } from "../leaderboards/LeaderboardsPage";
 import { CreatorsPage } from "../creators/CreatorsPage";
 import { DeveloperPage } from "../developer/DeveloperPage";
-
 /** [features]: the page shows when the server has any of them. */
-type PageEntry = { key: SettingsPage; label: StringKey; icon: React.ReactNode; features?: string[] };
+type PageEntry = {
+  key: SettingsPage;
+  label: StringKey;
+  icon: React.ReactNode;
+  features?: string[];
+};
 const NO_FEATURES: string[] = [];
-
 /** The reference's two groups (2026-10-28): you and your account, then how the app looks and behaves here. */
 const USER_PAGES: PageEntry[] = [
   { key: "account", label: "settings_account", icon: <SettingsIcon name="account" /> },
@@ -41,26 +47,73 @@ const USER_PAGES: PageEntry[] = [
   { key: "devices", label: "settings_devices", icon: <SettingsIcon name="devices" /> },
   { key: "gifts", label: "settings_gifts", icon: <Gift size={17} /> },
   // Meldiq Plus (server docs/MOJO.md): with the account, not pushed anywhere else.
-  { key: "mojo", label: "settings_mojo", icon: <SettingsIcon name="mojo" /> },
+  {
+    key: "mojo",
+    label: "settings_mojo",
+    icon: <SettingsIcon name="mojo" />,
+  },
   // Meldiq Spark: its own page (2026-10-28), boosting the communities you love.
-  { key: "spark", label: "settings_spark", icon: <SettingsIcon name="spark" /> },
+  {
+    key: "spark",
+    label: "settings_spark",
+    icon: <SettingsIcon name="spark" />,
+  },
 ];
 const APP_PAGES: PageEntry[] = [
-  { key: "appearance", label: "settings_appearance", icon: <SettingsIcon name="appearance" /> },
-  { key: "calls", label: "settings_calls", icon: <SettingsIcon name="voice" /> },
-  { key: "notifications", label: "settings_notifications", icon: <SettingsIcon name="notifications" /> },
-  { key: "shortcuts", label: "settings_shortcuts", icon: <SettingsIcon name="shortcuts" /> },
+  {
+    key: "appearance",
+    label: "settings_appearance",
+    icon: <SettingsIcon name="appearance" />,
+  },
+  {
+    key: "calls",
+    label: "settings_calls",
+    icon: <SettingsIcon name="voice" />,
+  },
+  {
+    key: "notifications",
+    label: "settings_notifications",
+    icon: <SettingsIcon name="notifications" />,
+  },
+  {
+    key: "shortcuts",
+    label: "settings_shortcuts",
+    icon: <SettingsIcon name="shortcuts" />,
+  },
   // API 0.65.0: points, quests and account levels (Gem is Spark's).
-  { key: "leaderboards", label: "settings_leaderboards", icon: <SettingsIcon name="leaderboards" /> },
-  { key: "points", label: "settings_points", icon: <SettingsIcon name="embers" />, features: ["points"] },
-  { key: "advanced", label: "settings_advanced", icon: <SettingsIcon name="advanced" /> },
+  {
+    key: "leaderboards",
+    label: "settings_leaderboards",
+    icon: <SettingsIcon name="leaderboards" />,
+  },
+  {
+    key: "points",
+    label: "settings_points",
+    icon: <SettingsIcon name="embers" />,
+    features: ["points"],
+  },
+  {
+    key: "advanced",
+    label: "settings_advanced",
+    icon: <SettingsIcon name="advanced" />,
+  },
   // API 0.65.0 batch B: bots and "Log in with Meldiq" apps.
-  { key: "developer", label: "settings_developer", icon: <SettingsIcon name="developer" />, features: ["bots", "oauth-apps"] },
+  {
+    key: "developer",
+    label: "settings_developer",
+    icon: <SettingsIcon name="developer" />,
+    features: ["bots", "oauth-apps"],
+  },
   // API 0.65.0 batch B: the creator programme.
-  { key: "creators", label: "settings_creators", icon: <SettingsIcon name="creators" />, features: ["creator-program"] },
+  {
+    key: "creators",
+    label: "settings_creators",
+    icon: <SettingsIcon name="creators" />,
+    features: ["creator-program"],
+  },
 ];
-
 export function SettingsView({ page: requestedPage, onSignedOut }: { page: SettingsPage; onSignedOut: () => void }) {
+  useLocaleRender();
   const page = requestedPage === "storage" || requestedPage === "about" ? "profile" : requestedPage;
   const engine = useEngine();
   const accountAction = useAccountActions();
@@ -70,16 +123,23 @@ export function SettingsView({ page: requestedPage, onSignedOut }: { page: Setti
   const t = useT();
   const features = useOrbit((s) => s.server?.features ?? NO_FEATURES);
   const named = (list: PageEntry[]) => list.filter((p) => !p.features || p.features.some((f) => features.includes(f))).map((p) => ({ ...p, label: t(p.label) }));
-  const groups: { title: string; pages: { key: SettingsPage; label: string; icon: React.ReactNode }[] }[] = [
+  const groups: {
+    title: string;
+    pages: {
+      key: SettingsPage;
+      label: string;
+      icon: React.ReactNode;
+    }[];
+  }[] = [
     { title: t("settings_user_group"), pages: named(USER_PAGES) },
     { title: t("settings_app_group"), pages: named(APP_PAGES) },
     ...(admin
       ? [
           {
-            title: "Administration",
+            title: t("admin.title"),
             pages: [
-              { key: "health" as const, label: "Service health", icon: <Activity size={17} /> },
-              { key: "usage" as const, label: "Community usage", icon: <BarChart3 size={17} /> },
+              { key: "health" as const, label: t("admin.health"), icon: <Activity size={17} /> },
+              { key: "usage" as const, label: t("admin.usage"), icon: <BarChart3 size={17} /> },
             ],
           },
         ]
@@ -88,13 +148,16 @@ export function SettingsView({ page: requestedPage, onSignedOut }: { page: Setti
   const filtered = groups.map((g) => ({ ...g, pages: g.pages.filter((p) => matchesSetting(p.key, p.label, query)) })).filter((g) => g.pages.length);
   const scope = SETTINGS_INFO[page === "you" ? "profile" : page];
   return (
-    <section className="main main-split" aria-label="Settings" style={{ display: "flex", flexDirection: "column" }}>
+    <section className="main main-split" aria-label={t("settings.title")} style={{ display: "flex", flexDirection: "column" }}>
       <div className={`settings user-settings${page === "you" ? " at-you" : ""}`}>
-        <nav className="settings-nav" aria-label="Settings pages">
+        <nav className="settings-nav" aria-label={uiText("settings.interface.settings_pages_05ec055")}>
           <div className="settings-brand not-phone">
             <img src="/meldling-96.webp" width={28} height={28} alt="" />
             <span>
-              Meldiq <small>Your space, your way</small>
+              Meldiq{" "}
+              <small>
+                <Localized k="settings.interface.your_space_your_way_fe82363" />
+              </small>
             </span>
           </div>
           <h2 className="you-only">{t("settings_title")}</h2>
@@ -114,8 +177,8 @@ export function SettingsView({ page: requestedPage, onSignedOut }: { page: Setti
             <Search size={16} aria-hidden="true" />
             <input
               type="search"
-              aria-label="Search settings"
-              placeholder="Search settings"
+              aria-label={uiText("settings.interface.search_settings_255b076")}
+              placeholder={uiText("settings.interface.search_settings_255b076")}
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               onKeyDownCapture={(e) => {
@@ -127,7 +190,7 @@ export function SettingsView({ page: requestedPage, onSignedOut }: { page: Setti
               }}
             />
             {query && (
-              <button className="icon-btn" aria-label="Clear settings search" onClick={() => setQuery("")}>
+              <button className="icon-btn" aria-label={uiText("settings.interface.clear_settings_search_63c62e1")} onClick={() => setQuery("")}>
                 <X size={14} />
               </button>
             )}
@@ -135,7 +198,7 @@ export function SettingsView({ page: requestedPage, onSignedOut }: { page: Setti
           <div className="settings-nav-pages">
             {query && !filtered.length && (
               <p className="faint settings-search-empty" role="status">
-                No settings found for “{query}”. Try a different word.
+                <Localized k="settings.interface.no_settings_found_for_try_a_different_word_f3ce051" slots={[query]} />
               </p>
             )}
             {filtered.map((g) => (
@@ -159,25 +222,29 @@ export function SettingsView({ page: requestedPage, onSignedOut }: { page: Setti
               <span className="glyph">
                 <ArrowRightLeft size={17} />
               </span>
-              <span>Switch account</span>
+              <span>
+                <Localized k="settings.interface.switch_account_fedce01" />
+              </span>
             </button>
             <button className="side-item settings-logout" onClick={() => accountAction("logout")}>
               <span className="glyph">
                 <LogOut size={17} />
               </span>
-              <span>Log out</span>
+              <span>
+                <Localized k="settings.interface.log_out_4961614" />
+              </span>
             </button>
             <button className="side-item not-phone" onClick={() => navigate({ section: "home" })}>
               <span className="glyph">
                 <Laptop size={17} />
               </span>
-              <span>Back to conversations</span>
+              <span>{t("messaging.conv_back")}</span>
             </button>
           </div>
         </nav>
         <div className="settings-page scroll">
           <div className={`inner${page === "leaderboards" || page === "mojo" || page === "spark" || page === "profile" || page === "billing" || page === "checkout" ? " wide" : ""}`}>
-            <button className="settings-back" aria-label="Back to settings" onClick={() => navigate({ section: "settings", settingsPage: "you" })}>
+            <button className="settings-back" aria-label={uiText("settings.interface.back_to_settings_dc9c609")} onClick={() => navigate({ section: "settings", settingsPage: "you" })}>
               <ChevronLeft size={18} aria-hidden="true" /> {t("nav_you")}
             </button>
             {scope && (

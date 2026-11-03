@@ -1,7 +1,10 @@
+import { text as uiText } from "../i18n";
 /** Opt-in migration transport. It never changes device keys, offline state, stored legacy sessions or active UI auth. */
 export interface ProviderSession {
   access_token: string;
-  user: { id: string };
+  user: {
+    id: string;
+  };
 }
 export interface ExistingOwner {
   accountId: string;
@@ -49,11 +52,10 @@ export class AuthMigrationError extends Error {
     readonly code: string,
     readonly status?: number,
   ) {
-    super("Account migration could not be completed");
+    super(uiText("auth.interface.account_migration_could_not_be_completed_4dd6f20"));
     this.name = "AuthMigrationError";
   }
 }
-
 function providerIdentity(provider: ProviderSession) {
   try {
     if (!uuid.test(provider.user.id) || provider.access_token.length > 16384) throw new Error();
@@ -95,13 +97,20 @@ function transport(options: Options) {
       credentials: "omit",
       cache: "no-store",
       signal: options.signal,
-      headers: { authorization: `Bearer ${options.providerSession.access_token}`, ...(body === undefined ? {} : { "content-type": "application/json" }) },
+      headers: {
+        authorization: `Bearer ${options.providerSession.access_token}`,
+        ...(body === undefined ? {} : { "content-type": "application/json" }),
+      },
       ...(body === undefined ? {} : { body: JSON.stringify(body) }),
     });
     if (!response.ok) {
       let code = "migration_request_failed";
       try {
-        const failure = (await response.json()) as { error?: { code?: unknown } };
+        const failure = (await response.json()) as {
+          error?: {
+            code?: unknown;
+          };
+        };
         if (typeof failure.error?.code === "string" && publicFailureCodes.has(failure.error.code)) code = failure.error.code;
       } catch {
         /* Never include server response bodies or credentials in error messages. */
@@ -115,14 +124,23 @@ function transport(options: Options) {
     }
   };
 }
-async function prepare(options: Options, legacy?: { accessToken: string; password?: string }): Promise<PreparedAuthBinding> {
+async function prepare(
+  options: Options,
+  legacy?: {
+    accessToken: string;
+    password?: string;
+  },
+): Promise<PreparedAuthBinding> {
   const session = { access_token: options.providerSession.access_token, user: { id: options.providerSession.user.id } };
   const identity = providerIdentity(session);
   if (![options.expectedOwner.accountId, options.expectedOwner.userId, options.expectedOwner.deviceId].every((value) => typeof value === "string" && id.test(value)))
     throw new AuthMigrationError("invalid_existing_owner");
   if (legacy && (legacy.accessToken.length < 20 || legacy.accessToken.length > 200)) throw new AuthMigrationError("invalid_legacy_session");
   const request = transport({ ...options, providerSession: session });
-  const challenge = (await request("POST", "/v1/auth/challenge")) as { nonce?: unknown; expiresAt?: unknown };
+  const challenge = (await request("POST", "/v1/auth/challenge")) as {
+    nonce?: unknown;
+    expiresAt?: unknown;
+  };
   if (
     !challenge ||
     typeof challenge.nonce !== "string" ||
@@ -132,7 +150,11 @@ async function prepare(options: Options, legacy?: { accessToken: string; passwor
     challenge.expiresAt <= Date.now()
   )
     throw new AuthMigrationError("invalid_device_challenge");
-  const signature = await options.signDeviceProof(`meldiq-supabase-device-v1\n${identity.authUserId}\n${identity.sessionId}\n${options.expectedOwner.deviceId}\n${challenge.nonce}`);
+  const signature = await options.signDeviceProof(`meldiq-supabase-device-v1
+${identity.authUserId}
+${identity.sessionId}
+${options.expectedOwner.deviceId}
+${challenge.nonce}`);
   if (!/^[A-Za-z0-9+/]{86}==$/.test(signature)) throw new AuthMigrationError("invalid_device_signature");
   const bound = (await request("POST", legacy ? "/v3/auth/legacy-link" : "/v3/auth/device", {
     deviceId: options.expectedOwner.deviceId,
@@ -140,9 +162,15 @@ async function prepare(options: Options, legacy?: { accessToken: string; passwor
     signature,
     ...(options.totpCode ? { totpCode: options.totpCode } : {}),
     ...(legacy ? { legacyAccessToken: legacy.accessToken, ...(legacy.password ? { password: legacy.password } : {}) } : {}),
-  })) as { ok?: unknown };
+  })) as {
+    ok?: unknown;
+  };
   if (!bound || bound.ok !== true) throw new AuthMigrationError("invalid_server_response");
-  const owner = (await request("GET", "/v3/auth/me")) as { authUserId?: unknown; accountId?: unknown; userId?: unknown };
+  const owner = (await request("GET", "/v3/auth/me")) as {
+    authUserId?: unknown;
+    accountId?: unknown;
+    userId?: unknown;
+  };
   if (!owner || owner.authUserId !== identity.authUserId || owner.accountId !== options.expectedOwner.accountId || owner.userId !== options.expectedOwner.userId)
     throw new AuthMigrationError("identity_mismatch");
   return {
@@ -153,9 +181,13 @@ async function prepare(options: Options, legacy?: { accessToken: string; passwor
     providerSessionId: identity.sessionId,
   };
 }
-
 /** Return a verified binding receipt. The caller must fence the current SDK session before switching API auth. */
-export function prepareLegacySupabaseLink(options: Options & { legacyAccessToken: string; password?: string }): Promise<PreparedAuthBinding> {
+export function prepareLegacySupabaseLink(
+  options: Options & {
+    legacyAccessToken: string;
+    password?: string;
+  },
+): Promise<PreparedAuthBinding> {
   return prepare(options, { accessToken: options.legacyAccessToken, password: options.password });
 }
 /** A later provider login can authorize only an already-certified device of its explicitly mapped owner. */

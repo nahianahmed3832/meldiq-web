@@ -1,3 +1,5 @@
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
 import { MonitorUp, Volume2 } from "lucide-react";
 import { shallowEqual, useOrbit } from "../../application/orbit";
 import { contextMenuProps, Menu, useMenu } from "../components/Overlay";
@@ -13,9 +15,15 @@ import { orgActivity, orgLive } from "../selectors";
 import { isHighlighted, unreadMarker } from "../unread";
 import { useT } from "../../i18n";
 import type { ShellDialog } from "./Shell";
-
-export type RailOrg = { id: string; name: string; photoRev: number | null; accent: string | null; myRole: string | null; unread: number; mentions: number };
-
+export type RailOrg = {
+  id: string;
+  name: string;
+  photoRev: number | null;
+  accent: string | null;
+  myRole: string | null;
+  unread: number;
+  mentions: number;
+};
 /** The communities in rail order, with their rolled-up unread activity. */
 export function useRailOrgs(): RailOrg[] {
   return useOrbit(
@@ -23,7 +31,6 @@ export function useRailOrgs(): RailOrg[] {
     (a, b) => a.length === b.length && a.every((x, i) => shallowEqual(x, b[i])),
   );
 }
-
 /**
  * One community's icon: selects it and opens its channels (from DMs too); its side marker and badge say what's new.
  * A right-click (or the Menu key) opens its menu: open, invite, mark as read, settings, copy its id, leave.
@@ -40,8 +47,12 @@ export function CommunityButton({
   size: number;
   onDialog: (d: ShellDialog) => void;
   /** Its place for dragging: in a folder (its id) or not, and whether something may be dropped onto it. */
-  drag?: { group: string | null; into: boolean };
+  drag?: {
+    group: string | null;
+    into: boolean;
+  };
 }) {
+  useLocaleRender();
   const t = useT();
   const menu = useMenu();
   // The permissions behind the menu's items load only once it opens (one request per right-click, not per icon).
@@ -52,7 +63,7 @@ export function CommunityButton({
   const live = useOrbit((s) => orgLive(s, o.id), shallowEqual);
   const ownColors = useCommunityThemes().on;
   const accent = ownColors ? o.accent : null;
-  const label = `${o.name}${live.live ? (live.sharing ? ", someone is live" : ", a call is on") : ""}${o.mentions ? `, ${t("rail_mentions", { n: o.mentions })}` : ""}${o.unread ? `, ${t("nav_unread", { n: o.unread })}` : ""}`;
+  const label = `${o.name}${live.live ? (live.sharing ? uiText("organization.interface.someone_is_live_6b49bda") : uiText("organization.interface.a_call_is_on_3a26014")) : ""}${o.mentions ? `, ${t("rail_mentions", { n: o.mentions })}` : ""}${o.unread ? `, ${t("nav_unread", { n: o.unread })}` : ""}`;
   const openIt = () => {
     setPrefs({ orgId: o.id });
     navigate({ section: "home" });
@@ -76,7 +87,10 @@ export function CommunityButton({
         <OrgAvatar orgId={o.id} name={o.name} photoRev={o.photoRev} size={size} />
         {!selected && <UnreadBadge marker={marker} />}
         {live.live && (
-          <span className={`rail-live${live.sharing ? " sharing" : ""}`} title={live.sharing ? "Someone is live" : "A call is on"}>
+          <span
+            className={`rail-live${live.sharing ? " sharing" : ""}`}
+            title={live.sharing ? uiText("organization.interface.someone_is_live_9e00ccc") : uiText("organization.interface.a_call_is_on_1c301c0")}
+          >
             {live.sharing ? <MonitorUp size={11} aria-hidden="true" /> : <Volume2 size={11} aria-hidden="true" />}
           </span>
         )}

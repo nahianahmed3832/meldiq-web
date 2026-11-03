@@ -1,3 +1,4 @@
+import { text as uiText } from "../i18n";
 import type { AccountView } from "../api/accountSchemas";
 import { randomBytes } from "../crypto/bytes";
 import { canonical } from "../crypto/canonical";
@@ -9,20 +10,15 @@ import { openKeyBackup, sealKeyBackup, WrongBackupPassword } from "../crypto/key
 import { encodeRecoveryCode } from "../crypto/recoveryCode";
 import type { DeviceRecord } from "../model/types";
 import type { AccountApi } from "./accountApi";
-
 /** Something the person can act on: the recovery key belongs to another account, the approval wasn't for this one. */
 export class SetupError extends Error {}
-
 const SEED_BYTES = 32;
-
 interface Enrolled {
   device: DeviceRecord;
 }
-
 async function certify(seed: Uint8Array, identityKey: string, keys: DeviceKeys): Promise<string> {
   return sign(await signingKeyFromSeed(seed), canonical.deviceCert(identityKey, keys.signingPublic, keys.encryptionPublic));
 }
-
 async function enroll(accounts: AccountApi, account: AccountView, seed: Uint8Array, identityKey: string, keys: DeviceKeys, deviceName: string, purpose: "register" | "add-device"): Promise<Enrolled> {
   const certificate = await certify(seed, identityKey, keys);
   const nonce = await accounts.challenge();
@@ -44,7 +40,6 @@ async function enroll(accounts: AccountApi, account: AccountView, seed: Uint8Arr
     },
   };
 }
-
 /**
  * Seals [seed] under the sign-in [password] and saves it when the account has no usable key backup (server
  * docs/KEY_BACKUP.md), so the next new device needs only the password and an emailed code. This browser keeps no seed
@@ -62,7 +57,6 @@ export async function backUpKeysIfMissing(accounts: AccountApi, accountId: strin
     return false;
   }
 }
-
 /**
  * The emailed [code] (null when the unlock step said it needs none) gets the sealed keys back and [password] opens them.
  * The caller wipes the seed it gets.
@@ -72,11 +66,10 @@ export async function openKeyBackupWithCode(accounts: AccountApi, accountId: str
   try {
     return await openKeyBackup(password, accountId, backup);
   } catch (e) {
-    if (e instanceof WrongBackupPassword) throw new SetupError("That password doesn't open your key backup. Use your recovery key or your phone instead.");
+    if (e instanceof WrongBackupPassword) throw new SetupError(uiText("auth.interface.that_password_doesn_t_open_your_key_backup_use_your_recovery_458c847"));
     throw e;
   }
 }
-
 /**
  * The emailed [code] gets the sealed keys back and [password] opens them; this browser is then added like with the
  * recovery key. The seed is wiped before this returns.
@@ -89,12 +82,20 @@ export async function enrollWithEmailCode(accounts: AccountApi, account: Account
     seed.fill(0);
   }
 }
-
 /**
  * The account's first device (docs/ORBIT_2_ARCHITECTURE §3): makes the encryption identity here and backs it up under
  * [password] when given. The recovery key is returned to be shown once; the seed itself is wiped before this returns.
  */
-export async function createIdentity(accounts: AccountApi, account: AccountView, deviceName: string, password?: string): Promise<Enrolled & { recoveryCode: string }> {
+export async function createIdentity(
+  accounts: AccountApi,
+  account: AccountView,
+  deviceName: string,
+  password?: string,
+): Promise<
+  Enrolled & {
+    recoveryCode: string;
+  }
+> {
   const seed = randomBytes(SEED_BYTES);
   try {
     const identityKey = await publicKeyFromSeed(seed);
@@ -105,15 +106,14 @@ export async function createIdentity(accounts: AccountApi, account: AccountView,
     seed.fill(0);
   }
 }
-
 /**
  * Adds this browser to an account that already has an identity, certified with its seed: typed in as the recovery key, or
  * handed over by another device (pairing). The seed must be this account's, or nothing is sent.
  */
 export async function enrollWithSeed(accounts: AccountApi, account: AccountView, seed: Uint8Array, deviceName: string, keys?: DeviceKeys, password?: string): Promise<Enrolled> {
   const identityKey = account.identity?.identityKey;
-  if (!identityKey) throw new SetupError("This account has no encryption keys yet.");
-  if ((await publicKeyFromSeed(seed)) !== identityKey) throw new SetupError("That recovery key belongs to a different Meldiq account.");
+  if (!identityKey) throw new SetupError(uiText("auth.interface.this_account_has_no_encryption_keys_yet_50c5749"));
+  if ((await publicKeyFromSeed(seed)) !== identityKey) throw new SetupError(uiText("workspace.interface.that_recovery_key_belongs_to_a_different_meldiq_account_5aa9171"));
   const enrolled = await enroll(accounts, account, seed, identityKey, keys ?? (await generateDeviceKeys()), deviceName, "add-device");
   await backUpKeysIfMissing(accounts, account.id, seed, password);
   return enrolled;

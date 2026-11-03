@@ -1,4 +1,5 @@
 import { defineConfig } from "vite";
+import { fileURLToPath } from "node:url";
 
 /**
  * The service worker (src/sw/sw.ts) as one classic script at the site's root, /sw.js, so it can control the whole app
@@ -8,6 +9,9 @@ import { defineConfig } from "vite";
 export default defineConfig(({ mode }) => ({
   // Library builds leave process.env alone; the worker shares modules that read NODE_ENV (src/application/env.ts).
   define: { "process.env.NODE_ENV": JSON.stringify(mode === "development" ? "development" : "production") },
+  resolve: {
+    alias: [{ find: /^(?:\.\.?\/)+i18n(?:\/api-errors)?$/, replacement: fileURLToPath(new URL("./src/sw/internalLocale.ts", import.meta.url)) }],
+  },
   build: {
     target: ["es2022", "safari16.4"],
     // Development keeps its map; releases ship no readable source (the owner, 2026-10-29).

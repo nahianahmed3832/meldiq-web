@@ -450,6 +450,18 @@ test("embedded one-time fields keep confirmation on the stored server purchase",
   await page.getByRole("radio", { name: /Debit or credit card/ }).check();
   await page.locator(".checkout-agreement input").check();
   await page.getByLabel("Billing country").selectOption("US");
+  const nameField = page.locator(".checkout-hosted-field input").first();
+  await nameField.fill("Locale Test");
+  const originalField = await nameField.elementHandle();
+  for (const locale of ["العربية", "English"]) {
+    await page.locator("button.lang-picker").click();
+    await page.getByRole("option", { name: locale, exact: true }).click();
+    await expect(page.locator(".language-dialog")).toHaveCount(0);
+    expect(await originalField!.evaluate((element) => element === document.querySelector(".checkout-hosted-field input"))).toBe(true);
+    await expect(nameField).toHaveValue("Locale Test");
+    await expect(nameField).toHaveAttribute("lang", locale === "العربية" ? "ar" : "en");
+  }
+  await expect(page.getByLabel("Billing country")).toHaveValue("US");
   await page.getByRole("button", { name: "Complete purchase", exact: true }).click();
   await expect.poll(() => confirmations).toBe(1);
   expect(await page.evaluate(() => (window as unknown as { embeddedOrderId: string }).embeddedOrderId)).toBe(p.providerRef);

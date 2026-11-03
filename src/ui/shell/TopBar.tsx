@@ -1,3 +1,5 @@
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
 import { Bell, Bookmark, Menu as MenuIcon, Search, Settings } from "lucide-react";
 import { useOrbit } from "../../application/orbit";
 import { navigate, type Section } from "../../application/router";
@@ -6,7 +8,6 @@ import { laterDue, mentionCount } from "../selectors";
 import { capCount } from "../unread";
 import { type Translate, useT } from "../../i18n";
 import { useProfileMenu } from "./ProfileMenu";
-
 interface TopBarProps {
   onMenu: () => void;
   onSearch: () => void;
@@ -14,12 +15,12 @@ interface TopBarProps {
   /** The community on screen, for the page title and the search box's scope. */
   orgId: string | null;
 }
-
 /**
  * The compact top bar (the floating redesign, 2026-10-28): where you are on the left, search in the middle, and
  * Activity, Saved, Settings and you on the right. On phones it steps aside where the lists carry their own headers.
  */
 export function TopBar({ onMenu, onSearch, section, orgId }: TopBarProps) {
+  useLocaleRender();
   const t = useT();
   const orgName = useOrbit((s) => (orgId ? (s.orgs.find((o) => o.id === orgId)?.name ?? null) : null));
   const inCommunity = (section === "home" || section === "workspace" || section === "lobby") && !!orgName;
@@ -32,21 +33,20 @@ export function TopBar({ onMenu, onSearch, section, orgId }: TopBarProps) {
   const due = useOrbit(laterDue);
   const profile = useProfileMenu();
   const mac = typeof navigator !== "undefined" && /Mac|iPhone|iPad/.test(navigator.platform);
-
   return (
     <header className="topbar">
       <div className="topbar-left">
-        <button className="icon-btn menu-toggle" onClick={onMenu} aria-label="Show conversations">
+        <button className="icon-btn menu-toggle" onClick={onMenu} aria-label={uiText("workspace.interface.show_conversations_a50e7d6")}>
           <MenuIcon size={19} />
         </button>
         <span className="topbar-title ellipsis" title={title}>
           {title}
         </span>
       </div>
-      <button className="searchbox" onClick={onSearch} aria-label="Search Meldiq" aria-keyshortcuts={mac ? "Meta+K" : "Control+K"}>
+      <button className="searchbox" onClick={onSearch} aria-label={uiText("workspace.interface.search_meldiq_7c5a6e1")} aria-keyshortcuts={mac ? "Meta+K" : "Control+K"}>
         <Search size={16} />
         <span className="ellipsis">{searchLabel}</span>
-        <kbd className="kbd">{mac ? "⌘K" : "Ctrl K"}</kbd>
+        <kbd className="kbd">{mac ? "⌘K" : uiText("workspace.interface.ctrl_k_854f7b2")}</kbd>
       </button>
       <div className="topbar-right">
         {/* Activity (mentions, unreads, threads, calls) and Later moved here from the rail (community-first brief §G); phones
@@ -80,18 +80,31 @@ export function TopBar({ onMenu, onSearch, section, orgId }: TopBarProps) {
             </span>
           )}
         </button>
-        <button className="icon-btn hide-sm" onClick={() => navigate({ section: "settings", settingsPage: "notifications" })} aria-label="Settings">
+        <button className="icon-btn hide-sm" onClick={() => navigate({ section: "settings", settingsPage: "notifications" })} aria-label={t("settings.title")}>
           <Settings size={19} />
         </button>
-        <button className="me-btn" onClick={(e) => profile.open(e.currentTarget)} aria-label="Your profile and settings" aria-haspopup="menu" aria-expanded={profile.expanded}>
-          <UserAvatar userId={me?.userId ?? ""} name={me?.displayName ?? "Me"} colorIndex={me?.avatarColor ?? 0} photoRev={myPhoto} size={32} online={connection === "online"} decorative />
+        <button
+          className="me-btn"
+          onClick={(e) => profile.open(e.currentTarget)}
+          aria-label={uiText("workspace.interface.your_profile_and_settings_44120f0")}
+          aria-haspopup="menu"
+          aria-expanded={profile.expanded}
+        >
+          <UserAvatar
+            userId={me?.userId ?? ""}
+            name={me?.displayName ?? uiText("organization.interface.me_d30af07")}
+            colorIndex={me?.avatarColor ?? 0}
+            photoRev={myPhoto}
+            size={32}
+            online={connection === "online"}
+            decorative
+          />
         </button>
         {profile.ui}
       </div>
     </header>
   );
 }
-
 /** The top bar's title outside a community: the section's own name. */
 function pageTitle(section: Section, t: Translate): string {
   switch (section) {

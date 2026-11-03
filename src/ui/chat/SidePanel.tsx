@@ -1,3 +1,7 @@
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
+import { Localized } from "../../i18n/Localized";
+import { useT as useLocalization } from "../../i18n";
 import { titleOf } from "../../sync/forumRules";
 import { ThreadsPanel } from "./ThreadsPanel";
 import { useEffect, useMemo, useState } from "react";
@@ -13,8 +17,8 @@ import { SearchPanel } from "./SearchPanel";
 import { PinnedPanel } from "./PinnedPanel";
 import { hasPeoplePanel, PeoplePanel } from "./PeoplePanels";
 import { CollectionControls, useMessageCollection } from "./useMessageCollection";
-
 export function SidePanel({ route }: { route: Route }) {
+  useLocaleRender();
   const close = () => navigate({ section: route.section, conversationId: route.conversationId });
   if (!route.conversationId) return null;
   if (route.panel === "search") return <SearchPanel conversationId={route.conversationId} onClose={close} />;
@@ -27,13 +31,14 @@ export function SidePanel({ route }: { route: Route }) {
     <DetailsPanel conversationId={route.conversationId} onClose={close} />
   );
 }
-
 function PeopleRoutePanel({ conversationId, onClose }: { conversationId: string; onClose: () => void }) {
+  useLocaleRender();
   const c = useOrbit((s) => s.conversations[conversationId]);
   return c && hasPeoplePanel(c) ? <PeoplePanel c={c} onClose={onClose} /> : null;
 }
-
 function ThreadPanel({ conversationId, root, onClose }: { conversationId: string; root: string; onClose: () => void }) {
+  useLocaleRender();
+  const l10n = useLocalization();
   const engine = useEngine();
   const c = useOrbit((s) => s.conversations[conversationId]);
   const loaded = useOrbit((s) => s.messages[conversationId]?.items);
@@ -71,15 +76,15 @@ function ThreadPanel({ conversationId, root, onClose }: { conversationId: string
   const title = conversationTitle(c, me.userId, users);
   const postTitle = c.format === "forum" && rootMsg ? titleOf(rootMsg.rich?.title, rootMsg.text) : null;
   return (
-    <aside className="panel" aria-label="Thread">
+    <aside className="panel" aria-label={l10n("messaging.thread")}>
       <PanelHead
-        title={postTitle || "Thread"}
-        sub={c.type === "CHANNEL" ? `#${title}` : title}
+        title={postTitle || l10n("messaging.thread")}
+        sub={c.type === "CHANNEL" ? uiText("messaging.interface.value0_dbac6f0", { value0: title }) : title}
         onClose={onClose}
         actions={
           following !== null && (
             <button className="btn btn-secondary btn-sm" aria-pressed={following} onClick={() => void engine.setFollowed(root, !following).then(() => setFollowing(!following))}>
-              {following ? "Following" : "Follow"}
+              {following ? uiText("messaging.interface.following_344b427") : uiText("messaging.interface.follow_641d1ef")}
             </button>
           )
         }
@@ -89,7 +94,7 @@ function ThreadPanel({ conversationId, root, onClose }: { conversationId: string
         <>
           {!rootMsg && (
             <p className="faint" role="status">
-              The first message is outside your available history. You can still read the available replies.
+              <Localized k="messaging.interface.the_first_message_is_outside_your_available_history_you_can_still_4e4a250" />
             </p>
           )}
           <MessageList
@@ -110,10 +115,10 @@ function ThreadPanel({ conversationId, root, onClose }: { conversationId: string
         <div className="empty">
           <p>
             {collection.loading
-              ? "Loading this thread…"
+              ? uiText("messaging.interface.loading_this_thread_f236e3a")
               : collection.error
-                ? "This thread couldn't be loaded. Use Refresh to try again."
-                : "This thread isn't available in this browser's cached history."}
+                ? uiText("messaging.interface.this_thread_couldn_t_be_loaded_use_refresh_to_try_again_0a717e0")
+                : uiText("messaging.interface.this_thread_isn_t_available_in_this_browser_s_cached_history_6a933ff")}
           </p>
         </div>
       )}

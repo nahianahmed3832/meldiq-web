@@ -1,5 +1,5 @@
+import { text as uiText } from "../i18n";
 import { fitWithin } from "./photoQuality";
-
 export const PREVIEW_MAX_BYTES = 128 * 1024;
 export interface LocalMediaPreview {
   file: File;
@@ -7,7 +7,6 @@ export interface LocalMediaPreview {
   h: number;
   durationMs?: number;
 }
-
 /** A small, separate derivative. Originals are never changed, and no plaintext is sent to a processing service. */
 export async function mediaPreview(source: Blob, name: string, signal?: AbortSignal): Promise<LocalMediaPreview | null> {
   if (!/^(image\/(jpeg|png|webp|avif|heic|heif|bmp)|video\/(mp4|webm|quicktime))$/.test(source.type)) return null;
@@ -38,10 +37,10 @@ export async function mediaPreview(source: Blob, name: string, signal?: AbortSig
           else resolve();
         };
         const abort = () => finish(new DOMException("Cancelled", "AbortError"));
-        const timer = setTimeout(() => finish(new Error("Preview unavailable")), 8000);
+        const timer = setTimeout(() => finish(new Error(uiText("files.interface.preview_unavailable_b99fa6c"))), 8000);
         signal?.addEventListener("abort", abort, { once: true });
         video!.onloadeddata = () => finish();
-        video!.onerror = () => finish(new Error("This browser cannot decode the video"));
+        video!.onerror = () => finish(new Error(uiText("files.interface.this_browser_cannot_decode_the_video_c5eff00")));
         video!.src = url!;
       });
       w = video.videoWidth;
@@ -49,7 +48,7 @@ export async function mediaPreview(source: Blob, name: string, signal?: AbortSig
       if (Number.isFinite(video.duration)) durationMs = Math.round(video.duration * 1000);
     }
     signal?.throwIfAborted();
-    if (!w || !h || w > 32768 || h > 32768 || w * h > 64_000_000) return null;
+    if (!w || !h || w > 32768 || h > 32768 || w * h > 64000000) return null;
     const size = fitWithin(w, h, 480);
     const canvas = document.createElement("canvas");
     canvas.width = size.width;

@@ -1,27 +1,41 @@
+import { text as uiText } from "../i18n";
 import { openAttachment, streamAttachment } from "./attachments";
 import type { SaveItem, SaveStatus } from "./bulkSave";
 import type { Engine } from "./engine";
-
 /**
  * Runs a bulk save (android round 7 BulkSaver): one file at a time, each downloaded through the membership-checked
  * endpoint, verified and decrypted here, then written. Where the browser lets a page write into a folder the person
  * picks (Chromium's File System Access), files go there; elsewhere each one is handed to the browser's downloads.
  */
 interface DirHandle {
-  getFileHandle(name: string, o?: { create?: boolean }): Promise<{ createWritable(): Promise<Writable> }>;
+  getFileHandle(
+    name: string,
+    o?: {
+      create?: boolean;
+    },
+  ): Promise<{
+    createWritable(): Promise<Writable>;
+  }>;
 }
 interface Writable {
   write(data: Blob | Uint8Array): Promise<void>;
   close(): Promise<void>;
   abort(): Promise<void>;
 }
-
 /** Whether this browser can save into a folder the person picks. */
-export const canPickFolder = (): boolean => typeof (window as unknown as { showDirectoryPicker?: unknown }).showDirectoryPicker === "function";
-
+export const canPickFolder = (): boolean =>
+  typeof (
+    window as unknown as {
+      showDirectoryPicker?: unknown;
+    }
+  ).showDirectoryPicker === "function";
 /** Asks for a folder; null when the person closed the picker. */
 export async function pickFolder(): Promise<DirHandle | null> {
-  const picker = (window as unknown as { showDirectoryPicker: (o: { mode: "readwrite" }) => Promise<DirHandle> }).showDirectoryPicker;
+  const picker = (
+    window as unknown as {
+      showDirectoryPicker: (o: { mode: "readwrite" }) => Promise<DirHandle>;
+    }
+  ).showDirectoryPicker;
   try {
     return await picker({ mode: "readwrite" });
   } catch (e) {
@@ -29,7 +43,6 @@ export async function pickFolder(): Promise<DirHandle | null> {
     throw e;
   }
 }
-
 /** A name not yet used in [dir]: files already there are never overwritten ("a.jpg" → "a (1).jpg"). */
 async function freeName(dir: DirHandle, name: string): Promise<string> {
   const dot = name.lastIndexOf(".") > 0 ? name.lastIndexOf(".") : name.length;
@@ -41,9 +54,8 @@ async function freeName(dir: DirHandle, name: string): Promise<string> {
       return candidate; // NotFoundError: free
     }
   }
-  throw new Error("Too many files with this name in that folder.");
+  throw new Error(uiText("workspace.interface.too_many_files_with_this_name_in_that_folder_3229f0e"));
 }
-
 async function writeInto(engine: Engine, dir: DirHandle, item: SaveItem): Promise<void> {
   const file = await dir.getFileHandle(await freeName(dir, item.fileName), { create: true });
   const out = await file.createWritable();
@@ -56,7 +68,6 @@ async function writeInto(engine: Engine, dir: DirHandle, item: SaveItem): Promis
     throw e;
   }
 }
-
 async function download(engine: Engine, item: SaveItem): Promise<void> {
   const url = URL.createObjectURL(await openAttachment(engine, item.ref));
   const a = document.createElement("a");
@@ -66,9 +77,8 @@ async function download(engine: Engine, item: SaveItem): Promise<void> {
   document.body.appendChild(a);
   a.click();
   a.remove();
-  setTimeout(() => URL.revokeObjectURL(url), 30_000);
+  setTimeout(() => URL.revokeObjectURL(url), 30000);
 }
-
 /**
  * Saves [items] into [dir] (or as downloads when null), reporting each file's status; [stopped] ends the batch before
  * the next file, leaving the rest "cancelled" for Retry.
@@ -90,9 +100,8 @@ export async function runBulkSave(
       await (dir ? writeInto(engine, dir, item) : download(engine, item));
       report(item.key, "saved");
     } catch (e) {
-      report(item.key, "failed", e instanceof Error ? e.message : "Couldn't save this file.");
+      report(item.key, "failed", e instanceof Error ? e.message : uiText("workspace.interface.couldn_t_save_this_file_fc73a64"));
     }
   }
 }
-
 export type { DirHandle };

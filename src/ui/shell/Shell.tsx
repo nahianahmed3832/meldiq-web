@@ -1,3 +1,6 @@
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
+import { useT as useLocalization } from "../../i18n";
 import { byActivity, markAllReadTargets, unreadOf } from "../selectors";
 import { actionFor, comboOf } from "../../application/shortcuts";
 import { ShortcutsDialog } from "../dialogs/ShortcutsDialog";
@@ -53,14 +56,11 @@ import { PHONE_LAYOUT } from "../../application/viewport";
 import { PlusRenewalNotice } from "../mojo/PlusRenewalNotice";
 import { PlusSupportNotice } from "../mojo/PlusSupportNotice";
 import { UserPanel } from "./UserPanel";
-
 const SettingsView = lazy(() => import("../settings/SettingsView").then((m) => ({ default: m.SettingsView })));
 const WorkspaceView = lazy(() => import("../workspace/WorkspaceView").then((m) => ({ default: m.WorkspaceView })));
 const LobbyPage = lazy(() => import("../lobby/LobbyPage").then((m) => ({ default: m.LobbyPage })));
-
 /** What shows behind settings opened straight from a link: Home. */
 const HOME_ROUTE: Route = { section: "home", conversationId: null, panel: null, threadRoot: null, settingsPage: "profile", workspacePage: "overview" };
-
 /** Whether the phone layout applies (one screen at a time), following the window as it's resized. */
 function usePhoneLayout(): boolean {
   const [phone, setPhone] = useState(() => typeof window !== "undefined" && window.matchMedia(PHONE_LAYOUT).matches);
@@ -72,28 +72,57 @@ function usePhoneLayout(): boolean {
   }, []);
   return phone;
 }
-
 export type ShellDialog =
-  | { kind: "search" }
-  | { kind: "new" }
-  | { kind: "newGroup" }
-  | { kind: "channels" }
-  | { kind: "identity"; userId: string }
-  | { kind: "createWorkspace"; discord?: DiscordReturn | null }
-  | { kind: "joinWorkspace"; code?: string }
+  | {
+      kind: "search";
+    }
+  | {
+      kind: "new";
+    }
+  | {
+      kind: "newGroup";
+    }
+  | {
+      kind: "channels";
+    }
+  | {
+      kind: "identity";
+      userId: string;
+    }
+  | {
+      kind: "createWorkspace";
+      discord?: DiscordReturn | null;
+    }
+  | {
+      kind: "joinWorkspace";
+      code?: string;
+    }
   // Community parity E: a template link's preview ("Create a community from this template").
-  | { kind: "template"; code: string }
-  | { kind: "connections" }
-  | { kind: "requests" }
-  | { kind: "addMembers"; orgId?: string }
-  | { kind: "shortcuts" }
+  | {
+      kind: "template";
+      code: string;
+    }
+  | {
+      kind: "connections";
+    }
+  | {
+      kind: "requests";
+    }
+  | {
+      kind: "addMembers";
+      orgId?: string;
+    }
+  | {
+      kind: "shortcuts";
+    }
   | null;
-
 /**
  * The signed-in frame: workspace rail, top bar, sidebar, the main column and an optional side panel; on phones a single
  * column with a bottom tab bar. Keyboard: ⌘/Ctrl+K search, Alt+↑/↓ previous or next conversation, Esc closes overlays.
  */
 export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
+  useLocaleRender();
+  const l10n = useLocalization();
   const engine = useEngine();
   const route = useRoute();
   const prefs = usePrefs();
@@ -114,7 +143,6 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
   const [drawer, setDrawer] = useState(false);
   const [dialog, setDialog] = useState<ShellDialog>(null);
   usePushToTalk();
-
   const orgId = prefs.orgId && orgIds.includes(prefs.orgId) ? prefs.orgId : (orgIds[0] ?? null);
   const orgName = useOrbit((s) => s.orgs.find((o) => o.id === orgId)?.name ?? "");
   const orgs = useOrbit((s) => s.orgs, shallowEqual);
@@ -122,7 +150,6 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
     if (orgId !== prefs.orgId && synced) setPrefs({ orgId });
   }, [orgId, prefs.orgId, synced]);
   useLobbyLanding(orgId, route, phone);
-
   // The account's selected workspace, shared with the phone (PUT /v2/account/preferences): adopted once when the app
   // opens, then every switch made here is saved for the other devices. Best effort: if either call fails, this browser
   // keeps its own choice and nothing else is affected.
@@ -146,7 +173,6 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
     saved.current = orgId;
     rememberSelection(engine, orgId).catch(() => undefined);
   }, [orgId, synced, engine]);
-
   // Invalidate the previous window before paint; position only after the new page renders.
   useLayoutEffect(() => {
     const selected = isFullPage(route.section) ? null : route.conversationId;
@@ -162,33 +188,29 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
     if (c?.orgId && guide) void noteGuideVisit(engine.store, c.orgId, guide, c.id).then((changed) => changed && window.dispatchEvent(new Event(GUIDE_EVENT)));
     return () => window.removeEventListener("pageshow", restored);
   }, [engine, route.conversationId, route.section]);
-
   // Where the person is, for the next time Meldiq opens (application/lastPlace.ts); settings windows aren't places.
   useEffect(() => {
     if (!isFullPage(route.section) && route.section !== "oauth" && (route.conversationId || route.section === "lobby")) rememberPlace(engine.device.userId, routeHref(route));
   }, [engine, route]);
   // From now on this browser opens straight into the app's frame, not the launch screen (application/splash.ts).
   useEffect(() => rememberReturning(true), []);
-
   // A conversation this account can no longer see (removed, or another workspace's link) closes.
   useEffect(() => {
     if (synced && route.conversationId && !known) {
-      engine.notice("info", "That conversation isn't available to you.");
+      engine.notice("info", uiText("workspace.interface.that_conversation_isn_t_available_to_you_949dba6"));
       navigate({ section: isFullPage(route.section) ? "home" : route.section }, true);
     }
   }, [synced, known, route.conversationId, route.section, engine]);
-
   // Someone's profile, opened from a name or a member list anywhere.
   const [profile, setProfile] = useState<ProfileRequest | null>(null);
   useEffect(() => {
     const onOpen = (e: Event) => {
       const d = (e as CustomEvent<ProfileRequest>).detail;
-      if (d?.userId) setProfile({ ...d, name: d.name ?? "Profile" });
+      if (d?.userId) setProfile({ ...d, name: d.name ?? uiText("settings.profile") });
     };
     window.addEventListener(OPEN_PROFILE_EVENT, onOpen);
     return () => window.removeEventListener(OPEN_PROFILE_EVENT, onOpen);
   }, []);
-
   // An invitation link opened in this tab (/join/<code>, kept through signing in): Join with its preview, once.
   useEffect(() => {
     if (!synced) return;
@@ -207,28 +229,24 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
     const discord = takeDiscordReturn();
     if (discord) setDialog({ kind: "createWorkspace", discord });
   }, [synced, engine]);
-
   // Invite people from a call (ConnectedCallPanel, CallStage): the community's Invite dialog.
   useEffect(() => {
     const onInvite = (e: Event) => setDialog({ kind: "addMembers", orgId: String((e as CustomEvent).detail ?? "") || undefined });
     window.addEventListener(INVITE_EVENT, onInvite);
     return () => window.removeEventListener(INVITE_EVENT, onInvite);
   }, []);
-
   // An invite link clicked inside a chat opens Join with its code (batch B4b).
   useEffect(() => {
     const onInvite = (e: Event) => setDialog({ kind: "joinWorkspace", code: String((e as CustomEvent).detail ?? "") });
     window.addEventListener(JOIN_INVITE_EVENT, onInvite);
     return () => window.removeEventListener(JOIN_INVITE_EVENT, onInvite);
   }, []);
-
   // A template link clicked inside a chat opens its preview (community parity E).
   useEffect(() => {
     const onTemplate = (e: Event) => setDialog({ kind: "template", code: String((e as CustomEvent).detail ?? "") });
     window.addEventListener(OPEN_TEMPLATE_EVENT, onTemplate);
     return () => window.removeEventListener(OPEN_TEMPLATE_EVENT, onTemplate);
   }, []);
-
   useEffect(() => {
     const focus = () => engine.setFocused(document.visibilityState === "visible" && document.hasFocus());
     focus();
@@ -241,7 +259,6 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
       document.removeEventListener("visibilitychange", focus);
     };
   }, [engine]);
-
   const order = useOrbit((s) => {
     const ids = Object.values(s.conversations)
       .filter((c) => c.orgId === null || c.orgId === orgId)
@@ -249,12 +266,10 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
       .map((c) => c.id);
     return ids;
   }, shallowEqual);
-
   const unread = useOrbit((s) => order.filter((id) => unreadOf(s, id) > 0), shallowEqual);
   const readTargets = useOrbit((s) => markAllReadTargets(s, orgId), shallowEqual);
   const inCall = useOrbit((s) => s.call.phase !== "idle");
   const connection = useOrbit((s) => s.connection);
-
   // Settings › Shortcuts (application/shortcuts.ts): the person's combinations, else the defaults.
   useEffect(() => {
     const go = (list: string[], delta: number) => {
@@ -287,7 +302,6 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [order, unread, readTargets, inCall, route, drawer, engine]);
-
   // Settings and community settings float over the app on desktop and tablets (SettingsWindow); behind them stays the
   // last ordinary view. Phones show them full screen, as before.
   const view = backdrop;
@@ -298,16 +312,13 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
   // conversation have their own headers, so the top bar steps aside there.
   const phoneFrame = `${phoneList && section === "home" ? " phone-home" : ""}${phoneList || section === "settings" || (view.conversationId && !settings) ? " phone-bare" : ""}`;
   const ctx = useMemo(() => ({ open: (d: ShellDialog) => setDialog(d) }), []);
-
   // "Log in with Meldiq" (API 0.65.0 batch B): the consent page stands alone, without the app around it.
   if (route.section === "oauth") return <ConsentPage />;
-
   let full = null;
   if (route.section === "settings") full = <SettingsView page={route.settingsPage} onSignedOut={onSignedOut} />;
   else if (route.section === "workspace") full = <WorkspaceView orgId={orgId} page={route.workspacePage} onDialog={ctx.open} />;
   // Settings and administration load on first use, keeping the first page load small.
   if (full) full = <Suspense fallback={<section className="main" aria-busy="true" />}>{full}</Suspense>;
-
   let main;
   if (settings) main = full;
   else if (view.conversationId && knownView) main = <ConversationView key={view.conversationId} id={view.conversationId} route={view} onDialog={ctx.open} />;
@@ -330,7 +341,6 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
   // The Messages home is Friends (2026-10-28, after the owner's reference), as is /friends.
   else if (section === "friends" || section === "dms") main = <FriendsView />;
   else main = <HomeView orgId={orgId} section={section} onDialog={ctx.open} />;
-
   return (
     <div className={`app${phoneFrame}`} data-connection={connection} onContextMenu={quietContextMenu}>
       {/* Desktop: a slim brand bar across the window (the reference's title strip); everything else lives in the panels. */}
@@ -351,7 +361,10 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
         </div>
       </div>
       {windowed && (
-        <SettingsWindow label={route.section === "workspace" ? `${orgName} settings` : "Settings"} onClose={() => navigate(behind ?? HOME_ROUTE)}>
+        <SettingsWindow
+          label={route.section === "workspace" ? uiText("workspace.interface.value0_settings_5f9bb7e", { value0: orgName }) : l10n("settings.title")}
+          onClose={() => navigate(behind ?? HOME_ROUTE)}
+        >
           {full}
         </SettingsWindow>
       )}
@@ -384,7 +397,7 @@ export function Shell({ onSignedOut }: { onSignedOut: () => void }) {
         <ProfileDialog
           key={profile.userId}
           userId={profile.userId}
-          fallbackName={profile.name ?? "Profile"}
+          fallbackName={profile.name ?? uiText("settings.profile")}
           orgId={profile.orgId ?? null}
           near={profile.near ?? null}
           onClose={() => setProfile(null)}

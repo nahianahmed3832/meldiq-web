@@ -1,3 +1,7 @@
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
+import { Localized } from "../../i18n/Localized";
+import { useT as useLocalization } from "../../i18n";
 import { Eye, EyeOff, Pencil } from "lucide-react";
 import { type FormEvent, useState } from "react";
 import { ApiError } from "../../api/client";
@@ -9,15 +13,15 @@ import { usePhoto } from "../components/photos";
 import { Dialog } from "../components/Overlay";
 import { LookAvatar, StyledName, useUserLook } from "../people/NameStyle";
 import { useLoad } from "../workspace/useLoad";
-
 type Editing = "displayName" | "username" | "email" | null;
-
 /**
  * Settings › My Account, top (the reference's account card, 2026-10-28): your banner, avatar, name and username with
  * Edit profile; then display name, username and email, each with Edit, the email hidden until Reveal. Changing the
  * email sends a code to the new address (API 0.46.0); the server asks for the password again.
  */
 export function AccountOverview({ email, onEmailChanged }: { email: string; onEmailChanged: (email: string) => void }) {
+  useLocaleRender();
+  const l10n = useLocalization();
   const engine = useEngine();
   const me = useOrbit((s) => s.me);
   const photoRev = useOrbit((s) => (s.me ? s.users[s.me.userId]?.photoRev : null));
@@ -51,19 +55,30 @@ export function AccountOverview({ email, onEmailChanged }: { email: string; onEm
           <small>@{me.username}</small>
         </span>
         <button className="btn btn-primary btn-sm" onClick={() => navigate({ section: "settings", settingsPage: "profile" })}>
-          Edit profile
+          <Localized k="settings.interface.edit_profile_15c4aa1" />
         </button>
       </div>
       <div className="account-rows">
-        <Row label="Display name" value={displayName || <span className="faint">You haven't added a display name yet.</span>} onEdit={() => setEditing("displayName")} />
-        <Row label="Username" value={me.username} onEdit={() => setEditing("username")} />
         <Row
-          label="Email"
+          label={uiText("settings.interface.display_name_2b7f6a8")}
+          value={
+            displayName || (
+              <span className="faint">
+                <Localized k="settings.interface.you_haven_t_added_a_display_name_yet_cc3a8c2" />
+              </span>
+            )
+          }
+          onEdit={() => setEditing("displayName")}
+        />
+        <Row label={l10n("auth.username")} value={me.username} onEdit={() => setEditing("username")} />
+        <Row
+          label={l10n("auth.email")}
           value={
             <span className="row" style={{ gap: 8, alignItems: "center" }}>
               <span className="ellipsis">{revealed ? email : maskEmail(email)}</span>
               <button type="button" className="text-link" onClick={() => setRevealed((r) => !r)} aria-pressed={revealed}>
-                {revealed ? <EyeOff size={13} aria-hidden="true" /> : <Eye size={13} aria-hidden="true" />} {revealed ? "Hide" : "Reveal"}
+                {revealed ? <EyeOff size={13} aria-hidden="true" /> : <Eye size={13} aria-hidden="true" />}{" "}
+                {revealed ? uiText("settings.interface.hide_ac20a57") : uiText("settings.interface.reveal_36b830b")}
               </button>
             </span>
           }
@@ -72,25 +87,25 @@ export function AccountOverview({ email, onEmailChanged }: { email: string; onEm
       </div>
       {editing === "displayName" && (
         <TextEdit
-          title="Change your display name"
-          label="Display name"
+          title={uiText("settings.interface.change_your_display_name_05c151c")}
+          label={uiText("settings.interface.display_name_2b7f6a8")}
           initial={displayName}
           max={64}
-          hint="What people see. It doesn't have to be unique."
+          hint={uiText("settings.interface.what_people_see_it_doesn_t_have_to_be_unique_e592eee")}
           onSave={(v) => updateMyProfile(engine, { displayName: v })}
           onClose={() => setEditing(null)}
         />
       )}
       {editing === "username" && (
         <TextEdit
-          title="Change your username"
-          label="Username"
+          title={uiText("settings.interface.change_your_username_dc9cbaa")}
+          label={l10n("auth.username")}
           initial={me.username}
           max={32}
           hint={
             usernameHolds
-              ? "Letters, digits, dots and underscores. You can change it once an hour; your old one stays yours for 7 days."
-              : "Letters, digits, dots and underscores. You can change it once an hour; your old one is free for others again."
+              ? uiText("settings.interface.letters_digits_dots_and_underscores_you_can_change_it_once_an_hou_9c43bef")
+              : uiText("settings.interface.letters_digits_dots_and_underscores_you_can_change_it_once_an_hou_5d0eff0")
           }
           onSave={(v) => updateMyProfile(engine, { username: v.replace(/^@/, "") })}
           onClose={() => setEditing(null)}
@@ -100,8 +115,9 @@ export function AccountOverview({ email, onEmailChanged }: { email: string; onEm
     </div>
   );
 }
-
 function Row({ label, value, onEdit }: { label: string; value: React.ReactNode; onEdit?: () => void }) {
+  useLocaleRender();
+  const l10n = useLocalization();
   return (
     <div className="account-row">
       <span className="lines grow">
@@ -109,15 +125,16 @@ function Row({ label, value, onEdit }: { label: string; value: React.ReactNode; 
         <span className="account-row-value">{value}</span>
       </span>
       {onEdit && (
-        <button className="btn btn-secondary btn-sm" onClick={onEdit} aria-label={`Edit ${label.toLowerCase()}`}>
-          <Pencil size={13} aria-hidden="true" /> Edit
+        <button className="btn btn-secondary btn-sm" onClick={onEdit} aria-label={uiText("settings.interface.edit_value0_44b87fe", { value0: label.toLowerCase() })}>
+          <Pencil size={13} aria-hidden="true" /> {l10n("common.actions.edit")}
         </button>
       )}
     </div>
   );
 }
-
 function TextEdit(p: { title: string; label: string; initial: string; max: number; hint: string; onSave: (v: string) => Promise<unknown>; onClose: () => void }) {
+  useLocaleRender();
+  const l10n = useLocalization();
   const [value, setValue] = useState(p.initial);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -129,7 +146,7 @@ function TextEdit(p: { title: string; label: string; initial: string; max: numbe
     setError(null);
     p.onSave(v)
       .then(p.onClose)
-      .catch((err: unknown) => setError(err instanceof ApiError ? err.message : "Couldn't save. Try again."))
+      .catch((err: unknown) => setError(err instanceof ApiError ? err.message : uiText("settings.interface.couldn_t_save_try_again_3194939")))
       .finally(() => setBusy(false));
   };
   return (
@@ -147,22 +164,31 @@ function TextEdit(p: { title: string; label: string; initial: string; max: numbe
         )}
         <div className="row" style={{ justifyContent: "flex-end", gap: 8 }}>
           <button type="button" className="btn btn-secondary" onClick={p.onClose}>
-            Cancel
+            {l10n("common.actions.cancel")}
           </button>
           <button className="btn btn-primary" disabled={busy}>
-            {busy ? "Saving…" : "Save"}
+            {busy ? l10n("common.common_saving") : l10n("common.actions.save")}
           </button>
         </div>
       </form>
     </Dialog>
   );
 }
-
 /** Changing the email: the password and the new address, then the code sent there. */
 function EmailChangeDialog({ current, onClose, onChanged }: { current: string; onClose: () => void; onChanged: (email: string) => void }) {
+  useLocaleRender();
+  const l10n = useLocalization();
   const engine = useEngine();
   const api = new AccountSafetyApi(engine.api);
-  const [step, setStep] = useState<{ k: "ask" } | { k: "code"; masked: string }>({ k: "ask" });
+  const [step, setStep] = useState<
+    | {
+        k: "ask";
+      }
+    | {
+        k: "code";
+        masked: string;
+      }
+  >({ k: "ask" });
   const [password, setPassword] = useState("");
   const [next, setNext] = useState("");
   const [code, setCode] = useState("");
@@ -172,12 +198,12 @@ function EmailChangeDialog({ current, onClose, onChanged }: { current: string; o
     setBusy(true);
     setError(null);
     fn()
-      .catch((e: unknown) => setError(e instanceof ApiError ? e.message : "That didn't work. Try again."))
+      .catch((e: unknown) => setError(e instanceof ApiError ? e.message : uiText("workspace.interface.that_didn_t_work_try_again_5da2573")))
       .finally(() => setBusy(false));
   };
   const start = (e: FormEvent) => {
     e.preventDefault();
-    if (!password || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(next.trim())) return setError("Enter your password and the new address.");
+    if (!password || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(next.trim())) return setError(uiText("settings.interface.enter_your_password_and_the_new_address_bc287b9"));
     run(async () => {
       const r = await api.emailChangeStart(password, next.trim());
       setStep({ k: "code", masked: r.email });
@@ -185,27 +211,31 @@ function EmailChangeDialog({ current, onClose, onChanged }: { current: string; o
   };
   const confirm = (e: FormEvent) => {
     e.preventDefault();
-    if (code.replace(/\D/g, "").length !== 6) return setError("Enter the 6-digit code.");
+    if (code.replace(/\D/g, "").length !== 6) return setError(uiText("settings.interface.enter_the_6_digit_code_d74d36e"));
     run(async () => {
       const r = await api.emailChangeConfirm(code);
       onChanged(r.email);
-      engine.notice("info", "Your email address was changed.");
+      engine.notice("info", uiText("settings.interface.your_email_address_was_changed_7556829"));
       onClose();
     });
   };
   return (
-    <Dialog title="Change your email" onClose={onClose}>
+    <Dialog title={uiText("settings.interface.change_your_email_752b060")} onClose={onClose}>
       {step.k === "ask" ? (
         <form className="dialog-body" onSubmit={start} noValidate>
           <p className="muted" style={{ margin: 0 }}>
-            Now {maskEmail(current)}. We'll send a code to the new address; your account changes over once you enter it, and we tell the old address.
+            <Localized k="settings.interface.we_ll_send_a_code_to_the_new_address_your_account_changes_over_on_5ad5a71" slots={[l10n("messaging.people_now"), maskEmail(current)]} />
           </p>
           <label className="field">
-            <span>New email</span>
+            <span>
+              <Localized k="settings.interface.new_email_0d25c8b" />
+            </span>
             <input className="input" type="email" autoComplete="email" value={next} onChange={(e) => setNext(e.target.value)} disabled={busy} data-autofocus />
           </label>
           <label className="field">
-            <span>Current password</span>
+            <span>
+              <Localized k="settings.interface.current_password_72ed2bd" />
+            </span>
             <input className="input" type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} disabled={busy} />
           </label>
           {error && (
@@ -215,20 +245,20 @@ function EmailChangeDialog({ current, onClose, onChanged }: { current: string; o
           )}
           <div className="row" style={{ justifyContent: "flex-end", gap: 8 }}>
             <button type="button" className="btn btn-secondary" onClick={onClose}>
-              Cancel
+              {l10n("common.actions.cancel")}
             </button>
             <button className="btn btn-primary" disabled={busy}>
-              {busy ? "Sending…" : "Send code"}
+              {busy ? l10n("common.common_sending") : l10n("auth.forgot_button")}
             </button>
           </div>
         </form>
       ) : (
         <form className="dialog-body" onSubmit={confirm} noValidate>
           <p className="muted" style={{ margin: 0 }}>
-            If {step.masked} can be used, a 6-digit code is on its way there. It works for 30 minutes.
+            <Localized k="settings.interface.if_can_be_used_a_6_digit_code_is_on_its_way_there_it_works_for_30_963c8d0" slots={[step.masked]} />
           </p>
           <label className="field">
-            <span>Code</span>
+            <span>{l10n("common.common_code")}</span>
             <input className="input mono" inputMode="numeric" autoComplete="one-time-code" maxLength={7} value={code} onChange={(e) => setCode(e.target.value)} disabled={busy} data-autofocus />
           </label>
           {error && (
@@ -238,10 +268,10 @@ function EmailChangeDialog({ current, onClose, onChanged }: { current: string; o
           )}
           <div className="row" style={{ justifyContent: "flex-end", gap: 8 }}>
             <button type="button" className="btn btn-secondary" onClick={() => setStep({ k: "ask" })}>
-              Back
+              {l10n("common.actions.back")}
             </button>
             <button className="btn btn-primary" disabled={busy}>
-              {busy ? "Changing…" : "Change email"}
+              {busy ? uiText("settings.interface.changing_92a0c89") : uiText("settings.interface.change_email_ff2ec26")}
             </button>
           </div>
         </form>

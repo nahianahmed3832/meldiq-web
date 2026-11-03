@@ -1,3 +1,7 @@
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
+import { Localized } from "../../i18n/Localized";
+import { useT as useLocalization } from "../../i18n";
 import { BotReplies } from "./SlashCommands";
 import { ConversationMenu } from "./ConversationMenu";
 import { UNKNOWN } from "../../api/enums";
@@ -33,8 +37,8 @@ import { channelAbilities } from "../../sync/channelGates";
 import { PARITY_FEATURES } from "../../sync/communityParity";
 import { useCommunityAccess, useFeature } from "../community/useCommunityAccess";
 import { LockedBanner } from "../community/LockedBanner";
-
 export function ConversationView({ id, route, onDialog }: { id: string; route: Route; onDialog: (d: ShellDialog) => void }) {
+  useLocaleRender();
   const engine = useEngine();
   const t = useT();
   const c = useOrbit((s) => s.conversations[id]);
@@ -84,7 +88,6 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
   const access = useCommunityAccess(c?.type === "CHANNEL" ? c.orgId : null);
   const permissionsOn = useFeature(PARITY_FEATURES.permissions);
   const lockedUntil = useOrbit((s) => (c?.type === "CHANNEL" && c.orgId ? (s.orgs.find((o) => o.id === c.orgId)?.lockedUntil ?? null) : null));
-
   // A thread of a message drawn from the snapshot opens once the server's page has it (engine.whenLive).
   const onThread = useCallback(
     (m: StoredMessage) => {
@@ -98,7 +101,6 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
     const first = engine.state.get().identityAlerts[0];
     if (first) onDialog({ kind: "identity", userId: first.userId });
   }, [engine, onDialog]);
-
   if (!c || !me) return null;
   const isRules = c.type === "CHANNEL" && !!rules?.channelId && rules.channelId === c.id;
   const posting = postingState(c, rules ? { rulesChannel: rules } : null);
@@ -112,9 +114,8 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
         ? members(c.memberCount)
         : null; // a channel's line is built in the header below (who's online, with its dot)
   const panelOpen = route.panel === "details";
-
   return (
-    <section className="main conversation" aria-label={`Conversation: ${title}`} {...drop.handlers} style={{ position: "relative" }}>
+    <section className="main conversation" aria-label={uiText("messaging.interface.conversation_value0_3497fd3", { value0: title })} {...drop.handlers} style={{ position: "relative" }}>
       <header className="conv-head">
         <button className="icon-btn back" onClick={() => navigate({ section: route.section })} aria-label={t("conv_back")}>
           <ArrowLeft size={19} />
@@ -134,7 +135,7 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
                   {c.type === "CHANNEL" && c.topic && <span className="conv-topic ellipsis hide-sm">{c.topic}</span>}
                   {c.archived && (
                     <span className="tag">
-                      <Archive size={11} /> Archived
+                      <Localized k="messaging.interface.archived_e761d33" slots={[<Archive size={11} />]} />
                     </span>
                   )}
                 </h1>
@@ -148,7 +149,7 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
             <button
               className="conv-title-btn"
               onClick={() => navigate({ section: route.section, conversationId: id, panel: panelOpen ? null : "details" })}
-              aria-label={`${c.type === "CHANNEL" ? `#${title}` : title}: details`}
+              aria-label={uiText("messaging.interface.value0_details_ffe0248", { value0: c.type === "CHANNEL" ? `#${title}` : title })}
               aria-expanded={panelOpen}
             >
               {titleBlock}
@@ -283,7 +284,7 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
       {/* A voice channel is for talking: no messages (batch B14; the server refuses them too). Its room page has Join. */}
       {(c.type === "CHANNEL" && c.format === "forum") || c.voice ? null : c.format === UNKNOWN ? (
         <div className="banner info" role="status" style={{ margin: 12 }}>
-          This channel is of a kind this version of Meldiq Web can't post in yet. Its messages are shown above.
+          <Localized k="messaging.interface.this_channel_is_of_a_kind_this_version_of_meldiq_web_can_t_post_i_23cc1da" />
         </div>
       ) : c.request?.incoming ? (
         <RequestBar conversation={c} name={title} />
@@ -294,18 +295,23 @@ export function ConversationView({ id, route, onDialog }: { id: string; route: R
             conversation={c}
             title={title}
             replyTo={replyTo}
-            replyName={replyTo ? (replyTo.outgoing ? "yourself" : (users[replyTo.senderUserId]?.displayName ?? "Unknown")) : null}
+            replyName={
+              replyTo ? (replyTo.outgoing ? uiText("messaging.interface.yourself_2077055") : (users[replyTo.senderUserId]?.displayName ?? uiText("messaging.interface.unknown_b764cdc"))) : null
+            }
             onCancelReply={() => setReplyTo(null)}
             dropped={drop.dropped}
             onDroppedTaken={drop.take}
           />
         </>
       )}
-      {drop.over && <div className="drop-overlay">Drop files to send them to {title}</div>}
+      {drop.over && (
+        <div className="drop-overlay">
+          <Localized k="messaging.interface.drop_files_to_send_them_to_1146ee4" slots={[title]} />
+        </div>
+      )}
     </section>
   );
 }
-
 interface CallButtonsProps {
   conversationId: string;
   canPost: boolean;
@@ -316,40 +322,53 @@ interface CallButtonsProps {
   /** A call is running in this conversation (join it from the banner). */
   running: boolean;
 }
-
 /** Voice and video call buttons; disabled with the reason when calling can't work here. */
 function CallButtons({ conversationId, canPost, archived, serverCalling, busy, running }: CallButtonsProps) {
+  useLocaleRender();
+  const l10n = useLocalization();
   const engine = useEngine();
   const why = !serverCalling
-    ? "Calling isn't set up on this server"
+    ? uiText("messaging.interface.calling_isn_t_set_up_on_this_server_56ca804")
     : !engine.calls.supported()
       ? CallFailure.UNSUPPORTED
       : archived
-        ? "This channel is archived"
+        ? uiText("workspace.interface.this_channel_is_archived_e078852")
         : !canPost
-          ? "You can't start calls here"
+          ? uiText("messaging.interface.you_can_t_start_calls_here_af8b6a7")
           : busy
-            ? "You're already in a call"
+            ? uiText("messaging.interface.you_re_already_in_a_call_716b71e")
             : running
-              ? "A call is in progress: join it below"
+              ? uiText("messaging.interface.a_call_is_in_progress_join_it_below_f0ff614")
               : null;
   return (
     <span className="conv-call-actions">
-      <button className="icon-btn" onClick={() => void engine.calls.startCall(conversationId, false)} disabled={why !== null} aria-label="Start a voice call" title={why ?? "Voice call"}>
+      <button
+        className="icon-btn"
+        onClick={() => void engine.calls.startCall(conversationId, false)}
+        disabled={why !== null}
+        aria-label={uiText("messaging.interface.start_a_voice_call_c438221")}
+        title={why ?? l10n("calls.voiceCall")}
+      >
         <Phone size={18} />
       </button>
-      <button className="icon-btn" onClick={() => void engine.calls.startCall(conversationId, true)} disabled={why !== null} aria-label="Start a video call" title={why ?? "Video call"}>
+      <button
+        className="icon-btn"
+        onClick={() => void engine.calls.startCall(conversationId, true)}
+        disabled={why !== null}
+        aria-label={uiText("messaging.interface.start_a_video_call_170d39a")}
+        title={why ?? l10n("calls.videoCall")}
+      >
         <Video size={19} />
       </button>
     </span>
   );
 }
-
 /**
  * The header's search box (the reference's "Search MINECRAFT"): Meldiq's search for this community (conversations,
  * people, and messages found on this device: the server can't read them). The same as ⌘K.
  */
 function HeaderSearch({ orgId, onSearch }: { orgId: string | null; onSearch: () => void }) {
+  useLocaleRender();
   const t = useT();
   const orgName = useOrbit((s) => (orgId ? (s.orgs.find((o) => o.id === orgId)?.name ?? null) : null));
   const label = orgName ? t("conv_search_in", { name: orgName }) : t("search_short");
@@ -361,9 +380,9 @@ function HeaderSearch({ orgId, onSearch }: { orgId: string | null; onSearch: () 
     </button>
   );
 }
-
 /** Messages on their way: a few placeholder lines where they go (also the whole view while the app opens: Shell). */
 export function MessagesSkeleton() {
+  useLocaleRender();
   return (
     <div className="messages" aria-busy="true" style={{ padding: 18, display: "grid", gap: 18, alignContent: "end" }}>
       {[0, 1, 2].map((i) => (

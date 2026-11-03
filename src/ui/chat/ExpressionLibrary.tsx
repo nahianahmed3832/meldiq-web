@@ -1,3 +1,6 @@
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
+import { Localized } from "../../i18n/Localized";
 import { Clock, Star } from "lucide-react";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { useEngine, useOrbit } from "../../application/orbit";
@@ -5,13 +8,17 @@ import { expressions, type Expression } from "../../sync/expressions";
 import { CustomEmojiImage } from "../community/CustomEmoji";
 import { OrgAvatar } from "../components/OrgAvatar";
 import { useLongPress } from "./longPress";
-
 /** One authorized library, grouped by community, with the picker's shared search. */
 export function ExpressionLibrary({ orgIds, stickers, query, onPick, revision }: { orgIds: string[]; stickers: boolean; query: string; onPick: (e: Expression) => void; revision: number }) {
+  useLocaleRender();
   const engine = useEngine();
   const orgs = useOrbit((s) => s.orgs);
   const prefs = useOrbit((s) => s.nav.personal);
-  const [loaded, setLoaded] = useState<{ scope: string; items: Expression[]; failed: boolean } | null>(null);
+  const [loaded, setLoaded] = useState<{
+    scope: string;
+    items: Expression[];
+    failed: boolean;
+  } | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [limits, setLimits] = useState<Record<string, number>>({});
   const scope = JSON.stringify(orgIds);
@@ -50,7 +57,7 @@ export function ExpressionLibrary({ orgIds, stickers, query, onPick, revision }:
       : [];
   const write = (action: Promise<void>) => {
     setError(null);
-    void action.catch(() => setError("Couldn't sync your expressions. Your change will retry when connected."));
+    void action.catch(() => setError(uiText("messaging.interface.couldn_t_sync_your_expressions_your_change_will_retry_when_connec_dac1747")));
   };
   const section = (id: string, title: ReactNode, list: Expression[], label: string) => {
     if (!list.length) return null;
@@ -74,28 +81,36 @@ export function ExpressionLibrary({ orgIds, stickers, query, onPick, revision }:
         </div>
         {list.length > limit && (
           <button className="btn btn-ghost btn-sm" onClick={() => setLimits((current) => ({ ...current, [id]: limit + 60 }))}>
-            Show more ({list.length - limit})
+            <Localized k="messaging.interface.show_more_2ff0ae2" slots={[list.length - limit]} />
           </button>
         )}
       </section>
     );
   };
   return (
-    <div className="xp-library" aria-label="Community expressions">
+    <div className="xp-library" aria-label={uiText("messaging.interface.community_expressions_62b455d")}>
       {loaded?.scope !== scope && (
         <p className="hint" role="status">
-          Loading community expressions…
+          <Localized k="messaging.interface.loading_community_expressions_77976eb" />
         </p>
       )}
       {loaded?.failed && (
         <p className="hint" role="status">
-          Some communities couldn't load. Reopen the picker to retry.
+          <Localized k="messaging.interface.some_communities_couldn_t_load_reopen_the_picker_to_retry_5ff7e70" />
         </p>
       )}
       {section(
         "favorites",
         <>
-          <Star size={15} /> Favorites <small>· right-click or hold to unstar</small>
+          <Localized
+            k="messaging.interface.favorites_498684f"
+            slots={[
+              <Star size={15} />,
+              <small>
+                <Localized k="messaging.interface.right_click_or_hold_to_unstar_d25c3de" />
+              </small>,
+            ]}
+          />
         </>,
         items.filter((e) => favorites.includes(e.id)),
         "Favorites",
@@ -104,7 +119,7 @@ export function ExpressionLibrary({ orgIds, stickers, query, onPick, revision }:
         section(
           "recent",
           <>
-            <Clock size={15} /> Recently used
+            <Localized k="messaging.interface.recently_used_761eb0d" slots={[<Clock size={15} />]} />
           </>,
           recents.flatMap((id) => items.filter((e) => e.id === id)).slice(0, 24),
           "Recently used",
@@ -128,8 +143,8 @@ export function ExpressionLibrary({ orgIds, stickers, query, onPick, revision }:
     </div>
   );
 }
-
 function ExpressionTile({ expression: e, favorite, onFavorite, onPick }: { expression: Expression; favorite: boolean; onFavorite: () => void; onPick: () => void }) {
+  useLocaleRender();
   const ref = useRef<HTMLSpanElement>(null);
   const [visible, setVisible] = useState(false);
   const press = useLongPress(onFavorite, true);
@@ -153,13 +168,25 @@ function ExpressionTile({ expression: e, favorite, onFavorite, onPick }: { expre
         {...press}
         type="button"
         className="xp-expression-pick"
-        aria-label={`${e.kind === "sticker" ? "Send sticker " : ""}:${e.name}:`}
-        title={`:${e.name}: · ${e.kind === "sticker" ? "sticker" : e.animated ? "animated emoji" : "emoji"}`}
+        aria-label={uiText("messaging.interface.value0_value1_1138811", { value0: e.kind === "sticker" ? uiText("messaging.interface.send_sticker_ba214b0") : "", value1: e.name })}
+        title={uiText("messaging.interface.value0_value1_47e7ef0", {
+          value0: e.name,
+          value1:
+            e.kind === "sticker" ? uiText("messaging.interface.sticker_6581f65") : e.animated ? uiText("messaging.interface.animated_emoji_5e165ca") : uiText("messaging.interface.emoji_4030f0c"),
+        })}
         onClick={onPick}
       >
         <span ref={ref}>{visible && <CustomEmojiImage id={e.id} name={e.name} sha256={e.sha256} size={32} sticker={e.kind === "sticker"} />}</span>
       </button>
-      <button className="xp-favorite" aria-label={`${favorite ? "Unfavorite" : "Favorite"} ${e.name}`} aria-pressed={favorite} onClick={onFavorite}>
+      <button
+        className="xp-favorite"
+        aria-label={uiText("auth.interface.value0_value1_54ef3bb", {
+          value0: favorite ? uiText("messaging.interface.unfavorite_de9bba0") : uiText("settings.interface.favorite_ea713ec"),
+          value1: e.name,
+        })}
+        aria-pressed={favorite}
+        onClick={onFavorite}
+      >
         <Star size={12} fill={favorite ? "currentColor" : "none"} />
       </button>
     </div>

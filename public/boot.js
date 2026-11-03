@@ -9,6 +9,11 @@
   try {
     var root = document.documentElement;
     var look = JSON.parse(localStorage.getItem("meldiq.look") || "null");
+    var locales = ["en", "bn", "hi", "ur", "zh-CN", "zh-TW", "ja", "ko", "id", "vi", "th", "ar", "tr", "pt-BR", "es-419", "es-ES", "fr", "de", "it", "nl", "pl", "ru", "uk", "ro", "sv", "cs", "el", "pt-PT"];
+    if (look && locales.indexOf(look.language) !== -1) {
+      root.setAttribute("lang", look.language);
+      root.setAttribute("dir", look.language === "ar" || look.language === "ur" ? "rtl" : "ltr");
+    }
     if (look && (look.theme === "light" || look.theme === "dark")) root.setAttribute("data-theme", look.theme);
     if (look && typeof look.palette === "string" && /^[a-z0-9-]{1,32}$/.test(look.palette)) root.setAttribute("data-palette", look.palette);
     if (localStorage.getItem("meldiq.returning") === "1") root.setAttribute("data-boot", "app");

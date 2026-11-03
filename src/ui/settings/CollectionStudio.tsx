@@ -1,3 +1,8 @@
+import { Localized } from "../../i18n/Localized";
+import { formatCurrency } from "../../i18n/format";
+import { useT as useLocalization } from "../../i18n";
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
 import { PurchaseCollectible } from "../operations/PlatformInbox";
 import { userProfile } from "../../sync/account";
 import { useLoad } from "../workspace/useLoad";
@@ -16,6 +21,7 @@ import { NO_STYLE } from "./noStyle";
 import { collectionAsset } from "../../sync/collectibles";
 type Inventory = Awaited<ReturnType<typeof collectionInventory>>["inventory"];
 export function CollectionStudio() {
+  useLocaleRender();
   const [open, setOpen] = useState(false);
   const enabled = useOrbit((s) => s.server?.features.includes("profile-collectibles") ?? false);
   if (!enabled) return null;
@@ -26,8 +32,12 @@ export function CollectionStudio() {
           <Sparkles size={25} />
         </span>
         <span className="lines grow">
-          <strong>Your profile. Your universe.</strong>
-          <small>Explore the Nightwave collection · frames, themes & more</small>
+          <strong>
+            <Localized k="settings.interface.your_profile_your_universe_df6faaf" />
+          </strong>
+          <small>
+            <Localized k="settings.interface.explore_the_nightwave_collection_frames_themes_more_bbffd2e" />
+          </small>
         </span>
         <ArrowRight size={20} />
       </button>
@@ -36,6 +46,8 @@ export function CollectionStudio() {
   );
 }
 function Studio({ onClose }: { onClose: () => void }) {
+  useLocaleRender();
+  const l10n = useLocalization();
   const engine = useEngine();
   const reducedMotion = useReducedMotion();
   const me = useOrbit((s) => s.me);
@@ -44,7 +56,6 @@ function Studio({ onClose }: { onClose: () => void }) {
   const profile = useLoad(() => (me ? userProfile(engine, me.userId) : Promise.resolve(null)), [engine, me?.userId, profilesRev]);
   const bannerKind = profile.data?.profileBanner?.kind;
   const bannerUrl = usePhoto("profileBanner", me?.userId ?? "", profile.data?.profileBanner?.rev, bannerKind === "gif" ? "image/gif" : bannerKind === "webp" ? "image/webp" : "image/jpeg");
-
   const [category, setCategory] = useState<CollectionCategory>("avatar-frame");
   const [query, setQuery] = useState("");
   const [search, setSearch] = useState("");
@@ -120,7 +131,7 @@ function Studio({ onClose }: { onClose: () => void }) {
     try {
       await fn();
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Couldn't save this change.");
+      setError(e instanceof Error ? e.message : uiText("settings.interface.couldn_t_save_this_change_7bec452"));
     } finally {
       setBusy(false);
     }
@@ -137,13 +148,13 @@ function Studio({ onClose }: { onClose: () => void }) {
   if (!me) return null;
   return (
     <Dialog
-      title="Profile collection"
+      title={uiText("settings.interface.profile_collection_9660e1c")}
       onClose={onClose}
       width="min(1180px, 97vw)"
       footer={
         <>
           <button className="btn btn-ghost" onClick={onClose}>
-            Close
+            {l10n("common.actions.close")}
           </button>
           <button
             className="btn btn-secondary"
@@ -156,11 +167,11 @@ function Studio({ onClose }: { onClose: () => void }) {
                 setDraft(s.profileStyle ?? NO_STYLE);
                 setSlots({});
                 setSelected(null);
-                setNotice("Latest look loaded.");
+                setNotice(uiText("settings.interface.latest_look_loaded_a5e8e2e"));
               })
             }
           >
-            Reload saved look
+            <Localized k="settings.interface.reload_saved_look_7d75aa0" />
           </button>
           <button
             className="btn btn-primary"
@@ -171,21 +182,29 @@ function Studio({ onClose }: { onClose: () => void }) {
                 setBase(s);
                 setDraft(s.profileStyle ?? NO_STYLE);
                 setSlots({});
-                setNotice("Your look is saved across your devices.");
+                setNotice(uiText("settings.interface.your_look_is_saved_across_your_devices_b9e2e32"));
               })
             }
           >
-            {busy ? "Saving…" : "Apply look"}
+            {busy ? l10n("common.common_saving") : uiText("settings.interface.apply_look_5ed04ba")}
           </button>
         </>
       }
     >
       <div className="dialog-body collection-studio">
         <div className="collection-hero">
-          <span className="collection-eyebrow">THE NIGHTWAVE COLLECTION</span>
-          <h2>A little more you.</h2>
-          <p>Find your signature. Collect something unexpected.</p>
-          <span>Original Meldiq designs · One look, everywhere</span>
+          <span className="collection-eyebrow">
+            <Localized k="settings.interface.the_nightwave_collection_86e0408" />
+          </span>
+          <h2>
+            <Localized k="settings.interface.a_little_more_you_23be67e" />
+          </h2>
+          <p>
+            <Localized k="settings.interface.find_your_signature_collect_something_unexpected_60489d6" />
+          </p>
+          <span>
+            <Localized k="settings.interface.original_meldiq_designs_one_look_everywhere_986cd81" />
+          </span>
         </div>
         {error && (
           <p className="banner danger" role="alert">
@@ -198,8 +217,8 @@ function Studio({ onClose }: { onClose: () => void }) {
           </p>
         )}
         <div className="collection-layout">
-          <section className="collection-browser" aria-label="Decoration marketplace">
-            <div className="collection-categories" aria-label="Decoration categories">
+          <section className="collection-browser" aria-label={uiText("settings.interface.decoration_marketplace_403e6c9")}>
+            <div className="collection-categories" aria-label={uiText("settings.interface.decoration_categories_c6d2676")}>
               {COLLECTION_CATEGORIES.map((cat) => (
                 <button
                   key={cat}
@@ -216,9 +235,15 @@ function Studio({ onClose }: { onClose: () => void }) {
               ))}
             </div>
             <div className="collection-tools">
-              <input maxLength={80} aria-label="Search decorations" placeholder="Find your next favorite…" value={query} onChange={(e) => setQuery(e.target.value)} />
+              <input
+                maxLength={80}
+                aria-label={uiText("settings.interface.search_decorations_2f59222")}
+                placeholder={uiText("settings.interface.find_your_next_favorite_ccd0a32")}
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+              />
               <select
-                aria-label="Filter decorations"
+                aria-label={uiText("settings.interface.filter_decorations_5521343")}
                 value={filter}
                 onChange={(e) => {
                   setFilter(e.target.value);
@@ -226,24 +251,38 @@ function Studio({ onClose }: { onClose: () => void }) {
                   setHistory([]);
                 }}
               >
-                <option value="all">Marketplace</option>
-                <option value="owned">My inventory</option>
-                <option value="unowned">Not collected</option>
-                <option value="favorites">Favorites</option>
-                <option value="recent">Recently acquired</option>
+                <option value="all">
+                  <Localized k="settings.interface.marketplace_c608981" />
+                </option>
+                <option value="owned">
+                  <Localized k="settings.interface.my_inventory_bd18c24" />
+                </option>
+                <option value="unowned">
+                  <Localized k="settings.interface.not_collected_f6b1360" />
+                </option>
+                <option value="favorites">
+                  <Localized k="settings.interface.favorites_7a1f2a8" />
+                </option>
+                <option value="recent">
+                  <Localized k="settings.interface.recently_acquired_aff5bf7" />
+                </option>
               </select>
             </div>
             <p className="faint">{CATEGORY_LABELS[category]}</p>
             {loading ? (
-              <p role="status">Loading collection…</p>
+              <p role="status">
+                <Localized k="settings.interface.loading_collection_1514df6" />
+              </p>
             ) : (
               <div className="collection-grid">
                 <button className="collection-item collection-none" aria-pressed={slots[category] === null} onClick={() => choose(null)}>
                   <span className="collection-art">
                     <RotateCcw size={26} />
                   </span>
-                  <strong>Default</strong>
-                  <small>Unequip this category</small>
+                  <strong>{l10n("settings.ap_default")}</strong>
+                  <small>
+                    <Localized k="settings.interface.unequip_this_category_1c6d7e6" />
+                  </small>
                 </button>
                 {visible.map((item) => (
                   <div className={`collection-item rarity-${item.rarity}`} key={item.id}>
@@ -263,35 +302,38 @@ function Studio({ onClose }: { onClose: () => void }) {
                       </span>
                       <strong>{item.name}</strong>
                       <small>
-                        {item.rarity} {item.isFeatured ? "· Featured" : ""}
+                        {item.rarity} {item.isFeatured ? uiText("settings.interface.featured_226bd9d") : ""}
                       </small>
                       <span className="collection-ownership">
                         {own(item.id) ? (
                           <>
-                            <Check size={12} /> Owned
+                            <Localized k="settings.interface.owned_86314b9" slots={[<Check size={12} />]} />
                           </>
                         ) : item.acquisitionType === "free" ? (
-                          "Free to collect"
+                          uiText("settings.interface.free_to_collect_36d7058")
                         ) : (
                           <>
                             <Lock size={12} />
                             {item.acquisitionType === "purchase"
                               ? item.currency === "EMBERS"
-                                ? `${item.price} Embers`
-                                : `USD ${(item.price / 100).toFixed(2)}`
+                                ? uiText("workspace.interface.value0_embers_f4866b3", { value0: item.price })
+                                : formatCurrency(item.price / 100, "USD")
                               : item.acquisitionType === "premium"
-                                ? "Premium grant"
-                                : "Event reward"}
+                                ? uiText("settings.interface.premium_grant_91cbf56")
+                                : uiText("settings.interface.event_reward_5fac2b5")}
                           </>
                         )}
                       </span>
                     </button>
                     <button
                       className="collection-star"
-                      aria-label={`${own(item.id)?.is_favorite ? "Unfavorite" : "Favorite"} ${item.name}`}
+                      aria-label={uiText("auth.interface.value0_value1_54ef3bb", {
+                        value0: own(item.id)?.is_favorite ? uiText("messaging.interface.unfavorite_de9bba0") : uiText("settings.interface.favorite_ea713ec"),
+                        value1: item.name,
+                      })}
                       aria-pressed={!!own(item.id)?.is_favorite}
                       disabled={busy || !own(item.id)}
-                      title={own(item.id) ? "Favorite" : "Collect to favorite"}
+                      title={own(item.id) ? uiText("settings.interface.favorite_ea713ec") : uiText("settings.interface.collect_to_favorite_61cff99")}
                       onClick={() =>
                         void run(async () => {
                           await favoriteCollectible(engine, item.id, !own(item.id)?.is_favorite);
@@ -305,7 +347,11 @@ function Studio({ onClose }: { onClose: () => void }) {
                 ))}
               </div>
             )}
-            {!loading && !visible.length && <p role="status">No matching decorations. Try another filter.</p>}
+            {!loading && !visible.length && (
+              <p role="status">
+                <Localized k="settings.interface.no_matching_decorations_try_another_filter_592c23e" />
+              </p>
+            )}
             <div className="collection-pagination">
               <button
                 className="btn btn-secondary"
@@ -316,7 +362,7 @@ function Studio({ onClose }: { onClose: () => void }) {
                 }}
               >
                 <ArrowLeft size={14} />
-                Previous
+                {l10n("common.actions.previous")}
               </button>
               <button
                 className="btn btn-secondary"
@@ -326,13 +372,15 @@ function Studio({ onClose }: { onClose: () => void }) {
                   setCursor(next);
                 }}
               >
-                Next
+                {l10n("common.actions.next")}
                 <ArrowRight size={14} />
               </button>
             </div>
           </section>
-          <aside className="collection-preview" aria-label="Live profile preview">
-            <span className="collection-eyebrow">LIVE PREVIEW</span>
+          <aside className="collection-preview" aria-label={uiText("settings.interface.live_profile_preview_03d4b29")}>
+            <span className="collection-eyebrow">
+              <Localized k="settings.interface.live_preview_9da051d" />
+            </span>
             <div className="collection-profile" style={collectibleCardVars(draft, !reducedMotion)}>
               <div className="collection-profile-banner" style={bannerUrl ? { backgroundImage: `url(${bannerUrl})`, backgroundSize: "cover", backgroundPosition: "center" } : undefined}>
                 <CollectibleBanner style={draft} />
@@ -353,7 +401,7 @@ function Studio({ onClose }: { onClose: () => void }) {
                   <StyledName name={me.displayName} style={draft} />
                 </h3>
                 <small>@{me.username}</small>
-                <p>{profile.data?.aboutMe || "Good conversations start with a little personality."}</p>
+                <p>{profile.data?.aboutMe || uiText("settings.interface.good_conversations_start_with_a_little_personality_f7e1813")}</p>
                 <CollectibleBadge style={draft} />
               </div>
             </div>
@@ -365,7 +413,19 @@ function Studio({ onClose }: { onClose: () => void }) {
                   </span>
                   <h3>{selected.name}</h3>
                   <p>{selected.description}</p>
-                  <small>{selected.supportedPlatforms.map((p) => ({ web: "Web", android: "Android", windows: "Windows", macos: "macOS" })[p]).join(" · ")}</small>
+                  <small>
+                    {selected.supportedPlatforms
+                      .map(
+                        (p) =>
+                          ({
+                            web: uiText("settings.interface.web_2975104"),
+                            android: "Android",
+                            windows: "Windows",
+                            macos: "macOS",
+                          })[p],
+                      )
+                      .join(" · ")}
+                  </small>
                   {!own(selected.id) &&
                     (selected.acquisitionType === "free" ? (
                       <button
@@ -374,11 +434,11 @@ function Studio({ onClose }: { onClose: () => void }) {
                         onClick={() =>
                           void run(async () => {
                             setInventory((await claimCollectible(engine, selected.id)).inventory);
-                            setNotice("Added to your inventory. Apply your look when ready.");
+                            setNotice(uiText("settings.interface.added_to_your_inventory_apply_your_look_when_ready_b492207"));
                           })
                         }
                       >
-                        Collect for free
+                        <Localized k="settings.interface.collect_for_free_26be29e" />
                       </button>
                     ) : selected.acquisitionType === "purchase" && selected.currency === "USD" && selected.price > 0 ? (
                       <PurchaseCollectible
@@ -388,7 +448,7 @@ function Studio({ onClose }: { onClose: () => void }) {
                         onOwned={() =>
                           void run(async () => {
                             setInventory((await collectionInventory(engine)).inventory);
-                            setNotice("Purchase verified. Apply your look when ready.");
+                            setNotice(uiText("settings.interface.purchase_verified_apply_your_look_when_ready_dbdfa0e"));
                           })
                         }
                       />
@@ -396,18 +456,28 @@ function Studio({ onClose }: { onClose: () => void }) {
                       <p className="faint">
                         <Lock size={13} />{" "}
                         {selected.acquisitionType === "premium"
-                          ? "Requires an authorized premium grant."
+                          ? uiText("settings.interface.requires_an_authorized_premium_grant_297200e")
                           : selected.acquisitionType === "event"
-                            ? "Awarded through a Meldiq event."
-                            : "Purchases are not available for this item yet."}
+                            ? uiText("settings.interface.awarded_through_a_meldiq_event_b7fef92")
+                            : uiText("settings.interface.purchases_are_not_available_for_this_item_yet_ceef159")}
                       </p>
                     ))}
                 </>
               ) : (
-                <p>Select a decoration to try it on.</p>
+                <p>
+                  <Localized k="settings.interface.select_a_decoration_to_try_it_on_db63683" />
+                </p>
               )}
-              {missing && <p className="faint">Collect every selected item before applying.</p>}
-              {dirty && <small role="status">Unsaved preview</small>}
+              {missing && (
+                <p className="faint">
+                  <Localized k="settings.interface.collect_every_selected_item_before_applying_2878922" />
+                </p>
+              )}
+              {dirty && (
+                <small role="status">
+                  <Localized k="settings.interface.unsaved_preview_a55446a" />
+                </small>
+              )}
             </div>
             <button
               className="btn btn-ghost"
@@ -424,7 +494,7 @@ function Studio({ onClose }: { onClose: () => void }) {
                 setSelected(null);
               }}
             >
-              Reset to default
+              <Localized k="settings.interface.reset_to_default_bc5b45a" />
             </button>
           </aside>
         </div>

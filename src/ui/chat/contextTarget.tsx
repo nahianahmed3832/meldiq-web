@@ -1,14 +1,27 @@
+import { text as uiText } from "../../i18n";
 import { Copy, Download, ExternalLink, ImageDown, Link2 } from "lucide-react";
 import type { MenuEntry } from "../components/Overlay";
-
 /**
  * What a right-click (or long press) inside a message landed on, so Meldiq's own menu offers what the browser's used
  * to (2026-10-28: the owner wants no browser menu in the app): the photo, video or sound under the pointer (open,
  * download, copy the image), a link (open, copy), or the text selected (copy).
  */
 export type ContextTarget =
-  { kind: "media"; media: "image" | "video" | "audio"; url: string; name: string; element: HTMLElement } | { kind: "link"; href: string } | { kind: "selection"; text: string };
-
+  | {
+      kind: "media";
+      media: "image" | "video" | "audio";
+      url: string;
+      name: string;
+      element: HTMLElement;
+    }
+  | {
+      kind: "link";
+      href: string;
+    }
+  | {
+      kind: "selection";
+      text: string;
+    };
 export function contextTarget(target: EventTarget | null): ContextTarget | null {
   const el = target as HTMLElement | null;
   if (!el?.closest) return null;
@@ -28,7 +41,6 @@ export function contextTarget(target: EventTarget | null): ContextTarget | null 
   if (link && /^(https?:|mailto:)/.test(link.href)) return { kind: "link", href: link.href };
   return null;
 }
-
 /** Downloads [url] (a decrypted blob: URL or a same-origin file) as [name]. */
 export function downloadUrl(url: string, name: string): void {
   const a = document.createElement("a");
@@ -39,7 +51,6 @@ export function downloadUrl(url: string, name: string): void {
   a.click();
   a.remove();
 }
-
 /**
  * [url] drawn into a PNG. Through an image, not fetch(): the site's CSP allows blob: pictures in img-src but not in
  * connect-src, so fetching a decrypted photo's blob: URL is refused in production (the owner, 2026-10-29).
@@ -52,13 +63,12 @@ function pngOf(url: string): Promise<Blob> {
       canvas.width = img.naturalWidth;
       canvas.height = img.naturalHeight;
       canvas.getContext("2d")?.drawImage(img, 0, 0);
-      canvas.toBlob((b) => (b ? resolve(b) : reject(new Error("no image"))), "image/png");
+      canvas.toBlob((b) => (b ? resolve(b) : reject(new Error(uiText("messaging.interface.no_image_453361f")))), "image/png");
     };
-    img.onerror = () => reject(new Error("image didn't load"));
+    img.onerror = () => reject(new Error(uiText("messaging.interface.image_didn_t_load_59d76a2")));
     img.src = url;
   });
 }
-
 /** Copies a picture to the clipboard as PNG (what clipboards accept everywhere); false where the browser can't. */
 export async function copyImage(url: string): Promise<boolean> {
   if (typeof ClipboardItem === "undefined" || !navigator.clipboard?.write) return false;
@@ -71,27 +81,63 @@ export async function copyImage(url: string): Promise<boolean> {
     return false;
   }
 }
-
 /** The menu entries for [t], shown first in the menu; [notice] reports what happened. */
 export function contextEntries(t: ContextTarget | null, notice: (text: string) => void): MenuEntry[] {
   if (!t) return [];
-  if (t.kind === "selection") return [{ label: "Copy", icon: <Copy size={16} />, onSelect: () => void navigator.clipboard?.writeText(t.text).then(() => notice("Copied.")) }, "separator"];
-  if (t.kind === "link")
+  if (t.kind === "selection")
     return [
-      { label: "Open link", icon: <ExternalLink size={16} />, onSelect: () => void window.open(t.href, "_blank", "noopener,noreferrer") },
-      { label: "Copy link", icon: <Link2 size={16} />, onSelect: () => void navigator.clipboard?.writeText(t.href).then(() => notice("Link copied.")) },
+      {
+        get label() {
+          return uiText("common.actions.copy");
+        },
+        icon: <Copy size={16} />,
+        onSelect: () => void navigator.clipboard?.writeText(t.text).then(() => notice(uiText("messaging.interface.copied_d249818"))),
+      },
       "separator",
     ];
-  const what = t.media === "image" ? "photo" : t.media;
+  if (t.kind === "link")
+    return [
+      {
+        get label() {
+          return uiText("messaging.interface.open_link_aab63f8");
+        },
+        icon: <ExternalLink size={16} />,
+        onSelect: () => void window.open(t.href, "_blank", "noopener,noreferrer"),
+      },
+      {
+        get label() {
+          return uiText("messaging.fwd_copy_link");
+        },
+        icon: <Link2 size={16} />,
+        onSelect: () => void navigator.clipboard?.writeText(t.href).then(() => notice(uiText("messaging.interface.link_copied_71af38a"))),
+      },
+      "separator",
+    ];
+  const what = t.media === "image" ? uiText("messaging.media.photo") : t.media === "video" ? uiText("messaging.media.video") : uiText("messaging.media.audio");
   return [
-    ...(t.media === "image" ? [{ label: "Open photo", icon: <ExternalLink size={16} />, onSelect: () => t.element.click() }] : []),
-    { label: `Download ${what}`, icon: <Download size={16} />, onSelect: () => downloadUrl(t.url, t.name) },
     ...(t.media === "image"
       ? [
           {
-            label: "Copy image",
+            get label() {
+              return uiText("messaging.interface.open_photo_a2cfb44");
+            },
+            icon: <ExternalLink size={16} />,
+            onSelect: () => t.element.click(),
+          },
+        ]
+      : []),
+    { label: uiText("messaging.interface.download_value0_0f5a93c", { value0: what }), icon: <Download size={16} />, onSelect: () => downloadUrl(t.url, t.name) },
+    ...(t.media === "image"
+      ? [
+          {
+            get label() {
+              return uiText("messaging.interface.copy_image_3cb27ae");
+            },
             icon: <ImageDown size={16} />,
-            onSelect: () => void copyImage(t.url).then((ok) => notice(ok ? "Image copied." : "This browser can't copy images. Download it instead.")),
+            onSelect: () =>
+              void copyImage(t.url).then((ok) =>
+                notice(ok ? uiText("messaging.interface.image_copied_7169679") : uiText("messaging.interface.this_browser_can_t_copy_images_download_it_instead_60ae8c2")),
+              ),
           },
         ]
       : []),

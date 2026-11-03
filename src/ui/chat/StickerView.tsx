@@ -1,8 +1,9 @@
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
 import { useState } from "react";
 import { usePrefs } from "../../application/prefs";
 import type { StickerRef } from "../../protocol/payload";
 import { findSticker, type StickerSpec } from "../../sync/stickers";
-
 /**
  * A Meldiq sticker drawn from its spec (docs/STICKERS.md; android Stickers.kt StickerView): the emoji in this device's
  * own font over a soft shape in its tone, the caption on a tilted label, and its motion played when it appears or is
@@ -10,12 +11,13 @@ import { findSticker, type StickerSpec } from "../../sync/stickers";
  * unknown sticker (a newer catalogue) shows the message's fallback text.
  */
 export function StickerView({ sticker, fallback, size = 132, still = false }: { sticker: StickerRef; fallback: string; size?: number; still?: boolean }) {
+  useLocaleRender();
   const spec = findSticker(sticker);
   if (!spec) return <div className="msg-text">{fallback}</div>;
   return <StickerArt spec={spec} size={size} still={still} />;
 }
-
 export function StickerArt({ spec, size = 132, still = false }: { spec: StickerSpec; size?: number; still?: boolean }) {
+  useLocaleRender();
   const { animatedEmoji } = usePrefs();
   const [plays, setPlays] = useState(0);
   const playing = animatedEmoji && !still;
@@ -25,7 +27,7 @@ export function StickerArt({ spec, size = 132, still = false }: { spec: StickerS
       className={`sticker tone-${spec.tone}${playing ? ` motion-${spec.motion}` : ""}${size < 110 ? " compact" : ""}`}
       style={{ width: size, height: size, fontSize: size }}
       role="img"
-      aria-label={`Sticker: ${spec.caption}`}
+      aria-label={uiText("messaging.interface.sticker_value0_5410255", { value0: spec.caption })}
       onClick={playing ? () => setPlays((n) => n + 1) : undefined}
     >
       <span className="sticker-shape" aria-hidden="true" />

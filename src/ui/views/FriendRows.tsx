@@ -1,11 +1,13 @@
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
+import { useT as useLocalization } from "../../i18n";
 import { MessageCircle, MoreVertical, UserMinus } from "lucide-react";
 import { useOrbit } from "../../application/orbit";
 import { Menu, useMenu } from "../components/Overlay";
 import { LookAvatar, StyledName, useUserLook } from "../people/NameStyle";
-
 /** The Friends page's lists (FriendsView, SuggestedPeople): a titled group, and a person's row with its actions. */
-
 export function Group({ title, empty, children }: { title: string; empty: string; children: React.ReactNode[] }) {
+  useLocaleRender();
   return (
     <div className="friends-group">
       <h3>{title}</h3>
@@ -13,15 +15,26 @@ export function Group({ title, empty, children }: { title: string; empty: string
     </div>
   );
 }
-
 export function FriendRow(p: {
-  p: { id: string; username: string; displayName: string; avatarColor: number; statusText?: string | null };
+  p: {
+    id: string;
+    username: string;
+    displayName: string;
+    avatarColor: number;
+    statusText?: string | null;
+  };
   online: boolean;
   sub?: string;
   onMessage?: () => void;
   actions?: React.ReactNode;
-  more?: { label: string; danger?: boolean; run: () => void }[];
+  more?: {
+    label: string;
+    danger?: boolean;
+    run: () => void;
+  }[];
 }) {
+  useLocaleRender();
+  const l10n = useLocalization();
   const look = useUserLook(p.p.id);
   const photo = useOrbit((s) => s.users[p.p.id]?.photoRev ?? null);
   const menu = useMenu();
@@ -33,17 +46,22 @@ export function FriendRow(p: {
           <StyledName name={p.p.displayName} style={look.profileStyle} tag={look.tag} mojo={look.mojo} bot={look.bot} className="ellipsis" />
           {p.p.username && <small className="friend-handle"> @{p.p.username}</small>}
         </strong>
-        <small className="ellipsis">{p.sub ?? (p.p.statusText || (p.online ? "Online" : "Offline"))}</small>
+        <small className="ellipsis">{p.sub ?? (p.p.statusText || (p.online ? l10n("workspace.online") : l10n("messaging.people_offline")))}</small>
       </span>
       <span className="friend-actions">
         {p.actions}
         {p.onMessage && (
-          <button className="icon-btn" onClick={p.onMessage} aria-label={`Message ${p.p.displayName}`} title="Message">
+          <button className="icon-btn" onClick={p.onMessage} aria-label={uiText("messaging.interface.message_value0_ddd26fd", { value0: p.p.displayName })} title={l10n("messaging.message")}>
             <MessageCircle size={18} />
           </button>
         )}
         {p.more && (
-          <button className="icon-btn" onClick={(e) => menu.open(e.currentTarget)} aria-label={`More for ${p.p.displayName}`} aria-haspopup="menu">
+          <button
+            className="icon-btn"
+            onClick={(e) => menu.open(e.currentTarget)}
+            aria-label={uiText("organization.interface.more_for_value0_87b81e8", { value0: p.p.displayName })}
+            aria-haspopup="menu"
+          >
             <MoreVertical size={18} />
           </button>
         )}

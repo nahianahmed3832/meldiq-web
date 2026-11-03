@@ -1,3 +1,7 @@
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
+import { Localized } from "../../i18n/Localized";
+import { useT as useLocalization } from "../../i18n";
 import { Users } from "lucide-react";
 import { type FormEvent, useMemo, useState } from "react";
 import { ApiError } from "../../api/client";
@@ -11,16 +15,55 @@ import { useLoad } from "../workspace/useLoad";
 import type { DiscordReturn } from "../../application/discordReturn";
 import { DiscordImport } from "./DiscordImport";
 import { DISCOVERY_FEATURES, templateFromText, templateLink } from "../../sync/discovery/rules";
-
 /** The starter templates' names and what they're for (android CommunityTemplates; ids from the server). */
-const TEMPLATE_TEXT: Record<string, { name: string; hint: string }> = {
-  starter: { name: "Starter", hint: "Welcome, announcements, general chat, introductions and a lounge" },
-  friends: { name: "Friends", hint: "General chat, photos, plans and a voice hangout" },
-  gaming: { name: "Gaming", hint: "Looking for group, a clips forum and two voice channels" },
-  study: { name: "Study group", hint: "Homework help, a resources forum and a study room" },
-  club: { name: "Club", hint: "Introductions, an ideas forum and a meeting room" },
+const TEMPLATE_TEXT: Record<
+  string,
+  {
+    name: string;
+    hint: string;
+  }
+> = {
+  starter: {
+    get name() {
+      return uiText("organization.interface.starter_262b4ff");
+    },
+    get hint() {
+      return uiText("organization.interface.welcome_announcements_general_chat_introductions_and_a_lounge_bdc46b3");
+    },
+  },
+  friends: {
+    get name() {
+      return uiText("workspace.friends");
+    },
+    get hint() {
+      return uiText("organization.interface.general_chat_photos_plans_and_a_voice_hangout_2212f85");
+    },
+  },
+  gaming: {
+    get name() {
+      return uiText("organization.interface.gaming_0fadfa2");
+    },
+    get hint() {
+      return uiText("organization.interface.looking_for_group_a_clips_forum_and_two_voice_channels_5a54ca0");
+    },
+  },
+  study: {
+    get name() {
+      return uiText("organization.interface.study_group_aeb1c77");
+    },
+    get hint() {
+      return uiText("organization.interface.homework_help_a_resources_forum_and_a_study_room_7ab2263");
+    },
+  },
+  club: {
+    get name() {
+      return uiText("organization.interface.club_72e81fe");
+    },
+    get hint() {
+      return uiText("organization.interface.introductions_an_ideas_forum_and_a_meeting_room_0624245");
+    },
+  },
 };
-
 /**
  * Start a community (batch B2 starter templates, android CreateCommunitySheet): name, description, a template whose
  * categories and channels the server creates, and whether it's listed in Discover and open to join.
@@ -31,8 +74,9 @@ interface CreateCommunityDialogProps {
   /** Community parity E: a pasted template link opens its preview instead. */
   onTemplate?: (code: string) => void;
 }
-
 export function CreateCommunityDialog({ onClose, discord = null, onTemplate }: CreateCommunityDialogProps) {
+  useLocaleRender();
+  const l10n = useLocalization();
   const engine = useEngine();
   const canImport = useOrbit((s) => s.server?.features.includes("discord-import") ?? false);
   const [tab, setTab] = useState<"new" | "discord">(discord ? "discord" : "new");
@@ -48,10 +92,9 @@ export function CreateCommunityDialog({ onClose, discord = null, onTemplate }: C
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const chosen = templates.data?.find((t) => t.id === template);
-
   const submit = async (e: FormEvent) => {
     e.preventDefault();
-    if (!name.trim()) return setError("Give the community a name.");
+    if (!name.trim()) return setError(uiText("organization.interface.give_the_community_a_name_789d631"));
     setBusy(true);
     setError(null);
     try {
@@ -64,25 +107,30 @@ export function CreateCommunityDialog({ onClose, discord = null, onTemplate }: C
       onClose();
       navigate({ section: "home" });
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : "Couldn't create the community.");
+      setError(err instanceof ApiError ? err.message : uiText("organization.interface.couldn_t_create_the_community_1d96bd2"));
     } finally {
       setBusy(false);
     }
   };
-
   const tabs = canImport && (
-    <div className="segmented create-tabs" role="tablist" aria-label="How to start">
+    <div className="segmented create-tabs" role="tablist" aria-label={uiText("organization.interface.how_to_start_69f3633")}>
       <button type="button" role="tab" aria-selected={tab === "new"} aria-pressed={tab === "new"} onClick={() => setTab("new")}>
-        New community
+        <Localized k="organization.interface.new_community_3d86379" />
       </button>
       <button type="button" role="tab" aria-selected={tab === "discord"} aria-pressed={tab === "discord"} onClick={() => setTab("discord")}>
-        Import from Discord
+        <Localized k="organization.interface.import_from_discord_47d6de1" />
       </button>
     </div>
   );
   if (tab === "discord" && canImport) {
     return (
-      <Dialog title="Import from Discord" subtitle="Channels, categories, roles, emoji and the icon come over. People join with an invitation." onClose={onClose} wide className="create-dialog">
+      <Dialog
+        title={uiText("organization.interface.import_from_discord_47d6de1")}
+        subtitle={uiText("organization.interface.channels_categories_roles_emoji_and_the_icon_come_over_people_joi_26ee27a")}
+        onClose={onClose}
+        wide
+        className="create-dialog"
+      >
         <div className="dialog-body">
           {tabs}
           <DiscordImport returned={discord} onClose={onClose} />
@@ -91,7 +139,13 @@ export function CreateCommunityDialog({ onClose, discord = null, onTemplate }: C
     );
   }
   return (
-    <Dialog title="Start a community" subtitle="Your place to hang out with friends, your team or your fans." onClose={onClose} wide className="create-dialog">
+    <Dialog
+      title={l10n("workspace.home_start_community")}
+      subtitle={uiText("organization.interface.your_place_to_hang_out_with_friends_your_team_or_your_fans_ada1f33")}
+      onClose={onClose}
+      wide
+      className="create-dialog"
+    >
       <form className="dialog-body" onSubmit={(e) => void submit(e)} noValidate>
         {tabs}
         {error && (
@@ -100,17 +154,31 @@ export function CreateCommunityDialog({ onClose, discord = null, onTemplate }: C
           </div>
         )}
         <div className="field">
-          <label htmlFor="cc-name">Name</label>
-          <input id="cc-name" className="input" data-autofocus value={name} maxLength={80} onChange={(e) => setName(e.target.value)} placeholder="Dhaka Makers" />
+          <label htmlFor="cc-name">
+            <Localized k="messaging.interface.name_dcd1d52" />
+          </label>
+          <input
+            id="cc-name"
+            className="input"
+            data-autofocus
+            value={name}
+            maxLength={80}
+            onChange={(e) => setName(e.target.value)}
+            placeholder={uiText("organization.interface.dhaka_makers_8027676")}
+          />
         </div>
         <div className="field">
-          <label htmlFor="cc-desc">Description (optional)</label>
+          <label htmlFor="cc-desc">
+            <Localized k="organization.interface.description_optional_f6cbe2f" />
+          </label>
           <input id="cc-desc" className="input" value={description} maxLength={500} onChange={(e) => setDescription(e.target.value)} />
         </div>
         {hasTemplates && (
           <div className="field">
-            <span className="label">Start with</span>
-            <div className="kind-choice template-choice" role="radiogroup" aria-label="Template">
+            <span className="label">
+              <Localized k="organization.interface.start_with_a78c1db" />
+            </span>
+            <div className="kind-choice template-choice" role="radiogroup" aria-label={uiText("organization.interface.template_0575f29")}>
               {(templates.data ?? []).map((t) => (
                 <button key={t.id} type="button" role="radio" aria-checked={template === t.id} className="kind-option" onClick={() => setTemplate(t.id)}>
                   <span>
@@ -125,60 +193,66 @@ export function CreateCommunityDialog({ onClose, discord = null, onTemplate }: C
         )}
         {templateLinks && onTemplate && <TemplateLinkField onTemplate={onTemplate} />}
         <div className="field">
-          <span className="label">Who can find it</span>
-          <div className="segmented" role="radiogroup" aria-label="Who can find it">
+          <span className="label">
+            <Localized k="organization.interface.who_can_find_it_df3ff14" />
+          </span>
+          <div className="segmented" role="radiogroup" aria-label={uiText("organization.interface.who_can_find_it_df3ff14")}>
             <button type="button" role="radio" aria-checked={visibility === "private"} aria-pressed={visibility === "private"} onClick={() => setVisibility("private")}>
-              Only people I invite
+              <Localized k="organization.interface.only_people_i_invite_4664a6e" />
             </button>
             <button type="button" role="radio" aria-checked={visibility === "public"} aria-pressed={visibility === "public"} onClick={() => setVisibility("public")}>
-              Listed in Discover
+              <Localized k="organization.interface.listed_in_discover_39a6a3a" />
             </button>
           </div>
         </div>
         {visibility === "public" && (
           <div className="field">
-            <span className="label">Who can join</span>
-            <div className="segmented" role="radiogroup" aria-label="Who can join">
+            <span className="label">
+              <Localized k="organization.interface.who_can_join_35c6853" />
+            </span>
+            <div className="segmented" role="radiogroup" aria-label={uiText("organization.interface.who_can_join_35c6853")}>
               <button type="button" role="radio" aria-checked={joinPolicy === "invite"} aria-pressed={joinPolicy === "invite"} onClick={() => setJoinPolicy("invite")}>
-                With an invitation
+                <Localized k="organization.interface.with_an_invitation_5a42cd4" />
               </button>
               <button type="button" role="radio" aria-checked={joinPolicy === "open"} aria-pressed={joinPolicy === "open"} onClick={() => setJoinPolicy("open")}>
-                Anyone
+                <Localized k="organization.interface.anyone_8d486bb" />
               </button>
             </div>
           </div>
         )}
         <div className="row" style={{ justifyContent: "flex-end", gap: 8 }}>
           <button type="button" className="btn btn-secondary" onClick={onClose}>
-            Cancel
+            {l10n("common.actions.cancel")}
           </button>
           <button className="btn btn-primary" disabled={busy}>
-            <Users size={16} /> {busy ? "Creating…" : "Create community"}
+            <Users size={16} /> {busy ? l10n("auth.signup_busy") : uiText("organization.interface.create_community_5d6da55")}
           </button>
         </div>
       </form>
     </Dialog>
   );
 }
-
 /** "Have a template link?": a pasted link (or code) opens that template's preview. */
 function TemplateLinkField({ onTemplate }: { onTemplate: (code: string) => void }) {
+  useLocaleRender();
   const [text, setText] = useState("");
   const [problem, setProblem] = useState<string | null>(null);
   const open = () => {
     const code = templateFromText(text);
-    if (!code) return setProblem(`That isn't a template link. Template links look like ${templateLink("ABCD1234EFGH")}.`);
+    if (!code) return setProblem(uiText("organization.interface.that_isn_t_a_template_link_template_links_look_like_value0_905bbad", { value0: templateLink("ABCD1234EFGH") }));
     onTemplate(code);
   };
   return (
     <div className="field">
-      <label htmlFor="cc-template">Or start from a template link</label>
+      <label htmlFor="cc-template">
+        <Localized k="organization.interface.or_start_from_a_template_link_f3c85ec" />
+      </label>
       <div className="row" style={{ gap: 8 }}>
         <input
           id="cc-template"
           className="input grow"
           value={text}
-          placeholder="Paste a template link"
+          placeholder={uiText("organization.interface.paste_a_template_link_dc8cec7")}
           onChange={(e) => {
             setText(e.target.value);
             setProblem(null);
@@ -190,7 +264,7 @@ function TemplateLinkField({ onTemplate }: { onTemplate: (code: string) => void 
           }}
         />
         <button type="button" className="btn btn-secondary btn-sm" disabled={!text.trim()} onClick={open}>
-          Use template
+          <Localized k="organization.interface.use_template_351dd54" />
         </button>
       </div>
       {problem && (

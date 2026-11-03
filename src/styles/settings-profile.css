@@ -67,7 +67,7 @@
   min-width: 0;
 }
 .tag-tile .wtag {
-  margin-left: 0;
+  margin-inline-start: 0;
 }
 .tag-tile .ellipsis {
   max-width: 100%;
@@ -87,7 +87,7 @@
   border: 1px solid var(--border);
   background: var(--surface);
   color: var(--text);
-  text-align: left;
+  text-align: start;
   cursor: pointer;
 }
 .style-row:hover,
@@ -126,7 +126,7 @@
   gap: 16px;
   min-width: 0;
   overflow-y: auto;
-  padding-right: 4px;
+  padding-inline-end: 4px;
 }
 .style-window-preview {
   display: grid;

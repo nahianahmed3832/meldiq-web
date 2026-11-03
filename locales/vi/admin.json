@@ -1,0 +1,10 @@
+{
+  "title": "Quản trị",
+  "health": "Trạng thái dịch vụ",
+  "usage": "Mức sử dụng cộng đồng",
+  "states": {
+    "rejected": "Bị từ chối",
+    "escalated": "Đã chuyển lên cấp cao hơn",
+    "disputed": "Đang tranh chấp"
+  }
+}

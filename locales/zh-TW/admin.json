@@ -1,0 +1,10 @@
+{
+  "title": "管理",
+  "health": "服務狀態",
+  "usage": "社群用量",
+  "states": {
+    "rejected": "已拒絕",
+    "escalated": "已轉交上級處理",
+    "disputed": "有爭議"
+  }
+}

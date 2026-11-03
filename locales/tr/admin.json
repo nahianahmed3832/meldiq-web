@@ -1,0 +1,10 @@
+{
+  "title": "Yönetim",
+  "health": "Hizmet durumu",
+  "usage": "Topluluk kullanımı",
+  "states": {
+    "rejected": "Reddedildi",
+    "escalated": "Üst birime iletildi",
+    "disputed": "İtiraz edildi"
+  }
+}

@@ -1,3 +1,7 @@
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
+import { Localized } from "../../i18n/Localized";
+import { useT as useLocalization } from "../../i18n";
 import { Pin, Plus, Trash2, UserMinus, UserPlus } from "lucide-react";
 import { type FormEvent, useMemo, useRef, useState } from "react";
 import type { OrgAdminDetail } from "../../api/workspaceSchemas";
@@ -8,12 +12,13 @@ import { Avatar } from "../components/Avatar";
 import { Dialog } from "../components/Overlay";
 import { useAction, useLoad } from "./useLoad";
 import { Card, ErrorLine } from "./WorkspaceView";
-
 /**
  * Community settings › Pins (API 0.64.0, server docs/PROFILE_PINS.md): the community's own pins, which its owners and
  * admins make and give to members; members wear them on their profile. Every member can see the pins and who has each.
  */
 export function PinsPage({ detail }: { detail: OrgAdminDetail }) {
+  useLocaleRender();
+  const l10n = useLocalization();
   const engine = useEngine();
   const orgId = detail.org.id;
   const [rev, setRev] = useState(0);
@@ -25,19 +30,18 @@ export function PinsPage({ detail }: { detail: OrgAdminDetail }) {
   const canManage = list.data?.canManage ?? false;
   const limit = list.data?.limit ?? 30;
   const reload = () => setRev((r) => r + 1);
-
   return (
     <Card
-      title={`Pins · ${pins.length}/${limit}`}
+      title={uiText("workspace.interface.pins_value0_value1_c6d78de", { value0: pins.length, value1: limit })}
       sub={
         detail.org.visibility === "public"
-          ? "Pins your members wear on their profile, beside Meldiq's own. Everyone sees them, since this community is public."
-          : "Pins your members wear on their profile, beside Meldiq's own. As this community is private, only its members see them."
+          ? uiText("workspace.interface.pins_your_members_wear_on_their_profile_beside_meldiq_s_own_every_c9a03be")
+          : uiText("workspace.interface.pins_your_members_wear_on_their_profile_beside_meldiq_s_own_as_th_c503ed3")
       }
       actions={
         canManage && (
           <button className="btn btn-secondary btn-sm" disabled={pins.length >= limit} onClick={() => setMaking(true)}>
-            <Plus size={14} /> Make a pin
+            <Localized k="workspace.interface.make_a_pin_6bd3f71" slots={[<Plus size={14} />]} />
           </button>
         )
       }
@@ -46,7 +50,9 @@ export function PinsPage({ detail }: { detail: OrgAdminDetail }) {
       {!list.data && !list.error && <div className="skeleton" style={{ height: 80 }} aria-busy="true" />}
       {list.data && pins.length === 0 && (
         <p className="faint" style={{ margin: 0 }}>
-          {canManage ? "No pins yet. Make one, like “Top helper” or “Event winner”, and give it to members." : "This community hasn't made any pins yet."}
+          {canManage
+            ? uiText("workspace.interface.no_pins_yet_make_one_like_top_helper_or_event_winner_and_give_it_c556f43")
+            : uiText("workspace.interface.this_community_hasn_t_made_any_pins_yet_7e1a0da")}
         </p>
       )}
       {pins.length > 0 && (
@@ -56,19 +62,19 @@ export function PinsPage({ detail }: { detail: OrgAdminDetail }) {
               <img src={pinImage(p.id)} alt="" width={40} height={40} />
               <span className="grow">
                 <strong className="ellipsis">{p.name}</strong>
-                <small className="faint ellipsis">{[p.description, `${p.holders} ${p.holders === 1 ? "member has" : "members have"} it`].filter(Boolean).join(" · ")}</small>
+                <small className="faint ellipsis">{[p.description, uiText("workspace.pinHolders", { count: p.holders })].filter(Boolean).join(" · ")}</small>
               </span>
               <button className="btn btn-secondary btn-sm" onClick={() => setOpen(p)}>
-                {canManage ? "Give or take back" : "Who has it"}
+                {canManage ? uiText("workspace.interface.give_or_take_back_5943cb1") : uiText("workspace.interface.who_has_it_e38b555")}
               </button>
               {canManage && (
                 <button
                   className="icon-btn"
-                  aria-label={`Delete ${p.name}`}
-                  title="Delete"
+                  aria-label={uiText("organization.interface.delete_value0_8782b77", { value0: p.name })}
+                  title={l10n("common.actions.delete")}
                   disabled={remove.busy}
                   onClick={() => {
-                    if (!window.confirm(`Delete "${p.name}"? It comes off everyone who has it.`)) return;
+                    if (!window.confirm(uiText("workspace.interface.delete_value0_it_comes_off_everyone_who_has_it_445f1b2", { value0: p.name }))) return;
                     void remove.act(() => deletePin(engine, orgId, p.id)).then((ok) => ok && reload());
                   }}
                 >
@@ -93,8 +99,9 @@ export function PinsPage({ detail }: { detail: OrgAdminDetail }) {
     </Card>
   );
 }
-
 function MakePinDialog({ orgId, onClose, onMade }: { orgId: string; onClose: () => void; onMade: () => void }) {
+  useLocaleRender();
+  const l10n = useLocalization();
   const engine = useEngine();
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -103,7 +110,6 @@ function MakePinDialog({ orgId, onClose, onMade }: { orgId: string; onClose: () 
   const [problem, setProblem] = useState<string | null>(null);
   const save = useAction();
   const input = useRef<HTMLInputElement>(null);
-
   const pick = async (f: File | undefined) => {
     if (!f) return;
     const issue = await pinFileProblem(f);
@@ -117,44 +123,56 @@ function MakePinDialog({ orgId, onClose, onMade }: { orgId: string; onClose: () 
     if (!file || name.trim().length < 2) return;
     void save.act(async () => createPin(engine, orgId, name, description, new Uint8Array(await file.arrayBuffer()))).then((ok) => ok && onMade());
   };
-
   return (
-    <Dialog title="Make a pin" onClose={onClose}>
+    <Dialog title={uiText("workspace.interface.make_a_pin_f1440cd")} onClose={onClose}>
       <form className="dialog-body" onSubmit={submit} style={{ display: "grid", gap: 12 }}>
         <div className="row" style={{ gap: 12, alignItems: "center" }}>
           <span className="pin-drop">{preview ? <img src={preview} alt="" width={56} height={56} /> : <Pin size={22} aria-hidden="true" />}</span>
           <div style={{ display: "grid", gap: 4 }}>
             <input ref={input} type="file" hidden accept="image/png,image/webp,image/gif" onChange={(e) => void pick(e.target.files?.[0])} />
             <button type="button" className="btn btn-secondary btn-sm" onClick={() => input.current?.click()}>
-              {file ? "Choose another image" : "Choose an image"}
+              {file ? uiText("workspace.interface.choose_another_image_f0763cc") : uiText("workspace.interface.choose_an_image_ceed9fd")}
             </button>
-            <small className="faint">A square PNG, WebP or GIF, 64 to 512 px (128 × 128 works well), up to 512 KB. GIFs stay animated.</small>
+            <small className="faint">
+              <Localized k="workspace.interface.a_square_png_webp_or_gif_64_to_512_px_128_128_works_well_up_to_51_ded9582" />
+            </small>
           </div>
         </div>
         <ErrorLine text={problem} />
         <div className="field">
-          <label htmlFor="pin-name">Name</label>
-          <input id="pin-name" className="input" value={name} maxLength={32} placeholder="Top helper" onChange={(e) => setName(e.target.value)} />
+          <label htmlFor="pin-name">
+            <Localized k="messaging.interface.name_dcd1d52" />
+          </label>
+          <input id="pin-name" className="input" value={name} maxLength={32} placeholder={uiText("workspace.interface.top_helper_270aa87")} onChange={(e) => setName(e.target.value)} />
         </div>
         <div className="field">
-          <label htmlFor="pin-desc">What it's for (optional)</label>
-          <input id="pin-desc" className="input" value={description} maxLength={120} placeholder="Answered 100 questions in #help" onChange={(e) => setDescription(e.target.value)} />
+          <label htmlFor="pin-desc">
+            <Localized k="workspace.interface.what_it_s_for_optional_44e6c41" />
+          </label>
+          <input
+            id="pin-desc"
+            className="input"
+            value={description}
+            maxLength={120}
+            placeholder={uiText("workspace.interface.answered_100_questions_in_help_5f0827b")}
+            onChange={(e) => setDescription(e.target.value)}
+          />
         </div>
         <ErrorLine text={save.error} />
         <div className="row" style={{ gap: 8, justifyContent: "flex-end" }}>
           <button type="button" className="btn btn-ghost btn-sm" onClick={onClose}>
-            Cancel
+            {l10n("common.actions.cancel")}
           </button>
           <button className="btn btn-primary btn-sm" disabled={!file || name.trim().length < 2 || save.busy}>
-            {save.busy ? "Making…" : "Make pin"}
+            {save.busy ? uiText("workspace.interface.making_398c838") : uiText("workspace.interface.make_pin_ea74acb")}
           </button>
         </div>
       </form>
     </Dialog>
   );
 }
-
 function HoldersDialog({ orgId, pin, canManage, onClose, onChanged }: { orgId: string; pin: CommunityPin; canManage: boolean; onClose: () => void; onChanged: () => void }) {
+  useLocaleRender();
   const engine = useEngine();
   const [rev, setRev] = useState(0);
   const [q, setQ] = useState("");
@@ -170,19 +188,20 @@ function HoldersDialog({ orgId, pin, canManage, onClose, onChanged }: { orgId: s
         setRev((r) => r + 1);
         onChanged();
       });
-
   return (
     <Dialog title={pin.name} onClose={onClose}>
       <div className="dialog-body" style={{ display: "grid", gap: 12 }}>
         <div className="row" style={{ gap: 12, alignItems: "center" }}>
           <img src={pinImage(pin.id)} alt="" width={48} height={48} />
-          <span className="faint">{pin.description ?? "A pin from this community."}</span>
+          <span className="faint">{pin.description ?? uiText("workspace.interface.a_pin_from_this_community_0149f08")}</span>
         </div>
         <ErrorLine text={act.error ?? holders.error} />
-        <h3 className="invite-or-title">Who has it</h3>
+        <h3 className="invite-or-title">
+          <Localized k="workspace.interface.who_has_it_e38b555" />
+        </h3>
         {holders.data?.length === 0 && (
           <p className="faint" style={{ margin: 0 }}>
-            Nobody yet.
+            <Localized k="workspace.interface.nobody_yet_441ed85" />
           </p>
         )}
         <ul className="pin-people">
@@ -194,7 +213,7 @@ function HoldersDialog({ orgId, pin, canManage, onClose, onChanged }: { orgId: s
               </span>
               {canManage && (
                 <button className="btn btn-ghost btn-sm" disabled={act.busy} onClick={() => change(h.userId, false)}>
-                  <UserMinus size={14} /> Take back
+                  <Localized k="workspace.interface.take_back_6e14c76" slots={[<UserMinus size={14} />]} />
                 </button>
               )}
             </li>
@@ -202,8 +221,17 @@ function HoldersDialog({ orgId, pin, canManage, onClose, onChanged }: { orgId: s
         </ul>
         {canManage && (
           <>
-            <h3 className="invite-or-title">Give it to</h3>
-            <input className="input" type="search" value={q} placeholder="Search members" aria-label="Search members" onChange={(e) => setQ(e.target.value)} />
+            <h3 className="invite-or-title">
+              <Localized k="workspace.interface.give_it_to_2a36e9a" />
+            </h3>
+            <input
+              className="input"
+              type="search"
+              value={q}
+              placeholder={uiText("workspace.interface.search_members_6497fc6")}
+              aria-label={uiText("workspace.interface.search_members_6497fc6")}
+              onChange={(e) => setQ(e.target.value)}
+            />
             <ul className="pin-people">
               {(members.data ?? [])
                 .filter((m) => !has.has(m.id))
@@ -215,7 +243,7 @@ function HoldersDialog({ orgId, pin, canManage, onClose, onChanged }: { orgId: s
                       {m.displayName} <small className="faint">@{m.username}</small>
                     </span>
                     <button className="btn btn-secondary btn-sm" disabled={act.busy} onClick={() => change(m.id, true)}>
-                      <UserPlus size={14} /> Give
+                      <Localized k="workspace.interface.give_5aeabb9" slots={[<UserPlus size={14} />]} />
                     </button>
                   </li>
                 ))}

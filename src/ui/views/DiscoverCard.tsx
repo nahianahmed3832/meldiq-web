@@ -1,3 +1,5 @@
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
 import { BadgeCheck, Users } from "lucide-react";
 import { useState } from "react";
 import { ApiError } from "../../api/client";
@@ -13,14 +15,12 @@ import { colorIndexOf } from "../components/Avatar";
 import { OrgAvatar } from "../components/OrgAvatar";
 import { usePhoto } from "../components/photos";
 import { members } from "../format";
-
 const LABEL_KEYS: Record<NonNullable<Exclude<CardLabel, "unknown">>, StringKey> = {
   promoted: "discover_label_promoted",
   mega: "discover_label_mega",
   super: "discover_label_super",
   boost: "discover_label_boost",
 };
-
 interface DiscoverCardProps {
   c: DiscoverCard;
   onPreview: () => void;
@@ -28,13 +28,13 @@ interface DiscoverCardProps {
   /** Filters Discover by a tag on the card (servers with discovery-listing). */
   onTag?: (tag: string) => void;
 }
-
 /**
  * One community on Discover (community-first brief §3B; community parity E): banner, icon, name, its label (PROMOTED,
  * MEGA BOOSTED in gold, SUPER BOOSTED, BOOSTED), the one-line description, tags, members and who's online, and one clear
  * action: Open when joined, Join when anyone may, otherwise View (to apply, or to read that it's invite-only).
  */
 export function DiscoverCommunityCard({ c, onPreview, onJoined, onTag }: DiscoverCardProps) {
+  useLocaleRender();
   const engine = useEngine();
   const t = useT();
   const [busy, setBusy] = useState(false);
@@ -76,7 +76,7 @@ export function DiscoverCommunityCard({ c, onPreview, onJoined, onTag }: Discove
         {c.description && <span className="discover-desc">{c.description}</span>}
       </button>
       {c.tags.length > 0 && (
-        <ul className="discover-tags" aria-label="Tags">
+        <ul className="discover-tags" aria-label={uiText("organization.interface.tags_1331275")}>
           {c.tags.map((tag) => (
             <li key={tag}>
               {onTag ? (
@@ -124,7 +124,6 @@ export function DiscoverCommunityCard({ c, onPreview, onJoined, onTag }: Discove
     </article>
   );
 }
-
 /** Vivid bands in Meldiq's palette (cyan, blue, violet, pink, orange), one per community without a banner or accent. */
 const BANDS = [
   "linear-gradient(120deg, #22d3ee, #6366f1)",

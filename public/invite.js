@@ -1,14 +1,51 @@
 // The meldiq.app/invite/CODE page (batch B4b): shows which community the invitation is for, using the public preview
 // (name, description and size only; never channels or members), and hands the code to the app or Meldiq Web.
 // Plain script, no build step: the page must load before the web app and under its Content-Security-Policy.
-(function () {
+(function start() {
   "use strict";
+  if (!window.meldiqPublicI18n) {
+    var localeScript = document.createElement("script");
+    localeScript.src = "/public-locale.js";
+    localeScript.onload = start;
+    localeScript.onerror = function () {
+      var error = document.getElementById("public-locale-error");
+      if (error) error.hidden = false;
+    };
+    document.head.appendChild(localeScript);
+    return;
+  }
+  var ui = window.meldiqPublicI18n;
+  // Older cached invitation markup can load the current script during a release.
+  [
+    ["lead", ui.keys.lead],
+    ["copy", ui.keys.copy],
+    ["open-web", ui.keys.web],
+    ["open-app", ui.keys.app],
+  ].forEach(function (pair) {
+    var node = document.getElementById(pair[0]);
+    if (node) ui.label(node, pair[1]);
+  });
+  var hint = document.querySelector("#join > p");
+  if (hint) ui.label(hint, ui.keys.hint);
+  var android = document.querySelector("#get-app span");
+  if (!android) {
+    var link = document.getElementById("get-app");
+    if (link) {
+      Array.from(link.childNodes).forEach(function (node) {
+        if (node.nodeType === 3) node.remove();
+      });
+      android = document.createElement("span");
+      link.appendChild(android);
+    }
+  }
+  if (android) ui.label(android, ui.keys.android);
+
   var CODE = /^[A-Za-z0-9]{4}(-?[A-Za-z0-9]{4}){2,4}$/;
   var PROBLEMS = {
-    invite_not_found: "This invitation link isn't valid. Ask for a new one.",
-    invite_expired: "This invitation has expired. Ask for a new one.",
-    invite_revoked: "This invitation was turned off. Ask for a new one.",
-    invite_used_up: "This invitation has been used up. Ask for a new one.",
+    invite_not_found: ui.keys.invalid,
+    invite_expired: ui.keys.expired,
+    invite_revoked: ui.keys.revoked,
+    invite_used_up: ui.keys.used,
   };
 
   function el(id) {
@@ -20,6 +57,11 @@
     e.hidden = false;
   }
 
+  function showText(id, key, values) {
+    ui.label(el(id), key, values);
+    el(id).hidden = false;
+  }
+
   function codeFromPath(path) {
     var raw = decodeURIComponent(path.replace(/^\/invite\/?/, "").split("/")[0] || "");
     if (!CODE.test(raw)) return null;
@@ -27,11 +69,11 @@
     return plain.match(/.{1,4}/g).join("-");
   }
 
-  function problem(text) {
+  function problem(key) {
     // Nothing was invited to: no "You've been invited to join" above the reason.
     el("lead").hidden = true;
-    el("name").textContent = "Invitation";
-    show("problem", text);
+    ui.label(el("name"), ui.keys.invitation);
+    showText("problem", key);
   }
 
   var code = codeFromPath(window.location.pathname);
@@ -55,7 +97,7 @@
   }
   el("copy").addEventListener("click", function () {
     var done = function () {
-      el("copy").textContent = "Copied";
+      ui.label(el("copy"), ui.keys.copied);
       el("copy").setAttribute("aria-live", "polite");
     };
     if (navigator.clipboard) navigator.clipboard.writeText(code).then(done, function () {});
@@ -70,11 +112,15 @@
     .then(function (res) {
       if (!res.ok) {
         var c = res.body && res.body.error && res.body.error.code;
-        problem(PROBLEMS[c] || "This invitation can't be opened right now. Try again later.");
+        problem(Object.hasOwn(PROBLEMS, c) ? PROBLEMS[c] : ui.keys.generic);
         return;
       }
       var community = res.body.community || {};
-      el("name").textContent = community.name || "A Meldiq community";
+      if (community.name) {
+        el("name").removeAttribute("data-public-text");
+        el("name").removeAttribute("data-public-values");
+        el("name").textContent = community.name;
+      } else ui.label(el("name"), ui.keys.community);
       var initialsIcon = function () {
         // The community's initials on Meldiq's gradient when it has no icon (or it can't load).
         var words = community.name.trim().split(/\s+/);
@@ -94,7 +140,12 @@
         };
         img.src = "/v1/invites/" + encodeURIComponent(code) + "/photo";
       } else if (community.name) initialsIcon();
-      document.title = (community.name || "Meldiq") + " · Meldiq invitation";
+      document.querySelector("title").removeAttribute("data-public-text");
+      var updateTitle = function () {
+        document.title = (community.name ? community.name + " · " : "") + ui.text(ui.keys.title);
+      };
+      updateTitle();
+      window.addEventListener("meldiq:public-locale", updateTitle);
       if (community.description) show("about", community.description);
       // API 0.44.0: the community's banner and accent colour (only "#rrggbb"; anything else keeps Meldiq's colours).
       var accent = /^#[0-9a-f]{6}$/i.test(community.accent || "") ? community.accent : null;
@@ -118,11 +169,11 @@
         el("open-web").style.borderColor = accent;
         el("open-web").style.color = onAccent;
       }
-      if (typeof community.memberCount === "number") show("members", community.memberCount === 1 ? "1 member" : community.memberCount + " members");
-      if (res.body.invitesPaused) show("problem", "This community has paused new members for now. Try again later.");
+      if (typeof community.memberCount === "number") showText("members", ui.keys.members, { count: community.memberCount });
+      if (res.body.invitesPaused) showText("problem", ui.keys.paused);
       show("join");
     })
     .catch(function () {
-      problem("This invitation can't be opened right now. Check your connection and try again.");
+      problem(ui.keys.generic);
     });
 })();

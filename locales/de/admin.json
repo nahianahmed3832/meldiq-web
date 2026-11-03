@@ -1,0 +1,10 @@
+{
+  "title": "Verwaltung",
+  "health": "Dienststatus",
+  "usage": "Community-Nutzung",
+  "states": {
+    "rejected": "Abgelehnt",
+    "escalated": "Eskaliert",
+    "disputed": "Angefochten"
+  }
+}

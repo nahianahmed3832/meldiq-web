@@ -1,20 +1,24 @@
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
+import { Localized } from "../../i18n/Localized";
+import { useT as useLocalization } from "../../i18n";
 import type { Member } from "../../api/schemas";
 import { Dialog } from "../components/Overlay";
 import { StyledName } from "./NameStyle";
 import { StyledAvatar } from "./ProfileStyle";
-
 type BotIdentity = Pick<Member, "id" | "displayName" | "avatarColor"> & Partial<Pick<Member, "photoRev" | "avatarMedia" | "profileStyle" | "tag" | "mojo" | "statusText" | "statusEmoji">>;
-
 /** Bot accounts have a community identity; they do not use the human profile or direct-message API. */
 export function BotProfileDialog({ bot, onClose }: { bot: BotIdentity; onClose: () => void }) {
+  useLocaleRender();
+  const l10n = useLocalization();
   const status = [bot.statusEmoji, bot.statusText].filter(Boolean).join(" ");
   return (
     <Dialog
-      title="Bot details"
+      title={uiText("files.interface.bot_details_83f995e")}
       onClose={onClose}
       footer={
         <button className="btn btn-secondary" onClick={onClose}>
-          Done
+          {l10n("common.actions.done")}
         </button>
       }
     >
@@ -34,11 +38,15 @@ export function BotProfileDialog({ bot, onClose }: { bot: BotIdentity; onClose: 
             <strong>
               <StyledName name={bot.displayName} style={bot.profileStyle} tag={bot.tag} mojo={bot.mojo} bot className="ellipsis" />
             </strong>
-            <small>Automated community account</small>
+            <small>
+              <Localized k="files.interface.automated_community_account_e61bc60" />
+            </small>
           </span>
         </div>
         {status && <p>{status}</p>}
-        <p className="faint">Find this bot's messages and supported commands in your community's channels.</p>
+        <p className="faint">
+          <Localized k="files.interface.find_this_bot_s_messages_and_supported_commands_in_your_community_7d13528" />
+        </p>
       </div>
     </Dialog>
   );

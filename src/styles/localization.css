@@ -1,0 +1,198 @@
+/* Interface language controls use the existing Meldiq tokens and dialog focus trap. */
+:root {
+  --safe-inline-start: env(safe-area-inset-left, 0px);
+  --safe-inline-end: env(safe-area-inset-right, 0px);
+}
+html[dir="rtl"] {
+  --safe-inline-start: env(safe-area-inset-right, 0px);
+  --safe-inline-end: env(safe-area-inset-left, 0px);
+}
+.lang-picker {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  max-inline-size: 100%;
+  min-block-size: 36px;
+  padding: 7px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  text-align: start;
+  white-space: normal;
+}
+.lang-picker span {
+  overflow-wrap: anywhere;
+}
+.language-dialog {
+  display: grid;
+  gap: 12px;
+  min-inline-size: 0;
+}
+.language-search {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.language-search input {
+  flex: 1;
+  min-inline-size: 0;
+  inline-size: 100%;
+}
+.language-list {
+  overflow-y: auto;
+  max-block-size: min(52dvh, 390px);
+  overscroll-behavior: contain;
+}
+.language-list [role="option"] {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  inline-size: 100%;
+  min-block-size: 42px;
+  padding: 10px 12px;
+  text-align: start;
+  border-radius: var(--r-sm);
+  overflow-wrap: anywhere;
+}
+.language-list [aria-selected="true"] {
+  background: var(--accent-soft);
+  color: var(--accent-text);
+}
+.language-list [role="option"]:hover {
+  background: var(--surface-hover);
+}
+.language-state {
+  margin: 0;
+  min-block-size: 1.5em;
+}
+.language-preference {
+  padding: 18px;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.language-preference h2,
+.language-preference p {
+  margin: 0;
+}
+.language-preference > div {
+  flex: 1 1 200px;
+}
+.language-spinner {
+  inline-size: 16px;
+  block-size: 16px;
+  border: 2px solid currentColor;
+  border-inline-end-color: transparent;
+  border-radius: 50%;
+  animation: language-spin 1s linear infinite;
+}
+.setting {
+  flex-wrap: wrap;
+}
+.setting > .lines {
+  flex: 1 1 15rem;
+  min-inline-size: min(15rem, 100%);
+  overflow-wrap: anywhere;
+}
+.setting > :is(.segmented, .palette-picker) {
+  max-inline-size: 100%;
+}
+.setting > .segmented {
+  flex-wrap: wrap;
+}
+.setting > .segmented button {
+  block-size: auto;
+  min-block-size: 30px;
+  padding-block: 5px;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+@keyframes language-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .language-spinner {
+    animation: none;
+  }
+}
+/* Local system font fallbacks: no third-party font requests. Existing brand fonts retain priority. */
+:lang(bn) {
+  font-family: "Plus Jakarta Sans", "Noto Sans Bengali", "Bangla Sangam MN", system-ui, sans-serif;
+}
+:lang(hi) {
+  font-family: "Plus Jakarta Sans", "Noto Sans Devanagari", "Devanagari Sangam MN", system-ui, sans-serif;
+}
+:lang(ur) {
+  font-family: "Plus Jakarta Sans", "Noto Sans Arabic", "Geeza Pro", system-ui, sans-serif;
+}
+:lang(ar) {
+  font-family: "Plus Jakarta Sans", "Noto Sans Arabic", "Geeza Pro", system-ui, sans-serif;
+}
+:lang(ja) {
+  font-family: "Plus Jakarta Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", system-ui, sans-serif;
+}
+:lang(ko) {
+  font-family: "Plus Jakarta Sans", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
+}
+:lang(zh) {
+  font-family: "Plus Jakarta Sans", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+}
+:lang(zh-TW) {
+  font-family: "Plus Jakarta Sans", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+}
+:lang(th) {
+  font-family: "Plus Jakarta Sans", "Thonburi", "Noto Sans Thai", system-ui, sans-serif;
+}
+/* Grid/flex follow document direction. Keep content legible without mirroring media or people's content. */
+html[dir="rtl"] .sidebar {
+  border-inline-end: 1px solid var(--border);
+}
+html[dir="rtl"] .settings-nav {
+  border-inline-end: 1px solid var(--border);
+}
+html[dir="rtl"] :is(.dialog, .menu, .settings-content, .form-field) {
+  text-align: start;
+}
+html[dir="rtl"] :is(input[type="email"], input[type="url"], input[type="password"], input[autocomplete="one-time-code"], .code, code, pre) {
+  direction: ltr;
+  text-align: start;
+}
+html[dir="rtl"] :is(.msg-body, .msg-text, .markdown, .message-text) {
+  unicode-bidi: plaintext;
+  text-align: start;
+}
+html[dir="rtl"] :is(.side-item, .settings-nav a, .settings-nav button) {
+  text-align: start;
+}
+html[dir="rtl"] :is(.lucide-chevron-right, .lucide-chevron-left, .lucide-arrow-left, .lucide-arrow-right) {
+  transform: scaleX(-1);
+}
+/* Media, clocks, screen sharing and video transport controls retain their physical orientation. */
+html[dir="rtl"] :is(video, audio, canvas, .call-ping, .duration) {
+  direction: ltr;
+}
+html[dir="rtl"] .switch[aria-checked="true"]::after {
+  transform: translateX(-16px);
+}
+html[dir="rtl"] .spark-track-stops li {
+  transform: translateX(50%);
+}
+@media (min-width: 641px) and (max-width: 960px) {
+  html[dir="rtl"] .sidebar {
+    transform: translateX(104%);
+  }
+  html[dir="rtl"] .sidebar.open {
+    transform: none;
+  }
+}
+
+.checkout-brand {
+  flex-wrap: wrap;
+}
+.checkout-brand .lang-picker {
+  margin-inline-start: auto;
+}

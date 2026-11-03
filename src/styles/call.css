@@ -106,7 +106,7 @@ button.e2ee-badge:hover {
 }
 .call-tile .who {
   position: absolute;
-  left: 10px;
+  inset-inline-start: 10px;
   bottom: 10px;
   display: inline-flex;
   align-items: center;
@@ -204,7 +204,7 @@ button.e2ee-badge:hover {
 .call-incoming {
   position: fixed;
   top: 16px;
-  right: 16px;
+  inset-inline-end: 16px;
   z-index: 70;
   width: min(360px, calc(100vw - 32px));
   display: grid;
@@ -253,20 +253,23 @@ button.e2ee-badge:hover {
 .call-mini {
   position: fixed;
   top: calc(var(--app-top, 0px) + var(--topbar-h) + 8px);
-  right: 16px;
+  inset-inline-end: 16px;
   z-index: 60;
   display: flex;
   align-items: center;
   gap: 10px;
   max-width: calc(100vw - 32px);
-  padding: 8px 8px 8px 6px;
+  padding-block-start: 8px;
+  padding-inline-end: 8px;
+  padding-block-end: 8px;
+  padding-inline-start: 6px;
   border-radius: var(--r-pill);
   background: var(--call-bg);
   color: var(--call-text);
   box-shadow: var(--shadow-lg);
 }
 .call-mini.placed {
-  right: auto;
+  inset-inline-end: auto;
   bottom: auto;
 }
 .call-mini-grip,
@@ -324,14 +327,14 @@ button.e2ee-badge:hover {
   }
   .call-incoming {
     top: 8px;
-    right: 8px;
+    inset-inline-end: 8px;
     width: calc(100vw - 16px);
   }
   /* At the top on phones: the bottom holds the composer and the tab bar. */
   .call-mini:not(.placed) {
     top: calc(var(--app-top, 0px) + 8px);
-    right: 8px;
-    left: 8px;
+    inset-inline-end: 8px;
+    inset-inline-start: 8px;
   }
 }
 
@@ -367,7 +370,7 @@ button.e2ee-badge:hover {
 .call-screen-actions {
   position: absolute;
   top: 10px;
-  right: 10px;
+  inset-inline-end: 10px;
   display: flex;
   gap: 6px;
 }
@@ -394,7 +397,7 @@ button.e2ee-badge:hover {
 }
 .call-screen .who {
   position: absolute;
-  left: 12px;
+  inset-inline-start: 12px;
   bottom: 12px;
   display: inline-flex;
   align-items: center;
@@ -421,7 +424,10 @@ button.e2ee-badge:hover {
 .call-screen-layout.side .call-strip {
   flex-direction: column;
   overflow: hidden auto;
-  padding: 0 0 0 2px;
+  padding-block-start: 0;
+  padding-inline-end: 0;
+  padding-block-end: 0;
+  padding-inline-start: 2px;
 }
 .call-screen-layout.side .call-strip .call-tile {
   flex: 0 0 96px;
@@ -630,8 +636,8 @@ button.call-pill:hover {
 @media (min-width: 961px) {
   .app:has(.workspace.with-sidebar) .call-stage {
     top: calc(env(safe-area-inset-top, 0px) + var(--brandbar-h));
-    left: calc(env(safe-area-inset-left, 0px) + var(--frame-gap) * 3 + var(--rail-w) + var(--sidebar-w));
-    right: calc(env(safe-area-inset-right, 0px) + var(--frame-gap));
+    inset-inline-start: calc(var(--safe-inline-start) + var(--frame-gap) * 3 + var(--rail-w) + var(--sidebar-w));
+    inset-inline-end: calc(var(--safe-inline-end) + var(--frame-gap));
     bottom: var(--frame-gap);
     border-radius: var(--r-panel);
     background: var(--call-bg);
@@ -657,7 +663,7 @@ button.call-pill:hover {
 .live-badge {
   position: absolute;
   top: 10px;
-  left: 10px;
+  inset-inline-start: 10px;
   z-index: 2;
   padding: 2px 8px;
   border-radius: var(--r-pill);
@@ -793,7 +799,7 @@ button.call-pill:hover {
     0 0 26px -8px var(--call-speaking);
 }
 .call-tile .who {
-  left: 14px;
+  inset-inline-start: 14px;
   bottom: 14px;
   padding: 5px 12px;
   font-size: 13px;
@@ -858,7 +864,7 @@ button.call-pill:hover {
 .call-connection-detail {
   display: none;
   position: absolute;
-  left: 0;
+  inset-inline-start: 0;
   bottom: calc(100% + 10px);
   width: 228px;
   padding: 14px;

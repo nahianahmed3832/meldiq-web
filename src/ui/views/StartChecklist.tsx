@@ -1,18 +1,22 @@
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
+import { Localized } from "../../i18n/Localized";
+import { useT as useLocalization } from "../../i18n";
 import { CheckCircle2, Circle, X } from "lucide-react";
 import { useCommunityServer, useOrbit } from "../../application/orbit";
 import { setPrefs, usePrefs } from "../../application/prefs";
 import { navigate } from "../../application/router";
 import type { ShellDialog } from "../shell/Shell";
 import { type StartStep, startProgress, startVisible } from "./startRules";
-
 const notificationsAllowed = (): boolean => typeof Notification !== "undefined" && Notification.permission === "granted";
-
 /**
  * Get started (android HomeStart): the first things a new person does in Meldiq, each one a click away, checked off from
  * real state (a photo, a workspace or community, someone invited, notifications). Nothing is forced; the card can be hidden and goes away
  * by itself once the required steps are done.
  */
 export function StartChecklist({ orgId, onDialog }: { orgId: string | null; onDialog: (d: ShellDialog) => void }) {
+  useLocaleRender();
+  const l10n = useLocalization();
   const prefs = usePrefs();
   const community = useCommunityServer();
   const facts = useOrbit(
@@ -23,31 +27,54 @@ export function StartChecklist({ orgId, onDialog }: { orgId: string | null; onDi
     }),
     (a, b) => a.photo === b.photo && a.workspaces === b.workspaces && a.members === b.members,
   );
-  const steps: (StartStep & { go: () => void })[] = [
-    { key: "profile", label: "Add your name and photo", done: facts.photo, go: () => navigate({ section: "settings", settingsPage: "profile" }) },
-    { key: "workspace", label: community ? "Start or join a community" : "Create or join a community", done: facts.workspaces > 0, go: () => onDialog({ kind: "joinWorkspace" }) },
+  const steps: (StartStep & {
+    go: () => void;
+  })[] = [
+    {
+      key: "profile",
+      get label() {
+        return uiText("workspace.interface.add_your_name_and_photo_c9c73e5");
+      },
+      done: facts.photo,
+      go: () => navigate({ section: "settings", settingsPage: "profile" }),
+    },
+    {
+      key: "workspace",
+      label: community ? uiText("workspace.interface.start_or_join_a_community_44a7a8f") : uiText("workspace.interface.create_or_join_a_community_cb85c61"),
+      done: facts.workspaces > 0,
+      go: () => onDialog({ kind: "joinWorkspace" }),
+    },
     {
       key: "invite",
-      label: community ? "Invite your friends" : "Invite your teammates",
+      label: community ? uiText("workspace.interface.invite_your_friends_d47dd80") : uiText("workspace.interface.invite_your_teammates_30fc939"),
       done: facts.members > 1,
       go: () => (orgId ? navigate({ section: "workspace", workspacePage: "invitations" }) : onDialog({ kind: "createWorkspace" })),
     },
-    { key: "notifications", label: "Turn on notifications", done: prefs.notifications && notificationsAllowed(), go: () => navigate({ section: "settings", settingsPage: "notifications" }) },
+    {
+      key: "notifications",
+      get label() {
+        return uiText("workspace.interface.turn_on_notifications_92dfd36");
+      },
+      done: prefs.notifications && notificationsAllowed(),
+      go: () => navigate({ section: "settings", settingsPage: "notifications" }),
+    },
     // Meldiq B15: no "Connect the tools you use" step: app connections were retired with the community rebuild, and the
     // step led to a page the server no longer offers.
   ];
   if (!startVisible(prefs.startHidden, steps)) return null;
   const { done, total } = startProgress(steps);
   return (
-    <section className="card start-card" aria-label="Get started with Meldiq">
+    <section className="card start-card" aria-label={uiText("workspace.interface.get_started_with_meldiq_19f2fa0")}>
       <header className="row" style={{ gap: 8 }}>
         <div className="grow">
-          <h2>Get started with Meldiq</h2>
+          <h2>
+            <Localized k="workspace.interface.get_started_with_meldiq_19f2fa0" />
+          </h2>
           <small className="faint">
-            {done} of {total} done
+            <Localized k="workspace.interface.of_done_c6748f7" slots={[done, total]} />
           </small>
         </div>
-        <button className="icon-btn" onClick={() => setPrefs({ startHidden: true })} aria-label="Hide Get started">
+        <button className="icon-btn" onClick={() => setPrefs({ startHidden: true })} aria-label={uiText("workspace.interface.hide_get_started_c57486c")}>
           <X size={16} />
         </button>
       </header>
@@ -56,9 +83,13 @@ export function StartChecklist({ orgId, onDialog }: { orgId: string | null; onDi
         {steps.map((s) => (
           <li key={s.key}>
             <button className={`start-step${s.done ? " done" : ""}`} onClick={s.go} disabled={s.done}>
-              {s.done ? <CheckCircle2 size={18} aria-label="Done" /> : <Circle size={18} aria-hidden="true" />}
+              {s.done ? <CheckCircle2 size={18} aria-label={l10n("common.actions.done")} /> : <Circle size={18} aria-hidden="true" />}
               <span className="grow">{s.label}</span>
-              {s.optional && !s.done && <span className="tag">Optional</span>}
+              {s.optional && !s.done && (
+                <span className="tag">
+                  <Localized k="workspace.interface.optional_59be713" />
+                </span>
+              )}
             </button>
           </li>
         ))}

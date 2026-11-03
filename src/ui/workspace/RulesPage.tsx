@@ -1,3 +1,7 @@
+import { Localized } from "../../i18n/Localized";
+import { formatUiNumber } from "../../i18n/format";
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
 import { ArrowDown, ArrowUp, Minus, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { OrgAdminDetail } from "../../api/workspaceSchemas";
@@ -10,13 +14,13 @@ import { CreateChannelDialog } from "../community/CreateChannelDialog";
 import { RulesList } from "../community/RulesViews";
 import { useAction, useLoad } from "./useLoad";
 import { Card, ErrorLine } from "./WorkspaceView";
-
 /**
  * Community settings › Rules (API 0.65.0, feature rules-channel): which channel is the rules channel, the numbered rules
  * with a title and an optional description, and whether members agree to them before posting or reacting. People who
  * can edit the community change them; the server checks again.
  */
 export function RulesPage({ detail }: { detail: OrgAdminDetail }) {
+  useLocaleRender();
   const engine = useEngine();
   const t = useT();
   const orgId = detail.org.id;
@@ -34,7 +38,6 @@ export function RulesPage({ detail }: { detail: OrgAdminDetail }) {
     setRequired(current.data.required);
     setRules(current.data.rules.map((r) => ({ id: r.id, title: r.title, description: r.description ?? "" })));
   }, [current.data]);
-
   // A rules channel is a text or announcement channel everyone can see (the server says the same).
   const options = (channels.data ?? []).filter((c) => !c.voice && c.format !== "forum" && c.kind !== "PRIVATE");
   const settings = { channelId: channelId || null, required, rules };
@@ -44,7 +47,6 @@ export function RulesPage({ detail }: { detail: OrgAdminDetail }) {
     setRules(rules.map((r, j) => (j === i ? { ...r, ...change } : r)));
   };
   const preview = rules.filter((r) => r.title.trim()).map((r, i) => ({ id: r.id ?? `new-${i}`, title: r.title.trim(), description: r.description.trim() || null }));
-
   return (
     <div className="ws-page">
       {creating && (
@@ -84,7 +86,7 @@ export function RulesPage({ detail }: { detail: OrgAdminDetail }) {
           <p className="hint">{t("rules_settings_channel_hint")}</p>
           {current.data && !current.data.channelId && detail.permissions.canCreateChannels && (
             <button className="btn btn-secondary btn-sm" onClick={() => setCreating(true)}>
-              <Plus size={14} /> Create rules channel
+              <Localized k="workspace.interface.create_rules_channel_5e0fe29" slots={[<Plus size={14} />]} />
             </button>
           )}
         </div>
@@ -94,7 +96,7 @@ export function RulesPage({ detail }: { detail: OrgAdminDetail }) {
           {rules.map((r, i) => (
             <div key={r.id ?? `new-${i}`} className="rules-editor-row">
               <span className="rules-num" aria-hidden>
-                {i + 1}
+                {formatUiNumber(i + 1)}
               </span>
               <div className="lines">
                 <input
@@ -108,7 +110,7 @@ export function RulesPage({ detail }: { detail: OrgAdminDetail }) {
                 <textarea
                   className="textarea"
                   rows={2}
-                  aria-label={`${t("rules_settings_rule", { n: i + 1 })}: ${t("rules_settings_desc_ph")}`}
+                  aria-label={uiText("billing.interface.value0_value1_6a77681", { value0: t("rules_settings_rule", { n: i + 1 }), value1: t("rules_settings_desc_ph") })}
                   placeholder={t("rules_settings_desc_ph")}
                   maxLength={RULES_LIMITS.description}
                   value={r.description}
@@ -166,7 +168,7 @@ export function RulesPage({ detail }: { detail: OrgAdminDetail }) {
         </div>
       </Card>
       {preview.length > 0 && (
-        <Card title={`${t("rules_title")} · ${preview.length}`}>
+        <Card title={uiText("messaging.interface.value0_value1_75414c2", { value0: t("rules_title"), value1: preview.length })}>
           <RulesList rules={preview} />
         </Card>
       )}

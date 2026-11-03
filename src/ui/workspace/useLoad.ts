@@ -1,5 +1,6 @@
 import { type DependencyList, useCallback, useEffect, useRef, useState } from "react";
-import { ApiError } from "../../api/client";
+import { localizedError } from "../../i18n/errors";
+import { useT } from "../../i18n";
 
 export interface Loaded<T> {
   data: T | null;
@@ -11,7 +12,8 @@ export interface Loaded<T> {
 /** Loads [fn] when [deps] change (or on reload); ignores answers that arrive after a newer request started. */
 export function useLoad<T>(fn: () => Promise<T>, deps: DependencyList): Loaded<T> {
   const [data, setData] = useState<T | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const t = useT();
+  const [failure, setError] = useState<unknown>(null);
   const [loading, setLoading] = useState(true);
   const [tick, setTick] = useState(0);
   const gen = useRef(0);
@@ -27,19 +29,20 @@ export function useLoad<T>(fn: () => Promise<T>, deps: DependencyList): Loaded<T
         setError(null);
       })
       .catch((e: unknown) => {
-        if (mine === gen.current) setError(e instanceof ApiError ? e.message : "Couldn't load this. Try again.");
+        if (mine === gen.current) setError(e);
       })
       .finally(() => {
         if (mine === gen.current) setLoading(false);
       });
   }, [run, tick]);
-  return { data, error, loading, reload: useCallback(() => setTick((t) => t + 1), []) };
+  return { data, error: failure === null ? null : localizedError(failure, t), loading, reload: useCallback(() => setTick((t) => t + 1), []) };
 }
 
 /** Runs one action at a time for a control: busy while it runs, its refusal as text. */
 export function useAction(): { busy: boolean; error: string | null; clear: () => void; act: (fn: () => Promise<unknown>) => Promise<boolean> } {
+  const t = useT();
   const [busy, setBusy] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [failure, setError] = useState<unknown>(null);
   const act = useCallback(async (fn: () => Promise<unknown>) => {
     setBusy(true);
     setError(null);
@@ -47,11 +50,11 @@ export function useAction(): { busy: boolean; error: string | null; clear: () =>
       await fn();
       return true;
     } catch (e) {
-      setError(e instanceof ApiError ? e.message : "That didn't work. Try again.");
+      setError(e);
       return false;
     } finally {
       setBusy(false);
     }
   }, []);
-  return { busy, error, clear: useCallback(() => setError(null), []), act };
+  return { busy, error: failure === null ? null : localizedError(failure, t), clear: useCallback(() => setError(null), []), act };
 }

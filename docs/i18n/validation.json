@@ -1,0 +1,78 @@
+{
+  "status": "validated-awaiting-production-package",
+  "date": "2026-11-04",
+  "nativeReview": "awaiting-native-review",
+  "typecheck": "passed",
+  "lint": "passed",
+  "repositoryFormatting": "passed",
+  "unit": {
+    "files": 141,
+    "passed": 967,
+    "skipped": 1
+  },
+  "browser": {
+    "status": "passed",
+    "projects": [
+      "chromium",
+      "phone-width"
+    ],
+    "totalSelectedPassed": 66,
+    "finalDictionaryRefreshPassed": 14,
+    "all28LocaleSelection": "passed",
+    "activeEncryptedCallContinuity": "passed-desktop-and-phone",
+    "hostedCardFieldContinuity": "passed-desktop-and-phone",
+    "standaloneInviteAndProviderReturn": "passed-desktop-and-phone",
+    "visuallyInspectedLocales": [
+      "en",
+      "bn",
+      "zh-CN",
+      "ja",
+      "de",
+      "pt-BR",
+      "ar",
+      "ur"
+    ],
+    "fullCrossBrowserSuite": "not-run",
+    "controlBoundsPassed": 2
+  },
+  "serverPatch": {
+    "isolatedSQLitePassed": 17,
+    "postgres": "passed",
+    "isolatedPostgresPassed": 17,
+    "compatibleReaderPostgresPassed": 17,
+    "existingPostgresCompatibilityPassed": 124,
+    "typecheck": "passed",
+    "build": "passed",
+    "sourceCommit": "cc61eb40cd991c4ae843cd31a0d43f793f2f480f",
+    "mergedCommit": "fb5db1d3d615a5388454f07b769451904ceeb1a4",
+    "pullRequest": "https://github.com/nahianahmed3832/meldiq/pull/10",
+    "ci": {
+      "status": "success",
+      "url": "https://github.com/nahianahmed3832/meldiq/actions/runs/41708332732"
+    },
+    "productionScope": "Three compiled preference modules over the exact live image; no database migration or authority change."
+  },
+  "qualityGate": {
+    "strictCheck": "passed",
+    "requiredKeys": 6179,
+    "locales": 28,
+    "coveragePercent": 100,
+    "structuralErrors": 0,
+    "missingKeys": 0,
+    "untranslatedValues": 0,
+    "hardcodedSourceCandidates": 0,
+    "accessibilityCandidates": 0,
+    "writingSystems": "passed",
+    "textEntryInstructions": "passed",
+    "protectedNames": "passed",
+    "inlineSlotMultiplicity": "passed",
+    "englishPhraseAudit": "passed"
+  },
+  "productionBuild": "required-by-production-packager",
+  "serviceWorkerBefore": {
+    "bytes": 201859,
+    "gzipBytes": 62984,
+    "source": "Live public-status release c60e2bf"
+  },
+  "deployed": false
+}

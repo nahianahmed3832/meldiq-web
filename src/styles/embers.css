@@ -223,7 +223,7 @@
 .achievement-state {
   position: absolute;
   top: 8px;
-  right: 8px;
+  inset-inline-end: 8px;
   color: var(--tier-color);
 }
 .achievement-medal.locked .achievement-state {
@@ -232,8 +232,8 @@
 .achievement-mini-progress {
   position: absolute;
   bottom: 9px;
-  left: 16px;
-  right: 16px;
+  inset-inline-start: 16px;
+  inset-inline-end: 16px;
   height: 2px;
   overflow: hidden;
   background: var(--border);

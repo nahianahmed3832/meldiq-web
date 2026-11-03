@@ -9,7 +9,7 @@ import { type NavPrefs, PERSONAL, workspaceOf, zNavDoc } from "../sync/navPrefs"
 import { SessionManager } from "../sync/session";
 import { notificationPath, SW_OPEN, SW_WAKE } from "./messages";
 import { loadWakePrefs, showWakeNoticeOnce } from "./swPrefs";
-import { type WakeNotice, wakeBatch, type WakePrefs } from "./wakeRules";
+import { DEFAULT_WAKE_COPY, type WakeNotice, wakeBatch, type WakePrefs } from "./wakeRules";
 import { shellHandler, type FetchEventLike } from "./shell";
 
 /**
@@ -49,7 +49,7 @@ const sw = self as unknown as ServiceWorkerScopeLike;
 const ICON = "/meldling-192.png";
 const BADGE = "/meldling-badge-96.png";
 /** Shown when the server can't be asked (offline, signed out elsewhere): something is waiting, open the app. */
-const GENERIC: WakeNotice = { tag: "meldiq-wake", title: "Meldiq", body: "Something new is waiting for you.", url: "/", call: false };
+const GENERIC: WakeNotice = { tag: "meldiq-wake", title: "Meldiq", body: DEFAULT_WAKE_COPY.waiting, url: "/", call: false };
 
 sw.addEventListener("install", () => void sw.skipWaiting());
 sw.addEventListener("activate", (e) => e.waitUntil(sw.clients.claim()));
@@ -76,7 +76,8 @@ async function onWake(): Promise<void> {
   try {
     ({ notices, deviceId, identities, database } = await lookUp());
   } catch {
-    notices = [GENERIC];
+    const saved = await loadWakePrefs().catch(() => null);
+    notices = [{ ...GENERIC, body: saved?.copy?.waiting ?? DEFAULT_WAKE_COPY.waiting }];
   }
   for (const n of notices) {
     const show = () =>

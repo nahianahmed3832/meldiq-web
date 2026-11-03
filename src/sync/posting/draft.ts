@@ -1,3 +1,4 @@
+import { text as uiText } from "../../i18n";
 import { cleanButtons, cleanEmbeds, type Embed, isHttpsUrl, type PostButton } from "./embeds";
 
 /**
@@ -84,12 +85,16 @@ export function sampleDraft(community: string): PostDraft {
   return {
     content: "",
     boxes: [
-      { ...emptyBox("#5865f2"), title: `Welcome to ${community}!`, description: "Say hi in the chat and make yourself at home." },
-      { ...emptyBox("#f0b232"), title: "Rules", description: "1. Be kind.\n2. No spam.\n3. Keep it on topic." },
+      {
+        ...emptyBox("#5865f2"),
+        title: uiText("workspace.interface.welcome_to_56d2f20", { value0: community }),
+        description: uiText("workspace.interface.say_hi_in_the_chat_and_make_yourself_at_home_93e9b95"),
+      },
+      { ...emptyBox("#f0b232"), title: uiText("organization.rules_title"), description: uiText("workspace.interface.1_be_kind_2_no_spam_3_keep_it_on_topic_633167d") },
     ],
     buttons: [
-      { ...emptyButton(), emoji: "📜", label: "Terms", url: "https://example.com/terms" },
-      { ...emptyButton(), emoji: "🛡️", label: "Guidelines", url: "https://example.com/guidelines" },
+      { ...emptyButton(), emoji: "📜", label: uiText("auth.landing_terms"), url: "https://example.com/terms" },
+      { ...emptyButton(), emoji: "🛡️", label: uiText("workspace.interface.guidelines_141d1d7"), url: "https://example.com/guidelines" },
     ],
     threadName: "",
   };

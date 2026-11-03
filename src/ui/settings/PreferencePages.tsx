@@ -1,3 +1,7 @@
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
+import { Localized } from "../../i18n/Localized";
+import { useT as useLocalization } from "../../i18n";
 import { syncPlusReminderPreference } from "../../application/plusSupport";
 import { NotificationOverview } from "./NotificationOverview";
 import { AccessibilityCard, VibesCard } from "./AppearanceExtras";
@@ -28,12 +32,11 @@ import { type ChimeState, chimeState, playChime, unlockChime } from "../../appli
 import { type StringKey, useT } from "../../i18n";
 import { InstallSetting } from "./InstallButton";
 import { LanguagePicker } from "../components/LanguagePicker";
-
 const THEME_KEY = { system: "ap_system", light: "ap_light", dark: "ap_dark", black: "ap_black" } as const satisfies Record<Prefs["theme"], StringKey>;
 const PALETTE_KEY = { meldiq: "ap_meldiq", midnight: "ap_midnight", charcoal: "ap_charcoal", indigo: "ap_indigo", plum: "ap_plum", amber: "ap_amber" } as const satisfies Record<Palette, StringKey>;
 const SIZE_KEY = { small: "ap_small", default: "ap_default", large: "ap_large" } as const satisfies Record<TextSize, StringKey>;
-
 export function NotificationsPage() {
+  useLocaleRender();
   const engine = useEngine();
   const [reminderLoading, setReminderLoading] = useState(true);
   useEffect(() => {
@@ -66,18 +69,22 @@ export function NotificationsPage() {
       <div className="card">
         <div className="setting">
           <div className="lines">
-            <strong>Support Meldiq reminders</strong>
-            <small>Occasional in-app reminders about optional Plus subscriptions that fund independent development. No sound or desktop notifications.</small>
+            <strong>
+              <Localized k="settings.interface.support_meldiq_reminders_afc5eec" />
+            </strong>
+            <small>
+              <Localized k="settings.interface.occasional_in_app_reminders_about_optional_plus_subscriptions_tha_3c7de7a" />
+            </small>
           </div>
           <Toggle
-            label="Support Meldiq reminders"
+            label={uiText("settings.interface.support_meldiq_reminders_afc5eec")}
             disabled={reminderLoading}
             checked={prefs.plusReminders}
             onChange={(plusReminders) => {
               setPrefs({ plusReminders });
               void engine.api
                 .call("PUT", "/v2/billing/promotions/preference", { body: { optOut: !plusReminders } })
-                .catch(() => engine.notice("error", "Your reminder preference could not be saved across devices. Please try again."));
+                .catch(() => engine.notice("error", uiText("settings.interface.your_reminder_preference_could_not_be_saved_across_devices_please_d8ace7d")));
             }}
           />
         </div>
@@ -141,9 +148,9 @@ export function NotificationsPage() {
     </>
   );
 }
-
 /** The chime in this tab (application/messageChime.ts): on or off, its volume, and a test that also unlocks sound. */
 function InAppSoundSettings() {
+  useLocaleRender();
   const prefs = usePrefs();
   const t = useT();
   const [state, setState] = useState<ChimeState>(chimeState());
@@ -185,8 +192,8 @@ function InAppSoundSettings() {
           {result && (
             <small className={result === "played" ? "faint" : "field-error"} role="status" style={{ flexBasis: "100%" }}>
               {result === "played"
-                ? "Played. If you heard nothing, check this site isn't muted in the browser tab and the computer's volume."
-                : "The browser blocked sound. Allow sound for this site in the browser's site settings, then try again."}
+                ? uiText("settings.interface.played_if_you_heard_nothing_check_this_site_isn_t_muted_in_the_br_c35c0f3")
+                : uiText("settings.interface.the_browser_blocked_sound_allow_sound_for_this_site_in_the_browse_8dce822")}
             </small>
           )}
         </div>
@@ -194,8 +201,8 @@ function InAppSoundSettings() {
     </>
   );
 }
-
 export function AppearancePage() {
+  useLocaleRender();
   const prefs = usePrefs();
   const t = useT();
   return (
@@ -308,8 +315,12 @@ export function AppearancePage() {
         </div>
         <div className="setting">
           <div className="lines">
-            <strong>Photo uploads</strong>
-            <small>Photos are optimized automatically. Animations and transparency are preserved.</small>
+            <strong>
+              <Localized k="settings.interface.photo_uploads_8e74c58" />
+            </strong>
+            <small>
+              <Localized k="settings.interface.photos_are_optimized_automatically_animations_and_transparency_ar_57d42ba" />
+            </small>
           </div>
         </div>
         <div className="setting">
@@ -371,55 +382,81 @@ export function AppearancePage() {
     </>
   );
 }
-
 export function AboutPage() {
+  useLocaleRender();
+  const l10n = useLocalization();
   const server = useOrbit((s) => s.server);
   const me = useOrbit((s) => s.me);
   return (
     <>
-      <h1>About</h1>
+      <h1>{l10n("settings.settings_about")}</h1>
       <p className="faint" style={{ margin: "0 0 12px" }}>
-        Meldiq Web by GriipBuddy · version {APP_VERSION}
+        <Localized k="settings.interface.meldiq_web_by_griipbuddy_version_82f9bb9" slots={[APP_VERSION]} />
       </p>
       <div className="card">
         <InstallSetting />
-        <div className="setting"><div className="lines"><strong>Service status</strong><small>Live service health, incidents and planned maintenance.</small></div><a href="https://status.meldiq.app" target="_blank" rel="noopener noreferrer">View status ↗</a></div>
         <div className="setting">
           <div className="lines">
-            <strong>Server</strong>
+            <strong>
+              <Localized k="auth.interface.service_status_cce5eda" />
+            </strong>
+            <small>
+              <Localized k="settings.interface.live_service_health_incidents_and_planned_maintenance_d946362" />
+            </small>
+          </div>
+          <a href="https://status.meldiq.app" target="_blank" rel="noopener noreferrer">
+            <Localized k="settings.interface.view_status_34820d5" />
+          </a>
+        </div>
+        <div className="setting">
+          <div className="lines">
+            <strong>
+              <Localized k="settings.interface.server_aef7de2" />
+            </strong>
             <small>
               {serverHost()}
-              {server ? ` · ${server.instanceName ?? "Meldiq"} ${server.version} · client API ${server.api}` : ""}
+              {server ? uiText("settings.interface.value0_value1_client_api_value2_a31980c", { value0: server.instanceName ?? "Meldiq", value1: server.version, value2: server.api }) : ""}
             </small>
           </div>
         </div>
         <div className="setting">
           <div className="lines">
-            <strong>This browser</strong>
+            <strong>
+              <Localized k="settings.interface.this_browser_101f4d9" />
+            </strong>
             <small>{me?.deviceName}</small>
           </div>
         </div>
         <div className="setting">
           <div className="lines">
-            <strong>Files</strong>
+            <strong>{l10n("files.files")}</strong>
             <small>
-              Up to {bytes(fileLimit(server))} per file, {MAX_FILES_PER_MESSAGE} files per message. Files are kept 7 days on the server unless saved with history.
+              <Localized k="settings.interface.up_to_per_file_files_per_message_files_are_kept_7_days_on_the_ser_1158527" slots={[bytes(fileLimit(server)), MAX_FILES_PER_MESSAGE]} />
             </small>
           </div>
         </div>
         <div className="setting">
           <div className="lines">
-            <strong>Calls</strong>
+            <strong>
+              <Localized k="settings.interface.calls_b73a5e2" />
+            </strong>
             <small>
               {server?.calling
-                ? "Voice and video calls work in this browser and in Meldiq on your phone. Call media is end-to-end encrypted with a new key for every call; the browser asks before it uses your microphone or camera."
-                : "This server has no calling configured."}
+                ? uiText("settings.interface.voice_and_video_calls_work_in_this_browser_and_in_meldiq_on_your_da83cef")
+                : uiText("settings.interface.this_server_has_no_calling_configured_2986115")}
             </small>
           </div>
         </div>
       </div>
       <p className="faint" style={{ fontSize: 12.5 }}>
-        Meldiq Web 0.1.0 · Plus Jakarta Sans is used under the SIL Open Font License (<a href="/fonts/OFL.txt">license</a>).
+        <Localized
+          k="settings.interface.meldiq_web_0_1_0_plus_jakarta_sans_is_used_under_the_sil_open_fon_7a2c148"
+          slots={[
+            <a href="/fonts/OFL.txt">
+              <Localized k="settings.interface.license_cc1d3b0" />
+            </a>,
+          ]}
+        />
       </p>
     </>
   );

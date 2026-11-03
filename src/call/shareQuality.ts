@@ -1,13 +1,13 @@
+import { formatNumber } from "../i18n/format";
+import { text as uiText } from "../i18n";
 /**
  * Screen sharing quality (2026-10-24): two modes the presenter picks before or during a share, the capture constraints
  * and encoding each asks for, what the browser actually delivers, and a step-down ladder driven by the sender's WebRTC
  * stats. Pure, so it's unit-tested directly (test/share-quality.test.ts); livekitSession.ts applies it.
  */
 export type ShareQuality = "standard" | "smooth" | "sharp" | "high" | "max" | "max60";
-
 /** Lowest to highest (a list of choices shows them in this order). */
 export const SHARE_QUALITY_ORDER: readonly ShareQuality[] = ["standard", "smooth", "sharp", "high", "max", "max60"];
-
 export interface ShareQualitySpec {
   width: number;
   height: number;
@@ -19,72 +19,89 @@ export interface ShareQualitySpec {
   label: string;
   hint: string;
 }
-
 export const SHARE_QUALITIES: Record<ShareQuality, ShareQualitySpec> = {
   standard: {
     width: 1280,
     height: 720,
     frameRate: 30,
-    maxBitrate: 2_500_000,
+    maxBitrate: 2500000,
     contentHint: "detail",
-    label: "Standard",
-    hint: "1280×720 at 30 frames a second. Works on most connections.",
+    get label() {
+      return uiText("settings.ap_standard");
+    },
+    get hint() {
+      return uiText("calls.interface.1280_720_at_30_frames_a_second_works_on_most_connections_bd56827");
+    },
   },
   // Plans (server docs/PLANS.md, 2026-10-30): Free shares up to 720p 60, Legacy Go up to 1080p 60, Plus up to 2K 60.
   smooth: {
     width: 1280,
     height: 720,
     frameRate: 60,
-    maxBitrate: 3_500_000,
+    maxBitrate: 3500000,
     contentHint: "motion",
-    label: "Smooth",
-    hint: "1280×720 at 60 frames a second, for motion.",
+    get label() {
+      return uiText("calls.interface.smooth_da51938");
+    },
+    get hint() {
+      return uiText("calls.interface.1280_720_at_60_frames_a_second_for_motion_f34c05a");
+    },
   },
   sharp: {
     width: 1920,
     height: 1080,
     frameRate: 30,
-    maxBitrate: 4_000_000,
+    maxBitrate: 4000000,
     contentHint: "detail",
-    label: "Sharp",
-    hint: "1920×1080 at 30 frames a second, for text and detail.",
+    get label() {
+      return uiText("calls.interface.sharp_1a3c4b3");
+    },
+    get hint() {
+      return uiText("calls.interface.1920_1080_at_30_frames_a_second_for_text_and_detail_b6a2a80");
+    },
   },
   high: {
     width: 1920,
     height: 1080,
     frameRate: 60,
-    maxBitrate: 6_000_000,
+    maxBitrate: 6000000,
     contentHint: "motion",
-    label: "High",
-    hint: "1920×1080 at 60 frames a second, for games and video. Needs a fast connection and computer.",
+    get label() {
+      return uiText("calls.interface.high_c4ebc6d");
+    },
+    get hint() {
+      return uiText("calls.interface.1920_1080_at_60_frames_a_second_for_games_and_video_needs_a_fast_ca9fbbc");
+    },
   },
   max: {
     width: 2560,
     height: 1440,
     frameRate: 30,
-    maxBitrate: 8_000_000,
+    maxBitrate: 8000000,
     contentHint: "detail",
     label: "2K",
-    hint: "2560×1440 at 30 frames a second. Needs a fast connection and computer.",
+    get hint() {
+      return uiText("calls.interface.2560_1440_at_30_frames_a_second_needs_a_fast_connection_and_compu_03a5416");
+    },
   },
   max60: {
     width: 2560,
     height: 1440,
     frameRate: 60,
-    maxBitrate: 12_000_000,
+    maxBitrate: 12000000,
     contentHint: "motion",
     label: "2K 60",
-    hint: "2560×1440 at 60 frames a second, for fast games. Needs a very fast connection and computer.",
+    get hint() {
+      return uiText("calls.interface.2560_1440_at_60_frames_a_second_for_fast_games_needs_a_very_fast_9cfda5d");
+    },
   },
 };
-
 /** A screen-share ceiling as the server sends it in a call's media grant (Meldiq Plus). */
 export interface SharePresetLimit {
   width: number;
   height: number;
   fps: number;
 }
-
 /**
  * The qualities [limits] allow, lowest first: one is allowed when some ceiling covers its size and frame rate (the
  * server's rule, docs/MOJO.md). Without limits (a server before Meldiq Plus, or limits not enforced) Standard and High, as
@@ -98,17 +115,14 @@ export function allowedShareQualities(limits: readonly SharePresetLimit[] | null
   });
   return allowed.length ? allowed : ["standard"];
 }
-
 /** [wanted] if allowed, else the best allowed quality below it (Standard at least). */
 export function clampShareQuality(wanted: ShareQuality, allowed: readonly ShareQuality[]): ShareQuality {
   if (allowed.includes(wanted)) return wanted;
   const rank = SHARE_QUALITY_ORDER.indexOf(wanted);
   return [...allowed].reverse().find((q) => SHARE_QUALITY_ORDER.indexOf(q) <= rank) ?? allowed[0] ?? "standard";
 }
-
 /** The saved choice, or Standard for anything else (including the older text/motion modes). */
 export const shareQualityOf = (saved: unknown): ShareQuality => ((SHARE_QUALITY_ORDER as readonly unknown[]).includes(saved) ? (saved as ShareQuality) : "standard");
-
 /**
  * getDisplayMedia's video constraints for [quality]. `ideal` asks for the size and rate, `max` keeps a larger screen from
  * being captured above them (scaled down, whole, never cropped). Safari 17 captures at a low resolution when any size is
@@ -120,7 +134,6 @@ export function displayConstraints(quality: ShareQuality, safari: boolean): Medi
   if (safari) return { frameRate };
   return { width: { ideal: q.width, max: q.width }, height: { ideal: q.height, max: q.height }, frameRate };
 }
-
 /** One rung of the adaptive ladder: how far below the mode the encoder sends. */
 export interface ShareLevel {
   /** Height the encoder sends at most (the capture is scaled down to it, keeping its shape). */
@@ -128,63 +141,65 @@ export interface ShareLevel {
   frameRate: number;
   maxBitrate: number;
 }
-
 /** Top rung first. Each step down gives up frame rate before resolution, so text stays readable longest. */
 export const SHARE_LADDERS: Record<ShareQuality, readonly ShareLevel[]> = {
   max60: [
-    { height: 1440, frameRate: 60, maxBitrate: 12_000_000 },
-    { height: 1440, frameRate: 30, maxBitrate: 8_000_000 },
-    { height: 1080, frameRate: 30, maxBitrate: 4_000_000 },
-    { height: 720, frameRate: 30, maxBitrate: 2_500_000 },
-    { height: 720, frameRate: 15, maxBitrate: 1_200_000 },
+    { height: 1440, frameRate: 60, maxBitrate: 12000000 },
+    { height: 1440, frameRate: 30, maxBitrate: 8000000 },
+    { height: 1080, frameRate: 30, maxBitrate: 4000000 },
+    { height: 720, frameRate: 30, maxBitrate: 2500000 },
+    { height: 720, frameRate: 15, maxBitrate: 1200000 },
   ],
   max: [
-    { height: 1440, frameRate: 30, maxBitrate: 8_000_000 },
-    { height: 1080, frameRate: 30, maxBitrate: 4_000_000 },
-    { height: 720, frameRate: 30, maxBitrate: 2_500_000 },
-    { height: 720, frameRate: 15, maxBitrate: 1_200_000 },
+    { height: 1440, frameRate: 30, maxBitrate: 8000000 },
+    { height: 1080, frameRate: 30, maxBitrate: 4000000 },
+    { height: 720, frameRate: 30, maxBitrate: 2500000 },
+    { height: 720, frameRate: 15, maxBitrate: 1200000 },
   ],
   sharp: [
-    { height: 1080, frameRate: 30, maxBitrate: 4_000_000 },
-    { height: 720, frameRate: 30, maxBitrate: 2_500_000 },
-    { height: 720, frameRate: 15, maxBitrate: 1_200_000 },
+    { height: 1080, frameRate: 30, maxBitrate: 4000000 },
+    { height: 720, frameRate: 30, maxBitrate: 2500000 },
+    { height: 720, frameRate: 15, maxBitrate: 1200000 },
   ],
   smooth: [
-    { height: 720, frameRate: 60, maxBitrate: 3_500_000 },
-    { height: 720, frameRate: 30, maxBitrate: 2_500_000 },
-    { height: 720, frameRate: 15, maxBitrate: 1_200_000 },
+    { height: 720, frameRate: 60, maxBitrate: 3500000 },
+    { height: 720, frameRate: 30, maxBitrate: 2500000 },
+    { height: 720, frameRate: 15, maxBitrate: 1200000 },
   ],
   high: [
-    { height: 1080, frameRate: 60, maxBitrate: 6_000_000 },
-    { height: 1080, frameRate: 30, maxBitrate: 4_000_000 },
-    { height: 720, frameRate: 30, maxBitrate: 2_500_000 },
-    { height: 720, frameRate: 15, maxBitrate: 1_200_000 },
+    { height: 1080, frameRate: 60, maxBitrate: 6000000 },
+    { height: 1080, frameRate: 30, maxBitrate: 4000000 },
+    { height: 720, frameRate: 30, maxBitrate: 2500000 },
+    { height: 720, frameRate: 15, maxBitrate: 1200000 },
   ],
   standard: [
-    { height: 720, frameRate: 30, maxBitrate: 2_500_000 },
-    { height: 720, frameRate: 15, maxBitrate: 1_200_000 },
-    { height: 480, frameRate: 15, maxBitrate: 600_000 },
+    { height: 720, frameRate: 30, maxBitrate: 2500000 },
+    { height: 720, frameRate: 15, maxBitrate: 1200000 },
+    { height: 480, frameRate: 15, maxBitrate: 600000 },
   ],
 };
-
 /** The RTCRtpEncodingParameters for [level] given the captured frame height (0 when not known yet). */
-export function encodingFor(level: ShareLevel, capturedHeight: number): { maxBitrate: number; maxFramerate: number; scaleResolutionDownBy: number } {
+export function encodingFor(
+  level: ShareLevel,
+  capturedHeight: number,
+): {
+  maxBitrate: number;
+  maxFramerate: number;
+  scaleResolutionDownBy: number;
+} {
   const scale = capturedHeight > level.height ? capturedHeight / level.height : 1;
   return { maxBitrate: level.maxBitrate, maxFramerate: level.frameRate, scaleResolutionDownBy: Math.round(scale * 100) / 100 };
 }
-
 /** Why the browser's encoder is holding back (WebRTC `qualityLimitationReason`). */
 export type Limitation = "none" | "bandwidth" | "cpu" | "other";
-
 /** Two seconds between stats samples (livekitSession FLOW_SAMPLE_MS). */
 const DOWN_AFTER_SAMPLES = 3;
 const UP_AFTER_SAMPLES = 10;
-const MIN_GAP_MS = 8_000;
+const MIN_GAP_MS = 8000;
 /** Going back up waits this long at first; an upgrade that has to come down again soon doubles it (up to the cap). */
-const UP_WAIT_MS = 20_000;
-const UP_WAIT_MAX_MS = 160_000;
-const FAILED_UPGRADE_MS = 30_000;
-
+const UP_WAIT_MS = 20000;
+const UP_WAIT_MAX_MS = 160000;
+const FAILED_UPGRADE_MS = 30000;
 /**
  * Steps the share down its ladder when the encoder reports it's limited by bandwidth or CPU for a few samples in a row,
  * and back up only after a long clean stretch; an upgrade that fails again soon makes the next one wait longer, so the
@@ -197,13 +212,10 @@ export class ShareAdapter {
   private changedAt = Number.NEGATIVE_INFINITY;
   private upgradedAt = Number.NEGATIVE_INFINITY;
   private upWaitMs = UP_WAIT_MS;
-
   constructor(readonly ladder: readonly ShareLevel[]) {}
-
   get current(): ShareLevel {
     return this.ladder[this.level];
   }
-
   /** Feeds one stats sample; returns the new level when it changed, else null. */
   sample(limitation: Limitation, now: number): number | null {
     if (limitation === "bandwidth" || limitation === "cpu") {
@@ -226,7 +238,6 @@ export class ShareAdapter {
     }
     return null;
   }
-
   private move(level: number, now: number): number {
     this.level = level;
     this.changedAt = now;
@@ -235,24 +246,41 @@ export class ShareAdapter {
     return level;
   }
 }
-
 /** What the presenter's browser captures and sends, from the track's settings and the sender's stats. */
 export interface ShareStats {
   quality: ShareQuality;
   /** The capture's size and frame rate as the browser reports them (null until known). */
-  captured: { width: number; height: number; frameRate: number | null } | null;
+  captured: {
+    width: number;
+    height: number;
+    frameRate: number | null;
+  } | null;
   /** What the encoder sends now (null until the first stats). */
-  sent: { width: number; height: number; fps: number } | null;
+  sent: {
+    width: number;
+    height: number;
+    fps: number;
+  } | null;
   /** The ladder rung in use: 0 is the mode itself. */
   level: number;
   limitation: Limitation;
 }
-
-type Stat = Record<string, unknown> & { type: string };
-
+type Stat = Record<string, unknown> & {
+  type: string;
+};
 /** The video sender's numbers from a stats report: the outbound RTP stream with the largest frame. */
-export function sentVideo(stats: Iterable<Stat>): { width: number; height: number; fps: number; limitation: Limitation } | null {
-  let best: { width: number; height: number; fps: number; limitation: Limitation } | null = null;
+export function sentVideo(stats: Iterable<Stat>): {
+  width: number;
+  height: number;
+  fps: number;
+  limitation: Limitation;
+} | null {
+  let best: {
+    width: number;
+    height: number;
+    fps: number;
+    limitation: Limitation;
+  } | null = null;
   for (const s of stats) {
     if (s.type !== "outbound-rtp" || (s.kind !== "video" && s.mediaType !== "video")) continue;
     const width = typeof s.frameWidth === "number" ? s.frameWidth : 0;
@@ -263,9 +291,12 @@ export function sentVideo(stats: Iterable<Stat>): { width: number; height: numbe
   }
   return best;
 }
-
 /** The received video's numbers from a stats report (a viewer's inbound RTP stream). */
-export function receivedVideo(stats: Iterable<Stat>): { width: number; height: number; fps: number } | null {
+export function receivedVideo(stats: Iterable<Stat>): {
+  width: number;
+  height: number;
+  fps: number;
+} | null {
   for (const s of stats) {
     if (s.type !== "inbound-rtp" || (s.kind !== "video" && s.mediaType !== "video")) continue;
     const width = typeof s.frameWidth === "number" ? s.frameWidth : 0;
@@ -275,11 +306,9 @@ export function receivedVideo(stats: Iterable<Stat>): { width: number; height: n
   }
   return null;
 }
-
 function limitationOf(v: unknown): Limitation {
   return v === "bandwidth" || v === "cpu" || v === "none" ? v : v === undefined ? "none" : "other";
 }
-
 /**
  * What to tell the presenter when they get less than they chose: the browser captures less (a smaller window, or the
  * browser's own limit), or the connection made the share step down. Null when it's what was asked for.
@@ -289,12 +318,27 @@ export function shareShortfall(stats: ShareStats): string | null {
   const notes: string[] = [];
   const c = stats.captured;
   // A screen with another shape is fit inside the box, so only being smaller on both sides counts as less.
-  if (c && c.width < q.width * 0.95 && c.height < q.height * 0.95) notes.push(`your browser captures ${c.width}×${c.height}`);
-  if (c?.frameRate && c.frameRate < q.frameRate * 0.9) notes.push(`at most ${Math.round(c.frameRate)} frames a second`);
+  if (c && c.width < q.width * 0.95 && c.height < q.height * 0.95)
+    notes.push(
+      uiText("calls.interface.your_browser_captures_value0_value1_a5dc89b", { value0: formatNumber(c.width, { useGrouping: false }), value1: formatNumber(c.height, { useGrouping: false }) }),
+    );
+  if (c?.frameRate && c.frameRate < q.frameRate * 0.9) notes.push(uiText("calls.interface.at_most_value0_frames_a_second_1ab9f7f", { value0: Math.round(c.frameRate) }));
   if (stats.level > 0) {
     const l = SHARE_LADDERS[stats.quality][stats.level];
-    notes.push(`lowered to ${l.height}p at ${l.frameRate} fps for your ${stats.limitation === "cpu" ? "computer" : "connection"}`);
+    notes.push(
+      uiText("calls.interface.lowered_to_value0_p_at_value1_fps_for_your_value2_746b65b", {
+        value0: l.height,
+        value1: l.frameRate,
+        value2: stats.limitation === "cpu" ? uiText("workspace.interface.computer_c60266a") : uiText("workspace.interface.connection_814605c"),
+      }),
+    );
   }
   if (!notes.length) return null;
-  return `${q.label} asks for ${q.width}×${q.height} at ${q.frameRate} fps: ${notes.join(", ")}.`;
+  return uiText("calls.interface.value0_asks_for_value1_value2_at_value3_fps_value4_7dad201", {
+    value0: q.label,
+    value1: formatNumber(q.width, { useGrouping: false }),
+    value2: formatNumber(q.height, { useGrouping: false }),
+    value3: q.frameRate,
+    value4: notes.join(", "),
+  });
 }

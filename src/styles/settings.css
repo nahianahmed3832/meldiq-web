@@ -149,8 +149,8 @@
   content: "";
   position: absolute;
   top: 8px;
-  left: 9px;
-  right: 9px;
+  inset-inline-start: 9px;
+  inset-inline-end: 9px;
   height: 3px;
   border-radius: 2px;
   background: var(--border);
@@ -192,7 +192,10 @@
   display: grid;
   gap: 6px;
   margin: 0;
-  padding: 10px 14px 10px 28px;
+  padding-block-start: 10px;
+  padding-inline-end: 14px;
+  padding-block-end: 10px;
+  padding-inline-start: 28px;
   border-radius: var(--r-md);
   background: var(--surface-sunken);
   font-size: 13px;
@@ -288,7 +291,7 @@
   content: "✓";
   position: absolute;
   top: 4px;
-  right: 4px;
+  inset-inline-end: 4px;
   width: 18px;
   height: 18px;
   display: grid;
@@ -469,7 +472,10 @@
     display: inline-flex;
     align-items: center;
     gap: 2px;
-    margin: -8px 0 12px -6px;
+    margin-block-start: -8px;
+    margin-inline-end: 0;
+    margin-block-end: 12px;
+    margin-inline-start: -6px;
     padding: 6px 8px;
     border-radius: var(--r-md);
     color: var(--text-2);
@@ -580,7 +586,7 @@
 .settings-search-result {
   display: grid;
   gap: 3px;
-  text-align: left;
+  text-align: start;
 }
 .settings-search-result small {
   font-size: 11px;

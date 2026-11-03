@@ -1,3 +1,4 @@
+import { text as uiText } from "../../i18n";
 import { previewLegacyStyle } from "../../sync/collectibles";
 import { useMemo, useRef, useState } from "react";
 import type { ProfileStyle } from "../../api/schemas";
@@ -40,18 +41,18 @@ export function useStyleDraft(engine: Engine, server: ProfileStyle, onSaved: () 
       setError(null);
       try {
         const me = engine.state.get().me;
-        if (!me) throw new Error("Sign in again before saving.");
+        if (!me) throw new Error(uiText("settings.interface.sign_in_again_before_saving_c8c5571"));
         const profile = await myProfile(engine);
         const latest = profile.profileStyle ?? server;
         for (const k of Object.keys(pending) as (keyof ProfileStyleChange & keyof ProfileStyle)[]) {
           if (baseline.current && !same(latest[k], baseline.current[k]) && !same(latest[k], pending[k]))
-            throw new Error("Your look changed on another device. Reset your draft to load it, then apply your changes again.");
+            throw new Error(uiText("settings.interface.your_look_changed_on_another_device_reset_your_draft_to_load_it_t_c051945"));
         }
         await setProfileStyle(engine, { ...pending, baseStyleRevision: profile.styleRevision });
         reset();
         onSaved();
       } catch (e) {
-        setError(e instanceof ApiError || e instanceof Error ? e.message : "Couldn't save your look. Your draft is kept.");
+        setError(e instanceof ApiError || e instanceof Error ? e.message : uiText("settings.interface.couldn_t_save_your_look_your_draft_is_kept_8c4e4de"));
       } finally {
         setBusy(false);
       }

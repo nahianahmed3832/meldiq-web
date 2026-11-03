@@ -1,3 +1,4 @@
+import { text as uiText } from "../../i18n";
 /** A custom role as the member directory gives it (batch B12): its colour, and whether it heads its own group. */
 export interface ListedRole {
   id: string;
@@ -8,7 +9,6 @@ export interface ListedRole {
   /** Community parity A1: the colour it fades into (a gradient role colour), or null. */
   color2?: string | null;
 }
-
 export interface ListedMember {
   id: string;
   displayName: string;
@@ -19,7 +19,6 @@ export interface ListedMember {
   /** The community's protected base role, independent of custom role ordering. */
   orgRole?: string | null;
 }
-
 export interface MemberListGroup<T> {
   key: string;
   /** "Admin", a custom role's name, "Online", "Bots" or "Offline". */
@@ -28,15 +27,12 @@ export interface MemberListGroup<T> {
   color: string | null;
   members: T[];
 }
-
 /** Online, idle and do not disturb count as here; offline, or presence hidden by their last-seen setting, doesn't. */
 export function isHere(m: Pick<ListedMember, "presence" | "online">): boolean {
   if (m.presence) return m.presence !== "offline";
   return m.online === true;
 }
-
 const byPosition = (a: ListedRole, b: ListedRole) => a.position - b.position || a.name.localeCompare(b.name);
-
 /** The conversation endpoint can omit bots. Add only bots from the permission-checked community directory. */
 export function withCommunityBots<T extends ListedMember>(members: readonly T[], directory: readonly T[]): T[] {
   const listed = new Map(members.map((m) => [m.id, m]));
@@ -45,19 +41,16 @@ export function withCommunityBots<T extends ListedMember>(members: readonly T[],
   }
   return [...listed.values()];
 }
-
 /** The colour a person's name takes in the member list: their highest role that has one. */
 export function nameColor(roles: readonly ListedRole[] | undefined): string | null {
   return [...(roles ?? [])].sort(byPosition).find((r) => r.color)?.color ?? null;
 }
-
 /** Their highest coloured role's colours: one, or two for a gradient (community parity A1); null without any. */
 export function roleNameColors(roles: readonly ListedRole[] | undefined): string[] | null {
   const top = [...(roles ?? [])].sort(byPosition).find((r) => r.color);
   if (!top?.color) return null;
   return top.color2 ? [top.color, top.color2] : [top.color];
 }
-
 /**
  * Active owners lead the list, under their highest separately displayed custom role or Admin by default.
  * Their group leads regardless of custom role position, and owners lead that group's members. Other active people
@@ -72,7 +65,6 @@ export function memberListGroups<T extends ListedMember>(members: readonly T[], 
   const bots = members.filter((m) => m.bot);
   const here = people.filter(isHere);
   const away = people.filter((m) => !isHere(m));
-
   const roles = new Map<string, ListedRole>();
   for (const m of here) {
     const r = topHoisted(m);
@@ -85,15 +77,43 @@ export function memberListGroups<T extends ListedMember>(members: readonly T[], 
     members: here.filter((m) => topHoisted(m)?.id === r.id).sort(ownerFirst),
   }));
   const activeGroups: MemberListGroup<T>[] = [
-    { key: "admin", label: "Admin", color: null, members: here.filter((m) => isAdmin(m) && topHoisted(m) === null).sort(ownerFirst) },
+    {
+      key: "admin",
+      get label() {
+        return uiText("messaging.people_admin");
+      },
+      color: null,
+      members: here.filter((m) => isAdmin(m) && topHoisted(m) === null).sort(ownerFirst),
+    },
     ...roleGroups,
-    { key: "online", label: "Online", color: null, members: here.filter((m) => !isAdmin(m) && topHoisted(m) === null).sort(alpha) },
+    {
+      key: "online",
+      get label() {
+        return uiText("workspace.online");
+      },
+      color: null,
+      members: here.filter((m) => !isAdmin(m) && topHoisted(m) === null).sort(alpha),
+    },
   ];
   activeGroups.sort((a, b) => Number(b.members.some((m) => m.orgRole === "OWNER")) - Number(a.members.some((m) => m.orgRole === "OWNER")));
   const groups: MemberListGroup<T>[] = [
     ...activeGroups,
-    { key: "bots", label: "Bots", color: null, members: [...bots].sort(alpha) },
-    { key: "offline", label: "Offline", color: null, members: [...away].sort(alpha) },
+    {
+      key: "bots",
+      get label() {
+        return uiText("messaging.people_bots");
+      },
+      color: null,
+      members: [...bots].sort(alpha),
+    },
+    {
+      key: "offline",
+      get label() {
+        return uiText("messaging.people_offline");
+      },
+      color: null,
+      members: [...away].sort(alpha),
+    },
   ];
   return groups.filter((g) => g.members.length > 0);
 }

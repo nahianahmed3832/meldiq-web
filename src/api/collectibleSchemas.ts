@@ -1,15 +1,30 @@
+import { text as uiText } from "../i18n";
 import { z } from "zod";
 export const COLLECTION_CATEGORIES = ["avatar-frame", "avatar-effect", "background", "banner", "profile-theme", "name-effect", "badge", "particles"] as const;
 export type CollectionCategory = (typeof COLLECTION_CATEGORIES)[number];
 export const CATEGORY_LABELS: Record<CollectionCategory, string> = {
-  "avatar-frame": "Avatar frames",
-  "avatar-effect": "Avatar effects",
+  get "avatar-frame"() {
+    return uiText("workspace.interface.avatar_frames_55724bb");
+  },
+  get "avatar-effect"() {
+    return uiText("workspace.interface.avatar_effects_bb06221");
+  },
   background: "Backgrounds",
-  banner: "Banners",
-  "profile-theme": "Card themes",
-  "name-effect": "Name effects",
-  badge: "Collectible badges",
-  particles: "Ambient effects",
+  get banner() {
+    return uiText("workspace.interface.banners_5976815");
+  },
+  get "profile-theme"() {
+    return uiText("workspace.interface.card_themes_69ffbe1");
+  },
+  get "name-effect"() {
+    return uiText("workspace.interface.name_effects_b8f6b95");
+  },
+  get badge() {
+    return uiText("workspace.interface.collectible_badges_314d428");
+  },
+  get particles() {
+    return uiText("workspace.interface.ambient_effects_c5d9124");
+  },
 };
 /** Keep the public domain type shallow: this schema is nested throughout profile, member and message models. */
 export interface CollectibleLook {

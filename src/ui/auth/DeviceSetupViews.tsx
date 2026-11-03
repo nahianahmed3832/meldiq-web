@@ -1,3 +1,5 @@
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
 import { Check, Copy, Download, KeyRound, RefreshCw, ShieldCheck, Smartphone } from "lucide-react";
 import { type FormEvent, useEffect, useRef, useState } from "react";
 import type { AccountView } from "../../api/accountSchemas";
@@ -11,11 +13,8 @@ import { type LinkApproval, LinkError, type PendingLink, pollLinkApproval, start
 import { AuthHeading, FormError, LinkButton } from "./AuthFrame";
 import { authErrorText, useSubmit } from "./useSubmit";
 import { useT } from "../../i18n";
-
 const POLL_MS = 2000;
-
 // ───────────────────────── first device: make the identity ─────────────────────────
-
 export function CreateIdentityView(props: {
   creds: SetupCredentials;
   account: AccountView;
@@ -25,6 +24,7 @@ export function CreateIdentityView(props: {
   onCreated: (device: DeviceRecord, recoveryCode: string) => void;
   onSignOut: () => void;
 }) {
+  useLocaleRender();
   const { busy, error, run } = useSubmit();
   const t = useT();
   return (
@@ -52,9 +52,9 @@ export function CreateIdentityView(props: {
     </div>
   );
 }
-
 /** Shows the recovery key once, and won't continue until the person says it's stored. */
 export function RecoveryKeyReveal({ code, onDone }: { code: string; onDone: () => void }) {
+  useLocaleRender();
   const [saved, setSaved] = useState(false);
   const [copied, setCopied] = useState(false);
   const t = useT();
@@ -66,7 +66,7 @@ export function RecoveryKeyReveal({ code, onDone }: { code: string; onDone: () =
     return () => window.removeEventListener("beforeunload", warn);
   }, [saved]);
   const download = () => {
-    const blob = new Blob([`Meldiq recovery key\n\n${code}\n\nKeep this somewhere safe. Anyone with it can read your messages.\n`], { type: "text/plain" });
+    const blob = new Blob([uiText("auth.interface.meldiq_recovery_key_value0_keep_this_somewhere_safe_anyone_with_i_ccdea11", { value0: code })], { type: "text/plain" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
@@ -113,12 +113,9 @@ export function RecoveryKeyReveal({ code, onDone }: { code: string; onDone: () =
     </div>
   );
 }
-
 // ───────────────────────── later devices ─────────────────────────
-
 /** The ways besides the emailed code. */
 type OtherWay = "phone" | "recovery";
-
 interface AddDeviceProps {
   creds: SetupCredentials;
   account: AccountView;
@@ -127,16 +124,23 @@ interface AddDeviceProps {
   password?: string;
   onEnrolled: (device: DeviceRecord) => void;
 }
-
 /**
  * Adds this browser to an account that already has keys. With a key backup for the current password, the emailed code
  * is the one way shown (server docs/KEY_BACKUP.md); approving from the phone and the recovery key open only from
  * "Account recovery". Without a backup they are the only ways, so they're shown at once (meldiq
  * docs/product/MELDIQ_AUTH_FLOW_AUDIT.md).
  */
-export function AddDeviceView(props: AddDeviceProps & { onSignOut: () => void }) {
+export function AddDeviceView(
+  props: AddDeviceProps & {
+    onSignOut: () => void;
+  },
+) {
+  useLocaleRender();
   // The key backup check: which attempt it answers, and whether a backup exists (null: the server couldn't say).
-  const [status, setStatus] = useState<{ attempt: number; exists: boolean | null } | null>(null);
+  const [status, setStatus] = useState<{
+    attempt: number;
+    exists: boolean | null;
+  } | null>(null);
   const [attempt, setAttempt] = useState(0);
   const [way, setWay] = useState<OtherWay>("phone");
   const [others, setOthers] = useState(false);
@@ -209,20 +213,20 @@ export function AddDeviceView(props: AddDeviceProps & { onSignOut: () => void })
     </div>
   );
 }
-
 /** A code emailed this long ago is still the one to type: opening the page again doesn't send another. */
-const RESEND_AFTER_MS = 2 * 60_000;
+const RESEND_AFTER_MS = 2 * 60000;
 const SENT_KEY = "meldiq.keyUnlock.sent";
-
 function recentlySentTo(email: string): boolean {
   try {
-    const sent = JSON.parse(sessionStorage.getItem(SENT_KEY) ?? "null") as { to?: unknown; at?: unknown } | null;
+    const sent = JSON.parse(sessionStorage.getItem(SENT_KEY) ?? "null") as {
+      to?: unknown;
+      at?: unknown;
+    } | null;
     return sent?.to === email && typeof sent.at === "number" && Date.now() - sent.at < RESEND_AFTER_MS;
   } catch {
     return false;
   }
 }
-
 function rememberSent(email: string): void {
   try {
     sessionStorage.setItem(SENT_KEY, JSON.stringify({ to: email, at: Date.now() }));
@@ -236,7 +240,13 @@ function rememberSent(email: string): void {
  * code or switches account; Account recovery opens the other ways (phone, recovery key). An account made in the admin
  * console (API 0.63.0) may need the tester code it was given instead, or no code: then the password alone unlocks.
  */
-function EmailUnlock(props: AddDeviceProps & { onSignOut: () => void; onRecovery: () => void }) {
+function EmailUnlock(
+  props: AddDeviceProps & {
+    onSignOut: () => void;
+    onRecovery: () => void;
+  },
+) {
+  useLocaleRender();
   const email = props.account.email;
   const [sentTo, setSentTo] = useState<string | null>(() => (recentlySentTo(email) ? email : null));
   const [delivery, setDelivery] = useState<UnlockDelivery>("email");
@@ -314,8 +324,8 @@ function EmailUnlock(props: AddDeviceProps & { onSignOut: () => void; onRecovery
     </form>
   );
 }
-
 function RecoveryKeyEntry(props: AddDeviceProps) {
+  useLocaleRender();
   const [code, setCode] = useState("");
   const { busy, error, setError, run } = useSubmit();
   const t = useT();
@@ -345,15 +355,31 @@ function RecoveryKeyEntry(props: AddDeviceProps) {
     </form>
   );
 }
-
-type Pairing = { k: "starting" } | { k: "waiting"; link: PendingLink; deviceFp: string } | { k: "finishing" } | { k: "expired" } | { k: "error"; message: string };
-
+type Pairing =
+  | {
+      k: "starting";
+    }
+  | {
+      k: "waiting";
+      link: PendingLink;
+      deviceFp: string;
+    }
+  | {
+      k: "finishing";
+    }
+  | {
+      k: "expired";
+    }
+  | {
+      k: "error";
+      message: string;
+    };
 function ApproveFromDevice(props: AddDeviceProps) {
+  useLocaleRender();
   const [state, setState] = useState<Pairing>({ k: "starting" });
   const gen = useRef(0);
   const { creds, account, deviceName, password, onEnrolled } = props;
   const t = useT();
-
   const begin = async () => {
     const mine = ++gen.current;
     setState({ k: "starting" });
@@ -364,7 +390,6 @@ function ApproveFromDevice(props: AddDeviceProps) {
       if (mine === gen.current) setState({ k: "error", message: authErrorText(e) });
     }
   };
-
   useEffect(() => {
     const generation = gen;
     void begin();
@@ -373,7 +398,6 @@ function ApproveFromDevice(props: AddDeviceProps) {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps -- starts once; "New code" restarts it
   }, []);
-
   useEffect(() => {
     if (state.k !== "waiting") return;
     const mine = gen.current;
@@ -409,7 +433,6 @@ function ApproveFromDevice(props: AddDeviceProps) {
     timer = setTimeout(tick, POLL_MS);
     return () => clearTimeout(timer);
   }, [state, creds, account, deviceName, password, onEnrolled]);
-
   const code = state.k === "waiting" ? `${state.link.code.slice(0, 5)} ${state.link.code.slice(5)}` : "";
   return (
     <ol className="steps">
@@ -424,7 +447,7 @@ function ApproveFromDevice(props: AddDeviceProps) {
           <strong>{t("phone_step_code")}</strong>
           {state.k === "waiting" ? (
             <div className="code-box">
-              <span className="code" aria-label={`Link code ${state.link.code.split("").join(" ")}`}>
+              <span className="code" aria-label={uiText("workspace.interface.link_code_value0_dc5cdc8", { value0: state.link.code.split("").join(" ") })}>
                 {code}
               </span>
             </div>
@@ -446,7 +469,7 @@ function ApproveFromDevice(props: AddDeviceProps) {
         <div style={{ display: "grid", gap: 6 }}>
           <strong>{t("phone_step_check")}</strong>
           <span className="muted">{t("phone_step_check_sub")}</span>
-          <span className="fingerprint" aria-label="Device key">
+          <span className="fingerprint" aria-label={uiText("workspace.interface.device_key_ac05e8b")}>
             {state.k === "waiting" ? state.deviceFp : "····· ····· ····· ····· ····· ·····"}
           </span>
           <span className="faint" aria-live="polite" style={{ fontSize: 12.5 }}>

@@ -1,15 +1,13 @@
+import { text as uiText } from "../i18n";
 import { z } from "zod";
 import { openEnum } from "../api/enums";
 import type { Engine } from "./engine";
-
 /**
  * Guest end dates and scheduled meetings (server docs/WORKSPACE_C5.md, android round 7 slice C5; templates and user
  * groups went with the community rebuild, API 0.12). Every rule is the server's; these are its calls and the meeting editor's time rules (android MeetingRules).
  */
 const enc = encodeURIComponent;
-
 // ───────────── Guests ─────────────
-
 export async function setGuestPolicy(engine: Engine, orgId: string, guestsAllowed: boolean, guestMaxDays: number | null): Promise<void> {
   await engine.api.call("PUT", `/v1/orgs/${enc(orgId)}/guest-policy`, { body: { guestsAllowed, guestMaxDays } });
 }
@@ -17,14 +15,24 @@ export async function setGuestPolicy(engine: Engine, orgId: string, guestsAllowe
 export async function setGuestExpiry(engine: Engine, orgId: string, userId: string, expiresAt: number | null): Promise<void> {
   await engine.api.call("PUT", `/v1/orgs/${enc(orgId)}/members/${enc(userId)}/expiry`, { body: { expiresAt } });
 }
-
 // ───────────── Meetings ─────────────
-
 export const RESPONSES = ["accepted", "tentative", "declined"] as const;
 export type MeetingResponse = (typeof RESPONSES)[number];
-export const RESPONSE_LABEL: Record<string, string> = { accepted: "Going", tentative: "Maybe", declined: "Not going", pending: "No answer yet" };
+export const RESPONSE_LABEL: Record<string, string> = {
+  get accepted() {
+    return uiText("workspace.interface.going_7bd49cd");
+  },
+  get tentative() {
+    return uiText("workspace.interface.maybe_da318d1");
+  },
+  get declined() {
+    return uiText("workspace.interface.not_going_f4d6c49");
+  },
+  get pending() {
+    return uiText("workspace.interface.no_answer_yet_405cf39");
+  },
+};
 export const DURATIONS = [15, 30, 45, 60, 90] as const;
-
 const zMeeting = z.object({
   id: z.string(),
   orgId: z.string(),
@@ -48,9 +56,14 @@ const zMeeting = z.object({
 export type Meeting = z.infer<typeof zMeeting>;
 export const EVENT_REPEATS = ["none", "weekly", "biweekly", "monthly", "yearly"] as const;
 export type EventRepeatChoice = (typeof EVENT_REPEATS)[number];
-
 /** The start's weekday name and which one of the month it is (1–5), in [zone] (android EventRepeatRules.weekdayAndNth). */
-export function weekdayAndNth(startMs: number, zone: string): { weekday: string; nth: number } | null {
+export function weekdayAndNth(
+  startMs: number,
+  zone: string,
+): {
+  weekday: string;
+  nth: number;
+} | null {
   try {
     const parts = new Intl.DateTimeFormat("en-US", { timeZone: zone, weekday: "long", day: "numeric" }).formatToParts(new Date(startMs));
     const weekday = parts.find((p) => p.type === "weekday")?.value;
@@ -60,23 +73,23 @@ export function weekdayAndNth(startMs: number, zone: string): { weekday: string;
     return null;
   }
 }
-
 const NTH = ["first", "second", "third", "fourth"];
-
 /** What a repeat choice says for an event starting at [startMs] (android b8b_* strings): "Weekly on Thursday"… */
 export function repeatLabel(choice: EventRepeatChoice, startMs: number, zone: string): string {
   const w = weekdayAndNth(startMs, zone);
   switch (choice) {
     case "none":
-      return "Does not repeat";
+      return uiText("workspace.interface.does_not_repeat_621d129");
     case "weekly":
-      return w ? `Weekly on ${w.weekday}` : "Weekly";
+      return w ? uiText("workspace.interface.weekly_on_value0_781d1fc", { value0: w.weekday }) : uiText("workspace.interface.weekly_2975132");
     case "biweekly":
-      return w ? `Every other ${w.weekday}` : "Every other week";
+      return w ? uiText("workspace.interface.every_other_value0_a969ec0", { value0: w.weekday }) : uiText("workspace.interface.every_other_week_539677a");
     case "monthly":
-      return w ? `Monthly on the ${w.nth >= 5 ? "last" : NTH[w.nth - 1]} ${w.weekday}` : "Monthly";
+      return w
+        ? uiText("workspace.interface.monthly_on_the_value0_value1_7bead08", { value0: w.nth >= 5 ? uiText("workspace.interface.last_213ed3e") : NTH[w.nth - 1], value1: w.weekday })
+        : uiText("billing.monthly");
     case "yearly":
-      return "Every year";
+      return uiText("workspace.interface.every_year_828ca0e");
   }
 }
 export interface MeetingInput {
@@ -90,7 +103,6 @@ export interface MeetingInput {
   /** Batch B8b (servers with `event-repeat`): null repeats nothing. */
   repeat?: Exclude<EventRepeatChoice, "none"> | null;
 }
-
 export async function listMeetings(engine: Engine, orgId: string): Promise<Meeting[]> {
   return (await engine.api.json("GET", `/v1/orgs/${enc(orgId)}/meetings`, z.object({ meetings: z.array(zMeeting) }))).meetings;
 }
@@ -110,12 +122,9 @@ export async function cancelMeeting(engine: Engine, id: string): Promise<Meeting
 export async function respondToMeeting(engine: Engine, id: string, response: MeetingResponse): Promise<Meeting> {
   return (await engine.api.json("POST", `/v1/meetings/${enc(id)}/respond`, z.object({ meeting: zMeeting }), { body: { response } })).meeting;
 }
-
 // ───── the editor's time rules (android MeetingRules): entered in the person's zone, sent as UTC with the zone ─────
-
 const TIME = /^([01]\d|2[0-3]):[0-5]\d$/;
 const DATE = /^\d{4}-\d{2}-\d{2}$/;
-
 /** The wall clock in [zone] at [utcMs], as the parts of a UTC date (so they can be added to and printed). */
 function wall(utcMs: number, zone: string): number {
   const parts = new Intl.DateTimeFormat("en-US", {
@@ -131,7 +140,6 @@ function wall(utcMs: number, zone: string): number {
   const get = (t: string) => Number(parts.find((p) => p.type === t)?.value);
   return Date.UTC(get("year"), get("month") - 1, get("day"), get("hour"), get("minute"), get("second"));
 }
-
 const pad = (n: number) => String(n).padStart(2, "0");
 const isoDate = (w: number) => {
   const d = new Date(w);
@@ -141,7 +149,6 @@ const isoTime = (w: number) => {
   const d = new Date(w);
   return `${pad(d.getUTCHours())}:${pad(d.getUTCMinutes())}`;
 };
-
 /** UTC ms for [date] "YYYY-MM-DD" at [time] "HH:MM" in [zone], or null when either doesn't parse (DST-correct). */
 export function startMs(date: string, time: string, zone: string): number | null {
   if (!DATE.test(date) || !TIME.test(time)) return null;
@@ -157,32 +164,28 @@ export function startMs(date: string, time: string, zone: string): number | null
     return null;
   }
 }
-
 /** The next half hour from [nowMs] in [zone], as ["YYYY-MM-DD", "HH:MM"]. */
 export function nextSlot(nowMs: number, zone: string): [string, string] {
   const w = wall(nowMs, zone);
   const d = new Date(w);
-  const next = w - d.getUTCSeconds() * 1000 + (30 - (d.getUTCMinutes() % 30)) * 60_000;
+  const next = w - d.getUTCSeconds() * 1000 + (30 - (d.getUTCMinutes() % 30)) * 60000;
   return [isoDate(next), isoTime(next)];
 }
-
 /** ["YYYY-MM-DD", "HH:MM", minutes] for an existing meeting, in [zone]. */
 export function meetingFields(startsAt: number, endsAt: number, zone: string): [string, string, number] {
   const w = wall(startsAt, zone);
-  return [isoDate(w), isoTime(w), Math.round((endsAt - startsAt) / 60_000)];
+  return [isoDate(w), isoTime(w), Math.round((endsAt - startsAt) / 60000)];
 }
-
 /** What's missing before Save, in order; empty when the server can be asked. */
 export function meetingProblems(title: string, roomId: string | null, date: string, time: string, zone: string, nowMs: number): string[] {
   const out: string[] = [];
-  if (!title.trim()) out.push("Give the meeting a title");
-  if (!roomId) out.push("Pick a voice room");
+  if (!title.trim()) out.push(uiText("workspace.interface.give_the_meeting_a_title_dd210b5"));
+  if (!roomId) out.push(uiText("workspace.interface.pick_a_voice_room_b40fb4c"));
   const start = startMs(date, time, zone);
-  if (start === null) out.push("Set the date as YYYY-MM-DD and the time as HH:MM");
-  else if (start < nowMs - 5 * 60_000) out.push("Pick a time that hasn't passed yet");
+  if (start === null) out.push(uiText("workspace.interface.set_the_date_as_yyyy_mm_dd_and_the_time_as_hh_mm_47888e5"));
+  else if (start < nowMs - 5 * 60000) out.push(uiText("workspace.interface.pick_a_time_that_hasn_t_passed_yet_0861294"));
   return out;
 }
-
 /**
  * Whether a step of the three-step event creation can go on (android B5): Where needs a voice room; What and when needs
  * everything else right ([problems] from meetingProblems); the preview creates.
@@ -190,14 +193,12 @@ export function meetingProblems(title: string, roomId: string | null, date: stri
 export function eventStepReady(step: number, roomId: string | null, problems: readonly string[]): boolean {
   return step === 0 ? roomId !== null : problems.length === 0;
 }
-
 /** "Mon 20 Oct, 14:30–15:00" in [zone]. */
 export function whenText(startsAt: number, endsAt: number, zone: string): string {
   const day = new Intl.DateTimeFormat("en-GB", { timeZone: zone, weekday: "short", day: "numeric", month: "short" }).format(startsAt).replace(",", "");
   const hm = (t: number) => new Intl.DateTimeFormat("en-GB", { timeZone: zone, hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).format(t);
   return `${day}, ${hm(startsAt)}–${hm(endsAt)}`;
 }
-
 /** An iCalendar file for "Add to my calendar": Meldiq reads nothing from the calendar and asks for no permission. */
 export function meetingIcs(m: Pick<Meeting, "id" | "title" | "description" | "startsAt" | "endsAt" | "room">): string {
   const stamp = (t: number) =>
@@ -227,14 +228,17 @@ export function meetingIcs(m: Pick<Meeting, "id" | "title" | "description" | "st
   ];
   return `${lines.join("\r\n")}\r\n`;
 }
-
 /** A `meeting.soon` frame: the meeting as this person may see it, as a system notification (once, from the server). */
 export async function meetingSoon(engine: Engine, meetingId: string, notify?: (title: string, body: string, roomId: string | null) => void): Promise<void> {
   if (!notify) return;
   try {
     const m = await getMeeting(engine, meetingId);
     if (m.cancelled || m.myResponse === "declined") return;
-    notify(`Starting soon: ${m.title}`, `${whenText(m.startsAt, m.endsAt, Intl.DateTimeFormat().resolvedOptions().timeZone)}${m.room?.name ? ` · #${m.room.name}` : ""}`, m.room?.id ?? null);
+    notify(
+      uiText("workspace.interface.starting_soon_value0_4fd101f", { value0: m.title }),
+      `${whenText(m.startsAt, m.endsAt, Intl.DateTimeFormat().resolvedOptions().timeZone)}${m.room?.name ? ` · #${m.room.name}` : ""}`,
+      m.room?.id ?? null,
+    );
   } catch {
     /* gone or no longer visible: nothing to say */
   }

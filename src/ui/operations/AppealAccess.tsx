@@ -1,7 +1,11 @@
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
+import { Localized } from "../../i18n/Localized";
 import { useState } from "react";
 import { z } from "zod";
 import { ApiClient } from "../../api/client";
 export function AppealAccess({ base }: { base: string }) {
+  useLocaleRender();
   const [email, setEmail] = useState(""),
     [challenge, setChallenge] = useState<string | null>(null),
     [code, setCode] = useState(""),
@@ -31,7 +35,9 @@ export function AppealAccess({ base }: { base: string }) {
   };
   return (
     <details style={{ marginTop: 20 }}>
-      <summary>Appeal an account restriction</summary>
+      <summary>
+        <Localized k="workspace.interface.appeal_an_account_restriction_2a0a485" />
+      </summary>
       <form
         className="auth-form"
         onSubmit={(e) => {
@@ -39,30 +45,32 @@ export function AppealAccess({ base }: { base: string }) {
           void run();
         }}
       >
-        <p>Verify your account email to submit an appeal even while sign-in is restricted. This code cannot sign you in or change your account.</p>
+        <p>
+          <Localized k="workspace.interface.verify_your_account_email_to_submit_an_appeal_even_while_sign_in_bb21083" />
+        </p>
         {!challenge ? (
           <label>
-            Account email
+            <Localized k="workspace.interface.account_email_316ef5f" />
             <input className="input" required type="email" maxLength={254} value={email} onChange={(e) => setEmail(e.target.value)} />
           </label>
         ) : (
           <>
             <label>
-              Appeal verification code
+              <Localized k="workspace.interface.appeal_verification_code_9e9a37b" />
               <input className="input" required inputMode="numeric" pattern="[0-9]{6}" value={code} onChange={(e) => setCode(e.target.value)} />
             </label>
             <label>
-              Appeal subject
+              <Localized k="workspace.interface.appeal_subject_d44c7b4" />
               <input className="input" required minLength={3} maxLength={120} value={subject} onChange={(e) => setSubject(e.target.value)} />
             </label>
             <label>
-              Appeal details
+              <Localized k="workspace.interface.appeal_details_1348a06" />
               <textarea className="textarea" required minLength={10} maxLength={4000} value={body} onChange={(e) => setBody(e.target.value)} />
             </label>
           </>
         )}
         <button className="btn btn-secondary" disabled={busy} type="submit">
-          {challenge ? "Submit verified appeal" : "Send appeal code"}
+          {challenge ? uiText("workspace.interface.submit_verified_appeal_3f00635") : uiText("workspace.interface.send_appeal_code_18f7877")}
         </button>
         {result && <p role="status">{result}</p>}
       </form>

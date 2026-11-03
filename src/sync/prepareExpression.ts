@@ -1,8 +1,11 @@
+import { text as uiText } from "../i18n";
 import { EXPRESSION_MAX_BYTES, SHRINK_TO } from "./expressions";
-
 const ascii = (bytes: Uint8Array, offset: number, length: number) => String.fromCharCode(...bytes.subarray(offset, offset + length));
 /** Detect animation before using canvas, which would discard every frame except the first. */
-export function expressionFormat(bytes: Uint8Array): { mime: string; animated: boolean } | null {
+export function expressionFormat(bytes: Uint8Array): {
+  mime: string;
+  animated: boolean;
+} | null {
   if (["GIF87a", "GIF89a"].includes(ascii(bytes, 0, 6))) return { mime: "image/gif", animated: true };
   if (ascii(bytes, 0, 4) === "RIFF" && ascii(bytes, 8, 4) === "WEBP") {
     const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
@@ -25,21 +28,19 @@ export function expressionFormat(bytes: Uint8Array): { mime: string; animated: b
   }
   return null;
 }
-
 export interface PreparedExpression {
   bytes: Uint8Array<ArrayBuffer>;
   mime: string;
   converted: boolean;
 }
-
 /** Keep supported animation byte-for-byte; oversized animated files need optimization, never silent flattening. */
 export async function prepareExpression(file: File, kind: "emoji" | "sticker"): Promise<PreparedExpression> {
   const bytes = new Uint8Array(await file.arrayBuffer());
   const format = expressionFormat(bytes);
   if (format && bytes.length <= EXPRESSION_MAX_BYTES) return { bytes, mime: format.mime, converted: false };
-  if (format?.animated) throw new Error("This animated image is over 256 KB. Optimize it to 256 KB or less to keep its animation, then choose it again.");
+  if (format?.animated) throw new Error(uiText("workspace.interface.this_animated_image_is_over_256_kb_optimize_it_to_256_kb_or_less_6677b4e"));
   const bitmap = await createImageBitmap(file).catch(() => {
-    throw new Error("That picture couldn't be read. Choose a PNG, GIF, WebP or JPEG image.");
+    throw new Error(uiText("workspace.interface.that_picture_couldn_t_be_read_choose_a_png_gif_webp_or_jpeg_image_3883d7d"));
   });
   try {
     const scale = Math.min(1, SHRINK_TO[kind] / Math.max(bitmap.width, bitmap.height));
@@ -47,11 +48,11 @@ export async function prepareExpression(file: File, kind: "emoji" | "sticker"): 
     canvas.width = Math.max(1, Math.round(bitmap.width * scale));
     canvas.height = Math.max(1, Math.round(bitmap.height * scale));
     const context = canvas.getContext("2d");
-    if (!context) throw new Error("This browser can't resize pictures.");
+    if (!context) throw new Error(uiText("workspace.interface.this_browser_can_t_resize_pictures_b2b8cd3"));
     context.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
     const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/png"));
-    if (!blob) throw new Error("This browser can't resize pictures.");
-    if (blob.size > EXPRESSION_MAX_BYTES) throw new Error("That picture is still over 256 KB after resizing. Choose a smaller image.");
+    if (!blob) throw new Error(uiText("workspace.interface.this_browser_can_t_resize_pictures_b2b8cd3"));
+    if (blob.size > EXPRESSION_MAX_BYTES) throw new Error(uiText("workspace.interface.that_picture_is_still_over_256_kb_after_resizing_choose_a_smaller_4ee981e"));
     return { bytes: new Uint8Array(await blob.arrayBuffer()), mime: "image/png", converted: true };
   } finally {
     bitmap.close();

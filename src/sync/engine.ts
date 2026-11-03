@@ -1,3 +1,4 @@
+import { text as uiText } from "../i18n";
 import { z } from "zod";
 import { zMessageCollection, type CollectionCursor, type CollectionKind } from "../api/messageCollections";
 import type { MessageCollectionPage } from "./messageCollections";
@@ -63,7 +64,6 @@ import { followedThreads, loadThreadActivity, markThreadSeen, setFollowed, type 
 import { preview, sendsReadReceipts } from "./rules";
 import { type RevokedReason, SessionManager } from "./session";
 import { matchesSearch, parseSearchQuery } from "./searchQuery";
-
 export interface EngineOptions {
   /** API origin: "" in the browser (same origin), absolute in tests. */
   base: string;
@@ -77,30 +77,44 @@ export interface EngineOptions {
   /** A scheduled meeting starts in ten minutes (round 7): [roomId] is the voice room it happens in. */
   notifyMeeting?: (title: string, body: string, roomId: string | null) => void;
   /** Per-browser preferences. */
-  prefs?: () => { readReceipts: boolean; typing: boolean; groupNotifications?: boolean };
+  prefs?: () => {
+    readReceipts: boolean;
+    typing: boolean;
+    groupNotifications?: boolean;
+  };
   onRevoked?: (reason: RevokedReason) => void;
   /** Call media: LiveKit with frame encryption in the browser (call/livekitSession.ts); a fake in tests. */
   media?: MediaFactory;
   /** Whether this browser can encrypt call media (default: checked in the browser, false elsewhere). */
   callSupported?: () => boolean;
-  ringtone?: { start(): void; stop(): void };
+  ringtone?: {
+    start(): void;
+    stop(): void;
+  };
   /** A system notification for a ringing call while the tab isn't looked at. */
   ringAlert?: (title: string, video: boolean, conversationId: string) => void;
   /** How long an action on a snapshot message waits for the server's page (LIVE_WAIT_MS; shorter in tests). */
   liveWaitMs?: number;
   /** Call timing for tests. */
-  callTiming?: { keyWaitMs?: number; peerWindowMs?: number; rejoinWindowMs?: number };
+  callTiming?: {
+    keyWaitMs?: number;
+    peerWindowMs?: number;
+    rejoinWindowMs?: number;
+  };
   /** Settings › Calls (batches B10, B11): noise reduction, and how this browser shares its screen. */
   callPrefs?: () => CallPrefs;
 }
-
 const PAGE = 60;
 /** How long an action on a snapshot message waits for its conversation's first server page (live()). */
 export const LIVE_WAIT_MS = 5000;
 /** Waits shorter than this show nothing; longer ones mark the message as waiting. */
 export const PENDING_AFTER_MS = 300;
-export const MESSAGE_CHANGED = "That message changed, try again.";
-export const UNREACHABLE = "Couldn't reach Meldiq. Try again in a moment.";
+export function MESSAGE_CHANGED() {
+  return uiText("errors.messageChanged");
+}
+export function UNREACHABLE() {
+  return uiText("errors.unreachable");
+}
 /** GET /v2/messages/search (API 0.57.0). */
 const zSearchRes = z.object({ messages: z.array(zStoredEvent) });
 /** GET /v2/messages/summary (API 0.57.0). */
@@ -111,7 +125,6 @@ const zConversations = z.object({ conversations: z.array(zConversation) });
 const zOrgs = z.object({ orgs: z.array(zOrg) });
 const zMembers = z.object({ members: z.array(zMember) });
 const CACHE_KEY = "cache.meta";
-
 /**
  * One linked browser's connection to its account: realtime delivery, the outbox, history restore and the state the
  * interface draws. Current message history, membership and entitlements are server-owned; private device keys stay here.
@@ -151,7 +164,14 @@ export class Engine implements EngineContext {
   private uploader: HistoryUploader | null = null;
   private readTimers = new Map<string, ReturnType<typeof setTimeout>>();
   /** Per conversation: the oldest server time loaded from its history, and whether older messages remain. */
-  private readonly serverPages = new Map<string, { oldest: number | null; more: boolean; nextCursor?: ServerHistoryPage["nextCursor"] }>();
+  private readonly serverPages = new Map<
+    string,
+    {
+      oldest: number | null;
+      more: boolean;
+      nextCursor?: ServerHistoryPage["nextCursor"];
+    }
+  >();
   private readonly olderLoads = new Map<string, Promise<void>>();
   private readonly windowVersions = new Map<string, number>();
   private openVersion = 0;
@@ -165,14 +185,11 @@ export class Engine implements EngineContext {
   private userFetches = new Map<string, Promise<void>>();
   private members = new Map<string, Member[]>();
   private lastTypingAt = 0;
-
   /** This browser's device record; only its account address can change (after an account recovery, signInAgain). */
   private record: DeviceRecord;
-
   get device(): DeviceRecord {
     return this.record;
   }
-
   constructor(
     device: DeviceRecord,
     readonly store: LocalStore,
@@ -288,14 +305,11 @@ export class Engine implements EngineContext {
       createSocket: opts.createSocket,
     });
   }
-
   // ───────────────────────── lifecycle ─────────────────────────
-
   /** Set by open(), taken by start(). */
   private opened: Promise<void> | null = null;
   /** The app as it was last time, kept sealed on this computer (sync/snapshot.ts). */
   readonly snapshots: SnapshotKeeper;
-
   /**
    * This browser's device and what this page already holds, before any network: the app's frame is drawn on it at once
    * (skeletons where the server's data goes), so a reload or a return opens like an app rather than a website loading.
@@ -305,7 +319,6 @@ export class Engine implements EngineContext {
     this.opened ??= this.openLocal();
     return this.opened;
   }
-
   /**
    * Starts with a session just granted (linking, signing in), or else signs in again by itself: the stored account session,
    * or the device key. Works offline from local data.
@@ -336,7 +349,6 @@ export class Engine implements EngineContext {
       .then((n) => (n > 0 ? this.syncSummaries() : undefined))
       .catch(() => undefined);
   }
-
   private async openLocal(): Promise<void> {
     const me = {
       userId: this.device.userId,
@@ -351,9 +363,13 @@ export class Engine implements EngineContext {
     };
     await this.loadLocal();
     await this.drawSnapshot();
+    // Pending work is recovered independently of the bounded app snapshot, before any network wait.
+    for (const id of await this.store.messageIds()) {
+      const m = await this.store.message(id);
+      if (m?.outgoing && ["SENDING", "FAILED", "HELD"].includes(m.status)) this.show(m);
+    }
     this.set((s) => ({ ...s, phase: "ready", me: { ...me, ...(s.me ?? {}) } }));
   }
-
   /**
    * The app as it was last time (sync/snapshot.ts), drawn before any network; the server's answers replace it as they
    * come. Only while this browser's session can carry on by itself: one that needs the password draws nothing.
@@ -371,15 +387,12 @@ export class Engine implements EngineContext {
       /* nothing kept, or unreadable: the server's answers draw everything, as on a first visit */
     }
   }
-
   /** Whether this session counted today's visit for points (API 0.65.0). */
   private checkedIn = false;
-
   /** Conversations whose messages on screen are still the snapshot's: their first server page hasn't replaced them. */
   private readonly fromSnapshot = new Set<string>();
   /** Each conversation's first server page while it loads (one load, however many ask). */
   private readonly firstPages = new Map<string, Promise<ServerHistoryPage | null>>();
-
   /**
    * The conversation's newest page from the server; null if unavailable. A conversation drawn from the snapshot then shows
    * the server's messages instead, and actions on its messages run against them (live()).
@@ -405,12 +418,10 @@ export class Engine implements EngineContext {
     }
     return p;
   }
-
   /** Whether [m] is one of the snapshot's, waiting for its conversation's first server page (sync check, for the UI). */
   waitsForServer(m: Pick<StoredMessage, "conversationId">): boolean {
     return this.fromSnapshot.has(m.conversationId);
   }
-
   /**
    * The message an action runs against (2026-10-30, the owner: actions on snapshot messages must never fail without a
    * word): at once for one the server has sent; for one drawn from the snapshot, once its conversation's first page is
@@ -424,9 +435,9 @@ export class Engine implements EngineContext {
     try {
       const timeout = new Promise<false>((r) => (timer = setTimeout(() => r(false), this.opts.liveWaitMs ?? LIVE_WAIT_MS)));
       const arrived = await Promise.race([this.firstPage(m.conversationId), timeout]);
-      if (!arrived) throw new Error(UNREACHABLE);
+      if (!arrived) throw new Error(UNREACHABLE());
       const fresh = await this.store.message(m.id);
-      if (!fresh) throw new Error(MESSAGE_CHANGED);
+      if (!fresh) throw new Error(MESSAGE_CHANGED());
       return fresh;
     } finally {
       clearTimeout(pending);
@@ -434,27 +445,23 @@ export class Engine implements EngineContext {
       if (this.state.get().waiting[m.id]) this.set((s) => ({ ...s, waiting: Object.fromEntries(Object.entries(s.waiting).filter(([k]) => k !== m.id)) }));
     }
   }
-
   /** live(), saying why when it can't (a notice), for actions the UI runs itself: null then. */
   async whenLive(m: StoredMessage): Promise<StoredMessage | null> {
     try {
       return await this.live(m);
     } catch (e) {
-      this.notice("error", e instanceof Error ? e.message : UNREACHABLE);
+      this.notice("error", e instanceof Error ? e.message : UNREACHABLE());
       return null;
     }
   }
-
   /** Runs [action] on the message as the server has it (whenLive). */
   private async onLive(m: StoredMessage, action: (live: StoredMessage) => Promise<void>): Promise<void> {
     const live = await this.whenLive(m);
     if (live) await action(live);
   }
-
   private readonly flushSignalsWhenHidden = () => {
     if (document.visibilityState === "hidden") void this.signals.flush();
   };
-
   stop(): void {
     clearExpressionCache(this);
     this.stopped = true;
@@ -466,79 +473,83 @@ export class Engine implements EngineContext {
     this.outbox.stop();
     for (const t of this.readTimers.values()) clearTimeout(t);
   }
-
   /** Connects again now instead of waiting for the next backoff step ("Reconnect now"). */
   reconnect(): void {
     this.realtime.reconnectNow();
     this.outbox.kick();
   }
-
   /** Resolves once received frames and queued sends have settled (tests). */
   async idle(): Promise<void> {
     await this.realtime.idle();
     await this.outbox.settle();
   }
-
   private set(fn: (s: AppState) => AppState): void {
     this.state.update(fn);
   }
-
   /** Arranges a conversation on Home (starred, a section, its notification level) in its workspace's synced document. */
   arrange(conversationId: string, op: NavOp): Promise<void> {
     return this.nav.change(workspaceOf(this.state.get().conversations[conversationId]?.orgId ?? null), op);
   }
-
-  expressionPreference(op: Extract<NavOp, { op: "expressionFavorite" | "expressionUsed" }>): Promise<void> {
+  expressionPreference(
+    op: Extract<
+      NavOp,
+      {
+        op: "expressionFavorite" | "expressionUsed";
+      }
+    >,
+  ): Promise<void> {
     return this.nav.change(PERSONAL, op);
   }
-
   /** Saved for later (android Home › Later): kept in the personal document, so every device of the person shows it. */
-  later(op: Extract<NavOp, { op: "save" | "unsave" | "savedDone" | "remind" }>): Promise<void> {
+  later(
+    op: Extract<
+      NavOp,
+      {
+        op: "save" | "unsave" | "savedDone" | "remind";
+      }
+    >,
+  ): Promise<void> {
     return this.nav.change(PERSONAL, op);
   }
-
   /** A reminder that went off: shown once per occurrence on this browser (the phone shows its own). */
   private async showReminder(r: Reminder): Promise<boolean> {
     if (!(await firstShowing(this.store, r))) return false;
-    const title = r.content?.title ?? "Reminder";
-    this.notice("info", `Reminder: ${title}`);
-    this.opts.notifyReminder?.(title, r.content?.note ?? (r.content?.source === "later" ? "A message you saved for later" : "Meldiq reminder"), r.content?.ref?.conversationId ?? null);
+    const title = r.content?.title ?? uiText("workspace.interface.reminder_31757bb");
+    this.notice("info", uiText("workspace.interface.reminder_value0_4856197", { value0: title }));
+    this.opts.notifyReminder?.(
+      title,
+      r.content?.note ?? (r.content?.source === "later" ? uiText("workspace.interface.a_message_you_saved_for_later_378c917") : uiText("workspace.interface.meldiq_reminder_08cb2c9")),
+      r.content?.ref?.conversationId ?? null,
+    );
     return true;
   }
-
   /**
    * Browsers set up before reminders existed have no reminder key: the recovery key (the identity seed) gives it, once.
    * The seed must be this account's; it isn't kept.
    */
   async unlockReminders(seed: Uint8Array): Promise<void> {
-    if ((await publicKeyFromSeed(seed)) !== this.record.identityKey) throw new Error("That recovery key belongs to a different Meldiq account.");
+    if ((await publicKeyFromSeed(seed)) !== this.record.identityKey) throw new Error(uiText("workspace.interface.that_recovery_key_belongs_to_a_different_meldiq_account_5aa9171"));
     this.record = { ...this.record, reminders: await deriveReminderKey(seed, this.record.userId) };
     await this.store.saveDevice(this.record);
     await this.reminders.refresh();
   }
-
   notice(kind: "error" | "info", text: string): void {
     const id = Date.now() + Math.random();
     this.set((s) => ({ ...s, notices: [...s.notices.slice(-3), { id, kind, text }] }));
   }
-
   dismissNotice(id: number): void {
     this.set((s) => ({ ...s, notices: s.notices.filter((n) => n.id !== id) }));
   }
-
   /** Set while this browser signs itself out: the server closing its connection then is expected, not a removal. */
   private signingOut = false;
-
   setSigningOut(on: boolean): void {
     this.signingOut = on;
   }
-
   private async adopt(grant: SessionGrant | AccountSessionGrant): Promise<void> {
     if ("accessToken" in grant) {
       if (this.session instanceof AccountSession) await this.session.adopt(grant);
     } else if (this.session instanceof SessionManager) this.session.adopt(grant);
   }
-
   /** The account session can't renew itself: stop syncing and ask for the password (local data stays). */
   private accountSessionEnded(why: AccountSessionEnd): void {
     if (this.signingOut) return;
@@ -547,13 +558,12 @@ export class Engine implements EngineContext {
     this.outbox.stop();
     this.set((s) => ({ ...s, phase: "reauth", phaseReason: why }));
   }
-
   /**
    * Signs in again after the account session ended: the password, plus proof that this browser still holds its device
    * key, so the new session is bound to this device. A removed device is told so by the server, and then erased.
    */
   async signInAgain(password: string, email?: string, totpCode?: string): Promise<void> {
-    if (!(this.session instanceof AccountSession)) throw new Error("This browser isn't signed in with a Meldiq account.");
+    if (!(this.session instanceof AccountSession)) throw new Error(uiText("auth.interface.this_browser_isn_t_signed_in_with_a_meldiq_account_e04ab65"));
     const account = this.record.account;
     try {
       await this.session.adopt(await signInWithDevice(this.opts.base, this.record, password, email, totpCode));
@@ -573,11 +583,10 @@ export class Engine implements EngineContext {
     void this.refreshAll();
     this.outbox.kick();
   }
-
   /** A verified provider session must prove this exact account and device before unlocking its local messages. */
   async signInAgainWithProvider(grant: AccountSessionGrant): Promise<void> {
     if (!(this.session instanceof AccountSession) || grant.account.id !== this.record.account?.id || grant.session.deviceId !== this.record.deviceId)
-      throw new Error("Sign in with the Meldiq account that owns this browser's messages.");
+      throw new Error(uiText("workspace.interface.sign_in_with_the_meldiq_account_that_owns_this_browser_s_messages_6182900"));
     await this.session.adopt(grant);
     await this.accountEmailChanged(grant.account.email);
     this.set((s) => ({ ...s, phase: "ready", phaseReason: null }));
@@ -586,7 +595,6 @@ export class Engine implements EngineContext {
     void this.refreshAll();
     this.outbox.kick();
   }
-
   /** The account's email changed here (Settings › My Account, API 0.46.0): sign-ins from now on use the new address. */
   async accountEmailChanged(email: string): Promise<void> {
     const account = this.record.account;
@@ -594,18 +602,21 @@ export class Engine implements EngineContext {
     this.record = { ...this.record, account: { ...account, email } };
     await this.store.saveDevice(this.record);
   }
-
   private revoked(reason: RevokedReason): void {
     if (this.signingOut) return;
     this.stop();
     this.set((s) => ({ ...s, phase: "revoked", phaseReason: reason }));
     this.opts.onRevoked?.(reason);
   }
-
   private async loadLocal(): Promise<void> {
     const [locals, cache, pins, callLog] = await Promise.all([
       this.store.conversations(),
-      this.store.getValue<{ orgs: Org[]; conversations: Conversation[]; users: UserLite[]; server?: ServerInfo | null }>(CACHE_KEY),
+      this.store.getValue<{
+        orgs: Org[];
+        conversations: Conversation[];
+        users: UserLite[];
+        server?: ServerInfo | null;
+      }>(CACHE_KEY),
       this.store.changedPins(),
       this.callLog.load(),
     ]);
@@ -620,7 +631,6 @@ export class Engine implements EngineContext {
       identityAlerts: pins,
     }));
   }
-
   /**
    * Someone's profile or settings changed (API 0.28 `user.updated`; reported 2026-10-23: such changes showed on other
    * devices only after a refresh). Your own: everything is loaded again, as after a reconnect. Someone else's: their
@@ -643,9 +653,7 @@ export class Engine implements EngineContext {
     }
     this.set((s) => ({ ...s, profilesRev: s.profilesRev + 1 }));
   }
-
   private refreshLoad: Promise<void> | null = null;
-
   /** Startup and the socket's hello share one metadata refresh instead of fetching every list twice. */
   refreshAll(): Promise<void> {
     this.refreshLoad ??= this.refreshMetadata().finally(() => {
@@ -653,7 +661,6 @@ export class Engine implements EngineContext {
     });
     return this.refreshLoad;
   }
-
   /** Server info, profile, workspaces and conversations: on start and after every reconnect (what changed while away). */
   private async refreshMetadata(): Promise<void> {
     try {
@@ -735,10 +742,9 @@ export class Engine implements EngineContext {
         void pointsCheckin(this).catch(() => undefined);
       }
     } catch (e) {
-      if (!(e instanceof ApiError && e.isNetwork)) this.notice("error", e instanceof ApiError ? e.message : "Couldn't load your conversations.");
+      if (!(e instanceof ApiError && e.isNetwork)) this.notice("error", e instanceof ApiError ? e.message : uiText("workspace.interface.couldn_t_load_your_conversations_92bdd13"));
     }
   }
-
   /** Restores what the history has and this browser doesn't ([fromStart]: reads it all again), then backs up what it holds. */
   async runHistory(fromStart = false): Promise<void> {
     if (!this.device.history) return;
@@ -749,12 +755,18 @@ export class Engine implements EngineContext {
       await this.startBackup();
     } catch (e) {
       const unsupported = e instanceof ApiError && (e.code === "history_off" || e.status === 404);
-      this.set((s) => ({ ...s, history: { ...s.history, status: unsupported ? "unsupported" : "error", error: unsupported ? null : e instanceof ApiError ? e.message : "Couldn't restore history" } }));
+      this.set((s) => ({
+        ...s,
+        history: {
+          ...s.history,
+          status: unsupported ? "unsupported" : "error",
+          error: unsupported ? null : e instanceof ApiError ? e.message : uiText("workspace.interface.couldn_t_restore_history_74253b4"),
+        },
+      }));
       // A failed download (offline) doesn't stop this browser backing up what it holds.
       if (!unsupported) await this.startBackup();
     }
   }
-
   /** Backs this browser's chats up into the history (historyUpload.ts), or says it needs its keys opened once. */
   private async startBackup(): Promise<void> {
     const keys = this.device.history;
@@ -772,31 +784,26 @@ export class Engine implements EngineContext {
     });
     await this.uploader.start();
   }
-
   private setBackup(change: Partial<HistoryBackupState>): void {
     this.set((s) => ({ ...s, history: { ...s.history, backup: { ...s.history.backup, ...change } } }));
   }
-
   /** Sends this browser's unsent backup now (before signing out); throws if it couldn't. */
   async flushBackup(): Promise<void> {
     await this.uploader?.flush();
   }
-
   /**
    * Browsers set up before 2026-10-28 can read the history but not write it: the identity seed (the recovery key, or the
    * key backup opened with the password) gives them keys that can, once. The seed must be this account's; it isn't kept.
    */
   async unlockHistoryBackup(seed: Uint8Array): Promise<void> {
-    if ((await publicKeyFromSeed(seed)) !== this.record.identityKey) throw new Error("That key belongs to a different Meldiq account.");
+    if ((await publicKeyFromSeed(seed)) !== this.record.identityKey) throw new Error(uiText("workspace.interface.that_key_belongs_to_a_different_meldiq_account_d0c201f"));
     const history = await deriveHistoryKeys(seed, this.record.userId);
     this.record = { ...this.record, history, reminders: this.record.reminders ?? (await deriveReminderKey(seed, this.record.userId)) };
     await this.store.saveDevice(this.record);
     this.setBackup({ mode: "on", error: null });
     await this.startBackup();
   }
-
   // ───────────────────────── realtime frames ─────────────────────────
-
   private async onFrame(raw: Frame): Promise<void> {
     if (this.stopped) return;
     const f = parseFrame(raw);
@@ -883,22 +890,17 @@ export class Engine implements EngineContext {
         return;
     }
   }
-
   /** Takes a bot's answer that only you saw off its conversation (API 0.65.0 batch B). */
   dismissBotReply(conversationId: string, interactionId: string): void {
     this.set((s) => dismissBotReply(s, conversationId, interactionId));
   }
-
   // ───────────────────────── EngineContext ─────────────────────────
-
   viewing(): string | null {
     return this.focused && this.readingLatest ? this.viewingId : null;
   }
-
   async ensureConversation(id: string): Promise<Conversation | null> {
     return this.state.get().conversations[id] ?? this.fetchConversation(id);
   }
-
   private fetchConversation(id: string): Promise<Conversation | null> {
     let p = this.convFetches.get(id);
     if (!p) {
@@ -929,7 +931,6 @@ export class Engine implements EngineContext {
     }
     return p;
   }
-
   async ensureUser(id: string): Promise<void> {
     if (this.state.get().users[id]) return;
     let p = this.userFetches.get(id);
@@ -963,67 +964,60 @@ export class Engine implements EngineContext {
     }
     return p;
   }
-
   show(m: StoredMessage): void {
     this.set((s) => {
       const next = upsertLoaded(s, m);
       return m.threadRootId ? { ...next, threadRev: next.threadRev + 1 } : next;
     });
   }
-
   /** Threads this account takes part in, with replies not yet seen here (Activity › Thread replies). */
   threadActivity(): Promise<ThreadActivity[]> {
     return loadThreadActivity(this.store);
   }
-
   /** Follows a thread or forum post (batch B8): its replies come into Activity › Threads. Kept on this browser. */
   async setFollowed(rootId: string, on: boolean): Promise<void> {
     await setFollowed(this.store, rootId, on);
     this.set((s) => ({ ...s, threadRev: s.threadRev + 1 }));
   }
-
   isFollowed(rootId: string): Promise<boolean> {
     return followedThreads(this.store).then((s) => s.has(rootId));
   }
-
   /** The thread was opened here: its replies so far are seen. */
   async markThreadSeen(rootId: string): Promise<void> {
     if (await markThreadSeen(this.store, rootId)) this.set((s) => ({ ...s, threadRev: s.threadRev + 1 }));
   }
-
   private local(id: string): Promise<ConversationLocal> {
     return this.locals.get(id);
   }
-
-  bump(m: StoredMessage, counts: { unread: boolean; mention: boolean }): Promise<void> {
+  bump(
+    m: StoredMessage,
+    counts: {
+      unread: boolean;
+      mention: boolean;
+    },
+  ): Promise<void> {
     return this.locals.bump(m, counts);
   }
-
   refreshPreview(conversationId: string): Promise<void> {
     return this.locals.refreshPreview(conversationId);
   }
-
   readElsewhere(conversationId: string, upTo: number): Promise<void> {
     return this.locals.readElsewhere(conversationId, upTo);
   }
-
   /** Marks a conversation read or unread on this browser only: no read receipt is sent either way (as on the phone). */
   setUnreadLocally(id: string, unread: boolean): Promise<void> {
     return this.locals.setUnread(id, unread);
   }
-
   /** Archives a conversation on this browser, or brings it back (local, reversible; nothing is sent). */
   setArchivedLocally(id: string, archived: boolean): Promise<void> {
     return this.locals.setArchived(id, archived);
   }
-
   /** A conversation's unsent text, kept with this browser's other local data (never in localStorage). */
   async saveDraft(conversationId: string, text: string): Promise<void> {
     await this.locals.saveDraft(conversationId, text);
     // Locals are an in-memory working set. Drafts must reach the existing sealed snapshot before a reload.
     await this.snapshots.flush();
   }
-
   markReadSoon(conversationId: string): void {
     clearTimeout(this.readTimers.get(conversationId));
     this.readTimers.set(
@@ -1034,7 +1028,6 @@ export class Engine implements EngineContext {
       }, 400),
     );
   }
-
   /**
    * A system notification for a message that arrived off screen, unless the person's synced notification level for the
    * conversation says otherwise (docs/MENTIONS.md, NOTIFICATIONS.md): "mentions" lets mentions and @everyone through,
@@ -1051,24 +1044,24 @@ export class Engine implements EngineContext {
     const mentioned = mention !== null;
     // Group notifications off (android Settings › Notifications): groups and channels stay quiet; mentions still notify.
     if (conversation?.type !== "DM" && !mentioned && this.opts.prefs?.().groupNotifications === false) return;
-    const sender = st.users[m.senderUserId]?.displayName ?? "Someone";
-    const title = conversation?.type === "CHANNEL" ? `#${conversation.name ?? "channel"}` : conversation?.type === "GROUP" ? (conversation.name ?? sender) : sender;
-    this.opts.notify(mentioned ? `${title} · mentioned you` : title, conversation?.type === "DM" ? preview(m) : `${sender}: ${preview(m)}`, m.conversationId);
+    const sender = st.users[m.senderUserId]?.displayName ?? uiText("messaging.react_someone");
+    const title = conversation?.type === "CHANNEL" ? `#${conversation.name ?? uiText("messaging.interface.channel_69e3656")}` : conversation?.type === "GROUP" ? (conversation.name ?? sender) : sender;
+    this.opts.notify(
+      mentioned ? uiText("workspace.interface.value0_mentioned_you_221c40d", { value0: title }) : title,
+      conversation?.type === "DM" ? preview(m) : `${sender}: ${preview(m)}`,
+      m.conversationId,
+    );
   }
-
   async refreshIdentityAlerts(): Promise<void> {
     const identityAlerts = await this.store.changedPins();
     this.set((s) => ({ ...s, identityAlerts }));
   }
-
   kickOutbox(): void {
     this.outbox.kick();
   }
-
   private identityChanged(pin: PinnedIdentity): void {
     this.set((s) => ({ ...s, identityAlerts: [...s.identityAlerts.filter((p) => p.userId !== pin.userId), pin] }));
   }
-
   private async markSent(messageId: string, serverTs: number): Promise<void> {
     const m = await this.store.message(messageId);
     if (!m) return;
@@ -1078,7 +1071,6 @@ export class Engine implements EngineContext {
     this.show(next);
     await this.refreshPreview(m.conversationId);
   }
-
   private async markFailed(messageId: string, status: "FAILED" | "HELD", reason: string): Promise<void> {
     const m = await this.store.message(messageId);
     if (!m) return;
@@ -1086,9 +1078,7 @@ export class Engine implements EngineContext {
     await this.store.putMessage(next);
     this.show(next);
   }
-
   // ───────────────────────── reading ─────────────────────────
-
   /**
    * Each conversation's newest message, read position and unread counts, from the server (API 0.57.0): the list after a
    * page load or a reconnect, when this browser keeps nothing between visits.
@@ -1099,7 +1089,6 @@ export class Engine implements EngineContext {
     });
     return this.summaryLoad;
   }
-
   private async fetchSummaries(): Promise<void> {
     const res = await this.api.json("GET", "/v2/messages/summary", zSummary).catch(() => null);
     if (!res) {
@@ -1118,7 +1107,6 @@ export class Engine implements EngineContext {
     }
     this.summariesLoaded = true;
   }
-
   /**
    * One page of a conversation's history from the server, older than [before] (null: the newest): its messages oldest
    * first, then the changes to them, applied as live ones are. Remembers whether older ones remain.
@@ -1137,7 +1125,7 @@ export class Engine implements EngineContext {
     const page = main
       ? await this.api.json("GET", `/v2/conversations/${encodeURIComponent(id)}/message-collections?${q}`, zMessageCollection)
       : await this.api.json("GET", `/v2/conversations/${encodeURIComponent(id)}/messages?${q}`, zServerHistoryPage);
-    if (around && !page.messages.some((m) => m.id === around)) throw new Error("That message is no longer available.");
+    if (around && !page.messages.some((m) => m.id === around)) throw new Error(uiText("workspace.interface.that_message_is_no_longer_available_aeb42eb"));
     for (const e of [...page.messages].reverse()) await this.receiver.ingest(e, 0, { history: true });
     for (const e of page.changes) await this.receiver.ingest(e, 0, { history: true });
     if (version === this.windowVersions.get(id)) {
@@ -1148,7 +1136,6 @@ export class Engine implements EngineContext {
     void Promise.all([...new Set(page.messages.map((m) => m.senderUserId))].map((userId) => this.ensureUser(userId).catch(() => undefined)));
     return page;
   }
-
   /** Loads the selected conversation. Read receipts wait until its latest messages are actually in view. */
   async openConversation(id: string | null): Promise<void> {
     const opening = ++this.openVersion;
@@ -1190,7 +1177,7 @@ export class Engine implements EngineContext {
     const received = page ? await Promise.all(page.messages.map((m) => this.store.message(m.id))) : [];
     if (opening !== this.openVersion || version !== this.windowVersions.get(id)) return;
     const newest = page?.messages[0];
-    const newer = (m: StoredMessage) => !newest || m.sortTs > newest.serverTs || (m.sortTs === newest.serverTs && m.id > newest.id);
+    const newer = (m: StoredMessage) => ["SENDING", "FAILED", "HELD"].includes(m.status) || !newest || m.sortTs > newest.serverTs || (m.sortTs === newest.serverTs && m.id > newest.id);
     const items = page ? [...received.filter((m): m is StoredMessage => !!m), ...cached.filter(newer)] : cached;
     this.fromSnapshot.delete(id);
     this.viewReady = true;
@@ -1215,7 +1202,6 @@ export class Engine implements EngineContext {
     });
     void this.syncCalls(id);
   }
-
   /** Wait for a fresh page before deciding a snapshot's saved anchor needs a distant history window. */
   async restoreReadingAnchor(id: string, messageId: string): Promise<void> {
     await this.firstPage(id);
@@ -1229,7 +1215,6 @@ export class Engine implements EngineContext {
     }
     await this.loadAround(id, messageId);
   }
-
   /** A distant result replaces the active window; unrelated cached history never fills its middle with a gap. */
   async loadAround(id: string, messageId: string): Promise<void> {
     const version = (this.windowVersions.get(id) ?? 0) + 1;
@@ -1240,14 +1225,13 @@ export class Engine implements EngineContext {
     const messages = await Promise.all(page.messages.map((m) => this.store.message(m.id)));
     if (version !== this.windowVersions.get(id)) return;
     const items = messages.filter((m): m is StoredMessage => !!m);
-    if (!items.some((m) => m.id === messageId)) throw new Error("That message is no longer available.");
+    if (!items.some((m) => m.id === messageId)) throw new Error(uiText("workspace.interface.that_message_is_no_longer_available_aeb42eb"));
     this.fromSnapshot.delete(id);
     this.set((s) => {
       const next = withMessages(s, id, items, page.more);
       return { ...next, messages: { ...next.messages, [id]: { ...next.messages[id]!, detached: true, historyReady: true } } };
     });
   }
-
   /** Explicitly returns from a search/older window to the server's newest contiguous page. */
   async loadLatest(id: string): Promise<void> {
     const version = (this.windowVersions.get(id) ?? 0) + 1;
@@ -1271,23 +1255,19 @@ export class Engine implements EngineContext {
       return { ...next, messages: { ...next.messages, [id]: { ...next.messages[id]!, detached: false, historyReady: true } } };
     });
   }
-
   setReadingLatest(id: string, latest: boolean): void {
     if (this.viewingId !== id || !this.viewReady) return;
     this.readingLatest = latest && !this.state.get().messages[id]?.detached;
     if (this.viewing() === id && !this.waitsForServer({ conversationId: id })) this.markReadSoon(id);
   }
-
   /** The conversation's calls from the server's record (catches up calls that ended while this browser was away). */
   syncCalls(conversationId: string): Promise<void> {
     return this.callLog.sync(conversationId);
   }
-
   setFocused(focused: boolean): void {
     this.focused = focused;
     if (focused && this.viewing()) this.markReadSoon(this.viewingId!);
   }
-
   loadOlder(id: string): Promise<void> {
     const version = this.windowVersions.get(id);
     const key = `${id}:${version ?? 0}`;
@@ -1297,7 +1277,6 @@ export class Engine implements EngineContext {
     this.olderLoads.set(key, request);
     return request;
   }
-
   private async loadOlderPage(id: string, version: number | undefined): Promise<void> {
     const loaded = this.state.get().messages[id];
     if (!loaded?.hasMore || loaded.items.length === 0) return;
@@ -1313,10 +1292,9 @@ export class Engine implements EngineContext {
       this.set((s) => withMessages(s, id, [...older, ...(s.messages[id]?.items ?? [])], page ? page.more : older.length === PAGE));
     } catch (e) {
       // Keep the cursor and retry control available after a transient failure.
-      if (version === this.windowVersions.get(id)) this.notice("error", e instanceof ApiError ? e.message : "Couldn't load earlier messages. Try again.");
+      if (version === this.windowVersions.get(id)) this.notice("error", e instanceof ApiError ? e.message : uiText("workspace.interface.couldn_t_load_earlier_messages_try_again_69b7e2e"));
     }
   }
-
   /** Clears unread on this device and, where the phone would, tells the others with an encrypted read receipt. */
   async markRead(id: string): Promise<void> {
     let l = await this.local(id);
@@ -1340,7 +1318,6 @@ export class Engine implements EngineContext {
     if (receipts) return this.enqueueControl(id, { type: "read", upTo });
     await this.syncReadToOwnDevices(id, upTo);
   }
-
   /**
    * "Read up to here" for this person's other devices only (API 0.43.0, audience "self"), encrypted like everything
    * else, so reading a channel here clears it in their other browsers and nobody else learns what was read. Best
@@ -1354,10 +1331,8 @@ export class Engine implements EngineContext {
       this.lastReadSent.delete(conversationId);
     }
   }
-
   /** Marks a conversation read or unread on this browser only: no read receipt is sent either way (as on the phone). */
   // ───────────────────────── sending ─────────────────────────
-
   async membersOf(conversationId: string): Promise<Member[]> {
     const cached = this.members.get(conversationId);
     if (cached) return cached;
@@ -1367,7 +1342,6 @@ export class Engine implements EngineContext {
     this.members.set(conversationId, list);
     return list;
   }
-
   /** Shows the message at once ("sending") and queues it; the outbox makes it authoritative. Returns its id. */
   /**
    * Sends a message (sync/compose.ts). [rich]: a contact card, location or animated emoji, with its readable form in
@@ -1376,7 +1350,15 @@ export class Engine implements EngineContext {
   sendText(
     conversationId: string,
     text: string,
-    opts: { replyTo?: string; threadRoot?: string; attachments?: Payload["attachments"]; presetId?: string; rich?: RichContent | null; forwarded?: boolean; roleMentions?: string[] } = {},
+    opts: {
+      replyTo?: string;
+      threadRoot?: string;
+      attachments?: Payload["attachments"];
+      presetId?: string;
+      rich?: RichContent | null;
+      forwarded?: boolean;
+      roleMentions?: string[];
+    } = {},
   ): Promise<string> {
     // A reply to a message drawn from the snapshot goes once the server's page has it (a new message never waits).
     const target = opts.replyTo && this.fromSnapshot.has(conversationId) ? this.store.message(opts.replyTo) : null;
@@ -1392,36 +1374,28 @@ export class Engine implements EngineContext {
     );
     return sent;
   }
-
   retry(messageId: string): Promise<void> {
     return this.compose.retry(messageId);
   }
-
   react(m: StoredMessage, emoji: string): Promise<void> {
     return this.onLive(m, (x) => this.compose.react(x, emoji));
   }
-
   edit(m: StoredMessage, text: string): Promise<void> {
     return this.onLive(m, (x) => this.compose.edit(x, text));
   }
-
   /** [asModerator]: someone else's message, by a moderator of a community channel (community parity A1). */
   deleteForEveryone(m: StoredMessage, asModerator = false): Promise<void> {
     return this.onLive(m, (x) => this.compose.deleteForEveryone(x, asModerator));
   }
-
   vote(m: StoredMessage, choices: string[], anonymous?: boolean): Promise<void> {
     return this.onLive(m, (x) => this.compose.vote(x, choices, anonymous));
   }
-
   closePoll(m: StoredMessage): Promise<void> {
     return this.onLive(m, (x) => this.compose.closePoll(x));
   }
-
   setPinned(m: StoredMessage, pinned: boolean, asModerator = false): Promise<void> {
     return this.onLive(m, (x) => this.compose.setPinned(x, pinned, asModerator));
   }
-
   setTyping(conversationId: string, on: boolean): void {
     if (this.opts.prefs?.().typing === false) return;
     const now = Date.now();
@@ -1429,11 +1403,9 @@ export class Engine implements EngineContext {
     this.lastTypingAt = on ? now : 0;
     this.realtime.send({ t: "typing", c: conversationId, on });
   }
-
   private enqueueControl(conversationId: string, payload: Payload): Promise<void> {
     return this.compose.enqueueControl(conversationId, payload);
   }
-
   /**
    * Seals and posts a control message at once, without the outbox: it is never written to storage, so a call's media
    * key stays in memory. One retry for a passing network or server problem; after that the call fails visibly.
@@ -1444,17 +1416,25 @@ export class Engine implements EngineContext {
       await sealAndPost(this, o);
     } catch (e) {
       if (!(e instanceof ApiError && e.isTransient)) throw e;
-      await new Promise((r) => setTimeout(r, 1_000));
+      await new Promise((r) => setTimeout(r, 1000));
       await sealAndPost(this, o, true);
     }
   }
-
   private async describeConversation(id: string): Promise<CallTarget> {
     const c = await this.ensureConversation(id).catch(() => null);
-    if (!c) return { title: "Call", isGroup: false, colorIndex: 0, voiceRoom: false, canModerate: false };
+    if (!c)
+      return {
+        get title() {
+          return uiText("workspace.interface.call_d6e645b");
+        },
+        isGroup: false,
+        colorIndex: 0,
+        voiceRoom: false,
+        canModerate: false,
+      };
     if (c.type !== "DM")
       return {
-        title: c.type === "CHANNEL" ? `#${c.name ?? "channel"}` : (c.name ?? "Group"),
+        title: c.type === "CHANNEL" ? `#${c.name ?? uiText("messaging.interface.channel_69e3656")}` : (c.name ?? uiText("messaging.interface.group_34ca0e7")),
         isGroup: true,
         colorIndex: 0,
         voiceRoom: c.voice,
@@ -1463,15 +1443,13 @@ export class Engine implements EngineContext {
         listenOnly: c.voice && c.canSpeak === false,
       };
     const peer = c.members?.find((m) => m.id !== this.device.userId);
-    const title = (peer && (this.state.get().users[peer.id]?.displayName ?? peer.displayName)) || "Call";
+    const title = (peer && (this.state.get().users[peer.id]?.displayName ?? peer.displayName)) || uiText("workspace.interface.call_d6e645b");
     return { title, isGroup: false, colorIndex: peer?.avatarColor ?? 0, voiceRoom: false, canModerate: false };
   }
-
   private async queue(o: OutboxItem): Promise<void> {
     await this.store.putOutbox(o);
     this.outbox.kick();
   }
-
   /** The person accepts [userId]'s changed identity key (the one they were shown): resumes sending and opens held messages. */
   async acceptIdentity(userId: string): Promise<void> {
     const pin = await this.store.pin(userId);
@@ -1491,24 +1469,19 @@ export class Engine implements EngineContext {
     await this.refreshIdentityAlerts();
     this.outbox.kick();
   }
-
   /** Text search over the messages this browser holds (the server can't search encrypted content). */
   searchFiles(query: string, limit = 50): ReturnType<LocalStore["searchFiles"]> {
     return this.store.searchFiles(query, limit);
   }
-
   searchPinned(query: string, limit = 50): Promise<StoredMessage[]> {
     return this.store.searchPinned(query, limit);
   }
-
   pinnedMessages(conversationId: string): Promise<StoredMessage[]> {
     return this.store.pinnedMessages(conversationId);
   }
-
   recentSent(limit: number): Promise<StoredMessage[]> {
     return this.store.recentSent(limit);
   }
-
   /** Messages on this browser matching [query]: words and filters (from:, has:, before:, after:; src/sync/searchQuery.ts). */
   async searchMessages(query: string, conversationId?: string): Promise<StoredMessage[]> {
     const q = parseSearchQuery(query);
@@ -1526,7 +1499,6 @@ export class Engine implements EngineContext {
     };
     return this.store.findMessages((m) => matchesSearch(m, q, sender), conversationId ? 100 : 50, conversationId);
   }
-
   /** Recent root badges use server counts even when their replies aren't in the main timeline window. */
   refreshThreadCounts(conversationId: string): Promise<void> {
     if (!this.state.get().server?.features.includes("message-collections")) return Promise.resolve();
@@ -1549,7 +1521,6 @@ export class Engine implements EngineContext {
     this.threadCountLoads.set(conversationId, request);
     return request;
   }
-
   /** A separate collection cursor never changes the main timeline or acknowledges messages as read. */
   async messageCollection(conversationId: string, kind: CollectionKind, cursor: CollectionCursor | null = null, root?: string): Promise<MessageCollectionPage> {
     const q = new URLSearchParams({ kind, limit: "50" });
@@ -1560,7 +1531,7 @@ export class Engine implements EngineContext {
     if (root) q.set("root", root);
     const page = await this.api.json("GET", `/v2/conversations/${encodeURIComponent(conversationId)}/message-collections?${q}`, zMessageCollection);
     const events = [...page.context, ...page.messages, ...page.changes];
-    if (events.some((e) => e.conversationId !== conversationId)) throw new Error("This collection contains a message from another conversation.");
+    if (events.some((e) => e.conversationId !== conversationId)) throw new Error(uiText("workspace.interface.this_collection_contains_a_message_from_another_conversation_fd364c4"));
     for (const e of [...page.context, ...page.messages].reverse()) await this.receiver.ingest(e, 0, { history: true });
     for (const e of page.changes) await this.receiver.ingest(e, 0, { history: true });
     const read = async (events: typeof page.messages) => (await Promise.all(events.map((e) => this.store.message(e.id)))).filter((m): m is StoredMessage => !!m);
@@ -1568,23 +1539,19 @@ export class Engine implements EngineContext {
     void Promise.all([...new Set([...messages, ...context].map((m) => m.senderUserId))].map((id) => this.ensureUser(id)));
     return { messages: messages.sort((a, b) => a.sortTs - b.sortTs || a.id.localeCompare(b.id)), context, threads: page.threads, more: page.more, nextCursor: page.nextCursor };
   }
-
   /** Up to [limit] newest cached messages; older servers retain this explicitly limited fallback. */
   conversationMessages(conversationId: string, limit = 1000): Promise<StoredMessage[]> {
     return this.store.latestMessages(conversationId, limit);
   }
-
   /** The identity key pinned for someone, if any (a different key from the server pauses messages until reviewed). */
   async pinnedIdentity(userId: string): Promise<PinnedIdentity | null> {
     return this.store.pin(userId);
   }
 }
-
 /** Without a media implementation (tests that don't need calls), calls can't start. */
 const unavailableMedia: MediaFactory = () => {
-  throw new Error("call media isn't available here");
+  throw new Error(uiText("workspace.interface.call_media_isn_t_available_here_5caf3b7"));
 };
-
 function toUser(m: Member, prev?: UserLite): UserLite {
   return {
     id: m.id,

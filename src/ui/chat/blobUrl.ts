@@ -1,13 +1,26 @@
+import { text as uiText } from "../../i18n";
 import { useEffect, useState } from "react";
 import { useEngine } from "../../application/orbit";
 import type { AttachmentRef } from "../../protocol/payload";
 import { openAttachment } from "../../sync/attachments";
-
 /** An attachment decrypted into an object URL while [enabled] (revoked when no longer shown). */
-export function useBlobUrl(r: AttachmentRef, enabled: boolean): { url: string | null; error: string | null; loading: boolean; retry: () => void } {
+export function useBlobUrl(
+  r: AttachmentRef,
+  enabled: boolean,
+): {
+  url: string | null;
+  error: string | null;
+  loading: boolean;
+  retry: () => void;
+} {
   const engine = useEngine();
   const [attempt, setAttempt] = useState(0);
-  const [state, setState] = useState<{ id: string; url: string | null; error: string | null; loading: boolean }>({ id: r.id, url: null, error: null, loading: enabled });
+  const [state, setState] = useState<{
+    id: string;
+    url: string | null;
+    error: string | null;
+    loading: boolean;
+  }>({ id: r.id, url: null, error: null, loading: enabled });
   useEffect(() => {
     if (!enabled) return;
     let url: string | null = null;
@@ -19,7 +32,7 @@ export function useBlobUrl(r: AttachmentRef, enabled: boolean): { url: string | 
         url = URL.createObjectURL(blob);
         setState({ id: r.id, url, error: null, loading: false });
       })
-      .catch((e: unknown) => alive && setState({ id: r.id, url: null, error: e instanceof Error ? e.message : "Couldn't open this file.", loading: false }));
+      .catch((e: unknown) => alive && setState({ id: r.id, url: null, error: e instanceof Error ? e.message : uiText("messaging.interface.couldn_t_open_this_file_5ede4a7"), loading: false }));
     return () => {
       alive = false;
       if (url) URL.revokeObjectURL(url);

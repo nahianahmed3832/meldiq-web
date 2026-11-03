@@ -1,3 +1,8 @@
+import { formatUiNumber } from "../../i18n/format";
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
+import { Localized } from "../../i18n/Localized";
+import { useT as useLocalization } from "../../i18n";
 import { usePrefs } from "../../application/prefs";
 import { isHighlighted, unreadLabel, unreadMarker } from "../unread";
 import { UnreadBadge } from "../components/UnreadBadge";
@@ -39,20 +44,50 @@ import { CategoryLevelDialog, HiddenChannelsDialog } from "./NotifyDialogs";
 import { panelChannels, categoriesOf, nextMuteEnd } from "./panelData";
 import { PermissionsDialog } from "./PermissionsDialog";
 import type { CommunityPermissions } from "./useCommunityPermissions";
-
 type PanelDialog =
-  | { k: "create"; categoryId: string | null }
-  | { k: "edit"; channel: Conversation }
-  | { k: "delete"; channel: Conversation }
-  | { k: "move"; channel: Conversation }
-  | { k: "mute"; ids: string[]; title: string }
-  | { k: "category"; category: Category | null }
-  | { k: "deleteCategory"; category: Category }
-  | { k: "categoryLevel"; category: Category }
-  | { k: "permissions"; type: "category" | "channel"; id: string; title: string }
-  | { k: "hidden" }
+  | {
+      k: "create";
+      categoryId: string | null;
+    }
+  | {
+      k: "edit";
+      channel: Conversation;
+    }
+  | {
+      k: "delete";
+      channel: Conversation;
+    }
+  | {
+      k: "move";
+      channel: Conversation;
+    }
+  | {
+      k: "mute";
+      ids: string[];
+      title: string;
+    }
+  | {
+      k: "category";
+      category: Category | null;
+    }
+  | {
+      k: "deleteCategory";
+      category: Category;
+    }
+  | {
+      k: "categoryLevel";
+      category: Category;
+    }
+  | {
+      k: "permissions";
+      type: "category" | "channel";
+      id: string;
+      title: string;
+    }
+  | {
+      k: "hidden";
+    }
   | null;
-
 /**
  * A community's channels on Home (android CommunityHomeScreen's panel, docs/product/MELDIQ_COMMUNITY_CHAT_SPEC.md §2):
  * categories in the community's order, collapsed state synced to every device, channels you haven't joined dimmed until
@@ -60,6 +95,8 @@ type PanelDialog =
  * change; menus only offer what the person's permissions allow.
  */
 export function CommunityPanel({ orgId, unreadOnly, hideMuted, perms }: { orgId: string; unreadOnly: boolean; hideMuted: boolean; perms: CommunityPermissions }) {
+  useLocaleRender();
+  const l10n = useLocalization();
   const engine = useEngine();
   const route = useRoute();
   const features = useOrbit((s) => s.server?.features ?? [], shallowEqual);
@@ -74,11 +111,9 @@ export function CommunityPanel({ orgId, unreadOnly, hideMuted, perms }: { orgId:
   const muteEnd = useOrbit((s) => nextMuteEnd(s, orgId));
   const [dialog, setDialog] = useState<PanelDialog>(null);
   useTickAt(muteEnd);
-
   useEffect(() => {
     void engine.community.refresh(orgId);
   }, [engine, orgId]);
-
   const keepEmpty = perms.canCreateChannels || perms.canManageChannels;
   const sections = useMemo(
     () =>
@@ -95,13 +130,11 @@ export function CommunityPanel({ orgId, unreadOnly, hideMuted, perms }: { orgId:
   );
   const allSections = useMemo(() => panelSections(channels, categories, { collapsed: new Set(), keepEmpty: false }), [channels, categories]);
   const hiddenCount = channels.filter((c) => hiddenList.includes(c.id) && !(c.mentions > 0 || c.id === route.conversationId)).length;
-
   const convOf = (id: string): Conversation | undefined => engine.state.get().conversations[id] ?? engine.state.get().communities[orgId]?.channels.find((c) => c.id === id);
   const siblingsOf = (categoryId: string | null) => allSections.find((s) => s.categoryId === categoryId)?.channels.map((c) => c.id) ?? [];
   const keepAllCategories = panelSections(channels, categories, { collapsed: new Set(), keepEmpty: true })
     .filter((s) => s.categoryId)
     .map((s) => s.categoryId as string);
-
   const toggle = (key: string, collapsed: boolean) => void engine.nav.change(orgId, { op: "collapse", key, collapsed });
   const setMuted = (ids: string[], mute: boolean) => {
     for (const id of ids) {
@@ -118,7 +151,6 @@ export function CommunityPanel({ orgId, unreadOnly, hideMuted, perms }: { orgId:
   };
   const timed = features.includes("channel-preferences");
   const builder = usePrefs().builderMode;
-
   const onChannel = (ch: PanelChannel, item: ChannelMenuItem, sectionIds: string[]) => {
     const conv = convOf(ch.id);
     switch (item) {
@@ -136,10 +168,10 @@ export function CommunityPanel({ orgId, unreadOnly, hideMuted, perms }: { orgId:
         return void engine.nav.change(orgId, { op: "hide", conversationId: ch.id, hidden: item === "hide" });
       case "copyName":
         void navigator.clipboard?.writeText(ch.name).catch(() => undefined);
-        return engine.notice("info", "Channel name copied.");
+        return engine.notice("info", uiText("organization.interface.channel_name_copied_406931f"));
       case "copyId":
         void navigator.clipboard?.writeText(ch.id).catch(() => undefined);
-        return engine.notice("info", "Channel ID copied.");
+        return engine.notice("info", uiText("organization.interface.channel_id_copied_b4a1ec4"));
       case "edit":
         return conv && setDialog({ k: "edit", channel: conv });
       case "permissions":
@@ -149,16 +181,17 @@ export function CommunityPanel({ orgId, unreadOnly, hideMuted, perms }: { orgId:
       case "moveUp":
       case "moveDown":
         return void saveLayout(engine, orgId, { channels: layoutPositions(ch.categoryId, moved(sectionIds, ch.id, item === "moveUp" ? -1 : 1)) }).catch((e: unknown) =>
-          engine.notice("error", e instanceof Error ? e.message : "Couldn't move the channel."),
+          engine.notice("error", e instanceof Error ? e.message : uiText("organization.interface.couldn_t_move_the_channel_59d766c")),
         );
       case "archive":
       case "restore":
-        return void updateChannel(engine, ch.id, { archived: item === "archive" }).catch((e: unknown) => engine.notice("error", e instanceof Error ? e.message : "Couldn't change the channel."));
+        return void updateChannel(engine, ch.id, { archived: item === "archive" }).catch((e: unknown) =>
+          engine.notice("error", e instanceof Error ? e.message : uiText("organization.interface.couldn_t_change_the_channel_1ea81a5")),
+        );
       case "delete":
         return conv && setDialog({ k: "delete", channel: conv });
     }
   };
-
   const onCategory = (s: PanelSection, item: CategoryMenuItem) => {
     const category = categories.find((c) => c.id === s.categoryId) ?? null;
     switch (item) {
@@ -170,7 +203,9 @@ export function CommunityPanel({ orgId, unreadOnly, hideMuted, perms }: { orgId:
       case "collapseAll":
         return sections.filter((x) => !x.collapsed).forEach((x) => toggle(x.key, true));
       case "mute":
-        return timed ? setDialog({ k: "mute", ids: muteTargets(s.channels, true), title: s.title ?? "channels" }) : setMuted(muteTargets(s.channels, true), true);
+        return timed
+          ? setDialog({ k: "mute", ids: muteTargets(s.channels, true), title: s.title ?? uiText("organization.interface.channels_61ffa9c") })
+          : setMuted(muteTargets(s.channels, true), true);
       case "unmute":
         return setMuted(muteTargets(s.channels, false), false);
       case "notify":
@@ -186,21 +221,20 @@ export function CommunityPanel({ orgId, unreadOnly, hideMuted, perms }: { orgId:
         return (
           category &&
           void saveLayout(engine, orgId, { categories: moved(keepAllCategories, category.id, item === "moveUp" ? -1 : 1) }).catch((e: unknown) =>
-            engine.notice("error", e instanceof Error ? e.message : "Couldn't move the category."),
+            engine.notice("error", e instanceof Error ? e.message : uiText("organization.interface.couldn_t_move_the_category_daf74b6")),
           )
         );
       case "delete":
         return category && setDialog({ k: "deleteCategory", category });
     }
   };
-
   // Drag channels and categories to rearrange them (2026-10-28), for the people who may: a channel before or after
   // another (in that one's category), or onto a category; a category before or after another.
   const dragBox = useRef<HTMLDivElement>(null);
   useDragSort(
     dragBox,
     (drag, target, at) => {
-      const fail = (e: unknown) => engine.notice("error", e instanceof Error ? e.message : "Couldn't move it.");
+      const fail = (e: unknown) => engine.notice("error", e instanceof Error ? e.message : uiText("organization.interface.couldn_t_move_it_da216e3"));
       if (drag.kind === "category") {
         if (target.kind !== "category" || at === "into") return;
         const rest = keepAllCategories.filter((id) => id !== drag.id);
@@ -222,11 +256,14 @@ export function CommunityPanel({ orgId, unreadOnly, hideMuted, perms }: { orgId:
     },
     perms.canManageChannels,
   );
-
   if (!engine.community.available) return null;
   return (
     <div ref={dragBox} className="channel-panel">
-      {sections.length === 0 && <div className="side-quiet">No channels here yet.</div>}
+      {sections.length === 0 && (
+        <div className="side-quiet">
+          <Localized k="organization.interface.no_channels_here_yet_d8a9250" />
+        </div>
+      )}
       {sections.map((s) => {
         const category = categories.find((c) => c.id === s.categoryId);
         const catIndex = s.categoryId ? keepAllCategories.indexOf(s.categoryId) : -1;
@@ -248,7 +285,7 @@ export function CommunityPanel({ orgId, unreadOnly, hideMuted, perms }: { orgId:
             key={s.key}
             draggable={perms.canManageChannels}
             section={s}
-            title={s.title ?? "Channels"}
+            title={s.title ?? l10n("organization.channels")}
             menu={items}
             canAdd={items.includes("newChannel")}
             onToggle={() => toggle(s.key, !s.collapsed)}
@@ -287,7 +324,9 @@ export function CommunityPanel({ orgId, unreadOnly, hideMuted, perms }: { orgId:
           <span className="glyph">
             <Eye size={16} />
           </span>
-          <span className="grow">{hiddenCount > 0 ? `${hiddenCount} hidden · Browse channels` : "Browse channels"}</span>
+          <span className="grow">
+            {hiddenCount > 0 ? uiText("organization.interface.value0_hidden_browse_channels_116521a", { value0: hiddenCount }) : uiText("organization.interface.browse_channels_79d490f")}
+          </span>
         </button>
       )}
 
@@ -300,11 +339,12 @@ export function CommunityPanel({ orgId, unreadOnly, hideMuted, perms }: { orgId:
       {dialog?.k === "deleteCategory" && <DeleteCategoryDialog orgId={orgId} category={dialog.category} onClose={() => setDialog(null)} />}
       {dialog?.k === "categoryLevel" && <CategoryLevelDialog orgId={orgId} categoryId={dialog.category.id} name={dialog.category.name} onClose={() => setDialog(null)} />}
       {dialog?.k === "permissions" && <PermissionsDialog orgId={orgId} target={{ type: dialog.type, id: dialog.id }} title={dialog.title} onClose={() => setDialog(null)} />}
-      {dialog?.k === "hidden" && <HiddenChannelsDialog orgId={orgId} sections={allSections.map((s) => ({ title: s.title ?? "Channels", channels: s.channels }))} onClose={() => setDialog(null)} />}
+      {dialog?.k === "hidden" && (
+        <HiddenChannelsDialog orgId={orgId} sections={allSections.map((s) => ({ title: s.title ?? uiText("organization.channels"), channels: s.channels }))} onClose={() => setDialog(null)} />
+      )}
     </div>
   );
 }
-
 function CategorySection(props: {
   draggable: boolean;
   section: PanelSection;
@@ -316,6 +356,7 @@ function CategorySection(props: {
   onPick: (item: CategoryMenuItem) => void;
   children: React.ReactNode;
 }) {
+  useLocaleRender();
   const { section: s, title, menu, canAdd, onToggle, onAdd, onPick, children, draggable } = props;
   // A category can be dragged among categories, and channels dropped onto it (the top "no category" part can't move).
   const dragProps = draggable && s.categoryId ? { "data-drag": s.categoryId, "data-drag-kind": "category", "data-drag-into": "channel" } : {};
@@ -332,17 +373,22 @@ function CategorySection(props: {
       <div className="side-section-row" onContextMenu={open} {...dragProps}>
         <button className="side-section-head" aria-expanded={!s.collapsed} onClick={onToggle}>
           <ChevronDown size={14} className="chev" />
-          <span className="grow ellipsis" style={{ textAlign: "left" }}>
+          <span className="grow ellipsis" style={{ textAlign: "start" }}>
             {title}
           </span>
-          {s.collapsed && s.unreadChannels > 0 ? <span className="count">{s.unreadChannels}</span> : null}
+          {s.collapsed && s.unreadChannels > 0 ? <span className="count">{formatUiNumber(s.unreadChannels)}</span> : null}
         </button>
         {canAdd && (
-          <button className="row-more" aria-label={`Create a channel in ${title}`} title="Create channel" onClick={onAdd}>
+          <button
+            className="row-more"
+            aria-label={uiText("organization.interface.create_a_channel_in_value0_897faad", { value0: title })}
+            title={uiText("organization.interface.create_channel_f0f8831")}
+            onClick={onAdd}
+          >
             <Plus size={15} />
           </button>
         )}
-        <button className="row-more" aria-label={`More for ${title}`} aria-haspopup="menu" aria-expanded={!!m.anchor} onClick={open}>
+        <button className="row-more" aria-label={uiText("organization.interface.more_for_value0_87b81e8", { value0: title })} aria-haspopup="menu" aria-expanded={!!m.anchor} onClick={open}>
           <MoreHorizontal size={15} />
         </button>
       </div>
@@ -351,8 +397,19 @@ function CategorySection(props: {
     </section>
   );
 }
-
-function entriesOf<T extends string>(items: T[], labels: Record<T, { label: string; icon: React.ReactNode; danger?: boolean }>, onPick: (item: T) => void, separatorsBefore: T[]): MenuEntry[] {
+function entriesOf<T extends string>(
+  items: T[],
+  labels: Record<
+    T,
+    {
+      label: string;
+      icon: React.ReactNode;
+      danger?: boolean;
+    }
+  >,
+  onPick: (item: T) => void,
+  separatorsBefore: T[],
+): MenuEntry[] {
   const out: MenuEntry[] = [];
   items.forEach((item, i) => {
     if (i > 0 && separatorsBefore.includes(item)) out.push("separator");
@@ -361,7 +418,6 @@ function entriesOf<T extends string>(items: T[], labels: Record<T, { label: stri
   });
   return out;
 }
-
 const ChannelItem = memo(function ChannelItem({
   orgId,
   ch,
@@ -401,13 +457,13 @@ const ChannelItem = memo(function ChannelItem({
       await joinCommunityChannel(engine, orgId, ch.id);
       navigate({ section: "home", conversationId: ch.id });
     } catch (err) {
-      engine.notice("error", err instanceof Error ? err.message : "Couldn't open that channel.");
+      engine.notice("error", err instanceof Error ? err.message : uiText("organization.interface.couldn_t_open_that_channel_943d8de"));
     } finally {
       setJoining(false);
     }
   };
   const marker = unreadMarker(ch.unread, ch.mentions, ch.muted);
-  const label = `${ch.voice ? "Voice channel" : "Channel"} ${ch.name}${ch.joined ? "" : ", not joined yet"}${unreadLabel(ch.unread, ch.mentions, ch.muted, { unread: (n) => `${n} unread`, mentions: (n) => `${n} mentions`, muted: "muted" })}`;
+  const label = `${ch.voice ? uiText("organization.interface.voice_channel_5290966") : uiText("settings.interface.channel_ce4683e")} ${ch.name}${ch.joined ? "" : uiText("organization.interface.not_joined_yet_23e5ba2")}${unreadLabel(ch.unread, ch.mentions, ch.muted, { unread: (n) => uiText("organization.interface.value0_unread_f307d99", { value0: n }), mentions: (n) => uiText("organization.interface.value0_mentions_939b7f1", { value0: n }), muted: "muted" })}`;
   return (
     <div className="side-row" {...(draggable ? { "data-drag": ch.id, "data-drag-kind": "channel", "data-drag-group": ch.categoryId ?? "" } : {})}>
       <a
@@ -427,18 +483,18 @@ const ChannelItem = memo(function ChannelItem({
         {ch.muted && <BellOff size={12} className="faint" aria-hidden="true" />}
         <UnreadBadge marker={marker} />
       </a>
-      <button className="row-more" aria-label={`More for ${ch.name}`} aria-haspopup="menu" onClick={open}>
+      <button className="row-more" aria-label={uiText("organization.interface.more_for_value0_87b81e8", { value0: ch.name })} aria-haspopup="menu" onClick={open}>
         <MoreHorizontal size={16} />
       </button>
       {m.anchor && (
         <Menu anchor={m.anchor} point={m.point} align="end" label={ch.name} onClose={m.close} entries={entriesOf(menu, CHANNEL_ITEM, onPick, ["edit", "moveTo", "archive", "restore", "delete"])} />
       )}
       {people.length > 0 && (
-        <div className="voice-channel-people" aria-label={`${people.length} in ${ch.name}`}>
+        <div className="voice-channel-people" aria-label={uiText("organization.interface.value0_in_value1_8e5a603", { value0: people.length, value1: ch.name })}>
           {people.slice(0, 8).map((u) => (
             <span key={u} className="voice-person">
-              <UserAvatar userId={u} name={users[u]?.displayName ?? "Someone"} colorIndex={users[u]?.avatarColor ?? 0} photoRev={users[u]?.photoRev} size={18} decorative />
-              <span className="ellipsis">{users[u]?.displayName ?? "Someone"}</span>
+              <UserAvatar userId={u} name={users[u]?.displayName ?? uiText("messaging.react_someone")} colorIndex={users[u]?.avatarColor ?? 0} photoRev={users[u]?.photoRev} size={18} decorative />
+              <span className="ellipsis">{users[u]?.displayName ?? t("messaging.react_someone")}</span>
               {sharing.includes(u) && (
                 <span className="voice-sharing">
                   <MonitorUp size={11} aria-hidden="true" /> {t("live_sharing_short")}

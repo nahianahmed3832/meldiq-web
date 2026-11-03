@@ -1,3 +1,8 @@
+import { formatUiNumber } from "../../i18n/format";
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
+import { Localized } from "../../i18n/Localized";
+import { useT as useLocalization } from "../../i18n";
 import { CommunityOwnerBadge } from "../components/CommunityOwnerBadge";
 import { Bell, BellOff, Hash, Lock, MessageSquare, Search, Shield, ShieldCheck, User, UserPlus, UsersRound } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -22,7 +27,6 @@ import { PanelHead } from "./PanelHead";
 import { usePinned } from "./PinnedPanel";
 import { SecuritySheet } from "./SecuritySheet";
 import { ChannelDetails } from "./ChannelDetails";
-
 /** A conversation's members, loaded again when someone joins or leaves (here or on another device). */
 export function useMembers(conversationId: string, memberCount: number | undefined) {
   const engine = useEngine();
@@ -34,7 +38,7 @@ export function useMembers(conversationId: string, memberCount: number | undefin
         setMembers(list);
         setError(null);
       })
-      .catch((e: unknown) => setError(e instanceof Error ? e.message : "Couldn't load members"));
+      .catch((e: unknown) => setError(e instanceof Error ? e.message : uiText("messaging.interface.couldn_t_load_members_cda1fcf")));
   }, [engine, conversationId]);
   useEffect(() => {
     setMembers(null);
@@ -42,7 +46,6 @@ export function useMembers(conversationId: string, memberCount: number | undefin
   }, [reload, memberCount]);
   return { members, error, reload };
 }
-
 /** Photos, videos, files and links in the messages this browser has loaded. */
 export function useShared(conversationId: string) {
   const loaded = useOrbit((s) => s.messages[conversationId]?.items);
@@ -50,13 +53,12 @@ export function useShared(conversationId: string) {
   const links = useMemo(() => linksOf(loaded ?? []), [loaded]);
   return { gallery, links };
 }
-
 export function useSenderName() {
   const users = useOrbit((s) => s.users);
-  return (i: { outgoing: boolean; senderUserId: string }) => (i.outgoing ? "You" : (users[i.senderUserId]?.displayName ?? "Unknown"));
+  return (i: { outgoing: boolean; senderUserId: string }) => (i.outgoing ? uiText("workspace.nav_you") : (users[i.senderUserId]?.displayName ?? uiText("messaging.interface.unknown_b764cdc")));
 }
-
 export function DetailsPanel({ conversationId, onClose }: { conversationId: string; onClose: () => void }) {
+  useLocaleRender();
   const c = useOrbit((s) => s.conversations[conversationId]);
   const me = useOrbit((s) => s.me);
   if (!c || !me) return null;
@@ -64,12 +66,13 @@ export function DetailsPanel({ conversationId, onClose }: { conversationId: stri
   // Keyed by conversation: another conversation's details start on their own first tab, with nothing carried over.
   return c.type === "CHANNEL" ? <ChannelDetails key={c.id} c={c} onClose={onClose} /> : <ChatDetails key={c.id} c={c} me={me.userId} onClose={onClose} />;
 }
-
 /**
  * A direct message's or group's details (batch B14, android DmDetails): the photo and name, round actions, New group
  * with this person (DMs), tabs backed by what the conversation holds, then its settings.
  */
 function ChatDetails({ c, me, onClose }: { c: Conversation; me: string; onClose: () => void }) {
+  useLocaleRender();
+  const l10n = useLocalization();
   const engine = useEngine();
   const route = useRoute();
   const users = useOrbit((s) => s.users);
@@ -82,7 +85,6 @@ function ChatDetails({ c, me, onClose }: { c: Conversation; me: string; onClose:
   const tabs = detailsTabs(c.type);
   const [tab, setTab] = useState<DetailsTab>(tabs[0]);
   const [sheet, setSheet] = useState<"security" | "add" | "newGroup" | null>(null);
-
   const title = conversationTitle(c, me, users);
   const peer = c.type === "DM" ? dmPeer(c, me) : null;
   const peerMember = peer ? members?.find((m) => m.id === peer.id) : undefined;
@@ -90,14 +92,19 @@ function ChatDetails({ c, me, onClose }: { c: Conversation; me: string; onClose:
   const toggleMute = () =>
     void (async () => {
       for (const op of muteToggle(nav, c.id, c.categoryId)) await engine.arrange(c.id, op);
-    })().catch((e: unknown) => engine.notice("error", e instanceof Error ? e.message : "Couldn't change notifications"));
-
+    })().catch((e: unknown) => engine.notice("error", e instanceof Error ? e.message : uiText("organization.interface.couldn_t_change_notifications_9c82a42")));
   const actions: DetailsAction[] = [
-    { key: "search", label: "Search", icon: <Search size={20} />, onClick: () => navigate({ section: route.section, conversationId: c.id, panel: "search" }) },
-    { key: "mute", label: muted ? "Unmute" : "Mute", icon: muted ? <BellOff size={20} /> : <Bell size={20} />, onClick: toggleMute, active: muted },
-    ...(peer ? [{ key: "profile", label: "Profile", icon: <User size={20} />, onClick: () => openProfile(peer.id, peer.displayName) }] : []),
-    ...(c.type === "GROUP" && c.canManage ? [{ key: "add", label: "Add", icon: <UserPlus size={20} />, onClick: () => setSheet("add") }] : []),
-    { key: "security", label: "Security", icon: <Shield size={20} />, onClick: () => setSheet("security") },
+    { key: "search", label: l10n("common.actions.search"), icon: <Search size={20} />, onClick: () => navigate({ section: route.section, conversationId: c.id, panel: "search" }) },
+    {
+      key: "mute",
+      label: muted ? uiText("notifications.bell_unmute") : uiText("notifications.bell_mute"),
+      icon: muted ? <BellOff size={20} /> : <Bell size={20} />,
+      onClick: toggleMute,
+      active: muted,
+    },
+    ...(peer ? [{ key: "profile", label: l10n("settings.profile"), icon: <User size={20} />, onClick: () => openProfile(peer.id, peer.displayName) }] : []),
+    ...(c.type === "GROUP" && c.canManage ? [{ key: "add", label: l10n("common.actions.add"), icon: <UserPlus size={20} />, onClick: () => setSheet("add") }] : []),
+    { key: "security", label: l10n("settings.security"), icon: <Shield size={20} />, onClick: () => setSheet("security") },
   ];
   const avatar =
     c.type === "DM" && peer ? (
@@ -109,10 +116,9 @@ function ChatDetails({ c, me, onClose }: { c: Conversation; me: string; onClose:
   const presence = peerMember ? presenceWords(peerMember.presence, peerMember.online) : null;
   const counts = { members: c.memberCount, media: paged ? undefined : gallery.media.length, pins: paged ? undefined : pinned, links: links.length, files: paged ? undefined : gallery.files.length };
   const memberIds = new Set((members ?? []).map((m) => m.id));
-
   return (
-    <aside className="panel" aria-label="Details">
-      <PanelHead title="Details" sub={title} onClose={onClose} />
+    <aside className="panel" aria-label={uiText("organization.interface.details_45989de")}>
+      <PanelHead title={uiText("organization.interface.details_45989de")} sub={title} onClose={onClose} />
       <div className="panel-body scroll">
         <DetailsHero avatar={avatar} title={c.type === "DM" && peer ? <LookName userId={peer.id} name={title} withMarks /> : title} sub={sub} presence={presence} />
         <DetailsActions actions={actions} />
@@ -122,8 +128,12 @@ function ChatDetails({ c, me, onClose }: { c: Conversation; me: string; onClose:
               <UsersRound size={16} />
             </span>
             <span className="lines grow">
-              <span>New group</span>
-              <small>Start a group with {peerMember.displayName}</small>
+              <span>
+                <Localized k="messaging.interface.new_group_df796c6" />
+              </span>
+              <small>
+                <Localized k="messaging.interface.start_a_group_with_0996872" slots={[peerMember.displayName]} />
+              </small>
             </span>
           </button>
         )}
@@ -135,7 +145,7 @@ function ChatDetails({ c, me, onClose }: { c: Conversation; me: string; onClose:
           {tab === "pins" && <PinsTab conversationId={c.id} />}
           {tab === "links" && <LinksTab conversationId={c.id} links={links} nameOf={nameOf} />}
         </div>
-        <h3 className="details-settings-head">Settings</h3>
+        <h3 className="details-settings-head">{l10n("settings.title")}</h3>
         <AboutCards c={c} />
         <ConversationSettings conversationId={c.id} />
       </div>
@@ -145,41 +155,62 @@ function ChatDetails({ c, me, onClose }: { c: Conversation; me: string; onClose:
     </aside>
   );
 }
-
 /** The conversation's facts, and in a DM blocking; a group's photo. (The safety number card was retired, brief v4 §13.) */
 export function AboutCards({ c }: { c: Conversation }) {
+  useLocaleRender();
   const me = useOrbit((s) => s.me);
   const peer = me && c.type === "DM" ? dmPeer(c, me.userId) : null;
-
   return (
     <>
       <div className="panel-card">
         <dl style={{ margin: 0 }}>
           {c.type === "CHANNEL" && (
             <div>
-              <dt>Topic</dt>
-              <dd>{c.topic ?? <span className="faint">No topic</span>}</dd>
+              <dt>
+                <Localized k="messaging.interface.topic_7e61847" />
+              </dt>
+              <dd>
+                {c.topic ?? (
+                  <span className="faint">
+                    <Localized k="messaging.interface.no_topic_f547802" />
+                  </span>
+                )}
+              </dd>
             </div>
           )}
           <div>
-            <dt>Type</dt>
+            <dt>
+              <Localized k="messaging.interface.type_baaddf7" />
+            </dt>
             <dd className="row" style={{ gap: 6 }}>
               {c.type === "CHANNEL" ? c.kind === "PRIVATE" ? <Lock size={14} /> : <Hash size={14} /> : <MessageSquare size={14} />}
               {c.type === "CHANNEL"
-                ? `${c.kind === "PRIVATE" ? "Private" : c.kind === "ANNOUNCEMENT" ? "Announcement" : "Public"} channel${c.scopeName ? ` in ${c.scopeName}` : ""}`
+                ? uiText("messaging.interface.value0_channel_value1_9c32181", {
+                    value0:
+                      c.kind === "PRIVATE"
+                        ? uiText("workspace.interface.private_c63eb67")
+                        : c.kind === "ANNOUNCEMENT"
+                          ? uiText("organization.interface.announcement_028cd1c")
+                          : uiText("workspace.interface.public_591935b"),
+                    value1: c.scopeName ? uiText("workspace.interface.in_value0_e1b84d9", { value0: c.scopeName }) : "",
+                  })
                 : c.type === "GROUP"
-                  ? "Group"
-                  : "Direct message"}
+                  ? uiText("messaging.interface.group_34ca0e7")
+                  : uiText("messaging.interface.direct_message_cd3e160")}
             </dd>
           </div>
           <div>
-            <dt>Created</dt>
+            <dt>
+              <Localized k="messaging.interface.created_d70b9e2" />
+            </dt>
             <dd>{dayLabel(c.createdAt)}</dd>
           </div>
           <div>
-            <dt>Encryption</dt>
+            <dt>
+              <Localized k="messaging.interface.encryption_82f4e71" />
+            </dt>
             <dd className="row" style={{ gap: 6 }}>
-              <ShieldCheck size={14} /> Kept on Meldiq's servers, on all your devices
+              <Localized k="messaging.interface.kept_on_meldiq_s_servers_on_all_your_devices_4d65162" slots={[<ShieldCheck size={14} />]} />
             </dd>
           </div>
         </dl>
@@ -198,11 +229,10 @@ export function AboutCards({ c }: { c: Conversation }) {
         </div>
       )}
 
-      <GroupPhotoCard c={c} title={c.name ?? "Group"} />
+      <GroupPhotoCard c={c} title={c.name ?? uiText("messaging.interface.group_34ca0e7")} />
     </>
   );
 }
-
 interface MembersListProps {
   c: Conversation;
   members: Member[] | null;
@@ -211,16 +241,17 @@ interface MembersListProps {
   /** A channel adds people from its list; a group from the details' Add action. */
   showAdd: boolean;
 }
-
 export function MembersList({ c, members, error, onAdded, showAdd }: MembersListProps) {
+  useLocaleRender();
+  const l10n = useLocalization();
   const engine = useEngine();
   const me = useOrbit((s) => s.me?.userId);
   const memberIds = useMemo(() => new Set((members ?? []).map((m) => m.id)), [members]);
   return (
-    <div style={{ display: "grid", gap: 12 }} role="tabpanel" aria-label="Members">
+    <div style={{ display: "grid", gap: 12 }} role="tabpanel" aria-label={l10n("workspace.members")}>
       <div className="panel-section-title">
-        <span>Members</span>
-        <span>{c.memberCount}</span>
+        <span>{l10n("workspace.members")}</span>
+        <span>{formatUiNumber(c.memberCount)}</span>
       </div>
       {showAdd && <AddMembersButton c={c} memberIds={memberIds} onAdded={onAdded} />}
       {error && <div className="banner danger">{error}</div>}
@@ -231,23 +262,23 @@ export function MembersList({ c, members, error, onAdded, showAdd }: MembersList
           <div className="lines grow">
             <button className="ellipsis person-name" onClick={() => openProfile(m.id, m.displayName)}>
               {m.displayName}
-              {m.id === me ? " (you)" : ""}
+              {m.id === me ? uiText("messaging.interface.you_9d84cd4") : ""}
             </button>
             {c.orgId && m.orgRole === "OWNER" && <CommunityOwnerBadge />}
             <small className="ellipsis">
               @{m.username}
-              {m.role === "ADMIN" ? " · admin" : ""}
-              {m.orgRole && m.orgRole !== "MEMBER" ? ` · ${m.orgRole.toLowerCase()}` : ""}
+              {m.role === "ADMIN" ? uiText("messaging.interface.admin_fdc0e04") : ""}
+              {m.orgRole && m.orgRole !== "MEMBER" ? uiText("calls.interface.value0_9402340", { value0: m.orgRole.toLowerCase() }) : ""}
             </small>
           </div>
           {m.id !== me && (
             <button
               className="icon-btn"
-              aria-label={`Message ${m.displayName}`}
+              aria-label={uiText("messaging.interface.message_value0_ddd26fd", { value0: m.displayName })}
               onClick={() => {
                 void startDirect(engine, m.id)
                   .then((cid) => navigate({ section: "dms", conversationId: cid }))
-                  .catch((e: unknown) => engine.notice("error", e instanceof Error ? e.message : "Couldn't open the conversation"));
+                  .catch((e: unknown) => engine.notice("error", e instanceof Error ? e.message : uiText("workspace.interface.couldn_t_open_the_conversation_1f813b2")));
               }}
             >
               <MessageSquare size={16} />

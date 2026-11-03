@@ -1,7 +1,7 @@
+import { text as uiText } from "../i18n";
 import { z } from "zod";
 import { ApiError } from "../api/client";
 import type { Engine } from "./engine";
-
 /**
  * Official bots (community parity batch D, feature community-bots; docs/COMMUNITY_PARITY_API.md › Official bots):
  * Meldiq's own bots a community turns on from Settings › Bots. Each one on is a bot member of the community with the
@@ -9,11 +9,9 @@ import type { Engine } from "./engine";
  * checks every rule again; these calls carry what the screens chose.
  */
 export const OFFICIAL_BOTS_FEATURE = "community-bots";
-
 /** Every official bot, in the order the Bots page lists them. */
 export const OFFICIAL_BOT_KEYS = ["welcomer", "helper", "levels", "logger", "starboard", "giveaways", "tickets", "alerts", "wordy"] as const;
 export type OfficialBotKey = (typeof OFFICIAL_BOT_KEYS)[number];
-
 const enc = encodeURIComponent;
 const nullableString = z
   .string()
@@ -23,7 +21,6 @@ const nullableTime = z
   .number()
   .nullish()
   .transform((v) => v ?? null);
-
 const zCatalogBot = z.object({
   key: z.string(),
   name: z.string(),
@@ -44,13 +41,10 @@ const zCatalogBot = z.object({
   unavailableReason: nullableString,
 });
 export type CatalogBot = z.infer<typeof zCatalogBot>;
-
 const zBotsPlus = z.object({ name: z.string(), description: z.string(), perks: z.array(z.string()).default([]) });
 export type BotsPlusInfo = z.infer<typeof zBotsPlus>;
-
 const zCatalog = z.object({ bots: z.array(zCatalogBot), botsPlus: zBotsPlus });
 export type OfficialBotsCatalog = z.infer<typeof zCatalog>;
-
 const zOfficialBot = z.object({
   key: z.string(),
   name: z.string(),
@@ -76,7 +70,6 @@ const zOfficialBot = z.object({
   updatedAt: nullableTime,
 });
 export type OfficialBot = z.infer<typeof zOfficialBot>;
-
 const zCommunityBots = z.object({
   botsPlus: z.boolean(),
   /** When Bots+ ends (null: no end, or none). */
@@ -86,88 +79,79 @@ const zCommunityBots = z.object({
   bots: z.array(zOfficialBot),
 });
 export type CommunityOfficialBots = z.infer<typeof zCommunityBots>;
-
 const zBotOne = z.object({ bot: zOfficialBot });
 const zWelcomeTest = z.object({ messageId: z.string(), channelId: z.string() });
-
 /** The catalog: what each bot does, its commands and its Free vs Plus table, and Bots+'s perks. */
 export function officialBotsCatalog(engine: Engine): Promise<OfficialBotsCatalog> {
   return engine.api.json("GET", "/v1/official-bots", zCatalog);
 }
-
 /** A community's official bots: on or off, their look here, settings (editors) and Bots+. */
 export function communityOfficialBots(engine: Engine, orgId: string): Promise<CommunityOfficialBots> {
   return engine.api.json("GET", `/v1/orgs/${enc(orgId)}/official-bots`, zCommunityBots);
 }
-
 export interface OfficialBotChange {
   enabled?: boolean;
   /** Some or all of the bot's settings; the rest stay. */
   settings?: Record<string, unknown>;
   /** null: back to the bot's own name. */
-  look?: { name: string | null };
+  look?: {
+    name: string | null;
+  };
 }
-
 /** Turns a bot on or off, changes its settings or its name here (people who can edit the community). */
 export async function updateOfficialBot(engine: Engine, orgId: string, key: string, change: OfficialBotChange): Promise<OfficialBot> {
   return (await engine.api.json("PUT", `/v1/orgs/${enc(orgId)}/official-bots/${enc(key)}`, zBotOne, { body: change })).bot;
 }
-
 /** The bot's picture in this community: a square JPEG of at most 512 KB. */
 export async function setOfficialBotAvatar(engine: Engine, orgId: string, key: string, jpeg: Uint8Array): Promise<OfficialBot> {
   return (await engine.api.json("PUT", `/v1/orgs/${enc(orgId)}/official-bots/${enc(key)}/avatar`, zBotOne, { raw: jpeg })).bot;
 }
-
 /** Back to the bot's standard picture. */
 export async function removeOfficialBotAvatar(engine: Engine, orgId: string, key: string): Promise<OfficialBot> {
   return (await engine.api.json("DELETE", `/v1/orgs/${enc(orgId)}/official-bots/${enc(key)}/avatar`, zBotOne)).bot;
 }
-
 /** Welcomer greets the caller in its channel, as it would a newcomer. */
 export function testWelcomer(engine: Engine, orgId: string): Promise<z.infer<typeof zWelcomeTest>> {
   return engine.api.json("POST", `/v1/orgs/${enc(orgId)}/official-bots/welcomer/test`, zWelcomeTest);
 }
-
 const detailOf = (e: ApiError): Record<string, unknown> => (e.details && typeof e.details === "object" ? (e.details as Record<string, unknown>) : {});
-
 /** Whether the server refused because the bot can't run yet (it is listed for later). */
 export function isUnavailable(e: unknown): boolean {
   return e instanceof ApiError && e.code === "official_bot_unavailable";
 }
-
 /** A refusal from the official bot routes, in words. */
 export function officialBotError(e: unknown): string {
-  if (!(e instanceof ApiError)) return e instanceof Error && e.message ? e.message : "That didn't work. Try again.";
+  if (!(e instanceof ApiError)) return e instanceof Error && e.message ? e.message : uiText("workspace.interface.that_didn_t_work_try_again_5da2573");
   const d = detailOf(e);
   switch (e.code) {
     case "bots_plus_required": {
       const fields = Array.isArray(d.settings) ? d.settings.join(", ") : null;
-      return `That needs Bots+${fields ? ` (${fields})` : ""}. Take those changes out to save the rest.`;
+      return uiText("workspace.interface.that_needs_bots_value0_take_those_changes_out_to_save_the_rest_913243d", { value0: fields ? ` (${fields})` : "" });
     }
     case "bot_role_not_givable":
-      return "One of the reward roles can't be given by a bot: pick a role without admin powers that you can give yourself.";
+      return uiText("workspace.interface.one_of_the_reward_roles_can_t_be_given_by_a_bot_pick_a_role_witho_dc0054d");
     case "official_bot_channel_invalid":
-      return "One of the channels can't be used: pick a text channel of this community that you can see.";
+      return uiText("workspace.interface.one_of_the_channels_can_t_be_used_pick_a_text_channel_of_this_com_e74f58d");
     case "official_bot_off":
-      return "Turn the bot on first.";
+      return uiText("workspace.interface.turn_the_bot_on_first_5f7a7aa");
     case "official_bot_unavailable":
-      return e.message || "This bot isn't ready yet.";
+      return e.message || uiText("workspace.interface.this_bot_isn_t_ready_yet_bcd23dd");
     case "alerts_unconfigured":
-      return "Alerts needs a YouTube API key on this server, so it can't follow channels yet.";
+      return uiText("workspace.interface.alerts_needs_a_youtube_api_key_on_this_server_so_it_can_t_follow_efdf77f");
     case "alerts_source_unknown":
-      return "YouTube doesn't know that channel. Paste its link (youtube.com/@name) or its @handle.";
+      return uiText("workspace.interface.youtube_doesn_t_know_that_channel_paste_its_link_youtube_com_name_909f59c");
     case "conflict":
-      return "That YouTube channel already posts in that channel.";
+      return uiText("workspace.interface.that_youtube_channel_already_posts_in_that_channel_d7aa460");
     case "wordy_not_a_word":
-      return "That isn't in the word list. It didn't use a try.";
+      return uiText("workspace.interface.that_isn_t_in_the_word_list_it_didn_t_use_a_try_f79c68b");
     case "wordy_finished":
-      return "You've played today's word. A new one comes at 00:00 UTC.";
+      return uiText("workspace.interface.you_ve_played_today_s_word_a_new_one_comes_at_00_00_utc_7f4124b");
     case "limit_reached":
-      return "This community is full, so the bot can't join it.";
+      return uiText("workspace.interface.this_community_is_full_so_the_bot_can_t_join_it_78f4bb3");
     case "banned":
-      return "This bot is banned here. Unban it from the member list first.";
+      return uiText("workspace.interface.this_bot_is_banned_here_unban_it_from_the_member_list_first_a6888b3");
     case "too_large":
-      return "That picture is too big: 512 KB at most.";
+      return uiText("workspace.interface.that_picture_is_too_big_512_kb_at_most_99f39ba");
     default:
       return e.message;
   }

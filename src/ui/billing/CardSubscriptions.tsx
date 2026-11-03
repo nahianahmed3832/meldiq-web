@@ -1,3 +1,8 @@
+import { billingState } from "../../i18n/billing";
+import { interfaceLocale } from "../../i18n/format";
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
+import { Localized } from "../../i18n/Localized";
 import { useRef, useState } from "react";
 import { zCardMandate, zCardMandates, zCardMethods, zCardQuote } from "../../api/cardSchemas";
 import { useEngine } from "../../application/orbit";
@@ -5,8 +10,9 @@ import { navigate } from "../../application/router";
 import { useAction, useLoad } from "../workspace/useLoad";
 import { money } from "../mojo/mojoFormat";
 import { SavedCards } from "./SavedCards";
-const date = (t: number) => new Intl.DateTimeFormat(undefined, { dateStyle: "medium" }).format(t);
+const date = (t: number) => new Intl.DateTimeFormat(interfaceLocale(), { dateStyle: "medium" }).format(t);
 export function CardSubscriptionCheckout({ product, orgId }: { product: "plus" | "bots_plus"; orgId?: string }) {
+  useLocaleRender();
   const engine = useEngine();
   const methods = useLoad(() => engine.api.json("GET", "/v2/billing/payment-methods", zCardMethods), [engine]);
   const quote = useLoad(() => engine.api.json("GET", `/v2/billing/card-subscriptions/quote?product=${product}`, zCardQuote), [engine, product]);
@@ -36,26 +42,26 @@ export function CardSubscriptionCheckout({ product, orgId }: { product: "plus" |
       <section className="card">
         <h3>
           {result.status === "past_due"
-            ? "Card payment declined"
+            ? uiText("billing.interface.card_payment_declined_7600c65")
             : result.status === "attention"
-              ? "Payment verification pending"
+              ? uiText("billing.interface.payment_verification_pending_b59318f")
               : result.paidThrough
-                ? "Payment confirmed"
-                : "Card renewal scheduled"}
+                ? uiText("billing.interface.payment_confirmed_3450b63")
+                : uiText("billing.interface.card_renewal_scheduled_0fb6634")}
         </h3>
         <p>
           {result.status === "past_due"
-            ? "PayPal declined this payment. Open Billing and choose another verified card to retry. No paid access has been granted for this charge."
+            ? uiText("billing.interface.paypal_declined_this_payment_open_billing_and_choose_another_veri_f2bd1fa")
             : result.status === "attention"
-              ? "We could not confirm payment yet. Check Billing before starting another purchase."
+              ? uiText("billing.interface.we_could_not_confirm_payment_yet_check_billing_before_starting_an_f641700")
               : result.paidThrough
-                ? `Your paid period continues until ${date(result.paidThrough)}.`
+                ? uiText("billing.interface.your_paid_period_continues_until_value0_fa82117", { value0: date(result.paidThrough) })
                 : result.nextBillingAt
-                  ? `Your first payment is scheduled for ${date(result.nextBillingAt)}. Existing free Plus time stays available.`
-                  : "Check Billing for your subscription status."}
+                  ? uiText("billing.interface.your_first_payment_is_scheduled_for_value0_existing_free_plus_tim_5e7877f", { value0: date(result.nextBillingAt) })
+                  : uiText("billing.interface.check_billing_for_your_subscription_status_f252055")}
         </p>
         <button className="btn btn-secondary" onClick={() => navigate({ section: "settings", settingsPage: "billing" })}>
-          View billing
+          <Localized k="billing.interface.view_billing_2b264b2" />
         </button>
       </section>
     );
@@ -66,10 +72,16 @@ export function CardSubscriptionCheckout({ product, orgId }: { product: "plus" |
           {action.error ?? quote.error ?? methods.error}
         </p>
       )}
-      {(methods.loading || quote.loading) && <p role="status">Loading secure card checkout…</p>}
+      {(methods.loading || quote.loading) && (
+        <p role="status">
+          <Localized k="billing.interface.loading_secure_card_checkout_c855640" />
+        </p>
+      )}
       {methods.data?.methods.length ? (
         <label className="field">
-          <span>Choose your saved card</span>
+          <span>
+            <Localized k="billing.interface.choose_your_saved_card_58aa617" />
+          </span>
           <select
             className="input"
             value={method}
@@ -79,7 +91,9 @@ export function CardSubscriptionCheckout({ product, orgId }: { product: "plus" |
             }}
             disabled={action.busy}
           >
-            <option value="">Choose a card…</option>
+            <option value="">
+              <Localized k="billing.interface.choose_a_card_a33241e" />
+            </option>
             {methods.data.methods.map((m) => (
               <option key={m.id} value={m.id}>
                 {m.brand} ···· {m.lastFour}
@@ -88,23 +102,33 @@ export function CardSubscriptionCheckout({ product, orgId }: { product: "plus" |
           </select>
         </label>
       ) : (
-        !methods.loading && <p>Add your card below to continue. Saving a card alone does not start billing.</p>
+        !methods.loading && (
+          <p>
+            <Localized k="billing.interface.add_your_card_below_to_continue_saving_a_card_alone_does_not_star_05a85ab" />
+          </p>
+        )
       )}
       <SavedCards onChanged={methods.reload} />
       {quote.data && (
         <label className="checkbox">
-          <input type="checkbox" checked={consent} disabled={action.busy} onChange={(e) => setConsent(e.target.checked)} />I authorize Meldiq to charge{" "}
-          {money(quote.data.amountMinor, quote.data.currency)} to my selected card every month, starting {date(quote.data.firstBillingAt)}, until I cancel in Billing.
+          <input type="checkbox" checked={consent} disabled={action.busy} onChange={(e) => setConsent(e.target.checked)} />
+          <Localized
+            k="billing.interface.i_authorize_meldiq_to_charge_to_my_selected_card_every_month_star_8b6ca3f"
+            slots={[money(quote.data.amountMinor, quote.data.currency), date(quote.data.firstBillingAt)]}
+          />
         </label>
       )}
       <button className="btn btn-mojo" disabled={!consent || !methods.data?.methods.some((m) => m.id === method) || !quote.data || action.busy} onClick={() => void subscribe()}>
-        {action.busy ? "Verifying payment…" : "Subscribe with card"}
+        {action.busy ? uiText("billing.interface.verifying_payment_52f2be6") : uiText("billing.interface.subscribe_with_card_366cedb")}
       </button>
-      <p className="checkout-hint">Your bank may require verification. Plus starts after payment is confirmed. Saving a card or an unsuccessful payment does not activate Plus or a free trial.</p>
+      <p className="checkout-hint">
+        <Localized k="billing.interface.your_bank_may_require_verification_plus_starts_after_payment_is_c_5e7e884" />
+      </p>
     </div>
   );
 }
 export function CardSubscriptionManagement() {
+  useLocaleRender();
   const engine = useEngine();
   const result = useLoad(() => engine.api.json("GET", "/v2/billing/card-subscriptions", zCardMandates), [engine]);
   const methods = useLoad(() => engine.api.json("GET", "/v2/billing/payment-methods", zCardMethods), [engine]);
@@ -113,7 +137,9 @@ export function CardSubscriptionManagement() {
   if (!result.data?.subscriptions.length) return null;
   return (
     <section className="checkout-card">
-      <h2>Card subscriptions</h2>
+      <h2>
+        <Localized k="billing.interface.card_subscriptions_9956d98" />
+      </h2>
       {action.error && (
         <p className="banner danger" role="alert">
           {action.error}
@@ -122,23 +148,41 @@ export function CardSubscriptionManagement() {
       {result.data.subscriptions.map((m) => (
         <article className="card" key={m.id}>
           <h3>
-            {m.product === "plus" ? "Plus" : "Bots+"}
-            {m.orgId ? ` · ${m.orgId}` : ""}
+            {m.product === "plus" ? uiText("billing.interface.plus_8a78437") : uiText("billing.interface.bots_475bc2f")}
+            {m.orgId ? uiText("calls.interface.value0_9402340", { value0: m.orgId }) : ""}
           </h3>
           <p>
-            {money(m.amountMinor, m.currency)} / month · {m.status === "attention" ? "Payment needs verification" : m.status.replaceAll("_", " ")}
-            {m.cancelAt ? " · renewal canceled" : ""}
+            <Localized
+              k="billing.interface.month_beec2d6"
+              slots={[
+                money(m.amountMinor, m.currency),
+                m.status === "attention" ? uiText("billing.interface.payment_needs_verification_17b5f85") : billingState(m.status),
+                m.cancelAt ? uiText("billing.interface.renewal_canceled_927f845") : "",
+              ]}
+            />
           </p>
-          {m.paidThrough && <p>Verified paid time until {date(m.paidThrough)}.</p>}
-          {m.nextBillingAt && <p>Next payment: {date(m.nextBillingAt)}.</p>}
-          {m.processing && <p role="status">A payment is in progress. Canceling stops future renewals; this payment may still finish.</p>}
+          {m.paidThrough && (
+            <p>
+              <Localized k="billing.interface.verified_paid_time_until_71c73a5" slots={[date(m.paidThrough)]} />
+            </p>
+          )}
+          {m.nextBillingAt && (
+            <p>
+              <Localized k="billing.interface.next_payment_5d8eaf0" slots={[date(m.nextBillingAt)]} />
+            </p>
+          )}
+          {m.processing && (
+            <p role="status">
+              <Localized k="billing.interface.a_payment_is_in_progress_canceling_stops_future_renewals_this_pay_b07f8a8" />
+            </p>
+          )}
           {!m.cancelAt && m.status !== "canceled" && (
             <>
               <button
                 className="btn btn-secondary"
                 disabled={action.busy}
                 onClick={() => {
-                  if (confirm("Cancel future card renewals? Your verified paid time stays available."))
+                  if (confirm(uiText("billing.interface.cancel_future_card_renewals_your_verified_paid_time_stays_available_cb8203a")))
                     void action.act(async () => {
                       await engine.api.json("POST", `/v2/billing/card-subscriptions/${encodeURIComponent(m.id)}/cancel`, zCardMandate, { body: { confirm: true } });
                       result.reload();
@@ -146,11 +190,13 @@ export function CardSubscriptionManagement() {
                     });
                 }}
               >
-                Cancel card renewal
+                <Localized k="billing.interface.cancel_card_renewal_a8a95c0" />
               </button>
               {!!methods.data?.methods.length && (
                 <div className="field">
-                  <label htmlFor={`method-${m.id}`}>Card for future renewals</label>
+                  <label htmlFor={`method-${m.id}`}>
+                    <Localized k="billing.interface.card_for_future_renewals_2b36f54" />
+                  </label>
                   <select
                     id={`method-${m.id}`}
                     className="input"
@@ -174,7 +220,7 @@ export function CardSubscriptionManagement() {
                       })
                     }
                   >
-                    Update renewal card
+                    <Localized k="billing.interface.update_renewal_card_5d3f734" />
                   </button>
                 </div>
               )}

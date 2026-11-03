@@ -1,3 +1,6 @@
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
+import { Localized } from "../../i18n/Localized";
 import { ExternalLink, ImageOff } from "lucide-react";
 import { useState } from "react";
 import type { RichContent } from "../../model/types";
@@ -7,12 +10,12 @@ import { CloseTicketDialog, OpenTicketDialog } from "../community/tickets/Ticket
 import { GiveawayStatus } from "./GiveawayStatus";
 import { Markdown, MarkdownLine } from "./Markdown";
 import { SafeLink } from "./SafeLink";
-
 /**
  * A post's boxes and buttons (community parity C): what a webhook, "Make a post" or the Tickets sender posted. Drawn
  * from the cleaned payload (sync/posting/embeds.ts), so every link is https and every text plain React text.
  */
 export function PostedContent({ rich, orgId, channelId }: { rich: RichContent; orgId: string | null; channelId: string }) {
+  useLocaleRender();
   return (
     <>
       {rich.embeds?.map((e, i) => (
@@ -23,12 +26,12 @@ export function PostedContent({ rich, orgId, channelId }: { rich: RichContent; o
     </>
   );
 }
-
 /** One box: a colour bar on the left, the author line, the title (a link when it has one), the text, pictures, footer. */
 export function EmbedBox({ embed: e }: { embed: Embed }) {
+  useLocaleRender();
   const bar = colorHex(e.color);
   return (
-    <article className="embed" style={bar ? { borderInlineStartColor: bar } : undefined} aria-label={e.title ?? "Box"}>
+    <article className="embed" style={bar ? { borderInlineStartColor: bar } : undefined} aria-label={e.title ?? uiText("messaging.interface.box_512fd3c")}>
       <div className="embed-body">
         {e.author && (
           <div className="embed-author">
@@ -58,26 +61,33 @@ export function EmbedBox({ embed: e }: { embed: Embed }) {
     </article>
   );
 }
-
 /**
  * A box's picture, from the address the poster gave (https only), sent without this page as referrer. Where the
  * browser won't load pictures from other sites (Meldiq's own pages don't), a link to it shows instead.
  */
 function Picture({ url, className }: { url: string; className: string }) {
+  useLocaleRender();
   const [failed, setFailed] = useState(false);
   if (failed)
     return (
       <SafeLink href={url} className={`embed-picture-link ${className}-link`}>
-        <ImageOff size={14} aria-hidden /> Picture · {readableDomain(url) ?? "link"}
+        <Localized k="messaging.interface.picture_a2a369e" slots={[<ImageOff size={14} aria-hidden />, readableDomain(url) ?? uiText("messaging.interface.link_b1b1bdb")]} />
       </SafeLink>
     );
   return <img className={className} src={url} alt="" loading="lazy" referrerPolicy="no-referrer" draggable={false} onError={() => setFailed(true)} />;
 }
-
-type TicketDialog = { k: "open"; panelId: string | null } | { k: "close" } | null;
-
+type TicketDialog =
+  | {
+      k: "open";
+      panelId: string | null;
+    }
+  | {
+      k: "close";
+    }
+  | null;
 /** Link buttons open their address (asking first like any link); ticket buttons open or close a ticket here. */
 function PostButtons({ buttons, orgId, channelId }: { buttons: PostButton[]; orgId: string | null; channelId: string }) {
+  useLocaleRender();
   const [dialog, setDialog] = useState<TicketDialog>(null);
   return (
     <div className="post-buttons">

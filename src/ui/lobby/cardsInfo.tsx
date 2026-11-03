@@ -1,15 +1,14 @@
+import { Localized } from "../../i18n/Localized";
 import { ChevronDown, ExternalLink, Gift, ImageIcon, Link2 } from "lucide-react";
 import { SafeLink } from "../chat/SafeLink";
 import { relative, untilWhen } from "../format";
 import { Markdown } from "./Markdown";
 import { useLobby } from "./lobbyContext";
-
 /** The community's About text, in the little Markdown the lobby takes. */
 export function AboutCard() {
   const { view } = useLobby();
   return <Markdown text={view.settings.about ?? ""} />;
 }
-
 /** Questions newcomers ask, each opening to its answer. */
 export function FaqCard() {
   const { view } = useLobby();
@@ -29,7 +28,6 @@ export function FaqCard() {
     </div>
   );
 }
-
 const hostOf = (url: string): string => {
   try {
     return new URL(url).hostname.replace(/^www\./, "");
@@ -37,7 +35,6 @@ const hostOf = (url: string): string => {
     return url;
   }
 };
-
 /** The community's links (Community settings › Profile). */
 export function LinksCard() {
   const { view } = useLobby();
@@ -56,7 +53,6 @@ export function LinksCard() {
     </div>
   );
 }
-
 /**
  * Posts apps sent to the lobby's feed URL, newest first. Pictures stay links: the app only shows images from its own
  * origin (its Content-Security-Policy), so a post's picture opens in a new tab.
@@ -81,7 +77,7 @@ export function FeedCard() {
             {p.url && !p.title && <SafeLink href={p.url}>{hostOf(p.url)}</SafeLink>}
             {p.image && (
               <SafeLink href={p.image} className="lobby-post-pic">
-                <ImageIcon size={13} aria-hidden="true" /> Picture
+                <Localized k="workspace.interface.picture_19c7471" slots={[<ImageIcon size={13} aria-hidden="true" />]} />
               </SafeLink>
             )}
           </div>
@@ -90,7 +86,6 @@ export function FeedCard() {
     </div>
   );
 }
-
 /** Giveaways running now (filled by a giveaway bot later). */
 export function GiveawaysCard() {
   const { view } = useLobby();
@@ -102,7 +97,7 @@ export function GiveawaysCard() {
           <span className="lines grow">
             <span className="ellipsis">{g.title}</span>
             <small>
-              Ends {untilWhen(g.endsAt)} · {g.entrants} entered
+              <Localized k="workspace.interface.ends_entered_dd2184d" slots={[untilWhen(g.endsAt), g.entrants]} />
             </small>
           </span>
         </div>

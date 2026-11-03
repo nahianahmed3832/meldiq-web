@@ -31,6 +31,7 @@ import "../styles/collection.css";
 import "../styles/leaderboards.css";
 import "../styles/identity-marks.css";
 import "../styles/mobile.css"; // mobile interaction and visual-viewport refinements
+import "../styles/localization.css";
 
 export default function MeldiqApp({ Component, pageProps }: AppProps) {
   return (

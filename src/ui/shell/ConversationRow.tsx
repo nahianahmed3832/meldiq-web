@@ -1,3 +1,8 @@
+import { conversationPreview } from "../../sync/rules";
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
+import { Localized } from "../../i18n/Localized";
+import { useT as useLocalization } from "../../i18n";
 import { LiveCallBadge } from "../components/LiveCallBadge";
 import { isHighlighted, unreadLabel, unreadMarker } from "../unread";
 import { UnreadBadge } from "../components/UnreadBadge";
@@ -36,13 +41,29 @@ import { conversationTitle, dmPeer, members, shortWhen } from "../format";
 import { isMuted, isPeople } from "../selectors";
 import { usePrefs } from "../../application/prefs";
 import { useT } from "../../i18n";
-
-const LEVELS: { level: NotifyLevel; label: string }[] = [
-  { level: "all", label: "All new messages" },
-  { level: "mentions", label: "Mentions only" },
-  { level: "none", label: "Off (muted)" },
+const LEVELS: {
+  level: NotifyLevel;
+  label: string;
+}[] = [
+  {
+    level: "all",
+    get label() {
+      return uiText("messaging.interface.all_new_messages_0bd334d");
+    },
+  },
+  {
+    level: "mentions",
+    get label() {
+      return uiText("messaging.interface.mentions_only_78732e1");
+    },
+  },
+  {
+    level: "none",
+    get label() {
+      return uiText("workspace.interface.off_muted_686a4e8");
+    },
+  },
 ];
-
 /**
  * One conversation in the sidebar. Its menu (the … button, or right-click) arranges it as on the phone's long-press:
  * star, move to a section, order, notification level (synced to every device), mark read or unread and archive (this
@@ -106,7 +127,7 @@ export const ConversationRow = memo(function ConversationRow({ id, twoLine, hide
   const glyph =
     c.type === "CHANNEL" ? (
       isRules ? (
-        <BookText size={15} aria-label="Rules" />
+        <BookText size={15} aria-label={t("organization.rules_title")} />
       ) : c.kind === "PRIVATE" ? (
         <Lock size={15} />
       ) : c.kind === "ANNOUNCEMENT" ? (
@@ -120,7 +141,7 @@ export const ConversationRow = memo(function ConversationRow({ id, twoLine, hide
       <LookAvatar userId={peerId ?? ""} name={title} colorIndex={peerColor} photoRev={peerPhoto} size={twoLine ? 36 : 22} online={online} presence={presence} />
     );
   const marker = unreadMarker(unread, mentions, muted, c.type !== "CHANNEL");
-  const label = `${c.type === "CHANNEL" ? "Channel " : ""}${title}${unreadLabel(unread, mentions, muted, { unread: (n) => `${n} unread`, mentions: (n) => `${n} mentions`, muted: "muted" })}`;
+  const label = `${c.type === "CHANNEL" ? uiText("workspace.interface.channel_af0e6a9") : ""}${title}${unreadLabel(unread, mentions, muted, { unread: (n) => uiText("organization.interface.value0_unread_f307d99", { value0: n }), mentions: (n) => uiText("organization.interface.value0_mentions_939b7f1", { value0: n }), muted: uiText("common.states.muted") })}`;
   const count = <UnreadBadge marker={marker} />;
   const highlight = isHighlighted(marker) ? " unread" : "";
   const href = `/${section}/c/${encodeURIComponent(id)}`;
@@ -133,7 +154,7 @@ export const ConversationRow = memo(function ConversationRow({ id, twoLine, hide
     else menu.open(row);
   };
   const more = (
-    <button className="row-more" aria-label={`More for ${title}`} aria-haspopup="menu" onClick={openMenu}>
+    <button className="row-more" aria-label={uiText("organization.interface.more_for_value0_87b81e8", { value0: title })} aria-haspopup="menu" onClick={openMenu}>
       <MoreHorizontal size={16} />
     </button>
   );
@@ -157,13 +178,25 @@ export const ConversationRow = memo(function ConversationRow({ id, twoLine, hide
           <small className="grow ellipsis">
             {typing ? (
               <span className="row-typing" title={t("row_typing")}>
-                <span aria-hidden="true">{typer ? `${typer} ${t("meldling_one")}…` : `${t("typing_meldling")}…`}</span>
+                <span aria-hidden="true">
+                  {typer
+                    ? uiText("workspace.interface.value0_value1_9fe094e", { value0: typer, value1: t("meldling_one") })
+                    : uiText("workspace.interface.value0_48ee9c0", { value0: t("typing_meldling") })}
+                </span>
                 <span className="sr-only">{t("row_typing")}</span>
               </span>
             ) : !showPreview ? (
               ""
             ) : local?.lastPreview ? (
-              `${local.lastSenderName && c.type !== "DM" ? `${local.lastSenderName}: ` : local.lastSenderName === "You" ? "You: " : ""}${local.lastPreview}`
+              uiText("messaging.interface.value0_value1_82032eb", {
+                value0:
+                  local.lastSenderName && c.type !== "DM"
+                    ? `${(local.lastSenderOwn ?? local.lastSenderName === "You") ? t("workspace.nav_you") : local.lastSenderName}: `
+                    : (local.lastSenderOwn ?? local.lastSenderName === "You")
+                      ? uiText("workspace.interface.you_624103e")
+                      : "",
+                value1: conversationPreview(local) ?? "",
+              })
             ) : c.type === "GROUP" ? (
               members(c.memberCount)
             ) : (
@@ -195,7 +228,6 @@ export const ConversationRow = memo(function ConversationRow({ id, twoLine, hide
     </div>
   );
 });
-
 function RowMenu({
   id,
   title,
@@ -210,9 +242,14 @@ function RowMenu({
   inPlace: boolean;
   unread: boolean;
   anchor: HTMLElement;
-  point: { x: number; y: number } | null;
+  point: {
+    x: number;
+    y: number;
+  } | null;
   onClose: () => void;
 }) {
+  useLocaleRender();
+  const l10n = useLocalization();
   const engine = useEngine();
   const c = useOrbit((s) => s.conversations[id]);
   const ws = workspaceOf(c?.orgId ?? null);
@@ -226,23 +263,65 @@ function RowMenu({
   const arrange = (op: Parameters<typeof engine.arrange>[1]) => void engine.arrange(id, op);
   const entries: MenuEntry[] = [
     place.k === "starred"
-      ? { label: "Remove from Starred", icon: <StarOff size={16} />, onSelect: () => arrange({ op: "place", conversationId: id, sectionId: null, starred: false }) }
-      : { label: "Star", icon: <Star size={16} />, onSelect: () => arrange({ op: "place", conversationId: id, sectionId: null, starred: true }) },
+      ? {
+          get label() {
+            return uiText("organization.interface.remove_from_starred_1ae7d78");
+          },
+          icon: <StarOff size={16} />,
+          onSelect: () => arrange({ op: "place", conversationId: id, sectionId: null, starred: false }),
+        }
+      : {
+          get label() {
+            return uiText("organization.interface.star_e357d39");
+          },
+          icon: <Star size={16} />,
+          onSelect: () => arrange({ op: "place", conversationId: id, sectionId: null, starred: true }),
+        },
     ...sections
       .filter((s) => !(place.k === "section" && place.id === s.id))
-      .map((s) => ({ label: `Move to ${s.name}`, icon: <FolderInput size={16} />, onSelect: () => arrange({ op: "place", conversationId: id, sectionId: s.id, starred: false }) })),
-    { label: "Move to a new section…", icon: <FolderPlus size={16} />, onSelect: () => setNaming(true) },
+      .map((s) => ({
+        label: uiText("workspace.interface.move_to_value0_c241e13", { value0: s.name }),
+        icon: <FolderInput size={16} />,
+        onSelect: () => arrange({ op: "place", conversationId: id, sectionId: s.id, starred: false }),
+      })),
+    {
+      get label() {
+        return uiText("workspace.interface.move_to_a_new_section_c8ba4d1");
+      },
+      icon: <FolderPlus size={16} />,
+      onSelect: () => setNaming(true),
+    },
     ...(place.k === "section"
-      ? [{ label: "Remove from section", icon: <FolderMinus size={16} />, onSelect: () => arrange({ op: "place", conversationId: id, sectionId: null, starred: false }) }]
+      ? [
+          {
+            get label() {
+              return uiText("workspace.interface.remove_from_section_a8f82a6");
+            },
+            icon: <FolderMinus size={16} />,
+            onSelect: () => arrange({ op: "place", conversationId: id, sectionId: null, starred: false }),
+          },
+        ]
       : []),
     ...(inPlace && place.k !== "default"
       ? [
-          { label: "Move up", icon: <ArrowUp size={16} />, onSelect: () => arrange({ op: "move", conversationId: id, delta: -1 }) },
-          { label: "Move down", icon: <ArrowDown size={16} />, onSelect: () => arrange({ op: "move", conversationId: id, delta: 1 }) },
+          {
+            get label() {
+              return uiText("organization.interface.move_up_c66feb5");
+            },
+            icon: <ArrowUp size={16} />,
+            onSelect: () => arrange({ op: "move", conversationId: id, delta: -1 }),
+          },
+          {
+            get label() {
+              return uiText("organization.interface.move_down_40bb50d");
+            },
+            icon: <ArrowDown size={16} />,
+            onSelect: () => arrange({ op: "move", conversationId: id, delta: 1 }),
+          },
         ]
       : []),
     "separator",
-    { heading: "Notifications" },
+    { heading: l10n("settings.notifications") },
     ...LEVELS.map((l) => ({
       label: l.label,
       icon: l.level === "all" ? <Bell size={16} /> : l.level === "mentions" ? <BellDot size={16} /> : <BellOff size={16} />,
@@ -251,23 +330,47 @@ function RowMenu({
     })),
     "separator",
     unread
-      ? { label: "Mark as read", icon: <Eye size={16} />, onSelect: () => void engine.setUnreadLocally(id, false) }
-      : { label: "Mark as unread", icon: <EyeOff size={16} />, onSelect: () => void engine.setUnreadLocally(id, true) },
+      ? { label: l10n("notifications.markRead"), icon: <Eye size={16} />, onSelect: () => void engine.setUnreadLocally(id, false) }
+      : {
+          get label() {
+            return uiText("workspace.interface.mark_as_unread_2c19d58");
+          },
+          icon: <EyeOff size={16} />,
+          onSelect: () => void engine.setUnreadLocally(id, true),
+        },
     ...(isPeople(c)
       ? [
           archived
-            ? { label: "Unarchive", icon: <ArchiveRestore size={16} />, onSelect: () => void engine.setArchivedLocally(id, false) }
-            : { label: "Archive", icon: <Archive size={16} />, onSelect: () => void engine.setArchivedLocally(id, true) },
+            ? {
+                get label() {
+                  return uiText("workspace.interface.unarchive_f565318");
+                },
+                icon: <ArchiveRestore size={16} />,
+                onSelect: () => void engine.setArchivedLocally(id, false),
+              }
+            : {
+                get label() {
+                  return uiText("workspace.interface.archive_66f4804");
+                },
+                icon: <Archive size={16} />,
+                onSelect: () => void engine.setArchivedLocally(id, true),
+              },
         ]
       : []),
-    { label: "Details", icon: <Info size={16} />, onSelect: () => navigate({ section: c.type === "CHANNEL" ? "home" : "dms", conversationId: id, panel: "details" }) },
+    {
+      get label() {
+        return uiText("organization.interface.details_45989de");
+      },
+      icon: <Info size={16} />,
+      onSelect: () => navigate({ section: c.type === "CHANNEL" ? "home" : "dms", conversationId: id, panel: "details" }),
+    },
   ];
   return (
     <>
-      {!naming && <Menu anchor={anchor} point={point} entries={entries} onClose={onClose} align="end" label={`Arrange ${title}`} />}
+      {!naming && <Menu anchor={anchor} point={point} entries={entries} onClose={onClose} align="end" label={uiText("workspace.interface.arrange_value0_508b91b", { value0: title })} />}
       {naming && (
         <SectionNameDialog
-          title="New section"
+          title={uiText("workspace.interface.new_section_843c4a5")}
           initial=""
           onClose={onClose}
           onSave={(name) => {
@@ -280,8 +383,9 @@ function RowMenu({
     </>
   );
 }
-
 export function SectionNameDialog({ title, initial, onSave, onClose }: { title: string; initial: string; onSave: (name: string) => void; onClose: () => void }) {
+  useLocaleRender();
+  const l10n = useLocalization();
   const [name, setName] = useState(initial);
   return (
     <Dialog title={title} onClose={onClose}>
@@ -292,16 +396,24 @@ export function SectionNameDialog({ title, initial, onSave, onClose }: { title: 
           if (name.trim()) onSave(name.trim());
         }}
       >
-        <input className="input" data-autofocus value={name} maxLength={60} onChange={(e) => setName(e.target.value)} aria-label="Section name" placeholder="e.g. Projects" />
+        <input
+          className="input"
+          data-autofocus
+          value={name}
+          maxLength={60}
+          onChange={(e) => setName(e.target.value)}
+          aria-label={uiText("workspace.interface.section_name_7c0fadd")}
+          placeholder={uiText("organization.interface.e_g_projects_03697e0")}
+        />
         <p className="faint" style={{ margin: 0, fontSize: 13 }}>
-          Sections are yours alone and follow you to every device. The server can see their names, never your messages.
+          <Localized k="workspace.interface.sections_are_yours_alone_and_follow_you_to_every_device_the_serve_345b6df" />
         </p>
         <div className="row" style={{ justifyContent: "flex-end", gap: 8 }}>
           <button type="button" className="btn btn-secondary" onClick={onClose}>
-            Cancel
+            {l10n("common.actions.cancel")}
           </button>
           <button className="btn btn-primary" disabled={!name.trim()}>
-            Save
+            {l10n("common.actions.save")}
           </button>
         </div>
       </form>

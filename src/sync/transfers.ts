@@ -1,3 +1,4 @@
+import { text as uiText } from "../i18n";
 import { mediaPreview } from "./mediaPreview";
 import { aesGcmDecrypt, aesGcmEncrypt } from "../crypto/aead";
 import { fromB64, randomBytes, sha256, toB64, utf8 } from "../crypto/bytes";
@@ -9,7 +10,6 @@ import { AttachmentError, fileLimit, MAX_FILES_PER_MESSAGE, SINGLE_FORMAT_BYTES 
 import { CHUNK_BYTES } from "../crypto/fileStream";
 import { prepareLarge, type PreparedFile, checkUploadSignal, type UploadCheckpoint, UploadCancelled, uploadPrepared } from "./largeUpload";
 import type { Engine } from "./engine";
-
 /**
  * Sending files (continuation brief v3 §2): every send is a transfer owned here, not by the screen that started it, so
  * moving to another conversation or page doesn't stop it, lose its progress, or invite a second copy.
@@ -23,10 +23,8 @@ import type { Engine } from "./engine";
  *   server already has; a file whose encryption hadn't finished is chosen again (a page can't reopen a file by itself).
  * - The message itself goes through the outbox (compose.ts), which already survives reloads.
  */
-
 export type TransferStatus = "running" | "interrupted" | "failed" | "sent" | "cancelled";
 export type FilePhase = "waiting" | "encrypting" | "uploading" | "previewing" | "done" | "failed" | "cancelled";
-
 export interface TransferFile {
   name: string;
   type: string;
@@ -42,7 +40,6 @@ export interface TransferFile {
   /** The file is needed again to continue (its encryption hadn't finished before a reload). */
   needsFile?: boolean;
 }
-
 export interface Transfer {
   id: string;
   conversationId: string;
@@ -52,7 +49,6 @@ export interface Transfer {
   error: string | null;
   createdAt: number;
 }
-
 /** What a picked file brings (the composer passes Files; tests pass Blobs with names). */
 export interface OutgoingFile {
   name: string;
@@ -62,12 +58,10 @@ export interface OutgoingFile {
   source: Blob;
   voiceDurationMs?: number;
 }
-
 interface SealedKey {
   iv: string;
   wrapped: string;
 }
-
 /** A file's checkpoint as kept in the database: no plaintext, no raw key. */
 interface StoredFile {
   thumbnail?: StoredFile;
@@ -89,7 +83,6 @@ interface StoredFile {
   /** Set once the server stored the ciphertext. */
   attachmentId?: string;
 }
-
 interface StoredTransfer {
   id: string;
   messageId?: string;
@@ -100,14 +93,11 @@ interface StoredTransfer {
   createdAt: number;
   files: StoredFile[];
 }
-
 const KEY_PREFIX = "transfer:";
 const WRAP_KEY = "transfer-wrap-key";
 /** Progress reaches the screen at most this often. */
 const PROGRESS_MS = 150;
-
 type Listener = () => void;
-
 /** The transfers of one signed-in browser (one per engine). */
 export class Transfers {
   private readonly jobs = new Map<string, Transfer>();
@@ -125,19 +115,15 @@ export class Transfers {
   private active = 0;
   private readonly slots = new Set<() => void>();
   private writes = new Map<string, Promise<void>>();
-
   constructor(private readonly engine: Engine) {}
-
   subscribe(fn: Listener): () => void {
     this.listeners.add(fn);
     return () => this.listeners.delete(fn);
   }
-
   /** The transfers of [conversationId] (all when omitted), newest last. */
   list(conversationId?: string): Transfer[] {
     return [...this.jobs.values()].filter((j) => !conversationId || j.conversationId === conversationId).sort((a, b) => a.createdAt - b.createdAt);
   }
-
   /** Transfers kept from before a reload come back as interrupted (once per engine). */
   load(): Promise<void> {
     this.loaded ??= (async () => {
@@ -171,20 +157,28 @@ export class Transfers {
     })().catch(() => undefined);
     return this.loaded;
   }
-
   /**
    * Starts sending [files] with [caption] as one message; answers the transfer's id. The same send while it's still
    * running joins it instead of starting again.
    */
-  async start(conversationId: string, files: OutgoingFile[], caption: string, opts: { replyTo?: string; threadRoot?: string } = {}): Promise<string> {
-    if (!files.length) throw new AttachmentError("Choose at least one file.");
-    if (files.some((f) => !Number.isSafeInteger(f.size) || f.size !== f.source.size)) throw new AttachmentError("The selected file size changed. Choose the file again.");
-    if (files.length > MAX_FILES_PER_MESSAGE) throw new AttachmentError(`Send at most ${MAX_FILES_PER_MESSAGE} files in one message.`);
+  async start(
+    conversationId: string,
+    files: OutgoingFile[],
+    caption: string,
+    opts: {
+      replyTo?: string;
+      threadRoot?: string;
+    } = {},
+  ): Promise<string> {
+    if (!files.length) throw new AttachmentError(uiText("files.interface.choose_at_least_one_file_d63076a"));
+    if (files.some((f) => !Number.isSafeInteger(f.size) || f.size !== f.source.size))
+      throw new AttachmentError(uiText("workspace.interface.the_selected_file_size_changed_choose_the_file_again_2ff8a93"));
+    if (files.length > MAX_FILES_PER_MESSAGE) throw new AttachmentError(uiText("files.interface.send_at_most_value0_files_in_one_message_e25b619", { value0: MAX_FILES_PER_MESSAGE }));
     const limit = fileLimit(this.engine.state.get().server);
     const tooBig = files.find((f) => f.size > limit);
-    if (tooBig) throw new AttachmentError(`"${tooBig.name}" is larger than this server accepts per file.`);
+    if (tooBig) throw new AttachmentError(uiText("workspace.interface.value0_is_larger_than_this_server_accepts_per_file_9a0e037", { value0: tooBig.name }));
     const empty = files.find((f) => f.size === 0);
-    if (empty) throw new AttachmentError(`"${empty.name}" is empty.`);
+    if (empty) throw new AttachmentError(uiText("files.interface.value0_is_empty_9065ae7", { value0: empty.name }));
     const id = await operationId(conversationId, files, caption, opts);
     const existing = this.jobs.get(id);
     if (existing && existing.status === "running") return id;
@@ -228,7 +222,6 @@ export class Transfers {
     void this.run(id);
     return id;
   }
-
   /** Continues an interrupted or failed transfer (with the files chosen again, when some are needed). */
   resume(id: string, files?: OutgoingFile[]): void {
     const job = this.jobs.get(id);
@@ -244,13 +237,11 @@ export class Transfers {
     this.emit(true);
     void this.run(id);
   }
-
   cancel(id: string): void {
     this.aborts.get(id)?.abort();
     const job = this.jobs.get(id);
     if (job && job.status !== "running") void this.finish(id, "cancelled");
   }
-
   /** Drops a finished, cancelled or failed transfer from the list. */
   dismiss(id: string): void {
     const job = this.jobs.get(id);
@@ -259,7 +250,6 @@ export class Transfers {
     void this.forget(id);
     this.emit(true);
   }
-
   private async run(id: string): Promise<void> {
     const job = this.jobs.get(id)!;
     const rec = this.stored.get(id)!;
@@ -292,13 +282,13 @@ export class Transfers {
           try {
             const thumbnail = await this.sendFile(id, i, f.thumbnail, view, abort.signal, { source: previewSource, preview: true });
             const mime = thumbnail.mime;
-            if (mime !== "image/jpeg" && mime !== "image/png" && mime !== "image/webp") throw new AttachmentError("The generated preview format is unsupported.");
+            if (mime !== "image/jpeg" && mime !== "image/png" && mime !== "image/webp") throw new AttachmentError(uiText("workspace.interface.the_generated_preview_format_is_unsupported_bc43c65"));
             ref = { ...ref, thumbnail: { ...thumbnail, mime }, w: f.w, h: f.h, ...(f.durationMs !== undefined ? { durationMs: f.durationMs } : {}) };
           } catch (e) {
             if (e instanceof ApiError && ["quota_exceeded", "upload_limit", "storage_full", "too_large"].includes(e.code) && !abort.signal.aborted) {
               delete f.thumbnail;
               await this.save(id);
-              this.engine.notice("info", "The preview could not fit in your storage allowance. The original file is ready.");
+              this.engine.notice("info", uiText("workspace.interface.the_preview_could_not_fit_in_your_storage_allowance_the_original_2f98eb1"));
             } else throw e;
           }
         }
@@ -322,7 +312,7 @@ export class Transfers {
         job.status = "failed";
         const failed = job.files.find((f) => f.phase !== "done");
         if (failed) failed.phase = "failed";
-        job.error = e instanceof Error ? e.message : "Couldn't send the files.";
+        job.error = e instanceof Error ? e.message : uiText("workspace.interface.couldn_t_send_the_files_5381a8c");
       }
       this.emit(true);
     } finally {
@@ -331,14 +321,13 @@ export class Transfers {
       this.aborts.delete(id);
     }
   }
-
   /** A bounded queue across messages, with cancellation while waiting for a slot. */
   private acquire(signal: AbortSignal): Promise<() => void> {
     checkUploadSignal(signal);
     return new Promise((resolve, reject) => {
       const abort = () => {
         this.slots.delete(check);
-        reject(new UploadCancelled("Upload cancelled."));
+        reject(new UploadCancelled(uiText("workspace.interface.upload_cancelled_13737e1")));
       };
       const check = () => {
         if (this.active >= 2) return;
@@ -355,8 +344,17 @@ export class Transfers {
       check();
     });
   }
-
-  private async sendFile(id: string, i: number, f: StoredFile, view: TransferFile, signal: AbortSignal, opts: { source?: Blob; preview?: boolean } = {}): Promise<AttachmentRef> {
+  private async sendFile(
+    id: string,
+    i: number,
+    f: StoredFile,
+    view: TransferFile,
+    signal: AbortSignal,
+    opts: {
+      source?: Blob;
+      preview?: boolean;
+    } = {},
+  ): Promise<AttachmentRef> {
     let sample = { phase: "waiting" as FilePhase, at: performance.now(), done: 0 };
     const progress = (phase: FilePhase) => (p: { done: number; total: number }) => {
       const now = performance.now();
@@ -436,7 +434,6 @@ export class Transfers {
     await this.save(id);
     return this.ref(f, attachmentId, toB64(prepared.rawKey));
   }
-
   private async refFromStored(f: StoredFile, attachmentId: string): Promise<AttachmentRef> {
     const raw = await this.unseal(f.sealedKey!);
     try {
@@ -445,7 +442,6 @@ export class Transfers {
       raw.fill(0);
     }
   }
-
   private ref(f: StoredFile, id: string, key: string): AttachmentRef {
     return {
       id,
@@ -462,7 +458,6 @@ export class Transfers {
       ...(f.voiceDurationMs !== undefined ? { voice: true, durationMs: Math.round(f.voiceDurationMs) } : {}),
     };
   }
-
   private async finish(id: string, status: "sent" | "cancelled"): Promise<void> {
     const job = this.jobs.get(id);
     const rec = this.stored.get(id);
@@ -487,7 +482,6 @@ export class Transfers {
     }
     this.emit(true);
   }
-
   private async forget(id: string): Promise<void> {
     for (const p of this.prepared.get(id) ?? []) p?.rawKey.fill(0);
     this.prepared.delete(id);
@@ -497,7 +491,6 @@ export class Transfers {
     this.writes.delete(id);
     await this.engine.store.deleteValue(KEY_PREFIX + id);
   }
-
   private async save(id: string): Promise<void> {
     const rec = this.stored.get(id);
     if (!rec) return;
@@ -506,12 +499,10 @@ export class Transfers {
     this.writes.set(id, write);
     await write;
   }
-
   /** The non-extractable key that seals file keys in this browser, made once. */
   private wrapKey(): Promise<CryptoKey> {
     return (this.wrapping ??= this.loadWrapKey());
   }
-
   private async loadWrapKey(): Promise<CryptoKey> {
     const kept = await this.engine.store.getValue<CryptoKey>(WRAP_KEY);
     if (kept instanceof CryptoKey) return kept;
@@ -519,20 +510,17 @@ export class Transfers {
     await this.engine.store.setValue(WRAP_KEY, key);
     return key;
   }
-
   private async seal(raw: Uint8Array): Promise<SealedKey> {
     const iv = randomBytes(12);
     return { iv: toB64(iv), wrapped: toB64(await aesGcmEncrypt(await this.wrapKey(), iv, raw, utf8("meldiq-transfer-key"))) };
   }
-
   private async unseal(s: SealedKey): Promise<Uint8Array> {
     try {
       return await aesGcmDecrypt(await this.wrapKey(), fromB64(s.iv), fromB64(s.wrapped), utf8("meldiq-transfer-key"));
     } catch {
-      throw new ApiError(0, "transfer_key", "This transfer can't continue in this browser. Send the files again.");
+      throw new ApiError(0, "transfer_key", uiText("workspace.interface.this_transfer_can_t_continue_in_this_browser_send_the_files__f1b0944"));
     }
   }
-
   private emit(now = false): void {
     const fire = () => {
       this.lastEmit = Date.now();
@@ -547,23 +535,27 @@ export class Transfers {
     this.emitTimer = setTimeout(fire, Math.max(0, PROGRESS_MS - (Date.now() - this.lastEmit)));
   }
 }
-
 class NeedsFile extends Error {
   constructor(readonly index: number) {
     super("file needed");
   }
 }
-
 /** The operation's id: the same conversation, files, caption and reply give the same id. */
-async function operationId(conversationId: string, files: OutgoingFile[], caption: string, opts: { replyTo?: string; threadRoot?: string }): Promise<string> {
+async function operationId(
+  conversationId: string,
+  files: OutgoingFile[],
+  caption: string,
+  opts: {
+    replyTo?: string;
+    threadRoot?: string;
+  },
+): Promise<string> {
   const text = JSON.stringify([conversationId, caption, opts.replyTo ?? "", opts.threadRoot ?? "", files.map((f) => [f.name, f.size, f.lastModified ?? 0, f.type])]);
   return toB64(await sha256(utf8(text)))
     .replace(/[+/=]/g, "")
     .slice(0, 32);
 }
-
 const perEngine = new WeakMap<Engine, Transfers>();
-
 /** The transfers of this signed-in browser (made on first use; interrupted ones are loaded then). */
 export function transfersOf(engine: Engine): Transfers {
   let t = perEngine.get(engine);

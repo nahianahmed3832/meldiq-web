@@ -1,3 +1,5 @@
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
 import { useEffect, useRef, useState } from "react";
 import { useEngine, useOrbit } from "../../application/orbit";
 import { getPrefs, setPrefs, usePrefs } from "../../application/prefs";
@@ -7,9 +9,9 @@ import { supportOnSale, syncPlusReminderPreference } from "../../application/plu
 import { zPromotionClaim, zPromotionCurrent, type Promotion } from "../../api/promotionSchemas";
 import { transfersOf } from "../../sync/transfers";
 import { PlusPromotion } from "./PlusPromotion";
-
 /** All impressions are reserved by the backend before presentation; an unavailable backend always suppresses them. */
 export function PlusSupportNotice({ blocked }: { blocked: boolean }) {
+  useLocaleRender();
   const engine = useEngine();
   const mojo = useOrbit((s) => s.mojo);
   const ready = useOrbit((s) => s.phase === "ready" && s.synced && s.connection === "online");
@@ -29,7 +31,6 @@ export function PlusSupportNotice({ blocked }: { blocked: boolean }) {
   useEffect(() => {
     current.current = promotion;
   }, [promotion]);
-
   useEffect(() => {
     let alive = true;
     preferenceReady.current = false;
@@ -43,7 +44,6 @@ export function PlusSupportNotice({ blocked }: { blocked: boolean }) {
       alive = false;
     };
   }, [engine, ready]);
-
   useEffect(() => {
     let alive = true;
     let pending = false;
@@ -84,7 +84,7 @@ export function PlusSupportNotice({ blocked }: { blocked: boolean }) {
           if (alive) setPromotion(null);
           return;
         }
-        if (document.visibilityState === "visible" && document.hasFocus() && now - lastInput < 120_000 && now - lastActivity >= 15_000) {
+        if (document.visibilityState === "visible" && document.hasFocus() && now - lastInput < 120000 && now - lastActivity >= 15000) {
           lastActivity = now;
           await engine.api.call("POST", "/v2/billing/promotions/activity", { body: { sessionId: session.current, onboardingComplete: true, active: true } });
         }
@@ -96,7 +96,7 @@ export function PlusSupportNotice({ blocked }: { blocked: boolean }) {
         if (current.current) {
           const result = await engine.api.json("GET", `/v2/billing/promotions/${encodeURIComponent(current.current.id)}`, zPromotionCurrent);
           if (alive) setPromotion((p) => (result.active && p && result.expiresAt ? { ...p, expiresAt: result.expiresAt } : null));
-        } else if (!claimed && now - lastInput >= 15_000) {
+        } else if (!claimed && now - lastInput >= 15000) {
           const result = await engine.api.json("POST", "/v2/billing/promotions/claim", zPromotionClaim, {
             body: { sessionId: session.current, trigger: "consistent_usage", screen: "home", safe: true },
           });
@@ -111,25 +111,22 @@ export function PlusSupportNotice({ blocked }: { blocked: boolean }) {
     };
     const events = ["pointerdown", "keydown", "scroll"] as const;
     for (const e of events) window.addEventListener(e, input, { passive: true, capture: true });
-    const timer = setInterval(() => void tick(), 5_000);
+    const timer = setInterval(() => void tick(), 5000);
     return () => {
       alive = false;
       clearInterval(timer);
       for (const e of events) window.removeEventListener(e, input, true);
     };
   }, [engine]);
-
   useEffect(() => {
     if (!promotion) return;
     const timer = setTimeout(() => setPromotion(null), Math.max(0, promotion.expiresAt - Date.now()));
     return () => clearTimeout(timer);
   }, [promotion]);
-
   const impressionId = promotion?.id;
   useEffect(() => {
     if (impressionId) void engine.api.call("POST", "/v2/billing/promotions/events", { body: { impressionId, sessionId: session.current, event: "impression" } }).catch(() => setPromotion(null));
   }, [engine, impressionId]);
-
   const feedback = async (event: "dismiss" | "snooze" | "click" | "pricing_visit") => {
     const p = promotion;
     setPromotion(null);
@@ -141,7 +138,7 @@ export function PlusSupportNotice({ blocked }: { blocked: boolean }) {
     try {
       await engine.api.call("PUT", "/v2/billing/promotions/preference", { body: { optOut: true } });
     } catch {
-      engine.notice("error", "Reminders are hidden here. We couldn’t save your preference across devices; try again in Notifications settings.");
+      engine.notice("error", uiText("billing.interface.reminders_are_hidden_here_we_couldn_t_save_your_preference_across_0685cb4"));
     }
   };
   const quiet = ready && !blocked && !calling && !notices && !paused && !route.conversationId && route.section === "home";

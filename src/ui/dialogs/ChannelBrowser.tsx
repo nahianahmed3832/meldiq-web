@@ -1,3 +1,7 @@
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
+import { Localized } from "../../i18n/Localized";
+import { useT as useLocalization } from "../../i18n";
 import { members } from "../format";
 import { useCallback, useEffect, useState } from "react";
 import type { Conversation } from "../../api/schemas";
@@ -6,32 +10,41 @@ import { navigate } from "../../application/router";
 import { browseChannels, joinChannel } from "../../sync/account";
 import { ChannelGlyph } from "../community/ChannelDialogs";
 import { Dialog } from "../components/Overlay";
-
 /** Channels the server lets you see in this workspace: open the ones you're in, join public ones in your scope. */
 export function ChannelBrowser({ orgId, onClose }: { orgId: string; onClose: () => void }) {
+  useLocaleRender();
+  const l10n = useLocalization();
   const engine = useEngine();
   const rulesChannelId = useOrbit((s) => s.orgs.find((o) => o.id === orgId)?.rulesChannel?.channelId);
   const [list, setList] = useState<Conversation[] | null>(null);
   const [q, setQ] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
-
   const load = useCallback(() => {
     browseChannels(engine, orgId)
       .then(setList)
-      .catch((e: unknown) => setError(e instanceof Error ? e.message : "Couldn't load channels"));
+      .catch((e: unknown) => setError(e instanceof Error ? e.message : uiText("organization.interface.couldn_t_load_channels_48ea67c")));
   }, [engine, orgId]);
   useEffect(load, [load]);
-
   const shown = (list ?? []).filter((c) => !q || (c.name ?? "").toLowerCase().includes(q.toLowerCase()) || (c.topic ?? "").toLowerCase().includes(q.toLowerCase()));
-
   return (
-    <Dialog title="Browse channels" onClose={onClose} wide>
+    <Dialog title={uiText("organization.interface.browse_channels_79d490f")} onClose={onClose} wide>
       <div className="dialog-body">
-        <input className="input" data-autofocus value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search channels" aria-label="Search channels" />
+        <input
+          className="input"
+          data-autofocus
+          value={q}
+          onChange={(e) => setQ(e.target.value)}
+          placeholder={uiText("organization.interface.search_channels_7fbc58c")}
+          aria-label={uiText("organization.interface.search_channels_7fbc58c")}
+        />
         {error && <div className="banner danger">{error}</div>}
         {!list && !error && <span className="skeleton" style={{ height: 160 }} />}
-        {list && shown.length === 0 && <p className="faint">No channels match.</p>}
+        {list && shown.length === 0 && (
+          <p className="faint">
+            <Localized k="organization.interface.no_channels_match_d353bf6" />
+          </p>
+        )}
         <div style={{ display: "grid", gap: 2 }}>
           {shown.map((c) => (
             <div key={c.id} className="list-row">
@@ -41,7 +54,7 @@ export function ChannelBrowser({ orgId, onClose }: { orgId: string; onClose: () 
               <span className="lines">
                 <span className="ellipsis" style={{ fontWeight: 600 }}>
                   {c.name}
-                  {c.archived ? " · archived" : ""}
+                  {c.archived ? uiText("organization.interface.archived_736ced9") : ""}
                 </span>
                 <small className="ellipsis">{[c.topic, members(c.memberCount), c.scopeName].filter(Boolean).join(" · ")}</small>
               </span>
@@ -53,10 +66,10 @@ export function ChannelBrowser({ orgId, onClose }: { orgId: string; onClose: () 
                     navigate({ section: "home", conversationId: c.id });
                   }}
                 >
-                  Open
+                  {l10n("workspace.discover_open_btn")}
                 </button>
               ) : c.kind === "PRIVATE" ? (
-                <span className="tag">Invite only</span>
+                <span className="tag">{l10n("workspace.discover_invite_only")}</span>
               ) : (
                 <button
                   className="btn btn-primary btn-sm"
@@ -68,11 +81,11 @@ export function ChannelBrowser({ orgId, onClose }: { orgId: string; onClose: () 
                         onClose();
                         navigate({ section: "home", conversationId: c.id });
                       })
-                      .catch((e: unknown) => setError(e instanceof Error ? e.message : "Couldn't join"))
+                      .catch((e: unknown) => setError(e instanceof Error ? e.message : uiText("organization.interface.couldn_t_join_c401f21")))
                       .finally(() => setBusy(null));
                   }}
                 >
-                  Join
+                  {l10n("workspace.discover_join")}
                 </button>
               )}
             </div>

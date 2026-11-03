@@ -1,5 +1,19 @@
 "use strict";
 (() => {
+  function setStatus(key) {
+    const status = document.getElementById("status");
+    status.dataset.publicText = key;
+    if (window.meldiqPublicI18n) {
+      const ui = window.meldiqPublicI18n;
+      ui.label(status, key);
+      for (const node of [document.querySelector("h1"), document.querySelector("title"), document.querySelector('a[href="/"]')]) if (node) ui.label(node, ui.keys.back);
+    } else {
+      const script = document.createElement("script");
+      script.src = "/public-locale.js";
+      script.onload = () => setStatus(key);
+      document.head.appendChild(script);
+    }
+  }
   const result = new URLSearchParams(location.hash.slice(1));
   history.replaceState(null, "", location.pathname);
   const id = result.get("id");
@@ -27,9 +41,9 @@
     } catch {
       /* The provider may isolate its popup. */
     }
-    document.getElementById("status").textContent = "Return to your Meldiq tab to finish signing in. You can close this window.";
+    setStatus("auth.public.returnTab");
     // Close only after the initiating tab acknowledges the return; an orphan keeps its recovery message.
   } else {
-    document.getElementById("status").textContent = "This sign-in window is no longer connected. Return to Meldiq and start sign-in again.";
+    setStatus("auth.public.orphan");
   }
 })();

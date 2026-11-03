@@ -5,6 +5,7 @@
  */
 import fs from "node:fs";
 import path from "node:path";
+import { writePublicLocaleAssets } from "./i18n/public-assets.mjs";
 
 const root = path.resolve(import.meta.dirname, "..");
 const out = path.join(root, "out");
@@ -19,4 +20,7 @@ fs.renameSync(out, dist);
 // The export copies public/, which holds `npm run dev`'s service worker and its source map, and macOS's .DS_Store:
 // none of them ship (releases carry no readable source; the release service worker is built next).
 for (const leftover of ["sw.js", "sw.js.map", ".DS_Store"]) fs.rmSync(path.join(dist, leftover), { force: true });
+fs.rmSync(path.join(dist, "locales"), { recursive: true, force: true });
+fs.rmSync(path.join(dist, "public-locale.js"), { force: true });
+writePublicLocaleAssets(dist, { fillEnglish: true });
 console.log("dist/ is ready");

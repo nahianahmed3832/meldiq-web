@@ -1,3 +1,8 @@
+import { formatUiNumber } from "../../i18n/format";
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
+import { Localized } from "../../i18n/Localized";
+import { useT as useLocalization } from "../../i18n";
 import { BotTag } from "../components/BotTag";
 import { Bot, Search, Trash2 } from "lucide-react";
 import { type FormEvent, useState } from "react";
@@ -10,9 +15,7 @@ import { directory } from "../../sync/workspaces";
 import { AlsoBuiltIn, OfficialBotsSection, useOfficialBotsOffered } from "./bots/OfficialBotsSection";
 import { useAction, useLoad } from "./useLoad";
 import { Card, ErrorLine } from "./WorkspaceView";
-
 const BOT_ID = /^[A-Za-z0-9_-]{1,64}$/;
-
 /**
  * Community settings › Bots (API 0.65.0 batch B): add a bot by its ID after seeing who it is and who made it, and remove
  * the ones here. A bot joins as an ordinary member, so roles and channel permissions decide what it can see and post.
@@ -20,6 +23,7 @@ const BOT_ID = /^[A-Za-z0-9_-]{1,64}$/;
  * Meldiq's official bots, "Your own bot" and Bots+ come first, and "Also built in" closes the page.
  */
 export function BotsPage({ detail }: { detail: OrgAdminDetail }) {
+  useLocaleRender();
   const official = useOfficialBotsOffered();
   const others = useOrbit((s) => s.server?.features.includes("bots") ?? false);
   return (
@@ -30,9 +34,10 @@ export function BotsPage({ detail }: { detail: OrgAdminDetail }) {
     </>
   );
 }
-
 /** Bots people made (API 0.65.0 batch B): add one by its ID, and the ones here. */
 function InstalledBots({ detail }: { detail: OrgAdminDetail }) {
+  useLocaleRender();
+  const l10n = useLocalization();
   const engine = useEngine();
   const orgId = detail.org.id;
   const [rev, setRev] = useState(0);
@@ -42,15 +47,21 @@ function InstalledBots({ detail }: { detail: OrgAdminDetail }) {
   const reload = () => setRev((r) => r + 1);
   // Community parity E: the community bot directory (bot-directory).
   const directoryOn = useOrbit((s) => s.server?.features.includes(DISCOVERY_FEATURES.botDirectory) ?? false);
-
   return (
     <>
       <AddBot orgId={orgId} onAdded={reload} />
       {directoryOn && <CommunityBotsCard orgId={orgId} installed={new Set(installed.map((b) => b.id))} onAdded={reload} />}
-      <Card title={`Bots here · ${installed.length}`} sub="Bots are members: give them roles to choose which channels they see and where they can post.">
+      <Card
+        title={uiText("workspace.interface.bots_here_value0_dced6ba", { value0: installed.length })}
+        sub={uiText("workspace.interface.bots_are_members_give_them_roles_to_choose_which_channels_they_se_da0bbe6")}
+      >
         <ErrorLine text={members.error ?? remove.error} />
         {!members.data && !members.error && <div className="skeleton" style={{ height: 60 }} aria-busy="true" />}
-        {members.data && installed.length === 0 && <p className="faint">No bots in this community yet.</p>}
+        {members.data && installed.length === 0 && (
+          <p className="faint">
+            <Localized k="workspace.interface.no_bots_in_this_community_yet_20581db" />
+          </p>
+        )}
         <ul className="ws-list">
           {installed.map((b) => (
             <li key={b.id} className="ws-row">
@@ -65,10 +76,11 @@ function InstalledBots({ detail }: { detail: OrgAdminDetail }) {
                 className="btn btn-danger-quiet btn-sm"
                 disabled={remove.busy}
                 onClick={() => {
-                  if (window.confirm(`Remove ${b.displayName} from ${detail.org.name}?`)) void remove.act(() => removeBot(engine, orgId, b.id).then(reload));
+                  if (window.confirm(uiText("workspace.interface.remove_value0_from_value1_505f4b4", { value0: b.displayName, value1: detail.org.name })))
+                    void remove.act(() => removeBot(engine, orgId, b.id).then(reload));
                 }}
               >
-                <Trash2 size={14} /> Remove
+                <Trash2 size={14} /> {l10n("common.actions.remove")}
               </button>
             </li>
           ))}
@@ -77,31 +89,36 @@ function InstalledBots({ detail }: { detail: OrgAdminDetail }) {
     </>
   );
 }
-
 /** Look a bot up by its ID, show it, then add it. */
 function AddBot({ orgId, onAdded }: { orgId: string; onAdded: () => void }) {
+  useLocaleRender();
   const engine = useEngine();
   const [id, setId] = useState("");
   const [found, setFound] = useState<BotProfile | null>(null);
   const [note, setNote] = useState<string | null>(null);
   const look = useAction();
   const add = useAction();
-
   const find = (e: FormEvent) => {
     e.preventDefault();
     const botId = id.trim();
     setFound(null);
     setNote(null);
-    if (!BOT_ID.test(botId)) return setNote("A bot ID is letters, digits, - and _, as its maker copied it from Developer settings.");
+    if (!BOT_ID.test(botId)) return setNote(uiText("workspace.interface.a_bot_id_is_letters_digits_and_as_its_maker_copied_it_from_develo_6b6c7cf"));
     void look.act(async () => setFound(await botProfile(engine, botId)));
   };
-
   return (
-    <Card title="Add a bot" sub="Ask the bot's maker for its ID. Only bots their makers made public can be added, unless it's your own.">
+    <Card title={uiText("workspace.interface.add_a_bot_12fa6ea")} sub={uiText("workspace.interface.ask_the_bot_s_maker_for_its_id_only_bots_their_makers_made_public_8d3be37")}>
       <form className="row" style={{ gap: 8 }} onSubmit={find}>
-        <input className="input grow" aria-label="Bot ID" placeholder="Bot ID" maxLength={64} value={id} onChange={(e) => setId(e.target.value)} />
+        <input
+          className="input grow"
+          aria-label={uiText("workspace.interface.bot_id_d09dbb7")}
+          placeholder={uiText("workspace.interface.bot_id_d09dbb7")}
+          maxLength={64}
+          value={id}
+          onChange={(e) => setId(e.target.value)}
+        />
         <button className="btn btn-secondary btn-sm" disabled={look.busy || !id.trim()}>
-          <Search size={14} /> {look.busy ? "Looking…" : "Look up"}
+          <Search size={14} /> {look.busy ? uiText("workspace.interface.looking_2eaf1f9") : uiText("workspace.interface.look_up_504101b")}
         </button>
       </form>
       <ErrorLine text={note ?? look.error ?? add.error} />
@@ -114,7 +131,9 @@ function AddBot({ orgId, onAdded }: { orgId: string; onAdded: () => void }) {
             </span>
             <small>
               @{found.username}
-              {found.owner ? ` · made by @${found.owner.username}` : ""} · {found.commands} {found.commands === 1 ? "command" : "commands"} · {found.public ? "public" : "private"}
+              {found.owner ? uiText("workspace.interface.made_by_value0_7b63dc8", { value0: found.owner.username }) : ""} · {formatUiNumber(found.commands)}{" "}
+              {found.commands === 1 ? uiText("workspace.interface.command_5d347fd") : uiText("workspace.interface.commands_10f5f77")} ·{" "}
+              {found.public ? uiText("workspace.interface.public_efa1f37") : uiText("workspace.interface.private_715dc84")}
             </small>
           </span>
           <button
@@ -123,14 +142,14 @@ function AddBot({ orgId, onAdded }: { orgId: string; onAdded: () => void }) {
             onClick={() =>
               void add.act(async () => {
                 const added = await installBot(engine, orgId, found.id);
-                setNote(added ? null : `${found.displayName} is already here.`);
+                setNote(added ? null : uiText("workspace.interface.value0_is_already_here_b6429fa", { value0: found.displayName }));
                 setFound(null);
                 setId("");
                 onAdded();
               })
             }
           >
-            {add.busy ? "Adding…" : "Add to community"}
+            {add.busy ? uiText("messaging.interface.adding_c6de6f4") : uiText("workspace.interface.add_to_community_60c8a67")}
           </button>
         </div>
       )}

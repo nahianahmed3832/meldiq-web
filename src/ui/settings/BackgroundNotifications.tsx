@@ -1,30 +1,56 @@
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
+import { Localized } from "../../i18n/Localized";
+import { useT as useLocalization } from "../../i18n";
 import { useState } from "react";
 import { useEngine, useOrbit } from "../../application/orbit";
 import { usePrefs } from "../../application/prefs";
 import { iosNeedsHomeScreen, type PushState, pushState } from "../../application/pushRules";
 import { pushAvailable, pushRegistered, pushSupported, PushError, registerPush, systemNotify, unregisterPush } from "../../application/webPush";
 import { config } from "../../application/config";
-
 /** What each state says (docs/MELDIQ_WEB_PUSH.md). */
 const TEXT: Record<PushState, string> = {
-  unsupported: "This browser can't receive notifications while Meldiq is closed. You'll still get them while it's open in a tab.",
-  insecure: "Background notifications need Meldiq on a secure (https) address.",
-  "not-offered": "This server doesn't send background notifications yet. You'll get them while Meldiq is open in a tab.",
-  "not-configured": "Background notifications aren't set up for this site yet. You'll get them while Meldiq is open in a tab.",
-  denied: "Notifications are blocked for this site. Allow them in your browser's site settings, then come back here.",
-  "needs-permission": "Turn on Desktop notifications above first.",
-  off: "Turn on Desktop notifications above to get them while Meldiq is closed too.",
-  registering: "Turning on…",
-  failed: "Background notifications couldn't be turned on.",
-  "needs-registration": "Get notified of messages and calls even when no Meldiq tab is open.",
-  on: "On: this browser is notified of messages and calls even when Meldiq is closed. Message text is shown only inside Meldiq.",
+  get unsupported() {
+    return uiText("settings.interface.this_browser_can_t_receive_notifications_while_meldiq_is_closed_y_55e5d45");
+  },
+  get insecure() {
+    return uiText("settings.interface.background_notifications_need_meldiq_on_a_secure_https_address_dd793fa");
+  },
+  get "not-offered"() {
+    return uiText("settings.interface.this_server_doesn_t_send_background_notifications_yet_you_ll_get_199be76");
+  },
+  get "not-configured"() {
+    return uiText("settings.interface.background_notifications_aren_t_set_up_for_this_site_yet_you_ll_g_79a536f");
+  },
+  get denied() {
+    return uiText("settings.interface.notifications_are_blocked_for_this_site_allow_them_in_your_browse_fbb9477");
+  },
+  get "needs-permission"() {
+    return uiText("settings.interface.turn_on_desktop_notifications_above_first_0dce978");
+  },
+  get off() {
+    return uiText("settings.interface.turn_on_desktop_notifications_above_to_get_them_while_meldiq_is_c_89d1497");
+  },
+  get registering() {
+    return uiText("settings.interface.turning_on_63fd4df");
+  },
+  get failed() {
+    return uiText("workspace.interface.background_notifications_couldn_t_be_turned_on_a849bc5");
+  },
+  get "needs-registration"() {
+    return uiText("settings.interface.get_notified_of_messages_and_calls_even_when_no_meldiq_tab_is_ope_7076ae5");
+  },
+  get on() {
+    return uiText("settings.interface.on_this_browser_is_notified_of_messages_and_calls_even_when_meldi_2804606");
+  },
 };
-
 /**
  * Settings › Notifications › When Meldiq is closed: background notifications through Firebase (the Android app's
  * project), with every state spelled out, a button to (re)register, one to turn them off, and a test notification.
  */
 export function BackgroundNotifications({ permission }: { permission: NotificationPermission | "unsupported" }) {
+  useLocaleRender();
+  const l10n = useLocalization();
   const engine = useEngine();
   const prefs = usePrefs();
   useOrbit((s) => s.server?.features.length ?? 0); // re-render when the server's features arrive
@@ -47,7 +73,7 @@ export function BackgroundNotifications({ permission }: { permission: Notificati
     setError(null);
     fn()
       .then(() => setRegistered(nowRegistered))
-      .catch((e: unknown) => setError(e instanceof PushError ? e.message : "Couldn't reach the server. Try again."))
+      .catch((e: unknown) => setError(e instanceof PushError ? e.message : uiText("settings.interface.couldn_t_reach_the_server_try_again_4fd19de")))
       .finally(() => setBusy(false));
   };
   const homeScreen = state === "unsupported" && iosNeedsHomeScreen(navigator.userAgent, matchMedia("(display-mode: standalone)").matches, navigator.maxTouchPoints);
@@ -55,12 +81,10 @@ export function BackgroundNotifications({ permission }: { permission: Notificati
   return (
     <div className="setting" style={{ alignItems: "flex-start" }}>
       <div className="lines">
-        <strong>When Meldiq is closed</strong>
-        <small role="status">
-          {homeScreen
-            ? "On iPhone and iPad (iOS 16.4 or later): add Meldiq to your Home Screen (Share › Add to Home Screen), open it from there, then turn this on. In Safari itself, notifications come while Meldiq is open."
-            : TEXT[state]}
-        </small>
+        <strong>
+          <Localized k="settings.interface.when_meldiq_is_closed_dfaa9ed" />
+        </strong>
+        <small role="status">{homeScreen ? uiText("settings.interface.on_iphone_and_ipad_ios_16_4_or_later_add_meldiq_to_your_home_scre_e6153b7") : TEXT[state]}</small>
         {error && (
           <small className="danger-text" role="alert">
             {error}
@@ -69,20 +93,20 @@ export function BackgroundNotifications({ permission }: { permission: Notificati
         <div className="row" style={{ gap: 8, marginTop: 6, flexWrap: "wrap" }}>
           {canRegister && state !== "on" && (
             <button className="btn btn-primary btn-sm" disabled={busy} onClick={() => act(() => registerPush(engine, { force: true }), true)}>
-              {state === "failed" ? "Try again" : "Turn on"}
+              {state === "failed" ? l10n("common.actions.retry") : uiText("settings.interface.turn_on_5a1f096")}
             </button>
           )}
           {state === "on" && (
             <button className="btn btn-secondary btn-sm" disabled={busy} onClick={() => act(() => unregisterPush(engine), false)}>
-              Turn off on this browser
+              <Localized k="settings.interface.turn_off_on_this_browser_1ba2e9b" />
             </button>
           )}
           {permission === "granted" && prefs.notifications && (
             <button
               className="btn btn-ghost btn-sm"
-              onClick={() => systemNotify({ title: "Meldiq", body: "Notifications work on this browser.", tag: "meldiq-test", href: "/settings/notifications" })}
+              onClick={() => systemNotify({ title: "Meldiq", body: uiText("settings.interface.notifications_work_on_this_browser_33e834e"), tag: "meldiq-test", href: "/settings/notifications" })}
             >
-              Send a test notification
+              <Localized k="settings.interface.send_a_test_notification_ae6de6b" />
             </button>
           )}
         </div>

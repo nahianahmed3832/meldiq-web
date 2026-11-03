@@ -1,0 +1,10 @@
+{
+  "title": "Administration",
+  "health": "État du service",
+  "usage": "Utilisation de la communauté",
+  "states": {
+    "rejected": "Rejeté",
+    "escalated": "Transmis au niveau supérieur",
+    "disputed": "Contesté"
+  }
+}

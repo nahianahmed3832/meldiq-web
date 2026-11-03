@@ -1,3 +1,5 @@
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
 import type { CollectibleLook } from "../../api/collectibleSchemas";
 import { collectionAsset } from "../../sync/collectibles";
 import { usePrefs } from "../../application/prefs";
@@ -8,7 +10,6 @@ import { UserAvatar } from "../components/OrgAvatar";
 import { usePhoto } from "../components/photos";
 import { PresenceMark } from "../components/Avatar";
 import { AvatarFrame } from "./AvatarFrame";
-
 /**
  * Profile customisation as people see it (continuation brief v3 §10, API 0.45.0): an animated avatar (a GIF, WebP or a
  * silent looping clip), a decoration frame around it, and an effect over the banner. Meldiq's own frames and effects,
@@ -17,10 +18,40 @@ import { AvatarFrame } from "./AvatarFrame";
  * decoration can also be an image (Meldiq's own or a community one, server docs/PROFILE_DECORATIONS.md), drawn over
  * the avatar at 1.2 times its size; the presence dot stays on top.
  */
-
-export const DECORATION_LABEL: Record<string, string> = { aurora: "Aurora", ember: "Ember", frost: "Frost", neon: "Neon", sakura: "Sakura", pixel: "Pixel" };
-export const EFFECT_LABEL: Record<string, string> = { sparkles: "Sparkles", glow: "Glow", stars: "Stars", bubbles: "Bubbles" };
-
+export const DECORATION_LABEL: Record<string, string> = {
+  get aurora() {
+    return uiText("settings.interface.aurora_e9de098");
+  },
+  get ember() {
+    return uiText("workspace.interface.ember_cb1655d");
+  },
+  get frost() {
+    return uiText("files.interface.frost_17636dd");
+  },
+  get neon() {
+    return uiText("settings.interface.neon_618484e");
+  },
+  get sakura() {
+    return uiText("files.interface.sakura_95c0d6e");
+  },
+  get pixel() {
+    return uiText("workspace.interface.pixel_5817280");
+  },
+};
+export const EFFECT_LABEL: Record<string, string> = {
+  get sparkles() {
+    return uiText("files.interface.sparkles_eafe5c6");
+  },
+  get glow() {
+    return uiText("workspace.interface.glow_f534ed9");
+  },
+  get stars() {
+    return uiText("files.interface.stars_4e44dae");
+  },
+  get bubbles() {
+    return uiText("settings.ap_bubbles");
+  },
+};
 export function useReducedMotion(): boolean {
   const { reducedMotion } = usePrefs();
   const query = typeof window !== "undefined" && window.matchMedia ? window.matchMedia("(prefers-reduced-motion: reduce)") : null;
@@ -33,29 +64,33 @@ export function useReducedMotion(): boolean {
   }, [query]);
   return reducedMotion === "on" || (reducedMotion === "system" && reduced);
 }
-
 /** How thick a frame is around an avatar of [size]: thin on list rows, up to 6 px on a profile. It sits wholly outside the face. */
 export function decorationWidth(size: number): number {
   return Math.min(6, Math.max(2, Math.round(size * 0.08)));
 }
-
 interface StyledAvatarProps {
   collectibles?: CollectibleLook[];
   userId: string;
   name: string;
   colorIndex: number;
   photoRev: number | null;
-  media: { kind: "gif" | "webp" | "video"; rev: number } | null;
+  media: {
+    kind: "gif" | "webp" | "video";
+    rev: number;
+  } | null;
   decoration: string | null;
   size: number;
   online?: boolean | null;
   presence?: "online" | "idle" | "dnd" | "offline" | null;
   /** A local preview (Settings) instead of the stored media. */
-  previewUrl?: { url: string; video: boolean } | null;
+  previewUrl?: {
+    url: string;
+    video: boolean;
+  } | null;
 }
-
 /** An avatar with its animation and decoration; the plain photo where neither applies. */
 export function StyledAvatar(p: StyledAvatarProps) {
+  useLocaleRender();
   const reduced = useReducedMotion();
   const kind = p.media?.kind ?? null;
   const mime = kind === "video" ? "video/mp4" : kind === "gif" ? "image/gif" : kind === "webp" ? "image/webp" : undefined;
@@ -104,9 +139,9 @@ export function StyledAvatar(p: StyledAvatarProps) {
     </span>
   );
 }
-
 /** An image decoration over an avatar of [size]: 1.2 times as large, centred, gone if it can't be loaded. */
 export function DecorationImage({ id, size }: { id: string; size: number }) {
+  useLocaleRender();
   const [failed, setFailed] = useState(false);
   useEffect(() => setFailed(false), [id]);
   if (failed) return null;
@@ -127,9 +162,9 @@ export function DecorationImage({ id, size }: { id: string; size: number }) {
     />
   );
 }
-
 /** The banner's effect layer (nothing with reduced motion). */
 export function ProfileEffect({ effect }: { effect: ProfileStyle["effect"] | null | undefined }) {
+  useLocaleRender();
   const reduced = useReducedMotion();
   if (!effect || reduced) return null;
   return <span className={`fx fx-${effect}`} aria-hidden="true" />;

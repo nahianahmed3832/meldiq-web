@@ -1,3 +1,5 @@
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
 import { Check, Forward, Hash, Link2, Paperclip, Search } from "lucide-react";
 import { useMemo, useState } from "react";
 import { shallowEqual, useEngine, useOrbit } from "../../application/orbit";
@@ -9,12 +11,12 @@ import { GroupAvatar, UserAvatar } from "../components/OrgAvatar";
 import { Dialog } from "../components/Overlay";
 import { conversationTitle, dmPeer } from "../format";
 import { useT } from "../../i18n";
-
 /**
  * Forward To (android, 2026-10-23): up to five conversations at once, a preview of what goes, an optional message sent
  * after it, and Copy link (people in the original conversation can open it).
  */
 export function ForwardDialog({ message, onClose }: { message: StoredMessage; onClose: () => void }) {
+  useLocaleRender();
   const engine = useEngine();
   const t = useT();
   const [q, setQ] = useState("");
@@ -71,7 +73,7 @@ export function ForwardDialog({ message, onClose }: { message: StoredMessage; on
     const copy = () =>
       void navigator.clipboard?.writeText(messageLink(message.conversationId, message.id)).then(
         () => engine.notice("info", t("msg_link_copied")),
-        () => engine.notice("error", "Couldn't copy the link."),
+        () => engine.notice("error", uiText("messaging.interface.couldn_t_copy_the_link_c4fe74d")),
       );
     if (!engine.waitsForServer(message)) copy();
     else void engine.whenLive(message).then((x) => x && copy());

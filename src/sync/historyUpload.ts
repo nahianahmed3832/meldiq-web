@@ -1,3 +1,4 @@
+import { text as uiText } from "../i18n";
 import { z } from "zod";
 import { ApiError, type ApiClient } from "../api/client";
 import { toB64, utf8 } from "../crypto/bytes";
@@ -6,27 +7,23 @@ import { encodeHistoryRecord, historyUploadable } from "../protocol/history";
 import type { HistoryBackupState } from "../state/store";
 import type { LocalStore } from "../store/db";
 import { HISTORY_CURSOR } from "./historySync";
-
 /** Ids of messages waiting to be backed up, kept so a closed tab carries on where it stopped. */
 const PENDING_KEY = "history.upload.pending";
 /** Set once every message this browser held was queued (the first run of a browser that backs up). */
 const BACKFILLED_KEY = "history.upload.backfilled";
-
 /** As the phone sends them (android HistorySync): 150 items or 3 MB a request, items up to the server's 64 KiB. */
 const BATCH_ITEMS = 150;
 const BATCH_BYTES = 3 * 1024 * 1024;
 const MAX_ITEM_BYTES = 64 * 1024;
 /** Changes arriving together go up together. */
-const SETTLE_MS = 3_000;
+const SETTLE_MS = 3000;
 const SAVE_PENDING_MS = 300;
-const RETRY_MIN_MS = 30_000;
-const RETRY_MAX_MS = 15 * 60_000;
+const RETRY_MIN_MS = 30000;
+const RETRY_MAX_MS = 15 * 60000;
 /** The relay keeps files 7 days; a message younger than that asks the server to keep its files with the history. */
-const KEEP_WINDOW_MS = 7 * 86_400_000;
-
+const KEEP_WINDOW_MS = 7 * 86400000;
 const zPut = z.object({ seq: z.number(), items: z.number(), bytes: z.number() });
 const zKept = z.object({ kept: z.boolean(), expiresAt: z.number() });
-
 interface UploaderDeps {
   api: ApiClient;
   store: LocalStore;
@@ -35,10 +32,8 @@ interface UploaderDeps {
   keepsFiles: () => boolean;
   onState: (s: HistoryBackupState) => void;
 }
-
 /** Thrown when a file couldn't be kept yet: its message stays queued and is sent again with the next try. */
 class KeepLater extends Error {}
-
 /**
  * Backs this browser's messages up into the account's encrypted history (docs/MESSAGE_HISTORY.md), as the phone does
  * (android HistorySync.upload): every message written here is queued, sealed with keys only the account's devices and
@@ -59,9 +54,7 @@ export class HistoryUploader {
   /** What was last sent for each message, receipts left out: a new read receipt alone isn't sent again (as on phones). */
   private readonly sent = new Map<string, string>();
   private state: HistoryBackupState = { mode: "on", pending: 0, lastUploadAt: null, error: null };
-
   constructor(private readonly deps: UploaderDeps) {}
-
   /** Starts listening; on a browser's first run, queues everything it already holds. */
   async start(): Promise<void> {
     const { store } = this.deps;
@@ -76,21 +69,18 @@ export class HistoryUploader {
     this.publish({});
     this.schedule(0);
   }
-
   stop(): void {
     this.stopped = true;
     this.unsubscribe?.();
     if (this.timer) clearTimeout(this.timer);
     if (this.saveTimer) clearTimeout(this.saveTimer);
   }
-
   /** Sends everything queued now; throws if something couldn't be sent (signing out asks before going on). */
   async flush(): Promise<void> {
     if (this.timer) clearTimeout(this.timer);
     if (this.running) await this.running.catch(() => undefined);
     if (this.pending.size) await this.run();
   }
-
   private queue(ids: string[]): void {
     if (this.stopped || !ids.length) return;
     for (const id of ids) this.pending.set(id, ++this.changes);
@@ -99,7 +89,6 @@ export class HistoryUploader {
     // A busy chat doesn't keep putting the upload off: the first change starts the pause, later ones join it.
     if (!this.timer && !this.running) this.schedule(SETTLE_MS);
   }
-
   private schedule(delayMs: number): void {
     if (this.stopped) return;
     if (this.timer) clearTimeout(this.timer);
@@ -108,7 +97,6 @@ export class HistoryUploader {
       this.run().catch(() => undefined); // reported in the state; the next try is scheduled
     }, delayMs);
   }
-
   private run(): Promise<void> {
     if (this.running) return this.running;
     const run = this.uploadAll()
@@ -132,7 +120,6 @@ export class HistoryUploader {
     this.running = run;
     return run;
   }
-
   private async uploadAll(): Promise<void> {
     try {
       while (this.pending.size && !this.stopped) {
@@ -143,11 +130,15 @@ export class HistoryUploader {
       await this.savePending();
     }
   }
-
   /** One request's worth. False when nothing could be taken off the queue. */
   private async uploadBatch(batch: [string, number][]): Promise<boolean> {
     const { api, store, keys } = this.deps;
-    const items: { tag: string; conv: string; ts: number; body: string }[] = [];
+    const items: {
+      tag: string;
+      conv: string;
+      ts: number;
+      body: string;
+    }[] = [];
     const handled: [string, number][] = [];
     const keepFiles = new Map<string, string[]>();
     const digests = new Map<string, string>();
@@ -196,10 +187,9 @@ export class HistoryUploader {
     }
     for (const [id, change] of handled) if (!keepLater.has(id) && this.pending.get(id) === change) this.pending.delete(id);
     this.publish({});
-    if (keepLater.size) throw new KeepLater("Waiting to keep files on the server");
+    if (keepLater.size) throw new KeepLater(uiText("workspace.interface.waiting_to_keep_files_on_the_server_bd02a35"));
     return handled.length > 0;
   }
-
   /** False when it should be asked again later; true when settled (kept, or gone or over quota: nothing more to do). */
   private async keepFile(id: string): Promise<boolean> {
     if (this.kept.has(id)) return true;
@@ -211,27 +201,24 @@ export class HistoryUploader {
     this.kept.add(id);
     return true;
   }
-
   private async savePending(): Promise<void> {
     if (this.saveTimer) clearTimeout(this.saveTimer);
     this.saveTimer = null;
     if (this.stopped) return;
     await this.deps.store.setValue(PENDING_KEY, [...this.pending.keys()]);
   }
-
   private publish(change: Partial<HistoryBackupState>): void {
     this.state = { ...this.state, ...change, pending: this.pending.size };
     this.deps.onState(this.state);
   }
 }
-
 function describe(e: unknown): string {
   if (e instanceof KeepLater) return e.message;
   if (e instanceof ApiError) {
-    if (e.isNetwork) return "Waiting for a connection";
-    if (e.status === 429 || e.code === "history_full" || e.code === "quota_exceeded") return "The server's storage for your message history is full.";
-    if (e.code === "history_off") return "This server doesn't keep message history.";
+    if (e.isNetwork) return uiText("workspace.interface.waiting_for_a_connection_4c4beb2");
+    if (e.status === 429 || e.code === "history_full" || e.code === "quota_exceeded") return uiText("workspace.interface.the_server_s_storage_for_your_message_history_is_full_e59b6ac");
+    if (e.code === "history_off") return uiText("workspace.interface.this_server_doesn_t_keep_message_history_10c6c5b");
     return e.message;
   }
-  return "Couldn't back up this browser's chats";
+  return uiText("workspace.interface.couldn_t_back_up_this_browser_s_chats_eaf14d8");
 }

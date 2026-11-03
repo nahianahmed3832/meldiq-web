@@ -1,3 +1,4 @@
+import { text as uiText } from "../i18n";
 import { attachmentName, detectedMime } from "./attachmentPolicy";
 import { z } from "zod";
 import { ApiError } from "../api/client";
@@ -12,31 +13,30 @@ import { decryptFileBlob } from "../crypto/cipherClient";
 import { cipherSize, importChunkKey } from "../crypto/fileStream";
 import { fromB64 } from "../crypto/bytes";
 import { holdUpdates } from "../application/updates";
-
 /**
  * File bodies are encrypted before upload and verified/decrypted on the recipient. Download access requires membership.
  * Current v2 server-stored messages carry the reference keys to the relay; this is not E2EE against that server.
  * Legacy encrypted envelopes protect the same reference under their original message security.
  */
-
 /** Up to this size a file uses the single-message format every Orbit app opens; larger ones are encrypted in chunks. */
 export const SINGLE_FORMAT_BYTES = 25 * 1024 * 1024;
 /** Absolute ceiling for new uploads; lower server and subscription limits still apply. */
-export const MAX_FILE_BYTES = 1_000_000_000;
+export const MAX_FILE_BYTES = 1000000000;
 /** Existing attachments under the former 1 GiB reader limit remain downloadable. */
 const MAX_READABLE_FILE_BYTES = 1024 * 1024 * 1024;
 export const MAX_FILES_PER_MESSAGE = 10;
-
 /** The largest file this server takes: fileMaxBytes (Orbit 2.0), else attachmentMaxBytes less the encryption tag. */
-export function fileLimit(server: { fileMaxBytes?: number; attachmentMaxBytes: number } | null): number {
+export function fileLimit(
+  server: {
+    fileMaxBytes?: number;
+    attachmentMaxBytes: number;
+  } | null,
+): number {
   if (!server) return SINGLE_FORMAT_BYTES;
   return Math.min(MAX_FILE_BYTES, server.fileMaxBytes ?? server.attachmentMaxBytes - 16);
 }
-
 const zUploadRes = z.object({ id: z.string(), size: z.number(), expiresAt: z.number() });
-
 export class AttachmentError extends Error {}
-
 export interface PickedFile {
   name: string;
   type: string;
@@ -47,29 +47,30 @@ export interface PickedFile {
   /** The file itself, read in slices: required for files over the single-message size. */
   source?: Blob;
 }
-
 /** Stores a single-message file's ciphertext; answers its attachment id. */
 export async function uploadSingle(engine: Engine, conversationId: string, ciphertext: Uint8Array, signal?: AbortSignal): Promise<string> {
   return (await engine.api.json("POST", `/v1/attachments?conversationId=${encodeURIComponent(conversationId)}`, zUploadRes, { raw: ciphertext, signal })).id;
 }
-
-const sizeText = (n: number): string => (n >= 1_000_000_000 ? `${+(n / 1_000_000_000).toFixed(1)} GB` : `${+(n / 1_000_000).toFixed(1)} MB`);
-
+const sizeText = (n: number): string =>
+  n >= 1000000000 ? uiText("files.interface.value0_gb_02d50f1", { value0: +(n / 1000000000).toFixed(1) }) : uiText("files.interface.value0_mb_36c07a7", { value0: +(n / 1000000).toFixed(1) });
 export async function uploadFiles(
   engine: Engine,
   conversationId: string,
   files: PickedFile[],
   onProgress?: (done: number, total: number) => void,
-  large?: { onProgress?: (file: string, p: UploadProgress) => void; signal?: AbortSignal },
+  large?: {
+    onProgress?: (file: string, p: UploadProgress) => void;
+    signal?: AbortSignal;
+  },
 ): Promise<AttachmentRef[]> {
   checkUploadSignal(large?.signal);
-  if (!files.length) throw new AttachmentError("Choose at least one file.");
-  if (files.length > MAX_FILES_PER_MESSAGE) throw new AttachmentError(`Send at most ${MAX_FILES_PER_MESSAGE} files in one message.`);
+  if (!files.length) throw new AttachmentError(uiText("files.interface.choose_at_least_one_file_d63076a"));
+  if (files.length > MAX_FILES_PER_MESSAGE) throw new AttachmentError(uiText("files.interface.send_at_most_value0_files_in_one_message_e25b619", { value0: MAX_FILES_PER_MESSAGE }));
   const limit = fileLimit(engine.state.get().server);
   const tooBig = files.find((f) => f.size > limit);
-  if (tooBig) throw new AttachmentError(`"${tooBig.name}" is larger than ${sizeText(limit)}, the most this server accepts per file.`);
+  if (tooBig) throw new AttachmentError(uiText("files.interface.value0_is_larger_than_value1_the_most_this_server_accepts_pe_3f9e6c0", { value0: tooBig.name, value1: sizeText(limit) }));
   const empty = files.find((f) => f.size === 0);
-  if (empty) throw new AttachmentError(`"${empty.name}" is empty.`);
+  if (empty) throw new AttachmentError(uiText("files.interface.value0_is_empty_9065ae7", { value0: empty.name }));
   const refs: AttachmentRef[] = [];
   // A new release waits for the upload before the tab reloads by itself.
   const release = holdUpdates();
@@ -77,7 +78,7 @@ export async function uploadFiles(
     for (const [i, f] of files.entries()) {
       checkUploadSignal(large?.signal);
       if (f.size > SINGLE_FORMAT_BYTES) {
-        if (!f.source) throw new AttachmentError(`"${f.name}" is too large to send this way.`);
+        if (!f.source) throw new AttachmentError(uiText("files.interface.value0_is_too_large_to_send_this_way_8d8e1ee", { value0: f.name }));
         refs.push(
           await uploadLarge(engine, conversationId, Object.assign({ name: f.name, type: f.type, size: f.size, slice: (a: number, b: number) => f.source!.slice(a, b) }, { source: f.source }), {
             onProgress: (p) => large?.onProgress?.(f.name, p),
@@ -89,7 +90,7 @@ export async function uploadFiles(
         continue;
       }
       const plain = await f.bytes();
-      if (plain.length !== f.size) throw new AttachmentError(`"${f.name}" changed while being read. Choose it again.`);
+      if (plain.length !== f.size) throw new AttachmentError(uiText("files.interface.value0_changed_while_being_read_choose_it_again_f49e0a8", { value0: f.name }));
       const enc = await encryptFile(plain);
       checkUploadSignal(large?.signal);
       const res = await engine.api.json("POST", `/v1/attachments?conversationId=${encodeURIComponent(conversationId)}`, zUploadRes, { raw: enc.ciphertext, signal: large?.signal });
@@ -111,36 +112,39 @@ export async function uploadFiles(
   }
   return refs;
 }
-
 /** Sends files (with an optional caption) as one message. */
 export async function sendFiles(
   engine: Engine,
   conversationId: string,
   files: PickedFile[],
   caption: string,
-  opts: { replyTo?: string; threadRoot?: string } = {},
+  opts: {
+    replyTo?: string;
+    threadRoot?: string;
+  } = {},
   onProgress?: (done: number, total: number) => void,
-  large?: { onProgress?: (file: string, p: UploadProgress) => void; signal?: AbortSignal },
+  large?: {
+    onProgress?: (file: string, p: UploadProgress) => void;
+    signal?: AbortSignal;
+  },
 ): Promise<string> {
   const attachments = await uploadFiles(engine, conversationId, files, onProgress, large);
   checkUploadSignal(large?.signal);
   return engine.sendText(conversationId, caption, { ...opts, attachments });
 }
-
 const caches = new WeakMap<Engine, Map<string, Promise<Blob>>>();
 const cacheSizes = new WeakMap<Engine, Map<string, number>>();
-
 /** Files up to this size are kept decrypted for the page's life (instant reopening); larger ones are fetched each time. */
 const CACHE_LIMIT = 64 * 1024 * 1024;
-
 /**
  * Downloads, verifies and decrypts a file: once per page load when small, and single-message files once per browser
  * (their ciphertext is kept in the media cache). Object URLs are made by the caller and revoked by it.
  */
 export function openAttachment(engine: Engine, ref: AttachmentRef, onProgress?: (p: DownloadProgress) => void, signal?: AbortSignal): Promise<Blob> {
-  if (!Number.isSafeInteger(ref.size) || ref.size < 0 || ref.size > MAX_READABLE_FILE_BYTES) return Promise.reject(new AttachmentError("This file has an invalid size."));
+  if (!Number.isSafeInteger(ref.size) || ref.size < 0 || ref.size > MAX_READABLE_FILE_BYTES)
+    return Promise.reject(new AttachmentError(uiText("files.interface.this_file_has_an_invalid_size_3a99924")));
   if (ref.chunk !== undefined && (!Number.isInteger(ref.chunk) || ref.chunk < 1024 || ref.chunk > 16 * 1024 * 1024))
-    return Promise.reject(new AttachmentError("This file has an unsupported encryption format."));
+    return Promise.reject(new AttachmentError(uiText("files.interface.this_file_has_an_unsupported_encryption_format_84f7ea1")));
   const load = () => (ref.chunk !== undefined ? openChunked(engine, ref, onProgress, signal) : openSingle(engine, ref, onProgress, signal));
   // A cancellable download has its own request, so cancelling it cannot break another viewer's download.
   if (signal || onProgress) return load();
@@ -176,16 +180,13 @@ export function openAttachment(engine: Engine, ref: AttachmentRef, onProgress?: 
   }, forget);
   return p;
 }
-
 export interface DownloadProgress {
   phase: "downloading" | "decrypting";
   done: number;
   total: number;
 }
-
 /** Tries for a download whose connection drops; each continues from the bytes already received (a Range request). */
 const DOWNLOAD_TRIES = 4;
-
 /**
  * A chunked file (continuation brief v3 §2): its ciphertext from this browser's media cache when an earlier visit kept
  * it, else downloaded (continuing after a dropped connection rather than from zero), then decrypted and verified in the
@@ -210,13 +211,12 @@ async function openChunked(engine: Engine, ref: AttachmentRef, onProgress?: (p: 
   try {
     plain = await decrypt(ct);
   } catch (e) {
-    if (e instanceof EnvelopeError) throw new AttachmentError("This file didn't pass its integrity check and wasn't opened.");
+    if (e instanceof EnvelopeError) throw new AttachmentError(uiText("files.interface.this_file_didn_t_pass_its_integrity_check_and_wasn_t_opened_57b6b46"));
     throw e;
   }
   void keepMediaBlob(key, ct);
   return plain;
 }
-
 /** The whole ciphertext as a Blob, resuming with a Range request when the connection drops part-way. */
 export async function downloadCiphertext(engine: Engine, id: string, total: number, onProgress: (done: number) => void, signal?: AbortSignal): Promise<Blob> {
   const release = holdUpdates();
@@ -236,7 +236,7 @@ async function downloadCiphertextHeld(engine: Engine, id: string, total: number,
       res = got > 0 ? await attachmentResponse(engine, id, signal, `bytes=${got}-`) : await attachmentResponse(engine, id, signal);
     } catch (e) {
       signal?.throwIfAborted();
-      if (e instanceof ApiError && e.status === 404) throw new AttachmentError("This file has expired on the server (files are kept 7 days unless saved with history).");
+      if (e instanceof ApiError && e.status === 404) throw new AttachmentError(uiText("files.interface.this_file_has_expired_on_the_server_files_are_kept_7_days_un_c8168a7"));
       if (!(e instanceof ApiError && e.code === "network") || attempt >= DOWNLOAD_TRIES) throw e;
       await uploadBackoff(attempt, signal);
       continue;
@@ -250,10 +250,10 @@ async function downloadCiphertextHeld(engine: Engine, id: string, total: number,
       const range = /^bytes (\d+)-(\d+)\/(\d+)$/.exec(res.headers.get("content-range") ?? "");
       if (!range || Number(range[1]) !== got || Number(range[3]) !== total || Number(range[2]) !== total - 1) {
         await res.body?.cancel();
-        throw new AttachmentError("The server returned an invalid download range. Try again.");
+        throw new AttachmentError(uiText("files.interface.the_server_returned_an_invalid_download_range_try_again_82e3810"));
       }
     }
-    if (!res.body) throw new ApiError(res.status, "decode", "The server's answer had no body");
+    if (!res.body) throw new ApiError(res.status, "decode", uiText("workspace.interface.the_server_s_answer_had_no_body_4ba2ac8"));
     const reader = res.body.getReader();
     let pending: Uint8Array[] = [];
     let pendingBytes = 0;
@@ -269,7 +269,7 @@ async function downloadCiphertextHeld(engine: Engine, id: string, total: number,
         signal?.throwIfAborted();
         if (got + value.length > total) {
           await reader.cancel();
-          throw new AttachmentError("The downloaded file is larger than its verified reference.");
+          throw new AttachmentError(uiText("files.interface.the_downloaded_file_is_larger_than_its_verified_reference_c01b5f7"));
         }
         pending.push(value);
         pendingBytes += value.length;
@@ -279,19 +279,18 @@ async function downloadCiphertextHeld(engine: Engine, id: string, total: number,
       }
       flush();
       if (got === total) return new Blob(parts, { type: "application/octet-stream" });
-      throw new ApiError(0, "network", "The download stopped early.");
+      throw new ApiError(0, "network", uiText("files.interface.the_download_stopped_early_ec088bb"));
     } catch (e) {
       flush();
       signal?.throwIfAborted();
       if (e instanceof AttachmentError) throw e;
-      if (attempt >= DOWNLOAD_TRIES) throw e instanceof ApiError ? e : new ApiError(0, "network", "The download was interrupted. Try again.");
+      if (attempt >= DOWNLOAD_TRIES) throw e instanceof ApiError ? e : new ApiError(0, "network", uiText("files.interface.the_download_was_interrupted_try_again_d07dbc1"));
       await uploadBackoff(attempt, signal);
     } finally {
       reader.releaseLock();
     }
   }
 }
-
 /**
  * A single-message file: its ciphertext from this browser's media cache when an earlier visit downloaded it, else from
  * the server (then kept). A kept copy that fails its check is dropped and downloaded again.
@@ -308,18 +307,17 @@ async function openSingle(engine: Engine, ref: AttachmentRef, onProgress?: (p: D
   try {
     ct = new Uint8Array(await (await downloadCiphertext(engine, ref.id, ref.size + 16, (done) => onProgress?.({ phase: "downloading", done, total: ref.size + 16 }), signal)).arrayBuffer());
   } catch (e) {
-    if (e instanceof ApiError && e.status === 404) throw new AttachmentError("This file has expired on the server (files are kept 7 days unless saved with history).");
+    if (e instanceof ApiError && e.status === 404) throw new AttachmentError(uiText("files.interface.this_file_has_expired_on_the_server_files_are_kept_7_days_un_c8168a7"));
     throw e;
   }
   signal?.throwIfAborted();
   onProgress?.({ phase: "decrypting", done: 0, total: ct.length });
   const plain = await decryptFile(ct, ref).catch(() => {
-    throw new AttachmentError("This file didn't pass its integrity check and wasn't opened.");
+    throw new AttachmentError(uiText("files.interface.this_file_didn_t_pass_its_integrity_check_and_wasn_t_opened_57b6b46"));
   });
   void keepMedia(key, ct);
   return new Blob([new Uint8Array(plain)], { type: safeMime(detectedMime(plain.subarray(0, 64), ref.mime)) });
 }
-
 /**
  * Servers that keep files in S3 answer a download with a short-lived S3 link. A browser follows it only if the bucket
  * allows this site (a CORS rule); without one the request fails as if offline. The file is then fetched through this
@@ -328,7 +326,6 @@ async function openSingle(engine: Engine, ref: AttachmentRef, onProgress?: (p: D
  */
 let throughWebServer = new WeakSet<Engine>();
 let throughApiProxy = new WeakSet<Engine>();
-
 export async function attachmentResponse(engine: Engine, id: string, signal?: AbortSignal, range?: string): Promise<Response> {
   const direct = `/v1/attachments/${encodeURIComponent(id)}`;
   const canProxy = engine.state.get().server?.features.includes("attachment-proxy") ?? false;
@@ -369,7 +366,6 @@ export async function attachmentResponse(engine: Engine, id: string, signal?: Ab
     return res;
   }
 }
-
 /** Null where this site has no such route: a development server or an older install answers with the app's page. */
 async function viaWebServer(engine: Engine, id: string, signal?: AbortSignal, range?: string): Promise<Response | null> {
   const res = await engine.api.response(`/media/attachments/${encodeURIComponent(id)}`, { signal, headers: range ? { range } : undefined });
@@ -379,13 +375,11 @@ async function viaWebServer(engine: Engine, id: string, signal?: AbortSignal, ra
   }
   return res;
 }
-
 /** For tests: forget that this tab switched to the web server. */
 export function resetAttachmentRoute(): void {
   throughWebServer = new WeakSet();
   throughApiProxy = new WeakSet();
 }
-
 /**
  * A chunked file, decrypted as it downloads and handed to [sink] chunk by chunk (decryptStream checks every chunk, the
  * count and the whole hash; on failure the caller discards what it got).
@@ -400,10 +394,10 @@ export async function streamAttachment(
   let body: ReadableStream<Uint8Array>;
   try {
     const res = await attachmentResponse(engine, ref.id, signal);
-    if (!res.body) throw new ApiError(res.status, "decode", "The server's answer had no body");
+    if (!res.body) throw new ApiError(res.status, "decode", uiText("workspace.interface.the_server_s_answer_had_no_body_4ba2ac8"));
     body = res.body;
   } catch (e) {
-    if (e instanceof ApiError && e.status === 404) throw new AttachmentError("This file has expired on the server (files are kept 7 days unless saved with history).");
+    if (e instanceof ApiError && e.status === 404) throw new AttachmentError(uiText("files.interface.this_file_has_expired_on_the_server_files_are_kept_7_days_un_c8168a7"));
     throw e;
   }
   try {
@@ -416,11 +410,10 @@ export async function streamAttachment(
       onProgress?.({ phase: "downloading", done, total });
     });
   } catch (e) {
-    if (e instanceof EnvelopeError) throw new AttachmentError("This file didn't pass its integrity check and wasn't opened.");
+    if (e instanceof EnvelopeError) throw new AttachmentError(uiText("files.interface.this_file_didn_t_pass_its_integrity_check_and_wasn_t_opened_57b6b46"));
     throw e;
   }
 }
-
 async function* readAll(body: ReadableStream<Uint8Array>): AsyncGenerator<Uint8Array> {
   const reader = body.getReader();
   try {
@@ -434,14 +427,24 @@ async function* readAll(body: ReadableStream<Uint8Array>): AsyncGenerator<Uint8A
     reader.releaseLock();
   }
 }
-
 /**
  * Saves a file to disk. Where the browser lets a page write a file it chose (Chromium's File System Access), a large
  * file is decrypted straight into it, never whole in memory; a failed check deletes what was written. Elsewhere the
  * decrypted file is handed to the browser's download.
  */
-export async function saveAttachment(engine: Engine, ref: AttachmentRef, opts: { signal?: AbortSignal; onProgress?: (p: DownloadProgress) => void } = {}): Promise<void> {
-  const picker = (window as unknown as { showSaveFilePicker?: (o: { suggestedName: string }) => Promise<FileSystemFileHandle> }).showSaveFilePicker;
+export async function saveAttachment(
+  engine: Engine,
+  ref: AttachmentRef,
+  opts: {
+    signal?: AbortSignal;
+    onProgress?: (p: DownloadProgress) => void;
+  } = {},
+): Promise<void> {
+  const picker = (
+    window as unknown as {
+      showSaveFilePicker?: (o: { suggestedName: string }) => Promise<FileSystemFileHandle>;
+    }
+  ).showSaveFilePicker;
   if (ref.chunk !== undefined && ref.size > CACHE_LIMIT && picker) {
     const handle = await picker({ suggestedName: attachmentName(ref.name) });
     const out = await handle.createWritable();
@@ -464,9 +467,8 @@ export async function saveAttachment(engine: Engine, ref: AttachmentRef, opts: {
   document.body.appendChild(a);
   a.click();
   a.remove();
-  setTimeout(() => URL.revokeObjectURL(url), 30_000);
+  setTimeout(() => URL.revokeObjectURL(url), 30000);
 }
-
 /** Only inert types are shown inline; anything else is a download, never rendered as a page (no HTML or SVG). */
 export function safeMime(mime: string): string {
   const m = mime.toLowerCase();
@@ -474,7 +476,6 @@ export function safeMime(mime: string): string {
   if (/^(video\/(mp4|webm|quicktime)|audio\/(mp4|mpeg|ogg|webm|aac|wav|x-m4a))$/.test(m)) return m;
   return "application/octet-stream";
 }
-
 export function isInlineImage(ref: AttachmentRef): boolean {
   return safeMime(ref.mime).startsWith("image/");
 }

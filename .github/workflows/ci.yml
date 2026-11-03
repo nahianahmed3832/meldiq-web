@@ -31,6 +31,8 @@ jobs:
           cache: npm
       - name: Install (exact versions from package-lock.json)
         run: npm ci
+      - name: Complete localization coverage and source audit
+        run: npm run i18n:check
       - name: Typecheck
         run: npm run typecheck
       - name: Lint

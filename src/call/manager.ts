@@ -1,3 +1,4 @@
+import { text as uiText } from "../i18n";
 import { ScreenShareUnavailable } from "./screenShareSupport";
 import { type ApiClient, ApiError } from "../api/client";
 import { type Call, zCallGrant, zCallList, zCallRes } from "../api/schemas";
@@ -9,7 +10,6 @@ import { backoff, CallFailure, deafenChange, KEY_POLL_MS, KEY_WAIT_MS, PEER_WIND
 import { allowedShareQualities, clampShareQuality, SHARE_QUALITIES, type ShareQuality } from "./shareQuality";
 import { type CallShareView, MAX_SCREEN_SHARES, mayShare, nextWatched } from "./shares";
 import { type CallUiState, DeviceError, type DeviceKind, idleCall, type MediaDeviceChoice, type MediaEvents, type MediaFactory, type MediaGrant, type MediaSession } from "./types";
-
 /** This browser's call settings (Settings › Calls and Voice & Audio) as the manager reads them. */
 export interface CallPrefs {
   noiseReduction: boolean;
@@ -28,7 +28,10 @@ export interface CallPrefs {
 export interface CallHost {
   readonly api: ApiClient;
   readonly state: Store;
-  readonly me: { userId: string; deviceId: string };
+  readonly me: {
+    userId: string;
+    deviceId: string;
+  };
   /** Seals and posts a control message at once, never writing it to storage (call keys stay in memory). */
   sendControlNow(conversationId: string, payload: Payload): Promise<void>;
   /** Title, kind and colour of a conversation for the call screen; whether it's a voice room this person manages. */
@@ -39,7 +42,6 @@ export interface CallHost {
   /** A system notification for a ringing call while the tab isn't looked at. */
   ringAlert?(title: string, video: boolean, conversationId: string): void;
 }
-
 export interface CallTarget {
   title: string;
   isGroup: boolean;
@@ -49,15 +51,16 @@ export interface CallTarget {
   /** A voice channel this person may join but not talk in (voice.speak): no microphone opens. */
   listenOnly?: boolean;
 }
-
 /** What a voice room's manager can do to someone in its call (server POST /v1/calls/:id/moderate). */
 export type ModerationAction = "mute" | "lower_hand" | "remove";
-
 export interface CallOptions {
   media: MediaFactory;
   /** This browser can encrypt call media (RTCRtpScriptTransform or encoded streams, and workers). */
   supported(): boolean;
-  ringtone?: { start(): void; stop(): void };
+  ringtone?: {
+    start(): void;
+    stop(): void;
+  };
   now?(): number;
   sleep?(ms: number): Promise<void>;
   keyWaitMs?: number;
@@ -68,16 +71,13 @@ export interface CallOptions {
   /** How many screens may be shared in one call at once (default [MAX_SCREEN_SHARES]; at least 2). */
   maxScreenShares?: number;
 }
-
 /** A failure whose message is already what the person should read. */
 class CallError extends Error {}
 /** The attempt this work belonged to was hung up, declined or replaced. */
 class Superseded extends Error {}
-
 const MAX_HANDLED = 64;
-const ENDED_SHOWN_MS = 1_500;
-const ERROR_SHOWN_MS = 4_000;
-
+const ENDED_SHOWN_MS = 1500;
+const ERROR_SHOWN_MS = 4000;
 /**
  * The browser's calls (android CallManager): one at a time, over the server's call API and its realtime `call` events,
  * with media in a LiveKit room encrypted end to end under a per-call key that travels only inside griip-envelope-v1
@@ -98,24 +98,19 @@ export class CallManager {
   private rejoining = false;
   private peerTimer: ReturnType<typeof setTimeout> | undefined;
   private resetTimer: ReturnType<typeof setTimeout> | undefined;
-
   constructor(
     private readonly host: CallHost,
     private readonly opts: CallOptions,
   ) {
     this.pacer = new KeyRequestPacer(() => this.now());
   }
-
   get state(): CallUiState {
     return this.host.state.get().call;
   }
-
   supported(): boolean {
     return this.opts.supported();
   }
-
   // ───────────────────────── starting and answering ─────────────────────────
-
   async startCall(conversationId: string, video: boolean): Promise<void> {
     if (!this.isFree()) return;
     const about = await this.host.describe(conversationId);
@@ -141,7 +136,6 @@ export class CallManager {
       this.failed(gen, e);
     }
   }
-
   /** Answers the ringing call; [withVideo] turns the camera on (a video call can be answered with voice only). */
   async accept(withVideo = this.state.video): Promise<void> {
     const s = this.state;
@@ -149,7 +143,6 @@ export class CallManager {
     this.opts.ringtone?.stop();
     await this.answer({ ...s, phase: "connecting", cameraOn: withVideo, error: null }, s.callId, withVideo);
   }
-
   /** Joins a call already running in a conversation (a group call, or one this account's other device is in). */
   async join(conversationId: string, callId: string, video: boolean): Promise<void> {
     if (!this.isFree() || !this.opts.supported()) return;
@@ -157,11 +150,9 @@ export class CallManager {
     this.markHandled(callId);
     await this.answer({ ...idleCall, phase: "connecting", callId, conversationId, video, cameraOn: video, ...about }, callId, video);
   }
-
   declinedHere(callId: string): boolean {
     return this.declined.has(callId);
   }
-
   decline(): void {
     const s = this.state;
     if (s.phase !== "incoming" || !s.callId) return;
@@ -173,11 +164,9 @@ export class CallManager {
     this.gen++;
     this.set(idleCall);
   }
-
   hangup(): void {
     this.finish("hangup", true);
   }
-
   private async answer(next: CallUiState, callId: string, withVideo: boolean): Promise<void> {
     const gen = this.begin(next);
     this.created = false;
@@ -192,7 +181,6 @@ export class CallManager {
       this.failed(gen, e);
     }
   }
-
   /**
    * A new call's key: kept here, and sent to every device in the conversation inside an encrypted control message. The
    * message goes out while this browser connects to the media room (android round 7, bug 7): this browser already has
@@ -209,7 +197,6 @@ export class CallManager {
     if (!this.state.voiceRoom) void this.host.recordCall(callId, conversationId, video).catch(() => undefined);
     return key;
   }
-
   /** Opens the devices first: this is when the browser asks. Placing a call needs the microphone; answering doesn't. */
   private async prepare(gen: number, session: MediaSession, video: boolean, needMicrophone: boolean): Promise<void> {
     const listenOnly = this.state.listenOnly;
@@ -227,7 +214,6 @@ export class CallManager {
     this.patch({ askingPermission: false, devices, micOn: !listenOnly && !devices.microphone, cameraOn: video && !devices.camera });
     if (needMicrophone && !listenOnly && devices.microphone) throw new CallError(CallFailure.device("microphone", devices.microphone));
   }
-
   /** The key arrives as an encrypted control message, possibly after the ring; late joiners ask the creator (T5.3). */
   private async waitForKey(gen: number, callId: string): Promise<string> {
     const deadline = this.now() + (this.opts.keyWaitMs ?? KEY_WAIT_MS);
@@ -247,7 +233,6 @@ export class CallManager {
       this.check(gen);
     }
   }
-
   private async requestKey(callId: string): Promise<void> {
     try {
       const { call } = await this.host.api.json("GET", `/v1/calls/${encodeURIComponent(callId)}`, zCallRes);
@@ -256,7 +241,6 @@ export class CallManager {
       /* asked again on a later poll */
     }
   }
-
   private async connect(gen: number, session: MediaSession, callId: string, grant: MediaGrant, key: string): Promise<void> {
     // What the server allows this person to share at here (Meldiq Plus); older servers send nothing: as before.
     this.patch({ verification: await verificationCode(key, callId), security: "verifying", shareQualities: allowedShareQualities(grant.limits?.screen) });
@@ -284,9 +268,7 @@ export class CallManager {
     this.patch({ phase: alone ? (this.created ? "outgoing" : "connecting") : "connected", connectedAt: alone ? null : this.now(), mediaEpoch: this.state.mediaEpoch + 1 });
     this.refresh();
   }
-
   // ───────────────────────── media session events ─────────────────────────
-
   private newSession(gen: number): MediaSession {
     let self: MediaSession | null = null;
     const live = () => gen === this.gen && self !== null && this.session === self;
@@ -301,7 +283,7 @@ export class CallManager {
       remoteJoined: () => live() && this.onRemoteJoined(),
       remoteLeft: (remaining) => live() && this.onRemoteLeft(remaining),
       audioBlocked: (audioBlocked) => live() && this.patch({ audioBlocked }),
-      shareEnded: (name) => live() && this.patch({ notice: `${name} stopped sharing their screen` }),
+      shareEnded: (name) => live() && this.patch({ notice: uiText("calls.interface.value0_stopped_sharing_their_screen_c9ca98c", { value0: name }) }),
       shareStats: (shareStats) => live() && this.patch({ shareStats }),
       watchStats: (stats) => {
         if (!live()) return;
@@ -314,20 +296,17 @@ export class CallManager {
     this.session = self;
     return self;
   }
-
   /** Where a call that has its media connection stands. */
   private settledPhase(): CallUiState["phase"] {
     if (this.state.connectedAt !== null || (this.session?.remoteCount() ?? 0) > 0 || this.state.isGroup) return "connected";
     return this.created ? "outgoing" : "connecting";
   }
-
   private onRemoteJoined(): void {
     clearTimeout(this.peerTimer);
     this.peerTimer = undefined;
     const s = this.state;
     this.patch({ phase: s.phase === "reconnecting" ? s.phase : "connected", connectedAt: s.connectedAt ?? this.now(), peerReconnecting: false });
   }
-
   /** 1:1: the other person may only have lost their connection (a hang-up arrives as an "ended" event): wait for them. */
   private onRemoteLeft(remaining: number): void {
     if (this.state.isGroup || remaining > 0 || this.peerTimer) return;
@@ -337,7 +316,6 @@ export class CallManager {
       if ((this.session?.remoteCount() ?? 0) === 0) this.finish("lost", true);
     }, this.opts.peerWindowMs ?? PEER_WINDOW_MS);
   }
-
   private onDisconnected(gen: number, reason: string | undefined): void {
     const phase = this.state.phase;
     if (phase === "idle" || phase === "ended" || this.rejoining) return;
@@ -347,7 +325,6 @@ export class CallManager {
     else if (reason === "PARTICIPANT_REMOVED") this.finish("removed", false);
     else this.finish("disconnected", true);
   }
-
   /**
    * This browser's media connection dropped and LiveKit gave up: new credentials from the server and a new room
    * connection with the same key, with backoff, for up to 45 s (android CallRecovery). "Reconnecting…" meanwhile.
@@ -376,7 +353,6 @@ export class CallManager {
       this.rejoining = false;
     }
   }
-
   private async rejoinOnce(gen: number, callId: string, key: string): Promise<boolean> {
     let grant: MediaGrant;
     try {
@@ -407,11 +383,19 @@ export class CallManager {
     this.refresh();
     return true;
   }
-
   // ───────────────────────── server events and keys ─────────────────────────
-
   /** A realtime `call` frame (server ws.ts): ring, started, updated, alerted, declined, dismissed, ended, moderated. */
-  async onCallEvent(event: string, call: Call, extra: { from?: { displayName?: unknown }; reason?: unknown; action?: unknown }): Promise<void> {
+  async onCallEvent(
+    event: string,
+    call: Call,
+    extra: {
+      from?: {
+        displayName?: unknown;
+      };
+      reason?: unknown;
+      action?: unknown;
+    },
+  ): Promise<void> {
     const current = call.id === this.state.callId;
     if (current && call.voiceRoom && event !== "ended") this.patch({ voiceRoom: true, hands: call.hands });
     switch (event) {
@@ -444,7 +428,6 @@ export class CallManager {
         return;
     }
   }
-
   private async onRing(call: Call, callerName: string | null): Promise<void> {
     if (this.handled.has(call.id) || call.createdBy === this.host.me.userId || call.state === "ENDED") return;
     if (!this.isFree()) {
@@ -459,7 +442,7 @@ export class CallManager {
     const about = await this.host.describe(call.conversationId);
     if (!this.isFree()) return;
     const isGroup = about.isGroup || (call.conversationType ?? "DM") !== "DM";
-    const caller = this.host.displayName(call.createdBy) ?? callerName ?? "Someone";
+    const caller = this.host.displayName(call.createdBy) ?? callerName ?? uiText("messaging.react_someone");
     const supported = this.opts.supported();
     this.begin({
       ...idleCall,
@@ -467,7 +450,7 @@ export class CallManager {
       callId: call.id,
       conversationId: call.conversationId,
       title: isGroup ? about.title : caller,
-      subtitle: isGroup ? `${caller} is calling` : null,
+      subtitle: isGroup ? uiText("calls.interface.value0_is_calling_5322b08", { value0: caller }) : null,
       colorIndex: about.colorIndex,
       video: call.video,
       isGroup,
@@ -478,7 +461,6 @@ export class CallManager {
     this.opts.ringtone?.start();
     this.host.ringAlert?.(isGroup ? `${caller} · ${about.title}` : caller, call.video, call.conversationId);
   }
-
   /** After a reconnect, once the backlog (and with it any call key) has arrived: calls that rang while we were away. */
   async recoverRinging(): Promise<void> {
     if (!this.opts.supported() || !this.isFree()) return;
@@ -490,13 +472,11 @@ export class CallManager {
     }
     for (const c of calls) if (shouldRing(c, this.host.me.userId, this.now(), this.handled, this.isFree())) await this.onRing(c, null);
   }
-
   /** A `call_invite` whose envelope signature proved its sender; [call] is the server's record (null: unknown). */
   onInvite(callId: string, conversationId: string, senderUserId: string, key: string, call: Call | null): KeyVerdict {
     const refused = judgeKey(call, conversationId, senderUserId);
     return refused ?? this.keys.accept({ callId, conversationId, fromUserId: senderUserId, key });
   }
-
   /**
    * A late joiner asks for a call's key: this account answers as the call's creator, or in a voice room while connected
    * to its call (a room outlives whoever opened it; android MessageRepository call_key_request), while the call is live.
@@ -515,14 +495,11 @@ export class CallManager {
       /* the joiner asks again */
     }
   }
-
   /** Test and diagnostics: whether this browser holds a key for [callId] (never the key itself). */
   hasKey(callId: string): boolean {
     return this.keys.get(callId) !== null;
   }
-
   // ───────────────────────── controls ─────────────────────────
-
   async toggleMicrophone(): Promise<void> {
     if (this.state.listenOnly) return;
     // Unmuting while deafened brings the sound back too (as on the phone: you can't talk without hearing).
@@ -532,25 +509,20 @@ export class CallManager {
     }
     await this.setDevice("microphone", !this.state.micOn || this.state.devices.microphone !== null);
   }
-
   /** The call whose join preferences (join muted or deafened, push to talk) were applied. */
   private joinPrefsFor: string | null = null;
-
   /** Push to talk (Settings › Voice & Audio): the microphone is on only while the key is held, never while deafened. */
   async pushToTalk(down: boolean): Promise<void> {
     if (!this.session || this.state.listenOnly || this.state.deafened || !this.opts.callPrefs?.().pushToTalk) return;
     if (down !== this.state.micOn) await this.setDevice("microphone", down).catch(() => undefined);
   }
-
   /** The speaker or volume changed in Settings: everyone's sound follows at once. */
   applyOutput(): void {
     const prefs = this.opts.callPrefs?.();
     this.session?.setOutput?.({ speakerId: prefs?.speakerId ?? null, volume: prefs?.outputVolume ?? 100 });
   }
-
   /** Mic state before deafening, so undeafening only turns it back on if it was on (batch B10). */
   private micBeforeDeafen = false;
-
   /** Deafen (batch B10): you hear nobody and your microphone is off; again, both come back as they were. */
   async toggleDeafen(): Promise<void> {
     const session = this.session;
@@ -561,11 +533,9 @@ export class CallManager {
     this.patch({ deafened: next.deafened });
     if (next.micOn !== this.state.micOn && !this.state.listenOnly) await this.setDevice("microphone", next.micOn);
   }
-
   async toggleCamera(): Promise<void> {
     await this.setDevice("camera", !this.state.cameraOn || this.state.devices.camera !== null);
   }
-
   private async setDevice(device: "microphone" | "camera", on: boolean): Promise<void> {
     const session = this.session;
     if (!session) return;
@@ -577,7 +547,6 @@ export class CallManager {
     }
     if (this.session === session) this.refresh();
   }
-
   /** Shares this browser's screen, or stops (the browser's own "Stop sharing" also stops it; the state follows). */
   async toggleScreenShare(opts?: { quality: ShareQuality; audio: boolean }): Promise<void> {
     const session = this.session;
@@ -587,11 +556,11 @@ export class CallManager {
     const share = { ...wanted, quality: clampShareQuality(wanted.quality, this.state.shareQualities) };
     const on = !this.state.screenSharing;
     if (on && share.quality !== wanted.quality) {
-      this.patch({ notice: `Sharing at ${SHARE_QUALITIES[share.quality].label}: higher quality comes with Meldiq Plus or this community's Sparks.` });
+      this.patch({ notice: uiText("calls.interface.sharing_at_value0_higher_quality_comes_with_meldiq_plus_or_this_c_8a9bfc5", { value0: SHARE_QUALITIES[share.quality].label }) });
     }
     const max = Math.max(2, this.opts.maxScreenShares ?? MAX_SCREEN_SHARES);
     if (on && !mayShare(session.shares(), max)) {
-      this.patch({ notice: `Up to ${max} screens can be shared at once. Ask someone to stop sharing first.` });
+      this.patch({ notice: uiText("calls.interface.up_to_value0_screens_can_be_shared_at_once_ask_someone_to_stop_sh_5f529f8", { value0: max }) });
       return;
     }
     try {
@@ -600,35 +569,30 @@ export class CallManager {
     } catch (e) {
       // Closing the browser's screen picker isn't a failure to show.
       if (e instanceof ScreenShareUnavailable) this.patch({ error: e.message });
-      else if (!(e instanceof DeviceError && e.issue === "denied")) this.patch({ error: "Your screen couldn't be shared." });
+      else if (!(e instanceof DeviceError && e.issue === "denied")) this.patch({ error: uiText("calls.interface.your_screen_couldn_t_be_shared_16af5c4") });
     }
     if (this.session === session) this.refresh();
   }
-
   /** Changes the quality of this browser's share while it runs (also remembered for next time by the caller). */
   async setShareQuality(wanted: ShareQuality): Promise<void> {
     const session = this.session;
     const quality = clampShareQuality(wanted, this.state.shareQualities);
     if (!session || !this.state.screenSharing || this.state.shareQuality === quality) return;
-    await session.setShareQuality(quality).catch(() => this.patch({ notice: "The share's quality couldn't be changed." }));
+    await session.setShareQuality(quality).catch(() => this.patch({ notice: uiText("calls.interface.the_share_s_quality_couldn_t_be_changed_2ba5a37") }));
     this.patch({ shareQuality: quality });
   }
-
   /** Watches the share [key], or goes back to the people (null). Only this browser's view changes. */
   watchShare(key: string | null): void {
     if (key !== null && !this.state.shares.some((s) => s.key === key && !s.isLocal)) return;
     this.patch({ watching: key, watchDismissed: key === null, watchStats: null });
     this.session?.watchShare(key);
   }
-
   attachShare(key: string, el: HTMLVideoElement): () => void {
     return this.session?.attachShare(key, el) ?? (() => undefined);
   }
-
   async listDevices(kind: DeviceKind): Promise<MediaDeviceChoice[]> {
     return (await this.session?.listDevices(kind)) ?? [];
   }
-
   /** Switches microphone, camera or speaker during the call. */
   async useDevice(kind: DeviceKind, deviceId: string): Promise<void> {
     const session = this.session;
@@ -636,26 +600,21 @@ export class CallManager {
     try {
       await session.useDevice(kind, deviceId);
     } catch {
-      this.patch({ error: "That device couldn't be used. Choose another." });
+      this.patch({ error: uiText("calls.interface.that_device_couldn_t_be_used_choose_another_f5f1b2a") });
     }
     if (this.session === session) this.refresh();
   }
-
   async startAudio(): Promise<void> {
     await this.session?.startAudio().catch(() => undefined);
     this.patch({ audioBlocked: false });
   }
-
   setMinimized(minimized: boolean): void {
     this.patch({ minimized });
   }
-
   dismissNotice(): void {
     this.patch({ notice: null });
   }
-
   // ───────────────────────── voice rooms ─────────────────────────
-
   /** Raises or lowers this person's hand; everyone in the room sees the queue. */
   async raiseHand(raised: boolean): Promise<void> {
     const id = this.state.callId;
@@ -664,10 +623,9 @@ export class CallManager {
       const { call } = await this.host.api.json("POST", `/v1/calls/${encodeURIComponent(id)}/hand`, zCallRes, { body: { raised } });
       if (call.id === this.state.callId) this.patch({ hands: call.hands, notice: null });
     } catch (e) {
-      this.patch({ notice: e instanceof ApiError ? e.message : "Your hand couldn't be changed. Try again." });
+      this.patch({ notice: e instanceof ApiError ? e.message : uiText("calls.interface.your_hand_couldn_t_be_changed_try_again_675f1e7") });
     }
   }
-
   /** The room's managers: mute someone's microphone (only they can turn it on again), lower their hand, or remove them. */
   async moderate(userId: string, action: ModerationAction): Promise<void> {
     const id = this.state.callId;
@@ -676,32 +634,28 @@ export class CallManager {
       const { call } = await this.host.api.json("POST", `/v1/calls/${encodeURIComponent(id)}/moderate`, zCallRes, { body: { userId, action } });
       if (call.id === this.state.callId) this.patch({ hands: call.hands, notice: null });
     } catch (e) {
-      this.patch({ notice: e instanceof ApiError ? e.message : "That didn't work. Try again." });
+      this.patch({ notice: e instanceof ApiError ? e.message : uiText("workspace.interface.that_didn_t_work_try_again_5da2573") });
     }
   }
-
   /** A manager acted on this person: a muted microphone shows off here too; removal arrives as the call's end. */
   private async onModerated(action: unknown): Promise<void> {
     if (action === "mute") {
       await this.session?.setMicrophone(false).catch(() => undefined);
       this.refresh();
-      this.patch({ notice: "A room manager muted your microphone. You can turn it on again." });
+      this.patch({ notice: uiText("calls.interface.a_room_manager_muted_your_microphone_you_can_turn_it_on_again_3b921ee") });
     } else if (action === "lower_hand") {
-      this.patch({ notice: "A room manager lowered your hand." });
+      this.patch({ notice: uiText("calls.interface.a_room_manager_lowered_your_hand_a080bfe") });
     }
   }
-
   attachVideo(identity: string, el: HTMLVideoElement): () => void {
     return this.session?.attachVideo(identity, el) ?? (() => undefined);
   }
-
   /** The tab is closing: tell the server now, so the other side isn't left waiting for a reconnect. */
   leaveOnUnload(): void {
     const s = this.state;
     if (!s.callId || s.phase === "idle" || s.phase === "ended" || s.phase === "incoming") return;
     void this.endOnServer(s.callId, this.othersInCall(s), true);
   }
-
   /** Sign-out or another tab took over: drop everything, keys included. */
   stop(): void {
     this.teardown();
@@ -709,9 +663,7 @@ export class CallManager {
     this.gen++;
     this.set(idleCall);
   }
-
   // ───────────────────────── ending ─────────────────────────
-
   private finish(reason: string, notifyServer: boolean): void {
     const s = this.state;
     if (s.phase === "idle" || s.phase === "ended") return;
@@ -730,7 +682,6 @@ export class CallManager {
     this.set({ ...s, phase: "ended", endReason: reason, participants: [], latencyMs: null, askingPermission: false, waitingForKey: false, peerReconnecting: false });
     this.scheduleReset(gen, ENDED_SHOWN_MS);
   }
-
   private failed(gen: number, e: unknown): void {
     if (e instanceof Superseded || gen !== this.gen) return;
     const message = e instanceof CallError ? e.message : e instanceof IdentityChangedError ? CallFailure.KEY_CHANGED : CallFailure.forApi(e);
@@ -745,12 +696,10 @@ export class CallManager {
     this.set({ ...s, phase: "ended", error: message, endReason: "error", participants: [], latencyMs: null, askingPermission: false, waitingForKey: false });
     this.scheduleReset(next, ERROR_SHOWN_MS);
   }
-
   /** A voice room's call is left, never ended for everyone: it closes by itself when the last person leaves. */
   private othersInCall(s: CallUiState): boolean {
     return s.voiceRoom || (s.isGroup && s.participants.some((p) => !p.isLocal));
   }
-
   /** 1:1 calls end for both; in a group call with others still in it, this browser only leaves. */
   private async endOnServer(callId: string, othersRemain: boolean, keepalive = false): Promise<void> {
     const id = encodeURIComponent(callId);
@@ -760,7 +709,6 @@ export class CallManager {
       await this.host.api.call("POST", `/v1/calls/${id}/leave`, { keepalive }).catch(() => undefined);
     }
   }
-
   private teardown(): void {
     clearTimeout(this.peerTimer);
     clearTimeout(this.resetTimer);
@@ -770,20 +718,16 @@ export class CallManager {
     this.session = null;
     void session?.disconnect().catch(() => undefined);
   }
-
   private scheduleReset(gen: number, ms: number): void {
     clearTimeout(this.resetTimer);
     this.resetTimer = setTimeout(() => {
       if (gen === this.gen && this.state.phase === "ended") this.set(idleCall);
     }, ms);
   }
-
   // ───────────────────────── state ─────────────────────────
-
   private isFree(): boolean {
     return this.state.phase === "idle" || this.state.phase === "ended";
   }
-
   /** Starts a new attempt with [next] as the call screen; returns its generation. */
   private begin(next: CallUiState): number {
     this.teardown();
@@ -791,11 +735,9 @@ export class CallManager {
     this.set(next);
     return this.gen;
   }
-
   private check(gen: number): void {
     if (gen !== this.gen) throw new Superseded();
   }
-
   private refresh(): void {
     const session = this.session;
     if (!session) return;
@@ -816,33 +758,27 @@ export class CallManager {
       ...(local ? { micOn: local.micOn, cameraOn: local.cameraOn, screenSharing: local.screenOn } : {}),
     });
   }
-
   private markHandled(id: string | null): void {
     if (!id) return;
     this.handled.delete(id);
     this.handled.add(id);
     while (this.handled.size > MAX_HANDLED) this.handled.delete(this.handled.values().next().value as string);
   }
-
   /** Writes that change nothing don't notify: listeners may call back in (sign-out stops the engine from one). */
   private set(call: CallUiState): void {
     this.host.state.update((s: AppState) => (s.call === call ? s : { ...s, call }));
   }
-
   private patch(p: Partial<CallUiState>): void {
     this.host.state.update((s: AppState) => {
       const changed = (Object.keys(p) as (keyof CallUiState)[]).some((k) => s.call[k] !== p[k]);
       return changed ? { ...s, call: { ...s.call, ...p } } : s;
     });
   }
-
   private now(): number {
     return this.opts.now?.() ?? Date.now();
   }
-
   private sleep(ms: number): Promise<void> {
     return this.opts.sleep?.(ms) ?? new Promise((r) => setTimeout(r, ms));
   }
 }
-
 const sameShare = (a: CallShareView, b: CallShareView | undefined): boolean => !!b && a.key === b.key && a.ready === b.ready && a.name === b.name && a.withAudio === b.withAudio;

@@ -1,7 +1,10 @@
 import type { Conversation, QueueItem } from "../api/schemas";
 import { countsEveryone, levelOf, type NavPrefs, shouldNotify, workspaceOf } from "../sync/navPrefs";
 import { paused } from "../sync/status";
-import { conversationTitle } from "../ui/format";
+import notifications from "../../locales/en/notifications.json";
+
+export type WakeCopy = typeof notifications.background;
+export const DEFAULT_WAKE_COPY: WakeCopy = notifications.background;
 
 /** A call rings for about this long; an older RINGING call is a leftover, not someone calling now. */
 export const RING_WINDOW_MS = 60_000;
@@ -13,6 +16,9 @@ export interface WakePrefs {
   notifications: boolean;
   groupNotifications: boolean;
   notificationText: boolean;
+  /** Only this locale's eight short labels, mirrored by the page; no dictionary downloads in a push handler. */
+  locale?: string;
+  copy?: WakeCopy;
 }
 
 export interface WakeInput {
@@ -39,8 +45,8 @@ export interface WakeNotice {
 }
 
 const urlOf = (c: Conversation): string => `/${c.type === "CHANNEL" ? "home" : "dms"}/c/${encodeURIComponent(c.id)}`;
-const titleOf = (c: Conversation, me: string): string => {
-  const t = conversationTitle(c, me, {});
+const titleOf = (c: Conversation, me: string, copy: WakeCopy): string => {
+  const t = c.type === "CHANNEL" ? (c.name ?? copy.channel) : c.type === "GROUP" ? (c.name ?? copy.group) : (c.members?.find((m) => m.id !== me)?.displayName ?? copy.directMessage);
   return c.type === "CHANNEL" ? `#${t}` : t;
 };
 
@@ -56,6 +62,7 @@ const MAX_BODY = 140;
 const clsOf = (it: WakeInput["items"][number]) => it.payload.event?.cls ?? it.payload.cls ?? "message";
 
 export function wakeBatch(i: WakeInput): { notices: WakeNotice[]; identities: Record<string, string> } {
+  const copy = i.prefs.copy ?? DEFAULT_WAKE_COPY;
   if (!i.prefs.notifications) return { notices: [], identities: {} };
   const seen = new Set<string>();
   const messageIds = new Map<string, string[]>();
@@ -86,8 +93,17 @@ export function wakeBatch(i: WakeInput): { notices: WakeNotice[]; identities: Re
   const messages = [...counts].map(([id, n]): WakeNotice => {
     const c = i.conversations[id];
     return i.prefs.notificationText
-      ? { tag: id, title: titleOf(c, i.me), body: n === 1 ? (latest.get(id) ?? "New message") : `${n} new messages${latest.has(id) ? `: ${latest.get(id)}` : ""}`, url: urlOf(c), call: false }
-      : { tag: id, title: "Meldiq", body: "New message", url: urlOf(c), call: false };
+      ? {
+          tag: id,
+          title: titleOf(c, i.me, copy),
+          body:
+            n === 1
+              ? (latest.get(id) ?? copy.newMessage)
+              : `${copy.newMessages.replace("{count}", new Intl.NumberFormat(i.prefs.locale ?? "en").format(n))}${latest.has(id) ? `: ${latest.get(id)}` : ""}`,
+          url: urlOf(c),
+          call: false,
+        }
+      : { tag: id, title: "Meldiq", body: copy.newMessage, url: urlOf(c), call: false };
   });
   const notices = [...calls, ...messages];
   const identities = Object.fromEntries(
@@ -102,6 +118,7 @@ export function wakeNotices(i: WakeInput): WakeNotice[] {
 
 /** Calls ringing for this person: a call still RINGING, started recently, whose invite came from someone else. */
 function incomingCalls(i: WakeInput): WakeNotice[] {
+  const copy = i.prefs.copy ?? DEFAULT_WAKE_COPY;
   const out: WakeNotice[] = [];
   for (const c of Object.values(i.conversations)) {
     const call = c.activeCall;
@@ -110,7 +127,7 @@ function incomingCalls(i: WakeInput): WakeNotice[] {
       (it) => it.kind !== "receipt" && it.conversationId === c.id && it.senderUserId !== i.me && clsOf(it) === "control" && it.createdAt >= call.startedAt - INVITE_SLACK_MS,
     );
     if (!invited) continue;
-    out.push({ tag: `call-${c.id}`, title: i.prefs.notificationText ? titleOf(c, i.me) : "Meldiq", body: call.video ? "Incoming video call" : "Incoming voice call", url: urlOf(c), call: true });
+    out.push({ tag: `call-${c.id}`, title: i.prefs.notificationText ? titleOf(c, i.me, copy) : "Meldiq", body: call.video ? copy.incomingVideo : copy.incomingVoice, url: urlOf(c), call: true });
   }
   return out;
 }

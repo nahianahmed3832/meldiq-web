@@ -1,3 +1,4 @@
+import { text as uiText } from "../i18n";
 import { z } from "zod";
 import { ApiError, type ApiClient } from "../api/client";
 import { openReminder, type ReminderKey, sealReminder } from "../crypto/reminderKeys";
@@ -21,16 +22,13 @@ import {
   zReminderContent,
   zReminderDto,
 } from "./reminderRules";
-
 /** What the Reminders screen shows (server feature `reminders`). [locked]: this browser can't read or seal them yet. */
 export interface RemindersState {
   available: boolean;
   locked: boolean;
   items: Reminder[];
 }
-
 export const NO_REMINDERS: RemindersState = { available: false, locked: false, items: [] };
-
 export interface ReminderHost {
   api: ApiClient;
   key(): ReminderKey | null;
@@ -39,11 +37,9 @@ export interface ReminderHost {
   /** Shows a reminder that went off (once per occurrence): true when it was shown. */
   show(r: Reminder): Promise<boolean>;
 }
-
 const zList = z.object({ reminders: z.array(zReminderDto) });
 const zOne = z.object({ reminder: zReminderDto });
 const enc = encodeURIComponent;
-
 /**
  * Reminders kept and fired by the server (server docs/REMINDERS.md; android ReminderRepository): content sealed here with
  * the account's reminder key, the server only knows when each is due. Refreshed on start, on reconnect and on every
@@ -52,13 +48,10 @@ const enc = encodeURIComponent;
 export class ReminderSync {
   private items: Reminder[] = [];
   private refreshing: Promise<void> | null = null;
-
   constructor(private readonly host: ReminderHost) {}
-
   private publish(): void {
     this.host.publish({ available: this.host.available(), locked: this.host.key() === null, items: this.items });
   }
-
   private async decode(d: ReminderDto): Promise<Reminder> {
     const k = this.host.key();
     let content: ReminderContent | null = null;
@@ -82,18 +75,15 @@ export class ReminderSync {
       completedAt: d.completedAt ?? null,
     };
   }
-
   private async seal(id: string, content: ReminderContent): Promise<string> {
     const k = this.host.key();
-    if (!k) throw new Error("This browser can't make reminders yet: unlock them with your recovery key first.");
+    if (!k) throw new Error(uiText("workspace.interface.this_browser_can_t_make_reminders_yet_unlock_them_with_your_recov_391acb7"));
     return sealReminder(k, id, new TextEncoder().encode(JSON.stringify(content)));
   }
-
   refresh(): Promise<void> {
     this.refreshing ??= this.load().finally(() => (this.refreshing = null));
     return this.refreshing;
   }
-
   private async load(): Promise<void> {
     if (!this.host.available()) {
       this.items = [];
@@ -108,7 +98,6 @@ export class ReminderSync {
     this.publish();
     await this.showFired();
   }
-
   private async showFired(): Promise<void> {
     const now = Date.now();
     for (const r of this.items) {
@@ -117,12 +106,10 @@ export class ReminderSync {
       if (await this.host.show(r).catch(() => false)) await this.host.api.call("POST", `/v1/reminders/${enc(r.id)}/ack`, { body: { firedAt: r.firedAt } }).catch(() => undefined);
     }
   }
-
   private put(r: Reminder): void {
     this.items = [...this.items.filter((x) => x.id !== r.id), r];
     this.publish();
   }
-
   async create(input: { title: string; note?: string | null; dueAt: number; recurrence: Recurrence | null; ref?: ReminderContent["ref"]; id?: string; source?: string }): Promise<Reminder> {
     const id = input.id ?? newReminderId();
     const note = input.note?.trim() ? input.note.trim().slice(0, NOTE_MAX) : null;
@@ -138,7 +125,6 @@ export class ReminderSync {
     this.put(created);
     return created;
   }
-
   /** A change based on the current revision; if another device changed it first, once more on the fresh copy. */
   private async patch(id: string, fields: Record<string, unknown>): Promise<Reminder> {
     const attempt = async (rev: number) => (await this.host.api.json("PATCH", `/v1/reminders/${enc(id)}`, zOne, { body: { rev, ...fields } })).reminder;
@@ -154,30 +140,24 @@ export class ReminderSync {
     this.put(updated);
     return updated;
   }
-
   reschedule(id: string, dueAt: number): Promise<Reminder> {
     return this.patch(id, { dueAt });
   }
-
   complete(id: string): Promise<Reminder> {
     return this.patch(id, { state: "done" });
   }
-
   /** Stops reminding; never marks what it points at as done. */
   dismiss(id: string): Promise<Reminder> {
     return this.patch(id, { state: "dismissed" });
   }
-
   async edit(id: string, content: ReminderContent, dueAt: number, recurrence: Recurrence | null): Promise<Reminder> {
     return this.patch(id, { sealed: await this.seal(id, content), dueAt, timeZone: browserZone(), repeat: recurrence ? { recurrence, ...repeatRule(dueAt) } : null });
   }
-
   async remove(id: string): Promise<void> {
     await this.host.api.call("DELETE", `/v1/reminders/${enc(id)}`);
     this.items = this.items.filter((x) => x.id !== id);
     this.publish();
   }
-
   /**
    * Keeps saved messages' reminders on the server (android ReminderRepository.syncLater): one per saved item with a time,
    * moved or finished to match. Every device does it; the shared id and revisions keep them from fighting.
@@ -205,13 +185,17 @@ export class ReminderSync {
     }
   }
 }
-
 /** Reminder occurrences already shown on this browser ("<id>@<firedAt>"), so each goes off once here. */
 const SHOWN_KEY = "reminders.shown";
 const SHOWN_KEPT = 200;
-
 /** True the first time this browser sees this occurrence of [r] go off (and remembers it). */
-export async function firstShowing(store: { getValue<T>(k: string): Promise<T | undefined>; setValue(k: string, v: unknown): Promise<void> }, r: Reminder): Promise<boolean> {
+export async function firstShowing(
+  store: {
+    getValue<T>(k: string): Promise<T | undefined>;
+    setValue(k: string, v: unknown): Promise<void>;
+  },
+  r: Reminder,
+): Promise<boolean> {
   const key = `${r.id}@${r.firedAt}`;
   const shown = ((await store.getValue<string[]>(SHOWN_KEY)) ?? []).slice(-SHOWN_KEPT);
   if (shown.includes(key)) return false;

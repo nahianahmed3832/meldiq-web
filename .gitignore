@@ -16,3 +16,7 @@ public/sw.js
 public/sw.js.map
 
 /node_modules
+
+# Standalone-page locale assets are derived from the committed dictionaries.
+public/public-locale.js
+public/locales/

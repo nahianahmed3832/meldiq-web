@@ -1,3 +1,6 @@
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
+import { Localized } from "../../i18n/Localized";
 import { CharLimitNote, overCharLimit } from "../mojo/CharLimit";
 import { useMojoLimits, useUploadLimit } from "../mojo/useMojoLimits";
 import { size } from "../mojo/mojoFormat";
@@ -41,10 +44,8 @@ import { ComposerHoldBar, ComposerNoteLine, useComposerGates } from "./ComposerG
 import { hasHeading, refusalText } from "../../sync/channelGates";
 import { clearComposerNote, setComposerNote } from "../../sync/composerNotes";
 import { type MentionRole, mentionableRoles, roleToken, rolesStillMentioned } from "../../sync/roleMentions";
-
 /** A role in the mention list is shown among people with this id prefix. */
 const ROLE_PREFIX = "role:";
-
 interface ComposerProps {
   conversation: Conversation;
   title: string;
@@ -56,8 +57,8 @@ interface ComposerProps {
   dropped: File[];
   onDroppedTaken: () => void;
 }
-
 export function Composer(props: ComposerProps) {
+  useLocaleRender();
   const { conversation: c } = props;
   const engine = useEngine();
   const planUploadLimit = useUploadLimit(c.type === "CHANNEL" ? c.orgId : null);
@@ -77,7 +78,11 @@ export function Composer(props: ComposerProps) {
   useEffect(() => () => preparing.current?.abort(), []);
   const [busy, setBusy] = useState<string | null>(null);
   const [members, setMembers] = useState<Member[]>([]);
-  const [suggest, setSuggest] = useState<{ start: number; items: Member[]; index: number } | null>(null);
+  const [suggest, setSuggest] = useState<{
+    start: number;
+    items: Member[];
+    index: number;
+  } | null>(null);
   const input = useRef<HTMLTextAreaElement>(null);
   const fileInput = useRef<HTMLInputElement>(null);
   const emoji = useMenu();
@@ -117,7 +122,6 @@ export function Composer(props: ComposerProps) {
   // API 0.65.0 batch B: "/" lists the commands of the bots in this channel; sending one runs it.
   const slash = useSlashCommands(c, props.threadRoot ? "" : text, (t) => onChange(t), members);
   const wordy = useWordyCommand(c);
-
   // Draft: restored when the conversation opens, saved as you type (main composer only).
   useEffect(() => {
     if (props.threadRoot) return;
@@ -141,7 +145,6 @@ export function Composer(props: ComposerProps) {
       document.removeEventListener("visibilitychange", hidden);
     };
   }, [c.id, engine, props.threadRoot, flushDraft]);
-
   useEffect(() => {
     if (c.type === "DM") return;
     engine
@@ -149,7 +152,6 @@ export function Composer(props: ComposerProps) {
       .then(setMembers)
       .catch(() => setMembers([]));
   }, [c.id, c.type, engine]);
-
   useEffect(() => {
     if (props.dropped.length) {
       addFiles(props.dropped);
@@ -157,11 +159,9 @@ export function Composer(props: ComposerProps) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.dropped]);
-
   useEffect(() => {
     if (props.replyTo) input.current?.focus();
   }, [props.replyTo]);
-
   const autosize = useCallback(() => {
     const el = input.current;
     if (!el) return;
@@ -185,12 +185,12 @@ export function Composer(props: ComposerProps) {
       window.visualViewport?.removeEventListener("resize", resize);
     };
   }, [autosize]);
-
   const addFiles = useCallback(
     (list: File[]) => {
-      if (!can.attach) return engine.notice("error", "You can't share files in this channel.");
-      if (list.some((f) => f.size === 0)) engine.notice("error", "Empty files cannot be sent.");
-      if (files.length + list.length > MAX_FILES_PER_MESSAGE) engine.notice("info", `Send up to ${MAX_FILES_PER_MESSAGE} files per message. Extra files were left out.`);
+      if (!can.attach) return engine.notice("error", uiText("messaging.interface.you_can_t_share_files_in_this_channel_25d01aa"));
+      if (list.some((f) => f.size === 0)) engine.notice("error", uiText("messaging.interface.empty_files_cannot_be_sent_2b60d70"));
+      if (files.length + list.length > MAX_FILES_PER_MESSAGE)
+        engine.notice("info", uiText("messaging.interface.send_up_to_value0_files_per_message_extra_files_were_left_out_bb1b759", { value0: MAX_FILES_PER_MESSAGE }));
       const serverLimit = fileLimit(engine.state.get().server);
       // Meldiq Plus (server docs/MOJO.md): the person's plan, or the community's Sparks, may set a lower limit.
       const limit = planUploadLimit === null ? serverLimit : Math.min(serverLimit, planUploadLimit);
@@ -199,8 +199,8 @@ export function Composer(props: ComposerProps) {
         engine.notice(
           "error",
           planUploadLimit !== null && limit === planUploadLimit
-            ? `"${tooBig.name}" is larger than ${size(limit)}, the limit on your plan here. Meldiq Plus raises it, and so do a community's Sparks.`
-            : `"${tooBig.name}" is larger than this server accepts (${Math.floor(limit / (1024 * 1024))} MB per file).`,
+            ? uiText("messaging.interface.value0_is_larger_than_value1_the_limit_on_your_plan_here_meldiq_p_2146e72", { value0: tooBig.name, value1: size(limit) })
+            : uiText("messaging.interface.value0_is_larger_than_this_server_accepts_value1_mb_per_file_aac32dd", { value0: tooBig.name, value1: Math.floor(limit / (1024 * 1024)) }),
         );
       }
       if (!files.length) setPhotoQuality("auto");
@@ -212,11 +212,10 @@ export function Composer(props: ComposerProps) {
           .map(inspectFile),
       )
         .then((detected) => setFiles((cur) => [...cur, ...detected].slice(0, MAX_FILES_PER_MESSAGE)))
-        .catch(() => engine.notice("error", "Couldn't read that file. Choose it again."));
+        .catch(() => engine.notice("error", uiText("messaging.interface.couldn_t_read_that_file_choose_it_again_7847574")));
     },
     [engine, planUploadLimit, can.attach, files.length],
   );
-
   const onChange = (value: string) => {
     setText(value);
     if (!props.threadRoot) {
@@ -231,13 +230,14 @@ export function Composer(props: ComposerProps) {
     const pool = [...members.filter((m) => m.id !== engine.device.userId)];
     const roleItems = mentionableRoles(gates.roles, true, q.query).map((r) => ({ id: `${ROLE_PREFIX}${r.id}`, username: r.name, displayName: `@${r.name}`, avatarColor: 7 }) as Member);
     const items = [
-      ...(c.canMentionAll && "everyone".startsWith(q.query) ? [{ id: "everyone", username: "everyone", displayName: "Everyone in this conversation", avatarColor: 7 } as Member] : []),
+      ...(c.canMentionAll && "everyone".startsWith(q.query)
+        ? [{ id: "everyone", username: "everyone", displayName: uiText("messaging.interface.everyone_in_this_conversation_0e13719"), avatarColor: 7 } as Member]
+        : []),
       ...roleItems.slice(0, 3),
       ...pool.filter((m) => m.username.toLowerCase().startsWith(q.query) || m.displayName.toLowerCase().includes(q.query)),
     ].slice(0, 8);
     setSuggest(items.length ? { start: q.start, items, index: 0 } : null);
   };
-
   const pick = (m: Member) => {
     if (!suggest) return;
     const caret = input.current?.selectionStart ?? text.length;
@@ -253,14 +253,13 @@ export function Composer(props: ComposerProps) {
       input.current?.focus();
     });
   };
-
   const send = async () => {
     const body = text.trim();
     if ((!body && !files.length) || busy) return;
     // Over the plan's characters (server docs/MOJO.md): the note under the box says so; nothing is cut off.
     if (overCharLimit(body, charLimit)) return;
     // Community parity A1: headings need Use Big Text; said here instead of after the server refuses.
-    if (!can.headings && hasHeading(body)) return setComposerNote(c.id, refusalText("headings_not_allowed") ?? "Headings aren't allowed here.");
+    if (!can.headings && hasHeading(body)) return setComposerNote(c.id, refusalText("headings_not_allowed") ?? uiText("messaging.interface.headings_aren_t_allowed_here_d825c95"));
     clearComposerNote(c.id);
     if (!files.length && !props.threadRoot && body.startsWith("/")) {
       // Community parity D: `/wordy` opens the private game panel, so guesses never show in the channel.
@@ -284,7 +283,7 @@ export function Composer(props: ComposerProps) {
     if (!props.threadRoot) void engine.saveDraft(c.id, "");
     try {
       if (files.length) {
-        setBusy("Preparing uploads…");
+        setBusy(uiText("messaging.interface.preparing_uploads_24fc8fc"));
         // One at a time: decoding several large photos at once can run a phone's browser out of memory.
         const prepared: File[] = [];
         preparing.current = new AbortController();
@@ -292,7 +291,7 @@ export function Composer(props: ComposerProps) {
           const inspected = await inspectFile(f);
           const optimized =
             photoQuality !== "original" && inspected.type.startsWith("video/")
-              ? await optimizeVideo(inspected, preparing.current.signal, (percent) => setBusy(`Optimizing video… ${percent}%`))
+              ? await optimizeVideo(inspected, preparing.current.signal, (percent) => setBusy(uiText("messaging.interface.optimizing_video_value0_8b15d2b", { value0: percent })))
               : await preparePhoto(inspected, photoQuality);
           if (preparing.current.signal.aborted) throw new UploadCancelled();
           prepared.push(optimized);
@@ -323,14 +322,14 @@ export function Composer(props: ComposerProps) {
       const restored = input.current?.value || body;
       setText(restored);
       if (!props.threadRoot) void engine.saveDraft(c.id, restored);
-      if (!(e instanceof UploadCancelled) && !(e instanceof DOMException && e.name === "AbortError")) engine.notice("error", e instanceof Error ? e.message : "Couldn't send.");
+      if (!(e instanceof UploadCancelled) && !(e instanceof DOMException && e.name === "AbortError"))
+        engine.notice("error", e instanceof Error ? e.message : uiText("messaging.interface.couldn_t_send_096b34b"));
     } finally {
       preparing.current = null;
       setBusy(null);
       input.current?.focus();
     }
   };
-
   /** A voice message (android VoiceViews): an encrypted audio attachment marked voice, with its length. */
   const sendVoice = async (rec: Recording) => {
     const opts = { replyTo: props.replyTo?.id, threadRoot: props.threadRoot };
@@ -345,10 +344,9 @@ export function Composer(props: ComposerProps) {
       props.onCancelReply();
       setVoice(false);
     } catch (e) {
-      engine.notice("error", e instanceof Error ? e.message : "Couldn't send the voice message.");
+      engine.notice("error", e instanceof Error ? e.message : uiText("messaging.interface.couldn_t_send_the_voice_message_d34f62a"));
     }
   };
-
   /** A contact card or location: inside the encrypted message, with a readable text for apps that don't show it. */
   const sendRich = async (content: RichContent) => {
     setRich(null);
@@ -356,38 +354,35 @@ export function Composer(props: ComposerProps) {
       await engine.sendText(c.id, fallbackText(content), { rich: content, replyTo: props.replyTo?.id, threadRoot: props.threadRoot });
       props.onCancelReply();
     } catch (e) {
-      engine.notice("error", e instanceof Error ? e.message : "Couldn't send.");
+      engine.notice("error", e instanceof Error ? e.message : uiText("messaging.interface.couldn_t_send_096b34b"));
     }
   };
-
   if (rules?.mustAgree && c.orgId && !c.archived) return <RulesAgreeBar orgId={c.orgId} />;
   if (gates.hold && c.orgId && !c.archived) return <ComposerHoldBar hold={gates.hold} org={{ id: c.orgId }} />;
-
   if (!c.canPost) {
     return (
       <div className="composer-wrap">
         <div className="composer-locked" role="note">
           <Lock size={16} />
           {c.archived
-            ? "This channel is archived. You can read it, but nobody can post."
+            ? uiText("messaging.interface.this_channel_is_archived_you_can_read_it_but_nobody_can_post_a133ac7")
             : c.timedOutUntil && c.timedOutUntil > Date.now()
-              ? `You're timed out in this community until ${untilWhen(c.timedOutUntil)}. You can read, but not post.`
+              ? uiText("messaging.interface.you_re_timed_out_in_this_community_until_value0_you_can_read_but_33f9ca9", { value0: untilWhen(c.timedOutUntil) })
               : rules?.channelId === c.id
                 ? t("rules_channel_locked")
                 : c.kind === "ANNOUNCEMENT"
-                  ? "Only the people who manage this announcement channel can post here."
-                  : "You can't post in this conversation."}
+                  ? uiText("messaging.interface.only_the_people_who_manage_this_announcement_channel_can_post_her_168fbf9")
+                  : uiText("messaging.interface.you_can_t_post_in_this_conversation_c9a4d70")}
         </div>
       </div>
     );
   }
-
   return (
     <div className="composer-wrap">
       <TransferList conversationId={c.id} />
       <SlashCommandList slash={slash} />
       {suggest && (
-        <div className="suggest card" role="listbox" aria-label="People to mention">
+        <div className="suggest card" role="listbox" aria-label={uiText("messaging.interface.people_to_mention_5295509")}>
           {suggest.items.map((m, i) => (
             <button key={m.id} role="option" aria-selected={i === suggest.index} onMouseDown={(e) => e.preventDefault()} onClick={() => pick(m)}>
               {m.id === "everyone" || m.id.startsWith(ROLE_PREFIX) ? (
@@ -396,7 +391,7 @@ export function Composer(props: ComposerProps) {
                 <UserAvatar userId={m.id} name={m.displayName} colorIndex={m.avatarColor} photoRev={m.photoRev} size={24} decorative />
               )}
               <span className="grow ellipsis">{m.displayName}</span>
-              <span className="faint">{m.id.startsWith(ROLE_PREFIX) ? "Role" : `@${m.username}`}</span>
+              <span className="faint">{m.id.startsWith(ROLE_PREFIX) ? uiText("messaging.interface.role_14736a2") : uiText("messaging.interface.value0_d91cbfb", { value0: m.username })}</span>
             </button>
           ))}
         </div>
@@ -404,7 +399,9 @@ export function Composer(props: ComposerProps) {
       {gates.note && <ComposerNoteLine conversationId={c.id} note={gates.note} />}
       {slowed && (
         <div className="composer-slowmode" role="status" aria-live="polite">
-          {nextAt > now ? `Slowmode · you can send again in ${waitText(nextAt, now)}. Messages you send now go out then.` : `Slowmode is on: one message every ${slowmodeLabel(c.slowmodeSec)}.`}
+          {nextAt > now
+            ? uiText("messaging.interface.slowmode_you_can_send_again_in_value0_messages_you_send_now_go_ou_12405db", { value0: waitText(nextAt, now) })
+            : uiText("messaging.interface.slowmode_is_on_one_message_every_value0_c53f473", { value0: slowmodeLabel(c.slowmodeSec) })}
         </div>
       )}
       <div className="composer">
@@ -413,7 +410,7 @@ export function Composer(props: ComposerProps) {
             <span className="grow ellipsis">
               {t("composer_replying")} <b>{props.replyName}</b>: {props.replyTo.text || t("composer_attachment")}
             </span>
-            <button className="icon-btn" style={{ width: 26, height: 26 }} onClick={props.onCancelReply} aria-label="Cancel reply">
+            <button className="icon-btn" style={{ width: 26, height: 26 }} onClick={props.onCancelReply} aria-label={uiText("messaging.interface.cancel_reply_2355f73")}>
               <X size={14} />
             </button>
           </div>
@@ -425,12 +422,12 @@ export function Composer(props: ComposerProps) {
               <div className="attachment-quality">
                 <label>
                   <input type="checkbox" checked={photoQuality === "original"} disabled={!!busy} onChange={(e) => setPhotoQuality(e.target.checked ? "original" : "auto")} />
-                  Original file
+                  <Localized k="messaging.interface.original_file_0ee08b3" />
                 </label>
                 <small>
                   {photoQuality === "original"
-                    ? "Send unchanged files, including any saved location metadata."
-                    : "Photos and videos are optimized automatically. Animations and already efficient files keep their quality."}
+                    ? uiText("messaging.interface.send_unchanged_files_including_any_saved_location_metadata_2a6aae6")
+                    : uiText("messaging.interface.photos_and_videos_are_optimized_automatically_animations_and_alre_b4cfb76")}
                 </small>
               </div>
             )}
@@ -441,7 +438,7 @@ export function Composer(props: ComposerProps) {
         ) : (
           <>
             <label className="sr-only" htmlFor={`composer-${c.id}-${props.threadRoot ?? "main"}`}>
-              {props.threadRoot ? "Reply in thread" : `Message ${props.title}`}
+              {props.threadRoot ? t("messaging.msg_reply_thread") : uiText("messaging.interface.message_value0_ddd26fd", { value0: props.title })}
             </label>
             {/* B14 (android one-row composer): actions, the text, emoji, and the microphone that becomes Send. */}
             <div className="composer-row">
@@ -462,13 +459,14 @@ export function Composer(props: ComposerProps) {
                 type="file"
                 multiple
                 hidden
-                aria-label="Choose files"
+                aria-label={uiText("messaging.interface.choose_files_1157def")}
                 onChange={(e) => {
                   addFiles(Array.from(e.target.files ?? []));
                   e.target.value = "";
                 }}
               />
               <textarea
+                dir="auto"
                 id={`composer-${c.id}-${props.threadRoot ?? "main"}`}
                 ref={input}
                 rows={1}
@@ -526,7 +524,7 @@ export function Composer(props: ComposerProps) {
                     setPickerTab(b.tab);
                     emoji.open(e.currentTarget);
                   }}
-                  aria-label={b.tab === "emoji" ? "Insert emoji" : b.label}
+                  aria-label={b.tab === "emoji" ? uiText("messaging.interface.insert_emoji_774fd8a") : b.label}
                   title={b.label}
                   aria-haspopup="dialog"
                   aria-expanded={!!emoji.anchor && pickerTab === b.tab}
@@ -537,7 +535,7 @@ export function Composer(props: ComposerProps) {
               {c.type !== "DM" && (
                 <button
                   className="icon-btn hide-sm"
-                  aria-label="Mention someone"
+                  aria-label={uiText("messaging.interface.mention_someone_e5efb96")}
                   onClick={() => {
                     const next = `${text}${text && !text.endsWith(" ") ? " " : ""}@`;
                     setText(next);
@@ -563,7 +561,7 @@ export function Composer(props: ComposerProps) {
                   onClick={() => void send()}
                   disabled={(!text.trim() && !files.length) || !!busy}
                   aria-label={t("composer_send")}
-                  title={prefs.enterToSend ? "Send (Enter) · Shift+Enter for a new line" : "Send (Ctrl+Enter)"}
+                  title={prefs.enterToSend ? uiText("messaging.interface.send_enter_shift_enter_for_a_new_line_610ff7c") : uiText("messaging.interface.send_ctrl_enter_6336fe7")}
                 >
                   <SendHorizontal size={17} />
                 </button>
@@ -575,7 +573,7 @@ export function Composer(props: ComposerProps) {
                 <span className="grow">{busy}</span>
                 {preparing.current && (
                   <button type="button" className="text-btn" onClick={() => preparing.current?.abort()}>
-                    Cancel
+                    {t("common.actions.cancel")}
                   </button>
                 )}
               </div>
@@ -586,15 +584,21 @@ export function Composer(props: ComposerProps) {
       {attach.anchor && (
         <Menu
           anchor={attach.anchor}
-          label="Attach"
+          label={uiText("messaging.interface.attach_d406ade")}
           onClose={attach.close}
           entries={[
-            { heading: "Share something" },
+            {
+              get heading() {
+                return uiText("messaging.interface.share_something_865228d");
+              },
+            },
             ...(can.attach
               ? [
                   {
                     label: t("composer_file"),
-                    hint: "Photos, videos and documents",
+                    get hint() {
+                      return uiText("messaging.interface.photos_videos_and_documents_5ccf8f8");
+                    },
                     icon: <FileUp size={22} aria-hidden="true" />,
                     className: "attachment-file-option",
                     onSelect: () => fileInput.current?.click(),
@@ -602,9 +606,31 @@ export function Composer(props: ComposerProps) {
                   "separator" as const,
                 ]
               : []),
-            ...(can.polls ? [{ label: "Poll…", icon: <BarChart3 size={16} />, onSelect: () => setRich("poll") }] : []),
-            { label: "Share a profile…", icon: <UserRound size={16} />, onSelect: () => setRich("contact") },
-            { label: "Location…", icon: <MapPin size={16} />, onSelect: () => setRich("location") },
+            ...(can.polls
+              ? [
+                  {
+                    get label() {
+                      return uiText("messaging.interface.poll_e1ff7d8");
+                    },
+                    icon: <BarChart3 size={16} />,
+                    onSelect: () => setRich("poll"),
+                  },
+                ]
+              : []),
+            {
+              get label() {
+                return uiText("messaging.interface.share_a_profile_044559a");
+              },
+              icon: <UserRound size={16} />,
+              onSelect: () => setRich("contact"),
+            },
+            {
+              get label() {
+                return uiText("messaging.interface.location_b8e60a5");
+              },
+              icon: <MapPin size={16} />,
+              onSelect: () => setRich("location"),
+            },
           ]}
         />
       )}
@@ -639,7 +665,7 @@ export function Composer(props: ComposerProps) {
                   props.onCancelReply();
                   if (slowed && !props.threadRoot) setLastSent(Date.now());
                 })
-                .catch((err: unknown) => engine.notice("error", err instanceof Error ? err.message : "Couldn't send the sticker."));
+                .catch((err: unknown) => engine.notice("error", err instanceof Error ? err.message : uiText("messaging.interface.couldn_t_send_the_sticker_e319cbd")));
             },
           }}
           onSticker={(pack, id) => {
@@ -657,16 +683,20 @@ export function Composer(props: ComposerProps) {
             void engine
               .sendText(c.id, gif.url, { rich: { gif }, replyTo: props.replyTo?.id, threadRoot: props.threadRoot })
               .then(() => props.onCancelReply())
-              .catch((err: unknown) => engine.notice("error", err instanceof Error ? err.message : "Couldn't send the GIF."));
+              .catch((err: unknown) => engine.notice("error", err instanceof Error ? err.message : uiText("messaging.interface.couldn_t_send_the_gif_769dfdb")));
           }}
         />
       )}
     </div>
   );
 }
-
 /** Lets the whole conversation accept dropped files. */
-export function useFileDrop(enabled: boolean): { over: boolean; dropped: File[]; take: () => void; handlers: Record<string, (e: DragEvent) => void> } {
+export function useFileDrop(enabled: boolean): {
+  over: boolean;
+  dropped: File[];
+  take: () => void;
+  handlers: Record<string, (e: DragEvent) => void>;
+} {
   const [over, setOver] = useState(false);
   const [dropped, setDropped] = useState<File[]>([]);
   const depth = useRef(0);

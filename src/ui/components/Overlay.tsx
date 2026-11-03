@@ -1,13 +1,16 @@
+import { useLocaleRender } from "../../i18n/Localized";
+import { text as uiText } from "../../i18n";
+import { useT as useLocalization } from "../../i18n";
+import { useLanguage } from "../../i18n";
+import { directionOf } from "../../i18n/languages";
 import { ArrowLeft, Check, ChevronRight, X } from "lucide-react";
 import { PHONE_LAYOUT, visibleViewport } from "../../application/viewport";
 import { ROUTE_EVENT } from "../../application/router";
 import { type CSSProperties, type KeyboardEvent as ReactKeyboardEvent, type MouseEvent as ReactMouseEvent, type ReactNode, type RefObject, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-
 const FOCUSABLE = 'button:not([disabled]), [href], input:not([disabled]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
 // Portalled children aren't DOM descendants of their parent dialog. Only the top trap answers Tab.
 const focusTraps: HTMLElement[] = [];
-
 /** Keeps Tab inside [ref] and returns focus to where it was when the overlay closes. */
 export function useFocusTrap(ref: RefObject<HTMLElement | null>, active: boolean, cycle = false): void {
   useEffect(() => {
@@ -53,7 +56,6 @@ export function useFocusTrap(ref: RefObject<HTMLElement | null>, active: boolean
     };
   }, [ref, active, cycle]);
 }
-
 interface DialogProps {
   title: string;
   onClose: () => void;
@@ -74,24 +76,31 @@ interface DialogProps {
    * On wide screens, shown as a card beside this point (the left edge of what opened it) instead of centred, over a clear
    * backdrop: a profile from the member list (the reference's popover). Narrow screens keep the centred dialog.
    */
-  near?: { x: number; y: number } | null;
+  near?: {
+    x: number;
+    y: number;
+  } | null;
 }
-
 /** Wider than this, a dialog with [near] is placed beside its anchor. */
 const NEAR_MIN_WIDTH = 961;
 const NEAR_GAP = 12;
-
 export function Dialog({ title, onClose, children, footer, wide, width, header, subtitle, className, vars, near }: DialogProps) {
+  useLocaleRender();
+  const rtl = directionOf(useLanguage()) === "rtl";
+  const l10n = useLocalization();
   const ref = useRef<HTMLDivElement>(null);
-  const [placed, setPlaced] = useState<{ top: number; left: number } | null>(null);
+  const [placed, setPlaced] = useState<{
+    top: number;
+    left: number;
+  } | null>(null);
   const anchored = !!near && typeof window !== "undefined" && window.innerWidth >= NEAR_MIN_WIDTH;
   useLayoutEffect(() => {
     if (!anchored || !near || !ref.current) return;
     const { offsetWidth: w, offsetHeight: h } = ref.current;
-    const left = Math.max(8, Math.min(near.x - w - NEAR_GAP, window.innerWidth - w - 8));
+    const left = Math.max(8, Math.min(rtl ? near.x + NEAR_GAP : near.x - w - NEAR_GAP, window.innerWidth - w - 8));
     const top = Math.max(8, Math.min(near.y - 24, window.innerHeight - h - 8));
     setPlaced({ top, left });
-  }, [anchored, near]);
+  }, [anchored, near, rtl]);
   useFocusTrap(ref, true);
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -131,7 +140,7 @@ export function Dialog({ title, onClose, children, footer, wide, width, header, 
             ) : (
               <h2>{title}</h2>
             )}
-            <button className="icon-btn" onClick={onClose} aria-label="Close">
+            <button className="icon-btn" onClick={onClose} aria-label={l10n("common.actions.close")}>
               <X size={18} />
             </button>
           </div>
@@ -145,7 +154,6 @@ export function Dialog({ title, onClose, children, footer, wide, width, header, 
     document.body,
   );
 }
-
 export interface MenuItem {
   label: string;
   className?: string;
@@ -162,9 +170,15 @@ export interface MenuItem {
   /** Opens beside the item on hover, click, Enter or the right arrow. */
   submenu?: MenuEntry[];
 }
-
-export type MenuEntry = MenuItem | "separator" | { heading: string } | { custom: ReactNode };
-
+export type MenuEntry =
+  | MenuItem
+  | "separator"
+  | {
+      heading: string;
+    }
+  | {
+      custom: ReactNode;
+    };
 interface MenuProps {
   anchor: HTMLElement;
   entries: MenuEntry[];
@@ -172,48 +186,71 @@ interface MenuProps {
   align?: "start" | "end";
   label: string;
   /** Opened at the pointer (a right-click): the menu's corner there, kept inside the window. */
-  point?: { x: number; y: number } | null;
+  point?: {
+    x: number;
+    y: number;
+  } | null;
 }
-
 /** A popup menu: arrow keys move, Escape closes, focus returns to the button that opened it. */
 export function Menu({ anchor, entries, onClose, align = "start", label, point = null }: MenuProps) {
+  useLocaleRender();
   return <MenuLevel anchor={anchor} entries={entries} onClose={onClose} onDone={onClose} align={align} label={label} point={point} beside={false} />;
 }
-
 /** Where a menu goes: at the pointer, beside its item (a submenu), or below its button, kept inside the window. */
-function menuPosition(anchor: HTMLElement, el: HTMLElement | null, align: "start" | "end", point: { x: number; y: number } | null, beside: boolean) {
+function menuPosition(
+  anchor: HTMLElement,
+  el: HTMLElement | null,
+  align: "start" | "end",
+  point: {
+    x: number;
+    y: number;
+  } | null,
+  beside: boolean,
+) {
+  const rtl = getComputedStyle(anchor).direction === "rtl";
   const v = visibleViewport();
   const w = el?.offsetWidth ?? 240;
   const h = el?.offsetHeight ?? 200;
   const fit = (top: number) => Math.max(v.top + 8, Math.min(top, v.bottom - h - 8));
   const fitLeft = (left: number) => Math.max(v.left + 8, Math.min(left, v.right - w - 8));
   if (point) {
-    return { top: fit(point.y + h > v.bottom - 8 ? point.y - h : point.y), left: fitLeft(point.x + w > v.right - 8 ? point.x - w : point.x) };
+    const left = rtl ? point.x - w : point.x + w > v.right - 8 ? point.x - w : point.x;
+    return { top: fit(point.y + h > v.bottom - 8 ? point.y - h : point.y), left: fitLeft(left) };
   }
   const r = anchor.getBoundingClientRect();
   if (beside) {
     // Beside the item, flipped to the left where the window ends; level with the item, moved up to fit.
-    const left = fitLeft(r.right + 4 + w > v.right - 8 ? r.left - w - 4 : r.right + 4);
+    const preferred = rtl ? r.left - w - 4 : r.right + 4;
+    const left = fitLeft(preferred < v.left + 8 ? r.right + 4 : preferred + w > v.right - 8 ? r.left - w - 4 : preferred);
     return { top: fit(r.top - 6), left };
   }
-  let left = align === "end" ? r.right - w : r.left;
+  let left = (align === "end") !== rtl ? r.right - w : r.left;
   left = fitLeft(left);
   let top = r.bottom + 6;
   if (top + h > v.bottom - 8) top = r.top - h - 6;
   return { top: fit(top), left };
 }
-
 interface MenuLevelProps extends Required<Omit<MenuProps, "point">> {
-  point: { x: number; y: number } | null;
+  point: {
+    x: number;
+    y: number;
+  } | null;
   /** Closes every level (a leaf was chosen, or a click landed outside them all). */
   onDone: () => void;
   beside: boolean;
 }
-
 function MenuLevel({ anchor, entries, onClose, onDone, align, label, point, beside }: MenuLevelProps) {
+  useLocaleRender();
+  const rtl = directionOf(useLanguage()) === "rtl";
   const ref = useRef<HTMLDivElement>(null);
-  const [pos, setPos] = useState<{ top: number; left: number } | null>(null);
-  const [open, setOpen] = useState<{ index: number; el: HTMLElement } | null>(null);
+  const [pos, setPos] = useState<{
+    top: number;
+    left: number;
+  } | null>(null);
+  const [open, setOpen] = useState<{
+    index: number;
+    el: HTMLElement;
+  } | null>(null);
   const hoverTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const phone = window.matchMedia(PHONE_LAYOUT).matches;
   useFocusTrap(ref, phone && !open, true);
@@ -226,7 +263,7 @@ function MenuLevel({ anchor, entries, onClose, onDone, align, label, point, besi
       window.visualViewport?.removeEventListener("resize", place);
       window.visualViewport?.removeEventListener("scroll", place);
     };
-  }, [anchor, align, point, beside]);
+  }, [anchor, align, point, beside, rtl]);
   // Desktop popovers close on resize; phone sheets stay open when the keyboard resizes Chrome's window.
   useEffect(() => {
     if (beside) return;
@@ -251,7 +288,7 @@ function MenuLevel({ anchor, entries, onClose, onDone, align, label, point, besi
       if (!ref.current?.contains(document.activeElement)) return;
       const list = items();
       const i = list.indexOf(document.activeElement as HTMLElement);
-      if (e.key === "Escape" || (beside && e.key === "ArrowLeft")) {
+      if (e.key === "Escape" || (beside && e.key === (rtl ? "ArrowRight" : "ArrowLeft"))) {
         e.preventDefault();
         onClose();
         anchor.focus();
@@ -275,7 +312,7 @@ function MenuLevel({ anchor, entries, onClose, onDone, align, label, point, besi
       document.removeEventListener("keydown", onKey);
       document.removeEventListener("mousedown", onDown);
     };
-  }, [anchor, onClose, onDone, beside, phone]);
+  }, [anchor, onClose, onDone, beside, phone, rtl]);
   // The first item takes the focus once the menu is placed (a hidden element can't take it), so the keyboard and
   // Escape work at once however it was opened.
   const placed = pos !== null;
@@ -299,12 +336,12 @@ function MenuLevel({ anchor, entries, onClose, onDone, align, label, point, besi
       >
         <div className="menu-phone-head">
           {beside && (
-            <button className="icon-btn" aria-label="Back to previous menu" onClick={onClose}>
+            <button className="icon-btn" aria-label={uiText("workspace.interface.back_to_previous_menu_11faca8")} onClick={onClose}>
               <ArrowLeft size={20} />
             </button>
           )}
           <strong className="grow">{label}</strong>
-          <button className="icon-btn" aria-label={`Close ${label} menu`} onClick={onDone}>
+          <button className="icon-btn" aria-label={uiText("workspace.interface.close_value0_menu_2f2ba9b", { value0: label })} onClick={onDone}>
             <X size={20} />
           </button>
         </div>
@@ -335,7 +372,7 @@ function MenuLevel({ anchor, entries, onClose, onDone, align, label, point, besi
                 hoverTimer.current = setTimeout(() => (hasSub ? openSub(i, el) : setOpen(null)), hasSub ? 120 : 200);
               }}
               onKeyDown={(ev) => {
-                if (hasSub && (ev.key === "ArrowRight" || ev.key === "Enter" || ev.key === " ")) {
+                if (hasSub && (ev.key === (rtl ? "ArrowLeft" : "ArrowRight") || ev.key === "Enter" || ev.key === " ")) {
                   ev.preventDefault();
                   ev.stopPropagation();
                   openSub(i, ev.currentTarget);
@@ -367,20 +404,31 @@ function MenuLevel({ anchor, entries, onClose, onDone, align, label, point, besi
     document.body,
   );
 }
-
 /**
  * A button that opens a [Menu] below itself; [openAt] opens it at the pointer instead (a right-click), and [point]
  * goes to the Menu.
  */
 export function useMenu(): {
   anchor: HTMLElement | null;
-  point: { x: number; y: number } | null;
+  point: {
+    x: number;
+    y: number;
+  } | null;
   open: (el: HTMLElement) => void;
-  openAt: (el: HTMLElement, e: { clientX: number; clientY: number } | null) => void;
+  openAt: (
+    el: HTMLElement,
+    e: {
+      clientX: number;
+      clientY: number;
+    } | null,
+  ) => void;
   close: () => void;
 } {
   const [anchor, setAnchor] = useState<HTMLElement | null>(null);
-  const [point, setPoint] = useState<{ x: number; y: number } | null>(null);
+  const [point, setPoint] = useState<{
+    x: number;
+    y: number;
+  } | null>(null);
   return {
     anchor,
     point,
@@ -396,7 +444,6 @@ export function useMenu(): {
     close: () => setAnchor(null),
   };
 }
-
 /**
  * The browser's own menu stays only in text fields, where paste, spelling suggestions and the like live (2026-10-28: the
  * owner wants no browser menu anywhere else in the app). Elsewhere a right-click opens Meldiq's menu, which offers what
@@ -407,7 +454,6 @@ export function keepsNativeMenu(target: EventTarget | null): boolean {
   const el = target as HTMLElement | null;
   return !!el?.closest?.('input, textarea, select, [contenteditable="true"]');
 }
-
 /**
  * For the app's frame (the root element): a right-click that nothing in Meldiq answered shows no menu, as in a
  * desktop app, except where [keepsNativeMenu] keeps the browser's.
@@ -415,12 +461,19 @@ export function keepsNativeMenu(target: EventTarget | null): boolean {
 export function quietContextMenu(e: ReactMouseEvent<HTMLElement>): void {
   if (!keepsNativeMenu(e.target)) e.preventDefault();
 }
-
 /**
  * Props that open [menu] on right-click (or a two-finger click) at the pointer, and on the keyboard's Menu key or
  * Shift+F10 by the element, unless the browser's menu is the right one there ([keepsNativeMenu]).
  */
-export function contextMenuProps(open: (el: HTMLElement, e: { clientX: number; clientY: number } | null) => void) {
+export function contextMenuProps(
+  open: (
+    el: HTMLElement,
+    e: {
+      clientX: number;
+      clientY: number;
+    } | null,
+  ) => void,
+) {
   return {
     onContextMenu: (e: ReactMouseEvent<HTMLElement>) => {
       if (keepsNativeMenu(e.target)) return;
