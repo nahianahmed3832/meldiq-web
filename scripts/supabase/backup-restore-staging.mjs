@@ -50,6 +50,9 @@ const remote = new Client({
   ssl: { rejectUnauthorized: true, ca: fs.readFileSync(settings.SUPABASE_DB_CA_FILE, "utf8") },
   connectionTimeoutMillis: 10_000,
   statement_timeout: 30_000,
+  query_timeout: 45_000,
+  keepAlive: true,
+  keepAliveInitialDelayMillis: 10_000,
   application_name: "meldiq-staging-backup-readonly",
 });
 const localConfig = { host: "127.0.0.1", port: 55432, database: "postgres", user: "postgres", connectionTimeoutMillis: 5_000 };
@@ -333,9 +336,20 @@ try {
     dump.process.stdin.end();
     const encryption = child("age", ["-r", recipient.stdout.trim()]);
     const destination = fs.createWriteStream(archive, { flags: "wx", mode: 0o600 });
+    // Keep the exported snapshot's otherwise idle connection alive while libpq copies the dump.
+    // SELECT 1 stays in the same read-only snapshot and cannot alter the source.
+    let heartbeatError;
+    const heartbeat = setInterval(() => {
+      remote.query("SELECT 1").catch((error) => {
+        heartbeatError = error;
+      });
+    }, 15_000);
     try {
       await Promise.all([pipeline(dump.process.stdout, encryption.process.stdin), pipeline(encryption.process.stdout, destination), dump.done, encryption.done]);
+      await remote.query("SELECT 1");
+      if (heartbeatError) throw heartbeatError;
     } finally {
+      clearInterval(heartbeat);
       dump.process.kill();
       encryption.process.kill();
     }
