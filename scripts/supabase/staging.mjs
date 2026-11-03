@@ -69,9 +69,9 @@ try {
   if (phase === "test") cli(["test", "db"]);
   if (phase === "test-native") {
     const results = await db.query(fs.readFileSync(path.join(root, "supabase/tests/rls.test.sql"), "utf8"));
-    const tap = results.flatMap(result => (result.rows ?? []).flatMap(row => Object.values(row))).filter(value => typeof value === "string");
+    const tap = results.flatMap((result) => (result.rows ?? []).flatMap((row) => Object.values(row))).filter((value) => typeof value === "string");
     process.stdout.write(tap.join("\n") + "\n");
-    if (tap.some(line => /^(not ok|# Looks like)/.test(line)) || tap.filter(line => /^ok \d/.test(line)).length !== 10) throw new Error("Hosted pgTAP assertions failed");
+    if (tap.some((line) => /^(not ok|# Looks like)/.test(line)) || tap.filter((line) => /^ok \d/.test(line)).length !== 10) throw new Error("Hosted pgTAP assertions failed");
     report.pgTapAssertions = 10;
   }
 

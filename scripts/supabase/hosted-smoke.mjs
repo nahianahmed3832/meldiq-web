@@ -24,7 +24,8 @@ const url = `https://${project}.supabase.co`;
 const publishable = "sb_publishable_DSnteWCwZ3WumfEgQYWGyg_HhOQr5_f";
 const server = process.env.MELDIQ_SERVER_DIR ?? path.resolve(root, "../meldiq_supabase_migration/server");
 const fromSource = process.env.MELDIQ_SERVER_TS === "1";
-const moduleRoot = fromSource ? "src" : "dist", extension = fromSource ? "ts" : "js";
+const moduleRoot = fromSource ? "src" : "dist",
+  extension = fromSource ? "ts" : "js";
 const { MeldiqPostgres } = await import(pathToFileURL(path.join(server, `${moduleRoot}/infrastructure/database/postgres/client.${extension}`)));
 const { SupabaseAccessVerifier } = await import(pathToFileURL(path.join(server, `${moduleRoot}/infrastructure/database/postgres/auth.${extension}`)));
 const { PostgresOutbox } = await import(pathToFileURL(path.join(server, `${moduleRoot}/infrastructure/database/postgres/outbox.${extension}`)));
@@ -86,9 +87,16 @@ try {
     assert(verified?.userId === userId, "Hosted JWT did not resolve the exact owner");
     // Synthetic policy fixture only. The separate hosted API test must exercise the real cryptographic binding route.
     const deviceId = `device${run}${i}`;
-    await db.query("INSERT INTO meldiq.devices(id,user_id,name,signing_key,encryption_key,certificate,created_at) VALUES($1,$2,'Synthetic policy fixture',$1,$1,'Synthetic certificate',$3)", [deviceId, userId, Date.now()]);
-    await db.query(`INSERT INTO meldiq.auth_device_sessions(id,auth_user_id,account_id,user_id,device_id,link_method,password_changed_at,bound_at)
-      SELECT $1,$2,id,user_id,$3,'existing_mapping',password_changed_at,$4 FROM meldiq.accounts WHERE id=$5`, [verified.sessionId, created.data.user.id, deviceId, Date.now(), accountId]);
+    await db.query("INSERT INTO meldiq.devices(id,user_id,name,signing_key,encryption_key,certificate,created_at) VALUES($1,$2,'Synthetic policy fixture',$1,$1,'Synthetic certificate',$3)", [
+      deviceId,
+      userId,
+      Date.now(),
+    ]);
+    await db.query(
+      `INSERT INTO meldiq.auth_device_sessions(id,auth_user_id,account_id,user_id,device_id,link_method,password_changed_at,bound_at)
+      SELECT $1,$2,id,user_id,$3,'existing_mapping',password_changed_at,$4 FROM meldiq.accounts WHERE id=$5`,
+      [verified.sessionId, created.data.user.id, deviceId, Date.now(), accountId],
+    );
     users[i].sessionId = verified.sessionId;
     await client.realtime.setAuth(login.data.session.access_token);
   }

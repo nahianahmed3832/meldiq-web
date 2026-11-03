@@ -9,7 +9,7 @@ const files = fs
   .filter((f) => f.endsWith(".sql"))
   .sort();
 if (!files.length || new Set(files.map((f) => f.slice(0, 14))).size !== files.length) throw new Error("Missing or duplicate migration versions");
-const schema = files.map(file => fs.readFileSync(path.join(root, "supabase/migrations", file), "utf8")).join("\n");
+const schema = files.map((file) => fs.readFileSync(path.join(root, "supabase/migrations", file), "utf8")).join("\n");
 for (const table of catalog.tables) {
   if (!schema.includes(`CREATE TABLE meldiq."${table.name}"`) || !schema.includes(`ALTER TABLE meldiq."${table.name}" FORCE ROW LEVEL SECURITY;`))
     throw new Error(`Missing secured relation: ${table.name}`);
