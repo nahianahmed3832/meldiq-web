@@ -1,0 +1,15 @@
+{
+  "observedAt": "2026-11-03T04:40:59.639Z",
+  "projectRef": "bkvlxbsnzqkhbifawcww",
+  "region": "eu-central-1",
+  "phase": "plan",
+  "productionChanged": false,
+  "connection": {
+    "ok": true,
+    "database": "postgres",
+    "version": "17.11"
+  },
+  "tables": 289,
+  "securedTables": 289,
+  "ok": true
+}

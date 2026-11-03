@@ -1,0 +1,45 @@
+{
+  "status": "deployed-and-verified",
+  "deployedAt": "2026-11-02T16:25:24.578121+00:00",
+  "sourceCommit": "8bda7374ed94a7830077addb98f62c3c5ddfbb90",
+  "previousWeb": "/opt/meldiq-web/releases/0.5.0-beta-unified-files-e456c93",
+  "webRelease": "/opt/meldiq-web/releases/0.5.0-beta-supabase-prep-8bda737",
+  "archiveSha256": "afc7e025463747eaa42f8a3b90dcfef7d0e3a5bfa3ddab9f8827e0d7f0fb30ad",
+  "apiPreserved": true,
+  "apiImageId": "sha256:d3eb8ae81b8332444d25fdeb5d01e57c08da36f135788334657e363b70e73f47",
+  "publicConfigPreserved": true,
+  "nginxPreserved": true,
+  "health": {
+    "ok": true,
+    "version": "0.76.1",
+    "time": 1793636724577,
+    "livekit": true,
+    "mongodb": true,
+    "redis": true
+  },
+  "productionSupabaseEnabled": false,
+  "productionDatabaseChanged": false,
+  "customerDataTransferred": false,
+  "previousStaticAssetsRetained": true,
+  "validation": {
+    "unitTestsPassed": 943,
+    "unitTestsSkipped": 1,
+    "browserChecks": {
+      "startTime": "2026-11-02T16:21:45.143Z",
+      "duration": 17916.749,
+      "expected": 4,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "browserEngines": [
+      "chromium",
+      "webkit"
+    ],
+    "runtimeAuditVulnerabilities": 0,
+    "ciRun": 41480497477,
+    "browserScope": "Local isolated API with mocked provider/bridge transport; real device signing and production artifact",
+    "privateCredentialMatches": 0,
+    "ciConclusion": "success"
+  }
+}

@@ -1,0 +1,20 @@
+# Feature parity report
+
+November2,2026. **Full migration parity is not demonstrated. Production remains on Atlas and existing clients.** PostgreSQL/Supabase components are opt-in staging implementations.
+
+| Feature group | Executed evidence | Still required before activation |
+|---|---|---|
+| Identity/Auth | Nine local bridge tests; real hosted signed JWT/JWKS, fresh legacy/device linking, API use, refresh/restart and independent local/provider logout; encrypted web vault and staged Android transports | Account-only/new-user enrollment, unified account/security/billing/admin principals, recovery/provider linking, Google/Apple configuration, complete web/Android UI and offline-state acceptance |
+| Messaging | Existing API suites on PostgreSQL; event paging/ties/edit/reply/reaction/read/pin rules, privacy, malformed historical payloads, idempotency and durable outbox; actual API-to-two-private-socket receipts | Frozen real source validation, full migrated clients and concurrent hosted acceptance under representative traffic |
+| Realtime | Restricted-role outbox publish; lease fencing/retry/replay and enqueue-failure rollback; hosted private Broadcast/Presence/reconnect, foreign/public-topic denial | Confirmed cached-channel receipt after provider logout blocks activation; prove already-connected revocation for all permission changes, typing/presence privacy, producers, fan-out and load |
+| Communities | PostgreSQL core/native rules, roles/overwrites/moderation and existing APIs covered by the consolidated local parity run | Real source anomalies, complete Auth principal/client integration and hosted role-change/revocation acceptance |
+| Media/S3 | SigV4 S3 test-server upload/download/cancel/cleanup, metadata/cascade races, exact upload boundary; read-only source probe accounts for447 S3 objects and35 readable fallback files | Preserve fallback volume; frozen content/hash reconciliation, actual1GB AWS transfer and production-like upload/network recovery |
+| Calls | Existing API/call state/screenshare tests on PostgreSQL; LiveKit retained | Two-device real voice/video/screenshare/reconnect with migrated Auth/clients |
+| Commerce | Existing payment/Play/gift/webhook/idempotency API suites on PostgreSQL with test providers; exact financial fixture checks | Unified provider principals, real payment-provider acceptance and verified source/provider totals; no entitlement inferred from migration success |
+| Notifications | Durable push destination and existing push-dispatch API tests with fake delivery | Wire outbox to current delivery worker and prove FCM/APNs/ntfy identity, preferences and actual device delivery |
+| Admin | PostgreSQL admin/control/account regression, health adapter, immutable audit/price triggers and denied raw client mutations | Unified primary/step-up principal and passkey handling, migrated console and provider/admin authorization acceptance |
+| Recovery/ops | Synthetic import/resume/hash reconciliation; independent local pg_dump/restore; encrypted hosted Auth/application snapshot restored and all table rows reconciled locally | Restored original-password/same-subject Auth login, ES256 verification, refresh and logout pass; full Supabase-stack roles/Realtime/provider/configuration restore, off-host recovery, write-frozen rollback, realistic load/residency/cost alert delivery |
+
+The consolidated API run passes692 tests locally, with87 Auth/account/admin/contracts follow-up checks and95 repository/security checks. Those suites use synthetic records and fake external providers; they do not replace real client/media/payment acceptance. Dedicated web tests pass19 and isolated Android Kotlin/JVM tests pass10. A full Android app build after the new transport and a physical-device run are not claimed. No ADB device is connected.
+
+No client offline database, vault, pending outbox or protected device key has been cleared. No customer data has been imported and no production cutover has occurred. Receipts and retained failures are linked from migration-test-report.md and execution-status.md.

@@ -1,0 +1,42 @@
+{
+  "ok": true,
+  "synthetic": true,
+  "productionChanged": false,
+  "unpublishedNetworkNamespace": true,
+  "candidateRevision": "b047192a546727b23c45d9693e32cc6142dbd654",
+  "rollbackRevision": "88ea011a9b6fc80ddcb0a99731d29609da3e9c6c",
+  "simulatedDatabaseRoundTripMilliseconds": 168,
+  "phase": "complete",
+  "observedAt": "2026-11-03T00:51:54.302772+00:00",
+  "activationHoldVerified": true,
+  "customerTableFingerprintsUnchangedAtRollback": true,
+  "client": {
+    "ok": true,
+    "synthetic": true,
+    "ownedNetworkOnly": true,
+    "productionChanged": false,
+    "simulatedDatabaseRoundTripMilliseconds": 168,
+    "unifiedSupabaseAuthTested": false,
+    "managedRealtimeTested": false,
+    "phase": "complete",
+    "messageLoad": {
+      "requests": 20,
+      "concurrency": 4,
+      "errors": 0,
+      "elapsedMilliseconds": 44710,
+      "p50Milliseconds": 9054,
+      "p95Milliseconds": 9546,
+      "maxMilliseconds": 9569
+    },
+    "websocketMessages": 20,
+    "retainedSessionTokensAfterRollback": true,
+    "committedMessagesRetainedAfterRollback": 20,
+    "postRollbackMessages": 1,
+    "idempotentRetryPassed": true,
+    "completedAt": "2026-11-03T00:53:49.897Z"
+  },
+  "pendingNativeFanoutJobs": 0,
+  "applicationConnections": 2,
+  "ownedContainersRemoved": true,
+  "completedAt": "2026-11-03T00:53:50.911711+00:00"
+}

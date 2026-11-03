@@ -1,0 +1,3 @@
+-- Intentionally no accounts, credentials, payments or production data.
+-- Synthetic fixtures are created transactionally by the test harness and rolled back/reset in isolated test databases.
+-- Auth users must be created by the development Auth API, never by inventing production auth.users rows.

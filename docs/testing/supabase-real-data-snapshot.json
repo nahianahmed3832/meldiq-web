@@ -1,0 +1,16 @@
+{
+  "ok": true,
+  "observedAt": "2026-11-02T16:41:59.987381+00:00",
+  "sourceReadOnly": true,
+  "sourceRemainsLive": true,
+  "pointInTimeSnapshot": true,
+  "snapshotTime": "7703614944545079310",
+  "collections": 275,
+  "records": 692113,
+  "encryptedBytes": 11331402,
+  "compressedPlaintextSha256": "0a9e9710372073cb8dc8aeb9ec56a0d328779ea8da5a0ed930c51c209ac3d5b4",
+  "ciphertextSha256": "faa45981d6f0757e55d908abbecf1c222bf61b84c5d0abc75b3dc34ae09c8e12",
+  "privateDirectory": "/Users/nahian/.local/share/meldiq-supabase/atlas-rehearsal-20261102T164018Z",
+  "destinationImported": false,
+  "productionChanged": false
+}

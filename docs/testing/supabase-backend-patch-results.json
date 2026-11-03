@@ -1,0 +1,9 @@
+{
+  "baseline": "dfb010738b323c37f7489cea8ef8491e88f03909",
+  "candidate": "9eec6c7fed1564f9343c4962626bbff786bc9c01",
+  "patch": "0012-supabase-staging-consolidation.patch",
+  "bytes": 522501,
+  "sha256": "cc74e101f95aa45d2c64ff70dfe51e56cf07d86bd786761dfc74a46ba5c7fc1b",
+  "exactBaselineApplyCheckPassed": true,
+  "productionDeploymentAuthorized": false
+}

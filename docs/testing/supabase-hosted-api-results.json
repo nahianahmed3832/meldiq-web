@@ -1,0 +1,21 @@
+{
+  "observedAt": "2026-11-02T09:46:47.811Z",
+  "projectRef": "bkvlxbsnzqkhbifawcww",
+  "synthetic": true,
+  "productionChanged": false,
+  "checks": {
+    "postgresOnlyRestrictedRuntime": true,
+    "health": true,
+    "accountVerificationLoginDeviceBinding": true,
+    "messageHistoryIdempotencyAndOutbox": true,
+    "preferenceOwnership": true,
+    "anonymousHistoryDenied": true,
+    "restartDurabilityAndRefresh": true,
+    "logoutRevocation": true
+  },
+  "phase": "complete",
+  "startupMs": 32178,
+  "legacySqlAttempts": 0,
+  "restartMs": 26058,
+  "ok": true
+}

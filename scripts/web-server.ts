@@ -30,7 +30,14 @@ function headers(): [string, string][] {
     path.join(here, process.env.MELDIQ_PAYPAL_SANDBOX === "1" ? "deploy/nginx/meldiq-web-paypal-sandbox-headers.conf.template" : "deploy/nginx/meldiq-web-headers.conf.template"),
     "utf8",
   );
-  const extra = [`ws://${origin}`, process.env.ORBIT_E2E_LIVEKIT, process.env.ORBIT_E2E_LIVEKIT?.replace(/^ws/, "http")].filter(Boolean).join(" ");
+  const extra = [
+    `ws://${origin}`,
+    process.env.ORBIT_E2E_LIVEKIT,
+    process.env.ORBIT_E2E_LIVEKIT?.replace(/^ws/, "http"),
+    process.env.MELDIQ_SUPABASE_PREVIEW === "1" ? "https://bkvlxbsnzqkhbifawcww.supabase.co" : undefined,
+  ]
+    .filter(Boolean)
+    .join(" ");
   return [...text.matchAll(/^add_header ([A-Za-z-]+) "(.*)" always;$/gm)]
     .filter((m) => m[1] !== "Strict-Transport-Security")
     .map((m) => [m[1], m[2].replaceAll("wss://${WEB_HOST}", `ws://${origin}`).replaceAll("${WEB_HOST}", origin).replaceAll("${CONNECT_EXTRA}", extra).replace("; upgrade-insecure-requests", "")]);
@@ -90,7 +97,7 @@ function resolve(urlPath: string): { file: string; cache: string } | null {
 
 const server = http.createServer((req, res) => {
   const url = new URL(req.url ?? "/", `http://${origin}`);
-  if (/^\/v[12]\//.test(url.pathname)) return proxy(req, res, api);
+  if (/^\/v[123]\//.test(url.pathname)) return proxy(req, res, api);
   // Invitation links get the small invitation page, as nginx answers them, in development too.
   if (app && url.pathname.startsWith("/invite/")) {
     res.writeHead(200, { ...Object.fromEntries(SECURITY), "content-type": "text/html; charset=utf-8", "cache-control": "no-cache" });

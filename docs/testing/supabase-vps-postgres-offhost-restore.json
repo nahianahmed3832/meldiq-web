@@ -1,0 +1,22 @@
+{
+  "ok": true,
+  "observedAt": "2026-11-03T04:54:33.649Z",
+  "sourceCapturedAt": "20261103T044939Z",
+  "projectRef": "bkvlxbsnzqkhbifawcww",
+  "offHostMirror": true,
+  "sourceDatabaseModified": false,
+  "plaintextDumpWritten": false,
+  "fullServiceRecoveryVerified": false,
+  "phase": "complete",
+  "allMirroredPayloadsAuthenticated": true,
+  "encryptedFiles": 10,
+  "sourceManifestSha256": "83e6b71a849371ccdb736f23ad4192199a37fafcbc5c88eb6d61f18d14432d36",
+  "restoreMilliseconds": 2855,
+  "reconciledTables": 317,
+  "reconciledRows": 679426,
+  "exactRowFingerprintsMatch": true,
+  "encryptedBackupVerified": true,
+  "policyScope": "Stored schemas and Auth/application/migration rows; no Auth/Realtime/OAuth/SMTP service or production-role restore claim",
+  "ownedScratchDatabaseRemoved": true,
+  "completedAt": "2026-11-03T04:54:39.189Z"
+}

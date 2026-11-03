@@ -1,0 +1,120 @@
+{
+  "observedAt": "2026-11-02T23:49:37.426Z",
+  "phase": "Production PostgreSQL compatibility preparation; Atlas remains authoritative",
+  "productionCutoverCompleted": false,
+  "chosenProductionProjectRef": "bkvlxbsnzqkhbifawcww",
+  "chosenRegion": "eu-central-1",
+  "existingSocialAuthProjectRef": "sgowwdmnavcsofzlgggm",
+  "existingSocialAuthRegion": "eu-north-1",
+  "userAuthorizedExistingFrankfurtCutover": true,
+  "userAndroidRelease": "Owner confirmed their own production-signed release",
+  "runtimeRevision": "88ea011a9b6fc80ddcb0a99731d29609da3e9c6c",
+  "sourceSnapshot": {
+    "collections": 275,
+    "records": 693197,
+    "snapshotTime": "7703711727338127363",
+    "ciphertextSha256": "2becc324098eadbfafdcf889bd836d70f298c1d0b9a07afe245ead73908107cb"
+  },
+  "localRehearsal": {
+    "ok": true,
+    "tables": 282,
+    "records": 678701,
+    "allRecordHashesMatch": true
+  },
+  "deltaFromFirstHostedRehearsal": {
+    "before": 677617,
+    "after": 678701,
+    "inserted": 22525,
+    "updated": 31,
+    "deleted": 21441,
+    "unchanged": 656145
+  },
+  "repositoryBootstrap": {
+    "observedAt": "2026-11-02T23:05:27.173Z",
+    "ok": true,
+    "synthetic": false,
+    "scope": "Repository bootstrap on an owned MacBook loopback clone; no HTTP server, Auth provider, external clients or delivery/cleanup jobs",
+    "sourceSha256": "1181c919a459c41766fc1aa5c55f316eabab82e858d082b7045ea045dc113706",
+    "catalogSha256": "c59c75ad003c04eeeab81cd5f5c2859be847c4147ab0e580c1aa954489a56a94",
+    "sourceAndHostedDestinationChanged": false,
+    "bootstrapMilliseconds": 1080.6260000000002,
+    "residentMemoryBytes": 392511488,
+    "heapUsedBytes": 228137440,
+    "applicationTables": 282,
+    "records": 678701,
+    "cachedDomainsMatchDatabaseCounts": true,
+    "legacySqlAttempts": 0
+  },
+  "vpsBackup": {
+    "capturedAt": "20261102T234449Z",
+    "rehearsal": true,
+    "projectRef": "bkvlxbsnzqkhbifawcww",
+    "tables": 317,
+    "rows": 678057,
+    "encryptedFiles": 10,
+    "offHostMirrorAuthenticated": true,
+    "independentRestore": {
+      "ok": true,
+      "observedAt": "2026-11-02T23:49:32.785Z",
+      "sourceCapturedAt": "20261102T234449Z",
+      "projectRef": "bkvlxbsnzqkhbifawcww",
+      "offHostMirror": true,
+      "sourceDatabaseModified": false,
+      "plaintextDumpWritten": false,
+      "fullServiceRecoveryVerified": false,
+      "phase": "complete",
+      "allMirroredPayloadsAuthenticated": true,
+      "encryptedFiles": 10,
+      "sourceManifestSha256": "a7043a60f4673d6a02e5f7b3c8db942424cc0ffac490d811b33c9f66bda10a33",
+      "restoreMilliseconds": 2426,
+      "reconciledTables": 317,
+      "reconciledRows": 678057,
+      "exactRowFingerprintsMatch": true,
+      "encryptedBackupVerified": true,
+      "policyScope": "Stored schemas and Auth/application/migration rows; no Auth/Realtime/OAuth/SMTP service or production-role restore claim",
+      "ownedScratchDatabaseRemoved": true,
+      "completedAt": "2026-11-02T23:49:37.426Z"
+    }
+  },
+  "checks": {
+    "postgresSecurityTestsPassed": 113,
+    "accountDeviceMessageAdminTestsPassed": 62,
+    "legacyDeliveryCallingPushReminderTestsPassed": 90,
+    "typeScriptBuildPassed": true
+  },
+  "remaining": [
+    "Isolated Node22 deployment/load checks",
+    "Reviewed final frozen-source sync and exact hosted reconciliation",
+    "Production acceptance and traffic cutover",
+    "Separate unified Supabase Auth/Realtime activation and revocation resolution"
+  ],
+  "vpsRepositoryBootstrap": {
+    "ok": true,
+    "observedAt": "2026-11-03T00:17:27.078Z",
+    "projectRef": "bkvlxbsnzqkhbifawcww",
+    "runtimeRevision": "88ea011a9b6fc80ddcb0a99731d29609da3e9c6c",
+    "sourceSha256": "3bf606760224f367d378c1e0661061fb20d7aff7f4ee0e84671f63e23d58f472",
+    "nodeVersion": "v22.22.3",
+    "phase": "complete",
+    "productionContainerChanged": false,
+    "applicationDataWrites": 0,
+    "httpServerStarted": false,
+    "externalProvidersStarted": false,
+    "bootstrapMilliseconds": 13365,
+    "residentMemoryBytes": 252280832,
+    "heapUsedBytes": 180117160,
+    "queryRoundTripMilliseconds": 168,
+    "counts": {
+      "accounts": 27,
+      "users": 66,
+      "devices": 126,
+      "orgs": 12,
+      "conversations": 195,
+      "billing_plan_versions": 2,
+      "auth_device_sessions": 0
+    },
+    "legacySqlAttempts": 0,
+    "connectionErrors": 0,
+    "completedAt": "2026-11-03T00:17:44.457Z"
+  }
+}

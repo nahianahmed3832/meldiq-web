@@ -1,0 +1,28 @@
+{
+  "observedAt": "2026-11-02T16:26:30.523Z",
+  "url": "https://web.meldiq.app",
+  "sourceCommit": "8bda7374ed94a7830077addb98f62c3c5ddfbb90",
+  "checks": [
+    {
+      "browser": "chromium",
+      "viewportWidth": 390,
+      "signInVisible": true,
+      "productionConfig": true,
+      "newStagingProjectRequests": 0,
+      "pageErrors": 0,
+      "ok": true
+    },
+    {
+      "browser": "webkit",
+      "viewportWidth": 390,
+      "signInVisible": true,
+      "productionConfig": true,
+      "newStagingProjectRequests": 0,
+      "pageErrors": 0,
+      "ok": true
+    }
+  ],
+  "customerAccountsUsed": false,
+  "productionDataWrites": 0,
+  "ok": true
+}

@@ -1,0 +1,16 @@
+{
+  "observedAt": "2026-11-03T04:42:37.737Z",
+  "projectRef": "bkvlxbsnzqkhbifawcww",
+  "region": "eu-central-1",
+  "phase": "test-native",
+  "productionChanged": false,
+  "connection": {
+    "ok": true,
+    "database": "postgres",
+    "version": "17.11"
+  },
+  "pgTapAssertions": 10,
+  "tables": 289,
+  "securedTables": 289,
+  "ok": true
+}

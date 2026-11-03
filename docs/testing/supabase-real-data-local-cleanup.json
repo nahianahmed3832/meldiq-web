@@ -1,0 +1,8 @@
+{
+  "observedAt": "2026-11-02T17:30:13.796Z",
+  "ownedLocalRehearsalDatabasesRemoved": 3,
+  "encryptedSourceAndStagingBackupsPreserved": true,
+  "normalizedPrivateSnapshotPreserved": true,
+  "legacyDatabasesDeleted": false,
+  "productionChanged": false
+}

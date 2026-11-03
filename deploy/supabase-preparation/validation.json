@@ -1,0 +1,27 @@
+{
+  "observedAt": "2026-11-02T16:17:14.289066+00:00",
+  "baseline": "e456c93",
+  "unitTestsPassed": 943,
+  "unitTestsSkipped": 1,
+  "unitTestsFailed": 0,
+  "productionBuildPassed": true,
+  "typecheckPassed": true,
+  "lintPassed": true,
+  "formatPassed": true,
+  "browserChecks": {
+    "startTime": "2026-11-02T16:15:41.331Z",
+    "duration": 23288.066000000003,
+    "expected": 4,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "browserEngines": ["chromium", "webkit"],
+  "browserViewportWidth": 390,
+  "browserScope": "Production artifact; real isolated local legacy API/email/device flow, mocked Supabase Auth/bridge transport, real protected-device signature verification; not real hosted Supabase UI acceptance",
+  "sourceMapsPublished": false,
+  "productionDatabaseChanges": false,
+  "supabaseActivation": false,
+  "failedAttemptRetained": "Initial browser mock asserted an exact password body; the actual SDK also sends gotrue_meta_security. The mock now verifies required fields. Both engines pass.",
+  "revalidation": "Candidate rebased after the concurrent unified-file-picker rollout; final checks are recorded in the deployment receipt."
+}

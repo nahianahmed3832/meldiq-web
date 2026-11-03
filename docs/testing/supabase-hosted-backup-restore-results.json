@@ -1,0 +1,40 @@
+{
+  "observedAt": "2026-11-02T17:20:49.801Z",
+  "projectRef": "bkvlxbsnzqkhbifawcww",
+  "productionChanged": false,
+  "remoteSqlWrites": 0,
+  "scopes": [
+    "auth",
+    "meldiq",
+    "meldiq_private",
+    "supabase_migrations"
+  ],
+  "plaintextArchiveWritten": false,
+  "authPasswordSessionRestoreTested": false,
+  "fullSupabaseStackRestoreTested": false,
+  "offHostRecoveryCopyVerified": false,
+  "syntheticAuthUsersCreated": 0,
+  "phase": "complete",
+  "ok": true,
+  "sourceVersion": "17.11",
+  "dumpVersion": "pg_dump (PostgreSQL) 17.11 (Homebrew)",
+  "dumpAndEncryptionMs": 241147,
+  "ciphertextSha256": "953feb697b3fe7d22d70d65b2a25d881cd7b6de237cb0b218b2a1d6aef26d2c8",
+  "encryptedBytes": 8800326,
+  "completedAt": "2026-11-02T17:27:11.129Z",
+  "connectionErrorCodes": [
+    "ERR_SSL_DECRYPTION_FAILED_OR_BAD_RECORD_MAC"
+  ],
+  "resumedAt": "2026-11-02T17:27:06.679Z",
+  "previousErrorCode": "EPIPE",
+  "entireEncryptedArchiveAuthenticated": true,
+  "archiveAuthenticatedAndReadable": true,
+  "restoreMs": 2409,
+  "reconciledTables": 317,
+  "reconciledRows": 678057,
+  "authTables": 27,
+  "authUsers": 24,
+  "passwordHashesAndIdentitiesIncludedInExactRowChecks": true,
+  "policyScope": "Stored Auth/application/migration rows and definitions only; no Auth/Realtime service or production role grants restored",
+  "ownedScratchDatabaseRemoved": true
+}

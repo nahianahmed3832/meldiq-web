@@ -1,0 +1,13 @@
+{
+  "ok": true,
+  "observedAt": "2026-11-03T04:50:46.010Z",
+  "sourceSha256": "1181c919a459c41766fc1aa5c55f316eabab82e858d082b7045ea045dc113706",
+  "catalogSha256": "c59c75ad003c04eeeab81cd5f5c2859be847c4147ab0e580c1aa954489a56a94",
+  "tables": 282,
+  "records": 678701,
+  "allRecordHashesMatch": true,
+  "timestampRangesAndFinancialTotalsMatch": true,
+  "sourceCounterFloorsPreserved": true,
+  "atlasStillLive": true,
+  "productionCutoverCompleted": false
+}

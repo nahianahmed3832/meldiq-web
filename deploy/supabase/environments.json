@@ -1,0 +1,19 @@
+{
+  "development": {
+    "kind": "local",
+    "projectId": "meldiq-supabase-development"
+  },
+  "staging": {
+    "projectRef": "bkvlxbsnzqkhbifawcww",
+    "url": "https://bkvlxbsnzqkhbifawcww.supabase.co",
+    "region": "eu-central-1",
+    "data": "synthetic only",
+    "separateFromProduction": true
+  },
+  "production": {
+    "projectRef": null,
+    "region": "eu-central-1",
+    "approval": "Explicit production cutover approval after all acceptance gates",
+    "legacySocialAuthProjectRef": "sgowwdmnavcsofzlgggm"
+  }
+}
