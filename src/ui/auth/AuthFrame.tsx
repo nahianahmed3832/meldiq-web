@@ -35,6 +35,7 @@ export function AuthFrame({ children }: { children: ReactNode }) {
 
       <footer className="landing-foot">
         <span>Meldiq by GriipBuddy</span>
+        <a href="https://status.meldiq.app" target="_blank" rel="noopener noreferrer">Service status</a>
         <a href="https://meldiq.app/legal/terms">{t("landing_terms")}</a>
         <a href="https://meldiq.app/legal/privacy">{t("landing_privacy")}</a>
       </footer>

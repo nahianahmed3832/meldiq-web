@@ -383,6 +383,7 @@ export function AboutPage() {
       </p>
       <div className="card">
         <InstallSetting />
+        <div className="setting"><div className="lines"><strong>Service status</strong><small>Live service health, incidents and planned maintenance.</small></div><a href="https://status.meldiq.app" target="_blank" rel="noopener noreferrer">View status ↗</a></div>
         <div className="setting">
           <div className="lines">
             <strong>Server</strong>
