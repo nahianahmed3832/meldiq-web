@@ -91,6 +91,8 @@ export function writePublicLocaleAssets(destination, { fillEnglish = false } = {
   }
 
   if (fillEnglish) {
+    // Production keeps the legacy callback URL in its desktop-owned nginx alias. New HTML uses this release's hashed script.
+    fs.rmSync(path.join(destination, "social-auth-callback.js"), { force: true });
     const englishText = (key) => {
       const entry = dictionaries.en[key];
       assert(entry?.kind === "text" && entry.parts.every((part) => typeof part === "string"));

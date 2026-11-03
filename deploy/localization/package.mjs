@@ -61,8 +61,17 @@ for (const [variant, server, hashes] of [
   }
   fs.writeFileSync(
     path.join(destination, "Dockerfile"),
-    `FROM ${expected.expectedImage}\nLABEL org.opencontainers.image.revision="${apiSource}" com.meldiq.preference-variant="${variant}"\nCOPY dist/ /app/dist/\n`,
+    `FROM ${expected.buildBaseImage ?? expected.expectedImage}\nLABEL org.opencontainers.image.revision="${apiSource}" com.meldiq.preference-variant="${variant}"\nCOPY dist/ /app/dist/\n`,
   );
+  const readableCode = (folder) => {
+    fs.chmodSync(folder, 0o755);
+    for (const entry of fs.readdirSync(folder, { withFileTypes: true })) {
+      const file = path.join(folder, entry.name);
+      if (entry.isDirectory()) readableCode(file);
+      else fs.chmodSync(file, 0o644);
+    }
+  };
+  readableCode(path.join(destination, "dist"));
   tar(destination, variant + ".tar.gz");
 }
 for (const module of modules.slice(0, 2)) assert.equal(apiFiles[module], readerFiles[module], "Reader must use the same locale-capable schema and contract");
@@ -87,15 +96,16 @@ const archives = Object.fromEntries(["web.tar.gz", "api-overlay.tar.gz", "api-re
 const buildId = fs.readdirSync(path.join(dist, "_next/static")).find((name) => fs.statSync(path.join(dist, "_next/static", name)).isDirectory() && !["chunks", "css", "media"].includes(name));
 assert(buildId, "Missing Next.js build ID");
 const imagePrefix = expected.expectedImage.slice(0, expected.expectedImage.indexOf(":"));
-const baseTag = expected.expectedImage.slice(expected.expectedImage.indexOf(":") + 1);
+const baseImage = expected.buildBaseImage ?? expected.expectedImage;
+const baseTag = baseImage.slice(baseImage.indexOf(":") + 1).replace(/-locales(?:-reader)?-.+$/, "");
 const manifest = {
   ...expected,
   webSource: source,
   apiSource,
   buildId,
   newWeb: `/opt/meldiq-web/releases/0.5.0-beta-locales-${source.slice(0, 7)}`,
-  newImage: `${imagePrefix}:${baseTag}-locales-${apiSource.slice(0, 8)}`,
-  readerImage: `${imagePrefix}:${baseTag}-locales-reader-${apiSource.slice(0, 8)}`,
+  newImage: `${imagePrefix}:${baseTag}-locales-${apiSource.slice(0, 8)}-${source.slice(0, 7)}`,
+  readerImage: `${imagePrefix}:${baseTag}-locales-reader-${apiSource.slice(0, 8)}-${source.slice(0, 7)}`,
   files,
   archives,
   apiFiles,
