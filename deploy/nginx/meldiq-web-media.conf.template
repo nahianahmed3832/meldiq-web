@@ -35,3 +35,5 @@ location @meldiq_media {
   proxy_buffering off;
   proxy_read_timeout 3600s;
 }
+
+include /etc/nginx/meldiq-upload-compat/*.conf;
