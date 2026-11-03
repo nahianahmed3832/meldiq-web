@@ -1,5 +1,5 @@
 {
-  "observedAt": "2026-11-02T17:20:49.801Z",
+  "observedAt": "2026-11-03T07:51:25.374Z",
   "projectRef": "bkvlxbsnzqkhbifawcww",
   "productionChanged": false,
   "remoteSqlWrites": 0,
@@ -18,23 +18,37 @@
   "ok": true,
   "sourceVersion": "17.11",
   "dumpVersion": "pg_dump (PostgreSQL) 17.11 (Homebrew)",
-  "dumpAndEncryptionMs": 241147,
-  "ciphertextSha256": "953feb697b3fe7d22d70d65b2a25d881cd7b6de237cb0b218b2a1d6aef26d2c8",
-  "encryptedBytes": 8800326,
-  "completedAt": "2026-11-02T17:27:11.129Z",
-  "connectionErrorCodes": [
-    "ERR_SSL_DECRYPTION_FAILED_OR_BAD_RECORD_MAC"
-  ],
-  "resumedAt": "2026-11-02T17:27:06.679Z",
-  "previousErrorCode": "EPIPE",
+  "dumpAndEncryptionMs": 217005,
+  "ciphertextSha256": "24294110faa914b008f39d5ac317597d56b67dadd0706d01d96580c791e9c004",
+  "encryptedBytes": 8899391,
   "entireEncryptedArchiveAuthenticated": true,
   "archiveAuthenticatedAndReadable": true,
-  "restoreMs": 2409,
+  "restoreMs": 8046,
   "reconciledTables": 317,
-  "reconciledRows": 678057,
+  "reconciledRows": 677209,
   "authTables": 27,
   "authUsers": 24,
   "passwordHashesAndIdentitiesIncludedInExactRowChecks": true,
   "policyScope": "Stored Auth/application/migration rows and definitions only; no Auth/Realtime service or production role grants restored",
-  "ownedScratchDatabaseRemoved": true
+  "sourceManifestSha256": "b9c755cec28563ba4896eec7192f6f9a3e6f1c6c9ab24d4f1aa943088eadb39e",
+  "sourceReconciliation": {
+    "ok": true,
+    "sourceSha256": "4cd5d42dfe14499fa26cdc0fb5b8eb6f56a487e79ab32a32d0702bd3ecf94ba1",
+    "catalogSha256": "c59c75ad003c04eeeab81cd5f5c2859be847c4147ab0e580c1aa954489a56a94",
+    "snapshotId": "d5b0d94d-e341-4294-8597-141feacd1a93",
+    "sourceManifestSha256": "b9c755cec28563ba4896eec7192f6f9a3e6f1c6c9ab24d4f1aa943088eadb39e",
+    "ciphertextSha256": "24294110faa914b008f39d5ac317597d56b67dadd0706d01d96580c791e9c004",
+    "tables": 282,
+    "records": 675918,
+    "allRecordHashesMatch": true,
+    "allSourceFileHashesMatch": true,
+    "timestampFinancialAndCounterChecksPassed": true,
+    "comparisonDatabase": "owned loopback restore",
+    "completedAt": "2026-11-03T07:55:51.240Z"
+  },
+  "ownedScratchDatabaseRemoved": true,
+  "completedAt": "2026-11-03T07:55:51.549Z",
+  "connectionErrorCodes": [
+    "ERR_SSL_DECRYPTION_FAILED_OR_BAD_RECORD_MAC"
+  ]
 }

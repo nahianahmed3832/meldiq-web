@@ -1,5 +1,7 @@
 # Supabase consolidation execution status
 
+> Current database authority: Frankfurt Supabase PostgreSQL, active since November3 at07:58 UTC. The [final cutover report](../migrations/production-database-cutover-20261103.md) supersedes historical staging checkpoints below. Native Auth/Realtime remain a separate unfinished phase.
+
 Updated November 3, 2026 (Asia/Shanghai). **Production readiness: BLOCKED. Production remains Atlas-authoritative.**
 
 ## Completed evidence
@@ -118,3 +120,10 @@ Atlas is live and has newer writes than the first final capture. A fresh encrypt
 The second freeze began at07:03:45 UTC. Its new encrypted Atlas capture contains693,432 documents and678,936 normalized application records. All282 local source tables passed import/resume and complete row/timestamp/financial/counter validation; all525 attachment references remained accessible. Remote full-row transfer during the pre-delta comparison was too slow on the operator connection. The process was stopped before the atomic delta began. The Frankfurt prepared marker still identifies the first snapshot; PostgreSQL was never activated. Atlas and public ingress were restored and verified healthy by07:23:57 UTC. The second window lasted about20 minutes. The final capture is retained locally; its additional VPS copy was incomplete and is not claimed as verified.
 
 The verification pipeline now compares all rows against an independently restored encrypted destination backup locally, then binds that proof to live protected-table fingerprints under the same writer/table locks. Both the VPS off-host mirror and the saved Mac archive restored all317 tables/680,600 rows and matched every row of the679,592-record prepared baseline locally. The prepare-only mode cannot produce final acceptance; a fresh post-delta backup, full local source comparison and live all289-table fingerprint check must complete before activation. Atlas remains live during implementation and tests.
+
+
+## November3 final database milestone
+
+Frankfurt PostgreSQL is authoritative and publicly healthy; Atlas is retained. The source-bound durable receipt was written at07:58:37 UTC and ingress verified at07:58:50 UTC. The final 675,918 application records across282 tables reconcile completely. All289 protected fingerprints matched before activation. The later pool fix preserves the concurrent media release, keeps the same authority receipt, and caps the pool at six with a15-second queue wait/five-second socket bound. The initial request pool timeouts were corrected; a single subsequent Redis timeout burst is retained in the detailed report.
+
+Production encrypted recovery and independent off-host restore passed for317 tables/677,180 rows and14 payloads. Both source-archive copies are verified. Daily backup dispatch and hourly reachable-Mac mirroring remain in place; synthetic staging mutation helpers are fenced. The API-only rollback remains on PostgreSQL and preserves the latest media capabilities. No Atlas deletion, database reverse cutover or native Supabase Auth/Realtime activation occurred. The full platform consolidation remains unfinished.

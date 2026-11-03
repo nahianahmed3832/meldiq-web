@@ -1,5 +1,7 @@
 # Migration reconciliation report
 
+> Current database authority: Frankfurt Supabase PostgreSQL, active since November3 at07:58 UTC. The [final cutover report](../migrations/production-database-cutover-20261103.md) supersedes historical staging checkpoints below. Native Auth/Realtime remain a separate unfinished phase.
+
 **No production/customer records have been migrated to Supabase.** Source inventory counts are observations of a running database, not source/destination matches. Existing historical Atlas reconciliation reports remain historical.
 
 The SQL migration has been exercised against isolated PostgreSQL with synthetic fixtures. The typed importer checks all columns and record hashes, resumes a completed batch only when its source checksum matches, and refuses conflicting destination content even when counts match. Failed batches leave neither inserted rows nor checkpoints. Dependency order and active-writer exclusion are tested.

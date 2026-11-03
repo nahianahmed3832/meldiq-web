@@ -1,0 +1,69 @@
+{
+  "ok": true,
+  "candidate": {
+    "ok": true,
+    "observedAt": "2026-11-03T06:50:39.376671+00:00",
+    "runtimeRevision": "f2f7c6c345b3751e60afc6d2939640b27f689df7",
+    "productionChanged": false,
+    "customerIngressChanged": false,
+    "realProductionSettings": true,
+    "copiedWritableDataDirectory": true,
+    "actualMediaMountedReadOnly": true,
+    "phase": "complete",
+    "sourceSha256": "334986a518f7876da3fcb50aa6ead94eb0961336995396bbc7f564ebdfe4406a",
+    "protectedRowsMatchBeforeStartup": true,
+    "health": {
+      "ok": true,
+      "version": "0.76.1",
+      "time": 1793688672913,
+      "livekit": true,
+      "mongodb": null,
+      "postgres": true,
+      "databaseMode": "supabase",
+      "redis": true
+    },
+    "cutover": {
+      "projectRef": "bkvlxbsnzqkhbifawcww",
+      "sourceSha256": "334986a518f7876da3fcb50aa6ead94eb0961336995396bbc7f564ebdfe4406a",
+      "held": true,
+      "activationDurable": false
+    },
+    "protectedRowsUnchangedAfterStartup": true,
+    "completedAt": "2026-11-03T06:51:29.324651+00:00",
+    "runDirectory": "/opt/griip-internal-messaging/database-migration/production-preflight-f2f7c6c3-20261103T065039Z"
+  },
+  "rollback": {
+    "ok": true,
+    "observedAt": "2026-11-03T06:53:27.015011+00:00",
+    "runtimeRevision": "29cd7618b68a3ca5334ca9c595e360b566a8fc96",
+    "productionChanged": false,
+    "customerIngressChanged": false,
+    "realProductionSettings": true,
+    "copiedWritableDataDirectory": true,
+    "actualMediaMountedReadOnly": true,
+    "phase": "complete",
+    "sourceSha256": "334986a518f7876da3fcb50aa6ead94eb0961336995396bbc7f564ebdfe4406a",
+    "protectedRowsMatchBeforeStartup": true,
+    "health": {
+      "ok": true,
+      "version": "0.76.1",
+      "time": 1793688835763,
+      "livekit": true,
+      "mongodb": null,
+      "postgres": true,
+      "databaseMode": "supabase",
+      "redis": true
+    },
+    "cutover": {
+      "projectRef": "bkvlxbsnzqkhbifawcww",
+      "sourceSha256": "334986a518f7876da3fcb50aa6ead94eb0961336995396bbc7f564ebdfe4406a",
+      "held": true,
+      "activationDurable": false
+    },
+    "protectedRowsUnchangedAfterStartup": true,
+    "completedAt": "2026-11-03T06:54:10.239048+00:00",
+    "runDirectory": "/opt/griip-internal-messaging/database-migration/production-preflight-29cd7618-20261103T065326Z"
+  },
+  "publicContractFieldsMatch": true,
+  "scope": "Held production configuration in isolated writable data directories; no ingress switch or activation; all 289 protected table fingerprints unchanged"
+}
