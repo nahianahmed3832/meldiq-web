@@ -5263,6 +5263,9 @@ isOneToOne: false
             "active_user_id":
 { Args: Record<PropertyKey, never>; Returns: string
                            },
+"apply_row_changes":
+{ Args: { "changes": Json,"counters": Json }; Returns: undefined
+                           },
 "can_join_topic":
 { Args: { "extension": string,"sending"?: boolean,"topic": string }; Returns: boolean
                            },

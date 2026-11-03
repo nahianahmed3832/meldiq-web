@@ -1,5 +1,5 @@
 {
-  "observedAt": "2026-11-02T16:49:56.336Z",
+  "observedAt": "2026-11-03T04:40:59.639Z",
   "projectRef": "bkvlxbsnzqkhbifawcww",
   "region": "eu-central-1",
   "phase": "plan",
@@ -9,7 +9,7 @@
     "database": "postgres",
     "version": "17.11"
   },
-  "tables": 286,
-  "securedTables": 286,
+  "tables": 289,
+  "securedTables": 289,
   "ok": true
 }

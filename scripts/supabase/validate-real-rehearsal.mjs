@@ -8,12 +8,13 @@ import {promisify} from "node:util";
 process.umask(0o077);
 const execute = promisify(execFile);
 const root = path.resolve(import.meta.dirname, "../..");
-const server = path.resolve(root, "../meldiq_supabase_migration/server");
+const server = process.env.MELDIQ_SERVER_DIR ?? path.resolve(root, "../meldiq_supabase_migration/server");
 const privateRoot = path.join(os.homedir(), ".local/share/meldiq-supabase");
 const snapshot = path.resolve(process.argv[2] ?? "");
-if (!snapshot.startsWith(`${privateRoot}/atlas-rehearsal-`)) throw new Error("Private Atlas rehearsal directory required");
+if (!snapshot.startsWith(`${privateRoot}/atlas-rehearsal-`)&&!snapshot.startsWith(`${privateRoot}/atlas-cutover-`)) throw new Error("Private Atlas snapshot directory required");
 const manifest = JSON.parse(fs.readFileSync(path.join(snapshot, "manifest.json"), "utf8"));
-if (!manifest.realDataSnapshot || manifest.synthetic || manifest.purpose !== "staging-rehearsal" || !/^[a-f0-9-]{36}$/.test(manifest.id)) throw new Error("Real immutable rehearsal manifest required");
+const finalClone=manifest.purpose==="production-cutover"&&manifest.sourceWritesFrozen===true;
+if (!manifest.realDataSnapshot || manifest.synthetic || !finalClone&&manifest.purpose !== "staging-rehearsal" || !/^[a-f0-9-]{36}$/.test(manifest.id)) throw new Error("Real immutable snapshot manifest required");
 const require = createRequire(path.join(server, "package.json"));
 const {Pool} = require("pg");
 const name = `meldiq_customer_rehearsal_${manifest.id.replaceAll("-", "")}`;
@@ -44,7 +45,7 @@ try {
   }
   for (const pass of ["initial", "resume"]) {
     phase = `${pass}-import`; const start = performance.now();
-    const result = await execute(process.execPath, ["--import", "tsx", "scripts/supabase-import.ts", snapshot, "--real-data-rehearsal"], {cwd: server, env, timeout: 900000, maxBuffer: 2000000});
+    const result = await execute(process.execPath, ["--import", "tsx", "scripts/supabase-import.ts", snapshot, finalClone?"--final-cutover-clone":"--real-data-rehearsal"], {cwd: server, env, timeout: 900000, maxBuffer: 2000000});
     fs.writeFileSync(path.join(snapshot, `${pass}-local-import.log`), result.stdout, {mode: 0o600});
     report[`${pass}ImportMilliseconds`] = performance.now() - start;
   }

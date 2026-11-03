@@ -1,0 +1,29 @@
+{
+  "ok": true,
+  "observedAt": "2026-11-03T00:17:27.078Z",
+  "projectRef": "bkvlxbsnzqkhbifawcww",
+  "runtimeRevision": "88ea011a9b6fc80ddcb0a99731d29609da3e9c6c",
+  "sourceSha256": "3bf606760224f367d378c1e0661061fb20d7aff7f4ee0e84671f63e23d58f472",
+  "nodeVersion": "v22.22.3",
+  "phase": "complete",
+  "productionContainerChanged": false,
+  "applicationDataWrites": 0,
+  "httpServerStarted": false,
+  "externalProvidersStarted": false,
+  "bootstrapMilliseconds": 13365,
+  "residentMemoryBytes": 252280832,
+  "heapUsedBytes": 180117160,
+  "queryRoundTripMilliseconds": 168,
+  "counts": {
+    "accounts": 27,
+    "users": 66,
+    "devices": 126,
+    "orgs": 12,
+    "conversations": 195,
+    "billing_plan_versions": 2,
+    "auth_device_sessions": 0
+  },
+  "legacySqlAttempts": 0,
+  "connectionErrors": 0,
+  "completedAt": "2026-11-03T00:17:44.457Z"
+}

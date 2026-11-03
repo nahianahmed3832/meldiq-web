@@ -1,6 +1,6 @@
 # Supabase rehearsal operations
 
-This checkout collects the schema, operational scripts, master documentation and aggregate execution receipts independently of the user's dirty web working tree. It builds on the deployed web preparation commit8bda737. The operational branch has not been pushed or deployed.
+This checkout collects the schema, operational scripts, master documentation and aggregate execution receipts independently of the user's dirty web working tree. It builds on the deployed web preparation commit8bda737. The operational branch contains schema and recovery preparation; production authority has not switched.
 
 The Frankfurt project`bkvlxbsnzqkhbifawcww` now contains customer rehearsal data. Atlas remains live. Synthetic hosted imports and API/Realtime smoke entry points are deliberately fenced; use a disposable synthetic environment or owned loopback PostgreSQL database for further mutation tests. Do not remove the customer-data marker to bypass this protection.
 
@@ -21,3 +21,6 @@ The real-data rehearsal has already completed. Do not rerun snapshot replacement
 Evidence and remaining gates are documented in `docs/migrations/staging-real-data-rehearsal-20261103.md`, `docs/migrations/execution-status.md` and `docs/testing/supabase-real-data-*.json`.
 
 Backend source is committed at2cf5268f in the isolated migration checkout; patches0012 and0013 are included for review. Android source is committed atfdae429e in `meldiq_android_migration_release`; its artifact folder contains the debug-signed0.5.5 test APK, unsigned release AAB, a preparation patch and verification receipt. Neither Android nor production Supabase traffic was published/activated. Current production API feature integration, unified Auth, Realtime revocation, device/provider acceptance, load testing and off-host full-stack recovery remain required before cutover.
+
+
+The compatibility rollout now uses the isolated `meldiq_supabase_runtime_release/server` checkout at347ad1a9. The tested runtime image is2097e601; the retained-data fallback is88ea011a. Migrations0014 and0015 provide atomic repository units and indexed primary-key deletion. Read `docs/migrations/production-database-compatibility-cutover.md` for freeze, final sync, acceptance, deployment and rollback mechanics. Original client authentication and transport remain active during this database-only phase. Complete Auth/Realtime consolidation is not attested by these checks.
