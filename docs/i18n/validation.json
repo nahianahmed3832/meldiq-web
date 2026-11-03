@@ -1,5 +1,5 @@
 {
-  "status": "validated-awaiting-production-package",
+  "status": "deployed-and-verified",
   "date": "2026-11-04",
   "nativeReview": "awaiting-native-review",
   "typecheck": "passed",
@@ -18,6 +18,9 @@
     ],
     "totalSelectedPassed": 66,
     "finalDictionaryRefreshPassed": 14,
+    "postPolishRefreshPassed": 4,
+    "controlBoundsPassed": 2,
+    "providerReturnDesktopBridgePassed": 4,
     "all28LocaleSelection": "passed",
     "activeEncryptedCallContinuity": "passed-desktop-and-phone",
     "hostedCardFieldContinuity": "passed-desktop-and-phone",
@@ -32,8 +35,7 @@
       "ar",
       "ur"
     ],
-    "fullCrossBrowserSuite": "not-run",
-    "controlBoundsPassed": 2
+    "fullCrossBrowserSuite": "not-run"
   },
   "serverPatch": {
     "isolatedSQLitePassed": 17,
@@ -68,11 +70,76 @@
     "inlineSlotMultiplicity": "passed",
     "englishPhraseAudit": "passed"
   },
-  "productionBuild": "required-by-production-packager",
+  "productionBuild": "passed-with-test-linking-disabled",
   "serviceWorkerBefore": {
     "bytes": 201859,
     "gzipBytes": 62984,
     "source": "Live public-status release c60e2bf"
   },
-  "deployed": false
+  "deployed": true,
+  "webCI": {
+    "localization": {
+      "conclusion": "success",
+      "status": "completed",
+      "url": "https://github.com/nahianahmed3832/meldiq-web/actions/runs/41730529794"
+    },
+    "compatibility": {
+      "conclusion": "success",
+      "status": "completed",
+      "url": "https://github.com/nahianahmed3832/meldiq-web/actions/runs/41734537546"
+    },
+    "localizationPR": "https://github.com/nahianahmed3832/meldiq-web/pull/32",
+    "compatibilityPR": "https://github.com/nahianahmed3832/meldiq-web/pull/33",
+    "mainMerge": "9df27a47b97aa7f487bb2b6977ee86ee7c15817f"
+  },
+  "productionBrowser": {
+    "status": "passed",
+    "testedAt": "2026-11-03T22:59:30.625Z",
+    "target": "https://web.meldiq.app",
+    "authenticatedWrites": false,
+    "results": [
+      {
+        "viewport": {
+          "width": 1440,
+          "height": 1000
+        },
+        "localeChoices": 28,
+        "localizedSignInHeadings": 28,
+        "callbackLocales": 8,
+        "guestReload": true,
+        "desktopHandoff": true,
+        "pageErrors": 0
+      },
+      {
+        "viewport": {
+          "width": 393,
+          "height": 852
+        },
+        "localeChoices": 28,
+        "localizedSignInHeadings": 28,
+        "callbackLocales": 8,
+        "guestReload": true,
+        "desktopHandoff": true,
+        "pageErrors": 0
+      }
+    ],
+    "networkObservations": {
+      "publicStatusSummary": "The existing separate public-status endpoints were unavailable from this browser environment; the application retained its fallback. Web/API release health and all selected localization checks passed.",
+      "localeSwitchTimeoutMs": 30000,
+      "note": "The first live run used the local-test 5-second assertion window and timed out during a locale download. The complete repeat used a 30-second network allowance and passed both viewports."
+    }
+  },
+  "serviceWorkerAfter": {
+    "bytes": 188774,
+    "gzipBytes": 58433
+  },
+  "deployment": {
+    "status": "deployed-and-verified",
+    "deployedAt": "2026-11-03T22:57:29.097226+00:00",
+    "buildId": "BfG5t4FRHsAar79YyZeGD",
+    "webSource": "5facb4c29927d1e993b71a7675e5f33475faeb9f",
+    "apiSource": "cc61eb40cd991c4ae843cd31a0d43f793f2f480f",
+    "newApiImage": "griip-internal-messaging-api:0.76.1-pg-b9e6f005-locales-cc61eb40-5facb4c",
+    "receipt": "production-receipt.json"
+  }
 }

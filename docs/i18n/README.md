@@ -1,6 +1,6 @@
 # Meldiq interface localization — 2026-11-04
 
-**All localization and selected browser gates passed. The normal production package and publication are the remaining release steps. Professional native-speaker review remains pending.**
+**All localization gates passed; published and verified in production. Professional native-speaker review remains pending.**
 
 The application has **6,179 translation keys in each of 28 locales**, arranged into 13 namespaces: common, auth, onboarding, workspace, messaging, calls, files, organization, settings, notifications, billing, errors and admin. The strict gate checks dictionary completeness, native plural categories, interpolation types and multiplicity, protected names, line structure, copied English values and prose fragments, malformed output, hardcoded render strings, standalone HTML/JavaScript, and accessible control labels. Intentional shared spellings are reviewed per key and locale in `locales/invariants.json`.
 
@@ -66,16 +66,18 @@ An original strict preference reader can reject documents that now contain `loca
 - Strict localization gate: **passed**, 6179 / 6179 keys in all 28 locales; no structural, missing, untranslated, hardcoded-render or icon-label findings.
 - Repository typecheck, lint and formatting: **passed**.
 - Unit suite: **967 passed, 1 existing conditional skip, 141 files**.
-- Browser regression: **66 passed** on desktop and phone; the **14 localization cases were rerun after the final dictionary corrections and passed**.
+- Browser regression: **66 passed** on desktop and phone; the **14 localization cases were rerun after the final dictionary corrections and passed**; four final copy refresh cases, two control-bounds cases and four final invitation/provider-return cases also passed. The provider-return cases include the existing desktop browser handoff.
 - Optional preference tests: **17 SQLite, 17 PostgreSQL**; compatible rollback reader: **17 PostgreSQL**; existing PostgreSQL compatibility: **124 passed**.
 - [Backend CI](https://github.com/nahianahmed3832/meldiq/actions/runs/41708332732): **passed** (server typecheck/tests/build plus the unchanged Android CI targets; no Android source change or distribution).
-- Normal production build: **required and rerun by the release packager before publication**.
+- Normal production build: **passed, test linking disabled**.
 
 The browser suite uses Chromium desktop and a phone-width viewport. It covers all configured locale choices, the eight required script/layout samples, guest reload, account synchronization/isolation, unchanged user content, keyboard/focus behavior, stable sockets, active encrypted call tracks/audio, registration/recovery, media upload/download/original bytes, checkout regression, unchanged hosted card inputs during language switching, public invitations, and synchronous provider-return relay. Payment tests use existing mocks/test wiring; they do not prove real buyer approval, capture, signed-webhook or recurring lifecycle behavior. Existing production Plus offer flags remain unchanged. No new Android distribution or physical-device OAuth claim is made. Full Safari/Firefox regression and professional linguistic review remain outside the verified results.
 
+[Web localization CI](https://github.com/nahianahmed3832/meldiq-web/actions/runs/41730529794) and [production compatibility CI](https://github.com/nahianahmed3832/meldiq-web/actions/runs/41734537546) both passed. The final production browser check selected all 28 localized sign-in headings, verified RTL and guest reload, and exercised localized callback recovery and the existing desktop handoff at desktop and phone widths. See [production-browser-verification.json](production-browser-verification.json).
+
 ## Performance and files
 
-English remains the eager fallback; only the selected locale's application chunks are requested, with cached catalogs and formatters. Standalone pages request one small selected-locale subset and reuse it when revisited. The worker receives only its eight required labels and does not import the framework or full dictionaries. The predecessor worker is 201,859 bytes (62,984 gzip); the final normal-build measurement is recorded in the publication receipt. Source JSON sizes in [architecture.json](architecture.json) are informational and are not browser transfer or startup-latency benchmarks. No full startup or end-to-end latency benchmark is claimed.
+English remains the eager fallback; only the selected locale's application chunks are requested, with cached catalogs and formatters. Standalone pages request one small selected-locale subset and reuse it when revisited. The worker receives only its eight required labels and does not import the framework or full dictionaries. The production worker is 188,774 bytes (58,433 gzip), compared with the predecessor’s 201,859 bytes (62,984 gzip). Source JSON sizes in [architecture.json](architecture.json) are informational and are not browser transfer or startup-latency benchmarks. No full startup or end-to-end latency benchmark is claimed.
 
 [changed-files.json](changed-files.json) lists created/modified/deleted files in the isolated release checkout, avoiding unrelated work in the shared dirty workspace. [source-inventory.json](source-inventory.json) records the final source scan; the initial inventory is retained as historical evidence. [integration.json](integration.json) summarizes the current audited modules.
 
@@ -110,4 +112,4 @@ node deploy/localization/package.mjs \
 
 Read the current deployment controller, image ID, three preference-module hashes, live web predecessor and both release locks immediately before publishing. Transfer the resulting bundle to the server and invoke its `publish.py` with the absolute bundle directory. It obtains both existing release locks, verifies the exact predecessor, builds full and reader overlays before switching, copies the server-owned web configuration, retains loaded hashed assets, performs the paired API/web update and verifies served asset hashes, health, runtime configuration and other containers. It automatically falls back to the old web plus compatible reader if verification fails. The bundle's `rollback.py` performs a later guarded paired rollback; retain its manifest and images. Use these dedicated scripts for this release, since generic historical scripts do not retain the standalone hashed locale assets.
 
-Publication has not yet occurred in this report snapshot. The final publication receipt records the deployed source, build ID and verification results.
+Publication completed at 2026-11-03T22:57:29.097226+00:00. Build ID: `BfG5t4FRHsAar79YyZeGD`. Web source: `5facb4c29927d1e993b71a7675e5f33475faeb9f`; API preference source: `cc61eb40cd991c4ae843cd31a0d43f793f2f480f`. See [production-receipt.json](production-receipt.json) for verified image/module hashes, configuration preservation and rollout evidence.

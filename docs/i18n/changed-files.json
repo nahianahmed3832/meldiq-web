@@ -50,6 +50,14 @@
       "status": "A"
     },
     {
+      "file": "docs/i18n/production-browser-verification.json",
+      "status": "A"
+    },
+    {
+      "file": "docs/i18n/production-receipt.json",
+      "status": "A"
+    },
+    {
       "file": "docs/i18n/README.md",
       "status": "A"
     },

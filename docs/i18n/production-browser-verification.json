@@ -1,0 +1,37 @@
+{
+  "status": "passed",
+  "testedAt": "2026-11-03T22:59:30.625Z",
+  "target": "https://web.meldiq.app",
+  "authenticatedWrites": false,
+  "results": [
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "localeChoices": 28,
+      "localizedSignInHeadings": 28,
+      "callbackLocales": 8,
+      "guestReload": true,
+      "desktopHandoff": true,
+      "pageErrors": 0
+    },
+    {
+      "viewport": {
+        "width": 393,
+        "height": 852
+      },
+      "localeChoices": 28,
+      "localizedSignInHeadings": 28,
+      "callbackLocales": 8,
+      "guestReload": true,
+      "desktopHandoff": true,
+      "pageErrors": 0
+    }
+  ],
+  "networkObservations": {
+    "publicStatusSummary": "The existing separate public-status endpoints were unavailable from this browser environment; the application retained its fallback. Web/API release health and all selected localization checks passed.",
+    "localeSwitchTimeoutMs": 30000,
+    "note": "The first live run used the local-test 5-second assertion window and timed out during a locale download. The complete repeat used a 30-second network allowance and passed both viewports."
+  }
+}
