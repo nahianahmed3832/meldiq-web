@@ -1,6 +1,6 @@
 # PostgreSQL compatibility cutover
 
-The owner selected the existing Frankfurt project `bkvlxbsnzqkhbifawcww` for the eventual production database on November 3, 2026, and confirmed publishing their own production-signed Android release. This authorizes the final data sync and database switch after verification. Atlas and its backups must be retained. This document does not attest that cutover has occurred.
+The owner selected the existing Frankfurt project `bkvlxbsnzqkhbifawcww` for the eventual production database on November 3, 2026, and confirmed publishing their own production-signed Android release. This authorizes the final data sync and database switch after verification. Atlas and its backups must be retained. Cutover completed on November3 at07:58 UTC. See [the final database report](production-database-cutover-20261103.md); staging checkpoints below are historical.
 
 The first production phase preserves the released account/device authentication, Fastify HTTP/WebSocket protocols, S3, Hostinger, LiveKit, Redis and push integrations. Native Supabase Auth and Realtime activation remain separately blocked until their identity, client and revocation checks pass. The existing Stockholm social-login project `sgowwdmnavcsofzlgggm` is distinct from the Frankfurt database project; its `SUPABASE_URL` and social credentials must not be overwritten with database settings.
 

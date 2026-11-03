@@ -30,3 +30,12 @@ Cache content-hashed static assets globally with immutable lifetimes. Serve conf
 The live source has482 attachment references. S3 HEAD metadata matches447 exact lengths;35 older references are backed by the already configured local read fallback, with matching lengths and existing uploader/conversation rows. Preserve the current Hostinger attachment data volume and STORAGE_READ_FALLBACK=local during any database-only cutover. Starting the API with a fresh empty volume would break those35 references despite a correct PostgreSQL import. No object was moved or uploaded by this audit. Any later consolidation of those files into S3 needs its own reviewed non-overwrite copy/verification plan; no bucket/key rename or Supabase Storage copy is implied. Full content hashes/transfers and frozen-source reconciliation remain separate acceptance.
 
 The combined hosted receipt records a release-blocking cached-channel revocation leak. Keep the PostgreSQL/Supabase composition opt-in and outside production until reliable already-connected authorization is demonstrated. Migration012 fixes a separate delivery-loss bug by making managed-table enqueue errors abort acknowledgment; deploying that correction does not resolve cached revocation. The measured warm MacBook/Frankfurt HTTP p95 of1.55s is not VPS performance. Measure the final API/database placement before approving launch latency.
+
+
+## Current database phase
+
+Frankfurt PostgreSQL is live; [the November3 cutover report](../migrations/production-database-cutover-20261103.md) records the exact source, authority, image and recovery evidence. The runtime preserves existing account/device login and WebSocket protocols. Native Supabase Auth/Realtime remain a separate unfinished phase.
+
+Acquire `/run/lock/meldiq-production-release.lock` before API changes. Inspect the live immutable image and effective canonical configuration first, and preserve concurrent feature releases. Keep `/data`, the original source-bound acceptance, the durable authority receipt, CA and every current env-file/mount. The runtime pool is capped at six, with15-second bounded checkout and five-second physical connection setup. Update only the API using `--no-deps`; do not apply the legacy full-stack template or remove Redis or LiveKit. Ordinary restarts retain PostgreSQL authority.
+
+The old staging helpers are fenced with production environment settings. Create a separate synthetic staging environment before further native Auth/Realtime experiments. No new paid plan was enabled by the database cutover.

@@ -42,3 +42,12 @@ Archives and row manifests remain under the private local staging support direct
 Primary references: [Supabase backup/restore](https://supabase.com/docs/guides/platform/migrating-within-supabase/backup-restore), [platform to self-hosted recovery scope](https://supabase.com/docs/guides/self-hosting/restore-from-platform), [official Auth serve command](https://github.com/supabase/auth/blob/v2.197.0/cmd/serve_cmd.go), [PostgreSQL17 pg_dump snapshots](https://www.postgresql.org/docs/17/app-pgdump.html).
 
 The final executed snapshot/Auth drill passes:314 tables/1,395 rows reconcile, with original-password/same-subject login, wrong-password rejection, ES256 verification, refresh rotation, logout and denied subsequent refresh. The public receipt retains scope limits and the Node25 TLS shutdown warning. No off-host recovery claim is made.
+
+
+## Live PostgreSQL recovery checkpoint, November3
+
+The daily host backup now follows the live PostgreSQL authority. Bundle20261103T090738Z authenticated14 encrypted payloads and independently restored all317 tables/677,180 rows. The hourly Mac mirror is installed and runs while the Mac and SSH host are reachable. Its loopback verifier removes only its own scratch database. The raw final Atlas capture is also verified on both hosts, encrypted for the independently mirrored recovery identity.
+
+The bundle includes `api-effective-environment.json.age`: the exact Docker environment as a JSON array of `NAME=value` strings, including values from additional media env files. During recovery, reconstruct the API environment files referenced by the saved compose configuration from this private payload; the older canonical `.env` alone may not contain the active media settings. Keep all decrypted credentials outside Git with private permissions. Restore the original acceptance and durable authority receipts, reports key and local media along with the PostgreSQL data. The configured push service account is encrypted separately.
+
+After activation, application rollback keeps the same PostgreSQL authority. The validated prior media image is b7bffce7; older database-only images do not contain the newer media behavior. Do not resume Atlas against stale records. These checks establish stored-schema/row recovery; full Auth/Realtime/provider/SMTP service and production-role recreation are not claimed.
