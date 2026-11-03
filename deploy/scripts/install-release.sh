@@ -37,6 +37,15 @@ else
   MEDIA_ORIGIN="(none)"
   MEDIA_ORIGIN_RE="https://media-origin-not-configured\\.invalid"
 fi
+# During a region change both the old origin and the new region may have
+# outstanding uploads. Only allow exact operator-configured HTTPS hostnames.
+for origin in "${MELDIQ_UPLOAD_ORIGIN:-}" "${MEDIA_PUBLIC_BASE_URL:-}"; do
+  [ -z "$origin" ] && continue
+  [[ "$origin" =~ ^https://[a-z0-9.-]+$ ]] || { echo "Invalid HTTPS media origin" >&2; exit 1; }
+  CONNECT_EXTRA="$CONNECT_EXTRA $origin"
+  escaped="$(printf '%s' "$origin" | sed 's/[.]/\\./g')"
+  MEDIA_ORIGIN_RE="($MEDIA_ORIGIN_RE|$escaped)"
+done
 # nginx needs a resolver to follow a link to the bucket: the host's own (systemd-resolved's stub on Ubuntu).
 RESOLVER="$(awk '/^nameserver/ { print $2; exit }' /etc/resolv.conf 2>/dev/null || true)"
 [ -n "$RESOLVER" ] || RESOLVER=127.0.0.53
