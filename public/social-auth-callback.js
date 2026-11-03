@@ -21,6 +21,19 @@
   const error = result.get("error");
   const valid = /^[A-Za-z0-9_-]{43}$/.test(id || "") && (error || /^[A-Za-z0-9_-]{43}$/.test(receipt || ""));
   if (valid) {
+    try {
+      const pending = JSON.parse(sessionStorage.getItem("meldiq.desktop.browserFlow") || "null");
+      if (pending?.kind === "social" && pending.id === id && pending.expires > Date.now()) {
+        const q = new URLSearchParams({ kind: "social-return", id });
+        if (receipt) q.set("receipt", receipt);
+        if (error) q.set("error", error);
+        location.replace(`/desktop-bridge.html#${q}`);
+        return;
+      }
+    } catch {
+      /* Existing web sign-in continues when storage is unavailable. */
+    }
+
     const message = { type: "meldiq-social", id, receipt, error };
     try {
       if (typeof BroadcastChannel !== "undefined") {

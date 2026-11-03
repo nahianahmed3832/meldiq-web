@@ -49,4 +49,13 @@ test("the provider return relays its receipt immediately, removes the fragment a
   await expect.poll(() => page.evaluate(() => (window as unknown as { returned: unknown }).returned)).toEqual({ type: "meldiq-social", id, receipt, error: null });
   await expect.poll(() => new URL(popup.url()).hash).toBe("");
   await popup.close();
+  await page.route("**/desktop-bridge.html", (route) => route.fulfill({ contentType: "text/html", body: "<!doctype html><title>Desktop handoff fixture</title>" }));
+  await page.goto("/");
+  await page.evaluate((id) => {
+    sessionStorage.setItem("meldiq.desktop.browserFlow", JSON.stringify({ kind: "social", id, expires: Date.now() + 60_000 }));
+  }, id);
+  await page.goto(`/social-auth-callback.html#id=${id}&receipt=${receipt}`);
+  await expect(page).toHaveURL(/\/desktop-bridge\.html#/);
+  const bridge = new URLSearchParams(new URL(page.url()).hash.slice(1));
+  expect(Object.fromEntries(bridge)).toEqual({ kind: "social-return", id, receipt });
 });

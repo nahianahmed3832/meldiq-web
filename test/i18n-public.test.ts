@@ -13,7 +13,7 @@ afterEach(() => {
 function assets() {
   const directory = fs.mkdtempSync(path.join(os.tmpdir(), "meldiq-public-i18n-"));
   directories.push(directory);
-  for (const file of ["invite.html", "social-auth-callback.html"]) fs.copyFileSync(path.resolve("public", file), path.join(directory, file));
+  for (const file of ["invite.html", "social-auth-callback.html", "social-auth-callback.js"]) fs.copyFileSync(path.resolve("public", file), path.join(directory, file));
   const report = writePublicLocaleAssets(directory, { fillEnglish: true });
   return { directory, report, script: fs.readFileSync(path.join(directory, "public-locale.js"), "utf8") };
 }
@@ -60,6 +60,8 @@ describe("standalone localization assets", () => {
     expect(html).toContain("Copy the code");
     const callback = fs.readFileSync(path.join(directory, "social-auth-callback.html"), "utf8");
     expect(callback).toContain("Finishing sign-in…");
+    expect(callback).toMatch(/src="\/locales\/social-auth-callback-[a-f0-9]+\.js"/);
+    expect(fs.existsSync(path.join(directory, "social-auth-callback.js"))).toBe(false);
     const payloads = fs
       .readdirSync(path.join(directory, "locales"), { withFileTypes: true })
       .filter((entry) => entry.isDirectory())

@@ -98,6 +98,11 @@ labels = before["Config"].get("Labels", {})
 assert labels["com.docker.compose.project.config_files"] == str(base / "compose.yaml")
 assert not labels.get("com.docker.compose.project.environment_file")
 assert json.loads(command(["docker", "image", "inspect", manifest["expectedImage"]]))[0]["Id"] == manifest["expectedImageId"]
+build_base = manifest.get("buildBaseImage", manifest["expectedImage"])
+assert json.loads(command(["docker", "image", "inspect", build_base]))[0]["Id"] == manifest.get("buildBaseImageId", manifest["expectedImageId"])
+for path, sha in manifest.get("serverOwnedAssets", {}).items():
+    assert digest(served(path)) == sha, "Server-owned callback asset changed"
+
 nginx_before = command(["nginx", "-T"])
 others_before = command(["docker", "ps", "--format", "{{.Names}} {{.ID}}"])
 (run / "before-inspection.private.json").write_text(json.dumps(before))
@@ -133,7 +138,12 @@ for name, image, hashes in [("api-overlay", manifest["newImage"], manifest["apiF
     assert {str(path.relative_to(directory / "dist")) for path in (directory / "dist").rglob("*") if path.is_file()} == module_paths
     for path, sha in hashes.items():
         assert digest((directory / "dist" / path).read_bytes()) == sha
-    assert (directory / "Dockerfile").read_text().splitlines()[0] == "FROM " + manifest["expectedImage"]
+    assert (directory / "Dockerfile").read_text().splitlines()[0] == "FROM " + build_base
+    # The bundle itself stays private; copied application code must be readable by the base image's runtime user.
+    code = directory / "dist"
+    code.chmod(0o755)
+    for path in code.rglob("*"):
+        path.chmod(0o755 if path.is_dir() else 0o644)
     build = subprocess.run(["docker", "build", "--pull=false", "--network=none", "--memory=256m", "--memory-swap=256m", "--cpu-quota=50000", "--cpu-period=100000", "-t", image, str(directory)], env={**os.environ, "DOCKER_BUILDKIT": "0"}, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     (run / (name + "-build.log")).write_bytes(build.stdout)
     assert build.returncode == 0
@@ -184,6 +194,9 @@ try:
         if path == "index.html" or path == "sw.js" or path.endswith((".js", ".css", ".json")):
             assert digest(served(path)) == sha, path
     assert served("config.json") == (old / "config.json").read_bytes()
+    for path, sha in manifest.get("serverOwnedAssets", {}).items():
+        assert digest(served(path)) == sha, "Server-owned callback asset changed during publication"
+
     assert nginx_before == command(["nginx", "-T"])
     def others(data):
         return {line for line in data.decode().splitlines() if not line.startswith(container + " ")}
@@ -202,6 +215,6 @@ except BaseException:
         verify_runtime(before, healthy())
     raise
 
-receipt = {"status": "deployed-and-verified", "deployedAt": datetime.datetime.now(datetime.UTC).isoformat(), "webSource": manifest["webSource"], "apiSource": manifest["apiSource"], "buildId": manifest["buildId"], "previousWeb": str(old), "newWeb": str(new), "previousApiImage": manifest["expectedImage"], "newApiImage": manifest["newImage"], "compatibleReaderImage": manifest["readerImage"], "apiModulesReplaced": sorted(module_paths), "previousApiImageId": before["Image"], "newApiImageId": current["Image"], "baselineModuleSha256": manifest["baselineFiles"], "apiModuleSha256": manifest["apiFiles"], "compatibleReaderModuleSha256": manifest["readerFiles"], "webArchiveSha256": manifest["archives"]["web.tar.gz"], "verifiedWebFileCount": len(manifest["files"]), "runtimeConfigurationPreserved": True, "databaseMigrationsChanged": False, "nginxUnchanged": True, "otherContainersUnchanged": True, "publicSourceMaps": False, "validation": manifest["validation"]}
+receipt = {"status": "deployed-and-verified", "publicationToolSha256": digest(Path(__file__).read_bytes()), "deployedAt": datetime.datetime.now(datetime.UTC).isoformat(), "webSource": manifest["webSource"], "apiSource": manifest["apiSource"], "buildId": manifest["buildId"], "previousWeb": str(old), "newWeb": str(new), "previousApiImage": manifest["expectedImage"], "newApiImage": manifest["newImage"], "compatibleReaderImage": manifest["readerImage"], "apiModulesReplaced": sorted(module_paths), "previousApiImageId": before["Image"], "newApiImageId": current["Image"], "baselineModuleSha256": manifest["baselineFiles"], "apiModuleSha256": manifest["apiFiles"], "compatibleReaderModuleSha256": manifest["readerFiles"], "webArchiveSha256": manifest["archives"]["web.tar.gz"], "verifiedWebFileCount": len(manifest["files"]), "serverOwnedAssetsPreserved": manifest.get("serverOwnedAssets", {}), "buildBaseImage": build_base, "runtimeConfigurationPreserved": True, "databaseMigrationsChanged": False, "nginxUnchanged": True, "otherContainersUnchanged": True, "publicSourceMaps": False, "validation": manifest["validation"]}
 (run / "production-receipt.json").write_text(json.dumps(receipt, indent=2) + "\n")
 print(json.dumps(receipt), flush=True)
