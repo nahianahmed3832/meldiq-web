@@ -11,6 +11,7 @@ import { followVisualViewport } from "../application/viewport";
 import { guardInspectorKeys } from "../application/inspectGuard";
 import { installLegacyCurves } from "../crypto/legacyCurves";
 import { App } from "../ui/App";
+import { ServiceStatusNotice } from "../ui/components/ServiceStatusNotice";
 import { ConfigError } from "../ui/StatusScreens";
 
 type Start = { s: "starting" } | { s: "ready" } | { s: "failed"; message: string };
@@ -64,6 +65,7 @@ export default function Root() {
   return (
     <StrictMode>
       <div id="root">
+        <ServiceStatusNotice />
         <App />
       </div>
     </StrictMode>
