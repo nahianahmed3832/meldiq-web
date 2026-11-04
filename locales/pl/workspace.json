@@ -2094,6 +2094,9 @@
     "none": "Nie poproszono o dodatkowy dostęp.",
     "richMessages": "Rozbudowane wiadomości i elementy sterujące",
     "richMessagesDescription": "Zezwalaj na interaktywne wiadomości, karty i przyciski z linkami. Zwykłe wiadomości tekstowe nadal podlegają rolom społeczności.",
-    "inputNotice": "Wprowadzone dane są wysyłane prywatnie do tego bota i jego twórcy."
+    "inputNotice": "Wprowadzone dane są wysyłane prywatnie do tego bota i jego twórcy.",
+    "voiceKey": "Klucz szyfrowania głosu bota",
+    "voiceKeyNotice": "Użyj publicznego klucza X25519 wygenerowanego przez bota. Klucz prywatny zachowaj w procesie bota.",
+    "voiceApprovalNotice": "Dostęp głosowy pozwala temu botowi i jego twórcy słyszeć pokój. Wymagane są publiczny klucz szyfrowania i ponowne zatwierdzenie."
   }
 }

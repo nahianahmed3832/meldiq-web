@@ -50,14 +50,20 @@ function PermissionForm({ botId, orgId }: { botId: string; orgId?: string }) {
   );
   const action = useAction();
   const [draft, setDraft] = useState<BotScope[] | null>(null);
+  const [voiceKey, setVoiceKey] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
   const view = loaded.data;
   const selected = new Set(draft ?? view?.installation?.permissions ?? view?.manifest.permissions ?? []);
   const available = orgId ? (view?.manifest.permissions ?? []) : BOT_SCOPES;
   const prior = view?.installation?.permissions ?? view?.manifest.permissions ?? [];
-  const dirty = prior.length !== selected.size || prior.some((permission) => !selected.has(permission));
+  const dirty =
+    prior.length !== selected.size ||
+    prior.some((permission) => !selected.has(permission)) ||
+    (!orgId && voiceKey !== null && voiceKey.trim() !== (view?.manifest.voicePublicKey ?? "")) ||
+    (!!orgId && !!view?.installation && view.installation.manifestRev !== view.manifest.rev);
   const reload = () => {
     setDraft(null);
+    setVoiceKey(null);
     setSaved(false);
     action.clear();
     loaded.reload();
@@ -72,8 +78,9 @@ function PermissionForm({ botId, orgId }: { botId: string; orgId?: string }) {
         setSaved(false);
         void action.act(async () => {
           if (orgId && view.installation) await approveBotPermissions(engine, orgId, botId, [...selected], view.manifest.rev, view.installation.rev);
-          else await requestBotPermissions(engine, botId, [...selected], view.manifest.rev);
+          else await requestBotPermissions(engine, botId, [...selected], view.manifest.rev, voiceKey === null ? undefined : voiceKey.trim() || null);
           setDraft(null);
+          setVoiceKey(null);
           loaded.reload();
           setSaved(true);
         });
@@ -110,6 +117,33 @@ function PermissionForm({ botId, orgId }: { botId: string; orgId?: string }) {
               </label>
             );
           })}
+          {(selected.has("voice.connect") || !!view.manifest.voicePublicKey) && (
+            <div className="field">
+              {orgId ? <strong>{t("workspace.botAccess.voiceKey")}</strong> : <label htmlFor={`bot-voice-key-${botId}`}>{t("workspace.botAccess.voiceKey")}</label>}
+              {!orgId && (
+                <input
+                  id={`bot-voice-key-${botId}`}
+                  className="input"
+                  type="text"
+                  dir="ltr"
+                  autoComplete="off"
+                  spellCheck={false}
+                  maxLength={100}
+                  value={voiceKey ?? view.manifest.voicePublicKey ?? ""}
+                  onChange={(event) => {
+                    setVoiceKey(event.currentTarget.value);
+                    setSaved(false);
+                  }}
+                />
+              )}
+              <small className="muted">{t(orgId ? "workspace.botAccess.voiceApprovalNotice" : "workspace.botAccess.voiceKeyNotice")}</small>
+              {view.manifest.voiceKeyFingerprint && (orgId || voiceKey === null || voiceKey.trim() === view.manifest.voicePublicKey) && (
+                <code dir="ltr" style={{ overflowWrap: "anywhere", wordBreak: "break-all" }}>
+                  SHA-256 · {view.manifest.voiceKeyFingerprint}
+                </code>
+              )}
+            </div>
+          )}
         </fieldset>
       )}
       <div className="row" style={{ gap: 8, flexWrap: "wrap" }}>

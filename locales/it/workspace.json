@@ -2094,6 +2094,9 @@
     "none": "Nessun accesso aggiuntivo richiesto.",
     "richMessages": "Messaggi avanzati e controlli",
     "richMessagesDescription": "Consenti messaggi interattivi, schede e pulsanti di collegamento. I normali messaggi di testo restano regolati dai ruoli della comunità.",
-    "inputNotice": "I dati inseriti vengono inviati in privato a questo bot e al suo sviluppatore."
+    "inputNotice": "I dati inseriti vengono inviati in privato a questo bot e al suo sviluppatore.",
+    "voiceKey": "Chiave di crittografia vocale del bot",
+    "voiceKeyNotice": "Usa la chiave pubblica X25519 generata dal bot. Conserva la chiave privata nel processo del bot.",
+    "voiceApprovalNotice": "L’accesso vocale consente a questo bot e al suo sviluppatore di ascoltare la stanza. Sono necessarie una chiave pubblica di crittografia e una nuova approvazione."
   }
 }

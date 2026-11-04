@@ -2094,6 +2094,9 @@
     "none": "Ingen ytterligare åtkomst har begärts.",
     "richMessages": "Utökade meddelanden och kontroller",
     "richMessagesDescription": "Tillåt interaktiva meddelanden, kort och länkknappar. Vanliga textmeddelanden styrs fortfarande av gemenskapens roller.",
-    "inputNotice": "Det du anger skickas privat till den här boten och dess utvecklare."
+    "inputNotice": "Det du anger skickas privat till den här boten och dess utvecklare.",
+    "voiceKey": "Krypteringsnyckel för botens röst",
+    "voiceKeyNotice": "Använd den offentliga X25519-nyckel som boten har skapat. Behåll den privata nyckeln i botprocessen.",
+    "voiceApprovalNotice": "Röståtkomst låter den här boten och dess utvecklare höra rummet. En offentlig krypteringsnyckel och ett nytt godkännande krävs."
   }
 }

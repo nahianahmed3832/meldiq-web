@@ -2094,6 +2094,9 @@
     "none": "Ek erişim istenmedi.",
     "richMessages": "Zengin mesajlar ve denetimler",
     "richMessagesDescription": "Etkileşimli mesajlara, kartlara ve bağlantı düğmelerine izin verin. Normal metin mesajlarını topluluk rolleri yönetmeye devam eder.",
-    "inputNotice": "Girdiğiniz bilgiler bu bota ve geliştiricisine özel olarak gönderilir."
+    "inputNotice": "Girdiğiniz bilgiler bu bota ve geliştiricisine özel olarak gönderilir.",
+    "voiceKey": "Bot ses şifreleme anahtarı",
+    "voiceKeyNotice": "Botunuzun oluşturduğu X25519 açık anahtarını kullanın. Özel anahtarı bot sürecinde saklayın.",
+    "voiceApprovalNotice": "Ses erişimi, bu botun ve geliştiricisinin odayı duymasını sağlar. Açık şifreleme anahtarı ve yeni onay gerekir."
   }
 }

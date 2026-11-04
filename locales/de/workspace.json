@@ -2094,6 +2094,9 @@
     "none": "Kein zusätzlicher Zugriff angefordert.",
     "richMessages": "Erweiterte Nachrichten und Steuerelemente",
     "richMessagesDescription": "Interaktive Nachrichten, Karten und Link-Schaltflächen erlauben. Normale Textnachrichten werden weiterhin durch die Community-Rollen geregelt.",
-    "inputNotice": "Deine Eingaben werden privat an diesen Bot und seinen Entwickler gesendet."
+    "inputNotice": "Deine Eingaben werden privat an diesen Bot und seinen Entwickler gesendet.",
+    "voiceKey": "Schlüssel für Bot-Sprachverschlüsselung",
+    "voiceKeyNotice": "Verwende den vom Bot erzeugten öffentlichen X25519-Schlüssel. Bewahre den privaten Schlüssel im Bot-Prozess auf.",
+    "voiceApprovalNotice": "Sprachzugriff lässt diesen Bot und seinen Entwickler den Raum hören. Ein öffentlicher Verschlüsselungsschlüssel und eine erneute Genehmigung sind erforderlich."
   }
 }

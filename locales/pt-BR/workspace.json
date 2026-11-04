@@ -2094,6 +2094,9 @@
     "none": "Nenhum acesso adicional solicitado.",
     "richMessages": "Mensagens avançadas e controles",
     "richMessagesDescription": "Permitir mensagens interativas, cartões e botões de link. As mensagens de texto comuns continuam sujeitas aos cargos da comunidade.",
-    "inputNotice": "Suas informações são enviadas de forma privada a este bot e ao desenvolvedor dele."
+    "inputNotice": "Suas informações são enviadas de forma privada a este bot e ao desenvolvedor dele.",
+    "voiceKey": "Chave de criptografia de voz do bot",
+    "voiceKeyNotice": "Use a chave pública X25519 gerada pelo bot. Mantenha a chave privada no processo do bot.",
+    "voiceApprovalNotice": "O acesso de voz permite que este bot e seu desenvolvedor ouçam a sala. São necessárias uma chave pública de criptografia e uma nova aprovação."
   }
 }

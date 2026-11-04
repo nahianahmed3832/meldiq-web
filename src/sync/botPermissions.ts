@@ -28,7 +28,13 @@ export const BOT_SCOPES = [
 ] as const;
 export type BotScope = (typeof BOT_SCOPES)[number];
 const permissions = z.array(z.enum(BOT_SCOPES));
-const manifest = z.object({ botId: z.string(), permissions, rev: z.number().int().nonnegative() });
+const manifest = z.object({
+  botId: z.string(),
+  permissions,
+  rev: z.number().int().nonnegative(),
+  voicePublicKey: z.string().nullable().optional().default(null),
+  voiceKeyFingerprint: z.string().nullable().optional().default(null),
+});
 const installation = z.object({
   orgId: z.string(),
   botId: z.string(),
@@ -48,8 +54,8 @@ export async function requestedBotPermissions(engine: Engine, botId: string) {
 export async function botPermissionReview(engine: Engine, orgId: string, botId: string) {
   return engine.api.json("GET", `/v1/orgs/${enc(orgId)}/bots/${enc(botId)}/permission-review`, review);
 }
-export async function requestBotPermissions(engine: Engine, botId: string, selected: BotScope[], rev: number) {
-  return engine.api.json("PUT", `/v2/developer/bots/${enc(botId)}/permissions`, manifest, { body: { permissions: selected, rev } });
+export async function requestBotPermissions(engine: Engine, botId: string, selected: BotScope[], rev: number, voicePublicKey?: string | null) {
+  return engine.api.json("PUT", `/v2/developer/bots/${enc(botId)}/permissions`, manifest, { body: { permissions: selected, rev, ...(voicePublicKey === undefined ? {} : { voicePublicKey }) } });
 }
 export async function approveBotPermissions(engine: Engine, orgId: string, botId: string, selected: BotScope[], manifestRev: number, rev: number) {
   return engine.api.json("PUT", `/v1/orgs/${enc(orgId)}/bots/${enc(botId)}/permissions`, installation, { body: { permissions: selected, manifestRev, rev } });

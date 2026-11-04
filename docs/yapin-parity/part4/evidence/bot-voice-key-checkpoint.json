@@ -1,0 +1,118 @@
+{
+  "recordedAt": "2026-11-04T20:03:05.880691+00:00",
+  "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
+  "status": "public-key approval foundation only; voice participation still active",
+  "database": "fresh loopback PostgreSQL; 33 migrations; Auth/Realtime test stubs",
+  "api": {
+    "keyPlatformDmSchema": {
+      "files": 4,
+      "passed": 21
+    },
+    "contractsArchitectureKey": {
+      "files": 3,
+      "passed": 12
+    },
+    "countsOverlap": true,
+    "typecheckExitCode": 0
+  },
+  "web": {
+    "typecheckExitCode": 0,
+    "lintExitCode": 0,
+    "buildExitCode": 0,
+    "buildScope": "test-linking export, not a release artifact",
+    "pinnedContractCasesPassed": 4,
+    "localeKeys": 6305,
+    "languages": 28,
+    "structuralErrors": 0,
+    "hardcodedCandidates": 0,
+    "linguisticReview": "pending"
+  },
+  "browserBatches": [
+    {
+      "passed": 8,
+      "flows": [
+        "public-key owner/manager/stale review",
+        "existing permissions/retry"
+      ],
+      "projects": [
+        "Chromium",
+        "Firefox",
+        "WebKit",
+        "phone-width"
+      ]
+    },
+    {
+      "passed": 8,
+      "flows": [
+        "final fingerprint edit/stale approval",
+        "new pinned SDK download and SHA-256"
+      ],
+      "projects": [
+        "Chromium",
+        "Firefox",
+        "WebKit",
+        "phone-width"
+      ]
+    }
+  ],
+  "physicalDevices": "pending by explicit owner choice",
+  "production": "not deployed",
+  "sdk": {
+    "format": 1,
+    "apiCommit": "5c464f1ac9d397bcdf33ffabf600d5d4465a33eb",
+    "status": "preview source clients",
+    "archiveSha256": "199808e0173212d4a258543f784829aab419a8fb004fbaef4d1bb2b10635d696",
+    "files": [
+      {
+        "path": "README.md",
+        "sha256": "45075fd08bddb52c6c74acd23b5f5730a5056ded252bddb1e5bdb2b57d6f4113",
+        "bytes": 9274
+      },
+      {
+        "path": "docs/api/bot-gateway.schema.json",
+        "sha256": "d7f445f7400b8785df2b6a1e3ff38fc355c8b80f053198021f7441a16777a5e5",
+        "bytes": 10840
+      },
+      {
+        "path": "docs/api/openapi.json",
+        "sha256": "bfadb7d8cdb44a9a2edaf57981d8c81ca32840a229b523142a51b2535f03f8c7",
+        "bytes": 4026046
+      },
+      {
+        "path": "examples/commands.mjs",
+        "sha256": "963db3449428c125efaf5dc250264c9bbfb9ad2e69a725868b5f7914423914a7",
+        "bytes": 1057
+      },
+      {
+        "path": "examples/commands.py",
+        "sha256": "20710966f3e49a0b157f78b6c1a836b357d80b0efcda1beefd733eb0bcbb527a",
+        "bytes": 706
+      },
+      {
+        "path": "javascript/gateway.mjs",
+        "sha256": "49ba8fd98e258d8ba8bb7f4a90ba6287701563b561b533278bc4bd60dafb1591",
+        "bytes": 9966
+      },
+      {
+        "path": "javascript/index.mjs",
+        "sha256": "d502e94fbd9401d4b5a4d0e41858d4806bbbfa2671835cfc69572ca01c5a7c5d",
+        "bytes": 5361
+      },
+      {
+        "path": "javascript/package.json",
+        "sha256": "2ddf907f9ea6134b02b317556b4800b0731945346f3fe9a9ac2f9018e93f907d",
+        "bytes": 174
+      },
+      {
+        "path": "javascript/transport.mjs",
+        "sha256": "70d856077186e049e99245b2249ffb7170f56205d1fe883e412c9d18a000a2e7",
+        "bytes": 2533
+      },
+      {
+        "path": "python/meldiq_bot.py",
+        "sha256": "b67170113d56a2f536ff52bd39ceba8dfe68637c9ff5f7b5c08efd937ea94e3e",
+        "bytes": 6415
+      }
+    ]
+  }
+}

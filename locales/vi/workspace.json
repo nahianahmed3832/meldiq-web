@@ -2094,6 +2094,9 @@
     "none": "Không có yêu cầu quyền truy cập bổ sung.",
     "richMessages": "Tin nhắn nâng cao và điều khiển",
     "richMessagesDescription": "Cho phép tin nhắn tương tác, thẻ và nút liên kết. Tin nhắn văn bản thông thường vẫn tuân theo vai trò cộng đồng.",
-    "inputNotice": "Thông tin bạn nhập được gửi riêng cho bot này và nhà phát triển của bot."
+    "inputNotice": "Thông tin bạn nhập được gửi riêng cho bot này và nhà phát triển của bot.",
+    "voiceKey": "Khóa mã hóa giọng nói của bot",
+    "voiceKeyNotice": "Dùng khóa công khai X25519 do bot tạo. Giữ khóa riêng trong tiến trình bot.",
+    "voiceApprovalNotice": "Quyền truy cập giọng nói cho phép bot này và nhà phát triển nghe phòng. Cần có khóa mã hóa công khai và phê duyệt mới."
   }
 }

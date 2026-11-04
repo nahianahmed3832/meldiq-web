@@ -2094,6 +2094,9 @@
     "none": "Nebyl požadován žádný další přístup.",
     "richMessages": "Rozšířené zprávy a ovládací prvky",
     "richMessagesDescription": "Povolit interaktivní zprávy, karty a tlačítka s odkazy. Běžné textové zprávy nadále řídí role komunity.",
-    "inputNotice": "Vaše údaje se odešlou soukromě tomuto botovi a jeho vývojáři."
+    "inputNotice": "Vaše údaje se odešlou soukromě tomuto botovi a jeho vývojáři.",
+    "voiceKey": "Šifrovací klíč hlasu bota",
+    "voiceKeyNotice": "Použijte veřejný klíč X25519 vygenerovaný botem. Soukromý klíč ponechte v procesu bota.",
+    "voiceApprovalNotice": "Hlasový přístup umožňuje tomuto botovi a jeho vývojáři slyšet místnost. Je nutný veřejný šifrovací klíč a nové schválení."
   }
 }

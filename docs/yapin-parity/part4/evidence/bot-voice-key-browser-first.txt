@@ -1,0 +1,31 @@
+[WebServer] (node:8703) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:8719) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:8721) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:8721) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+[WebServer] (node:8721) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+[WebServer] (node:8769) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 8 tests using 1 worker
+
+(node:8770) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 [chromium] › e2e/part4-bot-permissions.spec.ts:12:1 › bot requested access, explicit approval, stale review and retry use the real API (8.1s)
+  ✓  2 [chromium] › e2e/part4-bot-voice-key.spec.ts:13:1 › owners configure public voice keys and managers review key changes without changing scopes (6.5s)
+(node:8848) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  3 [firefox] › e2e/part4-bot-permissions.spec.ts:12:1 › bot requested access, explicit approval, stale review and retry use the real API (7.8s)
+  ✓  4 [firefox] › e2e/part4-bot-voice-key.spec.ts:13:1 › owners configure public voice keys and managers review key changes without changing scopes (6.1s)
+(node:8955) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  5 [webkit] › e2e/part4-bot-permissions.spec.ts:12:1 › bot requested access, explicit approval, stale review and retry use the real API (8.0s)
+  ✓  6 [webkit] › e2e/part4-bot-voice-key.spec.ts:13:1 › owners configure public voice keys and managers review key changes without changing scopes (7.1s)
+(node:9101) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  7 [phone-width] › e2e/part4-bot-permissions.spec.ts:12:1 › bot requested access, explicit approval, stale review and retry use the real API (7.1s)
+  ✓  8 [phone-width] › e2e/part4-bot-voice-key.spec.ts:13:1 › owners configure public voice keys and managers review key changes without changing scopes (7.0s)
+
+  8 passed (1.2m)

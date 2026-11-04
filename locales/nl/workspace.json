@@ -2094,6 +2094,9 @@
     "none": "Geen extra toegang aangevraagd.",
     "richMessages": "Uitgebreide berichten en bediening",
     "richMessagesDescription": "Interactieve berichten, kaarten en linkknoppen toestaan. Gewone tekstberichten blijven onder de communityrollen vallen.",
-    "inputNotice": "Je invoer wordt privé naar deze bot en de ontwikkelaar gestuurd."
+    "inputNotice": "Je invoer wordt privé naar deze bot en de ontwikkelaar gestuurd.",
+    "voiceKey": "Sleutel voor botspraakversleuteling",
+    "voiceKeyNotice": "Gebruik de openbare X25519-sleutel die je bot heeft gegenereerd. Bewaar de privésleutel in het botproces.",
+    "voiceApprovalNotice": "Met spraaktoegang kunnen deze bot en de ontwikkelaar de ruimte horen. Een openbare versleutelingssleutel en nieuwe goedkeuring zijn vereist."
   }
 }
