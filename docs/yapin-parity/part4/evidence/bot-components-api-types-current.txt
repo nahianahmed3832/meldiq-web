@@ -1,0 +1,6 @@
+
+> meldiq-server@0.76.1 typecheck
+> tsc -p tsconfig.json --noEmit
+
+src/modules/bots/components.ts(359,61): error TS2345: Argument of type 'Record<string, unknown>' is not assignable to parameter of type '{ [x: string]: unknown; type: string; target?: string | undefined; text?: string | undefined; }'.
+  Property 'type' is missing in type 'Record<string, unknown>' but required in type '{ [x: string]: unknown; type: string; target?: string | undefined; text?: string | undefined; }'.

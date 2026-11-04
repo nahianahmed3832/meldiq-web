@@ -1,0 +1,7 @@
+
+> meldiq-web@0.5.0-beta typecheck
+> tsc -b
+
+src/ui/chat/BotMessageControls.tsx(19,59): error TS2349: This expression is not callable.
+  Type '{ id: string; type: "DM" | "GROUP" | "CHANNEL"; orgId: string | null; scope: string | null; scopeId: string | null; scopeName: string | null; kind: string | null; name: string | null; ... 31 more ...; options?: { ...; } | ... 1 more ... | undefined; }' has no call signatures.
+src/ui/chat/BotMessageControls.tsx(19,65): error TS7006: Parameter 'conversation' implicitly has an 'any' type.

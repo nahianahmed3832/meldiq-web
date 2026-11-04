@@ -12,6 +12,7 @@ import { cleanPoll } from "./polls";
 import { cleanSticker } from "./stickers";
 import { cleanContact } from "./rich";
 import { cleanButtons, cleanEmbeds, cleanWebhook } from "./posting/embeds";
+import { cleanBotComponents } from "./botComponentRules";
 import { cleanGiveaway } from "./giveaways";
 import { deleteAllowed } from "./channelGates";
 /**
@@ -54,7 +55,7 @@ function richOf(p: Payload): RichContent | null {
   Object.assign(r, postedOf(p));
   return Object.keys(r).length ? r : null;
 }
-type Posted = Pick<RichContent, "embeds" | "buttons" | "webhook" | "textFromEmbeds" | "giveaway">;
+type Posted = Pick<RichContent, "embeds" | "buttons" | "botComponents" | "webhook" | "textFromEmbeds" | "giveaway">;
 /** Community parity C and D: the boxes, buttons and webhook of a server sender's post, and a giveaway card, cleaned. */
 export function postedOf(p: Payload): Posted {
   const out: Posted = {};
@@ -62,6 +63,8 @@ export function postedOf(p: Payload): Posted {
   if (embeds.length) out.embeds = embeds;
   const buttons = cleanButtons(p.buttons);
   if (buttons.length) out.buttons = buttons;
+  const controls = p.forwarded ? null : cleanBotComponents(p.botComponents);
+  if (controls) out.botComponents = controls;
   const webhook = cleanWebhook(p.webhook);
   if (webhook) out.webhook = webhook;
   if (p.textFromEmbeds === true && embeds.length) out.textFromEmbeds = true;

@@ -2091,6 +2091,9 @@
     "requested": "İstenen erişim",
     "approved": "Onaylanan erişim",
     "notice": "Yeni erişim için topluluk onayı gerekir. Rol ve kanal kısıtlamaları geçerliliğini korur.",
-    "none": "Ek erişim istenmedi."
+    "none": "Ek erişim istenmedi.",
+    "richMessages": "Zengin mesajlar ve denetimler",
+    "richMessagesDescription": "Etkileşimli mesajlara, kartlara ve bağlantı düğmelerine izin verin. Normal metin mesajlarını topluluk rolleri yönetmeye devam eder.",
+    "inputNotice": "Girdiğiniz bilgiler bu bota ve geliştiricisine özel olarak gönderilir."
   }
 }

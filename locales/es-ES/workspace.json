@@ -2091,6 +2091,9 @@
     "requested": "Acceso solicitado",
     "approved": "Acceso aprobado",
     "notice": "El nuevo acceso requiere la aprobación de la comunidad. Las restricciones de roles y canales siguen vigentes.",
-    "none": "No se ha solicitado acceso adicional."
+    "none": "No se ha solicitado acceso adicional.",
+    "richMessages": "Mensajes enriquecidos y controles",
+    "richMessagesDescription": "Permitir mensajes interactivos, tarjetas y botones de enlace. Los roles de la comunidad siguen controlando los mensajes de texto normales.",
+    "inputNotice": "Tu información se envía de forma privada a este bot y a su desarrollador."
   }
 }

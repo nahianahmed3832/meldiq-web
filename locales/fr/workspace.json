@@ -2091,6 +2091,9 @@
     "requested": "Accès demandé",
     "approved": "Accès approuvé",
     "notice": "Tout nouvel accès nécessite l’approbation de la communauté. Les restrictions des rôles et des salons restent applicables.",
-    "none": "Aucun accès supplémentaire demandé."
+    "none": "Aucun accès supplémentaire demandé.",
+    "richMessages": "Messages enrichis et commandes",
+    "richMessagesDescription": "Autoriser les messages interactifs, les cartes et les boutons de lien. Les rôles de la communauté continuent de régir les messages texte ordinaires.",
+    "inputNotice": "Votre saisie est envoyée en privé à ce bot et à son développeur."
   }
 }

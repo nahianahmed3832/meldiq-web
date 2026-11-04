@@ -2091,6 +2091,9 @@
     "requested": "Wnioskowany dostęp",
     "approved": "Zatwierdzony dostęp",
     "notice": "Nowy dostęp wymaga zgody społeczności. Ograniczenia ról i kanałów nadal obowiązują.",
-    "none": "Nie poproszono o dodatkowy dostęp."
+    "none": "Nie poproszono o dodatkowy dostęp.",
+    "richMessages": "Rozbudowane wiadomości i elementy sterujące",
+    "richMessagesDescription": "Zezwalaj na interaktywne wiadomości, karty i przyciski z linkami. Zwykłe wiadomości tekstowe nadal podlegają rolom społeczności.",
+    "inputNotice": "Wprowadzone dane są wysyłane prywatnie do tego bota i jego twórcy."
   }
 }

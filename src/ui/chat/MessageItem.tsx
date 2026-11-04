@@ -158,7 +158,7 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
   const live = m.kind === "text" && !m.deleted;
   // Community parity C: a webhook's post shows the webhook, and text made from its boxes only where there are none.
   const webhook = m.rich?.webhook ?? null;
-  const posted = !!(m.rich?.embeds?.length || m.rich?.buttons?.length || m.rich?.giveaway);
+  const posted = !!(m.rich?.embeds?.length || m.rich?.buttons?.length || m.rich?.giveaway || m.rich?.botComponents);
   const shownText = m.rich?.textFromEmbeds ? "" : m.text;
   const reactionRoles = useReactionRolesItem(m, inCommunity, !!more.anchor);
   const body = () => {
@@ -271,7 +271,7 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
             </div>
           )
         )}
-        {posted && m.rich && <PostedContent rich={m.rich} orgId={inCommunity} channelId={m.conversationId} />}
+        {posted && m.rich && <PostedContent rich={m.rich} orgId={inCommunity} channelId={m.conversationId} messageId={m.id} botId={m.senderUserId} />}
         <Attachments
           message={m}
           refs={m.attachments}

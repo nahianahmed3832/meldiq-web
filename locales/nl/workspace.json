@@ -2091,6 +2091,9 @@
     "requested": "Aangevraagde toegang",
     "approved": "Goedgekeurde toegang",
     "notice": "Nieuwe toegang vereist goedkeuring van de community. Beperkingen van rollen en kanalen blijven gelden.",
-    "none": "Geen extra toegang aangevraagd."
+    "none": "Geen extra toegang aangevraagd.",
+    "richMessages": "Uitgebreide berichten en bediening",
+    "richMessagesDescription": "Interactieve berichten, kaarten en linkknoppen toestaan. Gewone tekstberichten blijven onder de communityrollen vallen.",
+    "inputNotice": "Je invoer wordt privé naar deze bot en de ontwikkelaar gestuurd."
   }
 }

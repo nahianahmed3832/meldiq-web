@@ -10,6 +10,7 @@ import { ErrorLine } from "../components/SettingsCard";
 
 /** Reuse the current native permission catalog and all 28 translations, without displaying permission identifiers. */
 function scopeText(scope: BotScope): { label: string; description?: string } {
+  if (scope === "messages.post") return { label: t("workspace.botAccess.richMessages"), description: t("workspace.botAccess.richMessagesDescription") };
   if (scope === "events.manage") return { label: `${t("common.actions.edit")} · ${t("workspace.interface.events_8d14f6e")}` };
   const names = {
     "communities.read": () => t("workspace.interface.communities_c864f32"),

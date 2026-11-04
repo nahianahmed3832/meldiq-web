@@ -156,6 +156,7 @@ export const zPayload = z.object({
    */
   embeds: opt(z.array(z.unknown()).max(50)),
   buttons: opt(z.array(z.unknown()).max(50)),
+  botComponents: opt(z.unknown()),
   webhook: opt(z.unknown()),
   /** [text] was made from the boxes for older apps: not shown beside them. */
   textFromEmbeds: opt(z.boolean()),
@@ -170,7 +171,7 @@ export type Payload = z.infer<typeof zPayload>;
 
 /** Fields only the server's own senders may put in a payload: never read from an end-to-end envelope. */
 export function withoutServerFields(p: Payload): Payload {
-  const { embeds: _e, buttons: _b, webhook: _w, textFromEmbeds: _t, giveaway: _g, managedPoll: _managed, ...rest } = p;
+  const { embeds: _e, buttons: _b, botComponents: _controls, webhook: _w, textFromEmbeds: _t, giveaway: _g, managedPoll: _managed, ...rest } = p;
   return rest;
 }
 export type ForwardOrigin = z.infer<typeof zOrigin>;

@@ -3,6 +3,7 @@ import type { HistoryKeys } from "../crypto/history";
 import type { ReminderKey } from "../crypto/reminderKeys";
 import type { AttachmentRef, ContactCard, CustomEmojiRef, GifRef, LinkPreview, ManagedPoll, Poll, SharedLocation, StickerRef } from "../protocol/payload";
 import type { Embed, PostButton, PostWebhook } from "../sync/posting/embeds";
+import type { BotMessageComponents } from "../sync/botComponentRules";
 
 /** Delivery state of a message, as the phone shows it (android data/model/Models.kt `MessageStatus`). */
 export type MessageStatus = "SENDING" | "SENT" | "DELIVERED" | "READ" | "FAILED" | "RECEIVED" | "HELD";
@@ -34,6 +35,7 @@ export interface RichContent {
   /** Community parity C: a webhook's or the Tickets sender's boxes and buttons, and the webhook that posted. */
   embeds?: Embed[];
   buttons?: PostButton[];
+  botComponents?: BotMessageComponents;
   webhook?: PostWebhook;
   /** The text was made from the boxes for older apps: shown only when there are no boxes to show. */
   textFromEmbeds?: boolean;

@@ -1,0 +1,130 @@
+{
+  "recordedAt": "2026-11-04T19:43:41.921812+00:00",
+  "apiCommit": "445fac6faee9fda0f4337305351e9934b0efa10d",
+  "status": "IMPLEMENTED_NOT_ACCEPTED",
+  "production": "not deployed; coordinated candidate and authorization pending",
+  "database": "fresh disposable loopback PostgreSQL; 32 migrations; hosted Auth/Realtime test stubs",
+  "validation": {
+    "apiBoundaryNativePolicy": {
+      "files": 4,
+      "passed": 46
+    },
+    "apiSdkArchitectureSchema": {
+      "files": 3,
+      "passed": 16
+    },
+    "apiEventsNativeMessageContracts": {
+      "files": 4,
+      "passed": 33
+    },
+    "apiGatewayJournalCursor": {
+      "files": 4,
+      "passed": 25
+    },
+    "apiCountsOverlap": true,
+    "apiTypecheckExitCode": 0,
+    "webFull": {
+      "files": 148,
+      "passed": 992,
+      "skipped": 1,
+      "failed": 0
+    },
+    "webPinnedContractsAndControlRules": {
+      "files": 2,
+      "passed": 7
+    },
+    "browsersFinal": {
+      "passed": 12,
+      "failed": 0,
+      "projects": [
+        "Chromium",
+        "Firefox",
+        "WebKit",
+        "phone-width Chromium"
+      ],
+      "flows": [
+        "source-bound controls/private input/failure retry/revocation",
+        "recipient bot-DM consent/send/withdraw/renew",
+        "actual SDK download SHA-256/guide"
+      ]
+    },
+    "webBuildExitCode": 0,
+    "webBuildScope": "test-linking export, not a production artifact",
+    "locales": {
+      "languages": 28,
+      "keys": 6302,
+      "structuralErrors": 0,
+      "hardcodedCandidates": 0,
+      "linguisticReview": "pending"
+    }
+  },
+  "earlierFailures": "First component workflow: JSONB key-order retry equality and nullable community FK were corrected; incorrect test expectation changed to native 404. First API/Web typecheck issues were corrected; current checks exited zero. Earlier failures are retained as diagnostic evidence and not counted as passed runs.",
+  "remaining": [
+    "voice join/leave",
+    "bot-specific qualification of remaining native adapters",
+    "file pipeline",
+    "capacity measurements",
+    "age/legal ledger and integration",
+    "Windows resync/native compatibility",
+    "complete coordinated staging/rollback and register reconciliation"
+  ],
+  "physicalDevices": "pending by explicit owner choice",
+  "sdk": {
+    "format": 1,
+    "apiCommit": "445fac6faee9fda0f4337305351e9934b0efa10d",
+    "status": "preview source clients",
+    "archiveSha256": "19f7dd748d06cf390c9dc7a978828051c9ea791f358a2da282baa11327a4913d",
+    "files": [
+      {
+        "path": "README.md",
+        "sha256": "45075fd08bddb52c6c74acd23b5f5730a5056ded252bddb1e5bdb2b57d6f4113",
+        "bytes": 9274
+      },
+      {
+        "path": "docs/api/bot-gateway.schema.json",
+        "sha256": "d7f445f7400b8785df2b6a1e3ff38fc355c8b80f053198021f7441a16777a5e5",
+        "bytes": 10840
+      },
+      {
+        "path": "docs/api/openapi.json",
+        "sha256": "3ca22f7fc25d6f588e2656533a9ba3da10e528b942369d3aa56c5b0376004a4d",
+        "bytes": 4024531
+      },
+      {
+        "path": "examples/commands.mjs",
+        "sha256": "963db3449428c125efaf5dc250264c9bbfb9ad2e69a725868b5f7914423914a7",
+        "bytes": 1057
+      },
+      {
+        "path": "examples/commands.py",
+        "sha256": "20710966f3e49a0b157f78b6c1a836b357d80b0efcda1beefd733eb0bcbb527a",
+        "bytes": 706
+      },
+      {
+        "path": "javascript/gateway.mjs",
+        "sha256": "49ba8fd98e258d8ba8bb7f4a90ba6287701563b561b533278bc4bd60dafb1591",
+        "bytes": 9966
+      },
+      {
+        "path": "javascript/index.mjs",
+        "sha256": "d502e94fbd9401d4b5a4d0e41858d4806bbbfa2671835cfc69572ca01c5a7c5d",
+        "bytes": 5361
+      },
+      {
+        "path": "javascript/package.json",
+        "sha256": "2ddf907f9ea6134b02b317556b4800b0731945346f3fe9a9ac2f9018e93f907d",
+        "bytes": 174
+      },
+      {
+        "path": "javascript/transport.mjs",
+        "sha256": "70d856077186e049e99245b2249ffb7170f56205d1fe883e412c9d18a000a2e7",
+        "bytes": 2533
+      },
+      {
+        "path": "python/meldiq_bot.py",
+        "sha256": "b67170113d56a2f536ff52bd39ceba8dfe68637c9ff5f7b5c08efd937ea94e3e",
+        "bytes": 6415
+      }
+    ]
+  }
+}

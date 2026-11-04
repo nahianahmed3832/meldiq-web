@@ -10,11 +10,12 @@ import { CloseTicketDialog, OpenTicketDialog } from "../community/tickets/Ticket
 import { GiveawayStatus } from "./GiveawayStatus";
 import { Markdown, MarkdownLine } from "./Markdown";
 import { SafeLink } from "./SafeLink";
+import { BotMessageControls } from "./BotMessageControls";
 /**
  * A post's boxes and buttons (community parity C): what a webhook, "Make a post" or the Tickets sender posted. Drawn
  * from the cleaned payload (sync/posting/embeds.ts), so every link is https and every text plain React text.
  */
-export function PostedContent({ rich, orgId, channelId }: { rich: RichContent; orgId: string | null; channelId: string }) {
+export function PostedContent({ rich, orgId, channelId, messageId, botId }: { rich: RichContent; orgId: string | null; channelId: string; messageId?: string; botId?: string }) {
   useLocaleRender();
   return (
     <>
@@ -23,6 +24,9 @@ export function PostedContent({ rich, orgId, channelId }: { rich: RichContent; o
       ))}
       {rich.giveaway && <GiveawayStatus giveaway={rich.giveaway} />}
       {rich.buttons?.length ? <PostButtons buttons={rich.buttons} orgId={orgId} channelId={channelId} /> : null}
+      {rich.botComponents && messageId && botId && (
+        <BotMessageControls key={`${messageId}:${rich.botComponents.expiresAt}`} controls={rich.botComponents} messageId={messageId} botId={botId} channelId={channelId} />
+      )}
     </>
   );
 }

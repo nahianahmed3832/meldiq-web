@@ -2091,6 +2091,9 @@
     "requested": "Acces solicitat",
     "approved": "Acces aprobat",
     "notice": "Accesul nou necesită aprobarea comunității. Restricțiile rolurilor și canalelor se aplică în continuare.",
-    "none": "Nu s-a solicitat acces suplimentar."
+    "none": "Nu s-a solicitat acces suplimentar.",
+    "richMessages": "Mesaje îmbogățite și comenzi",
+    "richMessagesDescription": "Permite mesaje interactive, carduri și butoane cu linkuri. Mesajele text obișnuite rămân controlate de rolurile comunității.",
+    "inputNotice": "Datele introduse sunt trimise privat acestui bot și dezvoltatorului său."
   }
 }

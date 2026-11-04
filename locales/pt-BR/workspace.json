@@ -2091,6 +2091,9 @@
     "requested": "Acesso solicitado",
     "approved": "Acesso aprovado",
     "notice": "Novos acessos exigem aprovação da comunidade. As restrições de cargos e canais continuam valendo.",
-    "none": "Nenhum acesso adicional solicitado."
+    "none": "Nenhum acesso adicional solicitado.",
+    "richMessages": "Mensagens avançadas e controles",
+    "richMessagesDescription": "Permitir mensagens interativas, cartões e botões de link. As mensagens de texto comuns continuam sujeitas aos cargos da comunidade.",
+    "inputNotice": "Suas informações são enviadas de forma privada a este bot e ao desenvolvedor dele."
   }
 }

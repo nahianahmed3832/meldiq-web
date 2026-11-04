@@ -2091,6 +2091,9 @@
     "requested": "Akses yang diminta",
     "approved": "Akses yang disetujui",
     "notice": "Akses baru memerlukan persetujuan komunitas. Pembatasan peran dan kanal tetap berlaku.",
-    "none": "Tidak ada permintaan akses tambahan."
+    "none": "Tidak ada permintaan akses tambahan.",
+    "richMessages": "Pesan kaya dan kontrol",
+    "richMessagesDescription": "Izinkan pesan interaktif, kartu, dan tombol tautan. Pesan teks biasa tetap diatur oleh peran komunitas.",
+    "inputNotice": "Masukan Anda dikirim secara pribadi ke bot ini dan pengembangnya."
   }
 }

@@ -182,7 +182,18 @@ export function parseFrame(f: Frame): ServerFrame | null {
       const command = str(f.command);
       const content = typeof f.content === "string" ? f.content.slice(0, 4000) : null;
       if (!interactionId || !conversationId || !botId || !command || !content) return null;
-      return { t, reply: { interactionId, conversationId, botId, command, content, at: typeof f.at === "number" ? f.at : Date.now() } };
+      return {
+        t,
+        reply: {
+          interactionId,
+          conversationId,
+          botId,
+          command,
+          content,
+          at: typeof f.at === "number" ? f.at : Date.now(),
+          ...(typeof f.componentLabel === "string" && f.componentLabel.length <= 80 ? { componentLabel: f.componentLabel } : {}),
+        },
+      };
     }
     default:
       return null;

@@ -126,9 +126,7 @@ export function BotReplies({ conversationId }: { conversationId: string }) {
           <span className="lines grow">
             <span className="bot-reply-head">
               <strong>{users[r.botId]?.displayName ?? uiText("messaging.interface.a_bot_7bcedea")}</strong> <BotTag />{" "}
-              <span className="faint">
-                <Localized k="messaging.interface.answered_f5447c2" slots={[r.command]} />
-              </span>
+              <span className="faint">{r.componentLabel ?? <Localized k="messaging.interface.answered_f5447c2" slots={[r.command]} />}</span>
             </span>
             <span className="bot-reply-text">{r.content}</span>
             <small className="faint">

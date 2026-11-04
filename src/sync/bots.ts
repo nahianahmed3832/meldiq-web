@@ -36,6 +36,7 @@ export interface BotReply {
   command: string;
   content: string;
   at: number;
+  componentLabel?: string;
 }
 export async function botProfile(engine: Engine, botId: string): Promise<BotProfile> {
   return (await engine.api.json("GET", `/v2/bots/${enc(botId)}`, z.object({ bot: zBotProfile }))).bot;

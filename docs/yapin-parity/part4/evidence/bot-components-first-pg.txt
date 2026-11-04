@@ -1,0 +1,77 @@
+
+ RUN  v4.1.12 /Volumes/code_files/meldiq_parity_integration_api/server
+
+(node:99545) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:99545) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+PostgreSQL API parity failure call sites (no request values):
+    at /Volumes/code_files/meldiq_supabase_migration/server/node_modules/pg/lib/client.js:694:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at MeldiqPostgres.transaction (/Volumes/code_files/meldiq_parity_integration_api/server/src/infrastructure/database/postgres/client.ts:96:7)
+    at PostgresBotStore.addInteraction (/Volumes/code_files/meldiq_parity_integration_api/server/src/modules/bots/postgresStore.ts:32:67)
+    at BotComponents.run (/Volumes/code_files/meldiq_parity_integration_api/server/src/modules/bots/components.ts:108:11)
+    at Object.<anonymous> (/Volumes/code_files/meldiq_parity_integration_api/server/src/modules/bots/routes.ts:190:39)
+ ❯ test/bot_components.test.ts (8 tests | 4 failed) 1342ms
+     × accepts all three control types, binds actor/source and deduplicates concurrent retries 14ms
+     × rejects invalid choices, unknown fields, disabled controls and guessed or inaccessible targets 13ms
+     × uses the existing bot poll/reply leases and sends private answers only to their actor 4ms
+     × refuses expired controls and permits personal controls only within the recipient's current consent 27ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/bot_components.test.ts > native bot message components > accepts all three control types, binds actor/source and deduplicates concurrent retries
+Error: HTTP 409: {"error":{"code":"conflict","message":"That interaction id is already in use"}}
+ ❯ GriipClient.req test/support/griipClient.ts:173:24
+    171|     const ct = res.headers.get("content-type") ?? "";
+    172|     const data = ct.includes("application/json") ? await res.json() : …
+    173|     if (!res.ok) throw new ApiFailure(res.status, data, res.headers.ge…
+       |                        ^
+    174|     return data;
+    175|   }
+ ❯ test/bot_components.test.ts:67:24
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  test/bot_components.test.ts > native bot message components > rejects invalid choices, unknown fields, disabled controls and guessed or inaccessible targets
+Error: expected HTTP 403, got 404
+ ❯ expectStatus test/support/harness.ts:131:11
+    129|   } catch (e: any) {
+    130|     if (e?.status === status) return e.body;
+    131|     throw new Error(`expected HTTP ${status}, got ${e?.status ?? e}`);
+       |           ^
+    132|   }
+    133|   throw new Error(`expected HTTP ${status}, got success`);
+ ❯ test/bot_components.test.ts:87:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  test/bot_components.test.ts > native bot message components > uses the existing bot poll/reply leases and sends private answers only to their actor
+TypeError: ids is not iterable
+ ❯ test/bot_components.test.ts:96:88
+     94|     const poll = await request("GET", "/v2/bot/interactions");
+     95|     expect(poll.status, JSON.stringify(poll.body)).toBe(200);
+     96|     expect(poll.body.interactions.map((i: { id: string }) => i.id).sor…
+       |                                                                                        ^
+     97|     expect(poll.body.interactions.find((i: { id: string }) => i.id ===…
+     98|     expect(poll.body.interactions.find((i: { id: string }) => i.id ===…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  test/bot_components.test.ts > native bot message components > refuses expired controls and permits personal controls only within the recipient's current consent
+Error: HTTP 500: {"error":{"code":"internal","message":"Something went wrong on the server"}}
+ ❯ GriipClient.req test/support/griipClient.ts:173:24
+    171|     const ct = res.headers.get("content-type") ?? "";
+    172|     const data = ct.includes("application/json") ? await res.json() : …
+    173|     if (!res.ok) throw new ApiFailure(res.status, data, res.headers.ge…
+       |                        ^
+    174|     return data;
+    175|   }
+ ❯ test/bot_components.test.ts:147:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 4 passed (8)
+   Start at  02:59:09
+   Duration  4.04s (transform 1.72s, setup 0ms, import 2.58s, tests 1.34s, environment 0ms)

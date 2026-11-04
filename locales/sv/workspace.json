@@ -2091,6 +2091,9 @@
     "requested": "Begärd åtkomst",
     "approved": "Godkänd åtkomst",
     "notice": "Ny åtkomst kräver communityns godkännande. Begränsningar för roller och kanaler gäller fortfarande.",
-    "none": "Ingen ytterligare åtkomst har begärts."
+    "none": "Ingen ytterligare åtkomst har begärts.",
+    "richMessages": "Utökade meddelanden och kontroller",
+    "richMessagesDescription": "Tillåt interaktiva meddelanden, kort och länkknappar. Vanliga textmeddelanden styrs fortfarande av gemenskapens roller.",
+    "inputNotice": "Det du anger skickas privat till den här boten och dess utvecklare."
   }
 }

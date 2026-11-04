@@ -347,3 +347,50 @@ form.dialog-body[hidden] {
 .msg-gutter .msg-avatar-btn {
   align-self: flex-start;
 }
+.bot-message-controls {
+  display: grid;
+  gap: 10px;
+  max-inline-size: 100%;
+  margin-block: 10px;
+}
+.bot-control {
+  display: grid;
+  justify-items: start;
+  gap: 6px;
+  min-inline-size: 0;
+  max-inline-size: 100%;
+}
+.bot-control .btn {
+  min-block-size: 44px;
+  max-inline-size: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+.bot-control-fields {
+  display: grid;
+  gap: 8px;
+  min-inline-size: 0;
+  max-inline-size: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.bot-control-fields legend {
+  padding: 0;
+  overflow-wrap: anywhere;
+}
+.bot-control-fields .input {
+  min-inline-size: 0;
+  max-inline-size: 100%;
+  min-block-size: 44px;
+}
+.bot-control-fields .perm-row {
+  min-block-size: 44px;
+}
+.bot-control-fields input[type="checkbox"] {
+  accent-color: var(--accent);
+}
+.bot-control-form textarea {
+  min-block-size: 100px;
+  resize: vertical;
+}

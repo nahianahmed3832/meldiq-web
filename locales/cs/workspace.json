@@ -2091,6 +2091,9 @@
     "requested": "Požadovaný přístup",
     "approved": "Schválený přístup",
     "notice": "Nový přístup vyžaduje schválení komunity. Omezení rolí a kanálů nadále platí.",
-    "none": "Nebyl požadován žádný další přístup."
+    "none": "Nebyl požadován žádný další přístup.",
+    "richMessages": "Rozšířené zprávy a ovládací prvky",
+    "richMessagesDescription": "Povolit interaktivní zprávy, karty a tlačítka s odkazy. Běžné textové zprávy nadále řídí role komunity.",
+    "inputNotice": "Vaše údaje se odešlou soukromě tomuto botovi a jeho vývojáři."
   }
 }

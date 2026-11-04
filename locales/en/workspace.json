@@ -2091,6 +2091,9 @@
     "requested": "Requested access",
     "approved": "Approved access",
     "notice": "New access requires community approval. Roles and channel restrictions still apply.",
-    "none": "No additional access requested."
+    "none": "No additional access requested.",
+    "richMessages": "Rich messages and controls",
+    "richMessagesDescription": "Allow interactive messages, boxes and link buttons. Native roles still control ordinary text messages.",
+    "inputNotice": "Your input is sent privately to this bot and its developer."
   }
 }

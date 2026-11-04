@@ -2091,6 +2091,9 @@
     "requested": "Angeforderter Zugriff",
     "approved": "Genehmigter Zugriff",
     "notice": "Neuer Zugriff erfordert die Zustimmung der Community. Rollen- und Kanalbeschränkungen gelten weiterhin.",
-    "none": "Kein zusätzlicher Zugriff angefordert."
+    "none": "Kein zusätzlicher Zugriff angefordert.",
+    "richMessages": "Erweiterte Nachrichten und Steuerelemente",
+    "richMessagesDescription": "Interaktive Nachrichten, Karten und Link-Schaltflächen erlauben. Normale Textnachrichten werden weiterhin durch die Community-Rollen geregelt.",
+    "inputNotice": "Deine Eingaben werden privat an diesen Bot und seinen Entwickler gesendet."
   }
 }

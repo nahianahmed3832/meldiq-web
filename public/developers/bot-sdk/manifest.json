@@ -1,23 +1,23 @@
 {
   "format": 1,
-  "apiCommit": "beddb059af8a7dae5412496105433e85bd1493dd",
+  "apiCommit": "445fac6faee9fda0f4337305351e9934b0efa10d",
   "status": "preview source clients",
-  "archiveSha256": "964a12b5f6f83773f0892340efa4581bd2e7ed816a414c92db777e976ba8149a",
+  "archiveSha256": "19f7dd748d06cf390c9dc7a978828051c9ea791f358a2da282baa11327a4913d",
   "files": [
     {
       "path": "README.md",
-      "sha256": "3c86143165eca4f08757fa2d19f9094ed20bd3b3cc87766327a7e59abe395942",
-      "bytes": 6727
+      "sha256": "45075fd08bddb52c6c74acd23b5f5730a5056ded252bddb1e5bdb2b57d6f4113",
+      "bytes": 9274
     },
     {
       "path": "docs/api/bot-gateway.schema.json",
-      "sha256": "9ac3db9320c33f1abe3c4b720a8a140af3733815fff1bf3248814eda059a0003",
-      "bytes": 10805
+      "sha256": "d7f445f7400b8785df2b6a1e3ff38fc355c8b80f053198021f7441a16777a5e5",
+      "bytes": 10840
     },
     {
       "path": "docs/api/openapi.json",
-      "sha256": "5a239a4fb438a3f73fe69feb715032ecc3e9f800ecf0f10a223e9cf5bd7539e9",
-      "bytes": 3990749
+      "sha256": "3ca22f7fc25d6f588e2656533a9ba3da10e528b942369d3aa56c5b0376004a4d",
+      "bytes": 4024531
     },
     {
       "path": "examples/commands.mjs",
@@ -36,8 +36,8 @@
     },
     {
       "path": "javascript/index.mjs",
-      "sha256": "8a7490302ae2e6e08f12eb8195dff64eaa47368445e03f21632f3ef49ac6f58a",
-      "bytes": 4715
+      "sha256": "d502e94fbd9401d4b5a4d0e41858d4806bbbfa2671835cfc69572ca01c5a7c5d",
+      "bytes": 5361
     },
     {
       "path": "javascript/package.json",
@@ -51,8 +51,8 @@
     },
     {
       "path": "python/meldiq_bot.py",
-      "sha256": "22f50be279e2cba62751917a942e5c144b209c17dbc19f9729a015723193793b",
-      "bytes": 5775
+      "sha256": "b67170113d56a2f536ff52bd39ceba8dfe68637c9ff5f7b5c08efd937ea94e3e",
+      "bytes": 6415
     }
   ]
 }

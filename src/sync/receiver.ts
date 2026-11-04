@@ -89,6 +89,8 @@ export class Receiver {
     if (existing && e.cls === "message" && existing.kind !== "undecryptable") return; // already here
     const payload = parsePayload(JSON.stringify(e.payload));
     if (!payload) return this.recordUnsupported(item, "unreadable payload");
+    // Imported history cannot introduce active third-party controls.
+    if (e.importedBy) delete payload.botComponents;
     const conversation = await this.ctx.ensureConversation(e.conversationId);
     await this.apply(payload, item, conversation, e.senderUserId === this.ctx.device.userId, e.serverTs, existing?.kind === "undecryptable", opts.history === true);
     if (!opts.history && ["text", "edit", "delete", "pin", "reaction", "vote", "poll_close"].includes(payload.type)) this.ctx.state.update((s) => ({ ...s, collectionRev: s.collectionRev + 1 }));

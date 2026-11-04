@@ -101,7 +101,7 @@ export class Compose {
       readBy: [],
       deliveredTo: [],
       call: null,
-      rich: opts.rich ?? null,
+      rich: opts.rich ? { ...opts.rich, botComponents: undefined } : null,
       forwarded: opts.forwarded === true,
     };
     await this.host.store.putMessage(m);

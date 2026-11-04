@@ -2091,6 +2091,9 @@
     "requested": "Quyền truy cập được yêu cầu",
     "approved": "Quyền truy cập đã duyệt",
     "notice": "Quyền truy cập mới cần được cộng đồng phê duyệt. Các giới hạn của vai trò và kênh vẫn áp dụng.",
-    "none": "Không có yêu cầu quyền truy cập bổ sung."
+    "none": "Không có yêu cầu quyền truy cập bổ sung.",
+    "richMessages": "Tin nhắn nâng cao và điều khiển",
+    "richMessagesDescription": "Cho phép tin nhắn tương tác, thẻ và nút liên kết. Tin nhắn văn bản thông thường vẫn tuân theo vai trò cộng đồng.",
+    "inputNotice": "Thông tin bạn nhập được gửi riêng cho bot này và nhà phát triển của bot."
   }
 }
