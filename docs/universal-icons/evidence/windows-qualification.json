@@ -1,0 +1,131 @@
+{
+  "platform": "native Windows CI",
+  "keyId": "abb61b4909c9803f0e1f360b441ef8e65c35c98271fe9957b82d76d48af41f8d",
+  "status": "passed",
+  "candidateRun": "41867848541",
+  "sourceCommit": "9f25c68b912aa8a02443ada60ab522cd540ce86c",
+  "tests": [
+    {
+      "status": "passed",
+      "rejectedBeforeDownload": true,
+      "scenario": "bad-signature",
+      "version": "0.3.1-canary.1",
+      "scope": "Installed NSIS upgrade with local fixture account/message and OS-sealed session; no production account or backend mutations"
+    },
+    {
+      "status": "passed",
+      "corruptArtifactRejected": true,
+      "scenario": "bad-hash",
+      "version": "0.3.1-canary.1",
+      "scope": "Installed NSIS upgrade with local fixture account/message and OS-sealed session; no production account or backend mutations"
+    },
+    {
+      "status": "passed",
+      "actualInstallerUpgrade": true,
+      "automaticCheckAndDownload": true,
+      "automaticInstallOnSafeExit": true,
+      "busyGuardPassed": true,
+      "accountRetained": true,
+      "messageRetained": true,
+      "sealedSessionRetained": true,
+      "localStorageRetained": true,
+      "oldVersion": "0.3.1-canary.1",
+      "newVersion": "0.3.1-canary.2",
+      "scenario": "upgrade",
+      "version": "0.3.1-canary.2",
+      "scope": "Installed NSIS upgrade with local fixture account/message and OS-sealed session; no production account or backend mutations"
+    }
+  ],
+  "publishedBaselineUpgrade": {
+    "limitation": "A run-owned profile file is not an authenticated session/message fixture; physical Windows 10/11, publisher signing, pinned taskbar icon-cache visuals and real provider acceptance remain pending.",
+    "baselineVersion": "0.2.1",
+    "platform": "Windows Server CI VM",
+    "candidate": "Meldiq-Setup-0.3.1-x64.exe",
+    "afterUpgrade": {
+      "branding": {
+        "executable": "Meldiq.exe",
+        "productName": "Meldiq",
+        "fileDescription": "Meldiq",
+        "version": "0.3.1.0",
+        "canonicalIconPixels": true
+      },
+      "protocol": "quoted per-user installed path",
+      "shortcutAppUserModelId": "app.meldiq.desktop"
+    },
+    "candidateSha256": "064a96a69173b26ed2abb3f50470991d217a669895ebe59e98ae518a2cd7a17b",
+    "passed": [
+      "actual published 0.2.1 baseline installation and launch",
+      "actual in-place NSIS upgrade",
+      "canonical executable icon after upgrade",
+      "quoted protocol registration after upgrade",
+      "correct Start Menu AppUserModelID and target",
+      "OS protocol dispatch after upgrade",
+      "profile fixture retained across upgrade",
+      "profile fixture retained across uninstall",
+      "actual reinstall and launch",
+      "branding and registration after reinstall",
+      "profile fixture retained across reinstall",
+      "final uninstall"
+    ],
+    "afterReinstall": {
+      "branding": {
+        "executable": "Meldiq.exe",
+        "productName": "Meldiq",
+        "fileDescription": "Meldiq",
+        "version": "0.3.1.0",
+        "canonicalIconPixels": true
+      },
+      "protocol": "quoted per-user installed path",
+      "shortcutAppUserModelId": "app.meldiq.desktop"
+    },
+    "baselineSha256": "25095025281bfbcc8d0f5b8443cd7103fafb78bd5f3d0136303b25c11f556d02",
+    "osVersion": "Microsoft Windows NT 10.0.26100.0",
+    "recordedAt": "2026-11-04T16:42:35.5083306Z"
+  },
+  "currentProductionUpgrade": {
+    "limitation": "A run-owned profile file is not an authenticated session/message fixture; physical Windows 10/11, publisher signing, pinned taskbar icon-cache visuals and real provider acceptance remain pending.",
+    "baselineVersion": "0.3.0",
+    "platform": "Windows Server CI VM",
+    "candidate": "Meldiq-Setup-0.3.1-x64.exe",
+    "afterUpgrade": {
+      "branding": {
+        "executable": "Meldiq.exe",
+        "productName": "Meldiq",
+        "fileDescription": "Meldiq",
+        "version": "0.3.1.0",
+        "canonicalIconPixels": true
+      },
+      "protocol": "quoted per-user installed path",
+      "shortcutAppUserModelId": "app.meldiq.desktop"
+    },
+    "candidateSha256": "064a96a69173b26ed2abb3f50470991d217a669895ebe59e98ae518a2cd7a17b",
+    "passed": [
+      "actual published 0.3.0 baseline installation and launch",
+      "actual in-place NSIS upgrade",
+      "canonical executable icon after upgrade",
+      "quoted protocol registration after upgrade",
+      "correct Start Menu AppUserModelID and target",
+      "OS protocol dispatch after upgrade",
+      "profile fixture retained across upgrade",
+      "profile fixture retained across uninstall",
+      "actual reinstall and launch",
+      "branding and registration after reinstall",
+      "profile fixture retained across reinstall",
+      "final uninstall"
+    ],
+    "afterReinstall": {
+      "branding": {
+        "executable": "Meldiq.exe",
+        "productName": "Meldiq",
+        "fileDescription": "Meldiq",
+        "version": "0.3.1.0",
+        "canonicalIconPixels": true
+      },
+      "protocol": "quoted per-user installed path",
+      "shortcutAppUserModelId": "app.meldiq.desktop"
+    },
+    "baselineSha256": "65537b02b6c2f722e48a97a1508ff2d1a62216f6702d998d3be902198ca46cad",
+    "osVersion": "Microsoft Windows NT 10.0.26100.0",
+    "recordedAt": "2026-11-04T16:43:21.5026127Z"
+  }
+}

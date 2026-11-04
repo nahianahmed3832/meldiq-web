@@ -1,0 +1,8 @@
+{
+  "status": "published-and-hash-verified",
+  "release": "/opt/meldiq-site/releases/site-20261104T164424Z-44812839bf",
+  "expectedPrevious": "/opt/meldiq-site/releases/site-20261103T181028Z-a07de9ec4e",
+  "verifiedFiles": 97,
+  "version": "0.3.1",
+  "nginxConfigurationChanged": false
+}

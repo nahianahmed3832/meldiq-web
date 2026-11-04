@@ -1,0 +1,20 @@
+{
+  "verifiedAt": "2026-11-04T16:46:03.472Z",
+  "status": "passed",
+  "page": "https://meldiq.app/download",
+  "feed": "https://meldiq.app/desktop-updates/windows/stable/release.json",
+  "download": "https://meldiq.app/downloads/windows/0.3.1/064a96a69173b26e/Meldiq-Setup-0.3.1-x64.exe",
+  "version": "0.3.1",
+  "bytes": 124336491,
+  "sha256": "064a96a69173b26ed2abb3f50470991d217a669895ebe59e98ae518a2cd7a17b",
+  "sha512": "9LJ3pME/Rzvg6FS6ZqQnxEmMKqz3UkAeFpuwxXNC7fnKmCNQEkA3cbvtu/l78hYYaU5yT/L6pngkrZDrVRqPVw==",
+  "sourceCommit": "9f25c68b912aa8a02443ada60ab522cd540ce86c",
+  "keyId": "abb61b4909c9803f0e1f360b441ef8e65c35c98271fe9957b82d76d48af41f8d",
+  "sequence": 1793810268783,
+  "expiresAt": "2027-02-02T16:37:48.783Z",
+  "signedFeedVerified": true,
+  "fullPublicDownloadVerified": true,
+  "immutableArtifactHeaders": true,
+  "uncachedMetadataHeaders": true,
+  "exactWebsiteLink": true
+}

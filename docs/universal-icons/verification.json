@@ -28,18 +28,38 @@
     "nativeGraphicsTestsPassed": 1,
     "vectorsRenderedOffline": 33,
     "sourceCommit": "4e0dcccd",
-    "releaseBundle": "building",
+    "releaseBundle": "passed; unsigned verification artifact",
     "signed": false,
     "playPublished": false,
-    "dirtyWorkspaceTested": true
+    "dirtyWorkspaceTested": true,
+    "releaseBundleSha256": "0f272e3263471c4ea531ea67d60a41f066e765138b24cea4be61ebfa1f344d94",
+    "releaseBundleBytes": 71569200,
+    "requiredPilotResourcesPresent": true,
+    "bundledLicenceNotice": true,
+    "versionName": "0.5.5",
+    "versionCode": 34,
+    "signing": "not configured for automated release"
   },
   "desktop": {
     "unitPassed": 109,
     "typecheck": "passed",
     "lint": "passed",
     "snapshotFilesChecked": 1722,
-    "candidateRun": "41866418726",
-    "runtimeCommit": "11bba7b8e2a68387fba6fd103f17e653e3a1e737",
-    "qualification": "pending"
+    "candidateRun": "41867848541",
+    "runtimeCommit": "9f25c68b912aa8a02443ada60ab522cd540ce86c",
+    "qualification": "passed",
+    "bundledWebPassed": 930,
+    "bundledWebSkipped": 2,
+    "candidate": "passed",
+    "qualificationRun": "41869416093",
+    "productionStatus": "published-and-verified",
+    "version": "0.3.1",
+    "publicDownloadSha256": "064a96a69173b26ed2abb3f50470991d217a669895ebe59e98ae518a2cd7a17b",
+    "publicDownloadBytes": 124336491,
+    "publisherSigned": false,
+    "upgradeBaselines": [
+      "0.2.1",
+      "0.3.0"
+    ]
   }
 }
