@@ -17,7 +17,10 @@
       "Chromium desktop",
       "Chromium phone",
       "WebKit desktop"
-    ]
+    ],
+    "productionStatus": "deployed-and-verified",
+    "productionSource": "ddaf497cfa0906b363d4c1244f73a3ca00bd2aae",
+    "publicSmokeScenariosPassed": 3
   },
   "android": {
     "debugKotlinCompilation": "passed",

@@ -1,0 +1,8 @@
+{
+  "expectedWeb": "/opt/meldiq-web/releases/0.5.0-beta-compact-rail-1153ca0",
+  "expectedHtmlSha256": "5ca1e383dd33e83e7c22a472681a0c21b42bd5c29e85b91902574ae869b47e7f",
+  "expectedConfigSha256": "14e20a7ee86b757689bc551d06bc1a49ae35aed0be46acc40ff7510720c70571",
+  "expectedCallbackSha256": "7c055c60a8557473217ea303b97ad9772e9b04ee28a0b4d21b8444132af39633",
+  "expectedApiImageId": "sha256:6fe6ef9beb98aa14d2cc3e264d1392a0e76ba6aefe26ba9029342950f2f67f03",
+  "expectedApiContainerId": "2f2da5b48ecc192a8c0eb18b93531783b3259819065b54b6199b4ab39321a522"
+}

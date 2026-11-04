@@ -1,0 +1,48 @@
+{
+  "status": "deployed-and-verified",
+  "deployedAt": "2026-11-04T16:31:59.164707+00:00",
+  "sourceCommit": "ddaf497cfa0906b363d4c1244f73a3ca00bd2aae",
+  "sourceTreeSha256": "f6275c80cc4dce52ee7f0c7c0c21197b8dc911e16ac22c5d4dfe582a08fc11d4",
+  "previousWeb": "/opt/meldiq-web/releases/0.5.0-beta-compact-rail-1153ca0",
+  "webRelease": "/opt/meldiq-web/releases/0.5.0-beta-universal-icons-ddaf497",
+  "buildId": "5AjDZr0qu4fQh-v4VRYOk",
+  "archiveSha256": "dc05578cddf694f9014a4edb8863a820c986af19e827ab4ccfae41ef81a41e02",
+  "apiPreserved": true,
+  "apiImageId": "sha256:6fe6ef9beb98aa14d2cc3e264d1392a0e76ba6aefe26ba9029342950f2f67f03",
+  "apiContainerId": "2f2da5b48ecc192a8c0eb18b93531783b3259819065b54b6199b4ab39321a522",
+  "publicConfigPreserved": true,
+  "nginxPreserved": true,
+  "oauthCallbackPreserved": true,
+  "health": {
+    "ok": true,
+    "version": "0.76.1",
+    "time": 1793809919094,
+    "livekit": true,
+    "mongodb": null,
+    "postgres": true,
+    "databaseMode": "supabase",
+    "redis": true
+  },
+  "previousStaticAssetsRetained": true,
+  "verifiedFileCount": 474,
+  "validation": {
+    "unitPassed": 971,
+    "unitSkipped": 1,
+    "testFiles": 143,
+    "typecheck": "passed",
+    "lint": "passed",
+    "format": "passed",
+    "productionBuild": "passed",
+    "i18nLocales": 28,
+    "i18nStructure": "passed",
+    "catalogueTestsPassed": 14,
+    "offlineBrowserMatricesPassed": 8,
+    "initialUnitRun": "Localization audit timed out under CPU contention; full rerun with two workers passed.",
+    "integratedBrowserScenariosPassed": 6,
+    "integratedBrowsers": [
+      "Chromium desktop",
+      "Chromium phone",
+      "WebKit desktop"
+    ]
+  }
+}

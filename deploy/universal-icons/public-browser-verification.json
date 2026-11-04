@@ -1,0 +1,43 @@
+{
+  "status": "passed",
+  "target": "https://web.meldiq.app",
+  "testedAt": "2026-11-04T16:33:26.901Z",
+  "results": [
+    {
+      "name": "chromium-desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "buildId": "5AjDZr0qu4fQh-v4VRYOk",
+      "testLinkingDisabled": true,
+      "reloadPassed": true,
+      "pageErrors": 0,
+      "failedAssets": 0
+    },
+    {
+      "name": "chromium-phone",
+      "viewport": {
+        "width": 393,
+        "height": 852
+      },
+      "buildId": "5AjDZr0qu4fQh-v4VRYOk",
+      "testLinkingDisabled": true,
+      "reloadPassed": true,
+      "pageErrors": 0,
+      "failedAssets": 0
+    },
+    {
+      "name": "webkit-desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "buildId": "5AjDZr0qu4fQh-v4VRYOk",
+      "testLinkingDisabled": true,
+      "reloadPassed": true,
+      "pageErrors": 0,
+      "failedAssets": 0
+    }
+  ]
+}
