@@ -1,0 +1,42 @@
+{
+  "web": {
+    "unitPassed": 971,
+    "unitSkipped": 1,
+    "testFiles": 143,
+    "typecheck": "passed",
+    "lint": "passed",
+    "format": "passed",
+    "productionBuild": "passed",
+    "i18nLocales": 28,
+    "i18nStructure": "passed",
+    "catalogueTestsPassed": 14,
+    "offlineBrowserMatricesPassed": 8,
+    "initialUnitRun": "Localization audit timed out under CPU contention; full rerun with two workers passed.",
+    "integratedBrowserScenariosPassed": 6,
+    "integratedBrowsers": [
+      "Chromium desktop",
+      "Chromium phone",
+      "WebKit desktop"
+    ]
+  },
+  "android": {
+    "debugKotlinCompilation": "passed",
+    "resourceProcessing": "passed",
+    "nativeGraphicsTestsPassed": 1,
+    "vectorsRenderedOffline": 33,
+    "sourceCommit": "4e0dcccd",
+    "releaseBundle": "building",
+    "signed": false,
+    "playPublished": false,
+    "dirtyWorkspaceTested": true
+  },
+  "desktop": {
+    "unitPassed": 109,
+    "typecheck": "passed",
+    "lint": "passed",
+    "snapshotFilesChecked": 1722,
+    "candidateRun": "41866418726",
+    "runtimeCommit": "11bba7b8e2a68387fba6fd103f17e653e3a1e737",
+    "qualification": "pending"
+  }
+}

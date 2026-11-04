@@ -1,3 +1,4 @@
+import { Icon } from "../icons/Icon";
 import { roleName } from "../../sync/workspaceRules";
 import { useLocaleRender } from "../../i18n/Localized";
 import { text as uiText } from "../../i18n";
@@ -239,7 +240,7 @@ export function Sidebar({ orgId, section, open, onDialog }: SidebarProps) {
           {PRIMARY_NAVIGATION.filter((item) => item.section === "home" || item.section === "activity").map((item) => (
             <a key={item.section} className="side-item" href={`/${item.section}`} aria-current={primaryDestinationActive(item, section) ? "page" : undefined}>
               <span className="glyph">
-                <item.icon size={20} aria-hidden="true" />
+                <Icon name={item.icon} size={20} />
               </span>
               <span className="grow">{t(item.labelKey)}</span>
               {item.section === "activity" && mentions > 0 && <span className="count accent">{capCount(mentions)}</span>}

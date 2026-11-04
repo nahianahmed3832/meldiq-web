@@ -1,0 +1,632 @@
+[
+  {
+    "path": "/Volumes/code_files/meldiq_android",
+    "head": "c111376cab3d732f59b0ed17ecd16b03b309beee",
+    "sourceFiles": 617,
+    "iconLibraryFiles": {
+      "androidx.compose.material.icons": 183
+    },
+    "inlineSvgFiles": 0,
+    "inlineSvgExamples": [],
+    "localSvgs": 0,
+    "duplicateSvgGroups": [],
+    "brokenSvgs": [],
+    "androidVectors": 35,
+    "buildScripts": null
+  },
+  {
+    "path": "/Volumes/code_files/meldiq_bots",
+    "implementation": "No client source present"
+  },
+  {
+    "path": "/Volumes/code_files/meldiq_central_admin",
+    "head": "361ea0f8246f42d15c9134e39241d9dd0bc12268",
+    "sourceFiles": 136,
+    "iconLibraryFiles": {
+      "lucide-react": 56
+    },
+    "inlineSvgFiles": 4,
+    "inlineSvgExamples": [
+      "src/console/charts/TrendChart.tsx",
+      "src/console/charts/Sparkline.tsx",
+      "src/console/charts/Donut.tsx",
+      "src/console/charts/BarCompareChart.tsx"
+    ],
+    "localSvgs": 0,
+    "duplicateSvgGroups": [],
+    "brokenSvgs": [],
+    "androidVectors": 0,
+    "buildScripts": "tsc -b && vite build"
+  },
+  {
+    "path": "/Volumes/code_files/meldiq_database_migration",
+    "head": "d7fd6b312c269c935ef38323f000d41dc108a20e",
+    "sourceFiles": 409,
+    "iconLibraryFiles": {
+      "androidx.compose.material.icons": 130
+    },
+    "inlineSvgFiles": 0,
+    "inlineSvgExamples": [],
+    "localSvgs": 0,
+    "duplicateSvgGroups": [],
+    "brokenSvgs": [],
+    "androidVectors": 0,
+    "buildScripts": null
+  },
+  {
+    "path": "/Volumes/code_files/meldiq_ios",
+    "implementation": "No client source present"
+  },
+  {
+    "path": "/Volumes/code_files/meldiq_landing_website",
+    "head": null,
+    "sourceFiles": 70,
+    "iconLibraryFiles": {},
+    "inlineSvgFiles": 6,
+    "inlineSvgExamples": [
+      "src/components/Layout.tsx",
+      "src/components/Icons.tsx",
+      "src/components/MarketingArt.tsx",
+      "src/pages/download.tsx",
+      "src/pages/support.tsx",
+      "src/pages/faq.tsx"
+    ],
+    "localSvgs": 0,
+    "duplicateSvgGroups": [],
+    "brokenSvgs": [],
+    "androidVectors": 0,
+    "buildScripts": "tsc --noEmit && rm -rf out && next build"
+  },
+  {
+    "path": "/Volumes/code_files/meldiq_media_defaults",
+    "head": "e0a7f4aadfc11fc7f3188a24ca9ae264b88e1fbe",
+    "sourceFiles": 659,
+    "iconLibraryFiles": {
+      "lucide-react": 237
+    },
+    "inlineSvgFiles": 8,
+    "inlineSvgExamples": [
+      "src/ui/workspace/UsagePage.tsx",
+      "src/ui/components/QrCode.tsx",
+      "src/ui/components/EmberIcon.tsx",
+      "src/ui/components/IdentityGlyph.tsx",
+      "src/ui/components/SettingsIcon.tsx",
+      "src/ui/people/AvatarFrame.tsx",
+      "src/ui/people/LevelRing.tsx",
+      "public/invite.html"
+    ],
+    "localSvgs": 3,
+    "duplicateSvgGroups": [],
+    "brokenSvgs": [],
+    "androidVectors": 0,
+    "buildScripts": "tsc -b && rm -rf out && next build --webpack && node scripts/finish-export.mjs && vite build --config vite.sw.config.ts"
+  },
+  {
+    "path": "/Volumes/code_files/meldiq_media_module",
+    "head": "82ff757a64c67e7b293462c8f6bf8d619b76c7f1",
+    "sourceFiles": 409,
+    "iconLibraryFiles": {
+      "androidx.compose.material.icons": 130
+    },
+    "inlineSvgFiles": 0,
+    "inlineSvgExamples": [],
+    "localSvgs": 0,
+    "duplicateSvgGroups": [],
+    "brokenSvgs": [],
+    "androidVectors": 0,
+    "buildScripts": null
+  },
+  {
+    "path": "/Volumes/code_files/meldiq_media_release",
+    "head": "b34d3ee82eeb82cdcce8d2e5af0ad06ead17398d",
+    "sourceFiles": 411,
+    "iconLibraryFiles": {
+      "androidx.compose.material.icons": 130
+    },
+    "inlineSvgFiles": 0,
+    "inlineSvgExamples": [],
+    "localSvgs": 0,
+    "duplicateSvgGroups": [],
+    "brokenSvgs": [],
+    "androidVectors": 0,
+    "buildScripts": null
+  },
+  {
+    "path": "/Volumes/code_files/meldiq_messaging_latency_release",
+    "head": "bd20d747e3a4a768b823263cab017b9d9e0017c4",
+    "sourceFiles": 421,
+    "iconLibraryFiles": {
+      "androidx.compose.material.icons": 130
+    },
+    "inlineSvgFiles": 0,
+    "inlineSvgExamples": [],
+    "localSvgs": 0,
+    "duplicateSvgGroups": [],
+    "brokenSvgs": [],
+    "androidVectors": 0,
+    "buildScripts": null
+  },
+  {
+    "path": "/Volumes/code_files/meldiq_parity_integration_admin",
+    "head": "8a10c4bae41fcac023f849a582fdd95f97ab8457",
+    "sourceFiles": 137,
+    "iconLibraryFiles": {
+      "lucide-react": 56
+    },
+    "inlineSvgFiles": 4,
+    "inlineSvgExamples": [
+      "src/console/charts/TrendChart.tsx",
+      "src/console/charts/Sparkline.tsx",
+      "src/console/charts/Donut.tsx",
+      "src/console/charts/BarCompareChart.tsx"
+    ],
+    "localSvgs": 0,
+    "duplicateSvgGroups": [],
+    "brokenSvgs": [],
+    "androidVectors": 0,
+    "buildScripts": "tsc -b && vite build"
+  },
+  {
+    "path": "/Volumes/code_files/meldiq_parity_integration_web",
+    "head": "7abb48d67c3d3e272cd407eec23a70ee1f81ad49",
+    "sourceFiles": 724,
+    "iconLibraryFiles": {
+      "lucide-react": 246
+    },
+    "inlineSvgFiles": 8,
+    "inlineSvgExamples": [
+      "src/ui/workspace/UsagePage.tsx",
+      "src/ui/components/QrCode.tsx",
+      "src/ui/components/EmberIcon.tsx",
+      "src/ui/components/IdentityGlyph.tsx",
+      "src/ui/components/SettingsIcon.tsx",
+      "src/ui/people/AvatarFrame.tsx",
+      "src/ui/people/LevelRing.tsx",
+      "public/invite.html"
+    ],
+    "localSvgs": 3,
+    "duplicateSvgGroups": [],
+    "brokenSvgs": [],
+    "androidVectors": 0,
+    "buildScripts": "tsc -b && rm -rf out && next build --webpack && node scripts/finish-export.mjs && vite build --config vite.sw.config.ts"
+  },
+  {
+    "path": "/Volumes/code_files/meldiq_parity_integration_windows",
+    "head": "ee834673e37894517b1f218eb5a1f7fb388692e4",
+    "sourceFiles": 727,
+    "iconLibraryFiles": {
+      "lucide-react": 246
+    },
+    "inlineSvgFiles": 8,
+    "inlineSvgExamples": [
+      "packages/web/src/ui/workspace/UsagePage.tsx",
+      "packages/web/src/ui/components/QrCode.tsx",
+      "packages/web/src/ui/components/EmberIcon.tsx",
+      "packages/web/src/ui/components/IdentityGlyph.tsx",
+      "packages/web/src/ui/components/SettingsIcon.tsx",
+      "packages/web/src/ui/people/AvatarFrame.tsx",
+      "packages/web/src/ui/people/LevelRing.tsx",
+      "packages/web/public/invite.html"
+    ],
+    "localSvgs": 3,
+    "duplicateSvgGroups": [],
+    "brokenSvgs": [],
+    "androidVectors": 0,
+    "buildScripts": "tsc -b && rm -rf out && next build --webpack && node scripts/finish-export.mjs && vite build --config vite.sw.config.ts"
+  },
+  {
+    "path": "/Volumes/code_files/meldiq_part2_api",
+    "head": "598f7c1d72c48cd5179c822221266aaafcb89815",
+    "sourceFiles": 421,
+    "iconLibraryFiles": {
+      "androidx.compose.material.icons": 130
+    },
+    "inlineSvgFiles": 0,
+    "inlineSvgExamples": [],
+    "localSvgs": 0,
+    "duplicateSvgGroups": [],
+    "brokenSvgs": [],
+    "androidVectors": 0,
+    "buildScripts": null
+  },
+  {
+    "path": "/Volumes/code_files/meldiq_part3_admin",
+    "head": "8a10c4bae41fcac023f849a582fdd95f97ab8457",
+    "sourceFiles": 137,
+    "iconLibraryFiles": {
+      "lucide-react": 56
+    },
+    "inlineSvgFiles": 4,
+    "inlineSvgExamples": [
+      "src/console/charts/TrendChart.tsx",
+      "src/console/charts/Sparkline.tsx",
+      "src/console/charts/Donut.tsx",
+      "src/console/charts/BarCompareChart.tsx"
+    ],
+    "localSvgs": 0,
+    "duplicateSvgGroups": [],
+    "brokenSvgs": [],
+    "androidVectors": 0,
+    "buildScripts": "tsc -b && vite build"
+  },
+  {
+    "path": "/Volumes/code_files/meldiq_part3_api",
+    "head": "9b0b6e5493695a3bec1d620b0d7fac6f320238c0",
+    "sourceFiles": 421,
+    "iconLibraryFiles": {
+      "androidx.compose.material.icons": 130
+    },
+    "inlineSvgFiles": 0,
+    "inlineSvgExamples": [],
+    "localSvgs": 0,
+    "duplicateSvgGroups": [],
+    "brokenSvgs": [],
+    "androidVectors": 0,
+    "buildScripts": null
+  },
+  {
+    "path": "/Volumes/code_files/meldiq_phase3_admin",
+    "head": "45e07c5a8796dffbe0e0ea645a60aef86d7438be",
+    "sourceFiles": 136,
+    "iconLibraryFiles": {
+      "lucide-react": 56
+    },
+    "inlineSvgFiles": 4,
+    "inlineSvgExamples": [
+      "src/console/charts/TrendChart.tsx",
+      "src/console/charts/Sparkline.tsx",
+      "src/console/charts/Donut.tsx",
+      "src/console/charts/BarCompareChart.tsx"
+    ],
+    "localSvgs": 0,
+    "duplicateSvgGroups": [],
+    "brokenSvgs": [],
+    "androidVectors": 0,
+    "buildScripts": "tsc -b && vite build"
+  },
+  {
+    "path": "/Volumes/code_files/meldiq_phase3_web",
+    "head": "9ffbab971b7403b70bd66f02a96b14a7cced6257",
+    "sourceFiles": 682,
+    "iconLibraryFiles": {
+      "lucide-react": 237
+    },
+    "inlineSvgFiles": 8,
+    "inlineSvgExamples": [
+      "src/ui/workspace/UsagePage.tsx",
+      "src/ui/components/QrCode.tsx",
+      "src/ui/components/EmberIcon.tsx",
+      "src/ui/components/IdentityGlyph.tsx",
+      "src/ui/components/SettingsIcon.tsx",
+      "src/ui/people/AvatarFrame.tsx",
+      "src/ui/people/LevelRing.tsx",
+      "public/invite.html"
+    ],
+    "localSvgs": 3,
+    "duplicateSvgGroups": [],
+    "brokenSvgs": [],
+    "androidVectors": 0,
+    "buildScripts": "tsc -b && rm -rf out && next build --webpack && node scripts/finish-export.mjs && vite build --config vite.sw.config.ts"
+  },
+  {
+    "path": "/Volumes/code_files/meldiq_supabase_migration",
+    "head": "2cf5268f14632c39d3200eb88b62b4c25b7b45fb",
+    "sourceFiles": 412,
+    "iconLibraryFiles": {
+      "androidx.compose.material.icons": 130
+    },
+    "inlineSvgFiles": 0,
+    "inlineSvgExamples": [],
+    "localSvgs": 0,
+    "duplicateSvgGroups": [],
+    "brokenSvgs": [],
+    "androidVectors": 0,
+    "buildScripts": null
+  },
+  {
+    "path": "/Volumes/code_files/meldiq_supabase_ops_release",
+    "head": "bd28a29cff15304aa86bbf0a265a22de7698296a",
+    "sourceFiles": 666,
+    "iconLibraryFiles": {
+      "lucide-react": 237
+    },
+    "inlineSvgFiles": 8,
+    "inlineSvgExamples": [
+      "src/ui/workspace/UsagePage.tsx",
+      "src/ui/components/QrCode.tsx",
+      "src/ui/components/EmberIcon.tsx",
+      "src/ui/components/IdentityGlyph.tsx",
+      "src/ui/components/SettingsIcon.tsx",
+      "src/ui/people/AvatarFrame.tsx",
+      "src/ui/people/LevelRing.tsx",
+      "public/invite.html"
+    ],
+    "localSvgs": 3,
+    "duplicateSvgGroups": [],
+    "brokenSvgs": [],
+    "androidVectors": 0,
+    "buildScripts": "tsc -b && rm -rf out && next build --webpack && node scripts/finish-export.mjs && vite build --config vite.sw.config.ts"
+  },
+  {
+    "path": "/Volumes/code_files/meldiq_supabase_rollback_release",
+    "head": "f38b4d45457c0722311e5f4851a80770efb40ad6",
+    "sourceFiles": 418,
+    "iconLibraryFiles": {
+      "androidx.compose.material.icons": 130
+    },
+    "inlineSvgFiles": 0,
+    "inlineSvgExamples": [],
+    "localSvgs": 0,
+    "duplicateSvgGroups": [],
+    "brokenSvgs": [],
+    "androidVectors": 0,
+    "buildScripts": null
+  },
+  {
+    "path": "/Volumes/code_files/meldiq_supabase_runtime_release",
+    "head": "2dae0d27955ac8e44170bed5057a20c0d4f065ba",
+    "sourceFiles": 421,
+    "iconLibraryFiles": {
+      "androidx.compose.material.icons": 130
+    },
+    "inlineSvgFiles": 0,
+    "inlineSvgExamples": [],
+    "localSvgs": 0,
+    "duplicateSvgGroups": [],
+    "brokenSvgs": [],
+    "androidVectors": 0,
+    "buildScripts": null
+  },
+  {
+    "path": "/Volumes/code_files/meldiq_web",
+    "head": "9ded695a192b893fe375e09004b286deed950646",
+    "sourceFiles": 675,
+    "iconLibraryFiles": {
+      "lucide-react": 239
+    },
+    "inlineSvgFiles": 8,
+    "inlineSvgExamples": [
+      "src/ui/workspace/UsagePage.tsx",
+      "src/ui/components/QrCode.tsx",
+      "src/ui/components/EmberIcon.tsx",
+      "src/ui/components/IdentityGlyph.tsx",
+      "src/ui/components/SettingsIcon.tsx",
+      "src/ui/people/AvatarFrame.tsx",
+      "src/ui/people/LevelRing.tsx",
+      "public/invite.html"
+    ],
+    "localSvgs": 3,
+    "duplicateSvgGroups": [],
+    "brokenSvgs": [],
+    "androidVectors": 0,
+    "buildScripts": "tsc -b && rm -rf out && next build --webpack && node scripts/finish-export.mjs && vite build --config vite.sw.config.ts"
+  },
+  {
+    "path": "/Volumes/code_files/meldiq_web_admin_controls",
+    "head": "96a3f4e4387fa8426ef1c546f62a753821ca5605",
+    "sourceFiles": 638,
+    "iconLibraryFiles": {
+      "lucide-react": 235
+    },
+    "inlineSvgFiles": 7,
+    "inlineSvgExamples": [
+      "src/ui/workspace/UsagePage.tsx",
+      "src/ui/components/QrCode.tsx",
+      "src/ui/components/EmberIcon.tsx",
+      "src/ui/components/SettingsIcon.tsx",
+      "src/ui/people/LevelRing.tsx",
+      "src/ui/mojo/MojoBadge.tsx",
+      "public/invite.html"
+    ],
+    "localSvgs": 3,
+    "duplicateSvgGroups": [],
+    "brokenSvgs": [],
+    "androidVectors": 0,
+    "buildScripts": "tsc -b && rm -rf out && next build && node scripts/finish-export.mjs && vite build --config vite.sw.config.ts"
+  },
+  {
+    "path": "/Volumes/code_files/meldiq_web_media_release",
+    "head": "e8825c727d2b68760bb098a17374a36216051b3f",
+    "sourceFiles": 653,
+    "iconLibraryFiles": {
+      "lucide-react": 236
+    },
+    "inlineSvgFiles": 8,
+    "inlineSvgExamples": [
+      "src/ui/workspace/UsagePage.tsx",
+      "src/ui/components/QrCode.tsx",
+      "src/ui/components/EmberIcon.tsx",
+      "src/ui/components/IdentityGlyph.tsx",
+      "src/ui/components/SettingsIcon.tsx",
+      "src/ui/people/AvatarFrame.tsx",
+      "src/ui/people/LevelRing.tsx",
+      "public/invite.html"
+    ],
+    "localSvgs": 3,
+    "duplicateSvgGroups": [],
+    "brokenSvgs": [],
+    "androidVectors": 0,
+    "buildScripts": "tsc -b && rm -rf out && next build --webpack && node scripts/finish-export.mjs && vite build --config vite.sw.config.ts"
+  },
+  {
+    "path": "/Volumes/code_files/meldiq_web_migration_release",
+    "head": "8bda7374ed94a7830077addb98f62c3c5ddfbb90",
+    "sourceFiles": 666,
+    "iconLibraryFiles": {
+      "lucide-react": 237
+    },
+    "inlineSvgFiles": 8,
+    "inlineSvgExamples": [
+      "src/ui/workspace/UsagePage.tsx",
+      "src/ui/components/QrCode.tsx",
+      "src/ui/components/EmberIcon.tsx",
+      "src/ui/components/IdentityGlyph.tsx",
+      "src/ui/components/SettingsIcon.tsx",
+      "src/ui/people/AvatarFrame.tsx",
+      "src/ui/people/LevelRing.tsx",
+      "public/invite.html"
+    ],
+    "localSvgs": 3,
+    "duplicateSvgGroups": [],
+    "brokenSvgs": [],
+    "androidVectors": 0,
+    "buildScripts": "tsc -b && rm -rf out && next build --webpack && node scripts/finish-export.mjs && vite build --config vite.sw.config.ts"
+  },
+  {
+    "path": "/Volumes/code_files/meldiq_web_part2_foundation",
+    "head": "e62fb193ef24dd3cd27234c6116709b7bd499987",
+    "sourceFiles": 709,
+    "iconLibraryFiles": {
+      "lucide-react": 245
+    },
+    "inlineSvgFiles": 8,
+    "inlineSvgExamples": [
+      "src/ui/workspace/UsagePage.tsx",
+      "src/ui/components/QrCode.tsx",
+      "src/ui/components/EmberIcon.tsx",
+      "src/ui/components/IdentityGlyph.tsx",
+      "src/ui/components/SettingsIcon.tsx",
+      "src/ui/people/AvatarFrame.tsx",
+      "src/ui/people/LevelRing.tsx",
+      "public/invite.html"
+    ],
+    "localSvgs": 3,
+    "duplicateSvgGroups": [],
+    "brokenSvgs": [],
+    "androidVectors": 0,
+    "buildScripts": "tsc -b && rm -rf out && next build --webpack && node scripts/finish-export.mjs && vite build --config vite.sw.config.ts"
+  },
+  {
+    "path": "/Volumes/code_files/meldiq_web_part3_ecosystem",
+    "head": "551d480302c57a0a41701ad73b5a7073b93f86cb",
+    "sourceFiles": 723,
+    "iconLibraryFiles": {
+      "lucide-react": 246
+    },
+    "inlineSvgFiles": 8,
+    "inlineSvgExamples": [
+      "src/ui/workspace/UsagePage.tsx",
+      "src/ui/components/QrCode.tsx",
+      "src/ui/components/EmberIcon.tsx",
+      "src/ui/components/IdentityGlyph.tsx",
+      "src/ui/components/SettingsIcon.tsx",
+      "src/ui/people/AvatarFrame.tsx",
+      "src/ui/people/LevelRing.tsx",
+      "public/invite.html"
+    ],
+    "localSvgs": 3,
+    "duplicateSvgGroups": [],
+    "brokenSvgs": [],
+    "androidVectors": 0,
+    "buildScripts": "tsc -b && rm -rf out && next build --webpack && node scripts/finish-export.mjs && vite build --config vite.sw.config.ts"
+  },
+  {
+    "path": "/Volumes/code_files/meldiq_windows",
+    "head": "9430934084d7ede99284b911384906a08c26f345",
+    "sourceFiles": 650,
+    "iconLibraryFiles": {
+      "lucide-react": 236
+    },
+    "inlineSvgFiles": 8,
+    "inlineSvgExamples": [
+      "packages/web/src/ui/workspace/UsagePage.tsx",
+      "packages/web/src/ui/components/QrCode.tsx",
+      "packages/web/src/ui/components/EmberIcon.tsx",
+      "packages/web/src/ui/components/IdentityGlyph.tsx",
+      "packages/web/src/ui/components/SettingsIcon.tsx",
+      "packages/web/src/ui/people/AvatarFrame.tsx",
+      "packages/web/src/ui/people/LevelRing.tsx",
+      "packages/web/public/invite.html"
+    ],
+    "localSvgs": 3,
+    "duplicateSvgGroups": [],
+    "brokenSvgs": [],
+    "androidVectors": 0,
+    "buildScripts": "tsc -b && rm -rf out && next build --webpack && node scripts/finish-export.mjs && vite build --config vite.sw.config.ts"
+  },
+  {
+    "path": "/Volumes/code_files/meldiq_windows_release_activation",
+    "head": "ee834673e37894517b1f218eb5a1f7fb388692e4",
+    "sourceFiles": 649,
+    "iconLibraryFiles": {
+      "lucide-react": 236
+    },
+    "inlineSvgFiles": 8,
+    "inlineSvgExamples": [
+      "packages/web/src/ui/workspace/UsagePage.tsx",
+      "packages/web/src/ui/components/QrCode.tsx",
+      "packages/web/src/ui/components/EmberIcon.tsx",
+      "packages/web/src/ui/components/IdentityGlyph.tsx",
+      "packages/web/src/ui/components/SettingsIcon.tsx",
+      "packages/web/src/ui/people/AvatarFrame.tsx",
+      "packages/web/src/ui/people/LevelRing.tsx",
+      "packages/web/public/invite.html"
+    ],
+    "localSvgs": 3,
+    "duplicateSvgGroups": [],
+    "brokenSvgs": [],
+    "androidVectors": 0,
+    "buildScripts": "tsc -b && rm -rf out && next build --webpack && node scripts/finish-export.mjs && vite build --config vite.sw.config.ts"
+  },
+  {
+    "path": "/Volumes/code_files/meldiq_server_status/client-releases/universal-icons-web",
+    "head": "0d3d7ab784145c7d771a7532454ac7485469c4ee",
+    "sourceFiles": 696,
+    "iconLibraryFiles": {
+      "lucide-react": 239
+    },
+    "inlineSvgFiles": 8,
+    "inlineSvgExamples": [
+      "src/ui/workspace/UsagePage.tsx",
+      "src/ui/components/QrCode.tsx",
+      "src/ui/components/EmberIcon.tsx",
+      "src/ui/components/IdentityGlyph.tsx",
+      "src/ui/components/SettingsIcon.tsx",
+      "src/ui/people/AvatarFrame.tsx",
+      "src/ui/people/LevelRing.tsx",
+      "public/invite.html"
+    ],
+    "localSvgs": 3,
+    "duplicateSvgGroups": [],
+    "brokenSvgs": [],
+    "androidVectors": 0,
+    "buildScripts": "tsc -b && rm -rf out && next build --webpack && node scripts/finish-export.mjs && vite build --config vite.sw.config.ts"
+  },
+  {
+    "path": "/Volumes/code_files/meldiq_server_status/client-releases/universal-icons-desktop",
+    "head": "ee834673e37894517b1f218eb5a1f7fb388692e4",
+    "sourceFiles": 650,
+    "iconLibraryFiles": {
+      "lucide-react": 235
+    },
+    "inlineSvgFiles": 8,
+    "inlineSvgExamples": [
+      "packages/web/src/ui/workspace/UsagePage.tsx",
+      "packages/web/src/ui/components/QrCode.tsx",
+      "packages/web/src/ui/components/EmberIcon.tsx",
+      "packages/web/src/ui/components/IdentityGlyph.tsx",
+      "packages/web/src/ui/components/SettingsIcon.tsx",
+      "packages/web/src/ui/people/AvatarFrame.tsx",
+      "packages/web/src/ui/people/LevelRing.tsx",
+      "packages/web/public/invite.html"
+    ],
+    "localSvgs": 3,
+    "duplicateSvgGroups": [],
+    "brokenSvgs": [],
+    "androidVectors": 0,
+    "buildScripts": "tsc -b && rm -rf out && next build --webpack && node scripts/finish-export.mjs && vite build --config vite.sw.config.ts"
+  },
+  {
+    "path": "/Volumes/code_files/meldiq_server_status/platform",
+    "head": "058d13f90ec20b17d6f782592834edde4dcd6c9a",
+    "sourceFiles": 2,
+    "iconLibraryFiles": {},
+    "inlineSvgFiles": 0,
+    "inlineSvgExamples": [],
+    "localSvgs": 2,
+    "duplicateSvgGroups": [],
+    "brokenSvgs": [],
+    "androidVectors": 0,
+    "buildScripts": "node scripts/run-framework.mjs build"
+  }
+]
