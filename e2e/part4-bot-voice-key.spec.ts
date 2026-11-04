@@ -47,7 +47,12 @@ test("owners configure public voice keys and managers review key changes without
       .filter({ hasText: /^Permissions$/ })
       .click();
     const approval = installed.getByRole("form", { name: "Approved access" });
-    await expect(approval.getByText("Voice access lets this bot and its developer hear the room. A public encryption key and fresh approval are required.", { exact: true })).toBeVisible();
+    await expect(
+      approval.getByText(
+        "Call access lets this bot and its developer receive the room's audio, camera video, screen shares and other content shared in the call. A public encryption key and fresh approval are required.",
+        { exact: true },
+      ),
+    ).toBeVisible();
     await expect(approval.getByText(`SHA-256 · ${fingerprint(key1)}`, { exact: true })).toBeVisible();
     await expect(approval.getByRole("button", { name: "Save", exact: true })).toBeEnabled();
     await approval.getByRole("button", { name: "Save", exact: true }).click();

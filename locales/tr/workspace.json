@@ -2097,6 +2097,6 @@
     "inputNotice": "Girdiğiniz bilgiler bu bota ve geliştiricisine özel olarak gönderilir.",
     "voiceKey": "Bot ses şifreleme anahtarı",
     "voiceKeyNotice": "Botunuzun oluşturduğu X25519 açık anahtarını kullanın. Özel anahtarı bot sürecinde saklayın.",
-    "voiceApprovalNotice": "Ses erişimi, bu botun ve geliştiricisinin odayı duymasını sağlar. Açık şifreleme anahtarı ve yeni onay gerekir."
+    "voiceApprovalNotice": "Görüşme erişimi, bu botun ve geliştiricisinin odanın sesini, kamera videosunu, ekran paylaşımlarını ve görüşmede paylaşılan diğer içerikleri almasını sağlar. Açık şifreleme anahtarı ve yeni onay gerekir."
   }
 }

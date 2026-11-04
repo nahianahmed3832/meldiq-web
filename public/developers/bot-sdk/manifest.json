@@ -1,13 +1,13 @@
 {
   "format": 1,
-  "apiCommit": "742cc1884ff79d751c544619f078b0021d2369a2",
+  "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
   "status": "preview source clients",
-  "archiveSha256": "b2c19b8e100caf69a85b3293342c81f729c6ecb21fc9bc55e82e6f82c718cf0c",
+  "archiveSha256": "e182cb81a15d0570a3eb3a0397570495a490779e2eac44739519b7d78df6ec6c",
   "files": [
     {
       "path": "README.md",
-      "sha256": "f5d0c9bc917c5c5016970934454bec8f524e8b6f9f591d25608cc6373253a80a",
-      "bytes": 17088
+      "sha256": "ee66c154567d3d9c8db87d77ba48108bd0c49c6e905041ed864becec69e15f28",
+      "bytes": 17626
     },
     {
       "path": "docs/api/bot-gateway.schema.json",

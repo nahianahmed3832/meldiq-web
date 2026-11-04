@@ -2097,6 +2097,6 @@
     "inputNotice": "Os dados introduzidos são enviados em privado a este bot e ao seu programador.",
     "voiceKey": "Chave de encriptação de voz do bot",
     "voiceKeyNotice": "Use a chave pública X25519 gerada pelo bot. Mantenha a chave privada no processo do bot.",
-    "voiceApprovalNotice": "O acesso de voz permite que este bot e o seu programador ouçam a sala. São necessárias uma chave pública de encriptação e uma nova aprovação."
+    "voiceApprovalNotice": "O acesso à chamada permite que este bot e o seu programador recebam o áudio da sala, vídeos das câmaras, partilhas de ecrã e outros conteúdos partilhados na chamada. São necessárias uma chave pública de encriptação e uma nova aprovação."
   }
 }

@@ -2097,6 +2097,6 @@
     "inputNotice": "Det du anger skickas privat till den här boten och dess utvecklare.",
     "voiceKey": "Krypteringsnyckel för botens röst",
     "voiceKeyNotice": "Använd den offentliga X25519-nyckel som boten har skapat. Behåll den privata nyckeln i botprocessen.",
-    "voiceApprovalNotice": "Röståtkomst låter den här boten och dess utvecklare höra rummet. En offentlig krypteringsnyckel och ett nytt godkännande krävs."
+    "voiceApprovalNotice": "Samtalsåtkomst låter den här boten och dess utvecklare ta emot rummets ljud, kameravideo, skärmdelningar och annat innehåll som delas i samtalet. En offentlig krypteringsnyckel och ett nytt godkännande krävs."
   }
 }

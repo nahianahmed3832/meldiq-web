@@ -2097,6 +2097,6 @@
     "inputNotice": "Masukan Anda dikirim secara pribadi ke bot ini dan pengembangnya.",
     "voiceKey": "Kunci enkripsi suara bot",
     "voiceKeyNotice": "Gunakan kunci publik X25519 yang dibuat bot Anda. Simpan kunci privatnya dalam proses bot.",
-    "voiceApprovalNotice": "Akses suara memungkinkan bot ini dan pengembangnya mendengar ruang. Diperlukan kunci enkripsi publik dan persetujuan baru."
+    "voiceApprovalNotice": "Akses panggilan memungkinkan bot ini dan pengembangnya menerima audio ruang, video kamera, berbagi layar, dan konten lain yang dibagikan dalam panggilan. Diperlukan kunci enkripsi publik dan persetujuan baru."
   }
 }

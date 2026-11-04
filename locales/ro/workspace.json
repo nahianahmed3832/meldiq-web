@@ -2097,6 +2097,6 @@
     "inputNotice": "Datele introduse sunt trimise privat acestui bot și dezvoltatorului său.",
     "voiceKey": "Cheie de criptare vocală a botului",
     "voiceKeyNotice": "Folosiți cheia publică X25519 generată de bot. Păstrați cheia privată în procesul botului.",
-    "voiceApprovalNotice": "Accesul vocal permite acestui bot și dezvoltatorului său să audă camera. Sunt necesare o cheie publică de criptare și o nouă aprobare."
+    "voiceApprovalNotice": "Accesul la apel permite acestui bot și dezvoltatorului său să primească sunetul camerei, imaginile video ale camerelor, ecranele partajate și alt conținut distribuit în apel. Sunt necesare o cheie publică de criptare și o nouă aprobare."
   }
 }

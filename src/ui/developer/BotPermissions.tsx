@@ -23,7 +23,10 @@ function scopeText(scope: BotScope): { label: string; description?: string } {
   const key = native.replaceAll(".", "_");
   const source = (ENGLISH.organization.builtIn.permissionCatalog as Record<string, { label: string; description: string }>)[key];
   if (!source) return { label: t("workspace.interface.events_8d14f6e") };
-  return { label: permissionLabel(native, source.label), description: catalogText(`organization.builtIn.permissionCatalog.${key}.description`, source.description) };
+  return {
+    label: permissionLabel(native, source.label),
+    description: scope === "voice.speak" ? undefined : catalogText(`organization.builtIn.permissionCatalog.${key}.description`, source.description),
+  };
 }
 
 export function BotPermissions({ botId, orgId }: { botId: string; orgId?: string }) {

@@ -2097,6 +2097,6 @@
     "inputNotice": "Wprowadzone dane są wysyłane prywatnie do tego bota i jego twórcy.",
     "voiceKey": "Klucz szyfrowania głosu bota",
     "voiceKeyNotice": "Użyj publicznego klucza X25519 wygenerowanego przez bota. Klucz prywatny zachowaj w procesie bota.",
-    "voiceApprovalNotice": "Dostęp głosowy pozwala temu botowi i jego twórcy słyszeć pokój. Wymagane są publiczny klucz szyfrowania i ponowne zatwierdzenie."
+    "voiceApprovalNotice": "Dostęp do rozmowy pozwala temu botowi i jego twórcy odbierać dźwięk z pokoju, obraz z kamer, udostępniane ekrany i inne treści udostępniane podczas rozmowy. Wymagane są publiczny klucz szyfrowania i ponowne zatwierdzenie."
   }
 }

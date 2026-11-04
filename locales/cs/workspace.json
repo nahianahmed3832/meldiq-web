@@ -2097,6 +2097,6 @@
     "inputNotice": "Vaše údaje se odešlou soukromě tomuto botovi a jeho vývojáři.",
     "voiceKey": "Šifrovací klíč hlasu bota",
     "voiceKeyNotice": "Použijte veřejný klíč X25519 vygenerovaný botem. Soukromý klíč ponechte v procesu bota.",
-    "voiceApprovalNotice": "Hlasový přístup umožňuje tomuto botovi a jeho vývojáři slyšet místnost. Je nutný veřejný šifrovací klíč a nové schválení."
+    "voiceApprovalNotice": "Přístup k hovoru umožňuje tomuto botovi a jeho vývojáři přijímat zvuk místnosti, video z kamer, sdílení obrazovky a další obsah sdílený v hovoru. Je nutný veřejný šifrovací klíč a nové schválení."
   }
 }

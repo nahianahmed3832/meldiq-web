@@ -2097,6 +2097,6 @@
     "inputNotice": "Thông tin bạn nhập được gửi riêng cho bot này và nhà phát triển của bot.",
     "voiceKey": "Khóa mã hóa giọng nói của bot",
     "voiceKeyNotice": "Dùng khóa công khai X25519 do bot tạo. Giữ khóa riêng trong tiến trình bot.",
-    "voiceApprovalNotice": "Quyền truy cập giọng nói cho phép bot này và nhà phát triển nghe phòng. Cần có khóa mã hóa công khai và phê duyệt mới."
+    "voiceApprovalNotice": "Quyền truy cập cuộc gọi cho phép bot này và nhà phát triển nhận âm thanh trong phòng, video từ camera, nội dung chia sẻ màn hình và nội dung khác được chia sẻ trong cuộc gọi. Cần có khóa mã hóa công khai và phê duyệt mới."
   }
 }

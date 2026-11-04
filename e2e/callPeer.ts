@@ -50,21 +50,40 @@ export interface Received {
 export class NativeMedia {
   readonly received: Record<"audio" | "video", Received> = { audio: { frames: 0, audible: 0, audibleAt: [] }, video: { frames: 0, audible: 0, audibleAt: [] } };
   private timer: ReturnType<typeof setInterval> | undefined;
+  /** Positive matches for an explicitly generated continuous probe tone; never retains PCM. */
+  matchedToneFrames = 0;
+  publishedAudioFrames = 0;
 
-  private constructor(private readonly room: any) {}
+  private constructor(
+    private readonly room: any,
+    private readonly toneHz?: number,
+    private readonly publishToneHz = 440,
+  ) {}
   get isConnected(): boolean {
     return this.room.isConnected;
   }
 
-  static async join(media: { url: string; token: string }, key: string, video: boolean, options: { beforePublish?: () => Promise<void> } = {}): Promise<NativeMedia> {
+  static async join(
+    media: { url: string; token: string },
+    key: string,
+    video: boolean,
+    options: { beforePublish?: () => Promise<void>; receiveOnly?: boolean; toneHz?: number; publishToneHz?: number } = {},
+  ): Promise<NativeMedia> {
     const lk = await rtc();
     const room = new lk.Room();
-    const peer = new NativeMedia(room);
+    const peer = new NativeMedia(room, options.toneHz, options.publishToneHz);
     room.on(lk.RoomEvent.TrackSubscribed, (track: any) => peer.count(lk, track));
-    await room.connect(media.url, media.token, { autoSubscribe: true, dynacast: false, encryption: { keyProviderOptions: { sharedKey: new TextEncoder().encode(key) } } });
-    await options.beforePublish?.();
-    await peer.publish(lk, video);
-    return peer;
+    try {
+      await room.connect(media.url, media.token, { autoSubscribe: true, dynacast: false, encryption: { keyProviderOptions: { sharedKey: new TextEncoder().encode(key) } } });
+      if (!options.receiveOnly) {
+        await options.beforePublish?.();
+        await peer.publish(lk, video);
+      }
+      return peer;
+    } catch (error) {
+      await peer.leave();
+      throw error;
+    }
   }
 
   private count(lk: any, track: any): void {
@@ -85,6 +104,21 @@ export class NativeMedia {
             r.audible++;
             r.audibleAt.push(r.frames);
           }
+          if (this.toneHz) {
+            let cosine = 0,
+              sine = 0,
+              energy = 0;
+            for (let i = 0; i < frame.data.length; i++) {
+              const sample = frame.data[i],
+                angle = (2 * Math.PI * this.toneHz * i) / 48000;
+              cosine += sample * Math.cos(angle);
+              sine += sample * Math.sin(angle);
+              energy += sample * sample;
+            }
+            // A known sine accounts for nearly all energy; the detector qualifies only the requested probe signal.
+            const concentration = energy ? (2 * (cosine * cosine + sine * sine)) / (frame.data.length * energy) : 0;
+            if (energy / frame.data.length > 300 * 300 && concentration > 0.7) this.matchedToneFrames++;
+          }
         }
       })().catch(() => undefined);
     }
@@ -93,13 +127,19 @@ export class NativeMedia {
   private async publish(lk: any, video: boolean): Promise<void> {
     const audio = new lk.AudioSource(48000, 1);
     const cam = new lk.VideoSource(640, 360);
-    await this.room.localParticipant.publishTrack(lk.LocalAudioTrack.createAudioTrack("mic", audio), new lk.TrackPublishOptions({ source: lk.TrackSource.SOURCE_MICROPHONE }));
+    await this.room.localParticipant.publishTrack(
+      lk.LocalAudioTrack.createAudioTrack("mic", audio),
+      new lk.TrackPublishOptions({ source: lk.TrackSource.SOURCE_MICROPHONE, ...(this.publishToneHz !== 440 ? { dtx: false } : {}) }),
+    );
     if (video) await this.room.localParticipant.publishTrack(lk.LocalVideoTrack.createVideoTrack("cam", cam), new lk.TrackPublishOptions({ source: lk.TrackSource.SOURCE_CAMERA }));
     let t = 0;
     this.timer = setInterval(() => {
       const f = lk.AudioFrame.create(48000, 1, 4800);
-      for (let i = 0; i < f.data.length; i++) f.data[i] = Math.round(Math.sin(((t * 4800 + i) * 2 * Math.PI * 440) / 48000) * 6000);
-      void audio.captureFrame(f);
+      for (let i = 0; i < f.data.length; i++) f.data[i] = Math.round(Math.sin(((t * 4800 + i) * 2 * Math.PI * this.publishToneHz) / 48000) * 6000);
+      void audio
+        .captureFrame(f)
+        .then(() => this.publishedAudioFrames++)
+        .catch(() => undefined);
       if (video) {
         const px = new Uint8Array(640 * 360 * 4);
         for (let i = 0; i < px.length; i += 4) {
