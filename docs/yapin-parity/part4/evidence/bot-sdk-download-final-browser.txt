@@ -1,0 +1,27 @@
+[WebServer] (node:97565) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:97581) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:97583) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:97583) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+[WebServer] (node:97583) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+[WebServer] (node:97613) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 4 tests using 1 worker
+
+(node:97614) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 [chromium] › e2e/part4-bot-sdk.spec.ts:12:1 › the developer screen downloads the exact pinned first-party SDK and guide (6.3s)
+(node:97661) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  2 [firefox] › e2e/part4-bot-sdk.spec.ts:12:1 › the developer screen downloads the exact pinned first-party SDK and guide (6.1s)
+(node:97684) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  3 [webkit] › e2e/part4-bot-sdk.spec.ts:12:1 › the developer screen downloads the exact pinned first-party SDK and guide (6.5s)
+(node:97724) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  4 [phone-width] › e2e/part4-bot-sdk.spec.ts:12:1 › the developer screen downloads the exact pinned first-party SDK and guide (5.6s)
+
+  4 passed (35.1s)

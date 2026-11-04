@@ -1,5 +1,5 @@
 import { confirmAction } from "../components/ConfirmationDialog";
-import { SERVER_REFERENCE } from "../../i18n/syntax";
+import { BOT_CLIENT_LANGUAGES, SERVER_REFERENCE } from "../../i18n/syntax";
 import { countLabel } from "../../i18n/counts";
 import { useLocaleRender } from "../../i18n/Localized";
 import { text as uiText } from "../../i18n";
@@ -222,6 +222,7 @@ function BotRow({ bot, onChanged, onSecret }: { bot: DeveloperBot; onChanged: ()
 }
 function HowBotsWork({ apiOrigin }: { apiOrigin: string }) {
   useLocaleRender();
+  const clients = useOrbit((state) => state.server?.features.includes("bot-permissions") ?? false);
   return (
     <details className="dev-how">
       <summary>
@@ -244,6 +245,16 @@ function HowBotsWork({ apiOrigin }: { apiOrigin: string }) {
           <Localized k="workspace.interface.add_the_bot_to_a_community_in_community_settings_bots_with_its_id_9edfc37" />
         </li>
       </ol>
+      {clients && (
+        <div className="ws-form-actions">
+          <a className="btn btn-secondary btn-sm" href="/developers/meldiq-bot-sdk-preview.zip" download>
+            {uiText("common.actions.download")} · {BOT_CLIENT_LANGUAGES}
+          </a>
+          <a className="btn btn-ghost btn-sm" href="/developers/bot-sdk/README.txt" target="_blank" rel="noreferrer">
+            {uiText("workspace.interface.how_bots_work_1e041ef")}
+          </a>
+        </div>
+      )}
       <small className="faint">
         <Localized
           k="workspace.interface.the_full_reference_is_the_log_in_with_meldiq_section_of_docs_sett_dd2bca4"

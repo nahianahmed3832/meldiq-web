@@ -1,0 +1,58 @@
+{
+  "format": 1,
+  "apiCommit": "beddb059af8a7dae5412496105433e85bd1493dd",
+  "status": "preview source clients",
+  "archiveSha256": "964a12b5f6f83773f0892340efa4581bd2e7ed816a414c92db777e976ba8149a",
+  "files": [
+    {
+      "path": "README.md",
+      "sha256": "3c86143165eca4f08757fa2d19f9094ed20bd3b3cc87766327a7e59abe395942",
+      "bytes": 6727
+    },
+    {
+      "path": "docs/api/bot-gateway.schema.json",
+      "sha256": "9ac3db9320c33f1abe3c4b720a8a140af3733815fff1bf3248814eda059a0003",
+      "bytes": 10805
+    },
+    {
+      "path": "docs/api/openapi.json",
+      "sha256": "5a239a4fb438a3f73fe69feb715032ecc3e9f800ecf0f10a223e9cf5bd7539e9",
+      "bytes": 3990749
+    },
+    {
+      "path": "examples/commands.mjs",
+      "sha256": "963db3449428c125efaf5dc250264c9bbfb9ad2e69a725868b5f7914423914a7",
+      "bytes": 1057
+    },
+    {
+      "path": "examples/commands.py",
+      "sha256": "20710966f3e49a0b157f78b6c1a836b357d80b0efcda1beefd733eb0bcbb527a",
+      "bytes": 706
+    },
+    {
+      "path": "javascript/gateway.mjs",
+      "sha256": "49ba8fd98e258d8ba8bb7f4a90ba6287701563b561b533278bc4bd60dafb1591",
+      "bytes": 9966
+    },
+    {
+      "path": "javascript/index.mjs",
+      "sha256": "8a7490302ae2e6e08f12eb8195dff64eaa47368445e03f21632f3ef49ac6f58a",
+      "bytes": 4715
+    },
+    {
+      "path": "javascript/package.json",
+      "sha256": "2ddf907f9ea6134b02b317556b4800b0731945346f3fe9a9ac2f9018e93f907d",
+      "bytes": 174
+    },
+    {
+      "path": "javascript/transport.mjs",
+      "sha256": "70d856077186e049e99245b2249ffb7170f56205d1fe883e412c9d18a000a2e7",
+      "bytes": 2533
+    },
+    {
+      "path": "python/meldiq_bot.py",
+      "sha256": "22f50be279e2cba62751917a942e5c144b209c17dbc19f9729a015723193793b",
+      "bytes": 5775
+    }
+  ]
+}

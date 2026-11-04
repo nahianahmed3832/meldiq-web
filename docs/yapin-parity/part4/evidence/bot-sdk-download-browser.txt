@@ -1,0 +1,31 @@
+[WebServer] (node:96247) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:96263) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:96264) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:96264) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+[WebServer] (node:96264) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+[WebServer] (node:96290) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 8 tests using 1 worker
+
+(node:96291) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 [chromium] › e2e/part4-bot-direct-messages.spec.ts:11:1 › personal bot approval, messaging, revocation and fresh consent use the real API (7.2s)
+  ✓  2 [chromium] › e2e/part4-bot-sdk.spec.ts:12:1 › the developer screen downloads the exact pinned first-party SDK and guide (4.8s)
+(node:96353) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  3 [firefox] › e2e/part4-bot-direct-messages.spec.ts:11:1 › personal bot approval, messaging, revocation and fresh consent use the real API (7.2s)
+  ✓  4 [firefox] › e2e/part4-bot-sdk.spec.ts:12:1 › the developer screen downloads the exact pinned first-party SDK and guide (4.6s)
+(node:96399) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  5 [webkit] › e2e/part4-bot-direct-messages.spec.ts:11:1 › personal bot approval, messaging, revocation and fresh consent use the real API (8.2s)
+  ✓  6 [webkit] › e2e/part4-bot-sdk.spec.ts:12:1 › the developer screen downloads the exact pinned first-party SDK and guide (5.4s)
+(node:96529) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  7 [phone-width] › e2e/part4-bot-direct-messages.spec.ts:11:1 › personal bot approval, messaging, revocation and fresh consent use the real API (6.7s)
+  ✓  8 [phone-width] › e2e/part4-bot-sdk.spec.ts:12:1 › the developer screen downloads the exact pinned first-party SDK and guide (4.4s)
+
+  8 passed (1.0m)

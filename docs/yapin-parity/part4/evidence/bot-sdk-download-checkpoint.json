@@ -1,0 +1,30 @@
+{
+  "apiCommit": "beddb059af8a7dae5412496105433e85bd1493dd",
+  "parentWebCommit": "68f0347",
+  "package": {
+    "files": 10,
+    "bytes": 224489,
+    "sha256": "964a12b5f6f83773f0892340efa4581bd2e7ed816a414c92db777e976ba8149a",
+    "pinnedSourceCheckExitCode": 0
+  },
+  "validation": {
+    "buildExitCode": 0,
+    "lintExitCode": 0,
+    "browserPassed": 8,
+    "projects": [
+      "chromium",
+      "firefox",
+      "webkit",
+      "phone-width"
+    ],
+    "testDeviceLinking": true,
+    "finalDownloadBrowserPassed": 4,
+    "localeCheck": {
+      "languages": 28,
+      "keysPerLanguage": 6299,
+      "structuralErrors": 0,
+      "hardcodedCandidates": 0
+    }
+  },
+  "production": "unchanged; this is a source/test artifact checkpoint"
+}

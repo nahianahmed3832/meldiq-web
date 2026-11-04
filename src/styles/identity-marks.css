@@ -109,6 +109,9 @@
   padding-block: 8px;
 }
 .bot-identity > .lines {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
   min-width: 0;
   flex: 1;
 }
