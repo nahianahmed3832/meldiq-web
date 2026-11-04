@@ -2068,6 +2068,23 @@
     "selectLoaded": "Yüklenen üyeleri seç",
     "bulkRoles": "Seçilen rolleri yönet",
     "allRoles": "Tüm erişim düzeyleri",
-    "loadedCount": "{loaded} yüklendi · {total} eşleşme"
+    "loadedCount": "{loaded} yüklendi · {total} eşleşme",
+    "quiz": "Test",
+    "correctOption": "Doğru yanıt: Seçenek {n}",
+    "quizReveal": "Doğru yanıtlar oylama kapandıktan sonra gösterilir.",
+    "correctAnswer": "Doğru yanıt",
+    "threadClose": "Konuyu kapat",
+    "threadReopen": "Konuyu yeniden aç",
+    "threadLock": "Konuyu kilitle",
+    "threadUnlock": "Konunun kilidini aç",
+    "threadDelete": "Konuyu sil",
+    "threadClosed": "Bu konu kapalı.",
+    "threadLocked": "Bu konu kilitli.",
+    "threadDeleting": "Konu siliniyor…",
+    "threadDeleted": "Bu konu silindi.",
+    "threadInterrupted": "Silme durdu. Erişimi kontrol edip yeniden deneyin.",
+    "threadDeleteReplies": "Tüm yanıtlar silinsin mi? Ana mesaj kalacak.",
+    "threadDeletePost": "Bu forum gönderisi ve tüm yanıtlar silinsin mi?",
+    "threadResume": "Silmeye devam et"
   }
 }

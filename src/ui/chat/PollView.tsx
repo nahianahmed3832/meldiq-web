@@ -12,9 +12,20 @@ import type { StoredMessage } from "../../model/types";
 import { pollClosed, pollPercentage, tally, voters } from "../../sync/polls";
 import { Dialog } from "../components/Overlay";
 import { Toggle } from "../components/Toggle";
+import type { ManagedPollState } from "../../sync/managedPolls";
 import { PollResultsDialog } from "./PollResultsDialog";
 /** A live poll with explicit counts, percent of voters and per-ballot name visibility. */
-export function PollView({ m, myUserId, canPost }: { m: StoredMessage; myUserId: string; canPost: boolean }) {
+export function PollView({
+  m,
+  myUserId,
+  canPost,
+  managed,
+}: {
+  m: StoredMessage;
+  myUserId: string;
+  canPost: boolean;
+  managed?: { state: ManagedPollState; vote: (choices: string[], anonymous: boolean) => Promise<void>; close: () => Promise<void> };
+}) {
   useLocaleRender();
   const l10n = useLocalization();
   const engine = useEngine();
@@ -26,7 +37,7 @@ export function PollView({ m, myUserId, canPost }: { m: StoredMessage; myUserId:
   const [anonymous, setAnonymous] = useState(m.rich?.votePrivacy?.[myUserId] === true);
   const rich = m.rich;
   const poll = rich?.poll;
-  const myVisibility = rich?.votes?.[myUserId]?.length ? rich.votePrivacy?.[myUserId] === true : null;
+  const myVisibility = managed ? (managed.state.mine?.anonymous ?? null) : rich?.votes?.[myUserId]?.length ? rich.votePrivacy?.[myUserId] === true : null;
   useEffect(() => {
     if (myVisibility !== null) setAnonymous(myVisibility);
   }, [m.id, myVisibility]);
@@ -36,17 +47,18 @@ export function PollView({ m, myUserId, canPost }: { m: StoredMessage; myUserId:
     return () => clearTimeout(timer);
   }, [poll?.endsAt, rich?.pollClosed, now]);
   if (!rich || !poll) return null;
-  const counts = tally(rich);
-  const total = voters(rich);
-  const mine = new Set(rich.votes?.[myUserId] ?? []);
-  const closed = pollClosed(rich, now);
+  const counts = managed ? poll.options.map((o) => ({ ...o, votes: managed.state.counts.find((c) => c.id === o.id)?.votes ?? 0 })) : tally(rich);
+  const total = managed?.state.total ?? voters(rich);
+  const mine = new Set(managed ? (managed.state.mine?.choices ?? []) : (rich.votes?.[myUserId] ?? []));
+  const closed = managed ? managed.state.closed : pollClosed(rich, now);
   const top = Math.max(0, ...counts.map((o) => o.votes));
   const submit = async (choices: string[], hidden = anonymous) => {
     if (closed || !canPost || busy) return;
     setBusy(true);
     setError(null);
     try {
-      await engine.vote(m, choices, hidden);
+      if (managed) await managed.vote(choices, hidden);
+      else await engine.vote(m, choices, hidden);
     } catch (e) {
       setError(e instanceof Error ? e.message : uiText("messaging.interface.couldn_t_save_your_vote_try_again_dd978a6"));
     } finally {
@@ -58,7 +70,8 @@ export function PollView({ m, myUserId, canPost }: { m: StoredMessage; myUserId:
     setBusy(true);
     setError(null);
     try {
-      await engine.closePoll(m);
+      if (managed) await managed.close();
+      else await engine.closePoll(m);
       setClosing(false);
     } catch (e) {
       setError(e instanceof Error ? e.message : uiText("messaging.interface.couldn_t_close_this_poll_try_again_76173e3"));
@@ -97,6 +110,7 @@ export function PollView({ m, myUserId, canPost }: { m: StoredMessage; myUserId:
             ? uiText("messaging.interface.choose_one_or_more_answers_you_can_change_your_vote_3951f15")
             : uiText("messaging.interface.choose_one_answer_you_can_change_your_vote_9376744")}
       </p>
+      {managed?.state.poll.quiz && !closed && <p className="hint">{uiText("workspace.part3.quizReveal")}</p>}
       <div className="poll-options" role={poll.multi ? "group" : "radiogroup"} aria-label={uiText("messaging.interface.poll_answers_bde2d20")}>
         {counts.map((o) => {
           const share = pollPercentage(o.votes, total);
@@ -109,7 +123,12 @@ export function PollView({ m, myUserId, canPost }: { m: StoredMessage; myUserId:
               aria-checked={selected}
               disabled={closed || !canPost || busy}
               onClick={() => choose(o.id)}
-              aria-label={uiText("messaging.interface.native_count_1ce5b31dc", { value0: o.text, value1: countLabel(o.votes, "votes"), value2: "", value3: share })}
+              aria-label={uiText("messaging.interface.native_count_1ce5b31dc", {
+                value0: o.text + (closed && managed?.state.correctOptionIds?.includes(o.id) ? `, ${uiText("workspace.part3.correctAnswer")}` : ""),
+                value1: countLabel(o.votes, "votes"),
+                value2: "",
+                value3: share,
+              })}
             >
               <span className="poll-fill" style={{ width: `${share}%` }} aria-hidden="true" />
               <span className={`poll-mark${poll.multi ? " multi" : ""}`} aria-hidden="true">
@@ -118,6 +137,12 @@ export function PollView({ m, myUserId, canPost }: { m: StoredMessage; myUserId:
               <span className="poll-answer">
                 {o.emoji ? uiText("messaging.interface.value0_f77463c", { value0: o.emoji }) : ""}
                 {o.text}
+                {closed && managed?.state.correctOptionIds?.includes(o.id) && (
+                  <span className="tag">
+                    <Check size={12} aria-hidden="true" />
+                    {uiText("workspace.part3.correctAnswer")}
+                  </span>
+                )}
               </span>
               <span className="poll-option-stats">
                 <span className="poll-count">{formatUiNumber(o.votes)}</span>
@@ -184,7 +209,7 @@ export function PollView({ m, myUserId, canPost }: { m: StoredMessage; myUserId:
               <Localized k="messaging.interface.remove_my_vote_0503498" />
             </button>
           )}
-          {m.outgoing && !closed && canPost && (
+          {(managed ? managed.state.canClose : m.outgoing) && !closed && canPost && (
             <button className="btn btn-ghost btn-sm" disabled={busy} onClick={() => setClosing(true)}>
               <Localized k="messaging.interface.close_poll_f6740d6" />
             </button>

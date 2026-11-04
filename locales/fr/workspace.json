@@ -2068,6 +2068,23 @@
     "selectLoaded": "Sélectionner les membres chargés",
     "bulkRoles": "Gérer les rôles sélectionnés",
     "allRoles": "Tous les niveaux d’accès",
-    "loadedCount": "{loaded} chargés · {total} résultats"
+    "loadedCount": "{loaded} chargés · {total} résultats",
+    "quiz": "Questionnaire",
+    "correctOption": "Bonne réponse : option {n}",
+    "quizReveal": "Les bonnes réponses sont révélées après la clôture du vote.",
+    "correctAnswer": "Bonne réponse",
+    "threadClose": "Fermer le fil",
+    "threadReopen": "Rouvrir le fil",
+    "threadLock": "Verrouiller le fil",
+    "threadUnlock": "Déverrouiller le fil",
+    "threadDelete": "Supprimer le fil",
+    "threadClosed": "Ce fil est fermé.",
+    "threadLocked": "Ce fil est verrouillé.",
+    "threadDeleting": "Suppression du fil…",
+    "threadDeleted": "Ce fil a été supprimé.",
+    "threadInterrupted": "Suppression interrompue. Vérifiez les accès et réessayez.",
+    "threadDeleteReplies": "Supprimer toutes les réponses ? Le message initial sera conservé.",
+    "threadDeletePost": "Supprimer cette publication et toutes ses réponses ?",
+    "threadResume": "Reprendre la suppression"
   }
 }

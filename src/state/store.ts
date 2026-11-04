@@ -151,6 +151,7 @@ export interface AppState {
   /** Reminders kept by the server (Later › Reminders). */
   reminders: RemindersState;
   /** Bumped on each meeting.updated / meeting.soon frame (round 7 meetings): open lists reload. */
+  pollsRev: number;
   meetingsRev: number;
   /** Communities opened in this session: their categories and every channel the person may see (joined or not). */
   communities: Record<string, CommunityData>;
@@ -188,6 +189,7 @@ export const initialState: AppState = {
   serverThreadCounts: {},
   callLog: [],
   reminders: NO_REMINDERS,
+  pollsRev: 0,
   meetingsRev: 0,
   communities: {},
   moderationRev: 0,

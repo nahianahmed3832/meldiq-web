@@ -29,8 +29,11 @@ export function SuggestedPeople({ engine, rev, busy, online, match, run, onMessa
   const list = useLoad(() => suggestedPeople(engine), [engine, rev]);
   if (list.error && !list.data)
     return (
-      <div className="banner danger">
+      <div className="banner danger" role="alert">
         <Localized k="workspace.interface.suggestions_couldn_t_be_loaded_fada06f" slots={[list.error]} />
+        <button className="btn btn-secondary btn-sm" onClick={list.reload}>
+          {l10n("common.actions.retry")}
+        </button>
       </div>
     );
   if (!list.data) return <p className="faint">{l10n("common.status.loading")}</p>;

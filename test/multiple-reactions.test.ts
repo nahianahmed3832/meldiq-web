@@ -20,6 +20,7 @@ it("preserves concurrent emoji reactions and removes only the selected emoji", a
       show: () => undefined,
       bump: async () => undefined,
       refreshPreview: async () => undefined,
+      confirmControl: async () => 0,
       queue: async (item) => {
         controls.push(JSON.parse(item.payloadJson));
       },

@@ -55,6 +55,9 @@ export type ServerFrame =
   | { t: "conv.updated"; conversationId: string }
   | { t: "org.updated" }
   | { t: "org.applications" | "org.application" | "org.reports" }
+  | { t: "thread.updated"; conversationId: string; rootId: string; rev: number }
+  | { t: "thread.preference"; conversationId: string; rootId: string; following: boolean }
+  | { t: "poll.updated"; conversationId: string; messageId: string; rev: number }
   | { t: "meeting.updated" }
   | { t: "meeting.soon"; meetingId: string | null }
   | { t: "reminders.changed" | "reminder.due" }
@@ -82,6 +85,9 @@ export const HANDLED_FRAMES: ReadonlySet<string> = new Set<ServerFrame["t"]>([
   "org.applications",
   "org.application",
   "org.reports",
+  "poll.updated",
+  "thread.updated",
+  "thread.preference",
   "meeting.updated",
   "meeting.soon",
   "reminders.changed",
@@ -132,6 +138,21 @@ export function parseFrame(f: Frame): ServerFrame | null {
     case "conv.updated": {
       const conversationId = str(f.conversationId);
       return conversationId ? { t, conversationId } : null;
+    }
+    case "thread.updated": {
+      const conversationId = str(f.conversationId),
+        rootId = str(f.rootId);
+      return conversationId && rootId && typeof f.rev === "number" && Number.isSafeInteger(f.rev) && f.rev > 0 ? { t, conversationId, rootId, rev: f.rev } : null;
+    }
+    case "thread.preference": {
+      const conversationId = str(f.conversationId),
+        rootId = str(f.rootId);
+      return conversationId && rootId && typeof f.following === "boolean" ? { t, conversationId, rootId, following: f.following } : null;
+    }
+    case "poll.updated": {
+      const conversationId = str(f.conversationId),
+        messageId = str(f.messageId);
+      return conversationId && messageId && typeof f.rev === "number" && Number.isSafeInteger(f.rev) && f.rev > 0 ? { t, conversationId, messageId, rev: f.rev } : null;
     }
     case "meeting.soon":
       return { t, meetingId: typeof f.meetingId === "string" ? f.meetingId : null };

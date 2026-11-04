@@ -83,3 +83,10 @@ describe("followed threads (batch B8)", () => {
     expect(threadActivity([reply], new Map([["r", root]]), {}, new Set(["r"])).map((t) => [t.rootId, t.unseen])).toEqual([["r", 1]]);
   });
 });
+
+it("explicit unfollow overrides participation and deleted roots leave Activity", () => {
+  const root = msg("root", { outgoing: true }),
+    reply = msg("reply", { threadRootId: "root", sortTs: 3 });
+  expect(threadActivity([reply], new Map([["root", root]]), {}, new Set(["root"]), new Set(["root"]))).toEqual([]);
+  expect(threadActivity([reply], new Map([["root", { ...root, deleted: true }]]), {}, new Set(["root"]))).toEqual([]);
+});

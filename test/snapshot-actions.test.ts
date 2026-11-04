@@ -138,8 +138,9 @@ describe("actions on messages drawn from the snapshot", () => {
     const { engine, store, page } = await openOnSnapshot([msg("m1", "deleted since")], [msg("m2", "something else")]);
     const deleted = vi.spyOn((engine as unknown as { compose: { deleteForEveryone(m: StoredMessage): Promise<void> } }).compose, "deleteForEveryone").mockResolvedValue();
     const done = engine.deleteForEveryone(engine.state.get().messages[CONV]!.items[0]!);
+    const refused = expect(done).rejects.toThrow(MESSAGE_CHANGED());
     page().resolve();
-    await done;
+    await refused;
     expect(deleted).not.toHaveBeenCalled();
     expect(engine.state.get().notices.map((n) => n.text)).toEqual([MESSAGE_CHANGED()]);
     await LocalStore.erase(store);
@@ -155,7 +156,7 @@ describe("actions on messages drawn from the snapshot", () => {
 
     const slow = await openOnSnapshot([msg("m1", "old")], [msg("m1", "new")], { liveWaitMs: 200 });
     const edited = vi.spyOn((slow.engine as unknown as { compose: { edit(m: StoredMessage, t: string): Promise<void> } }).compose, "edit").mockResolvedValue();
-    await slow.engine.edit(slow.engine.state.get().messages[CONV]!.items[0]!, "changed"); // the page never comes
+    await expect(slow.engine.edit(slow.engine.state.get().messages[CONV]!.items[0]!, "changed")).rejects.toThrow(UNREACHABLE()); // the page never comes
     expect(edited).not.toHaveBeenCalled();
     expect(slow.engine.state.get().notices.map((n) => n.text)).toEqual([UNREACHABLE()]);
     expect(slow.engine.state.get().waiting.m1).toBeUndefined();

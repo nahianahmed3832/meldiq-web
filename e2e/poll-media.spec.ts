@@ -93,8 +93,8 @@ test("poll percentages, named and hidden ballots survive reload, change, remove 
   const poll = page.getByRole("group", { name: "Poll: What should we do on Friday?", exact: true });
   await expect(poll).toContainText("Ends in 1h");
   const target = (await poll.locator("xpath=ancestor::*[starts-with(@id,'msg-')][1]").getAttribute("id"))!.slice(4);
-  await named.send(channel.id, { type: "vote", target, choices: ["o1"], anonymous: false }, "control");
-  await hidden.send(channel.id, { type: "vote", target, choices: ["o1", "o2"], anonymous: true }, "control");
+  await named.req("PUT", `/v1/polls/${target}/vote`, { choices: ["o1"], anonymous: false });
+  await hidden.req("PUT", `/v1/polls/${target}/vote`, { choices: ["o1", "o2"], anonymous: true });
   await expect(poll).toContainText("2 people voted");
   await expect(poll.getByRole("checkbox", { name: "Game night, 2 votes, 100% of voters", exact: true })).toBeVisible();
   await expect(poll.getByRole("checkbox", { name: "Movie night, 1 vote, 50% of voters", exact: true })).toBeVisible();

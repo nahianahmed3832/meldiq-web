@@ -23,6 +23,7 @@ export function threadActivity(
   roots: ReadonlyMap<string, StoredMessage | null>,
   seen: Readonly<Record<string, number>>,
   followed: ReadonlySet<string> = new Set(),
+  unfollowed: ReadonlySet<string> = new Set(),
 ): ThreadActivity[] {
   const byRoot = new Map<string, StoredMessage[]>();
   for (const m of replies) {
@@ -34,6 +35,7 @@ export function threadActivity(
   const out: ThreadActivity[] = [];
   for (const [rootId, list] of byRoot) {
     const root = roots.get(rootId) ?? null;
+    if (unfollowed.has(rootId) || root?.deleted) continue;
     const mine = list.filter((m) => m.outgoing);
     if (!root?.outgoing && mine.length === 0 && !followed.has(rootId)) continue;
     const seenAt = Math.max(seen[rootId] ?? 0, ...mine.map((m) => m.sortTs));
@@ -57,18 +59,19 @@ export async function loadThreadActivity(store: LocalStore): Promise<ThreadActiv
   const rootIds = [...new Set(replies.map((m) => m.threadRootId).filter((id): id is string => !!id))];
   const roots = new Map(await Promise.all(rootIds.map(async (id) => [id, await store.message(id)] as const)));
   const seen = (await store.getValue<Record<string, number>>(THREAD_SEEN_KEY)) ?? {};
-  return threadActivity(replies, roots, seen, await followedThreads(store));
+  return threadActivity(replies, roots, seen, await followedThreads(store), await unfollowedThreads(store));
 }
 const FOLLOWED_KEY = "threads.followed";
-/** At most this many followed threads are kept; the oldest go first. */
-const MAX_FOLLOWED = 500;
+const UNFOLLOWED_KEY = "threads.unfollowed";
 /** Threads and forum posts followed on this browser (batch B8, android FollowedThreads: kept on the device). */
 export async function followedThreads(store: LocalStore): Promise<Set<string>> {
   return new Set((await store.getValue<string[]>(FOLLOWED_KEY)) ?? []);
 }
 export async function setFollowed(store: LocalStore, rootId: string, on: boolean): Promise<void> {
   const list = ((await store.getValue<string[]>(FOLLOWED_KEY)) ?? []).filter((id) => id !== rootId);
-  await store.setValue(FOLLOWED_KEY, on ? [...list, rootId].slice(-MAX_FOLLOWED) : list);
+  await store.setValue(FOLLOWED_KEY, on ? [...list, rootId] : list);
+  const muted = [...(await unfollowedThreads(store))].filter((id) => id !== rootId);
+  await store.setValue(UNFOLLOWED_KEY, on ? muted : [...muted, rootId]);
 }
 /** The thread was opened here: its replies so far are seen. True when that changed anything. */
 export async function markThreadSeen(store: LocalStore, rootId: string): Promise<boolean> {
@@ -134,4 +137,18 @@ export function threadRows(messages: readonly StoredMessage[]): ThreadRow[] {
 export function filterThreads(rows: readonly ThreadRow[], query: string): ThreadRow[] {
   const q = query.trim().toLowerCase();
   return q ? rows.filter((r) => r.title.toLowerCase().includes(q)) : [...rows];
+}
+
+export async function unfollowedThreads(store: LocalStore): Promise<Set<string>> {
+  return new Set((await store.getValue<string[]>(UNFOLLOWED_KEY)) ?? []);
+}
+export async function replaceThreadPreferences(store: LocalStore, values: { rootId: string; following: boolean }[]): Promise<void> {
+  await store.setValue(
+    FOLLOWED_KEY,
+    values.filter((v) => v.following).map((v) => v.rootId),
+  );
+  await store.setValue(
+    UNFOLLOWED_KEY,
+    values.filter((v) => !v.following).map((v) => v.rootId),
+  );
 }

@@ -1,3 +1,4 @@
+import { zThreadPreferences, zThreadFollowResult } from "./threadLifecycle";
 import { text as uiText } from "../i18n";
 import { z } from "zod";
 import { zMessageCollection, type CollectionCursor, type CollectionKind } from "../api/messageCollections";
@@ -60,7 +61,7 @@ import { Receiver } from "./receiver";
 import { CallLog } from "./callLog";
 import { Compose } from "./compose";
 import { ConversationLocals } from "./locals";
-import { followedThreads, loadThreadActivity, markThreadSeen, setFollowed, type ThreadActivity } from "./threads";
+import { followedThreads, unfollowedThreads, replaceThreadPreferences, loadThreadActivity, markThreadSeen, setFollowed, type ThreadActivity } from "./threads";
 import { preview, sendsReadReceipts } from "./rules";
 import { type RevokedReason, SessionManager } from "./session";
 import { matchesSearch, parseSearchQuery } from "./searchQuery";
@@ -247,6 +248,7 @@ export class Engine implements EngineContext {
       bump: (m, counts) => this.bump(m, counts),
       refreshPreview: (id) => this.refreshPreview(id),
       queue: (o) => this.queue(o),
+      confirmControl: (conversationId, payload, messageId) => sealAndPost(this, { conversationId, payloadJson: encodePayload(payload), messageId, cls: "control", sentAt: Date.now() }),
     });
     this.callLog = new CallLog({
       api: this.api,
@@ -367,6 +369,7 @@ export class Engine implements EngineContext {
       deviceName: this.device.deviceName,
     };
     await this.loadLocal();
+    this.unfollowed = await unfollowedThreads(this.store);
     await this.drawSnapshot();
     // Pending work is recovered independently of the bounded app snapshot, before any network wait.
     for (const id of await this.store.messageIds()) {
@@ -458,6 +461,13 @@ export class Engine implements EngineContext {
       this.notice("error", e instanceof Error ? e.message : UNREACHABLE());
       return null;
     }
+  }
+  /** Draft-owning controls need both the existing notice and a rejection so their editor remains open. */
+  private checkedLive(m: StoredMessage): Promise<StoredMessage> {
+    return this.live(m).catch((e) => {
+      this.notice("error", e instanceof Error ? e.message : UNREACHABLE());
+      throw e;
+    });
   }
   /** Runs [action] on the message as the server has it (whenLive). */
   private async onLive(m: StoredMessage, action: (live: StoredMessage) => Promise<void>): Promise<void> {
@@ -746,6 +756,7 @@ export class Engine implements EngineContext {
       void this.nav.refresh([PERSONAL, ...orgs.orgs.map((o) => o.id)]);
       void this.reminders.refresh();
       void this.syncSummaries();
+      if (server.features.includes("thread-lifecycle")) void this.refreshThreadPreferences().catch(() => undefined);
       // API 0.65.0: today's visit counts for points once a session opens (after the first load that gets through, so a
       // session that signs in again first still counts); a failure never stands in the way of anything.
       if (!this.checkedIn && server.features.includes("points")) {
@@ -858,6 +869,16 @@ export class Engine implements EngineContext {
         this.set((s) => ({ ...s, moderationRev: s.moderationRev + 1 }));
         if (f.t === "org.application") void this.refreshAll();
         return;
+      case "thread.updated":
+        this.set((s) => ({ ...s, threadRev: s.threadRev + 1 }));
+        return;
+      case "thread.preference":
+        this.threadPreferenceEpoch++;
+        await this.rememberThreadPreference(f.rootId, f.following);
+        return;
+      case "poll.updated":
+        this.set((s) => ({ ...s, pollsRev: s.pollsRev + 1 }));
+        break;
       case "meeting.updated":
       case "meeting.soon":
         this.set((s) => ({ ...s, meetingsRev: s.meetingsRev + 1 }));
@@ -983,12 +1004,43 @@ export class Engine implements EngineContext {
   }
   /** Threads this account takes part in, with replies not yet seen here (Activity › Thread replies). */
   threadActivity(): Promise<ThreadActivity[]> {
-    return loadThreadActivity(this.store);
+    return loadThreadActivity(this.store).then((rows) => rows.filter((row) => !!this.state.get().conversations[row.conversationId]));
   }
-  /** Follows a thread or forum post (batch B8): its replies come into Activity › Threads. Kept on this browser. */
-  async setFollowed(rootId: string, on: boolean): Promise<void> {
-    await setFollowed(this.store, rootId, on);
+  private unfollowed = new Set<string>();
+  private threadPreferenceEpoch = 0;
+  private async refreshThreadPreferences(): Promise<void> {
+    const epoch = ++this.threadPreferenceEpoch;
+    const all: { rootId: string; following: boolean }[] = [];
+    let after: string | null = null;
+    do {
+      const page: { nextAfter: string | null; preferences: { rootId: string; conversationId: string; following: boolean }[] } = await this.api.json(
+        "GET",
+        `/v1/me/thread-preferences${after ? `?after=${encodeURIComponent(after)}` : ""}`,
+        zThreadPreferences,
+      );
+      all.push(...page.preferences);
+      after = page.nextAfter;
+    } while (after && !this.stopped);
+    if (this.stopped || epoch !== this.threadPreferenceEpoch) return;
+    await replaceThreadPreferences(this.store, all);
+    this.unfollowed = new Set(all.filter((v) => !v.following).map((v) => v.rootId));
     this.set((s) => ({ ...s, threadRev: s.threadRev + 1 }));
+  }
+  private async rememberThreadPreference(rootId: string, on: boolean): Promise<void> {
+    await setFollowed(this.store, rootId, on);
+    if (on) this.unfollowed.delete(rootId);
+    else this.unfollowed.add(rootId);
+    this.set((s) => ({ ...s, threadRev: s.threadRev + 1 }));
+  }
+  /** Community follow preferences are account-synced. Older servers and direct chats retain their local behavior. */
+  async setFollowed(rootId: string, on: boolean): Promise<void> {
+    const root = await this.store.message(rootId),
+      conv = root ? this.state.get().conversations[root.conversationId] : null;
+    if (conv?.type === "CHANNEL" && conv.orgId && this.state.get().server?.features.includes("thread-lifecycle")) {
+      await this.api.json("PUT", `/v1/threads/${encodeURIComponent(rootId)}/follow`, zThreadFollowResult, { body: { following: on } });
+      this.threadPreferenceEpoch++;
+    }
+    await this.rememberThreadPreference(rootId, on);
   }
   isFollowed(rootId: string): Promise<boolean> {
     return followedThreads(this.store).then((s) => s.has(rootId));
@@ -1045,6 +1097,7 @@ export class Engine implements EngineContext {
     if (!this.opts.notify || (this.focused && this.viewingId === m.conversationId)) return;
     // Batch B6: a message request arrives without a notification (it waits under DMs › Message requests).
     if (conversation?.request?.incoming) return;
+    if (m.threadRootId && this.unfollowed.has(m.threadRootId) && mention !== "me") return;
     const st = this.state.get();
     // Paused from the profile menu (round 3): the message arrives and counts as unread, without a notification.
     if (paused(st.me?.notificationsPausedUntil ?? null, Date.now())) return;
@@ -1391,12 +1444,12 @@ export class Engine implements EngineContext {
   react(m: StoredMessage, emoji: string): Promise<void> {
     return this.onLive(m, (x) => this.compose.react(x, emoji));
   }
-  edit(m: StoredMessage, text: string): Promise<void> {
-    return this.onLive(m, (x) => this.compose.edit(x, text));
+  async edit(m: StoredMessage, text: string, messageId?: string): Promise<void> {
+    return this.compose.edit(await this.checkedLive(m), text, messageId);
   }
   /** [asModerator]: someone else's message, by a moderator of a community channel (community parity A1). */
-  deleteForEveryone(m: StoredMessage, asModerator = false): Promise<void> {
-    return this.onLive(m, (x) => this.compose.deleteForEveryone(x, asModerator));
+  async deleteForEveryone(m: StoredMessage, asModerator = false, messageId?: string): Promise<void> {
+    return this.compose.deleteForEveryone(await this.checkedLive(m), asModerator, messageId);
   }
   vote(m: StoredMessage, choices: string[], anonymous?: boolean): Promise<void> {
     return this.onLive(m, (x) => this.compose.vote(x, choices, anonymous));
@@ -1405,7 +1458,7 @@ export class Engine implements EngineContext {
     return this.onLive(m, (x) => this.compose.closePoll(x));
   }
   setPinned(m: StoredMessage, pinned: boolean, asModerator = false): Promise<void> {
-    return this.onLive(m, (x) => this.compose.setPinned(x, pinned, asModerator));
+    return this.onLive(m, (x) => this.compose.setPinned(x, pinned, asModerator)).catch((e) => this.notice("error", e instanceof Error ? e.message : String(e)));
   }
   setTyping(conversationId: string, on: boolean): void {
     if (this.opts.prefs?.().typing === false) return;

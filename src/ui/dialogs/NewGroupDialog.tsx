@@ -22,20 +22,37 @@ export function NewGroupDialog({ onClose, initial = [] }: { onClose: () => void;
   const engine = useEngine();
   const [name, setName] = useState("");
   const [q, setQ] = useState("");
+  const [searching, setSearching] = useState(false),
+    [searchError, setSearchError] = useState<string | null>(null),
+    [searchTick, setSearchTick] = useState(0);
   const [found, setFound] = useState<Member[]>([]);
   const [picked, setPicked] = useState<Member[]>(initial);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   useEffect(() => {
     const term = q.trim();
-    if (!term) return setFound([]);
-    const t = setTimeout(() => {
+    let alive = true;
+    setFound([]);
+    setSearchError(null);
+    setSearching(!!term);
+    if (!term) return;
+    const timer = setTimeout(() => {
       searchPeople(engine, term)
-        .then((r) => setFound(r.filter((m) => m.id !== engine.device.userId && !m.homeServer)))
-        .catch(() => setFound([]));
+        .then((r) => {
+          if (alive) setFound(r.filter((m) => m.id !== engine.device.userId && !m.homeServer));
+        })
+        .catch((e) => {
+          if (alive) setSearchError(e instanceof Error ? e.message : uiText("workspace.interface.search_failed_01ee45e"));
+        })
+        .finally(() => {
+          if (alive) setSearching(false);
+        });
     }, 220);
-    return () => clearTimeout(t);
-  }, [q, engine]);
+    return () => {
+      alive = false;
+      clearTimeout(timer);
+    };
+  }, [q, engine, searchTick]);
   const toggle = (m: Member) => setPicked((p) => (p.some((x) => x.id === m.id) ? p.filter((x) => x.id !== m.id) : p.length >= MAX_OTHERS ? p : [...p, m]));
   const submit = async (e: FormEvent) => {
     e.preventDefault();
@@ -98,6 +115,16 @@ export function NewGroupDialog({ onClose, initial = [] }: { onClose: () => void;
             style={{ border: 0, outline: "none", background: "transparent", flex: 1, padding: "10px 0" }}
           />
         </div>
+        {searchError && (
+          <div className="banner danger" role="alert">
+            {searchError}
+            <button type="button" className="btn btn-secondary btn-sm" onClick={() => setSearchTick((n) => n + 1)}>
+              {l10n("common.actions.retry")}
+            </button>
+          </div>
+        )}
+        {searching && <p role="status">{l10n("common.status.loading")}</p>}
+        {q.trim() && !searching && !searchError && !found.length && <p role="status">{uiText("workspace.interface.nothing_found_eb1fa11")}</p>}
         <div aria-label={uiText("workspace.interface.people_found_29b8414")} style={{ display: "grid", gap: 2, maxHeight: 240, overflow: "auto" }}>
           {found.map((p) => {
             const on = picked.some((x) => x.id === p.id);

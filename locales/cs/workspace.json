@@ -2068,6 +2068,23 @@
     "selectLoaded": "Vybrat načtené členy",
     "bulkRoles": "Spravovat role vybraných",
     "allRoles": "Všechny úrovně přístupu",
-    "loadedCount": "{loaded} načteno · {total} shod"
+    "loadedCount": "{loaded} načteno · {total} shod",
+    "quiz": "Kvíz",
+    "correctOption": "Správná odpověď: možnost {n}",
+    "quizReveal": "Správné odpovědi se zobrazí po ukončení hlasování.",
+    "correctAnswer": "Správná odpověď",
+    "threadClose": "Zavřít vlákno",
+    "threadReopen": "Znovu otevřít vlákno",
+    "threadLock": "Zamknout vlákno",
+    "threadUnlock": "Odemknout vlákno",
+    "threadDelete": "Smazat vlákno",
+    "threadClosed": "Toto vlákno je zavřené.",
+    "threadLocked": "Toto vlákno je zamčené.",
+    "threadDeleting": "Mazání vlákna…",
+    "threadDeleted": "Toto vlákno bylo smazáno.",
+    "threadInterrupted": "Mazání se zastavilo. Zkontrolujte přístup a zkuste to znovu.",
+    "threadDeleteReplies": "Smazat všechny odpovědi? Původní zpráva zůstane.",
+    "threadDeletePost": "Smazat tento příspěvek fóra a všechny odpovědi?",
+    "threadResume": "Pokračovat v mazání"
   }
 }

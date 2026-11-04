@@ -160,7 +160,15 @@ export function FriendsView() {
               <input value={q} onChange={(e) => setQ(e.target.value)} placeholder={l10n("common.actions.search")} aria-label={uiText("workspace.interface.search_friends_9d92d9f")} />
               <Search size={17} className="faint" aria-hidden="true" />
             </label>
-            {list.loading && !list.data ? (
+            {(tab === "blocked" ? blocked.error : list.error) && (
+              <div className="banner danger" role="alert">
+                {tab === "blocked" ? blocked.error : list.error}
+                <button className="btn btn-secondary btn-sm" onClick={() => (tab === "blocked" ? blocked.reload() : list.reload())}>
+                  {l10n("common.actions.retry")}
+                </button>
+              </div>
+            )}
+            {(tab === "blocked" ? blocked.error && !blocked.data : list.error && !list.data) ? null : list.loading && !list.data ? (
               <p className="faint">{l10n("common.status.loading")}</p>
             ) : tab === "online" ? (
               <Group title={uiText("workspace.interface.online_value0_e20063d", { value0: shownOnline.length })} empty={uiText("workspace.interface.nobody_s_online_right_now_41da499")}>

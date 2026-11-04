@@ -1,7 +1,7 @@
 import type { DeviceKeys } from "../crypto/identity";
 import type { HistoryKeys } from "../crypto/history";
 import type { ReminderKey } from "../crypto/reminderKeys";
-import type { AttachmentRef, ContactCard, CustomEmojiRef, GifRef, LinkPreview, Poll, SharedLocation, StickerRef } from "../protocol/payload";
+import type { AttachmentRef, ContactCard, CustomEmojiRef, GifRef, LinkPreview, ManagedPoll, Poll, SharedLocation, StickerRef } from "../protocol/payload";
 import type { Embed, PostButton, PostWebhook } from "../sync/posting/embeds";
 
 /** Delivery state of a message, as the phone shows it (android data/model/Models.kt `MessageStatus`). */
@@ -13,6 +13,7 @@ export interface RichContent {
   animoji?: string;
   link?: LinkPreview;
   poll?: Poll;
+  managedPoll?: ManagedPoll;
   /** voter user id → their chosen option ids (polls; android RichContent.votes). */
   votes?: Record<string, string[]>;
   /** Voters who chose to hide their names in poll results; identity is still retained by the messaging protocol. */

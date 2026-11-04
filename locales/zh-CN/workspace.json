@@ -2068,6 +2068,23 @@
     "selectLoaded": "选择已加载的成员",
     "bulkRoles": "管理所选成员的角色",
     "allRoles": "所有访问级别",
-    "loadedCount": "已加载 {loaded} 人 · 共 {total} 个匹配"
+    "loadedCount": "已加载 {loaded} 人 · 共 {total} 个匹配",
+    "quiz": "测验",
+    "correctOption": "正确答案：选项 {n}",
+    "quizReveal": "投票结束后公布正确答案。",
+    "correctAnswer": "正确答案",
+    "threadClose": "关闭话题",
+    "threadReopen": "重新打开话题",
+    "threadLock": "锁定话题",
+    "threadUnlock": "解锁话题",
+    "threadDelete": "删除话题",
+    "threadClosed": "此话题已关闭。",
+    "threadLocked": "此话题已锁定。",
+    "threadDeleting": "正在删除话题…",
+    "threadDeleted": "此话题已删除。",
+    "threadInterrupted": "删除已停止。请检查访问权限后重试。",
+    "threadDeleteReplies": "删除所有回复？原始消息将保留。",
+    "threadDeletePost": "删除此论坛帖子及所有回复？",
+    "threadResume": "继续删除"
   }
 }

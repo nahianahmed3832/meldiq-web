@@ -2068,6 +2068,23 @@
     "selectLoaded": "불러온 멤버 선택",
     "bulkRoles": "선택한 멤버의 역할 관리",
     "allRoles": "모든 접근 수준",
-    "loadedCount": "{loaded}명 불러옴 · {total}명 일치"
+    "loadedCount": "{loaded}명 불러옴 · {total}명 일치",
+    "quiz": "퀴즈",
+    "correctOption": "정답: 선택지 {n}",
+    "quizReveal": "투표가 종료된 후 정답이 공개됩니다.",
+    "correctAnswer": "정답",
+    "threadClose": "스레드 닫기",
+    "threadReopen": "스레드 다시 열기",
+    "threadLock": "스레드 잠그기",
+    "threadUnlock": "스레드 잠금 해제",
+    "threadDelete": "스레드 삭제",
+    "threadClosed": "닫힌 스레드입니다.",
+    "threadLocked": "잠긴 스레드입니다.",
+    "threadDeleting": "스레드 삭제 중…",
+    "threadDeleted": "삭제된 스레드입니다.",
+    "threadInterrupted": "삭제가 중단되었습니다. 접근 권한을 확인하고 다시 시도하세요.",
+    "threadDeleteReplies": "모든 답글을 삭제할까요? 원본 메시지는 유지됩니다.",
+    "threadDeletePost": "이 포럼 게시물과 모든 답글을 삭제할까요?",
+    "threadResume": "삭제 계속"
   }
 }

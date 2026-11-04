@@ -2068,6 +2068,23 @@
     "selectLoaded": "Seleccionar miembros cargados",
     "bulkRoles": "Gestionar roles seleccionados",
     "allRoles": "Todos los niveles de acceso",
-    "loadedCount": "{loaded} cargados · {total} coincidencias"
+    "loadedCount": "{loaded} cargados · {total} coincidencias",
+    "quiz": "Cuestionario",
+    "correctOption": "Respuesta correcta: opción {n}",
+    "quizReveal": "Las respuestas correctas se muestran al cerrar la votación.",
+    "correctAnswer": "Respuesta correcta",
+    "threadClose": "Cerrar hilo",
+    "threadReopen": "Reabrir hilo",
+    "threadLock": "Bloquear hilo",
+    "threadUnlock": "Desbloquear hilo",
+    "threadDelete": "Eliminar hilo",
+    "threadClosed": "Este hilo está cerrado.",
+    "threadLocked": "Este hilo está bloqueado.",
+    "threadDeleting": "Eliminando hilo…",
+    "threadDeleted": "Este hilo se eliminó.",
+    "threadInterrupted": "Se detuvo la eliminación. Revisa el acceso e inténtalo de nuevo.",
+    "threadDeleteReplies": "¿Eliminar todas las respuestas? El mensaje original permanecerá.",
+    "threadDeletePost": "¿Eliminar esta publicación del foro y todas las respuestas?",
+    "threadResume": "Reanudar eliminación"
   }
 }

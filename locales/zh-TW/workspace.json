@@ -2068,6 +2068,23 @@
     "selectLoaded": "選擇已載入的成員",
     "bulkRoles": "管理所選成員的角色",
     "allRoles": "所有存取層級",
-    "loadedCount": "已載入 {loaded} 人 · 共 {total} 個符合"
+    "loadedCount": "已載入 {loaded} 人 · 共 {total} 個符合",
+    "quiz": "測驗",
+    "correctOption": "正確答案：選項 {n}",
+    "quizReveal": "投票結束後公布正確答案。",
+    "correctAnswer": "正確答案",
+    "threadClose": "關閉話題",
+    "threadReopen": "重新開啟話題",
+    "threadLock": "鎖定話題",
+    "threadUnlock": "解鎖話題",
+    "threadDelete": "刪除話題",
+    "threadClosed": "此話題已關閉。",
+    "threadLocked": "此話題已鎖定。",
+    "threadDeleting": "正在刪除話題…",
+    "threadDeleted": "此話題已刪除。",
+    "threadInterrupted": "刪除已停止。請檢查存取權限後重試。",
+    "threadDeleteReplies": "刪除所有回覆？原始訊息將保留。",
+    "threadDeletePost": "刪除此論壇貼文及所有回覆？",
+    "threadResume": "繼續刪除"
   }
 }

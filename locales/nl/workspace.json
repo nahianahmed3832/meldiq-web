@@ -2068,6 +2068,23 @@
     "selectLoaded": "Geladen leden selecteren",
     "bulkRoles": "Rollen van selectie beheren",
     "allRoles": "Alle toegangsniveaus",
-    "loadedCount": "{loaded} geladen · {total} resultaten"
+    "loadedCount": "{loaded} geladen · {total} resultaten",
+    "quiz": "Quiz",
+    "correctOption": "Juiste antwoord: optie {n}",
+    "quizReveal": "De juiste antwoorden worden na het sluiten van de stemming getoond.",
+    "correctAnswer": "Juiste antwoord",
+    "threadClose": "Thread sluiten",
+    "threadReopen": "Thread heropenen",
+    "threadLock": "Thread vergrendelen",
+    "threadUnlock": "Thread ontgrendelen",
+    "threadDelete": "Thread verwijderen",
+    "threadClosed": "Deze thread is gesloten.",
+    "threadLocked": "Deze thread is vergrendeld.",
+    "threadDeleting": "Thread verwijderen…",
+    "threadDeleted": "Deze thread is verwijderd.",
+    "threadInterrupted": "Verwijderen gestopt. Controleer de toegang en probeer opnieuw.",
+    "threadDeleteReplies": "Alle antwoorden verwijderen? Het oorspronkelijke bericht blijft staan.",
+    "threadDeletePost": "Dit forumbericht en alle antwoorden verwijderen?",
+    "threadResume": "Verwijderen hervatten"
   }
 }

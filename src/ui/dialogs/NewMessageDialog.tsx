@@ -24,13 +24,18 @@ export function NewMessageDialog({ onClose, onNewGroup }: { onClose: () => void;
   const community = useCommunityServer();
   const [q, setQ] = useState("");
   const [people, setPeople] = useState<Member[]>([]);
+  const [searching, setSearching] = useState(false),
+    [searchTick, setSearchTick] = useState(0);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const federates = useOrbit((s) => !!s.server?.federation);
   const term = q.trim();
   const kind = lookupKind(term);
   useEffect(() => {
-    if (!term) return setPeople([]);
+    setPeople([]);
+    setError(null);
+    setSearching(!!term);
+    if (!term) return;
     let alive = true;
     const find = async (): Promise<Member[]> => {
       if (kind === "phone") {
@@ -46,11 +51,13 @@ export function NewMessageDialog({ onClose, onNewGroup }: { onClose: () => void;
       find()
         .then((r) => {
           if (!alive) return;
+          setSearching(false);
           setPeople(r);
           setError(null);
         })
         .catch((e: unknown) => {
           if (!alive) return;
+          setSearching(false);
           setPeople([]);
           setError(e instanceof Error ? e.message : uiText("workspace.interface.search_failed_01ee45e"));
         });
@@ -59,7 +66,7 @@ export function NewMessageDialog({ onClose, onNewGroup }: { onClose: () => void;
       alive = false;
       clearTimeout(t);
     };
-  }, [term, kind, federates, engine]);
+  }, [term, kind, federates, engine, searchTick]);
   const open = async (id: string) => {
     setBusy(true);
     try {
@@ -86,7 +93,15 @@ export function NewMessageDialog({ onClose, onNewGroup }: { onClose: () => void;
             style={{ border: 0, outline: "none", background: "transparent", flex: 1, padding: "10px 0" }}
           />
         </div>
-        {error && <div className="banner danger">{error}</div>}
+        {error && (
+          <div className="banner danger" role="alert">
+            {error}
+            <button className="btn btn-secondary btn-sm" onClick={() => setSearchTick((n) => n + 1)}>
+              {l10n("common.actions.retry")}
+            </button>
+          </div>
+        )}
+        {searching && <p role="status">{l10n("common.status.loading")}</p>}
         <div aria-label={uiText("calls.interface.people_7db2089")} style={{ display: "grid", gap: 2 }}>
           {people.map((p) => (
             <button key={p.id} className="list-row" disabled={busy} onClick={() => void open(p.id)}>
@@ -97,7 +112,7 @@ export function NewMessageDialog({ onClose, onNewGroup }: { onClose: () => void;
               </span>
             </button>
           ))}
-          {term && people.length === 0 && !error && (
+          {term && people.length === 0 && !error && !searching && (
             <p className="faint" style={{ margin: "8px 4px" }}>
               {kind === "phone"
                 ? uiText("workspace.interface.no_one_found_with_that_number_people_only_appear_here_by_phone_if_c14f69f")

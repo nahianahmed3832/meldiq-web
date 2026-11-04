@@ -2068,6 +2068,23 @@
     "selectLoaded": "لوڈ شدہ اراکین منتخب کریں",
     "bulkRoles": "منتخب کرداروں کا انتظام کریں",
     "allRoles": "رسائی کی تمام سطحیں",
-    "loadedCount": "{loaded} لوڈ شدہ · {total} نتائج"
+    "loadedCount": "{loaded} لوڈ شدہ · {total} نتائج",
+    "quiz": "کوئز",
+    "correctOption": "درست جواب: اختیار {n}",
+    "quizReveal": "ووٹنگ بند ہونے کے بعد درست جوابات ظاہر ہوں گے۔",
+    "correctAnswer": "درست جواب",
+    "threadClose": "تھریڈ بند کریں",
+    "threadReopen": "تھریڈ دوبارہ کھولیں",
+    "threadLock": "تھریڈ مقفل کریں",
+    "threadUnlock": "تھریڈ کا قفل کھولیں",
+    "threadDelete": "تھریڈ حذف کریں",
+    "threadClosed": "یہ تھریڈ بند ہے۔",
+    "threadLocked": "یہ تھریڈ مقفل ہے۔",
+    "threadDeleting": "تھریڈ حذف ہو رہا ہے…",
+    "threadDeleted": "یہ تھریڈ حذف ہو گیا۔",
+    "threadInterrupted": "حذف رک گیا۔ رسائی جانچ کر دوبارہ کوشش کریں۔",
+    "threadDeleteReplies": "تمام جوابات حذف کریں؟ اصل پیغام باقی رہے گا۔",
+    "threadDeletePost": "یہ فورم پوسٹ اور تمام جوابات حذف کریں؟",
+    "threadResume": "حذف جاری رکھیں"
   }
 }

@@ -126,6 +126,10 @@ export function SearchDialog({ orgId: _orgId, onClose }: { orgId: string | null;
   const orgs = useOrbit((s) => s.orgs);
   const me = useOrbit((s) => s.me);
   const universal = useOrbit((s) => s.server?.features.includes("search") ?? false);
+  const [loading, setLoading] = useState(false),
+    [error, setError] = useState<string | null>(null),
+    [retry, setRetry] = useState(0);
+  const generation = useRef(0);
   const [q, setQ] = useState("");
   const [filter, setFilter] = useState<Filter>("all");
   const [server, setServer] = useState<SearchResults>({});
@@ -143,48 +147,59 @@ export function SearchDialog({ orgId: _orgId, onClose }: { orgId: string | null;
     return () => document.removeEventListener("keydown", k);
   }, [onClose]);
   useEffect(() => {
-    setShown(PAGE);
-    if (!term) {
-      setServer({});
-      setLegacyPeople([]);
-      setLocal(NO_LOCAL);
-      return;
-    }
+    generation.current++;
     let alive = true;
-    // from:, has:, before: and after: narrow messages in this browser; the server and file names get the words only.
+    setShown(PAGE);
+    setServer({});
+    setLegacyPeople([]);
+    setLocal(NO_LOCAL);
+    setError(null);
+    setLoading(!!term);
+    if (!term) return;
     const words = parseSearchQuery(term).text;
-    const t = setTimeout(() => {
+    const timer = setTimeout(() => {
       const types = serverTypes(filter);
-      if (!words) setServer({});
-      else if (types && universal)
-        serverSearch(engine, words, { types, limit: filter === "all" ? PREVIEW_COUNT : PAGE })
-          .then((r) => alive && setServer(r))
-          .catch(() => alive && setServer({}));
-      else if (!universal && (filter === "all" || filter === "people"))
-        searchPeople(engine, words)
-          .then((r) => alive && setLegacyPeople(r))
-          .catch(() => alive && setLegacyPeople([]));
       void Promise.all([
-        filter === "all" || filter === "messages" ? engine.searchMessages(term) : [],
-        words && (filter === "all" || filter === "files") ? engine.searchFiles(words, LOCAL_LIMIT) : [],
-        words && (filter === "all" || filter === "pinned") ? engine.searchPinned(words, LOCAL_LIMIT) : [],
+        words && types && universal ? serverSearch(engine, words, { types, limit: filter === "all" ? PREVIEW_COUNT : PAGE }) : Promise.resolve({}),
+        words && !universal && (filter === "all" || filter === "people") ? searchPeople(engine, words) : Promise.resolve([]),
+        Promise.all([
+          filter === "all" || filter === "messages" ? engine.searchMessages(term) : [],
+          words && (filter === "all" || filter === "files") ? engine.searchFiles(words, LOCAL_LIMIT) : [],
+          words && (filter === "all" || filter === "pinned") ? engine.searchPinned(words, LOCAL_LIMIT) : [],
+        ]),
       ])
-        .then(([messages, files, pinned]) => alive && setLocal({ messages, files, pinned }))
-        .catch(() => alive && setLocal(NO_LOCAL));
+        .then(([server, people, [messages, files, pinned]]) => {
+          if (alive) {
+            setServer(server);
+            setLegacyPeople(people);
+            setLocal({ messages, files, pinned });
+          }
+        })
+        .catch((e) => {
+          if (alive) setError(e instanceof Error ? e.message : uiText("workspace.interface.search_failed_01ee45e"));
+        })
+        .finally(() => {
+          if (alive) setLoading(false);
+        });
     }, DEBOUNCE_MS);
     return () => {
       alive = false;
-      clearTimeout(t);
+      clearTimeout(timer);
     };
-  }, [term, filter, universal, engine]);
-  /** Show more: the next page of a server kind (its cursor), or more of what's already found on this browser. */
+  }, [term, filter, universal, engine, retry]);
   const more = async (section: Section) => {
+    const mine = generation.current,
+      pageOf = server[section as keyof SearchResults];
     setShown((n) => n + PAGE);
-    const pageOf = server[section as keyof SearchResults];
     if (!term || !pageOf?.next) return;
-    const next = await serverSearch(engine, term, { types: section, limit: PAGE, cursor: pageOf.next }).catch(() => null);
-    const add = next?.[section as keyof SearchResults];
-    if (add) setServer((cur) => ({ ...cur, [section]: { items: [...(cur[section as keyof SearchResults]?.items ?? []), ...add.items], next: add.next } }));
+    try {
+      const next = await serverSearch(engine, parseSearchQuery(term).text, { types: section, limit: PAGE, cursor: pageOf.next });
+      if (generation.current !== mine) return;
+      const add = next[section as keyof SearchResults];
+      if (add) setServer((cur) => ({ ...cur, [section]: { items: [...(cur[section as keyof SearchResults]?.items ?? []), ...add.items], next: add.next } }));
+    } catch (e) {
+      if (generation.current === mine) setError(e instanceof Error ? e.message : uiText("workspace.interface.search_failed_01ee45e"));
+    }
   };
   const open = (r: Result) => {
     if (term) {
@@ -360,7 +375,16 @@ export function SearchDialog({ orgId: _orgId, onClose }: { orgId: string | null;
               </div>
             </div>
           )}
-          {flat.length === 0 && term && (
+          {error && (
+            <div className="banner danger" role="alert">
+              {error}
+              <button className="btn btn-secondary btn-sm" onClick={() => setRetry((n) => n + 1)}>
+                {l10n("common.actions.retry")}
+              </button>
+            </div>
+          )}
+          {loading && <p role="status">{l10n("common.status.loading")}</p>}
+          {flat.length === 0 && term && !error && !loading && (
             <div className="empty" style={{ padding: 32 }}>
               <Localized k="workspace.interface.nothing_found_eb1fa11" />
             </div>

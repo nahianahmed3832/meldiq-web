@@ -60,9 +60,11 @@ import { useT } from "../../i18n";
 import { LookAvatar, LookName } from "../people/NameStyle";
 import { isWebUrl } from "../../protocol/payload";
 import { Attachments } from "./Attachments";
-import { isEmojiOnly, RichText } from "./RichText";
+import { isEmojiOnly } from "./RichText";
+import { MessageBody } from "./MessageBody";
 import { SafeLink } from "./SafeLink";
 import { AnimojiView } from "./AnimojiView";
+import { ManagedPollView } from "./ManagedPollView";
 import { PollView } from "./PollView";
 import { StickerView } from "./StickerView";
 import { MediaLinkCard } from "./MediaLinkCard";
@@ -120,6 +122,9 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
   const { m } = p;
   const [editing, setEditing] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [deleteBusy, setDeleteBusy] = useState(false),
+    [deleteError, setDeleteError] = useState<string | null>(null);
+  const deleteAttempt = useRef<string | null>(null);
   const [forwarding, setForwarding] = useState(false);
   const [info, setInfo] = useState(false);
   const [translating, setTranslating] = useState(false);
@@ -184,7 +189,7 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
     if (m.deleted) return <span className="msg-deleted">{t("msg_deleted")}</span>;
     if (editing) return <EditBox m={m} onDone={() => setEditing(false)} />;
     // A poll, contact, location, sticker or animated emoji is the message itself: no card under it (android MessageBubble).
-    const structured = !!(m.rich?.poll || m.rich?.contact || m.rich?.location || m.rich?.sticker || m.rich?.animoji || m.rich?.customSticker || m.rich?.gif);
+    const structured = !!(m.rich?.managedPoll || m.rich?.poll || m.rich?.contact || m.rich?.location || m.rich?.sticker || m.rich?.animoji || m.rich?.customSticker || m.rich?.gif);
     const mediaLink = mediaCards && !structured ? findMediaLink(m.text) : null;
     return (
       <>
@@ -199,7 +204,12 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
           </button>
         )}
         {m.forwarded && <ForwardedLine origin={m.rich?.origin} />}
-        {m.rich?.poll ? (
+        {m.rich?.managedPoll ? (
+          <div>
+            <ManagedPollView m={m} myUserId={p.myUserId} canPost={!!conv?.canPost} />
+            {mine && <Status receipts={conv?.type === "DM"} m={m} onRetry={() => void engine.retry(m.id)} onReview={p.onReview} />}
+          </div>
+        ) : m.rich?.poll ? (
           <div>
             <PollView m={m} myUserId={p.myUserId} canPost={canReact} />
             {mine && <Status receipts={conv?.type === "DM"} m={m} onRetry={() => void engine.retry(m.id)} onReview={p.onReview} />}
@@ -245,7 +255,7 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
           </a>
         ) : shownText ? (
           <div dir="auto" className={`msg-text${isEmojiOnly(shownText) ? " big-emoji" : ""}`}>
-            <RichText text={shownText} mentionNames={p.mentionNames} myUsername={p.myUsername} customEmoji={m.rich?.customEmoji} />
+            <MessageBody text={shownText} mentionNames={p.mentionNames} myUsername={p.myUsername} customEmoji={m.rich?.customEmoji} />
             {m.editedAt && (
               <span className="msg-meta">
                 <Localized k="messaging.interface.edited_de44feb" />
@@ -597,9 +607,20 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
               <button
                 className="btn btn-danger"
                 data-autofocus
-                onClick={() => {
-                  setConfirmDelete(false);
-                  void engine.deleteForEveryone(m, !mine);
+                disabled={deleteBusy}
+                onClick={async () => {
+                  if (deleteBusy) return;
+                  deleteAttempt.current ??= crypto.randomUUID();
+                  setDeleteBusy(true);
+                  setDeleteError(null);
+                  try {
+                    await engine.deleteForEveryone(m, !mine, deleteAttempt.current);
+                    setConfirmDelete(false);
+                  } catch (e) {
+                    setDeleteError(e instanceof Error ? e.message : String(e));
+                  } finally {
+                    setDeleteBusy(false);
+                  }
                 }}
               >
                 {t("common.actions.delete")}
@@ -608,6 +629,7 @@ export const MessageItem = memo(function MessageItem(p: MessageItemProps) {
           }
         >
           <div className="dialog-body">
+            {deleteError && <p role="alert">{deleteError}</p>}
             <p className="muted" style={{ margin: 0 }}>
               <Localized k="messaging.interface.it_s_removed_for_everyone_in_the_conversation_on_every_device_ff48f7f" />
             </p>
@@ -679,14 +701,34 @@ function EditBox({ m, onDone }: { m: StoredMessage; onDone: () => void }) {
   // Edits get the same room as new messages (server docs/MOJO.md).
   const limit = useMojoLimits()?.messageChars ?? null;
   const tooLong = overCharLimit(text, limit);
-  const save = () => {
-    if (tooLong) return;
-    if (text.trim() && text.trim() !== m.text) void engine.edit(m, text);
-    onDone();
+  const [busy, setBusy] = useState(false),
+    [error, setError] = useState<string | null>(null);
+  const attempt = useRef<{ body: string; id: string } | null>(null);
+  const save = async () => {
+    if (tooLong || busy) return;
+    const body = text.trim();
+    if (!body) return;
+    if (body === m.text) {
+      onDone();
+      return;
+    }
+    if (attempt.current?.body !== body) attempt.current = { body, id: crypto.randomUUID() };
+    setBusy(true);
+    setError(null);
+    try {
+      await engine.edit(m, body, attempt.current.id);
+      onDone();
+    } catch (e) {
+      setError(e instanceof Error ? e.message : String(e));
+    } finally {
+      setBusy(false);
+    }
   };
   return (
     <div style={{ display: "grid", gap: 6, marginTop: 4 }}>
+      {error && <p role="alert">{error}</p>}
       <textarea
+        disabled={busy}
         className="textarea"
         value={text}
         autoFocus
@@ -696,7 +738,7 @@ function EditBox({ m, onDone }: { m: StoredMessage; onDone: () => void }) {
         onKeyDown={(e) => {
           if (e.key === "Enter" && !e.shiftKey) {
             e.preventDefault();
-            save();
+            void save();
           } else if (e.key === "Escape") onDone();
         }}
       />
@@ -709,7 +751,7 @@ function EditBox({ m, onDone }: { m: StoredMessage; onDone: () => void }) {
         <button className="btn btn-secondary btn-sm" onClick={onDone}>
           {l10n("common.actions.cancel")}
         </button>
-        <button className="btn btn-primary btn-sm" onClick={save} disabled={!text.trim() || tooLong}>
+        <button className="btn btn-primary btn-sm" onClick={() => void save()} disabled={!text.trim() || tooLong || busy}>
           {l10n("common.actions.save")}
         </button>
       </div>

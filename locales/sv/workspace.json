@@ -2068,6 +2068,23 @@
     "selectLoaded": "Välj inlästa medlemmar",
     "bulkRoles": "Hantera valda roller",
     "allRoles": "Alla åtkomstnivåer",
-    "loadedCount": "{loaded} inlästa · {total} träffar"
+    "loadedCount": "{loaded} inlästa · {total} träffar",
+    "quiz": "Frågesport",
+    "correctOption": "Rätt svar: alternativ {n}",
+    "quizReveal": "Rätt svar visas när omröstningen har stängts.",
+    "correctAnswer": "Rätt svar",
+    "threadClose": "Stäng tråden",
+    "threadReopen": "Öppna tråden igen",
+    "threadLock": "Lås tråden",
+    "threadUnlock": "Lås upp tråden",
+    "threadDelete": "Radera tråden",
+    "threadClosed": "Tråden är stängd.",
+    "threadLocked": "Tråden är låst.",
+    "threadDeleting": "Raderar tråden…",
+    "threadDeleted": "Tråden har raderats.",
+    "threadInterrupted": "Raderingen stoppades. Kontrollera åtkomsten och försök igen.",
+    "threadDeleteReplies": "Radera alla svar? Ursprungsmeddelandet finns kvar.",
+    "threadDeletePost": "Radera foruminlägget och alla svar?",
+    "threadResume": "Fortsätt radera"
   }
 }

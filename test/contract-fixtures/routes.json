@@ -18,6 +18,38 @@
       "path": "/admin/v1/partner-applications/{orgId}"
     },
     {
+      "method": "GET",
+      "path": "/v1/polls/{id}"
+    },
+    {
+      "method": "PUT",
+      "path": "/v1/polls/{id}/vote"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/polls/{id}/close"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/threads/{id}"
+    },
+    {
+      "method": "PATCH",
+      "path": "/v1/threads/{id}"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/threads/{id}/delete"
+    },
+    {
+      "method": "PUT",
+      "path": "/v1/threads/{id}/follow"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/me/thread-preferences"
+    },
+    {
       "method": "POST",
       "path": "/v3/auth/legacy-link"
     },

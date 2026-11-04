@@ -2068,6 +2068,23 @@
     "selectLoaded": "Pilih anggota yang dimuat",
     "bulkRoles": "Kelola peran pilihan",
     "allRoles": "Semua tingkat akses",
-    "loadedCount": "{loaded} dimuat · {total} cocok"
+    "loadedCount": "{loaded} dimuat · {total} cocok",
+    "quiz": "Kuis",
+    "correctOption": "Jawaban benar: Opsi {n}",
+    "quizReveal": "Jawaban benar ditampilkan setelah pemungutan suara ditutup.",
+    "correctAnswer": "Jawaban benar",
+    "threadClose": "Tutup utas",
+    "threadReopen": "Buka kembali utas",
+    "threadLock": "Kunci utas",
+    "threadUnlock": "Buka kunci utas",
+    "threadDelete": "Hapus utas",
+    "threadClosed": "Utas ini ditutup.",
+    "threadLocked": "Utas ini dikunci.",
+    "threadDeleting": "Menghapus utas…",
+    "threadDeleted": "Utas ini telah dihapus.",
+    "threadInterrupted": "Penghapusan berhenti. Periksa akses dan coba lagi.",
+    "threadDeleteReplies": "Hapus semua balasan? Pesan induk tetap ada.",
+    "threadDeletePost": "Hapus kiriman forum ini dan semua balasan?",
+    "threadResume": "Lanjutkan penghapusan"
   }
 }

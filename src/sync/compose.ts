@@ -27,6 +27,7 @@ export interface ComposeHost {
   ): Promise<void>;
   refreshPreview(conversationId: string): Promise<void>;
   queue(o: OutboxItem): Promise<void>;
+  confirmControl(conversationId: string, payload: Payload, messageId: string): Promise<number>;
 }
 /**
  * What this browser sends into conversations: messages (shown at once, sent by the outbox), retries, and the controls
@@ -124,6 +125,7 @@ export class Compose {
         animoji: opts.rich?.animoji,
         link: opts.rich?.link,
         poll: opts.rich?.poll,
+        managedPoll: opts.rich?.managedPoll,
         sticker: opts.rich?.sticker,
         gif: opts.rich?.gif,
         title: opts.rich?.title,
@@ -211,33 +213,38 @@ export class Compose {
     this.host.show(next);
     await this.enqueueControl(m.conversationId, { type: "poll_close", target: m.id });
   }
-  async edit(m: StoredMessage, text: string): Promise<void> {
-    if (!m.outgoing || m.deleted || !this.canPost(m.conversationId)) return;
+  async edit(m: StoredMessage, text: string, messageId = crypto.randomUUID()): Promise<void> {
+    if (!m.outgoing || m.deleted || !this.canPost(m.conversationId)) throw new ApiError(403, "forbidden", uiText("workspace.interface.you_can_t_post_in_this_conversation_343c10f"));
     const body = text.trim();
     if (!body) return;
     const conv = this.host.state().conversations[m.conversationId];
     const ids = conv && conv.type !== "DM" ? resolveMentions(body, await this.host.membersOf(m.conversationId).catch(() => []), false, this.host.device.userId).ids : [];
-    const next = { ...m, text: body, editedAt: Date.now(), mentions: ids };
+    const serverTs = await this.host.confirmControl(m.conversationId, { type: "edit", target: m.id, text: body, mentions: ids }, messageId);
+    const fresh = (await this.host.store.message(m.id)) ?? m;
+    if (fresh.deleted || (fresh.editedAt !== null && fresh.editedAt > serverTs)) return;
+    const next = { ...fresh, text: body, editedAt: serverTs, mentions: ids };
     await this.host.store.putMessage(next);
     this.host.show(next);
     await this.host.refreshPreview(m.conversationId);
-    await this.enqueueControl(m.conversationId, { type: "edit", target: m.id, text: body, mentions: ids });
   }
-  async deleteForEveryone(m: StoredMessage, asModerator = false): Promise<void> {
-    if (!m.outgoing && !asModerator) return;
-    if (m.outgoing && !this.canPost(m.conversationId)) return;
-    const next = { ...m, deleted: true, text: "", attachments: [], rich: null };
+  async deleteForEveryone(m: StoredMessage, asModerator = false, messageId = crypto.randomUUID()): Promise<void> {
+    if ((!m.outgoing && !asModerator) || (m.outgoing && !this.canPost(m.conversationId)))
+      throw new ApiError(403, "forbidden", uiText("workspace.interface.you_can_t_post_in_this_conversation_343c10f"));
+    await this.host.confirmControl(m.conversationId, { type: "delete", target: m.id }, messageId);
+    const fresh = (await this.host.store.message(m.id)) ?? m;
+    const next = { ...fresh, deleted: true, text: "", attachments: [], rich: null };
     await this.host.store.putMessage(next);
     this.host.show(next);
     await this.host.refreshPreview(m.conversationId);
-    await this.enqueueControl(m.conversationId, { type: "delete", target: m.id });
   }
   async setPinned(m: StoredMessage, pinned: boolean, asModerator = false): Promise<void> {
-    if (!asModerator && !this.canPost(m.conversationId)) return;
-    const next = applyPin(m, pinned);
+    if (!asModerator && !this.canPost(m.conversationId)) throw new ApiError(403, "forbidden", uiText("workspace.interface.you_can_t_post_in_this_conversation_343c10f"));
+    await this.host.confirmControl(m.conversationId, { type: "pin", target: m.id, pinned }, crypto.randomUUID());
+    const fresh = (await this.host.store.message(m.id)) ?? m;
+    if (fresh.deleted) return;
+    const next = applyPin(fresh, pinned);
     await this.host.store.putMessage(next);
     this.host.show(next);
-    await this.enqueueControl(m.conversationId, { type: "pin", target: m.id, pinned });
   }
   async enqueueControl(conversationId: string, payload: Payload): Promise<void> {
     await this.host.queue({

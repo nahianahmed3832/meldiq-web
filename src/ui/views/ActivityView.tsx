@@ -38,6 +38,7 @@ export function ActivityView({ orgId }: { orgId: string | null }) {
       })),
     (a, b) => a.length === b.length && a.every((x, i) => shallowEqual(x, b[i])),
   );
+  const [retry, setRetry] = useState(0);
   const [filter, setFilter] = useState<ActivityFilter>("all");
   const [log, setLog] = useState<Activity[] | null>(null);
   const [logError, setLogError] = useState<string | null>(null);
@@ -64,7 +65,7 @@ export function ActivityView({ orgId }: { orgId: string | null }) {
     return () => {
       alive = false;
     };
-  }, [engine, orgId]);
+  }, [engine, orgId, retry]);
   return (
     <section className="main" aria-label={l10n("workspace.activity")}>
       <div className="view scroll">
@@ -139,8 +140,11 @@ export function ActivityView({ orgId }: { orgId: string | null }) {
                 <Localized k="workspace.interface.community_activity_6b03fb2" />
               </h2>
               {logError ? (
-                <div className="side-quiet" style={{ padding: 14 }}>
+                <div className="side-quiet" role="alert" style={{ padding: 14 }}>
                   {logError}
+                  <button className="btn btn-secondary btn-sm" onClick={() => setRetry((n) => n + 1)}>
+                    {l10n("common.actions.retry")}
+                  </button>
                 </div>
               ) : !log ? (
                 <div style={{ padding: 12, display: "grid", gap: 10 }} aria-busy="true">
@@ -230,14 +234,21 @@ function ThreadReplies() {
   useLocaleRender();
   const engine = useEngine();
   const rev = useOrbit((s) => s.threadRev);
+  const conversations = useOrbit((s) => s.conversations);
+  const [retry, setRetry] = useState(0),
+    [error, setError] = useState<string | null>(null);
   const [threads, setThreads] = useState<ThreadActivity[] | null>(null);
   useEffect(() => {
     let live = true;
-    void engine.threadActivity().then((t) => live && setThreads(t));
+    setError(null);
+    void engine
+      .threadActivity()
+      .then((t) => live && setThreads(t))
+      .catch((e) => live && setError(e instanceof Error ? e.message : uiText("workspace.interface.couldn_t_load_activity_0b66256")));
     return () => {
       live = false;
     };
-  }, [engine, rev]);
+  }, [engine, rev, conversations, retry]);
   const names = useOrbit((s) => s.users);
   const titles = useOrbit(
     (s) =>
@@ -249,7 +260,14 @@ function ThreadReplies() {
       <h2>
         <Localized k="workspace.interface.thread_replies_fcf8b34" />
       </h2>
-      {!threads ? (
+      {error ? (
+        <div role="alert">
+          {error}
+          <button className="btn btn-secondary btn-sm" onClick={() => setRetry((n) => n + 1)}>
+            {uiText("common.actions.retry")}
+          </button>
+        </div>
+      ) : !threads ? (
         <div style={{ padding: 12 }} aria-busy="true">
           <span className="skeleton" style={{ height: 36, display: "block" }} />
         </div>

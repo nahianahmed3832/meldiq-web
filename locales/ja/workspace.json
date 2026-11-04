@@ -2068,6 +2068,23 @@
     "selectLoaded": "読み込み済みメンバーを選択",
     "bulkRoles": "選択したメンバーのロールを管理",
     "allRoles": "すべてのアクセスレベル",
-    "loadedCount": "{loaded}人読み込み済み · {total}件一致"
+    "loadedCount": "{loaded}人読み込み済み · {total}件一致",
+    "quiz": "クイズ",
+    "correctOption": "正解：選択肢 {n}",
+    "quizReveal": "投票終了後に正解が表示されます。",
+    "correctAnswer": "正解",
+    "threadClose": "スレッドを閉じる",
+    "threadReopen": "スレッドを再開",
+    "threadLock": "スレッドをロック",
+    "threadUnlock": "ロックを解除",
+    "threadDelete": "スレッドを削除",
+    "threadClosed": "このスレッドは終了しています。",
+    "threadLocked": "このスレッドはロックされています。",
+    "threadDeleting": "スレッドを削除中…",
+    "threadDeleted": "このスレッドは削除されました。",
+    "threadInterrupted": "削除が停止しました。アクセス権を確認して再試行してください。",
+    "threadDeleteReplies": "すべての返信を削除しますか？元のメッセージは残ります。",
+    "threadDeletePost": "このフォーラム投稿とすべての返信を削除しますか？",
+    "threadResume": "削除を再開"
   }
 }

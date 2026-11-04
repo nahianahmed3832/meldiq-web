@@ -4,14 +4,18 @@ import { Localized } from "../../i18n/Localized";
 import { useT as useLocalization } from "../../i18n";
 import { Plus, X } from "lucide-react";
 import { useState } from "react";
-import type { Poll } from "../../protocol/payload";
+import { useOrbit } from "../../application/orbit";
+import type { ManagedPoll, Poll } from "../../protocol/payload";
 import { composePoll, duplicatePollAnswers, MAX_OPTION, MAX_OPTIONS, MAX_QUESTION, MIN_OPTIONS } from "../../sync/polls";
 import { Dialog } from "../components/Overlay";
 import { Toggle } from "../components/Toggle";
 /** A new poll (android Attach › Poll): a question, two to ten options, and whether several answers are allowed. */
-export function PollDialog({ onSend, onClose }: { onSend: (poll: Poll) => void; onClose: () => void }) {
+export function PollDialog({ onSend, onClose }: { onSend: (poll: Poll, managedPoll?: ManagedPoll) => void; onClose: () => void }) {
   useLocaleRender();
   const l10n = useLocalization();
+  const managed = useOrbit((s) => s.server?.features.includes("managed-polls") ?? false);
+  const [quiz, setQuiz] = useState(false),
+    [correct, setCorrect] = useState<Set<number>>(new Set());
   const [question, setQuestion] = useState("");
   const [options, setOptions] = useState(["", ""]);
   const [multi, setMulti] = useState(false);
@@ -29,10 +33,14 @@ export function PollDialog({ onSend, onClose }: { onSend: (poll: Poll) => void; 
           </button>
           <button
             className="btn btn-primary"
-            disabled={!poll}
+            disabled={!poll || (quiz && (!correct.size || [...correct].some((i) => !options[i]?.trim()) || (!multi && correct.size !== 1)))}
             onClick={() => {
               const ready = composePoll(question, options, multi, Number(duration) ? Date.now() + Number(duration) * 60000 : undefined);
-              if (ready) onSend(ready);
+              if (ready) {
+                const nonblank = options.map((text, index) => ({ text, index })).filter((o) => o.text.trim());
+                const answers = nonblank.flatMap((o, index) => (correct.has(o.index) ? [`o${index + 1}`] : []));
+                onSend(ready, managed ? { ...ready, version: 1, quiz, reveal: "after_close", ...(quiz ? { correctOptionIds: answers } : {}) } : undefined);
+              }
             }}
           >
             <Localized k="messaging.interface.send_poll_e6b7b5b" />
@@ -61,8 +69,30 @@ export function PollDialog({ onSend, onClose }: { onSend: (poll: Poll) => void; 
                 aria-label={uiText("messaging.interface.option_value0_ce4bc00", { value0: i + 1 })}
                 placeholder={uiText("messaging.interface.option_value0_ce4bc00", { value0: i + 1 })}
               />
+              {quiz && (
+                <input
+                  type="checkbox"
+                  aria-label={uiText("workspace.part3.correctOption", { n: i + 1 })}
+                  checked={correct.has(i)}
+                  onChange={() =>
+                    setCorrect((prior) => {
+                      const next = new Set(multi ? prior : []);
+                      if (prior.has(i)) next.delete(i);
+                      else next.add(i);
+                      return next;
+                    })
+                  }
+                />
+              )}
               {options.length > MIN_OPTIONS && (
-                <button className="icon-btn" aria-label={uiText("messaging.interface.remove_option_value0_f13ad12", { value0: i + 1 })} onClick={() => setOptions((x) => x.filter((_, j) => j !== i))}>
+                <button
+                  className="icon-btn"
+                  aria-label={uiText("messaging.interface.remove_option_value0_f13ad12", { value0: i + 1 })}
+                  onClick={() => {
+                    setOptions((x) => x.filter((_, j) => j !== i));
+                    setCorrect((prior) => new Set([...prior].filter((j) => j !== i).map((j) => (j > i ? j - 1 : j))));
+                  }}
+                >
                   <X size={16} />
                 </button>
               )}
@@ -105,8 +135,22 @@ export function PollDialog({ onSend, onClose }: { onSend: (poll: Poll) => void; 
           <span className="grow">
             <Localized k="messaging.interface.allow_several_answers_2b3c943" />
           </span>
-          <Toggle label={uiText("messaging.interface.allow_several_answers_2b3c943")} checked={multi} onChange={setMulti} />
+          <Toggle
+            label={uiText("messaging.interface.allow_several_answers_2b3c943")}
+            checked={multi}
+            onChange={(value) => {
+              setMulti(value);
+              if (!value) setCorrect((prior) => new Set([...prior].slice(0, 1)));
+            }}
+          />
         </div>
+        {managed && (
+          <div className="row">
+            <span className="grow">{uiText("workspace.part3.quiz")}</span>
+            <Toggle label={uiText("workspace.part3.quiz")} checked={quiz} onChange={setQuiz} />
+          </div>
+        )}
+        {quiz && <p className="hint">{uiText("workspace.part3.quizReveal")}</p>}
         <span className="hint">
           <Localized k="messaging.interface.voters_can_show_their_name_or_choose_anonymous_voter_in_results_o_7ac874d" />
         </span>

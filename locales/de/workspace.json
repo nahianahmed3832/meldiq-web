@@ -2068,6 +2068,23 @@
     "selectLoaded": "Geladene Mitglieder auswählen",
     "bulkRoles": "Rollen der Auswahl verwalten",
     "allRoles": "Alle Zugriffsebenen",
-    "loadedCount": "{loaded} geladen · {total} Treffer"
+    "loadedCount": "{loaded} geladen · {total} Treffer",
+    "quiz": "Quiz",
+    "correctOption": "Richtige Antwort: Option {n}",
+    "quizReveal": "Die richtigen Antworten werden nach Ende der Abstimmung angezeigt.",
+    "correctAnswer": "Richtige Antwort",
+    "threadClose": "Thread schließen",
+    "threadReopen": "Thread wieder öffnen",
+    "threadLock": "Thread sperren",
+    "threadUnlock": "Thread entsperren",
+    "threadDelete": "Thread löschen",
+    "threadClosed": "Dieser Thread ist geschlossen.",
+    "threadLocked": "Dieser Thread ist gesperrt.",
+    "threadDeleting": "Thread wird gelöscht…",
+    "threadDeleted": "Dieser Thread wurde gelöscht.",
+    "threadInterrupted": "Löschen gestoppt. Zugriff prüfen und erneut versuchen.",
+    "threadDeleteReplies": "Alle Antworten löschen? Die ursprüngliche Nachricht bleibt erhalten.",
+    "threadDeletePost": "Diesen Forenbeitrag und alle Antworten löschen?",
+    "threadResume": "Löschen fortsetzen"
   }
 }

@@ -2068,6 +2068,23 @@
     "selectLoaded": "লোড হওয়া সদস্য বাছুন",
     "bulkRoles": "বাছাই করা সদস্যদের ভূমিকা পরিচালনা",
     "allRoles": "সব প্রবেশাধিকার স্তর",
-    "loadedCount": "{loaded} জন লোড হয়েছে · {total} জন মিলেছে"
+    "loadedCount": "{loaded} জন লোড হয়েছে · {total} জন মিলেছে",
+    "quiz": "কুইজ",
+    "correctOption": "সঠিক উত্তর: বিকল্প {n}",
+    "quizReveal": "ভোট বন্ধ হওয়ার পর সঠিক উত্তর দেখানো হবে।",
+    "correctAnswer": "সঠিক উত্তর",
+    "threadClose": "থ্রেড বন্ধ করুন",
+    "threadReopen": "থ্রেড আবার খুলুন",
+    "threadLock": "থ্রেড লক করুন",
+    "threadUnlock": "থ্রেড আনলক করুন",
+    "threadDelete": "থ্রেড মুছুন",
+    "threadClosed": "এই থ্রেড বন্ধ।",
+    "threadLocked": "এই থ্রেড লক করা।",
+    "threadDeleting": "থ্রেড মোছা হচ্ছে…",
+    "threadDeleted": "এই থ্রেড মুছে ফেলা হয়েছে।",
+    "threadInterrupted": "মোছা থেমেছে। অনুমতি যাচাই করে আবার চেষ্টা করুন।",
+    "threadDeleteReplies": "সব উত্তর মুছবেন? মূল বার্তা থাকবে।",
+    "threadDeletePost": "এই ফোরাম পোস্ট ও সব উত্তর মুছবেন?",
+    "threadResume": "মোছা চালিয়ে যান"
   }
 }

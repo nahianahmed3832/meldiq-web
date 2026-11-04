@@ -52,7 +52,12 @@ let loading: Promise<EmojiGroup[]> | null = null;
 
 /** The catalogue, fetched once as its own chunk (about 140 kB) the first time a picker opens. */
 export function loadCatalog(): Promise<EmojiGroup[]> {
-  loading ??= import("./emoji.json").then((m) => parseCatalog(m.default as unknown as CatalogFile));
+  loading ??= import("./emoji.json")
+    .then((m) => parseCatalog(m.default as unknown as CatalogFile))
+    .catch((error) => {
+      loading = null;
+      throw error;
+    });
   return loading;
 }
 

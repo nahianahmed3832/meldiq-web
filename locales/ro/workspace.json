@@ -2068,6 +2068,23 @@
     "selectLoaded": "Selectează membrii încărcați",
     "bulkRoles": "Gestionează rolurile selectate",
     "allRoles": "Toate nivelurile de acces",
-    "loadedCount": "{loaded} încărcați · {total} rezultate"
+    "loadedCount": "{loaded} încărcați · {total} rezultate",
+    "quiz": "Chestionar",
+    "correctOption": "Răspuns corect: opțiunea {n}",
+    "quizReveal": "Răspunsurile corecte sunt afișate după închiderea votării.",
+    "correctAnswer": "Răspuns corect",
+    "threadClose": "Închide firul",
+    "threadReopen": "Redeschide firul",
+    "threadLock": "Blochează firul",
+    "threadUnlock": "Deblochează firul",
+    "threadDelete": "Șterge firul",
+    "threadClosed": "Acest fir este închis.",
+    "threadLocked": "Acest fir este blocat.",
+    "threadDeleting": "Se șterge firul…",
+    "threadDeleted": "Acest fir a fost șters.",
+    "threadInterrupted": "Ștergerea s-a oprit. Verifică accesul și reîncearcă.",
+    "threadDeleteReplies": "Ștergi toate răspunsurile? Mesajul inițial va rămâne.",
+    "threadDeletePost": "Ștergi această postare de forum și toate răspunsurile?",
+    "threadResume": "Reia ștergerea"
   }
 }

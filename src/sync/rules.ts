@@ -36,6 +36,7 @@ function richOf(p: Payload): RichContent | null {
   if (p.link) r.link = p.link;
   const poll = cleanPoll(p.poll);
   if (poll) r.poll = poll;
+  if (p.managedPoll) r.managedPoll = p.managedPoll;
   const sticker = cleanSticker(p.sticker);
   if (sticker) r.sticker = sticker;
   // A GIF is kept only when its address is on its provider's media hosts (sync/gifs.ts).

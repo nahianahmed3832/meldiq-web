@@ -2068,6 +2068,23 @@
     "selectLoaded": "Chọn thành viên đã tải",
     "bulkRoles": "Quản lý vai trò đã chọn",
     "allRoles": "Mọi cấp truy cập",
-    "loadedCount": "Đã tải {loaded} · {total} kết quả"
+    "loadedCount": "Đã tải {loaded} · {total} kết quả",
+    "quiz": "Câu đố",
+    "correctOption": "Đáp án đúng: Lựa chọn {n}",
+    "quizReveal": "Đáp án đúng được công bố sau khi đóng bình chọn.",
+    "correctAnswer": "Đáp án đúng",
+    "threadClose": "Đóng luồng",
+    "threadReopen": "Mở lại luồng",
+    "threadLock": "Khóa luồng",
+    "threadUnlock": "Mở khóa luồng",
+    "threadDelete": "Xóa luồng",
+    "threadClosed": "Luồng này đã đóng.",
+    "threadLocked": "Luồng này đã khóa.",
+    "threadDeleting": "Đang xóa luồng…",
+    "threadDeleted": "Luồng này đã bị xóa.",
+    "threadInterrupted": "Đã dừng xóa. Kiểm tra quyền truy cập rồi thử lại.",
+    "threadDeleteReplies": "Xóa mọi câu trả lời? Tin nhắn gốc sẽ được giữ lại.",
+    "threadDeletePost": "Xóa bài đăng diễn đàn này và mọi câu trả lời?",
+    "threadResume": "Tiếp tục xóa"
   }
 }

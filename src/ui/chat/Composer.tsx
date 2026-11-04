@@ -1,3 +1,4 @@
+import { useEmojiCompletion } from "./EmojiCompletion";
 import { useLocaleRender } from "../../i18n/Localized";
 import { text as uiText } from "../../i18n";
 import { Localized } from "../../i18n/Localized";
@@ -114,6 +115,22 @@ export function Composer(props: ComposerProps) {
   // Batch B9: a community's own emoji and stickers in its channels; the ones picked for this message by name.
   const communityEmoji = useExpressions(c.type === "CHANNEL" ? c.orgId : null, true);
   const picked = useRef(new Map<string, CustomEmojiRef>());
+  const completion = useEmojiCompletion({
+    scope: `${engine.device.userId}:${c.id}:${props.threadRoot ?? "main"}`,
+    list: communityEmoji,
+    onPick: (choice, range) => {
+      if (choice.expression) picked.current.set(choice.expression.name, refOf(choice.expression));
+      const next = text.slice(0, range.start) + choice.text + " " + text.slice(range.end);
+      onChange(next);
+      setSuggest(null);
+      requestAnimationFrame(() => {
+        input.current?.focus();
+        const caret = range.start + choice.text.length + 1;
+        input.current?.setSelectionRange(caret, caret);
+      });
+    },
+  });
+
   // Batch B3 slowmode: when this person may post next (the server's answer, or one interval after their last message).
   const slowed = c.type === "CHANNEL" && c.slowmodeSec > 0 && !c.slowmodeExempt;
   const [lastSent, setLastSent] = useState(0);
@@ -225,6 +242,7 @@ export function Composer(props: ComposerProps) {
     }
     engine.setTyping(c.id, value.trim().length > 0);
     const caret = input.current?.selectionStart ?? value.length;
+    completion.update(value, caret);
     const q = c.type === "DM" ? null : activeMentionQuery(value, caret);
     if (!q) return setSuggest(null);
     const pool = [...members.filter((m) => m.id !== engine.device.userId)];
@@ -269,6 +287,7 @@ export function Composer(props: ComposerProps) {
         clearTimeout(draftTimer.current);
         pendingDraft.current = null;
         setText("");
+        completion.clear();
         void engine.saveDraft(c.id, "");
         engine.setTyping(c.id, false);
         return;
@@ -381,6 +400,7 @@ export function Composer(props: ComposerProps) {
     <div className="composer-wrap">
       <TransferList conversationId={c.id} />
       <SlashCommandList slash={slash} />
+      {completion.view}
       {suggest && (
         <div className="suggest card" role="listbox" aria-label={uiText("messaging.interface.people_to_mention_5295509")}>
           {suggest.items.map((m, i) => (
@@ -487,7 +507,11 @@ export function Composer(props: ComposerProps) {
                     addFiles(pasted);
                   }
                 }}
+                aria-autocomplete="list"
+                aria-controls={completion.open ? completion.id : undefined}
+                aria-activedescendant={completion.activeId}
                 onKeyDown={(e) => {
+                  if (e.nativeEvent.isComposing || completion.onKey(e)) return;
                   if (slash.onKey(e)) return;
                   if (suggest) {
                     if (e.key === "ArrowDown" || e.key === "ArrowUp") {
@@ -636,7 +660,7 @@ export function Composer(props: ComposerProps) {
       )}
       {rich === "contact" && <ProfileShareDialog onClose={() => setRich(null)} onSend={(contact) => void sendRich({ contact })} />}
       {rich === "location" && <LocationDialog onClose={() => setRich(null)} onSend={(location) => void sendRich({ location })} />}
-      {rich === "poll" && <PollDialog onClose={() => setRich(null)} onSend={(poll) => void sendRich({ poll })} />}
+      {rich === "poll" && <PollDialog onClose={() => setRich(null)} onSend={(poll, managedPoll) => void sendRich(managedPoll ? { managedPoll } : { poll })} />}
       {emoji.anchor && (
         <ExpressionPicker
           anchor={emoji.anchor}

@@ -82,6 +82,7 @@ const zPoll = z.object({
   /** Android batch B8: when voting ends (epoch ms); absent: open until its creator closes it. */
   endsAt: opt(z.number().int()),
 });
+export const zManagedPoll = zPoll.extend({ version: z.literal(1), quiz: z.boolean(), reveal: z.literal("after_close") });
 /** A sticker reference into the shared catalogue (docs/STICKERS.md); the text carries the readable fallback. */
 const zSticker = z.object({ pack: z.string().max(64), id: z.string().max(64) });
 /**
@@ -134,6 +135,7 @@ export const zPayload = z.object({
   origin: opt(zOrigin),
   link: opt(zLink),
   poll: opt(zPoll),
+  managedPoll: opt(zManagedPoll).catch(undefined),
   sticker: opt(zSticker),
   gif: opt(zGif),
   /** A "vote" control: the chosen option ids of the poll in [target] (empty takes the vote back). */
@@ -168,11 +170,12 @@ export type Payload = z.infer<typeof zPayload>;
 
 /** Fields only the server's own senders may put in a payload: never read from an end-to-end envelope. */
 export function withoutServerFields(p: Payload): Payload {
-  const { embeds: _e, buttons: _b, webhook: _w, textFromEmbeds: _t, giveaway: _g, ...rest } = p;
+  const { embeds: _e, buttons: _b, webhook: _w, textFromEmbeds: _t, giveaway: _g, managedPoll: _managed, ...rest } = p;
   return rest;
 }
 export type ForwardOrigin = z.infer<typeof zOrigin>;
 export type Poll = z.infer<typeof zPoll>;
+export type ManagedPoll = z.infer<typeof zManagedPoll> & { correctOptionIds?: string[] };
 export type StickerRef = z.infer<typeof zSticker>;
 export type GifRef = z.infer<typeof zGif>;
 

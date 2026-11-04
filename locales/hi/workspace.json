@@ -2068,6 +2068,23 @@
     "selectLoaded": "लोड हुए सदस्य चुनें",
     "bulkRoles": "चुने गए सदस्यों की भूमिकाएँ प्रबंधित करें",
     "allRoles": "सभी पहुँच स्तर",
-    "loadedCount": "{loaded} लोड हुए · {total} मेल"
+    "loadedCount": "{loaded} लोड हुए · {total} मेल",
+    "quiz": "प्रश्नोत्तरी",
+    "correctOption": "सही उत्तर: विकल्प {n}",
+    "quizReveal": "मतदान बंद होने के बाद सही उत्तर दिखाए जाएँगे।",
+    "correctAnswer": "सही उत्तर",
+    "threadClose": "थ्रेड बंद करें",
+    "threadReopen": "थ्रेड फिर खोलें",
+    "threadLock": "थ्रेड लॉक करें",
+    "threadUnlock": "थ्रेड अनलॉक करें",
+    "threadDelete": "थ्रेड हटाएँ",
+    "threadClosed": "यह थ्रेड बंद है।",
+    "threadLocked": "यह थ्रेड लॉक है।",
+    "threadDeleting": "थ्रेड हटाया जा रहा है…",
+    "threadDeleted": "यह थ्रेड हटा दिया गया।",
+    "threadInterrupted": "हटाना रुक गया। पहुँच जाँचकर फिर प्रयास करें।",
+    "threadDeleteReplies": "सभी जवाब हटाएँ? मूल संदेश बना रहेगा।",
+    "threadDeletePost": "यह फ़ोरम पोस्ट और सभी जवाब हटाएँ?",
+    "threadResume": "हटाना जारी रखें"
   }
 }

@@ -57,6 +57,7 @@ export function fallbackText(r: RichContent): string {
   if (r.contact) return `👤 ${[r.contact.name, ...r.contact.phones, ...r.contact.emails].join("\n")}`;
   if (r.location) return `📍 ${r.location.label ? `${r.location.label}\n` : ""}${osmLink(r.location)}`;
   if (r.poll) return pollFallback(r.poll);
+  if (r.managedPoll) return pollFallback(r.managedPoll);
   if (r.sticker) {
     const spec = findSticker(r.sticker);
     return spec ? stickerFallback(spec) : uiText("workspace.interface.sticker_7e2d81c");

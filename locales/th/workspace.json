@@ -2068,6 +2068,23 @@
     "selectLoaded": "เลือกสมาชิกที่โหลดแล้ว",
     "bulkRoles": "จัดการบทบาทที่เลือก",
     "allRoles": "ทุกระดับการเข้าถึง",
-    "loadedCount": "โหลดแล้ว {loaded} คน · ตรงกัน {total} คน"
+    "loadedCount": "โหลดแล้ว {loaded} คน · ตรงกัน {total} คน",
+    "quiz": "แบบทดสอบ",
+    "correctOption": "คำตอบที่ถูกต้อง: ตัวเลือก {n}",
+    "quizReveal": "คำตอบที่ถูกต้องจะแสดงหลังปิดการโหวต",
+    "correctAnswer": "คำตอบที่ถูกต้อง",
+    "threadClose": "ปิดเธรด",
+    "threadReopen": "เปิดเธรดอีกครั้ง",
+    "threadLock": "ล็อกเธรด",
+    "threadUnlock": "ปลดล็อกเธรด",
+    "threadDelete": "ลบเธรด",
+    "threadClosed": "เธรดนี้ปิดแล้ว",
+    "threadLocked": "เธรดนี้ถูกล็อก",
+    "threadDeleting": "กำลังลบเธรด…",
+    "threadDeleted": "เธรดนี้ถูกลบแล้ว",
+    "threadInterrupted": "การลบหยุดลง ตรวจสอบสิทธิ์แล้วลองใหม่",
+    "threadDeleteReplies": "ลบทุกข้อความตอบกลับหรือไม่? ข้อความต้นฉบับจะยังอยู่",
+    "threadDeletePost": "ลบโพสต์ฟอรัมนี้และทุกข้อความตอบกลับหรือไม่?",
+    "threadResume": "ลบต่อ"
   }
 }

@@ -2068,6 +2068,23 @@
     "selectLoaded": "تحديد الأعضاء المحمّلين",
     "bulkRoles": "إدارة أدوار المحددين",
     "allRoles": "جميع مستويات الوصول",
-    "loadedCount": "{loaded} محمّل · {total} مطابق"
+    "loadedCount": "{loaded} محمّل · {total} مطابق",
+    "quiz": "اختبار",
+    "correctOption": "الإجابة الصحيحة: الخيار {n}",
+    "quizReveal": "تظهر الإجابات الصحيحة بعد إغلاق التصويت.",
+    "correctAnswer": "إجابة صحيحة",
+    "threadClose": "إغلاق النقاش",
+    "threadReopen": "إعادة فتح النقاش",
+    "threadLock": "قفل النقاش",
+    "threadUnlock": "فتح قفل النقاش",
+    "threadDelete": "حذف النقاش",
+    "threadClosed": "هذا النقاش مغلق.",
+    "threadLocked": "هذا النقاش مقفل.",
+    "threadDeleting": "جارٍ حذف النقاش…",
+    "threadDeleted": "تم حذف هذا النقاش.",
+    "threadInterrupted": "توقف الحذف. تحقق من الوصول وحاول مجددًا.",
+    "threadDeleteReplies": "هل تريد حذف كل الردود؟ ستبقى الرسالة الأصلية.",
+    "threadDeletePost": "هل تريد حذف منشور المنتدى وكل الردود؟",
+    "threadResume": "استئناف الحذف"
   }
 }

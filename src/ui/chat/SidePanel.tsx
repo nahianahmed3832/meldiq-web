@@ -1,3 +1,4 @@
+import { ThreadControls, useThreadLifecycle } from "./ThreadControls";
 import { useLocaleRender } from "../../i18n/Localized";
 import { text as uiText } from "../../i18n";
 import { Localized } from "../../i18n/Localized";
@@ -45,6 +46,7 @@ function ThreadPanel({ conversationId, root, onClose }: { conversationId: string
   const me = useOrbit((s) => s.me);
   const users = useOrbit((s) => s.users);
   const collection = useMessageCollection(conversationId, "thread", root);
+  const lifecycle = useThreadLifecycle(conversationId, root);
   // An older post or thread (beyond the conversation's loaded page) comes from this browser's store.
   const [older, setOlder] = useState<StoredMessage[]>([]);
   const inLoaded = !!loaded?.some((m) => m.id === root);
@@ -82,6 +84,7 @@ function ThreadPanel({ conversationId, root, onClose }: { conversationId: string
         sub={c.type === "CHANNEL" ? uiText("messaging.interface.value0_dbac6f0", { value0: title }) : title}
         onClose={onClose}
         actions={
+          !lifecycle.supported &&
           following !== null && (
             <button className="btn btn-secondary btn-sm" aria-pressed={following} onClick={() => void engine.setFollowed(root, !following).then(() => setFollowing(!following))}>
               {following ? uiText("messaging.interface.following_344b427") : uiText("messaging.interface.follow_641d1ef")}
@@ -89,6 +92,7 @@ function ThreadPanel({ conversationId, root, onClose }: { conversationId: string
           )
         }
       />
+      <ThreadControls rootId={root} control={lifecycle} autoFollowing={!!rootMsg?.outgoing || items.some((m) => m.threadRootId === root && m.outgoing)} />
       <CollectionControls collection={collection} />
       {rootMsg || (collection.supported && collection.page) ? (
         <>
@@ -104,12 +108,14 @@ function ThreadPanel({ conversationId, root, onClose }: { conversationId: string
             hasMore={false}
             onLoadOlder={() => undefined}
             threadRoot={root}
-            canPost={c.canPost}
+            canPost={c.canPost && lifecycle.canReply}
             onReply={() => undefined}
             onThread={null}
             onReview={() => undefined}
           />
-          <Composer conversation={c} title={title} replyTo={null} replyName={null} onCancelReply={() => undefined} threadRoot={root} dropped={[]} onDroppedTaken={() => undefined} />
+          {lifecycle.canReply && (
+            <Composer conversation={c} title={title} replyTo={null} replyName={null} onCancelReply={() => undefined} threadRoot={root} dropped={[]} onDroppedTaken={() => undefined} />
+          )}
         </>
       ) : (
         <div className="empty">

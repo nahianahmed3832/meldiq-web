@@ -280,12 +280,10 @@ test("forum tag requirements persist and ordinary authors cannot select moderato
   const cid = (await owner.req("POST", `/v1/orgs/${org}/channels`, { name: "tag-forum", format: "forum", scope: "ORG" })).channel.id;
   await owner.req("PATCH", `/v1/conversations/${cid}`, { forumTags: [{ name: "General" }, { name: "Staff" }] });
   await link(page, owner);
-  await page.goto(`/home/c/${cid}`);
-  await expect(page.getByRole("button", { name: "New post", exact: true })).toBeVisible();
-  const back = page.getByRole("button", { name: "Back to conversations", exact: true });
-  if (await back.isVisible()) await back.click();
-  await page.getByRole("button", { name: "More for tag-forum", exact: true }).click();
-  await page.getByRole("menuitem", { name: /Edit channel/ }).click();
+  await page.goto(`/home/c/${cid}/details`);
+  const details = page.getByRole("complementary", { name: "Details", exact: true });
+  await details.getByRole("button", { name: "Settings", exact: true }).click();
+  await page.getByRole("complementary", { name: "Channel settings", exact: true }).getByRole("button", { name: "Edit channel", exact: true }).click();
   const edit = page.getByRole("dialog", { name: "Edit #tag-forum", exact: true });
   await edit.getByRole("checkbox", { name: "Require a tag for new posts", exact: true }).check();
   await edit.getByRole("checkbox", { name: "Moderators only: Staff", exact: true }).check();

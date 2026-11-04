@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 
+export const MESSAGE_LAYOUT_EVENT = "meldiq:message-layout";
 const NEAR_BOTTOM = 120;
 type Anchor = { id: string | null; offset: number; atBottom: boolean };
 
@@ -17,6 +18,8 @@ export function useReadingPosition({
 }) {
   const scroller = useRef<HTMLDivElement>(null);
   const anchor = useRef<Anchor>({ id: null, offset: 0, atBottom: true });
+  const layoutIntent = useRef<Anchor | null>(null);
+  const layoutFrame = useRef<number | null>(null);
   const initialized = useRef(false);
   const jumping = useRef(false);
   const size = useRef({ height: 0, viewport: 0 });
@@ -96,7 +99,7 @@ export function useReadingPosition({
         }
         return;
       }
-      restore(anchor.current);
+      restore(layoutIntent.current ?? anchor.current);
       capture();
     });
     observer.observe(el);
@@ -107,8 +110,51 @@ export function useReadingPosition({
   useEffect(() => {
     const el = scroller.current;
     if (!el) return;
+    const changed = (event: Event) => {
+      const phase = (event as CustomEvent<{ phase: string }>).detail?.phase;
+      if (phase === "before") {
+        capture();
+        jumping.current = false;
+        layoutIntent.current = { ...anchor.current, atBottom: false };
+        if (layoutFrame.current !== null) cancelAnimationFrame(layoutFrame.current);
+      } else if (phase === "after" && layoutIntent.current) {
+        restore(layoutIntent.current);
+        capture();
+        // Focus visibility and ResizeObserver can scroll in the next frame; retain the explicit reading anchor through it.
+        layoutFrame.current = requestAnimationFrame(() => {
+          if (layoutIntent.current) {
+            restore(layoutIntent.current);
+            capture();
+          }
+          layoutFrame.current = requestAnimationFrame(() => {
+            if (layoutIntent.current) {
+              restore(layoutIntent.current);
+              capture();
+            }
+            layoutIntent.current = null;
+            layoutFrame.current = null;
+          });
+        });
+      }
+    };
+    el.addEventListener(MESSAGE_LAYOUT_EVENT, changed);
+    return () => {
+      el.removeEventListener(MESSAGE_LAYOUT_EVENT, changed);
+      if (layoutFrame.current !== null) cancelAnimationFrame(layoutFrame.current);
+      layoutIntent.current = null;
+    };
+  }, [capture, restore]);
+
+  useEffect(() => {
+    const el = scroller.current;
+    if (!el) return;
     const finish = (event: Event) => {
-      if (!jumping.current) return;
+      if (event.type !== "scrollend") layoutIntent.current = null;
+      if (!jumping.current) {
+        // Capture explicit input before a message expands or collapses; its preceding scroll may still be queued.
+        if (event.type !== "scrollend") capture();
+        return;
+      }
       // A completed old target may be short of an image that expanded during the animation.
       if (event.type === "scrollend" && el.scrollHeight - el.scrollTop - el.clientHeight > 1) {
         el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
@@ -118,9 +164,9 @@ export function useReadingPosition({
       capture();
     };
     // Native scrollend also handles interrupted smooth scrolling; input cancels following immediately.
-    for (const event of ["scrollend", "wheel", "touchstart", "keydown"]) el.addEventListener(event, finish);
+    for (const event of ["scrollend", "wheel", "touchstart", "pointerdown", "keydown"]) el.addEventListener(event, finish);
     return () => {
-      for (const event of ["scrollend", "wheel", "touchstart", "keydown"]) el.removeEventListener(event, finish);
+      for (const event of ["scrollend", "wheel", "touchstart", "pointerdown", "keydown"]) el.removeEventListener(event, finish);
     };
   }, [capture]);
 
@@ -134,6 +180,10 @@ export function useReadingPosition({
   }, [capture, ready]);
   const onScroll = useCallback(() => {
     const el = scroller.current;
+    if (layoutIntent.current) {
+      restore(layoutIntent.current);
+      return capture();
+    }
     // Layout can emit scroll before ResizeObserver runs (notably lazy images after a reload).
     // Do not mistake that movement for the reader choosing a new position.
     if (el && initialized.current && (size.current.height !== el.scrollHeight || size.current.viewport !== el.clientHeight)) {

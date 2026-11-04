@@ -2068,6 +2068,23 @@
     "selectLoaded": "Select loaded members",
     "bulkRoles": "Manage selected roles",
     "allRoles": "All access levels",
-    "loadedCount": "{loaded} loaded · {total} matches"
+    "loadedCount": "{loaded} loaded · {total} matches",
+    "quiz": "Quiz",
+    "correctOption": "Correct answer: Option {n}",
+    "quizReveal": "Correct answers are revealed after voting closes.",
+    "correctAnswer": "Correct answer",
+    "threadClose": "Close thread",
+    "threadReopen": "Reopen thread",
+    "threadLock": "Lock thread",
+    "threadUnlock": "Unlock thread",
+    "threadDelete": "Delete thread",
+    "threadClosed": "This thread is closed.",
+    "threadLocked": "This thread is locked.",
+    "threadDeleting": "Deleting thread…",
+    "threadDeleted": "This thread was deleted.",
+    "threadInterrupted": "Deletion stopped. Check access and retry.",
+    "threadDeleteReplies": "Delete every reply in this thread? The parent message will remain.",
+    "threadDeletePost": "Delete this forum post and every reply?",
+    "threadResume": "Resume deletion"
   }
 }
