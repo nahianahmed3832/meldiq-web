@@ -1,0 +1,15 @@
+
+> meldiq-desktop@0.3.0 test
+> vitest run --config desktop/vitest.config.ts
+
+
+ RUN  v4.1.12 /Volumes/code_files/meldiq_parity_integration_windows
+
+(node:32277) Warning: `--localstorage-file` was provided without a valid path
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+ Test Files  7 passed (7)
+      Tests  109 passed (109)
+   Start at  06:28:58
+   Duration  1.16s (transform 1.19s, setup 0ms, import 2.06s, tests 238ms, environment 25ms)
+

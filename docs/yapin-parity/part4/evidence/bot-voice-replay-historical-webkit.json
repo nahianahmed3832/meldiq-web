@@ -1,0 +1,10 @@
+{
+  "scope": "Historical local camera-enabled replay diagnostic before the continuous known-tone probe",
+  "project": "webkit",
+  "refused": false,
+  "connectedAtEnd": false,
+  "audioFrames": 25,
+  "sustainedAudioFrames": 0,
+  "elapsedMs": 390.43841600000087,
+  "limitation": "The helper excluded its first 60 frames from sustainedAudio. This observation does not determine whether those frames contained decoded content and must not be presented as zero received media."
+}

@@ -1,0 +1,36 @@
+{
+  "recordedAt": "2026-11-04T23:02:14.814014+00:00",
+  "runtimeWebCommit": "68bcf13e9716cfebde73a9fee21343da08e24599",
+  "runtimeApiCommit": "742cc1884ff79d751c544619f078b0021d2369a2",
+  "build": "NEXT_PUBLIC_MELDIQ_TEST_LINKING=0 npm run build",
+  "testLinkingEnabled": false,
+  "mode": "ordinary static export; same-origin API routes; not deployed",
+  "files": 477,
+  "sourceMapsAndUncompiledTypescript": 0,
+  "archive": "/tmp/meldiq-part4/releases/meldiq-web-normal-68bcf13.tar.gz",
+  "archiveBytes": 8894865,
+  "archiveSha256": "357ba34e8faef1ec8c1d2aba303632dfb9581862541b6c2baac28ec5421e05d9",
+  "sdkFiles": 13,
+  "sdkArchiveSha256": "b2c19b8e100caf69a85b3293342c81f729c6ecb21fc9bc55e82e6f82c718cf0c",
+  "browserQualification": {
+    "passed": 12,
+    "projects": [
+      "chromium",
+      "firefox",
+      "webkit",
+      "phone-width"
+    ],
+    "flows": [
+      "signup and email-code confirmation",
+      "security/recovery-key setup",
+      "persisted session after reload",
+      "second browser recovery and revoked setup-session handling",
+      "emailed-code third browser setup",
+      "wrong/forgotten password",
+      "fast field changes and delayed capabilities"
+    ],
+    "database": "Owned loopback PostgreSQL with 34 candidate migrations; hosted Auth/Realtime test stubs",
+    "log": "bot-media-disclosure-normal-auth-browser.txt"
+  },
+  "supersededBy": "bot-media-disclosure-web-normal-artifact.json"
+}

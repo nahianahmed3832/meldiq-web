@@ -1,0 +1,13 @@
+
+> meldiq-admin@1.7.0 test
+> vitest run
+
+
+ RUN  v4.1.12 /Volumes/code_files/meldiq_parity_integration_admin
+
+
+ Test Files  6 passed | 1 skipped (7)
+      Tests  32 passed | 1 skipped (33)
+   Start at  06:31:51
+   Duration  871ms (transform 704ms, setup 0ms, import 1.89s, tests 258ms, environment 1ms)
+

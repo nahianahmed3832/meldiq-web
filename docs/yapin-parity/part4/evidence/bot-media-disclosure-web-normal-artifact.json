@@ -1,0 +1,36 @@
+{
+  "recordedAt": "2026-11-04T23:48:11.460180+00:00",
+  "runtimeWebCommit": "a0a27ff82f9cf07bf157245271d513c66bbd9ae5",
+  "runtimeApiCommit": "742cc1884ff79d751c544619f078b0021d2369a2",
+  "apiSourceCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
+  "build": "NEXT_PUBLIC_MELDIQ_TEST_LINKING=0 npm run build",
+  "testLinkingEnabled": false,
+  "mode": "ordinary static export; same-origin API routes; not deployed",
+  "files": 477,
+  "sourceMapsAndUncompiledTypescript": 0,
+  "archive": "/tmp/meldiq-part4/releases/meldiq-web-normal-a0a27ff.tar.gz",
+  "archiveBytes": 8893839,
+  "archiveSha256": "911b0a83268455afe467a9b95f9c389a558e2d37b7ae3a0b1ddab1924d7016e3",
+  "sdkFiles": 13,
+  "sdkArchiveSha256": "e182cb81a15d0570a3eb3a0397570495a490779e2eac44739519b7d78df6ec6c",
+  "browserQualification": {
+    "passed": 12,
+    "projects": [
+      "chromium",
+      "firefox",
+      "webkit",
+      "phone-width"
+    ],
+    "flows": [
+      "signup and email-code confirmation",
+      "security/recovery-key setup",
+      "persisted session after reload",
+      "second browser recovery and revoked setup-session handling",
+      "emailed-code third browser setup",
+      "wrong/forgotten password",
+      "fast field changes and delayed capabilities"
+    ],
+    "database": "Owned loopback PostgreSQL with 34 candidate migrations; hosted Auth/Realtime test stubs",
+    "log": "bot-media-disclosure-normal-auth-browser.txt"
+  }
+}

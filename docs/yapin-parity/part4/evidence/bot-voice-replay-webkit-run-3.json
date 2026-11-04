@@ -1,0 +1,16 @@
+{
+  "scope": "Local self-hosted LiveKit with actual native RTC and a continuous 997 Hz source; no physical-device claim",
+  "project": "webkit",
+  "repetition": 3,
+  "refused": false,
+  "connectedAtEnd": false,
+  "audioFrames": 0,
+  "sustainedAudioFrames": 0,
+  "matchedSourceToneFrames": 0,
+  "positiveControlToneFrames": 247,
+  "referencePublishingAtEnd": true,
+  "referencePublishedFramesAtReplay": 27,
+  "referencePublishedFramesAtEnd": 33,
+  "disconnectedAfterMs": 234.204291,
+  "probeElapsedMs": 587.5439580000002
+}

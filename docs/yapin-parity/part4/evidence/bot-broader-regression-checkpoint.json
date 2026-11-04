@@ -1,0 +1,105 @@
+{
+  "recordedAt": "2026-11-04T23:01:23.508294+00:00",
+  "runtimeApiCommit": "742cc1884ff79d751c544619f078b0021d2369a2",
+  "testQualificationCommit": "43d837cbb30c2b25a7643bae37cf8fd68add8404",
+  "testHarnessCommit": "c6bf3845",
+  "status": "fresh full PostgreSQL-default regression passed; broader release remains open",
+  "initialDiagnostics": {
+    "pg": {
+      "filesPassed": 211,
+      "filesFailed": 23,
+      "filesSkipped": 4,
+      "passed": 1789,
+      "failed": 45,
+      "skipped": 93,
+      "clean": false
+    },
+    "legacyDefault": {
+      "filesPassed": 221,
+      "filesFailed": 2,
+      "filesSkipped": 15,
+      "passed": 2143,
+      "failed": 2,
+      "skipped": 97,
+      "clean": false
+    }
+  },
+  "corrections": {
+    "backendSelection": "A global PG run defaults to PostgreSQL while explicit MongoDB/SQLite fixtures retain their chosen backend; owned Mongo replica setup remains available. Audits use the platform repository. SQLite backup/migration/restart/secure_delete checks keep their native scope.",
+    "pgMixedFollowup": {
+      "files": 30,
+      "passed": 197
+    },
+    "backendSelectionBatch": {
+      "files": 13,
+      "passed": 115,
+      "failed": 2,
+      "skipped": 1,
+      "remainingDiagnostics": "storage restart and legacy SQLite site-details CLI; subsequently corrected"
+    },
+    "storageRestartFinal": {
+      "files": 1,
+      "passed": 18
+    },
+    "siteDetailsFinal": {
+      "files": 1,
+      "passed": 3
+    },
+    "legacyFinal": {
+      "files": 2,
+      "passed": 5,
+      "scope": "correct owning ephemeral session repository and real Android golden fixture path"
+    },
+    "countsOverlap": true,
+    "all23InitialPgFailedFilesHavePassingFollowup": true,
+    "apiTypecheckExitCode": 0
+  },
+  "gatewayCapacity": {
+    "passed": 2,
+    "backend": "actual PostgreSQL repository",
+    "realAuthenticatedSockets": 100,
+    "messages": 40,
+    "observedDeliveries": 4000,
+    "limitsProved": [
+      "two connections per bot",
+      "eight connections per forwarded test address",
+      "100 global connections; distinct 101st bot refused before identify",
+      "slots recovered after close"
+    ],
+    "fixtureProvisioning": "ordinary owner-authorized domain services, avoiding HTTP installation/review provisioning rate limits; personal bot quotas and all native permissions stay in force",
+    "metrics": {
+      "scope": "loopback PostgreSQL HTTP + 100 same-process WebSocket clients; bounded fan-out qualification",
+      "baselineMessages": 20,
+      "baselineP95Ms": 6.148832999999286,
+      "loadedMessages": 40,
+      "loadedP95Ms": 3.000250000000051,
+      "allRecipients": 100,
+      "observedDeliveries": 4000,
+      "elapsedMs": 645.4286250000005,
+      "processRssBytes": 317145088
+    },
+    "limits": "same process/client/server on loopback, tiny synthetic messages, small samples, baseline collected first before later cache warming; not a production capacity, latency improvement or deployment benchmark"
+  },
+  "production": "unchanged",
+  "physicalDevices": "pending by owner choice",
+  "freshFullPgRegression": {
+    "sourceCommit": "43d837cbb30c2b25a7643bae37cf8fd68add8404",
+    "filesPassed": 235,
+    "filesSkipped": 4,
+    "passed": 1908,
+    "failed": 0,
+    "skipped": 23,
+    "durationSeconds": 827.76,
+    "fixturePath": "sole Android workspace golden interop fixture via explicit environment",
+    "backendScope": "PostgreSQL API by default, with explicitly selected SQLite/MongoDB fixture cases retaining their own backend",
+    "countsOverlapOtherRuns": true
+  },
+  "laterApiSource": {
+    "commit": "031089388da4430fedfd7c85de1dd8c80964886e",
+    "changesSinceFullRun": [
+      "docs/api/BOT_VOICE_MEDIA.md",
+      "server/sdk/README.md"
+    ],
+    "implementationAndContractDifference": false
+  }
+}

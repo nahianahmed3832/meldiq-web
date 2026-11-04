@@ -36,7 +36,17 @@
       "download revocation during storage and streaming closes storage readers",
       "local object-store stand-in checksum, idempotency, ownership, multipart and cancellation",
       "real invitation/member lifecycle events; current invite role/scope withdrawal; no invitation-code disclosure"
-    ]
+    ],
+    "nativeEventVariants": {
+      "files": 3,
+      "passed": 22,
+      "sfu": "control-plane stand-in; real native handlers and PostgreSQL"
+    },
+    "contextAndOverwriteFollowup": {
+      "files": 2,
+      "passed": 14,
+      "countsOverlap": true
+    }
   },
   "web": {
     "files": 149,
@@ -67,7 +77,23 @@
       "chromium",
       "phone-width"
     ],
-    "firstDiagnostic": "test expected Attach files instead of the existing Share files label; corrected test selector, no runtime change"
+    "firstDiagnostic": "test expected Attach files instead of the existing Share files label; corrected test selector, no runtime change",
+    "combinedBotRegression": {
+      "passed": 28,
+      "flows": [
+        "rich controls",
+        "personal consent",
+        "community files",
+        "requested/approved permissions",
+        "SDK integrity",
+        "voice public-key review",
+        "encrypted RTC and revocation"
+      ],
+      "screenshotsReviewed": [
+        "phone-width encrypted call",
+        "chromium rich controls"
+      ]
+    }
   },
   "database": {
     "scope": "fresh disposable loopback PostgreSQL with hosted Auth/Realtime test stubs",
@@ -79,7 +105,8 @@
     "apiCommit": "742cc1884ff79d751c544619f078b0021d2369a2",
     "files": 13,
     "bytes": 240295,
-    "sha256": "b2c19b8e100caf69a85b3293342c81f729c6ecb21fc9bc55e82e6f82c718cf0c"
+    "sha256": "b2c19b8e100caf69a85b3293342c81f729c6ecb21fc9bc55e82e6f82c718cf0c",
+    "historical": true
   },
   "boundaries": [
     "no real AWS object-store acceptance",
@@ -88,12 +115,26 @@
     "no hosted code execution, package publication, production change or physical-device claim"
   ],
   "remaining": [
-    "Windows file checkpoint resync",
     "empty-room bot initiation",
     "remaining adapter/event variants",
     "complete immutable native integration",
     "performance and restore/rollback",
     "durable policy acceptance",
     "full coordinated release qualification"
-  ]
+  ],
+  "voiceEventQualificationCommit": "44e6649a",
+  "nativeAdapterQualificationCommit": "01c61bca",
+  "followupReceipts": [
+    "bot-broader-regression-checkpoint.json",
+    "bot-media-replay-checkpoint.json",
+    "bot-media-disclosure-web-normal-artifact.json",
+    "native-integration-checkpoint.json"
+  ],
+  "currentSdk": {
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
+    "files": 13,
+    "bytes": 240495,
+    "sha256": "e182cb81a15d0570a3eb3a0397570495a490779e2eac44739519b7d78df6ec6c",
+    "change": "guide disclosure only; no client implementation/contract delta from the original file SDK"
+  }
 }

@@ -1,0 +1,35 @@
+[WebServer] (node:38293) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:38309) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:38311) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:38311) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+[WebServer] (node:38311) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+[WebServer] (node:38318) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 12 tests using 1 worker
+
+(node:38319) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 [chromium] › e2e/accounts.spec.ts:44:1 › sign up, set up encryption, come back after a reload, and add a second browser with the recovery key (12.2s)
+  ✓   2 [chromium] › e2e/accounts.spec.ts:175:1 › a wrong password and a forgotten password (1.6s)
+  ✓   3 [chromium] › e2e/auth-input.spec.ts:4:1 › sign-in credentials survive fast field changes and delayed server capability updates (776ms)
+(node:38430) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   4 [firefox] › e2e/accounts.spec.ts:44:1 › sign up, set up encryption, come back after a reload, and add a second browser with the recovery key (17.4s)
+  ✓   5 [firefox] › e2e/accounts.spec.ts:175:1 › a wrong password and a forgotten password (1.4s)
+  ✓   6 [firefox] › e2e/auth-input.spec.ts:4:1 › sign-in credentials survive fast field changes and delayed server capability updates (826ms)
+(node:38487) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   7 [webkit] › e2e/accounts.spec.ts:44:1 › sign up, set up encryption, come back after a reload, and add a second browser with the recovery key (16.0s)
+  ✓   8 [webkit] › e2e/accounts.spec.ts:175:1 › a wrong password and a forgotten password (1.4s)
+  ✓   9 [webkit] › e2e/auth-input.spec.ts:4:1 › sign-in credentials survive fast field changes and delayed server capability updates (940ms)
+(node:38557) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  10 [phone-width] › e2e/accounts.spec.ts:44:1 › sign up, set up encryption, come back after a reload, and add a second browser with the recovery key (11.3s)
+  ✓  11 [phone-width] › e2e/accounts.spec.ts:175:1 › a wrong password and a forgotten password (1.4s)
+  ✓  12 [phone-width] › e2e/auth-input.spec.ts:4:1 › sign-in credentials survive fast field changes and delayed server capability updates (699ms)
+
+  12 passed (1.4m)

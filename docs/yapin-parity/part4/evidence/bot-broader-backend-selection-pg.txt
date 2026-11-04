@@ -1,0 +1,74 @@
+
+ RUN  v4.1.12 /Volumes/code_files/meldiq_parity_integration_api/server
+
+(node:36583) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:36583) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ❯ test/storage_s3.test.ts (18 tests | 1 failed) 30179ms
+     × disk files stay readable after moving to S3, and S3 files after a rollback to the disk 12505ms
+(node:36622) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:36622) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:36626) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:36626) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+delivery_queue: 5/5   submitted_messages: 5/5   
+(node:36793) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:36793) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:36811) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:36811) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:36820) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:36820) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ❯ test/site_details.test.ts (3 tests | 1 failed) 20300ms
+     × change only for super admins, with a reason, audited field by field, and show on the public answer at once 29ms
+(node:36857) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:36857) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:36877) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:36877) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/site_details.test.ts > site and legal details > change only for super admins, with a reason, audited field by field, and show on the public answer at once
+Error: Legacy SQL access is not implemented in the staged PostgreSQL runtime
+ ❯ Proxy.<anonymous> src/app/postgresRuntime.ts:83:15
+     81|       if (["prepare", "exec", "pragma", "transaction", "backup", "load…
+     82|         attempted();
+     83|         throw new Error("Legacy SQL access is not implemented in the s…
+       |               ^
+     84|       };
+     85|       const value = Reflect.get(target, property, target) as unknown;
+ ❯ siteDetailsFromDb src/app/siteDetails.ts:43:18
+ ❯ test/site_details.test.ts:79:12
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  test/storage_s3.test.ts > switching between the disk and S3 without moving files (STORAGE_READ_FALLBACK) > disk files stay readable after moving to S3, and S3 files after a rollback to the disk
+AssertionError: expected 401 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 401
+
+ ❯ test/storage_s3.test.ts:320:24
+    318|     await restart({ STORAGE_BACKEND: "s3", STORAGE_READ_FALLBACK: "loc…
+    319|     expect((await alice.req("GET", "/v1/server-info")).features).toCon…
+    320|     const old = await fetch(`${h.baseUrl}/v1/attachments/${diskId}`, {…
+       |                        ^
+    321|     expect(old.status).toBe(200); // streamed from the disk: S3 has no…
+    322|     expect(Buffer.from(await old.arrayBuffer())).toEqual(onDisk);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed | 11 passed (13)
+      Tests  2 failed | 115 passed | 1 skipped (118)
+   Start at  06:44:30
+   Duration  363.87s (transform 3.53s, setup 0ms, import 12.82s, tests 347.61s, environment 1ms)
+

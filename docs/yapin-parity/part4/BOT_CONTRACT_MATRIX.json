@@ -11,7 +11,7 @@
       "part4/evidence/bot-typed-fixture-validation.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
     "testingScope": "Real scoped API/gateway cases cover this behavior or its core path; full integrated acceptance is pending."
   },
   {
@@ -27,7 +27,7 @@
       "part4/evidence/bot-sdk-media-retention-pg.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
     "testingScope": "Bot-authenticated profile/media workflow passed: own identity/status, GIF/JPEG avatar and banner upload/read/removal, owner isolation and invalid media rejection. Full coordinated acceptance pending."
   },
   {
@@ -43,7 +43,7 @@
       "part4/evidence/bot-sdk-media-retention-pg.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
     "testingScope": "Bot-authenticated profile/media workflow passed: own identity/status, GIF/JPEG avatar and banner upload/read/removal, owner isolation and invalid media rejection. Full coordinated acceptance pending."
   },
   {
@@ -59,7 +59,7 @@
       "part4/evidence/bot-sdk-media-retention-pg.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
     "testingScope": "Bot-authenticated profile/media workflow passed: own identity/status, GIF/JPEG avatar and banner upload/read/removal, owner isolation and invalid media rejection. Full coordinated acceptance pending."
   },
   {
@@ -75,7 +75,7 @@
       "part4/evidence/bot-sdk-media-retention-pg.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
     "testingScope": "Bot-authenticated profile/media workflow passed: own identity/status, GIF/JPEG avatar and banner upload/read/removal, owner isolation and invalid media rejection. Full coordinated acceptance pending."
   },
   {
@@ -91,7 +91,7 @@
       "part4/evidence/bot-sdk-media-retention-pg.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
     "testingScope": "Bot-authenticated profile/media workflow passed: own identity/status, GIF/JPEG avatar and banner upload/read/removal, owner isolation and invalid media rejection. Full coordinated acceptance pending."
   },
   {
@@ -107,7 +107,7 @@
       "part4/evidence/bot-sdk-media-retention-pg.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
     "testingScope": "Bot-authenticated profile/media workflow passed: own identity/status, GIF/JPEG avatar and banner upload/read/removal, owner isolation and invalid media rejection. Full coordinated acceptance pending."
   },
   {
@@ -122,7 +122,7 @@
       "part4/evidence/bot-typed-fixture-validation.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
     "testingScope": "Real scoped API/gateway cases cover this behavior or its core path; full integrated acceptance is pending."
   },
   {
@@ -137,7 +137,7 @@
       "part4/evidence/bot-typed-fixture-validation.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
     "testingScope": "Real scoped API/gateway cases cover this behavior or its core path; full integrated acceptance is pending."
   },
   {
@@ -152,7 +152,7 @@
       "part4/evidence/bot-typed-fixture-validation.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
     "testingScope": "Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required."
   },
   {
@@ -168,7 +168,7 @@
       "part4/evidence/bot-domain-workflows-qualified.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
     "testingScope": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending.",
     "qualificationCommit": "cf826c33d8eec8b6188ee43d1073acccca2c86b9"
   },
@@ -182,11 +182,13 @@
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
       "part4/evidence/bot-typed-fixture-validation.txt",
-      "part4/evidence/bot-domain-workflows-qualified.txt"
+      "part4/evidence/bot-domain-workflows-qualified.txt",
+      "part4/evidence/bot-native-event-variants-pg.txt",
+      "part4/evidence/bot-voice-media-checkpoint.json"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
-    "testingScope": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending.",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
+    "testingScope": "Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending.",
     "qualificationCommit": "cf826c33d8eec8b6188ee43d1073acccca2c86b9"
   },
   {
@@ -199,11 +201,13 @@
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
       "part4/evidence/bot-typed-fixture-validation.txt",
-      "part4/evidence/bot-domain-workflows-qualified.txt"
+      "part4/evidence/bot-domain-workflows-qualified.txt",
+      "part4/evidence/bot-native-event-variants-pg.txt",
+      "part4/evidence/bot-voice-media-checkpoint.json"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
-    "testingScope": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending.",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
+    "testingScope": "Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending.",
     "qualificationCommit": "cf826c33d8eec8b6188ee43d1073acccca2c86b9"
   },
   {
@@ -216,11 +220,13 @@
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
       "part4/evidence/bot-typed-fixture-validation.txt",
-      "part4/evidence/bot-domain-workflows-qualified.txt"
+      "part4/evidence/bot-domain-workflows-qualified.txt",
+      "part4/evidence/bot-native-event-variants-pg.txt",
+      "part4/evidence/bot-voice-media-checkpoint.json"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
-    "testingScope": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending.",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
+    "testingScope": "Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending.",
     "qualificationCommit": "cf826c33d8eec8b6188ee43d1073acccca2c86b9"
   },
   {
@@ -233,11 +239,13 @@
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
       "part4/evidence/bot-typed-fixture-validation.txt",
-      "part4/evidence/bot-domain-workflows-qualified.txt"
+      "part4/evidence/bot-domain-workflows-qualified.txt",
+      "part4/evidence/bot-native-event-variants-pg.txt",
+      "part4/evidence/bot-voice-media-checkpoint.json"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
-    "testingScope": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending.",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
+    "testingScope": "Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending.",
     "qualificationCommit": "cf826c33d8eec8b6188ee43d1073acccca2c86b9"
   },
   {
@@ -250,44 +258,52 @@
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
       "part4/evidence/bot-typed-fixture-validation.txt",
-      "part4/evidence/bot-domain-workflows-qualified.txt"
+      "part4/evidence/bot-domain-workflows-qualified.txt",
+      "part4/evidence/bot-native-event-variants-pg.txt",
+      "part4/evidence/bot-voice-media-checkpoint.json"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
-    "testingScope": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending.",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
+    "testingScope": "Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending.",
     "qualificationCommit": "cf826c33d8eec8b6188ee43d1073acccca2c86b9"
   },
   {
     "id": "YAP-API-017",
     "reference": "PUT /channels/{id}/permissions/{role}",
     "verification": "UNVERIFIED_DOCS",
-    "nativeEquivalent": "PUT /v2/bot/conversations/:id/overwrites (native full permission document)",
+    "nativeEquivalent": "PUT /v2/bot/conversations/:id/overwrites (native subject document)",
     "scope": "Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending.",
     "source": "server/src/modules/bots/; server/src/shared/contracts/http/botDomainAdapters.ts; docs/api/bot-gateway.schema.json",
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
       "part4/evidence/bot-typed-fixture-validation.txt",
-      "part4/evidence/bot-domain-workflows-qualified.txt"
+      "part4/evidence/bot-domain-workflows-qualified.txt",
+      "part4/evidence/bot-native-event-variants-pg.txt",
+      "part4/evidence/bot-voice-media-checkpoint.json",
+      "part4/evidence/bot-native-context-overwrites-pg.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
-    "testingScope": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending.",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
+    "testingScope": "Positive native bot overwrite addition/removal and current message context pass through real PostgreSQL/native controllers; foreign anchor payloads are refused. The native permission surface uses subject documents, not vendor path compatibility. Full integrated/native release acceptance remains pending.",
     "qualificationCommit": "cf826c33d8eec8b6188ee43d1073acccca2c86b9"
   },
   {
     "id": "YAP-API-018",
     "reference": "DELETE /channels/{id}/permissions/{role}",
     "verification": "UNVERIFIED_DOCS",
-    "nativeEquivalent": "PUT /v2/bot/conversations/:id/overwrites (native document with one overwrite removed)",
+    "nativeEquivalent": "PUT /v2/bot/conversations/:id/overwrites with subject, allow:[], deny:[]",
     "scope": "Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending.",
     "source": "server/src/modules/bots/; server/src/shared/contracts/http/botDomainAdapters.ts; docs/api/bot-gateway.schema.json",
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
-      "part4/evidence/bot-typed-fixture-validation.txt"
+      "part4/evidence/bot-typed-fixture-validation.txt",
+      "part4/evidence/bot-native-event-variants-pg.txt",
+      "part4/evidence/bot-voice-media-checkpoint.json",
+      "part4/evidence/bot-native-context-overwrites-pg.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
-    "testingScope": "Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required."
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
+    "testingScope": "Positive native bot overwrite addition/removal and current message context pass through real PostgreSQL/native controllers; foreign anchor payloads are refused. The native permission surface uses subject documents, not vendor path compatibility. Full integrated/native release acceptance remains pending."
   },
   {
     "id": "YAP-API-019",
@@ -299,11 +315,13 @@
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
       "part4/evidence/bot-typed-fixture-validation.txt",
-      "part4/evidence/bot-domain-workflows-qualified.txt"
+      "part4/evidence/bot-domain-workflows-qualified.txt",
+      "part4/evidence/bot-native-event-variants-pg.txt",
+      "part4/evidence/bot-voice-media-checkpoint.json"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
-    "testingScope": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending.",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
+    "testingScope": "Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending.",
     "qualificationCommit": "cf826c33d8eec8b6188ee43d1073acccca2c86b9"
   },
   {
@@ -316,11 +334,13 @@
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
       "part4/evidence/bot-typed-fixture-validation.txt",
-      "part4/evidence/bot-domain-workflows-qualified.txt"
+      "part4/evidence/bot-domain-workflows-qualified.txt",
+      "part4/evidence/bot-native-event-variants-pg.txt",
+      "part4/evidence/bot-voice-media-checkpoint.json"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
-    "testingScope": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending.",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
+    "testingScope": "Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending.",
     "qualificationCommit": "cf826c33d8eec8b6188ee43d1073acccca2c86b9"
   },
   {
@@ -333,11 +353,13 @@
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
       "part4/evidence/bot-typed-fixture-validation.txt",
-      "part4/evidence/bot-domain-workflows-qualified.txt"
+      "part4/evidence/bot-domain-workflows-qualified.txt",
+      "part4/evidence/bot-native-event-variants-pg.txt",
+      "part4/evidence/bot-voice-media-checkpoint.json"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
-    "testingScope": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending.",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
+    "testingScope": "Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending.",
     "qualificationCommit": "cf826c33d8eec8b6188ee43d1073acccca2c86b9"
   },
   {
@@ -350,27 +372,33 @@
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
       "part4/evidence/bot-typed-fixture-validation.txt",
-      "part4/evidence/bot-domain-workflows-qualified.txt"
+      "part4/evidence/bot-domain-workflows-qualified.txt",
+      "part4/evidence/bot-native-event-variants-pg.txt",
+      "part4/evidence/bot-voice-media-checkpoint.json",
+      "part4/evidence/bot-native-context-overwrites-pg.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
-    "testingScope": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending.",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
+    "testingScope": "Positive native bot overwrite addition/removal and current message context pass through real PostgreSQL/native controllers; foreign anchor payloads are refused. The native permission surface uses subject documents, not vendor path compatibility. Full integrated/native release acceptance remains pending.",
     "qualificationCommit": "cf826c33d8eec8b6188ee43d1073acccca2c86b9"
   },
   {
     "id": "YAP-API-023",
     "reference": "DELETE /servers/{id}/categories/{cid}/permissions/{role}",
     "verification": "UNVERIFIED_DOCS",
-    "nativeEquivalent": "PUT /v2/bot/categories/:id/overwrites (native document with one overwrite removed)",
+    "nativeEquivalent": "PUT /v2/bot/categories/:id/overwrites with subject, allow:[], deny:[]",
     "scope": "Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending.",
     "source": "server/src/modules/bots/; server/src/shared/contracts/http/botDomainAdapters.ts; docs/api/bot-gateway.schema.json",
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
-      "part4/evidence/bot-typed-fixture-validation.txt"
+      "part4/evidence/bot-typed-fixture-validation.txt",
+      "part4/evidence/bot-native-event-variants-pg.txt",
+      "part4/evidence/bot-voice-media-checkpoint.json",
+      "part4/evidence/bot-native-context-overwrites-pg.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
-    "testingScope": "Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required."
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
+    "testingScope": "Positive native bot overwrite addition/removal and current message context pass through real PostgreSQL/native controllers; foreign anchor payloads are refused. The native permission surface uses subject documents, not vendor path compatibility. Full integrated/native release acceptance remains pending."
   },
   {
     "id": "YAP-API-024",
@@ -384,7 +412,7 @@
       "part4/evidence/bot-typed-fixture-validation.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
     "testingScope": "Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required."
   },
   {
@@ -397,11 +425,13 @@
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
       "part4/evidence/bot-typed-fixture-validation.txt",
-      "part4/evidence/bot-domain-workflows-qualified.txt"
+      "part4/evidence/bot-domain-workflows-qualified.txt",
+      "part4/evidence/bot-native-event-variants-pg.txt",
+      "part4/evidence/bot-voice-media-checkpoint.json"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
-    "testingScope": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending.",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
+    "testingScope": "Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending.",
     "qualificationCommit": "cf826c33d8eec8b6188ee43d1073acccca2c86b9"
   },
   {
@@ -414,11 +444,13 @@
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
       "part4/evidence/bot-typed-fixture-validation.txt",
-      "part4/evidence/bot-domain-workflows-qualified.txt"
+      "part4/evidence/bot-domain-workflows-qualified.txt",
+      "part4/evidence/bot-native-event-variants-pg.txt",
+      "part4/evidence/bot-voice-media-checkpoint.json"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
-    "testingScope": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending.",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
+    "testingScope": "Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending.",
     "qualificationCommit": "cf826c33d8eec8b6188ee43d1073acccca2c86b9"
   },
   {
@@ -431,11 +463,13 @@
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
       "part4/evidence/bot-typed-fixture-validation.txt",
-      "part4/evidence/bot-domain-workflows-qualified.txt"
+      "part4/evidence/bot-domain-workflows-qualified.txt",
+      "part4/evidence/bot-native-event-variants-pg.txt",
+      "part4/evidence/bot-voice-media-checkpoint.json"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
-    "testingScope": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending.",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
+    "testingScope": "Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending.",
     "qualificationCommit": "cf826c33d8eec8b6188ee43d1073acccca2c86b9"
   },
   {
@@ -448,11 +482,13 @@
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
       "part4/evidence/bot-typed-fixture-validation.txt",
-      "part4/evidence/bot-domain-workflows-qualified.txt"
+      "part4/evidence/bot-domain-workflows-qualified.txt",
+      "part4/evidence/bot-native-event-variants-pg.txt",
+      "part4/evidence/bot-voice-media-checkpoint.json"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
-    "testingScope": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending.",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
+    "testingScope": "Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending.",
     "qualificationCommit": "cf826c33d8eec8b6188ee43d1073acccca2c86b9"
   },
   {
@@ -467,7 +503,7 @@
       "part4/evidence/bot-typed-fixture-validation.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
     "testingScope": "Real scoped API/gateway cases cover this behavior or its core path; full integrated acceptance is pending."
   },
   {
@@ -482,7 +518,7 @@
       "part4/evidence/bot-typed-fixture-validation.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
     "testingScope": "Real scoped API/gateway cases cover this behavior or its core path; full integrated acceptance is pending."
   },
   {
@@ -497,7 +533,7 @@
       "part4/evidence/bot-typed-fixture-validation.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
     "testingScope": "Real scoped API/gateway cases cover this behavior or its core path; full integrated acceptance is pending."
   },
   {
@@ -505,17 +541,19 @@
     "reference": "POST /channels/{id}/messages",
     "verification": "UNVERIFIED_DOCS",
     "nativeEquivalent": "POST /v2/bot/channels/:channelId/messages",
-    "scope": "Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Current native send supports text/replies; rich interactive components and the complete bot attachment workflow remain pending. Native rich boxes, link buttons and source-bound controls now require explicit advanced messages.post approval and native current content authority.",
+    "scope": "Native text/replies, approved rich boxes and source-bound controls retain current content authority. Community attachment publication additionally requires separate files.upload and messages.post approval; download uses files.read and native history access. Personal bot DM files are outside this preview. Attachment-v2 relay can see keys. Full coordinated/provider/native acceptance remains pending.",
     "source": "server/src/modules/bots/; server/src/shared/contracts/http/botDomainAdapters.ts; docs/api/bot-gateway.schema.json",
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
       "part4/evidence/bot-typed-fixture-validation.txt",
       "part4/evidence/bot-components-boundaries-pg.txt",
-      "part4/evidence/bot-components-sdk-pg.txt"
+      "part4/evidence/bot-components-sdk-pg.txt",
+      "part4/evidence/bot-files-checkpoint.json",
+      "part4/evidence/bot-files-web-browser.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
-    "testingScope": "Real scoped API/gateway cases cover this behavior or its core path; full integrated acceptance is pending."
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
+    "testingScope": "Real encrypted-byte upload, native publication validation, interrupted-upload/reinstall cleanup and revoked-stream cases pass. All four browser projects download matching human plaintext after explicit manager review. Local object-store stand-ins do not prove AWS provider behavior."
   },
   {
     "id": "YAP-API-033",
@@ -526,11 +564,12 @@
     "source": "server/src/modules/bots/; server/src/shared/contracts/http/botDomainAdapters.ts; docs/api/bot-gateway.schema.json",
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
-      "part4/evidence/bot-typed-fixture-validation.txt"
+      "part4/evidence/bot-typed-fixture-validation.txt",
+      "part4/evidence/bot-native-context-overwrites-pg.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
-    "testingScope": "Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required."
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
+    "testingScope": "A bot reads current edited text through native around-message context; an anchor from a different community returns404 without its payload. Full context variants, native-client and coordinated release acceptance remain pending."
   },
   {
     "id": "YAP-API-034",
@@ -544,7 +583,7 @@
       "part4/evidence/bot-typed-fixture-validation.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
     "testingScope": "Real scoped API/gateway cases cover this behavior or its core path; full integrated acceptance is pending."
   },
   {
@@ -559,7 +598,7 @@
       "part4/evidence/bot-typed-fixture-validation.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
     "testingScope": "Real scoped API/gateway cases cover this behavior or its core path; full integrated acceptance is pending."
   },
   {
@@ -574,7 +613,7 @@
       "part4/evidence/bot-typed-fixture-validation.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
     "testingScope": "Real scoped API/gateway cases cover this behavior or its core path; full integrated acceptance is pending."
   },
   {
@@ -589,7 +628,7 @@
       "part4/evidence/bot-typed-fixture-validation.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
     "testingScope": "Real scoped API/gateway cases cover this behavior or its core path; full integrated acceptance is pending."
   },
   {
@@ -604,7 +643,7 @@
       "part4/evidence/bot-typed-fixture-validation.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
     "testingScope": "Real scoped API/gateway cases cover this behavior or its core path; full integrated acceptance is pending."
   },
   {
@@ -619,7 +658,7 @@
       "part4/evidence/bot-typed-fixture-validation.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
     "testingScope": "Real scoped API/gateway cases cover this behavior or its core path; full integrated acceptance is pending."
   },
   {
@@ -634,7 +673,7 @@
       "part4/evidence/bot-typed-fixture-validation.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
     "testingScope": "Real scoped API/gateway cases cover this behavior or its core path; full integrated acceptance is pending."
   },
   {
@@ -649,7 +688,7 @@
       "part4/evidence/bot-typed-fixture-validation.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
     "testingScope": "Real scoped API/gateway cases cover this behavior or its core path; full integrated acceptance is pending."
   },
   {
@@ -662,11 +701,13 @@
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
       "part4/evidence/bot-typed-fixture-validation.txt",
-      "part4/evidence/bot-domain-workflows-qualified.txt"
+      "part4/evidence/bot-domain-workflows-qualified.txt",
+      "part4/evidence/bot-native-event-variants-pg.txt",
+      "part4/evidence/bot-voice-media-checkpoint.json"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
-    "testingScope": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending.",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
+    "testingScope": "Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending.",
     "qualificationCommit": "cf826c33d8eec8b6188ee43d1073acccca2c86b9"
   },
   {
@@ -679,11 +720,13 @@
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
       "part4/evidence/bot-typed-fixture-validation.txt",
-      "part4/evidence/bot-domain-workflows-qualified.txt"
+      "part4/evidence/bot-domain-workflows-qualified.txt",
+      "part4/evidence/bot-native-event-variants-pg.txt",
+      "part4/evidence/bot-voice-media-checkpoint.json"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
-    "testingScope": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending.",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
+    "testingScope": "Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending.",
     "qualificationCommit": "cf826c33d8eec8b6188ee43d1073acccca2c86b9"
   },
   {
@@ -696,11 +739,13 @@
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
       "part4/evidence/bot-typed-fixture-validation.txt",
-      "part4/evidence/bot-domain-workflows-qualified.txt"
+      "part4/evidence/bot-domain-workflows-qualified.txt",
+      "part4/evidence/bot-native-event-variants-pg.txt",
+      "part4/evidence/bot-voice-media-checkpoint.json"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
-    "testingScope": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending.",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
+    "testingScope": "Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending.",
     "qualificationCommit": "cf826c33d8eec8b6188ee43d1073acccca2c86b9"
   },
   {
@@ -713,11 +758,13 @@
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
       "part4/evidence/bot-typed-fixture-validation.txt",
-      "part4/evidence/bot-domain-workflows-qualified.txt"
+      "part4/evidence/bot-domain-workflows-qualified.txt",
+      "part4/evidence/bot-native-event-variants-pg.txt",
+      "part4/evidence/bot-voice-media-checkpoint.json"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
-    "testingScope": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending.",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
+    "testingScope": "Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending.",
     "qualificationCommit": "cf826c33d8eec8b6188ee43d1073acccca2c86b9"
   },
   {
@@ -730,11 +777,13 @@
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
       "part4/evidence/bot-typed-fixture-validation.txt",
-      "part4/evidence/bot-domain-workflows-qualified.txt"
+      "part4/evidence/bot-domain-workflows-qualified.txt",
+      "part4/evidence/bot-native-event-variants-pg.txt",
+      "part4/evidence/bot-voice-media-checkpoint.json"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
-    "testingScope": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending.",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
+    "testingScope": "Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending.",
     "qualificationCommit": "cf826c33d8eec8b6188ee43d1073acccca2c86b9"
   },
   {
@@ -747,11 +796,13 @@
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
       "part4/evidence/bot-typed-fixture-validation.txt",
-      "part4/evidence/bot-domain-workflows-qualified.txt"
+      "part4/evidence/bot-domain-workflows-qualified.txt",
+      "part4/evidence/bot-native-event-variants-pg.txt",
+      "part4/evidence/bot-voice-media-checkpoint.json"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
-    "testingScope": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending.",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
+    "testingScope": "Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending.",
     "qualificationCommit": "cf826c33d8eec8b6188ee43d1073acccca2c86b9"
   },
   {
@@ -764,11 +815,13 @@
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
       "part4/evidence/bot-typed-fixture-validation.txt",
-      "part4/evidence/bot-domain-workflows-qualified.txt"
+      "part4/evidence/bot-domain-workflows-qualified.txt",
+      "part4/evidence/bot-native-event-variants-pg.txt",
+      "part4/evidence/bot-voice-media-checkpoint.json"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
-    "testingScope": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending.",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
+    "testingScope": "Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending.",
     "qualificationCommit": "cf826c33d8eec8b6188ee43d1073acccca2c86b9"
   },
   {
@@ -781,11 +834,13 @@
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
       "part4/evidence/bot-typed-fixture-validation.txt",
-      "part4/evidence/bot-domain-workflows-qualified.txt"
+      "part4/evidence/bot-domain-workflows-qualified.txt",
+      "part4/evidence/bot-native-event-variants-pg.txt",
+      "part4/evidence/bot-voice-media-checkpoint.json"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
-    "testingScope": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending.",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
+    "testingScope": "Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending.",
     "qualificationCommit": "cf826c33d8eec8b6188ee43d1073acccca2c86b9"
   },
   {
@@ -798,11 +853,13 @@
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
       "part4/evidence/bot-typed-fixture-validation.txt",
-      "part4/evidence/bot-domain-workflows-qualified.txt"
+      "part4/evidence/bot-domain-workflows-qualified.txt",
+      "part4/evidence/bot-native-event-variants-pg.txt",
+      "part4/evidence/bot-voice-media-checkpoint.json"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
-    "testingScope": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending.",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
+    "testingScope": "Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending.",
     "qualificationCommit": "cf826c33d8eec8b6188ee43d1073acccca2c86b9"
   },
   {
@@ -815,11 +872,13 @@
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
       "part4/evidence/bot-typed-fixture-validation.txt",
-      "part4/evidence/bot-domain-workflows-qualified.txt"
+      "part4/evidence/bot-domain-workflows-qualified.txt",
+      "part4/evidence/bot-native-event-variants-pg.txt",
+      "part4/evidence/bot-voice-media-checkpoint.json"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
-    "testingScope": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending.",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
+    "testingScope": "Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending.",
     "qualificationCommit": "cf826c33d8eec8b6188ee43d1073acccca2c86b9"
   },
   {
@@ -832,11 +891,13 @@
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
       "part4/evidence/bot-typed-fixture-validation.txt",
-      "part4/evidence/bot-domain-workflows-qualified.txt"
+      "part4/evidence/bot-domain-workflows-qualified.txt",
+      "part4/evidence/bot-native-event-variants-pg.txt",
+      "part4/evidence/bot-voice-media-checkpoint.json"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
-    "testingScope": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending.",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
+    "testingScope": "Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending.",
     "qualificationCommit": "cf826c33d8eec8b6188ee43d1073acccca2c86b9"
   },
   {
@@ -849,11 +910,13 @@
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
       "part4/evidence/bot-typed-fixture-validation.txt",
-      "part4/evidence/bot-domain-workflows-qualified.txt"
+      "part4/evidence/bot-domain-workflows-qualified.txt",
+      "part4/evidence/bot-native-event-variants-pg.txt",
+      "part4/evidence/bot-voice-media-checkpoint.json"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
-    "testingScope": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending.",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
+    "testingScope": "Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending.",
     "qualificationCommit": "cf826c33d8eec8b6188ee43d1073acccca2c86b9"
   },
   {
@@ -866,11 +929,13 @@
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
       "part4/evidence/bot-typed-fixture-validation.txt",
-      "part4/evidence/bot-domain-workflows-qualified.txt"
+      "part4/evidence/bot-domain-workflows-qualified.txt",
+      "part4/evidence/bot-native-event-variants-pg.txt",
+      "part4/evidence/bot-voice-media-checkpoint.json"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
-    "testingScope": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending.",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
+    "testingScope": "Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending.",
     "qualificationCommit": "cf826c33d8eec8b6188ee43d1073acccca2c86b9"
   },
   {
@@ -883,11 +948,13 @@
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
       "part4/evidence/bot-typed-fixture-validation.txt",
-      "part4/evidence/bot-domain-workflows-qualified.txt"
+      "part4/evidence/bot-domain-workflows-qualified.txt",
+      "part4/evidence/bot-native-event-variants-pg.txt",
+      "part4/evidence/bot-voice-media-checkpoint.json"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
-    "testingScope": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending.",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
+    "testingScope": "Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending.",
     "qualificationCommit": "cf826c33d8eec8b6188ee43d1073acccca2c86b9"
   },
   {
@@ -900,11 +967,13 @@
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
       "part4/evidence/bot-typed-fixture-validation.txt",
-      "part4/evidence/bot-domain-workflows-qualified.txt"
+      "part4/evidence/bot-domain-workflows-qualified.txt",
+      "part4/evidence/bot-native-event-variants-pg.txt",
+      "part4/evidence/bot-voice-media-checkpoint.json"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
-    "testingScope": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending.",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
+    "testingScope": "Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending.",
     "qualificationCommit": "cf826c33d8eec8b6188ee43d1073acccca2c86b9"
   },
   {
@@ -917,11 +986,13 @@
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
       "part4/evidence/bot-typed-fixture-validation.txt",
-      "part4/evidence/bot-domain-workflows-qualified.txt"
+      "part4/evidence/bot-domain-workflows-qualified.txt",
+      "part4/evidence/bot-native-event-variants-pg.txt",
+      "part4/evidence/bot-voice-media-checkpoint.json"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
-    "testingScope": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending.",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
+    "testingScope": "Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending.",
     "qualificationCommit": "cf826c33d8eec8b6188ee43d1073acccca2c86b9"
   },
   {
@@ -936,7 +1007,7 @@
       "part4/evidence/bot-typed-fixture-validation.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
     "testingScope": "Real scoped API/gateway cases cover this behavior or its core path; full integrated acceptance is pending."
   },
   {
@@ -949,11 +1020,13 @@
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
       "part4/evidence/bot-typed-fixture-validation.txt",
-      "part4/evidence/bot-domain-workflows-qualified.txt"
+      "part4/evidence/bot-domain-workflows-qualified.txt",
+      "part4/evidence/bot-native-event-variants-pg.txt",
+      "part4/evidence/bot-voice-media-checkpoint.json"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
-    "testingScope": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending.",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
+    "testingScope": "Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending.",
     "qualificationCommit": "cf826c33d8eec8b6188ee43d1073acccca2c86b9"
   },
   {
@@ -968,7 +1041,7 @@
       "part4/evidence/bot-typed-fixture-validation.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
     "testingScope": "Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required."
   },
   {
@@ -981,11 +1054,13 @@
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
       "part4/evidence/bot-typed-fixture-validation.txt",
-      "part4/evidence/bot-domain-workflows-qualified.txt"
+      "part4/evidence/bot-domain-workflows-qualified.txt",
+      "part4/evidence/bot-native-event-variants-pg.txt",
+      "part4/evidence/bot-voice-media-checkpoint.json"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
-    "testingScope": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending.",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
+    "testingScope": "Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending.",
     "qualificationCommit": "cf826c33d8eec8b6188ee43d1073acccca2c86b9"
   },
   {
@@ -998,11 +1073,13 @@
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
       "part4/evidence/bot-typed-fixture-validation.txt",
-      "part4/evidence/bot-domain-workflows-qualified.txt"
+      "part4/evidence/bot-domain-workflows-qualified.txt",
+      "part4/evidence/bot-native-event-variants-pg.txt",
+      "part4/evidence/bot-voice-media-checkpoint.json"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
-    "testingScope": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending.",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
+    "testingScope": "Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending.",
     "qualificationCommit": "cf826c33d8eec8b6188ee43d1073acccca2c86b9"
   },
   {
@@ -1014,11 +1091,13 @@
     "source": "server/src/modules/bots/; server/src/shared/contracts/http/botDomainAdapters.ts; docs/api/bot-gateway.schema.json",
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
-      "part4/evidence/bot-typed-fixture-validation.txt"
+      "part4/evidence/bot-typed-fixture-validation.txt",
+      "part4/evidence/bot-native-event-variants-pg.txt",
+      "part4/evidence/bot-voice-media-checkpoint.json"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
-    "testingScope": "Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required."
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
+    "testingScope": "Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending."
   },
   {
     "id": "YAP-API-064",
@@ -1031,7 +1110,7 @@
       "part4/evidence/bot-dm-guard-final-pg.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
     "testingScope": "Real native API workflow passed. Full broader-platform and coordinated-release acceptance remains pending."
   },
   {
@@ -1046,7 +1125,7 @@
       "part4/evidence/bot-typed-fixture-validation.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
     "testingScope": "Real scoped API/gateway cases cover this behavior or its core path; full integrated acceptance is pending."
   },
   {
@@ -1060,7 +1139,7 @@
       "part4/evidence/bot-developer-current-pg.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
     "testingScope": "Real native API workflow passed. Full broader-platform and coordinated-release acceptance remains pending."
   },
   {
@@ -1074,7 +1153,7 @@
       "part4/evidence/bot-developer-current-pg.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
     "testingScope": "Real native API workflow passed. Full broader-platform and coordinated-release acceptance remains pending."
   },
   {
@@ -1101,7 +1180,7 @@
       "part4/evidence/bot-typed-fixture-validation.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
     "testingScope": "Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required."
   },
   {
@@ -1109,32 +1188,36 @@
     "reference": "POST /servers/{id}/voice/join",
     "verification": "UNVERIFIED_DOCS",
     "nativeEquivalent": "POST /v2/bot/voice",
-    "scope": "Native dialect, existing active locally hosted community rooms only. Exact public-key manifest approval, current native authority, bounded separate bot media lease, human-sealed encrypted room key, initial receive-only token and durable removal metadata. Bot-created room initiation and Android/Windows handoff/integration remain active work.",
+    "scope": "Native dialect, existing active locally hosted community rooms only. Exact public-key manifest approval, current native authority, bounded separate bot media lease, human-sealed encrypted room key, initial receive-only token and durable removal metadata. Bot-created room initiation and Android/Windows handoff/integration remain active work. The receive grant covers room media; current approval copy and the SDK guide disclose audio, camera video, screen shares and other in-call content. Self-hosted token replay is fenced by Meldiq admission checks, not guaranteed provider token invalidation.",
     "source": "server/src/modules/bots/voice.ts; server/src/modules/calls/botMedia.ts; server/sdk/javascript/voice.mjs; Web src/call/botVoiceKeys.ts",
     "evidence": [
       "part4/evidence/bot-voice-platform-pg-final.txt",
       "part4/evidence/bot-voice-sdk-browser-final.txt",
-      "part4/evidence/bot-voice-media-checkpoint.json"
+      "part4/evidence/bot-voice-media-checkpoint.json",
+      "part4/evidence/bot-voice-replay-browser-qualified.txt",
+      "part4/evidence/bot-media-replay-checkpoint.json"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
-    "testingScope": "Real Chromium/Firefox/WebKit/phone-width encrypted native RTC audio and actual media disconnection after revocation pass. Control-plane races, expiry, restart/orphan cleanup, RLS and failed removal retry pass. Physical-device and complete platform acceptance remain pending."
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
+    "testingScope": "Actual encrypted audio and camera reception plus authority withdrawal pass in controlled browser/native RTC flows. A continuous 997 Hz native source with DTX disabled positively decodes before withdrawal; 15 saved-grant replays across five browser projects decode no matching source tone and are removed in sampled local timings. Some replays receive nonmatching frames; an earlier WebKit probe received 25 frames of undetermined content. Self-hosted JWTs are not provider-invalidated. Instantaneous/failure-timing revocation and complete native/provider acceptance remain unverified."
   },
   {
     "id": "YAP-API-071",
     "reference": "POST /servers/{id}/voice/leave",
     "verification": "UNVERIFIED_DOCS",
     "nativeEquivalent": "DELETE /v2/bot/voice/:leaseId",
-    "scope": "Native dialect, existing active locally hosted community rooms only. Exact public-key manifest approval, current native authority, bounded separate bot media lease, human-sealed encrypted room key, initial receive-only token and durable removal metadata. Bot-created room initiation and Android/Windows handoff/integration remain active work.",
+    "scope": "Native dialect, existing active locally hosted community rooms only. Exact public-key manifest approval, current native authority, bounded separate bot media lease, human-sealed encrypted room key, initial receive-only token and durable removal metadata. Bot-created room initiation and Android/Windows handoff/integration remain active work. The receive grant covers room media; current approval copy and the SDK guide disclose audio, camera video, screen shares and other in-call content. Self-hosted token replay is fenced by Meldiq admission checks, not guaranteed provider token invalidation.",
     "source": "server/src/modules/bots/voice.ts; server/src/modules/calls/botMedia.ts; server/sdk/javascript/voice.mjs; Web src/call/botVoiceKeys.ts",
     "evidence": [
       "part4/evidence/bot-voice-platform-pg-final.txt",
       "part4/evidence/bot-voice-sdk-browser-final.txt",
-      "part4/evidence/bot-voice-media-checkpoint.json"
+      "part4/evidence/bot-voice-media-checkpoint.json",
+      "part4/evidence/bot-voice-replay-browser-qualified.txt",
+      "part4/evidence/bot-media-replay-checkpoint.json"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
-    "testingScope": "Real Chromium/Firefox/WebKit/phone-width encrypted native RTC audio and actual media disconnection after revocation pass. Control-plane races, expiry, restart/orphan cleanup, RLS and failed removal retry pass. Physical-device and complete platform acceptance remain pending."
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
+    "testingScope": "Actual encrypted audio and camera reception plus authority withdrawal pass in controlled browser/native RTC flows. A continuous 997 Hz native source with DTX disabled positively decodes before withdrawal; 15 saved-grant replays across five browser projects decode no matching source tone and are removed in sampled local timings. Some replays receive nonmatching frames; an earlier WebKit probe received 25 frames of undetermined content. Self-hosted JWTs are not provider-invalidated. Instantaneous/failure-timing revocation and complete native/provider acceptance remain unverified."
   },
   {
     "id": "YAP-API-072",
@@ -1146,11 +1229,13 @@
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
       "part4/evidence/bot-typed-fixture-validation.txt",
-      "part4/evidence/bot-domain-workflows-qualified.txt"
+      "part4/evidence/bot-domain-workflows-qualified.txt",
+      "part4/evidence/bot-native-event-variants-pg.txt",
+      "part4/evidence/bot-voice-media-checkpoint.json"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
-    "testingScope": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending.",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
+    "testingScope": "Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending.",
     "qualificationCommit": "cf826c33d8eec8b6188ee43d1073acccca2c86b9"
   },
   {
@@ -1163,11 +1248,13 @@
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
       "part4/evidence/bot-typed-fixture-validation.txt",
-      "part4/evidence/bot-domain-workflows-qualified.txt"
+      "part4/evidence/bot-domain-workflows-qualified.txt",
+      "part4/evidence/bot-native-event-variants-pg.txt",
+      "part4/evidence/bot-voice-media-checkpoint.json"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
-    "testingScope": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending.",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
+    "testingScope": "Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending.",
     "qualificationCommit": "cf826c33d8eec8b6188ee43d1073acccca2c86b9"
   },
   {
@@ -1181,7 +1268,7 @@
       "part4/evidence/bot-developer-current-pg.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
     "testingScope": "Real native API workflow passed. Full broader-platform and coordinated-release acceptance remains pending."
   },
   {
@@ -1196,7 +1283,7 @@
       "part4/evidence/bot-typed-fixture-validation.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
     "testingScope": "Real scoped API/gateway cases cover this behavior or its core path; full integrated acceptance is pending."
   },
   {
@@ -1209,11 +1296,13 @@
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
       "part4/evidence/bot-typed-fixture-validation.txt",
-      "part4/evidence/bot-domain-workflows-qualified.txt"
+      "part4/evidence/bot-domain-workflows-qualified.txt",
+      "part4/evidence/bot-native-event-variants-pg.txt",
+      "part4/evidence/bot-voice-media-checkpoint.json"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
-    "testingScope": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending.",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
+    "testingScope": "Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending.",
     "qualificationCommit": "cf826c33d8eec8b6188ee43d1073acccca2c86b9"
   },
   {
@@ -1228,7 +1317,7 @@
       "part4/evidence/bot-typed-fixture-validation.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
     "testingScope": "Real scoped API/gateway cases cover this behavior or its core path; full integrated acceptance is pending."
   },
   {
@@ -1242,7 +1331,7 @@
       "part4/evidence/bot-dm-guard-final-pg.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
     "testingScope": "Real native API workflow passed. Full broader-platform and coordinated-release acceptance remains pending."
   },
   {
@@ -1254,11 +1343,13 @@
     "source": "server/src/modules/bots/; server/src/shared/contracts/http/botDomainAdapters.ts; docs/api/bot-gateway.schema.json",
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
-      "part4/evidence/bot-typed-fixture-validation.txt"
+      "part4/evidence/bot-typed-fixture-validation.txt",
+      "part4/evidence/bot-events-workflows-pg.txt",
+      "part4/evidence/bot-native-event-variants-pg.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
-    "testingScope": "Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required."
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
+    "testingScope": "Real native invitation create/revoke and member join/remove workflows emit ordered ID-only events; invite secrets remain absent. Current invite role/scope withdrawal withholds invite events. Full gateway/native/release acceptance remains pending."
   },
   {
     "id": "YAP-BOTEVENT-004",
@@ -1269,11 +1360,13 @@
     "source": "server/src/modules/bots/; server/src/shared/contracts/http/botDomainAdapters.ts; docs/api/bot-gateway.schema.json",
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
-      "part4/evidence/bot-typed-fixture-validation.txt"
+      "part4/evidence/bot-typed-fixture-validation.txt",
+      "part4/evidence/bot-events-workflows-pg.txt",
+      "part4/evidence/bot-native-event-variants-pg.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
-    "testingScope": "Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required."
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
+    "testingScope": "Real native invitation create/revoke and member join/remove workflows emit ordered ID-only events; invite secrets remain absent. Current invite role/scope withdrawal withholds invite events. Full gateway/native/release acceptance remains pending."
   },
   {
     "id": "YAP-BOTEVENT-005",
@@ -1287,7 +1380,7 @@
       "part4/evidence/bot-typed-fixture-validation.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
     "testingScope": "Real scoped API/gateway cases cover this behavior or its core path; full integrated acceptance is pending."
   },
   {
@@ -1302,7 +1395,7 @@
       "part4/evidence/bot-typed-fixture-validation.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
     "testingScope": "Real scoped API/gateway cases cover this behavior or its core path; full integrated acceptance is pending."
   },
   {
@@ -1314,11 +1407,12 @@
     "source": "server/src/modules/bots/; server/src/shared/contracts/http/botDomainAdapters.ts; docs/api/bot-gateway.schema.json",
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
-      "part4/evidence/bot-typed-fixture-validation.txt"
+      "part4/evidence/bot-typed-fixture-validation.txt",
+      "part4/evidence/bot-native-event-variants-pg.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
-    "testingScope": "Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required."
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
+    "testingScope": "Real PostgreSQL and native bot connected/removal handlers emit ID-only voice join/leave events without room credentials or lease IDs; this event test uses an SFU control-plane stand-in. Separate browser RTC/audio evidence does not itself qualify every event transport/client variant."
   },
   {
     "id": "YAP-BOTEVENT-008",
@@ -1329,11 +1423,12 @@
     "source": "server/src/modules/bots/; server/src/shared/contracts/http/botDomainAdapters.ts; docs/api/bot-gateway.schema.json",
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
-      "part4/evidence/bot-typed-fixture-validation.txt"
+      "part4/evidence/bot-typed-fixture-validation.txt",
+      "part4/evidence/bot-native-event-variants-pg.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
-    "testingScope": "Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required."
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
+    "testingScope": "Real PostgreSQL and native bot connected/removal handlers emit ID-only voice join/leave events without room credentials or lease IDs; this event test uses an SFU control-plane stand-in. Separate browser RTC/audio evidence does not itself qualify every event transport/client variant."
   },
   {
     "id": "YAP-BOTEVENT-009",
@@ -1347,7 +1442,7 @@
       "part4/evidence/bot-typed-fixture-validation.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
     "testingScope": "Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required."
   },
   {
@@ -1363,7 +1458,7 @@
       "part4/evidence/bot-components-browser-first.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
     "testingScope": "Real PostgreSQL privacy, concurrent retry/capacity, revocation, block/unblock, Unicode, offline retention and native-policy cases passed. Real browser workflow passed in Chromium/Firefox/WebKit/phone-width; phone-width is not a physical device."
   },
   {
@@ -1375,11 +1470,13 @@
     "source": "server/src/modules/bots/; server/src/shared/contracts/http/botDomainAdapters.ts; docs/api/bot-gateway.schema.json",
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
-      "part4/evidence/bot-typed-fixture-validation.txt"
+      "part4/evidence/bot-typed-fixture-validation.txt",
+      "part4/evidence/bot-events-workflows-pg.txt",
+      "part4/evidence/bot-native-event-variants-pg.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
-    "testingScope": "Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required."
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
+    "testingScope": "Real native invitation create/revoke and member join/remove workflows emit ordered ID-only events; invite secrets remain absent. Current invite role/scope withdrawal withholds invite events. Full gateway/native/release acceptance remains pending."
   },
   {
     "id": "YAP-BOTEVENT-012",
@@ -1390,11 +1487,13 @@
     "source": "server/src/modules/bots/; server/src/shared/contracts/http/botDomainAdapters.ts; docs/api/bot-gateway.schema.json",
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
-      "part4/evidence/bot-typed-fixture-validation.txt"
+      "part4/evidence/bot-typed-fixture-validation.txt",
+      "part4/evidence/bot-events-workflows-pg.txt",
+      "part4/evidence/bot-native-event-variants-pg.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
-    "testingScope": "Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required."
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
+    "testingScope": "Real native invitation create/revoke and member join/remove workflows emit ordered ID-only events; invite secrets remain absent. Current invite role/scope withdrawal withholds invite events. Full gateway/native/release acceptance remains pending."
   },
   {
     "id": "YAP-BOTEVENT-013",
@@ -1407,7 +1506,7 @@
       "part4/evidence/bot-developer-current-pg.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
     "testingScope": "Real native API workflow passed. Full broader-platform and coordinated-release acceptance remains pending."
   },
   {
@@ -1419,11 +1518,13 @@
     "source": "server/src/modules/bots/; server/src/shared/contracts/http/botDomainAdapters.ts; docs/api/bot-gateway.schema.json",
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
-      "part4/evidence/bot-typed-fixture-validation.txt"
+      "part4/evidence/bot-typed-fixture-validation.txt",
+      "part4/evidence/bot-broader-regression-checkpoint.json",
+      "part4/evidence/bot-gateway-capacity-qualified.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
-    "testingScope": "Real scoped API/gateway cases cover this behavior or its core path; full integrated acceptance is pending."
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
+    "testingScope": "Real native gateway cases and100concurrent authenticated sockets pass on loopback PostgreSQL.40messages reach all100sockets (4000observed deliveries); independent per-bot/per-address/global limits and released-slot reuse pass. Local same-process timings are not production capacity or a performance-improvement benchmark. Full native/provider/coordinated acceptance remains pending."
   },
   {
     "id": "YAP-GATEWAY-002",
@@ -1434,11 +1535,13 @@
     "source": "server/src/modules/bots/; server/src/shared/contracts/http/botDomainAdapters.ts; docs/api/bot-gateway.schema.json",
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
-      "part4/evidence/bot-typed-fixture-validation.txt"
+      "part4/evidence/bot-typed-fixture-validation.txt",
+      "part4/evidence/bot-broader-regression-checkpoint.json",
+      "part4/evidence/bot-gateway-capacity-qualified.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
-    "testingScope": "Real scoped API/gateway cases cover this behavior or its core path; full integrated acceptance is pending."
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
+    "testingScope": "Real native gateway cases and100concurrent authenticated sockets pass on loopback PostgreSQL.40messages reach all100sockets (4000observed deliveries); independent per-bot/per-address/global limits and released-slot reuse pass. Local same-process timings are not production capacity or a performance-improvement benchmark. Full native/provider/coordinated acceptance remains pending."
   },
   {
     "id": "YAP-GATEWAY-003",
@@ -1452,7 +1555,7 @@
       "part4/evidence/bot-typed-fixture-validation.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
     "testingScope": "Real scoped API/gateway cases cover this behavior or its core path; full integrated acceptance is pending."
   },
   {
@@ -1464,11 +1567,13 @@
     "source": "server/src/modules/bots/; server/src/shared/contracts/http/botDomainAdapters.ts; docs/api/bot-gateway.schema.json",
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
-      "part4/evidence/bot-typed-fixture-validation.txt"
+      "part4/evidence/bot-typed-fixture-validation.txt",
+      "part4/evidence/bot-broader-regression-checkpoint.json",
+      "part4/evidence/bot-gateway-capacity-qualified.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
-    "testingScope": "Real scoped API/gateway cases cover this behavior or its core path; full integrated acceptance is pending."
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
+    "testingScope": "Real native gateway cases and100concurrent authenticated sockets pass on loopback PostgreSQL.40messages reach all100sockets (4000observed deliveries); independent per-bot/per-address/global limits and released-slot reuse pass. Local same-process timings are not production capacity or a performance-improvement benchmark. Full native/provider/coordinated acceptance remains pending."
   },
   {
     "id": "YAP-GATEWAY-005",
@@ -1479,11 +1584,13 @@
     "source": "server/src/modules/bots/; server/src/shared/contracts/http/botDomainAdapters.ts; docs/api/bot-gateway.schema.json",
     "evidence": [
       "part4/evidence/bot-current-pg.txt",
-      "part4/evidence/bot-typed-fixture-validation.txt"
+      "part4/evidence/bot-typed-fixture-validation.txt",
+      "part4/evidence/bot-broader-regression-checkpoint.json",
+      "part4/evidence/bot-gateway-capacity-qualified.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
-    "testingScope": "Real scoped API/gateway cases cover this behavior or its core path; full integrated acceptance is pending."
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
+    "testingScope": "Real native gateway cases and100concurrent authenticated sockets pass on loopback PostgreSQL.40messages reach all100sockets (4000observed deliveries); independent per-bot/per-address/global limits and released-slot reuse pass. Local same-process timings are not production capacity or a performance-improvement benchmark. Full native/provider/coordinated acceptance remains pending."
   },
   {
     "id": "YAP-GATEWAY-006",
@@ -1497,7 +1604,7 @@
       "part4/evidence/bot-typed-fixture-validation.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
     "testingScope": "Real scoped API/gateway cases cover this behavior or its core path; full integrated acceptance is pending."
   },
   {
@@ -1512,7 +1619,7 @@
       "part4/evidence/bot-typed-fixture-validation.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
     "testingScope": "Real scoped API/gateway cases cover this behavior or its core path; full integrated acceptance is pending."
   },
   {
@@ -1527,7 +1634,7 @@
       "part4/evidence/bot-typed-fixture-validation.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
     "testingScope": "Real scoped API/gateway cases cover this behavior or its core path; full integrated acceptance is pending."
   },
   {
@@ -1542,7 +1649,7 @@
       "part4/evidence/bot-typed-fixture-validation.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
     "testingScope": "Real scoped API/gateway cases cover this behavior or its core path; full integrated acceptance is pending."
   },
   {
@@ -1557,7 +1664,7 @@
       "part4/evidence/bot-typed-fixture-validation.txt"
     ],
     "disposition": "IMPLEMENTED_NOT_ACCEPTED",
-    "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
+    "apiCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
     "testingScope": "Real scoped API/gateway cases cover this behavior or its core path; full integrated acceptance is pending."
   }
 ]

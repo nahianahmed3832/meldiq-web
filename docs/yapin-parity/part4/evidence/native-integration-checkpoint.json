@@ -1,9 +1,9 @@
 {
-  "recordedAt": "2026-11-04T21:43:07.015145+00:00",
+  "recordedAt": "2026-11-04T23:49:36.859398+00:00",
   "status": "native source checkpoints; full coordinated/native release remains open",
-  "webRuntimeCommit": "53b60ff3a8879c7437d9267bd47a7fff8d58fe6b",
-  "apiCommit": "1460e9966746a05524653b4bdce203842dd8af56",
-  "apiQualificationCommit": "cf826c33d8eec8b6188ee43d1073acccca2c86b9",
+  "webRuntimeCommit": "a0a27ff82f9cf07bf157245271d513c66bbd9ae5",
+  "apiCommit": "742cc1884ff79d751c544619f078b0021d2369a2",
+  "apiQualificationCommit": "43d837cbb30c2b25a7643bae37cf8fd68add8404",
   "android": {
     "sourceCommit": "3d5f6bb1436acd24cb2281ffd01ad4e6376c1fca",
     "sourceParent": "285651477be0adbef73d8bec3359a02d781bd3f4",
@@ -17,14 +17,14 @@
     "apkDistribution": "not published"
   },
   "windows": {
-    "commit": "6c9edeef5358f4e5c05026e0150d611b67d866dc",
-    "upstreamFilesChecked": 2285,
+    "commit": "1c1bb378f36e1ba10b85230b910261ca441bb92a",
+    "upstreamFilesChecked": 2294,
     "documentedAdaptationEntries": 39,
     "actualSourceDifferences": 26,
     "unexplainedDifferences": 0,
     "shellTests": 109,
-    "embeddedWebTests": 998,
-    "embeddedWebSkipped": 2,
+    "embeddedWebTests": 999,
+    "embeddedWebSkipped": 1,
     "typecheckExitCode": 0,
     "lintExitCode": 0,
     "buildExitCode": 0,
@@ -32,19 +32,22 @@
     "localeStructuralErrors": 0,
     "localeHardcodedCandidates": 0,
     "linguisticReview": "pending",
-    "isolatedSmoke": "passed on darwin/arm64 Electron, including pinned SDK integrity, untrusted IPC denial, temporary-cache account-data preservation, update holds and native link capture",
+    "isolatedSmoke": "passed on darwin/arm64 Electron: pinned current SDK integrity, IPC isolation, cache/account-data preservation, update holds and native link capture; no physical Windows claim",
     "smokeIsPhysicalWindowsEvidence": false,
     "windowsInstallAndProviderConsent": "pending",
-    "distribution": "development; not published"
+    "distribution": "development; not published",
+    "sdkFiles": 13,
+    "embeddedWebApiSource": "current API via ORBIT_SERVER_DIR; formerly skipped contract source comparison now passes"
   },
   "remaining": [
     "complete native same-candidate journeys",
     "bot empty-room initiation",
-    "remaining bot adapter/event and attachment qualification",
+    "remaining bot adapter/event/client variant qualification",
     "capacity/performance",
     "legal acceptance ledger",
     "full staging/backup/restore/rollback",
     "568-row implementation completion"
   ],
-  "production": "not deployed"
+  "production": "not deployed",
+  "apiSourceCommit": "031089388da4430fedfd7c85de1dd8c80964886e"
 }

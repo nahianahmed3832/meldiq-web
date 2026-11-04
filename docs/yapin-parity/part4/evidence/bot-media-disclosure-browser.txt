@@ -1,0 +1,44 @@
+[WebServer] (node:41641) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:41657) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:41658) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:41658) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+[WebServer] (node:41658) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+[WebServer] (node:41680) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 12 tests using 1 worker
+
+(node:41681) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 [chromium] › e2e/part4-bot-sdk.spec.ts:12:1 › the developer screen downloads the exact pinned first-party SDK and guide (5.6s)
+  ✓   2 [chromium] › e2e/part4-bot-voice-key.spec.ts:13:1 › owners configure public voice keys and managers review key changes without changing scopes (6.5s)
+{"level":20,"time":1793834657045,"pid":41681,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+{"level":20,"time":1793834659054,"pid":41681,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓   3 [chromium] › e2e/part4-bot-voice.spec.ts:16:1 › a dedicated bot receives the browser's sealed room key and exchanges real encrypted audio before revocation (8.3s)
+(node:41752) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   4 [firefox] › e2e/part4-bot-sdk.spec.ts:12:1 › the developer screen downloads the exact pinned first-party SDK and guide (5.7s)
+  ✓   5 [firefox] › e2e/part4-bot-voice-key.spec.ts:13:1 › owners configure public voice keys and managers review key changes without changing scopes (6.2s)
+{"level":20,"time":1793834677945,"pid":41752,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+{"level":20,"time":1793834679976,"pid":41752,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓   6 [firefox] › e2e/part4-bot-voice.spec.ts:16:1 › a dedicated bot receives the browser's sealed room key and exchanges real encrypted audio before revocation (7.6s)
+(node:41814) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   7 [webkit] › e2e/part4-bot-sdk.spec.ts:12:1 › the developer screen downloads the exact pinned first-party SDK and guide (6.3s)
+  ✓   8 [webkit] › e2e/part4-bot-voice-key.spec.ts:13:1 › owners configure public voice keys and managers review key changes without changing scopes (7.1s)
+{"level":20,"time":1793834701046,"pid":41814,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+{"level":20,"time":1793834703296,"pid":41814,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+[WebServer] 2026-11-05T07:25:03.297+0800	WARN	livekit	service/rtcservice.go:685	error writing to request sink	{"connID": "CO_LhrsDFDQkt8w", "error": "stream closed", "room": "griip-54967c4f7e46151e505b042b", "roomID": "RM_HX2ZzsbnDoYc", "participant": "u_IkKJyCPSpKET8fQAZaoAMQ.botvoice_we3hzHgzyi4BsV88drwyZw", "participantID": "PA_fohmV66dyWi7", "joinDuration": "0s"}
+  ✓   9 [webkit] › e2e/part4-bot-voice.spec.ts:16:1 › a dedicated bot receives the browser's sealed room key and exchanges real encrypted audio before revocation (8.6s)
+(node:41895) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  10 [phone-width] › e2e/part4-bot-sdk.spec.ts:12:1 › the developer screen downloads the exact pinned first-party SDK and guide (4.9s)
+  ✓  11 [phone-width] › e2e/part4-bot-voice-key.spec.ts:13:1 › owners configure public voice keys and managers review key changes without changing scopes (5.9s)
+{"level":20,"time":1793834721297,"pid":41895,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+{"level":20,"time":1793834724357,"pid":41895,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓  12 [phone-width] › e2e/part4-bot-voice.spec.ts:16:1 › a dedicated bot receives the browser's sealed room key and exchanges real encrypted audio before revocation (8.6s)
+
+  12 passed (1.5m)

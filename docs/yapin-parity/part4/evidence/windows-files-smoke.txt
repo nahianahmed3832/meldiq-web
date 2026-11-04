@@ -1,0 +1,33 @@
+
+> meldiq-desktop@0.3.0 test:smoke
+> node scripts/smoke.mjs
+
+{
+  "platform": "darwin",
+  "arch": "arm64",
+  "versions": {
+    "app": "0.3.0",
+    "electron": "45.2.1",
+    "chromium": "156.0.8078.75"
+  },
+  "offlineSmokeMs": 1957,
+  "developerAssets": {
+    "source": "742cc1884ff79d751c544619f078b0021d2369a2",
+    "files": 13,
+    "valid": true
+  },
+  "checks": [
+    "local renderer with network blocked",
+    "pinned packaged SDK manifest and archive integrity",
+    "sandbox and context isolation",
+    "untrusted IPC rejection",
+    "clear cache preserves localStorage and IndexedDB identity",
+    "cache clearing blocked during communication",
+    "economy effects",
+    "native settings",
+    "payment popup has no native bridge and blocks restart",
+    "native invitation captured by the existing join workflow"
+  ],
+  "status": "passed",
+  "windowsInstallation": "not tested by this smoke"
+}

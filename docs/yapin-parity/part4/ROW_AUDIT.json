@@ -1114,7 +1114,7 @@
       "owner": "PART 3",
       "state": "ACCEPTED",
       "referenceVerification": "OBSERVED_UI_CURRENT",
-      "testing": "Passed local controlled Web/API checks: api:quick_reactions.test.ts: quick reaction preferences (postgres) persists 3\u20135 distinct choices, preserves older client omissions, isolates accounts and rejects stale writes | web:part3-social.spec.ts#quick reactions: three-to-five quick reactions persist on the account and drive the message menu [chromium]; three-to-five quick reactions persist on the account and drive the message menu [tablet-width]; 1 additional passing cases recorded. Full per-row case list: part3/completion/ROW_EVIDENCE.json#YAP-MSG-009. No production or physical-device acceptance is implied. Final execution totals and exact environment: part3/validation.json.",
+      "testing": "Passed local controlled Web/API checks: api:quick_reactions.test.ts: quick reaction preferences (postgres) persists 3–5 distinct choices, preserves older client omissions, isolates accounts and rejects stale writes | web:part3-social.spec.ts#quick reactions: three-to-five quick reactions persist on the account and drive the message menu [chromium]; three-to-five quick reactions persist on the account and drive the message menu [tablet-width]; 1 additional passing cases recorded. Full per-row case list: part3/completion/ROW_EVIDENCE.json#YAP-MSG-009. No production or physical-device acceptance is implied. Final execution totals and exact environment: part3/validation.json.",
       "remaining": "No remaining defect in the recorded local Web/API scope. Current-production source reconciliation, controlled migration/deployment and installed-client/provider acceptance remain Part 4 release work."
     },
     {
@@ -1202,7 +1202,7 @@
       "owner": "PART 3",
       "state": "ACCEPTED",
       "referenceVerification": "VERIFIED_WORKFLOW_HISTORICAL",
-      "testing": "Passed local controlled Web/API checks: api:thread_lifecycle.test.ts: thread lifecycle (postgres) separates author close/reopen from moderator lock, rejects stale changes and controls current reply/vote authority; thread lifecycle (postgres) deletes all replies in bounded resumable batches, retains a text parent and forbids format-race widening; 1 additional passing cases recorded | unit:threads.test.ts: Activity \u203a Thread replies (android ThreadActivityRules) lists threads I started or replied in, with replies from others since I last looked or replied; Activity \u203a Thread replies (android ThreadActivityRules) puts unseen threads first and forgets what was seen; 3 additional passing cases recorded | web:part3-threads.spec.ts: thread close, moderator lock, synced unfollow, failed request retry and confirmed deletion [chromium]; thread close, moderator lock, synced unfollow, failed request retry and confirmed deletion [tablet-width]; 1 additional passing cases recorded. Full per-row case list: part3/completion/ROW_EVIDENCE.json#YAP-MSG-020. No production or physical-device acceptance is implied. Final execution totals and exact environment: part3/validation.json.",
+      "testing": "Passed local controlled Web/API checks: api:thread_lifecycle.test.ts: thread lifecycle (postgres) separates author close/reopen from moderator lock, rejects stale changes and controls current reply/vote authority; thread lifecycle (postgres) deletes all replies in bounded resumable batches, retains a text parent and forbids format-race widening; 1 additional passing cases recorded | unit:threads.test.ts: Activity › Thread replies (android ThreadActivityRules) lists threads I started or replied in, with replies from others since I last looked or replied; Activity › Thread replies (android ThreadActivityRules) puts unseen threads first and forgets what was seen; 3 additional passing cases recorded | web:part3-threads.spec.ts: thread close, moderator lock, synced unfollow, failed request retry and confirmed deletion [chromium]; thread close, moderator lock, synced unfollow, failed request retry and confirmed deletion [tablet-width]; 1 additional passing cases recorded. Full per-row case list: part3/completion/ROW_EVIDENCE.json#YAP-MSG-020. No production or physical-device acceptance is implied. Final execution totals and exact environment: part3/validation.json.",
       "remaining": "No remaining defect in the recorded local Web/API scope. Current-production source reconciliation, controlled migration/deployment and installed-client/provider acceptance remain Part 4 release work."
     },
     {
@@ -2034,8 +2034,8 @@
       "owner": "PART 3",
       "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "UNVERIFIED_RESTRICTED",
-      "testing": "Passed local controlled Web/API checks: api:push_wakeup.test.ts: registering a device's endpoint needs a signed-in device that hasn't been removed; registering a device's endpoint keeps one endpoint per device, and an endpoint moves to the device that registered it last; 22 additional passing cases recorded | api:push_transport.test.ts: the HTTPS wake-up request POSTs an empty body to the pinned address, with transport headers only; the HTTPS wake-up request returns the push server's status, and never follows a redirect; 3 additional passing cases recorded. Full per-row case list: part3/completion/ROW_EVIDENCE.json#YAP-NOTIFY-007. No production or physical-device acceptance is implied. Pending criterion: Physical installed-client/background push, permission, receipt, tap routing and logout/revocation remain pending at the owner\u2019s explicit request. Web wake/service-worker and API transport fixtures passed; they are not physical-device evidence. Final execution totals and exact environment: part3/validation.json.",
-      "remaining": "Physical installed-client/background push, permission, receipt, tap routing and logout/revocation remain pending at the owner\u2019s explicit request. Web wake/service-worker and API transport fixtures passed; they are not physical-device evidence."
+      "testing": "Passed local controlled Web/API checks: api:push_wakeup.test.ts: registering a device's endpoint needs a signed-in device that hasn't been removed; registering a device's endpoint keeps one endpoint per device, and an endpoint moves to the device that registered it last; 22 additional passing cases recorded | api:push_transport.test.ts: the HTTPS wake-up request POSTs an empty body to the pinned address, with transport headers only; the HTTPS wake-up request returns the push server's status, and never follows a redirect; 3 additional passing cases recorded. Full per-row case list: part3/completion/ROW_EVIDENCE.json#YAP-NOTIFY-007. No production or physical-device acceptance is implied. Pending criterion: Physical installed-client/background push, permission, receipt, tap routing and logout/revocation remain pending at the owner’s explicit request. Web wake/service-worker and API transport fixtures passed; they are not physical-device evidence. Final execution totals and exact environment: part3/validation.json.",
+      "remaining": "Physical installed-client/background push, permission, receipt, tap routing and logout/revocation remain pending at the owner’s explicit request. Web wake/service-worker and API transport fixtures passed; they are not physical-device evidence."
     },
     {
       "id": "YAP-NOTIFY-008",
@@ -2698,8 +2698,8 @@
       "owner": "PART 4",
       "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "UNVERIFIED_DOCS",
-      "testing": "API content/schema/current-authority cases and four-browser rich controls. Evidence: part4/PROGRESS.md and its exact checkpoint receipts. Full coordinated/native acceptance remains pending.",
-      "remaining": "Approved native rich posts is implemented in the coordinated candidate. Native adapter/event variants, attachments, capacity, full staging/restore and cross-client acceptance remain open where applicable. No vendor dialect compatibility or completed production release is claimed."
+      "testing": "Separate files.upload/files.read approvals preserve native role/history checks. Native encrypted publication validation, interrupted-write/stream and fresh-installation revocation cases pass. Four browser projects approve, upload, publish and download matching human plaintext. Personal bot DM files and actual object-store-provider qualification remain outside this preview. Evidence: part4/evidence/bot-files-checkpoint.json and part4/evidence/native-integration-checkpoint.json. Nothing deployed.",
+      "remaining": "Approved native rich posts and community attachments is implemented in the controlled candidate. Full coordinated/native/provider acceptance and release remain open."
     },
     {
       "id": "YAP-BOT-019",
@@ -2778,16 +2778,16 @@
       "owner": "PART 4",
       "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "UNVERIFIED_DOCS",
-      "testing": "Real native HTTP/gateway SDK cases, Python voice wrappers and eight final browser media/download checks. Evidence: part4/PROGRESS.md and its exact checkpoint receipts. Full coordinated/native acceptance remains pending.",
-      "remaining": "First-party JavaScript/Python preview clients is implemented in the coordinated candidate. Native adapter/event variants, attachments, capacity, full staging/restore and cross-client acceptance remain open where applicable. No vendor dialect compatibility or completed production release is claimed."
+      "testing": "The 13-file SDK pins API 031089388da4430fedfd7c85de1dd8c80964886e, 240495 bytes, SHA-256 e182cb81a15d0570a3eb3a0397570495a490779e2eac44739519b7d78df6ec6c. Real native JS/Python file cases and browser archive/file journeys pass. The in-memory JavaScript helper is limited to 64 MiB without changing server quotas. Complete coordinated/provider acceptance remains pending. Evidence: part4/evidence/bot-files-checkpoint.json and part4/evidence/native-integration-checkpoint.json. Nothing deployed.",
+      "remaining": "Pinned JavaScript/Python preview clients with file methods is implemented in the controlled candidate. Full coordinated/native/provider acceptance and release remain open."
     },
     {
       "id": "YAP-DEV-007",
       "owner": "PART 4",
       "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "UNVERIFIED_DOCS",
-      "testing": "Commit-ordered private PostgreSQL journal, current authorization, opaque replay cursors, bounded retention and native SDK replay checks. Evidence: part4/PROGRESS.md and its exact checkpoint receipts. Full coordinated/native acceptance remains pending.",
-      "remaining": "Scoped durable events and long polling is implemented in the coordinated candidate. Native adapter/event variants, attachments, capacity, full staging/restore and cross-client acceptance remain open where applicable. No vendor dialect compatibility or completed production release is claimed."
+      "testing": "Real native member/invitation workflows and current invite role/scope withdrawal pass. Native connected/removal handlers produce ID-only voice events without room grants using a control-plane SFU stand-in. All transport/client variants and full release acceptance remain pending. Evidence: part4/evidence/bot-files-checkpoint.json and part4/evidence/native-integration-checkpoint.json. Nothing deployed.",
+      "remaining": "Scoped durable native event feed is implemented in the controlled candidate. Full coordinated/native/provider acceptance and release remain open."
     },
     {
       "id": "YAP-DEV-008",
@@ -3042,8 +3042,8 @@
       "owner": "PART 4",
       "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "UNVERIFIED_DOCS",
-      "testing": "Windows candidate6c9edeef integrates committed Web53b60ff, preserves39 documented adaptation entries and checks2285 upstream files. 109 shell and998 embedded-Web cases pass, with2 skips. Build/typecheck/lint/localization and isolated macOS Electron smoke pass. Windows installation/physical testing remains pending. Evidence: part4/evidence/native-integration-checkpoint.json.",
-      "remaining": "Windows candidate6c9edeef integrates committed Web53b60ff, preserves39 documented adaptation entries and checks2285 upstream files. 109 shell and998 embedded-Web cases pass, with2 skips. Build/typecheck/lint/localization and isolated macOS Electron smoke pass. Windows installation/physical testing remains pending."
+      "testing": "Windows 1c1bb378f36e1ba10b85230b910261ca441bb92a imports Web a0a27ff82f9cf07bf157245271d513c66bbd9ae5 and checks 2294 upstream files, retaining 39 native adaptation entries and 26 documented differences. 109 shell and 999 embedded-Web cases pass with one skip using the current API source. Types/lint/build/localization and isolated macOS Electron SDK integrity checks have exact bounded receipts. Physical Windows installation/media/provider consent remain pending. Evidence: part4/evidence/bot-files-checkpoint.json and part4/evidence/native-integration-checkpoint.json. Nothing deployed.",
+      "remaining": "Committed Windows file/SDK integration is implemented in the controlled candidate. Full coordinated/native/provider acceptance and release remain open."
     },
     {
       "id": "YAP-RELEASE-002",
@@ -3850,96 +3850,96 @@
       "owner": "PART 4",
       "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "UNVERIFIED_DOCS",
-      "testing": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and part4/evidence/bot-voice-media-checkpoint.json. Competitor behavior stays UNVERIFIED_DOCS.",
-      "remaining": "Native counterpart: POST /v2/bot/orgs/:orgId/channels. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending."
+      "testing": "Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and its per-row evidence links. Competitor behavior stays UNVERIFIED_DOCS.",
+      "remaining": "Native counterpart: POST /v2/bot/orgs/:orgId/channels. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending."
     },
     {
       "id": "YAP-API-013",
       "owner": "PART 4",
       "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "UNVERIFIED_DOCS",
-      "testing": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and part4/evidence/bot-voice-media-checkpoint.json. Competitor behavior stays UNVERIFIED_DOCS.",
-      "remaining": "Native counterpart: GET /v2/bot/conversations/:id. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending."
+      "testing": "Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and its per-row evidence links. Competitor behavior stays UNVERIFIED_DOCS.",
+      "remaining": "Native counterpart: GET /v2/bot/conversations/:id. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending."
     },
     {
       "id": "YAP-API-014",
       "owner": "PART 4",
       "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "UNVERIFIED_DOCS",
-      "testing": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and part4/evidence/bot-voice-media-checkpoint.json. Competitor behavior stays UNVERIFIED_DOCS.",
-      "remaining": "Native counterpart: PATCH /v2/bot/conversations/:id. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending."
+      "testing": "Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and its per-row evidence links. Competitor behavior stays UNVERIFIED_DOCS.",
+      "remaining": "Native counterpart: PATCH /v2/bot/conversations/:id. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending."
     },
     {
       "id": "YAP-API-015",
       "owner": "PART 4",
       "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "UNVERIFIED_DOCS",
-      "testing": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and part4/evidence/bot-voice-media-checkpoint.json. Competitor behavior stays UNVERIFIED_DOCS.",
-      "remaining": "Native counterpart: DELETE /v2/bot/conversations/:id. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending."
+      "testing": "Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and its per-row evidence links. Competitor behavior stays UNVERIFIED_DOCS.",
+      "remaining": "Native counterpart: DELETE /v2/bot/conversations/:id. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending."
     },
     {
       "id": "YAP-API-016",
       "owner": "PART 4",
       "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "UNVERIFIED_DOCS",
-      "testing": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and part4/evidence/bot-voice-media-checkpoint.json. Competitor behavior stays UNVERIFIED_DOCS.",
-      "remaining": "Native counterpart: GET /v2/bot/conversations/:id/overwrites. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending."
+      "testing": "Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and its per-row evidence links. Competitor behavior stays UNVERIFIED_DOCS.",
+      "remaining": "Native counterpart: GET /v2/bot/conversations/:id/overwrites. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending."
     },
     {
       "id": "YAP-API-017",
       "owner": "PART 4",
       "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "UNVERIFIED_DOCS",
-      "testing": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and part4/evidence/bot-voice-media-checkpoint.json. Competitor behavior stays UNVERIFIED_DOCS.",
-      "remaining": "Native counterpart: PUT /v2/bot/conversations/:id/overwrites (native full permission document). Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending."
+      "testing": "Positive native bot overwrite addition/removal and current message context pass through real PostgreSQL/native controllers; foreign anchor payloads are refused. The native permission surface uses subject documents, not vendor path compatibility. Full integrated/native release acceptance remains pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and its per-row evidence links. Competitor behavior stays UNVERIFIED_DOCS.",
+      "remaining": "Native counterpart: PUT /v2/bot/conversations/:id/overwrites (native subject document). Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Positive native bot overwrite addition/removal and current message context pass through real PostgreSQL/native controllers; foreign anchor payloads are refused. The native permission surface uses subject documents, not vendor path compatibility. Full integrated/native release acceptance remains pending."
     },
     {
       "id": "YAP-API-018",
       "owner": "PART 4",
       "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "UNVERIFIED_DOCS",
-      "testing": "Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and part4/evidence/bot-voice-media-checkpoint.json. Competitor behavior stays UNVERIFIED_DOCS.",
-      "remaining": "Native counterpart: PUT /v2/bot/conversations/:id/overwrites (native document with one overwrite removed). Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required."
+      "testing": "Positive native bot overwrite addition/removal and current message context pass through real PostgreSQL/native controllers; foreign anchor payloads are refused. The native permission surface uses subject documents, not vendor path compatibility. Full integrated/native release acceptance remains pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and its per-row evidence links. Competitor behavior stays UNVERIFIED_DOCS.",
+      "remaining": "Native counterpart: PUT /v2/bot/conversations/:id/overwrites with subject, allow:[], deny:[]. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Positive native bot overwrite addition/removal and current message context pass through real PostgreSQL/native controllers; foreign anchor payloads are refused. The native permission surface uses subject documents, not vendor path compatibility. Full integrated/native release acceptance remains pending."
     },
     {
       "id": "YAP-API-019",
       "owner": "PART 4",
       "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "UNVERIFIED_DOCS",
-      "testing": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and part4/evidence/bot-voice-media-checkpoint.json. Competitor behavior stays UNVERIFIED_DOCS.",
-      "remaining": "Native counterpart: POST /v2/bot/orgs/:orgId/categories. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending."
+      "testing": "Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and its per-row evidence links. Competitor behavior stays UNVERIFIED_DOCS.",
+      "remaining": "Native counterpart: POST /v2/bot/orgs/:orgId/categories. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending."
     },
     {
       "id": "YAP-API-020",
       "owner": "PART 4",
       "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "UNVERIFIED_DOCS",
-      "testing": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and part4/evidence/bot-voice-media-checkpoint.json. Competitor behavior stays UNVERIFIED_DOCS.",
-      "remaining": "Native counterpart: PATCH /v2/bot/categories/:id. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending."
+      "testing": "Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and its per-row evidence links. Competitor behavior stays UNVERIFIED_DOCS.",
+      "remaining": "Native counterpart: PATCH /v2/bot/categories/:id. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending."
     },
     {
       "id": "YAP-API-021",
       "owner": "PART 4",
       "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "UNVERIFIED_DOCS",
-      "testing": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and part4/evidence/bot-voice-media-checkpoint.json. Competitor behavior stays UNVERIFIED_DOCS.",
-      "remaining": "Native counterpart: DELETE /v2/bot/categories/:id. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending."
+      "testing": "Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and its per-row evidence links. Competitor behavior stays UNVERIFIED_DOCS.",
+      "remaining": "Native counterpart: DELETE /v2/bot/categories/:id. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending."
     },
     {
       "id": "YAP-API-022",
       "owner": "PART 4",
       "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "UNVERIFIED_DOCS",
-      "testing": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and part4/evidence/bot-voice-media-checkpoint.json. Competitor behavior stays UNVERIFIED_DOCS.",
-      "remaining": "Native counterpart: PUT /v2/bot/categories/:id/overwrites. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending."
+      "testing": "Positive native bot overwrite addition/removal and current message context pass through real PostgreSQL/native controllers; foreign anchor payloads are refused. The native permission surface uses subject documents, not vendor path compatibility. Full integrated/native release acceptance remains pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and its per-row evidence links. Competitor behavior stays UNVERIFIED_DOCS.",
+      "remaining": "Native counterpart: PUT /v2/bot/categories/:id/overwrites. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Positive native bot overwrite addition/removal and current message context pass through real PostgreSQL/native controllers; foreign anchor payloads are refused. The native permission surface uses subject documents, not vendor path compatibility. Full integrated/native release acceptance remains pending."
     },
     {
       "id": "YAP-API-023",
       "owner": "PART 4",
       "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "UNVERIFIED_DOCS",
-      "testing": "Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and part4/evidence/bot-voice-media-checkpoint.json. Competitor behavior stays UNVERIFIED_DOCS.",
-      "remaining": "Native counterpart: PUT /v2/bot/categories/:id/overwrites (native document with one overwrite removed). Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required."
+      "testing": "Positive native bot overwrite addition/removal and current message context pass through real PostgreSQL/native controllers; foreign anchor payloads are refused. The native permission surface uses subject documents, not vendor path compatibility. Full integrated/native release acceptance remains pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and its per-row evidence links. Competitor behavior stays UNVERIFIED_DOCS.",
+      "remaining": "Native counterpart: PUT /v2/bot/categories/:id/overwrites with subject, allow:[], deny:[]. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Positive native bot overwrite addition/removal and current message context pass through real PostgreSQL/native controllers; foreign anchor payloads are refused. The native permission surface uses subject documents, not vendor path compatibility. Full integrated/native release acceptance remains pending."
     },
     {
       "id": "YAP-API-024",
@@ -3954,32 +3954,32 @@
       "owner": "PART 4",
       "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "UNVERIFIED_DOCS",
-      "testing": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and part4/evidence/bot-voice-media-checkpoint.json. Competitor behavior stays UNVERIFIED_DOCS.",
-      "remaining": "Native counterpart: GET /v2/bot/orgs/:orgId/expressions. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending."
+      "testing": "Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and its per-row evidence links. Competitor behavior stays UNVERIFIED_DOCS.",
+      "remaining": "Native counterpart: GET /v2/bot/orgs/:orgId/expressions. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending."
     },
     {
       "id": "YAP-API-026",
       "owner": "PART 4",
       "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "UNVERIFIED_DOCS",
-      "testing": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and part4/evidence/bot-voice-media-checkpoint.json. Competitor behavior stays UNVERIFIED_DOCS.",
-      "remaining": "Native counterpart: POST /v2/bot/orgs/:orgId/expressions. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending."
+      "testing": "Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and its per-row evidence links. Competitor behavior stays UNVERIFIED_DOCS.",
+      "remaining": "Native counterpart: POST /v2/bot/orgs/:orgId/expressions. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending."
     },
     {
       "id": "YAP-API-027",
       "owner": "PART 4",
       "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "UNVERIFIED_DOCS",
-      "testing": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and part4/evidence/bot-voice-media-checkpoint.json. Competitor behavior stays UNVERIFIED_DOCS.",
-      "remaining": "Native counterpart: PATCH /v2/bot/expressions/:id. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending."
+      "testing": "Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and its per-row evidence links. Competitor behavior stays UNVERIFIED_DOCS.",
+      "remaining": "Native counterpart: PATCH /v2/bot/expressions/:id. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending."
     },
     {
       "id": "YAP-API-028",
       "owner": "PART 4",
       "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "UNVERIFIED_DOCS",
-      "testing": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and part4/evidence/bot-voice-media-checkpoint.json. Competitor behavior stays UNVERIFIED_DOCS.",
-      "remaining": "Native counterpart: DELETE /v2/bot/expressions/:id. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending."
+      "testing": "Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and its per-row evidence links. Competitor behavior stays UNVERIFIED_DOCS.",
+      "remaining": "Native counterpart: DELETE /v2/bot/expressions/:id. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending."
     },
     {
       "id": "YAP-API-029",
@@ -4010,16 +4010,16 @@
       "owner": "PART 4",
       "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "UNVERIFIED_DOCS",
-      "testing": "Real scoped API/gateway cases cover this behavior or its core path; full integrated acceptance is pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and part4/evidence/bot-voice-media-checkpoint.json. Competitor behavior stays UNVERIFIED_DOCS.",
-      "remaining": "Native counterpart: POST /v2/bot/channels/:channelId/messages. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Current native send supports text/replies; rich interactive components and the complete bot attachment workflow remain pending. Native rich boxes, link buttons and source-bound controls now require explicit advanced messages.post approval and native current content authority. Real scoped API/gateway cases cover this behavior or its core path; full integrated acceptance is pending."
+      "testing": "Real encrypted-byte upload, native publication validation, interrupted-upload/reinstall cleanup and revoked-stream cases pass. All four browser projects download matching human plaintext after explicit manager review. Local object-store stand-ins do not prove AWS provider behavior. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and its per-row evidence links. Competitor behavior stays UNVERIFIED_DOCS.",
+      "remaining": "Native counterpart: POST /v2/bot/channels/:channelId/messages. Native text/replies, approved rich boxes and source-bound controls retain current content authority. Community attachment publication additionally requires separate files.upload and messages.post approval; download uses files.read and native history access. Personal bot DM files are outside this preview. Attachment-v2 relay can see keys. Full coordinated/provider/native acceptance remains pending. Real encrypted-byte upload, native publication validation, interrupted-upload/reinstall cleanup and revoked-stream cases pass. All four browser projects download matching human plaintext after explicit manager review. Local object-store stand-ins do not prove AWS provider behavior."
     },
     {
       "id": "YAP-API-033",
       "owner": "PART 4",
       "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "UNVERIFIED_DOCS",
-      "testing": "Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and part4/evidence/bot-voice-media-checkpoint.json. Competitor behavior stays UNVERIFIED_DOCS.",
-      "remaining": "Native counterpart: GET /v2/bot/conversations/:id/messages?around=:messageId (native paged context). Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required."
+      "testing": "A bot reads current edited text through native around-message context; an anchor from a different community returns404 without its payload. Full context variants, native-client and coordinated release acceptance remain pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and its per-row evidence links. Competitor behavior stays UNVERIFIED_DOCS.",
+      "remaining": "Native counterpart: GET /v2/bot/conversations/:id/messages?around=:messageId (native paged context). Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. A bot reads current edited text through native around-message context; an anchor from a different community returns404 without its payload. Full context variants, native-client and coordinated release acceptance remain pending."
     },
     {
       "id": "YAP-API-034",
@@ -4090,128 +4090,128 @@
       "owner": "PART 4",
       "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "UNVERIFIED_DOCS",
-      "testing": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and part4/evidence/bot-voice-media-checkpoint.json. Competitor behavior stays UNVERIFIED_DOCS.",
-      "remaining": "Native counterpart: PATCH /v2/bot/orgs/:orgId/members/:userId. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending."
+      "testing": "Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and its per-row evidence links. Competitor behavior stays UNVERIFIED_DOCS.",
+      "remaining": "Native counterpart: PATCH /v2/bot/orgs/:orgId/members/:userId. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending."
     },
     {
       "id": "YAP-API-043",
       "owner": "PART 4",
       "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "UNVERIFIED_DOCS",
-      "testing": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and part4/evidence/bot-voice-media-checkpoint.json. Competitor behavior stays UNVERIFIED_DOCS.",
-      "remaining": "Native counterpart: DELETE /v2/bot/orgs/:orgId/members/:userId. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending."
+      "testing": "Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and its per-row evidence links. Competitor behavior stays UNVERIFIED_DOCS.",
+      "remaining": "Native counterpart: DELETE /v2/bot/orgs/:orgId/members/:userId. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending."
     },
     {
       "id": "YAP-API-044",
       "owner": "PART 4",
       "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "UNVERIFIED_DOCS",
-      "testing": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and part4/evidence/bot-voice-media-checkpoint.json. Competitor behavior stays UNVERIFIED_DOCS.",
-      "remaining": "Native counterpart: GET /v2/bot/orgs/:orgId/bans. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending."
+      "testing": "Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and its per-row evidence links. Competitor behavior stays UNVERIFIED_DOCS.",
+      "remaining": "Native counterpart: GET /v2/bot/orgs/:orgId/bans. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending."
     },
     {
       "id": "YAP-API-045",
       "owner": "PART 4",
       "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "UNVERIFIED_DOCS",
-      "testing": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and part4/evidence/bot-voice-media-checkpoint.json. Competitor behavior stays UNVERIFIED_DOCS.",
-      "remaining": "Native counterpart: POST /v2/bot/orgs/:orgId/bans. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending."
+      "testing": "Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and its per-row evidence links. Competitor behavior stays UNVERIFIED_DOCS.",
+      "remaining": "Native counterpart: POST /v2/bot/orgs/:orgId/bans. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending."
     },
     {
       "id": "YAP-API-046",
       "owner": "PART 4",
       "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "UNVERIFIED_DOCS",
-      "testing": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and part4/evidence/bot-voice-media-checkpoint.json. Competitor behavior stays UNVERIFIED_DOCS.",
-      "remaining": "Native counterpart: DELETE /v2/bot/orgs/:orgId/bans/:userId. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending."
+      "testing": "Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and its per-row evidence links. Competitor behavior stays UNVERIFIED_DOCS.",
+      "remaining": "Native counterpart: DELETE /v2/bot/orgs/:orgId/bans/:userId. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending."
     },
     {
       "id": "YAP-API-047",
       "owner": "PART 4",
       "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "UNVERIFIED_DOCS",
-      "testing": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and part4/evidence/bot-voice-media-checkpoint.json. Competitor behavior stays UNVERIFIED_DOCS.",
-      "remaining": "Native counterpart: PUT /v2/bot/orgs/:orgId/members/:userId/timeout. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending."
+      "testing": "Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and its per-row evidence links. Competitor behavior stays UNVERIFIED_DOCS.",
+      "remaining": "Native counterpart: PUT /v2/bot/orgs/:orgId/members/:userId/timeout. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending."
     },
     {
       "id": "YAP-API-048",
       "owner": "PART 4",
       "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "UNVERIFIED_DOCS",
-      "testing": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and part4/evidence/bot-voice-media-checkpoint.json. Competitor behavior stays UNVERIFIED_DOCS.",
-      "remaining": "Native counterpart: GET /v2/bot/orgs/:orgId/invites. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending."
+      "testing": "Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and its per-row evidence links. Competitor behavior stays UNVERIFIED_DOCS.",
+      "remaining": "Native counterpart: GET /v2/bot/orgs/:orgId/invites. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending."
     },
     {
       "id": "YAP-API-049",
       "owner": "PART 4",
       "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "UNVERIFIED_DOCS",
-      "testing": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and part4/evidence/bot-voice-media-checkpoint.json. Competitor behavior stays UNVERIFIED_DOCS.",
-      "remaining": "Native counterpart: GET /v2/bot/orgs/:orgId/roles. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending."
+      "testing": "Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and its per-row evidence links. Competitor behavior stays UNVERIFIED_DOCS.",
+      "remaining": "Native counterpart: GET /v2/bot/orgs/:orgId/roles. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending."
     },
     {
       "id": "YAP-API-050",
       "owner": "PART 4",
       "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "UNVERIFIED_DOCS",
-      "testing": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and part4/evidence/bot-voice-media-checkpoint.json. Competitor behavior stays UNVERIFIED_DOCS.",
-      "remaining": "Native counterpart: POST /v2/bot/orgs/:orgId/roles. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending."
+      "testing": "Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and its per-row evidence links. Competitor behavior stays UNVERIFIED_DOCS.",
+      "remaining": "Native counterpart: POST /v2/bot/orgs/:orgId/roles. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending."
     },
     {
       "id": "YAP-API-051",
       "owner": "PART 4",
       "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "UNVERIFIED_DOCS",
-      "testing": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and part4/evidence/bot-voice-media-checkpoint.json. Competitor behavior stays UNVERIFIED_DOCS.",
-      "remaining": "Native counterpart: PUT /v2/bot/orgs/:orgId/roles/everyone. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending."
+      "testing": "Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and its per-row evidence links. Competitor behavior stays UNVERIFIED_DOCS.",
+      "remaining": "Native counterpart: PUT /v2/bot/orgs/:orgId/roles/everyone. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending."
     },
     {
       "id": "YAP-API-052",
       "owner": "PART 4",
       "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "UNVERIFIED_DOCS",
-      "testing": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and part4/evidence/bot-voice-media-checkpoint.json. Competitor behavior stays UNVERIFIED_DOCS.",
-      "remaining": "Native counterpart: PATCH /v2/bot/roles/:roleId. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending."
+      "testing": "Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and its per-row evidence links. Competitor behavior stays UNVERIFIED_DOCS.",
+      "remaining": "Native counterpart: PATCH /v2/bot/roles/:roleId. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending."
     },
     {
       "id": "YAP-API-053",
       "owner": "PART 4",
       "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "UNVERIFIED_DOCS",
-      "testing": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and part4/evidence/bot-voice-media-checkpoint.json. Competitor behavior stays UNVERIFIED_DOCS.",
-      "remaining": "Native counterpart: DELETE /v2/bot/roles/:roleId. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending."
+      "testing": "Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and its per-row evidence links. Competitor behavior stays UNVERIFIED_DOCS.",
+      "remaining": "Native counterpart: DELETE /v2/bot/roles/:roleId. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending."
     },
     {
       "id": "YAP-API-054",
       "owner": "PART 4",
       "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "UNVERIFIED_DOCS",
-      "testing": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and part4/evidence/bot-voice-media-checkpoint.json. Competitor behavior stays UNVERIFIED_DOCS.",
-      "remaining": "Native counterpart: PUT /v2/bot/roles/:roleId/members/:userId. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending."
+      "testing": "Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and its per-row evidence links. Competitor behavior stays UNVERIFIED_DOCS.",
+      "remaining": "Native counterpart: PUT /v2/bot/roles/:roleId/members/:userId. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending."
     },
     {
       "id": "YAP-API-055",
       "owner": "PART 4",
       "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "UNVERIFIED_DOCS",
-      "testing": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and part4/evidence/bot-voice-media-checkpoint.json. Competitor behavior stays UNVERIFIED_DOCS.",
-      "remaining": "Native counterpart: DELETE /v2/bot/roles/:roleId/members/:userId. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending."
+      "testing": "Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and its per-row evidence links. Competitor behavior stays UNVERIFIED_DOCS.",
+      "remaining": "Native counterpart: DELETE /v2/bot/roles/:roleId/members/:userId. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending."
     },
     {
       "id": "YAP-API-056",
       "owner": "PART 4",
       "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "UNVERIFIED_DOCS",
-      "testing": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and part4/evidence/bot-voice-media-checkpoint.json. Competitor behavior stays UNVERIFIED_DOCS.",
-      "remaining": "Native counterpart: GET /v2/bot/orgs/:orgId/meetings. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending."
+      "testing": "Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and its per-row evidence links. Competitor behavior stays UNVERIFIED_DOCS.",
+      "remaining": "Native counterpart: GET /v2/bot/orgs/:orgId/meetings. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending."
     },
     {
       "id": "YAP-API-057",
       "owner": "PART 4",
       "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "UNVERIFIED_DOCS",
-      "testing": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and part4/evidence/bot-voice-media-checkpoint.json. Competitor behavior stays UNVERIFIED_DOCS.",
-      "remaining": "Native counterpart: POST /v2/bot/orgs/:orgId/meetings. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending."
+      "testing": "Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and its per-row evidence links. Competitor behavior stays UNVERIFIED_DOCS.",
+      "remaining": "Native counterpart: POST /v2/bot/orgs/:orgId/meetings. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending."
     },
     {
       "id": "YAP-API-058",
@@ -4226,8 +4226,8 @@
       "owner": "PART 4",
       "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "UNVERIFIED_DOCS",
-      "testing": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and part4/evidence/bot-voice-media-checkpoint.json. Competitor behavior stays UNVERIFIED_DOCS.",
-      "remaining": "Native counterpart: GET /v2/bot/orgs/:orgId. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending."
+      "testing": "Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and its per-row evidence links. Competitor behavior stays UNVERIFIED_DOCS.",
+      "remaining": "Native counterpart: GET /v2/bot/orgs/:orgId. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending."
     },
     {
       "id": "YAP-API-060",
@@ -4242,24 +4242,24 @@
       "owner": "PART 4",
       "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "UNVERIFIED_DOCS",
-      "testing": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and part4/evidence/bot-voice-media-checkpoint.json. Competitor behavior stays UNVERIFIED_DOCS.",
-      "remaining": "Native counterpart: GET /v2/bot/orgs/:orgId/members. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending."
+      "testing": "Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and its per-row evidence links. Competitor behavior stays UNVERIFIED_DOCS.",
+      "remaining": "Native counterpart: GET /v2/bot/orgs/:orgId/members. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending."
     },
     {
       "id": "YAP-API-062",
       "owner": "PART 4",
       "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "UNVERIFIED_DOCS",
-      "testing": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and part4/evidence/bot-voice-media-checkpoint.json. Competitor behavior stays UNVERIFIED_DOCS.",
-      "remaining": "Native counterpart: GET /v2/bot/orgs/:orgId/members/:userId/profile. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending."
+      "testing": "Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and its per-row evidence links. Competitor behavior stays UNVERIFIED_DOCS.",
+      "remaining": "Native counterpart: GET /v2/bot/orgs/:orgId/members/:userId/profile. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending."
     },
     {
       "id": "YAP-API-063",
       "owner": "PART 4",
       "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "UNVERIFIED_DOCS",
-      "testing": "Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and part4/evidence/bot-voice-media-checkpoint.json. Competitor behavior stays UNVERIFIED_DOCS.",
-      "remaining": "Native counterpart: GET /v2/bot/orgs/:orgId/members/:userId/profile (authorized shared community only). Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required."
+      "testing": "Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and its per-row evidence links. Competitor behavior stays UNVERIFIED_DOCS.",
+      "remaining": "Native counterpart: GET /v2/bot/orgs/:orgId/members/:userId/profile (authorized shared community only). Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending."
     },
     {
       "id": "YAP-API-064",
@@ -4314,32 +4314,32 @@
       "owner": "PART 4",
       "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "UNVERIFIED_DOCS",
-      "testing": "Real Chromium/Firefox/WebKit/phone-width encrypted native RTC audio and actual media disconnection after revocation pass. Control-plane races, expiry, restart/orphan cleanup, RLS and failed removal retry pass. Physical-device and complete platform acceptance remain pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and part4/evidence/bot-voice-media-checkpoint.json. Competitor behavior stays UNVERIFIED_DOCS.",
-      "remaining": "Native counterpart: POST /v2/bot/voice. Native dialect, existing active locally hosted community rooms only. Exact public-key manifest approval, current native authority, bounded separate bot media lease, human-sealed encrypted room key, initial receive-only token and durable removal metadata. Bot-created room initiation and Android/Windows handoff/integration remain active work. Real Chromium/Firefox/WebKit/phone-width encrypted native RTC audio and actual media disconnection after revocation pass. Control-plane races, expiry, restart/orphan cleanup, RLS and failed removal retry pass. Physical-device and complete platform acceptance remain pending."
+      "testing": "Actual encrypted audio and camera reception plus authority withdrawal pass in controlled browser/native RTC flows. A continuous 997 Hz native source with DTX disabled positively decodes before withdrawal; 15 saved-grant replays across five browser projects decode no matching source tone and are removed in sampled local timings. Some replays receive nonmatching frames; an earlier WebKit probe received 25 frames of undetermined content. Self-hosted JWTs are not provider-invalidated. Instantaneous/failure-timing revocation and complete native/provider acceptance remain unverified. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and its per-row evidence links. Competitor behavior stays UNVERIFIED_DOCS.",
+      "remaining": "Native counterpart: POST /v2/bot/voice. Native dialect, existing active locally hosted community rooms only. Exact public-key manifest approval, current native authority, bounded separate bot media lease, human-sealed encrypted room key, initial receive-only token and durable removal metadata. Bot-created room initiation and Android/Windows handoff/integration remain active work. The receive grant covers room media; current approval copy and the SDK guide disclose audio, camera video, screen shares and other in-call content. Self-hosted token replay is fenced by Meldiq admission checks, not guaranteed provider token invalidation. Actual encrypted audio and camera reception plus authority withdrawal pass in controlled browser/native RTC flows. A continuous 997 Hz native source with DTX disabled positively decodes before withdrawal; 15 saved-grant replays across five browser projects decode no matching source tone and are removed in sampled local timings. Some replays receive nonmatching frames; an earlier WebKit probe received 25 frames of undetermined content. Self-hosted JWTs are not provider-invalidated. Instantaneous/failure-timing revocation and complete native/provider acceptance remain unverified."
     },
     {
       "id": "YAP-API-071",
       "owner": "PART 4",
       "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "UNVERIFIED_DOCS",
-      "testing": "Real Chromium/Firefox/WebKit/phone-width encrypted native RTC audio and actual media disconnection after revocation pass. Control-plane races, expiry, restart/orphan cleanup, RLS and failed removal retry pass. Physical-device and complete platform acceptance remain pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and part4/evidence/bot-voice-media-checkpoint.json. Competitor behavior stays UNVERIFIED_DOCS.",
-      "remaining": "Native counterpart: DELETE /v2/bot/voice/:leaseId. Native dialect, existing active locally hosted community rooms only. Exact public-key manifest approval, current native authority, bounded separate bot media lease, human-sealed encrypted room key, initial receive-only token and durable removal metadata. Bot-created room initiation and Android/Windows handoff/integration remain active work. Real Chromium/Firefox/WebKit/phone-width encrypted native RTC audio and actual media disconnection after revocation pass. Control-plane races, expiry, restart/orphan cleanup, RLS and failed removal retry pass. Physical-device and complete platform acceptance remain pending."
+      "testing": "Actual encrypted audio and camera reception plus authority withdrawal pass in controlled browser/native RTC flows. A continuous 997 Hz native source with DTX disabled positively decodes before withdrawal; 15 saved-grant replays across five browser projects decode no matching source tone and are removed in sampled local timings. Some replays receive nonmatching frames; an earlier WebKit probe received 25 frames of undetermined content. Self-hosted JWTs are not provider-invalidated. Instantaneous/failure-timing revocation and complete native/provider acceptance remain unverified. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and its per-row evidence links. Competitor behavior stays UNVERIFIED_DOCS.",
+      "remaining": "Native counterpart: DELETE /v2/bot/voice/:leaseId. Native dialect, existing active locally hosted community rooms only. Exact public-key manifest approval, current native authority, bounded separate bot media lease, human-sealed encrypted room key, initial receive-only token and durable removal metadata. Bot-created room initiation and Android/Windows handoff/integration remain active work. The receive grant covers room media; current approval copy and the SDK guide disclose audio, camera video, screen shares and other in-call content. Self-hosted token replay is fenced by Meldiq admission checks, not guaranteed provider token invalidation. Actual encrypted audio and camera reception plus authority withdrawal pass in controlled browser/native RTC flows. A continuous 997 Hz native source with DTX disabled positively decodes before withdrawal; 15 saved-grant replays across five browser projects decode no matching source tone and are removed in sampled local timings. Some replays receive nonmatching frames; an earlier WebKit probe received 25 frames of undetermined content. Self-hosted JWTs are not provider-invalidated. Instantaneous/failure-timing revocation and complete native/provider acceptance remain unverified."
     },
     {
       "id": "YAP-API-072",
       "owner": "PART 4",
       "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "UNVERIFIED_DOCS",
-      "testing": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and part4/evidence/bot-voice-media-checkpoint.json. Competitor behavior stays UNVERIFIED_DOCS.",
-      "remaining": "Native counterpart: GET /v2/bot/orgs/:orgId/channels/:channelId/webhooks. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending."
+      "testing": "Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and its per-row evidence links. Competitor behavior stays UNVERIFIED_DOCS.",
+      "remaining": "Native counterpart: GET /v2/bot/orgs/:orgId/channels/:channelId/webhooks. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending."
     },
     {
       "id": "YAP-API-073",
       "owner": "PART 4",
       "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "UNVERIFIED_DOCS",
-      "testing": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and part4/evidence/bot-voice-media-checkpoint.json. Competitor behavior stays UNVERIFIED_DOCS.",
-      "remaining": "Native counterpart: POST /v2/bot/orgs/:orgId/channels/:channelId/webhooks. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending."
+      "testing": "Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and its per-row evidence links. Competitor behavior stays UNVERIFIED_DOCS.",
+      "remaining": "Native counterpart: POST /v2/bot/orgs/:orgId/channels/:channelId/webhooks. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending."
     },
     {
       "id": "YAP-API-074",
@@ -4362,8 +4362,8 @@
       "owner": "PART 4",
       "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "UNVERIFIED_DOCS",
-      "testing": "Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and part4/evidence/bot-voice-media-checkpoint.json. Competitor behavior stays UNVERIFIED_DOCS.",
-      "remaining": "Native counterpart: DELETE /v2/bot/orgs/:orgId/channels/:channelId/webhooks/:webhookId. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Real bot-authenticated native controller workflow passed, with human reads of resulting state. Native validation, protected-role denial, foreign resources and current role withdrawal are exercised. Full coordinated acceptance remains pending."
+      "testing": "Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and its per-row evidence links. Competitor behavior stays UNVERIFIED_DOCS.",
+      "remaining": "Native counterpart: DELETE /v2/bot/orgs/:orgId/channels/:channelId/webhooks/:webhookId. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Real bot-authenticated native administration workflows cover the core operation; current source/authority and human resulting-state checks pass. Native variants and full integrated release acceptance remain pending."
     },
     {
       "id": "YAP-BOTEVENT-001",
@@ -4386,16 +4386,16 @@
       "owner": "PART 4",
       "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "UNVERIFIED_DOCS",
-      "testing": "Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and part4/evidence/bot-voice-media-checkpoint.json. Competitor behavior stays UNVERIFIED_DOCS.",
-      "remaining": "Native counterpart: GET /v2/bot/events; /v2/bot/gateway: member_join ID metadata. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Event bodies contain IDs/bounded metadata. Current message content is retrieved separately through approved, sanitized native history. Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required."
+      "testing": "Real native invitation create/revoke and member join/remove workflows emit ordered ID-only events; invite secrets remain absent. Current invite role/scope withdrawal withholds invite events. Full gateway/native/release acceptance remains pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and its per-row evidence links. Competitor behavior stays UNVERIFIED_DOCS.",
+      "remaining": "Native counterpart: GET /v2/bot/events; /v2/bot/gateway: member_join ID metadata. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Event bodies contain IDs/bounded metadata. Current message content is retrieved separately through approved, sanitized native history. Real native invitation create/revoke and member join/remove workflows emit ordered ID-only events; invite secrets remain absent. Current invite role/scope withdrawal withholds invite events. Full gateway/native/release acceptance remains pending."
     },
     {
       "id": "YAP-BOTEVENT-004",
       "owner": "PART 4",
       "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "UNVERIFIED_DOCS",
-      "testing": "Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and part4/evidence/bot-voice-media-checkpoint.json. Competitor behavior stays UNVERIFIED_DOCS.",
-      "remaining": "Native counterpart: GET /v2/bot/events; /v2/bot/gateway: member_leave ID metadata. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Event bodies contain IDs/bounded metadata. Current message content is retrieved separately through approved, sanitized native history. Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required."
+      "testing": "Real native invitation create/revoke and member join/remove workflows emit ordered ID-only events; invite secrets remain absent. Current invite role/scope withdrawal withholds invite events. Full gateway/native/release acceptance remains pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and its per-row evidence links. Competitor behavior stays UNVERIFIED_DOCS.",
+      "remaining": "Native counterpart: GET /v2/bot/events; /v2/bot/gateway: member_leave ID metadata. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Event bodies contain IDs/bounded metadata. Current message content is retrieved separately through approved, sanitized native history. Real native invitation create/revoke and member join/remove workflows emit ordered ID-only events; invite secrets remain absent. Current invite role/scope withdrawal withholds invite events. Full gateway/native/release acceptance remains pending."
     },
     {
       "id": "YAP-BOTEVENT-005",
@@ -4418,16 +4418,16 @@
       "owner": "PART 4",
       "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "UNVERIFIED_DOCS",
-      "testing": "Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and part4/evidence/bot-voice-media-checkpoint.json. Competitor behavior stays UNVERIFIED_DOCS.",
-      "remaining": "Native counterpart: GET /v2/bot/events; /v2/bot/gateway: voice_join ID metadata. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Event bodies contain IDs/bounded metadata. Current message content is retrieved separately through approved, sanitized native history. Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required."
+      "testing": "Real PostgreSQL and native bot connected/removal handlers emit ID-only voice join/leave events without room credentials or lease IDs; this event test uses an SFU control-plane stand-in. Separate browser RTC/audio evidence does not itself qualify every event transport/client variant. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and its per-row evidence links. Competitor behavior stays UNVERIFIED_DOCS.",
+      "remaining": "Native counterpart: GET /v2/bot/events; /v2/bot/gateway: voice_join ID metadata. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Event bodies contain IDs/bounded metadata. Current message content is retrieved separately through approved, sanitized native history. Real PostgreSQL and native bot connected/removal handlers emit ID-only voice join/leave events without room credentials or lease IDs; this event test uses an SFU control-plane stand-in. Separate browser RTC/audio evidence does not itself qualify every event transport/client variant."
     },
     {
       "id": "YAP-BOTEVENT-008",
       "owner": "PART 4",
       "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "UNVERIFIED_DOCS",
-      "testing": "Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and part4/evidence/bot-voice-media-checkpoint.json. Competitor behavior stays UNVERIFIED_DOCS.",
-      "remaining": "Native counterpart: GET /v2/bot/events; /v2/bot/gateway: voice_leave ID metadata. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Event bodies contain IDs/bounded metadata. Current message content is retrieved separately through approved, sanitized native history. Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required."
+      "testing": "Real PostgreSQL and native bot connected/removal handlers emit ID-only voice join/leave events without room credentials or lease IDs; this event test uses an SFU control-plane stand-in. Separate browser RTC/audio evidence does not itself qualify every event transport/client variant. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and its per-row evidence links. Competitor behavior stays UNVERIFIED_DOCS.",
+      "remaining": "Native counterpart: GET /v2/bot/events; /v2/bot/gateway: voice_leave ID metadata. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Event bodies contain IDs/bounded metadata. Current message content is retrieved separately through approved, sanitized native history. Real PostgreSQL and native bot connected/removal handlers emit ID-only voice join/leave events without room credentials or lease IDs; this event test uses an SFU control-plane stand-in. Separate browser RTC/audio evidence does not itself qualify every event transport/client variant."
     },
     {
       "id": "YAP-BOTEVENT-009",
@@ -4450,16 +4450,16 @@
       "owner": "PART 4",
       "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "UNVERIFIED_DOCS",
-      "testing": "Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and part4/evidence/bot-voice-media-checkpoint.json. Competitor behavior stays UNVERIFIED_DOCS.",
-      "remaining": "Native counterpart: GET /v2/bot/events; /v2/bot/gateway: invite_create ID metadata. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Event bodies contain IDs/bounded metadata. Current message content is retrieved separately through approved, sanitized native history. Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required."
+      "testing": "Real native invitation create/revoke and member join/remove workflows emit ordered ID-only events; invite secrets remain absent. Current invite role/scope withdrawal withholds invite events. Full gateway/native/release acceptance remains pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and its per-row evidence links. Competitor behavior stays UNVERIFIED_DOCS.",
+      "remaining": "Native counterpart: GET /v2/bot/events; /v2/bot/gateway: invite_create ID metadata. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Event bodies contain IDs/bounded metadata. Current message content is retrieved separately through approved, sanitized native history. Real native invitation create/revoke and member join/remove workflows emit ordered ID-only events; invite secrets remain absent. Current invite role/scope withdrawal withholds invite events. Full gateway/native/release acceptance remains pending."
     },
     {
       "id": "YAP-BOTEVENT-012",
       "owner": "PART 4",
       "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "UNVERIFIED_DOCS",
-      "testing": "Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and part4/evidence/bot-voice-media-checkpoint.json. Competitor behavior stays UNVERIFIED_DOCS.",
-      "remaining": "Native counterpart: GET /v2/bot/events; /v2/bot/gateway: invite_delete ID metadata. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Event bodies contain IDs/bounded metadata. Current message content is retrieved separately through approved, sanitized native history. Native adapter/trigger exists; credential-denial inventory and native domain tests are bounded evidence. A bot-specific happy-path case for this variant is still required."
+      "testing": "Real native invitation create/revoke and member join/remove workflows emit ordered ID-only events; invite secrets remain absent. Current invite role/scope withdrawal withholds invite events. Full gateway/native/release acceptance remains pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and its per-row evidence links. Competitor behavior stays UNVERIFIED_DOCS.",
+      "remaining": "Native counterpart: GET /v2/bot/events; /v2/bot/gateway: invite_delete ID metadata. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Event bodies contain IDs/bounded metadata. Current message content is retrieved separately through approved, sanitized native history. Real native invitation create/revoke and member join/remove workflows emit ordered ID-only events; invite secrets remain absent. Current invite role/scope withdrawal withholds invite events. Full gateway/native/release acceptance remains pending."
     },
     {
       "id": "YAP-BOTEVENT-013",
@@ -4474,16 +4474,16 @@
       "owner": "PART 4",
       "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "UNVERIFIED_DOCS",
-      "testing": "Real scoped API/gateway cases cover this behavior or its core path; full integrated acceptance is pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and part4/evidence/bot-voice-media-checkpoint.json. Competitor behavior stays UNVERIFIED_DOCS.",
-      "remaining": "Native counterpart: /v2/bot/gateway: hello. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Real scoped API/gateway cases cover this behavior or its core path; full integrated acceptance is pending."
+      "testing": "Real native gateway cases and100concurrent authenticated sockets pass on loopback PostgreSQL.40messages reach all100sockets (4000observed deliveries); independent per-bot/per-address/global limits and released-slot reuse pass. Local same-process timings are not production capacity or a performance-improvement benchmark. Full native/provider/coordinated acceptance remains pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and its per-row evidence links. Competitor behavior stays UNVERIFIED_DOCS.",
+      "remaining": "Native counterpart: /v2/bot/gateway: hello. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Real native gateway cases and100concurrent authenticated sockets pass on loopback PostgreSQL.40messages reach all100sockets (4000observed deliveries); independent per-bot/per-address/global limits and released-slot reuse pass. Local same-process timings are not production capacity or a performance-improvement benchmark. Full native/provider/coordinated acceptance remains pending."
     },
     {
       "id": "YAP-GATEWAY-002",
       "owner": "PART 4",
       "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "UNVERIFIED_DOCS",
-      "testing": "Real scoped API/gateway cases cover this behavior or its core path; full integrated acceptance is pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and part4/evidence/bot-voice-media-checkpoint.json. Competitor behavior stays UNVERIFIED_DOCS.",
-      "remaining": "Native counterpart: /v2/bot/gateway: identify. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Real scoped API/gateway cases cover this behavior or its core path; full integrated acceptance is pending."
+      "testing": "Real native gateway cases and100concurrent authenticated sockets pass on loopback PostgreSQL.40messages reach all100sockets (4000observed deliveries); independent per-bot/per-address/global limits and released-slot reuse pass. Local same-process timings are not production capacity or a performance-improvement benchmark. Full native/provider/coordinated acceptance remains pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and its per-row evidence links. Competitor behavior stays UNVERIFIED_DOCS.",
+      "remaining": "Native counterpart: /v2/bot/gateway: identify. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Real native gateway cases and100concurrent authenticated sockets pass on loopback PostgreSQL.40messages reach all100sockets (4000observed deliveries); independent per-bot/per-address/global limits and released-slot reuse pass. Local same-process timings are not production capacity or a performance-improvement benchmark. Full native/provider/coordinated acceptance remains pending."
     },
     {
       "id": "YAP-GATEWAY-003",
@@ -4498,16 +4498,16 @@
       "owner": "PART 4",
       "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "UNVERIFIED_DOCS",
-      "testing": "Real scoped API/gateway cases cover this behavior or its core path; full integrated acceptance is pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and part4/evidence/bot-voice-media-checkpoint.json. Competitor behavior stays UNVERIFIED_DOCS.",
-      "remaining": "Native counterpart: /v2/bot/gateway: ready/resumed. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Real scoped API/gateway cases cover this behavior or its core path; full integrated acceptance is pending."
+      "testing": "Real native gateway cases and100concurrent authenticated sockets pass on loopback PostgreSQL.40messages reach all100sockets (4000observed deliveries); independent per-bot/per-address/global limits and released-slot reuse pass. Local same-process timings are not production capacity or a performance-improvement benchmark. Full native/provider/coordinated acceptance remains pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and its per-row evidence links. Competitor behavior stays UNVERIFIED_DOCS.",
+      "remaining": "Native counterpart: /v2/bot/gateway: ready/resumed. Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Real native gateway cases and100concurrent authenticated sockets pass on loopback PostgreSQL.40messages reach all100sockets (4000observed deliveries); independent per-bot/per-address/global limits and released-slot reuse pass. Local same-process timings are not production capacity or a performance-improvement benchmark. Full native/provider/coordinated acceptance remains pending."
     },
     {
       "id": "YAP-GATEWAY-005",
       "owner": "PART 4",
       "state": "IMPLEMENTED_NOT_ACCEPTED",
       "referenceVerification": "UNVERIFIED_DOCS",
-      "testing": "Real scoped API/gateway cases cover this behavior or its core path; full integrated acceptance is pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and part4/evidence/bot-voice-media-checkpoint.json. Competitor behavior stays UNVERIFIED_DOCS.",
-      "remaining": "Native counterpart: /v2/bot/gateway: events (bounded ID-only batch). Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Real scoped API/gateway cases cover this behavior or its core path; full integrated acceptance is pending."
+      "testing": "Real native gateway cases and100concurrent authenticated sockets pass on loopback PostgreSQL.40messages reach all100sockets (4000observed deliveries); independent per-bot/per-address/global limits and released-slot reuse pass. Local same-process timings are not production capacity or a performance-improvement benchmark. Full native/provider/coordinated acceptance remains pending. Exact source/test receipts: part4/BOT_CONTRACT_MATRIX.json and its per-row evidence links. Competitor behavior stays UNVERIFIED_DOCS.",
+      "remaining": "Native counterpart: /v2/bot/gateway: events (bounded ID-only batch). Native dialect and current Meldiq policy; no vendor URL/frame compatibility promise. Broader-platform acceptance, full staging and per-row qualification remain pending. Real native gateway cases and100concurrent authenticated sockets pass on loopback PostgreSQL.40messages reach all100sockets (4000observed deliveries); independent per-bot/per-address/global limits and released-slot reuse pass. Local same-process timings are not production capacity or a performance-improvement benchmark. Full native/provider/coordinated acceptance remains pending."
     },
     {
       "id": "YAP-GATEWAY-006",

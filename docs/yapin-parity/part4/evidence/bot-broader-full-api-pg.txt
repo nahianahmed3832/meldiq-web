@@ -1,0 +1,1612 @@
+
+ RUN  v4.1.12 /Volumes/code_files/meldiq_parity_integration_api/server
+
+(node:33289) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:33289) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:33347) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:33347) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:33379) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:33379) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:33388) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:33388) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:33395) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:33395) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ❯ test/account_store_races.test.ts (22 tests | 1 failed | 12 skipped) 1350ms
+     × uses the store it was configured with 4ms
+(node:33400) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:33400) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:33441) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:33441) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:33488) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:33488) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:33501) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:33501) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:33517) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:33517) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:33527) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:33527) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:33531) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:33531) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:33539) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:33539) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ❯ test/backup.test.ts (4 tests | 2 failed) 1552ms
+     × snapshots a live database, keeps it owner-only and verifies it 44ms
+     × a restored snapshot opens and migrates on a fresh server 0ms
+(node:33580) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:33580) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:33594) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:33594) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:33601) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:33601) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:33607) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:33607) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ❯ test/billing_program.test.ts (15 tests | 4 failed) 1356ms
+     × turns on at once: the price list shows the trial, and every account gets it from then 5ms
+     × gives and ends free periods by hand, after the free period an account already has 41ms
+       × turn enforcement on and change a plan's numbers, at once, for the server and the apps' catalog 6ms
+       × change prices with no payment provider: the list price only, checked and audited 6ms
+(node:33632) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:33632) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:33643) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:33643) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:33644) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:33644) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:33667) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:33667) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:33673) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:33673) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:33681) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:33681) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:33686) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:33686) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:33718) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:33718) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:33734) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:33734) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:33738) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:33738) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:33743) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:33743) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:33748) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:33748) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:33757) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:33757) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:33761) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:33761) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ❯ test/community_migration.test.ts (6 tests | 6 skipped) 975ms
+(node:33769) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:33769) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:33773) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:33773) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ❯ test/database_backup.test.ts (0 test)
+ ❯ test/database_migration_cli.test.ts (1 test | 1 failed) 194ms
+   × plans and preflights without changing the source, target documents, validators or authority 193ms
+ ❯ test/database_migration_safety.test.ts (10 tests | 10 failed) 12ms
+     × resumes a partial large read window without duplicating acknowledged smaller write chunks 5ms
+     × resumes checkpoints and reruns idempotently with bounded batches and preserved timestamps 2ms
+     × writes only the final delta and archives changes from an immutable pre-copy without transferring authority 0ms
+     × refuses stale SQLite replacement after Atlas becomes authoritative 0ms
+     × requires explicit conflict review and keeps the original destination version before replacing it 0ms
+     × preserves AUTOINCREMENT high-water marks even when the highest rows were deleted 0ms
+     × detects IDs whose document primary key was tampered with 0ms
+     × prunes only explicit extras in bounded batches and rejects invalid batch sizes 0ms
+     × requires all domains and TLS certificate validation for explicit Atlas mode 2ms
+     × finds cross-community foreign keys without exposing records or changing them 0ms
+(node:33784) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:33784) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:33792) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:33792) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:33824) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:33824) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:33831) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:33831) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ❯ test/files_mongo.test.ts (6 tests | 6 skipped) 5ms
+(node:33834) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:33834) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:33842) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:33842) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:33859) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:33859) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ❯ test/history_mongo.test.ts (6 tests | 6 skipped) 5ms
+(node:33861) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:33861) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:33867) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:33867) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:33874) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:33874) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:33880) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:33880) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:33896) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:33896) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+WORKFLOW_PG {"challenge":[],"login":["commit auth_challenges+sessions+devices"],"membership":[],"send":["commit history + queue"],"queue":[],"ack":["commit delivery_queue"],"confirm":[]}
+PostgreSQL API parity failure call sites (no request values):
+    at /Volumes/code_files/meldiq_supabase_migration/server/node_modules/pg/lib/client.js:694:17
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at /Volumes/code_files/meldiq_parity_integration_api/server/src/infrastructure/database/rows/postgresRows.ts:105:22
+    at PostgresRows.commit (/Volumes/code_files/meldiq_parity_integration_api/server/src/infrastructure/database/rows/memory.ts:307:11)
+    at run (/Volumes/code_files/meldiq_parity_integration_api/server/src/infrastructure/database/rows/memory.ts:271:7)
+(node:33901) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:33901) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:33911) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:33911) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ❯ test/mongo_outage.test.ts (4 tests | 4 skipped) 1607ms
+(node:33917) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:33917) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:33921) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:33921) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:33925) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:33925) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ❯ test/ops_hygiene.test.ts (3 tests | 1 failed) 913ms
+     × the database overwrites deleted rows (D17) 2ms
+(node:33931) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:33931) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:33938) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:33938) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:33947) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:33947) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:33948) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:33948) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:33969) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:33969) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+PostgreSQL API parity failure call sites (no request values):
+    at /Volumes/code_files/meldiq_parity_integration_api/server/test/platform_admin_completion.test.ts:71:77
+    at file:///Volumes/code_files/meldiq_supabase_migration/server/node_modules/@vitest/runner/dist/chunk-artifact.js:302:11
+    at file:///Volumes/code_files/meldiq_supabase_migration/server/node_modules/@vitest/runner/dist/chunk-artifact.js:1903:26
+    at file:///Volumes/code_files/meldiq_supabase_migration/server/node_modules/@vitest/runner/dist/chunk-artifact.js:2326:20
+    at new Promise (<anonymous>)
+    at runWithCancel (file:///Volumes/code_files/meldiq_supabase_migration/server/node_modules/@vitest/runner/dist/chunk-artifact.js:2323:10)
+    at file:///Volumes/code_files/meldiq_supabase_migration/server/node_modules/@vitest/runner/dist/chunk-artifact.js:2305:20
+    at new Promise (<anonymous>)
+(node:33979) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:33979) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:33986) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:33986) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:33991) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:33991) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:34001) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:34001) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:34022) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:34022) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ❯ test/plus_promotions_mongo.test.ts (1 test | 1 failed) 4ms
+   × commits only one promotion reservation from two stale MongoDB mirrors and retains it after restart 3ms
+(node:34027) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:34027) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:34073) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:34073) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:34076) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:34076) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:34077) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:34077) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:34082) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:34082) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:34107) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:34107) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:34111) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:34111) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:34116) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:34116) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:34147) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:34147) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:34153) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:34153) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:34157) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:34157) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:34162) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:34162) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:34163) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:34163) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:34174) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:34174) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ❯ test/relay_mongo.test.ts (5 tests | 5 skipped) 6ms
+(node:34175) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:34175) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:34186) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:34186) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ❯ test/retired_modules.test.ts (2 tests | 1 failed) 855ms
+     × reports and purges the rows left in their tables, keeping the tables 3ms
+(node:34192) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:34192) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:34193) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:34193) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:34200) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:34200) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ❯ test/site_details.test.ts (3 tests | 1 failed) 1000ms
+     × change only for super admins, with a reason, audited field by field, and show on the public answer at once 11ms
+(node:34205) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:34205) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:34210) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:34210) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ❯ test/spark_purchases.test.ts (10 tests | 5 skipped) 1964ms
+(node:34277) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:34277) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ❯ test/standalone_commerce_paypal.test.ts (6 tests | 3 skipped) 1233ms
+(node:34285) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:34285) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ❯ test/storage_s3.test.ts (18 tests | 1 failed) 8324ms
+     × disk files stay readable after moving to S3, and S3 files after a rollback to the disk 2305ms
+(node:34353) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:34353) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:34400) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:34400) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:34416) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:34416) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:34427) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:34427) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ❯ test/mongo_migration.test.ts (15 tests | 15 skipped) 5ms
+ ❯ test/rows.test.ts (29 tests | 15 failed) 10383ms
+     × inserts with the columns' defaults and reads back 376ms
+     × follows SQL's semantics for NULL, ne, in, notIn, ranges, $or, order and limit 338ms
+     × keeps a NOCASE unique column unique whatever the case, and finds it in any case 308ms
+     × ignores a conflicting insert with orIgnore, and upserts 443ms
+     × updates and deletes, reporting how many rows 415ms
+     × applies ON DELETE CASCADE and SET NULL, through composite keys too 301ms
+     × deletes an organisation whose channels are still in categories (SET NULL inside the same cascade) 666ms
+     × refuses a row whose parent in the same rows doesn't exist 471ms
+     × applies a unit entirely or not at all, and lets the unit read its own writes 467ms
+     × hands out AUTOINCREMENT ids in order and never again, and keeps rowid tables 312ms
+     × runs units one after another: a failing one doesn't take the next with it 307ms
+     × returns copies: changing a row read doesn't change the rows 331ms
+     × compares text in ranges as SQLite does (code units; days as text) 294ms
+     × keeps everything across a restart (MongoDB: loaded again from the collections) 289ms
+     × follows another process's inserts, updates, deletes and counters, and never goes back to an older version 309ms
+(node:34479) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:34479) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ❯ test/mongo_capacity.test.ts (9 tests | 6 failed) 1483ms
+     × measures the documents exactly as MongoDB stores them 3ms
+     × projects against the live deployment 1ms
+     × mongo-migrate refuses before copying when the limit would be passed 1ms
+     × mongo-dryrun refuses into a named database and leaves nothing behind 0ms
+     × mongo-dryrun copies, verifies and then empties its database collection by collection 0ms
+     × mongo-migrate copies when there is room 0ms
+(node:34493) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:34493) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:34577) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:34577) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ❯ test/yapin_roadmap.test.ts (18 tests | 9 skipped) 1932ms
+(node:34589) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:34589) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:34628) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:34628) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:34642) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:34642) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+PostgreSQL API parity failure call sites (no request values):
+    at /Volumes/code_files/meldiq_parity_integration_api/server/test/direct_uploads.test.ts:267:80
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async file:///Volumes/code_files/meldiq_supabase_migration/server/node_modules/@vitest/runner/dist/chunk-artifact.js:1903:20
+(node:34659) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:34659) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:34717) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:34717) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:34736) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:34736) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:34766) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:34766) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:34776) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:34776) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:34803) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:34803) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:34826) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:34826) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:34836) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:34836) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:34882) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:34882) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:34902) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:34902) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:34910) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:34910) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:34972) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:34972) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:34981) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:34981) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:34998) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:34998) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:35018) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:35018) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:35054) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:35054) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:35071) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:35071) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:35084) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:35084) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:35130) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:35130) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:35142) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:35142) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:35166) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:35166) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:35183) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:35183) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:35196) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:35196) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:35205) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:35205) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:35244) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:35244) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:35252) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:35252) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:35259) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:35259) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:35315) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:35315) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:35331) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:35331) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:35348) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:35348) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:35359) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:35359) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:35405) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:35405) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:35410) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:35410) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:35416) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:35416) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:35435) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:35435) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:35440) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:35440) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:35449) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:35449) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:35454) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:35454) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:35461) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:35461) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:35468) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:35468) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:35473) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:35473) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:35481) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:35481) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:35491) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:35491) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:35497) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:35497) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:35503) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:35503) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:35511) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:35511) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:35517) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:35517) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:35526) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:35526) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:35534) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:35534) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:35542) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:35542) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:35568) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:35568) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:35576) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:35576) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:35581) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:35581) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:35592) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:35592) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:35598) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:35598) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:35609) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:35609) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:35640) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:35640) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:35671) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:35671) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:35677) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:35677) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:35682) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:35682) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:35690) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:35690) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:35695) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:35695) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:35721) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:35721) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:35729) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:35729) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:35734) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:35734) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:35743) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:35743) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:35789) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:35789) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:35798) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:35798) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:35813) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:35813) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:35821) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:35821) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:35829) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:35829) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:35836) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:35836) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:35841) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:35841) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:35846) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:35846) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:35929) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:35929) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:35934) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:35934) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:35948) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:35948) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:35956) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:35956) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:35980) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:35980) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:35991) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:35991) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:35999) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:35999) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:36011) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:36011) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:36017) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:36017) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:36022) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:36022) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:36029) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:36029) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:36034) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:36034) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:36040) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:36040) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:36067) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:36067) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:36072) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:36072) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:36101) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:36101) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:36107) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:36107) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:36111) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:36111) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:36117) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:36117) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:36124) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:36124) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:36150) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:36150) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:36156) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:36156) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:36161) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:36161) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:36184) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:36184) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:36190) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:36190) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:36195) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:36195) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:36208) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:36208) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:36214) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:36214) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:36222) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:36222) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:36241) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:36241) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:36247) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:36247) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:36253) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:36253) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:36261) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:36261) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:36265) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:36265) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:36271) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:36271) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:36276) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:36276) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+(node:36303) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:36303) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+ ❯ test/interop_vectors.test.ts (1 test | 1 failed) 3ms
+     × the committed vectors verify with the Node reference client 3ms
+(node:36325) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:36325) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 11 ⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/account_store_races.test.ts > accounts on MongoDB
+Error: MONGODB_DOMAINS needs MONGODB_URI
+ ❯ mongoConfig src/infrastructure/database/mongo/config.ts:87:31
+     85|   }
+     86|   if (!uri) {
+     87|     if (domains.length) throw new Error("MONGODB_DOMAINS needs MONGODB…
+       |                               ^
+     88|     return null;
+     89|   }
+ ❯ loadConfig src/app/config.ts:605:41
+ ❯ startServer test/support/harness.ts:40:18
+ ❯ test/account_store_races.test.ts:19:15
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/64]⎯
+
+ FAIL  test/account_store_races.test.ts > accounts on MongoDB
+TypeError: Cannot read properties of undefined (reading 'close')
+ ❯ test/account_store_races.test.ts:21:26
+     19|     h = await startServer({ MONGODB_DOMAINS: domains, REGISTRATION_MOD…
+     20|   });
+     21|   afterAll(async () => h.close());
+       |                          ^
+     22|
+     23|   const signUp = async (name: string, inviteCode?: string) => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/64]⎯
+
+ FAIL  test/community_migration.test.ts [ test/community_migration.test.ts ]
+Error: Legacy SQL access is not implemented in the staged PostgreSQL runtime
+ ❯ Proxy.<anonymous> src/app/postgresRuntime.ts:83:15
+     81|       if (["prepare", "exec", "pragma", "transaction", "backup", "load…
+     82|         attempted();
+     83|         throw new Error("Legacy SQL access is not implemented in the s…
+       |               ^
+     84|       };
+     85|       const value = Reflect.get(target, property, target) as unknown;
+ ❯ addMember test/community_migration.test.ts:37:58
+ ❯ test/community_migration.test.ts:38:89
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/64]⎯
+
+ FAIL  test/database_backup.test.ts [ test/database_backup.test.ts ]
+TypeError: Cannot read properties of undefined (reading 'startsWith')
+ ❯ connectionStringHasValidScheme ../../meldiq_supabase_migration/server/node_modules/mongodb-connection-string-url/src/index.ts:13:26
+ ❯ new ConnectionString ../../meldiq_supabase_migration/server/node_modules/mongodb-connection-string-url/src/index.ts:130:29
+ ❯ parseOptions ../../meldiq_supabase_migration/server/node_modules/mongodb/src/connection_string.ts:256:14
+ ❯ new MongoClient ../../meldiq_supabase_migration/server/node_modules/mongodb/src/mongo_client.ts:444:32
+ ❯ test/database_backup.test.ts:14:16
+     12| const destination = `meldiq_restore_${Date.now()}`;
+     13| const dir = fs.mkdtempSync(path.join(os.tmpdir(), "meldiq-backup-test-…
+     14| const source = new MongoClient(uri);
+       |                ^
+     15| afterAll(async () => {
+     16|   await source.db(name).dropDatabase();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/64]⎯
+
+ FAIL  test/files_mongo.test.ts [ test/files_mongo.test.ts ]
+Error: MONGODB_DOMAINS needs MONGODB_URI
+ ❯ mongoConfig src/infrastructure/database/mongo/config.ts:87:31
+     85|   }
+     86|   if (!uri) {
+     87|     if (domains.length) throw new Error("MONGODB_DOMAINS needs MONGODB…
+       |                               ^
+     88|     return null;
+     89|   }
+ ❯ loadConfig src/app/config.ts:605:41
+ ❯ startServer test/support/harness.ts:40:18
+ ❯ test/files_mongo.test.ts:23:13
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/64]⎯
+
+ FAIL  test/files_mongo.test.ts [ test/files_mongo.test.ts ]
+TypeError: Cannot read properties of undefined (reading 'close')
+ ❯ test/files_mongo.test.ts:28:24
+     26|   dm = (await alice.req("POST", "/v1/conversations/dm", { userId: bob.…
+     27| });
+     28| afterAll(async () => h.close());
+       |                        ^
+     29|
+     30| describe("files in MongoDB", () => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/64]⎯
+
+ FAIL  test/history_mongo.test.ts [ test/history_mongo.test.ts ]
+Error: MONGODB_DOMAINS needs MONGODB_URI
+ ❯ mongoConfig src/infrastructure/database/mongo/config.ts:87:31
+     85|   }
+     86|   if (!uri) {
+     87|     if (domains.length) throw new Error("MONGODB_DOMAINS needs MONGODB…
+       |                               ^
+     88|     return null;
+     89|   }
+ ❯ loadConfig src/app/config.ts:605:41
+ ❯ startServer test/support/harness.ts:40:18
+ ❯ test/history_mongo.test.ts:23:13
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/64]⎯
+
+ FAIL  test/history_mongo.test.ts [ test/history_mongo.test.ts ]
+TypeError: Cannot read properties of undefined (reading 'close')
+ ❯ test/history_mongo.test.ts:25:24
+     23|   h = await startServer({ MONGODB_DOMAINS: "accounts,preferences,histo…
+     24| });
+     25| afterAll(async () => h.close());
+       |                        ^
+     26|
+     27| describe("history in MongoDB", () => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/64]⎯
+
+ FAIL  test/mongo_migration.test.ts [ test/mongo_migration.test.ts ]
+TypeError: Cannot read properties of undefined (reading 'startsWith')
+ ❯ connectionStringHasValidScheme ../../meldiq_supabase_migration/server/node_modules/mongodb-connection-string-url/src/index.ts:13:26
+ ❯ new ConnectionString ../../meldiq_supabase_migration/server/node_modules/mongodb-connection-string-url/src/index.ts:130:29
+ ❯ parseOptions ../../meldiq_supabase_migration/server/node_modules/mongodb/src/connection_string.ts:256:14
+ ❯ new MongoClient ../../meldiq_supabase_migration/server/node_modules/mongodb/src/mongo_client.ts:444:32
+ ❯ MongoClient.connect ../../meldiq_supabase_migration/server/node_modules/mongodb/src/mongo_client.ts:886:19
+ ❯ test/mongo_migration.test.ts:38:27
+     36|
+     37| beforeAll(async () => {
+     38|   raw = await MongoClient.connect(uri);
+       |                           ^
+     39|   // A small synthetic workspace: people, an organisation with channel…
+     40|   // history (binary), personal preferences and an Orbit 2.0 account.
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/64]⎯
+
+ FAIL  test/mongo_migration.test.ts [ test/mongo_migration.test.ts ]
+TypeError: Cannot read properties of undefined (reading 'close')
+ ❯ test/mongo_migration.test.ts:61:13
+     59|     await m.close();
+     60|   }
+     61|   await raw.close();
+       |             ^
+     62|   await h.close();
+     63| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/64]⎯
+
+ FAIL  test/mongo_outage.test.ts [ test/mongo_outage.test.ts ]
+Error: PostgreSQL requires its accepted environment with no alternate database/store overrides
+ ❯ buildApp src/app/server.ts:306:11
+    304|       opts.files)
+    305|   ) {
+    306|     throw new Error(
+       |           ^
+    307|       "PostgreSQL requires its accepted environment with no alternate …
+    308|     );
+ ❯ startServer test/support/harness.ts:78:19
+ ❯ test/mongo_outage.test.ts:20:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/64]⎯
+
+ FAIL  test/mongo_outage.test.ts [ test/mongo_outage.test.ts ]
+TypeError: Cannot read properties of undefined (reading 'app')
+ ❯ test/mongo_outage.test.ts:28:11
+     26| afterAll(async () => {
+     27|   // The database is gone, so the harness can't drop it: close the ser…
+     28|   await h.app.close().catch(() => undefined);
+       |           ^
+     29|   h.ctx.db.close();
+     30| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/64]⎯
+
+ FAIL  test/relay_mongo.test.ts [ test/relay_mongo.test.ts ]
+Error: MONGODB_DOMAINS needs MONGODB_URI
+ ❯ mongoConfig src/infrastructure/database/mongo/config.ts:87:31
+     85|   }
+     86|   if (!uri) {
+     87|     if (domains.length) throw new Error("MONGODB_DOMAINS needs MONGODB…
+       |                               ^
+     88|     return null;
+     89|   }
+ ❯ loadConfig src/app/config.ts:605:41
+ ❯ startServer test/support/harness.ts:40:18
+ ❯ test/relay_mongo.test.ts:21:13
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/64]⎯
+
+ FAIL  test/relay_mongo.test.ts [ test/relay_mongo.test.ts ]
+TypeError: Cannot read properties of undefined (reading 'close')
+ ❯ test/relay_mongo.test.ts:26:24
+     24|   dm = (await alice.req("POST", "/v1/conversations/dm", { userId: bob.…
+     25| });
+     26| afterAll(async () => h.close());
+       |                        ^
+     27|
+     28| describe("relay in MongoDB", () => {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/64]⎯
+
+ FAIL  test/spark_purchases.test.ts > one-time Sparks (mongodb)
+Error: MONGODB_DOMAINS needs MONGODB_URI
+ ❯ mongoConfig src/infrastructure/database/mongo/config.ts:87:31
+     85|   }
+     86|   if (!uri) {
+     87|     if (domains.length) throw new Error("MONGODB_DOMAINS needs MONGODB…
+       |                               ^
+     88|     return null;
+     89|   }
+ ❯ loadConfig src/app/config.ts:605:41
+ ❯ startServer test/support/harness.ts:40:18
+ ❯ test/spark_purchases.test.ts:16:17
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/64]⎯
+
+ FAIL  test/spark_purchases.test.ts > one-time Sparks (mongodb)
+TypeError: Cannot read properties of undefined (reading 'close')
+ ❯ test/spark_purchases.test.ts:18:28
+     16|       h = await startServer({ MONGODB_DOMAINS: backend === "mongodb" ?…
+     17|     });
+     18|     afterAll(async () => h.close());
+       |                            ^
+     19|     async function purchase(quantity = 1) {
+     20|       const account = await AccountClient.ready(h.baseUrl, mailer, `sp…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/64]⎯
+
+ FAIL  test/standalone_commerce_paypal.test.ts > separate PayPal products (mongodb)
+Error: MONGODB_DOMAINS needs MONGODB_URI
+ ❯ mongoConfig src/infrastructure/database/mongo/config.ts:87:31
+     85|   }
+     86|   if (!uri) {
+     87|     if (domains.length) throw new Error("MONGODB_DOMAINS needs MONGODB…
+       |                               ^
+     88|     return null;
+     89|   }
+ ❯ loadConfig src/app/config.ts:605:41
+ ❯ startServer test/support/harness.ts:40:18
+ ❯ test/standalone_commerce_paypal.test.ts:57:17
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/64]⎯
+
+ FAIL  test/standalone_commerce_paypal.test.ts > separate PayPal products (mongodb)
+TypeError: Cannot read properties of undefined (reading 'close')
+ ❯ test/standalone_commerce_paypal.test.ts:62:28
+     60|       await h.ctx.billing.catalog.publish(plan.id, "paypal", "test", D…
+     61|     });
+     62|     afterAll(async () => h.close());
+       |                            ^
+     63|     async function account() { return AccountClient.ready(h.baseUrl, m…
+     64|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/64]⎯
+
+ FAIL  test/yapin_roadmap.test.ts > Yapin roadmap integration (mongodb)
+Error: MONGODB_DOMAINS needs MONGODB_URI
+ ❯ mongoConfig src/infrastructure/database/mongo/config.ts:87:31
+     85|   }
+     86|   if (!uri) {
+     87|     if (domains.length) throw new Error("MONGODB_DOMAINS needs MONGODB…
+       |                               ^
+     88|     return null;
+     89|   }
+ ❯ loadConfig src/app/config.ts:605:41
+ ❯ startServer test/support/harness.ts:40:18
+ ❯ test/yapin_roadmap.test.ts:15:15
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/64]⎯
+
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 45 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/account_store_races.test.ts > accounts on SQLite > uses the store it was configured with
+AssertionError: expected 'postgres' to be 'sqlite' // Object.is equality
+
+Expected: "sqlite"
+Received: "postgres"
+
+ ❯ test/account_store_races.test.ts:31:42
+     29|
+     30|   it("uses the store it was configured with", () => {
+     31|     expect(h.ctx.accounts.store.backend).toBe(domains ? "mongodb" : "s…
+       |                                          ^
+     32|   });
+     33|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[20/64]⎯
+
+ FAIL  test/backup.test.ts > self-host backup and restore checks > snapshots a live database, keeps it owner-only and verifies it
+Error: Legacy SQL access is not implemented in the staged PostgreSQL runtime
+ ❯ Proxy.<anonymous> src/app/postgresRuntime.ts:83:15
+     81|       if (["prepare", "exec", "pragma", "transaction", "backup", "load…
+     82|         attempted();
+     83|         throw new Error("Legacy SQL access is not implemented in the s…
+       |               ^
+     84|       };
+     85|       const value = Reflect.get(target, property, target) as unknown;
+ ❯ backupDatabase src/modules/administration/backup.ts:13:12
+ ❯ test/backup.test.ts:28:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[21/64]⎯
+
+ FAIL  test/backup.test.ts > self-host backup and restore checks > a restored snapshot opens and migrates on a fresh server
+Error: Legacy SQL access is not implemented in the staged PostgreSQL runtime
+ ❯ Proxy.<anonymous> src/app/postgresRuntime.ts:83:15
+     81|       if (["prepare", "exec", "pragma", "transaction", "backup", "load…
+     82|         attempted();
+     83|         throw new Error("Legacy SQL access is not implemented in the s…
+       |               ^
+     84|       };
+     85|       const value = Reflect.get(target, property, target) as unknown;
+ ❯ backupDatabase src/modules/administration/backup.ts:13:12
+ ❯ test/backup.test.ts:44:11
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[22/64]⎯
+
+ FAIL  test/billing_program.test.ts > the trial program in the console > turns on at once: the price list shows the trial, and every account gets it from then
+Error: Legacy SQL access is not implemented in the staged PostgreSQL runtime
+ ❯ Proxy.<anonymous> src/app/postgresRuntime.ts:83:15
+     81|       if (["prepare", "exec", "pragma", "transaction", "backup", "load…
+     82|         attempted();
+     83|         throw new Error("Legacy SQL access is not implemented in the s…
+       |               ^
+     84|       };
+     85|       const value = Reflect.get(target, property, target) as unknown;
+ ❯ test/billing_program.test.ts:103:28
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[23/64]⎯
+
+ FAIL  test/billing_program.test.ts > the trial program in the console > gives and ends free periods by hand, after the free period an account already has
+Error: Legacy SQL access is not implemented in the staged PostgreSQL runtime
+ ❯ Proxy.<anonymous> src/app/postgresRuntime.ts:83:15
+     81|       if (["prepare", "exec", "pragma", "transaction", "backup", "load…
+     82|         attempted();
+     83|         throw new Error("Legacy SQL access is not implemented in the s…
+       |               ^
+     84|       };
+     85|       const value = Reflect.get(target, property, target) as unknown;
+ ❯ test/billing_program.test.ts:144:29
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[24/64]⎯
+
+ FAIL  test/billing_program.test.ts > the trial program in the console > Meldiq Plus's enforcement and limits > turn enforcement on and change a plan's numbers, at once, for the server and the apps' catalog
+Error: Legacy SQL access is not implemented in the staged PostgreSQL runtime
+ ❯ Proxy.<anonymous> src/app/postgresRuntime.ts:83:15
+     81|       if (["prepare", "exec", "pragma", "transaction", "backup", "load…
+     82|         attempted();
+     83|         throw new Error("Legacy SQL access is not implemented in the s…
+       |               ^
+     84|       };
+     85|       const value = Reflect.get(target, property, target) as unknown;
+ ❯ test/billing_program.test.ts:231:30
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[25/64]⎯
+
+ FAIL  test/billing_program.test.ts > the trial program in the console > Meldiq Plus's enforcement and limits > change prices with no payment provider: the list price only, checked and audited
+Error: Legacy SQL access is not implemented in the staged PostgreSQL runtime
+ ❯ Proxy.<anonymous> src/app/postgresRuntime.ts:83:15
+     81|       if (["prepare", "exec", "pragma", "transaction", "backup", "load…
+     82|         attempted();
+     83|         throw new Error("Legacy SQL access is not implemented in the s…
+       |               ^
+     84|       };
+     85|       const value = Reflect.get(target, property, target) as unknown;
+ ❯ test/billing_program.test.ts:272:30
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[26/64]⎯
+
+ FAIL  test/database_migration_cli.test.ts > plans and preflights without changing the source, target documents, validators or authority
+TypeError: Cannot read properties of undefined (reading 'startsWith')
+ ❯ connectionStringHasValidScheme ../../meldiq_supabase_migration/server/node_modules/mongodb-connection-string-url/src/index.ts:13:26
+ ❯ new ConnectionString ../../meldiq_supabase_migration/server/node_modules/mongodb-connection-string-url/src/index.ts:130:29
+ ❯ parseOptions ../../meldiq_supabase_migration/server/node_modules/mongodb/src/connection_string.ts:256:14
+ ❯ new MongoClient ../../meldiq_supabase_migration/server/node_modules/mongodb/src/mongo_client.ts:444:32
+ ❯ test/database_migration_cli.test.ts:22:18
+     20|   const checksum = () => createHash("sha256").update(fs.readFileSync(s…
+     21|   const before = checksum();
+     22|   const client = new MongoClient(inject("mongoUri"));
+       |                  ^
+     23|   await client.connect();
+     24|   const target = client.db(testDbName("readonly_cli"));
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[27/64]⎯
+
+ FAIL  test/database_migration_safety.test.ts > migration data-loss guards > resumes a partial large read window without duplicating acknowledged smaller write chunks
+Error: MongoDB unavailable; check server connectivity and credentials
+ ❯ MeldiqMongo.connect src/infrastructure/database/mongo/client.ts:60:13
+     58|       await client?.close().catch(() => undefined);
+     59|       // Driver errors may echo credentials outside the original URI (…
+     60|       throw new Error("MongoDB unavailable; check server connectivity …
+       |             ^
+     61|     }
+     62|   }
+ ❯ fixture test/database_migration_safety.test.ts:48:17
+ ❯ test/database_migration_safety.test.ts:62:27
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[28/64]⎯
+
+ FAIL  test/database_migration_safety.test.ts > migration data-loss guards > resumes checkpoints and reruns idempotently with bounded batches and preserved timestamps
+Error: MongoDB unavailable; check server connectivity and credentials
+ ❯ MeldiqMongo.connect src/infrastructure/database/mongo/client.ts:60:13
+     58|       await client?.close().catch(() => undefined);
+     59|       // Driver errors may echo credentials outside the original URI (…
+     60|       throw new Error("MongoDB unavailable; check server connectivity …
+       |             ^
+     61|     }
+     62|   }
+ ❯ fixture test/database_migration_safety.test.ts:48:17
+ ❯ test/database_migration_safety.test.ts:72:27
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[29/64]⎯
+
+ FAIL  test/database_migration_safety.test.ts > migration data-loss guards > writes only the final delta and archives changes from an immutable pre-copy without transferring authority
+Error: MongoDB unavailable; check server connectivity and credentials
+ ❯ MeldiqMongo.connect src/infrastructure/database/mongo/client.ts:60:13
+     58|       await client?.close().catch(() => undefined);
+     59|       // Driver errors may echo credentials outside the original URI (…
+     60|       throw new Error("MongoDB unavailable; check server connectivity …
+       |             ^
+     61|     }
+     62|   }
+ ❯ fixture test/database_migration_safety.test.ts:48:17
+ ❯ test/database_migration_safety.test.ts:100:27
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[30/64]⎯
+
+ FAIL  test/database_migration_safety.test.ts > migration data-loss guards > refuses stale SQLite replacement after Atlas becomes authoritative
+Error: MongoDB unavailable; check server connectivity and credentials
+ ❯ MeldiqMongo.connect src/infrastructure/database/mongo/client.ts:60:13
+     58|       await client?.close().catch(() => undefined);
+     59|       // Driver errors may echo credentials outside the original URI (…
+     60|       throw new Error("MongoDB unavailable; check server connectivity …
+       |             ^
+     61|     }
+     62|   }
+ ❯ fixture test/database_migration_safety.test.ts:48:17
+ ❯ test/database_migration_safety.test.ts:114:27
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[31/64]⎯
+
+ FAIL  test/database_migration_safety.test.ts > migration data-loss guards > requires explicit conflict review and keeps the original destination version before replacing it
+Error: MongoDB unavailable; check server connectivity and credentials
+ ❯ MeldiqMongo.connect src/infrastructure/database/mongo/client.ts:60:13
+     58|       await client?.close().catch(() => undefined);
+     59|       // Driver errors may echo credentials outside the original URI (…
+     60|       throw new Error("MongoDB unavailable; check server connectivity …
+       |             ^
+     61|     }
+     62|   }
+ ❯ fixture test/database_migration_safety.test.ts:48:17
+ ❯ test/database_migration_safety.test.ts:137:27
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[32/64]⎯
+
+ FAIL  test/database_migration_safety.test.ts > migration data-loss guards > preserves AUTOINCREMENT high-water marks even when the highest rows were deleted
+Error: MongoDB unavailable; check server connectivity and credentials
+ ❯ MeldiqMongo.connect src/infrastructure/database/mongo/client.ts:60:13
+     58|       await client?.close().catch(() => undefined);
+     59|       // Driver errors may echo credentials outside the original URI (…
+     60|       throw new Error("MongoDB unavailable; check server connectivity …
+       |             ^
+     61|     }
+     62|   }
+ ❯ fixture test/database_migration_safety.test.ts:48:17
+ ❯ test/database_migration_safety.test.ts:164:27
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[33/64]⎯
+
+ FAIL  test/database_migration_safety.test.ts > migration data-loss guards > detects IDs whose document primary key was tampered with
+Error: MongoDB unavailable; check server connectivity and credentials
+ ❯ MeldiqMongo.connect src/infrastructure/database/mongo/client.ts:60:13
+     58|       await client?.close().catch(() => undefined);
+     59|       // Driver errors may echo credentials outside the original URI (…
+     60|       throw new Error("MongoDB unavailable; check server connectivity …
+       |             ^
+     61|     }
+     62|   }
+ ❯ fixture test/database_migration_safety.test.ts:48:17
+ ❯ test/database_migration_safety.test.ts:190:27
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[34/64]⎯
+
+ FAIL  test/database_migration_safety.test.ts > migration data-loss guards > prunes only explicit extras in bounded batches and rejects invalid batch sizes
+Error: MongoDB unavailable; check server connectivity and credentials
+ ❯ MeldiqMongo.connect src/infrastructure/database/mongo/client.ts:60:13
+     58|       await client?.close().catch(() => undefined);
+     59|       // Driver errors may echo credentials outside the original URI (…
+     60|       throw new Error("MongoDB unavailable; check server connectivity …
+       |             ^
+     61|     }
+     62|   }
+ ❯ fixture test/database_migration_safety.test.ts:48:17
+ ❯ test/database_migration_safety.test.ts:201:27
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[35/64]⎯
+
+ FAIL  test/database_migration_safety.test.ts > migration data-loss guards > requires all domains and TLS certificate validation for explicit Atlas mode
+AssertionError: expected [Function] to throw error matching /REDIS_URL/ but got 'DATABASE_MODE=atlas requires MongoDB …'
+
+- Expected:
+/REDIS_URL/
+
++ Received:
+"DATABASE_MODE=atlas requires MongoDB and every active domain"
+
+ ❯ test/database_migration_safety.test.ts:236:7
+    234|         NODE_ENV: "production",
+    235|       }),
+    236|     ).toThrow(/REDIS_URL/);
+       |       ^
+    237|     for (const option of [
+    238|       "tls=false",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[36/64]⎯
+
+ FAIL  test/database_migration_safety.test.ts > migration data-loss guards > finds cross-community foreign keys without exposing records or changing them
+Error: MongoDB unavailable; check server connectivity and credentials
+ ❯ MeldiqMongo.connect src/infrastructure/database/mongo/client.ts:60:13
+     58|       await client?.close().catch(() => undefined);
+     59|       // Driver errors may echo credentials outside the original URI (…
+     60|       throw new Error("MongoDB unavailable; check server connectivity …
+       |             ^
+     61|     }
+     62|   }
+ ❯ fixture test/database_migration_safety.test.ts:48:17
+ ❯ test/database_migration_safety.test.ts:260:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[37/64]⎯
+
+ FAIL  test/interop_vectors.test.ts > griip-envelope-v1 interop vectors (shared with the Android tests) > the committed vectors verify with the Node reference client
+Error: ENOENT: no such file or directory, open '/Volumes/code_files/meldiq_parity_integration_api/android/app/src/test/resources/griip-envelope-v1-vectors.json'
+ ❯ test/interop_vectors.test.ts:83:29
+     81|       fs.writeFileSync(FILE, JSON.stringify(await generate(), null, 2)…
+     82|     }
+     83|     const v = JSON.parse(fs.readFileSync(FILE, "utf8"));
+       |                             ^
+     84|     const s = v.sender;
+     85|     const identity = ed25519FromSeed(Buffer.from(s.identitySeed, "base…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[38/64]⎯
+
+ FAIL  test/mongo_capacity.test.ts > estimateStorage > measures the documents exactly as MongoDB stores them
+Error: Legacy SQL access is not implemented in the staged PostgreSQL runtime
+ ❯ Proxy.<anonymous> src/app/postgresRuntime.ts:83:15
+     81|       if (["prepare", "exec", "pragma", "transaction", "backup", "load…
+     82|         attempted();
+     83|         throw new Error("Legacy SQL access is not implemented in the s…
+       |               ^
+     84|       };
+     85|       const value = Reflect.get(target, property, target) as unknown;
+ ❯ describeTables src/infrastructure/database/mongo/catalog.ts:483:6
+ ❯ test/mongo_capacity.test.ts:78:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[39/64]⎯
+
+ FAIL  test/mongo_capacity.test.ts > estimateStorage > projects against the live deployment
+Error: MongoDB unavailable; check server connectivity and credentials
+ ❯ MeldiqMongo.connect src/infrastructure/database/mongo/client.ts:60:13
+     58|       await client?.close().catch(() => undefined);
+     59|       // Driver errors may echo credentials outside the original URI (…
+     60|       throw new Error("MongoDB unavailable; check server connectivity …
+       |             ^
+     61|     }
+     62|   }
+ ❯ test/mongo_capacity.test.ts:93:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[40/64]⎯
+
+ FAIL  test/mongo_capacity.test.ts > guards > mongo-migrate refuses before copying when the limit would be passed
+Error: MONGODB_URI is not set
+ ❯ connect src/infrastructure/database/mongo/admin.ts:98:25
+     96|
+     97| async function connect(cfg: Config, tables: TableSpec[], dbName?: stri…
+     98|   if (!cfg.mongo) throw new Error("MONGODB_URI is not set");
+       |                         ^
+     99|   return MeldiqMongo.connect(dbName ? { ...cfg.mongo, dbName } : cfg.m…
+    100| }
+ ❯ runMongoCommand src/infrastructure/database/mongo/admin.ts:158:27
+ ❯ test/mongo_capacity.test.ts:114:24
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[41/64]⎯
+
+ FAIL  test/mongo_capacity.test.ts > guards > mongo-dryrun refuses into a named database and leaves nothing behind
+Error: Legacy SQL access is not implemented in the staged PostgreSQL runtime
+ ❯ Proxy.<anonymous> src/app/postgresRuntime.ts:83:15
+     81|       if (["prepare", "exec", "pragma", "transaction", "backup", "load…
+     82|         attempted();
+     83|         throw new Error("Legacy SQL access is not implemented in the s…
+       |               ^
+     84|       };
+     85|       const value = Reflect.get(target, property, target) as unknown;
+ ❯ describeTables src/infrastructure/database/mongo/catalog.ts:483:6
+ ❯ runMongoCommand src/infrastructure/database/mongo/admin.ts:223:22
+ ❯ test/mongo_capacity.test.ts:124:24
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[42/64]⎯
+
+ FAIL  test/mongo_capacity.test.ts > guards > mongo-dryrun copies, verifies and then empties its database collection by collection
+Error: Legacy SQL access is not implemented in the staged PostgreSQL runtime
+ ❯ Proxy.<anonymous> src/app/postgresRuntime.ts:83:15
+     81|       if (["prepare", "exec", "pragma", "transaction", "backup", "load…
+     82|         attempted();
+     83|         throw new Error("Legacy SQL access is not implemented in the s…
+       |               ^
+     84|       };
+     85|       const value = Reflect.get(target, property, target) as unknown;
+ ❯ test/mongo_capacity.test.ts:136:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[43/64]⎯
+
+ FAIL  test/mongo_capacity.test.ts > guards > mongo-migrate copies when there is room
+Error: MONGODB_URI is not set
+ ❯ connect src/infrastructure/database/mongo/admin.ts:98:25
+     96|
+     97| async function connect(cfg: Config, tables: TableSpec[], dbName?: stri…
+     98|   if (!cfg.mongo) throw new Error("MONGODB_URI is not set");
+       |                         ^
+     99|   return MeldiqMongo.connect(dbName ? { ...cfg.mongo, dbName } : cfg.m…
+    100| }
+ ❯ runMongoCommand src/infrastructure/database/mongo/admin.ts:158:27
+ ❯ test/mongo_capacity.test.ts:147:24
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[44/64]⎯
+
+ FAIL  test/ops_hygiene.test.ts > operations hygiene (Tier 7) > the database overwrites deleted rows (D17)
+Error: Legacy SQL access is not implemented in the staged PostgreSQL runtime
+ ❯ Proxy.<anonymous> src/app/postgresRuntime.ts:83:15
+     81|       if (["prepare", "exec", "pragma", "transaction", "backup", "load…
+     82|         attempted();
+     83|         throw new Error("Legacy SQL access is not implemented in the s…
+       |               ^
+     84|       };
+     85|       const value = Reflect.get(target, property, target) as unknown;
+ ❯ test/ops_hygiene.test.ts:20:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[45/64]⎯
+
+ FAIL  test/plus_promotions_mongo.test.ts > commits only one promotion reservation from two stale MongoDB mirrors and retains it after restart
+Error: MongoDB unavailable; check server connectivity and credentials
+ ❯ MeldiqMongo.connect src/infrastructure/database/mongo/client.ts:60:13
+     58|       await client?.close().catch(() => undefined);
+     59|       // Driver errors may echo credentials outside the original URI (…
+     60|       throw new Error("MongoDB unavailable; check server connectivity …
+       |             ^
+     61|     }
+     62|   }
+ ❯ test/plus_promotions_mongo.test.ts:16:8
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[46/64]⎯
+
+ FAIL  test/retired_modules.test.ts > retired modules > reports and purges the rows left in their tables, keeping the tables
+Error: Legacy SQL access is not implemented in the staged PostgreSQL runtime
+ ❯ Proxy.<anonymous> src/app/postgresRuntime.ts:83:15
+     81|       if (["prepare", "exec", "pragma", "transaction", "backup", "load…
+     82|         attempted();
+     83|         throw new Error("Legacy SQL access is not implemented in the s…
+       |               ^
+     84|       };
+     85|       const value = Reflect.get(target, property, target) as unknown;
+ ❯ test/retired_modules.test.ts:20:8
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[47/64]⎯
+
+ FAIL  test/rows.test.ts > rows on mongodb > inserts with the columns' defaults and reads back
+Error: MongoDB unavailable; check server connectivity and credentials
+ ❯ MeldiqMongo.connect src/infrastructure/database/mongo/client.ts:60:13
+     58|       await client?.close().catch(() => undefined);
+     59|       // Driver errors may echo credentials outside the original URI (…
+     60|       throw new Error("MongoDB unavailable; check server connectivity …
+       |             ^
+     61|     }
+     62|   }
+ ❯ backends test/rows.test.ts:46:21
+ ❯ test/rows.test.ts:67:22
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[48/64]⎯
+
+ FAIL  test/rows.test.ts > rows on mongodb > follows SQL's semantics for NULL, ne, in, notIn, ranges, $or, order and limit
+Error: MongoDB unavailable; check server connectivity and credentials
+ ❯ MeldiqMongo.connect src/infrastructure/database/mongo/client.ts:60:13
+     58|       await client?.close().catch(() => undefined);
+     59|       // Driver errors may echo credentials outside the original URI (…
+     60|       throw new Error("MongoDB unavailable; check server connectivity …
+       |             ^
+     61|     }
+     62|   }
+ ❯ backends test/rows.test.ts:46:21
+ ❯ test/rows.test.ts:75:22
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[49/64]⎯
+
+ FAIL  test/rows.test.ts > rows on mongodb > keeps a NOCASE unique column unique whatever the case, and finds it in any case
+Error: MongoDB unavailable; check server connectivity and credentials
+ ❯ MeldiqMongo.connect src/infrastructure/database/mongo/client.ts:60:13
+     58|       await client?.close().catch(() => undefined);
+     59|       // Driver errors may echo credentials outside the original URI (…
+     60|       throw new Error("MongoDB unavailable; check server connectivity …
+       |             ^
+     61|     }
+     62|   }
+ ❯ backends test/rows.test.ts:46:21
+ ❯ test/rows.test.ts:98:22
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[50/64]⎯
+
+ FAIL  test/rows.test.ts > rows on mongodb > ignores a conflicting insert with orIgnore, and upserts
+Error: MongoDB unavailable; check server connectivity and credentials
+ ❯ MeldiqMongo.connect src/infrastructure/database/mongo/client.ts:60:13
+     58|       await client?.close().catch(() => undefined);
+     59|       // Driver errors may echo credentials outside the original URI (…
+     60|       throw new Error("MongoDB unavailable; check server connectivity …
+       |             ^
+     61|     }
+     62|   }
+ ❯ backends test/rows.test.ts:46:21
+ ❯ test/rows.test.ts:106:22
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[51/64]⎯
+
+ FAIL  test/rows.test.ts > rows on mongodb > updates and deletes, reporting how many rows
+Error: MongoDB unavailable; check server connectivity and credentials
+ ❯ MeldiqMongo.connect src/infrastructure/database/mongo/client.ts:60:13
+     58|       await client?.close().catch(() => undefined);
+     59|       // Driver errors may echo credentials outside the original URI (…
+     60|       throw new Error("MongoDB unavailable; check server connectivity …
+       |             ^
+     61|     }
+     62|   }
+ ❯ backends test/rows.test.ts:46:21
+ ❯ test/rows.test.ts:123:22
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[52/64]⎯
+
+ FAIL  test/rows.test.ts > rows on mongodb > applies ON DELETE CASCADE and SET NULL, through composite keys too
+Error: MongoDB unavailable; check server connectivity and credentials
+ ❯ MeldiqMongo.connect src/infrastructure/database/mongo/client.ts:60:13
+     58|       await client?.close().catch(() => undefined);
+     59|       // Driver errors may echo credentials outside the original URI (…
+     60|       throw new Error("MongoDB unavailable; check server connectivity …
+       |             ^
+     61|     }
+     62|   }
+ ❯ backends test/rows.test.ts:46:21
+ ❯ test/rows.test.ts:136:22
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[53/64]⎯
+
+ FAIL  test/rows.test.ts > rows on mongodb > deletes an organisation whose channels are still in categories (SET NULL inside the same cascade)
+Error: MongoDB unavailable; check server connectivity and credentials
+ ❯ MeldiqMongo.connect src/infrastructure/database/mongo/client.ts:60:13
+     58|       await client?.close().catch(() => undefined);
+     59|       // Driver errors may echo credentials outside the original URI (…
+     60|       throw new Error("MongoDB unavailable; check server connectivity …
+       |             ^
+     61|     }
+     62|   }
+ ❯ backends test/rows.test.ts:46:21
+ ❯ test/rows.test.ts:159:22
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[54/64]⎯
+
+ FAIL  test/rows.test.ts > rows on mongodb > refuses a row whose parent in the same rows doesn't exist
+Error: MongoDB unavailable; check server connectivity and credentials
+ ❯ MeldiqMongo.connect src/infrastructure/database/mongo/client.ts:60:13
+     58|       await client?.close().catch(() => undefined);
+     59|       // Driver errors may echo credentials outside the original URI (…
+     60|       throw new Error("MongoDB unavailable; check server connectivity …
+       |             ^
+     61|     }
+     62|   }
+ ❯ backends test/rows.test.ts:46:21
+ ❯ test/rows.test.ts:172:22
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[55/64]⎯
+
+ FAIL  test/rows.test.ts > rows on mongodb > applies a unit entirely or not at all, and lets the unit read its own writes
+Error: MongoDB unavailable; check server connectivity and credentials
+ ❯ MeldiqMongo.connect src/infrastructure/database/mongo/client.ts:60:13
+     58|       await client?.close().catch(() => undefined);
+     59|       // Driver errors may echo credentials outside the original URI (…
+     60|       throw new Error("MongoDB unavailable; check server connectivity …
+       |             ^
+     61|     }
+     62|   }
+ ❯ backends test/rows.test.ts:46:21
+ ❯ test/rows.test.ts:179:22
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[56/64]⎯
+
+ FAIL  test/rows.test.ts > rows on mongodb > hands out AUTOINCREMENT ids in order and never again, and keeps rowid tables
+Error: MongoDB unavailable; check server connectivity and credentials
+ ❯ MeldiqMongo.connect src/infrastructure/database/mongo/client.ts:60:13
+     58|       await client?.close().catch(() => undefined);
+     59|       // Driver errors may echo credentials outside the original URI (…
+     60|       throw new Error("MongoDB unavailable; check server connectivity …
+       |             ^
+     61|     }
+     62|   }
+ ❯ backends test/rows.test.ts:46:21
+ ❯ test/rows.test.ts:204:22
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[57/64]⎯
+
+ FAIL  test/rows.test.ts > rows on mongodb > runs units one after another: a failing one doesn't take the next with it
+Error: MongoDB unavailable; check server connectivity and credentials
+ ❯ MeldiqMongo.connect src/infrastructure/database/mongo/client.ts:60:13
+     58|       await client?.close().catch(() => undefined);
+     59|       // Driver errors may echo credentials outside the original URI (…
+     60|       throw new Error("MongoDB unavailable; check server connectivity …
+       |             ^
+     61|     }
+     62|   }
+ ❯ backends test/rows.test.ts:46:21
+ ❯ test/rows.test.ts:222:22
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[58/64]⎯
+
+ FAIL  test/rows.test.ts > rows on mongodb > returns copies: changing a row read doesn't change the rows
+Error: MongoDB unavailable; check server connectivity and credentials
+ ❯ MeldiqMongo.connect src/infrastructure/database/mongo/client.ts:60:13
+     58|       await client?.close().catch(() => undefined);
+     59|       // Driver errors may echo credentials outside the original URI (…
+     60|       throw new Error("MongoDB unavailable; check server connectivity …
+       |             ^
+     61|     }
+     62|   }
+ ❯ backends test/rows.test.ts:46:21
+ ❯ test/rows.test.ts:234:22
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[59/64]⎯
+
+ FAIL  test/rows.test.ts > rows on mongodb > compares text in ranges as SQLite does (code units; days as text)
+Error: MongoDB unavailable; check server connectivity and credentials
+ ❯ MeldiqMongo.connect src/infrastructure/database/mongo/client.ts:60:13
+     58|       await client?.close().catch(() => undefined);
+     59|       // Driver errors may echo credentials outside the original URI (…
+     60|       throw new Error("MongoDB unavailable; check server connectivity …
+       |             ^
+     61|     }
+     62|   }
+ ❯ backends test/rows.test.ts:46:21
+ ❯ test/rows.test.ts:242:22
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[60/64]⎯
+
+ FAIL  test/rows.test.ts > rows on mongodb > keeps everything across a restart (MongoDB: loaded again from the collections)
+Error: MongoDB unavailable; check server connectivity and credentials
+ ❯ MeldiqMongo.connect src/infrastructure/database/mongo/client.ts:60:13
+     58|       await client?.close().catch(() => undefined);
+     59|       // Driver errors may echo credentials outside the original URI (…
+     60|       throw new Error("MongoDB unavailable; check server connectivity …
+       |             ^
+     61|     }
+     62|   }
+ ❯ backends test/rows.test.ts:46:21
+ ❯ test/rows.test.ts:256:30
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[61/64]⎯
+
+ FAIL  test/rows.test.ts > rows on MongoDB, written by two processes > follows another process's inserts, updates, deletes and counters, and never goes back to an older version
+Error: MongoDB unavailable; check server connectivity and credentials
+ ❯ MeldiqMongo.connect src/infrastructure/database/mongo/client.ts:60:13
+     58|       await client?.close().catch(() => undefined);
+     59|       // Driver errors may echo credentials outside the original URI (…
+     60|       throw new Error("MongoDB unavailable; check server connectivity …
+       |             ^
+     61|     }
+     62|   }
+ ❯ test/rows.test.ts:282:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[62/64]⎯
+
+ FAIL  test/site_details.test.ts > site and legal details > change only for super admins, with a reason, audited field by field, and show on the public answer at once
+Error: Legacy SQL access is not implemented in the staged PostgreSQL runtime
+ ❯ Proxy.<anonymous> src/app/postgresRuntime.ts:83:15
+     81|       if (["prepare", "exec", "pragma", "transaction", "backup", "load…
+     82|         attempted();
+     83|         throw new Error("Legacy SQL access is not implemented in the s…
+       |               ^
+     84|       };
+     85|       const value = Reflect.get(target, property, target) as unknown;
+ ❯ test/site_details.test.ts:73:28
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[63/64]⎯
+
+ FAIL  test/storage_s3.test.ts > switching between the disk and S3 without moving files (STORAGE_READ_FALLBACK) > disk files stay readable after moving to S3, and S3 files after a rollback to the disk
+AssertionError: expected 401 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 401
+
+ ❯ test/storage_s3.test.ts:320:24
+    318|     expect((await alice.req("GET", "/v1/server-info")).features).toCon…
+    319|     const old = await fetch(`${h.baseUrl}/v1/attachments/${diskId}`, {…
+    320|     expect(old.status).toBe(200); // streamed from the disk: S3 has no…
+       |                        ^
+    321|     expect(Buffer.from(await old.arrayBuffer())).toEqual(onDisk);
+    322|     const part = await fetch(`${h.baseUrl}/v1/attachments/${diskId}`, …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[64/64]⎯
+
+
+ Test Files  23 failed | 211 passed | 4 skipped (238)
+      Tests  45 failed | 1789 passed | 93 skipped (1927)
+   Start at  06:31:51
+   Duration  748.84s (transform 7.09s, setup 0ms, import 178.66s, tests 537.29s, environment 14ms)
+

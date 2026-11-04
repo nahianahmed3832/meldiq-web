@@ -1,0 +1,11 @@
+{
+  "scope": "loopback PostgreSQL HTTP + 100 same-process WebSocket clients; bounded fan-out qualification",
+  "baselineMessages": 20,
+  "baselineP95Ms": 6.148832999999286,
+  "loadedMessages": 40,
+  "loadedP95Ms": 3.000250000000051,
+  "allRecipients": 100,
+  "observedDeliveries": 4000,
+  "elapsedMs": 645.4286250000005,
+  "processRssBytes": 317145088
+}

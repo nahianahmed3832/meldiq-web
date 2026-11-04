@@ -1,0 +1,105 @@
+[WebServer] (node:43231) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:43247) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:43248) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:43248) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+[WebServer] (node:43248) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+[WebServer] (node:43254) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 15 tests using 1 worker
+
+(node:43255) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"level":20,"time":1793835790013,"pid":43255,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+{"level":20,"time":1793835790132,"pid":43255,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+{"level":20,"time":1793835792743,"pid":43255,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓   1 [chromium] › e2e/part4-bot-voice.spec.ts:16:1 › a dedicated bot receives the browser's sealed room key and exchanges real encrypted audio before revocation (10.6s)
+(node:43366) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"level":20,"time":1793835800039,"pid":43366,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+{"level":20,"time":1793835800142,"pid":43366,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+{"level":20,"time":1793835802658,"pid":43366,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓   2 [chromium] › e2e/part4-bot-voice.spec.ts:16:1 › a dedicated bot receives the browser's sealed room key and exchanges real encrypted audio before revocation (8.9s)
+(node:43461) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"level":20,"time":1793835808912,"pid":43461,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+{"level":20,"time":1793835809011,"pid":43461,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+{"level":20,"time":1793835811609,"pid":43461,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓   3 [chromium] › e2e/part4-bot-voice.spec.ts:16:1 › a dedicated bot receives the browser's sealed room key and exchanges real encrypted audio before revocation (8.3s)
+(node:43573) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"level":20,"time":1793835819809,"pid":43573,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+{"level":20,"time":1793835819901,"pid":43573,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+{"level":20,"time":1793835822470,"pid":43573,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓   4 [firefox] › e2e/part4-bot-voice.spec.ts:16:1 › a dedicated bot receives the browser's sealed room key and exchanges real encrypted audio before revocation (9.4s)
+(node:43607) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"level":20,"time":1793835830893,"pid":43607,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+{"level":20,"time":1793835831001,"pid":43607,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+{"level":20,"time":1793835833646,"pid":43607,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓   5 [firefox] › e2e/part4-bot-voice.spec.ts:16:1 › a dedicated bot receives the browser's sealed room key and exchanges real encrypted audio before revocation (9.9s)
+(node:43695) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"level":20,"time":1793835841499,"pid":43695,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+{"level":20,"time":1793835841622,"pid":43695,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+{"level":20,"time":1793835844424,"pid":43695,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓   6 [firefox] › e2e/part4-bot-voice.spec.ts:16:1 › a dedicated bot receives the browser's sealed room key and exchanges real encrypted audio before revocation (9.8s)
+(node:43835) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"level":20,"time":1793835853555,"pid":43835,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+{"level":20,"time":1793835853673,"pid":43835,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+{"level":20,"time":1793835856516,"pid":43835,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓   7 [webkit] › e2e/part4-bot-voice.spec.ts:16:1 › a dedicated bot receives the browser's sealed room key and exchanges real encrypted audio before revocation (10.8s)
+(node:43876) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"level":20,"time":1793835864813,"pid":43876,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+{"level":20,"time":1793835864931,"pid":43876,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+{"level":20,"time":1793835867686,"pid":43876,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓   8 [webkit] › e2e/part4-bot-voice.spec.ts:16:1 › a dedicated bot receives the browser's sealed room key and exchanges real encrypted audio before revocation (10.2s)
+(node:43927) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"level":20,"time":1793835875503,"pid":43927,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+{"level":20,"time":1793835875629,"pid":43927,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+{"level":20,"time":1793835878390,"pid":43927,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓   9 [webkit] › e2e/part4-bot-voice.spec.ts:16:1 › a dedicated bot receives the browser's sealed room key and exchanges real encrypted audio before revocation (10.0s)
+(node:44015) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"level":20,"time":1793835886623,"pid":44015,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+{"level":20,"time":1793835886736,"pid":44015,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+{"level":20,"time":1793835889387,"pid":44015,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓  10 [phone-width] › e2e/part4-bot-voice.spec.ts:16:1 › a dedicated bot receives the browser's sealed room key and exchanges real encrypted audio before revocation (9.7s)
+(node:44091) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"level":20,"time":1793835897027,"pid":44091,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+{"level":20,"time":1793835897288,"pid":44091,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+{"level":20,"time":1793835900099,"pid":44091,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓  11 [phone-width] › e2e/part4-bot-voice.spec.ts:16:1 › a dedicated bot receives the browser's sealed room key and exchanges real encrypted audio before revocation (9.9s)
+(node:44191) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"level":20,"time":1793835909622,"pid":44191,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+{"level":20,"time":1793835909760,"pid":44191,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+{"level":20,"time":1793835912383,"pid":44191,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓  12 [phone-width] › e2e/part4-bot-voice.spec.ts:16:1 › a dedicated bot receives the browser's sealed room key and exchanges real encrypted audio before revocation (10.4s)
+(node:44262) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"level":20,"time":1793835921908,"pid":44262,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+{"level":20,"time":1793835922032,"pid":44262,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+{"level":20,"time":1793835924631,"pid":44262,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓  13 [iphone-width] › e2e/part4-bot-voice.spec.ts:16:1 › a dedicated bot receives the browser's sealed room key and exchanges real encrypted audio before revocation (10.6s)
+(node:44316) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"level":20,"time":1793835932343,"pid":44316,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+{"level":20,"time":1793835932471,"pid":44316,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+{"level":20,"time":1793835935161,"pid":44316,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓  14 [iphone-width] › e2e/part4-bot-voice.spec.ts:16:1 › a dedicated bot receives the browser's sealed room key and exchanges real encrypted audio before revocation (9.7s)
+(node:44389) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+{"level":20,"time":1793835942506,"pid":44389,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+{"level":20,"time":1793835942612,"pid":44389,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+{"level":20,"time":1793835945244,"pid":44389,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓  15 [iphone-width] › e2e/part4-bot-voice.spec.ts:16:1 › a dedicated bot receives the browser's sealed room key and exchanges real encrypted audio before revocation (9.5s)
+
+  15 passed (2.8m)

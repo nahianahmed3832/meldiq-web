@@ -1,0 +1,55 @@
+[WebServer] (node:34258) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:34274) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:34276) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:34276) ExperimentalWarning: The supports Web Crypto API method is an experimental feature and might change at any time
+[WebServer] (node:34276) ExperimentalWarning: The ML-DSA-44 Web Crypto API algorithm is an experimental feature and might change at any time
+[WebServer] (node:34284) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 28 tests using 1 worker
+
+(node:34286) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 [chromium] › e2e/part4-bot-components.spec.ts:11:1 › bot controls submit private inputs, recover from failure, and observe current permissions (7.2s)
+  ✓   2 [chromium] › e2e/part4-bot-direct-messages.spec.ts:11:1 › personal bot approval, messaging, revocation and fresh consent use the real API (5.8s)
+  ✓   3 [chromium] › e2e/part4-bot-files.spec.ts:12:1 › separate file review gates a bot upload and the human client decrypts its native attachment (7.1s)
+  ✓   4 [chromium] › e2e/part4-bot-permissions.spec.ts:12:1 › bot requested access, explicit approval, stale review and retry use the real API (6.7s)
+  ✓   5 [chromium] › e2e/part4-bot-sdk.spec.ts:12:1 › the developer screen downloads the exact pinned first-party SDK and guide (4.8s)
+  ✓   6 [chromium] › e2e/part4-bot-voice-key.spec.ts:13:1 › owners configure public voice keys and managers review key changes without changing scopes (6.5s)
+{"level":20,"time":1793831775124,"pid":34286,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓   7 [chromium] › e2e/part4-bot-voice.spec.ts:15:1 › a dedicated bot receives the browser's sealed room key and exchanges real encrypted audio before revocation (7.2s)
+(node:34543) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   8 [firefox] › e2e/part4-bot-components.spec.ts:11:1 › bot controls submit private inputs, recover from failure, and observe current permissions (7.0s)
+  ✓   9 [firefox] › e2e/part4-bot-direct-messages.spec.ts:11:1 › personal bot approval, messaging, revocation and fresh consent use the real API (6.2s)
+  ✓  10 [firefox] › e2e/part4-bot-files.spec.ts:12:1 › separate file review gates a bot upload and the human client decrypts its native attachment (7.5s)
+  ✓  11 [firefox] › e2e/part4-bot-permissions.spec.ts:12:1 › bot requested access, explicit approval, stale review and retry use the real API (7.0s)
+  ✓  12 [firefox] › e2e/part4-bot-sdk.spec.ts:12:1 › the developer screen downloads the exact pinned first-party SDK and guide (5.3s)
+  ✓  13 [firefox] › e2e/part4-bot-voice-key.spec.ts:13:1 › owners configure public voice keys and managers review key changes without changing scopes (6.4s)
+{"level":20,"time":1793831823703,"pid":34543,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓  14 [firefox] › e2e/part4-bot-voice.spec.ts:15:1 › a dedicated bot receives the browser's sealed room key and exchanges real encrypted audio before revocation (7.2s)
+(node:34787) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  15 [webkit] › e2e/part4-bot-components.spec.ts:11:1 › bot controls submit private inputs, recover from failure, and observe current permissions (7.5s)
+  ✓  16 [webkit] › e2e/part4-bot-direct-messages.spec.ts:11:1 › personal bot approval, messaging, revocation and fresh consent use the real API (7.2s)
+  ✓  17 [webkit] › e2e/part4-bot-files.spec.ts:12:1 › separate file review gates a bot upload and the human client decrypts its native attachment (8.3s)
+  ✓  18 [webkit] › e2e/part4-bot-permissions.spec.ts:12:1 › bot requested access, explicit approval, stale review and retry use the real API (7.7s)
+  ✓  19 [webkit] › e2e/part4-bot-sdk.spec.ts:12:1 › the developer screen downloads the exact pinned first-party SDK and guide (5.9s)
+  ✓  20 [webkit] › e2e/part4-bot-voice-key.spec.ts:13:1 › owners configure public voice keys and managers review key changes without changing scopes (7.9s)
+{"level":20,"time":1793831880347,"pid":34787,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓  21 [webkit] › e2e/part4-bot-voice.spec.ts:15:1 › a dedicated bot receives the browser's sealed room key and exchanges real encrypted audio before revocation (8.5s)
+(node:35092) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  22 [phone-width] › e2e/part4-bot-components.spec.ts:11:1 › bot controls submit private inputs, recover from failure, and observe current permissions (6.4s)
+  ✓  23 [phone-width] › e2e/part4-bot-direct-messages.spec.ts:11:1 › personal bot approval, messaging, revocation and fresh consent use the real API (5.8s)
+  ✓  24 [phone-width] › e2e/part4-bot-files.spec.ts:12:1 › separate file review gates a bot upload and the human client decrypts its native attachment (7.0s)
+  ✓  25 [phone-width] › e2e/part4-bot-permissions.spec.ts:12:1 › bot requested access, explicit approval, stale review and retry use the real API (6.4s)
+  ✓  26 [phone-width] › e2e/part4-bot-sdk.spec.ts:12:1 › the developer screen downloads the exact pinned first-party SDK and guide (4.9s)
+  ✓  27 [phone-width] › e2e/part4-bot-voice-key.spec.ts:13:1 › owners configure public voice keys and managers review key changes without changing scopes (6.5s)
+{"level":20,"time":1793831927108,"pid":35092,"hostname":"MDNAHIANs-MacBook-Pro.local","name":"lk-rtc","msg":"Connect callback received"}
+  ✓  28 [phone-width] › e2e/part4-bot-voice.spec.ts:15:1 › a dedicated bot receives the browser's sealed room key and exchanges real encrypted audio before revocation (8.7s)
+
+  28 passed (3.4m)

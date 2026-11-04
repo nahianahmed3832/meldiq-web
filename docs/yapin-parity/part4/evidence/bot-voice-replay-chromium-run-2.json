@@ -1,0 +1,16 @@
+{
+  "scope": "Local self-hosted LiveKit with actual native RTC and a continuous 997 Hz source; no physical-device claim",
+  "project": "chromium",
+  "repetition": 2,
+  "refused": false,
+  "connectedAtEnd": false,
+  "audioFrames": 2,
+  "sustainedAudioFrames": 0,
+  "matchedSourceToneFrames": 0,
+  "positiveControlToneFrames": 225,
+  "referencePublishingAtEnd": true,
+  "referencePublishedFramesAtReplay": 25,
+  "referencePublishedFramesAtEnd": 30,
+  "disconnectedAfterMs": 184.70645799999875,
+  "probeElapsedMs": 536.7394169999989
+}

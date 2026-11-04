@@ -1,0 +1,48 @@
+{
+  "recordedAt": "2026-11-04T23:46:34.698143+00:00",
+  "webSourceCommit": "a0a27ff82f9cf07bf157245271d513c66bbd9ae5",
+  "apiSourceCommit": "031089388da4430fedfd7c85de1dd8c80964886e",
+  "apiImplementationCommit": "742cc1884ff79d751c544619f078b0021d2369a2",
+  "livekitServerVersion": "1.13.10",
+  "nativeRtcSdkVersion": "1.0.0",
+  "source": "Authorized human native peer continuously publishes a 997 Hz tone with DTX disabled; counters only, no media retained.",
+  "passed": 15,
+  "repetitionsPerProject": 3,
+  "projects": [
+    "chromium",
+    "firefox",
+    "iphone-width",
+    "phone-width",
+    "webkit"
+  ],
+  "matchedRevokedSourceToneFrames": 0,
+  "receivedAudioFrames": [
+    0,
+    2,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "positiveControlMinimumMatchedFrames": 225,
+  "disconnectObservedMsRange": [
+    183.82029200000034,
+    462.3465419999993
+  ],
+  "sameSourceStillPublishing": true,
+  "limits": [
+    "Saved self-hosted JWTs are not provider-invalidated; signed-webhook admission fencing removes the stale participant.",
+    "Some probes receive nonmatching audio frames; an earlier camera-enabled WebKit probe received 25 frames of undetermined content.",
+    "No claim of instantaneous revocation, all network/SFU failure timings, provider-refreshed grant expiry, or physical-device acceptance."
+  ],
+  "production": "unchanged"
+}

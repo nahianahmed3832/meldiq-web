@@ -1,0 +1,16 @@
+{
+  "scope": "Local self-hosted LiveKit with actual native RTC and a continuous 997 Hz source; no physical-device claim",
+  "project": "iphone-width",
+  "repetition": 2,
+  "refused": false,
+  "connectedAtEnd": false,
+  "audioFrames": 0,
+  "sustainedAudioFrames": 0,
+  "matchedSourceToneFrames": 0,
+  "positiveControlToneFrames": 242,
+  "referencePublishingAtEnd": true,
+  "referencePublishedFramesAtReplay": 26,
+  "referencePublishedFramesAtEnd": 32,
+  "disconnectedAfterMs": 187.27908399999978,
+  "probeElapsedMs": 541.4011250000003
+}
